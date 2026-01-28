@@ -165,7 +165,11 @@ class ResCompany(models.Model):
         return extra_balance
 
     def _get_location_valuation_vals(self, at_date=None, location_domain=False):
-        location_domain = (location_domain or []) + [('valuation_account_id', '!=', False)]
+        location_domain = Domain.AND([
+            location_domain or [],
+            [('valuation_account_id', '!=', False)],
+            [('company_id', '=', self.id)],
+        ])
         amls_vals_list = []
         valued_location = self.env['stock.location'].search(location_domain)
         last_closing_date = self._get_last_closing_date()
@@ -332,7 +336,7 @@ class ResCompany(models.Model):
         if not closing:
             return False
         am_state_field = self.env['ir.model.fields'].search([('model', '=', 'account.move'), ('name', '=', 'state')], limit=1)
-        state_tracking = closing.message_ids.tracking_value_ids.filtered(lambda t: t.field_id == am_state_field).sorted('id')
+        state_tracking = closing.message_ids.sudo().tracking_value_ids.filtered(lambda t: t.field_id == am_state_field).sorted('id')
         return state_tracking[-1:].create_date or fields.Datetime.to_datetime(closing.date)
 
     def _save_closing_id(self, move_id):

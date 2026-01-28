@@ -67,6 +67,11 @@ registry.category("web_tour.tours").add('account_tax_group', {
         trigger: '.ui-menu-item-wrapper:contains("Account Tax Group Product")',
         run: "click",
     },
+    {
+        content: "Set Bill Date",
+        trigger: "input[data-field=invoice_date]",
+        run: "edit 2025-12-01",
+    },
     // Save account.move
     ...stepUtils.saveForm(),
     // Edit tax group amount

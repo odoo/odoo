@@ -1,0 +1,183 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:hrextac="urn:hzn.hr:schema:xsd:HRExtensionAggregateComponents-1">
+    <ext:UBLExtensions>
+    <ext:UBLExtension>
+      <ext:ExtensionContent>
+        <hrextac:HRFISK20Data>
+          <hrextac:HRTaxTotal>
+            <cbc:TaxAmount currencyID="EUR">25.00</cbc:TaxAmount>
+            <hrextac:HRTaxSubtotal>
+              <cbc:TaxableAmount currencyID="EUR">100.00</cbc:TaxableAmount>
+              <cbc:TaxAmount currencyID="EUR">25.00</cbc:TaxAmount>
+              <hrextac:HRTaxCategory>
+                <cbc:ID>S</cbc:ID>
+                <cbc:Name>HR:PDV25</cbc:Name>
+                <cbc:Percent>25.0</cbc:Percent>
+                <hrextac:HRTaxScheme>
+                  <cbc:ID>VAT</cbc:ID>
+                </hrextac:HRTaxScheme>
+              </hrextac:HRTaxCategory>
+            </hrextac:HRTaxSubtotal>
+          </hrextac:HRTaxTotal>
+          <hrextac:HRLegalMonetaryTotal>
+            <cbc:TaxExclusiveAmount currencyID="EUR">100.00</cbc:TaxExclusiveAmount>
+            <hrextac:OutOfScopeOfVATAmount currencyID="EUR">0.00</hrextac:OutOfScopeOfVATAmount>
+          </hrextac:HRLegalMonetaryTotal>
+        </hrextac:HRFISK20Data>
+      </ext:ExtensionContent>
+    </ext:UBLExtension>
+  </ext:UBLExtensions>  
+  <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.hr:cius-2025:1.0#conformant#urn:mfin.gov.hr:ext-2025:1.0</cbc:CustomizationID>
+  <cbc:ProfileID>P99:Test custom process type</cbc:ProfileID>
+  <cbc:ID>1/1/1</cbc:ID>
+  <cbc:CopyIndicator>false</cbc:CopyIndicator>
+  <cbc:IssueDate>2025-01-02</cbc:IssueDate>
+  <cbc:IssueTime>00:00:00</cbc:IssueTime>
+  <cbc:DueDate>2025-01-01</cbc:DueDate>
+  <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+  <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
+  <cac:OrderReference>
+    <cbc:ID>INV-2025-0001/1/1</cbc:ID>
+  </cac:OrderReference>
+  <cac:AccountingSupplierParty>
+    <cac:Party>
+      <cbc:EndpointID schemeID="9934">HR68139364755</cbc:EndpointID>
+      <cac:PartyIdentification>
+				<cbc:ID>9934:68139364755::HR99:12345</cbc:ID>
+			</cac:PartyIdentification>
+      <cac:PartyName>
+        <cbc:Name>company_1_data</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>Croatian Street 1</cbc:StreetName>
+        <cbc:CityName>Croatian City</cbc:CityName>
+        <cbc:PostalZone>1234</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode>HR</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cbc:CompanyID>HR68139364755</cbc:CompanyID>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>company_1_data</cbc:RegistrationName>
+        <cbc:CompanyID>HR68139364755</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:Name>company_1_data</cbc:Name>
+        <cbc:ElectronicMail>test1@test.test</cbc:ElectronicMail>
+      </cac:Contact>
+    </cac:Party>
+    <cac:SellerContact>
+      <cbc:ID>01234567896</cbc:ID>
+      <cbc:Name>Because I am accountman!</cbc:Name>
+    </cac:SellerContact>
+  </cac:AccountingSupplierParty>
+  <cac:AccountingCustomerParty>
+    <cac:Party>
+      <cbc:EndpointID schemeID="9934">HR08971065561</cbc:EndpointID>
+      <cac:PartyIdentification>
+				<cbc:ID>9934:08971065561</cbc:ID>
+			</cac:PartyIdentification>
+      <cac:PartyName>
+        <cbc:Name>partner_a</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:StreetName>Croatian Street 2</cbc:StreetName>
+        <cbc:CityName>Other Croatian City</cbc:CityName>
+        <cbc:PostalZone>5678</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode>HR</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cbc:CompanyID>HR08971065561</cbc:CompanyID>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>partner_a</cbc:RegistrationName>
+        <cbc:CompanyID>HR08971065561</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:Name>partner_a</cbc:Name>
+        <cbc:ElectronicMail>test3@test.test</cbc:ElectronicMail>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingCustomerParty>
+  <cac:Delivery>
+    <cac:DeliveryLocation>
+      <cac:Address>
+        <cbc:StreetName>Croatian Street 2</cbc:StreetName>
+        <cbc:CityName>Other Croatian City</cbc:CityName>
+        <cbc:PostalZone>5678</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode>HR</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:Address>
+    </cac:DeliveryLocation>
+    <cac:DeliveryParty>
+      <cac:PartyName>
+        <cbc:Name>partner_a</cbc:Name>
+      </cac:PartyName>
+    </cac:DeliveryParty>
+  </cac:Delivery>
+  <cac:PaymentMeans>
+    <cbc:PaymentMeansCode name="credit transfer">30</cbc:PaymentMeansCode>
+    <cbc:PaymentID>HR00 111</cbc:PaymentID>
+    <cac:PayeeFinancialAccount>
+      <cbc:ID>HR10000000000000</cbc:ID>
+    </cac:PayeeFinancialAccount>
+  </cac:PaymentMeans>
+  <cac:PaymentTerms>
+    <cbc:Note>Payment terms: Immediate Payment</cbc:Note>
+  </cac:PaymentTerms>
+  <cac:TaxTotal>
+    <cbc:TaxAmount currencyID="EUR">25.00</cbc:TaxAmount>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="EUR">100.00</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="EUR">25.00</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Percent>25.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+  </cac:TaxTotal>
+  <cac:LegalMonetaryTotal>
+    <cbc:LineExtensionAmount currencyID="EUR">100.00</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="EUR">100.00</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="EUR">125.00</cbc:TaxInclusiveAmount>
+    <cbc:PrepaidAmount currencyID="EUR">0.00</cbc:PrepaidAmount>
+    <cbc:PayableAmount currencyID="EUR">125.00</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>
+  <cac:InvoiceLine>
+    <cbc:ID>1</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="C62">1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">100.00</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>product_a</cbc:Description>
+      <cbc:Name>product_a</cbc:Name>
+      <cac:CommodityClassification>
+        <cbc:ItemClassificationCode listID="CG">01.11.11</cbc:ItemClassificationCode>
+      </cac:CommodityClassification>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID>S</cbc:ID>
+        <cbc:Name>HR:PDV25</cbc:Name>
+        <cbc:Percent>25.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>VAT</cbc:ID>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="EUR">100.0</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+</Invoice>

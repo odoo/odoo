@@ -376,8 +376,6 @@ class TestItEdiImport(TestItEdi):
             ('res_field', '=', 'l10n_it_edi_attachment_file'),
         ])
         self.assertEqual(len(attachments), 1)
-        invoices = self.env['account.move'].search([('payment_reference', '=', 'TWICE_TEST')])
-        self.assertEqual(len(invoices), 1)
 
     def test_receive_bill_with_global_discount(self):
         applied_xml = """

@@ -147,6 +147,9 @@ class AccountChartTemplate(models.AbstractModel):
         :param install_demo: whether or not we should load demo data right after loading the
             chart template.
         :type install_demo: bool
+        :param force_create: Determines the loading behavior. If True, forces the creation of new entries;
+            if False, prevents new creations and performs updates on existing data where applicable.
+        :type force_create: bool
         """
         if not company:
             return
@@ -296,7 +299,7 @@ class AccountChartTemplate(models.AbstractModel):
                 if journal:
                     del data['account.journal'][xmlid]
                     self.env['ir.model.data']._update_xmlids([{
-                        'xml_id': f"account.{company.id}_{xmlid}",
+                        'xml_id': self.company_xmlid(xmlid, company),
                         'record': journal,
                         'noupdate': True,
                     }])
@@ -434,7 +437,7 @@ class AccountChartTemplate(models.AbstractModel):
                         existing_account = accounts.sorted(key=lambda x: x.code != normalized_code)[0] if accounts else None
                         if existing_account:
                             self.env['ir.model.data']._update_xmlids([{
-                                'xml_id': f"account.{company.id}_{xmlid}",
+                                'xml_id': self.company_xmlid(xmlid, company),
                                 'record': existing_account,
                                 'noupdate': True,
                             }])
@@ -677,11 +680,14 @@ class AccountChartTemplate(models.AbstractModel):
                         del record_vals[key]
 
                 # Manage ids given as database id or xml_id
+                if isinstance(xml_id, str) and (record := self.ref(xml_id, raise_if_not_found=False)):
+                    xml_id = record.id
+
                 if isinstance(xml_id, int):
                     record_vals['id'] = xml_id
                     xml_id = False
                 else:
-                    xml_id = f"{('account.' + str(self.env.company.id) + '_') if '.' not in xml_id else ''}{xml_id}"
+                    xml_id = self.company_xmlid(xml_id)
 
                 all_records_vals.append({
                     'xml_id': xml_id,
@@ -892,7 +898,7 @@ class AccountChartTemplate(models.AbstractModel):
         else:
             accounts = self.env['account.account']._load_records([
                 {
-                    'xml_id': f"account.{company.id}_{xml_id}",
+                    'xml_id': self.company_xmlid(xml_id, company),
                     'values': values,
                     'noupdate': True,
                 }
@@ -924,7 +930,7 @@ class AccountChartTemplate(models.AbstractModel):
         }
         self.env['account.account']._load_records([
             {
-                'xml_id': f"account.{company.id}_{xml_id}",
+                'xml_id': self.company_xmlid(xml_id, company),
                 'values': values,
                 'noupdate': True,
             }
@@ -1204,12 +1210,16 @@ class AccountChartTemplate(models.AbstractModel):
     # Tooling
     # --------------------------------------------------------------------------------
 
-    def ref(self, xmlid, raise_if_not_found=True):
+    def company_xmlid(self, xmlid, company=None):
         if '.' in xmlid:
-            return self.env.ref(xmlid, raise_if_not_found)
+            return xmlid
+        company = company or self.env.company
+        return f"account.{company.id}_{xmlid}"
+
+    def ref(self, xmlid, raise_if_not_found=True):
         return (
-            self.env.ref(f"account.{self.env.company.id}_{xmlid}", raise_if_not_found=False)
-            or self.env.ref(f"account.{self.env.company.parent_ids[0].id}_{xmlid}", raise_if_not_found)
+            self.env.ref(self.company_xmlid(xmlid), raise_if_not_found=False)
+            or self.env.ref(self.company_xmlid(xmlid, self.env.company.parent_ids[0]), raise_if_not_found)
         )
 
     def _get_parent_template(self, code):
@@ -1471,7 +1481,7 @@ class AccountChartTemplate(models.AbstractModel):
                                 continue
                             field_translation = self._get_field_translation(record, fname, lang)
                             if field_translation:
-                                xml_id = _xml_id if '.' in _xml_id else f"account.{company.id}_{_xml_id}"
+                                xml_id = _xml_id if '.' in _xml_id else self.company_xmlid(_xml_id, company)
                                 translation_importer.model_translations[mname][fname][xml_id][lang] = field_translation
 
         # Gather translations for the TEMPLATE_MODELS records that are not created from the chart_template data

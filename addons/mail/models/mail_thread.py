@@ -577,9 +577,6 @@ class MailThread(models.AbstractModel):
         for record in records:
             changes, _tracking_value_ids = tracking.get(record.id, (None, None))
             record._message_track_post_template(changes)
-        # this method is called after the main flush() and just before commit();
-        # we have to flush() again in case we triggered some recomputations
-        self.env.flush_all()
 
     def _track_set_author(self, author):
         """ Set the author of the tracking message. """
@@ -592,7 +589,6 @@ class MailThread(models.AbstractModel):
     def _track_post_template_finalize(self):
         """Call the tracking template method with right values from precommit."""
         self._message_track_post_template(self.env.cr.precommit.data.pop(f'mail.tracking.create.{self._name}.{self.id}', []))
-        self.env.flush_all()
 
     def _track_set_log_message(self, message):
         """ Link tracking to a message logged as body, in addition to subtype
@@ -823,13 +819,13 @@ class MailThread(models.AbstractModel):
                 bounced_record._message_receive_bounce(bounced_email, bounced_partner)
 
             if bounced_message and (bounced_email or bounced_partner):
-                self.env['mail.notification'].sudo().search(Domain(
-                    'mail_message_id', '=', bounced_message.id
-                ) & Domain.OR([
-                    Domain('res_partner_id', 'in', bounced_partner.ids) if bounced_partner else [],
-                    Domain('mail_email_address', '=', bounced_email) if bounced_email else [],
-                ]),
-                ).write({
+                domain = Domain('mail_message_id', '=', bounced_message.id)
+                sub_domains = []
+                if bounced_partner:
+                    sub_domains.append(Domain('res_partner_id', 'in', bounced_partner.ids))
+                if bounced_email:
+                    sub_domains.append(Domain('mail_email_address', '=', bounced_email))
+                self.env['mail.notification'].sudo().search(domain & Domain.OR(sub_domains)).write({
                     'failure_reason': html2plaintext(message_dict.get('body') or ''),
                     'failure_type': 'mail_bounce',
                     'notification_status': 'bounce',
@@ -1640,6 +1636,9 @@ class MailThread(models.AbstractModel):
                     break
                 if part.get_content_type() == 'binary/octet-stream':
                     _logger.warning("Message containing an unexpected Content-Type 'binary/octet-stream', assuming 'application/octet-stream'")
+                    part.replace_header('Content-Type', 'application/octet-stream')
+                if part.get_content_type() == '*/*':
+                    _logger.warning("Message containing an unexpected Content-Type '*/*', assuming 'application/octet-stream'")
                     part.replace_header('Content-Type', 'application/octet-stream')
                 if part.get_content_type() == 'multipart/alternative':
                     alternative = True

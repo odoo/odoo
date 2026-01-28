@@ -48,7 +48,6 @@ import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 import OrderPaymentValidation from "../utils/order_payment_validation";
 import { logPosMessage } from "../utils/pretty_console_log";
 import { initLNA } from "../utils/init_lna";
-import { uuid } from "@web/core/utils/strings";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -179,7 +178,13 @@ export class PosStore extends WithLazyGetterTrap {
             this.syncAllOrdersDebounced();
         });
 
-        initLNA(this.notification);
+        this.lnaState = {
+            type: "pending",
+            message: _t("Checking Local Network Access permission..."),
+        };
+        initLNA(this.notification, (type, message) => {
+            this.lnaState = { type, message };
+        });
     }
 
     navigate(routeName, routeParams = {}) {
@@ -551,60 +556,79 @@ export class PosStore extends WithLazyGetterTrap {
                 return false;
             }
         }
+        const refundedOrderLines = order.lines
+            .filter((line) => line.refunded_orderline_id?.order_id)
+            .map((line) => ({
+                order: line.refunded_orderline_id.order_id,
+                uuid: line.refunded_orderline_id.uuid,
+            }));
+
         const orderIsDeleted = await this.deleteOrders([order]);
-        if (orderIsDeleted) {
-            order.uiState.displayed = false;
-            await this.afterOrderDeletion();
+        if (!orderIsDeleted) {
+            return false;
         }
-        return orderIsDeleted;
+        order.uiState.displayed = false;
+        // Delete refunded lines linked to the current order
+        for (const refundedLine of refundedOrderLines) {
+            delete refundedLine.order?.uiState?.lineToRefund[refundedLine.uuid];
+        }
+
+        await this.afterOrderDeletion();
+        return true;
     }
     async afterOrderDeletion() {
-        this.setOrder(this.getOpenOrders().at(-1) || this.addNewOrder());
+        if (!this.config.module_pos_restaurant) {
+            this.setOrder(this.getOpenOrders().at(-1) || this.addNewOrder());
+        }
     }
 
     async deleteOrders(orders, serverIds = [], ignoreChange = false) {
-        const ids = new Set();
-        for (const order of orders) {
-            if (order && (await this._onBeforeDeleteOrder(order))) {
-                if (
-                    !ignoreChange &&
-                    order.isSynced &&
-                    Object.keys(order.last_order_preparation_change).length > 0
-                ) {
-                    const orderPresetDate = DateTime.fromISO(order.preset_time);
-                    const isSame = DateTime.now().hasSame(orderPresetDate, "day");
-                    if (!order.preset_time || isSame) {
-                        await this.sendOrderInPreparation(order, {
-                            cancelled: true,
-                            orderDone: true,
-                        });
+        const ordersToDelete = [];
+        const actionPosOrderCancelCall = async (orderIds) => {
+            await this.data.call("pos.order", "action_pos_order_cancel", orderIds, {
+                context: {
+                    device_identifier: this.device.identifier,
+                },
+            });
+        };
+        try {
+            for (const order of orders) {
+                if (order && (await this._onBeforeDeleteOrder(order))) {
+                    if (
+                        !ignoreChange &&
+                        order.isSynced &&
+                        Object.keys(order.last_order_preparation_change).length > 0
+                    ) {
+                        const orderPresetDate = DateTime.fromISO(order.preset_time);
+                        const isSame = DateTime.now().hasSame(orderPresetDate, "day");
+                        if (!order.preset_time || isSame) {
+                            await this.sendOrderInPreparation(order, {
+                                cancelled: true,
+                                orderDone: true,
+                            });
+                        }
                     }
-                }
 
-                const cancelled = this.removeOrder(order, false);
-                this.removePendingOrder(order);
-                if (!cancelled) {
+                    if (order.isSynced) {
+                        await actionPosOrderCancelCall([order.id]);
+                    }
+                    ordersToDelete.push(order);
+                } else {
                     return false;
-                } else if (order.isSynced) {
-                    ids.add(order.id);
                 }
-            } else {
-                return false;
             }
-        }
 
-        if (serverIds.length > 0) {
-            for (const id of serverIds) {
-                if (typeof id !== "number") {
-                    continue;
-                }
-                ids.add(id);
+            if (serverIds.length > 0) {
+                await actionPosOrderCancelCall([
+                    ...new Set(serverIds.filter((id) => typeof id === "number")),
+                ]);
             }
-        }
-
-        if (ids.size > 0) {
-            await this.data.call("pos.order", "action_pos_order_cancel", [Array.from(ids)]);
-            return true;
+        } finally {
+            // Remove orders locally at the end to avoid reactivity during the async process
+            for (const order of ordersToDelete) {
+                this.removeOrder(order, false);
+                this.removePendingOrder(order);
+            }
         }
 
         return true;
@@ -898,10 +922,19 @@ export class PosStore extends WithLazyGetterTrap {
                 const decimalAccuracy = this.models["decimal.precision"].find(
                     (dp) => dp.name === "Product Unit"
                 ).digits;
+
+                const overridedValues = {};
+                if (order.pricelist_id) {
+                    overridedValues.pricelist = order.pricelist_id;
+                }
+                if (order.fiscal_position_id) {
+                    overridedValues.fiscalPosition = order.fiscal_position_id;
+                }
+
                 this.scale.setProduct(
                     values.product_id,
                     decimalAccuracy,
-                    values.product_id.getTaxDetails().total_included
+                    values.product_id.getTaxDetails({ overridedValues }).total_included
                 );
                 const weight = await this.weighProduct();
                 if (weight) {
@@ -1055,9 +1088,9 @@ export class PosStore extends WithLazyGetterTrap {
                     ]),
                     combo_item_id: comboItem.combo_item_id,
                     price_unit: comboItem.price_unit,
-                    price_type: "automatic",
+                    price_type: "original",
                     order_id: order,
-                    qty: comboItem.qty,
+                    qty: comboItem.qty * values.qty,
                     attribute_value_ids: comboItem.attribute_value_ids?.map((attr) => [
                         "link",
                         attr,
@@ -1568,7 +1601,8 @@ export class PosStore extends WithLazyGetterTrap {
             productProduct?.id,
         ]);
 
-        const priceWithoutTax = productInfo["all_prices"]["price_without_tax"];
+        const productTaxDetails = productTemplate.getTaxDetails();
+        const priceWithoutTax = productTaxDetails.total_excluded;
         const margin = priceWithoutTax - productTemplate.standard_price;
         const orderPriceWithoutTax = order.priceExcl;
         const orderCost = order.getTotalCost();
@@ -1580,9 +1614,9 @@ export class PosStore extends WithLazyGetterTrap {
             order.prices.taxDetails.order_sign * order.prices.taxDetails.total_amount_currency
         );
         const taxAmount = this.env.utils.formatCurrency(
-            productInfo.all_prices.tax_details[0]?.amount || 0
+            productTaxDetails.taxes_data.reduce((sum, d) => sum + d.tax_amount_currency, 0)
         );
-        const taxName = productInfo.all_prices.tax_details[0]?.name || "";
+        const taxName = productTemplate.taxes_id.map((t) => t.name)?.join(", ");
 
         const costCurrency = this.env.utils.formatCurrency(productTemplate.standard_price);
         const marginCurrency = this.env.utils.formatCurrency(margin);
@@ -1822,25 +1856,33 @@ export class PosStore extends WithLazyGetterTrap {
                     opts.cancelled
                 );
 
-                if (
-                    !orderChange.new.length &&
-                    !orderChange.cancelled.length &&
-                    !orderChange.noteUpdate.length &&
-                    !orderChange.internal_note &&
-                    !orderChange.general_customer_note &&
-                    order.uiState.lastPrints
-                ) {
-                    orderChange = [order.uiState.lastPrints.at(-1)];
-                    reprint = true;
+                const hasChanges =
+                    orderChange.new.length ||
+                    orderChange.cancelled.length ||
+                    orderChange.noteUpdate.length ||
+                    orderChange.internal_note ||
+                    orderChange.general_customer_note;
+
+                let shouldPrint = true;
+                if (!hasChanges) {
+                    if (opts.explicitReprint && order.uiState.lastPrints) {
+                        orderChange = [order.uiState.lastPrints.at(-1)];
+                        reprint = true;
+                    } else {
+                        shouldPrint = false;
+                    }
                 } else {
                     order.uiState.lastPrints.push(orderChange);
                     orderChange = [orderChange];
                 }
 
                 if (reprint && opts.orderDone) {
-                    return;
+                    shouldPrint = false;
                 }
-                isPrinted = await this.printChanges(order, orderChange, reprint);
+
+                if (shouldPrint) {
+                    isPrinted = await this.printChanges(order, orderChange, reprint);
+                }
             } catch (e) {
                 logPosMessage(
                     "Store",
@@ -2047,11 +2089,10 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async printOrderChanges(data, printer) {
-        const actionId = data.changes.data[0]?.uuid || uuid();
         const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
             data: data,
         });
-        return await printer.printReceipt(receipt, actionId);
+        return await printer.printReceipt(receipt);
     }
 
     filterChangeByCategories(categories, currentOrderChange) {
@@ -2141,6 +2182,7 @@ export class PosStore extends WithLazyGetterTrap {
      * @param {import("@point_of_sale/app/models/product_product").ProductProduct?} product leave undefined to create a new product
      */
     async editProduct(product) {
+        const orderContainsProduct = product && this.orderContainsProduct(product);
         this.action.doAction(
             product
                 ? "point_of_sale.product_template_action_edit_pos"
@@ -2157,6 +2199,9 @@ export class PosStore extends WithLazyGetterTrap {
                             type: "ir.actions.act_window_close",
                         });
                     },
+                },
+                additionalContext: {
+                    taxes_readonly: orderContainsProduct,
                 },
             }
         );
@@ -2188,6 +2233,9 @@ export class PosStore extends WithLazyGetterTrap {
         return {
             resModel: "pos.order",
             resId: order.id,
+            context: {
+                from_frontend: true,
+            },
             onRecordSaved: async (record) => {
                 await this.data.loadServerOrders([["id", "=", record.evalContext.id]]);
                 this.action.doAction({
@@ -2265,6 +2313,8 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         if (preset) {
+            order.setPreset(preset);
+
             if (preset.needsPartner) {
                 const partner = order.partner_id || (await this.selectPartner(order));
                 if (!partner) {
@@ -2278,7 +2328,7 @@ export class PosStore extends WithLazyGetterTrap {
                     }
                 }
             }
-            order.setPreset(preset);
+
             if (preset.identification === "name") {
                 await this.handleSelectNamePreset(order);
             }
@@ -2714,22 +2764,30 @@ export class PosStore extends WithLazyGetterTrap {
             return sortedProducts.length ? [["0", sortedProducts]] : [];
         } else {
             const groupedByCategory = {};
+            const selectedCategories = this.selectedCategory
+                ? this.selectedCategory.getAllChildren().map((c) => c.id)
+                : false;
             for (const product of sortedProducts) {
                 if (product.pos_categ_ids.length === 0) {
+                    // Only display product without category if we don't have a category selected
+                    if (selectedCategories) {
+                        continue;
+                    }
                     if (!groupedByCategory[0]) {
                         groupedByCategory[0] = [];
                     }
                     groupedByCategory[0].push(product);
                     continue;
                 }
-                const category_ids = this.selectedCategory
-                    ? [this.selectedCategory.id]
-                    : product.pos_categ_ids.map((c) => c.id);
-                for (const categ_id of category_ids) {
-                    if (!groupedByCategory[categ_id]) {
-                        groupedByCategory[categ_id] = [];
+                const productCategories = product.pos_categ_ids.map((c) => c.id);
+                for (const categId of productCategories) {
+                    if (selectedCategories && !selectedCategories.includes(categId)) {
+                        continue;
                     }
-                    groupedByCategory[categ_id].push(product);
+                    if (!groupedByCategory[categId]) {
+                        groupedByCategory[categId] = [];
+                    }
+                    groupedByCategory[categId].push(product);
                 }
             }
             const res = Object.entries(groupedByCategory).sort(([a], [b]) => {
@@ -2758,30 +2816,31 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
 
-    sortByWordIndex(products, words) {
-        return products.sort((a, b) => {
-            const nameA = normalize(a.name);
-            const nameB = normalize(b.name);
-
-            const indexA = nameA.indexOf(words);
-            const indexB = nameB.indexOf(words);
-            return (
-                (indexA === -1) - (indexB === -1) || indexA - indexB || nameA.localeCompare(nameB)
-            );
-        });
-    }
-
     getProductsBySearchWord(searchWord, products) {
-        const words = normalize(searchWord);
-        const matches = products.filter(
-            (p) =>
-                normalize(p.searchString).includes(words) ||
-                p.product_variant_ids.some((variant) =>
-                    normalize(variant.searchString).includes(words)
-                )
+        const query = normalize(searchWord);
+        const matches = [];
+
+        for (const product of products) {
+            const searchStr = product.searchString;
+
+            if (searchStr.includes(query)) {
+                const normName = product.normalizedName;
+                matches.push({
+                    product: product,
+                    index: normName.indexOf(query),
+                    name: normName,
+                });
+            }
+        }
+
+        matches.sort(
+            (a, b) =>
+                (a.index === -1) - (b.index === -1) ||
+                a.index - b.index ||
+                (a.name == b.name ? 0 : a.name > b.name ? 1 : -1)
         );
 
-        return this.sortByWordIndex(matches, words);
+        return matches.map((m) => m.product);
     }
     getPaymentMethodFmtAmount(pm, order) {
         const amount = order.getDefaultAmountDueToPayIn(pm);

@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-19 18:36+0000\n"
+"POT-Creation-Date: 2026-01-22 18:35+0000\n"
 "PO-Revision-Date: 2025-12-05 04:17+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -183,9 +183,21 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "%(name)s - Draft at (%(currency_amount)s)"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "%(name)s installment #%(number)s"
 msgstr "%(name)s 安装 #%(number)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "%(name)s%(ref)s at %(currency_amount)s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -212,12 +224,6 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "%(partner_name)s has reached its credit limit of: %(credit_limit)s"
 msgstr "%(partner_name)s已达到信贷限额： %(credit_limit)s"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "%(ref)s (%(currency_amount)s)"
-msgstr "%(ref)s（%(currency_amount)s）"
 
 #. module: account
 #. odoo-python
@@ -1389,6 +1395,16 @@ msgstr ""
 "                        您还可以选择在会计设置中对所有供应商禁用该功能。"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid ""
+"<i class=\"fa fa-trash text-danger\"/>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length == 1\">Delete all duplicates</span>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length &gt; 1\">Delete duplicate</span>"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Back to settings"
 msgstr "<i class=\"oi oi-arrow-right me-1\"/>返回设置"
@@ -2488,7 +2504,7 @@ msgid ""
 "                            </div>\n"
 "\n"
 "                            <div style=\"margin-top:32px; text-align:center;"
-"\">\n"
+"\" t-if=\"object.move_type != 'in_invoice'\">\n"
 "                                <a t-if=\"portal_url\" t-attf-"
 "href=\"{{ portal_url }}\" style=\"display:inline-block; margin:0 10px 14px; "
 "padding:13px 30px; min-width:210px; background:linear-"
@@ -10936,6 +10952,12 @@ msgid "Is Domestic"
 msgstr "是本地"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_draft_duplicated_ref_ids
+#: model:ir.model.fields,field_description:account.field_account_move__is_draft_duplicated_ref_ids
+msgid "Is Draft Duplicated Ref"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__is_mail_template_editor
 msgid "Is Editor"
 msgstr "是编辑者"
@@ -18768,13 +18790,6 @@ msgstr ""
 "本视图仅显示从其他上下文（如邮件发送或批量记录审核）中选择的日记账分录。"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid ""
-"This will update all taxes and accounts based on the currently selected "
-"fiscal position."
-msgstr "此操作将根据当前选定的应税设定，更新所有税费。"
-
-#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
 msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
@@ -21051,7 +21066,7 @@ msgstr "例如：我的公司"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "e.g. finance@example.com; billing@example.com"
+msgid "e.g. finance@example.com; accountant@example.com"
 msgstr ""
 
 #. module: account
@@ -21446,6 +21461,14 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} 自助开票发票（参考号 {{ object.name or 'n/"
 "a' }}）"
+
+#~ msgid "%(ref)s (%(currency_amount)s)"
+#~ msgstr "%(ref)s（%(currency_amount)s）"
+
+#~ msgid ""
+#~ "This will update all taxes and accounts based on the currently selected "
+#~ "fiscal position."
+#~ msgstr "此操作将根据当前选定的应税设定，更新所有税费。"
 
 #~ msgid "Enter an email to get notified"
 #~ msgstr "输入邮箱以接收通知"

@@ -75,6 +75,7 @@
         'o-text-white border-0 o-simulateDarkTheme': store.shouldSimulateDarkTheme(this),
         'bg-700': store.shouldSimulateDarkTheme(this) and !action.tags.includes('DANGER') and !action.tags.includes('SUCCESS') and !action.tags.includes('CALL_LAYOUT'),
         'bg-transparent': store.shouldSimulateDarkTheme(this) and action.tags.includes('CALL_LAYOUT'),
+        'opacity-75 opacity-100-hover': action.tags.includes('CALL_LAYOUT'),
     })"/>
     <t t-set="attrs" t-value="{ 'aria-label': action.name, 'disabled': action.disabledCondition, 'name': action.id, 'data-sequence': action.sequence, 'data-sequence-group': action.sequenceGroup, 'data-sequence-quick': action.sequenceQuick }"/>
     <t t-if="action.component and action.componentCondition" t-component="action.component" t-props="action.componentProps"/>

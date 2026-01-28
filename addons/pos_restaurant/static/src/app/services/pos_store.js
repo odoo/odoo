@@ -76,7 +76,7 @@ patch(PosStore.prototype, {
             for (const order of orders) {
                 // Avoid to block others devices on register screen when no table and name is set.
                 if (!order.table_id && !order.floating_order_name) {
-                    order.floating_order_name = order.pos_reference;
+                    order.floating_order_name = order.floatingOrderName || order.pos_reference;
                 }
             }
         }
@@ -164,6 +164,11 @@ patch(PosStore.prototype, {
     async mergeOrders(sourceOrder, destOrder) {
         let whileGuard = 0;
         const mergedCourses = this.mergeCourses(sourceOrder, destOrder);
+
+        // Sum the guest counts from both orders
+        const totalGuests = sourceOrder.getCustomerCount() + destOrder.getCustomerCount();
+        destOrder.setCustomerCount(totalGuests);
+
         while (sourceOrder.lines.length) {
             const orphanLine = sourceOrder.lines[0];
             const destinationLine = destOrder?.lines?.find((l) => l.canBeMergedWith(orphanLine));
@@ -377,15 +382,21 @@ patch(PosStore.prototype, {
 
         return false;
     },
-    async onDeleteOrder(order) {
-        const orderIsDeleted = await super.onDeleteOrder(...arguments);
-        if (
-            orderIsDeleted &&
-            this.config.module_pos_restaurant &&
-            this.router.state.current !== "TicketScreen"
-        ) {
+    removeOrder(order) {
+        const orderRemoved = super.removeOrder(...arguments);
+        if (this.removeOrderShouldRedirect(order, orderRemoved)) {
             this.navigate("FloorScreen");
         }
+        return orderRemoved;
+    },
+    removeOrderShouldRedirect(order, hasBeenRemoved) {
+        const wasCurrentOrder = this.selectedOrderUuid === order?.uuid;
+        return (
+            hasBeenRemoved &&
+            wasCurrentOrder &&
+            this.config.module_pos_restaurant &&
+            this.router.state.current !== "TicketScreen"
+        );
     },
     async closingSessionNotification(data) {
         await super.closingSessionNotification(...arguments);
@@ -463,18 +474,6 @@ patch(PosStore.prototype, {
     },
     get selectedTable() {
         return this.getOrder()?.table_id;
-    },
-    navigate(routeName, routeParams = {}) {
-        const order = this.getOrder();
-        if (
-            this.config.module_pos_restaurant &&
-            this.router.state.current === "ProductScreen" &&
-            order &&
-            !order.isBooked
-        ) {
-            this.removeOrder(order);
-        }
-        return super.navigate(routeName, routeParams);
     },
     showDefault() {
         const page = this.defaultPage;
@@ -554,6 +553,11 @@ patch(PosStore.prototype, {
         await this.ensureGuestCustomerCount(order);
         await this.sendOrderInPreparationUpdateLastChange(order);
         this.addPendingOrder([order.id]);
+        this.showDefault();
+    },
+    async reprintOrder() {
+        const order = this.getOrder();
+        await this.sendOrderInPreparation(order, { explicitReprint: true });
         this.showDefault();
     },
     async _askForPreparation() {
@@ -1048,7 +1052,28 @@ patch(PosStore.prototype, {
             customer_count: order.getCustomerCount(),
         };
     },
+    continueSplitting(order) {
+        const originalOrderUuid = order.uiState.splittedOrderUuid;
+        order.uiState.screen_data.value = "";
+        this.selectedOrderUuid = originalOrderUuid;
+        const nextOrderScreen = this.getOrder().getCurrentScreenData().name;
+        this.navigate(nextOrderScreen || "ProductScreen", {
+            orderUuid: originalOrderUuid,
+        });
+    },
+    isContinueSplitting(order) {
+        if (this.config.module_pos_restaurant && !this.selectedTable) {
+            const splittedOrder = order.originalSplittedOrder;
 
+            if (!splittedOrder) {
+                return false;
+            }
+
+            return !splittedOrder.finalized;
+        } else {
+            return false;
+        }
+    },
     async validateOrderFast(paymentMethod) {
         const currentOrder = this.getOrder();
         if (!currentOrder) {

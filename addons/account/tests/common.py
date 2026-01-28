@@ -14,21 +14,39 @@ import copy
 import logging
 import re
 
+import difflib
+import pprint
+import requests
 from contextlib import contextmanager
 from functools import wraps
 from itertools import count
 from lxml import etree
-from unittest import SkipTest
+from unittest import SkipTest, TestCase
 from unittest.mock import patch, ANY
 
 _logger = logging.getLogger(__name__)
+
+
+def skip_unless_external(func):
+    """
+    Skip a test unless the test is run in external mode.
+    """
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if 'EXTERNAL_MODE' in (config['test_tags'] or {}):
+            return func(*args, **kwargs)
+        else:
+            raise SkipTest("Skipping this test as it is meant to run in external mode")
+
+    return wrapper
 
 
 class AccountTestInvoicingCommon(ProductCommon):
     # to override by the helper methods setup_country and setup_chart_template to adapt to a localization
     chart_template = False
     country_code = False
-    extra_tags = ['SAVE_XML', *(['-standard', 'external'] if 'EXTERNAL_MODE' in (config['test_tags'] or {}) else [])]
+    extra_tags = ('-standard', 'external') if 'EXTERNAL_MODE' in (config['test_tags'] or {}) else ()
 
     @classmethod
     def safe_copy(cls, record):
@@ -402,8 +420,8 @@ class AccountTestInvoicingCommon(ProductCommon):
     def group_of_taxes(self, taxes, **kwargs):
         self.tax_number += 1
         return self.env['account.tax'].create({
-            **kwargs,
             'name': f"group_({self.tax_number})",
+            **kwargs,
             'amount_type': 'group',
             'children_tax_ids': [Command.set(taxes.ids)],
         })
@@ -411,8 +429,8 @@ class AccountTestInvoicingCommon(ProductCommon):
     def percent_tax(self, amount, **kwargs):
         self.tax_number += 1
         return self.env['account.tax'].create({
-            **kwargs,
             'name': f"percent_{amount}_({self.tax_number})",
+            **kwargs,
             'amount_type': 'percent',
             'amount': amount,
         })
@@ -420,8 +438,8 @@ class AccountTestInvoicingCommon(ProductCommon):
     def division_tax(self, amount, **kwargs):
         self.tax_number += 1
         return self.env['account.tax'].create({
-            **kwargs,
             'name': f"division_{amount}_({self.tax_number})",
+            **kwargs,
             'amount_type': 'division',
             'amount': amount,
         })
@@ -429,8 +447,8 @@ class AccountTestInvoicingCommon(ProductCommon):
     def fixed_tax(self, amount, **kwargs):
         self.tax_number += 1
         return self.env['account.tax'].create({
-            **kwargs,
             'name': f"fixed_{amount}_({self.tax_number})",
+            **kwargs,
             'amount_type': 'fixed',
             'amount': amount,
         })
@@ -439,8 +457,8 @@ class AccountTestInvoicingCommon(ProductCommon):
         self.ensure_installed('account_tax_python')
         self.tax_number += 1
         return self.env['account.tax'].create({
-            **kwargs,
             'name': f"code_({self.tax_number})",
+            **kwargs,
             'amount_type': 'code',
             'amount': 0.0,
             'formula': formula,
@@ -590,6 +608,24 @@ class AccountTestInvoicingCommon(ProductCommon):
         if post:
             payment.action_post()
         return payment
+
+    @classmethod
+    def pay_with_statement_line(cls, move, bank_journal_id, payment_date, amount):
+        statement_line = cls.env['account.bank.statement.line'].create({
+            'payment_ref': 'ref',
+            'journal_id': bank_journal_id,
+            'amount': amount,
+            'date': payment_date,
+        })
+        _st_liquidity_lines, st_suspense_lines, _st_other_lines = statement_line\
+            .with_context(skip_account_move_synchronization=True)\
+            ._seek_for_lines()
+        line = move.line_ids.filtered(lambda line: line.account_type in ('asset_receivable', 'liability_payable'))
+
+        st_suspense_lines.account_id = line.account_id
+        (st_suspense_lines + line).reconcile()
+
+        return {'move_reconciled': line, 'statement_line_reconciled': st_suspense_lines}
 
     def create_line_for_reconciliation(self, balance, amount_currency, currency, move_date, account_1=None, partner=None):
         write_off_account_to_be_reconciled = account_1 if account_1 else self.receivable_account
@@ -743,7 +779,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             .create(kwargs)
 
     @classmethod
-    def _reverse_invoice(cls, invoice, post=False, **reversal_args):
+    def _reverse_invoice(cls, invoice, is_modify=False, post=False, **reversal_args):
         reverse_action_values = (
             cls.env['account.move.reversal']
             .with_context(active_model='account.move', active_ids=invoice.ids)
@@ -751,7 +787,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                 'journal_id': invoice.journal_id.id,
                 **reversal_args,
             })
-            .reverse_moves()
+            .reverse_moves(is_modify=is_modify)
         )
         credit_note = cls.env['account.move'].browse(reverse_action_values['res_id'])
 
@@ -759,6 +795,26 @@ class AccountTestInvoicingCommon(ProductCommon):
             credit_note.action_post()
 
         return credit_note
+
+    @classmethod
+    def _create_debit_note(cls, invoice, post=False, **debit_note_args):
+        cls.ensure_installed('account_debit_note')
+        debit_note_values = (
+            cls.env['account.debit.note']
+            .with_context(
+                active_model='account.move',
+                active_ids=invoice.ids,
+                default_copy_lines=True,
+            )
+            .create(debit_note_args)
+            .create_debit()
+        )
+        debit_note = cls.env['account.move'].browse(debit_note_values['res_id'])
+
+        if post:
+            debit_note.action_post()
+
+        return debit_note
 
     @classmethod
     def _register_payment(cls, record, **kwargs):
@@ -1033,8 +1089,24 @@ class AccountTestInvoicingCommon(ProductCommon):
                 self.assertDictEqual(current_tax_group, expected_tax_group)
 
     ####################################################
-    # Xml Comparison
+    # Xml / JSON Comparison
     ####################################################
+
+    @classmethod
+    def _get_ignore_schema(cls, subfolder: str, ignore_schema_name: str) -> bytes | None:
+        subfolders = subfolder.split('/')
+        ignore_schema_paths = []
+        while subfolders:
+            ignore_schema_paths.append(f"{cls.test_module}/tests/test_files/{'/'.join(subfolders)}/{ignore_schema_name}")
+            subfolders.pop()
+        ignore_schema_paths.append(f"{cls.test_module}/tests/test_files/{ignore_schema_name}")
+
+        for ignore_schema_path in ignore_schema_paths:
+            try:
+                with file_open(ignore_schema_path, 'rb') as f:
+                    return f.read()
+            except FileNotFoundError:
+                pass
 
     @classmethod
     def _get_xml_ignore_schema(cls, subfolder: str) -> etree._Element | None:
@@ -1053,19 +1125,13 @@ class AccountTestInvoicingCommon(ProductCommon):
         :param subfolder: the subfolder of the path of XML file to save/assert. (e.g. "folder_1", "folder_outer/folder_inner")
         :return: _Element object if an `ignore_schema.xml` file is found, otherwise nothing will be returned.
         """
-        subfolders = subfolder.split('/')
-        ignore_schema_paths = []
-        while subfolders:
-            ignore_schema_paths.append(f"{cls.test_module}/tests/test_files/{'/'.join(subfolders)}/ignore_schema.xml")
-            subfolders.pop()
-        ignore_schema_paths.append(f"{cls.test_module}/tests/test_files/ignore_schema.xml")
+        if ignore_schema_bytes := cls._get_ignore_schema(subfolder, 'ignore_schema.xml'):
+            return etree.fromstring(ignore_schema_bytes)
 
-        for ignore_schema_path in ignore_schema_paths:
-            try:
-                with file_open(ignore_schema_path, 'rb') as f:
-                    return etree.fromstring(f.read())
-            except FileNotFoundError:
-                pass
+    @classmethod
+    def _get_json_ignore_schema(cls, subfolder: str) -> dict | list | None:
+        if ignore_schema_bytes := cls._get_ignore_schema(subfolder, 'ignore_schema.json'):
+            return json.loads(ignore_schema_bytes)
 
     @classmethod
     def _clear_xml_content(cls, xml_element: etree._Element, clean_namespaces=True):
@@ -1220,7 +1286,29 @@ class AccountTestInvoicingCommon(ProductCommon):
         optional_subfolder = f"{subfolder}/" if subfolder else ''
         return file_path(f"{self.test_module}/tests/test_files/{optional_subfolder}{file_name}")
 
-    def assert_json(self, content_to_assert: dict, test_name: str, subfolder=''):
+    @classmethod
+    def _apply_json_ignore_schema(cls, data, ignore_schema):
+        assert data.__class__ is ignore_schema.__class__, "Type of data and ignore_schema must match"
+
+        if isinstance(ignore_schema, dict):
+            for schema_key, schema_value in ignore_schema.items():
+                if schema_key in data:
+                    if schema_value == '___ignore___':
+                        data[schema_key] = '___ignore___'
+                    elif data[schema_key]:  # schema_value is a dict or a list, and the corresponding value is not None
+                        cls._apply_json_ignore_schema(data[schema_key], schema_value)
+        elif isinstance(ignore_schema, list):
+            if len(ignore_schema) == 1:
+                # if there's only one dictionary, apply it to every item in the `data` list
+                for data_child in data:
+                    cls._apply_json_ignore_schema(data_child, ignore_schema[0])
+            else:
+                # otherwise, the length of the schema must match the data, and go through them as pairs
+                assert len(ignore_schema) == len(data), "Length of list of ignore_schema and data must match"
+                for i in range(len(ignore_schema)):
+                    cls._apply_json_ignore_schema(data[i], ignore_schema[i])
+
+    def assert_json(self, content_to_assert: dict | list, test_name: str, subfolder=''):
         """
         Helper to save/assert a dictionary to a JSON file located in the corresponding module `test_files`.
         By default, this method will assert the dictionary with the JSON content.
@@ -1230,20 +1318,22 @@ class AccountTestInvoicingCommon(ProductCommon):
         Before asserting, the dictionary will first be serialized to ensure it is in the same format of the saved JSON.
         This means that for example: all tuples within the dictionary will be converted to list, etc.
 
-        :param content_to_assert: dictionary to save or assert to the corresponding test file
+        :param content_to_assert: dictionary | list to save or assert to the corresponding test file
         :param test_name: the test file name
         :param subfolder: the test file subfolder(s), separated by `/` if there is more than one
         """
         json_path = self._get_test_file_path(f"{test_name}.json", subfolder=subfolder)
+        content_to_assert = json.loads(json.dumps(content_to_assert))
+        if json_ignore_schema := self._get_json_ignore_schema(subfolder):
+            self._apply_json_ignore_schema(content_to_assert, json_ignore_schema)
 
         if 'SAVE_JSON' in config['test_tags']:
             with file_open(json_path, 'w') as f:
-                json.dump(content_to_assert, f, indent=4)
+                f.write(json.dumps(content_to_assert, indent=4))
+            _logger.info("Saved the generated JSON content to %s", json_path)
         else:
             with file_open(json_path, 'rb') as f:
                 expected_content = json.loads(f.read())
-
-            content_to_assert = json.loads(json.dumps(content_to_assert))
             self.assertDictEqual(content_to_assert, expected_content)
 
     def assert_xml(
@@ -1308,7 +1398,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             # Save the xml_element content
             with file_open(test_file_path, 'wb') as f:
                 f.write(etree.tostring(xml_element, pretty_print=True, encoding='UTF-8'))
-                _logger.info("Saved the generated xml content to %s", file_name)
+                _logger.info("Saved the generated XML content to %s", file_name)
         else:
             with file_open(test_file_path, 'rb') as f:
                 expected_xml_str = f.read()
@@ -2181,3 +2271,158 @@ class TestAccountMergeCommon(AccountTestInvoicingCommon):
             partner: 'property_account_receivable_id',
             attachment: 'res_id',
         }
+
+
+class PatchRequestsMixin(TestCase):
+    """ Mock external HTTP requests made through the `requests` library.
+    Assert expected requests and provide mocked responses in a record/replay fashion.
+    """
+
+    external_mode = False
+
+    @contextmanager
+    def assertRequests(self, expected_requests_and_responses: list[tuple[dict, requests.Response]]):
+        """ Assert expected requests and provide mocked responses in a record/replay fashion.
+
+        Patches `requests.Session.request`, which is the main method internally used by the
+        `requests` library to perform HTTP requests, asserts the request contents and serves
+        the provided mocked responses.
+
+        To transform the mocked test into a live test, set the `external_mode` attribute to:
+        - True to let the requests through;
+        - 'warn' to let the requests through but issue a warning if the requests / responses
+          differ from the expected requests / mocked responses.
+
+        :param expected_requests_and_responses: A list of tuples, each containing
+                                                an expected request and a mocked response.
+                                                The expected request is a dictionary of arguments
+                                                passed to `requests.Session.request`,
+                                                and the mocked response is an object that supports
+                                                the `requests.Response` interface.
+
+        Example usage:
+        ```
+        mocked_response = requests.Response()
+        mocked_response.status_code = 200
+        mocked_response._content = json.dumps({'message': 'Success'})
+
+        with self.assertRequestsMade([
+            (
+                {'method': 'POST', 'url': 'https://example.com/send', 'json': {'message': 'Hello World!'}},
+                mocked_response,
+            ),
+        ]):
+            response = requests.post('https://example.com/send', json={'message': 'Hello World!'})
+        ```
+        """
+        if self.external_mode is True:
+            yield  # Full external mode: don't patch `requests.Session.request` at all
+        elif self.external_mode == 'warn':
+            # External mode with warnings
+            yield from self.patch_requests_warn(expected_requests_and_responses)
+        else:
+            # Mocked mode
+            yield from self.assertMockRequests(expected_requests_and_responses)
+
+    def assertMockRequests(self, expected_requests_and_responses):
+        """ Mock requests, assert that the requests are as expected and serve a mocked response. """
+        expected_requests_and_responses_iter = iter(expected_requests_and_responses)
+
+        def mock_request(session, method, url, **kwargs):
+            actual_request = {
+                'method': method,
+                'url': url,
+                **kwargs,
+            }
+
+            try:
+                expected_request, mocked_response = next(expected_requests_and_responses_iter)
+            except StopIteration:
+                self.fail("Unexpected request: %s" % actual_request)
+
+            self.assertRequestsEqual(actual_request, expected_request)
+            return mocked_response
+
+        with patch.object(requests.Session, 'request', new=mock_request):
+            yield
+
+        next_expected_request, _ = next(expected_requests_and_responses_iter, (None, None))
+        if next_expected_request is not None:
+            self.fail("Expected request not made: %s" % next_expected_request)
+
+    def patch_requests_warn(self, expected_requests_and_responses):
+        """ Let requests pass through but warn if the request or the response differ from
+        what is expected.
+        """
+        expected_requests_and_responses_iter = iter(expected_requests_and_responses)
+        original_request_method = requests.Session.request
+
+        def request_and_warn(session, method, url, **kwargs):
+            actual_request = {
+                'method': method,
+                'url': url,
+                **kwargs,
+            }
+
+            try:
+                expected_request, expected_response = next(expected_requests_and_responses_iter)
+            except StopIteration:
+                _logger.warning("Unexpected request: %s", actual_request)
+                return original_request_method(session, method, url, **kwargs)
+
+            try:
+                self.assertRequestsEqual(actual_request, expected_request)
+            except AssertionError as e:
+                _logger.warning("Request differs from expected request: \n%s", e.args[0])
+
+            actual_response = original_request_method(session, method, url, **kwargs)
+
+            if diff_msg := self.difference_between_responses(actual_response, expected_response):
+                _logger.warning('Response differs from expected response:\n%s', diff_msg)
+
+            return actual_response
+
+        with patch.object(requests.Session, 'request', request_and_warn):
+            yield
+
+        for expected_request, _ in expected_requests_and_responses_iter:
+            _logger.warning("Expected request not made: %s", expected_request)
+
+    def assertRequestsEqual(self, actual_request, expected_request):
+        """ Method used to validate that the actual request is identical to the expected one.
+            Can be overridden to customize the validation. """
+        return self.assertEqual(actual_request, expected_request)
+
+    def difference_between_responses(self, actual_response, expected_response):
+        """ Method used by the `patch_requests_warn` method to know whether
+            the actual response is identical to the mocked response when live-testing.
+            Can be overridden to customize this behaviour. """
+
+        def generate_diff(d1, d2):
+            return '\n'.join(difflib.ndiff(
+                pprint.pformat(d1).splitlines(),
+                pprint.pformat(d2).splitlines())
+            )
+
+        if (
+            actual_response.status_code == expected_response.status_code
+            and actual_response.content == expected_response.content
+        ):
+            return None
+
+        diff_msg = ""
+        if actual_response.status_code != expected_response.status_code:
+            diff_msg += 'Status code: %s != %s\n' % (actual_response.status_code, expected_response.status_code)
+
+        if actual_response.content != expected_response.content:
+            try:
+                diff = generate_diff(actual_response.json(), expected_response.json())
+                diff_msg += 'Content: \n%s' % diff
+            except (TypeError, requests.exceptions.InvalidJSONError):
+                try:
+                    diff = generate_diff(actual_response.text, expected_response.text)
+                    diff_msg += 'Content: \n%s' % diff
+                except (TypeError, requests.exceptions.InvalidJSONError):
+                    diff_msg += 'Content: \n%s\n != \n%s' % (actual_response.content, expected_response.content)
+
+        return diff_msg

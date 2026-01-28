@@ -13,15 +13,15 @@
 # Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025.
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Yoshi Tashiro <tashiro@quartile.co>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-12-23 08:11+0000\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2026-01-23 09:26+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/mrp/ja/>"
 "\n"
@@ -45,8 +45,8 @@ msgid ""
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
 " * ドラフト: 製造オーダはまだ確認されていません。\n"
-" * 確認済: 製造オーダが確認済で、在庫規則および構成品の再オーダがトリガされて"
-"います。\n"
+" * 確認済: 製造オーダが確認済で、在庫ルールおよび構成品の再オーダがトリガされ"
+"ています。\n"
 " * 進行中: 製造が開始されています。(製造オーダ又は作業オーダ上)\n"
 " * クローズ対象: 製品が完成し、製造オーダをクローズする必要があります。\n"
 " * 完了: 製造オーダがクローズされ、在庫移動が計上されています。\n"
@@ -713,8 +713,7 @@ msgstr ""
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
-msgstr ""
-"キットタイプ部品表のあるプロダクトは再オーダ規則を持つことはできません。"
+msgstr "キットタイプ部品表のあるプロダクトは再オーダルールを持つことはできません。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__action
@@ -763,7 +762,7 @@ msgstr "活動ステータス"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__activity_type_icon
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活動種別アイコン"
+msgstr "活動タイプアイコン"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__cost_mode__actual
@@ -1093,7 +1092,7 @@ msgstr "利用可能プロダクト"
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workcenter_productivity_loss_type__loss_type__availability
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "Availability"
-msgstr "利用可能性"
+msgstr "可用性"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
@@ -1329,7 +1328,7 @@ msgstr "作業区をブロック"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Blocked"
-msgstr "不許可"
+msgstr "ブロック中"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__blocked_by_operation_ids
@@ -2435,7 +2434,8 @@ msgstr "ユニット毎の作業時間"
 msgid ""
 "Each operation can have multiple steps (scan products, view instructions) or "
 "even quality checks."
-msgstr "各オペレーションには、複数のステップ(スキャンや手順確認）、品質チェックなどを"
+msgstr ""
+"各オペレーションには、複数のステップ(スキャンや手順確認）、品質チェックなどを"
 "設定できます。"
 
 #. module: mrp
@@ -2458,7 +2458,8 @@ msgstr "有効性カテゴリ"
 msgid ""
 "Either the Bill of Materials set directly or the one computed to be used by "
 "this replenishment"
-msgstr "この補充で使用される、直接設定された部品表、または計算によって決定された部品"
+msgstr ""
+"この補充で使用される、直接設定された部品表、または計算によって決定された部品"
 "表のいずれか"
 
 #. module: mrp
@@ -2927,7 +2928,7 @@ msgstr "チェックした場合は、新しいメッセージに注意が必要
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__message_has_error
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "選択されている場合、一部のメッセージで配信エラーが発生しています。"
+msgstr "有効にすると、一部のメッセージに配信エラーが発生します。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__propagate_cancel
@@ -3545,12 +3546,12 @@ msgstr "製造(1ステップ)"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_mto_pull_id
 msgid "Manufacture MTO Rule"
-msgstr "製造MTO（受注生産）規則"
+msgstr "製造MTO（受注生産）ルール"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_pull_id
 msgid "Manufacture Rule"
-msgstr "製造規則"
+msgstr "製造ルール"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__normal
@@ -3759,7 +3760,7 @@ msgstr "メッセージ"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr "最小在庫規則"
+msgstr "最小在庫ルール"
 
 #. module: mrp
 #. odoo-javascript
@@ -3958,8 +3959,9 @@ msgstr "作業予定の作業オーダはありません！"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid ""
 "No workorder currently in progress. Click to mark work center as blocked."
-msgstr "現在進行中の作業オーダはありません。クリックで作業区をブロックステータスにマ"
-"ークします。"
+msgstr ""
+"現在進行中の作業オーダはありません。クリックで作業区をブロックステータスに"
+"マークします。"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__priority__0
@@ -4139,7 +4141,8 @@ msgstr "手持在庫"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
 "Only manufacturing orders in either a draft or confirmed state can be %s."
-msgstr "ドラフトステータスまたは確定ステータスの製造オーダーのみ%sであることが可能で"
+msgstr ""
+"ドラフトステータスまたは確定ステータスの製造オーダーのみ%sであることが可能で"
 "す。"
 
 #. module: mrp
@@ -4248,7 +4251,7 @@ msgstr "オーダ"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__orderpoint_id
 msgid "Orderpoint"
-msgstr "オーダポイント"
+msgstr "補充ルール"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__order_ids
@@ -4374,7 +4377,7 @@ msgstr "構成品をピッキング、製造しプロダクトを格納(3ステ�
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_mto_pull_id
 msgid "Picking Before Manufacturing MTO Rule"
-msgstr "製造MTO規則前のピッキング"
+msgstr "製造MTOルール前のピッキング"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_type_id
@@ -4900,7 +4903,7 @@ msgstr "品質ワークシート"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__quant_ids
 msgid "Quant"
-msgstr "Quant"
+msgstr "在庫数量"
 
 #. module: mrp
 #. odoo-javascript
@@ -5177,7 +5180,8 @@ msgstr "工順作業区"
 msgid ""
 "Run your Shop Floor with work orders for each operation defined on your bill "
 "of material."
-msgstr "部品表に定義された各オペレーションに対して作業オーダを発行し、製造現場を運用"
+msgstr ""
+"部品表に定義された各オペレーションに対して作業オーダを発行し、製造現場を運用"
 "しましょう。"
 
 #. module: mrp
@@ -5585,7 +5589,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "活動に基づくステータス\n"
-"遅延: 期限が既に過ぎています\n"
+"期限超過：期限日がすでに過ぎています\n"
 "今日: 活動日は今日です\n"
 "予定: 将来の活動。"
 
@@ -5597,7 +5601,7 @@ msgstr "製造工程後のピッキング"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_rule_id
 msgid "Stock After Manufacturing Rule"
-msgstr "製造規則後の在庫"
+msgstr "製造ルール後の在庫"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_availability
@@ -5632,7 +5636,7 @@ msgstr "在庫補充レポート"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_rule
 msgid "Stock Rule"
-msgstr "在庫規則"
+msgstr "在庫ルール"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_loc_id
@@ -5642,7 +5646,7 @@ msgstr "製造ロケーション後の在庫"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr "在庫規則レポート"
+msgstr "在庫ルールレポート"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_replenishment_info
@@ -5800,7 +5804,8 @@ msgid ""
 "The percentage of the final production cost for this by-product line "
 "(divided between the quantity produced).The total of all by-products' cost "
 "share must be less than or equal to 100."
-msgstr "この副産品の最終生産原価に占める割合(製造済数量で割ったもの)。すべての副産品"
+msgstr ""
+"この副産品の最終生産原価に占める割合(製造済数量で割ったもの)。すべての副産品"
 "の原価割合の合計は100以下である必要があります。"
 
 #. module: mrp
@@ -6049,8 +6054,9 @@ msgstr "準備のための時間（分）"
 msgid ""
 "Time in minutes:- In fixed mode, time used- In computed mode, supposed first "
 "time when there aren't any work orders yet"
-msgstr "時間(分):– 固定モードでは、使用される時間– "
-"計算モードでは、作業指図がまだ存在しないときに仮定される初回の時間"
+msgstr ""
+"時間(分):– 固定モードでは、使用される時間– 計算モードでは、作業指図がまだ存在"
+"しないときに仮定される初回の時間"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tz
@@ -6593,7 +6599,8 @@ msgstr ""
 "調達が、同じオペレーションタイプが設定された'生産'ルートを持つとき、同じオペ"
 "レーションタイプの部品表を使用して、そのプロダクトの製造オーダの作成を試みま"
 "す。そうでない場合、オペレーションタイプは部品表検索では考慮されません。これ"
-"により、異なる部品表で異なる製造オーダのトリガとなる在庫規則を定義できます。"
+"により、異なる部品表で異なる製造オーダのトリガとなる在庫ルールを定義できます"
+"。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__manual_consumption
@@ -6914,9 +6921,8 @@ msgstr ""
 msgid ""
 "You can not create a kit-type bill of materials for products that have at "
 "least one reordering rule."
-msgstr ""
-"少なくとも1つの再オーダ規則を持つプロダクト用のキットタイプ部品表を作成するこ"
-"とはできません。"
+msgstr "少なくとも1つの再オーダルールを持つプロダクト用のキットタイプ部品表を作成する"
+"ことはできません。"
 
 #. module: mrp
 #. odoo-python
@@ -6967,7 +6973,8 @@ msgstr "すでに完了している製造オーダはキャンセルできませ
 msgid ""
 "You cannot change the quantity produced of a work order that is in done or "
 "cancel state."
-msgstr "完了またはキャンセル状態の作業オーダの製造済数量を変更することはできません。"
+msgstr ""
+"完了またはキャンセル状態の作業オーダの製造済数量を変更することはできません。"
 
 #. module: mrp
 #. odoo-python
@@ -7135,7 +7142,8 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
 "You need to generate Lot/Serial Number(s) to mark as done some productions"
-msgstr "一部の製造を完了とするには、ロット/シリアル番号を生成する必要があります"
+msgstr ""
+"一部の製造を完了とするには、ロット/シリアル番号を生成する必要があります"
 
 #. module: mrp
 #. odoo-python
@@ -7189,7 +7197,8 @@ msgstr "キャンセル済"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
 msgid "copy paste a list and/or use Generate"
-msgstr "リストをコピー＆ペーストするおよび/または「生成」機能を使用してください"
+msgstr ""
+"リストをコピー＆ペーストするおよび/または「生成」機能を使用してください"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view

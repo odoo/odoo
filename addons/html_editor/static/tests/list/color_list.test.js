@@ -17,6 +17,14 @@ test("should apply color to completely selected list item", async () => {
     });
 });
 
+test("should apply text color class to completely selected list item", async () => {
+    await testEditor({
+        contentBefore: "<ol><li>[abc]</li><li>def</li></ol>",
+        stepFunction: setColor("text-o-color-1", "color"),
+        contentAfter: '<ol><li class="text-o-color-1">[abc]</li><li>def</li></ol>',
+    });
+});
+
 test("should apply color to completely selected multiple list items", async () => {
     await testEditor({
         contentBefore: "<ul><li>[abc</li><li>def]</li></ul>",
@@ -26,12 +34,30 @@ test("should apply color to completely selected multiple list items", async () =
     });
 });
 
+test("should apply text color class to fully selected multiple list items", async () => {
+    await testEditor({
+        contentBefore: "<ul><li>[abc</li><li>def]</li></ul>",
+        stepFunction: setColor("text-o-color-1", "color"),
+        contentAfter:
+            '<ul><li class="text-o-color-1">[abc</li><li class="text-o-color-1">def]</li></ul>',
+    });
+});
+
 test("should apply color to completely selected and partially selected list items", async () => {
     await testEditor({
         contentBefore: "<ol><li>[abc</li><li>def</li><li>gh]i</li></ol>",
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfter:
             '<ol><li style="color: rgb(255, 0, 0);">[abc</li><li style="color: rgb(255, 0, 0);">def</li><li><font style="color: rgb(255, 0, 0);">gh]</font>i</li></ol>',
+    });
+});
+
+test("should apply text color class to completely selected and partially selected list items", async () => {
+    await testEditor({
+        contentBefore: "<ol><li>[abc</li><li>def</li><li>gh]i</li></ol>",
+        stepFunction: setColor("text-o-color-1", "color"),
+        contentAfter:
+            '<ol><li class="text-o-color-1">[abc</li><li class="text-o-color-1">def</li><li><font class="text-o-color-1">gh]</font>i</li></ol>',
     });
 });
 

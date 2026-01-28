@@ -80,7 +80,14 @@ export class LinkSelectionPlugin extends Plugin {
     }
 
     isLinkEligibleForZwnbsp(link) {
+        const { anchorNode, focusNode } = this.dependencies.selection.getEditableSelection();
+        // we can't rely on `o_link_in_selection` class because it can be
+        // added to siblings while splitting link element.
+        const isLinkSelected = link.contains(anchorNode) || link.contains(focusNode);
+        const linkHasContentOrSelected =
+            isLinkSelected || link.textContent.replaceAll("\ufeff", "");
         return (
+            linkHasContentOrSelected &&
             link.isContentEditable &&
             link.parentElement.isContentEditable &&
             this.editable.contains(link) &&
@@ -116,7 +123,8 @@ export class LinkSelectionPlugin extends Plugin {
 
         if (
             singleLinkInSelection &&
-            this.isLinkEligibleForVisualIndication(singleLinkInSelection)
+            this.isLinkEligibleForVisualIndication(singleLinkInSelection) &&
+            this.document.activeElement === this.editable
         ) {
             singleLinkInSelection.classList.add("o_link_in_selection");
         }

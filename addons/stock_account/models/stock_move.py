@@ -205,19 +205,24 @@ class StockMove(models.Model):
         else:
             debit_acc = self.location_dest_id.valuation_account_id
             credit_acc = self.product_id._get_product_accounts()['stock_valuation']
+        value = self._get_aml_value()
         return [{
             'account_id': credit_acc.id,
-            'name': self.reference,
+            'name': self.reference + ' - ' + self.product_id.name,
             'debit': 0,
-            'credit': self.value,
+            'credit': value,
             'product_id': self.product_id.id,
         }, {
             'account_id': debit_acc.id,
-            'name': self.reference,
-            'debit': self.value,
+            'name': self.reference + ' - ' + self.product_id.name,
+            'debit': value,
             'credit': 0,
             'product_id': self.product_id.id,
         }]
+
+    def _get_aml_value(self):
+        self.ensure_one()
+        return self.value
 
     def _get_analytic_distribution(self):
         return {}
@@ -228,7 +233,16 @@ class StockMove(models.Model):
             return 0
         total_value = sum(self.mapped('value'))
         total_qty = sum(m._get_valued_qty() for m in self)
-        return total_value / total_qty if total_qty else self.product_id.standard_price
+        return total_value / total_qty if total_qty else 0
+
+    def _get_cogs_price_unit(self, quantity=0):
+        """ Returns the COGS unit price to value this stock move
+        quantity should be given in product uom """
+
+        total_qty = sum(m._get_valued_qty() for m in self)
+        if not total_qty:
+            return 0
+        return sum(self.mapped('value')) / total_qty if self.product_id.cost_method == 'fifo' else self.product_id.standard_price
 
     @api.model
     def _get_valued_types(self):
@@ -287,8 +301,7 @@ class StockMove(models.Model):
                 move.value = move.product_id.with_context(fifo_qty_already_processed=fifo_qty_processed[move.product_id])._run_fifo(valued_qty)
                 fifo_qty_processed[move.product_id] += valued_qty
             else:
-                qty = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
-                move.value = move.product_id.standard_price * qty
+                move.value = move.product_id.standard_price * move._get_valued_qty()
 
         # Recompute the standard price
         self.env['product.product'].browse(products_to_recompute)._update_standard_price()
@@ -401,7 +414,7 @@ class StockMove(models.Model):
         domain = Domain([('move_id', '=', self.id)])
         if at_date:
             domain &= Domain([('date', '<=', at_date)])
-        manual_value = self.env['product.value'].search(domain, order="date desc, id desc", limit=1)
+        manual_value = self.env['product.value'].sudo().search(domain, order="date desc, id desc", limit=1)
         if manual_value:
             valuation_data['value'] = manual_value.value
             valuation_data['quantity'] = quantity

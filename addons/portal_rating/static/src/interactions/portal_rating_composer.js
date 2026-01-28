@@ -92,20 +92,13 @@ export class RatingPopupComposer extends Interaction {
     }
 
     /**
-     * @param {OdooEvent|Object} eventOrData
+     * @param {Object} data
      */
-    onReloadRatingPopupComposer(eventOrData) {
-        const data = eventOrData.data || eventOrData;
+    onReloadRatingPopupComposer(data) {
         // Refresh the internal state of the widget
-        this.rating_avg = data.rating_avg || data["mail.thread"][0].rating_avg;
-        this.rating_count = data.rating_count || data["mail.thread"][0].rating_count;
-        this.rating_value = data.rating_value || data["rating.rating"]?.[0].rating;
-
-        // Clean the dictionary
-        delete data.rating_avg;
-        delete data.rating_count;
-        delete data.rating_value;
-
+        this.rating_avg = data["mail.thread"][0].rating_avg;
+        this.rating_count = data["mail.thread"][0].rating_count;
+        this.rating_value = data["rating.rating"]?.[0].rating;
         this.updateOptions(data);
         this.reloadRatingPopupComposer();
     }
@@ -114,23 +107,20 @@ export class RatingPopupComposer extends Interaction {
      * @param {Object} data
      */
     updateOptions(data) {
-        const message = data["mail.message"] && data["mail.message"][0];
-        const defaultOptions = {
-            default_message:
-                data.default_message || (message && message.body && message.body[1].replace(/<[^>]+>/g, "")),
+        const message = data["mail.message"][0];
+        if (!message.author_id || message.author_id !== this.options.partner_id) {
+            return;
+        }
+        const body = message.body[1]?.replace(/<[^>]+>/g, "");
+        Object.assign(this.options, {
+            default_message: body,
             default_message_id:
-                data.default_message_id ||
-                (message &&
-                    (message.body && message.body[1].replace(/<[^>]+>/g, "") ||
-                        message.attachment_ids.length ||
-                        message.rating_id) &&
-                    message.id),
-            default_attachment_ids: data.default_attachment_ids || data["ir.attachment"],
-            default_rating_value:
-                data.default_rating_value || this.rating_value || 4,
-        };
-        Object.assign(data, defaultOptions);
-        this.options = Object.assign(this.options, data);
+                body || message.attachment_ids?.length || message.rating_id
+                    ? message.id
+                    : undefined,
+            default_attachment_ids: data["ir.attachment"],
+            default_rating_value: this.rating_value || 4,
+        });
     }
 }
 

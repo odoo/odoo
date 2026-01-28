@@ -123,14 +123,10 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
     def test_invoice_tax_reverse_charge(self):
         tax_21 = self.percent_tax(21.0)
         tax_minus_10_67 = self.percent_tax(-10.67)
-        product_1 = self._create_product(lst_price=1000.0, taxes_id=tax_21)
-        product_2 = self._create_product(lst_price=100.0, taxes_id=tax_minus_10_67)
-        invoice = self._create_invoice(
+        product = self._create_product(lst_price=1000.0, taxes_id=tax_21 + tax_minus_10_67)
+        invoice = self._create_invoice_one_line(
+            product_id=product,
             partner_id=self.partner_be,
-            invoice_line_ids=[
-                self._prepare_invoice_line(product_id=product_1),
-                self._prepare_invoice_line(product_id=product_2),
-            ],
             post=True,
         )
 
@@ -141,6 +137,7 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         """ Ensure the recycling contribution taxes are turned into allowance/charges at the document line level. """
         tax_recupel = self.fixed_tax(1.0, name="RECUPEL", include_base_amount=True)
         tax_auvibel = self.fixed_tax(2.0, name="AUVIBEL", include_base_amount=True)
+        tax_bebat = self.fixed_tax(3.0, name="BEBAT", include_base_amount=True)
         tax_21 = self.percent_tax(21.0)
         invoice = self._create_invoice(
             partner_id=self.partner_be,
@@ -156,6 +153,11 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
                     quantity=4.0,
                     discount=25.0,
                     tax_ids=tax_auvibel + tax_21,
+                ),
+                self._prepare_invoice_line(
+                    product_id=self.product_a,
+                    price_unit=97.0,
+                    tax_ids=tax_bebat + tax_21,
                 ),
             ],
             post=True,
@@ -216,6 +218,32 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
 
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_fixed_tax_emptying_turned_as_extra_invoice_lines')
+
+    def test_invoice_custom_tax_emptying_turned_as_extra_invoice_lines(self):
+        """ Ensure the emptying taxes (a.k.a 'vidange') are turned into extra invoice lines inside the xml. """
+        tax_emptying = self.python_tax("quantity * 0.10", name="Vidange")
+        tax_21 = self.percent_tax(21.0)
+        invoice = self._create_invoice(
+            partner_id=self.partner_be,
+            invoice_line_ids=[
+                self._prepare_invoice_line(
+                    product_id=self.product_a,
+                    price_unit=100.0,
+                    quantity=4.0,
+                    tax_ids=tax_emptying + tax_21,
+                ),
+                self._prepare_invoice_line(
+                    product_id=self.product_a,
+                    price_unit=100.0,
+                    quantity=1.0,
+                    tax_ids=tax_emptying + tax_21,
+                ),
+            ],
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_custom_tax_emptying_turned_as_extra_invoice_lines')
 
     def test_invoice_manual_tax_amount(self):
         tax_12 = self.percent_tax(12.0)
@@ -379,12 +407,10 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_sent_to_luxembourg_dig')
 
-    def test_export_gln(self):
-        """ GLN was added in a fixup module account_add_gln. """
-        # TODO master: clean that skiptest, when the module account_add_gln is merged with account
-        if 'global_location_number' not in self.partner_be._fields:
-            self.skipTest("Fixup module with GLN not installed.")
+    def test_invoice_sent_to_partner_with_gln(self):
+        self.ensure_installed('account_add_gln')
         self.partner_be.global_location_number = "222222222222"
+
         tax_21 = self.percent_tax(21.0)
         product = self._create_product(
             lst_price=100.0,
@@ -397,7 +423,7 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         )
 
         self._generate_invoice_ubl_file(invoice)
-        self._assert_invoice_ubl_file(invoice, 'test_invoice_with_gln')
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_sent_to_partner_with_gln')
 
     def test_invoice_send_and_print_additional_documents(self):
         """ Ensure an additional document is added to the UBL under AdditionalDocumentReference. """
@@ -444,3 +470,22 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         wizard.action_send_and_print()
 
         self._assert_invoice_ubl_file(invoice, 'test_invoice_send_and_print_additional_documents')
+
+    def test_invoice_negative_discount_upsell(self):
+        """ Ensure a negative discount (upsell) is correctly handled as a Charge
+        with the appropriate UNCL 7161 reason code (ADK) instead of an Allowance.
+        """
+        tax_21 = self.percent_tax(21.0)
+        product = self._create_product(lst_price=10.0, taxes_id=tax_21)
+        invoice = self._create_invoice_one_line(
+            product_id=product,
+            quantity=10.0,
+            price_unit=5.76,
+            discount=-1.09,
+            partner_id=self.partner_be,
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_negative_discount_upsell')

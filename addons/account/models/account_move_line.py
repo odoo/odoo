@@ -1171,29 +1171,35 @@ class AccountMoveLine(models.Model):
             line.reconciled_lines_excluding_exchange_diff_ids = all_lines - excluded_ids
 
     def _compute_parent_id(self):
+        parent_id_vals_to_lines = defaultdict(list)
         for move, lines in self.grouped('move_id').items():
             if not move:
-                lines.parent_id = False
+                parent_id_vals_to_lines[False].extend(lines._ids)
                 continue
             last_section = False
             last_sub = False
             for line in move.line_ids.sorted('sequence'):
+                value = False
                 if line.display_type == 'line_section':
                     last_section = line
-                    line.parent_id = False
+                    value = False
                     last_sub = False
                 elif line.display_type == 'line_subsection':
-                    line.parent_id = last_section
+                    value = last_section
                     last_sub = line
                 elif line.display_type in {'line_note', 'product'}:
-                    line.parent_id = last_sub or last_section
+                    value = last_sub or last_section
                 else:
-                    line.parent_id = False
+                    value = False
+                parent_id_vals_to_lines[value].append(line.id)
 
-    @api.depends('move_id.move_type')
+        for val, record_ids in parent_id_vals_to_lines.items():
+            self.browse(record_ids).parent_id = val
+
+    @api.depends('journal_id.type')
     def _compute_no_followup(self):
         for aml in self:
-            aml.no_followup = aml.move_id.is_entry() and not aml.move_id.origin_payment_id
+            aml.no_followup = aml.journal_id.type == 'general'
 
     def _inverse_no_followup(self):
         # If one line of an invoice gets excluded from or included in the follow up report, we want all
@@ -3180,7 +3186,7 @@ class AccountMoveLine(models.Model):
 
         payment_date = payment_date or fields.Date.context_today(self)
 
-        term_lines = self.sorted(key=lambda line: (line.date_maturity, line.date))
+        term_lines = self.sorted(key=lambda line: (line.date_maturity or date.max, line.date))
         sign = move.direction_sign
         installments = []
         first_installment_mode = False

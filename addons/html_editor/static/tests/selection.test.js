@@ -15,6 +15,9 @@ import { MAIN_PLUGINS } from "../src/plugin_sets";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
 import { insertText, tripleClick } from "./_helpers/user_actions";
+import { withSequence } from "@html_editor/utils/resource";
+import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import { SelectionPlugin } from "@html_editor/core/selection_plugin";
 
 test("getEditableSelection should work, even if getSelection returns null", async () => {
     const { editor } = await setupEditor("<p>a[b]</p>");
@@ -129,6 +132,29 @@ describe("documentSelectionIsInEditable", () => {
         selectionData = editor.shared.selection.getSelectionData();
         expect(selectionData.documentSelectionIsInEditable).toBe(false);
     });
+});
+
+test("getSelectionData should validate the offsets of activeSelection", async () => {
+    const { editor } = await setupEditor("<p>a[b]</p>");
+    let selection = editor.shared.selection.getEditableSelection();
+    expect(selection.startOffset).toBe(1);
+    expect(selection.endOffset).toBe(2);
+
+    // We simulate getSelection() returning null while activeSelection has an
+    // offset pointing to a deleted element. This is an edge case that occurs in
+    // Chrome (see commit message).
+    patchWithCleanup(document, {
+        getSelection: () => null,
+    });
+    patchWithCleanup(SelectionPlugin.prototype, {
+        getSelectionData() {
+            this.activeSelection = { ...this.activeSelection, anchorOffset: 5 };
+            return super.getSelectionData();
+        },
+    });
+
+    selection = editor.shared.selection.getEditableSelection();
+    expect(selection.anchorOffset).toBe(0);
 });
 
 test("setEditableSelection should not crash if getSelection returns null", async () => {
@@ -1188,4 +1214,109 @@ test("should not autoscroll if selection is partially visible in viewport", asyn
     // Ensure that extending selection did not trigger any auto-scrolling.
     expect(scrollableElement.scrollTop).toBe(scrollTop);
     expect(isInViewPort(lastParagraph)).toBe(false);
+});
+
+describe("crash fixes", () => {
+    test("Should survive disconnected anchor", async () => {
+        class TestPlugin extends Plugin {
+            static id = "test";
+            resources = {
+                selectionchange_handlers: withSequence(-1, (selectionData) => {
+                    const { anchorNode } = selectionData.editableSelection;
+                    anchorNode.parentElement.remove();
+                }),
+            };
+        }
+
+        const { el } = await setupEditor("<p>x<span>a[]</span></p>", {
+            config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+        });
+        expect(getContent(el)).toBe("<p>x[]</p>");
+    });
+});
+
+describe("Preserve selection", () => {
+    const isSameCursor = (cursor1, cursor2) =>
+        cursor1.anchor.node === cursor2.anchor.node &&
+        cursor1.anchor.offset === cursor2.anchor.offset &&
+        cursor1.focus.node === cursor2.focus.node &&
+        cursor1.focus.offset === cursor2.focus.offset;
+
+    test("Should properly sync cursors (1)", async () => {
+        const { editor, el } = await setupEditor(
+            `<p><span class="a">a</span><span class="b">b</span></p>`
+        );
+        const [span1, span2] = el.querySelectorAll("span");
+        setSelection({
+            anchorNode: span1,
+            anchorOffset: 0,
+            focusNode: span2,
+            focusOffset: 0,
+        });
+        const c1 = editor.shared.selection.preserveSelection();
+        const c2 = editor.shared.selection.preserveSelection();
+        c1.update(callbacksForCursorUpdate.remove(span1));
+        c2.update(callbacksForCursorUpdate.remove(span1));
+        span1.remove();
+        c1.restore();
+        c2.restore();
+        expect(isSameCursor(c1, c2)).toBe(true);
+    });
+
+    test("Should properly sync cursors (2)", async () => {
+        const { editor, el } = await setupEditor(
+            `<p><span class="a">a</span><span class="b">b</span></p>`
+        );
+        const [span1, span2] = el.querySelectorAll("span");
+        setSelection({
+            anchorNode: span1,
+            anchorOffset: 0,
+            focusNode: span2,
+            focusOffset: 0,
+        });
+        const c1 = editor.shared.selection.preserveSelection();
+        const c2 = editor.shared.selection.preserveSelection();
+        c1.update(callbacksForCursorUpdate.remove(span1));
+        span1.remove();
+        c1.restore();
+        expect(isSameCursor(c1, c2)).toBe(true);
+    });
+
+    test("Should properly sync cursors (3)", async () => {
+        const { editor, el } = await setupEditor(
+            `<p><span class="a">a</span><span class="b">b</span></p>`
+        );
+        const [span1, span2] = el.querySelectorAll("span");
+        setSelection({
+            anchorNode: span1,
+            anchorOffset: 0,
+            focusNode: span2,
+            focusOffset: 0,
+        });
+        const c1 = editor.shared.selection.preserveSelection();
+        const c2 = editor.shared.selection.preserveSelection();
+        c1.update(callbacksForCursorUpdate.remove(span1));
+        span1.remove();
+        c2.restore();
+        expect(isSameCursor(c1, c2)).toBe(true);
+    });
+
+    test("Should properly sync cursors (4)", async () => {
+        const { editor, el } = await setupEditor(
+            `<p><span class="a">a</span><span class="b">b</span></p>`
+        );
+        const [span1, span2] = el.querySelectorAll("span");
+        setSelection({
+            anchorNode: span1,
+            anchorOffset: 0,
+            focusNode: span2,
+            focusOffset: 0,
+        });
+        const c1 = editor.shared.selection.preserveSelection();
+        const c2 = editor.shared.selection.preserveSelection();
+        c2.update(callbacksForCursorUpdate.remove(span1));
+        span1.remove();
+        c1.restore();
+        expect(isSameCursor(c1, c2)).toBe(true);
+    });
 });

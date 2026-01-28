@@ -558,10 +558,13 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(mo2.move_raw_ids.filtered(lambda m: m.product_id == p2).product_qty, 4)
         self.assertEqual(mo3.move_raw_ids.filtered(lambda m: m.product_id == p2).product_qty, 2)
 
+        location = self.env['stock.location'].search([], limit=1)
+        mo.production_group_id.production_ids.location_final_id = location
         # Merge them back
         expected_origin = ",".join([mo1.name, mo2.name, mo3.name])
         action = (mo1 + mo2 + mo3).action_merge()
         mo = self.env[action['res_model']].browse(action['res_id'])
+        self.assertEqual(mo.location_final_id, location)
         # Check origin & initial quantity
         self.assertEqual(mo.origin, expected_origin)
         self.assertEqual(mo.product_qty, 10)
@@ -916,6 +919,33 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertRecordValues(mo_all_produced, [{'state': 'done', 'qty_produced': product_qty, 'mrp_production_backorder_count': 1, 'priority': '0'}])
         self.assertRecordValues(mo_ask, [{'state': 'done', 'qty_produced': qty_produced, 'mrp_production_backorder_count': 1, 'priority': '0'}])
         self.assertRecordValues(mo_never, [{'state': 'done', 'qty_produced': qty_produced, 'mrp_production_backorder_count': 1, 'priority': '0'}])
+
+    def test_cancel_backorder_3_step_no_propagation(self):
+        '''
+        Ensure the post-prod -> stock picking for the produced quantity doesn't
+        get cancelled with the backorder production.
+        '''
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        # 3 steps Manufacture
+        warehouse.write({'manufacture_steps': 'pbm_sam'})
+
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_4.id,
+            'product_qty': 5,
+            'location_src_id': warehouse.pbm_loc_id.id,
+        })
+        mo.action_confirm()
+        mo.picking_ids.button_validate()
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+        action = mo.button_mark_done()
+        Form(self.env['mrp.production.backorder'].with_context(**action['context'])).save().action_backorder()
+        self.assertEqual(len(mo.production_group_id.production_ids), 2)
+
+        # Cancel backorder
+        mo.production_group_id.production_ids[-1].action_cancel()
+        self.assertFalse(mo.picking_ids.filtered(lambda p: p.state == 'cancel' and p.product_id == self.product_6))
 
 
 class TestMrpWorkorderBackorder(TransactionCase):

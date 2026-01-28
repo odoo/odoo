@@ -24,9 +24,11 @@ test("Taxes object should contain no discount values", async () => {
     expectFormattedPrice(order.currencyDisplayPrice, "$ 1,237.00");
     expectFormattedPrice(order.currencyAmountTaxes, "$ 257.00");
     expectFormattedPrice(order.lines[0].currencyDisplayPrice, "$ 1,125.00");
-    expectFormattedPrice(order.lines[0].currencyDisplayPriceUnit, "$ 900.00");
+    expectFormattedPrice(order.lines[0].currencyDisplayPriceUnit, "$ 1,125.00");
+    expectFormattedPrice(order.lines[0].currencyDisplayPriceUnitExcl, "$ 900.00");
     expectFormattedPrice(order.lines[1].currencyDisplayPrice, "$ 112.00");
-    expectFormattedPrice(order.lines[1].currencyDisplayPriceUnit, "$ 80.00");
+    expectFormattedPrice(order.lines[1].currencyDisplayPriceUnit, "$ 112.00");
+    expectFormattedPrice(order.lines[1].currencyDisplayPriceUnitExcl, "$ 80.00");
 
     // First line (25% on 1000) - no discount
     expect(line1.no_discount_total_included).toBe(1250);

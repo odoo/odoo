@@ -14,7 +14,6 @@ from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_c
 
 
 # these tests create accounting entries, and therefore need a chart of accounts
-@skip('Temporary to fast merge new valuation')
 class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon, TestSaleCommon):
 
     @classmethod
@@ -210,6 +209,7 @@ class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon, TestSaleCommon):
             move._action_done()
 
 
+@skip('Temporary to fast merge new valuation')
 @common.tagged('post_install', '-at_install')
 class TestSaleMrpFlow(TestSaleMrpFlowCommon):
     def test_00_sale_mrp_flow(self):

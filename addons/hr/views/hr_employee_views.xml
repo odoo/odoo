@@ -89,7 +89,7 @@
                 <form string="Employee" js_class="hr_employee_form" duplicate="false">
                     <header groups="hr.group_hr_user">
                         <button string="Create User" name="action_create_user" type="object"
-                                class="btn btn-primary" invisible="user_id" groups="hr.group_hr_user"
+                                class="btn btn-primary" invisible="user_id" groups="base.group_erp_manager"
                                 context="{'default_create_employee': True}"/>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action"
                             groups="hr.group_hr_user" invisible="not active or not id" context="{'sort_by_responsible': True}"/>
@@ -145,7 +145,7 @@
                                 <div invisible="not user_id">
                                     <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
                                 </div>
-                                <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
+                                <field name="hr_icon_display" invisible="not show_hr_icon_display or not id or not active" widget="hr_presence_status"/>
                             </div>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>

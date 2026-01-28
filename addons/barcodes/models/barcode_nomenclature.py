@@ -94,11 +94,13 @@ class BarcodeNomenclature(models.Model):
         :param barcode:
         :type barcode: str
         :return: A object containing various information about the barcode, like as:
+
             - code: the barcode
             - type: the barcode's type
             - value: if the id encodes a numerical value, it will be put there
             - base_code: the barcode code with all the encoding parts set to
               zero; the one put on the product in the backend
+
         :rtype: dict
         """
         parsed_result = {

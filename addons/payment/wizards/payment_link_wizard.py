@@ -94,7 +94,7 @@ class PaymentLinkWizard(models.TransientModel):
     def _prepare_access_token(self):
         self.ensure_one()
         return payment_utils.generate_access_token(
-            self.partner_id.id, self.amount, self.currency_id.id
+            self.partner_id.id, self.amount, self.currency_id.id, env=self.env,
         )
 
     def _prepare_anchor(self):

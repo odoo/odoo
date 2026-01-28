@@ -16,13 +16,14 @@
 # Zdzisław Krajewski <zdzichucb@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-12 18:35+0000\n"
-"PO-Revision-Date: 2025-11-16 22:40+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2025-12-30 18:36+0000\n"
+"PO-Revision-Date: 2026-01-16 08:35+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "hr_work_entry/pl/>\n"
 "Language: pl\n"
@@ -30,9 +31,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
-"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_employee__work_entry_source
@@ -55,17 +56,17 @@ msgstr ""
 "\n"
 "Harmonogram pracy: Wpisy pracy będą generowane na podstawie poniższych "
 "godzin pracy.\n"
-"Frekwencja: Wpisy pracy będą generowane z obecności pracownika. (wymaga "
-"aplikacji Obecności)\n"
-"Planowanie: Wpisy pracy będą generowane z harmonogramu pracownika. (wymaga "
-"aplikacji Planowanie)\n"
+"Frekwencja: Wpisy pracy będą generowane na podstawie obecności pracownika. "
+"(wymaga aplikacji Obecności)\n"
+"Planowanie: Wpisy pracy będą generowane na podstawie harmonogramu "
+"pracownika. (wymaga aplikacji Planowanie)\n"
 "    "
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "%(employee)s does not have a contract on %(date)s."
-msgstr ""
+msgstr "%(employee)s nie ma umowy na dzień %(date)s."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -79,6 +80,9 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>Employees in "
 "red will be skipped because they have at least one validated work entry."
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>Pracownicy "
+"zaznaczeni na czerwono zostaną pominięci, ponieważ mają co najmniej jeden "
+"zatwierdzony wpis pracy."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
@@ -117,7 +121,7 @@ msgstr "<span>Godziny</span>"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__active
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Active"
-msgstr "Aktywne"
+msgstr "Aktywny"
 
 #. module: hr_work_entry
 #. odoo-javascript
@@ -128,13 +132,13 @@ msgstr "Dodaj"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__is_extra_hours
 msgid "Added to Monthly Pay"
-msgstr ""
+msgstr "Dodane do miesięcznego wynagrodzenia"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar_multi_create_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Additional Description..."
-msgstr ""
+msgstr "Dodatkowy opis..."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_additional_paid
@@ -176,12 +180,12 @@ msgstr "Przerwa na karmienie piersią"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_small_unemployment_birth
 msgid "Brief Holiday (Birth)"
-msgstr "Krótki urlop (narodziny)"
+msgstr "Krótki urlop (poród)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_compensatory
 msgid "CTO"
-msgstr ""
+msgstr "CTO"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
@@ -214,6 +218,8 @@ msgid ""
 "Check this setting if you want the hours to be considered as extra time and "
 "added as a bonus to the basic salary."
 msgstr ""
+"Zaznacz to ustawienie, jeśli chcesz, aby te godziny były traktowane jako "
+"nadgodziny i dodane jako dodatek do wynagrodzenia podstawowego."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__color
@@ -327,7 +333,7 @@ msgstr "Niezdolność do pracy w wyniku choroby"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__display_code
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_code
 msgid "Display Code"
-msgstr ""
+msgstr "Wyświetl kod"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__display_name
@@ -361,7 +367,7 @@ msgstr "Czas trwania"
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "Duration must be positive and cannot exceed 24 hours."
-msgstr ""
+msgstr "Czas trwania musi być dodatni i nie może przekraczać 24 godzin."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__earliest_available_date_message
@@ -404,7 +410,7 @@ msgstr "Umowa pracownika"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__version_id
 msgid "Employee Record"
-msgstr ""
+msgstr "Rejestr pracownika"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__employee_ids
@@ -450,7 +456,7 @@ msgstr "Od"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_leave
 msgid "GTO"
-msgstr ""
+msgstr "GW"
 
 #. module: hr_work_entry
 #: model:ir.actions.server,name:hr_work_entry.ir_cron_generate_missing_work_entries_ir_actions_server
@@ -487,7 +493,7 @@ msgstr "Typ wpisu pracy HR"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_home_working
 msgid "HW"
-msgstr ""
+msgstr "PZ"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__has_work_entries
@@ -558,16 +564,17 @@ msgstr ""
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__amount_rate
 msgid "If you want the hours should be paid double, the rate should be 200%."
 msgstr ""
+"Jeśli chcesz, aby godziny były płatne podwójnie, stawka powinna wynosić 200%."
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__conflict
 msgid "In Conflict"
-msgstr ""
+msgstr "W konflikcie"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__validated
 msgid "In Payslip"
-msgstr ""
+msgstr "W odcinku wypłaty"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -576,6 +583,9 @@ msgid ""
 "In order to regenerate the work entries, you need to provide the wizard with "
 "an employee_id, a date_from and a date_to."
 msgstr ""
+"Aby zregenerować wpisy dotyczące pracy, należy podać w kreatorze "
+"identyfikator pracownika (employee_id), datę początkową (date_from) i datę "
+"końcową (date_to)."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_interruption_wt
@@ -695,19 +705,19 @@ msgstr "Asysta medyczna"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_care_children_with_cancer_imss
 msgid "Medical Leave for Care of Children Diagnosed with Cancer (IMSS)"
-msgstr ""
+msgstr "Urlop zdrowotny na opiekę nad dziećmi z rozpoznaniem nowotworu (IMSS)"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_version.py:0
 msgid "Missing date or duration on work entry"
-msgstr ""
+msgstr "Brak daty lub czasu trwania we wpisie dotyczącym pracy"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_version.py:0
 msgid "Missing timezone for work entries generation."
-msgstr ""
+msgstr "Brak strefy czasowej do generowania wpisów dotyczących pracy."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_monthly_wt
@@ -736,6 +746,8 @@ msgstr "Brak danych do wyświetlenia"
 msgid ""
 "No work entry can be regenerated in this range of dates and these employees."
 msgstr ""
+"W tym zakresie dat i dla tych pracowników nie można ponownie wygenerować "
+"żadnych wpisów pracy."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
@@ -750,12 +762,12 @@ msgstr "Zaświadczenie (Niedostarczone)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_overtime
 msgid "OT"
-msgstr ""
+msgstr "NG"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.hr_work_entry_type_out_of_contract
 msgid "OoC"
-msgstr ""
+msgstr "PU"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_other
@@ -785,7 +797,7 @@ msgstr "Nadgodziny"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_overtime
 msgid "Overtime Hours (Paid at 150%)"
-msgstr ""
+msgstr "Nadgodziny (płatne 150%)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_pto
@@ -820,7 +832,7 @@ msgstr "Nadgodziny: Niedziela i święto państwowe"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_legal_leave
 msgid "PTO"
-msgstr ""
+msgstr "UW"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_parental
@@ -858,7 +870,7 @@ msgstr "Urlop ojcowski"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_paternity_leave_80
 msgid "Paternity Leave 80%"
-msgstr ""
+msgstr "Urlop ojcowski 80%"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_paternity_legal
@@ -873,7 +885,7 @@ msgstr "Urlop ojcowski (płatny przez firmę)"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__amount_rate
 msgid "Pay rate"
-msgstr ""
+msgstr "Stawka wynagrodzenia"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__code
@@ -947,7 +959,7 @@ msgstr "Zresetuj"
 #. odoo-javascript
 #: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_multi_selection_buttons.xml:0
 msgid "Reset Selected Work Entries"
-msgstr ""
+msgstr "Resetuj wybrane wpisy pracy"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
@@ -972,7 +984,7 @@ msgstr "Godziny w standardowej stawce z mocą wsteczną"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_sick_leave
 msgid "STO"
-msgstr ""
+msgstr "ZW"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_accident_wt
@@ -1023,7 +1035,7 @@ msgstr "Ustaw"
 #. module: hr_work_entry
 #: model:ir.actions.server,name:hr_work_entry.action_hr_work_entry_set_to_draft
 msgid "Set to Draft"
-msgstr ""
+msgstr "Ustaw jako wersję roboczą"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_100
@@ -1064,7 +1076,7 @@ msgstr "Urlop chorobowy"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_pl_work_entry_type_sick_leave
 msgid "Sick Time Off (Paid at 80%)"
-msgstr ""
+msgstr "Zwolnienie lekarskie (płatne w 80%)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_part_sick
@@ -1133,7 +1145,7 @@ msgstr "Podziel"
 #. odoo-javascript
 #: code:addons/hr_work_entry/static/src/views/work_entry_calendar/work_entry_calendar_controller.js:0
 msgid "Split Work Entry"
-msgstr ""
+msgstr "Podziel wpisy pracy"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -1142,6 +1154,8 @@ msgid ""
 "Split work entry duration has to be less than the existing work entry "
 "duration."
 msgstr ""
+"Czas trwania podzielonego wpisu pracy musi być krótszy niż czas trwania "
+"istniejącego wpisu pracy."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__state
@@ -1170,7 +1184,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "The amount of work on the day should not exceed 24 hours."
-msgstr ""
+msgstr "Ilość pracy w ciągu dnia nie powinna przekraczać 24 godzin."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -1196,6 +1210,8 @@ msgstr "Ten sam kod nie może być powiązany z wieloma typami wpisów pracy (%s
 msgid ""
 "This code can be changed, it is only for a display purpose (3 letters max)"
 msgstr ""
+"Kod ten można zmienić, służy on wyłącznie do celów wyświetlania "
+"(maksymalnie 3 litery)"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
@@ -1246,7 +1262,7 @@ msgstr "Typ"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_unpaid_leave
 msgid "UN"
-msgstr ""
+msgstr "UB"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -1268,7 +1284,7 @@ msgstr "Nieuzasadniony powód"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_unpaid_leave
 msgid "Unpaid"
-msgstr "Nieopłacone"
+msgstr "Niepłatny"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_unpaid_wt
@@ -1411,13 +1427,13 @@ msgstr "Nie możesz zmienić kraju tego konkretnego typu wpisu pracy."
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "You can't split a work entry with less than 1 hour."
-msgstr ""
+msgstr "Nie można podzielić wpisu pracy trwającej krócej niż 1 godzinę."
 
 #. module: hr_work_entry
 #. odoo-javascript
 #: code:addons/hr_work_entry/static/src/views/work_entry_calendar/calendar_common/work_entry_calendar_common_popover.xml:0
 msgid "You cannot edit a validated work entry"
-msgstr ""
+msgstr "Nie można edytować zatwierdzonego wpisu pracy"
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique

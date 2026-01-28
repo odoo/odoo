@@ -37,6 +37,8 @@ class WebClient(WebclientController):
                 return
             fields_to_store = channel._get_livechat_session_fields_to_store()
             store.add(channel, fields=fields_to_store)
+        if name == "/im_livechat/fetch_self_expertise":
+            store.add(request.env.user, Store.Many("livechat_expertise_ids", ["name"]))
 
     @classmethod
     def _process_request_for_all(self, store: Store, name, params):

@@ -332,6 +332,7 @@ export class TicketScreen extends Component {
                     .slice(0, refundDetail.qty)
                     .map((lotName) => ["create", { lot_name: lotName }]),
                 price_type: "automatic",
+                attribute_value_ids: refundLine.attribute_value_ids.map((attr) => ["link", attr]),
             });
             lines.push(line);
             refundDetail.destination_order_uuid = destinationOrder.uuid;
@@ -651,7 +652,7 @@ export class TicketScreen extends Component {
                 !this.pos.isProductQtyZero(refund.qty) &&
                 refund.line.order_id.uuid === order.uuid &&
                 (partner ? refund.line.order_id.partner_id?.id === partner.id : true) &&
-                !refund.destination_order_id
+                !refund.destinationOrder
         );
     }
 

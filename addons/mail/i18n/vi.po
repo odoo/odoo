@@ -12,14 +12,14 @@
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2023
 # Thi Huong Nguyen, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-12 18:35+0000\n"
-"PO-Revision-Date: 2025-12-04 17:51+0000\n"
+"POT-Creation-Date: 2026-01-22 18:35+0000\n"
+"PO-Revision-Date: 2026-01-17 09:51+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/mail/"
 "vi/>\n"
@@ -312,16 +312,14 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
-msgid "%(user)s connected. This is their first connection. Wish them luck."
+#: code:addons/mail/static/src/core/common/message_model.js:0
+msgid "%(user)s deleted the thread \"%(thread_name)s\""
 msgstr ""
-"%(user)s đã được kết nối. Đây là lần kết nối đầu tiên của họ. Hãy chúc họ "
-"may mắn nào!"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_model.js:0
-msgid "%(user)s deleted the thread \"%(thread_name)s\""
+#: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
+msgid "%(user)s just connected for the first time. Wish them luck!"
 msgstr ""
 
 #. module: mail
@@ -9860,7 +9858,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_partner__user_id
 #: model:ir.model.fields,field_description:mail.field_res_users__user_id
 msgid "Salesperson"
-msgstr "Chuyên viên sales"
+msgstr "Nhân viên sales"
 
 #. module: mail
 #. odoo-javascript
@@ -9990,7 +9988,7 @@ msgstr "Ngày gửi đã lên lịch"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_cron__user_id
 msgid "Scheduler User"
-msgstr "Người lập kế hoạch"
+msgstr "Người dùng Trình lên lịch"
 
 #. module: mail
 #. odoo-python
@@ -12274,6 +12272,8 @@ msgstr "Bật lại thông báo cuộc trò chuyện"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/follower_model.js:0
+#: code:addons/mail/static/src/core/common/message_model.js:0
 #: code:addons/mail/static/src/core/web/recipients_input.js:0
 #: code:addons/mail/static/src/core/web/recipients_popover.js:0
 #: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
@@ -14103,6 +14103,11 @@ msgstr "bí danh của bạn"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” trong “%(channel_name)s”"
+
+#~ msgid "%(user)s connected. This is their first connection. Wish them luck."
+#~ msgstr ""
+#~ "%(user)s đã được kết nối. Đây là lần kết nối đầu tiên của họ. Hãy chúc họ "
+#~ "may mắn nào!"
 
 #~ msgid "Browser default"
 #~ msgstr "Mặc định trình duyệt"

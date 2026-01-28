@@ -1,6 +1,7 @@
 import { registry } from "@web/core/registry";
 import { markup } from "@odoo/owl";
 import { ProductTemplateAccounting } from "./accounting/product_template_accounting";
+import { normalize } from "@web/core/l10n/utils";
 
 /**
  * ProductProduct, shadow of product.product in python.
@@ -85,11 +86,7 @@ export class ProductTemplate extends ProductTemplateAccounting {
     }
 
     getImageUrl() {
-        return (
-            (this.image_128 &&
-                `/web/image?model=product.template&field=image_128&id=${this.id}&unique=${this.write_date}`) ||
-            ""
-        );
+        return `/web/image?model=product.template&field=image_128&id=${this.id}&unique=${this.write_date}`;
     }
 
     _isArchivedCombination(attributeValueIds) {
@@ -134,10 +131,25 @@ export class ProductTemplate extends ProductTemplateAccounting {
 
     get searchString() {
         const fields = ["name", "default_code", "barcode"];
-        return fields
+        const raw = fields
             .map((field) => this[field] || "")
             .filter(Boolean)
             .join(" ");
+
+        const templateContent = normalize(raw);
+        const variantContent = this.product_variant_ids.map((v) => v.searchString).join(" ");
+
+        return variantContent ? templateContent + " " + variantContent : templateContent;
+    }
+
+    get normalizedName() {
+        return normalize(this.name || "");
+    }
+
+    get displayName() {
+        return this.default_code
+            ? `[${this.default_code}] ${this.display_name}`
+            : this.display_name;
     }
 }
 registry.category("pos_available_models").add(ProductTemplate.pythonModel, ProductTemplate);

@@ -974,3 +974,48 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
                 },
             },
         )
+
+    def test_project_profitability_when_multiple_aa_in_the_same_line(self):
+        other_analytic_account = self.env['account.analytic.account'].create({
+            'name': 'Not important',
+            'code': 'KO-1234',
+            'plan_id': self.analytic_plan.id,
+        })
+        # create a new purchase order
+        purchase_order = self.env['purchase.order'].create({
+            "name": "A purchase order",
+            "partner_id": self.partner_a.id,
+            "order_line": [Command.create({
+                "analytic_distribution": {
+                    # this is the analytic_account that is linked to the project
+                    f"{self.analytic_account.id},{other_analytic_account.id}": 100,
+                },
+                "product_id": self.product_order.id,
+                "product_qty": 1,
+                "price_unit": self.product_order.standard_price,
+                "currency_id": self.env.company.currency_id.id,
+            })],
+        })
+        purchase_order.button_confirm()
+
+        purchase_order.action_create_invoice()
+
+        vendor_bill = purchase_order.invoice_ids[0]
+        vendor_bill.invoice_date = datetime.today()
+        vendor_bill.action_post()
+
+        self.assertDictEqual(
+            self.project._get_profitability_items(False)['costs'],
+            {
+                'data': [{
+                    'id': 'purchase_order',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['purchase_order'],
+                    'to_bill': 0.0,
+                    'billed': -235.0,
+                }],
+                'total': {
+                    'to_bill': 0.0,
+                    'billed': -235.0,
+                },
+            },
+        )

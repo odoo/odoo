@@ -1060,7 +1060,6 @@ const _getEmojisData1 = () => `{
     "category": "Smileys & Emotion",
     "codepoints": "😎",
     "emoticons": [
-        "B)",
         "8)",
         "B-)",
         "8-)"

@@ -311,7 +311,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'cbc:ID': {'_text': invoice.name},
             'cbc:IssueDate': {'_text': invoice.invoice_date},
             'cbc:InvoiceTypeCode': {'_text': 389 if vals['process_type'] == 'selfbilling' else 380} if vals['document_type'] == 'invoice' else None,
-            'cbc:Note': {'_text': html2plaintext(invoice.narration)} if invoice.narration else None,
+            'cbc:Note': {'_text': html2plaintext(invoice.narration) if invoice.narration else None},
             'cbc:DocumentCurrencyCode': {'_text': invoice.currency_id.name},
             'cac:OrderReference': {
                 # OrderReference/ID (order_reference) is mandatory inside the OrderReference node
@@ -1091,8 +1091,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'vat': self._find_value(f'.//cac:{role}Party//cbc:CompanyID[string-length(text()) > 5]', tree),
             'phone': self._find_value(f'.//cac:{role}Party//cac:Contact//cbc:Telephone', tree),
             'email': self._find_value(f'.//cac:{role}Party//cac:Contact//cbc:ElectronicMail', tree),
-            'name': self._find_value(f'.//cac:{role}Party//cac:Contact//cbc:Name', tree) or
-                    self._find_value(f'.//cac:{role}Party//cbc:RegistrationName', tree),
+            'name': self._find_value(f'.//cac:{role}Party//cbc:RegistrationName', tree) or
+                    self._find_value(f'.//cac:{role}Party//cac:Contact//cbc:Name', tree),
             'postal_address': self._get_postal_address(tree, role),
         }
 

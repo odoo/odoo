@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"POT-Creation-Date: 2026-01-09 18:37+0000\n"
 "PO-Revision-Date: 2025-11-21 14:46+0000\n"
 "Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
@@ -117,7 +117,8 @@ msgstr "<i class=\"fa fa-ban me-2\"/>Yayımlanmamış"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
 msgid "<i class=\"fa fa-calendar me-2\" role=\"presentation\"/>August 23, 2025"
-msgstr "<i class=\"fa fa-calendar me-2\" role=\"presentation\"/>23 Ağustos 2025"
+msgstr ""
+"<i class=\"fa fa-calendar me-2\" role=\"presentation\"/>23 Ağustos 2025"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_slot_registration
@@ -145,8 +146,8 @@ msgid ""
 "<i class=\"fa fa-discord text-discord\" aria-label=\"Discord\" "
 "title=\"Discord\"/>"
 msgstr ""
-"<i class=\"fa fa-discord text-discord\" aria-label=\"Discord\" title="
-"\"Discord\"/>"
+"<i class=\"fa fa-discord text-discord\" aria-label=\"Discord\" "
+"title=\"Discord\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -289,8 +290,8 @@ msgid ""
 "<span class=\"fs-5\"><i class=\"fa fa-map-marker me-2\" "
 "role=\"presentation\"/>Los Angeles, CA, United States</span>"
 msgstr ""
-"<span class=\"fs-5\"><i class=\"fa fa-map-marker me-2\" role=\"presentation\""
-"/>Los Angeles, CA, Birleşik Devletler</span>"
+"<span class=\"fs-5\"><i class=\"fa fa-map-marker me-2\" "
+"role=\"presentation\"/>Los Angeles, CA, Birleşik Devletler</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_card_preview_data
@@ -318,10 +319,10 @@ msgstr ""
 "center gap-3 border rounded py-2 px-3 rounded-pill\">\n"
 "                    <i class=\"fa fa-calendar\" role=\"presentation\"/>\n"
 "                   <strong>Yıldızların Altında Armoni</strong>\n"
-"                    <span class=\"text-muted\">23 Ağustos 2025 - 8:15</span>"
-"\n"
-"                    <span class=\"text-primary\">Kayıt Olun <i class="
-"\"fa fa-long-arrow-right\" role=\"presentation\"/></span>\n"
+"                    <span class=\"text-muted\">23 Ağustos 2025 - 8:15</"
+"span>\n"
+"                    <span class=\"text-primary\">Kayıt Olun <i class=\"fa fa-"
+"long-arrow-right\" role=\"presentation\"/></span>\n"
 "               </span>"
 
 #. module: website_event
@@ -366,8 +367,8 @@ msgid ""
 "<span class=\"text-primary text-nowrap\">Register Now <i class=\"fa fa-long-"
 "arrow-right\"/></span>"
 msgstr ""
-"<span class=\"text-primary text-nowrap\">Şimdi Kaydolun <i class="
-"\"fa fa-long-arrow-right\"/></span>"
+"<span class=\"text-primary text-nowrap\">Şimdi Kaydolun <i class=\"fa fa-"
+"long-arrow-right\"/></span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
@@ -378,10 +379,10 @@ msgid ""
 "Out\n"
 "                                    </span>"
 msgstr ""
-"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" class"
-"=\"text-danger\">\n"
-"                                        <i class=\"fa fa-ban me-2\"/>"
-"Tükendi\n"
+"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" "
+"class=\"text-danger\">\n"
+"                                        <i class=\"fa fa-ban me-2\"/"
+">Tükendi\n"
 "                                   </span>"
 
 #. module: website_event
@@ -817,6 +818,7 @@ msgstr "Açıklama"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_registration__display_name
+#: model:ir.model.fields,field_description:website_event.field_event_slot__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_tag__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_type__display_name
@@ -923,6 +925,11 @@ msgstr "Etkinlik Kayıt Bağlantısı"
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_ids
 msgid "Event Registrations"
 msgstr "Etkinlik Kayıtları"
+
+#. module: website_event
+#: model:ir.model,name:website_event.model_event_slot
+msgid "Event Slot"
+msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
@@ -1137,6 +1144,7 @@ msgstr "Bu olayı nasıl öğrendiniz?"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__id
 #: model:ir.model.fields,field_description:website_event.field_event_registration__id
+#: model:ir.model.fields,field_description:website_event.field_event_slot__id
 #: model:ir.model.fields,field_description:website_event.field_event_tag__id
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__id
 #: model:ir.model.fields,field_description:website_event.field_event_type__id

@@ -16,6 +16,7 @@ export class BillGuide extends Component {
         this.action = useService("action");
         this.context = null;
         this.alias = null;
+        this.showSampleAction = false;
         onWillStart(this.onWillStart);
     }
 
@@ -36,6 +37,7 @@ export class BillGuide extends Component {
                 default_journal_id: ctx.active_id,
             }
         }
+        this.showSampleAction = await this.orm.call("account.journal", "is_sample_action_available");
     }
 
     handleButtonClick(action, model="account.journal") {
@@ -44,6 +46,17 @@ export class BillGuide extends Component {
             name: action,
             context: this.context || this.env.searchModel.context,
             type: 'object',
+        });
+    }
+
+    openVendorBill() {
+        return this.action.doAction({
+            type: "ir.actions.act_window",
+            res_model: "account.move",
+            views: [[false, "form"]],
+            context: {
+                default_move_type: "in_invoice",
+            },
         });
     }
 }

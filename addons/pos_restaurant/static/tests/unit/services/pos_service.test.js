@@ -415,6 +415,19 @@ describe("restaurant pos_store.js", () => {
         expect(line2.course_id.id).toBe(course2.id);
     });
 
+    test("mergeOrders sums guest counts", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const table1 = models["restaurant.table"].get(2);
+        const table2 = models["restaurant.table"].get(3);
+        const order1 = store.addNewOrder({ table_id: table1 });
+        order1.setCustomerCount(3);
+        const order2 = store.addNewOrder({ table_id: table2 });
+        order2.setCustomerCount(5);
+        await store.mergeOrders(order1, order2);
+        expect(order2.getCustomerCount()).toBe(8);
+    });
+
     test("getCustomerCount", async () => {
         const store = await setupPosEnv();
         const table = store.models["restaurant.table"].get(2);
