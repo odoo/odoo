@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='external_url']" position="before">
                 <field name="event_id" readonly="0"/>
+                <field name="employee_id" invisible="1"/>  <!-- for the employee's default value in domain-->
             </xpath>
             <xpath expr="//field[@name='course_type']" position="attributes">
                 <attribute name="invisible">0</attribute>
