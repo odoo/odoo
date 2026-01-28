@@ -326,24 +326,10 @@ class MailMessage(models.Model):
     def _search(self, domain, offset=0, limit=None, order=None, *, bypass_access=False, **kwargs):
         """ Override that adds specific access rights of mail.message, to remove
         ids uid could not see according to our custom rules. Please refer to
-        _check_access() for more details about those rules.
-
-        Non employees users see only message with subtype, and cannot see
-        internal messages, either coming from message 'is_internal' flag,
-        subtype 'internal' flag, or being pure logs (no subtype). See
-        `_get_search_domain_share` which generates the domain.
-
-        After having received ids of a classic search, keep only:
-        - if author_id == pid, uid is the author, OR
-        - uid belongs to a notified channel, OR
-        - uid is in the specified recipients, OR
-        - uid has a notification on the message, OR
-        - uid has acces to the message linked document for messages that are not
-          'user_notification'
-        - otherwise: remove the id
+        :meth:`_check_access` for more details about those rules.
         """
         # Rules do not apply to administrator
-        if self.env.is_superuser() or bypass_access:
+        if self.env.su or bypass_access:
             return super()._search(domain, offset, limit, order, bypass_access=True, **kwargs)
 
         # Non-employee see only messages with a subtype and not internal
@@ -389,11 +375,9 @@ class MailMessage(models.Model):
                 SQL.identifier(notif_alias, 'res_partner_id'),
             ),
         ))
-        for id_, model, res_id, author_id, message_type, partner_id in self.env.cr.fetchall():
+        for id_, model, res_id, author_id, message_type, notified in self.env.cr.fetchall():
             ids.append(id_)
-            if author_id == pid:
-                allowed_ids.add(id_)
-            elif partner_id == pid:
+            if author_id == pid or notified:
                 allowed_ids.add(id_)
             elif model and res_id and message_type != 'user_notification':
                 model_ids[model][res_id].add(id_)
@@ -405,7 +389,7 @@ class MailMessage(models.Model):
     def _get_search_domain_share(self):
         if self.env.user._is_internal():
             return Domain.TRUE
-        return Domain(['&', '&', ('is_internal', '=', False), ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)])
+        return Domain('is_internal', '=', False) & Domain('subtype_id.internal', '=', False)
 
     def _filter_records_for_message_operation(self, doc_model, doc_res_ids, operation):
         """ Helper returning records on which 'operation' on mail.message is
@@ -421,6 +405,20 @@ class MailMessage(models.Model):
             forbidden_doc_ids = set()
             try:
                 operation_result = records._check_access(record_operation)
+                # Check that records really exist;
+                # lengthy way of checking first in cache and avoiding exists() call.
+                # see test_record_unlinked_orphan_activities
+                for field in records._fields.values():
+                    if (
+                        field.store and field.column_type
+                        and field.prefetch is True
+                        and records._has_field_access(field, 'read')
+                    ):
+                        records.mapped(field.name)
+                        break
+                else:
+                    if records.exists() != records:
+                        raise MissingError(self.env._("Missing records"))  # noqa: TRY301
             except MissingError:
                 existing = records.exists()
                 forbidden_doc_ids = set((records - existing).ids)
@@ -462,29 +460,29 @@ class MailMessage(models.Model):
 
     def _check_access(self, operation: str) -> tuple | None:
         """ Access rules of mail.message:
-            - read: if
-                - author_id == pid, uid is the author OR
-                - create_uid == uid, uid is the creator OR
-                - uid is in the recipients (partner_ids) OR
-                - uid has been notified (needaction) OR
-                - uid have read access to the related document if model, res_id
-                - otherwise: raise
-            - create: if
-                - no model, no res_id (private message) OR
-                - pid in message_follower_ids if model, res_id OR
-                - uid can read the parent OR
-                - uid have write or create access on the related document if model, res_id, OR
-                - otherwise: raise
-            - write: if
-                - author_id == pid, uid is the author, OR
-                - uid is in the recipients (partner_ids) OR
-                - uid has write or create access on the related document if model, res_id
-                - otherwise: raise
+            - read: if any
+                - author_id == pid, uid is the author
+                - create_uid == uid, uid is the creator
+                - pid is in the recipients (partner_ids)
+                - pid has been notified (needaction)
+                - uid has access on the related document
+            - write: if any
+                - author_id == pid, uid is the author
+                - pid is in the recipients (partner_ids)
+                - pid has been notified (needaction)
+                - uid has access on the related document
+            - create: if any
+                - no model, no res_id (private message)
+                - is a user notification (private message)
+                - pid in message_follower_ids if model, res_id
+                - uid has access on the related document
             - unlink: if
-                - uid has write or create access on the related document
-                - otherwise: raise
+                - uid has access on the related document
 
-        Specific case: non employee users cannot see internal messages (aka logs):
+        Access on related document is custom custom per model. The rule only
+        applies for messages that are not user notifications.
+
+        Global restriction: non employee users cannot see internal messages (aka logs):
         'is_internal' flag on message, 'internal' flag on subtype.
         """
         result = super()._check_access(operation)
@@ -504,25 +502,8 @@ class MailMessage(models.Model):
         """ Return the subset of ``self`` that does not satisfy the specific
         conditions for messages.
         """
-        forbidden = self.browse()
-
-        # Non employees see only messages with a subtype (aka, not internal logs)
-        if not self.env.user._is_internal():
-            # reserve '_get_search_domain_share' domain, to make search and read coherent
-            rows = self.env.execute_query(SQL(
-                ''' SELECT message.id
-                    FROM "mail_message" AS message
-                    LEFT JOIN "mail_message_subtype" as subtype ON message.subtype_id = subtype.id
-                    WHERE message.id = ANY (%s) AND (message.is_internal IS TRUE OR message.subtype_id IS NULL OR subtype.internal IS TRUE)
-                ''',
-                self.ids,
-            ))
-            if rows:
-                internal = self.browse(id_ for [id_] in rows)
-                forbidden += internal
-                self -= internal  # noqa: PLW0642
-            if not self:
-                return forbidden
+        if not self:
+            return self
 
         # Read the value of messages in order to determine their accessibility.
         # The values are put in 'messages_to_check', and entries are popped
@@ -530,63 +511,75 @@ class MailMessage(models.Model):
         # are the invalid ones.
         self.flush_recordset(['model', 'res_id', 'author_id', 'create_uid', 'parent_id', 'message_type', 'partner_ids'])
         self.env['mail.notification'].flush_model(['mail_message_id', 'res_partner_id'])
+        pid = self.env.user.partner_id.id
 
+        # Non internal users see only non-private messages
+        query = self.sudo()._search(self._get_search_domain_share() & Domain('id', 'in', self.ids), active_test=False)
+        table = query.table
         if operation in ('read', 'write'):
-            query = SQL(
-                """ SELECT m.id, m.model, m.res_id, m.author_id, m.create_uid, m.parent_id,
-                        bool_or(partner_rel.res_partner_id IS NOT NULL OR needaction_rel.res_partner_id IS NOT NULL) AS notified,
-                        m.message_type
-                    FROM "mail_message" m
-                    LEFT JOIN "mail_message_res_partner_rel" partner_rel
-                        ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %(pid)s
-                    LEFT JOIN "mail_notification" needaction_rel
-                        ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %(pid)s
-                    WHERE m.id = ANY(%(ids)s)
-                    GROUP BY m.id
-                """,
-                pid=self.env.user.partner_id.id, ids=self.ids,
-            )
+            id_sql = table.id
+            query.groupby = id_sql
+            # notified: partner_ids or needaction
+            query.add_join('LEFT JOIN', 'partner_rel', 'mail_message_res_partner_rel',
+                SQL('partner_rel.mail_message_id = %s AND partner_rel.res_partner_id = %s', id_sql, pid))
+            query.add_join('LEFT JOIN', 'needaction_rel', 'mail_notification',
+                SQL('needaction_rel.mail_message_id = %s AND needaction_rel.res_partner_id = %s', id_sql, pid))
+            query = query.select(*(
+                table[fname]
+                for fname in ('id', 'model', 'res_id', 'author_id', 'parent_id', 'message_type', 'create_uid')
+            ), SQL('bool_or(partner_rel.res_partner_id IS NOT NULL OR needaction_rel.res_partner_id IS NOT NULL) AS notified'))
         elif operation in ('create', 'unlink'):
-            query = SQL(
-                """ SELECT id, model, res_id, author_id, parent_id, message_type
-                    FROM "mail_message"
-                    WHERE id = ANY(%s)
-                """, self.ids,
-            )
+            query = query.select(*(
+                table[fname]
+                for fname in ('id', 'model', 'res_id', 'author_id', 'parent_id', 'message_type')
+            ))
         else:
             raise ValueError(_('Wrong operation name (%s)', operation))
-
-        # trick: messages_to_check doesn't contain missing records from messages
+        # skip flush which is already done
+        self.env.cr.execute(query)
         messages_to_check = {
             values['id']: values
-            for values in self.env.execute_query_dict(query)
+            for values in self.env.cr.dictfetchall()
         }
+        # Not found messages are forbidden
+        forbidden = self - self.browse(messages_to_check)
+        if not messages_to_check:
+            return forbidden
 
         # Author condition (READ, WRITE, CREATE (private))
-        partner_id = self.env.user.partner_id.id
         if operation == 'read':
-            for mid, message in list(messages_to_check.items()):
-                if (message.get('author_id') == partner_id
-                        or message.get('create_uid') == self.env.uid):
-                    messages_to_check.pop(mid)
+            uid = self.env.uid
+            messages_to_check = {
+                mid: message
+                for mid, message in messages_to_check.items()
+                if message['author_id'] != pid
+                and message['create_uid'] != uid
+            }
         elif operation == 'write':
-            for mid, message in list(messages_to_check.items()):
-                if message.get('author_id') == partner_id:
-                    messages_to_check.pop(mid)
+            messages_to_check = {
+                mid: message
+                for mid, message in messages_to_check.items()
+                if message['author_id'] != pid
+            }
         elif operation == 'create':
-            for mid, message in list(messages_to_check.items()):
-                if not self._is_thread_message_visible(vals=message):
-                    messages_to_check.pop(mid)
+            messages_to_check = {
+                mid: message
+                for mid, message in messages_to_check.items()
+                if message['model'] and message['res_id']
+                if message['message_type'] != 'user_notification'
+            }
 
         if not messages_to_check:
             return forbidden
 
         # Recipients condition, for read and write (partner_ids)
-        # keep on top, usefull for systray notifications
+        # keep on top, useful for systray notifications
         if operation in ('read', 'write'):
-            for mid, message in list(messages_to_check.items()):
-                if message.get('notified'):
-                    messages_to_check.pop(mid)
+            messages_to_check = {
+                mid: message
+                for mid, message in messages_to_check.items()
+                if not message['notified']
+            }
             if not messages_to_check:
                 return forbidden
 
@@ -594,9 +587,12 @@ class MailMessage(models.Model):
         # {document_model_name: {document_id: message_ids}}
         model_docid_msgids = defaultdict(lambda: defaultdict(list))
         for mid, message in messages_to_check.items():
-            if (message.get('model') and message.get('res_id') and
-                    message.get('message_type') != 'user_notification'):
-                model_docid_msgids[message['model']][message['res_id']].append(mid)
+            if (
+                (model := message['model'])
+                and (res_id := message['res_id'])
+                and message['message_type'] != 'user_notification'
+            ):
+                model_docid_msgids[model][res_id].append(mid)
 
         for model, docid_msgids in model_docid_msgids.items():
             allowed = self._filter_records_for_message_operation(model, docid_msgids, operation)
@@ -621,7 +617,7 @@ class MailMessage(models.Model):
                         JOIN "mail_message_res_partner_rel" partner_rel
                             ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %s
                         WHERE m.id = ANY(%s) """,
-                    self.env.user.partner_id.id, list(parent_ids_msg_ids),
+                    pid, list(parent_ids_msg_ids),
                 )
                 for [parent_id] in self.env.execute_query(query):
                     for mid in parent_ids_msg_ids[parent_id]:
@@ -772,8 +768,7 @@ class MailMessage(models.Model):
                 if other_cmd:
                     message.sudo().write({'tracking_value_ids': tracking_values_cmd})
 
-            if message._is_thread_message_visible(vals=values):
-                message._invalidate_documents(values.get('model'), values.get('res_id'))
+        messages.filtered(lambda msg: msg._is_thread_message() and msg.message_type != 'user_notification')._invalidate_documents()
 
         return messages
 
@@ -1421,20 +1416,14 @@ class MailMessage(models.Model):
         return message_id
 
     def _is_thread_message(self, vals=False, thread=None):
-        """ Tool method to compute thread validity in notification methods. """
+        """ Tool method to compute thread validity in notification methods.
+
+        Thread message has a model and a res_id.
+        """
         vals = vals or {}
         res_model = vals['model'] if 'model' in vals else thread._name if thread else self.model
         res_id = vals['res_id'] if 'res_id' in vals else thread.ids[0] if thread and thread.ids else self.res_id
         return bool(res_id) if (res_model and res_model != 'mail.thread') else False
-
-    def _is_thread_message_visible(self, vals=False, thread=None):
-        """ In addition to being a thread message, it should not be a user specific
-        notification that is recipient-specific. Used mainly for ACL purpose. """
-        is_thread = self._is_thread_message(vals=vals, thread=thread)
-        if is_thread:
-            message_type = (vals or {}).get('message_type') or self.message_type
-            return is_thread and message_type != 'user_notification'
-        return is_thread
 
     def _invalidate_documents(self, model=None, res_id=None):
         """ Invalidate the cache of the documents followed by ``self``. """
