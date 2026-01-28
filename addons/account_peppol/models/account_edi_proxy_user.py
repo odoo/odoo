@@ -311,7 +311,26 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             try:
                 proxy_user = edi_user._call_peppol_proxy("/api/peppol/2/participant_status")
             except AccountEdiProxyError as e:
+<<<<<<< 16e5fbd20687501a7e9effbd6af9e1b2442601f5
                 _logger.error('Error while updating Peppol participant status: %s', e)
+||||||| fecca216b2f7eaf9c8c8dfcce82084a0177e6e27
+                if e.code == 'client_gone':
+                    # reset the connection if it was archived/deleted on IAP side
+                    edi_user.sudo().company_id._reset_peppol_configuration()
+                else:
+                    # don't auto-deregister users on any other errors to avoid settings client-side to states
+                    # that are not recoverable without user action if an error on IAP side ever occurs
+                    _logger.error('Error while updating Peppol participant status: %s', e)
+=======
+                if e.code == 'client_gone':
+                    # reset the connection if it was archived/deleted on IAP side
+                    edi_user.sudo().company_id._reset_peppol_configuration()
+                    edi_user.action_archive()
+                else:
+                    # don't auto-deregister users on any other errors to avoid settings client-side to states
+                    # that are not recoverable without user action if an error on IAP side ever occurs
+                    _logger.error('Error while updating Peppol participant status: %s', e)
+>>>>>>> 8fb5b49a929badecb7401d1d26a9dc660cd2d2b3
                 continue
 
             if proxy_user['peppol_state'] in ('sender', 'smp_registration', 'receiver', 'rejected'):
