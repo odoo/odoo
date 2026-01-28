@@ -30,7 +30,7 @@ class CardCard(models.Model):
             if not model:
                 cards.display_name = ""
                 continue
-            self.env[model].browse(cards.mapped('res_id')).sudo().fetch(['display_name'])
+            self.env[model].browse(id_ for id_ in cards.mapped('res_id') if id_).sudo().fetch(['display_name'])
             for card in cards:
                 card.display_name = self.env[model].browse(card.res_id).sudo().display_name
 
