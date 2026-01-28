@@ -18,8 +18,7 @@ class WorldlineDriver(CtypesTerminalDriver):
     connection_type = 'ctep'
 
     def __init__(self, identifier, device):
-        lib_name = "libeasyctep.so" if IS_RPI else "libeasyctep.dll"
-        super().__init__(identifier, device, lib_name=lib_name, manufacturer="Worldline")
+        super().__init__(identifier, device, manufacturer="Worldline")
 
         # int startTransaction(
         self.terminal.startTransaction.argtypes = [
@@ -51,7 +50,7 @@ class WorldlineDriver(CtypesTerminalDriver):
         _logger.info('start transaction #%d amount: %f action_identifier: %d', transaction_id, transaction_amount, transaction_action_identifier)
 
         try:
-            device = ctypes.byref(self.dev) if IS_RPI else ctypes.cast(self.dev, ctypes.c_void_p)
+            device = ctypes.byref(self.manager) if IS_RPI else ctypes.cast(self.manager, ctypes.c_void_p)
             result = self.terminal.startTransaction(
                 device,  # std::shared_ptr<ect::CTEPTerminal> trm if IS_RPI else CTEPManager* manager
                 ctypes.c_char_p(str(transaction_amount).encode('utf-8')),  # char const* amount
@@ -107,7 +106,7 @@ class WorldlineDriver(CtypesTerminalDriver):
         error_code = create_ctypes_string_buffer()
         _logger.info("cancel transaction request for: %s", transaction)
         try:
-            device = ctypes.byref(self.dev) if IS_RPI else ctypes.cast(self.dev, ctypes.c_void_p)
+            device = ctypes.byref(self.manager) if IS_RPI else ctypes.cast(self.manager, ctypes.c_void_p)
             result = self.terminal.abortTransaction(device, error_code)
             _logger.debug("end cancel transaction request")
 
