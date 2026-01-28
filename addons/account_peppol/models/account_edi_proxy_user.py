@@ -290,6 +290,7 @@ class AccountEdiProxyClientUser(models.Model):
                 if e.code == 'client_gone':
                     # reset the connection if it was archived/deleted on IAP side
                     edi_user.sudo().company_id._reset_peppol_configuration()
+                    edi_user.action_archive()
                 else:
                     # don't auto-deregister users on any other errors to avoid settings client-side to states
                     # that are not recoverable without user action if an error on IAP side ever occurs
