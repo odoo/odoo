@@ -65,6 +65,8 @@ class AccountPaymentMethodLine(models.Model):
         """ Ensure we don't remove an account.payment.method.line that is linked to a provider
         in the test or enabled state.
         """
+        if self.env.context.get('force_delete'):
+            return
         active_provider = self.payment_provider_id.filtered(lambda provider: provider.state in ['enabled', 'test'])
         if active_provider:
             raise UserError(_(
