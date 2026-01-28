@@ -29,14 +29,12 @@
                         </group>
                         <div>
                             <group>
-                                <field name="hide_payment_provider" invisible="1"/>
                                 <field name="hide_qr_code_method" invisible="1"/>
-                                <field name="payment_method_type" />
-                                <field name="payment_provider" string="Integrate with" invisible="hide_payment_provider" placeholder="None"/>
+                                <field name="payment_method_type" invisible="not available_payment_method_types" widget="filterable_selection" options="{'whitelist_fname': 'available_payment_method_types'}" />
+                                <field name="payment_provider" string="Integrate with" invisible="not available_payment_providers" widget="filterable_selection" options="{'whitelist_fname': 'available_payment_providers'}" placeholder="None"/>
                                 <field name="qr_code_method" invisible="hide_qr_code_method" required="payment_method_type == 'bank_qr_code'"/>
                             </group>
-                            <widget name="pos_payment_provider_cards" options="{'payment_method_type': 'terminal'}" invisible="all_providers_installed or payment_provider or payment_method_type != 'terminal'" />
-                            <widget name="pos_payment_provider_cards" options="{'payment_method_type': 'external_qr'}" invisible="all_providers_installed or payment_provider or payment_method_type != 'external_qr'" />
+                            <widget name="pos_payment_provider_cards" invisible="all_providers_installed or payment_provider or payment_method_type not in ['terminal', 'external_qr', 'cash_machine']" />
                         </div>
                     </group>
                 </sheet>

@@ -123,13 +123,6 @@ class PosPaymentMethod(models.Model):
             return []
         return super()._get_provider_selection()
 
-    @api.depends('type')
-    def _compute_hide_payment_provider(self):
-        opm = self.filtered(lambda pm: pm.type == 'online')
-        if opm:
-            opm.hide_payment_provider = True
-        super(PosPaymentMethod, self - opm)._compute_hide_payment_provider()
-
     @api.model
     def _get_or_create_online_payment_method(self, company_id, pos_config_id):
         """ Get the first online payment method compatible with the provided pos.config.

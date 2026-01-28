@@ -12,7 +12,8 @@ class TestBackend(TestPoSCommon):
     def test_onchange_payment_provider(self):
         pm = self.env['pos.payment.method'].create({'name': 'Test PM'})
         with patch.object(PosPaymentMethod, '_get_terminal_provider_selection', return_value=[('terminal_1', 'Terminal 1'), ('terminal_2', 'Terminal 2')]), \
-             patch.object(PosPaymentMethod, '_get_external_qr_provider_selection', return_value=[('qr_1', 'QR Code 1'), ('qr_2', 'QR Code 2')]):
+             patch.object(PosPaymentMethod, '_get_external_qr_provider_selection', return_value=[('qr_1', 'QR Code 1'), ('qr_2', 'QR Code 2')]), \
+             patch.object(PosPaymentMethod, '_get_cash_machine_selection', return_value=[('cash_1', 'Cash Machine 1'), ('cash_2', 'Cash Machine 2')]):
             # False --> terminal_1 = terminal
             pm.payment_provider = 'terminal_1'
             pm._onchange_payment_provider()
@@ -43,7 +44,12 @@ class TestBackend(TestPoSCommon):
             pm._onchange_payment_provider()
             self.assertEqual(pm.payment_method_type, 'external_qr')
 
-            # qr_1 --> terminal_1 = terminal
+            # qr_1 --> cash_1 = cash_machine
+            pm.payment_provider = 'cash_1'
+            pm._onchange_payment_provider()
+            self.assertEqual(pm.payment_method_type, 'cash_machine')
+
+            # cash_1 --> terminal_1 = terminal
             pm.payment_provider = 'terminal_1'
             pm._onchange_payment_provider()
             self.assertEqual(pm.payment_method_type, 'terminal')
@@ -53,10 +59,16 @@ class TestBackend(TestPoSCommon):
             pm._onchange_payment_provider()
             self.assertEqual(pm.payment_method_type, 'terminal')
 
+            # False --> cash_1 = cash_machine
+            pm.payment_provider = 'cash_1'
+            pm._onchange_payment_provider()
+            self.assertEqual(pm.payment_method_type, 'cash_machine')
+
     def test_onchange_payment_method_type(self):
         pm = self.env['pos.payment.method'].create({'name': 'Test PM'})
         with patch.object(PosPaymentMethod, '_get_terminal_provider_selection', return_value=[('terminal_1', 'Terminal 1'), ('terminal_2', 'Terminal 2')]), \
-             patch.object(PosPaymentMethod, '_get_external_qr_provider_selection', return_value=[('qr_1', 'QR Code 1'), ('qr_2', 'QR Code 2')]):
+             patch.object(PosPaymentMethod, '_get_external_qr_provider_selection', return_value=[('qr_1', 'QR Code 1'), ('qr_2', 'QR Code 2')]), \
+             patch.object(PosPaymentMethod, '_get_cash_machine_selection', return_value=[('cash_1', 'Cash Machine 1'), ('cash_2', 'Cash Machine 2')]):
             # (False) none --> terminal = False
             pm.payment_method_type = 'terminal'
             pm._onchange_payment_method_type()
@@ -71,6 +83,12 @@ class TestBackend(TestPoSCommon):
             # (qr_1) external_qr --> terminal = False
             pm.payment_provider = 'qr_1'
             pm.payment_method_type = 'terminal'
+            pm._onchange_payment_method_type()
+            self.assertFalse(pm.payment_provider)
+
+            # (terminal_1) terminal --> cash_machine = False
+            pm.payment_provider = 'terminal_1'
+            pm.payment_method_type = 'cash_machine'
             pm._onchange_payment_method_type()
             self.assertFalse(pm.payment_provider)
 

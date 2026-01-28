@@ -20,7 +20,7 @@ export class PaymentMollie extends PaymentInterface {
                     !paymentLine.isDone() &&
                     paymentLine.getPaymentStatus() !== "retry"
                 ) {
-                    paymentLine.payment_method_id.payment_terminal.handleMollieStatusResponse(
+                    paymentLine.payment_method_id.payment_interface.handleMollieStatusResponse(
                         paymentLine,
                         payload
                     );

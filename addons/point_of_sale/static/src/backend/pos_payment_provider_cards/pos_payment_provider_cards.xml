@@ -2,7 +2,7 @@
 <templates>
     <t t-name="point_of_sale.PosPaymentProviderCards">
         <div class="row g-1" t-custom-ref="cards_container">
-            <div t-foreach="this.state.providers"
+            <div t-foreach="this.providers"
                  t-as="provider"
                  t-att-class="this.env.inDialog ? 'col-12' : 'col-6 col-xl-4'"
                  class="h-100"

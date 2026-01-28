@@ -6,8 +6,8 @@
         <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="inside">
-                <notebook invisible="payment_provider != 'adyen'">
-                    <page name="settings" string="Adyen">
+                <notebook invisible="payment_provider != 'bancontact_pay'">
+                    <page name="settings" string="Bancontact Pay">
                         <group>
                             <field name="bancontact_api_key" password="True" invisible="payment_provider != 'bancontact_pay'" required="payment_provider == 'bancontact_pay'"/>
                             <field name="bancontact_ppid" invisible="payment_provider != 'bancontact_pay'" required="payment_provider == 'bancontact_pay'"/>
