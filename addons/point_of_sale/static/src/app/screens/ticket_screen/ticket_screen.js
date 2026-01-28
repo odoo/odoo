@@ -482,6 +482,9 @@ export class TicketScreen extends Component {
             );
         }
     }
+    get actionBtnClass() {
+        return this.getHasItemsToRefund() ? "btn-primary" : "btn-secondary";
+    }
     getDate(order) {
         return this.pos.getDate(order.date_order);
     }
