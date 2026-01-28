@@ -145,6 +145,9 @@ class HrVersion(models.Model):
     def _get_whitelist_fields_from_template(self):
         return super()._get_whitelist_fields_from_template() + ['work_entry_source']
 
+    def _get_no_wet_or_wet_match(self, leave, leave_entry_type):
+        return not leave[2].work_entry_type_id or leave[2].work_entry_type_id.id == leave_entry_type.id
+
     # Meant for behavior override
     def _get_real_attendance_work_entry_vals(self, intervals):
         self.ensure_one()
@@ -313,10 +316,7 @@ class HrVersion(models.Model):
                 for leave_interval in [(l[0], l[1], interval[2]) for l in leaves_over_interval]:
                     leave_entry_type = version._get_interval_leave_work_entry_type(leave_interval, leaves, bypassing_work_entry_type_codes)
                     # leaves don't have work_entry_type_id set if you create them before having hr_work_entry_installed
-                    interval_leaves = [leave for leave in leaves if not leave[2].work_entry_type_id or leave[2].work_entry_type_id.id == leave_entry_type.id]
-                    if not interval_leaves:
-                        # Maybe the computed leave type is not found. In that case, we use all leaves
-                        interval_leaves = leaves
+                    interval_leaves = [leave for leave in leaves if self._get_no_wet_or_wet_match(leave, leave_entry_type)]
                     interval_start = leave_interval[0].astimezone(UTC).replace(tzinfo=None)
                     interval_stop = leave_interval[1].astimezone(UTC).replace(tzinfo=None)
                     version_vals += [dict([
