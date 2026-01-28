@@ -35,11 +35,24 @@ export class IndexedDB {
      */
     async read(table, key) {
         this._tables.add(table);
-        return this.execute((db) => {
-            if (db) {
-                return this._read(db, table, key);
-            }
-        });
+        return this.mutex.exec(() =>
+            this._execute((db) => {
+                if (db) {
+                    return this._read(db, table, key);
+                }
+            })
+        );
+    }
+
+    async getAllEntries(table) {
+        this._tables.add(table);
+        return this.mutex.exec(() =>
+            this._execute((db) => {
+                if (db) {
+                    return this._getAllEntries(db, table);
+                }
+            })
+        );
     }
 
     /**
@@ -50,11 +63,13 @@ export class IndexedDB {
      */
     async getAllKeys(table) {
         this._tables.add(table);
-        return this.execute((db) => {
-            if (db) {
-                return this._getAllKeys(db, table);
-            }
-        });
+        return this.mutex.exec(() =>
+            this._execute(async (db) => {
+                if (db) {
+                    return this._getAllKeys(db, table);
+                }
+            })
+        );
     }
 
     /**
@@ -67,11 +82,31 @@ export class IndexedDB {
      */
     async write(table, key, value) {
         this._tables.add(table);
-        return this.execute((db) => {
-            if (db) {
-                return this._write(db, table, key, value);
-            }
-        });
+        return this.mutex.exec(() =>
+            this._execute((db) => {
+                if (db) {
+                    return this._write(db, table, key, value);
+                }
+            })
+        );
+    }
+
+    /**
+     * Delete data from the given table
+     *
+     * @param {string} table
+     * @param {string} key
+     * @returns {Promise}
+     */
+    async delete(table, key) {
+        this._tables.add(table);
+        return this.mutex.exec(() =>
+            this._execute((db) => {
+                if (db) {
+                    return this._delete(db, table, key);
+                }
+            })
+        );
     }
 
     /**
@@ -81,11 +116,13 @@ export class IndexedDB {
      * @returns {Promise}
      */
     async invalidate(tables = null) {
-        return this.execute((db) => {
-            if (db) {
-                return this._invalidate(db, typeof tables === "string" ? [tables] : tables);
-            }
-        });
+        return this.mutex.exec(() =>
+            this._execute((db) => {
+                if (db) {
+                    return this._invalidate(db, typeof tables === "string" ? [tables] : tables);
+                }
+            })
+        );
     }
 
     /**
@@ -95,16 +132,6 @@ export class IndexedDB {
      */
     async deleteDatabase() {
         return this.mutex.exec(() => this._deleteDatabase(() => {}));
-    }
-
-    /**
-     * open the database and execute the callback with the db as parameter.
-     *
-     * @params {Function} callback
-     * @returns {Promise<any>}
-     */
-    async execute(callback) {
-        return this.mutex.exec(() => this._execute(callback));
     }
 
     // -------------------------------------------------------------------------
@@ -212,6 +239,20 @@ export class IndexedDB {
         });
     }
 
+    async _delete(db, table, key) {
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction(table, "readwrite");
+            transaction.objectStore(table).delete(key);
+            transaction.onerror = (ev) => reject(ev.target.error);
+            transaction.onabort = (ev) => reject(ev.target.error);
+            transaction.oncomplete = resolve;
+
+            // Force the changes to be committed to the database asap
+            // https://developer.mozilla.org/en-US/docs/Web/API/IDBTransaction/commit
+            transaction.commit();
+        });
+    }
+
     async _invalidate(db, tables) {
         return new Promise((resolve, reject) => {
             const objectStoreNames = [...db.objectStoreNames].filter(
@@ -234,8 +275,9 @@ export class IndexedDB {
                         request.onsuccess = resolve;
                     })
             );
-            transaction.onerror = () => reject(transaction.error);
             Promise.all(proms).then(resolve);
+            transaction.onerror = (ev) => reject(ev.target.error);
+            transaction.onabort = (ev) => reject(ev.target.error);
 
             // Force the changes to be committed to the database asap
             // https://developer.mozilla.org/en-US/docs/Web/API/IDBTransaction/commit
@@ -249,7 +291,30 @@ export class IndexedDB {
             const objectStore = transaction.objectStore(table);
             const r = objectStore.get(key);
             r.onsuccess = () => resolve(r.result);
-            transaction.onerror = () => reject(transaction.error);
+            transaction.onerror = (ev) => reject(ev.target.error);
+            transaction.onabort = (ev) => reject(ev.target.error);
+        });
+    }
+
+    async _getAllEntries(db, table) {
+        return new Promise((resolve, reject) => {
+            const transaction = db.transaction(table, "readonly");
+            const store = transaction.objectStore(table);
+            if ("getAllRecords" in store) {
+                // This is faster but it's not suported by all browsers!
+                const r = store.getAllRecords();
+                r.onsuccess = () => resolve(r.result.map(({ key, value }) => ({ key, value })));
+            } else {
+                const keysReq = store.getAllKeys();
+                const valuesReq = store.getAll();
+                transaction.oncomplete = () => {
+                    const keys = keysReq.result;
+                    const values = valuesReq.result;
+                    resolve(keys.map((key, i) => ({ key, value: values[i] })));
+                };
+            }
+            transaction.onerror = (ev) => reject(ev.target.error);
+            transaction.onabort = (ev) => reject(ev.target.error);
         });
     }
 
@@ -259,7 +324,8 @@ export class IndexedDB {
             const objectStore = transaction.objectStore(table);
             const r = objectStore.getAllKeys();
             r.onsuccess = () => resolve(r.result);
-            transaction.onerror = () => reject(transaction.error);
+            transaction.onerror = (ev) => reject(ev.target.error);
+            transaction.onabort = (ev) => reject(ev.target.error);
         });
     }
 }
