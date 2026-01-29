@@ -545,6 +545,9 @@ class Post(models.Model):
         posts = super(Post, self.with_context(mail_create_nolog=True)).create(vals_list)
 
         for post in posts:
+            # flagged parent post
+            if post.parent_id and post.parent_id.state == 'flagged' and not post.can_flag:
+                raise UserError(_('Posting on a [Flagged] post is not possible.'))
             # deleted or closed questions
             if post.parent_id and (post.parent_id.state == 'close' or post.parent_id.active is False):
                 raise UserError(_('Posting answer on a [Deleted] or [Closed] question is not possible.'))
@@ -555,6 +558,12 @@ class Post(models.Model):
                 raise AccessError(_('%d karma required to answer a question.', post.forum_id.karma_answer))
             if not post.parent_id and not post.can_post:
                 post.sudo().state = 'pending'
+            # questions mode
+            if (
+                post.parent_id and post.forum_id.mode == 'questions' and
+                sum(1 for child in post.parent_id.child_ids if child.create_uid == self.env.user) > 1
+            ):
+                raise UserError(_('You can post only one answer.'))
 
             # add karma for posting new questions
             if not post.parent_id and post.state == 'active':
@@ -573,6 +582,8 @@ class Post(models.Model):
         return super(Post, self)._get_mail_message_access(res_ids, operation, model_name=model_name)
 
     def write(self, vals):
+        if any(post.state == 'flagged' and not post.can_flag for post in self):
+            raise UserError(_('You cannot edit flagged post.'))
         trusted_keys = ['active', 'is_correct', 'tag_ids']  # fields where security is checked manually
         if 'forum_id' in vals:
             forum = self.env['forum.forum'].browse(vals['forum_id'])
