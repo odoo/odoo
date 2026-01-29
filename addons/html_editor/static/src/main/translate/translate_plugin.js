@@ -1,14 +1,14 @@
 import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { ChatGPTTranslateDialog } from "@html_editor/main/chatgpt/chatgpt_translate_dialog";
-import { LanguageSelector } from "@html_editor/main/chatgpt/language_selector";
+import { TranslateDialog } from "@html_editor/main/translate/translate_dialog";
+import { LanguageSelector } from "@html_editor/main/translate/language_selector";
 import { withSequence } from "@html_editor/utils/resource";
 import { user } from "@web/core/user";
 import { isContentEditable } from "@html_editor/utils/dom_info";
 
-export class ChatGPTTranslatePlugin extends Plugin {
-    static id = "chatgpt_translate";
+export class TranslatePlugin extends Plugin {
+    static id = "translate";
     static dependencies = [
         "baseContainer",
         "selection",
@@ -20,19 +20,19 @@ export class ChatGPTTranslatePlugin extends Plugin {
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
-        toolbar_groups: withSequence(50, {
-            id: "ai",
+        toolbar_groups: withSequence(45, {
+            id: "translate",
         }),
         toolbar_items: [
             {
                 id: "translate",
-                groupId: "ai",
-                description: _t("Translate with AI"),
+                groupId: "translate",
+                description: _t("Translate with Google Translate"),
                 isAvailable: (selection) => !selection.isCollapsed && user.userId,
                 isDisabled: this.isNotReplaceableByAI.bind(this),
                 Component: LanguageSelector,
                 props: {
-                    onSelected: (language) => this.openDialog({ language }),
+                    onSelected: (targetLang) => this.openDialog({ targetLang }),
                 },
             },
         ],
@@ -76,7 +76,7 @@ export class ChatGPTTranslatePlugin extends Plugin {
                         endParent = endParent.offsetParent;
                     }
                     const div = document.createElement("div");
-                    div.classList.add("o-chatgpt-content");
+                    div.classList.add("o-translator-content");
                     const FRAME_PADDING = 3;
                     div.style.left = `${left - FRAME_PADDING}px`;
                     div.style.top = `${top - FRAME_PADDING}px`;
@@ -94,7 +94,7 @@ export class ChatGPTTranslatePlugin extends Plugin {
         // collapse to end
         const sanitize = this.dependencies.sanitize.sanitize;
         const originalText = selection.textContent() || "";
-        this.dependencies.dialog.addDialog(ChatGPTTranslateDialog, {
+        this.dependencies.dialog.addDialog(TranslateDialog, {
             ...dialogParams,
             originalText,
             sanitize,

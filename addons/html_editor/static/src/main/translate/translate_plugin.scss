@@ -3,7 +3,7 @@
     0%,100% { opacity: 0 }
     30%,70% { opacity: 1 }
 }
-.o-chatgpt-content {
+.o-translator-content {
     position: absolute;
     background: rgba(1, 186, 210, 0.5);
     opacity: 0;
@@ -13,11 +13,23 @@
     outline-offset: -2px;
 }
 
-.o-chatgpt-translated > *:last-child {
+.o-translator-translated > *:last-child {
     margin-bottom: 0;
 }
 .o-message-error {
     color: #d44c59;
     font-weight: bold;
     --bg-opacity: 0.25;
+}
+
+.o-translate-selected {
+    background-color: lightgreen;
+}
+
+.o-translate {
+    background-color: honeydew;
+}
+
+.o-translate:hover {
+    background-color: lightgreen;
 }
