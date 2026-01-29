@@ -1132,3 +1132,9 @@ class HrApplicant(models.Model):
             if applicant.refuse_reason_id and applicant.refuse_date:
                 json[applicant.stage_id.id] -= (now - applicant.refuse_date).total_seconds()
         return json
+
+    def _creation_message(self):
+        self.ensure_one()
+        if self.is_pool_applicant:
+            return self.env._("Talent created")
+        return super()._creation_message()
