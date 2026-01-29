@@ -51,7 +51,7 @@
                     </div>
                     <div class="pos-receipt-amount receipt-to-pay">
                         To Pay
-                        <span t-out='formatCurrency(order.totalDue)' class="pos-receipt-right-align font-monospace"/>
+                        <span t-out='formatCurrency(order.totalDue + order.appliedRounding)' class="pos-receipt-right-align font-monospace"/>
                     </div>
                 </t>
 
