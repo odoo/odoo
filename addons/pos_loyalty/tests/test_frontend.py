@@ -597,6 +597,37 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Check final balance after consumption and refund eWallet for partner_bbb.
         self.assertAlmostEqual(ewallet_bbb.points, 20, places=2)
 
+    def test_ewallet_refund_credit_note_line_quantity(self):
+        """Reproduce: sell+invoice product, refund order, use eWallet refund payment.
+        The generated credit note must keep refunded product quantity positive."""
+        LoyaltyProgram = self.env['loyalty.program']
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        self.env.ref('loyalty.ewallet_product_50').product_tmpl_id.write({'active': True})
+        self.create_programs([('arbitrary_name', 'ewallet')])
+        partner_aaa = self.env['res.partner'].create({'name': 'Ewal'})
+
+        self.pos_user.write({
+            'group_ids': [
+                (4, self.env.ref('stock.group_stock_user').id),
+            ],
+        })
+        self.start_pos_tour("EWalletRefundCreditNoteQtyTour")
+
+        refund_orders = self.main_pos_config.current_session_id.order_ids.filtered(
+            lambda o: o.partner_id == partner_aaa and o.refunded_order_id and o.account_move and o.account_move.move_type == 'out_refund'
+        )
+        self.assertEqual(len(refund_orders), 1, "A single invoiced refund order should be created.")
+
+        refund_order = refund_orders[0]
+        refunded_product_line = refund_order.lines.filtered('refunded_orderline_id')[:1]
+        self.assertTrue(refunded_product_line, "Refund order should contain a refunded product line.")
+
+        invoice_product_line = refund_order.account_move.invoice_line_ids.filtered(
+            lambda l: l.product_id == refunded_product_line.product_id,
+        )
+        self.assertTrue(invoice_product_line, "Credit note should contain the refunded product line.")
+        self.assertEqual(invoice_product_line[:1].quantity, 1, "Refunded product quantity on credit note must be positive (1).")
+
     def test_multiple_gift_wallet_programs(self):
         """
         Test for multiple gift_card and ewallet programs.

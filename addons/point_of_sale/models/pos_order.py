@@ -550,7 +550,7 @@ class PosOrder(models.Model):
             if not order.currency_id:
                 raise UserError(_("You can't: create a pos order from the backend interface, or unset the pricelist, or create a pos.order in a python test with Form tool, or edit the form view in studio if no PoS order exist"))
             tax_totals = order._get_order_tax_totals()
-            refund_factor = -1 if (order.amount_total < 0.0) else 1
+            refund_factor = -1 if (order.is_refund or order.amount_total < 0.0) else 1
             order.amount_tax = refund_factor * tax_totals['tax_amount_currency']
             order.amount_total = refund_factor * tax_totals['total_amount_currency']
             order.amount_difference = order.amount_paid - order.amount_total
@@ -924,7 +924,7 @@ class PosOrder(models.Model):
         fiscal_position = self.fiscal_position_id
         pos_config = self.config_id
         move_type = 'out_invoice' if not any(
-            order.is_refund or order.amount_total < 0 for order in self
+            order.is_refund or order.amount_total < 0.0 for order in self
         ) else 'out_refund'
         invoice_payment_term_id = (
             self.partner_id.property_payment_term_id.id
