@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="pos_config_main_restaurant" model="pos.config">
+            <field name="name">Restaurant</field>
+            <field name="module_pos_restaurant">True</field>
+            <field name="iface_splitbill">True</field>
+            <field name="iface_printbill">False</field>
+            <field name="iface_orderline_notes">True</field>
+            <field name="iface_tipproduct">False</field>
+            <field name="start_category">False</field>
+            <field name="limit_categories">False</field>
+        </record>
+
+        <function model="pos.config" name="_setup_main_restaurant_defaults">
+            <value eval="[ref('pos_config_main_restaurant')]"/>
+        </function>
+    </data>
+</odoo>

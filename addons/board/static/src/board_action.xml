@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="board.BoardAction">
+        <t t-if="isValid">
+            <View t-props="viewProps"/>
+        </t>
+        <t t-else="">
+            <div class="text-center text-warning m-1">Invalid action</div>
+        </t>
+    </t>
+</templates>

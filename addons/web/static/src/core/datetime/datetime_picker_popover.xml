@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.DateTimePickerPopover">
+        <DateTimePicker t-props="props.pickerProps">
+            <t t-set-slot="buttons">
+                <t t-if="isDateTimeRange">
+                    <button
+                        class="o_apply btn btn-primary btn-sm h-100 w-100 w-md-auto d-flex align-items-center justify-content-center gap-1"
+                        tabindex="-1"
+                        t-on-click="props.close"
+                    >
+                        <i class="fa fa-check" />
+                        <span>Apply</span>
+                    </button>
+                </t>
+            </t>
+            <t t-set-slot="bottom_left">
+                <t t-if="isDateTimeRange">
+                    <button
+                        class="btn btn-secondary btn-sm h-100 w-100 w-md-auto d-flex align-items-center justify-content-center"
+                        tabindex="-1"
+                        t-on-click="props.close"
+                    >
+                        <span>Close</span>
+                    </button>
+                </t>
+            </t>
+        </DateTimePicker>
+    </t>
+</templates>

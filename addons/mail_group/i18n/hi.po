@@ -1,0 +1,1544 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mail_group
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2026-01-17 08:20+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hindi <https://translate.odoo.com/projects/odoo-17/mail_group/"
+"hi/>\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid ") <span invisible=\"not send_email\">and send them an email</span>."
+msgstr ") <span invisible=\"not send_email\">और उन्हें एक ईमेल भेजें</span>।"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "<br/> You'll be notified as soon as some new content is posted."
+msgstr "<br/> नया कॉन्टेंट पोस्ट होते ही आपको सूचना मिल जाएगी।"
+
+#. module: mail_group
+#: model:mail.template,body_html:mail_group.mail_template_list_subscribe
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hello,<br><br>\n"
+"                You have requested to be subscribed to the mailing list "
+"<strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                To confirm, please visit the following link: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"                <br><br>\n"
+"                If this was a mistake or you did not requested this action, "
+"please ignore this message.\n"
+"            </div>\n"
+"        "
+msgstr ""
+
+#. module: mail_group
+#: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hello,<br><br>\n"
+"                You have requested to be unsubscribed to the mailing list "
+"<strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                To confirm, please visit the following link: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"></t></a></strong>.\n"
+"                <br><br>\n"
+"                If this was a mistake or you did not requested this action, "
+"please ignore this message.\n"
+"            </div>\n"
+"        "
+msgstr ""
+
+#. module: mail_group
+#: model:mail.template,body_html:mail_group.mail_template_guidelines
+msgid ""
+"<div>\n"
+"                <p>Hello <t t-out=\"object.partner_id.name or ''\"></t>,</"
+"p>\n"
+"                <p>Please find below the guidelines of the <t t-"
+"out=\"object.mail_group_id.name\"></t> mailing list.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
+"or ''\"></t></p>\n"
+"            </div>\n"
+"        "
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_footer
+msgid ""
+"<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_name
+msgid ""
+"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
+"title=\"Recipients\"/>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+msgid ""
+"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
+"title=\"Previous message\"/>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+msgid ""
+"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Next message\" "
+"title=\"Next message\"/>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+msgid ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show attachments\" "
+"title=\"Show attachments\"/>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid ""
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
+"title=\"Show replies\"/>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+msgid ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide "
+"attachments\" title=\"Hide attachments\"/>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
+"title=\"Hide replies\"/>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid "<span class=\"bg-warning\">Pending</span>"
+msgstr "<span class=\"bg-warning\">पेंडिंग</span>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+msgid ""
+"<span class=\"ms-2 badge text-bg-success\" invisible=\"author_moderation != "
+"'allow'\">Whitelisted</span>\n"
+"                            <span class=\"ms-2 badge text-bg-danger\" "
+"invisible=\"author_moderation != 'ban'\">Banned</span>"
+msgstr ""
+"<span class=\"ms-2 badge text-bg-success\" invisible="
+"\"author_moderation != 'allow'\">व्हाइटलिस्टेड</span>\n"
+"                            <span class=\"ms-2 badge text-bg-danger\" "
+"invisible=\"author_moderation != 'ban'\">बैन किया गया</span>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_footer
+msgid "<span class=\"mx-2\">-</span>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
+msgid "<span>By thread</span>"
+msgstr "<span>थ्रेड के अनुसार</span>"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"<span>No Mail Group yet.</span>\n"
+"                    <br/>"
+msgstr ""
+"<span>अभी तक कोई मेल ग्रुप नहीं.</span>\n"
+"                    <br/>"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_defaults
+msgid ""
+"A Python dictionary that will be evaluated to provide default values when "
+"creating new records for this alias."
+msgstr ""
+"यह एक पायथन डिक्शनरी है. जब आप इस 'एलियास' के लिए कोई नया डेटा डालेंगे, तो यह "
+"डिक्शनरी अपने-आप कुछ खाली जगहें भर देगी।"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Accept"
+msgstr "स्वीकार करना"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__accepted
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+msgid "Accepted"
+msgstr "स्वीकार किया गया"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__action
+msgid "Action"
+msgstr "कार्रवाई"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__active
+msgid "Active"
+msgstr "ऐक्टिव"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid ""
+"Add this email address to white list of people and accept all pending "
+"messages from the same author."
+msgstr ""
+"इस ईमेल एड्रेस को व्हाइट लिस्ट में जोड़ें और इसी लेखक के सभी पेंडिंग मैसेज स्वीकार करें।"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_id
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
+msgid "Alias"
+msgstr "एलियास"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_contact
+msgid "Alias Contact Security"
+msgstr "उपनाम संपर्क सुरक्षा"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain_id
+msgid "Alias Domain"
+msgstr "एलियास डोमेन"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain
+msgid "Alias Domain Name"
+msgstr "एलियास डोमेन नाम"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_full_name
+msgid "Alias Email"
+msgstr "एलियास ईमेल"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_name
+msgid "Alias Name"
+msgstr "एलियास नाम"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_status
+msgid "Alias Status"
+msgstr "एलियास स्टेटस"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_status
+msgid "Alias status assessed on the last message received."
+msgstr "आखिरी मैसेज के आधार पर एलियास (उपनाम) की स्थिति जांची गई।"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_model_id
+msgid "Aliased Model"
+msgstr "एलियास मॉडल"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "All messages of this group"
+msgstr "इस ग्रुप के सभी मैसेज"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Allowed Emails"
+msgstr "स्वीकार किए गए ईमेल"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Alone we can do so little, together we can do so much"
+msgstr "अकेले हम बहुत कम कर सकते हैं, साथ मिलकर हम बहुत कुछ कर सकते हैं"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__allow
+msgid "Always Allow"
+msgstr "हमेशा अनुमति दें"
+
+#. module: mail_group
+#. odoo-javascript
+#: code:addons/mail_group/static/src/js/mail_group.js:0
+#, python-format
+msgid "An email with instructions has been sent."
+msgstr "निर्देशों के साथ एक ईमेल भेज दिया गया है।"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+msgid "Archived"
+msgstr "संग्रहीत किया गया"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
+msgid "Archives"
+msgstr "संग्रहित किया गया"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__attachment_ids
+msgid "Attachments"
+msgstr "अटैचमेंट"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__author_id
+msgid "Author"
+msgstr "लेखक"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__author_moderation
+msgid "Author Moderation Status"
+msgstr "लेखक का मॉडरेशन स्टेटस"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group_message__author_id
+msgid ""
+"Author of the message. If not set, email_from may hold an email address that "
+"did not match any partner."
+msgstr ""
+"मैसेज का लेखक. अगर यह सेट नहीं है, तो 'email_from' में वह ईमेल एड्रेस हो सकता है जो किसी पार्टनर से "
+"मेल नहीं खाता।"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__access_group_id
+msgid "Authorized Group"
+msgstr "ऐसे ग्रुप जिनको अनुमति मिली है"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_notify
+msgid "Automatic notification"
+msgstr "ऑटोमैटिक नोटिफ़िकेशन"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message_reject__action__ban
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Ban"
+msgstr "बैन करें"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Ban the author of the message ("
+msgstr "मैसेज के लेखक को बैन करें ("
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid ""
+"Ban this email address and reject all pending messages from the same author "
+"and send an email to the author"
+msgstr ""
+"इस ईमेल एड्रेस को बैन करें, इसी लेखक के सभी पेंडिंग मैसेज रिजेक्ट करें और उन्हें एक ईमेल भेजें"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__ban
+msgid "Banned"
+msgstr "बैन किया गया"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Banned Emails"
+msgstr "बैन किए गए ईमेल"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
+msgid "By date"
+msgstr "तारीख के हिसाब से"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__can_manage_group
+msgid "Can Manage"
+msgstr "मैनेज कर सकता है"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__can_manage_group
+msgid "Can manage the members"
+msgstr "सदस्यों को मैनेज कर सकता है"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_child_ids
+msgid "Children"
+msgstr "चिल्ड्रेन"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Choose or configure a custom domain"
+msgstr "एक कस्टम डोमेन चुने या कॉन्फ़िगर करें"
+
+#. module: mail_group
+#: model:mail.template,subject:mail_group.mail_template_list_subscribe
+msgid "Confirm subscription to {{ object.name }}"
+msgstr "{{ object.name }} का सब्सक्रिप्शन कन्फ़र्म करें"
+
+#. module: mail_group
+#: model:mail.template,subject:mail_group.mail_template_list_unsubscribe
+msgid "Confirm unsubscription to {{ object.name }}"
+msgstr "{{ object.name }} का अनसब्सक्रिप्शन कन्फ़र्म करें"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__body
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__body
+msgid "Contents"
+msgstr "कॉन्टेंट"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
+msgid "Create a Mail Group"
+msgstr "एक मेल ग्रुप बनाएं"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Create a new group"
+msgstr "एक नया ग्रुप बनाएं"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__create_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__create_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__create_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__create_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__create_uid
+msgid "Created by"
+msgstr "इन्होंने बनाया"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__create_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__create_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__create_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__create_date
+msgid "Created on"
+msgstr "इस तारीख को बनाया गया"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__is_moderator
+msgid "Current user is a moderator of the group"
+msgstr "वर्तमान यूज़र ग्रुप का मॉडरेटर है"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_bounced_content
+msgid "Custom Bounced Message"
+msgstr "कस्टम बाउंस मैसेज"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_defaults
+msgid "Default Values"
+msgstr "डिफ़ॉल्ट वैल्यू"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__description
+msgid "Description"
+msgstr "विवरण"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Discard"
+msgstr "खारिज करें"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__display_name
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__display_name
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__display_name
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__display_name
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__display_name
+msgid "Display Name"
+msgstr "डिस्प्ले का नाम"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__email
+msgid "Email"
+msgstr "ईमेल"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, python-format
+msgid "Email %s is invalid"
+msgstr "ईमेल %s अमान्य है"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_email
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Email Alias"
+msgstr "ईमेल एलियास"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__email_from_normalized
+msgid "Email From"
+msgstr "भेजने वाले का ईमेल"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group_message__email_from
+msgid ""
+"Email address of the sender. This field is set when no matching partner is "
+"found and replaces the author_id field in the chatter."
+msgstr ""
+"भेजने वाले का ईमेल एड्रेस. जब कोई मैचिंग पार्टनर नहीं मिलता, तब यह फ़ील्ड सेट की जाती है और चैटर में "
+"'author_id' फ़ील्ड की जगह ले लेती है।"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_domain
+msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
+msgstr "ईमेल डोमेन जैसे, 'odoo@example.com' में 'example.com'"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Emails"
+msgstr "ईमेल"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Emails waiting an action for this group"
+msgstr "इस ग्रुप के लिए कार्रवाई का इंतज़ार कर रहे ईमेल"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__public
+msgid "Everyone"
+msgstr "सभी"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+msgid "Follow-Ups"
+msgstr "फ़ॉलो-अप"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+msgid "From"
+msgstr "के द्वारा"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__mail_group_id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__mail_group_id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__mail_group_id
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Group"
+msgstr "ग्रुप"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+msgid "Group By"
+msgstr "इन्होंने ग्रुप किया"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+msgid "Group Message"
+msgstr "ग्रुप मैसेज"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Group Name"
+msgstr "ग्रुप का नाम"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+#, python-format
+msgid "Group message can only be linked to mail group. Current model is %s."
+msgstr "ग्रुप मैसेज को सिर्फ मेल ग्रुप से जोड़ा जा सकता है. वर्तमान मॉडल %s है।"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines_msg
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Guidelines"
+msgstr "गाइडलाइन"
+
+#. module: mail_group
+#: model:mail.template,subject:mail_group.mail_template_guidelines
+msgid "Guidelines of group {{ object.mail_group_id.name }}"
+msgstr "ग्रुप {{ object.mail_group_id.name }} की गाइडलाइन"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+msgid "Hello"
+msgstr "नमस्ते"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__id
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__id
+msgid "ID"
+msgstr "आईडी"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_thread_id
+msgid ""
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
+msgstr ""
+"उपनाम रखने वाले पैरेंट रिकॉर्ड की आईडी (उदाहरण: वह प्रोजेक्ट जिसमें टास्क बनाने का उपनाम "
+"है)"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_bounced_content
+msgid ""
+"If set, this content will automatically be sent out to unauthorized users "
+"instead of the default message."
+msgstr ""
+"अगर यह सेट कर दिया जाए, तो जिन उपयोगकर्ताओं को अनुमति नहीं है, उन्हें सामान्य संदेश की "
+"जगह यह ख़ास संदेश खुद ही चला जाएगा।"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__image_128
+msgid "Image"
+msgstr "इमेज"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, python-format
+msgid "Invalid action for URL generation (%s)"
+msgstr "यूआरएल जनरेशन के लिए अमान्य कार्रवाई (%s)"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_moderation.py:0
+#, python-format
+msgid "Invalid email address %r"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.invalid_token_subscription
+msgid "Invalid or expired confirmation link."
+msgstr "पुष्टि करने वाला लिंक अमान्य है या उसकी अवधि खत्म हो गई है।"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Is Allowed"
+msgstr "अनुमति है"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Is Banned"
+msgstr "बैन है"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__is_group_moderated
+msgid "Is Group Moderated"
+msgstr "ग्रुप मॉडरेट किया गया है"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__is_member
+msgid "Is Member"
+msgstr "सदस्य है"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+msgid "Join"
+msgstr "ज्वॉइन करें"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__write_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__write_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__write_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__write_uid
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__write_uid
+msgid "Last Updated by"
+msgstr "इन्होंने आखिरी बार अपडेट किया"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__write_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__write_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__write_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__write_date
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__write_date
+msgid "Last Updated on"
+msgstr "आखिरी बार अपडेट हुआ"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+msgid "Leave"
+msgstr "लीव"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
+msgid "Let people subscribe to your list online or manually add them here."
+msgstr ""
+"लोगों को ऑनलाइन अपनी लिस्ट सब्सक्राइब करने दें या उन्हें यहां मैन्युअल रूप से जोड़ें।"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_incoming_local
+msgid "Local-part based incoming detection"
+msgstr "लोकल-पार्ट पर आधारित इनकमिंग पहचान"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Mail Group"
+msgstr "मेल ग्रुप"
+
+#. module: mail_group
+#: model:res.groups,name:mail_group.group_mail_group_manager
+msgid "Mail Group Administrator"
+msgstr "मेल ग्रुप एडमिन"
+
+#. module: mail_group
+#: model:mail.template,name:mail_group.mail_template_list_subscribe
+msgid "Mail Group: Mailing List Subscription"
+msgstr "मेल ग्रुप: मेलिंग लिस्ट सब्सक्रिप्शन"
+
+#. module: mail_group
+#: model:mail.template,name:mail_group.mail_template_list_unsubscribe
+msgid "Mail Group: Mailing List Unsubscription"
+msgstr "मेल ग्रुप: मेलिंग लिस्ट अनसब्सक्रिप्शन"
+
+#. module: mail_group
+#: model:mail.template,name:mail_group.mail_template_guidelines
+msgid "Mail Group: Send Guidelines"
+msgstr "मेल ग्रुप: गाइडलाइन भेजें"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_action
+#: model:ir.ui.menu,name:mail_group.mail_group_menu
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+msgid "Mail Groups"
+msgstr "मेल ग्रुप"
+
+#. module: mail_group
+#: model:ir.actions.server,name:mail_group.ir_cron_mail_notify_group_moderators_ir_actions_server
+msgid "Mail List: Notify group moderators"
+msgstr "मेल लिस्ट: ग्रुप मॉडरेटर को सूचना दें"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__mail_message_id
+msgid "Mail Message"
+msgstr "मेल मैसेज"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group_member
+msgid "Mailing List Member"
+msgstr "मेलिंग लिस्ट का सदस्य"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group_message
+msgid "Mailing List Message"
+msgstr "मेलिंग लिस्ट मैसेज"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group_moderation
+msgid "Mailing List black/white list"
+msgstr "मेलिंग लिस्ट ब्लैक/व्हाइट लिस्ट"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.portal_breadcrumbs_group
+msgid "Mailing Lists"
+msgstr "मेलिंग लिस्ट"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
+msgid ""
+"Mailing groups are communities that like to discuss a specific topic "
+"together."
+msgstr ""
+"मेलिंग ग्रुप्स उन लोगों के ग्रुप हैं जो किसी खास टॉपिक पर आपस में चर्चा करते हैं।"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+msgid "Mailing-List:"
+msgstr "मेलिंग-लिस्ट:"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+msgid "Member"
+msgstr "सदस्य"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_member_action
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__member_ids
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
+msgid "Members"
+msgstr "सदस्य"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__member_count
+msgid "Members Count"
+msgstr "सदस्यों की संख्या"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Members of this group"
+msgstr "इस ग्रुप के सदस्य"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__members
+msgid "Members only"
+msgstr "सिर्फ़ सदस्य"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__mail_group_message_id
+msgid "Message"
+msgstr "मैसेज"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_message_reject_action
+msgid "Message Rejection Explanation"
+msgstr "मैसेज क्यों नहीं भेजा गया, इसकी वजह"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_message_action
+msgid "Messages"
+msgstr "संदेश"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_count
+msgid "Messages Count"
+msgstr "मैसेज की संख्या"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_last_month_count
+msgid "Messages Per Month"
+msgstr "हर महीने मैसेज"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, python-format
+msgid "Messages are pending moderation"
+msgstr "मैसेज मॉडरेट होने का इंतज़ार कर रहे हैं"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_moderation_count
+msgid "Messages that need an action"
+msgstr "वह मैसेज जिस पर कार्रवाई करने की ज़रूरत है"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+msgid "Moderate Messages"
+msgstr "मैसेज मॉडरेट करें"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
+msgid "Moderate this group"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+msgid "Moderated"
+msgstr "मॉडरेट किया गया"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderator_id
+msgid "Moderated By"
+msgstr "इन्होंने मॉडरेट किया"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_rule_ids
+msgid "Moderated Emails"
+msgstr "मॉडरेट किए गए ईमेल"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_rule_count
+msgid "Moderated emails count"
+msgstr "मॉडरेट किए गए ईमेल की संख्या"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Moderated emails in this group"
+msgstr "इस ग्रुप में मॉडरेट किए गए ईमेल"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, python-format
+msgid "Moderated group must have moderators."
+msgstr "मॉडरेट किए गए ग्रुप में मॉडरेटर होने चाहिए।"
+
+#. module: mail_group
+#: model:ir.actions.act_window,name:mail_group.mail_group_moderation_action
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+msgid "Moderation"
+msgstr "मॉडरेशन"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_tree
+msgid "Moderation Lists"
+msgstr "मॉडरेशन लिस्ट"
+
+#. module: mail_group
+#: model:ir.ui.menu,name:mail_group.mail_group_moderation_menu
+msgid "Moderation Rules"
+msgstr "मॉडरेशन के नियम"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Moderations"
+msgstr "मॉडरेशन"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__is_moderator
+msgid "Moderator"
+msgstr "मॉडरेटर"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderator_ids
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Moderators"
+msgstr "मॉडरेटर"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, python-format
+msgid "Moderators must have an email address."
+msgstr "मॉडरेटर के पास एक ईमेल पता होना चाहिए।"
+
+#. module: mail_group
+#: model:mail.group,name:mail_group.mail_group_1
+msgid "My Company News"
+msgstr "मेरी कंपनी की न्यूज़"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__name
+msgid "Name"
+msgstr "नाम"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"Need to unsubscribe? <br/>It's right here! <span class=\"oi fa-2x oi-arrow-"
+"down float-end\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
+msgstr ""
+"अनसब्सक्राइब करना है? <br/>यहीं से करें! <span class="
+"\"oi fa-2x oi-arrow-down float-end\" role=\"img\" aria-label=\"\" title=\""
+"Read this !\"/>"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__moderation_guidelines
+msgid ""
+"Newcomers on this moderated group will automatically receive the guidelines."
+msgstr "इस मॉडरेट किए गए ग्रुप के नए सदस्यों को नियम अपने-आप मिल जाएंगे।"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
+msgid "No Members in this list yet!"
+msgstr "इस सूची में अभी कोई सदस्य नहीं है!"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
+msgid "No Messages in this list yet!"
+msgstr "इस सूची में अभी कोई मैसेज नहीं है!"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email_normalized
+msgid "Normalized Email"
+msgstr "सामान्य ईमेल"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from_normalized
+msgid "Normalized From"
+msgstr "भेजने वाले का मानक रूप"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_notify_msg
+msgid "Notification message"
+msgstr "नोटिफ़िकेशन मैसेज"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Notify Members"
+msgstr "सदस्यों को सूचना दें"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_count
+msgid "Number of message in this group"
+msgstr "इस ग्रुप में मैसेज की संख्या"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, python-format
+msgid ""
+"Only an administrator or a moderator can send guidelines to group members."
+msgstr ""
+"सिर्फ़ एक एडमिनिस्ट्रेटर या एक मॉडरेटर ही ग्रुप के सदस्यों को नियम भेज सकता है।"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, python-format
+msgid "Only members can send email to the mailing list."
+msgstr "सिर्फ़ सदस्य ही मेलिंग सूची को ईमेल भेज सकते हैं।"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, python-format
+msgid "Only selected groups of users can send email to the mailing list."
+msgstr ""
+"सिर्फ़ उपयोगकर्ताओं के चुने हुए ग्रुप ही मेलिंग सूची को ईमेल भेज सकते हैं।"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
+msgid ""
+"Optional ID of a thread (record) to which all incoming messages will be "
+"attached, even if they did not reply to it. If set, this will disable the "
+"creation of new records completely."
+msgstr ""
+"एक थ्रेड (रिकॉर्ड) की वैकल्पिक आईडी जिससे आने वाले सभी मैसेज जुड़ जाएंगे, भले ही वे उसका "
+"जवाब न हों. अगर यह सेट है, तो नए रिकॉर्ड बनाना पूरी तरह से बंद हो जाएगा।"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_parent_id
+msgid "Parent"
+msgstr "पैरेंट"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_parent_model_id
+msgid "Parent Model"
+msgstr "पैरंट मॉडल"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_parent_thread_id
+msgid "Parent Record Thread ID"
+msgstr "पैरेंट रिकॉर्ड थ्रेड आईडी"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_model_id
+msgid ""
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
+"(parent_model) and task (model))"
+msgstr ""
+"उपनाम (alias) रखने वाला पैरेंट मॉडल. उपनाम संदर्भ (alias reference) रखने वाला मॉडल "
+"ज़रूरी नहीं कि वही हो जो alias_model_id द्वारा दिया गया है (उदाहरण: प्रोजेक्ट (पैरेंट "
+"मॉडल) और टास्क (मॉडल))"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_member__partner_id
+msgid "Partner"
+msgstr "साथी"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__member_partner_ids
+msgid "Partners Member"
+msgstr "पार्टनर मेंबर"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_ids
+msgid "Pending Messages"
+msgstr "पेंडिंग मैसेज"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_moderation_count
+msgid "Pending Messages Count"
+msgstr "पेंडिंग मैसेज की संख्या"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__pending_moderation
+msgid "Pending Moderation"
+msgstr "पेंडिंग मॉडरेशन"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__moderation_notify
+msgid ""
+"People receive an automatic notification about their message being waiting "
+"for moderation."
+msgstr ""
+"लोगों को अपने मैसेज के मॉडरेट होने के इंतज़ार की ऑटोमैटिक सूचना मिलती है।"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__ban
+msgid "Permanent Ban"
+msgstr "हमेशा के लिए बैन"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
+msgstr ""
+"मेलगेटवे का इस्तेमाल करके दस्तावेज़ पर मैसेज पोस्ट करने की नीति..\n"
+"- सभी लोग: कोई भी पोस्ट कर सकता है.\n"
+"- पार्टनर: सिर्फ़ प्रमाणित पार्टनर ही पोस्ट करें.\n"
+"- फ़ॉलोअर्स: सिर्फ़ संबंधित दस्तावेज़ के फ़ॉलोअर्स या फ़ॉलो किए गए चैनल के सदस्य ही पोस्ट करें\n"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+msgid "Post to:"
+msgstr "यहां पोस्ट करें:"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__create_date
+msgid "Posted"
+msgstr "पोस्ट किया गया"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__access_mode
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Privacy"
+msgstr "गोपनीयता"
+
+#. module: mail_group
+#: model:mail.group,name:mail_group.mail_group_2
+msgid "Public Mailing List"
+msgstr "पब्लिक मेलिंग लिस्ट"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/wizard/mail_group_message_reject.py:0
+#, python-format
+msgid "Re: %s"
+msgstr "जवाब: %s"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_force_thread_id
+msgid "Record Thread ID"
+msgstr "थ्रेड आईडी रिकॉर्ड करें"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.group_message
+msgid "Reference"
+msgstr "रेफ़रंस"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message_reject__action__reject
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Reject"
+msgstr "अस्वीकार करें"
+
+#. module: mail_group
+#: model:ir.model,name:mail_group.model_mail_group_message_reject
+msgid "Reject Group Message"
+msgstr "ग्रुप मैसेज अस्वीकार करें"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Reject Silently"
+msgstr "बिना बताए मना करें"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Reject the message"
+msgstr "मैसेज अस्वीकार करें"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__rejected
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+msgid "Rejected"
+msgstr "अस्वीकार किया गया"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Remove message with explanation"
+msgstr "स्पष्टीकरण के साथ मैसेज हटाएं"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Responsible Users"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
+msgid "Search Group Message"
+msgstr "ग्रुप मैसेज खोजें"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_member_view_search
+msgid "Search Mail Group Member"
+msgstr "मेल ग्रुप के सदस्य को खोजें"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+msgid "Search Mail group"
+msgstr "मेल ग्रुप खोजें"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Search Moderation List"
+msgstr "मॉडरेशन लिस्ट खोजें"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
+msgid "Selected group of users"
+msgstr "चुने गए उपयोगकर्ताओं का ग्रुप"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Send"
+msgstr "भेजें"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Send & Ban"
+msgstr "भेजें और बैन करें"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "Send & Reject"
+msgstr "भेजें और अस्वीकार करें"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__send_email
+msgid "Send Email"
+msgstr "ईमेल भेजें"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "Send Guidelines"
+msgstr ""
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group_message_reject__send_email
+msgid "Send an email to the author of the message"
+msgstr "मैसेज के लेखक को एक ईमेल भेजें"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
+msgid "Send guidelines to new subscribers"
+msgstr ""
+
+#. module: mail_group
+#: model:mail.template,description:mail_group.mail_template_guidelines
+msgid "Sent to people who subscribed to a mailing group with group guidelines"
+msgstr ""
+"उन लोगों को भेजा गया जिन्होंने समूह के नियमों के साथ मेलिंग ग्रुप की सदस्यता ली है"
+
+#. module: mail_group
+#: model:mail.template,description:mail_group.mail_template_list_unsubscribe
+msgid "Sent to people who unsubscribed from a mailing group"
+msgstr "उन लोगों को भेजा गया जिन्होंने मेलिंग ग्रुप की सदस्यता रद्द कर दी है"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__status
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+msgid "Status"
+msgstr "स्टेटस"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "Stay in touch with our Community"
+msgstr "हमारे कम्यूनिटी के साथ जुड़े रहें"
+
+#. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message__subject
+#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__subject
+msgid "Subject"
+msgstr "विषय"
+
+#. module: mail_group
+#. odoo-javascript
+#: code:addons/mail_group/static/src/js/mail_group.js:0
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, python-format
+msgid "Subscribe"
+msgstr "सब्सक्राइब"
+
+#. module: mail_group
+#: model:mail.template,description:mail_group.mail_template_list_subscribe
+msgid "Subscription confirmation to a mailing group"
+msgstr "मेलिंग ग्रुप के लिए सब्सक्रिप्शन की पुष्टि"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, python-format
+msgid ""
+"Template \"mail_group.mail_template_guidelines\" was not found. No email has "
+"been sent. Please contact an administrator to fix this issue."
+msgstr ""
+"टेम्पलेट \"mail\\_group.mail\\_template\\_guidelines\" नहीं मिला. कोई ईमेल नहीं भेजा गया है"
+". इस समस्या को ठीक करने के लिए, कृपया एडमिन से संपर्क करें।"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+msgid "Thank you!"
+msgstr "धन्यवाद!"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, python-format
+msgid "The \"Authorized Group\" is missing."
+msgstr "\"अधिकृत ग्रुप\" नहीं मिल रहा है।"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "The email"
+msgstr "ईमेल"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+#, python-format
+msgid "The email \"%s\" is not valid."
+msgstr "ईमेल \"%s\" सही नहीं है।"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, python-format
+msgid "The group of the message do not match."
+msgstr "मैसेज का ग्रुप मेल नहीं खाता।"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, python-format
+msgid "The guidelines description is empty."
+msgstr "दिशा-निर्देशों का विवरण खाली है।"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, python-format
+msgid "The guidelines description is missing."
+msgstr "दिशा-निर्देशों का विवरण खाली है।"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_model_id
+msgid ""
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
+msgstr ""
+"वह मॉडल (Odoo दस्तावेज़ प्रकार) जिससे यह उपनाम जुड़ा है. कोई भी आने वाला ईमेल जो किसी "
+"मौजूदा रिकॉर्ड का जवाब नहीं है, इस मॉडल का एक नया रिकॉर्ड बनाएगा (जैसे कि एक प्रोजेक्ट "
+"टास्क)"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_name
+msgid ""
+"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
+"<jobs@example.odoo.com>"
+msgstr ""
+"ईमेल उपनाम का नाम, जैसे कि 'नौकरियां', अगर आप jobs@example.odoo.com के लिए ईमेल "
+"पाना चाहते हैं"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, python-format
+msgid "The notification message is missing."
+msgstr "नोटिफ़िकेशन मैसेज नहीं मिल रहा है।"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group.py:0
+#, python-format
+msgid "The partner can not be found."
+msgstr "पार्टनर नहीं मिल सका।"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+#, python-format
+msgid "The record of the message should be the group."
+msgstr "मैसेज का रिकॉर्ड ग्रुप से जुड़ा होना चाहिए।"
+
+#. module: mail_group
+#. odoo-javascript
+#: code:addons/mail_group/static/src/js/mail_group.js:0
+#, python-format
+msgid "This email is already subscribed."
+msgstr "यह ईमेल पहले से ही सदस्य है।"
+
+#. module: mail_group
+#. odoo-javascript
+#: code:addons/mail_group/static/src/js/mail_group.js:0
+#, python-format
+msgid "This email is not subscribed."
+msgstr "यह ईमेल पहले से ही सदस्य नहीं है।"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+#, python-format
+msgid "This message can not be moderated"
+msgstr "इस मैसेज को मॉडरेट नहीं किया जा सका"
+
+#. module: mail_group
+#: model:ir.model.constraint,message:mail_group.constraint_mail_group_member_unique_partner
+msgid "This partner is already subscribed to the group"
+msgstr "यह पार्टनर पहले से ही ग्रुप का सदस्य है"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+#, python-format
+msgid "Those messages can not be moderated: %s."
+msgstr "वे मैसेज मॉडरेट नहीं किए जा सकते: %s।"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "To Review"
+msgstr "रिव्यू करने के लिए"
+
+#. module: mail_group
+#. odoo-javascript
+#: code:addons/mail_group/static/src/js/mail_group.js:0
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, python-format
+msgid "Unsubscribe"
+msgstr "अनसब्सक्राइब करें"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+msgid "Unsubscribe:"
+msgstr "अनसब्सक्राइब करें:"
+
+#. module: mail_group
+#: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
+msgid ""
+"When people send an email to the alias of the list, they will appear here."
+msgstr "जब लोग लिस्ट के उपनाम पर ईमेल करेंगे, तो वे ईमेल यहां दिखेंगे।"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+msgid "Whitelist"
+msgstr "व्हाइटलिस्ट"
+
+#. module: mail_group
+#: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__allow
+msgid "Whitelisted"
+msgstr "व्हाइटलिस्टेड"
+
+#. module: mail_group
+#. odoo-python
+#: code:addons/mail_group/models/mail_group_message.py:0
+#, python-format
+msgid "Wrong status (%s)"
+msgstr "गलत स्टेटस (%s)"
+
+#. module: mail_group
+#: model:ir.model.constraint,message:mail_group.constraint_mail_group_moderation_mail_group_email_uniq
+msgid "You can create only one rule for a given email address in a group."
+msgstr "आप एक ग्रुप में दिए गए ईमेल पते के लिए सिर्फ़ एक ही नियम बना सकते हैं।"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+msgid "You have messages to moderate, please go for the proceedings."
+msgstr "मॉडरेट करने के लिए आपके पास मैसेज हैं, कृपया आगे की कार्रवाई करें।"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+msgid "_______________________________________________"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+msgid "and send an email to the author ("
+msgstr "और लेखक को एक ईमेल भेजें ("
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+msgid "attachments"
+msgstr "अटैचमेंट"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.message_footer
+msgid "by"
+msgstr "के ज़रिए"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "e.g. \"Newsletter\""
+msgstr "जैसे, \"न्यूज़लेटर\""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+msgid "e.g. domain.com"
+msgstr "जैसे, domain.com"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
+msgid "group"
+msgstr "ग्रुप"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "has been"
+msgstr "रहा है"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid ""
+"members<br/>\n"
+"                        <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" "
+"aria-label=\"Traffic\" title=\"Traffic\"/>"
+msgstr ""
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "messages / month"
+msgstr "मैसेज / महीना"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid "more replies"
+msgstr "ज़्यादा जवाब"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+msgid "replies"
+msgstr "जवाब"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "subscribed to"
+msgstr "सब्सक्राइब किया है"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "the list"
+msgstr "लिस्ट"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+msgid "unsubscribed from"
+msgstr "यहां से अनसब्सक्राइब किया गया"
+
+#. module: mail_group
+#: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+msgid "your email..."
+msgstr "आपका ईमेल..।"

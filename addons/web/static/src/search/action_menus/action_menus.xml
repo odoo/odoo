@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ActionMenus">
+        <div class="o_cp_action_menus d-flex pe-2 gap-1">
+            <Dropdown t-if="printItems.length" class="'d-inline-block'" togglerClass="'btn btn-secondary'" hotkey="'shift+u'">
+                <t t-set-slot="toggler">
+                    <i class="fa fa-print me-1"/>
+                    <span class="o_dropdown_title">Print</span>
+                </t>
+                <t t-foreach="printItems" t-as="item" t-key="item.key">
+                    <DropdownItem class="'o_menu_item'" onSelected="() => this.onItemSelected(item)">
+                        <t t-esc="item.description"/>
+                    </DropdownItem>
+                </t>
+            </Dropdown>
+
+            <Dropdown t-if="actionItems.length" class="'d-inline-block'" togglerClass="'btn btn-secondary'" hotkey="'u'">
+                <t t-set-slot="toggler">
+                    <i class="fa fa-cog me-1"/>
+                    <span class="o_dropdown_title">Actions</span>
+                </t>
+                <t t-foreach="actionItems" t-as="item" t-key="item.key">
+                    <t t-if="item.Component" t-component="item.Component" t-props="item.props" />
+                    <DropdownItem t-else="" class="'o_menu_item'" onSelected="() => this.onItemSelected(item)">
+                        <i t-if="item.icon" t-att-class="item.icon + ' me-1 fa-fw oi-fw'"/>
+                        <t t-esc="item.description"/>
+                    </DropdownItem>
+                </t>
+            </Dropdown>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.resume.slides</field>
+        <field name="model">hr.employee</field>
+        <field name="priority" eval="45" />
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='line_type_id']" position="after">
+                <field name="course_url" column_invisible="True"/>
+            </xpath>
+            <xpath expr="//field[@name='company_country_code']" position="after">
+                <field name="user_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="has_subscribed_courses" invisible="1" groups="website_slides.group_website_slides_officer"/>
+                <button name="action_open_courses"
+                    class="oe_stat_button"
+                    groups="website_slides.group_website_slides_officer"
+                    icon="fa-graduation-cap"
+                    type="object"
+                    invisible="not user_id or not has_subscribed_courses">
+                    <field name="courses_completion_text" widget="statinfo" string="Courses"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

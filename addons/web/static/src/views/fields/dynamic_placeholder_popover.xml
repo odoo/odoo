@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DynamicPlaceholderPopover">
+        <t t-if="state.isPathSelected">
+            <div class="o_model_field_selector_popover" t-on-keydown="onInputKeydown">
+                <div class="o_model_field_selector_popover_header text-center">
+                    <div class="o_model_field_selector_popover_title">Default value</div>
+                    <i class="fa fa-times o_model_field_selector_popover_option o_model_field_selector_popover_close"
+                       title="Close"
+                       role="img"
+                       aria-label="Close"
+                       t-on-click="props.close"
+                    />
+                    <div class="o_model_field_selector_default_value_input mt-2">
+                        <input type="text"
+                               placeholder='Type a default text or press ENTER'
+                               class="o_input"
+                               t-att-value="state.defaultValue"
+                               t-on-input="(ev) => this.setDefaultValue(ev.target.value)"
+                               t-ref="autofocus"/>
+                    </div>
+                </div>
+                <div class="o_model_field_selector_popover_body">
+                    <ul class="o_model_field_selector_popover_page">
+                        <li class="o_model_field_selector_popover_item">
+                            <button class="o_model_field_selector_popover_item_name btn flex-fill text-start"  t-on-click="() => this.validate()">
+                                <t t-if="state.defaultValue === ''">
+                                    <div class="text-muted o_model_field_selector_item_title">Default text is used when no values are set</div>
+                                </t>
+                                <t t-else="">
+                                    <div class="text-muted o_model_field_selector_item_title">As a default text when no value are set</div>
+                                </t>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="o_model_field_selector_popover_footer">
+                    <input type="text" class="o_input o_model_field_selector_debug" disabled="disabled" t-att-value="state.path" />
+                </div>
+            </div>
+        </t>
+        <t t-else="">
+            <ModelFieldSelectorPopover
+                close.bind="closeFieldSelector"
+                filter.bind="filter"
+                followRelations="true"
+                isDebugMode="!!env.debug"
+                path="state.path"
+                resModel="props.resModel"
+                showSearchInput="true"
+                update.bind="setPath"
+            />
+        </t>
+    </t>
+
+</templates>

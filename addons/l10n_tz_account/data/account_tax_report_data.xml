@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_report" model="account.report">
+        <field name="name">Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.tz"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_value" model="account.report.column">
+                <field name="name">Value (Excluding VAT)</field>
+                <field name="expression_label">value</field>
+            </record>
+            <record id="tax_report_rate" model="account.report.column">
+                <field name="name">VAT Rate</field>
+                <field name="expression_label">rate</field>
+            </record>
+            <record id="tax_report_amount" model="account.report.column">
+                <field name="name">VAT Amount</field>
+                <field name="expression_label">amount</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_goods_or_services" model="account.report.line">
+                <field name="name">Supplies of goods &amp; or Services</field>
+                <field name="code">tz_goods_or_services</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_taxable_supplies" model="account.report.line">
+                        <field name="name">Taxable supplies</field>
+                        <field name="code">taxable_supplies</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_taxable_supplies_expr_value" model="account.report.expression">
+                                <field name="label">value</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">02.base</field>
+                            </record>
+                            <record id="tax_report_taxable_supplies_expr_rate" model="account.report.expression">
+                                <field name="label">rate</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="tax_report_taxable_supplies_expr_amount" model="account.report.expression">
+                                <field name="label">amount</field>
+                                <field name="engine">external</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">03.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_capital_good_deferred_vat" model="account.report.line">
+                        <field name="name">Value of capital Goods for which VAT is deferred</field>
+                        <field name="code">capital_good_deferred_vat</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_capital_good_deferred_vat_expr_value" model="account.report.expression">
+                                <field name="label">value</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">05.base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_zero_rated_supplies" model="account.report.line">
+                        <field name="name">Zero rated supplies</field>
+                        <field name="code">zero_rated_supplies</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_zero_rated_supplies_expr_value" model="account.report.expression">
+                                <field name="label">value</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">06.base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_exempt_supplies" model="account.report.line">
+                        <field name="name">Exempt supplies</field>
+                        <field name="code">exempt_supplies</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_exempt_supplies_expr_value" model="account.report.expression">
+                                <field name="label">value</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">07.base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_special_relief" model="account.report.line">
+                        <field name="name">Special relief / deferred supplies</field>
+                        <field name="code">special_relief</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_special_relief_value" model="account.report.expression">
+                                <field name="label">value</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">08.base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_imported_services" model="account.report.line">
+                        <field name="name">Value of imported services</field>
+                        <field name="code">imported_services</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_imported_services_expr_value" model="account.report.expression">
+                                <field name="label">value</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">09.base</field>
+                            </record>
+                            <record id="tax_report_imported_services_expr_rate" model="account.report.expression">
+                                <field name="label">rate</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="tax_report_imported_services_expr_amount" model="account.report.expression">
+                                <field name="label">amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">10.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_tz_total_output_tax" model="account.report.line">
+                        <field name="name">Total output (sales) and Tax</field>
+                        <field name="code">tz_total_output_tax</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_tz_total_output_tax_expr_value" model="account.report.expression">
+                                <field name="label">value</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">
+                                    taxable_supplies.value
+                                    + capital_good_deferred_vat.value
+                                    + zero_rated_supplies.value
+                                    + exempt_supplies.value
+                                    + special_relief.value
+                                    + imported_services.value
+                                </field>
+                            </record>
+                            <record id="tax_report_tz_total_output_tax_expr_amount" model="account.report.expression">
+                                <field name="label">amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">
+                                    taxable_supplies.amount
+                                    + imported_services.amount
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_purchase" model="account.report.line">
+                <field name="name">Purchase (Inputs)</field>
+                <field name="code">tz_purchase</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_exempt_purchases" model="account.report.line">
+                        <field name="name">Exempt (local &amp; imports) purchases</field>
+                        <field name="code">exempt_purchases</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_exempt_purchases_expr_value" model="account.report.expression">
+                                <field name="label">value</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">14.base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_non_creditable_purchases" model="account.report.line">
+                        <field name="name">Non-Creditable purchases</field>
+                        <field name="code">non_creditable_purchases</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_non_creditable_purchases_expr_value" model="account.report.expression">
+                                <field name="label">value</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">15.base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_capital_goods_deferred_vat_purchases" model="account.report.line">
+                        <field name="name">Value of capital Goods for which VAT is deferred</field>
+                        <field name="code">capital_goods_deferred_vat_purchases</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_capital_goods_deferred_vat_purchases_expr_value" model="account.report.expression">
+                                <field name="label">value</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">16.base</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_imported_services_purchases" model="account.report.line">
+                        <field name="name">Value of imported services</field>
+                        <field name="code">imported_services_purchases</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_imported_services_purchases_expr_value" model="account.report.expression">
+                                <field name="label">value</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">17.base</field>
+                            </record>
+                            <record id="tax_report_imported_services_purchases_expr_rate" model="account.report.expression">
+                                <field name="label">rate</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="tax_report_imported_services_purchases_expr_amount" model="account.report.expression">
+                                <field name="label">amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">18.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_taxable_supplies_purchases" model="account.report.line">
+                        <field name="name">Taxable supplies</field>
+                        <field name="code">taxable_supplies_purchases</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_taxable_supplies_purchases_expr_value" model="account.report.expression">
+                                <field name="label">value</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">20.base</field>
+                            </record>
+                            <record id="tax_report_taxable_supplies_purchases_expr_rate" model="account.report.expression">
+                                <field name="label">rate</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="tax_report_taxable_supplies_purchases_expr_amount" model="account.report.expression">
+                                <field name="label">amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">21.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_imports_taxable_supplies_purchases" model="account.report.line">
+                        <field name="name">Imports of taxable supplies</field>
+                        <field name="code">imports_taxable_supplies_purchases</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_imports_taxable_supplies_purchases_expr_value" model="account.report.expression">
+                                <field name="label">value</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">23.base</field>
+                            </record>
+                            <record id="tax_report_imports_taxable_supplies_purchases_expr_rate" model="account.report.expression">
+                                <field name="label">rate</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="tax_report_imports_taxable_supplies_purchases_expr_amount" model="account.report.expression">
+                                <field name="label">amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">24.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_tz_total_input_tax" model="account.report.line">
+                        <field name="name">Total input tax</field>
+                        <field name="code">tz_total_input_tax</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_tz_total_input_tax_expr_amount" model="account.report.expression">
+                                <field name="label">amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">
+                                    imported_services_purchases.amount
+                                    + taxable_supplies_purchases.amount
+                                    + imports_taxable_supplies_purchases.amount
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_total_vat_payable" model="account.report.line">
+                        <field name="name">Total VAT Payable/Refundable</field>
+                        <field name="code">total_vat_payable</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_total_vat_payable_expr_amount" model="account.report.expression">
+                                <field name="label">amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">
+                                    tz_total_output_tax.amount -
+                                    tz_total_input_tax.amount
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_credit_bought_forward" model="account.report.line">
+                <field name="name">VAT credit brought forward</field>
+                <field name="code">tz_credit_bought_forward</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="tax_report_credit_bought_forward_applied_carryover" model="account.report.expression">
+                        <field name="label">_applied_carryover_amount</field>
+                        <field name="engine">external</field>
+                        <field name="formula">most_recent</field>
+                        <field name="date_scope">previous_tax_period</field>
+                    </record>
+                    <record id="tax_report_credit_bought_forward_expr_amount" model="account.report.expression">
+                        <field name="label">amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">tz_credit_bought_forward._applied_carryover_amount</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_total_vat_due" model="account.report.line">
+                <field name="name">Total VAT due or carried forward</field>
+                <field name="code">tz_total_vat_due</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="tax_report_total_vat_due_expr_amount" model="account.report.expression">
+                        <field name="label">amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">total_vat_payable.amount + tz_credit_bought_forward.amount</field>
+                    </record>
+                    <record id="tz_total_vat_due_carryover" model="account.report.expression">
+                        <field name="label">_carryover_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">tz_total_vat_due.amount</field>
+                        <field name="carryover_target">tz_credit_bought_forward._applied_carryover_amount</field>
+                        <field name="subformula">if_below(TSH(0))</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

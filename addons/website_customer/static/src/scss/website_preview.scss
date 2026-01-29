@@ -1,0 +1,5 @@
+// hide website_customer options from showing on website_crm_partner_assign.index
+.o_website_preview:not([data-view-xmlid="website_customer.index"])
+we-customizeblock-options:has(we-button[data-customize-website-views="website_customer.opt_country_list"]) {
+    display: none!important;
+}

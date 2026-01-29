@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="task_type_search" model="ir.ui.view">
+            <field name="name">project.task.type.search</field>
+            <field name="model">project.task.type</field>
+            <field name="arch" type="xml">
+                <search string="Tasks Stages">
+                   <field name="name" string="Name"/>
+                   <field name="project_ids" string="Project"/>
+                   <field name="mail_template_id"/>
+                   <field name="rating_template_id"/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="task_type_edit" model="ir.ui.view">
+            <field name="name">project.task.type.form</field>
+            <field name="model">project.task.type</field>
+            <field name="arch" type="xml">
+                <form string="Task Stage" delete="0">
+                    <field name="active" invisible="1" />
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active" />
+                        <group>
+                            <group>
+                                <field name="name" placeholder="e.g. To Do"/>
+                                <field name="user_id" invisible="True"/>
+                                <field name="mail_template_id" context="{'default_model': 'project.task'}" invisible="user_id"/>
+                                <field name="rating_template_id"
+                                       placeholder="Task: Rating Request"
+                                       groups="project.group_project_rating"
+                                       context="{'default_model': 'project.task'}"
+                                       invisible="user_id"/>
+                                <div class="alert alert-warning" role="alert" colspan='2'
+                                     invisible="not rating_template_id or not disabled_rating_warning or user_id"
+                                     groups="project.group_project_rating">
+                                    <i class="fa fa-warning" title="Customer disabled on projects"/><b> Customer Ratings</b> are disabled on the following project(s) : <br/>
+                                    <field name="disabled_rating_warning" class="mb-0" />
+                                </div>
+                                <field name="auto_validation_state" invisible="not rating_template_id" groups="project.group_project_rating"/>
+                                <field name="sequence" groups="base.group_no_one"/>
+                            </group>
+                            <group>
+                                <field name="fold"/>
+                                <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color'}"
+                                       invisible="user_id"
+                                       required="not user_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- TODO: remove in master -->
+        <record id="personal_task_type_edit" model="ir.ui.view">
+            <field name="name">project.task.type.form</field>
+            <field name="model">project.task.type</field>
+            <field name="arch" type="xml">
+                <form string="Task Stage" delete="0">
+                    <field name="active" invisible="1" />
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active" />
+                        <group>
+                            <group>
+                                <field name="name" placeholder="e.g. To Do"/>
+                                <field name="sequence" groups="base.group_no_one"/>
+                            </group>
+                            <group>
+                                <field name="fold"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="task_type_tree" model="ir.ui.view">
+            <field name="name">project.task.type.tree</field>
+            <field name="model">project.task.type</field>
+            <field name="arch" type="xml">
+                <tree string="Task Stage" delete="0" sample="1" multi_edit="1" editable="bottom" open_form_view="True">
+                    <field name="sequence" widget="handle" optional="show"/>
+                    <field name="name" placeholder="e.g. To Do"/>
+                    <field name="fold" optional="show"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="task_type_tree_inherited" model="ir.ui.view">
+            <field name="name">project.task.type.tree.inherited</field>
+            <field name="model">project.task.type</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="task_type_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="default_group_by">project_ids</attribute>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="mail_template_id" optional="hide"/>
+                    <field name="rating_template_id" optional="hide" groups="project.group_project_rating"/>
+                    <field name="project_ids" required="1" optional="show" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_project_task_type_kanban" model="ir.ui.view">
+            <field name="name">project.task.type.kanban</field>
+            <field name="model">project.task.type</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile" sample="1" default_group_by="project_ids">
+                    <field name="name"/>
+                    <field name="fold"/>
+                    <field name="description"/>
+                    <field name="sequence" widget="handle"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <strong class="o_text_overflow"><t t-esc="record.name.value"/></strong>
+                                    </div>
+                                </div>
+                                <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <t t-if="record.description.value">
+                                    <hr class="mt8 mb8"/>
+                                    <t t-esc="record.description.value"/>
+                                </t>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="open_task_type_form" model="ir.actions.act_window">
+            <field name="name">Task Stages</field>
+            <field name="res_model">project.task.type</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_id" ref="task_type_tree_inherited"/>
+            <field name="domain">[('user_id', '=', False)]</field>
+            <field name="context">{'default_user_id': False}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                No stages found. Let's create one!
+              </p><p>
+                Define the steps your tasks move through from creation to completion.
+              </p>
+            </field>
+        </record>
+
+        <record id="open_task_type_form_domain" model="ir.actions.act_window">
+            <field name="name">Task Stages</field>
+            <field name="res_model">project.task.type</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="domain">[('project_ids','=', project_id)]</field>
+            <field name="view_id" ref="task_type_tree_inherited"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                Create a new stage in the task pipeline
+                </p><p>
+                Define the steps that will be used in the project from the
+                creation of the task, up to the closing of the task or issue.
+                You will use these stages in order to track the progress in
+                solving a task or an issue.
+                </p>
+            </field>
+        </record>
+
+        <record id="unlink_task_type_action" model="ir.actions.server">
+            <field name="name">Delete</field>
+            <field name="model_id" ref="project.model_project_task_type"/>
+            <field name="binding_model_id" ref="project.model_project_task_type"/>
+            <field name="binding_view_types">form,list</field>
+            <field name="state">code</field>
+            <field name="code">action = records.unlink_wizard(stage_view=True)</field>
+        </record>
+</odoo>

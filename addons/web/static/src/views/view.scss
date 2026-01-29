@@ -1,0 +1,87 @@
+/**
+ * This file regroups the rules which apply on elements which are shared between
+ * all views.
+ */
+
+// Sample data global rules
+.o_view_sample_data {
+    > :not(.o_search_panel) .form-check {
+        pointer-events: none !important;
+    }
+
+    .o_nocontent_help {
+        border-radius: 20%;
+        background-color: $o-view-background-color;
+        box-shadow: 0 0 120px 100px $o-view-background-color;
+    }
+}
+
+// No content helper
+.o_view_nocontent {
+    @include o-position-absolute(0, 0, 0, 0);
+    pointer-events: none;
+    z-index: var(--o-view-nocontent-zindex, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image:  radial-gradient(at 50% 50%, #{$o-view-background-color} 0px, #{rgba($o-view-background-color, 0.5)} 100%);
+
+    .o_nocontent_help {
+        @include o-nocontent-empty;
+
+        .o_view_nocontent_smiling_face:before {
+            @extend %o-nocontent-init-image;
+            width: 120px;
+            height: 140px;
+            background: transparent url(/web/static/img/smiling_face.svg) no-repeat center;
+        }
+
+        .o_view_nocontent_neutral_face:before {
+            @extend %o-nocontent-init-image;
+            width: 120px;
+            height: 140px;
+            background: transparent url(/web/static/img/neutral_face.svg) no-repeat center;
+        }
+
+        .o_view_nocontent_empty_folder:before {
+            @extend %o-nocontent-empty-document;
+        }
+
+        .o_empty_custom_dashboard {
+            min-height: 327px;
+            margin-left: -$grid-gutter-width/2;
+            margin-top: -$grid-gutter-width/2;
+            padding: 100px 0 0 137px;
+            background: transparent url(/web/static/img/graph_background.png) no-repeat 0 0;
+        }
+    }
+}
+
+// Invisible modifier (can be inside the view, the button area, ...)
+.o_invisible_modifier {
+    display: none!important;
+}
+
+// Status
+// This should normally be put in fields.scss but these classes are used outside
+// of `.o_field_widget` so it needs to be placed at an upper level.
+.o_status {
+    border-radius: 50%;
+    background-color: map-get($grays, '200');
+    height: 12px;
+    width: 12px;
+    box-shadow: inset 0 0 0 1px rgba($black, .2);
+
+    &.o_status_green {
+        background-color: map-get($theme-colors, "success");
+    }
+
+    &.o_status_red {
+        background-color: map-get($theme-colors, "danger");
+    }
+
+    .dropdown-item > & {
+        margin-bottom: .2em;
+        transform: translateX(-50%);
+    }
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="stock_report_delivery_document_inherit_product_expiry" inherit_id="stock.report_delivery_document">
+        <xpath expr="//th[@name='lot_serial']" position="after">
+            <t t-set="has_expiry_date" t-value="False"/>
+            <t t-set="has_expiry_date"
+               t-value="o.move_line_ids.filtered(lambda ml: ml.lot_id.expiration_date)"
+               groups="product_expiry.group_expiry_date_on_delivery_slip"/>
+            <t name="expiry_date" t-if="has_expiry_date">
+                <th>Expiration Date</th>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="stock_report_delivery_has_serial_move_line_inherit_product_expiry" inherit_id="stock.stock_report_delivery_has_serial_move_line">
+        <xpath expr="//t[@name='move_line_lot']" position="after">
+            <t t-if="has_expiry_date">
+                <td><span t-field="move_line.lot_id.expiration_date"/></td>
+            </t>
+        </xpath>
+    </template>
+</odoo>

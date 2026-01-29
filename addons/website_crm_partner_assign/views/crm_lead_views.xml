@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_crm_lead_opportunity_geo_assign_form" model="ir.ui.view">
+            <field name="name">crm.lead.geo_assign.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[last()]" position="after">
+                    <page string="Assigned Partner" name="assigned_partner" groups="sales_team.group_sale_salesman">
+                        <group>
+                            <group col="2">
+                                <label for="partner_latitude" string="Geolocation"/>
+                                <div>
+                                    <span class="oe_grey">( </span>
+                                    <field name="partner_latitude" class="oe_inline o_input_12ch px-1"/>
+                                    <span class="oe_grey" invisible="partner_latitude &lt;= 0">N </span>
+                                    <span class="oe_grey" invisible="partner_latitude &gt;= 0">S </span>
+                                    <field name="partner_longitude" class="oe_inline o_input_12ch ps-2 pe-1"/>
+                                    <span class="oe_grey" invisible="partner_longitude &lt;= 0">E </span>
+                                    <span class="oe_grey" invisible="partner_longitude &gt;= 0">W </span>
+                                    <span class="oe_grey ps-1">) </span>
+                                </div>
+                                <field name="partner_assigned_id" domain="[('grade_id','!=',False)]" context="{'partner_set_default_grade_activation': 1}"/>
+                            </group>
+                            <group>
+                                <button colspan="2" string="Automatic Assignment" name="action_assign_partner" type="object" class="btn-link pt-0 ps-0"/>
+                                <button colspan="2" string="Send Email" type="action" class="btn-link pt-0 ps-0"
+                                    invisible="not partner_assigned_id"
+                                    name="%(crm_lead_forward_to_partner_act)d"
+                                    context="{'default_composition_mode': 'forward','hide_forward_type': 1 , 'default_partner_ids': [partner_assigned_id]}"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_crm_opportunity_geo_assign_tree" model="ir.ui.view">
+            <field name="name">crm.lead.geo_assign.tree.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+            <field name="arch" type="xml">
+                <field name="priority" position="after">
+                    <field name="partner_assigned_id" optional="hide"/>
+                    <field name="date_partner_assign" column_invisible="True"/>
+                 </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="crm_opportunity_partner_filter">
+            <field name="name">crm.opportunity.partner.filter.assigned</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
+            <field name="arch" type="xml">
+                <filter name="stage" position="after">
+                    <filter string="Assigned Partner" name="assigned_partner" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
+                </filter>
+                <filter name="unassigned" position="after">
+                    <filter string="My Assigned Partners" name="my_assigned_partners" domain="[('partner_assigned_id.user_id', '=', uid)]"/>
+                </filter>
+                <field name="phone_mobile_search" position="after">
+                    <field name="partner_assigned_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_crm_lead_geo_assign_tree" model="ir.ui.view">
+            <field name="name">crm.lead.lead.geo_assign.tree.inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_tree_view_leads"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="partner_assigned_id" optional="show"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="crm_lead_partner_filter">
+            <field name="name">crm.lead.partner.filter.assigned</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.view_crm_case_leads_filter"/>
+            <field name="arch" type="xml">
+                <filter name="company" position="after">
+                    <filter string="Assigned Partner" name="assigned_partner" domain="[]" context="{'group_by': 'partner_assigned_id'}"/>
+                </filter>
+                <filter name="unassigned_leads" position="after">
+                    <filter string="My Assigned Partners" name="my_assigned_partners" domain="[('partner_assigned_id.user_id', '=', uid)]"/>
+                </filter>
+                <field name="campaign_id" position="after">
+                    <field name="partner_assigned_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_pivot" model="ir.ui.view">
+            <field name="name">crm.lead.view.pivot.inherit.partner.assign</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_pivot"/>
+            <field name="arch" type="xml">
+                <xpath expr="//pivot" position="inside">
+                    <field name="partner_latitude" invisible="1"/>
+                    <field name="partner_longitude" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="crm_opportunity_report_view_pivot_lead" model="ir.ui.view">
+            <field name="name">crm.opportunity.report.view.pivot.lead.inherit.partner_assign</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_opportunity_report_view_pivot_lead"/>
+            <field name="arch" type="xml">
+                <xpath expr="//pivot" position="inside">
+                    <field name="partner_latitude" invisible="1"/>
+                    <field name="partner_longitude" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_pivot_forecast" model="ir.ui.view">
+            <field name="name">crm.lead.view.pivot.forecast.inherit.website.crm.partner.assign</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_pivot_forecast"/>
+            <field name="arch" type="xml">
+                <xpath expr="//pivot" position="inside">
+                    <field name="partner_latitude" invisible="1"/>
+                    <field name="partner_longitude" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_graph" model="ir.ui.view">
+            <field name="name">crm.lead.view.graph.inherit.partner.assign</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_graph"/>
+            <field name="arch" type="xml">
+                <xpath expr="//graph" position="inside">
+                    <field name="partner_latitude" invisible="1"/>
+                    <field name="partner_longitude" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_graph_forecast" model="ir.ui.view">
+            <field name="name">crm.lead.view.graph.forecast.inherit.website.crm.partner.assign</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_graph_forecast"/>
+            <field name="arch" type="xml">
+                <xpath expr="//graph" position="inside">
+                    <field name="partner_latitude" invisible="1"/>
+                    <field name="partner_longitude" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_graph_report_opportunity" model="ir.ui.view">
+            <field name="name">crm.lead.view.graph.report.opportunity.inherit.partner.assign</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_opportunity_report_view_graph"/>
+            <field name="arch" type="xml">
+                <xpath expr="//graph" position="inside">
+                    <field name="partner_latitude" invisible="1"/>
+                    <field name="partner_longitude" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_graph_report_lead" model="ir.ui.view">
+            <field name="name">crm.lead.view.graph.report.lead.inherit.partner.assign</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_opportunity_report_view_graph_lead"/>
+            <field name="arch" type="xml">
+                <xpath expr="//graph" position="inside">
+                    <field name="partner_latitude" invisible="1"/>
+                    <field name="partner_longitude" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_kanban" model="ir.ui.view">
+            <field name="name">crm.lead.view.kanban.inherit.website.crm.partner.assign</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="partner_assigned_id"/>
+                </field>
+                <xpath expr="//span[@t-esc='record.partner_id.value']" position="replace">
+                    <span class="o_text_overflow"
+                        t-esc="record.partner_id.value"
+                        t-att-title="record.partner_id.value"
+                        t-if="record.partner_id.value"/>
+                    <span class="o_text_overflow" t-if="record.partner_assigned_id.value">
+                        <i class="fa fa-arrow-circle-right" aria-label="Assigned Partner" title="Assigned Partner"/>
+                        <span t-att-title="record.partner_assigned_id.value"
+                            t-esc="record.partner_assigned_id.value"/>
+                    </span>
+                </xpath>
+            </field>
+        </record>
+</odoo>

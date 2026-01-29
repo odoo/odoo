@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.EditListInput">
+        <div class="input-group mb-3">
+            <input type="text" t-att-value="props.item.text" t-on-input="onInput" class="popup-input list-line-input form-control form-control-lg w-75 mx-auto"
+                    placeholder="Serial/Lot Number" t-on-keyup="onKeyup" />
+            <button t-if="props.deletable" class="btn btn-danger btn-lg" t-on-click="props.removeItem">
+                <i class="oe_link_icon fa fa-trash-o" role="img" aria-label="Remove" title="Remove" />
+            </button>
+        </div>
+    </t>
+
+</templates>

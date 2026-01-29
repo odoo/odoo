@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_move_form_inherit" model="ir.ui.view">
+            <field name="name">stock.move.form.inherit</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside" >
+                    <button name="action_get_account_moves" icon="fa-usd" class="oe_stat_button" string="Accounting Entries" type="object" groups="account.group_account_readonly"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_stock_quant_tree_inventory_editable_inherit_stock_account" model="ir.ui.view">
+            <field name="name">stock.quant.inventory.tree.editable.inherit.stock.account</field>
+            <field name="model">stock.quant</field>
+            <field name="inherit_id" ref="stock.view_stock_quant_tree_inventory_editable"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_uom_id']" position="after">
+                    <field name="accounting_date" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_location_form_inherit" model="ir.ui.view">
+            <field name="name">stock.location.form.inherit</field>
+            <field name="model">stock.location</field>
+            <field name="inherit_id" ref="stock.view_location_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='additional_info']" position="after">
+                    <div groups="stock_account.group_stock_accounting_automatic">
+                        <group string="Accounting Information" invisible="usage not in ('inventory', 'production')">
+                            <field name="valuation_in_account_id" options="{'no_create': True}"/>
+                            <field name="valuation_out_account_id" options="{'no_create': True}"/>
+                        </group>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_stock_return_picking_form_inherit_stock_account" model="ir.ui.view">
+            <field name="name">stock.return.picking.stock.account.form</field>
+            <field name="inherit_id" ref="stock.view_stock_return_picking_form"/>
+            <field name="model">stock.return.picking</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_return_moves']/tree" position="inside">
+                    <field name="to_refund" groups="base.group_no_one"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

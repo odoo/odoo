@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="web_editor.MediaDialog">
+    <Dialog contentClass="contentClass"
+        size="size"
+        title="title"
+        modalRef="modalRef">
+        <Notebook pages="tabs" onPageUpdate.bind="onTabChange" defaultPage="state.activeTab"/>
+        <t t-set-slot="footer">
+            <button class="btn btn-primary" t-on-click="() => this.save()" t-ref="add-button">Add</button>
+            <button class="btn btn-secondary" t-on-click="() => this.props.close()">Discard</button>
+        </t>
+    </Dialog>
+</t>
+</templates>

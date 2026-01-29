@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.SearchBar.Toggler">
+        <button t-if="props.isSmall" t-attf-class="btn btn-secondary {{ props.showSearchBar ? 'active' : '' }}" t-on-click="props.toggleSearchBar">
+            <i class="fa fa-fw fa-search"/>
+        </button>
+    </t>
+
+</templates>

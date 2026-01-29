@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="web.MobileSwitchCompanyMenu">
+    <div class="o_burger_menu_companies p-3">
+        <div class="o_burger_menu_user_title h6 mb-3">Companies</div>
+        <t t-foreach="Object.values(companyService.allowedCompaniesWithAncestors)
+                      .filter((c) => !c.parent_id)
+                      .sort((c1, c2) => c1.sequence - c2.sequence)
+                     " t-as="company" t-key="company.id">
+            <MobileSwitchCompanyItem company="company" level="0"/>
+        </t>
+    </div>
+</t>
+
+<t t-name="web.MobileSwitchCompanyItem">
+    <t t-set="checkIcon" t-value="isCompanySelected ? 'fa-check-square text-primary' : 'fa-square-o'"/>
+    <div class="d-flex menu_companies_item" t-att-class="{'disabled': !isCompanyAllowed }" t-att-data-company-id="props.company.id">
+        <div class="border-end toggle_company" t-att-class="{'border-primary' : isCurrent}" t-on-click="() => this.toggleCompany()">
+            <span class="btn border-0 p-2" t-att-class="{'disabled': !isCompanyAllowed }">
+                <i t-attf-class="fa fa-fw fs-2 m-0 {{checkIcon}}"/>
+            </span>
+        </div>
+        <div
+            class="flex-grow-1 p-2 log_into"
+            t-att-class="{'alert-primary': isCurrent, 'text-muted': !isCompanyAllowed}" t-on-click="() => this.logIntoCompany()"
+        >
+            <span
+                t-esc="props.company.name" class="company_label"
+                t-att-class="isCurrent ? 'text-900 fw-bold' : ''"
+                t-att-style="'padding-left:' + (props.level * 10) + 'px';"
+            />
+            <small t-if="isCurrent" class="ms-1">(current)</small>
+        </div>
+    </div>
+    <t t-foreach="props.company.child_ids" t-as="child" t-key="child">
+        <MobileSwitchCompanyItem company="companyService.getCompany(child)" level="props.level + 1"/>
+    </t>
+</t>
+
+</templates>

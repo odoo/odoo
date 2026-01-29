@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_sa_additional_footer">
+        <div t-if="report_type == 'pdf' and additional_footer_text" class="text-muted">
+            <span t-out="additional_footer_text"/>
+        </div>
+    </template>
+    <template id="l10n_sa_external_layout_striped" inherit_id="web.external_layout_striped">
+        <div class="text-center" position="inside">
+            <t t-call="l10n_sa.l10n_sa_additional_footer"/>
+        </div>
+    </template>
+    <template id="l10n_sa_external_layout_boxed" inherit_id="web.external_layout_boxed">
+        <div class="text-center" position="inside">
+            <t t-call="l10n_sa.l10n_sa_additional_footer"/>
+        </div>
+    </template>
+    <template id="l10n_sa_external_layout_bold" inherit_id="web.external_layout_bold">
+        <xpath expr="//div[hasclass('col-4')]" position="inside">
+            <t t-call="l10n_sa.l10n_sa_additional_footer"/>
+        </xpath>
+    </template>
+    <template id="l10n_sa_external_layout_standard" inherit_id="web.external_layout_standard">
+        <div class="text-center" position="inside">
+            <t t-call="l10n_sa.l10n_sa_additional_footer"/>
+        </div>
+    </template>
+</odoo>

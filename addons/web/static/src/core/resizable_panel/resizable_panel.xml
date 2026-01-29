@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="web_studio.ResizablePanel">
+        <div class="o_resizable_panel d-flex flex-column" t-att-class="class" t-ref="containerRef">
+            <t t-slot="default" />
+            <div
+                class="o_resizable_panel_handle position-absolute top-0 bottom-0 end-0" t-att-class="props.handleSide === 'start' ? 'start-0' : 'end-0'"
+                t-ref="handleRef"
+            ></div>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="action_ice_servers" model="ir.actions.act_window">
+         <field name="name">ICE servers</field>
+         <field name="res_model">mail.ice.server</field>
+         <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.ui.view" id="view_ice_server_tree">
+        <field name="name">mail.ice.server.tree</field>
+        <field name="model">mail.ice.server</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field colspan="1" name="server_type"/>
+                <field name="uri"/>
+                <field name="username"/>
+                <field name="credential"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_ice_server_form">
+        <field name="name">mail.ice.server.form</field>
+        <field name="model">mail.ice.server</field>
+        <field name="arch" type="xml">
+            <form string="ICE server">
+                <sheet>
+                    <group>
+                        <label for="uri"/>
+                        <div class="oe_inline" name="URI" style="display: inline;">
+                            <field name="server_type" class="oe_inline"/><field name="uri" class="oe_inline"/>
+                        </div>
+                    </group>
+                    <group>
+                        <field name="username"/>
+                        <field name="credential"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

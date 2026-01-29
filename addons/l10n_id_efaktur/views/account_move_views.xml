@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_move_efaktur_form_view" model="ir.ui.view">
+            <field name="name">account.move.efaktur.form.view</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_shipping_id" position="before">
+                    <field name="l10n_id_need_kode_transaksi" invisible="1"/>
+                    <field name="l10n_id_attachment_id" invisible="1"/>
+                    <field name="l10n_id_kode_transaksi" invisible="country_code != 'ID' or not l10n_id_need_kode_transaksi" readonly="state in ['cancel', 'posted']" required="l10n_id_need_kode_transaksi"/>
+                    <field name="l10n_id_replace_invoice_id" invisible="country_code != 'ID'" readonly="state != 'draft'" options="{'m2o_dialog': False, 'no_create': True}"/>
+                </field>
+                <button name="button_draft" position="after">
+                    <button name="reset_efaktur" string="Reset E-Faktur" type="object" invisible="country_code != 'ID' or not l10n_id_tax_number or state != 'cancel' or l10n_id_attachment_id"/>
+                </button>
+                <xpath expr=".//group[@id='other_tab_group']" position="inside">
+                    <group string="Electronic Tax" invisible="country_code != 'ID'">
+                        <field name="l10n_id_tax_number" invisible="move_type == 'entry'" readonly="move_type in ('out_invoice', 'out_refund', 'out_receipt')"/>
+                        <field name="l10n_id_csv_created" invisible="move_type not in ('out_invoice', 'out_refund')"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="account_move_efaktur_tree_view" model="ir.ui.view">
+            <field name="name">account.move.efaktur.tree.view</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_invoice_tree"/>
+            <field name="arch" type="xml">
+                <field name="invoice_user_id" position="after">
+                    <field name="l10n_id_tax_number" optional="show"/>
+                    <field name="l10n_id_csv_created" optional="hide"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="dowload_efaktur_action" model="ir.actions.server">
+            <field name="name">Download e-Faktur</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="state">code</field>
+            <field name="code">action = records.download_efaktur()</field>
+        </record>
+
+        <record id="view_account_invoice_filter" model="ir.ui.view">
+            <field name="name">account.move.select.l10n_id.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="l10n_id_tax_number"/>
+                    <field name="l10n_id_attachment_id"/>
+                    <group>
+                        <filter string="To Generate e-Faktur" name="tax_csv_upload" domain="[('l10n_id_tax_number', '!=', False), ('l10n_id_attachment_id', '=', False), ('state', '=', 'posted')]" />
+                    </group>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.s_dynamic_snippet.carousel.arrows">
+        <a t-attf-href="##{unique_id}" class="carousel-control-prev" data-bs-slide="prev" role="button" aria-label="Previous" title="Previous">
+            <span class="fa fa-chevron-circle-left fa-2x"/>
+            <span class="visually-hidden">Previous</span>
+        </a>
+        <a t-attf-href="##{unique_id}" class="carousel-control-next" data-bs-slide="next" role="button" aria-label="Next" title="Next">
+            <span class="fa fa-chevron-circle-right fa-2x"/>
+            <span class="visually-hidden">Next</span>
+        </a>
+    </t>
+    <t t-name="website.s_dynamic_snippet.carousel">
+        <div t-att-id="unique_id" class="carousel slide" t-att-data-bs-interval="interval" data-bs-ride="carousel">
+            <!-- Content -->
+            <t t-set="rowSize" t-value="chunkSize" />
+            <t t-set="slideSize" t-value="rowSize * rowPerSlide" />
+            <t t-set="colClass" t-value="'d-flex flex-grow-0 flex-shrink-0 col-' + Math.trunc(12 / rowSize).toString()"/>
+            <t t-set="slideIndexGenerator" t-value="Array.from(Array(Math.ceil(data.length/slideSize)).keys())"/>
+            <t t-set="rowIndexGenerator" t-value="Array.from(Array(rowPerSlide).keys())"/>
+            <t t-set="colIndexGenerator" t-value="Array.from(Array(rowSize).keys())"/>
+            <div class="carousel-inner row w-100 mx-auto" role="listbox" aria-label="Carousel">
+                <t t-foreach="slideIndexGenerator" t-as="slideIndex" t-key="slideIndex_index">
+                    <t t-set="slideOffset" t-value="slideIndex * slideSize"/>
+                    <div t-attf-class="carousel-item #{extraClasses} #{slideIndex_first ? 'active' : ''}" role="option">
+                        <t t-foreach="rowIndexGenerator" t-as="rowIndex" t-key="rowIndex_index">
+                            <t t-set="rowOffset" t-value="slideOffset + (rowIndex * rowSize)"/>
+                            <t t-if="rowOffset &lt; data.length">
+                                <div class="row">
+                                    <t t-foreach="colIndexGenerator" t-as="colIndex" t-key="colIndex_index">
+                                        <t t-set="itemIndex" t-value="rowOffset + colIndex"/>
+                                        <t t-if="itemIndex &lt; data.length">
+                                            <div t-attf-class="#{colClass}">
+                                                <t t-out="data[itemIndex]"/>
+                                            </div>
+                                        </t>
+                                    </t>
+                                </div>
+                            </t>
+                        </t>
+                    </div>
+                </t>
+            </div>
+            <!-- Controls -->
+            <t t-if='slideIndexGenerator.length > 1'>
+                <t t-if="arrowPosition === 'bottom'">
+                    <div class="s_dynamic_snippet_arrow_bottom pt-2 d-flex justify-content-center">
+                        <t t-call="website.s_dynamic_snippet.carousel.arrows">
+                            <t t-set="unique_id" t-value="unique_id" />
+                        </t>
+                    </div>
+                </t>
+                <t t-else="">
+                    <t t-call="website.s_dynamic_snippet.carousel.arrows">
+                        <t t-set="unique_id" t-value="unique_id" />
+                    </t>
+                </t>
+            </t>
+        </div>
+    </t>
+</templates>

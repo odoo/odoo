@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_pk_wh_vat_form" model="account.report">
+        <field name="name">Withholding Tax Report - Pakistan (PK)</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.pk"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="l10n_pk_wh_vat_column_net" model="account.report.column">
+                <field name="name">base</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="l10n_pk_wh_vat_column_tax" model="account.report.column">
+                <field name="name">Tax Amount</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_pk_wh_vat_title_purchases_vat" model="account.report.line">
+                <field name="name">Purchase Withholding Tax</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_pk_wh_vat_line_P1" model="account.report.line">
+                        <field name="name">Purchase -1% WH</field>
+                        <field name="code">PURWH1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_P1_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -1% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_P1_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -1% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_wh_vat_line_P2" model="account.report.line">
+                        <field name="name">Purchase -1.5% WH</field>
+                        <field name="code">PURWH1.5</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_P2_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -1.5% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_P2_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -1.5% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_wh_vat_line_P3" model="account.report.line">
+                        <field name="name">Purchase -2% WH</field>
+                        <field name="code">PURWH2</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_P3_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -2% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_P3_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -2% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_wh_vat_line_P4" model="account.report.line">
+                        <field name="name">Purchase -3.5% WH</field>
+                        <field name="code">PURWH3.5</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_P4_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -3.5% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_P4_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -3.5% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_wh_vat_line_P5" model="account.report.line">
+                        <field name="name">Purchase -4% WH</field>
+                        <field name="code">PURWH4</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_P5_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -4% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_P5_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -4% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_wh_vat_line_P6" model="account.report.line">
+                        <field name="name">Purchase -5% WH</field>
+                        <field name="code">PURWH5K</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_P6_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -5% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_P6_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -5% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_wh_vat_line_P7" model="account.report.line">
+                        <field name="name">Purchase -5.5% WH</field>
+                        <field name="code">PURWH5.5</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_P7_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -5.5% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_P7_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -5.5% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_wh_vat_line_P8" model="account.report.line">
+                        <field name="name">Purchase -6% WH</field>
+                        <field name="code">PURWH6</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_P8_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -6% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_P8_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -6% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_wh_vat_line_P9" model="account.report.line">
+                        <field name="name">Purchase -7.5% WH</field>
+                        <field name="code">PURWH7.5</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_P9_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -7.5% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_P9_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -7.5% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_wh_vat_line_P10" model="account.report.line">
+                        <field name="name">Purchase -8% WH</field>
+                        <field name="code">PURWH8</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_P10_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -8% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_P10_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -8% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_wh_vat_line_P11" model="account.report.line">
+                        <field name="name">Purchase -9% WH</field>
+                        <field name="code">PURWH9</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_P11_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -9% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_P11_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -9% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_wh_vat_line_P12" model="account.report.line">
+                        <field name="name">Purchase -10% WH</field>
+                        <field name="code">PURWH10</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_P12_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -10% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_P12_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -10% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_wh_vat_line_P13" model="account.report.line">
+                        <field name="name">Purchase -11% WH</field>
+                        <field name="code">PURWH11</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_P13_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -11% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_P13_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Purchase -11% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_pk_wh_vat_title_sales_vat" model="account.report.line">
+                <field name="name">Sales Withholding Tax</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_pk_wh_vat_line_S1" model="account.report.line">
+                        <field name="name">Sales -1% WH</field>
+                        <field name="code">SALWH1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_S1_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales -1% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_S1_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales -1% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_wh_vat_line_S2" model="account.report.line">
+                        <field name="name">Sales -1.5% WH</field>
+                        <field name="code">SALWH1.5</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_S2_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales -1.5% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_S2_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales -1.5% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_wh_vat_line_S3" model="account.report.line">
+                        <field name="name">Sales -4% WH</field>
+                        <field name="code">SALWH4</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_S3_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales -4% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_S3_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales -4% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_wh_vat_line_S4" model="account.report.line">
+                        <field name="name">Sales -5% WH</field>
+                        <field name="code">SALWH5</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_S4_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales -5% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_S4_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales -5% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_wh_vat_line_S5" model="account.report.line">
+                        <field name="name">Sales -5.5% WH</field>
+                        <field name="code">SALWH5.5</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_S5_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales -5.5% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_S5_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales -5.5% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_wh_vat_line_S6" model="account.report.line">
+                        <field name="name">Sales -7.5% WH</field>
+                        <field name="code">SALWH7.5</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_S6_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales -7.5% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_S6_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales -7.5% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_wh_vat_line_S7" model="account.report.line">
+                        <field name="name">Sales -8% WH</field>
+                        <field name="code">SALWH8</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_S7_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales -8% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_S7_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales -8% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_wh_vat_line_S8" model="account.report.line">
+                        <field name="name">Sales -9% WH</field>
+                        <field name="code">SALWH9</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_S8_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales -9% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_S8_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales -9% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_wh_vat_line_S9" model="account.report.line">
+                        <field name="name">Sales -10% WH</field>
+                        <field name="code">SALWH10</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_S9_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales -10% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_S9_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales -10% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pk_wh_vat_line_S10" model="account.report.line">
+                        <field name="name">Sales -11% WH</field>
+                        <field name="code">SALWH11</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pk_wh_vat_expression_S10_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales -11% WH (Base)</field>
+                            </record>
+                            <record id="l10n_pk_wh_vat_expression_S10_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Sales -11% WH (Tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

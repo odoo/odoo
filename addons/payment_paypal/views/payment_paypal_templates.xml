@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- https://developer.paypal.com/docs/paypal-payments-standard/integration-guide/formbasics -->
+    <template id="redirect_form">
+        <form t-att-action="api_url" method="post">
+            <input type="hidden" name="address1" t-att-value="address1"/>
+            <input type="hidden" name="amount" t-att-value="amount"/>
+            <input type="hidden" name="business" t-att-value="business"/>
+            <input type="hidden" name="cancel_return" t-att-value="cancel_url"/>
+            <input type="hidden" name="city" t-att-value="city"/>
+            <input type="hidden" name="cmd" value="_xclick"/>
+            <input type="hidden" name="country" t-att-value="country"/>
+            <input type="hidden" name="currency_code" t-att-value="currency_code"/>
+            <input type="hidden" name="email" t-att-value="email"/>
+            <input type="hidden" name="first_name" t-att-value="first_name"/>
+            <input type="hidden" name="item_name" t-att-value="item_name"/>
+            <input type="hidden" name="item_number" t-att-value="item_number"/>
+            <input type="hidden" name="last_name" t-att-value="last_name"/>
+            <input type="hidden" name="lc" t-att-value="lc"/>
+            <input type="hidden" name="no_shipping" t-att-value="no_shipping"/>
+            <input type="hidden" name="address_override" t-att-value="address_override"/>
+            <input type="hidden" name="notify_url" t-att-value="notify_url"/>
+            <input type="hidden" name="return" t-att-value="return_url"/>
+            <input type="hidden" name="rm" value="2"/>
+            <input t-if="state"
+                   type="hidden" name="state" t-att-value="state"/>
+            <input type="hidden" name="zip" t-att-value="zip_code"/>
+        </form>
+    </template>
+
+</odoo>

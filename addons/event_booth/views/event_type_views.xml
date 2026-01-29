@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <record id="event_type_view_form" model="ir.ui.view">
+        <field name="name">event.type.view.form.inherit.event.booth</field>
+        <field name="model">event.type</field>
+        <field name="inherit_id" ref="event.view_event_type_form"/>
+        <field name="arch" type="xml">
+            <page name="event_type_communication" position="after">
+                <page string="Booths" name="page_booths">
+                    <field name="event_type_booth_ids"
+                           class="w-100"
+                           context="{
+                               'tree_view_ref': 'event_booth.event_type_booth_view_tree_from_type',
+                               'form_view_ref': 'event_booth.event_type_booth_view_form_from_type'
+                           }"/>
+                </page>
+            </page>
+        </field>
+    </record>
+
+</data></odoo>

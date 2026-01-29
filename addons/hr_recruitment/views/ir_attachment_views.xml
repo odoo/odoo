@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <!-- Resume and Letters -->
+        <record id="ir_attachment_view_search_inherit_hr_recruitment" model="ir.ui.view">
+            <field name="name">ir.attachment.search.inherit.recruitment</field>
+            <field name="model">ir.attachment</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="base.view_attachment_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='create_date']" position="after">
+                    <field name="index_content" string="Content"/>
+                </xpath>
+                <xpath expr="//filter[@name='my_documents_filter']" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </xpath>
+                <xpath expr="//filter[@name='url_filter']" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </xpath>
+                <xpath expr="//filter[@name='binary_filter']" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="ir_attachment_hr_recruitment_list_view" model="ir.ui.view">
+            <field name="model">ir.attachment</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" column_invisible="True"/>
+                    <field name="res_id" column_invisible="True"/>
+                    <field name="res_model" column_invisible="True"/>
+                    <field name="datas" widget="binary" filename="name" string="File"/>
+                    <field name="res_name" widget="applicant_char" string="Applicant" invisible="res_model != 'hr.applicant'"/>
+                    <field name="create_date"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+</odoo>

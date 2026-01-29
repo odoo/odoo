@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="module_view_kanban_apps_inherit">
+            <field name="name">Apps Kanban Data Modules</field>
+            <field name="model">ir.module.module</field>
+            <field name="inherit_id" ref="base.module_view_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='application']" position="after">
+                    <field name="module_type"/>
+                </xpath>
+                <xpath expr="//button[@name='button_immediate_install']" position="after">
+                    <button type="object" class="btn btn-primary btn-sm" name="button_immediate_install_app" invisible="state != 'uninstalled' or module_type in ('official', False)" groups="base.group_system" context="{'module_name':name}">Activate</button>
+                    <button type="object" class="btn btn-primary btn-sm" name="button_immediate_install_app" invisible="state == 'uninstalled' or module_type in ('official', False)" groups="base.group_system" context="{'module_name':name}">Upgrade</button>
+                </xpath>
+                <xpath expr="//button[@name='button_immediate_install']" position="attributes">
+                    <attribute name="invisible">state != 'uninstalled' or (module_type and module_type != 'official')</attribute>
+                </xpath>
+                <xpath expr="//t[@t-name='kanban-menu']/a[@type='edit']" position="attributes">
+                    <attribute name="context">{'module_type': module_type, 'module_name':name}</attribute>
+                    <attribute name="type">object</attribute>
+                    <attribute name="name">more_info</attribute>
+                </xpath>
+                <xpath expr="//div[hasclass('oe_module_action')]/a[@type='edit']" position="attributes">
+                    <attribute name="context">{'module_type': module_type, 'module_name':name}</attribute>
+                    <attribute name="type">object</attribute>
+                    <attribute name="name">more_info</attribute>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="module_tree_apps_inherit">
+            <field name="name">Apps List Data Modules</field>
+            <field name="model">ir.module.module</field>
+            <field name="inherit_id" ref="base.module_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='category_id']" position="after">
+                    <field name="module_type" column_invisible="1"/>
+                    <field name="name" column_invisible="1"/>
+                </xpath>
+                <tree position="attributes">
+                    <attribute name="js_class">ir_module_module_tree_view</attribute>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="module_form_apps_inherit">
+            <field name="name">Apps</field>
+            <field name="model">ir.module.module</field>
+            <field name="inherit_id" ref="base.module_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='has_iap']" position="after">
+                    <field name="module_type" invisible="1"/>
+                </xpath>
+                <xpath expr="//page[@name='technical_data']" position="attributes">
+                    <attribute name="invisible">module_type != 'official'</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_immediate_install']" position="after">
+                    <button type="object" class="btn btn-primary me-1" name="button_immediate_install_app" invisible="state != 'uninstalled' or module_type in ('official', False)" groups="base.group_system">Activate</button>
+                    <button type="object" class="btn btn-primary me-1" name="button_immediate_install_app" invisible="state == 'uninstalled' or module_type in ('official', False)" groups="base.group_system">Upgrade</button>
+                </xpath>
+                <xpath expr="//button[@name='button_immediate_install']" position="attributes">
+                    <attribute name="invisible">to_buy or state != 'uninstalled' or (module_type and module_type != 'official')</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_immediate_upgrade']" position="attributes">
+                    <attribute name="invisible">state == 'uninstalled' or (module_type and module_type != 'official')</attribute>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_module_filter_apps_inherit">
+            <field name="name">Search Data Modules</field>
+            <field name="model">ir.module.module</field>
+            <field name="inherit_id" ref="base.view_module_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//searchpanel/field[@name='category_id']" position="before">
+                    <field name="module_type" string="Apps" expand="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

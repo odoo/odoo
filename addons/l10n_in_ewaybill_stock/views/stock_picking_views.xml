@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_inherit_ewaybill" model="ir.ui.view">
+        <field name="name">view.picking.form.inherit.ewaybill</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/field[@name='state']" position="before">
+                <button string="Create e-Waybill / Challan"
+                        type="object"
+                        name="action_l10n_in_ewaybill_create"
+                        invisible="
+                            country_code != 'IN'
+                            or l10n_in_ewaybill_id
+                            or (picking_type_code == 'incoming' and state not in ('done', 'assigned'))
+                            or (picking_type_code != 'incoming' and state != 'done')"
+                        data-hotkey="e"
+                        groups="stock.group_stock_manager"/>
+            </xpath>
+            <xpath expr="//sheet/div[hasclass('oe_button_box')]" position="inside">
+                <field name="l10n_in_ewaybill_id" invisible="1" groups="stock.group_stock_manager"/>
+                <button name="action_open_l10n_in_ewaybill"
+                        class="oe_stat_button"
+                        icon="fa-truck"
+                        type="object"
+                        invisible="not l10n_in_ewaybill_id"
+                        groups="stock.group_stock_manager">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">e-Waybill / Challan</span>
+                        </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

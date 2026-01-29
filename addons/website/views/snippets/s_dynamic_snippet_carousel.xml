@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="s_dynamic_snippet_carousel" name="Dynamic Carousel">
+        <t t-call="website.s_dynamic_snippet_template">
+            <t t-set="snippet_name" t-value="'s_dynamic_snippet_carousel'"/>
+        </t>
+    </template>
+    <template id="dynamic_snippet_carousel_options_template">
+        <t t-call="website.s_dynamic_snippet_options_template">
+            <t t-set="snippet_name" t-value="snippet_name"/>
+            <t t-set="snippet_selector" t-value="snippet_selector"/>
+            <we-input string="Slider Speed"
+                  data-select-data-attribute="1s" data-name="speed_opt" data-attribute-name="carouselInterval" data-no-preview="true"
+                  data-unit="s" data-save-unit="ms" data-step="0.1"/>
+            <t t-out="0"/>
+        </t>
+    </template>
+    <template id="s_dynamic_snippet_carousel_options" inherit_id="website.snippet_options">
+        <xpath expr="." position="inside">
+            <t t-call="website.dynamic_snippet_carousel_options_template">
+                <t t-set="snippet_name" t-value="'dynamic_snippet_carousel'"/>
+                <t t-set="snippet_selector" t-value="'.s_dynamic_snippet_carousel'"/>
+            </t>
+        </xpath>
+    </template>
+
+<asset id="website.s_dynamic_snippet_carousel_000_scss" name="Dynamic snippet carousel 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_dynamic_snippet_carousel/000.scss</path>
+</asset>
+
+<asset id="website.s_dynamic_snippet_carousel_000_js" name="Dynamic snippet carousel 000 JS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_dynamic_snippet_carousel/000.js</path>
+</asset>
+
+<asset id="website.s_dynamic_snippet_carousel_000_xml" name="Dynamic snippet carousel 000 XML">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_dynamic_snippet_carousel/000.xml</path>
+</asset>
+
+</odoo>

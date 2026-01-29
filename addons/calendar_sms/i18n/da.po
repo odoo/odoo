@@ -1,0 +1,116 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * calendar_sms
+#
+# Translators:
+# Sanne Kristensen <sanne@vkdata.dk>, 2023
+# Martin Trigaux, 2023
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2026-01-17 17:00+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-17/"
+"calendar_sms/da/>\n"
+"Language: da\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: calendar_sms
+#: model:ir.model,name:calendar_sms.model_calendar_event
+msgid "Calendar Event"
+msgstr "Kalender begivenhed"
+
+#. module: calendar_sms
+#: model:sms.template,name:calendar_sms.sms_template_data_calendar_reminder
+msgid "Calendar Event: Reminder"
+msgstr "Kalender begivenhed: Påmindelse"
+
+#. module: calendar_sms
+#: model:ir.model,name:calendar_sms.model_calendar_alarm
+msgid "Event Alarm"
+msgstr "Arrangements notifikation"
+
+#. module: calendar_sms
+#: model:ir.model,name:calendar_sms.model_calendar_alarm_manager
+msgid "Event Alarm Manager"
+msgstr "Arrangements notifikations ansvarlig"
+
+#. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_event.py:0
+#, python-format
+msgid "Event reminder: %(name)s, %(time)s."
+msgstr "Begivenheds påmindelse: %(name)s, %(time)s."
+
+#. module: calendar_sms
+#: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
+msgid ""
+"Event reminder: {{ object.name }}, "
+"{{ object.get_display_time_tz(object.partner_id.tz) }}"
+msgstr ""
+"Begivenhedspåmindelse: {{ object.name }}, {{ object.get_display_time_tz"
+"(object.partner_id.tz) }}"
+
+#. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_alarm.py:0
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_notify_responsible
+#, python-format
+msgid "Notify Responsible"
+msgstr "Informér den ansvarshavende"
+
+#. module: calendar_sms
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
+msgid "SMS"
+msgstr "SMS"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_template_id
+msgid "SMS Template"
+msgstr "SMS skabelon"
+
+#. module: calendar_sms
+#: model:ir.model.fields.selection,name:calendar_sms.selection__calendar_alarm__alarm_type__sms
+msgid "SMS Text Message"
+msgstr "SMS besked"
+
+#. module: calendar_sms
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_tree_inherited
+msgid "Send SMS"
+msgstr "Send SMS"
+
+#. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_event.py:0
+#, python-format
+msgid "Send SMS Text Message"
+msgstr "Send SMS tekst besked"
+
+#. module: calendar_sms
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
+msgid "Send SMS to attendees"
+msgstr "Send SMS til deltagere"
+
+#. module: calendar_sms
+#: model:ir.model.fields,help:calendar_sms.field_calendar_alarm__sms_template_id
+msgid "Template used to render SMS reminder content."
+msgstr "Skabelon til SMS-påmindelser, der bruges til at gengive indholdet."
+
+#. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_event.py:0
+#, python-format
+msgid "There are no attendees on these events"
+msgstr "Der er ingen deltagere til disse arrangementer"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__alarm_type
+msgid "Type"
+msgstr "Type"

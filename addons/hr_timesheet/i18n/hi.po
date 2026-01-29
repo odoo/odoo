@@ -1,0 +1,1556 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_timesheet
+#
+# Translators:
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-12-31 11:29+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hindi <https://translate.odoo.com/projects/odoo-17/"
+"hr_timesheet/hi/>\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Weblate 5.14.3\n"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+msgid "#{timesheet.employee_id.name}"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/project_project.py:0
+#, python-format
+msgid "%(effective)s %(uom_name)s"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/project_project.py:0
+#, python-format
+msgid "%(effective)s / %(allocated)s %(uom_name)s"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/project_project.py:0
+#, python-format
+msgid "%(effective)s / %(allocated)s %(uom_name)s (%(success_rate)s%%)"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/project_project.py:0
+#, python-format
+msgid "%(exceeding_hours)s %(uom_name)s (+%(exceeding_rate)s%%)"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/project_project.py:0
+#, python-format
+msgid "%(name)s's Timesheets"
+msgstr "%(name)s की टाइमशीट"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "%s Spent"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/project_task.py:0
+#, python-format
+msgid "(%(sign)s%(hours)s:%(minutes)s remaining)"
+msgstr "(%(sign)s%(hours)s:%(minutes)s बचा हुआ)"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/project_task.py:0
+#, python-format
+msgid "(%s days remaining)"
+msgstr "(%s दिन बचे हुए)"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
+msgid "(incl."
+msgstr "(शामिल है"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
+msgid "1 day"
+msgstr "1 दिन"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
+msgid "2 hours"
+msgstr "2 घंटे"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
+msgid "2021-09-01"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
+msgid "<b class=\"tip_title\">Tip: Record your Timesheets faster</b>"
+msgstr "<b class=\"tip_title\">सलाह: अपनी टाइमशीट को तेज़ी से रिकॉर्ड करें</b>"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
+msgid ""
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
+"title=\"Date\"/>"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
+msgid "<i class=\"fa fa-print\"/> View Details"
+msgstr "<i class=\"fa fa-print\"/> जानकारी देखें"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
+msgid "<span class=\"o_stat_text\">Timesheets</span>"
+msgstr "<span class=\"o_stat_text\">टाइमशीट</span>"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
+msgid ""
+"<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">Hours Spent on "
+"Sub-tasks:</span>\n"
+"                                <span class=\"text-nowrap\" invisible=\"not "
+"encode_uom_in_days\">Days Spent on Sub-tasks:</span>"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
+msgid ""
+"<span invisible=\"not has_timesheet\">\n"
+"                        You cannot delete employees who have timesheets.\n"
+"                        <span invisible=\"not has_active_employee\">\n"
+"                            You can either archive these employees or first "
+"delete all of their timesheets.\n"
+"                        </span>\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                            Please first delete all of their timesheets.\n"
+"                        </span>\n"
+"                    </span>\n"
+"                    <span invisible=\"has_timesheet\">\n"
+"                        Are you sure you want to delete these employees?\n"
+"                    </span>"
+msgstr ""
+"<span invisible=\"not has_timesheet\">\n"
+"                        आप उन कर्मचारियों को हटा नहीं सकते जिनकी टाइमशीट है.\n"
+"                        <span invisible=\"not has_active_employee\">\n"
+"                            आप या तो इन कर्मचारियों को संग्रहीत कर सकते हैं या पहले उनकी सभी "
+"टाइमशीट हटा सकते हैं.\n"
+"                        </span>\n"
+"                        <span invisible=\"has_active_employee\" groups="
+"\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                            कृपया पहले उनकी सभी टाइमशीट हटा दें.\n"
+"                        </span>\n"
+"                    </span>\n"
+"                    <span invisible=\"has_timesheet\">\n"
+"                        क्या आप वाकई इन कर्मचारियों को हटाना चाहते हैं?\n"
+"                    </span>"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
+msgid "<span style=\"margin-right: 15px;\">Total (Days)</span>"
+msgstr "<span style=\"margin-right: 15px;\">कुल (दिन)</span>"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
+msgid "<span style=\"margin-right: 15px;\">Total (Hours)</span>"
+msgstr "<span style=\"margin-right: 15px;\">कुल (घंटे)</span>"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
+msgid "<span>Date</span>"
+msgstr "<span>तारीख</span>"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
+msgid "<span>Description</span>"
+msgstr "<span>विवरण</span>"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
+msgid "<span>Employee</span>"
+msgstr "<span>कर्मचारी</span>"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+msgid "<strong>Days recorded on sub-tasks: </strong>"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
+msgid "<strong>Duration: </strong>"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+msgid "<strong>Hours recorded on sub-tasks: </strong>"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
+msgid "<strong>Progress:</strong>"
+msgstr "<strong>प्रोग्रेस:</strong>"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+msgid "<strong>Remaining Days: </strong>"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+msgid "<strong>Remaining Hours: </strong>"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+msgid "<strong>Total: </strong>"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__analytic_account_active
+msgid "Active Analytic Account"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:res.groups,name:hr_timesheet.group_timesheet_manager
+msgid "Administrator"
+msgstr "एडमिन"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "All"
+msgstr "सभी"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_all
+#: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_all
+msgid "All Timesheets"
+msgstr "सभी टाइमशीट"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_project__allocated_hours
+msgid "Allocated Hours"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_update__allocated_time
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__allocated_hours
+msgid "Allocated Time"
+msgstr "निर्धारित समय"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__allow_timesheets
+msgid "Allow timesheets"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__amount
+msgid "Amount"
+msgstr "रकम"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/__init__.py:0
+#, python-format
+msgid "Analysis"
+msgstr "एनालिसिस"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_project__analytic_account_id
+msgid "Analytic Account"
+msgstr "एनालिटिक अकाउंट"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_form
+msgid "Analytic Entry"
+msgstr "एनालिटिक एंट्री"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "एनालिटिक लाइन"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_project_project__analytic_account_id
+msgid ""
+"Analytic account to which this project, its tasks and its timesheets are "
+"linked. \n"
+"Track the costs and revenues of your project by setting this analytic "
+"account on your related documents (e.g. sales orders, invoices, purchase "
+"orders, vendor bills, expenses etc.).\n"
+"This analytic account can be changed on each task individually if "
+"necessary.\n"
+"An analytic account is required in order to use timesheets."
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
+msgid ""
+"Analyze the projects and tasks on which your employees spend their time."
+"<br>\n"
+"                Evaluate which part is billable and what costs it represents."
+msgstr ""
+"कर्मचारी किस प्रोजेक्ट और टास्क पर समय लगाते हैं, उसका विश्लेषण करें.<br>\n"
+"                देखें कि कितना समय बिल करने योग्य है और उसकी लागत क्या है।"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__reminder_allow
+msgid "Approver Reminder"
+msgstr "अप्रूवर के लिए रिमाइंडर"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
+msgid "Archive Employees"
+msgstr "कर्मचारी को रिकॉर्ड में डालें"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_ids
+msgid "Associated Timesheets"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
+msgid "Audrey Peterson"
+msgstr "ऑड्रे पीटरसन"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
+msgid "Average of Progress"
+msgstr "प्रगति का औसत"
+
+#. module: hr_timesheet
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_activity_analysis
+msgid "By Employee"
+msgstr "कर्मचारी के ज़रिए"
+
+#. module: hr_timesheet
+#: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_project
+msgid "By Project"
+msgstr "प्रोजेक्ट के ज़रिए"
+
+#. module: hr_timesheet
+#: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_task
+msgid "By Task"
+msgstr "टास्क के ज़रिए"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
+msgid "Call client and discuss project"
+msgstr "ग्राहक को कॉल करें और प्रोजेक्ट पर चर्चा करें"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_project_collaborator
+msgid "Collaborators in project shared"
+msgstr "साझा किए गए प्रोजेक्ट में सहयोगी"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_res_company
+msgid "Companies"
+msgstr "कंपनियां"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__company_id
+msgid "Company"
+msgstr "संस्था"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_res_config_settings
+msgid "Config Settings"
+msgstr "कॉन्फ़िगरेशन सेटिंग"
+
+#. module: hr_timesheet
+#: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
+msgid "Configuration"
+msgstr "कॉन्फ़िगरेशन"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_employee.py:0
+#, python-format
+msgid "Confirmation"
+msgstr "कंफर्मेशन"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__create_uid
+msgid "Created by"
+msgstr "इन्होंने बनाया"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__create_date
+msgid "Created on"
+msgstr "इस तारीख को बनाया गया"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__currency_id
+msgid "Currency"
+msgstr "करेंसी"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__date
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+#, python-format
+msgid "Date"
+msgstr "तिथि"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
+msgid "Days"
+msgstr "दिन"
+
+#. module: hr_timesheet
+#: model:ir.model.fields.selection,name:hr_timesheet.selection__res_config_settings__timesheet_encode_method__days
+msgid "Days / Half-Days"
+msgstr "दिन / आधा-दिन"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_tasks_list_inherit
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
+msgid "Days Spent"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_res_company__internal_project_id
+msgid "Default project value for timesheet generated from time off type."
+msgstr "छुट्टी के लिए बनी टाइमशीट का डिफ़ॉल्ट प्रोजेक्ट।"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__employee_id
+msgid ""
+"Define an 'hourly cost' on the employee to track the cost of their time."
+msgstr "कर्मचारी के समय की लागत ट्रैक करने के लिए 'प्रति घंटा लागत' सेट करें।"
+
+#. module: hr_timesheet
+#: model:ir.actions.server,name:hr_timesheet.unlink_employee_action
+msgid "Delete"
+msgstr "हटाएं"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
+msgid "Delete Employee"
+msgstr "कर्मचारी हटाएं"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__department_id
+#: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__department_id
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+msgid "Department"
+msgstr "विभाग"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_form
+msgid "Describe your activity"
+msgstr "अपनी गतिविधि के बारे में बताएं"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__name
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+#, python-format
+msgid "Description"
+msgstr "विवरण"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
+msgid "Discard"
+msgstr "खारिज करें"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__display_name
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__display_name
+#: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__display_name
+msgid "Display Name"
+msgstr "डिस्प्ले का नाम"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_update__display_timesheet_stats
+msgid "Display Timesheet Stats"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
+msgid "Duration"
+msgstr "अवधि"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
+msgid "Effective Hours"
+msgstr "वास्तविक काम के घंटे"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#: model:ir.model,name:hr_timesheet.model_hr_employee
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__employee_id
+#: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+#, python-format
+msgid "Employee"
+msgstr "कर्मचारी"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_hr_employee_delete_wizard
+msgid "Employee Delete Wizard"
+msgstr "कर्मचारी को हटाने का विज़ॉर्ड"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__reminder_user_allow
+msgid "Employee Reminder"
+msgstr "कर्मचारी के लिए रिमाइंडर"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/wizard/hr_employee_delete_wizard.py:0
+#, python-format
+msgid "Employee Termination"
+msgstr "किसी कर्मचारी की नौकरी को खत्म करने की प्रक्रिया"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__employee_ids
+msgid "Employees"
+msgstr "कर्मचारी"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/wizard/hr_employee_delete_wizard.py:0
+#, python-format
+msgid "Employees' Timesheets"
+msgstr "कर्मचारी की टाइमशीट"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_project__encode_uom_in_days
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__encode_uom_in_days
+msgid "Encode Uom In Days"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_method
+msgid "Encoding Method"
+msgstr "एन्कोडिंग का तरीका"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__encoding_uom_id
+msgid "Encoding Uom"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/project_project.py:0
+#, python-format
+msgid "Extra Time"
+msgstr "अतिरिक्त समय"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Generate timesheets for validated time off requests and public holidays"
+msgstr "अप्रूव्ड छुट्टी और छुट्टियों के लिए अपने-आप टाइमशीट जनरेट करें"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_ir_http
+msgid "HTTP Routing"
+msgstr "एचटीपीपी राउटिंग"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__has_active_employee
+msgid "Has Active Employee"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee__has_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__has_timesheet
+msgid "Has Timesheet"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
+#, python-format
+msgid "Hours"
+msgstr "घंटे"
+
+#. module: hr_timesheet
+#: model:ir.model.fields.selection,name:hr_timesheet.selection__res_config_settings__timesheet_encode_method__hours
+msgid "Hours / Minutes"
+msgstr "घंटे / मिनट"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
+msgid "Hours By Task (Including Subtasks)"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__effective_hours
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__effective_hours
+#: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__unit_amount
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_tasks_list_inherit
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
+msgid "Hours Spent"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__subtask_effective_hours
+msgid "Hours Spent on Sub-Tasks"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__id
+#: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__id
+msgid "ID"
+msgstr "आईडी"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/res_company.py:0
+#: model:project.task.type,name:hr_timesheet.internal_project_default_stage
+#, python-format
+msgid "Internal"
+msgstr "इंटरनल"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_res_company__internal_project_id
+msgid "Internal Project"
+msgstr "इंटरनल प्रोजेक्ट"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/project_project.py:0
+#, python-format
+msgid "Invalid operator: %s"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/project_project.py:0
+#, python-format
+msgid "Invalid value: %s"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__is_encode_uom_days
+msgid "Is Encode Uom Days"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_project__is_internal_project
+msgid "Is Internal Project"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__job_title
+msgid "Job Title"
+msgstr "नौकरी का शीर्षक"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__write_uid
+msgid "Last Updated by"
+msgstr "इन्होंने आखिरी बार अपडेट किया"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__write_date
+msgid "Last Updated on"
+msgstr "आखिरी बार अपडेट हुआ"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Last month"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Last week"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Last year"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_project_view_form_simplified_inherit_timesheet
+msgid "Log time on tasks"
+msgstr "टास्क में लगा समय लिखें"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__manager_id
+#: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__manager_id
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+msgid "Manager"
+msgstr "मैनेजर"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/res_company.py:0
+#, python-format
+msgid "Meeting"
+msgstr "मीटिंग"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_ir_ui_menu
+msgid "Menu"
+msgstr "मेन्यू"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_search_inherit
+msgid "My Department's Updates"
+msgstr "मेरे विभाग के अपडेट"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_search_inherit
+msgid "My Team's Updates"
+msgstr "मेरी टीम के अपडेट"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line
+#: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_mine
+#: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_user
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+msgid "My Timesheets"
+msgstr "मेरी टाइमशीट"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Newest"
+msgstr "सबसे नया"
+
+#. module: hr_timesheet
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
+msgid "No activities found. Let's start a new one!"
+msgstr "कोई गतिविधि नहीं मिली. आइए एक नई शुरुआत करें!"
+
+#. module: hr_timesheet
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
+msgid "No data yet!"
+msgstr "अभी तक कोई डेटा नहीं मिला!"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "None"
+msgstr "कोई नहीं"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_project_task__remaining_hours
+msgid "Number of allocated hours minus the number of hours spent."
+msgstr "आवंटित घंटों की संख्या में से खर्च किए गए घंटों की संख्या घटाना।"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
+msgid "Ok"
+msgstr "ठीक है"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__overtime
+msgid "Overtime"
+msgstr "ओवरटाइम"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__parent_task_id
+#: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__parent_task_id
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+msgid "Parent Task"
+msgstr "पैरंट टास्क"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__partner_id
+msgid "Partner"
+msgstr "पार्टनर"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "प्रॉडक्ट माप की इकाई"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__progress
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__progress
+#, python-format
+msgid "Progress"
+msgstr "प्रगति देखने की सुविधा"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#: model:ir.model,name:hr_timesheet.model_project_project
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__project_id
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__project_id
+#: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__project_id
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
+#, python-format
+msgid "Project"
+msgstr "प्रोजेक्ट"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_res_company__project_time_mode_id
+#: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__project_time_mode_id
+msgid "Project Time Unit"
+msgstr "प्रोजेक्ट टाइम यूनिट"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_project_update
+msgid "Project Update"
+msgstr "प्रोजेक्ट अपडेट"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_project__is_project_overtime
+msgid "Project in Overtime"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_project
+msgid "Project's Timesheets"
+msgstr "प्रोजेक्ट की टाइमशीट"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__readonly_timesheet
+msgid "Readonly Timesheet"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
+msgid "Record a new activity"
+msgstr "नई गतिविधि रिकॉर्ड करें"
+
+#. module: hr_timesheet
+#: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
+msgid ""
+"Record your timesheets in an instant by pressing Shift + the corresponding "
+"hotkey to add 15min to your projects."
+msgstr ""
+"अपने प्रोजेक्ट्स में 15 मिनट जोड़ने के लिए संबंधित हॉटकी के साथ Shift दबाकर तुरंत अपनी "
+"टाइमशीट रिकॉर्ड करें।"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
+msgid "Remaining Days"
+msgstr "बचे हुए दिन"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__remaining_hours
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__remaining_hours
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
+msgid "Remaining Hours"
+msgstr "बचे हुए घंटे"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__remaining_hours_percentage
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__remaining_hours_percentage
+msgid "Remaining Hours Percentage"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_project__remaining_hours
+msgid "Remaining Invoiced Time"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports
+msgid "Reporting"
+msgstr "रिपोर्टिंग"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+msgid "Research and Development"
+msgstr "रिसर्च और डेवलेपमेंट"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
+msgid "Research and Development/New Portal System"
+msgstr "रिसर्च और डेवलपमेंट/नया पोर्टल सिस्टम"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_home_timesheet
+msgid "Review all timesheets related to your projects"
+msgstr "अपने प्रोजेक्ट से संबंधित सभी टाइमशीट की समीक्षा करें"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Search in All"
+msgstr "'सभी' में खोजें"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Search in Description"
+msgstr "विवरण में खोजें"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Search in Employee"
+msgstr "कर्मचारी में खोजें"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Search in Project"
+msgstr "प्रोजेक्ट में खोजें"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Search in Task"
+msgstr "टास्क में खोजें"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
+msgid "See Timesheets"
+msgstr "टाइमशीट देखें"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/project_project.py:0
+#: code:addons/hr_timesheet/models/project_task.py:0
+#, python-format
+msgid "See timesheet entries"
+msgstr "टाइमशीट की एंट्रीज़ देखें"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid ""
+"Send a periodical email reminder to timesheets approvers that still have "
+"timesheets to validate"
+msgstr "जिन अप्रूवर को टाइमशीट अप्रूव करनी है, उन्हें नियमित रूप से ईमेल रिमाइंडर भेजें"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid ""
+"Send a periodical email reminder to timesheets users that still have "
+"timesheets to encode"
+msgstr "जिन कर्मचारियों को टाइमशीट भरनी है, उन्हें नियमित रूप से ईमेल रिमाइंडर भेजें"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
+msgid "Settings"
+msgstr "कॉन्फ़िगरेशन"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
+msgid "Sub-Tasks Total Effective Hours"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
+msgid "Sub-tasks Hours Spent"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#: model:ir.model,name:hr_timesheet.model_project_task
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__task_id
+#: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__task_id
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
+#, python-format
+msgid "Task"
+msgstr "टास्क"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_task
+msgid "Task's Timesheets"
+msgstr "टास्क के लिए टाइमशीट"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_report_project_task_user
+msgid "Tasks Analysis"
+msgstr "टास्क का विश्लेषण"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/res_company.py:0
+#, python-format
+msgid "The Internal Project of a company should be in that company."
+msgstr "किसी कंपनी का इंटरनल प्रोजेक्ट उसी कंपनी में होना चाहिए।"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+msgid "There are no timesheets."
+msgstr "कोई टाइमशीट नहीं है।"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/project_project.py:0
+#, python-format
+msgid ""
+"These projects have some timesheet entries referencing them. Before removing "
+"these projects, you have to remove these timesheet entries."
+msgstr ""
+"इन प्रोजेक्ट्स से जुड़ी टाइमशीट एंट्री हैं. इन्हें हटाने से पहले, आपको टाइमशीट एंट्री हटानी "
+"होगी।"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/project_task.py:0
+#, python-format
+msgid ""
+"These tasks have some timesheet entries referencing them. Before removing "
+"these tasks, you have to remove these timesheet entries."
+msgstr ""
+"इन टास्क से जुड़ी टाइमशीट एंट्री हैं. इन्हें हटाने से पहले, आपको टाइमशीट एंट्री हटानी होगी।"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "This Quarter"
+msgstr "इस तिमाही"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "This month"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/project_task.py:0
+#, python-format
+msgid "This operator %s is not supported in this search method."
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/project_project.py:0
+#, python-format
+msgid ""
+"This project has some timesheet entries referencing it. Before removing this "
+"project, you have to remove these timesheet entries."
+msgstr ""
+"इस प्रोजेक्ट में कुछ टाइमशीट एंट्रीज़ हैं जो इसका उल्लेख करती हैं. इस प्रोजेक्ट को हटाने से पहले, "
+"आपको इन टाइमशीट एंट्रीज़ को हटाना होगा।"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/project_task.py:0
+#, python-format
+msgid ""
+"This task cannot be private because there are some timesheets linked to it."
+msgstr "इस टास्क पर टाइमशीट जुड़ी हैं, इसलिए इसे प्राइवेट नहीं किया जा सकता।"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/project_task.py:0
+#, python-format
+msgid ""
+"This task has some timesheet entries referencing it. Before removing this "
+"task, you have to remove these timesheet entries."
+msgstr ""
+"इस टास्क में कुछ टाइमशीट एंट्रीज़ हैं जो इसका उल्लेख करती हैं. इस टास्क को हटाने से पहले, "
+"आपको इन टाइमशीट एंट्रीज़ को हटाना होगा।"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "This week"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_res_company__project_time_mode_id
+#: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__project_time_mode_id
+msgid ""
+"This will set the unit of measure used in projects and tasks.\n"
+"If you use the timesheet linked to projects, don't forget to setup the right "
+"unit of measure in your employees."
+msgstr ""
+"यह प्रोजेक्ट और टास्क में इस्तेमाल की जाने वाली माप की इकाई को सेट करेगा. \n"
+"अगर आप प्रोजेक्ट से जुड़ी टाइमशीट का इस्तेमाल करते हैं, तो अपने कर्मचारियों में सही माप की "
+"इकाई सेट करना न भूलें।"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "This year"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Time Encoding"
+msgstr "टाइम एन्कोडिंग"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_holidays
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Time Off"
+msgstr "टाइम ऑफ़"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
+msgid "Time spent on the sub-tasks (and their own sub-tasks) of this task."
+msgstr "इस टास्क के सब-टास्क (और उनके सब-टास्क) में लगाया गया समय।"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
+msgid "Time spent on this task and its sub-tasks (and their own sub-tasks)."
+msgstr "इस टास्क और सभी सब-टास्क (और उनके सब-टास्क) में लगा कुल समय।"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_report_project_task_user__total_hours_spent
+msgid "Time spent on this task, including its sub-tasks."
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Time unit used to record your timesheets"
+msgstr "आपकी टाइमशीट रिकॉर्ड करने के लिए उपयोग की जाने वाली समय इकाई"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph_all
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph_my
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_my_timesheet_line_pivot
+msgid "Timesheet"
+msgstr "टाइमशीट"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
+msgid "Timesheet Activities"
+msgstr "टाइमशीट ऐक्टिविटीज़"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_graph_employee
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_graph_project
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_graph_task
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_employee
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_project
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_task
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph_all
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph_my
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_my_timesheet_line_pivot
+msgid "Timesheet Costs"
+msgstr "टाइमशीट की लागत"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_encode_uom_id
+msgid "Timesheet Encode Uom"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_res_company__timesheet_encode_uom_id
+msgid "Timesheet Encoding Unit"
+msgstr "टाइमशीट एन्कोडिंग यूनिट"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_update__timesheet_percentage
+msgid "Timesheet Percentage"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_report_search
+msgid "Timesheet Report"
+msgstr "टाइमशीट रिपोर्ट"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_update__timesheet_time
+msgid "Timesheet Time"
+msgstr "टाइमशीट का समय"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#: code:addons/hr_timesheet/models/project_project.py:0
+#: code:addons/hr_timesheet/models/project_task.py:0
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_by_project
+#: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_from_employee
+#: model:ir.actions.report,name:hr_timesheet.timesheet_report
+#: model:ir.actions.report,name:hr_timesheet.timesheet_report_project
+#: model:ir.actions.report,name:hr_timesheet.timesheet_report_task
+#: model:ir.actions.report,name:hr_timesheet.timesheet_report_task_timesheets
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_project__allow_timesheets
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__timesheet_ids
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_time_tracking
+#: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports_timesheet
+#: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_root
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_layout
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_home_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_project_view_form_simplified_inherit_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet_task
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_project_task_page
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_graph_employee
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_graph_project
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_graph_task
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_project_kanban_inherited
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
+#, python-format
+msgid "Timesheets"
+msgstr "टाइमशीट"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "Timesheets - %s"
+msgstr "टाइमशीट - %s"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_view_search
+msgid "Timesheets 80%"
+msgstr "टाइमशीट 80%"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_view_search
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_project_project_filter_inherit_timesheet
+msgid "Timesheets >100%"
+msgstr "टाइमशीट >100%"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_employee
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_project
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_task
+msgid "Timesheets Analysis"
+msgstr "टाइमशीट एनालिसिस"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_timesheets_analysis_report
+msgid "Timesheets Analysis Report"
+msgstr "टाइमशीट एनालिसिस रिपोर्ट"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Timesheets Control"
+msgstr "टाइमशीट कंट्रोल"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_report
+msgid "Timesheets by Employee"
+msgstr "कर्मचारियों के अनुसार टाइमशीट"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_project
+msgid "Timesheets by Project"
+msgstr "प्रोजेक्ट के अनुसार टाइमशीट"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_task
+msgid "Timesheets by Task"
+msgstr "टास्क के अनुसार टाइमशीट"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_project_task__allow_timesheets
+msgid "Timesheets can be logged on this task."
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "Timesheets cannot be created on a private task."
+msgstr "प्राइवेट टास्क पर टाइमशीट नहीं बनाई जा सकती।"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid ""
+"Timesheets must be created on a project or a task with an active analytic "
+"account."
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid ""
+"Timesheets must be created with an active employee in the selected companies."
+msgstr "टाइमशीट, चुनी गई कंपनियों में एक सक्रिय कर्मचारी के साथ बनाई जानी चाहिए।"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/wizard/hr_employee_delete_wizard.py:0
+#, python-format
+msgid "Timesheets of %(name)s"
+msgstr "%(name)s की टाइमशीट"
+
+#. module: hr_timesheet
+#: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
+msgid "Tip: Record your Timesheets faster"
+msgstr "सलाह: अपनी टाइमशीट को तेज़ी से रिकॉर्ड करें"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Today"
+msgstr "आज"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
+msgid "Total"
+msgstr "कुल"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
+msgid "Total Allocated Time"
+msgstr "काम के लिए निर्धारित कुल समय"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
+msgid "Total Days"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
+msgid "Total Hours"
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
+msgid "Total Remaining Hours"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_project__total_timesheet_time
+msgid "Total Timesheet Time"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_project_project__total_timesheet_time
+msgid ""
+"Total number of time (in the proper UoM) recorded in the project, rounded to "
+"the unit."
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+msgid "Total:"
+msgstr "कुल:"
+
+#. module: hr_timesheet
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
+msgid ""
+"Track your working hours by projects every day and invoice this time to your "
+"customers."
+msgstr ""
+"हर दिन प्रोजेक्ट के अनुसार अपने काम के घंटों को ट्रैक करें और इस समय का इनवॉइस अपने ग्राहकों "
+"को भेजें।"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/res_company.py:0
+#, python-format
+msgid "Training"
+msgstr "ट्रेनिंग"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_update__uom_id
+msgid "Unit Of Measure"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_project_task__display_name
+msgid ""
+"Use these keywords in the title to set new tasks:\n"
+"\n"
+"        30h Allocate 30 hours to the task\n"
+"        #tags Set tags on the task\n"
+"        @user Assign the task to a user\n"
+"        ! Set the task a high priority\n"
+"\n"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
+#: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__user_id
+msgid "User"
+msgstr "उपयोगकर्ता"
+
+#. module: hr_timesheet
+#: model:res.groups,name:hr_timesheet.group_hr_timesheet_approver
+msgid "User: all timesheets"
+msgstr "उपयोगकर्ता: सभी टाइमशीट"
+
+#. module: hr_timesheet
+#: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
+msgid "User: own timesheets only"
+msgstr "उपयोगकर्ता: सिर्फ़ अपनी टाइमशीट"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
+msgid "View Details"
+msgstr "जानकारी देखें"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_uom_uom__timesheet_widget
+msgid "Widget"
+msgstr "विजेट"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "You cannot access timesheets that are not yours."
+msgstr "आप उन टाइमशीट को नहीं खोल सकते जो आपकी नहीं हैं।"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_employee.py:0
+#, python-format
+msgid "You cannot delete employees who have timesheets."
+msgstr "आप उन कर्मचारियों को नहीं मिटा सकते जिनकी टाइमशीट मौजूद है।"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
+msgid ""
+"You cannot log timesheets on this project since it is linked to an inactive "
+"analytic account. Please change this account, or reactivate the current one "
+"to timesheet on the project."
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "You cannot set an archived employee to the existing timesheets."
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/project_project.py:0
+#, python-format
+msgid "You cannot use timesheets without an analytic account."
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/res_company.py:0
+#, python-format
+msgid "days"
+msgstr "दिन"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet_task
+msgid "for"
+msgstr "फ़ॉर"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_project_task_page
+msgid "for the"
+msgstr "के लिए"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/res_company.py:0
+#, python-format
+msgid "hours"
+msgstr "घंटे"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
+msgid ""
+"on\n"
+"                            <span class=\"fw-bold text-dark\"> Sub-tasks</"
+"span>)"
+msgstr "<span class=\"fw-bold text-dark\"> सब-टास्क</span>)"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
+msgid ""
+"on\n"
+"                        <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
+msgstr "<span class=\"fw-bold text-dark\"> सब-टास्क</span>)"
+
+#~ msgid "<i class=\"fa fa-download\"/> Download"
+#~ msgstr "<i class=\"fa fa-download\"/> डाउनलोड करें"
+
+#~ msgid "Download"
+#~ msgstr "डाउनलोड"
+
+#~ msgid "Group By"
+#~ msgstr "इन्होंने ग्रुप किया"
+
+#~ msgid "Print"
+#~ msgstr "प्रिंट"

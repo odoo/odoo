@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_attendance.employeeListElement">
+        <div class="d-flex position-relative py-2 overflow-visible o_treeEntry">
+    <div class="o_media_left position-relative">
+        <div class="o_media_object d-block rounded border border-info">
+            <img t-attf-src="{{avatar}}" height="80" width="80"/>
+        </div>
+    </div>
+    <div class="d-flex flex-grow-1 align-items-center justify-content-between position-relative px-3">
+        <div class="d-flex flex-column align-items-start">
+            <h5 class="o_media_heading m-0"><t t-esc="employeeName"/></h5>
+            <small class="text-muted fw-bold"><t t-esc="jobTitle"/></small>
+        </div>
+    </div>
+    </div>
+    </t>
+    <t t-name="hr_attendance.public_kiosk_manual_selection">
+        <t t-if="!this.props.displayBackButton">
+            <button t-on-click="() => this.props.onClickBack()" class="o_hr_attendance_back_button o_hr_attendance_back_button_md btn btn-secondary d-none d-md-inline-flex align-items-center position-absolute top-0 start-0 rounded-circle m-5">
+            <i class="oi fa-2x fa-fw oi-chevron-left me-1" role="img" aria-label="Go back" title="Go back"/>
+        </button>
+        </t>
+            <div class="o_kanban_view o_view_controller o_action">
+                <div class="o_control_panel d-flex flex-column gap-3 gap-lg-1 px-3 pt-2 pb-3" style="top: 0px;">
+                    <div class="o_control_panel_main d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-lg-start gap-3 flex-grow-1">
+                       <div class="o_cp_searchview d-flex input-group">
+                           <div class="o_searchview form-control d-print-contents d-flex align-items-center py-1 border-end-0">
+                               <i class="o_searchview_icon d-print-none oi oi-search me-2" aria-label="Search..." title="Search..."/>
+                               <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1" style="position: relative;">
+                                   <input t-on-input="onSearchInput" type="text" class="o_searchview_input d-print-none flex-grow-1 w-auto border-0" placeholder="Search..."/>
+                               </div>
+                           </div>
+                       </div>
+                    </div>
+                </div>
+                <div class="o_content o_component_with_search_panel">
+                <div class="o_search_panel flex-grow-0 flex-shrink-0 h-100 pb-5 bg-view overflow-auto pe-1 ps-3" style="max-height:500px;">
+                    <section class="o_search_panel_section o_search_panel_category">
+                        <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase cursor-default">
+                            <i class="fa fa-users o_search_panel_section_icon text-odoo me-2"/>
+                            <b>Department</b>
+                        </header>
+                        <ul class="list-group d-block o_search_panel_field">
+                            <li class="o_search_panel_category_value list-group-item py-1 cursor-pointer border-0 pe-0 ps-0">
+                                <header class="list-group-item list-group-item-action d-flex align-items-center px-0 py-lg-0 border-0 text-900 fw-bold">
+                                    <div t-on-click="() => this.onDepartementClick(false)" class="o_search_panel_label d-flex align-items-center overflow-hidden w-100 cursor-pointer mb-0 o_with_counters">
+                                        <span class="o_search_panel_label_title text-truncate">All</span>
+                                    </div>
+                                </header>
+                            </li>
+                            <t t-foreach="this.props.departments" t-as="dep" t-key="dep.id">
+                                <li class="o_search_panel_category_value list-group-item py-1 cursor-pointer border-0 pe-0 ps-0">
+                                <header class="list-group-item list-group-item-action d-flex align-items-center px-0 py-lg-0 border-0">
+                                    <div t-on-click="() => this.onDepartementClick(dep.id)" class="o_search_panel_label d-flex align-items-center overflow-hidden w-100 cursor-pointer mb-0 o_with_counters">
+                                        <span class="o_search_panel_label_title text-truncate"><t t-esc="dep.name"/></span>
+                                    </div>
+                                    <small class="o_search_panel_counter text-muted mx-2 fw-bold"><t t-esc="dep.count"/></small>
+                                </header>
+                                </li>
+                            </t>
+                        </ul>
+                    </section>
+                </div>
+                <div class="o_kanban_renderer o_renderer d-flex o_kanban_ungrouped align-content-start flex-wrap justify-content-start" style="max-width:1050px;max-height:500px;overflow-y:scroll;">
+                <t t-foreach="this.state.displayedEmployees" t-as="employee" t-key="employee.id">
+                <div t-on-click="() => this.props.onSelectEmployee(employee.id)" role="article" class="o_kanban_record d-flex oe_kanban_global_click flex-md-shrink-1 flex-shrink-0">
+                    <div class="oe_kanban_global_click">
+                        <div class="o_kanban_image">
+                            <img alt="Employee" loading="lazy" t-attf-src="{{employee.avatar}}"/>
+                        </div>
+                        <div class="oe_kanban_details">
+                            <div id="textbox">
+                                <strong><span><t t-esc="employee.name"/></span></strong>
+                            </div>
+                            <ul>
+                                <li t-if="employee.job"><span><t t-esc="employee.job"/></span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                </t>
+                </div>
+        </div>
+        </div>
+    </t>
+</templates>

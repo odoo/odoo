@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.Layout">
+        <t t-if="env.inDialog" t-portal="'#' + env.dialogId + ' .modal-footer'">
+            <t t-slot="layout-buttons"/>
+        </t>
+        <t t-component="components.ControlPanel" slots="controlPanelSlots" t-if="display.controlPanel" display="display.controlPanel"/>
+        <t t-component="components.Banner" t-if="display.banner"/>
+        <div t-ref="content" class="o_content" t-attf-class="{{props.className}}" t-att-class="{ 'o_component_with_search_panel': display.searchPanel }">
+            <t t-component="components.SearchPanel" t-if="display.searchPanel"/>
+            <t t-slot="default" contentRef="contentRef" />
+        </div>
+    </t>
+
+</templates>

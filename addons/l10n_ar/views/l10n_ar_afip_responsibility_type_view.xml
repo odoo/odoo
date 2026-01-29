@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_afip_responsibility_type_form" model="ir.ui.view">
+        <field name="name">afip.responsibility.type.form</field>
+        <field name="model">l10n_ar.afip.responsibility.type</field>
+        <field name="arch" type="xml">
+            <form string="AFIP Responsibility Type">
+                <group>
+                    <field name="name"/>
+                    <field name='code'/>
+                    <field name='active'/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_afip_responsibility_type_tree" model="ir.ui.view">
+        <field name="name">afip.responsibility.type.tree</field>
+        <field name="model">l10n_ar.afip.responsibility.type</field>
+        <field name="arch" type="xml">
+            <tree string="AFIP Responsibility Type" decoration-muted="(not active)">
+                <field name="name"/>
+                <field name="code"/>
+                <field name='active'/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_afip_responsibility_type">
+        <field name="name">AFIP Responsibility Types</field>
+        <field name="res_model">l10n_ar.afip.responsibility.type</field>
+    </record>
+
+    <menuitem name="Responsibility Types" action="action_afip_responsibility_type" id="menu_afip_responsibility_type" sequence="10" parent="menu_afip_config"/>
+
+</odoo>

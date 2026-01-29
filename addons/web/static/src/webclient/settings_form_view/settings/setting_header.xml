@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.HeaderSetting">
+        <div class="app_settings_header d-flex flex-column flex-md-row align-items-baseline gap-1 gap-md-5 py-3 bg-warning bg-opacity-25">
+            <label t-if="labelString" class="o_form_label" t-att-for="props.fieldId">
+                <t t-esc="labelString"/>
+            </label>
+            <div class="input-group align-items-baseline w-auto o_field_highlight">
+                <t t-slot="fieldSlot"/>
+                <t t-slot="default"/>
+            </div>
+        </div>
+    </t>
+</templates>

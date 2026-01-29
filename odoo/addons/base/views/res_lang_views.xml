@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_lang_tree" model="ir.ui.view">
+            <field name="name">res.lang.tree</field>
+            <field name="model">res.lang</field>
+            <field name="arch" type="xml">
+                <tree string="Languages" limit="200">
+                    <header>
+                        <button name="action_activate_langs" type="object" string="Activate"/>
+                    </header>
+                    <field name="name"/>
+                    <field name="code" groups="base.group_no_one"/>
+                    <field name="iso_code" groups="base.group_no_one"/>
+                    <field name="url_code" groups="base.group_no_one" column_invisible="True"/>
+                    <field name="direction" groups="base.group_no_one"/>
+                    <field name="active"/>
+                    <button name="%(base.action_view_base_language_install)d"
+                        string="Activate"
+                        type="action"
+                        icon="fa-check"
+                        invisible="active"/>
+                    <button name="%(base.action_view_base_language_install)d"
+                        string="Update"
+                        type="action"
+                        icon="fa-refresh"
+                        invisible="not active"/>
+                    <button name="action_archive"
+                        string="Disable"
+                        type="object"
+                        icon="fa-times"
+                        invisible="not active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="res_lang_form" model="ir.ui.view">
+            <field name="name">res.lang.form</field>
+            <field name="model">res.lang</field>
+            <field name="arch" type="xml">
+                <form string="Languages">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="%(base.action_view_base_language_install)d"
+                                type="action"
+                                class="oe_stat_button"
+                                icon="fa-refresh">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">Activate and Translate</span>
+                                </div>
+                            </button>
+                        </div>
+                        <field name="flag_image" widget="image" class="oe_avatar"/>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1><field name="name" placeholder="e.g. French"/></h1>
+                        </div>
+                        <group >
+                            <group>
+                                <field name="code"/>
+                                <field name="iso_code"/>
+                                <field name="url_code" invisible="1" required="0"/>
+                                <field name="active" widget="boolean_toggle"/>
+                            </group>
+                            <group>
+                                <field name="direction"/>
+                                <field name="grouping"/>
+                                <field name="decimal_point"/>
+                                <field name="thousands_sep"/>
+                                <field name="date_format"/>
+                                <field name="time_format"/>
+                                <field name="week_start"/>
+                            </group>
+                        </group>
+
+                        <div class="row">
+                            <div class="col-md-8 row">
+                                <div class="col-12">
+                                    <div class="o_horizontal_separator mb-3 mt-4 text-uppercase fw-bolder small">Legends for supported Date and Time Formats</div>
+                                </div>
+                                <div class="col-sm">
+                                    <div>%a - Abbreviated day of the week.</div>
+                                    <div>%A - Full day of the week.</div>
+                                    <div>%b - Abbreviated month name.</div>
+                                    <div>%B - Full month name."</div>
+                                    <div>%d - Day of the month [01,31]."</div>
+                                    <div>%j - Day of the year [001,366]."</div>
+                                    <div>%H - Hour (24-hour clock) [00,23]."</div>
+                                    <div>%I - Hour (12-hour clock) [01,12]."</div>
+                                </div>
+                                <div class="col-sm">
+                                    <div>%M - Minute [00,59]."</div>
+                                    <div>%p - Equivalent of either AM or PM."</div>
+                                    <div>%S - Seconds [00,61]."</div>
+                                    <div>%w - Day of the week number [0(Sunday),6]."</div>
+                                    <div>%y - Year without century [00,99]."</div>
+                                    <div>%Y - Year with century."</div>
+                                    <div>%m - Month number [01,12]."</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-info">
+                                <div class="o_horizontal_separator mb-3 mt-4 text-uppercase fw-bolder small">Examples</div>
+                                <div>1. %b, %B         ==> Dec, December</div>
+                                <div>2. %a ,%A         ==> Fri, Friday</div>
+                                <div>3. %y, %Y         ==> 08, 2008</div>
+                                <div>4. %d, %m         ==> 05, 12</div>
+                                <div>5. %H:%M:%S      ==> 18:25:20</div>
+                                <div>6. %I:%M:%S %p  ==> 06:25:20 PM</div>
+                                <div>7. %j              ==> 340</div>
+                                <div>8. %S              ==> 20</div>
+                                <div>9. %w              ==> 5 ( Friday is the 6th day)</div>
+                            </div>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="res_lang_search" model="ir.ui.view">
+            <field name="name">res.lang.search</field>
+            <field name="model">res.lang</field>
+            <field name="arch" type="xml">
+                <search string="Languages">
+                    <field name="name"
+                        filter_domain="['|', '|', ('name', 'ilike', self), ('code', 'ilike', self), ('iso_code', 'ilike', self)]"
+                        string="Language"/>
+                    <field name="direction"/>
+                    <separator/>
+                    <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="res_lang_act_window" model="ir.actions.act_window">
+            <field name="name">Languages</field>
+            <field name="res_model">res.lang</field>
+            <field name="context">{'active_test': False}</field>
+            <field name="search_view_id" ref="res_lang_search"/>
+        </record>
+
+        <menuitem action="res_lang_act_window" id="menu_res_lang_act_window" parent="menu_translation" sequence="1"/>
+    </data>
+</odoo>

@@ -1,0 +1,20 @@
+.subtask_list {
+    margin-top: 6px;
+
+    .subtask_list_row {
+        display: grid;
+        grid-template-columns: auto auto 22px;
+        padding: 4px 0px;
+
+        .subtask_name_col {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            align-self: center;
+        }
+    }
+
+    .subtask_list_row:hover {
+        background-color: mix($table-color, $table-bg, percentage($table-hover-bg-factor + 0.1));
+    }
+}

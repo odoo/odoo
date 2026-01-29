@@ -1,0 +1,53 @@
+#
+set meta-flag on
+set convert-meta off
+set input-meta on
+set output-meta on
+set show-all-if-ambiguous on
+set visible-stats on
+set bell-style none
+# set bell-style visible
+#"\M-k": kill-whole-line
+#----------------------------------------------------------
+# arrows left/right/up/down
+"\e[C": forward-char
+"\e[D": backward-char
+"\e[A": previous-history
+"\e[B": next-history
+# ---------------------------------------------------------
+# pgup/pgdn
+"\e[6~": history-search-forward
+"\e[5~": history-search-backward
+#----------------------------------------------------------
+# insert,delete
+#"\e[2~": quoted-insert
+"\e[3~": delete-char
+# esc+delete, esc+backspace
+"\e\e[3~": kill-word
+"\e\C-h": backward-kill-word
+#----------------------------------------------------------
+# ctrl left/right (rxvt)
+"\eOc": forward-word
+"\eOd": backward-word
+# ctrl left/right (xterm)
+"\e[1;5C": forward-word
+"\e[1;5D": backward-word
+# ctrl left/right (unknown)
+#"\e[5C": forward-word
+#"\e[5D": backward-word
+#"\e\e[C": forward-word
+#"\e\e[D": backward-word
+# ---------------------------------------------------------
+# home/end (linux console)
+"\e[1~": beginning-of-line
+"\e[4~": end-of-line
+# home/end (rxvt)
+"\e[7~": beginning-of-line
+"\e[8~": end-of-line
+# home/end (xterm, freebsd console)
+"\e[H": beginning-of-line
+"\e[F": end-of-line
+# home/end (non RH/Debian xterm, unknown)
+"\eOH": beginning-of-line
+"\eOF": end-of-line
+"\eOw": end-of-line

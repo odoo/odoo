@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    <t t-name="ProductCatalogSearchPanel.FiltersGroup" t-inherit="web.SearchPanel.FiltersGroup" t-inherit-mode="primary">
+        <li t-foreach="[...values.keys()]" position="replace">
+            <li t-foreach="[...this.state.sectionOfAttributes.keys()]" t-as="attrName" t-key="attrName"
+                class="o_search_panel_filter_value list-group-item p-0 mb-1 border-0 o_cursor_pointer"
+                t-att-class="{ 'ps-2' : isChildList }">
+                <t t-set="attrCount" t-value="this.state.sectionOfAttributes.get(attrName).get('count')"/>
+                <t t-set="attrIds" t-value="this.state.sectionOfAttributes.get(attrName).get('ids')"/>
+                <div class="form-check w-100">
+                    <input type="checkbox"
+                           t-attf-id="{{ section.id }}_input_{{ attrName }}"
+                           class="form-check-input"
+                           t-on-click="ev => this.toggleSectionFilterValue(section.id, attrIds, ev)"/>
+                    <label class="o_search_panel_label form-check-label d-flex align-items-center justify-content-between w-100 o_cursor_pointer"
+                           t-attf-for="{{ section.id }}_input_{{ attrName }}"
+                           t-att-title="(group and group.tooltip) or false">
+                        <span class="o_search_panel_label_title text-truncate" t-esc="attrName"/>
+                        <span t-if="section.enableCounters and attrCount gt 0"
+                              class="o_search_panel_counter text-muted mx-2 small"
+                              t-esc="attrCount"/>
+                    </label>
+                </div>
+            </li>
+        </li>
+    </t>
+</templates>

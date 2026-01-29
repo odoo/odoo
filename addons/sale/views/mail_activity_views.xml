@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="mail_activity_type_action_config_sale" model="ir.actions.act_window">
+        <field name="name">Activity Types</field>
+        <field name="res_model">mail.activity.type</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">['|', ('res_model', '=', False), ('res_model', '=', 'sale.order')]</field>
+        <field name="context">{'default_res_model': 'sale.order'}</field>
+    </record>
+
+</odoo>

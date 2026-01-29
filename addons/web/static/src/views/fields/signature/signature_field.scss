@@ -1,0 +1,28 @@
+.o_field_widget {
+    .o_signature {
+        outline: 1px solid rgba(map-get($theme-colors, 'secondary'), 0.3);
+        position: relative;
+        &.o_signature_empty {
+            display: flex;
+        }
+        > p {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+}
+
+.o_field_invalid {
+    .o_signature {
+        outline: 3px solid map-get($theme-colors, 'danger');
+        cursor: pointer;
+    }
+}
+.o_form_editable {
+    .o_signature:hover {
+        outline: 3px solid $o-enterprise-action-color;
+        cursor: pointer;
+    }
+}

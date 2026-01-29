@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sa_partner_address_form" model="ir.ui.view">
+        <field name="name">sa.partner.form.address</field>
+        <field name="model">res.partner</field>
+        <field name="priority" eval="900"/>
+        <field name="arch" type="xml">
+            <form>
+                <div class="o_address_format">
+                    <field name="parent_id" invisible="1"/>
+                    <field name="type" invisible="1"/>
+                    <field name="street" placeholder="Street" class="o_address_street"
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="street2" placeholder="District" class="o_address_street"
+                            readonly="type == 'contact' and parent_id"/>
+                    <field name="city" placeholder="City" class="o_address_city"
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="state_id" class="o_address_state" placeholder="State..." options='{"no_open": True}'
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="zip" placeholder="ZIP" class="o_address_zip"
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="l10n_sa_edi_building_number" placeholder="Building Number"
+                           class="o_address_building_number" options='{"no_open": True, "no_create": True}'
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="l10n_sa_edi_plot_identification" placeholder="Plot Identification"
+                           class="o_address_plot_identification" options='{"no_open": True, "no_create": True}'
+                           readonly="type == 'contact' and parent_id"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="base.sa" model="res.country">
+        <field name="address_view_id" ref="sa_partner_address_form" />
+        <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(l10n_sa_edi_building_number)s %(l10n_sa_edi_plot_identification)s\n%(country_name)s'"/>
+    </record>
+</odoo>

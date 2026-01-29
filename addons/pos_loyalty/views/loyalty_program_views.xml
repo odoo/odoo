@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="loyalty_program_view_form_inherit_pos_loyalty" model="ir.ui.view">
+        <field name="name">loyalty.program.view.form.inherit.pos.loyalty</field>
+        <field name="model">loyalty.program</field>
+        <field name="inherit_id" ref="loyalty.loyalty_program_view_form"/>
+        <field name="arch" type="xml">
+            <field name="mail_template_id" position="after">
+                <field name="pos_report_print_id" invisible="program_type != 'gift_card'" />
+            </field>
+            <xpath expr="//label[@for='available_on']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//div[@id='o_loyalty_program_availabilities']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//div[@id='o_loyalty_program_availabilities']" position="inside">
+                <span class="d-inline-flex text-break">
+                    <field name="pos_ok"/>
+                    <label for="pos_ok"/>
+                </span>
+            </xpath>
+            <xpath expr="//div[@id='o_loyalty_program_availabilities']" position="after">
+                <field name="pos_config_ids" string="Point of Sale" widget="many2many_tags" invisible="not pos_ok" options="{'create': False}" placeholder="All PoS"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="loyalty_program_view_tree_inherit_pos_loyalty" model="ir.ui.view">
+        <field name="name">loyalty.program.view.tree.inherit.pos.loyalty</field>
+        <field name="model">loyalty.program</field>
+        <field name="inherit_id" ref="loyalty.loyalty_program_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="before">
+                <field name="pos_config_ids" widget="many2many_tags"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

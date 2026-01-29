@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_report" model="account.report">
+        <field name="name">Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.vn"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_tax_report_line_01_vn" model="account.report.line">
+                <field name="name">Purchase of Goods and Services</field>
+                <field name="aggregation_formula">VAT_ON_PURCHASE_OF_GOODS_AND_SERVICES.balance + UNTAXED_PURCHASE_OF_GOODS_AND_SERVICES.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_01_01_vn" model="account.report.line">
+                        <field name="name">VAT on purchase of goods and services</field>
+                        <field name="code">VAT_ON_PURCHASE_OF_GOODS_AND_SERVICES</field>
+                        <field name="aggregation_formula">VAT_ON_PURCHASE_OF_GOODS_AND_SERVICES_0.balance + VAT_ON_PURCHASE_OF_GOODS_AND_SERVICES_5.balance + VAT_ON_PURCHASE_OF_GOODS_AND_SERVICES_10.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_01_01_01_vn" model="account.report.line">
+                                <field name="name">VAT on purchase of goods and services 0%</field>
+                                <field name="code">VAT_ON_PURCHASE_OF_GOODS_AND_SERVICES_0</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_01_01_01_vn_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">VAT on purchase of goods and services 0%</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_02_01_01_vn" model="account.report.line">
+                                <field name="name">VAT on purchase of goods and services 5%</field>
+                                <field name="code">VAT_ON_PURCHASE_OF_GOODS_AND_SERVICES_5</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_02_01_01_vn_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">VAT on purchase of goods and services 5%</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_03_01_01_vn" model="account.report.line">
+                                <field name="name">VAT on purchase of goods and services 10%</field>
+                                <field name="code">VAT_ON_PURCHASE_OF_GOODS_AND_SERVICES_10</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_03_01_01_vn_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">VAT on purchase of goods and services 10%</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_02_01_vn" model="account.report.line">
+                        <field name="name">Untaxed Purchase of Goods and Services</field>
+                        <field name="code">UNTAXED_PURCHASE_OF_GOODS_AND_SERVICES</field>
+                        <field name="aggregation_formula">UNTAXED_PURCHASE_OF_GOODS_AND_SERVICES_TAXED_0.balance + UNTAXED_PURCHASE_OF_GOODS_AND_SERVICES_TAXED_5.balance + UNTAXED_PURCHASE_OF_GOODS_AND_SERVICES_TAXED_10.balance + UNTAXED_PURCHASE_OF_GOODS_AND_SERVICES_TAXED_VAT_EXEMPTION.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_01_02_01_vn" model="account.report.line">
+                                <field name="name">Untaxed Purchase of Goods and Services taxed 0%</field>
+                                <field name="code">UNTAXED_PURCHASE_OF_GOODS_AND_SERVICES_TAXED_0</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_01_02_01_vn_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Untaxed Purchase of Goods and Services taxed 0%</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_02_02_01_vn" model="account.report.line">
+                                <field name="name">Untaxed Purchase of Goods and Services taxed 5%</field>
+                                <field name="code">UNTAXED_PURCHASE_OF_GOODS_AND_SERVICES_TAXED_5</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_02_02_01_vn_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Untaxed Purchase of Goods and Services taxed 5%</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_03_02_01_vn" model="account.report.line">
+                                <field name="name">Untaxed Purchase of Goods and Services taxed 10%</field>
+                                <field name="code">UNTAXED_PURCHASE_OF_GOODS_AND_SERVICES_TAXED_10</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_03_02_01_vn_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Untaxed Purchase of Goods and Services taxed 10%</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_04_02_01_vn" model="account.report.line">
+                                <field name="name">Untaxed Purchase of Goods and Services taxed VAT Exemption</field>
+                                <field name="code">UNTAXED_PURCHASE_OF_GOODS_AND_SERVICES_TAXED_VAT_EXEMPTION</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_04_02_01_vn_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Untaxed Purchase of Goods and Services taxed VAT Exemption</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_02_vn" model="account.report.line">
+                <field name="name">Sales of Goods and Services</field>
+                <field name="aggregation_formula">VAT_ON_SALES_OF_GOODS_AND_SERVICES.balance + UNTAXED_SALES_OF_GOODS_AND_SERVICES.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_01_02_vn" model="account.report.line">
+                        <field name="name">VAT on sales of goods and services</field>
+                        <field name="code">VAT_ON_SALES_OF_GOODS_AND_SERVICES</field>
+                        <field name="aggregation_formula">VAT_ON_SALES_OF_GOODS_AND_SERVICES_0.balance + VAT_ON_SALES_OF_GOODS_AND_SERVICES_5.balance + VAT_ON_SALES_OF_GOODS_AND_SERVICES_10.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_01_01_02_vn" model="account.report.line">
+                                <field name="name">VAT on sales of goods and services 0%</field>
+                                <field name="code">VAT_ON_SALES_OF_GOODS_AND_SERVICES_0</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_01_01_02_vn_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">VAT on sales of goods and services 0%</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_02_01_02_vn" model="account.report.line">
+                                <field name="name">VAT on sales of goods and services 5%</field>
+                                <field name="code">VAT_ON_SALES_OF_GOODS_AND_SERVICES_5</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_02_01_02_vn_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">VAT on sales of goods and services 5%</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_03_01_02_vn" model="account.report.line">
+                                <field name="name">VAT on sales of goods and services 10%</field>
+                                <field name="code">VAT_ON_SALES_OF_GOODS_AND_SERVICES_10</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_03_01_02_vn_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">VAT on sales of goods and services 10%</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_02_02_vn" model="account.report.line">
+                        <field name="name">Untaxed Sales of Goods and Services</field>
+                        <field name="code">UNTAXED_SALES_OF_GOODS_AND_SERVICES</field>
+                        <field name="aggregation_formula">UNTAXED_SALES_OF_GOODS_AND_SERVICES_TAXED_0.balance + UNTAXED_SALES_OF_GOODS_AND_SERVICES_TAXED_5.balance + UNTAXED_SALES_OF_GOODS_AND_SERVICES_TAXED_10.balance + UNTAXED_SALES_OF_GOODS_AND_SERVICES_TAXED_VAT_EXEMPTION.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_01_02_02_vn" model="account.report.line">
+                                <field name="name">Untaxed sales of goods and services taxed 0%</field>
+                                <field name="code">UNTAXED_SALES_OF_GOODS_AND_SERVICES_TAXED_0</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_01_02_02_vn_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Untaxed sales of goods and services taxed 0%</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_02_02_02_vn" model="account.report.line">
+                                <field name="name">Untaxed sales of goods and services taxed 5%</field>
+                                <field name="code">UNTAXED_SALES_OF_GOODS_AND_SERVICES_TAXED_5</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_02_02_02_vn_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Untaxed sales of goods and services taxed 5%</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_03_02_02_vn" model="account.report.line">
+                                <field name="name">Untaxed sales of goods and services taxed 10%</field>
+                                <field name="code">UNTAXED_SALES_OF_GOODS_AND_SERVICES_TAXED_10</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_03_02_02_vn_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Untaxed sales of goods and services taxed 10%</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_04_02_02_vn" model="account.report.line">
+                                <field name="name">Untaxed sales of goods and services taxed VAT Exemption</field>
+                                <field name="code">UNTAXED_SALES_OF_GOODS_AND_SERVICES_TAXED_VAT_EXEMPTION</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_04_02_02_vn_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Untaxed sales of goods and services taxed VAT Exemption</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>
