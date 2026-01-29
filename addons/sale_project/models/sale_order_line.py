@@ -182,16 +182,18 @@ class SaleOrderLine(models.Model):
     def _timesheet_create_project_prepare_values(self):
         """Generate project values"""
         # create the project or duplicate one
-        return {
+        ret = {
             'name': '%s - %s' % (self.order_id.client_order_ref, self.order_id.name) if self.order_id.client_order_ref else self.order_id.name,
             'account_id': self.env.context.get('project_account_id') or self.order_id.project_account_id.id or self.env['account.analytic.account'].create(self.order_id._prepare_analytic_account_data()).id,
             'partner_id': self.order_id.partner_id.id,
-            'sale_line_id': self.id,
             'active': True,
             'company_id': self.company_id.id,
             'allow_billable': True,
             'user_id': self.product_id.project_template_id.user_id.id,
         }
+        if self.order_id.state != 'draft':
+            ret['sale_line_id'] = self.id
+        return ret
 
     def _timesheet_create_project(self):
         """ Generate project for the given so line, and link it.
@@ -207,15 +209,16 @@ class SaleOrderLine(models.Model):
                 project = project_template.action_create_from_template(values)
             else:
                 project = project_template.copy(values)
-            project.tasks.write({
-                'sale_line_id': self.id,
-                'partner_id': self.order_id.partner_id.id,
-            })
+            if (self.order_id.state == 'sent'):
+                project.tasks.write({
+                    'sale_line_id': self.id,
+                    'partner_id': self.order_id.partner_id.id,
+                })
             # duplicating a project doesn't set the SO on sub-tasks
-            project.tasks.filtered('parent_id').write({
-                'sale_line_id': self.id,
-                'sale_order_id': self.order_id.id,
-            })
+                project.tasks.filtered('parent_id').write({
+                    'sale_line_id': self.id,
+                    'sale_order_id': self.order_id.id,
+                })
         else:
             project_only_sol_count = self.env['sale.order.line'].search_count([
                 ('order_id', '=', self.order_id.id),

@@ -61,6 +61,8 @@ class ProjectProject(models.Model):
                 'reinvoiced_sale_order_id': order_id,
                 'sale_line_id': sale_line_id,
             })
+        if defaults.get('sale_order_id') and self.env['sale.order'].search([('id', '=', defaults['sale_order_id']), ('state', '=', 'draft')]):
+            defaults.pop('sale_line_id', False)
         return defaults
 
     @api.model
@@ -166,38 +168,15 @@ class ProjectProject(models.Model):
         if not self.reinvoiced_sale_order_id and self.sale_line_id:
             self.reinvoiced_sale_order_id = self.sale_line_id.order_id
 
-    def _ensure_sale_order_linked(self, sol_ids):
-        """ Orders created from project/task are supposed to be confirmed to match the typical flow from sales, but since
-        we allow SO creation from the project/task itself we want to confirm newly created SOs immediately after creation.
-        However this would leads to SOs being confirmed without a single product, so we'd rather do it on record save.
-        """
-        quotations = self.env['sale.order.line'].sudo()._read_group(
-            domain=[('state', '=', 'draft'), ('id', 'in', sol_ids)],
-            aggregates=['order_id:recordset'],
-        )[0][0]
-        if quotations:
-            quotations.action_confirm()
-
     @api.model_create_multi
     def create(self, vals_list):
         projects = super().create(vals_list)
-        sol_ids = set()
         for project, vals in zip(projects, vals_list):
-            if (vals.get('sale_line_id')):
-                sol_ids.add(vals['sale_line_id'])
             if project.sale_order_id and not project.sale_order_id.project_id:
                 project.sale_order_id.project_id = project.id
             elif project.sudo().reinvoiced_sale_order_id and not project.sudo().reinvoiced_sale_order_id.project_id:
                 project.sudo().reinvoiced_sale_order_id.project_id = project.id
-        if sol_ids:
-            projects._ensure_sale_order_linked(list(sol_ids))
         return projects
-
-    def write(self, vals):
-        project = super().write(vals)
-        if sol_id := vals.get('sale_line_id'):
-            self._ensure_sale_order_linked([sol_id])
-        return project
 
     def _get_sale_orders_domain(self, all_sale_orders):
         return [("id", "in", all_sale_orders.ids)]
