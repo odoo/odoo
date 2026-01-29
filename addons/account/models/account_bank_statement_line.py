@@ -292,12 +292,8 @@ class AccountBankStatementLine(models.Model):
             _liquidity_lines, suspense_lines, _other_lines = st_line._seek_for_lines()
 
             # Compute residual amount
-            if st_line.review_state in ('todo', 'anomaly'):
-                st_line.amount_residual = -st_line.amount_currency if st_line.foreign_currency_id else -st_line.amount
-            elif suspense_lines.account_id.reconcile:
-                st_line.amount_residual = sum(suspense_lines.mapped('amount_residual_currency'))
-            else:
-                st_line.amount_residual = sum(suspense_lines.mapped('amount_currency'))
+            transaction_amount_residual, _company_amount_residual = st_line._get_statement_line_residual_amounts()
+            st_line.amount_residual = transaction_amount_residual
 
             # Compute is_reconciled
             if not st_line.id:
@@ -562,6 +558,29 @@ class AccountBankStatementLine(models.Model):
         ).statement_id
         if not statement.is_complete:
             return statement
+
+    def _get_statement_line_residual_amounts(self):
+        """Retrieve the residual amount for this line in terms of the transaction and company currency,
+
+        :return: (
+            transaction_amount_residual,
+            company_amount_residual,
+        )
+        """
+        self.ensure_one()
+        liquidity_lines, suspense_lines, _other_lines = self._seek_for_lines()
+
+        if self.review_state in ('todo', 'anomaly'):
+            transaction_amount_residual = -self.amount_currency if self.foreign_currency_id else -self.amount
+            company_amount_residual = -sum(liquidity_lines.mapped('balance'))
+        elif suspense_lines.account_id.reconcile:
+            transaction_amount_residual = sum(suspense_lines.mapped('amount_residual_currency'))
+            company_amount_residual = sum(suspense_lines.mapped('amount_residual'))
+        else:
+            transaction_amount_residual = sum(suspense_lines.mapped('amount_currency'))
+            company_amount_residual = sum(suspense_lines.mapped('balance'))
+
+        return (transaction_amount_residual, company_amount_residual)
 
     def _get_accounting_amounts_and_currencies(self):
         """ Retrieve the transaction amount, journal amount and the company amount with their corresponding currencies
