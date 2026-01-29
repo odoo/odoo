@@ -69,8 +69,6 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
 
     def test_invoice_price_unit_more_decimals(self):
         tax_21 = self.percent_tax(21.0)
-        decimal_precision = self.env['decimal.precision'].search([('name', '=', 'Product Price')], limit=1)
-        decimal_precision.digits = 4
         product = self._create_product(lst_price=0.4567, taxes_id=tax_21)
         invoice = self._create_invoice_one_line(
             product_id=product,
@@ -81,6 +79,27 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
 
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_price_unit_more_decimals')
+
+    def test_invoice_BR_CO_10_line_extension_amount_sum_lines(self):
+        """ [BR_CO_10] Sum of Invoice line net amount (BT-106) = Σ Invoice line net amount (BT-131). """
+        tax_21 = self.percent_tax(21.0)
+        product = self._create_product(lst_price=0.4567, taxes_id=tax_21)
+        invoice = self._create_invoice(
+            partner_id=self.partner_be,
+            invoice_line_ids=[
+                self._prepare_invoice_line(product_id=product),
+                self._prepare_invoice_line(product_id=product),
+                self._prepare_invoice_line(product_id=product),
+                self._prepare_invoice_line(product_id=product),
+                self._prepare_invoice_line(product_id=product),
+                self._prepare_invoice_line(product_id=product),
+                self._prepare_invoice_line(product_id=product, price_unit=1000.45),
+            ],
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_BR_CO_10_line_extension_amount_sum_lines')
 
     def test_invoice_price_amount_rounding_precision_with_price_included_taxes(self):
         tax_21 = self.percent_tax(21.0, price_include_override='tax_included')
