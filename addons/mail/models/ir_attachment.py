@@ -84,6 +84,7 @@ class IrAttachment(models.Model):
                 "filename",
                 "mimetype",
                 "name",
+                "res_model",
                 "res_name",
                 "size",
                 "thread",

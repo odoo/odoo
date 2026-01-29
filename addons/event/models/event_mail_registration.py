@@ -40,7 +40,9 @@ class EventMailRegistration(models.Model):
             lambda r: r.scheduler_id.notification_type == "mail"
         )
         for scheduler, reg_mails in todo.grouped('scheduler_id').items():
-            scheduler._send_mail(reg_mails.registration_id)
+            # exclusion_list should not be applied as registering to an event is implicitly
+            # subscribing to the emails relevant to the event such as the email containing the ticket
+            scheduler.with_context(default_use_exclusion_list=False)._send_mail(reg_mails.registration_id)
         todo.mail_sent = True
         return todo
 

@@ -609,7 +609,7 @@ class StockWarehouseOrderpoint(models.Model):
             ('trigger', '=', 'manual'),
         ]
         if self.ids:
-            expression.AND([domain, [('ids', 'in', self.ids)]])
+            domain = expression.AND([domain, [('id', 'in', self.ids)]])
         manual_orderpoints = self.env['stock.warehouse.orderpoint'].with_context(active_test=False).search(domain)
         orderpoints_to_remove = manual_orderpoints.filtered(lambda o: o.qty_to_order <= 0.0)
         # Remove previous automatically created orderpoint that has been refilled.

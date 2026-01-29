@@ -32,6 +32,7 @@ class ViewXMLID(common.TransactionCase):
         self.assertTrue(view.model_data_id)
         self.assertEqual(view.model_data_id.complete_name, 'base.view_company_form')
 
+
 class ViewCase(TransactionCaseWithUserDemo):
     def setUp(self):
         super(ViewCase, self).setUp()
@@ -1628,6 +1629,7 @@ class TestTemplating(ViewCase):
         """)
         self.assertEqual(arch, expected)
 
+
 class TestViews(ViewCase):
 
     def test_nonexistent_attribute_removal(self):
@@ -2438,6 +2440,28 @@ class TestViews(ViewCase):
         """
         self.assertValid(arch % 'base.group_no_one')
         self.assertWarning(arch % 'base.dummy')
+
+    def test_groups_field_removed(self):
+        view = self.View.create({
+            'name': 'valid view',
+            'model': 'ir.ui.view',
+            'arch': """
+                <form string="View">
+                    <span class="oe_inline" invisible="0 == 0">
+                        (<field name="name" groups="base.group_no_one"/>)
+                    </span>
+                </form>
+            """,
+        })
+        arch = self.View.get_views([(view.id, view.type)])['views']['form']['arch']
+
+        self.assertEqual(arch, """
+                <form string="View">
+                    <span class="oe_inline" invisible="0 == 0">
+                        ()
+                    </span>
+                </form>
+            """.strip())
 
     def test_attrs_groups_behavior(self):
         view = self.View.create({
@@ -3591,6 +3615,7 @@ class TestViewTranslations(common.TransactionCase):
 
         with self.assertRaises(ValidationError):
             view.write({'mode': 'extension'})
+
 
 class ViewModeField(ViewCase):
     """

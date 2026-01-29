@@ -1033,7 +1033,15 @@ actual arch.
         # check the read/visibility access
         for node in tree.xpath('//*[@__groups_key__]'):
             if not has_access(node.attrib.pop('__groups_key__')):
-                node.getparent().remove(node)
+                tail = node.tail
+                parent = node.getparent()
+                previous = node.getprevious()
+                parent.remove(node)
+                if tail:
+                    if previous is not None:
+                        previous.tail = (previous.tail or '') + tail
+                    elif parent is not None:
+                        parent.text = (parent.text or '') + tail
             elif node.tag == 't' and not node.attrib:
                 # Move content of <t groups=""> blocks
                 # and remove the <t> node.
