@@ -12,7 +12,7 @@ from random import randint
 
 from odoo.http import request
 from odoo import models, fields, api, exceptions, _
-from odoo.addons.resource.models.utils import Intervals
+from odoo.addons.resource.models.utils import Intervals, sum_intervals
 from odoo.osv.expression import AND, OR
 from odoo.tools.float_utils import float_is_zero
 from odoo.exceptions import AccessError
@@ -212,19 +212,33 @@ class HrAttendance(models.Model):
             between check_in and check_out, without taking into account the lunch_interval"""
         for attendance in self:
             if attendance.check_out and attendance.check_in and attendance.employee_id:
-                calendar = attendance._get_employee_calendar()
-                resource = attendance.employee_id.resource_id
-                tz = timezone(resource.tz) if not calendar else timezone(calendar.tz)
-                check_in_tz = attendance.check_in.astimezone(tz)
-                check_out_tz = attendance.check_out.astimezone(tz)
-                lunch_intervals = []
-                if not attendance.employee_id.is_flexible:
-                    lunch_intervals = attendance.employee_id._employee_attendance_intervals(check_in_tz, check_out_tz, lunch=True)
-                attendance_intervals = Intervals([(check_in_tz, check_out_tz, attendance)]) - lunch_intervals
-                delta = sum((i[1] - i[0]).total_seconds() for i in attendance_intervals)
-                attendance.worked_hours = delta / 3600.0
+                attendance.worked_hours = attendance._get_worked_hours_in_range(attendance.check_in, attendance.check_out)
             else:
                 attendance.worked_hours = False
+
+    def _get_worked_hours_in_range(self, start_dt, end_dt):
+        """Returns the amount of hours worked because of this attendance during the
+        interval defined by [start_dt, end_dt]
+
+        :param start_dt: datetime starting the interval.
+        :param end_dt: datetime ending the interval.
+        :returns: float, hours worked
+        """
+        self.ensure_one()
+        calendar = self._get_employee_calendar()
+        resource = self.employee_id.resource_id
+        tz = timezone(resource.tz) if not calendar else timezone(calendar.tz)
+        start_dt_tz = max(self.check_in, start_dt).astimezone(tz)
+        end_dt_tz = min(self.check_out, end_dt).astimezone(tz)
+
+        if end_dt_tz < start_dt_tz:
+            return 0.0
+
+        lunch_intervals = []
+        if not self.employee_id.is_flexible:
+            lunch_intervals = self.employee_id._employee_attendance_intervals(start_dt_tz, end_dt_tz, lunch=True)
+        attendance_intervals = Intervals([(start_dt_tz, end_dt_tz, self)]) - lunch_intervals
+        return sum_intervals(attendance_intervals)
 
     @api.constrains('check_in', 'check_out')
     def _check_validity_check_in_check_out(self):
