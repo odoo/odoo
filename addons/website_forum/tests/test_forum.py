@@ -179,6 +179,15 @@ class TestForum(TestForumCommon):
         })
         self.assertEqual(self.user_employee.karma, KARMA['ans'], 'website_forum: wrong karma generation when answering question')
 
+        # Answers on flagged question is not allowed
+        self.post.state = 'flagged'
+        with self.assertRaises(UserError):
+            Post.create({
+                'name': "Test",
+                'forum_id': self.forum.id,
+                'parent_id': self.post.id,
+            })
+
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_vote_crash(self):
         Post = self.env['forum.post']
@@ -289,6 +298,14 @@ class TestForum(TestForumCommon):
         post.state = 'active'
         post.with_user(self.user_portal).flag()
         self.assertEqual(post.state, 'flagged', 'website_forum: wrong state when flagging a post')
+
+        # user can edit flagged post if enough karma
+        post.write({'content': 'Test update 1'})
+        # user cannot edit flagged post if not enough karma
+        self.user_portal.karma = KARMA['flag'] - 1
+        post.invalidate_recordset()  # Recompute ``can_flag``
+        with self.assertRaises(UserError):
+            post.write({'content': 'Test update 2'})
 
     def test_validate_a_post(self):
         Post = self.env['forum.post']
@@ -450,6 +467,20 @@ class TestForum(TestForumCommon):
             not questions_post.uid_has_answered or questions_post.forum_id.mode == 'discussions', False)
         self.assertEqual(
             questions_post.uid_has_answered and questions_post.forum_id.mode == 'questions', True)
+
+        # "questions" mode only allows one answer per user
+        self.user_portal.karma = KARMA['ans']
+        Post.with_user(self.user_portal).create({
+            'name': 'First user answer',
+            'forum_id': forum_questions.id,
+            'parent_id': questions_post.id,
+        })
+        with self.assertRaises(UserError):
+            Post.with_user(self.user_portal).create({
+                'name': 'Second user answer',
+                'forum_id': forum_questions.id,
+                'parent_id': questions_post.id,
+            })
 
     def test_forum_mode_discussions(self):
         Forum = self.env['forum.forum']
