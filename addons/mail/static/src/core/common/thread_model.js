@@ -531,7 +531,7 @@ export class Thread extends Record {
             return { channel_id: this.id };
         }
         if (this.model === "mail.box") {
-            return {};
+            return { mailbox_id: this.id };
         }
         return {
             thread_id: this.id,
@@ -544,14 +544,8 @@ export class Thread extends Record {
         if (this.channel) {
             return "/discuss/channel/messages";
         }
-        if (this.model === "mail.box" && this.id === "inbox") {
-            return `/mail/inbox/messages`;
-        }
-        if (this.model === "mail.box" && this.id === "starred") {
-            return `/mail/starred/messages`;
-        }
-        if (this.model === "mail.box" && this.id === "history") {
-            return `/mail/history/messages`;
+        if (this.model === "mail.box") {
+            return "/mail/mailbox/messages";
         }
         return this.fetchRouteChatter;
     }

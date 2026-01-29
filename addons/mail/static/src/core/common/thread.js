@@ -515,9 +515,18 @@ export class Thread extends Component {
     }
 
     getMessageClassName(message) {
-        return !message.isNotification && this.messageHighlight?.highlightedMessageId === message.id
-            ? "o-highlighted bg-view shadow-lg pb-1"
-            : "";
+        let res = "";
+        if (!message.isNotification && this.messageHighlight?.highlightedMessageId === message.id) {
+            res += "o-highlighted bg-view shadow-lg pb-1";
+        }
+        if (
+            this.props.thread.model === "mail.box" &&
+            !["inbox", "history", "starred"].includes(this.props.thread.id) &&
+            !message.needaction
+        ) {
+            res += "bg-200 opacity-75";
+        }
+        return res;
     }
 
     async jumpToPresent({ immediate = false } = {}) {

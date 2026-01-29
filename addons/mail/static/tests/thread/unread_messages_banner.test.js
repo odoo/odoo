@@ -134,7 +134,7 @@ test("remove banner when opening thread at the bottom", async () => {
     await click(".o-dropdown-item:contains('Mark as Unread')");
     await contains(".o-mail-Thread-banner:has(:text('1 new message'))");
     await click(".o-mail-DiscussSidebar-item:has(:text('Inbox'))");
-    await contains(".o-mail-DiscussContent-threadName[title='Inbox']");
+    await contains(".o-mail-DiscussContent-threadName[title='Unread']");
     await click(".o-mail-DiscussSidebarChannel:text('general')");
     await contains(".o-mail-DiscussContent-threadName[title='general']");
     await contains(".o-mail-Thread-banner:has(:text('1 new message'))", { count: 0 });

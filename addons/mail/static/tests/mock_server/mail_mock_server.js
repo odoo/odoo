@@ -494,58 +494,6 @@ async function get_favorites(request) {
     return [[]];
 }
 
-registerRoute("/mail/history/messages", discuss_history_messages);
-/** @type {RouteCallback} */
-async function discuss_history_messages(request) {
-    /** @type {import("mock_models").MailMessage} */
-    const MailMessage = this.env["mail.message"];
-    /** @type {import("mock_models").MailNotification} */
-    const MailNotification = this.env["mail.notification"];
-
-    const { fetch_params = {} } = await parseRequestParams(request);
-    const domain = [["needaction", "=", false]];
-    const res = MailMessage._message_fetch(domain, makeKwArgs(fetch_params));
-    const { messages } = res;
-    delete res.messages;
-    const messagesWithNotification = messages.filter((message) => {
-        const notifs = MailNotification.search_read([
-            ["mail_message_id", "=", message.id],
-            ["is_read", "=", true],
-            ["res_partner_id", "=", this.env.user.partner_id],
-        ]);
-        return notifs.length > 0;
-    });
-    return {
-        ...res,
-        data: new mailDataHelpers.Store(
-            MailMessage.browse(messagesWithNotification.map((message) => message.id)),
-            makeKwArgs({ for_current_user: true })
-        ).get_result(),
-        messages: mailDataHelpers.Store.many(messages)._get_id(),
-    };
-}
-
-registerRoute("/mail/inbox/messages", discuss_inbox_messages);
-/** @type {RouteCallback} */
-async function discuss_inbox_messages(request) {
-    /** @type {import("mock_models").MailMessage} */
-    const MailMessage = this.env["mail.message"];
-
-    const { fetch_params = {} } = await parseRequestParams(request);
-    const domain = [["needaction", "=", true]];
-    const res = MailMessage._message_fetch(domain, makeKwArgs(fetch_params));
-    const { messages } = res;
-    delete res.messages;
-    return {
-        ...res,
-        data: new mailDataHelpers.Store(
-            MailMessage.browse(messages.map((message) => message.id)),
-            makeKwArgs({ for_current_user: true, add_followers: true })
-        ).get_result(),
-        messages: messages.map((message) => message.id),
-    };
-}
-
 registerRoute("/mail/link_preview", mail_link_preview);
 /** @type {RouteCallback} */
 async function mail_link_preview(request) {
@@ -850,14 +798,39 @@ async function session_update_and_broadcast(request) {
     }
 }
 
-registerRoute("/mail/starred/messages", discuss_starred_messages);
+function _get_mailbox_domain(mailbox_id, env) {
+    const user_notified_domain =
+        ("notification_ids", "any", [("res_partner_id", "=", env.user.partner_id)]);
+    switch (mailbox_id) {
+        case "inbox":
+            return [["needaction", "=", true]];
+        case "history":
+            return [["needaction", "=", false]];
+        case "starred":
+            return [["starred_partner_ids", "in", [env.user.partner_id]]];
+        case "comments":
+            return [user_notified_domain, ["message_type", "=", "comment"]];
+        case "mentioning":
+            return [
+                user_notified_domain,
+                ["message_type", "=", "comment"],
+                ["partner_ids", "in", env.user.partner_id],
+            ];
+        case "tracking":
+            return [user_notified_domain, ["tracking_value_ids", "!=", false]];
+        default:
+            throw new Error(`Unexpected mailbox id ${mailbox_id}`);
+    }
+}
+
+registerRoute("/mail/mailbox/messages", discuss_mailbox_messages);
 /** @type {RouteCallback} */
-async function discuss_starred_messages(request) {
+async function discuss_mailbox_messages(request) {
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
 
-    const { fetch_params = {} } = await parseRequestParams(request);
-    const domain = [["starred_partner_ids", "in", [this.env.user.partner_id]]];
+    const { mailbox_id, fetch_params = {} } = await parseRequestParams(request);
+    const domain = _get_mailbox_domain(mailbox_id, this.env);
     const res = MailMessage._message_fetch(domain, makeKwArgs(fetch_params));
     const { messages } = res;
     delete res.messages;
@@ -865,7 +838,10 @@ async function discuss_starred_messages(request) {
         ...res,
         data: new mailDataHelpers.Store(
             MailMessage.browse(messages.map((message) => message.id)),
-            makeKwArgs({ for_current_user: true })
+            makeKwArgs({
+                for_current_user: true,
+                add_followers: mailbox_id === "inbox" ? true : undefined,
+            })
         ).get_result(),
         messages: messages.map((message) => message.id),
     };

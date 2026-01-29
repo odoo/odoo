@@ -46,6 +46,17 @@ const StorePatch = {
         this.inbox = fields.One("mail.thread");
         this.starred = fields.One("mail.thread");
         this.history = fields.One("mail.thread");
+        this.comments = fields.One("mail.thread");
+        this.mentioning = fields.One("mail.thread");
+        this.tracking = fields.One("mail.thread");
+        this.mailboxes = fields.Many("mail.thread", {
+            sort(a, b) {
+                if (a.mailboxSequenceGroup !== b.mailboxSequenceGroup) {
+                    return a.mailboxSequenceGroup - b.mailboxSequenceGroup;
+                }
+                return a.mailboxSequence - b.mailboxSequence;
+            },
+        });
     },
     computeGlobalCounter() {
         return this.inbox?.counter ?? 0;
@@ -64,19 +75,46 @@ const StorePatch = {
     onStarted() {
         super.onStarted(...arguments);
         this.inbox = {
-            display_name: _t("Inbox"),
+            display_name: _t("Unread"),
             id: "inbox",
             model: "mail.box",
+            mailboxSequenceGroup: 10,
+            mailboxSequence: 10,
         };
         this.starred = {
-            display_name: _t("Starred messages"),
+            display_name: _t("Starred"),
             id: "starred",
             model: "mail.box",
+            mailboxSequenceGroup: 30,
+            mailboxSequence: 10,
         };
         this.history = {
-            display_name: _t("History"),
+            display_name: _t("Read"),
             id: "history",
             model: "mail.box",
+            mailboxSequenceGroup: 10,
+            mailboxSequence: 20,
+        };
+        this.comments = {
+            display_name: _t("Messages"),
+            id: "comments",
+            model: "mail.box",
+            mailboxSequenceGroup: 20,
+            mailboxSequence: 10,
+        };
+        this.mentioning = {
+            display_name: _t("Mentioning Me"),
+            id: "mentioning",
+            model: "mail.box",
+            mailboxSequenceGroup: 20,
+            mailboxSequence: 20,
+        };
+        this.tracking = {
+            display_name: _t("Tracked Changes"),
+            id: "tracking",
+            model: "mail.box",
+            mailboxSequenceGroup: 20,
+            mailboxSequence: 30,
         };
         try {
             // useful for synchronizing activity data between multiple tabs

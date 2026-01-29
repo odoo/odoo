@@ -667,7 +667,7 @@ test("leave command on channel", async () => {
     triggerHotkey("Enter");
     await click("button:text(Leave Conversation)");
     await contains(".o-mail-DiscussSidebarChannel:text('general')", { count: 0 });
-    await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "Unread" });
 });
 
 test("Can handle leave notification from unknown member", async () => {
@@ -709,7 +709,7 @@ test("leave command on chat", async () => {
     await contains(".o-mail-Composer-input", { value: "/leave " });
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel:text('Chuck Norris')", { count: 0 });
-    await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "Unread" });
 });
 
 test("Can post suggestions", async () => {

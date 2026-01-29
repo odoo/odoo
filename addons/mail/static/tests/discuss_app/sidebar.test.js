@@ -259,20 +259,18 @@ test("default thread rendering", async () => {
     await start();
     await openDiscuss("mail.box_inbox");
     await contains("button:text('Inbox')");
-    await contains("button:text('Starred messages')");
-    await contains("button:text('History')");
     await contains(".o-mail-DiscussSidebar-item:has(:text('General'))");
     await contains("button.o-active:text('Inbox')");
     await contains(
         ".o-mail-Thread:text('Congratulations, your inbox is empty New messages appear here.')"
     );
-    await click("button:text('Starred messages')");
-    await contains("button.o-active:text('Starred messages')");
+    await click("button[title='Change Mailbox']");
+    await click(".o-dropdown-item:text('Starred')");
     await contains(
         ".o-mail-Thread:text('No starred messages You can mark any message as 'starred', and it shows up in this mailbox.')"
     );
-    await click("button:text('History')");
-    await contains("button.o-active:text('History')");
+    await click("button[title='Change Mailbox']");
+    await click(".o-dropdown-item:text('Read')");
     await contains(
         ".o-mail-Thread:text('No history messages Messages marked as read will appear in the history.')"
     );
@@ -354,7 +352,7 @@ test("sidebar: open channel and leave it", async () => {
     await click(".o-dropdown-item:contains('Leave Channel')");
     await click("button:text('Leave Conversation')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')", { count: 0 });
-    await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "Unread" });
     await expect.waitForSteps(["action_unfollow"]);
 });
 

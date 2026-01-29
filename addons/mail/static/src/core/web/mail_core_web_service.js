@@ -42,6 +42,15 @@ export class MailCoreWeb {
             /** @type {import("models").Message} */
             const message = this.store["mail.message"].get(messageId);
             this.addMessageToInbox(message, notifId);
+            if (message.message_type === "comment") {
+                this.store.comments.messages.add(message);
+                if (message.partner_ids.includes(message.store.self)) {
+                    this.store.mentioning.messages.add(message);
+                }
+            }
+            if (message.trackingValues.length) {
+                this.store.tracking.messages.add(message);
+            }
             if (!this.store.self?.im_status?.includes("busy")) {
                 this.store.env.services["mail.out_of_focus"].notify(message);
             }

@@ -159,8 +159,8 @@ test("keep new message separator until user goes back to the thread", async () =
         "mail.record/insert",
         (n) => n["discuss.channel.member"][0].new_message_separator,
     ]);
-    await hootClick(".o-mail-DiscussSidebar-item:contains(History)");
-    await contains(".o-mail-DiscussContent-threadName", { value: "History" });
+    await hootClick(".o-mail-DiscussSidebar-item:contains(Inbox)");
+    await contains(".o-mail-DiscussContent-threadName", { value: "Unread" });
     await hootClick(".o-mail-DiscussSidebar-item:contains(test)");
     await contains(".o-mail-DiscussContent-threadName", { value: "test" });
     await contains(".o-mail-Message:has(:text('Message body 2'))");
@@ -372,7 +372,7 @@ test("only show new message separator in its thread", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message:has(:text('@Mitchell Admin'))");
     await click(".o-mail-DiscussSidebar-item:text('Inbox')");
-    await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "Unread" });
     await contains(".o-mail-Message:has(:text('@Mitchell Admin'))");
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message:has(:text('@Mitchell Admin'))", {
         count: 0,

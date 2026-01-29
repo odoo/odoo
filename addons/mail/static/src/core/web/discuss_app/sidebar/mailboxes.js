@@ -6,12 +6,13 @@ import { Component, useRef } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
 
 export class Mailbox extends Component {
     static template = "mail.Mailbox";
-    static props = ["mailbox"];
+    static props = [];
     static components = { Dropdown, ThreadIcon };
 
     setup() {
@@ -35,7 +36,15 @@ export class Mailbox extends Component {
 
     /** @returns {import("models").Thread} */
     get mailbox() {
-        return this.props.mailbox;
+        return this.store.self_user?.notification_type === "inbox"
+            ? this.store.inbox
+            : this.store.starred;
+    }
+
+    get mailboxName() {
+        return this.store.self_user?.notification_type === "inbox"
+            ? _t("Inbox")
+            : _t("Starred messages");
     }
 
     /** @param {MouseEvent} ev */
@@ -45,19 +54,4 @@ export class Mailbox extends Component {
     }
 }
 
-/**
- * @typedef {Object} Props
- * @extends {Component<Props, Env>}
- */
-export class DiscussSidebarMailboxes extends Component {
-    static template = "mail.DiscussSidebarMailboxes";
-    static props = {};
-    static components = { Mailbox };
-
-    setup() {
-        super.setup();
-        this.store = useService("mail.store");
-    }
-}
-
-discussSidebarItemsRegistry.add("mailbox", DiscussSidebarMailboxes, { sequence: 20 });
+discussSidebarItemsRegistry.add("mailbox", Mailbox, { sequence: 20 });

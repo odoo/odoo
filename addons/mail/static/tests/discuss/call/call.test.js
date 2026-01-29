@@ -628,7 +628,7 @@ test("start call when accepting from push notification", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss("mail.box_inbox");
-    await contains(".o-mail-DiscussContent-threadName[title=Inbox]");
+    await contains(".o-mail-DiscussContent-threadName[title=Unread]");
     serviceWorker.dispatchEvent(
         new MessageEvent("message", {
             data: { action: "OPEN_CHANNEL", data: { id: channelId, joinCall: true } },

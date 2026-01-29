@@ -24,6 +24,9 @@
                 <div t-if="props.thread.id === 'inbox'" class="fa fa-fw fa-inbox" t-att-class="sizeClass"/>
                 <div t-elif="props.thread.id === 'starred'" class="fa fa-fw fa-star-o" t-att-class="sizeClass"/>
                 <div t-elif="props.thread.id === 'history'" class="fa fa-fw fa-history" t-att-class="sizeClass"/>
+                <div t-elif="props.thread.id === 'comments'" class="fa fa-fw fa-comments-o" t-att-class="sizeClass"/>
+                <div t-elif="props.thread.id === 'mentioning'" class="fa fa-fw fa-at" t-att-class="sizeClass"/>
+                <div t-elif="props.thread.id === 'tracking'" class="fa fa-fw fa-random" t-att-class="sizeClass"/>
             </t>
         </div>
     </t>

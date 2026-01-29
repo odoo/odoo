@@ -9,17 +9,30 @@
                         New messages appear here.
                     </div>
                 </t>
-                <t t-if="props.thread.id === 'starred'">
+                <t t-elif="props.thread.id === 'starred'">
                     <h4 class="mb-3 fw-bolder">No starred messages</h4>
                     You can mark any message as 'starred', and it shows up in this mailbox.
                 </t>
-                <t t-if="props.thread.id === 'history'">
+                <t t-elif="props.thread.id === 'history'">
                     <img src="/web/static/img/neutral_face.svg" alt="History"/>
                     <h4 class="mb-3 fw-bolder">No history messages</h4>
                     Messages marked as read will appear in the history.
                 </t>
+                <t t-else="">
+                    No messages here
+                </t>
             </t>
             <t t-else="">$0</t>
         </xpath>
+    </t>
+
+    <t t-name="mail.MailboxesSelection">
+        <t t-foreach="store.mailboxes" t-as="mailbox" t-key="mailbox.id">
+            <hr t-if="mailbox.mailboxSequenceGroup != lastGroup and !mailbox_first" class="my-1"/>
+            <DropdownItem class="{ 'active': mailbox.discussAppAsThread }" onSelected="mailbox.setAsDiscussThread">
+                <t t-esc="mailbox.display_name"/>
+            </DropdownItem>
+            <t t-set="lastGroup" t-value="mailbox.mailboxSequenceGroup"/>
+        </t>
     </t>
 </templates>

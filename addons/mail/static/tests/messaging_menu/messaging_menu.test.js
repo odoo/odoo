@@ -1440,6 +1440,6 @@ test("user notification from inbox redirect to discuss inbox", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem .o-mail-NotificationItem-text:text('You: Hello world!')");
-    await contains(".o-mail-DiscussContent-threadName[title='Inbox']");
+    await contains(".o-mail-DiscussContent-threadName[title='Unread']");
     await contains(".o-mail-Message.o-highlighted .o-mail-Message-body:text('Hello world!')");
 });

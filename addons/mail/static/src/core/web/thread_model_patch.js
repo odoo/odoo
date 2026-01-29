@@ -17,6 +17,16 @@ const threadPatch = {
             onDelete: (r) => r?.remove(),
         });
         /** @type {boolean} */
+        this.storeAsMailbox = fields.One("Store", {
+            compute() {
+                return this.model === "mail.box" ? this.store : null;
+            },
+            inverse: "mailboxes",
+        });
+        /** @type {number|undefined} */
+        this.mailboxSequenceGroup = undefined;
+        /** @type {number|undefined} */
+        this.mailboxSequence = undefined;
     },
     get recipientsFullyLoaded() {
         return this.recipientsCount === this.recipients.length;
