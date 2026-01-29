@@ -80,7 +80,7 @@
             <field name="priority">2</field>
             <field name="linkedin_profile">www.example.linkedin.com/in/helen.lee</field>
             <field name="job_id" ref="job_marketing" />
-            <field name="user_id" ref="base.user_admin" />
+            <field name="recruiter_id" search="[('user_id', '=', ref('base.user_admin'))]" />
             <field name="medium_id" ref="utm.utm_medium_direct" />
             <field name="department_id" ref="dep_marketing" />
             <field name="salary_expected">3100</field>
@@ -102,7 +102,7 @@
             <field name="priority">2</field>
             <field name="linkedin_profile">www.example.linkedin.com/in/enrique.jones</field>
             <field name="job_id" ref="job_marketing" />
-            <field name="user_id" ref="base.user_admin" />
+            <field name="recruiter_id" search="[('user_id', '=', ref('base.user_admin'))]" />
             <field name="medium_id" ref="utm.utm_medium_direct" />
             <field name="department_id" ref="dep_marketing" />
             <field name="salary_expected">2900</field>
@@ -124,7 +124,7 @@
             <field name="priority">3</field>
             <field name="linkedin_profile">www.example.linkedin.com/in/hannah.glover</field>
             <field name="job_id" ref="job_full_stack_dev" />
-            <field name="user_id" ref="base.user_admin" />
+            <field name="recruiter_id" search="[('user_id', '=', ref('base.user_admin'))]" />
             <field name="medium_id" ref="utm.utm_medium_direct" />
 
             <field name="department_id" ref="dep_rd" />
@@ -147,7 +147,7 @@
             <field name="priority">0</field>
             <field name="linkedin_profile">www.example.linkedin.com/in/simon.jones</field>
             <field name="job_id" ref="job_full_stack_dev" />
-            <field name="user_id" ref="base.user_admin" />
+            <field name="recruiter_id" search="[('user_id', '=', ref('base.user_admin'))]" />
             <field name="medium_id" ref="utm.utm_medium_direct" />
             <field name="department_id" ref="dep_rd" />
             <field name="salary_expected">3000</field>
@@ -173,7 +173,7 @@
             <field name="priority">0</field>
             <field name="linkedin_profile">www.example.linkedin.com/in/maria.rodriguez</field>
             <field name="job_id" ref="job_full_stack_dev" />
-            <field name="user_id" ref="base.user_admin" />
+            <field name="recruiter_id" search="[('user_id', '=', ref('base.user_admin'))]" />
             <field name="medium_id" ref="utm.utm_medium_direct" />
             <field name="department_id" ref="dep_rd" />
             <field name="stage_id" ref="stage_job0" />
