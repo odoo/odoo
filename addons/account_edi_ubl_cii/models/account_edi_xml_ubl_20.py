@@ -387,9 +387,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         line_node = {}
         self._add_invoice_line_id_nodes(line_node, vals)
         self._add_invoice_line_note_nodes(line_node, vals)
-        self._add_invoice_line_amount_nodes(line_node, vals)
         self._add_invoice_line_period_nodes(line_node, vals)
         self._add_invoice_line_allowance_charge_nodes(line_node, vals)
+        self._add_invoice_line_amount_nodes(line_node, vals)
         self._add_invoice_line_tax_total_nodes(line_node, vals)
         self._add_invoice_line_item_nodes(line_node, vals)
         self._add_invoice_line_tax_category_nodes(line_node, vals)
