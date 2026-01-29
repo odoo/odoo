@@ -11,11 +11,10 @@
     "license": "LGPL-3",
     "depends": [
         "website_sale",
-        "l10n_tw_edi_ecpay",
+        "l10n_tw_edi_ecpay_sale",
     ],
     "data": [
         "data/data.xml",
-        "views/sale_order_views.xml",
         "views/templates.xml"
     ],
     "assets": {

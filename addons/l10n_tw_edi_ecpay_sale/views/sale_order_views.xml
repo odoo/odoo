@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">ecpay_sale_order_form_inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="ECPay" invisible="l10n_tw_edi_so_ecpay_tab_invisible">
+                    <group>
+                        <group string="E-invoice Carrier">
+                            <field name="l10n_tw_edi_is_print"/>
+                            <field name="l10n_tw_edi_love_code" invisible="l10n_tw_edi_is_print or l10n_tw_edi_carrier_type"/>
+                            <field name="l10n_tw_edi_carrier_type" invisible="l10n_tw_edi_is_print or l10n_tw_edi_love_code"/>
+                            <field name="l10n_tw_edi_carrier_number"
+                                   invisible="l10n_tw_edi_carrier_type not in ['2', '3', '4', '5'] or l10n_tw_edi_is_print or l10n_tw_edi_love_code"
+                                   required="l10n_tw_edi_carrier_type in ['2', '3', '4', '5'] and not l10n_tw_edi_is_print"/>
+                            <field name="l10n_tw_edi_carrier_number_2"
+                                   invisible="l10n_tw_edi_carrier_type not in ['4', '5'] or l10n_tw_edi_is_print or l10n_tw_edi_love_code"
+                                   required="l10n_tw_edi_carrier_type in ['4', '5'] and not l10n_tw_edi_is_print"/>
+                        </group>
+                        <group/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
