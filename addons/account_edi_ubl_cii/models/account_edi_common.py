@@ -1208,7 +1208,7 @@ class AccountEdiCommon(models.AbstractModel):
             ]
             tax = self.env['account.tax']
             if hasattr(record, '_get_specific_tax'):
-                tax = record._get_specific_tax(line_values['name'], 'percent', amount, tax_type)
+                tax = record._get_specific_tax(line_values['name'], 'percent', amount, tax_type).filtered_domain(domain)[:1]
             if tax_exigibility:
                 if not tax and tax_exigibility:
                     tax = self.env['account.tax'].search(domain + [('price_include', '=', False), ('tax_exigibility', '=', tax_exigibility)], limit=1)
