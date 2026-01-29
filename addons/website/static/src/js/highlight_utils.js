@@ -406,12 +406,19 @@ function rectToBatch(rects) {
     }
     const rectBatches = [];
     let lastX = rects[0].x - 1;
+    let lastY = rects[0].y;
+    let lastHeight = rects[0].height;
     let lineIndex2 = 0;
     for (const rect of rects) {
-        if (rect.x <= lastX) {
+        // 90% of the previous rectangle height is the tolerance value used
+        // to determine whether two rectangles belong to the same line based
+        // on their vertical position.
+        if (rect.x <= lastX || rect.y - lastY > lastHeight * 0.9) {
             lineIndex2++;
         }
         lastX = rect.x;
+        lastY = rect.y;
+        lastHeight = rect.height;
         rectBatches[lineIndex2] = rectBatches[lineIndex2] || [];
         rectBatches[lineIndex2].push(rect);
     }
