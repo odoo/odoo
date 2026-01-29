@@ -277,7 +277,30 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, MailCommon)
         }
 
         invoice = self.env['account.move'].message_new(message_parsed, {'move_type': 'in_invoice', 'journal_id': self.journal.id})
-        self.assertEqual(invoice.partner_id, self.internal_user.partner_id)
+        self.assertFalse(invoice.partner_id)
+
+        message_ids = invoice.message_ids
+        self.assertEqual(len(message_ids), 1, 'Only one message should be posted in the chatter')
+        self.assertEqual(message_ids.body, '<p>Vendor Bill Created</p>', 'Only the invoice creation should be posted')
+
+        following_partners = invoice.message_follower_ids.mapped('partner_id')
+        self.assertEqual(following_partners, self.env.user.partner_id)
+
+    def test_supplier_invoice_forwarded_by_internal_with_unknown_supplier_in_body(self):
+        """ In this test, the bill was forwarded by an employee,
+            and an unknown partner email address is found in the body."""
+        message_parsed = {
+            'message_id': 'message-id-dead-beef',
+            'message_type': 'email',
+            'subject': 'Incoming bill',
+            'from': '%s <%s>' % (self.internal_user.name, self.internal_user.email),
+            'to': '%s@%s' % (self.journal.alias_id.alias_name, self.journal.alias_id.alias_domain),
+            'body': "Mail sent by %s <%s>:\nYou know, that thing that you bought." % ("Test supplier", "unknown_supplier@other.com"),
+            'attachments': [b'Hello, invoice'],
+        }
+
+        invoice = self.env['account.move'].message_new(message_parsed, {'move_type': 'in_invoice', 'journal_id': self.journal.id})
+        self.assertFalse(invoice.partner_id)
 
         message_ids = invoice.message_ids
         self.assertEqual(len(message_ids), 1, 'Only one message should be posted in the chatter')
