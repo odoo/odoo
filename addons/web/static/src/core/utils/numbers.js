@@ -217,7 +217,7 @@ export function formatFloat(value, options = {}) {
     } else if (options.minDigits) {
         // When no precision is set, 12 is chosen as the precision. It is high enough to keep it precise,
         // but not too high in order to avoid rounding errors..
-        precision = 12;
+        precision = options.minDigits;
     } else {
         precision = 2;
     }
