@@ -177,10 +177,8 @@ export class HistoryPlugin extends Plugin {
             return;
         }
         this.dispatchTo("pre_undo_handlers");
-        const pos = this.getNextUndoIndex();
         let revertedStep;
-        if (pos > 0) {
-            revertedStep = this.steps[pos];
+        for (revertedStep of this.getNextUndoSteps()) {
             this.revertStep(revertedStep, { ensureNewMutations: true });
             this.revertedSteps.add(revertedStep.id);
         }
@@ -189,10 +187,8 @@ export class HistoryPlugin extends Plugin {
 
     redo() {
         this.dispatchTo("pre_redo_handlers");
-        const pos = this.getNextRedoIndex();
         let revertedStep;
-        if (pos > 0) {
-            revertedStep = this.steps[pos];
+        for (revertedStep of this.getNextRedoSteps()) {
             this.revertStep(revertedStep, { ensureNewMutations: true });
             this.revertedSteps.add(revertedStep.id);
         }
@@ -305,9 +301,9 @@ export class HistoryPlugin extends Plugin {
      *
      * @param { number } fromIndex step index from which to search
      */
-    getNextUndoIndex() {
+    getNextUndoIndex(fromIndex = this.steps.length) {
         // Go back to first step that can be undone ("original", "reset" or "redo").
-        for (let index = this.steps.length - 1; index >= 0; index--) {
+        for (let index = fromIndex - 1; index >= 0; index--) {
             const step = this.steps[index];
             if (!this.isReversibleStep(step) || this.discardedSteps.has(step.id)) {
                 continue;
@@ -322,6 +318,44 @@ export class HistoryPlugin extends Plugin {
         // There is no steps left to be undone, return an index that does not
         // point to any step
         return -1;
+    }
+    /**
+     * Returns the steps to be reverted by a single undo.
+     */
+    getNextUndoSteps() {
+        let referenceStepIndex = this.getNextUndoIndex();
+        if (referenceStepIndex === -1) {
+            return [];
+        }
+        let nextStepIndex = this.getNextUndoIndex(referenceStepIndex);
+        const result = [this.steps[referenceStepIndex]];
+        while (nextStepIndex >= 0 && this.canStepsBeBatched(referenceStepIndex, nextStepIndex)) {
+            result.push(this.steps[nextStepIndex]);
+            referenceStepIndex = nextStepIndex;
+            nextStepIndex = this.getNextUndoIndex(nextStepIndex);
+        }
+        return result;
+    }
+    /**
+     * Returns true if steps can be batched in a single undo/redo.
+     * Currrently: steps with a single mutation on the same text node.
+     * @param { number } index1
+     * @param { number } index2
+     */
+    canStepsBeBatched(index1, index2) {
+        const step1 = this.steps[index1];
+        const step2 = this.steps[index2];
+        if (!step1.commit.batchable || !step2.commit.batchable) {
+            return false;
+        }
+        // Keep only if close enough in time.
+        if (
+            Math.abs(step1.commit.originalTimestamp - step2.commit.originalTimestamp) >
+            STEP_DEBOUNCE_DELAY
+        ) {
+            return false;
+        }
+        return true;
     }
     /**
      * Get the step index in the history to redo.
@@ -345,6 +379,23 @@ export class HistoryPlugin extends Plugin {
             }
         }
         return -1;
+    }
+    /**
+     * Returns the steps to be redone by a single redo.
+     */
+    getNextRedoSteps() {
+        let referenceStepIndex = this.getNextRedoIndex();
+        if (referenceStepIndex === -1) {
+            return [];
+        }
+        let nextStepIndex = this.getNextRedoIndex(referenceStepIndex);
+        const result = [this.steps[referenceStepIndex]];
+        while (nextStepIndex >= 0 && this.canStepsBeBatched(referenceStepIndex, nextStepIndex)) {
+            result.push(this.steps[nextStepIndex]);
+            referenceStepIndex = nextStepIndex;
+            nextStepIndex = this.getNextRedoIndex(nextStepIndex);
+        }
+        return result;
     }
 
     // Applying a step

@@ -237,7 +237,11 @@ export class DomMutationPlugin extends Plugin {
                         this.update(key, value);
                     }
                 }
-                this.commit("undo");
+                this._commit({
+                    stepType: "undo",
+                    batchable: revertedStep.commit.batchable,
+                    batchingTimestamp: revertedStep.commit.batchingTimestamp,
+                });
             }
         }),
         pre_redo_handlers: this.discardDraft.bind(this),
@@ -254,7 +258,11 @@ export class DomMutationPlugin extends Plugin {
                         this.update(key, value);
                     }
                 }
-                this.commit("redo");
+                this._commit({
+                    stepType: "redo",
+                    batchable: revertedStep.commit.batchable,
+                    batchingTimestamp: revertedStep.commit.batchingTimestamp,
+                });
             }
         }),
         node_by_id_providers: (nodeId) => this.getNodeById(nodeId),
@@ -278,7 +286,11 @@ export class DomMutationPlugin extends Plugin {
     }
 
     // TODO AGE: stepType should actually just be commit.type.
-    commit(stepType) {
+    commit({ batchable = false } = {}) {
+        return this._commit({ batchable });
+    }
+
+    _commit({ stepType = "original", batchable = false, batchingTimestamp = Date.now() } = {}) {
         const hasMutations = this.prepareForCommit(stepType || "original");
         if (!hasMutations) {
             // TODO: I isolated `prepareForCommit` for now for simplicity for me
@@ -289,7 +301,7 @@ export class DomMutationPlugin extends Plugin {
 
         // AGE TODO: rename
         this.dispatchTo("before_commit_handlers", stepType); // making sure it updates the step we're adding
-        const commit = this.createCommit();
+        const commit = this.createCommit({ batchable, batchingTimestamp });
         this.dependencies.history.write(commit, stepType);
 
         this.resetCurrentMutations();
@@ -591,15 +603,23 @@ export class DomMutationPlugin extends Plugin {
     /**
      * @returns {EditorMutationCommit}
      */
-    createCommit() {
+    createCommit({ batchable, batchingTimestamp }) {
         this.updateLocal(
             "selectionAfter",
             this.serializeSelection(this.dependencies.selection.getEditableSelection())
         );
         const data = { ...this.currentChanges };
+        let originalTimestamp = Date.now();
+        if ("originalTimestamp" in data) {
+            originalTimestamp = data.originalTimestamp;
+            delete data.originalTimestamp;
+        }
         return {
             id: this.generateId(),
             data,
+            originalTimestamp,
+            batchable,
+            batchingTimestamp,
             root: this.getNodeId(this.getMutationsRoot(data.mutations) || this.editable),
         };
     }
@@ -1621,7 +1641,7 @@ export class DomMutationPlugin extends Plugin {
             this.setSerializedSelection(lastRevertedChanges.selection);
             // Register resulting mutations as a new "restore" commit (prevent undo).
             this.dispatchContentUpdated();
-            this.commit("restore");
+            this._commit({ stepType: "restore" });
             // AGE: end oldHistory.restoreToStep
 
             // Apply draft mutations to recover the same currentStep state
