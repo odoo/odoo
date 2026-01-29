@@ -11,7 +11,9 @@ class TestKpiProvider(TransactionCase):
         cls.user_someemployee = new_test_user(cls.env, name='Some Employee', login='someemployee')
         cls.user_anotheremployee = new_test_user(cls.env, name='AnotherEmployee', login='anotheremployee')
 
-        cls.env['mail.activity'].create([{
+        MailActivity = cls.env['mail.activity']
+        MailActivity.search([]).active = False
+        MailActivity.create([{
             'activity_type_id': cls.env.ref('mail.mail_activity_data_todo').id,
             'user_id': cls.user_someemployee.id,
         }, {
