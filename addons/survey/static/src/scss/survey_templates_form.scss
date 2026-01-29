@@ -26,8 +26,7 @@ $dynamic-text-color: if(lightness($body-bg) > 50%, $gray-900, $gray-100);
     background-size: cover;
     color: $dynamic-text-color !important;
     .text-muted {
-        opacity: 0.7;
-        color: $dynamic-text-color !important;
+        color: rgba($dynamic-text-color, 0.7) !important;
     }
     &.o_survey_background_shadow {
         box-shadow: inset 0 0 0 10000px rgba(255,255,255,.7);
