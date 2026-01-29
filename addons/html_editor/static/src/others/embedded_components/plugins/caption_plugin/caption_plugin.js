@@ -4,7 +4,11 @@ import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { renderToElement } from "@web/core/utils/render";
 import { unwrapContents } from "@html_editor/utils/dom";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { EDITABLE_MEDIA_CLASS, isVisible } from "@html_editor/utils/dom_info";
+import {
+    EDITABLE_MEDIA_CLASS,
+    isParagraphRelatedElement,
+    isVisible,
+} from "@html_editor/utils/dom_info";
 import { boundariesOut, rightPos } from "@html_editor/utils/position";
 import { findInSelection } from "@html_editor/utils/selection";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
@@ -127,7 +131,7 @@ export class CaptionPlugin extends Plugin {
         } else if (
             !link &&
             (image.previousSibling || image.nextSibling) &&
-            closestBlock(image) !== this.editable
+            isParagraphRelatedElement(closestBlock(image))
         ) {
             // <p>wx<img/>yz</p> => <p>wx</p><p><img/></p><p>yz</p>
             const block = this.dependencies.split.splitAroundUntil(image, closestBlock(image));
@@ -142,7 +146,7 @@ export class CaptionPlugin extends Plugin {
         // or <p><a><figure><img/></figure></a></p>
         image.before(figure);
         figure.append(image);
-        if (!link && figure.parentElement !== this.editable) {
+        if (!link && isParagraphRelatedElement(figure.parentElement)) {
             // => <figure><img/></figure></p>
             // but still <p><a><figure><img/></figure></p>
             unwrapContents(figure.parentElement);
@@ -177,7 +181,7 @@ export class CaptionPlugin extends Plugin {
         const figure = closestElement(image, "figure");
         if (figure) {
             figure.querySelector("figcaption").remove();
-            if (closestBlock(figure.parentElement) === this.editable) {
+            if (!isParagraphRelatedElement(closestBlock(figure.parentElement))) {
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer();
                 if (figure.parentElement.nodeName === "A") {
                     figure.parentElement.before(baseContainer);

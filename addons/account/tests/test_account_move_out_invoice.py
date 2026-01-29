@@ -1788,6 +1788,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         }])
 
     def test_out_invoice_create_refund(self):
+        self.invoice.write({'invoice_origin': 'S00001'})
         self.invoice.action_post()
 
         bank1 = self.env['res.partner.bank'].create({
@@ -1851,6 +1852,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
             'payment_state': 'not_paid',
             'partner_bank_id': bank1.id,
+            'invoice_origin': 'S00001'
         })
 
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
@@ -5002,6 +5004,26 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'invoice_currency_rate': 5.0,
             'expected_currency_rate': 2.0,
         }])
+
+    def test_out_invoice_currency_rate_posted_in_future(self):
+        self.env['res.currency.rate'].create(
+            [
+                {'name': '2025-01-01', 'rate': 3.0, 'currency_id': self.other_currency.id, 'company_id': self.env.company.id},
+                {'name': '2026-01-01', 'rate': 2.0, 'currency_id': self.other_currency.id, 'company_id': self.env.company.id},
+            ]
+        )
+        with (freeze_time('2025-01-02'), patch.object(self.env.cr, 'now', lambda: fields.Datetime.to_datetime("2025-01-02 10:00:00"))):
+            move = self.env['account.move'].create({
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'currency_id': self.other_currency.id,
+                'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+            })
+            self.assertEqual(move.invoice_currency_rate, 3.0)
+            move.invalidate_recordset(fnames=['expected_currency_rate'])
+        with freeze_time('2026-01-02'):
+            move.action_post()
+            self.assertEqual(move.invoice_currency_rate, 2.0)
 
     def test_out_invoice_fiscal_position_preserves_manual_price(self):
         """Manually adjusted prices should be preserved when changing fiscal position"""

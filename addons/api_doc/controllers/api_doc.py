@@ -150,6 +150,7 @@ class DocController(http.Controller):
                 # sorted(..., key=partial(sort_key_method, modules, type(Model))),
             }
             for ir_model in self.env['ir.model'].sudo().search([])
+            if ir_model.model in self.env
             if (Model := self.env[ir_model.model]).has_access('read')
         ]
         return modules, models

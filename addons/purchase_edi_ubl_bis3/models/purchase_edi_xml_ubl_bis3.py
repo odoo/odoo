@@ -251,7 +251,7 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
                 'unitCode': self._get_uom_unece_code(base_line['product_uom_id']),
             },
             'cbc:LineExtensionAmount': {
-                '_text': FloatFmt(base_line['_ubl_values']['line_extension_amount'], min_dp=currency.decimal_places),
+                '_text': FloatFmt(base_line['_ubl_values']['line_extension_amount_currency'], min_dp=currency.decimal_places),
                 'currencyID': currency.name,
             },
         })

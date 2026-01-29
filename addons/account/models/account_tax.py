@@ -222,7 +222,7 @@ class AccountTax(models.Model):
                         ('country_id', '=', tax.country_id.id),
                         ('id', '!=', tax.id),
                     ])
-            if duplicates := self.search(Domain.OR(domains)):
+            if duplicates := self.sudo().search(Domain.OR(domains)):
                 raise ValidationError(
                     self.env._(
                         "Tax names must be unique!\n%(taxes)s",
@@ -1811,6 +1811,9 @@ class AccountTax(models.Model):
     def _normalize_target_factors(self, target_factors):
         """ Normalize the factors passed as parameter to have a distribution having a sum of 1.
 
+        [!] Mirror of the same method in account_tax.js.
+        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+
         :param target_factors:      A list of dictionary containing at least 'factor' being the weight
                                     defining how much delta will be allocated to this factor.
         :return:                    A list of tuple <index, normalized_factor> for each 'target_factors' passed as parameter.
@@ -1818,7 +1821,7 @@ class AccountTax(models.Model):
         factors = [(i, abs(target_factor['factor'])) for i, target_factor in enumerate(target_factors)]
         factors.sort(key=lambda x: x[1], reverse=True)
         sum_of_factors = sum(x[1] for x in factors)
-        return [(i, factor / sum_of_factors if sum_of_factors else 0.0) for i, factor in factors]
+        return [(i, factor / sum_of_factors if sum_of_factors else 1 / len(factors)) for i, factor in factors]
 
     @api.model
     def _distribute_delta_amount_smoothly(self, precision_digits, delta_amount, target_factors):
@@ -1924,7 +1927,7 @@ class AccountTax(models.Model):
                 total_tax_amount = values[f'tax_amount{delta_currency_indicator}']
                 delta_total_tax_amount = rounded_raw_total_tax_amount - total_tax_amount
 
-                if raw_total_tax_amount:
+                if not delta_currency.is_zero(delta_total_tax_amount):
                     target_factors = [
                         {
                             'factor': tax_data[f'raw_tax_amount{delta_currency_indicator}'],
@@ -1954,7 +1957,7 @@ class AccountTax(models.Model):
                     total_base_amount = values[f'base_amount{delta_currency_indicator}']
                     delta_total_base_amount = rounded_raw_total_base_amount - total_base_amount
 
-                if raw_total_base_amount:
+                if not delta_currency.is_zero(delta_total_base_amount):
                     target_factors = [
                         {
                             'factor': tax_data[f'raw_base_amount{delta_currency_indicator}'],
@@ -3837,7 +3840,7 @@ class AccountTax(models.Model):
                     'factor': abs(
                         (base_line['tax_details']['total_excluded_currency'] + base_line['tax_details']['delta_total_excluded_currency'])
                         / current_base_amount_currency
-                    ),
+                    ) if current_base_amount_currency else 0.0,
                     'base_line': base_line,
                 }
                 for base_line in sorted_base_lines

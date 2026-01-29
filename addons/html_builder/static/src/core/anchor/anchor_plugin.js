@@ -6,9 +6,18 @@ import { markup } from "@odoo/owl";
 import { AnchorDialog } from "./anchor_dialog";
 import { getElementsWithOption } from "@html_builder/utils/utils";
 
-const anchorSelector = ":not(p).oe_structure > *, :not(p)[data-oe-type=html] > *";
+const anchorSelector = ":not(p).oe_structure > *, :not(p)[data-oe-type=html] > *, .accordion-item";
 const anchorExclude =
     ".modal *, .oe_structure .oe_structure *, [data-oe-type=html] .oe_structure *, .s_popup";
+
+/**
+ * Anchor titles are usually taken from headings (h1–h6). Here, styled titles
+ * often use utility classes instead, e.g. .h*-fs, .display-*-fs, .base-fs,
+ * .o_small-fs. Including these ensures anchors reflect visible titles, even
+ * when not using semantic <h*> tags.
+ */
+const TITLE_SELECTOR =
+    "h1, h2, h3, h4, h5, h6, .h1-fs, .h2-fs, .h3-fs, .h4-fs, .h5-fs, .h6-fs, .display-1-fs, .display-2-fs, .display-3-fs, display-4-fs, .base-fs, .o_small-fs";
 
 export function canHaveAnchor(element) {
     return element.matches(anchorSelector) && !element.matches(anchorExclude);
@@ -68,7 +77,7 @@ export class AnchorPlugin extends Plugin {
     }
 
     createAnchor(element) {
-        const titleEls = element.querySelectorAll("h1, h2, h3, h4, h5, h6");
+        const titleEls = element.querySelectorAll(TITLE_SELECTOR);
         const title = titleEls.length > 0 ? titleEls[0].innerText : element.dataset.name;
         const anchorName = this.formatAnchor(title);
 

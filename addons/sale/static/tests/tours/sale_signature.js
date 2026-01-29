@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
+import { stepUtils } from "@web_tour/tour_utils";
 
 // This tour relies on data created on the Python test.
 registry.category("web_tour.tours").add('sale_signature', {
@@ -61,6 +62,7 @@ registry.category("web_tour.tours").add('sale_signature', {
 
 registry.category("web_tour.tours").add("sale_signature_without_name", {
     steps: () => [
+        stepUtils.waitIframeIsReady(),
         {
             content: "Sign & Pay",
             trigger:

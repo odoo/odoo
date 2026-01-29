@@ -20,3 +20,4 @@ class TestSaleStockCommon(TestSaleCommon, ProductVariantsCommon):
         })
         delivery_route_3.rule_ids[1].write({'action': 'pull'})
         delivery_route_3.rule_ids[2].write({'action': 'pull'})
+        cls.account_income = cls.company.income_account_id

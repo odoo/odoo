@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//block[@id='peppol']" position="after">
                 <block title="MojEracun E-Invoicing" id="mojeracun" invisible="country_code != 'HR'">
-                    <setting string="Service credentials">
+                    <setting string="Service credentials" company_dependent="1">
                         <span class="text-muted">Requires registration on <a href="https://portal.moj-eracun.hr/">MojEracun portal</a></span>
                         <div class="mt-4">
                             <div class="row">
@@ -22,7 +22,7 @@
                                 <label string="Company ID (OIB or GIN)" for="l10n_hr_mer_company_ident" class="col-lg-6 o_light_label"/>
                                 <field name="l10n_hr_mer_company_ident"/>
                             </div>
-                            <div class="row">
+                            <div class="row" title="If you have not used Company BU/PJ for registering on MojEracun, leave this field blank.">
                                 <label string="Company Business Unit (PJ)" for="l10n_hr_mer_company_bu" class="col-lg-6 o_light_label"/>
                                 <field name="l10n_hr_mer_company_bu"/>
                             </div>
@@ -32,7 +32,7 @@
                             </div>
                         </div>
                     </setting>
-                    <setting string="Current status">
+                    <setting string="Current status" company_dependent="1">
                         <div class="mt-4">
                             <field name="l10n_hr_mer_connection_state"/>
                         </div>

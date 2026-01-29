@@ -31,7 +31,6 @@ class MockIAPReveal(MockIAPEnrich):
 
         def _iap_contact_mining(params, timeout):
             self.assertMineCallParams(params)
-            self.assertMinePayload(mine, params['data'])
 
             if sim_error and sim_error == 'credit':
                 raise iap_tools.InsufficientCreditError('InsufficientCreditError')
@@ -53,13 +52,7 @@ class MockIAPReveal(MockIAPEnrich):
                 company_data = self._get_iap_company_data(base_name, service='mine')
                 if default_data:
                     company_data.update(default_data)
-                iap_payload['company_data'] = company_data
-
-                if mine.search_type == 'people':
-                    people_data = self._get_iap_contact_data(base_name, service='mine')
-                    iap_payload['people_data'] = people_data
-
-                response.append(iap_payload)
+                response.append(company_data)
 
             return {
                 'data': response,
@@ -71,25 +64,9 @@ class MockIAPReveal(MockIAPEnrich):
             yield
 
     def _get_iap_company_data(self, base_name, service=None, add_values=None):
-        company_data = super(MockIAPReveal, self)._get_iap_company_data(base_name, service=service, add_values=add_values)
-        if service == 'mine':
-            company_data['phone'] = company_data['phone_numbers'][0]
-            company_data['sector'] = 'Sector Info'
+        company_data = super()._get_iap_dnb_company_data(base_name, service=service, add_values=add_values)
         return company_data
 
     def assertMineCallParams(self, params):
         self.assertTrue(bool(params['account_token']))
-        self.assertTrue(bool(params['dbuuid']))
-
-    def assertMinePayload(self, mine, payload):
-        if mine.search_type == 'people':
-            self.assertEqual(payload['contact_number'], mine.contact_number)
-        else:
-            self.assertTrue('contact_number' not in payload)
-        countries = [{
-            'code': country.code,
-            'states': mine.state_ids.filtered(lambda state: state in country.state_ids).mapped('code'),
-        } for country in mine.country_ids]
-        self.assertEqual(payload['countries'], countries)
-        self.assertEqual(payload['lead_number'], mine.lead_number)
-        self.assertEqual(payload['search_type'], mine.search_type)
+        self.assertTrue(bool(params['db_uuid']))

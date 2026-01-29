@@ -6,11 +6,10 @@ import itertools
 import logging
 from lxml import etree
 from markupsafe import Markup
-import psycopg2.errors
 from struct import error as StructError
 
 from odoo import api, models, modules
-from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
+from odoo.exceptions import RedirectWarning
 from odoo.tools import groupby
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.pdf import OdooPdfFileReader, PdfReadError
@@ -350,13 +349,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
                     return
         except RedirectWarning:
             raise
-        except (
-            AccessError,
-            UserError,
-            ValidationError,
-            psycopg2.errors.IntegrityError,
-            psycopg2.errors.SerializationFailure,
-        ) as e:
+        except Exception as e:
             _logger.exception("Error importing attachment %s on record %s", file_data['name'], self)
 
             self.sudo().message_post(body=Markup("%s<br/><br/>%s<br/>%s") % (

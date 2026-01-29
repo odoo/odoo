@@ -350,3 +350,43 @@ class TestReportSession(TestPoSCommon):
         self.config.current_session_id.action_pos_session_closing_control()
         report = self.env['report.point_of_sale.report_saledetails'].get_sale_details()
         self.assertEqual(report["taxes_info"]["base_amount"], 100, "Base amount should be equal to 100")
+
+    def test_report_sum_taxes_base_amounts(self):
+        tax_included = self.env['account.tax'].create({
+            'name': 'Tax Included',
+            'amount': 5,
+            'price_include_override': 'tax_included',
+        })
+        product = self.create_product('Product A', self.categ_basic, 110, tax_included.id)
+
+        self.config.open_ui()
+        session_id = self.config.current_session_id.id
+        order_info = [{
+            'company_id': self.env.company.id,
+            'session_id': session_id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': product.id,
+                'price_unit': 100,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': [[6, False, [tax_included.id]]],
+                'price_subtotal': 100,
+                'price_subtotal_incl': 100,
+            })],
+            'pricelist_id': self.config.pricelist_id.id,
+            'amount_paid': 100.0,
+            'amount_total': 100.0,
+            'amount_tax': 4.76,
+            'amount_return': 0.0,
+            'last_order_preparation_change': '{}',
+            'to_invoice': False,
+        } for _ in range(5)]
+
+        for order_data in order_info:
+            order = self.env['pos.order'].create(order_data)
+            self.make_payment(order, self.bank_pm1, 100.0)
+
+        self.config.current_session_id.action_pos_session_closing_control()
+        report = self.env['report.point_of_sale.report_saledetails'].get_sale_details()
+        self.assertAlmostEqual(report["taxes"][0]["base_amount"], 95.24 * 5, msg="Base amount should be equal to 476.20")

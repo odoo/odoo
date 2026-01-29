@@ -223,9 +223,7 @@ export class ProductConfiguratorPopup extends Component {
                     acc[selected.id] = custom_value;
                     return acc;
                 }, []),
-            price_extra: this.selectedValues
-                .filter((value) => value.attribute_id.create_variant === "no_variant")
-                .reduce((acc, val) => acc + val.price_extra, 0),
+            price_extra: this.priceExtra,
         };
     }
 
@@ -246,13 +244,31 @@ export class ProductConfiguratorPopup extends Component {
     }
 
     get title() {
-        const info = this.props.productTemplate.getTaxDetails();
-        const name = this.props.productTemplate.display_name;
+        const overridedValues = {};
+        const order = this.pos.getOrder();
+        if (order) {
+            if (order.pricelist_id) {
+                overridedValues.pricelist = order.pricelist_id;
+            }
+            if (order.fiscal_position_id) {
+                overridedValues.fiscalPosition = order.fiscal_position_id;
+            }
+        }
+
+        overridedValues.priceExtra = this.priceExtra;
+
+        const product = this.product || this.props.productTemplate;
+        const info = product.getTaxDetails({ overridedValues });
         const total = this.env.utils.formatCurrency(info?.raw_total_included_currency || 0.0);
-        return `${name} | ${total}`;
+        return `${this.props.productTemplate.display_name} | ${total}`;
     }
     get showInfoBanner() {
         return this.props.productTemplate.is_storable;
+    }
+    get priceExtra() {
+        return this.selectedValues
+            .filter((value) => value.attribute_id.create_variant === "no_variant")
+            .reduce((acc, val) => acc + val.price_extra, 0);
     }
 
     confirm() {

@@ -379,3 +379,9 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         self.assertAlmostEqual(find_by(product, 'id', self.product5.id)['lst_price'], 100.00)
         self.assertAlmostEqual(find_by(product, 'id', self.product6.id)['lst_price'], 22.65)
         self.assertAlmostEqual(find_by(product, 'id', self.product7.id)['lst_price'], 3.50)
+
+    def test_pos_data_standard_price_converted(self):
+        self.other_currency_config.open_ui()
+        res = self.other_currency_config.current_session_id.load_data({})
+        product1_data = next(filter(lambda product: product['display_name'] == "Product 1", res['product.product']))
+        self.assertEqual(product1_data['standard_price'], 2.5)  # standard price should be converted

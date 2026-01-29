@@ -1,17 +1,21 @@
 from __future__ import annotations
 
+import contextvars
+import copy
 import logging
+import os
 import threading
 import time
-import os
-import psycopg2
-import psycopg2.errors
 import typing
 from datetime import datetime, timedelta, timezone
+
+import psycopg2
+import psycopg2.errors
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, sql_db
 from odoo.exceptions import LockError, UserError
+from odoo.http import serialize_exception
 from odoo.modules import Manifest
 from odoo.modules.registry import Registry
 from odoo.tools import SQL
@@ -19,6 +23,7 @@ from odoo.tools.constants import GC_UNLINK_LIMIT
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable
+
     from odoo.sql_db import BaseCursor
 
 _logger = logging.getLogger(__name__)
@@ -57,6 +62,30 @@ class CompletionStatus:  # inherit from enum.StrEnum in 3.11
     FULLY_DONE = 'fully done'
     PARTIALLY_DONE = 'partially done'
     FAILED = 'failed'
+
+
+class ListLogHandler(logging.Handler):
+    def __init__(self, logger, level=logging.NOTSET):
+        super().__init__(level)
+        self.logger = logger
+        self.list_log_handler = contextvars.ContextVar('list_log_handler', default=None)
+
+    def emit(self, record):
+        logs = self.list_log_handler.get(None)
+        if logs is None:
+            return
+        record = copy.copy(record)
+        logs.append(record)
+
+    def __enter__(self):
+        # set a list in the current context
+        logs = []
+        self.list_log_handler.set(logs)
+        self.logger.addHandler(self)
+        return logs
+
+    def __exit__(self, *exc):
+        self.logger.removeHandler(self)
 
 
 class IrCron(models.Model):
@@ -135,7 +164,23 @@ class IrCron(models.Model):
         job = self._acquire_one_job(cron_cr, self.id, include_not_ready=True)
         if not job:
             raise UserError(self.env._("Job '%s' already executing", self.name))
-        self._process_job(cron_cr, job)
+
+        with ListLogHandler(_logger, logging.ERROR) as capture:
+            self._process_job(cron_cr, job)
+        if log_record := next((lr for lr in capture if hasattr(lr, 'exc_info')), None):
+            _exc_type, exception, _traceback = log_record.exc_info
+            e = RuntimeError()
+            e.__cause__ = exception
+            error = {
+                'code': 0,  # we don't care of this code
+                'message': "Odoo Server Error",
+                'data': serialize_exception(e),
+            }
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_exception',
+                'params': error,
+            }
         return True
 
     @staticmethod
@@ -447,39 +492,65 @@ class IrCron(models.Model):
 
             # stop after MIN_RUNS_PER_JOB runs and MIN_TIME_PER_JOB seconds, or
             # upon full completion or failure
-            while (
+            while status is None and (
                 loop_count < MIN_RUNS_PER_JOB
                 or time.monotonic() < env.context['cron_end_time']
             ):
                 cron, progress = cron._add_progress(timed_out_counter=timed_out_counter)
                 job_cr.commit()
 
+                success = False
                 try:
                     # signaling check and commit is done inside `_callback`
                     cron._callback(job['cron_name'], job['ir_actions_server_id'])
+                    success = True
                 except Exception:  # noqa: BLE001
                     _logger.exception('Job %r (%s) server action #%s failed',
                         job['cron_name'], job['id'], job['ir_actions_server_id'])
-                    if progress.done and progress.remaining:
-                        # we do not consider it a failure if some progress has
-                        # been committed
-                        status = CompletionStatus.PARTIALLY_DONE
-                    else:
-                        status = CompletionStatus.FAILED
-                else:
-                    if not progress.remaining:
-                        # assume the server action doesn't use the progress API
-                        # and that there is nothing left to process
-                        status = CompletionStatus.FULLY_DONE
-                    else:
-                        status = CompletionStatus.PARTIALLY_DONE
-                        if not progress.done:
-                            break
-
-                    if status == CompletionStatus.FULLY_DONE and progress.deactivate:
-                        job['active'] = False
                 finally:
                     done, remaining = progress.done, progress.remaining
+                    match (success, done, remaining):
+                        case (False, d, r) if d and r:
+                            # The cron action failed but was nonetheless able
+                            # to commit some progress.
+                            # Hopefully this failure is temporary.
+                            pass
+
+                        case (False, _, _):
+                            # The cron action failed, and was unable to commit
+                            # any progress this time. Consider it failed even
+                            # if it progressed in a previous loop iteration.
+                            status = CompletionStatus.FAILED
+
+                        case (True, _, 0):
+                            # The cron action completed. Either it doesn't use
+                            # the progress API, either it reported no remaining
+                            # stuff to process.
+                            status = CompletionStatus.FULLY_DONE
+                            if progress.deactivate:
+                                job['active'] = False
+
+                        case (True, 0, _) if loop_count == 0:
+                            # The cron action was able to determine there are
+                            # remaining records to process, but couldn't
+                            # process any of them.
+                            # Hopefully this condition is temporary.
+                            status = CompletionStatus.PARTIALLY_DONE
+                            _logger.warning("Job %r (%s) processed no record",
+                                job['cron_name'], job['id'])
+
+                        case (True, 0, _):
+                            # The cron action was able to determine there are
+                            # remaining records to process, did process some
+                            # records in a previous loop iteration, but
+                            # processed none this time.
+                            status = CompletionStatus.PARTIALLY_DONE
+
+                        case (True, _, _):
+                            # The cron action was able to process some but not
+                            # all records. Loop.
+                            pass
+
                     loop_count += 1
                     progress.timed_out_counter = 0
                     timed_out_counter = 0
@@ -488,9 +559,7 @@ class IrCron(models.Model):
                     _logger.debug('Job %r (%s) processed %s records, %s records remaining',
                         job['cron_name'], job['id'], done, remaining)
 
-                if status in (CompletionStatus.FULLY_DONE, CompletionStatus.FAILED):
-                    break
-
+            status = status or CompletionStatus.PARTIALLY_DONE
             _logger.info(
                 'Job %r (%s) %s (#loop %s; done %s; remaining %s; duration %.2fs)',
                 job['cron_name'], job['id'], status,

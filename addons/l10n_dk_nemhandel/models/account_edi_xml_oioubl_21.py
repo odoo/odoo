@@ -2,6 +2,8 @@ from odoo import _, models, tools
 from odoo.tools import html2plaintext
 from odoo.tools.float_utils import float_round
 
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
+
 DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID = '320'
 
 UBL_TO_OIOUBL_TAX_CATEGORY_ID_MAPPING = {
@@ -17,6 +19,13 @@ UBL_TO_OIOUBL_TAX_CATEGORY_ID_MAPPING = {
     'K': 'ReverseCharge',
     'L': 'ZeroRated',
     'M': 'ZeroRated',
+}
+
+SCHEME_ID_MAPPING = {
+    '0088': 'GLN',
+    '0184': 'DK:CVR',
+    '9918': 'IBAN',
+    '0198': 'DK:SE',
 }
 
 
@@ -153,7 +162,7 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
             prefix = 'DK' if partner.nemhandel_identifier_type == '0184' else ''
             party_node['cbc:EndpointID'] = {
                 '_text': f'{prefix}{partner.nemhandel_identifier_value}',
-                'schemeID': partner.nemhandel_identifier_type,
+                'schemeID': SCHEME_ID_MAPPING[partner.nemhandel_identifier_type],
             }
 
         return party_node
@@ -196,8 +205,9 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
             ),
             'currencyID': vals['currency_name'],
         }
-        # PrepaidAmount must not be present if equal to 0 and is only filled with 0 in the parent method
-        document_node[monetary_total_tag]['cbc:PrepaidAmount'] = None
+        # PrepaidAmount must not be present if equal to 0
+        if document_node[monetary_total_tag].get('cbc:PrepaidAmount') and document_node[monetary_total_tag]['cbc:PrepaidAmount'].get('_text') == FloatFmt(0, 2):
+            document_node[monetary_total_tag]['cbc:PrepaidAmount'] = None
 
     def _get_tax_category_node(self, vals):
         # EXTENDS account_edi_xml_ubl_20

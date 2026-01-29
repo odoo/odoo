@@ -75,6 +75,10 @@
 
     /* In mobile */
     @media (max-width: 768px){
+        .o_control_panel {
+            /* We don't want the control panel to disappear when scrolling */
+            top: 0px !important
+        }
         .o_control_panel_main {
             /* We don't want a gap before the DashboardMobileSearchPanel */
             column-gap: 0px !important;

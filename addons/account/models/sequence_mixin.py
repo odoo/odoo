@@ -70,9 +70,11 @@ class SequenceMixin(models.AbstractModel):
                   JOIN pg_index ix ON t.oid = ix.indrelid
                   JOIN pg_attribute a ON a.attrelid = t.oid
                                      AND a.attnum = ANY(ix.indkey)
+                  JOIN pg_namespace n ON t.relnamespace = n.oid
                  WHERE t.relkind = 'r'
                    AND t.relname = %(table)s
                    AND a.attname = %(column)s
+                   AND n.nspname = current_schema
                    AND ix.indisunique
                 """,
                 table=self._table,

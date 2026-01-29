@@ -11,3 +11,8 @@ export const attributeFlatter = (attribute) =>
         })
         .flat()
         .map((v) => parseInt(v));
+
+export const formatProductName = (product) => {
+    const attributes = product.product_template_attribute_value_ids?.map((v) => v.name).join(",");
+    return attributes ? `${product.name} (${attributes})` : product.name;
+};

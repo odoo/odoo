@@ -7,13 +7,15 @@
 # Wil Odoo, 2025
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Ho Pak Wai <wai@users.noreply.translate.odoo.com>, 2026.
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-30 18:38+0000\n"
-"PO-Revision-Date: 2025-09-16 08:12+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2026-01-23 07:37+0000\n"
+"Last-Translator: Ho Pak Wai <wai@users.noreply.translate.odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-19/website_sale_stock/zh_Hant/>\n"
 "Language: zh_TW\n"
@@ -21,19 +23,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_sale_stock
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid ""
 "%(product_name)s has not been added to your cart since it is not available."
-msgstr ""
+msgstr "%(product_name)s 缺貨/不可用，因此未有加入你的購物車。"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "<span invisible=\"not default_show_availability\">units</span>"
-msgstr ""
+msgstr "<span invisible=\"not default_show_availability\">單位</span>"
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -49,7 +51,7 @@ msgstr "所有倉庫"
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_ribbon__assign
 msgid "Assign"
-msgstr ""
+msgstr "分配"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__stock_notification_partner_ids
@@ -59,7 +61,7 @@ msgstr "返貨通知"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 msgid "Below"
-msgstr ""
+msgstr "低於"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
@@ -97,6 +99,11 @@ msgid ""
 "- New: Applied based on the New period you will define.\n"
 "- Out Of Stock: Applied when the product is out of stock."
 msgstr ""
+"設定為產品指派此絲帶的方式：\n"
+"- 手動：由你手動將絲帶指派給產品。\n"
+"- 促銷：當產品顯示促銷狀態時，套用此絲帶。\n"
+"- 新品：在新產品套用此絲帶，維持時間根據你所定義的新品期間而定。\n"
+"- 缺貨：在產品缺貨時套用此絲帶。"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_combo__display_name
@@ -203,7 +210,7 @@ msgstr "產品款式"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_ribbon
 msgid "Product ribbon"
-msgstr ""
+msgstr "產品絲帶"
 
 #. module: website_sale_stock
 #: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server

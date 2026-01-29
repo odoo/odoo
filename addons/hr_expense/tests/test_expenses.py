@@ -5,9 +5,10 @@ from datetime import date
 from freezegun import freeze_time
 
 from odoo import Command, fields
-from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests import tagged, Form
+from odoo.tests import Form, tagged
+
+from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 
 
 @tagged('-at_install', 'post_install')
@@ -149,6 +150,18 @@ class TestExpenses(TestExpenseCommon):
             {'balance':   18.46, 'account_id': tax_account_id,              'name': '15% (copy)',                                'date': date(2021, 10, 11), 'invoice_date': False},
             {'balance': -160.00, 'account_id': company_payment_account_id,  'name': 'expense_employee: Company PB 160 + 2*15%',  'date': date(2021, 10, 11), 'invoice_date': False},
 
+        ])
+
+        # Check lines partners:
+        self.assertRecordValues(expenses_by_employee.account_move_id.line_ids, [
+            # If the test fails, it is probably because the partner is the company's partner instead of the employee's one
+            {'partner_id': employee_partner_id},
+            {'partner_id': employee_partner_id},
+            {'partner_id': employee_partner_id},
+            {'partner_id': employee_partner_id},
+            {'partner_id': employee_partner_id},
+            {'partner_id': employee_partner_id},
+            {'partner_id': employee_partner_id},
         ])
 
         in_payment_state = expenses_by_employee.account_move_id._get_invoice_in_payment_state()
@@ -546,6 +559,25 @@ class TestExpenses(TestExpenseCommon):
             'res_model': 'account.move',
             'res_id': expense_2_move.id
         }])
+
+    def test_multiple_attachments_in_move_from_company_expense(self):
+        """ Checks that all attachments from expense are copied to their journal entries. """
+        expense = self.create_expenses({
+            'name': 'Company expense',
+            'payment_mode': 'company_account',
+        })
+        self.env['ir.attachment'].create([{
+            'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+            'name': f'file{i}.png',
+            'res_model': 'hr.expense',
+            'res_id': expense.id,
+        } for i in range(1, 3)])
+
+        expense.action_submit()
+        expense._do_approve()  # Skip duplicate wizard
+        expense.action_post()
+
+        self.assertEqual(len(expense.account_move_id.attachment_ids), 2)
 
     def test_expense_payment_method(self):
         default_payment_method_line = self.company_data['default_journal_bank'].outbound_payment_method_line_ids[0]

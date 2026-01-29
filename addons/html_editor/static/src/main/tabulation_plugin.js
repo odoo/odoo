@@ -1,7 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { splitTextNode } from "@html_editor/utils/dom";
-import { isEditorTab, isTextNode, isZWS } from "@html_editor/utils/dom_info";
+import {
+    isEditorTab,
+    isParagraphRelatedElement,
+    isTextNode,
+    isZWS,
+} from "@html_editor/utils/dom_info";
 import {
     descendants,
     getAdjacentPreviousSiblings,
@@ -118,7 +123,12 @@ export class TabulationPlugin extends Plugin {
     indentBlocks(blocks) {
         const selectionToRestore = this.dependencies.selection.getEditableSelection();
         const tab = parseHTML(this.document, tabHtml);
-        for (const block of blocks) {
+        const indentableBlocks = [...blocks].filter(
+            (block) =>
+                block.isContentEditable &&
+                (isParagraphRelatedElement(block) || block.tagName === "BLOCKQUOTE")
+        );
+        for (const block of indentableBlocks) {
             block.prepend(tab.cloneNode(true));
         }
         this.dependencies.selection.setSelection(selectionToRestore, { normalize: false });

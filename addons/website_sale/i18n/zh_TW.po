@@ -7,15 +7,15 @@
 # Tony Ng, 2025
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Tony Ng (ngto)" <ngto@odoo.com>, 2025.
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-30 18:36+0000\n"
-"PO-Revision-Date: 2025-11-08 19:19+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-01-22 18:35+0000\n"
+"PO-Revision-Date: 2026-01-23 07:37+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-19/website_sale/zh_Hant/>\n"
 "Language: zh_TW\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -2075,6 +2075,11 @@ msgid ""
 "- New: Applied based on the New period you will define.\n"
 "- Out Of Stock: Applied when the product is out of stock."
 msgstr ""
+"設定為產品指派此絲帶的方式：\n"
+"- 手動：由你手動將絲帶指派給產品。\n"
+"- 促銷：當產品顯示促銷狀態時，套用此絲帶。\n"
+"- 新品：在新產品套用此絲帶，維持時間根據你所定義的新品期間而定。\n"
+"- 缺貨：在產品缺貨時套用此絲帶。"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_ribbon__style
@@ -2083,6 +2088,9 @@ msgid ""
 "- Ribbon: Shows a ribbon banner on the product image.\n"
 "- Badge: Shows a small badge label on the product image."
 msgstr ""
+"設定顯示樣式：\n"
+"- 絲帶：在產品圖片上顯示絲帶橫幅。\n"
+"- 徽章：在產品圖片上顯示小型徽章標籤。"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3799,7 +3807,7 @@ msgstr "只是服務"
 #. odoo-python
 #: code:addons/website_sale/models/product_ribbon.py:0
 msgid "Only one ribbon with the assign %s is allowed."
-msgstr ""
+msgstr "只可有一個絲帶使用「%s」指派方式。"
 
 #. module: website_sale
 #. odoo-python
@@ -5472,6 +5480,12 @@ msgid ""
 msgstr ""
 "你嘗試進行銷售的網站的公司（%(website_company)s），與你想要使用的公司（%"
 "(company)s）不同。"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid "The delivery method is not compatible with your delivery address."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python

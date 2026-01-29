@@ -207,3 +207,12 @@ export function isRadioDisabled(name) {
         },
     ];
 }
+
+export function priceIs(price) {
+    return [
+        {
+            content: `checking that total price is ${price}`,
+            trigger: `.modal .modal-title:contains('${price}')`,
+        },
+    ];
+}

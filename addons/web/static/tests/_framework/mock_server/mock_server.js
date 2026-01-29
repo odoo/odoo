@@ -10,9 +10,9 @@ import {
     registerDebugInfo,
 } from "@odoo/hoot";
 import { makeErrorFromResponse, rpc, RPCError } from "@web/core/network/rpc";
+import { RPCCache } from "@web/core/network/rpc_cache";
 import { ensureArray, isIterable } from "@web/core/utils/arrays";
 import { isObject } from "@web/core/utils/objects";
-import { RPCCache } from "@web/core/network/rpc_cache";
 import { hashCode } from "@web/core/utils/strings";
 import { serverState } from "../mock_server_state.hoot";
 import { fetchModelDefinitions, globalCachedFetch, registerModelToFetch } from "../module_set.hoot";

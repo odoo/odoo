@@ -407,6 +407,7 @@ export class SwitchThemeAction extends BuilderAction {
     static dependencies = ["savePlugin"];
     setup() {
         this.preview = false;
+        this.canTimeout = false;
     }
     async apply() {
         const save = await new Promise((resolve) => {
@@ -433,6 +434,7 @@ export class AddLanguageAction extends BuilderAction {
     static dependencies = ["savePlugin"];
     setup() {
         this.preview = false;
+        this.canTimeout = false;
     }
     async apply() {
         const def = new Deferred();

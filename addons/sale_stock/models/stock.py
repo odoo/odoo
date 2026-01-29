@@ -29,6 +29,8 @@ class StockMove(models.Model):
         for move in self:
             if move.sale_line_id and not move.description_picking_manual:
                 sale_line_id = move.sale_line_id.with_context(lang=move.sale_line_id.order_id.partner_id.lang)
+                if move.description_picking == move.product_id.display_name:
+                    move.description_picking = ''
                 move.description_picking = (sale_line_id._get_sale_order_line_multiline_description_variants() + '\n' + move.description_picking).strip()
 
     def _action_synch_order(self):
@@ -184,7 +186,8 @@ class StockPicking(models.Model):
         for picking in self:
             # picking and move should have a link to the SO to see the picking on the stat button.
             # This will filter the move chain to the delivery moves only.
-            picking.sale_id = picking.move_ids.sale_line_id.order_id
+            sales_order = picking.move_ids.sale_line_id.order_id
+            picking.sale_id = sales_order[0] if sales_order else False
 
     @api.depends('move_ids.sale_line_id')
     def _compute_move_type(self):
@@ -322,14 +325,21 @@ class StockLot(models.Model):
 
     @api.depends('name')
     def _compute_sale_order_ids(self):
-        sale_orders = defaultdict(lambda: self.env['sale.order'])
-        for move_line in self.env['stock.move.line'].search([('lot_id', 'in', self.ids), ('state', '=', 'done')]):
-            move = move_line.move_id
-            if move.picking_id.location_dest_id.usage in ('customer', 'transit') and move.sale_line_id.order_id:
-                sale_orders[move_line.lot_id.id] |= move.sale_line_id.order_id
+        sale_orders = defaultdict(set)
+        move_lines = self.env['stock.move.line'].search([
+            ('lot_id', 'in', self.ids),
+            ('state', '=', 'done'),
+            ('move_id.sale_line_id.order_id', '!=', False),
+            ('move_id.picking_id.location_dest_id.usage', 'in', ('customer', 'transit')),
+        ])
+        for ml in move_lines:
+            so = ml.move_id.sale_line_id.order_id
+            if so.with_user(self.env.user).has_access('read'):
+                sale_orders[ml.lot_id.id].add(so.id)
         for lot in self:
-            lot.sale_order_ids = sale_orders[lot.id]
-            lot.sale_order_count = len(lot.sale_order_ids)
+            so_ids = sale_orders.get(lot.id, set())
+            lot.sale_order_ids = [Command.set(list(so_ids))]
+            lot.sale_order_count = len(so_ids)
 
     def action_view_so(self):
         self.ensure_one()

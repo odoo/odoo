@@ -6,3 +6,4 @@ from . import test_im_livechat_portal
 from . import test_performance
 from . import test_performance_inbox
 from . import test_livechat_session_open
+from . import test_res_partner

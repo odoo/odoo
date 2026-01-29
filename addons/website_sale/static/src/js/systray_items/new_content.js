@@ -12,7 +12,7 @@ patch(NewContentSystrayItem.prototype, {
         newProductElement.createNewContent = () => this.onAddContent(
             'website_sale.product_product_action_add',
             true,
-            {default_is_published: true});
+        );
         newProductElement.status = MODULE_STATUS.INSTALLED;
         newProductElement.model = 'product.product';
     },

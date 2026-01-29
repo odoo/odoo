@@ -103,19 +103,10 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
                     run: "click",
                 });
             } else if (isModal) {
-                snippetSteps.splice(
-                    5,
-                    2,
-                    {
-                        content: `Make sure ${snippet.name} is shown`,
-                        trigger: ":iframe body.modal-open",
-                    },
-                    {
-                        content: `Hide the ${snippet.name} popup`,
-                        trigger: `:iframe [data-snippet='${snippet.name}'] .s_popup_close`,
-                        run: "click",
-                    }
-                );
+                snippetSteps.splice(5, 0, {
+                    content: `Make sure ${snippet.name} is shown`,
+                    trigger: ":iframe body.modal-open",
+                });
             } else if (isDropInOnlySnippet) {
                 // The 'drop in only' snippets have their 'data-snippet' attribute
                 // removed once they are dropped, so we need to use a different

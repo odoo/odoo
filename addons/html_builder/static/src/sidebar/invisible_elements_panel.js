@@ -98,7 +98,8 @@ export class InvisibleElementsPanel extends Component {
             this.shared.builderOptions.updateContainers(snippetEl);
             // Scroll to the target if not visible.
             if (!isElementInViewport(snippetEl) && !snippetEl.matches(".s_popup")) {
-                snippetEl.scrollIntoView({ behavior: "smooth", block: "center" });
+                // Firefox mis-scrolls with block "center" on tall snippets; keep "start".
+                snippetEl.scrollIntoView({ behavior: "smooth", block: "start" });
             }
         }
         this.shared.disableSnippets.disableUndroppableSnippets();

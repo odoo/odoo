@@ -14,6 +14,40 @@ import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 
+describe("OperationMutex", () => {
+    test("skips queued actions until emptied after clearQueue", async () => {
+        const operation = new Operation();
+        const { mutex } = operation;
+        const firstStarted = Promise.withResolvers();
+        const firstDone = Promise.withResolvers();
+
+        mutex.exec(async () => {
+            expect.step("first start");
+            firstStarted.resolve();
+            await firstDone.promise;
+            expect.step("first done");
+        });
+
+        await firstStarted.promise;
+        mutex.clearQueue();
+        mutex.exec(() => {
+            expect.step("skip 1");
+        });
+        mutex.exec(() => {
+            expect.step("skip 2");
+        });
+
+        firstDone.resolve();
+        await mutex.getUnlockedDef();
+
+        await mutex.exec(() => {
+            expect.step("after clear");
+        });
+
+        expect.verifySteps(["first start", "first done", "after clear"]);
+    });
+});
+
 test("handle 3 concurrent cancellable operations (with delay)", async () => {
     const operation = new Operation();
     function makeCall(data) {

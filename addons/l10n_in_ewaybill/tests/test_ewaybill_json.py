@@ -228,6 +228,82 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
             distance_val = ewaybill._l10n_in_ewaybill_handle_zero_distance_alert_if_present(response.get('data'))
             self.assertEqual(distance_val['distance'], expected_distance)
 
+    def test_ewaybill_export_overseas(self):
+        ewaybill_invoice_with_export_without_lut = self.env['l10n.in.ewaybill'].create({
+            "type_id": self.env.ref("l10n_in_ewaybill.type_tax_invoice_sub_type_export").id,
+            "account_move_id": self.invoice_with_export_without_lut.id,
+            "distance": 20,
+            "mode": "1",
+            "vehicle_no": "GJ11AA1234",
+            "vehicle_type": "R",
+        })
+
+        ewaybill_invoice_with_export_lut = self.env['l10n.in.ewaybill'].create({
+            "type_id": self.env.ref("l10n_in_ewaybill.type_tax_invoice_sub_type_export").id,
+            "account_move_id": self.invoice_with_export_lut.id,
+            "distance": 20,
+            "mode": "1",
+            "vehicle_no": "GJ11AA1234",
+            "vehicle_type": "R",
+        })
+
+        # ================================== Ewaybill JSON for Export without LUT ===========================================
+        json_value = ewaybill_invoice_with_export_without_lut._ewaybill_generate_direct_json()
+        expected = {
+            "supplyType": "O",
+            "subSupplyType": "3",
+            "docType": "INV",
+            "transactionType": 1,
+            "transDistance": "20",
+            "docNo": False,
+            "docDate": "01/01/2019",
+            "fromGstin": "24AAGCC7144L6ZE",
+            "fromTrdName": "Default Company",
+            "fromAddr1": "Khodiyar Chowk",
+            "fromAddr2": "Sala Number 3",
+            "fromPlace": "Amreli",
+            "fromPincode": 365220,
+            "fromStateCode": 24,
+            "actFromStateCode": 24,
+            "toGstin": "URP",
+            "toTrdName": "Foreign Partner",
+            "toAddr1": "351 Horner Chapel Rd",
+            "toAddr2": "",
+            "toPlace": "Peebles",
+            "toPincode": 999999,
+            "actToStateCode": 99,
+            "toStateCode": 99,
+            "itemList": [{
+                "productName": "product_a",
+                "hsnCode": "111111",
+                "productDesc": "product_a",
+                "quantity": 1.0,
+                "qtyUnit": "UNT",
+                "taxableAmount": 1000.0,
+                "igstRate": 18.0,
+            }],
+            "totalValue": 1000.0,
+            "cgstValue": 0.0,
+            "sgstValue": 0.0,
+            "igstValue": 180.0,
+            "cessValue": 0.0,
+            "cessNonAdvolValue": 0.0,
+            "otherValue": 0.0,
+            "totInvValue": 1180.0,
+            "transMode": "1",
+            "vehicleNo": "GJ11AA1234",
+            "vehicleType": "R"
+        }
+        self.assertDictEqual(json_value, expected, "Indian EDI Export without LUT json value does not match")
+
+        # ================================== Ewaybill JSON for Export with LUT ===========================================
+        json_value = ewaybill_invoice_with_export_lut._ewaybill_generate_direct_json()
+        expected.update({
+            "igstValue": 0.0,
+            "totInvValue": 1000.0,
+        })
+        self.assertDictEqual(json_value, expected, "Indian EDI Export with LUT json value does not match")
+
     def test_ewaybill_transporter_gst(self):
         self.partner_b.write({
             "vat": False,

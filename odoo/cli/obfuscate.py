@@ -158,7 +158,13 @@ class Obfuscate(Command):
             if opt.allfields and not opt.unobfuscate:
                 _logger.error("--allfields can only be used in unobfuscate mode")
                 sys.exit("ERROR: --allfields can only be used in unobfuscate mode")
-            self.dbname = config['db_name']
+            if not opt.db_name:
+                _logger.error('Obfuscate command needs a database name. Use "-d" argument')
+                sys.exit('ERROR: Obfuscate command needs a database name. Use "-d" argument')
+            if len(opt.db_name) > 1:
+                _logger.error("-d/--database has multiple databases, please provide a single one")
+                sys.exit("ERROR: -d/--database has multiple databases, please provide a single one")
+            self.dbname = config['db_name'][0]
             self.registry = Registry(self.dbname)
             with self.registry.cursor() as cr:
                 self.cr = cr

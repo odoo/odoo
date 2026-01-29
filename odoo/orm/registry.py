@@ -783,7 +783,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
             FROM pg_attribute a
             JOIN pg_class c ON a.attrelid = c.oid
             JOIN pg_namespace n ON c.relnamespace = n.oid
-            WHERE n.nspname = 'public'
+            WHERE n.nspname = current_schema
             AND a.attnotnull = true
             AND a.attnum > 0
             AND a.attname != 'id';
@@ -897,7 +897,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
             JOIN pg_class AS c2 ON fk.confrelid = c2.oid
             JOIN pg_attribute AS a1 ON a1.attrelid = c1.oid AND fk.conkey[1] = a1.attnum
             JOIN pg_attribute AS a2 ON a2.attrelid = c2.oid AND fk.confkey[1] = a2.attnum
+            JOIN pg_namespace n ON c1.relnamespace = n.oid
             WHERE fk.contype = 'f' AND c1.relname IN %s
+              AND n.nspname = current_schema
         """
         cr.execute(query, [tuple({table for table, column in self._foreign_keys})])
         existing = {
@@ -987,7 +989,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                   JOIN pg_namespace n ON (n.oid = c.relnamespace)
                  WHERE c.relname IN %s
                    AND c.relkind = 'r'
-                   AND n.nspname = 'public'
+                   AND n.nspname = current_schema
             """
             tables = tuple(m._table for m in self.models.values())
             cr.execute(query, [tables])

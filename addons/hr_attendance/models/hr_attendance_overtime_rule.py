@@ -332,12 +332,12 @@ class HrAttendanceOvertimeRule(models.Model):
         attendances = self.env['hr.attendance']
         for (a_start, a_stop, attendance) in attendance_intervals:
             attendances += attendance
-            intervals_attendance_by_attendance[attendance] = (Intervals([(a_start, a_stop, self.env['resource.calendar'])]) - schedule['lunch']) &\
+            intervals_attendance_by_attendance[attendance] = (Intervals([(a_start, a_stop, self.env['resource.calendar'])]) - (schedule['lunch'] - schedule['leave'])) &\
                 Intervals([(start, stop, self.env['resource.calendar'])])
             attendances_interval_without_lunch.extend(intervals_attendance_by_attendance[attendance]._items)
 
         if self.expected_hours_from_contract:
-            period_schedule = schedule['work'] & Intervals([(start, stop, self.env['resource.calendar'])])
+            period_schedule = (schedule['work'] - schedule['leave']) & Intervals([(start, stop, self.env['resource.calendar'])])
             expected_duration = sum_intervals(period_schedule)
 
         overtime_amount = sum_intervals(Intervals(attendances_interval_without_lunch)) - expected_duration
@@ -402,6 +402,7 @@ class HrAttendanceOvertimeRule(models.Model):
         undertime_by_employee_by_attendance = defaultdict(lambda: defaultdict(list))
         for employee, duration_and_amount_by_periods in attendances_by_periods_by_employee.items():
             schedule = schedule_by_employee['schedule'][employee]
+            schedule['leave'] = schedule_by_employee['leave'][employee]
             fully_flex_schedule = schedule_by_employee['fully_flexible'][employee]
             for day, attendance_interval in duration_and_amount_by_periods.items():
                 for rule in self:
@@ -527,9 +528,11 @@ class HrAttendanceOvertimeRule(models.Model):
                     stop_datetime = datetime.combine(interval[0].date(), float_to_time(stop))
                     timing_intervals = Intervals([(start_datetime, stop_datetime, self.env['resource.calendar'])])
                     if rule.timing_start > rule.timing_stop:
+                        day_start = datetime.combine(interval[0].date(), datetime.min.time())
+                        day_end = datetime.combine(interval[0].date(), datetime.max.time())
                         timing_intervals = Intervals([
                             (i_start, i_stop, self.env['resource.calendar'])
-                        for i_start, i_stop in invert_intervals([(start_datetime, stop_datetime)], 0, 23.99)])
+                        for i_start, i_stop in invert_intervals([(start_datetime, stop_datetime)], day_start, day_end)])
                     timing_intervals_by_employee[employee] |= timing_intervals
             return timing_intervals_by_employee
 

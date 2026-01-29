@@ -218,3 +218,20 @@ class TestDoc(HttpCaseWithUserDemo):
                     clean_doc(parse_signature(method).as_dict()),
                     clean_doc(method.expected),
                 )
+
+    def test_ghost_model_robustness(self):
+        """
+        Ensure the documentation generator does not crash when encountering
+        a model in the database (state='base') that is missing from the registry.
+        """
+
+        ghost_model_name = 'ir.min.cron.mixin.test.ghost'
+        self.env['ir.model'].create({
+            'model': ghost_model_name,
+            'name': 'Ghost Model',
+            'state': 'base',
+        })
+
+        self.authenticate('demo', 'demo')
+        res = self.url_open('/doc/index.json')
+        res.raise_for_status()

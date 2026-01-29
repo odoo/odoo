@@ -376,7 +376,7 @@ class PosConfig(models.Model):
             },
         }
 
-        all_paid_orders = session.order_ids.filtered(lambda o: o.state == 'paid')
+        all_paid_orders = session.order_ids.filtered(lambda o: o.state in ['paid', 'done'])
         refund_orders = all_paid_orders.filtered(lambda o: o.is_refund)
         draft_orders = session.order_ids.filtered(lambda o: o.state == 'draft')
         non_refund_orders = all_paid_orders - refund_orders

@@ -104,9 +104,6 @@ export class GenerateDialog extends Component {
         ]));
         lines._currentIds.push(...newlines.map((record) => record._virtualId));
         await lines._onUpdate();
-        if (this.sequence && this.nextSerial.el.value === this.nextCustomSerialNumber) {
-            await this.orm.write("ir.sequence", [this.sequence.id], {number_next_actual: this.sequence.number_next_actual + newlines.length});
-        }
         this.props.close();
     }
 }

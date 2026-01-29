@@ -170,7 +170,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
             so_lines = order._create_down_payment_lines_from_base_lines(down_payment_base_lines)
 
             # Create the invoice.
-            invoice_values = self._prepare_down_payment_invoice_values(
+            invoice_values = self.with_context(accounts=[
+                base_line['account_id'] or self._get_down_payment_account(base_line['product_id'])
+                for base_line in down_payment_base_lines
+            ])._prepare_down_payment_invoice_values(
                 order=order,
                 so_lines=so_lines,
             )
@@ -192,6 +195,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
             return invoice
 
+    # TODO: add accounts to method params in master
     def _prepare_down_payment_invoice_values(self, order, so_lines):
         """ Prepare the values to create a down payment invoice.
 
@@ -200,11 +204,12 @@ class SaleAdvancePaymentInv(models.TransientModel):
         :return:            The values to create a new invoice.
         """
         self.ensure_one()
+        accounts = self.env.context.get('accounts')
         return {
             **order._prepare_invoice(),
             'invoice_line_ids': [
-                Command.create(self._prepare_down_payment_invoice_line_values(order, so_line, self.company_id.downpayment_account_id))
-                for so_line in so_lines
+                Command.create(self._prepare_down_payment_invoice_line_values(order, so_line, self.company_id.downpayment_account_id or account))
+                for so_line, account in zip(so_lines, accounts)
             ],
         }
 
@@ -229,3 +234,13 @@ class SaleAdvancePaymentInv(models.TransientModel):
             quantity=1.0,
             **({'account_id': account.id} if account else {}),
         )
+
+    def _get_down_payment_account(self, product):
+        """ Retrieve the down payment account to use.
+        :param product: A product.
+        :return: An accounting account or None if not found.
+        """
+        product_account = product.product_tmpl_id.get_product_accounts(
+            fiscal_pos=self.sale_order_ids.fiscal_position_id
+        )
+        return product_account.get('downpayment') or product_account.get('income')
