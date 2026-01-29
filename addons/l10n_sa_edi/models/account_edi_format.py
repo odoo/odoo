@@ -444,7 +444,7 @@ class AccountEdiFormat(models.Model):
                 )
             )
         if invoice.invoice_date > fields.Date.context_today(self.with_context(tz='Asia/Riyadh')):
-            errors.append(_("- Please, make sure the invoice date is set to either the same as or before Today."))
+            errors.append(_("- Please set the Invoice Date to be either less than or equal to today as per the Asia/Riyadh time zone, since ZATCA does not allow future-dated invoicing."))
 
         if invoice.l10n_sa_show_reason and not invoice.l10n_sa_reason:
             errors.append(_("- Please make sure the 'ZATCA Reason' for the issuance of the Credit/Debit Note is specified."))
