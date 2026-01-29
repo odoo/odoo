@@ -2,7 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 from datetime import datetime
-from odoo import api, fields, models
+from pytz import timezone, utc
+
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 from odoo.tools import float_repr, format_datetime
 
 
@@ -55,7 +58,7 @@ class AccountMove(models.Model):
             if move.country_code == 'SA' and move.is_sale_document():
                 vals = {}
                 if not move.l10n_sa_confirmation_datetime:
-                    vals['l10n_sa_confirmation_datetime'] = datetime.combine(move.invoice_date, fields.Datetime.now().time()).strftime(self._get_iso_format_asia_riyadh_date())
+                    vals['l10n_sa_confirmation_datetime'] = self._get_normalized_l10n_sa_confirmation_datetime(move.invoice_date)
                 if not move.delivery_date:
                     vals['delivery_date'] = move.invoice_date
                 move.write(vals)
@@ -84,13 +87,25 @@ class AccountMove(models.Model):
         self.ensure_one()
         return self.company_id.country_id.code == 'SA' and self.state == 'posted' and self.l10n_sa_qr_code_str
 
+    def _get_normalized_l10n_sa_confirmation_datetime(self, invoice_date, invoice_time=None):
+        """
+            Ensures the confirmation datetime does not exceed the current time in Asia/Riyadh to prevent ZATCA rejections.
+        """
+        sa_tz = timezone('Asia/Riyadh')
+        now_sa = datetime.now(sa_tz)
+        selected_date = fields.Date.from_string(invoice_date) if isinstance(invoice_date, str) else invoice_date
+        if selected_date > now_sa.date():
+            raise UserError(_("Please set the Invoice Date to be either less than or equal to today as per the Asia/Riyadh time zone, since ZATCA does not allow future-dated invoicing."))
+        return min(now_sa, sa_tz.localize(datetime.combine(selected_date, invoice_time or now_sa.time()))).astimezone(utc).replace(tzinfo=None)
+
     def write(self, vals):
         result = super().write(vals)
         invoice_date = vals.get('invoice_date')
         if not invoice_date:
             return result
         for move in self.filtered('l10n_sa_confirmation_datetime'):
-            move.l10n_sa_confirmation_datetime = datetime.combine(fields.Date.from_string(invoice_date), move.l10n_sa_confirmation_datetime.time())
+            sa_time = move.l10n_sa_confirmation_datetime.replace(tzinfo=utc).astimezone(timezone('Asia/Riyadh')).time()
+            move.l10n_sa_confirmation_datetime = self._get_normalized_l10n_sa_confirmation_datetime(invoice_date, sa_time)
         return result
 
     def _l10n_sa_is_simplified(self):
