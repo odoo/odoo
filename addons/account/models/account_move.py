@@ -221,7 +221,7 @@ class AccountMove(models.Model):
         search='_search_reconciled_payment_ids',
         help='Payments that have been reconciled with this invoice.'
     )
-    payment_count = fields.Integer(compute='_compute_payment_count')
+    payment_count = fields.Integer(compute='_compute_payment_count', compute_sudo=True)
 
     # === Statement fields === #
     statement_line_id = fields.Many2one(
