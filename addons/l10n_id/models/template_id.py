@@ -24,9 +24,11 @@ class AccountChartTemplate(models.AbstractModel):
                 'bank_account_code_prefix': '1112',
                 'cash_account_code_prefix': '1111',
                 'transfer_account_code_prefix': '1999999',
+                'default_cash_difference_income_account_id': 'l10n_id_99900002',
+                'default_cash_difference_expense_account_id': 'l10n_id_99900001',
                 'account_default_pos_receivable_account_id': 'l10n_id_11210011',
-                'income_currency_exchange_account_id': 'l10n_id_81100010',
-                'expense_currency_exchange_account_id': 'l10n_id_91100010',
+                'income_currency_exchange_account_id': 'l10n_id_81100030',
+                'expense_currency_exchange_account_id': 'l10n_id_91100020',
                 'account_journal_early_pay_discount_loss_account_id': 'l10n_id_99900003',
                 'account_journal_early_pay_discount_gain_account_id': 'l10n_id_99900004',
                 'account_sale_tax_id': 'tax_ST4',
@@ -34,6 +36,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_account_id': 'l10n_id_51000010',
                 'income_account_id': 'l10n_id_41000010',
                 'account_stock_valuation_id': 'l10n_id_11300180',
+                'deferred_expense_account_id': 'l10n_id_11210040',
+                'deferred_revenue_account_id': 'l10n_id_28110030',
             },
         }
 
@@ -43,5 +47,16 @@ class AccountChartTemplate(models.AbstractModel):
             'l10n_id_11300180': {
                 'account_stock_expense_id': 'l10n_id_51000020',
                 'account_stock_variation_id': 'l10n_id_42500010',
+            },
+        }
+
+    @template('id', 'account.journal')
+    def _get_id_account_journal(self):
+        return {
+            'bank': {'default_account_id': 'l10n_id_11120001'},
+            'cash': {
+                'name': self.env._("Cash"),
+                'type': 'cash',
+                'default_account_id': 'l10n_id_11110001',
             },
         }
