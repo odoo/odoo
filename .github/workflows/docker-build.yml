@@ -1,0 +1,220 @@
+# =============================================================================
+# GitHub Actions Workflow: Build and Push Docker Image to GHCR
+# =============================================================================
+# Triggers:
+#   - Push to 'main' branch
+#   - Push to 'develop' or 'testing/*' branches
+#   - Manual workflow dispatch
+#   - Release published
+# =============================================================================
+
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'testing/**'
+      - 'release/**'
+    paths-ignore:
+      - '**.md'
+      - 'doc/**'
+      - '.github/ISSUE_TEMPLATE/**'
+  pull_request:
+    branches:
+      - main
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Custom tag for the image (optional)'
+        required: false
+        default: ''
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # ===========================================================================
+  # Job 1: Build and Push Docker Image
+  # ===========================================================================
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # -----------------------------------------------------------------------
+      # Step 1: Checkout repository
+      # -----------------------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for better tagging
+
+      # -----------------------------------------------------------------------
+      # Step 2: Set up Docker Buildx (for multi-platform builds)
+      # -----------------------------------------------------------------------
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # -----------------------------------------------------------------------
+      # Step 3: Login to GitHub Container Registry
+      # -----------------------------------------------------------------------
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # -----------------------------------------------------------------------
+      # Step 4: Extract metadata for Docker tags and labels
+      # -----------------------------------------------------------------------
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            # Branch name tags
+            type=ref,event=branch,prefix={{branch}}-
+            # PR tags
+            type=ref,event=pr,prefix=pr-
+            # Release tags (semantic versioning)
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            # Short SHA for traceability
+            type=sha,prefix=sha-,suffix=-${{ github.run_number }}
+            # Custom tag from workflow dispatch
+            type=raw,value=${{ github.event.inputs.tag }},enable=${{ github.event.inputs.tag != '' }}
+            # Latest tag for main branch
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+            # Production-specific tag for main
+            type=raw,value=stable,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+            # Uber-specific tag for main
+            type=raw,value=odoo-uber-latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+
+      # -----------------------------------------------------------------------
+      # Step 5: Build and push Docker image
+      # -----------------------------------------------------------------------
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # Aggressive caching for faster rebuilds
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          # Build arguments for image metadata
+          build-args: |
+            BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+            VCS_REF=${{ github.sha }}
+
+      # -----------------------------------------------------------------------
+      # Step 6: Generate build summary for GitHub Actions UI
+      # -----------------------------------------------------------------------
+      - name: Generate build summary
+        if: success()
+        run: |
+          echo "## 🐳 Docker Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Image Details" >> $GITHUB_STEP_SUMMARY
+          echo "| Property | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Registry | \`${{ env.REGISTRY }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Repository | \`${{ env.IMAGE_NAME }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Commit | [\`${{ github.sha }}\`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}) |" >> $GITHUB_STEP_SUMMARY
+          echo "| Branch | \`${{ github.ref_name }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Generated Tags" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.meta.outputs.tags }}" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
+  # ===========================================================================
+  # Job 2: Security Scanning with Trivy
+  # ===========================================================================
+  security-scan:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    permissions:
+      security-events: write
+      packages: read
+      contents: read
+
+    steps:
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '0'  # Don't fail the workflow, report issues
+        continue-on-error: true
+
+      - name: Upload Trivy scan results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+          category: 'Trivy'
+        continue-on-error: true
+
+  # ===========================================================================
+  # Job 3: Image Size Report (for resource-constrained VPS)
+  # ===========================================================================
+  image-size-report:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    permissions:
+      packages: read
+
+    steps:
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get image metadata and size
+        id: image-info
+        run: |
+          IMAGE_DIGEST=$(docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }} 2>&1 | grep 'Digest:' | awk '{print $2}')
+          IMAGE_SIZE=$(docker images --quiet --no-trunc ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }} | xargs docker inspect --format='{{.Size}}' 2>/dev/null || echo "0")
+          SIZE_MB=$((IMAGE_SIZE / 1024 / 1024))
+          echo "image_size=$SIZE_MB" >> $GITHUB_OUTPUT
+          echo "image_digest=$IMAGE_DIGEST" >> $GITHUB_OUTPUT
+
+      - name: Report image size
+        run: |
+          echo "## 📦 Image Size Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Estimated Image Size**: \`${{ steps.image-info.outputs.image_size }} MB\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "This is optimized for VPS with limited resources (1GB RAM, 1 CPU)." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ ${{ steps.image-info.outputs.image_size }} -gt 800 ]; then
+            echo "⚠️ **WARNING**: Image size exceeds 800MB. Consider optimizing the Dockerfile." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ Image size is within acceptable limits for resource-constrained environments." >> $GITHUB_STEP_SUMMARY
+          fi
