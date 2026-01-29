@@ -350,6 +350,8 @@ class BaseString(Field[str | typing.Literal[False]]):
         if not self.translate or value is False or value is None:
             super().write(records, value)
             return
+
+        records.env.remove_to_compute(self, records)
         cache_value = self.convert_to_cache(value, records)
         records = self._filter_not_equal(records, cache_value)
         if not records:
