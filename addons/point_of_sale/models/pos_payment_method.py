@@ -1,5 +1,7 @@
+import base64
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.misc import file_path, file_open
 
 
 class PosPaymentMethod(models.Model):
@@ -57,8 +59,10 @@ class PosPaymentMethod(models.Model):
     hide_use_payment_terminal = fields.Boolean(compute='_compute_hide_use_payment_terminal')
     active = fields.Boolean(default=True)
     type = fields.Selection(selection=[('cash', 'Cash'), ('bank', 'Bank'), ('pay_later', 'Customer Account')], compute="_compute_type")
-    image = fields.Image("Image", max_width=50, max_height=50)
+    custom_image = fields.Image("Custom Image", max_width=90, max_height=90)
+    image = fields.Image(max_width=90, max_height=90, compute="_compute_image", inverse="_inverse_image")
     payment_method_type = fields.Selection(selection=lambda self: self._get_payment_method_type(), string="Integration", default='none', required=True)
+    all_providers_installed = fields.Boolean(compute="_compute_all_providers_installed")
     default_qr = fields.Char(compute='_compute_qr')
     qr_code_method = fields.Selection(
         string='QR Code Format', copy=False,
@@ -68,10 +72,29 @@ class PosPaymentMethod(models.Model):
     hide_qr_code_method = fields.Boolean(compute='_compute_hide_qr_code_method')
 
     @api.model
-    def get_provider_status(self, modules_list):
-        return {
-            'state': self.env['ir.module.module'].search_read([('name', 'in', modules_list)], ['name', 'state']),
-        }
+    def get_provider_status(self):
+        providers = self.get_payment_providers()
+        module_names = [provider["module"] for provider in providers]
+        module_states = {m['name']: {'state': m['state'], 'id': m['id']} for m in self.env['ir.module.module'].search_read([('name', 'in', module_names)], ['name', 'state'])}
+        return [{**p, 'state': module_states[p['module']]['state'], 'id': module_states[p['module']]['id']} for p in providers]
+
+    @api.model
+    def get_payment_providers(self):
+        return [
+            {"provider": "axepta_bnpp", "module": "pos_iot_worldline", "name": "Axepta BNP Paribas"},
+            {"provider": "six_iot", "module": "pos_iot_six", "name": "SIX"},
+            {"provider": "adyen", "module": "pos_adyen", "name": "Adyen"},
+            {"provider": "mercado_pago", "module": "pos_mercado_pago", "name": "Mercado Pago"},
+            {"provider": "razorpay", "module": "pos_razorpay", "name": "Razorpay"},
+            {"provider": "stripe", "module": "pos_stripe", "name": "Stripe"},
+            {"provider": "viva_com", "module": "pos_viva_com", "name": "Viva.com"},
+            {"provider": "worldline", "module": "pos_iot_worldline", "name": "Worldline"},
+            {"provider": "tyro", "module": "pos_tyro", "name": "Tyro"},
+            {"provider": "pine_labs", "module": "pos_pine_labs", "name": "Pine Labs"},
+            {"provider": "qfpay", "module": "pos_qfpay", "name": "QFPay"},
+            {"provider": "dpopay", "module": "pos_dpopay", "name": "DPO Pay"},
+            {"provider": "mollie", "module": "pos_mollie", "name": "Mollie"},
+        ]
 
     @api.model
     def _load_pos_data_domain(self, data, config):
@@ -135,6 +158,30 @@ class PosPaymentMethod(models.Model):
     def _compute_is_cash_count(self):
         for pm in self:
             pm.is_cash_count = pm.type == 'cash'
+
+    def _compute_all_providers_installed(self):
+        providers_status = self.get_provider_status()
+        if providers_status and all(status['state'] == 'installed' for status in providers_status):
+            self.all_providers_installed = True
+        else:
+            self.all_providers_installed = False
+
+    @api.depends('use_payment_terminal', 'custom_image')
+    def _compute_image(self):
+        for record in self:
+            if record.custom_image:
+                record.image = record.custom_image
+            elif record.use_payment_terminal:
+                path = f'point_of_sale/static/img/providers/{record.use_payment_terminal}.png'
+                if file_path(path):
+                    with file_open(path, 'rb') as image:
+                        record.image = base64.b64encode(image.read())
+                else:
+                    record.image = False
+
+    def _inverse_image(self):
+        for record in self:
+            record.custom_image = record.image
 
     def _is_write_forbidden(self, fields):
         whitelisted_fields = {'sequence'}
