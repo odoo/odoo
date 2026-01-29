@@ -72,7 +72,7 @@ class IrModuleModule(models.Model):
         if not was_installed and is_installed:
             if self.name != 'account':
                 for demo in [False, True] if self.demo else [False]:
-                    for company in self.env['res.company'].search([('chart_template', '!=', False)]):
+                    for company in self.env['res.company'].search([('chart_template', '!=', False)], order="parent_path"):
                         ChartTemplate = self.env['account.chart.template'].with_company(company)
                         module_template_data = ChartTemplate._get_chart_template_data(company.chart_template, demo, self.name)
                         module_template_data.pop('template_data', None)
