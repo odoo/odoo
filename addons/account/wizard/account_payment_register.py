@@ -592,6 +592,7 @@ class AccountPaymentRegister(models.TransientModel):
 
     def _convert_to_wizard_currency(self, installments):
         self.ensure_one()
+<<<<<<< 61814778d291aa7cc1cc39fc57e03c08604bccf3
         total_per_currency = defaultdict(lambda: {
             'amount_residual': 0.0,
             'amount_residual_currency': 0.0,
@@ -616,10 +617,36 @@ class AccountPaymentRegister(models.TransientModel):
             elif currency == comp_curr and wizard_curr != comp_curr:
                 # Company currency on source line but a foreign currency one on the opposite line.
                 total_amount += comp_curr._convert(amount_residual, wizard_curr, self.company_id, self.payment_date)
+||||||| f0196258ed41f56790db94747192545ae56c78b5
+        amount = 0.0
+        mode = False
+        moves = batch_result['lines'].mapped('move_id')
+        for move in moves:
+            if early_payment_discount and move._is_eligible_for_early_payment_discount(move.currency_id, self.payment_date):
+                for aml in batch_result['lines'].filtered(lambda l: l.move_id.id == move.id):
+                    amount += aml.discount_amount_currency
+                mode = 'early_payment'
+=======
+        amount = 0.0
+        mode = False
+        for move, lines in batch_result['lines'].grouped('move_id').items():
+            if early_payment_discount and move._is_eligible_for_early_payment_discount(move.currency_id, self.payment_date):
+                mode = 'early_payment'
+                amount += sum(aml.discount_amount_currency for aml in lines)
+>>>>>>> 7106c815ca36280df7ea78c6d601c31060745d8f
             else:
+<<<<<<< 61814778d291aa7cc1cc39fc57e03c08604bccf3
                 # Foreign currency on payment different than the one set on the journal entries.
                 total_amount += comp_curr._convert(amount_residual, wizard_curr, self.company_id, self.payment_date)
         return total_amount
+||||||| f0196258ed41f56790db94747192545ae56c78b5
+                for aml in batch_result['lines'].filtered(lambda l: l.move_id.id == move.id):
+                    amount += aml.amount_residual_currency
+        return abs(amount), mode
+=======
+                amount += sum(aml.amount_residual_currency for aml in lines)
+        return abs(amount), mode
+>>>>>>> 7106c815ca36280df7ea78c6d601c31060745d8f
 
     def _get_total_amounts_to_pay(self, batch_results):
         self.ensure_one()
