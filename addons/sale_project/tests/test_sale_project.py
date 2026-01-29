@@ -387,7 +387,6 @@ class TestSaleProject(TestSaleProjectCommon):
         # add a project to the SO
         line_delivered_milestone.project_id = self.project_global
         sale_order_1._compute_show_project_and_task_button()
-        self.assertFalse(sale_order_1.show_create_project_button, "There is a product service with the service_policy set on 'delivered on milestone' and a project on the sale order, the button should be hidden")
         self.assertTrue(sale_order_1.show_project_button, "There is a product service with the service_policy set on 'delivered on milestone' and a project on the sale order, the button should be displayed")
 
         # add an ordered_prepaid service product
@@ -1097,7 +1096,7 @@ class TestSaleProject(TestSaleProjectCommon):
             copy.order_line.project_id._get_analytic_distribution(),
         )
 
-    def test_confirm_sale_order_on_task_save(self):
+    def test_non_confirm_sale_order_on_task_save(self):
         sale_order = self.env['sale.order'].create({
             'name': 'Sale Order',
             'partner_id': self.partner.id,
@@ -1113,9 +1112,9 @@ class TestSaleProject(TestSaleProjectCommon):
             'project_id': self.project_global.id,
         })
         task.write({'sale_line_id': sale_order_line.id})
-        self.assertEqual(sale_order.state, 'sale')
+        self.assertEqual(sale_order.state, 'draft')
 
-    def test_confirm_sale_order_on_project_creation(self):
+    def test_non_confirm_sale_order_on_project_creation(self):
         sale_order = self.env['sale.order'].create({
             'name': 'Sale Order',
             'partner_id': self.partner.id,
@@ -1130,7 +1129,7 @@ class TestSaleProject(TestSaleProjectCommon):
             'name': 'Project',
             'sale_line_id': sale_order_line.id,
         })
-        self.assertEqual(sale_order.state, 'sale')
+        self.assertEqual(sale_order.state, 'draft')
 
     def test_create_project_on_fly(self):
         """
@@ -1375,7 +1374,7 @@ class TestSaleProject(TestSaleProjectCommon):
             =========
             When the user clicks on the stat button `Make Billable`, the `create_for_project_id` is added
             to the contex. With that context, we will make sure the action_confirm will do nothing if the
-            user clicks on it since the SO will automatically be confirmed in that use case.
+            user clicks on it since the SO will not automatically be confirmed in that use case.
         """
         self.project_global.partner_id = self.partner
         action_dict = self.project_global.with_context(
@@ -1391,7 +1390,7 @@ class TestSaleProject(TestSaleProjectCommon):
         })
         self.assertEqual(sale_order.partner_id, self.partner)
         self.assertEqual(sale_order.project_id, self.project_global)
-        self.assertEqual(sale_order.state, 'sale')
+        self.assertEqual(sale_order.state, 'draft')
         self.assertEqual(self.project_global.sale_line_id, sale_order.order_line)
 
         sale_order.action_confirm()  # no error should be raised even if the SO is already confirmed
@@ -1641,8 +1640,8 @@ class TestSaleProject(TestSaleProjectCommon):
             - Create a project and link it to the sale order.
             - Create a task and link it to the project.
             - Verify that the project is linked to the sale order.
-            - Verify that the task without SO item is not linked to the sale order.
-            - Verify that the project & task smart button is hidden.
+            - Verify that the task is linked to the sale order.
+            - Verify that the project & task smart button is visible.
             - Confirm the sale order.
             - Verify the visibility of the project & task smart button.
         """
@@ -1674,9 +1673,9 @@ class TestSaleProject(TestSaleProjectCommon):
             (1, 0),
             "Project must be linked and tasks without SO lines should not be linked to the sales order."
         )
-        self.assertFalse(
+        self.assertTrue(
             sale_order.show_project_button,
-            "The project smart buttons should be hidden in the sale order."
+            "The project smart buttons should be visible in the sale order."
         )
 
         sale_order.action_confirm()

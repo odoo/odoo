@@ -52,18 +52,9 @@ class SaleOrder(models.Model):
 
     def _compute_show_project_and_task_button(self):
         is_project_manager = self.env.user.has_group('project.group_project_manager')
-        show_button_ids = self.env['sale.order.line']._read_group([
-            ('order_id', 'in', self.ids),
-            ('order_id.state', 'not in', ['draft', 'sent']),
-        ], aggregates=['order_id:array_agg'])[0][0]
         for order in self:
-            state = order.state not in ['draft', 'sent']
-            order.show_project_button = state and order.project_count
-            order.show_create_project_button = (
-                is_project_manager
-                and order.id in show_button_ids
-                and not order.project_count
-            )
+            order.show_project_button = order.project_count
+            order.show_create_project_button = is_project_manager
 
     @api.model
     def _search_tasks_ids(self, operator, value):
@@ -145,15 +136,22 @@ class SaleOrder(models.Model):
             for order in self:
                 order.order_line.sudo().with_company(order.company_id)._timesheet_service_generation()
 
-        # If the order has exactly one project and that project comes from a template, set the company of the template
-        # on the project.
         for order in self.sudo(): # Salesman may not have access to projects
+            sale_line_to_assign = next((sol for sol in order.order_line if sol.is_service), False)
+            if not sale_line_to_assign:
+                continue
+            for project in order.project_ids.sudo():
+                if not project.sale_line_id and project.reinvoiced_sale_order_id:
+                    project.sale_line_id = sale_line_to_assign
+            # If the order has exactly one project and that project comes from a template, set the company of the template
+            # on the project.
             if len(order.project_ids) == 1:
                 project = order.project_ids[0]
                 for sol in order.order_line:
                     if project == sol.project_id and (project_template := sol.product_template_id.project_template_id):
                         project.sudo().company_id = project_template.sudo().company_id
                         break
+
         return super()._action_confirm()
 
     def _tasks_ids_domain(self):
@@ -167,10 +165,9 @@ class SaleOrder(models.Model):
                 'tag': 'display_notification',
                 'params': {
                     'type': 'danger',
-                    'message': self.env._("The project couldn't be created as the Sales Order must be confirmed or is already linked to a project."),
+                    'message': self.env._("The project couldn't be created because you don't have the right to create a project"),
                 }
             }
-
         sorted_line = self.order_line.sorted('sequence')
         default_sale_line = next((
             sol for sol in sorted_line
