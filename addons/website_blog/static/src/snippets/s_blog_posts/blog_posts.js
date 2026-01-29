@@ -26,3 +26,9 @@ registry
     .add("website_blog.blog_posts", {
         Interaction: BlogPosts,
     });
+
+registry
+    .category("public.interactions.preview")
+    .add("website_blog.blog_posts", {
+        Interaction: BlogPosts,
+    });
