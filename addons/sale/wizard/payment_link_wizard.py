@@ -32,7 +32,7 @@ class PaymentLinkWizard(models.TransientModel):
     def _compute_warning_message(self):
         super()._compute_warning_message()
         for wizard in self.filtered(lambda w: w.res_model == 'sale.order'):
-            sale_order = self.env['sale.order'].browse(self.res_id)
+            sale_order = self.env['sale.order'].browse(wizard.res_id)
             if sale_order.is_expired:
                 wizard.warning_message = _("The sale order has expired.")
 
