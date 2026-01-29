@@ -87,8 +87,7 @@ class ResourceCalendar(models.Model):
     def _check_attendance_ids(self):
         for res_calendar in self:
             # Avoid superimpose in attendance
-            attendance_ids = res_calendar.attendance_ids.filtered(
-                lambda attendance: not attendance.display_type)
+            attendance_ids = res_calendar.attendance_ids
             res_calendar._check_overlap(attendance_ids)
 
     # --------------------------------------------------
@@ -195,7 +194,6 @@ class ResourceCalendar(models.Model):
         domain = Domain.AND([
             Domain(domain or Domain.TRUE),
             Domain('calendar_id', '=', self.id),
-            Domain('display_type', '=', False),
         ])
 
         attendances = self.env['resource.calendar.attendance'].search(domain)
@@ -595,7 +593,7 @@ class ResourceCalendar(models.Model):
         return hour_per_week / number_of_days if number_of_days else 0
 
     def _get_global_attendances(self):
-        return self.attendance_ids.filtered(lambda attendance: not attendance.display_type)
+        return self.attendance_ids
 
     def _get_unusual_days(self, start_dt, end_dt, company_id=False, resource=None):
         if self:
@@ -626,7 +624,6 @@ class ResourceCalendar(models.Model):
                     'duration_hours': attendance.duration_hours,
                     'hour_from': attendance.hour_from,
                     'hour_to': attendance.hour_to,
-                    'display_type': attendance.display_type,
                 })
                 for attendance in attendances
             ]
