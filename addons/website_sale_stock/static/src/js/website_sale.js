@@ -2,6 +2,8 @@
 
 import { WebsiteSale } from '@website_sale/js/website_sale';
 import { isEmail } from '@web/core/utils/strings';
+import { _t } from "@web/core/l10n/translation";
+import { RPCError } from "@web/core/network/rpc_service";
 
 WebsiteSale.include({
     events: Object.assign({}, WebsiteSale.prototype.events, {
@@ -33,9 +35,10 @@ WebsiteSale.include({
         const stockNotificationEl = ev.currentTarget.closest('#stock_notification_div');
         const formEl = stockNotificationEl.querySelector('#stock_notification_form');
         const email = stockNotificationEl.querySelector('#stock_notification_input').value.trim();
+        const defaultMessage = _t('Invalid email');
 
         if (!isEmail(email)) {
-            return this._displayEmailIncorrectMessage(stockNotificationEl);
+            return this._displayEmailIncorrectMessage(defaultMessage, stockNotificationEl);
         }
 
         this.rpc("/shop/add/stock_notification", {
@@ -47,12 +50,14 @@ WebsiteSale.include({
             message.classList.remove('d-none');
             formEl.classList.add('d-none');
         }).catch((error) => {
-            this._displayEmailIncorrectMessage(stockNotificationEl);
+            let message = error instanceof RPCError ? error.data.message : defaultMessage;
+            this._displayEmailIncorrectMessage(message, stockNotificationEl);
         });
     },
 
-    _displayEmailIncorrectMessage(stockNotificationEl) {
+    _displayEmailIncorrectMessage(message, stockNotificationEl) {
         const incorrectIconEl = stockNotificationEl.querySelector('#stock_notification_input_incorrect');
+        incorrectIconEl.htmlContent = `<i class="fa fa-times text-danger"/> ${message}`;
         incorrectIconEl.classList.remove('d-none');
     }
 });
