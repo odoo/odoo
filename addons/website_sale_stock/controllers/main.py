@@ -5,23 +5,32 @@ from odoo.addons.website_sale.controllers import main as website_sale_controller
 from odoo.tools import email_re
 from odoo import http, _
 from odoo.http import request
-from werkzeug.exceptions import BadRequest
+from odoo.exceptions import AccessError, ValidationError
 
 
 class WebsiteSale(website_sale_controller.WebsiteSale):
     @http.route(['/shop/add/stock_notification'], type="json", auth="public", website=True)
     def add_stock_email_notification(self, email, product_id):
         if not email_re.match(email):
-            raise BadRequest(_("Invalid Email"))
+            raise ValidationError(_("Invalid Email"))
 
+        is_public_user = request.website.is_public_user()
         product = request.env['product.product'].browse(int(product_id))
+
+        # check if product available
+        if not product.exists() or not product._is_add_to_cart_allowed():
+            raise ValidationError(_("The given product does not exist."))
+
         partners = request.env['res.partner'].sudo()._mail_find_partner_from_emails([email], force_create=True)
         partner = partners[0]
+
+        if is_public_user and partner.user_ids.exists():
+            raise AccessError(_("Please sign in to proceed, then try again."))
 
         if not product._has_stock_notification(partner):
             product.sudo().stock_notification_partner_ids += partner
 
-        if request.website.is_public_user():
+        if is_public_user:
             request.session['product_with_stock_notification_enabled'] = request.session.get(
                 'product_with_stock_notification_enabled',
                 set()
