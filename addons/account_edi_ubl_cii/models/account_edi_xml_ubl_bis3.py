@@ -278,18 +278,8 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         AccountTax._round_raw_total_excluded(vals['base_lines'], company, in_foreign_currency=False)
         AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
         AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
-
-        # Turn recycling contribution taxes such as RECUPEL / AUVIBEL into allowance/charges.
-        self._ubl_add_base_line_ubl_values_allowance_charges_recycling_contribution(vals)
-
-        # Turn belgium excises taxes into allowance/charges.
-        self._ubl_add_base_line_ubl_values_allowance_charges_excise(vals)
-
-        # Turn 'discount' field into allowance/charges.
-        self._ubl_add_base_line_ubl_values_allowance_charges_discount(vals)
-
-        # Add 'line_extension_amount' being the total without tax.
-        self._ubl_add_base_line_ubl_values_line_extension_amount(vals)
+        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
+        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
 
         # Add 'price_amount' being the original price unit without tax.
         self._ubl_add_base_line_ubl_values_price(vals)
@@ -330,42 +320,44 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
     # EXPORT: Build Nodes
     # -------------------------------------------------------------------------
 
-    def _add_invoice_line_amount_nodes(self, line_node, vals):
-        # OVERRIDE
-        base_line = vals['base_line']
-        currency = vals['currency_id']
-
-        quantity_tag = self._get_tags_for_document_type(vals)['line_quantity']
-
-        line_node.update({
-            quantity_tag: {
-                '_text': base_line['quantity'],
-                'unitCode': self._get_uom_unece_code(base_line['product_uom_id']),
-            },
-            'cbc:LineExtensionAmount': {
-                '_text': FloatFmt(base_line['_ubl_values']['line_extension_amount_currency'], min_dp=currency.decimal_places),
-                'currencyID': currency.name,
-            },
-        })
-
     def _add_invoice_line_allowance_charge_nodes(self, line_node, vals):
         # OVERRIDE
-        base_line = vals['base_line']
-        ubl_values = base_line['_ubl_values']
-        allowance_charges_nodes = line_node['cac:AllowanceCharge'] = []
+        sub_vals = {
+            **vals,
+            'line_node': line_node,
+            'line_vals': {
+                'base_line': vals['base_line'],
+            },
+        }
+        self._ubl_add_line_allowance_charge_nodes(sub_vals)
 
         # Discount.
-        discount_values = ubl_values['allowance_charge_discount_currency']
-        if discount_values:
-            allowance_charges_nodes.append(self._ubl_get_line_allowance_charge_discount_node(vals, discount_values))
+        self._ubl_add_line_allowance_charge_nodes_for_discount(sub_vals)
 
         # Recycling contribution taxes.
-        for recycling_contribution_values in base_line['_ubl_values']['allowance_charges_recycling_contribution_currency']:
-            allowance_charges_nodes.append(self._ubl_get_line_allowance_charge_recycling_contribution_node(vals, recycling_contribution_values))
+        self._ubl_add_line_allowance_charge_nodes_for_recycling_contribution_taxes(sub_vals)
 
         # Excise taxes.
-        for excise_values in base_line['_ubl_values']['allowance_charges_excise_currency']:
-            allowance_charges_nodes.append(self._ubl_get_line_allowance_charge_excise_node(vals, excise_values))
+        self._ubl_add_line_allowance_charge_nodes_for_excise_taxes(sub_vals)
+
+    def _add_invoice_line_amount_nodes(self, line_node, vals):
+        # OVERRIDE
+        sub_vals = {
+            **vals,
+            'line_node': line_node,
+            'line_vals': {
+                'base_line': vals['base_line'],
+            },
+        }
+
+        if vals['document_type'] == 'credit_note':
+            self._ubl_add_line_credited_quantity_node(sub_vals)
+        elif vals['document_type'] == 'debit_note':
+            self._ubl_add_line_debited_quantity_node(sub_vals)
+        else:
+            self._ubl_add_line_invoiced_quantity_node(sub_vals)
+
+        self._ubl_add_line_extension_amount_node(sub_vals)
 
     def _add_invoice_line_item_nodes(self, line_node, vals):
         # OVERRIDE

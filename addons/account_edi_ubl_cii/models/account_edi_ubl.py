@@ -240,6 +240,8 @@ class AccountEdiUBL(models.AbstractModel):
             taxes_data = [21]
             recycling_contribution_data = [1]
 
+        TO BE REMOVED IN MASTER
+
         :param vals:        Some custom data.
         """
         base_lines = vals['base_lines']
@@ -289,6 +291,8 @@ class AccountEdiUBL(models.AbstractModel):
             taxes_data = [21]
             recycling_contribution_data = [1]
 
+        TO BE REMOVED IN MASTER
+
         :param vals:        Some custom data.
         """
         base_lines = vals['base_lines']
@@ -329,6 +333,8 @@ class AccountEdiUBL(models.AbstractModel):
             total_excluded_currency = (5 * 100) * 0.8 = 400
         ... compute an 'allowance_charge_discount' or (5 * 100) - 400 = 100:
 
+        TO BE REMOVED IN MASTER
+
         :param vals:        Some custom data.
         """
         base_lines = vals['base_lines']
@@ -368,6 +374,8 @@ class AccountEdiUBL(models.AbstractModel):
         """ Add 'base_line' -> '_ubl_values' -> 'line_extension_amount[_currency]'.
 
         'line_extension_amount' is the subtotal of the line but without tax plus charges.
+
+        TO BE REMOVED IN MASTER
 
         :param vals:                    Some custom data.
         :param use_company_currency:    Express the amount in company currency.
@@ -736,6 +744,34 @@ class AccountEdiUBL(models.AbstractModel):
     # EXPORT: Building nodes
     # -------------------------------------------------------------------------
 
+    def _ubl_add_line_quantity_node(self, vals):
+        base_line = vals['line_vals']['base_line']
+        vals['line_node']['cbc:Quantity'] = {
+            '_text': base_line['quantity'],
+            'unitCode': self._get_uom_unece_code(base_line['product_uom_id']),
+        }
+
+    def _ubl_add_line_invoiced_quantity_node(self, vals):
+        base_line = vals['line_vals']['base_line']
+        vals['line_node']['cbc:InvoicedQuantity'] = {
+            '_text': base_line['quantity'],
+            'unitCode': self._get_uom_unece_code(base_line['product_uom_id']),
+        }
+
+    def _ubl_add_line_credited_quantity_node(self, vals):
+        base_line = vals['line_vals']['base_line']
+        vals['line_node']['cbc:CreditedQuantity'] = {
+            '_text': base_line['quantity'],
+            'unitCode': self._get_uom_unece_code(base_line['product_uom_id']),
+        }
+
+    def _ubl_add_line_debited_quantity_node(self, vals):
+        base_line = vals['line_vals']['base_line']
+        vals['line_node']['cbc:DebitedQuantity'] = {
+            '_text': base_line['quantity'],
+            'unitCode': self._get_uom_unece_code(base_line['product_uom_id']),
+        }
+
     def _ubl_get_line_item_node_classified_tax_category_node(self, vals, tax_category):
         """ Generate the node 'cac:ClassifiedTaxCategory' in 'cac:Item'.
 
@@ -865,6 +901,82 @@ class AccountEdiUBL(models.AbstractModel):
                 '_text': FloatFmt(abs(base_amount), max_dp=currency.decimal_places),
                 'currencyID': currency.name,
             },
+        }
+
+    def _ubl_add_line_allowance_charge_nodes_for_discount(self, vals, in_foreign_currency=True):
+        line_node = vals['line_node']
+        base_line = vals['line_vals']['base_line']
+        currency = base_line['currency_id'] if in_foreign_currency else vals['company_currency']
+        suffix = '_currency' if in_foreign_currency else ''
+        tax_details = base_line['tax_details']
+
+        raw_discount_amount = tax_details[f'discount_amount{suffix}']
+        if currency.is_zero(raw_discount_amount):
+            return
+
+        allowance_charges_nodes = line_node['cac:AllowanceCharge']
+        allowance_charges_nodes.append(self._ubl_get_line_allowance_charge_discount_node(vals, {
+            'currency': currency,
+            'percent': base_line['discount'],
+            'is_charge': raw_discount_amount < 0.0,
+            'amount': raw_discount_amount,
+            'base_amount': tax_details[f'gross_total_excluded{suffix}'],
+        }))
+
+    def _ubl_add_line_allowance_charge_nodes_for_recycling_contribution_taxes(self, vals, in_foreign_currency=True):
+        line_node = vals['line_node']
+        base_line = vals['line_vals']['base_line']
+        currency = base_line['currency_id'] if in_foreign_currency else vals['company_currency']
+        suffix = '_currency' if in_foreign_currency else ''
+
+        allowance_charges_nodes = line_node['cac:AllowanceCharge']
+        for tax_data in base_line['tax_details']['taxes_data']:
+            if not self._ubl_is_recycling_contribution_tax(tax_data):
+                continue
+
+            allowance_charges_nodes.append(self._ubl_get_line_allowance_charge_recycling_contribution_node(vals, {
+                'tax': tax_data['tax'],
+                'is_charge': tax_data['tax_amount'] > 0.0,
+                'amount': tax_data[f'tax_amount{suffix}'],
+                'currency': currency,
+            }))
+
+    def _ubl_add_line_allowance_charge_nodes_for_excise_taxes(self, vals, in_foreign_currency=True):
+        line_node = vals['line_node']
+        base_line = vals['line_vals']['base_line']
+        currency = base_line['currency_id'] if in_foreign_currency else vals['company_currency']
+        suffix = '_currency' if in_foreign_currency else ''
+
+        allowance_charges_nodes = line_node['cac:AllowanceCharge']
+        for tax_data in base_line['tax_details']['taxes_data']:
+            if not self._ubl_is_excise_tax(tax_data):
+                continue
+
+            allowance_charges_nodes.append(self._ubl_get_line_allowance_charge_excise_node(vals, {
+                'tax': tax_data['tax'],
+                'is_charge': tax_data['tax_amount'] > 0.0,
+                'amount': tax_data[f'tax_amount{suffix}'],
+                'currency': currency,
+            }))
+
+    def _ubl_add_line_allowance_charge_nodes(self, vals):
+        vals['line_node']['cac:AllowanceCharge'] = []
+
+    def _ubl_add_line_extension_amount_node(self, vals, in_foreign_currency=True):
+        line_node = vals['line_node']
+        base_line = vals['line_vals']['base_line']
+        currency = base_line['currency_id'] if in_foreign_currency else vals['company_currency']
+        suffix = '_currency' if in_foreign_currency else ''
+        tax_details = base_line['tax_details']
+
+        gross_total_excluded = tax_details[f'gross_total_excluded{suffix}']
+        for allowance_charge_node in line_node['cac:AllowanceCharge']:
+            sign = 1 if allowance_charge_node['cbc:ChargeIndicator']['_text'] == 'true' else -1
+            gross_total_excluded += sign * allowance_charge_node['cbc:Amount']['_text']
+
+        line_node['cbc:LineExtensionAmount'] = {
+            '_text': FloatFmt(gross_total_excluded, min_dp=currency.decimal_places),
+            'currencyID': currency.name,
         }
 
     def _ubl_get_allowance_charge_early_payment(self, vals, early_payment_values):
