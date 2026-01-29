@@ -404,9 +404,6 @@
             'website/static/src/xml/website_form_editor.xml',
             'website/static/src/xml/website.cookies_bar.xml',
         ],
-        'website.assets_all_wysiwyg': [
-            ('include', 'website.assets_wysiwyg'),
-        ],
         'html_editor.assets_media_dialog': [
             'website/static/src/components/media_dialog/*',
         ],
