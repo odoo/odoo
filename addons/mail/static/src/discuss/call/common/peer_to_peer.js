@@ -1,6 +1,7 @@
 import { rpc } from "@web/core/network/rpc";
 import { Deferred } from "@web/core/utils/concurrency";
 import { browser } from "@web/core/browser/browser";
+import { IS_CLIENT_RTC_COMPATIBLE } from "@mail/discuss/call/common/rtc_model";
 
 export const STREAM_TYPE = Object.freeze({
     AUDIO: "audio",
@@ -36,7 +37,6 @@ const DEFAULT_BUS_BATCH_DELAY = 100;
 const INITIAL_RECONNECT_DELAY = 2_000 + Math.random() * 1_000; // the initial delay between reconnection attempts
 const MAXIMUM_RECONNECT_DELAY = 25_000 + Math.random() * 5_000; // the longest delay possible between reconnection attempts
 const INVALID_ICE_CONNECTION_STATES = new Set(["disconnected", "failed", "closed"]);
-const IS_CLIENT_RTC_COMPATIBLE = Boolean(window.RTCPeerConnection && window.MediaStream);
 const DEFAULT_ICE_SERVERS = [
     { urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"] },
 ];
