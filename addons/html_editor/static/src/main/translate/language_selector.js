@@ -37,7 +37,7 @@ export class LanguageSelector extends Component {
             }
         });
     }
-    onSelected(language) {
-        this.props.onSelected(language);
+    onSelected(targetLang) {
+        this.props.onSelected(targetLang);
     }
 }
