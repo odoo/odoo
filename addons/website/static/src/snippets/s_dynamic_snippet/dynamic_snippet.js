@@ -146,6 +146,9 @@ export class DynamicSnippet extends Interaction {
     }
 
     render() {
+        if (!this.isConfigComplete()) {
+            return;
+        }
         if (this.data.length > 0 || this.withSample) {
             this.toggleVisibility(true);
             this.prepareContent();
