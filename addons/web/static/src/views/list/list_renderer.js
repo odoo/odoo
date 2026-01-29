@@ -26,6 +26,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
 import { useMagicColumnWidths } from "./column_width_hook";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
 
 import {
     Component,
@@ -202,6 +203,17 @@ export class ListRenderer extends Component {
         onMounted(() => window.addEventListener("click", onGlobalClick, { capture: true }));
         onWillUnmount(() => window.removeEventListener("click", onGlobalClick, { capture: true }));
         this.odoomark = odoomark;
+
+        this.onScroll = useThrottleForAnimation(this.updateShadowClasses);
+        const shadowResizeObserver = new ResizeObserver(() => {
+            this.updateShadowPosition();
+            this.updateShadowClasses();
+        });
+        onMounted(() => {
+            shadowResizeObserver.observe(this.rootRef());
+            shadowResizeObserver.observe(this.tableRef());
+        });
+        onWillUnmount(() => shadowResizeObserver.disconnect());
 
         this.longTouchTimer = null;
         this.touchStartMs = 0;
@@ -2667,5 +2679,32 @@ export class ListRenderer extends Component {
             ev.preventDefault();
             this.toggleRecordSelection(record);
         }
+    }
+
+    updateShadowClasses() {
+        if (!this.uiService.isSmall) {
+            return;
+        }
+        const scrollEl = this.rootRef();
+        scrollEl.classList.toggle("o_list_has_shadow_left", scrollEl.scrollLeft > 0);
+        scrollEl.classList.toggle(
+            "o_list_has_shadow_right",
+            scrollEl.scrollLeft + scrollEl.clientWidth < scrollEl.scrollWidth
+        );
+    }
+
+    updateShadowPosition() {
+        if (!this.uiService.isSmall) {
+            return;
+        }
+        const tableEl = this.tableRef();
+        const theadHeight = tableEl.tHead?.offsetHeight || 0;
+        const tfootHeight = tableEl.tFoot?.offsetHeight || 0;
+        const rootEl = this.rootRef();
+        // We don't want the shadow on the table header. The shadow is
+        // positioned relative to the table's offsetParent, which may
+        // contain other elements above the list (e.g. a dashboard).
+        rootEl.style.setProperty("--ListRenderer-shadow-top", `${tableEl.offsetTop + theadHeight}px`);
+        rootEl.style.setProperty("--ListRenderer-shadow-height", `${tableEl.offsetHeight - theadHeight - tfootHeight}px`);
     }
 }

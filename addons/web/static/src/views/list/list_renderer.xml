@@ -7,6 +7,7 @@
             class="o_list_renderer o_renderer table-responsive"
             tabindex="-1"
             t-ref="this.rootRef"
+            t-on-scroll="() => this.onScroll()"
         >
             <t t-if="this.showNoContentHelper">
                 <ActionHelper noContentHelp="this.props.noContentHelp"/>

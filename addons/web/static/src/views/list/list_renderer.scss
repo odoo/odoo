@@ -632,6 +632,31 @@
             background-color: var(--o-input-invalid-bg);
         }
     }
+
+    @include media-breakpoint-down(md) {
+        --ListRenderer-shadow-blur: 1.5rem;
+
+        &::after {
+            content: "";
+            position: absolute;
+            inset: calc(var(--ListRenderer-shadow-top, 0px) - var(--ListRenderer-shadow-blur) / 2) 0 auto;
+            z-index: 2;
+            height: calc(var(--ListRenderer-shadow-height, 0px) + var(--ListRenderer-shadow-blur));
+            pointer-events: none;
+            mask-image: linear-gradient(transparent, var(--o-black) var(--ListRenderer-shadow-blur), var(--o-black) calc(100% - var(--ListRenderer-shadow-blur)), transparent);
+            box-shadow:
+                inset var(--ListRenderer-shadow-left, 0 0 transparent),
+                inset var(--ListRenderer-shadow-right, 0 0 transparent);
+        }
+
+        &.o_list_has_shadow_left {
+            --ListRenderer-shadow-left: var(--ListRenderer-shadow-blur) 0 var(--ListRenderer-shadow-blur) calc(-1 * var(--ListRenderer-shadow-blur)) rgba(0, 0, 0, 0.35);
+        }
+
+        &.o_list_has_shadow_right {
+            --ListRenderer-shadow-right: calc(-1 * var(--ListRenderer-shadow-blur)) 0 var(--ListRenderer-shadow-blur) calc(-1 * var(--ListRenderer-shadow-blur)) rgba(0, 0, 0, 0.35);
+        }
+    }
 }
 
 .o_optional_columns_dropdown .dropdown-item {
