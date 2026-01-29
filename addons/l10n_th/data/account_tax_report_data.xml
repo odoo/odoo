@@ -18,7 +18,6 @@
             <record id="tax_report_out_tax_title" model="account.report.line">
                 <field name="name">Output Tax</field>
                 <field name="name@th">ภาษีขาย</field>
-                <field name="aggregation_formula">OUTPUTTAX_SALEAMOUNT.balance + OUTPUTTAX_SALE_ZERO.balance + OUTPUTTAX_EXEMPTED.balance + OUTPUTTAX_TAX.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_out_tax_sale" model="account.report.line">
@@ -28,8 +27,18 @@
                         <field name="expression_ids">
                             <record id="tax_report_out_tax_sale_tag" model="account.report.expression">
                                 <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">OUTPUTTAX_SALEAMOUNT.sub_balance_1 + OUTPUTTAX_SALEAMOUNT.sub_balance_2</field>
+                            </record>
+                            <record id="tax_report_out_tax_sale_tag_pos" model="account.report.expression">
+                                <field name="label">sub_balance_1</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-1. Sales amount</field>
+                            </record>
+                            <record id="tax_report_out_tax_sale_tag_neg" model="account.report.expression">
+                                <field name="label">sub_balance_2</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">1. Sales amount_rev</field>
                             </record>
                         </field>
                     </record>
@@ -81,7 +90,6 @@
                 <field name="name">Input Tax</field>
                 <field name="name@th">ภาษีซื้อ</field>
                 <field name="code">INPUTTAX</field>
-                <field name="aggregation_formula">6_PURCHASE_AMOUNT_THAT_IS_ENTITLED_TO_DEDUCTION_OF_INPUT_TAX_FROM_OUTPUT_TAX_IN_TAX_COMPUTATION.balance + INPUTTAX_TAX.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_input_tax_purchase_from_out_tax" model="account.report.line">
@@ -113,7 +121,6 @@
             <record id="tax_report_vat" model="account.report.line">
                 <field name="name">Value Added Tax</field>
                 <field name="name@th">ภาษีมูลค่าเพิ่ม</field>
-                <field name="aggregation_formula">10_EXCESS_CARRIED_FORWARD.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_vat_payable" model="account.report.line">
@@ -170,7 +177,6 @@
             <record id="tax_report_net_vat" model="account.report.line">
                 <field name="name">Net Tax</field>
                 <field name="name@th">ภาษีสุทธิ</field>
-                <field name="aggregation_formula">11_NET_TAX_PAYABLE_IF_8_IS_GREATER_THAN_10.balance + 12_NET_VAT_EXCESS.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="tax_report_net_vat_payable" model="account.report.line">
