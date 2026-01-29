@@ -50,7 +50,7 @@ const SCREEN_CONFIG = {
 };
 
 export const IS_CLIENT_RTC_COMPATIBLE = Boolean(window.RTCPeerConnection && window.MediaStream);
-function GET_DEFAULT_ICE_SERVERS() {
+export function GET_DEFAULT_ICE_SERVERS() {
     return [{ urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"] }];
 }
 
