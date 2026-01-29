@@ -293,7 +293,7 @@ export class ProductPage extends Interaction {
         // Don't update the images when using the web editor. Otherwise, the images may not be
         // editable (depending on whether the images are updated before or after the editor is
         // ready).
-        if (images && !isEditorEnabled) {
+        if (images && !isEditorEnabled && newImages) {
             images.insertAdjacentHTML('beforebegin', markup(newImages));
             images.remove();
 
