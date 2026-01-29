@@ -25,6 +25,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
 import { useMagicColumnWidths } from "./column_width_hook";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
 
 import {
     Component,
@@ -153,6 +154,7 @@ export class ListRenderer extends Component {
         this.tableRef = signal(null);
         this.optionalColumnsDropdownRef = useChildRef();
         this.odoomark = odoomark;
+        this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
 
         this.longTouchTimer = null;
         this.touchStartMs = 0;
@@ -181,6 +183,7 @@ export class ListRenderer extends Component {
             // we need to wait the next micro task tick to set the activeElement.
             await Promise.resolve();
             this.activeElement = this.uiService.activeElement;
+            this.setShadowHeight();
         });
         onWillPatch(() => {
             const activeRow = document.activeElement.closest(".o_data_row.o_selected_row");
@@ -2525,6 +2528,22 @@ export class ListRenderer extends Component {
             ev.stopPropagation();
             ev.preventDefault();
             this.toggleRecordSelection(record);
+        }
+    }
+
+    onScroll() {
+        const scrollEl = this.rootRef();
+        this.state.scrollPosition = scrollEl.scrollLeft === 0
+        ? 'left'
+        :  scrollEl.scrollLeft + scrollEl.clientWidth >= scrollEl.scrollWidth
+            ? 'right' : 'scrolling';
+    }
+
+    setShadowHeight() {
+        const tableEl = this.tableRef();
+        if (tableEl) {
+            const tableHeight = tableEl.offsetHeight - 60;
+            this.rootRef().style.setProperty('--shadow-height', `${tableHeight}px`);
         }
     }
 }
