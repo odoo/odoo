@@ -405,8 +405,11 @@ export class EditMenuDialog extends Component {
         let url = menu.fields["url"];
         url = url.startsWith("/") ? url : "/" + url;
         this.dialogs.add(AddPageDialog, {
-            onAddPage: () => {
-                this.onClickSave(false, url);
+            onAddPage: ({ createdUrl }) => {
+                if (createdUrl) {
+                    menu.fields["url"] = createdUrl;
+                }
+                this.onClickSave(false, createdUrl ?? url);
             },
             websiteId: this.website.currentWebsite.id,
             forcedURL: url,

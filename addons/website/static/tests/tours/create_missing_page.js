@@ -39,9 +39,9 @@ registerWebsitePreviewTour(
                 ".modal-dialog .o_website_dialog main div.position-relative:not(.o_page_not_found)",
         },
         {
-            content: "Edit the 'url' input again",
+            content: "Edit the 'url' input again (with a character that will be ignored at creation)",
             trigger: ".modal-dialog .o_website_dialog input:eq(1)",
-            run: "edit zoe-s-diner",
+            run: "edit zoe-s-di,ner",
         },
         {
             content: "Check that the page is not found.",
