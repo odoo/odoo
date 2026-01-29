@@ -6,11 +6,14 @@
         <field name="inherit_id" ref="hr_holidays.hr_accrual_level_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='frequency']" position="replace">
-                <field nolabel="1" name="frequency" invisible="accrued_gain_time == 'end'"
+                <field nolabel="1" name="frequency" invisible="accrued_gain_time == 'end'" class="o_hr_narrow_field"
                        widget="filterable_selection" options="{'blacklisted_values': ['worked_hours']}"/>
-                <field nolabel="1" name="frequency" invisible="accrued_gain_time == 'start'"
+                <field nolabel="1" name="frequency" invisible="accrued_gain_time == 'start'" class="o_hr_narrow_field"
                        widget="selection"/>
             </xpath>
+            <span name="yearly_gain" position="inside">
+                <span invisible="frequency != 'worked_hours'"> (depending on attendances)</span>
+            </span>
         </field>
     </record>
 </odoo>
