@@ -519,6 +519,29 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
         updated_del_form = sale_order.action_open_delivery_wizard()
         self.assertEqual(updated_del_form['context']['default_total_weight'], 100)
 
+    def test_default_delivery_method_applied_on_add_shipping(self):
+        """
+        Ensure that when adding shipping from the delivery wizard, the default
+        delivery carrier defined on the contact (partner) is automatically
+        prefilled in the wizard context.
+        """
+        self.partner_4.property_delivery_carrier_id.write({'active': True})
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_4.id,
+            'partner_shipping_id': self.partner_4.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1,
+                }),
+            ],
+        })
+
+        wizard = sale_order.action_open_delivery_wizard().get('context', {})
+
+        self.assertEqual(wizard.get('default_carrier_id'), self.partner_4.property_delivery_carrier_id.id)
+
     def test_base_on_rule_currency_is_converted(self):
         """
         For based on rules delivery method without a company, check that the price
