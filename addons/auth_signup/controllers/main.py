@@ -146,6 +146,8 @@ class AuthSignupHome(Home):
         qcontext.update(self.get_auth_signup_config())
         if not qcontext.get('token') and request.session.get('auth_signup_token'):
             qcontext['token'] = request.session.get('auth_signup_token')
+        if qcontext.get('login'):
+            qcontext['login'] = qcontext['login'].strip()
         if qcontext.get('token'):
             try:
                 # retrieve the user info (name, login or email) corresponding to a signup token
@@ -163,6 +165,8 @@ class AuthSignupHome(Home):
             raise UserError(_("The form was not properly filled in."))
         if values.get('password') != qcontext.get('confirm_password'):
             raise UserError(_("Passwords do not match; please retype them."))
+        if not values.get('login', '').strip():
+            raise UserError(_("Please enter a proper login."))
         supported_lang_codes = [code for code, _ in request.env['res.lang'].get_installed()]
         lang = request.env.context.get('lang', '')
         if lang in supported_lang_codes:

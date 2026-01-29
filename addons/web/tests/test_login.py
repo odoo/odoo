@@ -63,6 +63,19 @@ class TestWebLogin(TestWebLoginCommon):
         # log in using the above form, it should still be valid
         self.login('internal_user', 'internal_user', csrf_token)
 
+    def test_web_login_case_insensitive(self):
+        # test login is case insensitive
+        login = '  InterNal_User  '
+        res_post = self.login(login, 'internal_user')
+        # ensure we are logged-in
+        self.url_open(
+            '/web/session/check',
+            headers={'Content-Type': 'application/json'},
+            data='{}'
+        ).raise_for_status()
+        # ensure we end up on the right page for internal users.
+        self.assertEqual(res_post.request.path_url, '/odoo')
+
 
 @tagged('post_install', '-at_install')
 class TestUserSwitch(HttpCaseWithUserDemo):

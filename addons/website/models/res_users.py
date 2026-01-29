@@ -13,21 +13,21 @@ class ResUsers(models.Model):
 
     website_id = fields.Many2one('website', related='partner_id.website_id', store=True, related_sudo=False, readonly=False)
 
-    _login_key = models.Constraint(
-        'unique (login, website_id)',
-        'You can not have two users with the same login!',
+    _login_key = models.UniqueIndex(
+        '(lower(login), website_id)',
+        'You can not have two users with the similar login!',
     )
 
     @api.constrains('login', 'website_id')
     def _check_login(self):
-        """ Do not allow two users with the same login without website """
+        """ Do not allow two users with the similar login without website """
         self.flush_model(['login', 'website_id'])
         self.env.cr.execute(
-            """SELECT login
+            """SELECT lower(login)
                  FROM res_users
-                WHERE login IN (SELECT login FROM res_users WHERE id IN %s AND website_id IS NULL)
+                WHERE lower(login) IN (SELECT lower(login) FROM res_users WHERE id IN %s AND website_id IS NULL)
                   AND website_id IS NULL
-             GROUP BY login
+             GROUP BY lower(login)
                HAVING COUNT(*) > 1
             """,
             (tuple(self.ids),)
