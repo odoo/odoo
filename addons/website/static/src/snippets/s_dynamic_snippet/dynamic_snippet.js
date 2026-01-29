@@ -156,6 +156,9 @@ export class DynamicSnippet extends Interaction {
 
     render() {
         this.loadingData = false;
+        if (this.el.querySelector(".s_dialog_preview")) {
+            return;
+        }
         if (this.data.length > 0 || this.withSample) {
             this.prepareContent();
         } else {
