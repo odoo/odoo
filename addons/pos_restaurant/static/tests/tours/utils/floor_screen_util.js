@@ -280,6 +280,10 @@ export function clickNewOrder() {
     return { trigger: ".new-order", run: "click" };
 }
 
+export function clickEditPlan() {
+    return { trigger: ".edit-plan", run: "click" };
+}
+
 export function addFloor(floorName) {
     return [
         {

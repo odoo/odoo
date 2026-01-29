@@ -291,7 +291,7 @@ registry.category("web_tour.tours").add("no_ghost_floor", {
             Dialog.confirm("Open Register"),
 
             // 1. Create new floor along with a table
-            Chrome.clickMenuOption("Edit Plan"),
+            FloorScreen.clickEditPlan(),
             FloorScreen.addFloor("Ghost Floor"),
             FloorScreen.addTable({ name: "999" }),
             FloorScreen.clickSaveEditButton(),
@@ -306,7 +306,7 @@ registry.category("web_tour.tours").add("no_ghost_floor", {
             FeedbackScreen.clickNextOrder(),
 
             // // 3. Delete the floor
-            Chrome.clickMenuOption("Edit Plan"),
+            FloorScreen.clickEditPlan(),
             FloorScreen.deleteFloor("Ghost Floor"),
             FloorScreen.clickSaveEditButton(),
 

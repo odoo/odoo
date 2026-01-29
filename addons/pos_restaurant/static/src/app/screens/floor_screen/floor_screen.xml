@@ -29,7 +29,7 @@
 
                     <!-- Right Side Div -->
                     <div class="right-buttons d-flex gap-1 pe-0">
-                         <button t-if="this.pos.showEditPlanButton and !ui.isSmall" class="btn btn-secondary btn-lg lh-lg" title="Edit Floor Plan" t-on-click="()=>this.startFloorPlanEditing()">
+                         <button t-if="this.pos.showEditPlanButton and !ui.isSmall" class="btn btn-secondary btn-lg lh-lg edit-plan" title="Edit Floor Plan" t-on-click="()=>this.startFloorPlanEditing()">
                              <i class="fa fa-fw fa-pencil-square-o"/>
                          </button>
                         <button class="button-table-selector btn btn-secondary btn-lg lh-lg" t-on-click="() => this.toggleTableSelector()">
