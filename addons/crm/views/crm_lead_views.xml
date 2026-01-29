@@ -269,6 +269,7 @@
             <field name="arch" type="xml">
                 <list string="Leads" sample="1" multi_edit="1" js_class="crm_list">
                     <header>
+                        <button name="%(action_crm_send_mass_convert)d" type="action" string="Convert to Opportunities"/>
                         <button name="%(crm.crm_lead_lost_action)d" type="action" string="Mark Lost"/>
                     </header>
                     <field name="company_id" column_invisible="True"/>
@@ -276,14 +277,14 @@
                     <field name="date_deadline" column_invisible="True"/>
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Lead" readonly="1"/>
-                    <field name="contact_name" optional="hide"/>
+                    <field name="contact_name" optional="show"/>
                     <field name="partner_name" optional="hide"/>
                     <field name="email_from" optional="show"/>
                     <field name="phone" optional="hide" class="o_force_ltr"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
-                    <field name="city" optional="show"/>
+                    <field name="city" optional="hide"/>
                     <field name="state_id" optional="hide"/>
-                    <field name="country_id" optional="show" options="{'no_open': True, 'no_create': True}"/>
+                    <field name="country_id" optional="hide" options="{'no_open': True, 'no_create': True}"/>
                     <field name="partner_id" column_invisible="True"/>
                     <!-- Explicit domain due to multi edit -> real company domain would be complicated -->
                     <field name="user_id" optional="show"  widget="many2one_avatar_user"
@@ -293,7 +294,7 @@
                     <field name="campaign_id" optional="hide"/>
                     <field name="referred" column_invisible="True"/>
                     <field name="medium_id" optional="hide"/>
-                    <field name="source_id" optional="hide"/>
+                    <field name="source_id" optional="show"/>
                     <field name="probability" string="Probability (%)" optional="hide"/>
                     <field name="message_needaction" column_invisible="True"/>
                     <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
@@ -564,13 +565,10 @@
                     <field name="phone_mobile_search"/>
                     <field name="lang_id"/>
                     <field name="create_date"/>
-                    <field name="source_id"/>
-                    <field name="medium_id"/>
                     <field name="campaign_id"/>
-                    <field name="activity_state"/>
+                    <field name="medium_id"/>
+                    <field name="source_id"/>
                     <field name="lead_properties"/>
-                    <field name="activity_user_id" string="Activities of"/>
-                    <field name="activity_type_id" string="Activity type"/>
                     <separator />
                     <filter string="My Leads"
                             name="assigned_to_me"
@@ -580,10 +578,10 @@
                             domain="[('user_id','=', False), ('type', '=', 'lead')]"
                             help="Leads that are not assigned"/>
                     <separator />
-                    <filter string="Lost" name="lost" domain="[('won_status', '=', 'lost'), ('active', '=', False)]"/>
-                    <separator/>
                     <filter string="Creation Date" name="filter_creation_date" date="create_date" default_period="month"/>
                     <filter name="filter_date_closed" date="date_closed"/>
+                    <separator/>
+                    <filter string="Lost" name="lost" domain="[('won_status', '=', 'lost'), ('active', '=', False)]"/>
                     <separator/>
                     <separator/>
                     <filter invisible="1" string="My Activities" name="filter_activities_my"
@@ -597,7 +595,6 @@
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                             domain="[('my_activity_date_deadline', '&gt;', 'today')]"/>
                     <separator/>
-                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group>
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Team" name="saleschannel" context="{'group_by':'team_id'}"/>
@@ -753,21 +750,6 @@
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.view_crm_case_leads_filter"/>
             <field name="arch" type="xml">
-                <!-- we should not override the whole field but instead just set invisible attribute
-                 to 0. but this approach is not working. the work around is temporary -->
-                <xpath expr="//filter[@name='activities_overdue']" position="replace">
-                    <filter string="Late Activities" name="activities_overdue"
-                        domain="[('my_activity_date_deadline', '&lt;', 'today')]"
-                        help="Show all opportunities for which the next action date is before today"/>
-                </xpath>
-                <xpath expr="//filter[@name='activities_today']" position="replace">
-                    <filter string="Today Activities" name="activities_today"
-                        domain="[('my_activity_date_deadline', '=', 'today')]"/>
-                </xpath>
-                <xpath expr="//filter[@name='activities_upcoming_all']" position="replace">
-                    <filter string="Future Activities" name="activities_upcoming_all"
-                        domain="[('my_activity_date_deadline', '&gt;', 'today')]"/>
-                </xpath>
                 <xpath expr="//filter[@name='assigned_to_me']" position="replace">
                     <filter string="My Activities" name="assigned_to_me"
                         domain="[('activity_user_id','=',uid)]"
@@ -968,7 +950,7 @@
         <record model="ir.actions.act_window" id="crm_lead_all_leads">
             <field name="name">Leads</field>
             <field name="res_model">crm.lead</field>
-            <field name="view_mode">list,kanban,graph,pivot,calendar,form,activity</field>
+            <field name="view_mode">list,kanban,graph,pivot,form,activity</field>
             <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
             <field name="context">{
@@ -997,13 +979,6 @@
             <field name="sequence" eval="2"/>
             <field name="view_mode">kanban</field>
             <field name="view_id" ref="view_crm_lead_kanban"/>
-            <field name="act_window_id" ref="crm_lead_all_leads"/>
-        </record>
-
-        <record id="crm_lead_all_leads_view_calendar" model="ir.actions.act_window.view">
-            <field name="sequence" eval="3"/>
-            <field name="view_mode">calendar</field>
-            <field name="view_id" ref="crm_case_calendar_view_leads"/>
             <field name="act_window_id" ref="crm_lead_all_leads"/>
         </record>
 
