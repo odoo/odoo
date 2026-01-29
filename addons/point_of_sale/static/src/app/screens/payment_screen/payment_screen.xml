@@ -148,7 +148,7 @@
                     </t>
                 </button>
                 <button t-if="pos.config.iface_cashdrawer" class="button js_cashdrawer btn btn-secondary btn-lg py-3 rounded"
-                    t-on-click="pos.openCashbox">
+                    t-on-click="() => this.pos.openCashbox()">
                     <i class="fa fa-archive me-2" />Open Cashbox
                 </button>
                 <button t-if="pos.config.ship_later" class="button btn btn-secondary btn-lg d-flex justify-content-between align-items-baseline w-100 lh-lg" t-att-class="{ 'highlight active text-action': currentOrder.shipping_date }"
