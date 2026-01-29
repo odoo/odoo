@@ -129,6 +129,38 @@ class test_inherits(common.TransactionCase):
         with self.assertRaises(ValidationError):
             box.write({'another_unit_id': unit5.id, 'val1': 8, 'val2': 7})
 
+    def test_access_rights_on_parent(self):
+        # introduce an ir.rule on the parent model of 'test.box'
+        self.env['ir.rule'].create({
+            'name': "Only access to state a",
+            'model_id': self.env['ir.model']._get('test.unit').id,
+            'domain_force': [('state', '=', 'a')],
+        })
+        user = self.env['res.users'].create({
+            'name': 'test',
+            'login': 'test_access_rights_on_parent',
+            'group_ids': [(6, 0, [self.env.ref("base.group_system").id])],
+        })
+        model = self.env['test.box'].with_user(user)
+        box_ids = model.sudo().create([
+            {'name': 'a', 'state': 'a'},
+            {'name': 'b', 'state': 'b'},
+        ]).ids
+
+        # search with an order on the parent model: the ir.rule above should
+        # appear in the WHERE clause, but not in the JOIN clause used to reach
+        # the inherited field(s)
+        model.search([('id', 'in', box_ids)], order='readonly_name')  # warmup
+        with self.assertQueries(["""
+            SELECT "test_box"."id"
+            FROM "test_box"
+            JOIN "test_unit" AS "test_box__unit_id" ON ("test_box"."unit_id" = "test_box__unit_id"."id")
+            WHERE "test_box"."id" IN %s
+            AND "test_box__unit_id"."state" IN %s
+            ORDER BY "test_box__unit_id"."readonly_name"
+        """]):
+            model.search([('id', 'in', box_ids)], order='readonly_name')
+
     def test_display_name(self):
         """ Check the 'display_name' of an inherited translated 'name'. """
         self.env['res.lang']._activate_lang('fr_FR')
