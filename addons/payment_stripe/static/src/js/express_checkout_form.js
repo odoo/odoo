@@ -17,7 +17,7 @@ paymentExpressCheckoutForm.include({
      */
     _getOrderDetails(deliveryAmount, amountFreeShipping) {
         const pending = this.paymentContext['shippingInfoRequired'] && deliveryAmount === undefined;
-        let minorAmount = parseInt(this.paymentContext['minorAmount'])
+        let minorAmount = parseInt(this.paymentContext['minorAmount'] || 0)
         const displayItems = [
             {
                 label: _t("Your order"),
