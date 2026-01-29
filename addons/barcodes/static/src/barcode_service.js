@@ -37,11 +37,10 @@ export const barcodeService = {
         let timeout = null;
 
         let bufferedBarcode = "";
-        let currentTarget = null;
         let barcodeInput = null;
 
-        function handleBarcode(barcode, target) {
-            bus.trigger('barcode_scanned', {barcode,target});
+        function handleBarcode(barcode) {
+            bus.trigger('barcode_scanned', {barcode});
         }
 
         /**
@@ -55,14 +54,13 @@ export const barcodeService = {
                     ev.preventDefault();
                 }
                 for (let scannedCode of str.split(RegExp(REGEX_END_CHARACTER)).filter(Boolean)) {
-                    handleBarcode(scannedCode, currentTarget);
+                    handleBarcode(scannedCode);
                 }
             }
             if (barcodeInput) {
                 barcodeInput.value = "";
             }
             bufferedBarcode = "";
-            currentTarget = null;
         }
 
         function keydownHandler(ev) {
@@ -85,12 +83,11 @@ export const barcodeService = {
                 return;
             }
 
-            currentTarget = ev.target;
             // Don't catch events targeting elements that are editable because we
             // have no way of redispatching 'genuine' key events. Resent events
             // don't trigger native event handlers of elements. So this means that
             // our fake events will not appear in eg. an <input> element.
-            if (currentTarget !== barcodeInput && isEditable(currentTarget)) {
+            if (ev.target !== barcodeInput && isEditable(ev.target)) {
                 return;
             }
 
@@ -103,8 +100,7 @@ export const barcodeService = {
             }
         }
 
-        function mobileChromeHandler(ev) {
-            currentTarget = ev.target;
+        function mobileChromeHandler() {
             if (document.activeElement && !document.activeElement.matches('input:not([type]), input[type="text"], textarea, [contenteditable], ' +
                 '[type="email"], [type="number"], [type="password"], [type="tel"], [type="search"]')) {
                 barcodeInput.focus();
