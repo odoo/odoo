@@ -120,3 +120,9 @@ registry
     .add("website_sale.dynamic_snippet_products", {
         Interaction: DynamicSnippetProducts,
     });
+
+registry
+    .category("public.interactions.preview")
+    .add("website_sale.dynamic_snippet_products", {
+        Interaction: DynamicSnippetProducts,
+    });
