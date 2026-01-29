@@ -671,7 +671,7 @@ class Survey(http.Controller):
             'is_html_empty': is_html_empty,
             'review': review,
             'survey': survey_sudo,
-            'answer': answer_sudo if survey_sudo.scoring_type != 'scoring_without_answers' else answer_sudo.browse(),
+            'answer': answer_sudo,
             'questions_to_display': answer_sudo._get_print_questions(),
             'scoring_display_correction': survey_sudo.scoring_type in ['scoring_with_answers', 'scoring_with_answers_after_page'] and answer_sudo,
             'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),
