@@ -303,7 +303,8 @@ export class HistoryPlugin extends Plugin {
      */
     getNextUndoIndex(fromIndex = this.steps.length) {
         // Go back to first step that can be undone ("original", "reset" or "redo").
-        for (let index = fromIndex - 1; index >= 0; index--) {
+        // Do not undo the initial commit.
+        for (let index = fromIndex - 1; index > 0; index--) {
             const step = this.steps[index];
             if (!this.isReversibleStep(step) || this.discardedSteps.has(step.id)) {
                 continue;
@@ -324,7 +325,8 @@ export class HistoryPlugin extends Plugin {
      */
     getNextUndoSteps() {
         let referenceStepIndex = this.getNextUndoIndex();
-        if (referenceStepIndex === -1) {
+        // Do not undo the initial commit.
+        if (referenceStepIndex <= 0) {
             return [];
         }
         let nextStepIndex = this.getNextUndoIndex(referenceStepIndex);
@@ -366,7 +368,8 @@ export class HistoryPlugin extends Plugin {
     getNextRedoIndex(fromIndex = this.steps.length) {
         // Look for an "undo" step that has not yet been redone. Stop search if
         // a "original" step is found.
-        for (let index = fromIndex - 1; index >= 0; index--) {
+        // Do not undo the initial commit.
+        for (let index = fromIndex - 1; index > 0; index--) {
             const step = this.steps[index];
             if (!this.isReversibleStep(step) || this.discardedSteps.has(step.id)) {
                 continue;
@@ -385,7 +388,8 @@ export class HistoryPlugin extends Plugin {
      */
     getNextRedoSteps() {
         let referenceStepIndex = this.getNextRedoIndex();
-        if (referenceStepIndex === -1) {
+        // Do not revert the initial commit.
+        if (referenceStepIndex <= 0) {
             return [];
         }
         let nextStepIndex = this.getNextRedoIndex(referenceStepIndex);
