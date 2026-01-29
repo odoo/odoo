@@ -494,13 +494,42 @@ class AccountEdiCommon(models.AbstractModel):
 
         # Update the invoice.
         invoice.move_type = move_type
+<<<<<<< 13623aaf9ec848df8f05e2ce68fef9864c1ea61a
         with invoice._get_edi_creation() as invoice:
             fill_invoice_logs = self._import_fill_invoice(invoice, tree, qty_factor)
+||||||| 20e54e37670ffa569f47663a7e4b8d7de3a4c33c
+        with invoice._get_edi_creation() as invoice:
+            logs = self._import_fill_invoice(invoice, tree, qty_factor)
+
+        if invoice:
+            body = Markup("<strong>%s</strong>") % \
+                _("Format used to import the invoice: %s",
+                  self.env['ir.model']._get(self._name).name)
+
+            if logs:
+                body += Markup("<ul>%s</ul>") % \
+                    Markup().join(Markup("<li>%s</li>") % l for l in logs)
+
+            invoice.message_post(body=body)
+=======
+        with invoice.with_context(disable_onchange_name_predictive=True)._get_edi_creation() as invoice:
+            logs = self._import_fill_invoice(invoice, tree, qty_factor)
+        if invoice:
+            body = Markup("<strong>%s</strong>") % \
+                _("Format used to import the invoice: %s",
+                  self.env['ir.model']._get(self._name).name)
+
+            if logs:
+                body += Markup("<ul>%s</ul>") % \
+                    Markup().join(Markup("<li>%s</li>") % l for l in logs)
+
+            invoice.message_post(body=body)
+>>>>>>> d6c5d87b710bf46fe9b2865bf7de968c766c6e5a
 
         # For UBL, we should override the computed tax amount if it is less than 0.05 different of the one in the xml.
         # In order to support use case where the tax total is adapted for rounding purpose.
         # This has to be done after the first import in order to let Odoo compute the taxes before overriding if needed.
-        with invoice._get_edi_creation() as invoice:
+        with invoice.with_context(disable_onchange_name_predictive=True)._get_edi_creation() as invoice:
             self._correct_invoice_tax_amount(tree, invoice)
 
         source_attachment = file_data['attachment'] or self.env['ir.attachment']
@@ -973,7 +1002,7 @@ class AccountEdiCommon(models.AbstractModel):
             ]
             tax = self.env['account.tax']
             if hasattr(record, '_get_specific_tax'):
-                tax = record._get_specific_tax(line_values['name'], 'percent', amount, tax_type)
+                tax = record._get_specific_tax(line_values['name'], 'percent', amount, tax_type).filtered_domain(domain)[:1]
             if tax_exigibility:
                 if not tax and tax_exigibility:
                     tax = self.env['account.tax'].search(domain + [('price_include', '=', False), ('tax_exigibility', '=', tax_exigibility)], limit=1)
