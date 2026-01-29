@@ -131,16 +131,19 @@ class TestMrpCommon(TestStockCommon):
                 'time_start': 10,
                 'time_stop': 5,
                 'time_efficiency': 80,
+                'tz': 'UTC',
             }, {
                 'name': 'Simple Workcenter',
                 'time_start': 0,
                 'time_stop': 0,
                 'time_efficiency': 100,
+                'tz': 'UTC',
             }, {
                 'name': 'Double Workcenter',
                 'time_start': 0,
                 'time_stop': 0,
                 'time_efficiency': 100,
+                'tz': 'UTC',
             }
         ])
         for (workcenter, default_capacity) in [(cls.workcenter_1, 2), (cls.workcenter_2, 1), (cls.workcenter_3, 2)]:
