@@ -125,7 +125,9 @@ export class EditorOverlay extends Component {
         if (!selection || !selection.rangeCount || !this.props.isOverlayOpen()) {
             return null;
         }
-        const inEditable = selectionData.currentSelectionIsInEditable;
+        const inEditable =
+            selectionData.documentSelectionIsInEditable &&
+            this.props.shared.editableDocumentHasFocus();
         let range;
         if (inEditable) {
             range = selection.getRangeAt(0);

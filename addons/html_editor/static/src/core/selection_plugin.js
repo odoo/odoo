@@ -53,7 +53,6 @@ import { weakMemoize } from "@html_editor/utils/functions";
  * @property { boolean } documentSelectionIsInEditable
  * @property { boolean } documentSelectionIsProtected
  * @property { boolean } documentSelectionIsProtecting
- * @property { boolean } currentSelectionIsInEditable
  */
 
 /**
@@ -197,6 +196,7 @@ export class SelectionPlugin extends Plugin {
         "isNodeEditable",
         "selectAroundNonEditable",
         "selectElement",
+        "editableDocumentHasFocus",
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -259,6 +259,9 @@ export class SelectionPlugin extends Plugin {
             this.addDomListener(this.document, "pointerdown", focusEditable, { capture: true });
             this.addDomListener(document, "pointerdown", unFocusEditable, { capture: true });
         }
+    }
+    editableDocumentHasFocus() {
+        return this.focusEditableDocument;
     }
 
     selectAll() {
@@ -507,8 +510,6 @@ export class SelectionPlugin extends Plugin {
             documentSelection: documentSelection,
             editableSelection: editableSelection,
             documentSelectionIsInEditable: documentSelectionIsInEditable,
-            currentSelectionIsInEditable:
-                documentSelectionIsInEditable && this.focusEditableDocument,
         };
 
         Object.defineProperty(selectionData, "deepEditableSelection", {
@@ -1072,8 +1073,12 @@ export class SelectionPlugin extends Plugin {
     }
 
     focusEditable() {
-        const { editableSelection, currentSelectionIsInEditable } = this.getSelectionData();
-        if (this.editable.contains(this.document.activeElement) && currentSelectionIsInEditable) {
+        const { editableSelection, documentSelectionIsInEditable } = this.getSelectionData();
+        if (
+            this.editable.contains(this.document.activeElement) &&
+            documentSelectionIsInEditable &&
+            this.editableDocumentHasFocus()
+        ) {
             // Editor has focus — nothing to do.
             return;
         }
@@ -1088,7 +1093,7 @@ export class SelectionPlugin extends Plugin {
             this.editable.focus({ preventScroll: true });
         }
 
-        if (!currentSelectionIsInEditable) {
+        if (!(documentSelectionIsInEditable && this.editableDocumentHasFocus())) {
             // Selection is outside the editor — restore it.
             const { anchorNode, anchorOffset, focusNode, focusOffset } = editableSelection;
             const selection = this.document.getSelection();

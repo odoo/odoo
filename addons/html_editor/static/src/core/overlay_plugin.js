@@ -85,6 +85,8 @@ export class Overlay {
                     shared: {
                         ignoreDOMMutations: this.plugin.dependencies.history.ignoreDOMMutations,
                         getSelectionData: this.plugin.dependencies.selection.getSelectionData,
+                        editableDocumentHasFocus:
+                            this.plugin.dependencies.selection.editableDocumentHasFocus,
                     },
                 }),
                 {
