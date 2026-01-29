@@ -187,18 +187,19 @@
                     <field name="assignment_enabled" invisible="1"/>
                     <field name="assignment_auto_enabled" invisible="1"/>
                     <field name="lead_all_assigned_month_exceeded" invisible="1"/>
-                    <div colspan="2">
+                    <field name="assignment_optout" widget="boolean_toggle" invisible="not assignment_auto_enabled"/>
+                    <div colspan="2" invisible="assignment_optout">
                         <div class="o_crm_lead_all_assigned_month_exceeded" invisible="not lead_all_assigned_month_exceeded"/>
                         <div class="o_crm_lead_month_assignment text-muted" invisible="not assignment_enabled">
                             <i class="fa fa-info-circle me-2" title="Assigned Lead Count"/>
-                            <field name="lead_all_assigned_month_count" class="oe_inline"/><span> leads assigned this month
-                            on a maximum of </span><field name="assignment_max" class="oe_inline"/>
+                            <field name="lead_all_assigned_month_count" class="oe_inline"/><span> leads assigned this month</span>
+                            <span invisible="not show_assignment_max"> on a maximum of </span>
+                            <field name="assignment_max" class="oe_inline" invisible="not show_assignment_max"/>
                         </div>
                     </div>
                     <field name="assignment_domain" widget="domain" string="Domain"
                         options="{'foldable': True, 'model': 'crm.lead', 'in_dialog': True}"
-                        invisible="not assignment_enabled"/>
-                    <field name="assignment_optout" invisible="not assignment_auto_enabled"/>
+                        invisible="not assignment_enabled or assignment_optout"/>
                 </xpath>
                 <xpath expr="//field[@name='member_ids']" position="attributes">
                     <attribute name="invisible">assignment_enabled</attribute>

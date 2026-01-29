@@ -8,6 +8,7 @@ from ast import literal_eval
 from markupsafe import Markup
 
 from odoo import api, exceptions, fields, models, modules, _
+from odoo.addons.crm.models.crm_team_member import MEMBER_MAX_LEAD_ASSIGNMENT_QUOTA
 from odoo.fields import Domain
 from odoo.tools import float_compare, float_round
 from odoo.tools.safe_eval import safe_eval
@@ -27,13 +28,14 @@ class CrmTeam(models.Model):
     # assignment
     assignment_enabled = fields.Boolean('Lead Assign', compute='_compute_assignment_enabled')
     assignment_auto_enabled = fields.Boolean('Auto Assignment', compute='_compute_assignment_enabled')
-    assignment_optout = fields.Boolean('Skip auto assignment')
+    assignment_optout = fields.Boolean('Pause auto assignment')
     assignment_max = fields.Integer(
         'Lead Average Capacity', compute='_compute_assignment_max',
         help='Monthly average leads capacity for all salesmen belonging to the team')
     assignment_domain = fields.Char(
         'Assignment Domain', tracking=True,
         help='Additional filter domain when fetching unassigned leads to allocate to the team.')
+    show_assignment_max = fields.Boolean(compute='_compute_show_assignment_max')
     # statistics about leads / opportunities / both
     lead_unassigned_count = fields.Integer(
         string='# Unassigned Leads', compute='_compute_lead_unassigned_count')
@@ -51,6 +53,16 @@ class CrmTeam(models.Model):
     def _compute_assignment_max(self):
         for team in self:
             team.assignment_max = sum(member.assignment_max for member in team.crm_team_member_ids)
+
+    @api.depends('crm_team_member_ids.assignment_max')
+    def _compute_show_assignment_max(self):
+        for team in self:
+            show_max = True
+            for member in team.crm_team_member_ids:
+                if member.assignment_max >= MEMBER_MAX_LEAD_ASSIGNMENT_QUOTA:
+                    show_max = False
+
+            team.show_assignment_max = show_max
 
     def _compute_assignment_enabled(self):
         assign_enabled = self.env['crm.lead']._is_rule_based_assignment_activated()
@@ -628,7 +640,7 @@ class CrmTeam(models.Model):
 
         for team, leads_to_assign_ids in leads_per_team.items():
             members_to_assign = list(team.crm_team_member_ids.filtered(lambda member:
-                not member.assignment_optout and quota_per_member.get(member, 0) > 0
+                member.assignment_max != 0 and quota_per_member.get(member, 0) > 0
             ).sorted(key=lambda member: quota_per_member.get(member, 0), reverse=True))
             if not members_to_assign:
                 continue
