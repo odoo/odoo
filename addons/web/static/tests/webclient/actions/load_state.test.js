@@ -1886,6 +1886,24 @@ describe(`new urls`, () => {
         // assert that we properly reload action and breacrumbs as lang changed
         expect.verifySteps(["/web/action/load_breadcrumbs", "/web/action/load"]);
     });
+
+    test(`switch to form view after reload`, async () => {
+        redirect("/odoo/action-3/2");
+
+        await mountWebClient();
+        expect(`.o_form_view`).toHaveCount(1);
+        expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
+            "Partners",
+            "Second record",
+        ]);
+
+        await getService("action").switchView("form", { resId: 5 });
+        expect(`.o_form_view`).toHaveCount(1);
+        expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
+            "Partners",
+            "Fifth record",
+        ]);
+    });
 });
 
 describe(`legacy urls`, () => {
