@@ -103,7 +103,7 @@ def _mock_check_peppol_participant_exists(func, self, *args, **kwargs):
 
 def _mock_create_connection(func, self, *args, **kwargs):
     peppol_identifier, _db_uuid, company = args
-    dummy_response = {'id_client': 'demo4peppol', 'refresh_token': 'demo', 'peppol_state': 'receiver'}
+    dummy_response = {'id_client': f'demo4peppol_{company.id}', 'refresh_token': 'demo', 'peppol_state': 'receiver'}
     private_key_sudo = self.env['certificate.key'].sudo()._generate_rsa_private_key(
         company,
         name=f"peppol_demo_{company.id}.key",
