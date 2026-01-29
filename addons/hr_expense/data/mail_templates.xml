@@ -36,26 +36,45 @@
             <div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
                 <table style="width:600px;margin:5px auto;background:white;border:1px solid #e1e1e1;">
                     <tbody><tr>
-                        <td style="padding:15px 20px 10px 20px;">
-                            <p style="font-size:20px;font-weight:bold;color:#515166;">Expenses approval</p>
+                        <td style="padding: 15px 20px 10px 20px;">
+                            <div>
+                                <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;">
+                                    <tr>
+                                        <td style="vertical-align: middle;">
+                                            <a t-att-href="url" style="margin-right: 5px; padding: 10px 15px; background-color: #875A7B; color: #ffffff; text-decoration: none; border-radius: 4px; font-weight: bold;">Review Expenses</a>
+                                        </td>
+                                        <td style="vertical-align: middle; padding-left: 20px;">
+                                            <span style="font-weight: bold;font-size: 16px; color: #333333;"><t t-out="first_expense_name"/></span><br/>
+                                            <span style="font-size: 14px; color: #666666;"><t t-out="today_string"/>, <t t-out="total_amount"/></span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                             <hr style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
-                            <p>Dear <t t-out="manager_name"/>,</p>
-                            <p>New expenses are waiting for your approval. You can Review them by following this link.</p>
-                            <br/>
-                            <a t-att-href="url" style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">View expenses</a>
-                            <br/><br/>
+                            <p>Hi <t t-out="manager_name"/>,</p>
+                            <p>A new expense is waiting for your approval in Odoo.</p>
+                            <p>You currently have <strong t-out="expenses_count"/> <strong>expenses</strong> pending approval, from:</p>
+                            <ul>
+                                <li t-foreach="employee_breakdown" t-as="employee_item">
+                                    <t t-out="employee_item['name']"/>: <t t-out="employee_item['amount']"/>
+                                </li>
+                            </ul>
+                            <p>Thanks,</p>
+                            <t t-if="user.signature">
+                                <div>--<br/><t t-out="user.signature"/></div>
+                            </t>
                             <hr style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
                             <table style="width: 100%;">
-                                <tbody><tr>
-                                    <td align="center" style="min-width: 590px; padding: 0 8px 0 8px; font-size:11px;">
-                                        <b t-out="company.name"/><br/>
+                                <tr>
+                                    <td align="center" style="min-width: 590px; padding: 0 8px 0 8px; font-size: 11px;">
                                         <div style="color: #999999;">
+                                            <b t-out="company.name"/><br/>
                                             <t t-out="company.phone"/>
                                             <t t-if="company.email"> | <a t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: #999999;"><t t-out="company.email"/></a></t>
                                             <t t-if="company.website"> | <a t-att-href="company.website" style="text-decoration:none; color: #999999;"><t t-out="company.website"/></a></t>
                                         </div>
                                     </td>
-                                </tr></tbody>
+                                </tr>
                             </table>
                         </td>
                     </tr></tbody>
