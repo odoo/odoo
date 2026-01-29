@@ -549,7 +549,7 @@ class Many2one(_Relational):
         model = table._model
         comodel = model.env[self.comodel_name]
         can_be_null = self not in model.env.registry.not_null_fields
-        if self.compute_sudo or self.inherited or model.env.su:
+        if self.compute_sudo or self.delegate or model.env.su:
             coquery = None
         else:
             coquery = comodel._search(Domain.TRUE, active_test=False)
