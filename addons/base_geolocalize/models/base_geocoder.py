@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import requests
 import logging
 
-from odoo import api, fields, models, tools, _
+import requests
 from odoo.exceptions import UserError
 
+from odoo import _, api, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -87,7 +87,8 @@ class GeoCoder(models.AbstractModel):
             return None
         url = 'https://nominatim.openstreetmap.org/search'
         try:
-            headers = {'User-Agent': 'Odoo (http://www.odoo.com/contactus)'}
+            headers = {'User-Agent': self.env['ir.config_parameter'].sudo().get_param('base_geolocalize.user_agent',
+                                                                               'Odoo (http://www.odoo.com/contactus)')}
             response = requests.get(url, headers=headers, params={'format': 'json', 'q': addr})
             _logger.info('openstreetmap nominatim service called')
             if response.status_code != 200:
