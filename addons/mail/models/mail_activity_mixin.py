@@ -170,7 +170,7 @@ class MailActivityMixin(models.AbstractModel):
 
     def _compute_sql_activity_state(self, table):
         # find activities
-        act_query = self.activity_ids._search(Domain('res_model', '=', self._name) & Domain('active', '=', True))
+        act_query = self.activity_ids._search(Domain('res_model', '=', self._name) & Domain('active', '=', True), bypass_access=True)
         activity_t = act_query.table
         res_id_sql = activity_t.res_id
         # group them by res_id and compute the state (as int)

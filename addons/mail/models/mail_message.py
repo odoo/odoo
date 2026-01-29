@@ -331,6 +331,8 @@ class MailMessage(models.Model):
         # Rules do not apply to administrator
         if self.env.su or bypass_access:
             return super()._search(domain, offset, limit, order, bypass_access=True, **kwargs)
+        if self.env.context.get('_read_groupby'):
+            raise ValueError("Cannot group by mail.message")
 
         # Non-employee see only messages with a subtype and not internal
         domain = self._get_search_domain_share() & Domain(domain)
