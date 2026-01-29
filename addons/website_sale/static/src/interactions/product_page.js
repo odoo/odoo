@@ -327,6 +327,7 @@ export class ProductPage extends Interaction {
         if (!parent) return Promise.resolve();
         const combination = wSaleUtils.getSelectedAttributeValues(parent);
         const addToCart = parent.querySelector('button[name="add_to_cart"]');
+        if (!addToCart) return Promise.resolve();
 
         const combinationInfo = await this.waitFor(rpc('/website_sale/get_combination_info', {
             'product_template_id': parseInt(addToCart?.dataset?.productTemplateId),
