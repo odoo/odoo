@@ -158,7 +158,8 @@ export class ProductScreen extends Component {
                 text: _t("Price"),
                 disabled:
                     !this.pos.cashierHasPriceControlRights() ||
-                    this.pos.cashier._role === "minimal",
+                    this.pos.cashier._role === "minimal" ||
+                    this.pos.getOrder()?.getSelectedOrderline()?.isPartOfCombo(),
             },
             BACKSPACE,
         ]).map((button) => ({
