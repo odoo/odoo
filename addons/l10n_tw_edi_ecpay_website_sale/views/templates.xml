@@ -42,7 +42,8 @@
                                             <t t-foreach="carrier_choices" t-as="choice">
                                                 <option t-attf-value="{{choice[0]}}"
                                                         t-att-selected="choice[0] == default_vals.get('carrier_type')">
-                                                    <t t-out="choice[1]"/>
+                                                    <t t-if="choice[0] == '1'">Member Account</t>
+                                                    <t t-else="" t-out="choice[1]"/>
                                                 </option>
                                             </t>
                                         </select>
