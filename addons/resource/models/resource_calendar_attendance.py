@@ -30,8 +30,6 @@ class ResourceCalendarAttendance(models.Model):
         ('morning', 'Morning'),
         ('afternoon', 'Afternoon'),
         ('full_day', 'Full Day')], store=True, compute='_compute_day_period')
-    display_type = fields.Selection([
-        ('line_section', "Section")], default=False, help="Technical field for UX purpose.")
     sequence = fields.Integer(default=10,
         help="Gives the sequence of this line when displaying the resource calendar.")
 
@@ -90,7 +88,7 @@ class ResourceCalendarAttendance(models.Model):
         super()._compute_display_name()
         dayofweek_selection = dict(self._fields['dayofweek']._description_selection(self.env))
         day_period_selection = dict(self._fields['day_period']._description_selection(self.env))
-        for record in self.filtered(lambda l: not l.display_type):
+        for record in self:
             record.display_name = f"{dayofweek_selection[record.dayofweek]} ({day_period_selection[record.day_period]})"
 
     def _copy_attendance_vals(self):
@@ -100,9 +98,8 @@ class ResourceCalendarAttendance(models.Model):
             'duration_hours': self.duration_hours,
             'hour_from': self.hour_from,
             'hour_to': self.hour_to,
-            'display_type': self.display_type,
             'sequence': self.sequence,
         }
 
     def _is_work_period(self):
-        return not self.display_type
+        return True

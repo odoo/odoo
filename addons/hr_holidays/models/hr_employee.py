@@ -679,7 +679,6 @@ class HrEmployee(models.Model):
 
         domain = [
             ('calendar_id', '=', calendar.id),
-            ('display_type', '=', False),
         ]
 
         init_attendances = self.env['resource.calendar.attendance']._read_group(

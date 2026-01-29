@@ -6,7 +6,6 @@
         <field name="arch" type="xml">
             <list string="Working Time" editable="bottom">
                 <field name="sequence" widget="handle"/>
-                <field name="display_type" column_invisible="True"/>
                 <field name="dayofweek"/>
                 <field name="duration_hours" sum="Hours per Week" force_save="1" widget="float_time"/>
                 <field name="hour_from" widget="float_time" optional="hidden"/>
