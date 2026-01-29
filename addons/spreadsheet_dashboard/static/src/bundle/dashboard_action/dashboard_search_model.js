@@ -8,7 +8,7 @@ import {
 import { user } from "@web/core/user";
 import { deepEqual } from "@web/core/utils/objects";
 
-function getActiveFilterValuesById(filterNodes) {
+export function getActiveFilterValuesById(filterNodes) {
     const filterValuesById = {};
     for (const { globalFilter, value } of filterNodes) {
         if (!isEmptyFilterValue(globalFilter, value)) {
@@ -18,7 +18,7 @@ function getActiveFilterValuesById(filterNodes) {
     return filterValuesById;
 }
 
-function buildFilterNodesFromValues(getters, filterValuesById) {
+export function buildFilterNodesFromValues(getters, filterValuesById) {
     return getters.getGlobalFilters().map((gf) => ({
         globalFilter: gf,
         value: filterValuesById[gf.id] ? { ...filterValuesById[gf.id] } : getDefaultValue(gf.type),
