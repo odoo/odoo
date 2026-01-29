@@ -35,8 +35,8 @@ class CrmTeamMember(models.Model):
     image_1920 = fields.Image("Image", related="user_id.image_1920", max_width=1920, max_height=1920)
     image_128 = fields.Image("Image (128)", related="user_id.image_128", max_width=128, max_height=128)
     name = fields.Char(string='Name', related='user_id.display_name', readonly=False)
-    email = fields.Char(string='Email', related='user_id.email')
-    phone = fields.Char(string='Phone', related='user_id.phone')
+    email = fields.Char(string='Email', related='user_id.email', readonly=False)
+    phone = fields.Char(string='Phone', related='user_id.phone', readonly=False)
     company_id = fields.Many2one('res.company', string='Company', related='user_id.company_id')
 
     @api.constrains('crm_team_id', 'user_id', 'active')

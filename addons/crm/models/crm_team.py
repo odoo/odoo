@@ -23,6 +23,7 @@ class CrmTeam(models.Model):
     use_leads = fields.Boolean('Leads', help="Check this box to filter and qualify incoming requests as leads before converting them into opportunities and assigning them to a salesperson.")
     use_opportunities = fields.Boolean('Pipeline', default=True, help="Check this box to manage a presales process with opportunities.")
     alias_id = fields.Many2one(help="The email address associated with this channel. New emails received will automatically create new leads assigned to the channel.")
+    alias_full_name = fields.Char(related='alias_id.alias_full_name')
     # assignment
     assignment_enabled = fields.Boolean('Lead Assign', compute='_compute_assignment_enabled')
     assignment_auto_enabled = fields.Boolean('Auto Assignment', compute='_compute_assignment_enabled')
@@ -42,6 +43,7 @@ class CrmTeam(models.Model):
     lead_all_assigned_month_exceeded = fields.Boolean('Exceed monthly lead assignement', compute="_compute_lead_all_assigned_month_count",
         help="True if the monthly lead assignment count is greater than the maximum assignment limit, false otherwise."
     )
+    opportunity_count = fields.Integer(string='Number of assigned opportunities', compute='_compute_opportunity_count')
     # properties
     lead_properties_definition = fields.PropertiesDefinition('Lead Properties')
 
@@ -67,6 +69,15 @@ class CrmTeam(models.Model):
         counts = {team.id: count for team, count in leads_data}
         for team in self:
             team.lead_unassigned_count = counts.get(team.id, 0)
+
+    def _compute_opportunity_count(self):
+        leads_data = self.env['crm.lead']._read_group([
+            ('team_id', 'in', self.ids),
+            ('type', '=', 'opportunity'),
+        ], ['team_id'], ['__count'])
+        counts = {team.id: count for team, count in leads_data}
+        for team in self:
+            team.opportunity_count = counts.get(team.id, 0)
 
     @api.depends('crm_team_member_ids.lead_month_count', 'assignment_max')
     def _compute_lead_all_assigned_month_count(self):
@@ -693,7 +704,7 @@ class CrmTeam(models.Model):
     # ACTIONS
     # ------------------------------------------------------------
 
-    def action_open_leads(self):
+    def action_open_opportunities(self):
         action = self.env['ir.actions.actions']._for_xml_id('crm.crm_case_form_view_salesteams_opportunity')
         rcontext = {
             'team': self,
@@ -701,8 +712,8 @@ class CrmTeam(models.Model):
         action['help'] = self.env['ir.ui.view']._render_template('crm.crm_action_helper', values=rcontext)
         return action
 
-    def action_open_unassigned_leads(self):
-        action = self.action_open_leads()
+    def action_open_unassigned_opportunities(self):
+        action = self.action_open_opportunities()
         context_str = action.get('context', '{}')
         if context_str:
             try:
@@ -722,5 +733,5 @@ class CrmTeam(models.Model):
     def action_primary_channel_button(self):
         self.ensure_one()
         if self.use_opportunities:
-            return self.action_open_leads()
+            return self.action_open_opportunities()
         return super().action_primary_channel_button()
