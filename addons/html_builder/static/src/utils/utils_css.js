@@ -203,7 +203,10 @@ export function areCssValuesEqual(value1, value2, cssProp, htmlStyle) {
         return false;
     }
     const numValue1 = data[0];
-    const numValue2 = convertValueToUnit(value2, data[1], htmlStyle);
+    // Zero values don't need unit conversion (0px === 0rem === 0em === 0)
+    const numValue2 = Math.abs(numValue1) < Number.EPSILON
+        ? getNumericAndUnit(value2)[0]
+        : convertValueToUnit(value2, data[1], htmlStyle);
     return Math.abs(numValue1 - numValue2) < Number.EPSILON;
 }
 /**
