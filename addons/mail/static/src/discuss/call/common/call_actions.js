@@ -3,11 +3,11 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ChangeLayoutDialog } from "@mail/discuss/call/common/change_layout_dialog";
+import { CallSuggestionTooltip } from "@mail/discuss/call/common/call_suggestion_tooltip";
 import { QuickVoiceSettings } from "@mail/discuss/call/common/quick_voice_settings";
 import { QuickVideoSettings } from "@mail/discuss/call/common/quick_video_settings";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/discuss_channel_model_patch";
-import { MicrophoneWarning } from "@mail/discuss/call/common/microphone_warning";
 import { Component, useEffect } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 
@@ -53,17 +53,17 @@ export const muteAction = {
     sequenceGroup: 100,
     setup({ action, owner, store }) {
         if (owner instanceof Component) {
-            this.popover = usePopover(MicrophoneWarning, {
+            this.popover = usePopover(CallSuggestionTooltip, {
                 closeOnClickAway: false,
                 closeOnEscape: false,
                 position: "top-middle",
             });
             useEffect(() => {
-                const hasWarning =
-                    store.rtc.showMicrophonePermissionWarning ||
-                    store.rtc.showMicrophoneSilentWarning;
-                if (!action.popover.isOpen && action.actionRef() && hasWarning) {
-                    action.popover.open(action.actionRef(), {});
+                const suggestion =
+                    store.rtc.visibleCallSuggestion?.targetActionId === action.id &&
+                    store.rtc.visibleCallSuggestion;
+                if (!action.popover.isOpen && action.actionRef() && suggestion) {
+                    action.popover.open(action.actionRef(), suggestion);
                 } else {
                     action.popover.close();
                 }

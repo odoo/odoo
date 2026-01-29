@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="discuss.CallSuggestionTooltip">
+        <div class="o-ps-2_5 o-pe-1_5 py-2 d-flex flex-row gap-1" style="max-width: 360px;" t-att-id="this.props.id">
+            <div class="d-flex flex-column">
+                <div class="d-flex gap-2 align-items-center">
+                    <i t-if="this.props.iconClass" t-att-class="this.props.iconClass"/>
+                    <div class="fs-5" t-out="this.props.headerText"/>
+                </div>
+                <div t-out="this.props.bodyText"/>
+            </div>
+            <i class="oi oi-large oi-close cursor-pointer opacity-50 opacity-100-hover" t-on-click="this.props.onDismiss" title="Dismiss"/>
+        </div>
+    </t>
+</templates>
