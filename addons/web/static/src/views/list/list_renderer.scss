@@ -568,6 +568,31 @@
     .o_optional_columns_dropdown .dropdown-item .o-checkbox .text-truncate {
         max-width: 30em;
     }
+
+    @mixin shadow-x {
+        display: block;
+        position: absolute;
+        // We don't want the shadow on the table header
+        top: 2.5rem;
+        height: var(--shadow-height, 0);
+        width: 1rem;
+        box-shadow: 0 0 1.5rem 0.1rem rgba(0, 0, 0, 0.5);
+        content: "";
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    @include media-breakpoint-down(md) {
+        &.shadow-right-sm::after {
+            @include shadow-x;
+            right: -1rem;
+        }
+
+        &.shadow-left-sm::before {
+            @include shadow-x;
+            left: -1rem;
+        }
+    }
 }
 
 @include media-breakpoint-down(md) {

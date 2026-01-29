@@ -4,9 +4,14 @@
     <t t-name="web.ListRenderer">
         <t t-set="_canSelectRecord" t-value="canSelectRecord"/>
         <div
-            class="o_list_renderer o_renderer table-responsive"
+            class="o_list_renderer o_renderer table-responsive shadow-right-sm"
+            t-att-class="{
+                'shadow-right-sm': state.scrollPosition === 'left' || state.scrollPosition === 'scrolling',
+                'shadow-left-sm': state.scrollPosition === 'right' || state.scrollPosition === 'scrolling'
+            }"
             tabindex="-1"
             t-ref="root"
+            t-on-scroll="onScrollDebounced"
         >
             <t t-if="showNoContentHelper">
                 <ActionHelper noContentHelp="props.noContentHelp"/>
