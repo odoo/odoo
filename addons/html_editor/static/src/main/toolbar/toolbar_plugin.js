@@ -362,7 +362,10 @@ export class ToolbarPlugin extends Plugin {
         // Prevent toolbar to open if the selection is not in the editable area,
         // or if the selection is protected or protecting.
         if (
-            !selectionData.currentSelectionIsInEditable ||
+            !(
+                selectionData.documentSelectionIsInEditable &&
+                this.dependencies.selection.editableDocumentHasFocus()
+            ) ||
             selectionData.documentSelectionIsProtected ||
             selectionData.documentSelectionIsProtecting
         ) {

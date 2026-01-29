@@ -38,7 +38,13 @@ export class HintPlugin extends Plugin {
 
         /** Providers */
         hint_targets_providers: (selectionData, editable) => {
-            if (!selectionData.currentSelectionIsInEditable || !selectionData.documentSelection) {
+            if (
+                !(
+                    selectionData.documentSelectionIsInEditable &&
+                    this.dependencies.selection.editableDocumentHasFocus()
+                ) ||
+                !selectionData.documentSelection
+            ) {
                 return [];
             }
             const blockEl = closestBlock(selectionData.documentSelection.anchorNode);
