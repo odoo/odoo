@@ -91,7 +91,10 @@ registerCallAction("deafen", {
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.DANGER : undefined),
 });
 export const cameraOnAction = {
-    badge: ({ owner, store, thread }) => !owner.env.inCallMenu && thread?.default_display_mode === "video_full_screen" && store.rtc.cameraPermission !== "granted",
+    badge: ({ owner, store, thread }) =>
+        !owner.env.inCallMenu &&
+        thread?.default_display_mode === "video_full_screen" &&
+        store.rtc.cameraPermission !== "granted",
     badgeIcon: "fa fa-exclamation",
     condition: ({ thread }) => thread?.isSelfInCall,
     disabledCondition: ({ store }) => store.rtc?.isRemote,
