@@ -161,8 +161,8 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.members.invalidate_model(['lead_month_count'])
         self.assertEqual(self.sales_team_1_m3.lead_month_count, 12)
 
-        # sales_team_1_m2 is opt-out (new field in 14.3) -> even with max, no lead assigned
-        self.sales_team_1_m2.update({'assignment_max': 45, 'assignment_optout': True})
+        # assignment_max = 0 means opt-out -> no leads should be assigned
+        self.sales_team_1_m2.update({'assignment_max': 0})
         self.sales_team_1_m3.update({'assignment_max': 45})
         with self.with_user('user_sales_manager'):
             teams_data, members_data = self.sales_team_1._action_assign_leads(force_quota=True)

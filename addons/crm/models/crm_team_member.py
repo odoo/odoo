@@ -11,6 +11,8 @@ from odoo.tools import float_round
 
 _logger = logging.getLogger(__name__)
 
+MEMBER_MAX_LEAD_ASSIGNMENT_QUOTA = 30000  # Arbitrarily large - 1000 per day (math.inf causes issues on runbot)
+
 
 class CrmTeamMember(models.Model):
     _inherit = 'crm.team.member'
@@ -19,14 +21,39 @@ class CrmTeamMember(models.Model):
     assignment_enabled = fields.Boolean(related="crm_team_id.assignment_enabled")
     assignment_domain = fields.Char('Assignment Domain', tracking=True)
     assignment_domain_preferred = fields.Char('Preference assignment Domain', tracking=True)
-    assignment_optout = fields.Boolean('Pause assignment')
-    assignment_max = fields.Integer('Average Leads Capacity (on 30 days)', default=30)
+    assignment_max = fields.Integer('Average Leads Capacity (on 30 days)', default=MEMBER_MAX_LEAD_ASSIGNMENT_QUOTA)
+    assignment_rules = fields.Selection([
+        ('unlimited', 'Always in rotation'),
+        ('limited', 'In rotation, with a limit'),
+        ('opt-out', 'Out of rotation')
+    ], string='Auto-Assignment Rules', compute='_compute_assignment_rules',
+        store=False, readonly=False)
     lead_day_count = fields.Integer(
         'Leads (last 24h)', compute='_compute_lead_day_count',
         help='Number of leads assigned to this member in the last 24 hours (lost leads excluded)')
     lead_month_count = fields.Integer(
         'Leads (30 days)', compute='_compute_lead_month_count',
         help='Number of leads assigned to this member in the last 30 days')
+
+    @api.depends('assignment_max')
+    def _compute_assignment_rules(self):
+        for member in self:
+            if member.assignment_max >= MEMBER_MAX_LEAD_ASSIGNMENT_QUOTA:
+                member.assignment_rules = 'unlimited'
+            elif member.assignment_max == 0:
+                member.assignment_rules = 'opt-out'
+            else:
+                member.assignment_rules = 'limited'
+
+    @api.onchange('assignment_rules')
+    def _onchange_assignment_rules(self):
+        for member in self:
+            if member.assignment_rules == 'unlimited':
+                member.assignment_max = MEMBER_MAX_LEAD_ASSIGNMENT_QUOTA
+            elif member.assignment_rules == 'opt-out':
+                member.assignment_max = 0
+            else:
+                member.assignment_max = 30
 
     @api.depends('user_id', 'crm_team_id')
     def _compute_lead_day_count(self):

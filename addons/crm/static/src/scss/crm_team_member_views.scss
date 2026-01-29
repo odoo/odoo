@@ -1,6 +1,16 @@
 .o_crm_team_member_kanban .o_kanban_renderer {
-    .o_member_assignment div.oe_gauge {
+    .o_member_assignment div {
         width: 100px;
         height: 80px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        // Align text with team member name
+        span {
+          margin-top: 2px;
+        }
+        canvas {
+          margin-top: -4px;
+        }
     }
 }

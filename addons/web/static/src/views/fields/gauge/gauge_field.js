@@ -12,6 +12,7 @@ export class GaugeField extends Component {
         ...standardFieldProps,
         maxValueField: { type: String, optional: true },
         maxValue: { type: Number, optional: true },
+        maxTooltip: { type: String, optional: true },
         title: { type: String, optional: true },
     };
     static defaultProps = {
@@ -49,7 +50,7 @@ export class GaugeField extends Component {
         const gaugeValue = this.props.record.data[this.props.name];
         let maxValue = this.props.maxValueField ? this.props.record.data[this.props.maxValueField] : this.props.maxValue;
         maxValue = Math.max(gaugeValue, maxValue);
-        let maxLabel = maxValue;
+        let maxLabel = this.props.maxTooltip ?? maxValue;
         if (gaugeValue === 0 && maxValue === 0) {
             maxValue = 1;
             maxLabel = 0;
@@ -118,8 +119,14 @@ export const gaugeField = {
             name: "max_value",
             type: "string",
         },
+        {
+            label: _t("Max tooltip"),
+            name: "max_tooltip",
+            type: "string",
+        }
     ],
     extractProps: ({ options }) => ({
+        maxTooltip: options.max_tooltip,
         maxValueField: options.max_field,
         maxValue: options.max_value,
         title: options.title,
