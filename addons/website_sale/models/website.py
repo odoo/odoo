@@ -23,6 +23,7 @@ _lt = LazyTranslate(__name__)
 
 
 CART_SESSION_CACHE_KEY = 'sale_order_id'
+COUNTRY_SESSION_CACHE_KEY = 'website_sale_country_id'
 FISCAL_POSITION_SESSION_CACHE_KEY = 'fiscal_position_id'
 PRICELIST_SESSION_CACHE_KEY = 'website_sale_current_pl'
 PRICELIST_SELECTED_SESSION_CACHE_KEY = 'website_sale_selected_pl_id'
@@ -625,6 +626,18 @@ class Website(models.Model):
         # we only want to reorder the records on hand, not filter them.
         return pricelists.sudo().sorted().ids
 
+    def _get_available_languages(self, country_group):
+        """Return the list of languages associated with the selected country.
+        Languages have to be defined on the website and on the related country group.
+        """
+        self.ensure_one()
+
+        website_languages = self.language_ids
+        country_group_languages = country_group.language_ids
+        common_languages = website_languages and country_group_languages
+        return self.env['res.lang'].browse(common_languages.ids)
+
+
     def get_pricelist_available(self, show_visible=False):
         """ Return the list of pricelists that can be used on website for the current user.
         Country restrictions will be detected with GeoIP (if installed).
@@ -674,8 +687,11 @@ class Website(models.Model):
     def _get_geoip_country_code(self):
         return request and request.geoip.country_code or False
 
-    def get_country_in_country_group(self):
-        return self.env['res.country'].search([], limit=1)
+    def get_website_countries(self):
+        all_countries = self.env['res.country.group'].search([
+            ('pricelist_ids.website_id', '=', self.id),
+        ]).mapped('country_ids')
+        return self.env['res.country'].search([('id', 'in', all_countries.ids)])
 
     def sale_product_domain(self):
         website_domain = self.get_current_website().website_domain()
@@ -723,6 +739,33 @@ class Website(models.Model):
             'team_id': self.salesteam_id.id,
             'website_id': self.id,
         }
+
+    def _get_and_cache_current_country(self):
+        """Retrieve and cache the current country for the session.
+
+        Note: self.ensure_one()
+
+        :return: The determined country, which could be empty, as a sudoed record.
+        :rtype: res.country
+        """
+        self.ensure_one()
+
+        CountrySudo = self.env['res.country'].sudo()
+        if COUNTRY_SESSION_CACHE_KEY in request.session:
+            country_sudo = CountrySudo.browse(request.session[COUNTRY_SESSION_CACHE_KEY])
+            if country_sudo and country_sudo.exists():
+                return country_sudo
+
+        partner_sudo = self.env.user.partner_id
+        # If the current user is the website public user, the country is computed according to
+        # geolocation.
+        if request and request.geoip.country_code and self.partner_id.id == partner_sudo.id:
+            country_sudo = CountrySudo.search(
+                [('code', '=', request.geoip.country_code)], limit=1
+            )
+            return country_sudo
+        else:
+            return partner_sudo.country_id
 
     def _get_and_cache_current_pricelist(self):
         """Retrieve and cache the current pricelist for the session.

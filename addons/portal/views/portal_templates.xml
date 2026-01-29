@@ -59,7 +59,7 @@
     <template id="footer_country_selector" inherit_id="portal.frontend_layout" name="Footer Country Selector">
         <xpath expr="//*[hasclass('o_footer_copyright_name')]" position="inside">
             <t id="country_selector_call"
-                t-call="portal.language_selector"
+                t-call="portal.country_selector"
                 _div_classes="(_div_classes or '') + ' dropup'"/>
         </xpath>
     </template>
@@ -67,7 +67,7 @@
     <template id="footer_pricelist_selector" inherit_id="portal.frontend_layout" name="Footer Pricelist Selector">
         <xpath expr="//*[hasclass('o_footer_copyright_name')]" position="inside">
             <t id="pricelist_selector_call"
-                t-call="portal.language_selector"
+                t-call="portal.pricelist_selector"
                 _div_classes="(_div_classes or '') + ' dropup'"/>
         </xpath>
     </template>
@@ -80,20 +80,49 @@
         </xpath>
     </template>
 
-<!--    <t t-set="active_country" t-value="frontend_countries[country]"/>-->
     <template id="country_selector" name="Country Selector">
-        <div t-attf-class="js_country_selector #{_div_classes} d-print-none">
-            <t t-set="active_country" t-value="website.get_country_in_country_group()"/>
-            <button t-attf-class="border-0 dropdown-toggle #{_btn_class or 'btn btn-sm btn-outline-secondary'}" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                <span t-attf-class="#{_txt_class}" t-out="active_country.name.split('/').pop()"/>
+        <div t-attf-class="#{_div_classes} d-print-none">
+            <t t-set="website_sale_countries" t-value="website.get_website_countries()"/>
+            <t t-set="active_country" t-value="request.country"/>
+            <button t-attf-class="border-0 dropdown-toggle #{_btn_class or 'btn btn-sm btn-outline-secondary'}"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="true">
+                <span t-attf-class="#{_txt_class}" t-out="active_country.name"/>
             </button>
             <div t-attf-class="dropdown-menu #{_dropdown_menu_class}" role="menu">
-                <t t-foreach="get_country_in_country_group" t-as="co">
-                    <a class="dropdown-item" t-att-href=""
-                    t-attf-class="dropdown-item js_change_country #{active_country == co and 'active'}"
-                    t-att-data-url_code="www.odoo.com" t-att-title="co.name.split('/').pop()"
-                    role="menuitem">
-                        <span t-out="co.name.split('/').pop()" t-attf-class="#{_txt_class}"/>
+                <t t-foreach="website_sale_countries" t-as="co">
+                    <a t-attf-class="dropdown-item"
+                       t-att-aria-current="request.country"
+                       t-att-href="'/shop/country/%s' % co.id"
+                       role="menuitem">
+                        <span t-out="co.name" t-attf-class="#{_txt_class}"/>
+                    </a>
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <template id="pricelist_selector" name="Pricelist Selector">
+        <t t-set="pricelists" t-value="website.get_pricelist_available()"/>
+        <t t-set="pricelist_selector_visible" t-value="len(pricelists) &gt; 1"/>
+        <div t-attf-class="#{_div_classes} d-print-none">
+            <t t-set="active_pricelist" t-value="request.pricelist"/>
+            <button t-attf-class="border-0 dropdown-toggle #{_btn_class or 'btn btn-sm btn-outline-secondary'}"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="true">
+                <span t-attf-class="#{_txt_class}" t-out="active_pricelist.name"/>
+            </button>
+            <div t-attf-class="dropdown-menu #{_dropdown_menu_class}" role="menu">
+                <t t-foreach="pricelists" t-as="pl">
+                    <a t-attf-class="dropdown-item"
+                       t-att-aria-current="request.pricelist"
+                       t-att-href="'/shop/pricelist/%s' % pl.id"
+                       role="menuitem">
+                        <span t-out="pl.name" t-attf-class="#{_txt_class}"/>
                     </a>
                 </t>
             </div>
