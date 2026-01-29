@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from calendar import monthrange
+from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
@@ -20,6 +21,7 @@ class HrLeaveAccrualLevel(models.Model):
         help='Sequence is generated automatically by start time delta.')
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', "Accrual Plan", required=True, index=True, ondelete="cascade", default=lambda self: self.env.context.get("active_id", None))
     accrued_gain_time = fields.Selection(related='accrual_plan_id.accrued_gain_time', export_string_translation=False)
+    is_based_on_worked_time = fields.Boolean(related='accrual_plan_id.is_based_on_worked_time', export_string_translation=False)
     start_count = fields.Integer(export_string_translation=False,
         help="The accrual starts after a defined period from the allocation start date. This field defines the number of days, months or years after which accrual is used.")
     start_type = fields.Selection(
@@ -144,6 +146,7 @@ class HrLeaveAccrualLevel(models.Model):
          ('month', 'Months')],
         default='day', export_string_translation=False, required=True,
         help="This field defines the unit of time after which the accrual ends.")
+    yearly_gain = fields.Float(compute="_compute_yearly_gain")
 
     _start_count_check = models.Constraint(
         "CHECK((start_count > 0 AND milestone_date = 'after') OR (start_count = 0 AND milestone_date = 'creation'))",
@@ -263,6 +266,32 @@ class HrLeaveAccrualLevel(models.Model):
         for level in self:
             if level.milestone_date == 'creation':
                 level.start_count = 0
+
+    @api.depends('frequency', 'added_value', 'cap_accrued_time', 'maximum_leave', 'cap_accrued_time_yearly', 'maximum_leave_yearly')
+    def _compute_yearly_gain(self):
+        current_year = date.today().year
+        number_of_days_of_the_year = 366 if (current_year % 4 == 0 and current_year % 100 != 0) or (current_year % 400 == 0) else 365
+        for level in self:
+            yearly_gain = 0
+            if level.frequency == 'hourly':
+                yearly_gain = level.added_value * number_of_days_of_the_year * 24
+            elif level.frequency == 'daily':
+                yearly_gain = level.added_value * number_of_days_of_the_year
+            elif level.frequency == 'weekly':
+                yearly_gain = level.added_value * 52
+            elif level.frequency == 'monthly':
+                yearly_gain = level.added_value * 12
+            elif level.frequency == 'bimonthly':
+                yearly_gain = level.added_value * 24
+            elif level.frequency == 'yearly':
+                yearly_gain = level.added_value
+            elif level.frequency == 'biyearly':
+                yearly_gain = level.added_value * 2
+            if level.cap_accrued_time_yearly:
+                yearly_gain = min(yearly_gain, level.maximum_leave_yearly)
+            if level.cap_accrued_time:
+                yearly_gain = min(yearly_gain, level.maximum_leave)
+            level.yearly_gain = yearly_gain
 
     def _get_hourly_frequencies(self):
         return ['hourly']

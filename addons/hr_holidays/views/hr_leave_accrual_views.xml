@@ -13,43 +13,51 @@
                         <group class="o_accrual" string="Accrual Level Options">
                             <label class="fw-bold" for="added_value" string="Set the employee accrual frequency :"/>
                             <span>
-                                <field nolabel="1" class="me-1 o_field_accrual" name="added_value"
+                                <field nolabel="1" class="me-1 o_hr_narrow_field-5 o_accrual_input" name="added_value"
                                        widget="float_without_trailing_zeros"/>
-                                <field nolabel="1" class="me-1 o_field_accrual" name="added_value_type"
+                                <field nolabel="1" class="me-1 o_hr_narrow_field-4" name="added_value_type"
                                        readonly="not can_modify_value_type"/>
-                                <field nolabel="1" class="o_field_accrual" name="frequency"/>
+                                <field nolabel="1" class="o_hr_narrow_field" name="frequency"/>
                                 <span name="weekly" invisible="frequency != 'weekly'">
                                     on
-                                    <field nolabel="1" name="week_day" class="o_field_accrual" required="frequency == 'weekly'" placeholder="select a weekday"/>
+                                    <field nolabel="1" name="week_day" class="o_hr_narrow_field-6" required="frequency == 'weekly'" placeholder="select a weekday"/>
                                 </span>
                                 <span name="monthly" invisible="frequency != 'monthly'">
                                     on the
-                                    <field nolabel="1" name="first_day" class="o_field_accrual" required="frequency == 'monthly'" placeholder="select a day"/>
+                                    <field nolabel="1" name="first_day" class="o_hr_narrow_field-3" required="frequency == 'monthly'" placeholder="select a day"/>
                                     of the month.
                                 </span>
                                 <span name="bimonthly" invisible="frequency != 'bimonthly'" style="width: 100%">
                                     on the
-                                    <field nolabel="1" name="first_day" class="o_field_accrual" required="frequency == 'bimonthly'" placeholder="select a day"/>
+                                    <field nolabel="1" name="first_day" class="o_hr_narrow_field-3" required="frequency == 'bimonthly'" placeholder="select a day"/>
                                     and the
-                                    <field nolabel="1" name="second_day" class="o_field_accrual" required="frequency == 'bimonthly'" placeholder="select a day"/>
+                                    <field nolabel="1" name="second_day" class="o_hr_narrow_field-3" required="frequency == 'bimonthly'" placeholder="select a day"/>
                                     of the month
                                 </span>
                                 <span name="biyearly" invisible="frequency != 'biyearly'">
                                     on the
-                                    <field nolabel="1" name="first_month_day" class="o_field_accrual" widget="day_selection" month_field="first_month" placeholder="select a day" required="frequency == 'biyearly'"/>
+                                    <field nolabel="1" name="first_month_day" class="o_hr_narrow_field-3" widget="day_selection" month_field="first_month" placeholder="select a day" required="frequency == 'biyearly'"/>
                                     of
-                                    <field name="first_month" class="o_field_accrual" placeholder="select a month" required="frequency == 'biyearly'"/>
+                                    <field name="first_month" class="o_hr_narrow_field-5" placeholder="select a month" required="frequency == 'biyearly'"/>
                                     and the
-                                    <field nolabel="1" name="second_month_day" class="o_field_accrual" widget="day_selection" month_field="second_month" placeholder="select a day" required="frequency == 'biyearly'"/>
+                                    <field nolabel="1" name="second_month_day" class="o_hr_narrow_field-3" widget="day_selection" month_field="second_month" placeholder="select a day" required="frequency == 'biyearly'"/>
                                     of
-                                    <field nolabel="1" name="second_month" class="o_field_accrual" placeholder="select a month" required="frequency == 'biyearly'"/>
+                                    <field nolabel="1" name="second_month" class="o_hr_narrow_field-5" placeholder="select a month" required="frequency == 'biyearly'"/>
                                 </span>
                                 <span name="yearly" invisible="frequency != 'yearly'">
                                     on the
-                                    <field nolabel="1" name="yearly_day" class="o_field_accrual" widget="day_selection" month_field="yearly_month" required="frequency == 'yearly'" placeholder="select a day"/>
+                                    <field nolabel="1" name="yearly_day" class="o_hr_narrow_field-3" widget="day_selection" month_field="yearly_month" required="frequency == 'yearly'" placeholder="select a day"/>
                                     of
-                                    <field nolabel="1" name="yearly_month" class="o_field_accrual" required="frequency == 'yearly'" placeholder="select a month"/>
+                                    <field nolabel="1" name="yearly_month" class="o_hr_narrow_field-5" required="frequency == 'yearly'" placeholder="select a month"/>
                                 </span>
+                            </span>
+                            <span name="yearly_gain" class="text-muted">
+                                <label class="fw-bold" for="yearly_gain" string="Gain for the year :" invisible="is_based_on_worked_time"/>
+                                <label class="fw-bold" for="yearly_gain" string="Maximum gain for the year :" invisible="not is_based_on_worked_time"/>
+                            </span>
+                            <span class="text-muted">
+                                <field nolabel="1" name="yearly_gain" class="me-1 o_hr_narrow_field-5"/>
+                                <field nolabel="1" name="added_value_type" class="o_hr_narrow_field-4" readonly="1"/>
                             </span>
                             <label class="fw-bold" for="milestone_date" string="This milestone will be reached :"/>
                             <span name="milestone_date">
@@ -57,8 +65,8 @@
                                        widget="radio_followed_by_element"
                                        options="{'links': {'after': 'milestone_date_after'}, 'observe': 'milestone_date'}"/>
                                 <span id="milestone_date_after">
-                                    <field nolabel="1" class="ms-1 me-1 o_field_accrual" name="start_count"/>
-                                    <field nolabel="1" class="me-1 o_field_accrual" name="start_type"/>
+                                    <field nolabel="1" class="ms-1 me-1 o_hr_narrow_field-5 o_accrual_input" name="start_count"/>
+                                    <field nolabel="1" class="me-1 o_hr_narrow_field-4" name="start_type"/>
                                     from the start of allocation
                                 </span>
                             </span>
