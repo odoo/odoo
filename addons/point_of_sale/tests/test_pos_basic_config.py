@@ -3,7 +3,7 @@
 
 import odoo
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from odoo.exceptions import ValidationError
 from freezegun import freeze_time
@@ -1485,3 +1485,106 @@ class TestPoSBasicConfig(TestPoSCommon):
             special_product.unlink()
         with self.assertRaisesRegex(UserError, "You cannot archive a product that is set as a special product in a Point of Sale configuration. Please change the configuration first."):
             special_product.product_variant_ids[0].unlink()
+
+    def test_refund_with_topup_prepare_base_line_quantities(self):
+        """
+        Original use case: refund a product and put the refund amount on eWallet (order total 0).
+        _prepare_base_line_for_taxes_computation must return quantity 1 for both the returned
+        product line and the top-up line so the credit note (RINV) shows correct quantities
+        and the tax report does not double-count credits.
+        """
+        current_session = self.open_new_session()
+        orders = list(self._create_orders([
+            {'pos_order_lines_ui_args': [(self.product1, 1)]},
+        ]).values())
+        original_order = orders[0]
+        original_line = original_order.lines[0]
+        refund_amount = 20.0
+        # Refund order: one returned product (qty=-1) + one top-up line (qty=1), total=0.
+        refund_order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': self.customer.id,
+            'lines': [
+                Command.create({
+                    'product_id': self.product1.id,
+                    'price_unit': refund_amount,
+                    'qty': -1,
+                    'tax_ids': [Command.set([])],
+                    'price_subtotal': -refund_amount,
+                    'price_subtotal_incl': -refund_amount,
+                    'refunded_orderline_id': original_line.id,
+                }),
+                Command.create({
+                    'product_id': self.product2.id,
+                    'price_unit': refund_amount,
+                    'qty': 1,
+                    'tax_ids': [Command.set([])],
+                    'price_subtotal': refund_amount,
+                    'price_subtotal_incl': refund_amount,
+                }),
+            ],
+            'amount_paid': 0.0,
+            'amount_total': 0.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+        })
+        self.assertTrue(refund_order.refunded_order_id, "Refund order should have refunded_order_id set")
+        base_lines = refund_order.lines._prepare_tax_base_line_values()
+        self.assertEqual(len(base_lines), 2, "Should have two base lines")
+        # Returned product line (qty=-1) must yield quantity 1 for the credit note.
+        self.assertEqual(base_lines[0]['quantity'], 1, "Returned product line should have quantity 1 in base line")
+        # Top-up line (qty=1) must yield quantity 1.
+        self.assertEqual(base_lines[1]['quantity'], 1, "Top-up line should have quantity 1 in base line")
+
+    def test_refund_with_topup_credit_note_invoice_line_quantities(self):
+        """
+        Same use case: refund + eWallet top-up (order total 0). The generated credit note
+        must have product lines with quantity 1 (not -1) so the tax report is correct.
+        """
+        current_session = self.open_new_session()
+        orders = list(self._create_orders([
+            {'pos_order_lines_ui_args': [(self.product1, 1)]},
+        ]).values())
+        original_line = orders[0].lines[0]
+        refund_amount = 20.0
+        refund_order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': self.customer.id,
+            'lines': [
+                Command.create({
+                    'product_id': self.product1.id,
+                    'price_unit': refund_amount,
+                    'qty': -1,
+                    'tax_ids': [Command.set([])],
+                    'price_subtotal': -refund_amount,
+                    'price_subtotal_incl': -refund_amount,
+                    'refunded_orderline_id': original_line.id,
+                }),
+                Command.create({
+                    'product_id': self.product2.id,
+                    'price_unit': refund_amount,
+                    'qty': 1,
+                    'tax_ids': [Command.set([])],
+                    'price_subtotal': refund_amount,
+                    'price_subtotal_incl': refund_amount,
+                }),
+            ],
+            'amount_paid': 0.0,
+            'amount_total': 0.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+        })
+        # Build invoice vals (as in _generate_pos_order_invoice) and check line quantities.
+        move_type = 'out_refund' if refund_order.refunded_order_id else 'out_invoice'
+        self.assertEqual(move_type, 'out_refund', "Refund order must produce a credit note")
+        invoice_vals = refund_order._prepare_invoice_vals()
+        self.assertEqual(invoice_vals['move_type'], 'out_refund', "Invoice must be a credit note")
+        # invoice_line_ids is a list of Command.create line_vals; product lines must have quantity 1.
+        product_lines = [
+            c[2] for c in invoice_vals['invoice_line_ids']
+            if c[0] == Command.CREATE and isinstance(c[2], dict) and c[2].get('product_id')
+        ]
+        for line_vals in product_lines:
+            self.assertEqual(line_vals['quantity'], 1, "Credit note product line must have quantity 1 (not -1) for correct tax report")

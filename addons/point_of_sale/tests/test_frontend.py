@@ -3080,15 +3080,16 @@ class TestUi(TestPointOfSaleHttpCommon):
             ('session_id', '=', self.main_pos_config.current_session_id.id)
         ])
         self.assertEqual(len(orders), 2, "Expected two orders: original and refund.")
-        order, refund_order = orders[0], orders[1]
+        original_order = next(o for o in orders if o.amount_total > 0)
+        frontend_refund_order = next(o for o in orders if o.amount_total < 0)
         self.assertEqual(
-            refund_order.pricelist_id.id,
-            order.pricelist_id.id,
+            frontend_refund_order.pricelist_id.id,
+            original_order.pricelist_id.id,
             "Refund order pricelist should be the original order's pricelist."
         )
 
         # Perform refund on order and retrieve the resulting draft refund order
-        refund_action = orders[1].refund()
+        refund_action = original_order.refund()
         refund_order = self.env['pos.order'].browse(refund_action['res_id'])
 
         # Validate the refund order is in draft and has correct negative total

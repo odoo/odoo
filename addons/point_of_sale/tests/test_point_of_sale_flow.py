@@ -129,7 +129,7 @@ class TestPointOfSaleFlow(CommonPosTest):
                 line.qty = 1
         refund = refund_form.save()
 
-        self.assertEqual(refund.amount_total, 10.0)
+        self.assertEqual(refund.amount_total, -10.0)
         payment_context = {"active_ids": refund.ids, "active_id": refund.id}
         refund_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
             'amount': refund.amount_total,
