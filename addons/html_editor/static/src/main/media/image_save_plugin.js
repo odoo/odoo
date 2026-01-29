@@ -181,7 +181,12 @@ export class ImageSavePlugin extends Plugin {
                 }
             }
         }
-        if (!isImageField && !isBackground && el.dataset.mimetype !== "image/gif") {
+        if (
+            !isImageField &&
+            !isBackground &&
+            el.dataset.mimetype !== "image/gif" &&
+            !el.dataset.hoverEffect
+        ) {
             // We are using these sizes instead of the normally used 128, 256, ...
             // because we want to optimize smartphone data usage and loading time.
             // Each sizes in smallerSizes fits a certain category of smartphone,
