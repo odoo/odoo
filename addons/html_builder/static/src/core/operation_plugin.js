@@ -38,7 +38,7 @@ export class OperationPlugin extends Plugin {
         let rollback;
         const result = await this.operation.next(() => {
             if (params.canTimeout) {
-                rollback = this.dependencies.history.makeSavePoint();
+                rollback = this.dependencies.domMutation.makeSavePoint();
             }
             if (fn) {
                 return fn();

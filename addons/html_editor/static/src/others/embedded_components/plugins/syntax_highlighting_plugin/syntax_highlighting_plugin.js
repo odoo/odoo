@@ -118,7 +118,7 @@ export class SyntaxHighlightingPlugin extends Plugin {
             Object.assign(props, {
                 onTextareaFocus: () => this.dependencies.domMutation.stageFocus(),
                 convertToParagraph: ({ target }) => {
-                    this.dependencies.history.stageSelection();
+                    this.dependencies.domMutation.stageSelection();
                     const component = target.closest(`[data-embedded='${name}']`);
                     const embeddedProps = getEmbeddedProps(component);
                     const baseContainer = this.dependencies.baseContainer.createBaseContainer();

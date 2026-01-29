@@ -36,7 +36,7 @@ class MassMailingSocialMediaOptionPlugin extends Plugin {
         "renderTitleEl",
         "reorderSocialMediaLinks",
     ];
-    static dependencies = ["builderActions", "history", "overlayButtons"];
+    static dependencies = ["builderActions", "domMutation", "overlayButtons"];
 
     resources = {
         builder_options: [
@@ -223,7 +223,7 @@ class MassMailingSocialMediaOptionPlugin extends Plugin {
         } else {
             editingElement.querySelector(LINKS_CONTAINER_SELECTOR).append(element);
         }
-        this.dependencies.history.addStep();
+        this.dependencies.domMutation.commit();
     }
 
     /** @param {integer} companyId */

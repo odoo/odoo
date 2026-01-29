@@ -92,7 +92,7 @@ export class EmojiPlugin extends Plugin {
                 focusOffset: start,
             });
             this.dependencies.dom.insert(emoji.codepoints);
-            this.dependencies.history.addStep();
+            this.dependencies.domMutation.commit();
             this.match = match;
             return;
         }
