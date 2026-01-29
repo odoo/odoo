@@ -1235,7 +1235,10 @@ export function makeActionManager(env, router = _router) {
         if (env.isSmall) {
             view = _findView(views, view.multiRecord, action.mobile_view_mode) || view;
         }
-        if (env.services.offline.offline) {
+        if (
+            env.services.offline.offline &&
+            !env.services.offline.isAvailableOffline(action.id, view.type, action.res_id || false)
+        ) {
             view =
                 views.find((v) => env.services.offline.isAvailableOffline(action.id, v.type)) ||
                 view;

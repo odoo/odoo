@@ -2877,3 +2877,29 @@ test("[Offline] execute unavailable action", async () => {
         `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
     ]);
 });
+
+test.tags("desktop");
+test("[Offline] open the asked viewType", async () => {
+    expect.errors(1); // 1x ConnectionLostError
+    const setOffline = mockOffline();
+
+    await mountWithCleanup(WebClient);
+
+    // visit some actions and records to populate the caches
+    await getService("action").doAction(4);
+    expect(".o_kanban_view").toHaveCount(1);
+    await contains(".o_cp_switch_buttons .o_list").click();
+    expect(".o_list_view").toHaveCount(1);
+
+    // switch offline
+    await setOffline(true);
+
+    // execute an action with viewType
+    await getService("action").doAction(4, { viewType: "list" });
+    await animationFrame();
+    expect(".o_list_view").toHaveCount(1);
+
+    expect.waitForErrors([
+        `Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established`,
+    ]);
+});
