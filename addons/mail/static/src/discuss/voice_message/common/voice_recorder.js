@@ -3,6 +3,7 @@ import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { Mp3Encoder } from "./mp3_encoder";
+import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
 import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
 
 export const patchable = {
@@ -40,6 +41,7 @@ export function useVoiceRecorder() {
         },
     });
     /** @type {ReturnType<typeof import("@web/core/notifications/notification_service").notificationService.start>} */
+    const dialog = useService("dialog");
     const notification = useService("notification");
     const store = useService("mail.store");
     const config = { bitRate: 128 }; // 128 or 160 kbit/s – mid-range bitrate quality
@@ -77,12 +79,7 @@ export function useVoiceRecorder() {
                     return;
                 }
             } catch {
-                notification.add(
-                    _t('"%(hostname)s" needs to access your microphone', {
-                        hostname: window.location.host,
-                    }),
-                    { type: "warning" }
-                );
+                dialog.add(CallPermissionDeniedDialog, { permissionType: "microphone" });
                 state.isActionPending = false;
                 return;
             }
