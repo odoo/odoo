@@ -524,7 +524,7 @@ class PosOrder(models.Model):
                 company=order.company_id,
                 cash_rounding=cash_rounding,
             )
-            refund_factor = -1 if (order.amount_total < 0.0) else 1
+            refund_factor = -1 if (order.is_refund or order.amount_total < 0.0) else 1
             order.amount_tax = refund_factor * tax_totals['tax_amount_currency']
             order.amount_total = refund_factor * tax_totals['total_amount_currency']
             order.amount_difference = order.amount_paid - order.amount_total
@@ -898,7 +898,7 @@ class PosOrder(models.Model):
         fiscal_position = self.fiscal_position_id
         pos_config = self.config_id
         move_type = 'out_invoice' if not any(
-            order.is_refund or order.amount_total < 0 for order in self
+            order.is_refund or order.amount_total < 0.0 for order in self
         ) else 'out_refund'
         invoice_payment_term_id = (
             self.partner_id.property_payment_term_id.id
@@ -1888,7 +1888,7 @@ class PosOrderLine(models.Model):
         if fiscal_position:
             account = fiscal_position.map_account(account)
 
-        is_refund_order = line.order_id.amount_total < 0.0
+        is_refund_order = line.order_id.is_refund or line.order_id.amount_total < 0.0
         is_refund_line = line.qty * line.price_unit < 0
 
         lang = line.order_id.partner_id.lang or self.env.user.lang
