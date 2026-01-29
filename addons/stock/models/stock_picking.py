@@ -814,15 +814,15 @@ class StockPicking(models.Model):
         '''
         picking_moves_state_map = defaultdict(dict)
         picking_move_lines = defaultdict(set)
-        for move in self.move_ids:
+        for move in self.env['stock.move'].search([('picking_id', 'in', self.ids)]):
             picking_id = move.picking_id
             move_state = move.state
             picking_moves_state_map[picking_id.id].update({
                 'any_draft': picking_moves_state_map[picking_id.id].get('any_draft', False) or move_state == 'draft',
                 'all_cancel': picking_moves_state_map[picking_id.id].get('all_cancel', True) and move_state == 'cancel',
                 'all_cancel_done': picking_moves_state_map[picking_id.id].get('all_cancel_done', True) and move_state in ('cancel', 'done'),
-                'all_done_are_scrapped': picking_moves_state_map[picking_id.id].get('all_done_are_scrapped', True) and (move.location_dest_usage == 'inventory' if move_state == 'done' else True),
-                'any_cancel_and_not_scrapped': picking_moves_state_map[picking_id.id].get('any_cancel_and_not_scrapped', False) or (move_state == 'cancel' and move.location_dest_usage != 'inventory'),
+                'all_done_are_scrapped': picking_moves_state_map[picking_id.id].get('all_done_are_scrapped', True) and (move.is_scrap if move_state == 'done' else True),
+                'any_cancel_and_not_scrapped': picking_moves_state_map[picking_id.id].get('any_cancel_and_not_scrapped', False) or (move_state == 'cancel' and not move.is_scrap),
             })
             picking_move_lines[picking_id.id].add(move.id)
         for picking in self:
