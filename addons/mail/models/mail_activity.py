@@ -389,6 +389,8 @@ class MailActivity(models.Model):
         # Rules do not apply to administrator
         if self.env.is_superuser() or bypass_access:
             return super()._search(domain, offset, limit, order, bypass_access=True, **kwargs)
+        if self.env.context.get('_read_groupby'):
+            raise ValueError("Cannot group by mail.activity")
 
         # retrieve activities and their corresponding res_model, res_id
         # Don't use the ORM to avoid cache pollution
