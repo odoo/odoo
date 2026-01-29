@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="spreadsheet.GlobalFilterWidget">
+        <t t-if="!state.isLoading">
+            <t t-if="state.filtersAndValues.length">
+                <DashboardFilterList
+                    filtersAndValues="state.filtersAndValues"
+                    searchableParentRelations="state.searchableParentRelations"
+                    onFilterChange.bind="onFilterChange"
+                    model="state.model"/>
+            </t>
+            <t t-elif="!lastDashboardId" class="text-muted">
+                Select a dashboard to edit a global filter.
+            </t>
+            <t t-else="" class="text-muted">
+                No global filters defined for this dashboard.
+            </t>
+        </t>
+    </t>
+
+</templates>

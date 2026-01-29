@@ -7,7 +7,7 @@ import {
 import { user } from "@web/core/user";
 import { deepCopy, deepEqual } from "@web/core/utils/objects";
 
-function serializeFavoriteFilters(filterNodes) {
+export function serializeFavoriteFilters(filterNodes) {
     const serialized = {};
     for (const { globalFilter, value } of filterNodes) {
         if (!isEmptyFilterValue(globalFilter, value)) {
@@ -17,7 +17,7 @@ function serializeFavoriteFilters(filterNodes) {
     return serialized;
 }
 
-function deserializeFavoriteFilters(getters, serializedFilters) {
+export function deserializeFavoriteFilters(getters, serializedFilters) {
     return getters.getGlobalFilters().map((gf) => ({
         globalFilter: gf,
         value: serializedFilters[gf.id]

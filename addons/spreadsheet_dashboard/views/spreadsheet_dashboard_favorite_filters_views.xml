@@ -5,6 +5,7 @@
         <field name="model">spreadsheet.dashboard.favorite.filters</field>
         <field name="arch" type="xml">
             <form string="Dashboard Filters">
+            <field name="dashboard_id" invisible="1"/> <!-- required for the global_filters widget, when the user is not in debug -->
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <group>
@@ -15,7 +16,7 @@
                             <field name="dashboard_id" groups="base.group_no_one"/>
                         </group>
                         <group>
-                            <field name="global_filters"/>
+                            <field name="global_filters" widget="global_filters" options="{'dashboard': 'dashboard_id'}"/>
                         </group>
                     </group>
                 </sheet>
@@ -43,7 +44,6 @@
                 <field name="dashboard_id"/>
                 <field name="user_ids" widget="many2many_tags_avatar"/>
                 <field name="is_default"/>
-                <field name="global_filters" groups="base.group_no_one"/>
             </list>
         </field>
     </record>
