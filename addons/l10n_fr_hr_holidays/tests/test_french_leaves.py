@@ -502,3 +502,52 @@ class TestFrenchLeaves(TransactionCase):
             'request_date_to': '2024-12-25',
         })
         self.assertEqual(leave.number_of_days, 4.0, 'Public holidays for French part-time employees should be considered')
+
+    def test_half_day_leave_with_employee_holiday(self):
+        """
+        Test Case:
+        ==========
+        - Employee has a working schedule with a public holiday on February 3rd (not on company calendar)
+        - Time Off is taken in half days
+        - Employee requests time off from February 2nd - 4th
+        - Only 2 days of time off should be used, since the 3rd is a holiday for this employee
+        """
+        employee_calendar = self.env['resource.calendar'].create({
+            'name': 'Employee Calendar',
+            'attendance_ids': [
+                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 18, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday Lunch', 'dayofweek': '1', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 18, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Lunch', 'dayofweek': '2', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 18, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday Lunch', 'dayofweek': '3', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 18, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 9, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Friday Lunch', 'dayofweek': '4', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 18, 'day_period': 'afternoon'})
+            ]
+        })
+
+        tz = pytz.timezone(self.env.user.tz)
+        self.env['resource.calendar.leaves'].with_company(self.company).create({
+            'name': 'Public Holiday',
+            'calendar_id': employee_calendar.id,
+            'date_from': tz.localize(fields.Datetime.from_string("2026-02-03 00:00:00")).astimezone(pytz.UTC).replace(tzinfo=None),
+            'date_to': tz.localize(fields.Datetime.from_string("2026-02-03 23:59:59")).astimezone(pytz.UTC).replace(tzinfo=None),
+            'resource_id': False,
+        })
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Test leave',
+            'holiday_status_id': self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2026-02-02',
+            'request_date_to': '2026-02-04',
+        })
+
+        self.assertEqual(leave.number_of_days, 2.0, 'The number of days should be equal to 2 since February 3rd is a holiday for this employee.')

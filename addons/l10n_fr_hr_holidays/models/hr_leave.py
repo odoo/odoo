@@ -145,6 +145,12 @@ class HrLeave(models.Model):
                 for leave in leaves:
                     if leave.request_unit_half:
                         duration_by_leave_id.update(leave._get_durations(resource_calendar=company_cal))
+                        employee_holidays = public_holidays.filtered_domain([
+                            ('calendar_id', 'in', [self.employee_id.resource_calendar_id.id]),
+                            ('company_id', '=', company.id)
+                        ])
+                        _, hours = duration_by_leave_id.get(leave.id, (0.0, 0.0))
+                        duration_by_leave_id[leave.id] = (_ - len(employee_holidays), hours - (len(employee_holidays) * 8))
                         continue
                     # Extend the end date to next working day
                     date_start = leave.date_from
