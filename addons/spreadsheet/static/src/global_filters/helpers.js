@@ -353,7 +353,7 @@ export function checkFilterAndValue(getters, filterId, value) {
  * @param {any} value
  * @returns {boolean}
  */
-function checkFilterValueIsValid(filter, value) {
+export function checkFilterValueIsValid(filter, value) {
     if (value === undefined) {
         return true;
     }
