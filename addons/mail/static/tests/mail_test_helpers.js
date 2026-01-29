@@ -1,6 +1,6 @@
 import { addBusMessageHandler, busModels } from "@bus/../tests/bus_test_helpers";
 import { after, before, expect, getFixture, registerDebugInfo, test } from "@odoo/hoot";
-import { hover as hootHover, queryFirst, resize } from "@odoo/hoot-dom";
+import { advanceTime, hover as hootHover, queryFirst, resize } from "@odoo/hoot-dom";
 import { Deferred, microTick } from "@odoo/hoot-mock";
 import {
     MockServer,
@@ -1048,4 +1048,16 @@ export async function assertChatBubbleAndWindowImStatus(conversationName, count)
         `.o-mail-ChatWindow-header:has(:text(${conversationName})) .o-mail-ImStatus`
     ).toHaveCount(count);
     await click(`.o-mail-ChatWindow-header:has(:text(${conversationName}))`);
+}
+
+/**
+ * Simulate self speaking for given `duration`.
+ *
+ * @param {import("@mail/discuss/call/common/rtc_session_model").RtcSession} selfSession
+ * @param {Number} duration
+ */
+export async function simulateSelfSpeaking(selfSession, duration) {
+    selfSession.isTalking = true;
+    await advanceTime(duration);
+    selfSession.isTalking = false;
 }

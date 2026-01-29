@@ -31,6 +31,7 @@ export function registerCallAction(id, definition) {
 }
 
 export const muteAction = {
+    btnClass: "o-discuss-callAction-Mute",
     badge: ({ owner, store }) => store.rtc.microphonePermission !== "granted",
     badgeIcon: "fa fa-exclamation",
     condition: ({ owner, store, channel }) =>

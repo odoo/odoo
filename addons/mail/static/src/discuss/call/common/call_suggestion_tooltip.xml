@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.CallSuggestionTooltip">
+        <div class="d-flex align-items-center py-1 px-2 gap-2" style="max-width: 210px;">
+            <span t-out="props.text"/>
+            <i class="fa fa-times cursor-pointer opacity-50 opacity-100-hover flex-shrink-0" aria-label="Dismiss" t-on-click="props.onDismiss"/>
+        </div>
+    </t>
+</templates>
