@@ -8,7 +8,7 @@ import werkzeug
 
 from odoo import api, fields, Command, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
-from odoo.tools import clean_context, email_normalize, float_repr, float_round, is_html_empty
+from odoo.tools import clean_context, email_normalize, float_repr, float_round, is_html_empty, format_amount, format_date
 
 
 _logger = logging.getLogger(__name__)
@@ -1063,9 +1063,28 @@ class HrExpense(models.Model):
                     url = '/odoo/expenses-to-process'
                 else:
                     url = f'/odoo/departments/{departments.id}/expenses-to-approve'
+                expenses_count = len(expenses_submitted)
+                employee_breakdown = []
+                for employee, expenses in expenses_submitted.grouped('employee_id').items():
+                    employee_total_amount = sum(expenses.mapped('total_amount'))
+                    employee_breakdown.append({
+                        'name': employee.name,
+                        'amount': format_amount(self.env, employee_total_amount, company.currency_id),
+                    })
+
                 body = self.env['ir.qweb']._render(
                     template='hr_expense.hr_expense_template_submitted_expenses',
-                    values={'manager_name': manager.name, 'url': url, 'company': company},
+                    values={
+                        'manager_name': manager.name,
+                        'url': url,
+                        'company': company,
+                        'user': self.env.user,
+                        'total_amount': sum(expenses_submitted.mapped('total_amount')),
+                        'today_string': format_date(self.env, fields.Date.context_today(self), date_format='EEEE', lang_code=mail_lang),
+                        'first_expense_name': expenses_submitted[0].name,
+                        'expenses_count': expenses_count,
+                        'employee_breakdown': employee_breakdown,
+                    },
                     lang=mail_lang,
                 )
                 new_mails.append({
