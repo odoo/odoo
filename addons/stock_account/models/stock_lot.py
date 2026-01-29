@@ -31,7 +31,6 @@ class StockLot(models.Model):
                 lot.total_value = 0.0
                 lot.avg_cost = 0.0
                 continue
-
             valuated_product = lot.product_id.with_context(at_date=at_date, lot_id=lot.id)
             qty_valued = valuated_product.qty_available
             qty_available = valuated_product.with_context(warehouse_id=False).qty_available

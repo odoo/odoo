@@ -169,6 +169,8 @@ class ProductProduct(models.Model):
         domain_move_out = [('product_id', 'in', self.ids)] + domain_move_out_loc
         if lot_id is not None:
             domain_quant += [('lot_id', '=', lot_id)]
+            domain_move_in += [('move_line_ids.lot_id', '=', lot_id)]
+            domain_move_out += [('move_line_ids.lot_id', '=', lot_id)]
         if owner_id is not None:
             domain_quant += [('owner_id', '=', owner_id)]
             domain_move_in += [('restrict_partner_id', '=', owner_id)]
