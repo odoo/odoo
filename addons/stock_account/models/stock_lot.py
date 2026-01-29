@@ -30,7 +30,6 @@ class StockLot(models.Model):
             if not lot.lot_valuated:
                 lot.total_value = 0.0
                 continue
-
             valuated_product = lot.product_id.with_context(at_date=at_date, lot_id=lot.id)
             qty_valued = valuated_product.qty_available
             qty_available = valuated_product.with_context(warehouse_id=False).qty_available
@@ -39,9 +38,9 @@ class StockLot(models.Model):
             elif valuated_product.cost_method == 'standard' or valuated_product.uom_id.is_zero(qty_available):
                 lot.total_value = lot.standard_price * qty_valued
             elif valuated_product.cost_method == 'average':
-                lot.total_value = valuated_product._run_avco(at_date=at_date, lot=lot)[1] * qty_valued / qty_available
+                lot.total_value = valuated_product.with_context(warehouse_id=False)._run_avco(at_date=at_date, lot=lot)[1] * qty_valued / qty_available
             else:
-                lot.total_value = valuated_product._run_fifo(qty_available, at_date=at_date, lot=lot) * qty_valued / qty_available
+                lot.total_value = valuated_product.with_context(warehouse_id=False)._run_fifo(qty_available, at_date=at_date, lot=lot) * qty_valued / qty_available
 
     # TODO: remove avg cost column in master and merge the two compute methods
     @api.depends('product_id.lot_valuated')

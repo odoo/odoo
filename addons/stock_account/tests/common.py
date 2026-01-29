@@ -1,5 +1,8 @@
 import re
 from dateutil.relativedelta import relativedelta
+from datetime import timedelta
+from freezegun.api import freeze_time
+
 
 from odoo import Command, fields
 from odoo.tools.misc import clean_context
@@ -408,40 +411,43 @@ class TestStockValuationCommon(BaseCommon):
         })
 
         # Clean context to avoid magic behavior later (e.g. copy with create_product_product to false)
-        product_common_vals = {
-            "standard_price": 10.0,
-            "list_price": 20.0,
-            "uom_id": cls.uom.id,
-            "is_storable": True,
-        }
-        cls.product = cls.env['product.product'].create({**product_common_vals, 'name': 'Storable Product'}).with_context(clean_context(cls.env.context))
-        cls.product_standard = cls.env['product.product'].create({
-            **product_common_vals,
-            'name': 'Standard Product',
-            'categ_id': cls.category_standard.id,
-        }).with_context(clean_context(cls.env.context))
-        cls.product_standard_auto = cls.env['product.product'].create({
-            **product_common_vals,
-            'name': 'Standard Product Auto',
-            'categ_id': cls.category_standard_auto.id,
-        }).with_context(clean_context(cls.env.context))
-        cls.product_fifo = cls.env['product.product'].create({
-            **product_common_vals,
-            'name': 'Fifo Product',
-            'categ_id': cls.category_fifo.id,
-        }).with_context(clean_context(cls.env.context))
-        cls.product_fifo_auto = cls.env['product.product'].create({
-            **product_common_vals,
-            'name': 'Fifo Product Auto',
-            'categ_id': cls.category_fifo_auto.id,
-        }).with_context(clean_context(cls.env.context))
-        cls.product_avco = cls.env['product.product'].create({
-            **product_common_vals,
-            'name': 'Avco Product',
-            'categ_id': cls.category_avco.id,
-        }).with_context(clean_context(cls.env.context))
-        cls.product_avco_auto = cls.env['product.product'].create({
-            **product_common_vals,
-            'name': 'Avco Product Auto',
-            'categ_id': cls.category_avco_auto.id,
-        }).with_context(clean_context(cls.env.context))
+        # Use a freeze time to avoid a conflict between moves and default product_value generated during create
+        with freeze_time(fields.Datetime.now() - timedelta(seconds=10)):
+            product_common_vals = {
+                "standard_price": 10.0,
+                "list_price": 20.0,
+                "uom_id": cls.uom.id,
+                "is_storable": True,
+            }
+            cls.product = cls.env['product.product'].create(
+                {**product_common_vals, 'name': 'Storable Product'}).with_context(clean_context(cls.env.context))
+            cls.product_standard = cls.env['product.product'].create({
+                **product_common_vals,
+                'name': 'Standard Product',
+                'categ_id': cls.category_standard.id,
+            }).with_context(clean_context(cls.env.context))
+            cls.product_standard_auto = cls.env['product.product'].create({
+                **product_common_vals,
+                'name': 'Standard Product Auto',
+                'categ_id': cls.category_standard_auto.id,
+            }).with_context(clean_context(cls.env.context))
+            cls.product_fifo = cls.env['product.product'].create({
+                **product_common_vals,
+                'name': 'Fifo Product',
+                'categ_id': cls.category_fifo.id,
+            }).with_context(clean_context(cls.env.context))
+            cls.product_fifo_auto = cls.env['product.product'].create({
+                **product_common_vals,
+                'name': 'Fifo Product Auto',
+                'categ_id': cls.category_fifo_auto.id,
+            }).with_context(clean_context(cls.env.context))
+            cls.product_avco = cls.env['product.product'].create({
+                **product_common_vals,
+                'name': 'Avco Product',
+                'categ_id': cls.category_avco.id,
+            }).with_context(clean_context(cls.env.context))
+            cls.product_avco_auto = cls.env['product.product'].create({
+                **product_common_vals,
+                'name': 'Avco Product Auto',
+                'categ_id': cls.category_avco_auto.id,
+            }).with_context(clean_context(cls.env.context))
