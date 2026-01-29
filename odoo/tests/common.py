@@ -1323,6 +1323,7 @@ class ChromeBrowser:
             '--disable-translate': '',
             '--no-sandbox': '',
             '--disable-gpu': '',
+            '--enable-unsafe-swiftshader': '',
             '--mute-audio': '',
         }
         switches = {
