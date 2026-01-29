@@ -108,31 +108,31 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_variation_id': 'account_account_us_raw_materials',
             },
             'account_account_us_technology': {
-                'asset_depreciation_account_id': 'account_account_us_acc_depreciation',
-                'asset_expense_account_id': 'account_account_us_computers',
+                'asset_depreciation_account_id': 'account_account_us_depreciation_technology',
+                'asset_expense_account_id': 'account_account_us_expense_technology',
             },
             'account_account_us_buildings': {
-                'asset_depreciation_account_id': 'account_account_us_acc_depreciation',
-                'asset_expense_account_id': 'account_account_us_expense',
+                'asset_depreciation_account_id': 'account_account_us_depreciation_buildings',
+                'asset_expense_account_id': 'account_account_us_expense_buildings',
             },
             'account_account_us_improvements': {
-                'asset_depreciation_account_id': 'account_account_us_acc_depreciation',
-                'asset_expense_account_id': 'account_account_us_office_maintenance',
+                'asset_depreciation_account_id': 'account_account_us_depreciation_improvements',
+                'asset_expense_account_id': 'account_account_us_expense_improvements',
             },
             'account_account_us_machines': {
-                'asset_depreciation_account_id': 'account_account_us_acc_depreciation',
-                'asset_expense_account_id': 'account_account_us_equipment',
+                'asset_depreciation_account_id': 'account_account_us_depreciation_machines',
+                'asset_expense_account_id': 'account_account_us_expense_machines',
             },
             'account_account_us_other_property': {
-                'asset_depreciation_account_id': 'account_account_us_acc_depreciation',
-                'asset_expense_account_id': 'account_account_us_expense',
+                'asset_depreciation_account_id': 'account_account_us_depreciation_other_property',
+                'asset_expense_account_id': 'account_account_us_expense_other_property',
             },
             'account_account_us_furniture': {
-                'asset_depreciation_account_id': 'account_account_us_acc_depreciation',
-                'asset_expense_account_id': 'account_account_us_equipment',
+                'asset_depreciation_account_id': 'account_account_us_depreciation_furniture',
+                'asset_expense_account_id': 'account_account_us_expense_furniture',
             },
             'account_account_us_vehicles': {
-                'asset_depreciation_account_id': 'account_account_us_acc_depreciation',
-                'asset_expense_account_id': 'account_account_us_vehicles_expense',
+                'asset_depreciation_account_id': 'account_account_us_depreciation_vehicles',
+                'asset_expense_account_id': 'account_account_us_expense_vehicles',
             },
         }
