@@ -18,12 +18,12 @@ class AccountMove(models.Model):
     campaign_id = fields.Many2one(ondelete='set null')
     medium_id = fields.Many2one(ondelete='set null')
     source_id = fields.Many2one(ondelete='set null')
-    sale_order_count = fields.Integer(compute="_compute_origin_so_count", string='Sale Order Count')
+    sale_order_count = fields.Integer(compute="_compute_origin_so_count", string='Sale Order Count', compute_sudo=True)
     sale_warning_text = fields.Text(
         "Sale Warning",
         help="Internal warning for the partner or the products as set by the user.",
         compute="_compute_sale_warning_text")
-    service_line_count = fields.Integer(compute="_compute_service_line_count")
+    service_line_count = fields.Integer(compute="_compute_service_line_count", compute_sudo=True)
 
     def unlink(self):
         downpayment_lines = self.mapped('line_ids.sale_line_ids').filtered(lambda line: line.is_downpayment and line.invoice_lines <= self.mapped('line_ids'))
