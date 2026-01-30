@@ -400,7 +400,8 @@ def _setup(model_cls: type[BaseModel], env: Environment):
             if not company_dependent:
                 # validate column type again in case the column type is changed by upgrade script
                 rows = env.execute_query(sql.SQL(
-                    'SELECT data_type FROM information_schema.columns WHERE table_name = %s AND column_name = %s',
+                    'SELECT data_type FROM information_schema.columns'
+                    ' WHERE table_name = %s AND column_name = %s AND table_schema = current_schema',
                     model_cls._table, name,
                 ))
                 if rows and rows[0][0] == 'jsonb':
@@ -560,9 +561,8 @@ def _add_manual_models(env: Environment):
                 """ SELECT a.attname
                     FROM pg_attribute a
                     JOIN pg_class t ON a.attrelid = t.oid AND t.relname = %s
-                    JOIN pg_namespace n ON t.relnamespace = n.oid
                     WHERE a.attnum > 0 -- skip system columns
-                      AND n.nspname = current_schema """,
+                    AND t.relnamespace = current_schema::regnamespace """,
                 [table_name]
             )
             columns = {colinfo[0] for colinfo in env.cr.fetchall()}

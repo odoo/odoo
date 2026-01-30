@@ -11,6 +11,7 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Command
 from odoo.tools import mute_logger, SQL
+from odoo.tools.sql import table_columns
 
 _logger = logging.getLogger('odoo.addons.base.partner.merge')
 
@@ -82,21 +83,19 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         """
         query = """
             SELECT cl1.relname as table, att1.attname as column
-            FROM pg_constraint as con, pg_class as cl1, pg_class as cl2, pg_attribute as att1, pg_attribute as att2,
-                 pg_namespace n
+            FROM pg_constraint as con, pg_class as cl1, pg_class as cl2, pg_attribute as att1, pg_attribute as att2
             WHERE con.conrelid = cl1.oid
                 AND con.confrelid = cl2.oid
                 AND array_lower(con.conkey, 1) = 1
                 AND con.conkey[1] = att1.attnum
                 AND att1.attrelid = cl1.oid
                 AND cl2.relname = %s
+                AND cl2.relnamespace = current_schema::regnamespace
                 AND att2.attname = 'id'
                 AND array_lower(con.confkey, 1) = 1
                 AND con.confkey[1] = att2.attnum
                 AND att2.attrelid = cl2.oid
                 AND con.contype = 'f'
-                AND cl2.relnamespace = n.oid
-                AND n.nspname = current_schema
         """
         self.env.cr.execute(query, (table,))
         return self.env.cr.fetchall()
@@ -106,13 +105,12 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             SELECT 1
             FROM pg_constraint c
             JOIN pg_class r ON (c.conrelid = r.oid)
-            JOIN pg_namespace n ON r.relnamespace = n.oid
             CROSS JOIN LATERAL unnest(c.conkey) AS cattr(attnum)
             JOIN pg_attribute a ON (a.attrelid = c.conrelid AND a.attnum = cattr.attnum)
             WHERE c.contype IN ('c', 'u')
                 AND r.relname = %s
+                AND r.relnamespace = current_schema::regnamespace
                 AND a.attname = %s
-                AND n.nspname = current_schema
             LIMIT 1
         """, (table, column))
         return bool(self.env.cr.rowcount)
@@ -135,13 +133,8 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             if 'base_partner_merge_' in table:  # ignore two tables
                 continue
 
-            # get list of columns of current table (exept the current fk column)
-            query = "SELECT column_name FROM information_schema.columns WHERE table_name LIKE '%s'" % (table)
-            self.env.cr.execute(query, ())
-            columns = []
-            for data in self.env.cr.fetchall():
-                if data[0] != column:
-                    columns.append(data[0])
+            # get list of columns of current table (except the current fk column)
+            columns = [fld for fld in table_columns(self.env.cr, table) if fld != column]
 
             # do the update for the current table/column in SQL
             query_dic = {
