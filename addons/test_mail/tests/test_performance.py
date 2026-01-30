@@ -405,7 +405,13 @@ class TestBaseAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
+<<<<<<< 5ab2ec323cf903f74857c371ef33af8d714006f4
         with self.assertQueryCount(admin=15, employee=15):  # tm 13 / 13
+||||||| ae11d590cd907ee00373df57d896068267dac118
+        with self.assertQueryCount(admin=14, employee=14):  # tm 10 / 10
+=======
+        with self.assertQueryCount(admin=15, employee=15):  # tm 10 / 10
+>>>>>>> b222c0821bddb9e28d8fd2f7ad24f325ba696d7b
             record.action_close('Dupe feedback', attachment_ids=attachments.ids)
 
         # notifications
@@ -476,7 +482,13 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 composer_form.attachment_ids.add(attachment)
             composer = composer_form.save()
 
+<<<<<<< 5ab2ec323cf903f74857c371ef33af8d714006f4
         with self.assertQueryCount(admin=55, employee=55):  # tm 54/54
+||||||| ae11d590cd907ee00373df57d896068267dac118
+        with self.assertQueryCount(admin=56, employee=57):  # tm 53/53
+=======
+        with self.assertQueryCount(admin=55, employee=55):  # tm 53/53
+>>>>>>> b222c0821bddb9e28d8fd2f7ad24f325ba696d7b
             composer._action_send_mail()
 
         # notifications
@@ -558,7 +570,13 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     def test_mail_composer_w_template_attachments(self):
         test_record, test_template = self._create_test_records()
 
+<<<<<<< 5ab2ec323cf903f74857c371ef33af8d714006f4
         with self.assertQueryCount(admin=28, employee=28):  # tm: 21/21
+||||||| ae11d590cd907ee00373df57d896068267dac118
+        with self.assertQueryCount(admin=30, employee=30):  # tm: 24/24
+=======
+        with self.assertQueryCount(admin=28, employee=28):  # tm: 24/24
+>>>>>>> b222c0821bddb9e28d8fd2f7ad24f325ba696d7b
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
@@ -1008,7 +1026,13 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_get_suggested_recipients_batch(self):
         records = self.test_records_recipients.with_env(self.env)
+<<<<<<< 5ab2ec323cf903f74857c371ef33af8d714006f4
         with self.assertQueryCount(employee=28):  # tm: 21
+||||||| ae11d590cd907ee00373df57d896068267dac118
+        with self.assertQueryCount(employee=32):  # tm: 25
+=======
+        with self.assertQueryCount(employee=28):  # tm: 25
+>>>>>>> b222c0821bddb9e28d8fd2f7ad24f325ba696d7b
             _recipients = records._message_get_suggested_recipients_batch(no_create=False)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')

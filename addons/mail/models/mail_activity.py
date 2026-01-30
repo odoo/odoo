@@ -8,7 +8,7 @@ from datetime import date, datetime, timedelta
 from dateutil.relativedelta import MO, relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
 from odoo.tools import is_html_empty
 from odoo.tools.misc import clean_context, get_lang, groupby
@@ -247,9 +247,33 @@ class MailActivity(models.Model):
                 forbidden_ids.append(activity.id)
 
         for doc_model, docid_actids in model_docid_actids.items():
+<<<<<<< 5ab2ec323cf903f74857c371ef33af8d714006f4
             allowed = self.env['mail.message']._filter_records_for_message_operation(doc_model, docid_actids, operation)
             for document_id in [doc_id for doc_id in docid_actids if doc_id not in allowed.ids]:
                 forbidden_ids.extend(docid_actids[document_id])
+||||||| ae11d590cd907ee00373df57d896068267dac118
+            documents = self.env[doc_model].browse(docid_actids)
+            doc_operation = getattr(
+                documents, '_mail_post_access', 'read' if operation == 'read' else 'write'
+            )
+            if doc_result := documents._check_access(doc_operation):
+                for document in doc_result[0]:
+                    forbidden_ids.extend(docid_actids[document.id])
+=======
+            documents = self.env[doc_model].browse(docid_actids)
+            doc_operation = getattr(
+                documents, '_mail_post_access', 'read' if operation == 'read' else 'write'
+            )
+            try:
+                doc_result = documents._check_access(doc_operation)
+            except MissingError:
+                existing = documents.exists()
+                forbidden_ids.extend((documents - existing).ids)
+                doc_result = existing._check_access(doc_operation)
+            if doc_result:
+                for document in doc_result[0]:
+                    forbidden_ids.extend(docid_actids[document.id])
+>>>>>>> b222c0821bddb9e28d8fd2f7ad24f325ba696d7b
 
         if forbidden_ids:
             forbidden = self.browse(forbidden_ids)
@@ -553,6 +577,7 @@ class MailActivity(models.Model):
                     next_activities_values.append(vals)
 
                 # post message on activity, before deleting it
+<<<<<<< 5ab2ec323cf903f74857c371ef33af8d714006f4
                 if record_sudo in existing:
                     activity_message = record_sudo.message_post_with_source(
                         'mail.message_activity_done',
@@ -572,6 +597,38 @@ class MailActivity(models.Model):
 
                 message_attachments = activity_attachments.get(activity.id) or self.env['ir.attachment']
                 attachment_ids = (attachment_ids or []) + message_attachments.ids
+||||||| ae11d590cd907ee00373df57d896068267dac118
+                activity_message = record_sudo.message_post_with_source(
+                    'mail.message_activity_done',
+                    attachment_ids=attachment_ids,
+                    author_id=self.env.user.partner_id.id,
+                    render_values={
+                        'activity': activity,
+                        'feedback': feedback,
+                        'display_assignee': activity.user_id != self.env.user
+                    },
+                    mail_activity_type_id=activity.activity_type_id.id,
+                    subtype_xmlid='mail.mt_activities',
+                )
+=======
+
+                if record_sudo in existing:
+                    activity_message = record_sudo.message_post_with_source(
+                        'mail.message_activity_done',
+                        attachment_ids=attachment_ids,
+                        author_id=self.env.user.partner_id.id,
+                        render_values={
+                            'activity': activity,
+                            'feedback': feedback,
+                            'display_assignee': activity.user_id != self.env.user
+                        },
+                        mail_activity_type_id=activity.activity_type_id.id,
+                        subtype_xmlid='mail.mt_activities',
+                    )
+                else:
+                    activity_message = self.env['mail.message']
+                    activities_to_remove += activity
+>>>>>>> b222c0821bddb9e28d8fd2f7ad24f325ba696d7b
                 if attachment_ids:
                     activity.attachment_ids = attachment_ids
 
@@ -584,10 +641,19 @@ class MailActivity(models.Model):
                         'res_id': activity_message.id,
                         'res_model': activity_message._name,
                     })
+<<<<<<< 5ab2ec323cf903f74857c371ef33af8d714006f4
                     activity_message.attachment_ids = message_attachments.ids
                 # removing attachments linked to activity if record is missing
                 elif message_attachments:
                     attachments_to_remove += message_attachments
+||||||| ae11d590cd907ee00373df57d896068267dac118
+                    activity_message.attachment_ids = message_attachments
+=======
+                    activity_message.attachment_ids = message_attachments
+                # removing attachments linked to activity if record is missing
+                elif message_attachments:
+                    attachments_to_remove += message_attachments
+>>>>>>> b222c0821bddb9e28d8fd2f7ad24f325ba696d7b
                 messages += activity_message
 
         next_activities = self.env['mail.activity']

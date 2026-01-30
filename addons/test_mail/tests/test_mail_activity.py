@@ -500,6 +500,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
             (self.test_lead_records._name, 'Planned do not count in total', (1, 1, 1, 0), []),
         ]:
             with self.subTest(model_name=model_name, msg=msg):
+<<<<<<< 5ab2ec323cf903f74857c371ef33af8d714006f4
                 group_values = next(values for values in groups_data if values['model'] == model_name)
                 self.assertEqual(group_values['total_count'], exp_total)
                 self.assertEqual(group_values['today_count'], exp_today)
@@ -561,6 +562,85 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
         self.assertEqual(len(messages), 3, 'Should have posted one message / live record')
         self.assertEqual(lead_activities.exists(), lead_activities - self.test_activities_removed, 'Mark done should unlink activities linked to removed records')
         self.assertEqual(lead_activities.exists().mapped('active'), [False] * 3)
+||||||| ae11d590cd907ee00373df57d896068267dac118
+                total_count = sum(
+                    record["total_count"] for record in data["Store"]["activityGroups"]
+                    if record.get("model") == model_name
+                )
+                today_count = sum(
+                    record["today_count"] for record in data["Store"]["activityGroups"]
+                    if record.get("model") == model_name
+                )
+                planned_count = sum(
+                    record["planned_count"] for record in data["Store"]["activityGroups"]
+                    if record.get("model") == model_name
+                )
+                overdue_count = sum(
+                    record["overdue_count"] for record in data["Store"]["activityGroups"]
+                    if record.get("model") == model_name
+                )
+                self.assertEqual(total_count, exp_total)
+                self.assertEqual(today_count, exp_today)
+                self.assertEqual(planned_count, exp_planned)
+                self.assertEqual(overdue_count, exp_overdue)
+=======
+                group_values = next(values for values in groups_data if values['model'] == model_name)
+                self.assertEqual(group_values['total_count'], exp_total)
+                self.assertEqual(group_values['today_count'], exp_today)
+                self.assertEqual(group_values['planned_count'], exp_planned)
+                self.assertEqual(group_values['overdue_count'], exp_overdue)
+                self.assertEqual(group_values['domain'], exp_domain)
+
+        # check search results with removed records
+        self.env.invalidate_all()
+        test_with_removed = self.env['mail.activity'].sudo().search([
+            ('id', 'in', self.test_activities.ids),
+            ('res_model', '=', self.test_lead_records._name),
+        ])
+        self.assertEqual(len(test_with_removed), 4, 'Without ACL check, activities linked to removed records are kept')
+
+        self.env.invalidate_all()
+        test_with_removed_as_admin = self.env['mail.activity'].with_user(self.user_admin).search([
+            ('id', 'in', self.test_activities.ids),
+            ('res_model', '=', self.test_lead_records._name),
+        ])
+        self.assertEqual(len(test_with_removed_as_admin), 3, 'With ACL check, activities linked to removed records are not kept is not assigned to the user')
+
+        self.env.invalidate_all()
+        self.env.transaction.clear_access_cache()
+        # interestingly, has_access('read') works, but reading fails (see below). To check with ORM.
+        # self.assertFalse(
+        #     self.test_activities_removed.with_user(self.user_admin).has_access('read'),
+        #     'No access to an activity linked to someone and whose record has been removed '
+        #     '(considered as no access to record); and should not crash (no MissingError)'
+        # )
+        with self.assertRaises(exceptions.AccessError):  # should not raise a MissingError
+            self.test_activities_removed.with_user(self.user_admin).read(['summary'])
+
+        self.env.invalidate_all()
+        test_with_removed = self.env['mail.activity'].search([
+            ('id', 'in', self.test_activities.ids),
+            ('res_model', '=', self.test_lead_records._name),
+        ])
+        self.assertEqual(len(test_with_removed), 4, 'Even with ACL check, activities linked to removed records are kept if assigned to the user (see odoo/odoo#112126)')
+
+        # if not assigned -> should filter out
+        self.env.invalidate_all()
+        self.test_activities_removed.write({'user_id': self.user_admin.id})
+        self.test_activities_removed.write({'user_id': self.user_employee.id})
+
+        # be sure activities on removed records do not crash when managed, and that
+        # lost attachments are removed as well
+        self.env.invalidate_all()
+        lead_activities = self.test_lead_activities.with_user(self.user_employee)
+        lead_act_attachments = self.lead_act_attachments.with_user(self.user_employee)
+        self.assertEqual(len(lead_activities), 4, 'Simulate UI where activities are still displayed even if record removed')
+        self.assertEqual(len(lead_act_attachments), 4, 'Simulate UI where activities are still displayed even if record removed')
+        messages, _next_activities = lead_activities._action_done()
+        self.assertEqual(len(messages), 3, 'Should have posted one message / live record')
+        self.assertEqual(lead_activities.exists(), lead_activities - self.test_activities_removed, 'Mark done should unlink activities linked to removed records')
+        self.assertEqual(lead_activities.exists().mapped('active'), [False] * 3)
+>>>>>>> b222c0821bddb9e28d8fd2f7ad24f325ba696d7b
         self.assertEqual(
             set(lead_act_attachments.exists().mapped('res_id')), set(messages.ids),
             'Mark done should clean up attachments linked to removed record, and linked other attachments to messages')

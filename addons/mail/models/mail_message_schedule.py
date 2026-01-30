@@ -63,8 +63,15 @@ class MailMessageSchedule(models.Model):
         """
         for model, schedules in self._group_by_model().items():
             if model:
+<<<<<<< 5ab2ec323cf903f74857c371ef33af8d714006f4
                 records = self.env[model].browse(schedules.mapped('mail_message_id.res_id'))
                 existing = records.exists()
+||||||| ae11d590cd907ee00373df57d896068267dac118
+                records = self.env[model].browse(id_ for id_ in schedules.mapped('mail_message_id.res_id') if id_)
+=======
+                records = self.env[model].browse(id_ for id_ in schedules.mapped('mail_message_id.res_id') if id_)
+                existing = records.exists()
+>>>>>>> b222c0821bddb9e28d8fd2f7ad24f325ba696d7b
             else:
                 records = [self.env['mail.thread']] * len(schedules)
                 existing = records
