@@ -1683,6 +1683,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         provider = self.env['payment.provider'].create({
             'name': 'Test',
+            'code': 'none',
         })
         transaction = self.env['payment.transaction'].create({
             'provider_id': provider.id,
