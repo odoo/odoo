@@ -140,10 +140,9 @@ class StockPickingBatch(models.Model):
     @api.depends('state', 'move_ids', 'picking_type_id')
     def _compute_show_allocation(self):
         self.show_allocation = False
-        if not self.env.user.has_group('stock.group_reception_report'):
-            return
         for batch in self:
-            batch.show_allocation = batch.picking_ids._get_show_allocation(batch.picking_type_id)
+            if batch.picking_type_id.auto_show_reception_report:
+                batch.show_allocation = batch.picking_ids._get_show_allocation(batch.picking_type_id)
 
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_state(self):

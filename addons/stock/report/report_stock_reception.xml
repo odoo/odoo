@@ -60,40 +60,52 @@
                     </t>
                 </h3>
             </div>
-            <table t-if="sources_to_lines" class="o_report_reception_table table table-sm text-start">
-                <t t-foreach="sources_to_lines" t-as="source">
-                    <thead t-if="any(line['is_assigned'] for line in sources_to_lines[source])">
-                        <tr class="bg-light">
-                            <th>
-                                <span t-field="source[0].display_name" t-options="{'widget': 'barcode', 'width': 200, 'height': 30}">Display Name</span>
-                                <i t-if="source[0].priority == '1'" class="o_priority o_priority_star fa fa-star"/>
-                                <a name="source_link" href="#" t-att-res-model="source[0]._name" view-type="form" t-att-res-id="source[0].id">
-                                    <span t-out="source[0].display_name">DEMO_SOURCE_DISPLAY_NAME</span>
-                                </a>
-                                <span t-if="len(source) > 1">
-                                    (<a name="origin_link" href="#" t-att-res-model="source[1]._name" view-type="form" t-att-res-id="source[1].id">
-                                    <span t-out="source[1].display_name">DEMO_ORIGIN_DISPLAY_NAME</span></a>)
-                                </span>
-                                <span t-if="source[0]._name == 'stock.picking' and source[0].partner_id">:
-                                    <a name="source_link" href="#" t-att-res-model="source[0].partner_id._name" t-att-res-id="source[0].partner_id.id" view-type="form">
-                                        <span t-out="source[0].partner_id.name">DEMO_PARTNER_NAME</span>
-                                    </a>
-                                </span>
-                            </th>
-                            <th>Expected Delivery: <span t-out="sources_to_formatted_scheduled_date[source]">DEMO_DATE</span></th>
-                        </tr>
-                    </thead>
+            <t t-set="has_assigned_lines" t-value="any(line.get('is_assigned', False) for lines in product_lines.values() for line in lines)"/>
+            <table t-if="has_assigned_lines" class="o_report_reception_table table table-sm text-start">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>quantity</th>
+                        <th class="text-center">Source</th>
+                        <th>Expected Delivery</th>
+                    </tr>
+                </thead>
+                <t t-foreach="product_lines" t-as="product">
                     <tbody>
-                        <t t-set="possible_moves" t-value="sources_to_lines[source]"/>
+                        <t t-set="possible_moves" t-value="product_lines[product]"/>
+                        <t t-set="first_line" t-value="True"/>
                         <t t-foreach="possible_moves" t-as="line">
                             <!-- don't print non-assigned lines when printing pdf -->
                             <tr t-if="line['is_assigned']">
-                                <td>
+                                <td t-if="first_line" t-att-rowspan="len(possible_moves)">
                                     <span t-out="line['product']['display_name']">DEMO_PRODUCT_DISPLAY_NAME</span>
+                                    <t t-set="first_line" t-value="False"/>
                                 </td>
                                 <td>
                                     <span t-out="line['quantity']">DEMO_QUANTITY</span>
                                     <span groups="uom.group_uom" t-out="line['uom']">DEMO_UOM</span>
+                                </td>
+                                <td>
+                                    <t t-set="source" t-value="line['source'][0]"/>
+                                    <span t-out="source['name']" t-options="{'widget': 'barcode', 'width': 200, 'height': 30}">Display Name</span>
+                                    <i t-if="source['priority'] == '1'" class="o_priority o_priority_star fa fa-star"/>
+                                    <a name="source_link" href="#" t-att-res-model="source['model']" view-type="form" t-att-res-id="source['id']">
+                                        <span t-out="source['name']">DEMO_SOURCE_DISPLAY_NAME</span>
+                                    </a>
+                                    <span t-if="len(line['source']) > 1">
+                                        <t t-set="source_origin" t-value="line['source'][1]"/>
+                                        <a name="origin_link" href="#" t-att-res-model="source_origin['model']" view-type="form" t-att-res-id="source_origin['id']">
+                                            <span t-out="source_origin['name']">DEMO_ORIGIN_DISPLAY_NAME</span>
+                                        </a>
+                                    </span>
+                                    <span t-if="source['model'] == 'stock.picking' and source['partner_name']">
+                                        <a name="source_link" href="#" t-att-res-model="'res.partner'" t-att-res-id="source['partner_id']" view-type="form">
+                                            <span t-out="source['partner_name']">DEMO_PARTNER_NAME</span>
+                                        </a>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span t-out="line['date']">DEMO_DATE</span>
                                 </td>
                             </tr>
                         </t>

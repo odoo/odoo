@@ -1,17 +1,17 @@
 import { useService } from "@web/core/utils/hooks";
-import { ReceptionReportLine } from "../reception_report_line/stock_reception_report_line";
+import { formatFloat } from "@web/views/fields/formatters";
 import { Component } from "@odoo/owl";
+import { CheckBox } from "@web/core/checkbox/checkbox";
 
 export class ReceptionReportTable extends Component {
     static template = "stock.ReceptionReportTable";
     static components = {
-        ReceptionReportLine,
+        CheckBox,
     };
     static props = {
         index: String,
         scheduledDate: { type: String, optional: true },
         lines: Array,
-        source: Array,
         labelReport: Object,
         showUom: Boolean,
         precision: Number,
@@ -20,27 +20,53 @@ export class ReceptionReportTable extends Component {
     setup() {
         this.actionService = useService("action");
         this.ormService = useService("orm");
+        this.formatFloat = (val) => formatFloat(val, { digits: [false, this.props.precision] });
     }
 
     //---- Handlers ----
 
-    async onClickAssignAll() {
-        const moveIds = [];
-        const quantities = [];
-        const inIds = [];
-        for (const line of this.props.lines) {
-            if (line.is_assigned) continue;
-            moveIds.push(line.move_out_id);
-            quantities.push(line.quantity);
-            inIds.push(line.move_ins);
-        }
+    async onClickForecast(line) {
+        const action = await this.ormService.call(
+            "stock.move",
+            "action_product_forecast_report",
+            [[line.move_out_id]],
+        );
 
+        return this.actionService.doAction(action);
+    }
+
+    async onClickPrint(line) {
+        if (!line.move_out_id) {
+            return;
+        }
+        const modelIds = [line.move_out_id];
+        const productQtys = [Math.ceil(line.quantity) || '1'];
+
+        return this.actionService.doAction({
+            ...this.props.labelReport,
+            context: { active_ids: modelIds },
+            data: { docids: modelIds, quantity: productQtys.join(",") },
+        });
+    }
+
+    async onClickAssign(line) {
         await this.ormService.call(
             "report.stock.report_reception",
             "action_assign",
-            [false, moveIds, quantities, inIds],
+            [false, [line.move_out_id], [line.quantity], [line.move_ins]],
         );
-        this.env.bus.trigger("update-assign-state", { isAssigned: true, tableIndex: this.props.index });
+        this.env.bus.trigger("update-assign-state", { isAssigned: true, tableIndex: this.props.index, lineIndex: line.index });
+    }
+
+    async onClickUnassign(line) {
+        const done = await this.ormService.call(
+            "report.stock.report_reception",
+            "action_unassign",
+            [false, line.move_out_id, line.quantity, line.move_ins]
+        )
+        if (done) {
+            this.env.bus.trigger("update-assign-state", { isAssigned: false, tableIndex: this.props.index, lineIndex: line.index });
+        }
     }
 
     async onClickLink(resModel, resId, viewType) {
@@ -53,40 +79,13 @@ export class ReceptionReportTable extends Component {
         });
     }
 
-    async onClickPrintLabels() {
-        const modelIds = [];
-        const quantities = [];
-        for (const line of this.props.lines) {
-            if (!line.is_assigned) continue;
-            modelIds.push(line.move_out_id);
-            quantities.push(Math.ceil(line.quantity) || 1);
-        }
-        if (!modelIds.length) {
-            return;
-        }
-
-        return this.actionService.doAction({
-            ...this.props.labelReport,
-            context: { active_ids: modelIds },
-            data: { docids: modelIds, quantity: quantities.join(",") },
-        });
-    }
-
     //---- Getters ----
 
-    get hasMovesIn() {
-        return this.props.lines.some(line => line.move_ins && line.move_ins.length > 0);
+    get totalQuantity() {
+        return this.props.lines.reduce((acc, line) => acc + line.quantity, 0);
     }
 
-    get hasAssignAllButton() {
-        return this.props.lines.some(line => line.is_qty_assignable);
-    }
-
-    get isAssignAllDisabled() {
-        return this.props.lines.every(line => line.is_assigned);
-    }
-
-    get isPrintLabelDisabled() {
-        return this.props.lines.every(line => !line.is_assigned);
+    get hasContent() {
+        return this.props.lines.length > 0 && this.props.lines[0].source.length > 0;
     }
 }

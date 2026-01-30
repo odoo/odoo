@@ -2,42 +2,62 @@
 <templates xml:space="preserve">
 
     <t t-name="stock.ReceptionReportTable">
-        <thead>
-            <tr class="bg-light">
-                <th>
-                    <i t-if="props.source[0].priority == '1'" class="o_priority o_priority_star fa fa-star"/>
-                    <a href="#" t-on-click.prevent="() => this.onClickLink(props.source[0].model, props.source[0].id, 'form')" t-out="props.source[0].name"/>
-                    <span t-if="props.source.length > 1">
-                        (<a href="#" t-on-click.prevent="() => this.onClickLink(props.source[1].model, props.source[1].id, 'form')" t-out="props.source[1].name"/>)
-                    </span>
-                    <span t-if="props.source[0].model == 'stock.picking' and props.source[0].partner_id">:
-                        <a href="#" t-on-click.prevent="() => this.onClickLink('res.partner', props.source[0].partner_id, 'form')" t-out="props.source[0].partner_name"/>
-                    </span>
-                </th>
-                <th>Expected Delivery: <t t-esc="props.scheduledDate"/></th>
-                <th t-if="hasMovesIn">
-                    <button t-if="hasAssignAllButton" t-on-click="onClickAssignAll" class="btn btn-sm btn-primary" t-att-disabled="isAssignAllDisabled" name="assign_source_link">
-                        Assign All
+        <t t-if="hasContent" t-foreach="props.lines" t-as="line" t-key="line.index">
+            <tr class="border">
+                <td t-if="line.index === 0" t-att-rowspan="props.lines.length" class="border-end">
+                    <div class="d-flex flex-column">
+                        <div class="d-flex">
+                            <t t-out="line.product.display_name"/>
+                            <button class="btn btn-link fa fa-area-chart" t-on-click="() => this.onClickForecast(line)" name="forecasted_report_link"/>
+                        </div>
+                        <div class="fs-4">
+                            <t t-out="totalQuantity"/> <t t-if="props.showUom" t-out="line.uom"/>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <t t-out="formatFloat(line.quantity)"/>
+                    <t t-if="line.qty_to_reserve > line.quantity"><t t-out="' / ' + formatFloat(line.qty_to_reserve)"/></t>
+                    <t t-if="props.showUom" t-out="' ' + line.uom"/>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-center">
+                        <CheckBox t-if="line.is_qty_assignable" className="'form-switch'"
+                                  onChange="(value) => value ? this.onClickAssign(line) : this.onClickUnassign(line)"
+                                  value="line.is_assigned"/>
+                    </div>
+                </td>
+                <td>
+                    <t t-if="line.source.length > 0">
+                        <i t-if="line.source[0].priority == '1'" class="o_priority o_priority_star fa fa-star"/>
+                        <a href="#" t-on-click.prevent="() => this.onClickLink(line.source[0].model, line.source[0].id, 'form')" t-out="line.source[0].name"/>
+                        <span t-if="line.source.length > 1"> (<a href="#"
+                                t-on-click.prevent="() => this.onClickLink(line.source[1].model, line.source[1].id, 'form')"
+                                t-out="line.source[1].name"/>) </span>
+                        <span t-if="line.source[0].model == 'stock.picking' and line.source[0].partner_id">: <a
+                                href="#"
+                                t-on-click.prevent="() => this.onClickLink('res.partner', line.source[0].partner_id, 'form')"
+                                t-out="line.source[0].partner_name"/>
+                        </span>
+                    </t>
+                </td>
+                <td>
+                    <t t-if="line.date" t-out="line.date"/>
+                </td>
+                <td>
+                    <button t-if="line.is_qty_assignable &amp;&amp; line.source"
+                        class="btn btn-sm btn-primary"
+                        t-attf-disabled="{{ !line.is_assigned }}"
+                        name="print_label"
+                        t-on-click="() => this.onClickPrint(line)">
+                        <span class="d-sm-block">Print Label</span>
                     </button>
-                </th>
-                <th>
-                    <button t-if="hasMovesIn" t-on-click="onClickPrintLabels" class="btn btn-sm btn-primary" t-att-disabled="isPrintLabelDisabled" name="print_labels">
-                        <span class="d-none d-sm-block">Print Labels</span>
-                        <span class="d-block d-sm-none fa fa-print"/>
-                    </button>
-                </th>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            <t t-foreach="props.lines" t-as="line" t-key="line.index">
-                <ReceptionReportLine
-                    data="line"
-                    labelReport="props.labelReport"
-                    parentIndex="props.index"
-                    showUom="props.showUom"
-                    precision="props.precision"/>
-            </t>
-        </tbody>
+            <tr t-if="line.index === props.lines.length - 1">
+                <td class="bg-transparent pb-2 border-0"></td>
+            </tr>
+        </t>
     </t>
 
 </templates>

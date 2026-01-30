@@ -2,13 +2,7 @@
 <templates xml:space="preserve">
 
     <div t-name="stock.ReceptionReportMain" class="o_action">
-        <ControlPanel display="controlPanelDisplay">
-            <t t-set-slot="control-panel-buttons">
-                <button t-on-click="onClickPrint" type="button" class="btn btn-primary" title="Print">Print</button>
-                <button t-on-click="onClickAssignAll" class="btn btn-secondary" t-att-disabled="isAssignAllDisabled">Assign All</button>
-                <button t-on-click="onClickPrintLabels" class="btn btn-secondary" t-att-disabled="isPrintLabelDisabled">Print Labels</button>
-            </t>
-        </ControlPanel>
+        <ControlPanel/>
         <div class="o_report_reception o_report_reception_no_print container-fluid justify-content-between">
             <div class="o_report_reception_header my-4">
                 <h1>
@@ -17,6 +11,11 @@
                             <a href="#" t-on-click.prevent="() => this.onClickTitle(doc.id)" view-type="form" t-esc="doc.name"/>
                             <span t-esc="doc.display_state" t-attf-class="ms-1 align-text-top badge rounded-pill bg-opacity-50 {{ doc.state == 'done' ? 'bg-success' : 'bg-info' }}"/>
                         </div>
+                        <div class="mt-2 d-flex gap-2">
+                            <button t-on-click="onClickPrint" class="btn btn-primary" title="Print">Print</button>
+                            <button t-on-click="onClickAssignAll" class="btn btn-secondary" t-att-disabled="isAssignAllDisabled">Assign All</button>
+                            <button t-on-click="onClickPrintLabels" class="btn btn-secondary" t-att-disabled="isPrintLabelDisabled">Print Labels</button>
+                        </div>
                     </t>
                     <t t-else="">
                         <span t-esc="data.reason"/>
@@ -24,16 +23,27 @@
                 </h1>
             </div>
             <t t-if="hasContent">
-                <table class="table table-sm">
-                    <ReceptionReportTable
-                        t-foreach="state.sourcesToLines" t-as="source" t-key="source"
-                        index="source"
-                        scheduledDate="data.sources_to_formatted_scheduled_date[source]"
-                        lines="state.sourcesToLines[source]"
-                        source="data.sources_info[source]"
-                        labelReport="receptionReportLabelAction"
-                        showUom="data.show_uom"
-                        precision="data.precision"/>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Available</th>
+                            <th>Quantity</th>
+                            <th class="text-center">Reserved</th>
+                            <th>For</th>
+                            <th>Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="state.productLines" t-as="lines" t-key="lines">
+                            <ReceptionReportTable
+                            index="lines"
+                            lines="state.productLines[lines]"
+                            labelReport="receptionReportLabelAction"
+                            showUom="data.show_uom"
+                            precision="data.precision"/>
+                        </t>
+                    </tbody>
                 </table>
             </t>
             <p t-else="">

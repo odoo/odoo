@@ -14,18 +14,17 @@ export class ReceptionReportMain extends Component {
     static props = { ...standardActionServiceProps };
 
     setup() {
-        this.controlPanelDisplay = {};
         this.ormService = useService("orm");
         this.actionService = useService("action");
         this.reportName = "stock.report_reception";
         this.labelReportName = "stock.report_reception_report_label";
         this.state = useState({
-            sourcesToLines: {},
+            productLines: {},
         });
         useBus(this.env.bus, "update-assign-state", (ev) => this._changeAssignedState(ev.detail));
 
         onWillStart(async () => {
-            // Check the URL if report was alreadu loaded.
+            // Check the URL if report was already loaded.
             let defaultDocIds;
             const { rfield, rids } = this.props.action.context.params || {};
             if (rfield && rids) {
@@ -45,8 +44,7 @@ export class ReceptionReportMain extends Component {
                 this.props.updateActionState({ rfield: this.contextDefaultDoc.field, rids: JSON.stringify(this.contextDefaultDoc.ids) });
             }
             this.data = await this.getReportData();
-            this.state.sourcesToLines = this.data.sources_to_lines;
-
+            this.state.productLines = this.data.product_lines;
             const matchingReports = await this.ormService.searchRead("ir.actions.report", [
                 ["report_name", "in", [this.reportName, this.labelReportName]],
             ]);
@@ -80,9 +78,9 @@ export class ReceptionReportMain extends Component {
         const quantities = [];
         const inIds = [];
 
-        for (const lines of Object.values(this.state.sourcesToLines)) {
+        for (const lines of Object.values(this.state.productLines)) {
             for (const line of lines) {
-                if (line.is_assigned) continue;
+                if (line.is_assigned || !line.is_qty_assignable) continue;
                 moveIds.push(line.move_out_id);
                 quantities.push(line.quantity);
                 inIds.push(line.move_ins);
@@ -118,9 +116,9 @@ export class ReceptionReportMain extends Component {
         const modelIds = [];
         const quantities = [];
 
-        for (const lines of Object.values(this.state.sourcesToLines)) {
+        for (const lines of Object.values(this.state.productLines)) {
             for (const line of lines) {
-                if (!line.is_assigned) continue;
+                if (!line.is_assigned || !line.is_qty_assignable) continue;
                 modelIds.push(line.move_out_id);
                 quantities.push(Math.ceil(line.quantity) || 1);
             }
@@ -141,7 +139,7 @@ export class ReceptionReportMain extends Component {
     _changeAssignedState(options) {
         const { isAssigned, tableIndex, lineIndex } = options;
 
-        for (const [tabIndex, lines] of Object.entries(this.state.sourcesToLines)) {
+        for (const [tabIndex, lines] of Object.entries(this.state.productLines)) {
             if (tableIndex && tableIndex != tabIndex) continue;
             lines.forEach(line => {
                 if (isNaN(lineIndex) || lineIndex == line.index) {
@@ -158,15 +156,16 @@ export class ReceptionReportMain extends Component {
     }
 
     get hasContent() {
-        return this.data.sources_to_lines && Object.keys(this.data.sources_to_lines).length > 0;
+        return this.data.product_lines && Object.values(this.data.product_lines).some(lines => lines.some(line => line.source.length > 0));
     }
 
+
     get isAssignAllDisabled() {
-        return Object.values(this.state.sourcesToLines).every(lines => lines.every(line => line.is_assigned || !line.is_qty_assignable));
+        return Object.values(this.state.productLines).every(lines => lines.every(line => line.is_assigned || !line.is_qty_assignable));
     }
 
     get isPrintLabelDisabled() {
-        return Object.values(this.state.sourcesToLines).every(lines => lines.every(line => !line.is_assigned));
+        return Object.values(this.state.productLines).every(lines => lines.every(line => !line.is_assigned));
     }
 }
 

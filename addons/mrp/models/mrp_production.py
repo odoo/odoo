@@ -742,13 +742,11 @@ class MrpProduction(models.Model):
     @api.depends('state', 'move_finished_ids')
     def _compute_show_allocation(self):
         self.show_allocation = False
-        if not self.env.user.has_group('mrp.group_mrp_reception_report'):
-            return
         for mo in self:
-            if not mo.picking_type_id:
-                return
-            lines = mo.move_finished_ids.filtered(lambda m: m.product_id.is_storable and m.state != 'cancel')
-            if lines:
+            if not mo.picking_type_id.auto_show_reception_report:
+                continue
+            moves = mo.move_finished_ids.filtered(lambda m: m.product_id.is_storable and m.state != 'cancel')
+            if moves:
                 allowed_states = ['confirmed', 'partially_available', 'waiting']
                 if mo.state == 'done':
                     allowed_states += ['assigned']
@@ -758,9 +756,9 @@ class MrpProduction(models.Model):
                     ('product_qty', '>', 0),
                     ('location_id', 'in', wh_location_ids),
                     ('raw_material_production_id', 'not in', mo.ids),
-                    ('product_id', 'in', lines.product_id.ids),
+                    ('product_id', 'in', moves.product_id.ids),
                     '|', ('move_orig_ids', '=', False),
-                        ('move_orig_ids', 'in', lines.ids)], limit=1):
+                        ('move_orig_ids', 'in', moves.ids)], limit=1):
                     mo.show_allocation = True
 
     @api.depends('product_uom_qty', 'date_start')
@@ -2263,7 +2261,7 @@ class MrpProduction(models.Model):
                     'res_id': self.id,
                     'target': 'main',
                 }
-            elif self.env.user.has_group('mrp.group_mrp_reception_report'):
+            else:
                 mos_to_show = self.filtered(lambda mo: mo.picking_type_id.auto_show_reception_report)
                 lines = mos_to_show.move_finished_ids.filtered(lambda m: m.product_id.is_storable and m.state != 'cancel' and m.picked and not m.move_dest_ids)
                 if lines:
@@ -2941,30 +2939,25 @@ class MrpProduction(models.Model):
                 action = self.env.ref("mrp.label_manufacture_template").report_action(labels_to_print.ids, config=False)
                 clean_action(action, self.env)
                 report_actions.append(action)
-        if self.env.user.has_group('mrp.group_mrp_reception_report'):
-            reception_reports_to_print = self.filtered(
-                lambda p: p.picking_type_id.auto_print_mrp_reception_report
-                          and p.picking_type_id.code == 'mrp_operation'
-                          and p.move_finished_ids.move_dest_ids
-            )
-            if reception_reports_to_print:
-                action = self.env.ref('stock.stock_reception_report_action').report_action(reception_reports_to_print, config=False)
-                action['context'] = dict({'default_production_ids': reception_reports_to_print.ids}, **self.env.context)
-                clean_action(action, self.env)
-                report_actions.append(action)
-            reception_labels_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_mrp_reception_report_labels and p.picking_type_id.code == 'mrp_operation')
-            if reception_labels_to_print:
-                moves_to_print = reception_labels_to_print.move_finished_ids.move_dest_ids
-                if moves_to_print:
-                    # needs to be string to support python + js calls to report
-                    quantities = ','.join(str(qty) for qty in moves_to_print.mapped(lambda m: math.ceil(m.product_uom_qty)))
-                    data = {
-                        'docids': moves_to_print.ids,
-                        'quantity': quantities,
-                    }
-                    action = self.env.ref('stock.label_picking').report_action(moves_to_print, data=data, config=False)
-                    clean_action(action, self.env)
-                    report_actions.append(action)
+        # Filters MOs and their dest. moves to print reception report and labels.
+        orders_for_reception_report = self.env['mrp.production']
+        moves_for_print_label = self.env['stock.move']
+        for order in self:
+            if not order.picking_type_id.auto_show_reception_report or order.picking_type_id.code != 'mrp_operation' or not order.move_finished_ids.move_dest_ids:
+                continue
+            if order.picking_type_id.auto_print_mrp_reception_report:
+                orders_for_reception_report |= order
+            if order.picking_type_id.auto_print_mrp_reception_report_labels:
+                moves_for_print_label |= order.move_finished_ids.move_dest_ids
+        if orders_for_reception_report:
+            action = self.env.ref('stock.stock_reception_report_action').report_action(orders_for_reception_report, config=False)
+            action['context'] = dict({'default_production_ids': orders_for_reception_report.ids}, **self.env.context)
+            clean_action(action, self.env)
+            report_actions.append(action)
+        if moves_for_print_label:
+            action = moves_for_print_label.action_open_allocation_report()
+            clean_action(action, self.env)
+            report_actions.append(action)
         if self.env.user.has_group('stock.group_production_lot'):
             productions_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_done_mrp_lot and p.move_finished_ids.move_line_ids.lot_id)
             productions_by_print_formats = productions_to_print.grouped(lambda p: p.picking_type_id.done_mrp_lot_label_to_print)

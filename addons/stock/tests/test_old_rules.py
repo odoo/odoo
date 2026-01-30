@@ -391,7 +391,12 @@ class TestOldRules(TestStockCommon):
 
         report = self.env['report.stock.report_reception']
         report_values = report._get_report_values(docids=[receipt.id])
-        self.assertEqual(len(report_values['sources_to_lines']), 1, "There should only be 1 line (pick move)")
+        all_sources = set()
+        for lines in report_values['product_lines'].values():
+            for line in lines:
+                if line['source'] and line['source'][0]['id']:
+                    all_sources.add(line['source'][0]['id'])
+        self.assertEqual(len(all_sources), 1, "There should only be 1 line (pick move)")
 
     def test_propagate_cancel_in_pull_setup(self):
         """

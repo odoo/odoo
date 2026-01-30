@@ -79,13 +79,19 @@
                         </td>
                         <td class="p-0 text-center border-start-0">
                             <t t-if="displayReserve(line)">
-                                <a t-if="line.reservation"
+                                <a t-if="line.reservation || line.is_pre_reserved"
                                     href="#"
                                     name="unreserve_link"
-                                    t-on-click="() => this._unreserve(line.move_out.id)">
+                                    t-on-click="() => this._unreserve(line)">
                                     Unreserve
                                 </a>
-                                <button t-elif="line.replenishment_filled or AvailableOnHandTotalQty[line.product.id] &gt; 0"
+                                <button t-elif="!line.is_pre_reserved and canPrereserveOperation(line)"
+                                    class="btn btn-sm btn-secondary"
+                                    name="prereserve_link"
+                                    t-on-click="() => this._prereserve(line.move_out.id, line.quantity, line.move_in.id)">
+                                    Pre-Reserve
+                                </button>
+                                <button t-elif="!line.is_pre_reserved and (line.replenishment_filled or AvailableOnHandTotalQty[line.product.id] &gt; 0)"
                                     class="btn btn-sm btn-secondary"
                                     name="reserve_link"
                                     t-on-click="() => this._reserve(line.move_out.id)">

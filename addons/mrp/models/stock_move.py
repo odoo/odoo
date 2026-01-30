@@ -663,3 +663,9 @@ class StockMove(models.Model):
         else:
             res['raw_material_production_id'] = self.production_id.id
         return res
+
+    def _get_similar_sibling_move(self, allocated=True):
+        self.ensure_one()
+        if self.production_id:
+            return self.production_id.move_finished_ids.filtered(lambda m: m.product_id == self.product_id and m.id != self.id and bool(m.allocation_location_id) == allocated)
+        return super()._get_similar_sibling_move(allocated=allocated)

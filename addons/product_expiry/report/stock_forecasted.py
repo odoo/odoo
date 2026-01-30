@@ -28,8 +28,8 @@ class StockForecasted_Product_Product(models.AbstractModel):
         res += [('removal_date', '<=', date.today())]
         return res
 
-    def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
-        res = super()._prepare_report_line(quantity, move_out, move_in, replenishment_filled, product, reserved_move, in_transit, read)
+    def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, is_pre_reserved=False, in_transit=False, read=True):
+        res = super()._prepare_report_line(quantity, move_out, move_in, replenishment_filled, product, reserved_move, is_pre_reserved, in_transit, read)
         removal_date = self.env.context.get('removal_date')
         if removal_date:
             res["removal_date"] = removal_date if removal_date == -1 else format_date(self.env, removal_date)
