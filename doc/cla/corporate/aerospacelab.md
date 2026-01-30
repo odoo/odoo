@@ -14,3 +14,4 @@ List of contributors:
 
 Thibault Libioulle thibault.libioulle@aerospacelab.be https://github.com/tli-asl
 Rémi Chauvenne remi.chauvenne@aerospacelab.be https://github.com/rch-asl
+Rémy Voet remy.voet@aerospacelab.com https://github.com/rvo-asl
