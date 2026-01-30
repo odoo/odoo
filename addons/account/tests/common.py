@@ -1524,10 +1524,12 @@ class AccountTestInvoicingWithBanksCommon(AccountTestInvoicingCommon):
         cls.partner_bank_account1 = cls.env['res.partner.bank'].create({
             'account_number': "0123456789",
             'partner_id': cls.partner_a.id,
+            'allow_out_payment': True,
         })
         cls.partner_bank_account2 = cls.env['res.partner.bank'].create({
             'account_number': "9876543210",
             'partner_id': cls.partner_a.id,
+            'allow_out_payment': True,
         })
         cls.comp_bank_account1 = cls.env['res.partner.bank'].create({
             'account_number': "985632147",
