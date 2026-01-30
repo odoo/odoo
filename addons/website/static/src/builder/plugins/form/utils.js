@@ -269,6 +269,9 @@ export function setActiveProperties(fieldEl, field) {
     } else if (fileInputEl) {
         field.maxFilesNumber = fileInputEl.dataset.maxFilesNumber;
         field.maxFileSize = fileInputEl.dataset.maxFileSize;
+        if (fileInputEl.hasAttribute("accept")) {
+            field.accept = fileInputEl.getAttribute("accept");
+        }
     } else if (selectInputEl) {
         const emptyOptionEl = selectInputEl.querySelector(".s_website_form_empty_option");
         field.allowEmpty = !!emptyOptionEl;
