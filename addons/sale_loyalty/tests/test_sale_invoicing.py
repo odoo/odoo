@@ -8,7 +8,6 @@ from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
 @tagged('post_install', '-at_install')
 class TestSaleInvoicing(TestSaleCouponCommon):
-
     def test_invoicing_order_with_promotions(self):
         discount_coupon_program = self.env['loyalty.program'].create({
             'name': '10% Discount',
@@ -16,12 +15,18 @@ class TestSaleInvoicing(TestSaleCouponCommon):
             'applies_on': 'current',
             'trigger': 'auto',
             'rule_ids': [(0, 0, {})],
-            'reward_ids': [(0, 0, {
-                'reward_type': 'discount',
-                'discount': 10,
-                'discount_mode': 'percent',
-                'discount_applicability': 'order',
-            })]
+            'reward_ids': [
+                (
+                    0,
+                    0,
+                    {
+                        'reward_type': 'discount',
+                        'discount': 10,
+                        'discount_mode': 'percent',
+                        'discount_applicability': 'order',
+                    },
+                )
+            ],
         })
 
         product = self.env['product.product'].create({
@@ -32,8 +37,10 @@ class TestSaleInvoicing(TestSaleCouponCommon):
 
         order = self._create_so(order_line=[Command.create({'product_id': product.id})])
 
-        #Check default invoice_policy on discount product
-        self.assertEqual(discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy, 'order')
+        # Check default invoice_policy on discount product
+        self.assertEqual(
+            discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy, 'order'
+        )
 
         order._update_programs_and_rewards()
         self._claim_reward(order, discount_coupon_program)
@@ -69,27 +76,33 @@ class TestSaleInvoicing(TestSaleCouponCommon):
             'applies_on': 'current',
             'trigger': 'auto',
             'rule_ids': [(0, 0, {})],
-            'reward_ids': [(0, 0, {
-                'reward_type': 'discount',
-                'discount': 10,
-                'discount_mode': 'percent',
-                'discount_applicability': 'order',
-            })]
+            'reward_ids': [
+                (
+                    0,
+                    0,
+                    {
+                        'reward_type': 'discount',
+                        'discount': 10,
+                        'discount_mode': 'percent',
+                        'discount_applicability': 'order',
+                    },
+                )
+            ],
         })
 
         product_6 = self.env['product.product'].create({'name': 'Large Cabinet'})
         order = self._create_so(order_line=[Command.create({'product_id': product_6.id})])
 
-        #Check default invoice_policy on discount product
-        self.assertEqual(discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy, 'order')
+        # Check default invoice_policy on discount product
+        self.assertEqual(
+            discount_coupon_program.reward_ids.discount_line_product_id.invoice_policy, 'order'
+        )
 
         self._auto_rewards(order, discount_coupon_program)
 
         self.assertEqual(len(order.order_line), 2, 'Coupon correctly applied')
 
-        product_11 = self.env['product.product'].create({
-            'name': 'Conference Chair',
-        })
+        product_11 = self.env['product.product'].create({'name': 'Conference Chair'})
 
         # orderline2
         self.env['sale.order.line'].create({
@@ -102,4 +115,7 @@ class TestSaleInvoicing(TestSaleCouponCommon):
         order._update_programs_and_rewards()
         self.assertEqual(len(order.order_line), 3, 'Coupon correctly applied')
 
-        self.assertTrue(order.order_line.sorted(lambda x: x.sequence)[-1].is_reward_line, 'Global coupons appear on the last line')
+        self.assertTrue(
+            order.order_line.sorted(lambda x: x.sequence)[-1].is_reward_line,
+            'Global coupons appear on the last line',
+        )
