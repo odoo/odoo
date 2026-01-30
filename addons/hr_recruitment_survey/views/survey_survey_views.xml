@@ -6,6 +6,14 @@
         <field name="inherit_id" ref="survey.survey_survey_view_form"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_open_jobs" type="object" class="oe_stat_button" icon="fa-briefcase" invisible="job_count == 0">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="job_count"/></span>
+                        <span class="o_stat_text">Jobs</span>
+                    </div>
+                </button>
+            </div>
             <xpath expr="//field[@name='survey_type']" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>

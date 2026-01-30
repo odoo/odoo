@@ -9,7 +9,7 @@
                 <label for="survey_id"/>
                 <div>
                     <field name="survey_id"
-                        context="{'default_access_mode': 'token'}"
+                        context="{'default_access_mode': 'token', 'form_view_ref': 'hr_recruitment_survey.survey_survey_view_form', 'default_survey_type': 'recruitment'}"
                         domain="[('survey_type', '=', 'recruitment')]"/>
                 </div>
             </field>
