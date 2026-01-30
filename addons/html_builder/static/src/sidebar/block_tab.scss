@@ -11,36 +11,43 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
     &.o_draggable_dragging {
         transform: rotate(-3deg) scale(1.2);
+        border-radius: $border-radius;
         box-shadow: 0 5px 25px -10px black;
         transition: transform 0.3s, box-shadow 0.3s;
     }
 
     .o_snippet_thumbnail {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: map-get($spacers, 2);
         width: 100%;
-        overflow: hidden;
+        padding: map-get($spacers, 2);
 
         .o_snippet_thumbnail_img {
-            width: 100%;
-            padding-top: 65%;
+            width: 30px;
+            height: 30px;
             background-repeat: no-repeat;
-            background-size: cover;
+            background-size: contain;
             background-position: center;
-            overflow: hidden;
+
+            .o_snippets_container:not(#snippet_custom_content) & {
+                margin-block: map-get($spacers, 2);
+            }
         }
     }
 
-    &:not(:hover):not(.o_disabled):not(.o_to_install) {
-        background-color: rgba($o-we-sidebar-blocks-content-snippet-bg, .9);
+    &:hover:not(.o_disabled):not(.o_to_install) {
+        background: $o-we-bg-light;
 
-        .o_snippet_thumbnail {
-            filter: saturate(.7);
-            opacity: .9;
+        .o_snippet_thumbnail_title {
+            color: $o-we-fg-lighter;
         }
     }
 }
 
 .o_block_tab {
-    background-color: $o-we-sidebar-blocks-content-bg;
     padding: map-get($spacers, 2);
     height: 100%; // give enough space for tips pointing at snippets after a snippet search
     z-index: 1;
@@ -53,43 +60,41 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     .o_snippets_container_header {
         position: sticky;
         top: 0;
-        background-color: $o-we-sidebar-blocks-content-bg;
+        background-color: $o-we-bg-darker;
         padding-top: $o-we-sidebar-blocks-content-spacing;
         z-index: 1;
     }
 
     .o_snippets_container_body {
-        display: flex; // Needed for too long snippet names
-        flex-wrap: wrap;
-        margin-left: -$o-we-sidebar-blocks-content-snippet-spacing;
-        z-index: 0;
         position: relative;
+        grid-template-columns: repeat(var(--SnippetsContainer-columns, 3), 1fr);
+        gap: map-get($spacers, 1);
 
         &.o_snippets_container_body_row_cols_2 {
-            .o_snippet {
-                width: 50%;
-            }
-            .o_snippet_thumbnail_img {
-                padding-top: 45%;
-                background-size: contain;
-                background-position: center top;
+            --SnippetsContainer-columns: 2;
+        }
+
+        &.o_snippet_custom_content_body {
+            --SnippetsContainer-columns: 1;
+
+            .o_snippet_thumbnail {
+                flex-direction: row;
+                justify-content: flex-start;
             }
         }
 
         .o_snippet {
-            flex: 0 0 auto;
-            width: percentage(1 / 3);
+            width: 100%;
+            border-radius: $border-radius;
             background-clip: padding-box;
-            border-left: $o-we-sidebar-blocks-content-snippet-spacing solid transparent;
-            margin-bottom: $o-we-sidebar-blocks-content-snippet-spacing;
             user-select: none;
             cursor: grab;
+            overflow: hidden;
 
             .o_snippet_thumbnail_title {
                 @include o-text-overflow(block);
                 white-space: normal;
-                padding: $o-we-sidebar-blocks-content-spacing / 2;
-                text-align: center;
+                font-size: $o-we-font-size-sm;
             }
 
             .o_snippet_thumbnail_area {
@@ -107,10 +112,8 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
             }
 
             &.o_disabled {
-                pointer-events: initial;
-
                 .o_snippet_undroppable {
-                    @include o-position-absolute(8px, 6px, auto, auto);
+                    @include o-position-absolute(map-get($spacers, 2), map-get($spacers, 2), auto, auto);
                 }
             }
 
@@ -119,9 +122,15 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
                 background-color: rgba($o-we-sidebar-blocks-content-snippet-bg, .2);
 
                 .o_snippet_thumbnail_img {
-                    opacity: .4;
-                    filter: saturate(0) blur(1px);
+                    opacity: $o-opacity-disabled;
+                    filter: saturate(0);
                 }
+            }
+        }
+
+        &:not(.o_snippet_custom_content_body) {
+            .o_snippet_thumbnail_title {
+                text-align: center;
             }
         }
     }
@@ -140,15 +149,8 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
             min-width: 0; // Ensure text-overflow on flex children
         }
 
-        .o_snippet_thumbnail_title {
-            white-space: nowrap;
-        }
-
         .o_snippet_thumbnail_img {
             flex-shrink: 0;
-            width: 41px;
-            height: 30px; // 82x60 -> 41x30
-            padding: 0;
         }
 
         // TODO improve the following rules later

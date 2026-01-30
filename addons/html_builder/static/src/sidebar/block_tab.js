@@ -203,9 +203,8 @@ export class BlockTab extends Component {
                 draggedEl.style.position = "fixed";
                 document.body.append(draggedEl);
                 // Center the helper on the thumbnail image.
-                const thumbnailImgEl = element.querySelector(".o_snippet_thumbnail_img");
-                helperOffset.x = thumbnailImgEl.offsetWidth / 2;
-                helperOffset.y = thumbnailImgEl.offsetHeight / 2;
+                helperOffset.x = draggedEl.offsetWidth / 2;
+                helperOffset.y = draggedEl.offsetHeight / 2;
                 return draggedEl;
             },
             onDragStart: ({ element }) => {

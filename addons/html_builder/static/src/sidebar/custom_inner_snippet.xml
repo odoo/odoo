@@ -13,8 +13,8 @@
             <Image t-if="this.snippet.isDisabled" src="'/html_builder/static/img/snippet_disabled.svg'" class="'o_snippet_undroppable'"/>
             <div class="o_snippet_thumbnail_img" t-attf-style="background-image: url({{this.snippet.thumbnailSrc}});"/>
             <t t-if="this.state.isRenaming">
-                <div class="rename-input w-100 mx-1 z-1">
-                    <input t-custom-ref="rename-input" type="text" autocomplete="chrome-off" t-att-value="this.snippet.title" class="text-start" t-on-pointerdown.stop=""/>
+                <div class="rename-input w-100 z-1">
+                    <input t-custom-ref="rename-input" type="text" autocomplete="chrome-off" t-att-value="this.snippet.title" class="text-start o-hb-input-text o-hb-input-base" t-on-pointerdown.stop=""/>
                     <button class="o_we_text_success fa fa-check btn btn-outline-success border-0"
                             data-tooltip="Confirm"
                             t-on-click="this.onConfirmRename"/>
@@ -27,7 +27,7 @@
                 <span class="o_snippet_thumbnail_title" t-out="this.snippet.title"/>
             </t>
         </div>
-        <div t-if="!this.state.isRenaming" class="rename-delete-buttons float-end z-1">
+        <div t-if="!this.state.isRenaming" class="rename-delete-buttons me-2 float-end z-1">
             <button class="fa fa-pencil btn o_we_hover_success btn-outline-info border-0"
                     t-att-data-tooltip="this.renameButtonTooltip"
                     t-on-click.stop="this.toggleRenamingState"/>
