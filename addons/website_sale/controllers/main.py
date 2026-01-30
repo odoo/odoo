@@ -476,47 +476,26 @@ class WebsiteSale(payment_portal.PaymentPortal):
         attributes = request.env['product.attribute']
         pavs_per_attribute = defaultdict(list)
         if products:
-            # get attribute values selected on the products
-            sudo_pavs = (
-                request
-                .env['product.attribute.value.product.template.attribute.line']
-                .sudo()
-                ._read_group(
-                    domain=[
-                        (
-                            'product_template_attribute_line_id',
-                            'in',
-                            search_product.attribute_line_ids.ids,
-                        ),
-                        ('attribute_id.visibility', '=', 'visible')
-                    ],
-                    groupby=['attribute_id.id', 'product_attribute_value_id.id']
-                )
+            used_pavs_query = f'''
+                SELECT product_attribute_value_id
+                FROM product_attribute_value_product_template_attribute_line_rel
+                WHERE product_template_attribute_line_id IN ({
+                ",".join(str(i) for i in search_product.attribute_line_ids.ids)
+                })
+            '''
+            request.env.cr.execute(SQL(used_pavs_query))
+            used_pavs_ids = [pav for pav, in self.env.cr.fetchall()]
+            grouped_pavs = request.env['product.attribute.value']._read_group(
+                domain=[('id', 'in', used_pavs_ids), ('attribute_id.visibility', '=', 'visible')],
+                groupby=['attribute_id'],
+                order='attribute_id',
+                aggregates=['id:recordset'],
             )
-            # _read_group() not working with aggregates
-            # sudo_pavs = (
-            #     request
-            #     .env['product.attribute.value.product.template.attribute.line']
-            #     .sudo()
-            #     ._read_group(
-            #         domain=[
-            #             (
-            #                 'product_template_attribute_line_id',
-            #                 'in',
-            #                 search_product.attribute_line_ids.ids,
-            #             ),
-            #             ('attribute_id.visibility', '=', 'visible'),
-            #         ],
-            #         groupby=['attribute_id'],
-            #         aggregates=['product_attribute_value_id:recordset'],
-            #     )
-            # )
-            for attribute, pav in sudo_pavs:
-                pavs_per_attribute[attribute].append(pav)
+            for attribute, pavs in grouped_pavs:
+                pavs_per_attribute[attribute] = pavs
                 attributes |= attribute
         else:
             attributes = attributes.browse(attribute_ids).sorted()
-
         products_prices = products._get_sales_prices(website)
         product_query_params = self._get_product_query_params(**post)
 
