@@ -5,12 +5,14 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { Thread } from "@mail/core/common/thread";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
+import { NO_MEMBERS_DEFAULT_OPEN_LS } from "@mail/core/public_web/discuss_app_model";
 import { DiscussSidebar } from "@mail/core/public_web/discuss_sidebar";
 import { useMessageScrolling } from "@mail/utils/common/hooks";
 
 import { Component, useRef, useState, useExternalListener, useEffect, useSubEnv } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
+import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
@@ -102,7 +104,8 @@ export class Discuss extends Component {
             } else if (this.threadActions.activeAction === memberListAction) {
                 return; // no-op (already open)
             } else {
-                this.store.discuss.isMemberPanelOpenByDefault = false;
+                browser.localStorage.setItem(NO_MEMBERS_DEFAULT_OPEN_LS, true);
+                this.store.discuss._recomputeIsMemberPanelOpenByDefault++;
             }
         }
     }
