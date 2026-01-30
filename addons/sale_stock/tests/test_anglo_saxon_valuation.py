@@ -6,49 +6,17 @@ from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 
-from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import (
-    ValuationReconciliationTestCommon,
-)
+from odoo.addons.stock_account.tests.common import TestStockValuationCommon
+from odoo.addons.sale_stock.tests.common import TestSaleStockCommon
 
 
 @tagged('post_install', '-at_install')
-@skip('Temporary to fast merge new valuation')
-class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
+class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
-        cls.env.user.company_id.anglo_saxon_accounting = True
-
-        cls.product = cls.env['product.product'].create({
-            'name': 'product',
-            'is_storable': True,
-            'categ_id': cls.stock_account_product_categ.id,
-        })
-
-    def _inv_adj_two_units(self):
-        self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': self.product.id,  # tracking serial
-            'inventory_quantity': 2,
-            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
-        }).action_apply_inventory()
-
-    def _so_and_confirm_two_units(self):
-        sale_order = self.env['sale.order'].sudo().create({
-            'partner_id': self.partner_a.id,
-            'order_line': [
-                (0, 0, {
-                    'name': self.product.name,
-                    'product_id': self.product.id,
-                    'product_uom_qty': 2.0,
-                    'price_unit': 12,
-                    'tax_ids': False,  # no love taxes amls
-                })],
-        })
-        sale_order.flush_recordset()
-        sale_order.action_confirm()
-        return sale_order
+        cls.partner_b = cls.env['res.partner'].create({'name': 'Partner B'})
 
     def _fifo_in_one_eight_one_ten(self):
         # Put two items in stock.
