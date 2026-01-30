@@ -423,14 +423,13 @@
                         <t t-if="can_interact_with_post" t-call="website_forum.post_dropdown"/>
                     </div>
                 </div>
-                <t t-call="website_forum.post_comment" object="post_id">
-                    <t t-if="post_id == answer">
-                        <t t-set="_collapse_uid" t-value="_answer_comment_collapse_uid"/>
-                    </t>
-                    <t t-if="post_id == question">
-                        <t t-set="_collapse_uid" t-value="_question_comment_collapse_uid"/>
-                   </t>
-                </t>
+                <t t-call="website_forum.post_comment"
+                    object="post_id"
+                    _collapse_uid="(
+                        _answer_comment_collapse_uid if post_id == answer else
+                        _question_comment_collapse_uid if post_id == question else
+                        False
+                    )"/>
             </div>
         </div>
 </template>
