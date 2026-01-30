@@ -26,10 +26,19 @@ describe("restaurant pos_store.js", () => {
             sourceOrder
         );
         const line = sourceOrder.lines[0];
-        sourceOrder.uiState.unmerge = {
-            [line.uuid]: {
-                table_id: table2.id,
-                quantity: 1,
+        sourceOrder.last_order_preparation_change = {
+            lines: {
+                [line.uuid]: {
+                    quantity: 3,
+                    history: [
+                        {
+                            uuid: "former-uuid-1",
+                            tableId: table2.id,
+                            quantity: 1,
+                            history: [],
+                        },
+                    ],
+                },
             },
         };
         const newOrder = await store.restoreOrdersToOriginalTable(sourceOrder, table2);
