@@ -680,17 +680,17 @@ class EventEvent(models.Model):
             image_url = f'{base_url}{image_url}'
 
         name = self.name
-        location = SchemaBuilder("Place")
-        address = None
+        # location = SchemaBuilder("Place")
+        # address = None
 
-        if self.address_id:
-            # address_id is a many2one to res.partner, so we can use
-            # website's postal_address_structured_data method which accepts
-            # company or partner id, as res.partner has the same address fields
-            address_id_sudo = self.address_id.sudo()
-            address = website.postal_address_structured_data(address_id_sudo)
-            location.set(name=self.address_name)
-            location.add_nested(address=address)
+        # if self.address_id:
+        #     # address_id is a many2one to res.partner, so we can use
+        #     # website's postal_address_structured_data method which accepts
+        #     # company or partner id, as res.partner has the same address fields
+        #     address_id_sudo = self.address_id.sudo()
+        #     address = website.postal_address_structured_data(address_id_sudo)
+        #     location.set(name=self.address_name)
+        #     location.add_nested(address=address)
 
         start_date = SchemaBuilder.datetime(self.date_begin)
         end_date = SchemaBuilder.datetime(self.date_end)
@@ -704,6 +704,7 @@ class EventEvent(models.Model):
         organizer = None
         if self.organizer_id:
             organizer = SchemaBuilder("Organization")
+            # Avoid below initialization here, and do it in event exhibitor?
             organizer_sudo = self.organizer_id.sudo()
             organizer.set(name=organizer_sudo.name or None)
             if organizer_sudo.website:
@@ -749,7 +750,7 @@ class EventEvent(models.Model):
             description=description or None,
             event_status=f"https://schema.org/{event_status}",
         ).add_nested(
-            location=location,
+            # location=location,
             organizer=organizer,
             offers=tickets,
         )

@@ -2413,7 +2413,7 @@ class Website(models.CachedModel):
         )
 
     @api.model
-    def organization_structured_data(self, company=None, with_id=False):
+    def organization_structured_data(self, company, with_id=False):
         """
         Generate structured data for the organization's information.
 
@@ -2423,11 +2423,10 @@ class Website(models.CachedModel):
         Returns:
             SchemaBuilder: The structured data schema builder for the organization.
         """
-        company = company or self.company_id
         if not company:
             return False
         company_name = company.name
-        base_url = self.get_base_url()
+        base_url = company.website_id.get_base_url()
 
         org = SchemaBuilder(
             "Organization",
@@ -2437,34 +2436,35 @@ class Website(models.CachedModel):
         if with_id:
             org.set(id=f"{base_url}/#organization")
 
-        social_handle_urls = {
-            'social_facebook': self.social_facebook,
-            'social_linkedin': self.social_linkedin,
-            'social_twitter': self.social_twitter,
-            'social_instagram': self.social_instagram,
-            'social_tiktok': self.social_tiktok,
-            'social_youtube': self.social_youtube,
-            'social_github': self.social_github,
-            'social_discord': self.social_discord,
-        }
-        if social_handle_urls:
-            org.set(same_as=list(social_handle_urls.values()))
+        same_as = list(filter(None, [
+            self.social_facebook,
+            self.social_linkedin,
+            self.social_twitter,
+            self.social_instagram,
+            self.social_tiktok,
+            self.social_youtube,
+            self.social_github,
+            self.social_discord,
+        ]))
+
+        if same_as:
+            org.set(same_as=same_as)
 
         logo_url = f"{base_url}/logo.png?company={company.id}"
         logo = SchemaBuilder("ImageObject", url=logo_url)
         org.add_nested(logo=logo)
 
-        contact_point = self.contact_structured_data(company)
-        if contact_point:
-            org.add_nested(contact_point=contact_point)
-        address = self.postal_address_structured_data(company)
-        if address:
-            org.add_nested(address=address)
+        # contact_point = self.contact_structured_data(company)
+        # if contact_point:
+        #     org.add_nested(contact_point=contact_point)
+        # address = self.postal_address_structured_data(company)
+        # if address:
+        #     org.add_nested(address=address)
 
         return org
 
     @api.model
-    def contact_structured_data(self, company=None):
+    def contact_structured_data(self, company):
         """
         Generate structured data for the contact point of a company.
 
@@ -2473,11 +2473,10 @@ class Website(models.CachedModel):
         Returns:
             SchemaBuilder: The structured data schema builder for the contact point.
         """
-        company = company or self.company_id
         if not company:
             return False
-        telephone = company.phone.strip() if company.phone else None
-        email = company.email.strip() if company.email else None
+        telephone = (company.phone or '').strip() or None
+        email = (company.email or '').strip() or None
         if telephone or email:
             return SchemaBuilder(
                 "ContactPoint",
@@ -2487,7 +2486,7 @@ class Website(models.CachedModel):
         return None
 
     @api.model
-    def postal_address_structured_data(self, company=None):
+    def postal_address_structured_data(self, company):
         """
         Generate structured data for the postal address of a company.
 
@@ -2496,13 +2495,12 @@ class Website(models.CachedModel):
         Returns:
             SchemaBuilder: The structured data schema builder for the postal address.
         """
-        company = company or self.company_id
         if not company:
             return False
-        street = company.street.strip() if company.street else None
-        street2 = company.street2.strip() if company.street2 else None
-        city = company.city.strip() if company.city else None
-        zip_code = company.zip.strip() if company.zip else None
+        street = (company.street or '').strip() or None
+        street2 = (company.street2 or '').strip() or None
+        city = (company.city or '').strip() or None
+        zip_code = (company.zip or '').strip() or None
         state = company.state_id.code if company.state_id else None
         country = company.country_id.code if company.country_id else None
 

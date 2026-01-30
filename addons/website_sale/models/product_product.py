@@ -169,12 +169,17 @@ class ProductProduct(models.Model):
             self.website_published = False
 
     def _to_structured_data(self, website):
-        """Generate JSON-LD structured data for product."""
+        """ Generate JSON-LD markup data for the current product.
+
+        :param website website: The current website.
+        :return: The JSON-LD markup data.
+        :rtype: dict
+        """
         self.ensure_one()
 
         base_url = website.get_base_url()
         product_price = request.pricelist._get_product_price(
-            self, quantity=1, target_currency=website.currency_id,
+            self, quantity=1, currency=website.currency_id
         )
         # Use sudo to access cross-company taxes.
         product_taxes_sudo = self.sudo().taxes_id._filter_taxes_by_company(self.env.company)

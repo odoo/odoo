@@ -1029,7 +1029,7 @@ class ProductTemplate(models.Model):
     def _to_structured_data(self, website):
         self.ensure_one()
 
-        org = website.organization_structured_data(with_id=True)
+        org = website.organization_structured_data(website.company_id, with_id=True)
         if self.product_variant_count == 1:
             return [org, self.product_variant_id._to_structured_data(website)]
 
@@ -1052,9 +1052,16 @@ class ProductTemplate(models.Model):
         if brand_obj:
             group.add_nested(brand=brand_obj)
 
+        # perf: temporal solution to avoid slowness when product have many variants and pricelist rules
+        limit = self.env['ir.config_parameter'].sudo().get_int('website_sale.markup_data_limit_variants') or None
+        if limit:
+            product_variant_ids = self.product_variant_ids[:limit]
+        else:
+            product_variant_ids = self.product_variant_ids
+
         group.add_nested(has_variant=[
             variant._to_structured_data(website)
-            for variant in self.product_variant_ids
+            for variant in product_variant_ids
         ])
 
         if self.description_ecommerce:

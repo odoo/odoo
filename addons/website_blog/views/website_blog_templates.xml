@@ -171,9 +171,6 @@ list of filtered posts (by date or tag).
         <t t-set="opt_blog_post_regular_cover" t-value="is_view_active('website_blog.opt_blog_post_regular_cover')"/>
         <t t-set="opt_blog_post_breadcrumb" t-value="is_view_active('website_blog.opt_blog_post_breadcrumb')"/>
 
-        <t t-set="opt_blog_post_regular_cover" t-value="is_view_active('website_blog.opt_blog_post_regular_cover')"/>
-        <t t-set="opt_blog_post_breadcrumb" t-value="is_view_active('website_blog.opt_blog_post_breadcrumb')"/>
-
         <t t-set="head">
             <script t-if="blog_post_ld_json" type="application/ld+json" t-out="blog_post_ld_json"/>
         </t>

@@ -162,18 +162,18 @@ spirit. To be successful, you will have solid solving problem skills.''')
         employement_type = None
         if self.contract_type_id.sudo():
             employement_type = {
-                'Permanent': 'FULL_TIME',       # Permanent is best described as Full Time
-                'Temporary': 'TEMPORARY',       # Exact match
-                'Interim': 'TEMPORARY',         # "Interim" is best described as Temporary
-                'Seasonal': 'TEMPORARY',        # "Seasonal" is a subset of Temporary
-                'Full-Time': 'FULL_TIME',       # Mapped to standard
-                'Part-Time': 'PART_TIME',       # Mapped to standard
-                'Intern': 'INTERN',             # Exact match
-                'Student': 'INTERN',            # "Student" jobs are usually Internships
-                'Apprenticeship': 'INTERN',     # Google treats apprenticeships under the INTERN umbrella
-                'Thesis': 'INTERN',             # Thesis work is academic/internship based
-                'Statutory': 'OTHER',           # Regulatory role, "Other" is safest
-                'Employee': 'FULL_TIME',        # Generic "Employee" usually implies Full Time
+                'Permanent': 'FULL_TIME',
+                'Temporary': 'TEMPORARY',
+                'Interim': 'TEMPORARY',
+                'Seasonal': 'TEMPORARY',
+                'Full-Time': 'FULL_TIME',
+                'Part-Time': 'PART_TIME',
+                'Intern': 'INTERN',
+                'Student': 'INTERN',
+                'Apprenticeship': 'INTERN',
+                'Thesis': 'INTERN',
+                'Statutory': 'OTHER',
+                'Employee': 'FULL_TIME',
             }.get(self.contract_type_id.sudo().name, 'OTHER')
         hiring_organization = None
         job_location = None
@@ -185,15 +185,9 @@ spirit. To be successful, you will have solid solving problem skills.''')
                 value=f"{department_company.id}-{self.id}",
             )
             hiring_organization = self.website_id.organization_structured_data(department_company)
-            job_location = SchemaBuilder("Place").add_nested(
-                address=SchemaBuilder(
-                    "PostalAddress",
-                    street_address=" ".join(filter(None, [self.address_id.street, self.address_id.street2])),
-                    address_locality=self.address_id.city or '',
-                    postal_code=self.address_id.zip or '',
-                    address_region=self.address_id.state_id.code or '',
-                    address_country=self.address_id.country_id.code or '',
-                ),
+            job_location = SchemaBuilder(
+                "Place",
+                address=self.env['website'].postal_address_structured_data(department_company),
             )
         base_salary = None  # TODO: Add support for baseSalary field
         return SchemaBuilder(

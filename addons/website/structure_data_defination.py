@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+# TODO: This module should be moved to 'tools/structure_data'?
+
 """
 Schema.org JSON-LD Builder for Website module(s).
 

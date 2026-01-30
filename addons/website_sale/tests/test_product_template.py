@@ -96,7 +96,8 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             ('name', '!=', company_currency.name)
         ], limit=1)
         with MockRequest(self.env, website=self.website):
-            markup = self.product._to_markup_data(self.website)
+            markup = self.product._to_structured_data(self.website)
+            markup = markup._render()
         # Expected converted price
         expected_price = company_currency._convert(
             self.product.list_price,
