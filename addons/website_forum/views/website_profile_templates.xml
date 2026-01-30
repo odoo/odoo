@@ -179,7 +179,7 @@
                                 _form_classes.f="d-flex flex-row align-items-center flex-wrap float-end"
                                 search_type.f="forums"
                                 action="'/forum/%s%s' % (forum_id or 'all', '/tag/%s/questions' % slug(tag) if tag else '')"
-                                display_description="true"
+                                display_description.f="false"
                                 display_detail.f="false"
                                 placeholder.f="Search Posts...">
                                 <input type="hidden" name="my" value="upvoted"/>
