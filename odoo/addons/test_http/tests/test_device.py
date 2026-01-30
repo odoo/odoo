@@ -34,6 +34,9 @@ class TestDevice(TestHttpBase):
             'group_ids': [Command.set([self.env.ref('base.group_user').id])],
         })
 
+    def authenticate(self, login, password):
+        return super().authenticate(login, password, session_extra={'_trace_disable': False})
+
     def hit(self, time, endpoint, headers=None, ip=None):
         if ip:
             headers = headers or {}
