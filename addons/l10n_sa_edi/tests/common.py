@@ -117,8 +117,8 @@ class TestSaEdiCommon(AccountEdiTestCommon):
             'country_id': cls.saudi_arabia.id,
             'state_id': cls.riyadh.id,
             # Simplified invoices use different ID schemes
-            'l10n_sa_edi_additional_identification_scheme': 'MOM',  # Momra License
-            'l10n_sa_edi_additional_identification_number': '3123123213131',
+            'l10n_sa_edi_additional_identification_scheme': 'NAT',
+            'l10n_sa_edi_additional_identification_number': '1076543210',
         })
 
     @classmethod

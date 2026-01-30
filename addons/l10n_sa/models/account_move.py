@@ -133,7 +133,6 @@ class AccountMove(models.Model):
     def _l10n_sa_is_simplified(self):
         """
             Returns True if the customer is an individual, i.e: The invoice is B2C
-        :return:
         """
         self.ensure_one()
-        return not self.partner_id.vat
+        return not self.commercial_partner_id.is_company
