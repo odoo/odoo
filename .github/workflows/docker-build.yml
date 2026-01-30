@@ -82,8 +82,8 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            # Branch name tags
-            type=ref,event=branch,prefix={{branch}}-
+            # Branch name tags (no prefix to avoid duplication)
+            type=ref,event=branch
             # PR tags
             type=ref,event=pr,prefix=pr-
             # Release tags (semantic versioning)
@@ -91,15 +91,11 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             # Short SHA for traceability
-            type=sha,prefix=sha-,suffix=-${{ github.run_number }}
+            type=sha,prefix=sha-
             # Custom tag from workflow dispatch
             type=raw,value=${{ github.event.inputs.tag }},enable=${{ github.event.inputs.tag != '' }}
             # Latest tag for main branch
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
-            # Production-specific tag for main
-            type=raw,value=stable,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
-            # Uber-specific tag for main
-            type=raw,value=odoo-uber-latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
 
       # -----------------------------------------------------------------------
       # Step 5: Build and push Docker image
@@ -164,9 +160,12 @@ jobs:
       - name: Wait for image to be available in GHCR
         run: |
           echo "Waiting for image to be pushed to GHCR..."
+          # Use branch name tag (feature-odoo-uber becomes feature-odoo-uber)
+          TAG_NAME=$(echo "${{ github.ref_name }}" | sed 's/\//-/g')
+          
           for i in {1..30}; do
-            if docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }} 2>/dev/null; then
-              echo "Image is available"
+            if docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${TAG_NAME} 2>/dev/null; then
+              echo "Image is available with tag: ${TAG_NAME}"
               exit 0
             fi
             echo "Attempt $i/30: Image not yet available, waiting..."
@@ -174,6 +173,19 @@ jobs:
           done
           echo "Image still not available after 60 seconds, but continuing..."
           exit 0
+
+      - name: Run Trivy vulnerability scanner
+        id: trivy-scan
+        continue-on-error: true
+        run: |
+          TAG_NAME=$(echo "${{ github.ref_name }}" | sed 's/\//-/g')
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            aquasec/trivy image \
+            --format sarif \
+            --output /tmp/trivy-results.sarif \
+            --severity CRITICAL,HIGH \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${TAG_NAME} || true
 
       - name: Run Trivy vulnerability scanner
         id: trivy-scan
@@ -236,14 +248,15 @@ jobs:
           echo "## 📦 Image Size & Layer Report" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           
-          # Pull the image
-          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }} 2>&1 | grep -i "Digest\|Pulling" || true
-          
+          # Pull the image using branch tag
+          TAG_NAME=$(echo "${{ github.ref_name }}" | sed 's/\//-/g')
+          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${TAG_NAME} 2>&1 | grep -i "Digest\|Pulling" || true
+
           # Get image size using inspect
           IMAGE_SIZE=$(docker inspect \
             --format='{{json .Size}}' \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }} 2>/dev/null || echo "0")
-          
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${TAG_NAME} 2>/dev/null || echo "0")
+
           if [ "$IMAGE_SIZE" = "0" ] || [ -z "$IMAGE_SIZE" ]; then
             echo "❌ Could not retrieve image size" >> $GITHUB_STEP_SUMMARY
             IMAGE_SIZE="unknown"
@@ -262,9 +275,8 @@ jobs:
           echo "### Top Layers (by size)" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           docker history --no-trunc --human \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }} 2>/dev/null | head -15 || echo "Layer history unavailable" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${TAG_NAME} 2>/dev/null | head -15 || echo "Layer history unavailable" >> $GITHUB_STEP_SUMMARY
+
           echo "image_size=$SIZE_MB" >> $GITHUB_OUTPUT
 
   # ===========================================================================
@@ -317,10 +329,9 @@ jobs:
           echo "📂 Working directory: $(pwd)"
           
           echo "📥 Pulling latest Docker image..."
-          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }} || {
-            echo "⚠️ Pulling by SHA failed, trying latest tag..."
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          }
+          TAG_NAME=$(echo "${{ github.ref_name }}" | sed 's/\//-/g')
+          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${TAG_NAME}
+
           
           echo "🔄 Updating docker-compose services..."
           docker-compose pull || true
@@ -336,14 +347,16 @@ jobs:
       - name: Verify deployment
         if: steps.deploy.outcome == 'success'
         run: |
+          TAG_NAME=$(echo "${{ github.ref_name }}" | sed 's/\//-/g')
           echo "## ✅ VPS Deployment Status" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Branch**: ${{ github.ref }}" >> $GITHUB_STEP_SUMMARY
           echo "**Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
           echo "**Target**: ${{ secrets.VPS_HOST }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Image**: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Image**: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${TAG_NAME}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "✅ Successfully deployed to production VPS" >> $GITHUB_STEP_SUMMARY
+
 
       - name: Deployment failed notification
         if: failure()

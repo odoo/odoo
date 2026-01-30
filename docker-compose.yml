@@ -111,7 +111,7 @@ services:
           memory: 256M     # 256MB limit for DB
 
   odoo:
-    image: ghcr.io/laxya911/custom-odoo:feature-odoo-uber-feature-odoo-uber
+    image: ghcr.io/laxya911/custom-odoo:feature-odoo-uber
     container_name: odoo_uber
     depends_on:
       - db
