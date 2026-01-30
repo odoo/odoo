@@ -3,7 +3,7 @@
 
     <t t-name="discuss.ChannelMemberList">
         <ActionPanel title.translate="Members" minWidth="200" initialWidth="env.inMeetingView ? 400 : 250" icon="'oi oi-users'">
-            <button name="inviteButton" t-on-click="() => this.openInviteDialog()" class="btn btn-sm btn-secondary mt-2 d-flex align-items-center justify-content-center gap-1 rounded-3" title="Invite People"><i class="oi oi-user-plus"/><span>Invite a User</span></button>
+            <button name="inviteButton" t-on-click="() => this.openInviteDialog()" class="btn btn-sm btn-secondary mt-2 d-flex align-items-center justify-content-center gap-1 rounded-3" title="Invite People"><i class="oi oi-user-plus"/><span>Invite People</span></button>
             <t t-if="props.channel.onlineMembers.length > 0">
                 <t t-call="discuss.ChannelMemberList.section">
                     <t t-set="sectionName" t-value="onlineSectionText"/>
