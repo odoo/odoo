@@ -200,13 +200,12 @@ class TestExpensesStates(TestExpenseCommon, MailCase):
         self.expenses_employee.manager_id = self.expense_user_manager_2
         with self.mock_mail_gateway():
             self.expenses_employee.action_submit()
-            self.env['hr.expense']._cron_send_submitted_expenses_mail()
         mail_activity = self.env['mail.activity'].search([('res_model', '=', 'hr.expense'), ('res_id', '=', self.expenses_employee.id)])
         self.assertEqual(mail_activity.user_id.id, self.expense_user_manager_2.id)
         # No notification should be sent
         notification_message = self.env['mail.message'].search([('partner_ids', 'in', self.expense_user_manager_2.partner_id.ids), ('display_name', '=', mail_activity.res_name)])
         self.assertFalse(notification_message)
-        # Expenses submitted email is sent via cron
+        # Expenses submitted email was sent on submission
         expenses_submitted = self.env['mail.mail'].search(
             [('email_to', '=', self.expense_user_manager_2.email),
             ('subject', '=', "New expenses waiting for your approval")]

@@ -9,6 +9,7 @@ import werkzeug
 from odoo import api, fields, Command, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools import clean_context, email_normalize, float_repr, float_round, is_html_empty, format_amount, format_date
+from datetime import timedelta
 
 
 _logger = logging.getLogger(__name__)
@@ -142,6 +143,7 @@ class HrExpense(models.Model):
     approval_date = fields.Datetime(string="Approval Date", readonly=True)
     duplicate_expense_ids = fields.Many2many(comodel_name='hr.expense', compute='_compute_duplicate_expense_ids')  # Used to trigger warnings
     same_receipt_expense_ids = fields.Many2many(comodel_name='hr.expense', compute='_compute_same_receipt_expense_ids')  # Used to trigger warnings
+    last_notification_date = fields.Datetime(string="Last Notification Date", readonly=True, copy=False)
 
     split_expense_origin_id = fields.Many2one(
         comodel_name='hr.expense',
@@ -1032,14 +1034,31 @@ class HrExpense(models.Model):
         if expenses_activity_unlink:
             expenses_activity_unlink.activity_unlink(['hr_expense.mail_act_expense_approval'])
 
-    @api.model
-    def _cron_send_submitted_expenses_mail(self):
-        expenses_submitted_to_review = self.search([('state', '=', 'submitted')])
         if expenses_submitted_to_review:
             expenses_submitted_to_review._send_submitted_expenses_mail()
 
     def _send_submitted_expenses_mail(self):
+        """
+        Send submitted email to manager if no email was sent recently
+        """
         new_mails = []
+        other_expenses_map = {
+            (company.id, manager.id): {
+                'expenses': expenses,
+                'last_notification_date': max_date
+            }
+            for company, manager, expenses, max_date in self.sudo()._read_group(
+                domain=[
+                    ('id', 'not in', self.ids),
+                    ('state', '=', 'submitted'),
+                    ('manager_id', 'in', self.mapped('manager_id').ids),
+                    ('company_id', 'in', self.mapped('company_id').ids),
+                ],
+                groupby=['company_id', 'manager_id'],
+                aggregates=['id:recordset', 'last_notification_date:max'],
+            )
+        }
+        recent_threshold = fields.Datetime.now() - timedelta(hours=12)
         for company, expenses_submitted_per_company in self.grouped('company_id').items():
             parent_company_mails = company.parent_ids[::-1].mapped('email_formatted')
             mail_from = (
@@ -1055,34 +1074,35 @@ class HrExpense(models.Model):
             for manager, expenses_submitted in expenses_submitted_per_company.grouped('manager_id').items():
                 if not manager:
                     continue
+                other_expenses_with_date = other_expenses_map.get((company.id, manager.id), {})
+                last_notification_date = other_expenses_with_date.get('last_notification_date')
+
+                if last_notification_date and last_notification_date > recent_threshold:
+                    continue
+
+                all_submitted_expenses = other_expenses_with_date.get('expenses', self.env['hr.expense'])
+                all_submitted_expenses |= expenses_submitted
 
                 manager_langs = tuple(lang for lang in manager.partner_id.mapped('lang') if lang)
                 mail_lang = (manager_langs and manager_langs[0]) or self.env.lang or 'en_US'
-                departments = expenses_submitted.department_id
-                if len(departments) > 1:
-                    url = '/odoo/expenses-to-process'
-                else:
-                    url = f'/odoo/departments/{departments.id}/expenses-to-approve'
-                expenses_count = len(expenses_submitted)
                 employee_breakdown = []
-                for employee, expenses in expenses_submitted.grouped('employee_id').items():
-                    employee_total_amount = sum(expenses.mapped('total_amount'))
+                for employee, expenses in all_submitted_expenses.grouped('employee_id').items():
                     employee_breakdown.append({
                         'name': employee.name,
-                        'amount': format_amount(self.env, employee_total_amount, company.currency_id),
+                        'amount': format_amount(self.env, sum(expenses.mapped('total_amount')), company.currency_id),
                     })
 
                 body = self.env['ir.qweb']._render(
                     template='hr_expense.hr_expense_template_submitted_expenses',
                     values={
                         'manager_name': manager.name,
-                        'url': url,
+                        'url': f'/odoo/{manager.id}/expenses-to-process',
                         'company': company,
                         'user': self.env.user,
                         'total_amount': sum(expenses_submitted.mapped('total_amount')),
                         'today_string': format_date(self.env, fields.Date.context_today(self), date_format='EEEE', lang_code=mail_lang),
                         'first_expense_name': expenses_submitted[0].name,
-                        'expenses_count': expenses_count,
+                        'expenses_count': len(all_submitted_expenses),
                         'employee_breakdown': employee_breakdown,
                     },
                     lang=mail_lang,
@@ -1095,6 +1115,7 @@ class HrExpense(models.Model):
                     'email_to': manager.employee_id.work_email or manager.email,
                     'subject': _("New expenses waiting for your approval"),
                 })
+                all_submitted_expenses.last_notification_date = fields.Datetime.now()
             if new_mails:
                 self.env['mail.mail'].sudo().create(new_mails).send()
 
@@ -1453,7 +1474,7 @@ class HrExpense(models.Model):
         self.update_activities_and_mails()
 
     def _do_reset_approval(self):
-        self.sudo().write({'approval_state': False, 'approval_date': False, 'account_move_id': False})
+        self.sudo().write({'approval_state': False, 'approval_date': False, 'last_notification_date': False, 'account_move_id': False})
         self.update_activities_and_mails()
 
     def _do_refuse(self, reason):
