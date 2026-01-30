@@ -10,7 +10,6 @@ from odoo.addons.website_sale.controllers import main
 
 
 class WebsiteSale(main.WebsiteSale):
-
     @route()
     def pricelist(self, promo, reward_id=None, **post):
         if not (order_sudo := request.cart):
@@ -18,7 +17,7 @@ class WebsiteSale(main.WebsiteSale):
         coupon_status = order_sudo._try_apply_code(promo)
         if coupon_status.get('not_found'):
             return super().pricelist(promo, **post)
-        elif coupon_status.get('error'):
+        if coupon_status.get('error'):
             request.session['error_promo_code'] = coupon_status['error']
         elif 'error' not in coupon_status:
             reward_successfully_applied = True
@@ -51,7 +50,9 @@ class WebsiteSale(main.WebsiteSale):
             else:
                 url_query['notify_coupon'] = code
         else:
-            url_query['coupon_error'] = _("The coupon will be automatically applied when you add something in your cart.")
+            url_query['coupon_error'] = _(
+                "The coupon will be automatically applied when you add something in your cart."
+            )
             url_query['coupon_error_type'] = 'warning'
         redirect = url_parts.replace(query=url_encode(url_query))
         return request.redirect(redirect.to_url())
@@ -83,10 +84,15 @@ class WebsiteSale(main.WebsiteSale):
             if reward_sudo in rewards:
                 coupon = coupon_
                 if code == coupon.code and (
-                    (program_sudo.trigger == 'with_code' and program_sudo.program_type != 'promo_code')
-                    or (program_sudo.trigger == 'auto'
+                    (
+                        program_sudo.trigger == 'with_code'
+                        and program_sudo.program_type != 'promo_code'
+                    )
+                    or (
+                        program_sudo.trigger == 'auto'
                         and program_sudo.applies_on == 'future'
-                        and program_sudo.program_type not in ('ewallet', 'loyalty'))
+                        and program_sudo.program_type not in ('ewallet', 'loyalty')
+                    )
                 ):
                     return self.pricelist(code, reward_id=reward_id)
         if coupon:

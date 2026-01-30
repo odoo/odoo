@@ -23,22 +23,17 @@
         'views/portal_templates.xml',
         'views/res_partner_views.xml',
     ],
-    'demo': [
-        'data/loyalty_demo.xml',
-    ],
+    'demo': ['data/loyalty_demo.xml'],
     'assets': {
         'web.assets_backend': [
             'loyalty/static/src/js/**/*.js',
             'loyalty/static/src/scss/*.scss',
             'loyalty/static/src/xml/*.xml',
-
             ('remove', 'loyalty/static/src/js/portal/**/*'),
             # Don't include dark mode files in light mode
             ('remove', 'loyalty/static/src/scss/*.dark.scss'),
         ],
-        'web.assets_web_dark': [
-            'loyalty/static/src/scss/*.dark.scss',
-        ],
+        'web.assets_web_dark': ['loyalty/static/src/scss/*.dark.scss'],
         'web.assets_frontend': [
             'loyalty/static/src/js/portal/**/*',
             'loyalty/static/src/interactions/*',

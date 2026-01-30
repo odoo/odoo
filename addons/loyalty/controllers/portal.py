@@ -8,23 +8,26 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 
 class CustomerPortalLoyalty(CustomerPortal):
-
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
         if not counters:
             # we want those data to be added to the /my/home page only, and always computed
-            values['cards_per_programs'] = dict(request.env['loyalty.card'].sudo()._read_group(
-                domain=[
-                    ('partner_id', '=', request.env.user.partner_id.id),
-                    ('program_id.active', '=', True),
-                    ('program_id.program_type', 'in', ['loyalty', 'ewallet']),
-                    '|',
+            values['cards_per_programs'] = dict(
+                request.env['loyalty.card']
+                .sudo()
+                ._read_group(
+                    domain=[
+                        ('partner_id', '=', request.env.user.partner_id.id),
+                        ('program_id.active', '=', True),
+                        ('program_id.program_type', 'in', ['loyalty', 'ewallet']),
+                        '|',
                         ('expiration_date', '>=', fields.Date().today()),
                         ('expiration_date', '=', False),
-                ],
-                groupby=['program_id'],
-                aggregates=['id:recordset'],
-            ))
+                    ],
+                    groupby=['program_id'],
+                    aggregates=['id:recordset'],
+                )
+            )
 
         return values
 
@@ -46,10 +49,14 @@ class CustomerPortalLoyalty(CustomerPortal):
         website=True,
     )
     def portal_my_loyalty_card_history(self, card_id, page=1, sortby='date', **kw):
-        card_sudo = request.env['loyalty.card'].sudo().search([
-            ('id', '=', int(card_id)),
-            ('partner_id', '=', request.env.user.partner_id.id),
-        ])
+        card_sudo = (
+            request.env['loyalty.card']
+            .sudo()
+            .search([
+                ('id', '=', int(card_id)),
+                ('partner_id', '=', request.env.user.partner_id.id),
+            ])
+        )
         if not card_sudo:
             return request.redirect('/my')
 
@@ -67,7 +74,7 @@ class CustomerPortalLoyalty(CustomerPortal):
         history_lines = LoyaltyHistorySudo.search(
             domain=[
                 ('card_id', '=', card_id),
-                ('card_id.partner_id', '=', request.env.user.partner_id.id)
+                ('card_id.partner_id', '=', request.env.user.partner_id.id),
             ],
             order=order,
             limit=self._items_per_page,
@@ -90,21 +97,29 @@ class CustomerPortalLoyalty(CustomerPortal):
         :param card_id(str): The ID of the loyalty card.
         :return(dict): A dictionary with card history values.
         """
-        card_sudo = request.env['loyalty.card'].sudo().search([
-            ('id', '=', int(card_id)),
-            ('partner_id', '=', request.env.user.partner_id.id)
-        ])
+        card_sudo = (
+            request.env['loyalty.card']
+            .sudo()
+            .search([
+                ('id', '=', int(card_id)),
+                ('partner_id', '=', request.env.user.partner_id.id),
+            ])
+        )
         if not card_sudo:
             return {}
 
         program_type = card_sudo.program_id.program_type
-        rewards = request.env['loyalty.reward'].sudo().search(
-            [
-                ('program_id', '=', card_sudo.program_id.id),
-                ('required_points', '<=', card_sudo.points)
-            ],
-            order='required_points desc',
-            limit=3,
+        rewards = (
+            request.env['loyalty.reward']
+            .sudo()
+            .search(
+                [
+                    ('program_id', '=', card_sudo.program_id.id),
+                    ('required_points', '<=', card_sudo.points),
+                ],
+                order='required_points desc',
+                limit=3,
+            )
         )
         return {
             'card': {
@@ -113,20 +128,23 @@ class CustomerPortalLoyalty(CustomerPortal):
                 'expiration_date': card_sudo.expiration_date,
                 'code': card_sudo.code,
             },
-            'program': {
-                'program_name': card_sudo.program_id.name,
-                'program_type': program_type,
-            },
-            'history_lines': [{
-                'order_id': line.order_id,
-                'description': line.description,
-                'order_portal_url': line._get_order_portal_url(),
-                'points': f'{"-" if line.issued < line.used else "+"}'
-                          f'{card_sudo._format_points(abs(line.issued - line.used))}',
-            } for line in card_sudo.history_ids[:5]],
-            'rewards': [{
-                'description': reward.description,
-                'points': card_sudo._format_points(reward.required_points),
-            } for reward in rewards],
+            'program': {'program_name': card_sudo.program_id.name, 'program_type': program_type},
+            'history_lines': [
+                {
+                    'order_id': line.order_id,
+                    'description': line.description,
+                    'order_portal_url': line._get_order_portal_url(),
+                    'points': f'{"-" if line.issued < line.used else "+"}'
+                    f'{card_sudo._format_points(abs(line.issued - line.used))}',
+                }
+                for line in card_sudo.history_ids[:5]
+            ],
+            'rewards': [
+                {
+                    'description': reward.description,
+                    'points': card_sudo._format_points(reward.required_points),
+                }
+                for reward in rewards
+            ],
             'img_path': f'/loyalty/static/src/img/{program_type}.svg',
         }

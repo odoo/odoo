@@ -12,7 +12,6 @@ from odoo.tools import mute_logger
 
 @tagged('post_install', '-at_install')
 class TestLoyalty(TransactionCase):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -21,20 +20,17 @@ class TestLoyalty(TransactionCase):
             'name': 'Test Program',
             'reward_ids': [(0, 0, {})],
         })
-        cls.product = cls.env['product.product'].with_context(default_taxes_id=False).create({
-            'name': "Test Product",
-            'type': 'consu',
-            'list_price': 20.0,
-        })
+        cls.product = (
+            cls.env['product.product']
+            .with_context(default_taxes_id=False)
+            .create({'name': "Test Product", 'type': 'consu', 'list_price': 20.0})
+        )
 
     def create_program_with_code(self, code):
         return self.env['loyalty.program'].create({
             'name': "Discount delivery",
             'program_type': 'promo_code',
-            'rule_ids': [Command.create({
-                'code': code,
-                'minimum_amount': 0,
-            })],
+            'rule_ids': [Command.create({'code': code, 'minimum_amount': 0})],
         })
 
     def test_loyalty_program_default_values(self):
@@ -74,38 +70,43 @@ class TestLoyalty(TransactionCase):
         # Test basic loyalty_mail functionalities
         loyalty_card_model_id = self.env.ref('loyalty.model_loyalty_card')
         create_tmpl, fifty_tmpl, hundred_tmpl = self.env['mail.template'].create([
-            {
-                'name': 'CREATE',
-                'model_id': loyalty_card_model_id.id,
-            },
-            {
-                'name': '50 points',
-                'model_id': loyalty_card_model_id.id,
-            },
-            {
-                'name': '100 points',
-                'model_id': loyalty_card_model_id.id,
-            },
+            {'name': 'CREATE', 'model_id': loyalty_card_model_id.id},
+            {'name': '50 points', 'model_id': loyalty_card_model_id.id},
+            {'name': '100 points', 'model_id': loyalty_card_model_id.id},
         ])
-        self.program.write({'communication_plan_ids': [
-            (0, 0, {
-                'program_id': self.program.id,
-                'trigger': 'create',
-                'mail_template_id': create_tmpl.id,
-            }),
-            (0, 0, {
-                'program_id': self.program.id,
-                'trigger': 'points_reach',
-                'points': 50,
-                'mail_template_id': fifty_tmpl.id,
-            }),
-            (0, 0, {
-                'program_id': self.program.id,
-                'trigger': 'points_reach',
-                'points': 100,
-                'mail_template_id': hundred_tmpl.id,
-            }),
-        ]})
+        self.program.write({
+            'communication_plan_ids': [
+                (
+                    0,
+                    0,
+                    {
+                        'program_id': self.program.id,
+                        'trigger': 'create',
+                        'mail_template_id': create_tmpl.id,
+                    },
+                ),
+                (
+                    0,
+                    0,
+                    {
+                        'program_id': self.program.id,
+                        'trigger': 'points_reach',
+                        'points': 50,
+                        'mail_template_id': fifty_tmpl.id,
+                    },
+                ),
+                (
+                    0,
+                    0,
+                    {
+                        'program_id': self.program.id,
+                        'trigger': 'points_reach',
+                        'points': 100,
+                        'mail_template_id': hundred_tmpl.id,
+                    },
+                ),
+            ]
+        })
 
         sent_mails = self.env['mail.template']
 
@@ -114,7 +115,9 @@ class TestLoyalty(TransactionCase):
             sent_mails |= self
 
         partner = self.env['res.partner'].create({'name': 'Test Partner'})
-        with patch('odoo.addons.mail.models.mail_template.MailTemplate.send_mail', new=mock_send_mail):
+        with patch(
+            'odoo.addons.mail.models.mail_template.MailTemplate.send_mail', new=mock_send_mail
+        ):
             # Send mail at creation
             coupon = self.env['loyalty.card'].create({
                 'program_id': self.program.id,
@@ -145,13 +148,7 @@ class TestLoyalty(TransactionCase):
         # recompute of rewards
         self.program.flush_recordset(['reward_ids'])
 
-        self.program.write({
-            'reward_ids': [
-                Command.create({
-                    'description': 'Test Product',
-                }),
-            ],
-        })
+        self.program.write({'reward_ids': [Command.create({'description': 'Test Product'})]})
         self.assertTrue(all(r.reward_type == 'product' for r in self.program.reward_ids))
 
     def test_loyalty_program_preserve_reward_with_always_edit(self):
@@ -166,13 +163,7 @@ class TestLoyalty(TransactionCase):
             self.assertEqual(program.reward_ids.reward_product_qty, 2)
 
     def test_archiving_unarchiving(self):
-        self.program.write({
-            'reward_ids': [
-                Command.create({
-                    'description': 'Test Product',
-                }),
-            ],
-        })
+        self.program.write({'reward_ids': [Command.create({'description': 'Test Product'})]})
         before_archived_reward_ids = self.program.reward_ids
         self.program.action_archive()
         self.program.action_unarchive()
@@ -195,9 +186,7 @@ class TestLoyalty(TransactionCase):
             'program_id': self.program.id,
             'discount_line_product_id': self.product.id,
         })
-        self.program.write({
-            'reward_ids': [Command.link(reward.id)],
-        })
+        self.program.write({'reward_ids': [Command.link(reward.id)]})
         with self.assertRaises(ValidationError):
             self.product.action_archive()
         self.program.action_archive()
@@ -210,11 +199,13 @@ class TestLoyalty(TransactionCase):
         self.program.write({
             'name': f"50% Discount on {self.product.name}",
             'program_type': 'promotion',
-            'reward_ids': [Command.create({
-                'discount': 50.0,
-                'discount_applicability': 'specific',
-                'discount_product_ids': self.product.ids,
-            })],
+            'reward_ids': [
+                Command.create({
+                    'discount': 50.0,
+                    'discount_applicability': 'specific',
+                    'discount_product_ids': self.product.ids,
+                })
+            ],
         })
         with self.assertRaises(ValidationError):
             self.product.action_archive()
@@ -235,8 +226,8 @@ class TestLoyalty(TransactionCase):
                 Command.create({
                     'description': 'Test Product',
                     'reward_product_id': self.product.id,
-                    'reward_type': 'product'
-                }),
+                    'reward_type': 'product',
+                })
             ],
         })
         loyalty_program.action_archive()
@@ -259,19 +250,9 @@ class TestLoyalty(TransactionCase):
             {'name': 'Destination Partner'},
         ])
         self.env['loyalty.card'].create([
-            {
-                'partner_id': partner_1.id,
-                'program_id': program.id,
-                'points': 10
-            }, {
-                'partner_id': partner_2.id,
-                'program_id': program.id,
-                'points': 20
-            }, {
-                'partner_id': dest_partner.id,
-                'program_id': program.id,
-                'points': 30
-            }
+            {'partner_id': partner_1.id, 'program_id': program.id, 'points': 10},
+            {'partner_id': partner_2.id, 'program_id': program.id, 'points': 20},
+            {'partner_id': dest_partner.id, 'program_id': program.id, 'points': 30},
         ])
 
         self.env['base.partner.merge.automatic.wizard']._merge(
@@ -285,9 +266,9 @@ class TestLoyalty(TransactionCase):
 
         self.assertEqual(len(dest_partner_loyalty_cards), 1)
         self.assertEqual(dest_partner_loyalty_cards.points, 60)
-        self.assertFalse(self.env['loyalty.card'].search([
-            ('partner_id', 'in', [partner_1.id, partner_2.id]),
-        ]))
+        self.assertFalse(
+            self.env['loyalty.card'].search([('partner_id', 'in', [partner_1.id, partner_2.id])])
+        )
 
     def test_card_description_on_tag_change(self):
         product_tag = self.env['product.tag'].create({'name': 'Multiple Products'})
@@ -309,17 +290,17 @@ class TestLoyalty(TransactionCase):
         self.assertNotEqual(
             reward_description_single_product,
             reward_description_product_tag,
-            "Reward description should be changed after adding a tag"
+            "Reward description should be changed after adding a tag",
         )
         self.assertEqual(
             reward_description_product_tag,
             "Free Product - [Test Product, Test Product 2]",
-            "Reward description for reward with tag should be 'Free Product - [Test Product, Test Product 2]'"
+            "Reward description for reward with tag should be 'Free Product - [Test Product, Test Product 2]'",
         )
 
     def test_prevent_unarchive_when_conflicting_active_program_exists(self):
         """Unarchiving a program should fail if another active program already has the same rule
-           code."""
+        code."""
         program = self.create_program_with_code("FREE")
         program.action_archive()
         # create another active program with the same rule code

@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, timedelta
+
 from freezegun import freeze_time
 
 from odoo import Command
@@ -13,7 +14,6 @@ from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
 @tagged('post_install', '-at_install')
 class TestShopLoyaltyPayment(PaymentHttpCommon, TestSaleCouponCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -40,18 +40,16 @@ class TestShopLoyaltyPayment(PaymentHttpCommon, TestSaleCouponCommon):
             'partner_id': self.portal_partner.id,
             'website_id': self.website.id,
             'message_partner_ids': self.portal_partner.ids,
-            'order_line': [Command.create({
-                'product_id': self.service_product.id,
-                'tax_ids': None,
-            })],
+            'order_line': [
+                Command.create({'product_id': self.service_product.id, 'tax_ids': None})
+            ],
         })
         self._apply_promo_code(order, program.coupon_ids.code)
 
         with freeze_time(program.date_to + timedelta(days=2)):
             self.authenticate(self.portal_user.login, self.portal_user.login)
             with self.assertRaises(
-                JsonRpcException,
-                msg="Payment shouldn't succeed with expired reward still applied",
+                JsonRpcException, msg="Payment shouldn't succeed with expired reward still applied"
             ):
                 self.make_jsonrpc_request(
                     self._build_url(f'/shop/payment/transaction/{order.id}'),

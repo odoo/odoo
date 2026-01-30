@@ -8,24 +8,14 @@ from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
 @tagged('post_install', '-at_install')
 class TestSaleAutoInvoice(TestSaleCouponCommon):
-
     def test_automatic_invoice_on_zero_amount_order(self):
         self.env['ir.config_parameter'].sudo().set_bool('sale.automatic_invoice', True)
         # Create a loyalty program with 100% discount
         self.env['loyalty.program'].sudo().create({
             'name': '100discount',
             'program_type': 'promo_code',
-            'rule_ids': [
-                Command.create({
-                    'code': "100dis",
-                    'minimum_amount': 0,
-                })
-            ],
-            'reward_ids': [
-                Command.create({
-                    'discount': 100,
-                }),
-            ],
+            'rule_ids': [Command.create({'code': "100dis", 'minimum_amount': 0})],
+            'reward_ids': [Command.create({'discount': 100})],
         })
         # Add order line to order
         self.env["sale.order.line"].create({

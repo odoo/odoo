@@ -9,14 +9,12 @@ class LoyaltyReward(models.Model):
     def _get_discount_product_values(self):
         res = super()._get_discount_product_values()
         for vals in res:
-            vals.update({
-                'taxes_id': False,
-                'supplier_taxes_id': False,
-                'invoice_policy': 'order',
-            })
+            vals.update({'taxes_id': False, 'supplier_taxes_id': False, 'invoice_policy': 'order'})
         return res
 
     def unlink(self):
-        if len(self) == 1 and self.env['sale.order.line'].sudo().search_count([('reward_id', 'in', self.ids)], limit=1):
+        if len(self) == 1 and self.env['sale.order.line'].sudo().search_count(
+            [('reward_id', 'in', self.ids)], limit=1
+        ):
             return self.action_archive()
         return super().unlink()

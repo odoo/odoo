@@ -16,49 +16,89 @@ class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
         self.immediate_promotion_program.rule_ids.write({'minimum_qty': 2.0})
         order = self.empty_order
         # Test case 1 (1 A): Assert that no reward is given, as the product B is missing
-        order.write({'order_line': [
-            (0, False, {
-                'product_id': self.product_A.id,
-                'name': '1 Product A',
-                'product_uom_qty': 1.0,
-            })
-        ]})
+        order.write({
+            'order_line': [
+                (
+                    0,
+                    False,
+                    {
+                        'product_id': self.product_A.id,
+                        'name': '1 Product A',
+                        'product_uom_qty': 1.0,
+                    },
+                )
+            ]
+        })
         order._update_programs_and_rewards()
         self._claim_reward(order, self.immediate_promotion_program)
-        self.assertEqual(len(order.order_line.ids), 1, "The promo offer shouldn't have been applied as the product B isn't in the order")
+        self.assertEqual(
+            len(order.order_line.ids),
+            1,
+            "The promo offer shouldn't have been applied as the product B isn't in the order",
+        )
 
         # Test case 2 (1 A 1 B): Assert that no reward is given, as the product A is not present in the correct quantity
-        order.write({'order_line': [
-            (0, False, {
-                'product_id': self.product_B.id,
-                'name': '2 Product B',
-                'product_uom_qty': 1.0,
-            })
-        ]})
+        order.write({
+            'order_line': [
+                (
+                    0,
+                    False,
+                    {
+                        'product_id': self.product_B.id,
+                        'name': '2 Product B',
+                        'product_uom_qty': 1.0,
+                    },
+                )
+            ]
+        })
         order._update_programs_and_rewards()
         self._claim_reward(order, self.immediate_promotion_program)
-        self.assertEqual(len(order.order_line.ids), 2, "The promo offer shouldn't have been applied as 2 product A aren't in the order")
+        self.assertEqual(
+            len(order.order_line.ids),
+            2,
+            "The promo offer shouldn't have been applied as 2 product A aren't in the order",
+        )
 
         # Test case 3 (2 A 1 B): Assert that the reward is given as the product B is now in the order
         order.write({'order_line': [(1, order.order_line[0].id, {'product_uom_qty': 2.0})]})
         order._update_programs_and_rewards()
         self._claim_reward(order, self.immediate_promotion_program)
-        self.assertEqual(len(order.order_line.ids), 3, "The promo offer should have been applied, the discount is not created")
+        self.assertEqual(
+            len(order.order_line.ids),
+            3,
+            "The promo offer should have been applied, the discount is not created",
+        )
 
         # Test case 4 (1 A 1 B): Assert that the reward is removed as we don't buy 2 products B anymore
         order.write({'order_line': [(1, order.order_line[0].id, {'product_uom_qty': 1.0})]})
         order._update_programs_and_rewards()
         self._claim_reward(order, self.immediate_promotion_program)
-        self.assertEqual(len(order.order_line.ids), 2, "The promo reward should have been removed as the rules are not matched anymore")
-        self.assertEqual(order.order_line[0].product_id.id, self.product_A.id, "The wrong line has been removed")
-        self.assertEqual(order.order_line[1].product_id.id, self.product_B.id, "The wrong line has been removed")
+        self.assertEqual(
+            len(order.order_line.ids),
+            2,
+            "The promo reward should have been removed as the rules are not matched anymore",
+        )
+        self.assertEqual(
+            order.order_line[0].product_id.id, self.product_A.id, "The wrong line has been removed"
+        )
+        self.assertEqual(
+            order.order_line[1].product_id.id, self.product_B.id, "The wrong line has been removed"
+        )
 
         # Test case 5 (1 B): Assert that the reward is removed when the order is modified and doesn't match the rules anymore
-        order.write({'order_line': [
-            (1, order.order_line[0].id, {'product_uom_qty': 2.0}),
-            (2, order.order_line[0].id, False)
-        ]})
+        order.write({
+            'order_line': [
+                (1, order.order_line[0].id, {'product_uom_qty': 2.0}),
+                (2, order.order_line[0].id, False),
+            ]
+        })
         order._update_programs_and_rewards()
         self._claim_reward(order, self.immediate_promotion_program)
-        self.assertEqual(len(order.order_line.ids), 1, "The promo reward should have been removed as the rules are not matched anymore")
-        self.assertEqual(order.order_line.product_id.id, self.product_B.id, "The wrong line has been removed")
+        self.assertEqual(
+            len(order.order_line.ids),
+            1,
+            "The promo reward should have been removed as the rules are not matched anymore",
+        )
+        self.assertEqual(
+            order.order_line.product_id.id, self.product_B.id, "The wrong line has been removed"
+        )

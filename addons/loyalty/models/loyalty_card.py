@@ -48,36 +48,41 @@ class LoyaltyCard(models.Model):
     use_count = fields.Integer(compute='_compute_use_count')
     active = fields.Boolean(default=True)
     history_ids = fields.One2many(
-        comodel_name='loyalty.history',
-        inverse_name='card_id',
-        readonly=True,
+        comodel_name='loyalty.history', inverse_name='card_id', readonly=True
     )
 
     _card_code_unique = models.Constraint(
-        'UNIQUE(code)',
-        "A coupon/loyalty card must have a unique code.",
+        'UNIQUE(code)', "A coupon/loyalty card must have a unique code."
     )
 
     @api.constrains('code')
     def _contrains_code(self):
         # Prevent a coupon from having the same code a program
-        if self.env['loyalty.rule'].search_count([('mode', '=', 'with_code'), ('code', 'in', self.mapped('code'))]):
-            raise ValidationError(_("A trigger with the same code as one of your coupon already exists."))
+        if self.env['loyalty.rule'].search_count([
+            ('mode', '=', 'with_code'),
+            ('code', 'in', self.mapped('code')),
+        ]):
+            raise ValidationError(
+                _("A trigger with the same code as one of your coupon already exists.")
+            )
 
     @api.constrains('active', 'partner_id', 'program_id')
     def _check_single_loyalty_card_per_partner(self):
         for card in self:
             if not card.partner_id or card.program_type != 'loyalty':
                 continue
-            loyalty_card_count = self.search_count([
-                ('id', '!=', card.id),
-                ('partner_id', '=', card.partner_id.id),
-                ('program_id', '=', card.program_id.id),
-            ], limit=1)
+            loyalty_card_count = self.search_count(
+                [
+                    ('id', '!=', card.id),
+                    ('partner_id', '=', card.partner_id.id),
+                    ('program_id', '=', card.program_id.id),
+                ],
+                limit=1,
+            )
             if loyalty_card_count:
-                raise ValidationError(self.env._(
-                    "A customer can only have one active loyalty card per program."
-                ))
+                raise ValidationError(
+                    self.env._("A customer can only have one active loyalty card per program.")
+                )
 
     @api.depends('points', 'point_name')
     def _compute_points_display(self):
@@ -98,25 +103,26 @@ class LoyaltyCard(models.Model):
 
     def _get_default_template(self):
         self.ensure_one()
-        return self.program_id.communication_plan_ids.filtered(lambda m: m.trigger == 'create').mail_template_id[:1]
+        return self.program_id.communication_plan_ids.filtered(
+            lambda m: m.trigger == 'create'
+        ).mail_template_id[:1]
 
     def _get_mail_author(self):
         self.ensure_one()
         return (
-            self.env.user._is_internal() and self.env.user or self.company_id or self.env.company
+            (self.env.user._is_internal() and self.env.user) or self.company_id or self.env.company
         ).partner_id
 
     def _get_signature(self):
         """To be overriden"""
         self.ensure_one()
-        return None
 
     def _has_source_order(self):
         return False
 
     def action_coupon_send(self):
-        """ Open a window to compose an email, with the default template returned by `_get_default_template`
-            message loaded by default
+        """Open a window to compose an email, with the default template returned by `_get_default_template`
+        message loaded by default
         """
         self.ensure_one()
         default_template = self._get_default_template()
@@ -144,12 +150,16 @@ class LoyaltyCard(models.Model):
         """
         Sends the 'At Creation' communication plan if it exist for the given coupons.
         """
-        if self.env.context.get('loyalty_no_mail', False) or self.env.context.get('action_no_send_mail', False):
+        if self.env.context.get('loyalty_no_mail', False) or self.env.context.get(
+            'action_no_send_mail', False
+        ):
             return
         # Ideally one per program, but multiple is supported
         create_comm_per_program = dict()
         for program in self.program_id:
-            create_comm_per_program[program] = program.communication_plan_ids.filtered(lambda c: c.trigger == 'create')
+            create_comm_per_program[program] = program.communication_plan_ids.filtered(
+                lambda c: c.trigger == 'create'
+            )
         for coupon in self:
             if not create_comm_per_program[coupon.program_id] or not coupon._mail_get_customer():
                 continue
@@ -177,27 +187,33 @@ class LoyaltyCard(models.Model):
             return
         milestones_per_program = dict()
         for program in self.program_id:
-            milestones_per_program[program] = program.communication_plan_ids\
-                .filtered(lambda c: c.trigger == 'points_reach')\
-                .sorted('points', reverse=True)
+            milestones_per_program[program] = program.communication_plan_ids.filtered(
+                lambda c: c.trigger == 'points_reach'
+            ).sorted('points', reverse=True)
         for coupon in self:
             if not coupon._mail_get_customer():
                 continue
             coupon_change = points_changes[coupon]
             # Do nothing if coupon lost points or did not change
-            if not milestones_per_program[coupon.program_id] or\
-                not coupon.partner_id or\
-                coupon_change['old'] >= coupon_change['new']:
+            if (
+                not milestones_per_program[coupon.program_id]
+                or not coupon.partner_id
+                or coupon_change['old'] >= coupon_change['new']
+            ):
                 continue
             this_milestone = False
             for milestone in milestones_per_program[coupon.program_id]:
-                if coupon_change['old'] < milestone.points and milestone.points <= coupon_change['new']:
+                if (
+                    coupon_change['old'] < milestone.points
+                    and milestone.points <= coupon_change['new']
+                ):
                     this_milestone = milestone
                     break
             if not this_milestone:
                 continue
-            this_milestone.mail_template_id.send_mail(res_id=coupon.id, email_layout_xmlid='mail.mail_notification_light')
-
+            this_milestone.mail_template_id.send_mail(
+                res_id=coupon.id, email_layout_xmlid='mail.mail_notification_light'
+            )
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -210,7 +226,9 @@ class LoyaltyCard(models.Model):
             points_before = {coupon: coupon.points for coupon in self}
         res = super().write(vals)
         if not self.env.context.get('loyalty_no_mail', False) and 'points' in vals:
-            points_changes = {coupon: {'old': points_before[coupon], 'new': coupon.points} for coupon in self}
+            points_changes = {
+                coupon: {'old': points_before[coupon], 'new': coupon.points} for coupon in self
+            }
             self._send_points_reach_communication(points_changes)
         return res
 
@@ -221,7 +239,5 @@ class LoyaltyCard(models.Model):
             'view_mode': 'form',
             'res_model': 'loyalty.card.update.balance',
             'target': 'new',
-            'context': {
-                'default_card_id': self.id,
-            },
+            'context': {'default_card_id': self.id},
         }

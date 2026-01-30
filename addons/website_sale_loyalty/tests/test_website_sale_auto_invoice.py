@@ -9,28 +9,22 @@ from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleAutoInvoice(WebsiteSaleCommon):
-
     def test_automatic_invoice_on_zero_amount(self):
         # Set automatic invoice
         self.env['ir.config_parameter'].sudo().set_bool('sale.automatic_invoice', True)
         Controller = WebsiteSale()
 
         # Create a discount code
-        program = self.env['loyalty.program'].sudo().create({
-            'name': '100discount',
-            'program_type': 'promo_code',
-            'rule_ids': [
-                Command.create({
-                    'code': "100code",
-                    'minimum_amount': 0,
-                })
-            ],
-            'reward_ids': [
-                Command.create({
-                    'discount': 100,
-                })
-            ]
-        })
+        program = (
+            self.env['loyalty.program']
+            .sudo()
+            .create({
+                'name': '100discount',
+                'program_type': 'promo_code',
+                'rule_ids': [Command.create({'code': "100code", 'minimum_amount': 0})],
+                'reward_ids': [Command.create({'discount': 100})],
+            })
+        )
 
         self.cart.carrier_id = self.free_delivery
 
@@ -41,5 +35,5 @@ class TestWebsiteSaleAutoInvoice(WebsiteSaleCommon):
         with MockRequest(self.env, website=self.website, sale_order_id=self.cart.id):
             Controller.shop_payment_validate()
         self.assertTrue(
-            self.cart.invoice_ids, "Invoices should be generated for orders with zero total amount",
+            self.cart.invoice_ids, "Invoices should be generated for orders with zero total amount"
         )

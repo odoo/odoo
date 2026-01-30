@@ -18,11 +18,15 @@ class LoyaltyRule(models.Model):
         if 'program_type' in self.env.context:
             program_type = self.env.context['program_type']
             program_default_values = self.env['loyalty.program']._program_type_default_values()
-            if program_type in program_default_values and\
-                len(program_default_values[program_type]['rule_ids']) == 2 and\
-                isinstance(program_default_values[program_type]['rule_ids'][1][2], dict):
+            if (
+                program_type in program_default_values
+                and len(program_default_values[program_type]['rule_ids']) == 2
+                and isinstance(program_default_values[program_type]['rule_ids'][1][2], dict)
+            ):
                 result.update({
-                    k: v for k, v in program_default_values[program_type]['rule_ids'][1][2].items() if k in fields
+                    k: v
+                    for k, v in program_default_values[program_type]['rule_ids'][1][2].items()
+                    if k in fields
                 })
         return result
 
@@ -37,7 +41,9 @@ class LoyaltyRule(models.Model):
         ]
 
     active = fields.Boolean(default=True)
-    program_id = fields.Many2one(comodel_name='loyalty.program', ondelete='cascade', required=True, index=True)
+    program_id = fields.Many2one(
+        comodel_name='loyalty.program', ondelete='cascade', required=True, index=True
+    )
     program_type = fields.Selection(related='program_id.program_type')
     # Stored for security rules
     company_id = fields.Many2one(related='program_id.company_id', store=True)
@@ -66,20 +72,14 @@ class LoyaltyRule(models.Model):
     minimum_qty = fields.Integer(string="Minimum Quantity", default=1)
     minimum_amount = fields.Monetary(string="Minimum Purchase")
     minimum_amount_tax_mode = fields.Selection(
-        selection=[
-            ('incl', "tax included"),
-            ('excl', "tax excluded"),
-        ],
+        selection=[('incl', "tax included"), ('excl', "tax excluded")],
         required=True,
         default='incl',
     )
 
     mode = fields.Selection(
         string="Application",
-        selection=[
-            ('auto', "Automatic"),
-            ('with_code', "With a promotion code"),
-        ],
+        selection=[('auto', "Automatic"), ('with_code', "With a promotion code")],
         compute='_compute_mode',
         store=True,
         readonly=False,
@@ -87,32 +87,35 @@ class LoyaltyRule(models.Model):
     code = fields.Char(string="Discount code", compute='_compute_code', store=True, readonly=False)
 
     _reward_point_amount_positive = models.Constraint(
-        'CHECK (reward_point_amount > 0)',
-        "Rule points reward must be strictly positive.",
+        'CHECK (reward_point_amount > 0)', "Rule points reward must be strictly positive."
     )
 
     @api.constrains('reward_point_split')
     def _constraint_trigger_multi(self):
         # Prevent setting trigger multi in case of nominative programs, it does not make sense to allow this
         for rule in self:
-            if rule.reward_point_split and (rule.program_id.applies_on == 'both' or rule.program_id.program_type == 'ewallet'):
-                raise ValidationError(_("Split per unit is not allowed for Loyalty and eWallet programs."))
+            if rule.reward_point_split and (
+                rule.program_id.applies_on == 'both' or rule.program_id.program_type == 'ewallet'
+            ):
+                raise ValidationError(
+                    _("Split per unit is not allowed for Loyalty and eWallet programs.")
+                )
 
     @api.constrains('code', 'active')
     def _constrains_code(self):
         mapped_codes = self.filtered(lambda r: r.code and r.active).mapped('code')
         # Program code must be unique
-        if len(mapped_codes) != len(set(mapped_codes)) or\
-            self.env['loyalty.rule'].search_count([
-                ('mode', '=', 'with_code'),
-                ('code', 'in', mapped_codes),
-                ('id', 'not in', self.ids),
-                ('active', '=', True),
-            ]):
+        if len(mapped_codes) != len(set(mapped_codes)) or self.env['loyalty.rule'].search_count([
+            ('mode', '=', 'with_code'),
+            ('code', 'in', mapped_codes),
+            ('id', 'not in', self.ids),
+            ('active', '=', True),
+        ]):
             raise ValidationError(_("The promo code must be unique."))
         # Prevent coupons and programs from sharing a code
         if self.env['loyalty.card'].search_count([
-            ('code', 'in', mapped_codes), ('active', '=', True)
+            ('code', 'in', mapped_codes),
+            ('active', '=', True),
         ]):
             raise ValidationError(_("A coupon with the same code was found."))
 
@@ -160,5 +163,5 @@ class LoyaltyRule(models.Model):
             self.minimum_amount,
             currency_to,
             self.company_id or self.env.company,
-            fields.Date.today()
+            fields.Date.today(),
         )

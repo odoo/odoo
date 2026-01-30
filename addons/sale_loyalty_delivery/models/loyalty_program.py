@@ -11,10 +11,11 @@ class LoyaltyProgram(models.Model):
         res = super()._program_type_default_values()
         # Add a loyalty reward for free shipping
         if 'loyalty' in res:
-            res['loyalty']['reward_ids'].append((0, 0, {
-                'reward_type': 'shipping',
-                'required_points': 100,
-            }))
+            res['loyalty']['reward_ids'].append((
+                0,
+                0,
+                {'reward_type': 'shipping', 'required_points': 100},
+            ))
         return res
 
     @api.model
@@ -22,14 +23,14 @@ class LoyaltyProgram(models.Model):
         # Override 'promotion' template to say free shipping
         res = super().get_program_templates()
         if 'promotion' in res:
-            res['promotion']['description'] = _("Automatic promotion: free shipping on orders higher than $50")
+            res['promotion']['description'] = _(
+                "Automatic promotion: free shipping on orders higher than $50"
+            )
         return res
 
     @api.model
     def _get_template_values(self):
         res = super()._get_template_values()
         if 'promotion' in res:
-            res['promotion']['reward_ids'] = [(5, 0, 0), (0, 0, {
-                'reward_type': 'shipping',
-            })]
+            res['promotion']['reward_ids'] = [(5, 0, 0), (0, 0, {'reward_type': 'shipping'})]
         return res

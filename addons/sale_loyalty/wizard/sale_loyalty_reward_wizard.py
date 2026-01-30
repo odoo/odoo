@@ -8,15 +8,22 @@ class SaleLoyaltyRewardWizard(models.TransientModel):
     _name = 'sale.loyalty.reward.wizard'
     _description = 'Sale Loyalty - Reward Selection Wizard'
 
-    order_id = fields.Many2one('sale.order', default=lambda self: self.env.context.get('active_id'), required=True)
+    order_id = fields.Many2one(
+        'sale.order', default=lambda self: self.env.context.get('active_id'), required=True
+    )
 
     reward_ids = fields.Many2many('loyalty.reward', compute='_compute_claimable_reward_ids')
     selected_reward_id = fields.Many2one('loyalty.reward', domain="[('id', 'in', reward_ids)]")
     # In case of multi_product reward
     multi_product_reward = fields.Boolean(related='selected_reward_id.multi_product')
     reward_product_ids = fields.Many2many(related='selected_reward_id.reward_product_ids')
-    selected_product_id = fields.Many2one('product.product', domain="[('id', 'in', reward_product_ids)]",
-        compute='_compute_selected_product_id', readonly=False, store=True,)
+    selected_product_id = fields.Many2one(
+        'product.product',
+        domain="[('id', 'in', reward_product_ids)]",
+        compute='_compute_selected_product_id',
+        readonly=False,
+        store=True,
+    )
 
     @api.depends('order_id')
     def _compute_claimable_reward_ids(self):
@@ -49,7 +56,14 @@ class SaleLoyaltyRewardWizard(models.TransientModel):
                 selected_coupon = coupon
                 break
         if not selected_coupon:
-            raise ValidationError(_('Coupon not found while trying to add the following reward: %s', self.selected_reward_id.description))
-        self.order_id._apply_program_reward(self.selected_reward_id, coupon, product=self.selected_product_id)
+            raise ValidationError(
+                _(
+                    'Coupon not found while trying to add the following reward: %s',
+                    self.selected_reward_id.description,
+                )
+            )
+        self.order_id._apply_program_reward(
+            self.selected_reward_id, coupon, product=self.selected_product_id
+        )
         self.order_id._update_programs_and_rewards()
         return True
