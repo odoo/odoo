@@ -44,16 +44,13 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
         })
 
     def test_add_loyalty_history_line_with_reward(self):
-        order = self.empty_order
-        order.write({
-            'order_line': [
+        order = self._create_so(order_line=[
                 Command.create({
-                'product_id': self.product_A.id,
-                'name': 'Ordinary Product A',
-                'product_uom_qty': 1.0,
+                    'product_id': self.product_A.id,
+                    'name': 'Ordinary Product A',
+                    'product_uom_qty': 1.0,
                 }),
-            ],
-        })
+            ])
         order._update_programs_and_rewards()
         self._auto_rewards(order, self.immediate_promotion_program)
 
@@ -63,16 +60,10 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
         self.assertEqual(history_records, 1, "A history line should be created on confirmation of order")
 
     def test_add_loyalty_history_line_without_reward(self):
-        order = self.empty_order
-        order.write({
-            'partner_id': self.partner_a.id,
-            'order_line': [
-                Command.create({
-                    'product_id': self.product_A.id,
-                    'tax_ids': False,
-                }),
-            ]
-        })
+        order = self._create_so(
+            partner_id=self.partner_a.id,
+            order_line=[Command.create({'product_id': self.product_A.id, 'tax_ids': False})],
+        )
         order.action_confirm()
         order._update_programs_and_rewards()
         self._claim_reward(order, self.loyalty_program)
@@ -81,16 +72,10 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
                         "The history line should be updated on change of order lines in a confirmed order")
 
     def test_delete_loyalty_history_line_on_cancel(self):
-        order = self.empty_order
-        order.write({
-            'partner_id': self.partner_a.id,
-            'order_line': [
-                Command.create({
-                    'product_id': self.product_A.id,
-                    'tax_ids': False,
-                }),
-            ]
-        })
+        order = self._create_so(
+            partner_id=self.partner_a.id,
+            order_line=[Command.create({'product_id': self.product_A.id, 'tax_ids': False})],
+        )
         order._update_programs_and_rewards()
         self._claim_reward(order, self.loyalty_program)
         order.action_confirm()
@@ -103,16 +88,10 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
         """Verify that applying multiple rewards sums up the total points cost."""
         self.loyalty_card.points = initial_points = 4
         self.loyalty_program.with_context(active_test=False).reward_ids.active = True
-        order = self.empty_order
-        order.write({
-            'partner_id': self.partner_a.id,
-            'order_line': [
-                Command.create({
-                    'product_id': self.product_A.id,
-                    'tax_ids': False,
-                }),
-            ],
-        })
+        order = self._create_so(
+            partner_id=self.partner_a.id,
+            order_line=[Command.create({'product_id': self.product_A.id, 'tax_ids': False})],
+        )
         for reward in self.loyalty_program.reward_ids:
             order._apply_program_reward(reward, self.loyalty_card)
         self.assertEqual(len(order.order_line.filtered('reward_id')), 2)

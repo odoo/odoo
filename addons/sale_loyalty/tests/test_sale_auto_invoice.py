@@ -28,16 +28,19 @@ class TestSaleAutoInvoice(TestSaleCouponCommon):
             ],
         })
         # Add order line to order
-        self.env["sale.order.line"].create({
-            'order_id': self.empty_order.id,
-            'product_id': self.product_A.id,
-            'product_uom_qty': 1,
-            'price_unit': 200,
-        })
+        order = self._create_so(
+            order_line=[
+                Command.create({
+                    'product_id': self.product_A.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 200,
+                })
+            ]
+        )
         # Apply discount
-        self._apply_promo_code(self.empty_order, '100dis')
-        self.empty_order._validate_order()
+        self._apply_promo_code(order, '100dis')
+        order._validate_order()
         self.assertTrue(
-            self.empty_order.invoice_ids,
+            order.invoice_ids,
             "Invoices should be generated for orders with zero total amount",
         )

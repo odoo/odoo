@@ -150,6 +150,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         """Checks that when the simplified invoice parter is automatically set
         on the order it does not override the pricelist that was manually selected
         during the order"""
+        self.pricelist = self._enable_pricelists()
+        self.main_pos_config.available_pricelist_ids |= self.pricelist
         self.assertTrue(len(self.main_pos_config.available_pricelist_ids.ids) > 1)
         self.main_pos_config.l10n_es_simplified_invoice_journal_id = self.main_pos_config.journal_id
         self.main_pos_config.default_fiscal_position_id = self.fiscal_pos_a.id

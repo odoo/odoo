@@ -96,7 +96,7 @@ class TestLoyalty(TestSaleCouponCommon):
             })],
         })
 
-        order = self.empty_order
+        order = self._create_so(order_line=[])
         order._update_programs_and_rewards()
         claimable_rewards = order._get_claimable_rewards()
         # Should be empty since we do not have any coupon created yet
@@ -420,11 +420,12 @@ class TestLoyalty(TestSaleCouponCommon):
             ],
         })
 
-        order = self.empty_order
-        order.order_line = [
-            Command.create({'product_id': self.product_A.id, 'product_uom_qty': 1}),
-            Command.create({'product_id': self.product_B.id, 'product_uom_qty': 1}),
-        ]
+        order = self._create_so(
+            order_line=[
+                Command.create({'product_id': self.product_A.id, 'product_uom_qty': 1}),
+                Command.create({'product_id': self.product_B.id, 'product_uom_qty': 1}),
+            ]
+        )
         order.action_confirm()
 
         order._update_programs_and_rewards()
@@ -694,19 +695,18 @@ class TestLoyalty(TestSaleCouponCommon):
             {'name': 'Other company_currency pricelist', 'currency_id': company_currency.id},
         ])
         self.immediate_promotion_program.active = True
-        order = self.empty_order.copy()
-        order.write({'order_line': [
-            (0, False, {
+        order = self._create_so(order_line=[
+            Command.create({
                 'product_id': self.product_A.id,
                 'name': '1 Product A',
                 'product_uom_qty': 1.0,
             }),
-            (0, False, {
+            Command.create({
                 'product_id': self.product_B.id,
                 'name': '2 Product B',
                 'product_uom_qty': 1.0,
             }),
-        ]})
+        ])
 
         applied_message = "The promo offer should have been applied."
         not_applied_message = "The promo offer should not have been applied because the order's " \
@@ -763,14 +763,15 @@ class TestLoyalty(TestSaleCouponCommon):
         ).create({'coupon_qty': 7, 'points_granted': 1}).generate_coupons()
         coupons = self.code_promotion_program.coupon_ids
 
-        order_no_pricelist = self.empty_order.copy()
-        order_no_pricelist.write({'pricelist_id': None, 'order_line': [
-            (0, False, {
-                'product_id': self.product_A.id,
-                'name': '1 Product A',
-                'product_uom_qty': 1.0,
-            }),
-        ]})
+        order_no_pricelist = self._create_so(
+            pricelist_id=None,
+            order_line=[
+                Command.create({
+                    'product_id': self.product_A.id,
+                    'name': '1 Product A',
+                })
+            ],
+        )
         order_pricelist_1 = order_no_pricelist.copy()
         order_pricelist_1.pricelist_id = pricelist_1
         order_pricelist_2 = order_no_pricelist.copy()
@@ -1133,15 +1134,14 @@ class TestLoyalty(TestSaleCouponCommon):
             ],
         })
         self.product_A.product_tag_ids = product_tag
-        order = self.empty_order
-        order.write({
-            'order_line':[
+        order = self._create_so(
+            order_line=[
                 # product_A: lst_price: 100, Tax included price: 115
                 Command.create({'product_id': self.product_A.id}),
                 # Product_B: lst_price: 5, Tax included price: 5.75
                 Command.create({'product_id': self.product_B.id}),
             ]
-        })
+        )
         self._apply_promo_code(order, '10discount')
         msg = "Discount should only be applied to the line with a correctly tagged product."
         self.assertEqual(order.order_line[2].price_total, -11.5, msg)
@@ -1173,16 +1173,15 @@ class TestLoyalty(TestSaleCouponCommon):
         updated_description = f"{reward.description} Adding manual description"
         reward.description = updated_description
 
-        order = self.empty_order
-        order.write({
-            'order_line': [
+        order = self._create_so(
+            order_line=[
                 Command.create({
                     'product_id': reward.reward_product_id.id,
                     'name': '1 Product',
                     'product_uom_qty': 4.0,
-                }),
+                })
             ]
-        })
+        )
         order._update_programs_and_rewards()
         self._claim_reward(order, loyalty_program)
 
@@ -1221,14 +1220,7 @@ class TestLoyalty(TestSaleCouponCommon):
             'partner_id': self.partner.id,
             'points': 0,
         })
-        sale_order = self.empty_order
-        sale_order.write({
-            'order_line': [
-                Command.create({
-                    'product_id': self.product_a.id,
-                }),
-            ]
-        })
+        sale_order = self._create_so(order_line=[Command.create({'product_id': self.product_a.id})])
         sale_order._update_programs_and_rewards()
         claimable_rewards = sale_order._get_claimable_rewards()
         self.assertTrue(claimable_rewards[loyalty_card])
@@ -1261,15 +1253,7 @@ class TestLoyalty(TestSaleCouponCommon):
                 }),
             ],
         })
-        sale_order = self.empty_order
-        sale_order.write({
-            'order_line': [
-                Command.create({
-                    'product_id': self.product_a.id,
-                    'product_uom_qty': 1,
-                }),
-            ],
-        })
+        sale_order = self._create_so(order_line=[Command.create({'product_id': self.product_a.id})])
         sale_order._update_programs_and_rewards()
         self._claim_reward(sale_order, loyalty_program)
         # In real use case, so.plan_id is set to False in _verify_cart_after_update in
@@ -1286,15 +1270,7 @@ class TestLoyalty(TestSaleCouponCommon):
         Ensure that re-applying a reward doesn't reset the existing reward line unit price to zero
         """
         self.immediate_promotion_program.active = True
-        sale_order = self.empty_order
-        sale_order.write({
-            'order_line': [
-                Command.create({
-                    'product_id': self.product_A.id,
-                    'product_uom_qty': 1,
-                }),
-            ],
-        })
+        sale_order = self._create_so(order_line=[Command.create({'product_id': self.product_A.id})])
         sale_order._update_programs_and_rewards()
         self._claim_reward(sale_order, self.immediate_promotion_program)
         reward_line = sale_order.order_line.filtered('reward_id')
@@ -1306,15 +1282,7 @@ class TestLoyalty(TestSaleCouponCommon):
     @freeze_time("2026-01-10")
     def test_expired_ewallet_is_not_claimable(self):
         self.ewallet.expiration_date = '2026-01-01'
-        sale_order = self.empty_order
-        sale_order.write({
-            'partner_id': self.partner.id,
-            'order_line': [
-                Command.create({
-                    'product_id': self.product_a.id,
-                }),
-            ],
-        })
+        sale_order = self._create_so(order_line=[Command.create({'product_id': self.product_a.id})])
         sale_order.action_open_reward_wizard()
         sale_order._update_programs_and_rewards()
         claimable_rewards = sale_order._get_claimable_rewards()

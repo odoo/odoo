@@ -51,6 +51,7 @@ class BaseCommon(TransactionCase):
             'name': 'Test Partner',
         })
 
+        cls.group_public = cls.quick_ref('base.group_public')
         cls.group_portal = cls.quick_ref('base.group_portal')
         cls.group_user = cls.quick_ref('base.group_user')
         cls.group_system = cls.quick_ref('base.group_system')

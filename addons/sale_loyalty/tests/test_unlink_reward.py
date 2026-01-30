@@ -33,8 +33,7 @@ class TestUnlinkReward(TestSaleCouponCommon):
         })
 
     def test_sale_unlink_reward(self):
-        order = self.empty_order
-        order.write({'order_line': [
+        order = self._create_so(order_line=[
             Command.create({
                 'product_id': self.product_A.id,
                 'name': 'Ordinary Product A',
@@ -45,7 +44,7 @@ class TestUnlinkReward(TestSaleCouponCommon):
                 'name': '2 Product B',
                 'product_uom_qty': 1.0,
             }),
-        ]})
+        ])
         order._update_programs_and_rewards()
         self._claim_reward(order, self.promotion_program)
         self.reward.unlink()
@@ -56,8 +55,7 @@ class TestUnlinkReward(TestSaleCouponCommon):
 
     def test_unlink_expired_coupon_line(self):
         """Ensure that lines linked to expired coupons get unlinked from the order."""
-        order = self.empty_order
-        order.order_line = [Command.create({'product_id': self.product_A.id})]
+        order = self._create_so(order_line=[Command.create({'product_id': self.product_A.id})])
         coupon_program = self.code_promotion_program
         self.env['loyalty.generate.wizard'].with_context(active_id=coupon_program.id).create({
             'coupon_qty': 1,

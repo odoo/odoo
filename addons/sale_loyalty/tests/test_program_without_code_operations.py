@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
@@ -14,15 +15,16 @@ class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
 
         # 2 products A are needed
         self.immediate_promotion_program.rule_ids.write({'minimum_qty': 2.0})
-        order = self.empty_order
         # Test case 1 (1 A): Assert that no reward is given, as the product B is missing
-        order.write({'order_line': [
-            (0, False, {
-                'product_id': self.product_A.id,
-                'name': '1 Product A',
-                'product_uom_qty': 1.0,
-            })
-        ]})
+        order = self._create_so(
+            order_line=[
+                Command.create({
+                    'product_id': self.product_A.id,
+                    'name': '1 Product A',
+                    'product_uom_qty': 1.0,
+                })
+            ]
+        )
         order._update_programs_and_rewards()
         self._claim_reward(order, self.immediate_promotion_program)
         self.assertEqual(len(order.order_line.ids), 1, "The promo offer shouldn't have been applied as the product B isn't in the order")

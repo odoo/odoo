@@ -71,16 +71,14 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
             })],
         })
 
-        order = self.empty_order
-
         # Price of order will be 5*1.15 = 5.75 (tax included)
-        order.write({'order_line': [
-            (0, False, {
+        order = self._create_so(order_line=[
+            Command.create({
                 'product_id': self.product_B.id,
                 'name': 'Product B',
                 'product_uom_qty': 1.0,
             })
-        ]})
+        ])
         self._auto_rewards(order, program)
         self.assertEqual(len(order.order_line.ids), 1)
 
@@ -157,14 +155,17 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
             })]
         })
         programs = (p_minimum_threshold_free_delivery | p_2)
-        order = self.empty_order
         self.iPadMini.taxes_id = self.tax_10pc_incl
-        sol1 = self.env['sale.order.line'].create({
-            'product_id': self.iPadMini.id,
-            'name': 'Large Cabinet',
-            'product_uom_qty': 3.0,
-            'order_id': order.id,
-        })
+        order = self._create_so(
+            order_line=[
+                Command.create({
+                    'product_id': self.iPadMini.id,
+                    'name': 'Large Cabinet',
+                    'product_uom_qty': 3.0,
+                })
+            ]
+        )
+        sol1 = order.order_line
         self._auto_rewards(order, programs)
         self.assertEqual(len(order.order_line.ids), 3, "We should get the 10% discount line since we bought 872.73$ and a free shipping line with a value of 0")
         self.assertEqual(order.order_line.filtered(lambda l: l.reward_id.reward_type == 'shipping').price_unit, 0)
@@ -223,14 +224,17 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
             })],
         })
         programs = (p_1 | p_2)
-        order = self.empty_order
         self.iPadMini.taxes_id = self.tax_10pc_incl
-        sol1 = self.env['sale.order.line'].create({
-            'product_id': self.iPadMini.id,
-            'name': 'Large Cabinet',
-            'product_uom_qty': 3.0,
-            'order_id': order.id,
-        })
+        order = self._create_so(
+            order_line=[
+                Command.create({
+                    'product_id': self.iPadMini.id,
+                    'name': 'Large Cabinet',
+                    'product_uom_qty': 3.0,
+                })
+            ]
+        )
+        sol1 = order.order_line
 
         # I add delivery cost in Sales order
         delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
@@ -303,7 +307,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
             'partner_id': self.partner.id,
             'points': 250,
         })
-        order = self.empty_order
+        order = self._create_so(order_line=[])
         # Check if we can claim the free shipping reward
         order._update_programs_and_rewards()
         claimable_rewards = order._get_claimable_rewards()
@@ -334,11 +338,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
             'list_price': 200.0,
             'invoice_policy': 'delivery',
         })
-        order = self.empty_order
-        self.env['sale.order.line'].create({
-            'product_id': product.id,
-            'order_id': order.id,
-        })
+        order = self._create_so(order_line=[Command.create({'product_id': product.id})])
         self._auto_rewards(order, program)
         self.assertNotEqual(order.reward_amount, 0)
         self.assertEqual(order.invoice_status, 'no')
@@ -373,20 +373,17 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         })
 
         # Create an order including: product and delivery
-        order = self.empty_order
-        self.env['sale.order.line'].create({
-            'product_id': self.iPadMini.id,
-            'name': self.iPadMini.name,
-            'product_uom_qty': 1.0,
-            'order_id': order.id,
-        })
-        self.env['sale.order.line'].create({
-            'product_id': self.product_delivery_poste.id,
-            'name': 'Free delivery charges\nFree Shipping',
-            'product_uom_qty': 1.0,
-            'order_id': order.id,
-            'is_delivery': True,
-        })
+        order = self._create_so(order_line=[
+            Command.create({
+                'product_id': self.iPadMini.id,
+                'name': self.iPadMini.name,
+            }),
+            Command.create({
+                'product_id': self.product_delivery_poste.id,
+                'name': 'Free delivery charges\nFree Shipping',
+                'is_delivery': True,
+            })
+        ])
 
         # Calculate promotions
         self._auto_rewards(order, discount_program)
@@ -409,14 +406,15 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
             })],
         })
         programs = (p_1)
-        order = self.empty_order
         self.iPadMini.taxes_id = self.tax_10pc_incl
-        sol1 = self.env['sale.order.line'].create({
-            'product_id': self.iPadMini.id,
-            'name': 'Large Cabinet',
-            'product_uom_qty': 3.0,
-            'order_id': order.id,
-        })
+        order = self._create_so(order_line=[
+            Command.create({
+                'product_id': self.iPadMini.id,
+                'name': 'Large Cabinet',
+                'product_uom_qty': 3.0,
+            })
+        ])
+        sol1 = order.order_line
 
         # I add delivery cost in Sales order
         delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({

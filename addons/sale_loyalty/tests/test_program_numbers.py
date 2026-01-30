@@ -11,6 +11,12 @@ from odoo.addons.sale_loyalty.tests.common import TestSaleCouponNumbersCommon
 @tagged('post_install', '-at_install')
 class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.empty_order = cls._create_so(order_line=[])
+
     def test_program_numbers_free_and_paid_product_qty(self):
         # These tests will focus on numbers (free product qty, SO total, reduction total..)
         order = self.empty_order

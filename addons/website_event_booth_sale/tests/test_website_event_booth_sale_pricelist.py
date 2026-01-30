@@ -30,13 +30,17 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
         })
 
     def test_pricelist_different_currency(self):
-        so_line = self.env['sale.order.line'].create({
-            'event_booth_category_id': self.event_booth_category_1.id,
-            'event_booth_pending_ids': (self.booth_1 + self.booth_2).ids,
-            'event_id': self.event.id,
-            'order_id': self.empty_cart.id,
-            'product_id': self.event_booth_product.id,
-        })
+        order = self._create_so(
+            order_line=[
+                Command.create({
+                    'event_booth_category_id': self.event_booth_category_1.id,
+                    'event_booth_pending_ids': (self.booth_1 + self.booth_2).ids,
+                    'event_id': self.event.id,
+                    'product_id': self.event_booth_product.id,
+                })
+            ]
+        )
+        so_line = order.order_line
         self.assertEqual(so_line.price_reduce_taxexcl, 40)
 
         # set pricelist to 10% - without discount
@@ -52,7 +56,7 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
             'name': 'Test pricelist (with discount)',
             'selectable': True,
         })
-        with MockRequest(self.env, website=self.website, sale_order_id=self.empty_cart.id) as req:
+        with MockRequest(self.env, website=self.website, sale_order_id=order.id) as req:
             self.assertEqual(req.pricelist, self.pricelist)
             self.WebsiteSaleController.pricelist_change(pl2)
             self.assertEqual(so_line.price_reduce_taxexcl, 360, 'Incorrect amount based on the pricelist "Without Discount" and its currency.')

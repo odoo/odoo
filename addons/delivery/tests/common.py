@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import TransactionCase
+from odoo.addons.sale.tests.common import SaleCommon
 
 
-class DeliveryCommon(TransactionCase):
+class DeliveryCommon(SaleCommon):
 
     @classmethod
     def setUpClass(cls):

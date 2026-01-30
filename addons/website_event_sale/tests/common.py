@@ -87,5 +87,6 @@ class TestWebsiteEventSaleCommon(WebsiteSaleCommon):
                 'selectable': True,
             })
 
+        cls.pricelist = cls._enable_pricelists()
         cls.pricelist_without_discount = create_pricelist(currency=cls.env.company.currency_id, name='EUR Without Discount Included')
         cls.ex_pricelist_without_discount = create_pricelist(currency=cls.currency_test, name='EX Without Discount Included')

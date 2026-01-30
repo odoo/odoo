@@ -543,7 +543,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
         with patch(
             'odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment',
             return_value=self.rate_shipment_result
-        ), MockRequest(self.env, website=self.website, sale_order_id=self.sale_order.id):
+        ), self.mock_request(user=self.env.user, sale_order_id=self.sale_order.id):
             result = websiteSaleDeliveryController.express_checkout_process_delivery_address(
                 partial_delivery_address=self.express_checkout_anonymized_shipping_values,
             )

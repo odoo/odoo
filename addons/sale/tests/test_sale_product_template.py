@@ -17,7 +17,7 @@ class TestSaleProductTemplate(SaleCommon):
             quantity=3,
             date=datetime(2000, 1, 1),
             currency=self.currency,
-            pricelist=self.pricelist,
+            pricelist=self.env['product.pricelist'],
         )
 
         self.assertEqual(configurator_price[0], 40)
@@ -28,7 +28,7 @@ class TestSaleProductTemplate(SaleCommon):
             product_or_template=self.product,
             date=datetime(2000, 1, 1),
             currency=self.currency,
-            pricelist=self.pricelist,
+            pricelist=self.env['product.pricelist'],
         )
 
         self.assertEqual(configurator_data, {})

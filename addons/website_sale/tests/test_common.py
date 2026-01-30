@@ -10,4 +10,3 @@ class TestWSaleCommon(WebsiteSaleCommon):
 
     def test_common(self):
         self.assertEqual(self.env.company, self.website.company_id)
-        self.assertEqual(self.pricelist.currency_id, self.env.company.currency_id)
