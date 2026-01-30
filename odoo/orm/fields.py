@@ -964,6 +964,10 @@ class Field[T]:
         if self.inherited_field and self.inherited_field._description_groupable(env):
             # avoid compuation for inherited field
             return True
+        from .models import BaseModel  # noqa: PLC0415
+        if self.type != 'many2many' and env.registry[self.model_name]._read_group_groupby is BaseModel._read_group_groupby:
+            # the default implementation has an edge case for many2many
+            return False
 
         model = env[self.model_name]
         groupby = self.name if self.type not in ('date', 'datetime') else f"{self.name}:month"
@@ -979,6 +983,10 @@ class Field[T]:
         if self.inherited_field and self.inherited_field._description_aggregator(env):
             # avoid compuation for inherited field
             return self.inherited_field.aggregator
+        from .models import BaseModel  # noqa: PLC0415
+        if env.registry[self.model_name]._read_group_select is BaseModel._read_group_select:
+            # the default implementation does not handle additional fields
+            return False
 
         model = env[self.model_name]
         query = model._as_query(ordered=False)
