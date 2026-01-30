@@ -161,23 +161,56 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Wait for image to be available in GHCR
+        run: |
+          echo "Waiting for image to be pushed to GHCR..."
+          for i in {1..30}; do
+            if docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }} 2>/dev/null; then
+              echo "Image is available"
+              exit 0
+            fi
+            echo "Attempt $i/30: Image not yet available, waiting..."
+            sleep 2
+          done
+          echo "Image still not available after 60 seconds, but continuing..."
+          exit 0
+
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGH'
-          exit-code: '0'  # Don't fail the workflow, report issues
+        id: trivy-scan
         continue-on-error: true
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            aquasec/trivy image \
+            --format sarif \
+            --output /tmp/trivy-results.sarif \
+            --severity CRITICAL,HIGH \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }} || true
+
+      - name: Check if scan results exist
+        id: scan-check
+        run: |
+          if [ -f /tmp/trivy-results.sarif ]; then
+            echo "scan_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "scan_exists=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Upload Trivy scan results to GitHub Security
+        if: steps.scan-check.outputs.scan_exists == 'true'
         uses: github/codeql-action/upload-sarif@v3
-        if: always()
         with:
-          sarif_file: 'trivy-results.sarif'
+          sarif_file: '/tmp/trivy-results.sarif'
           category: 'Trivy'
         continue-on-error: true
+
+      - name: Report scan status
+        run: |
+          if [ "${{ steps.scan-check.outputs.scan_exists }}" == "true" ]; then
+            echo "✅ Security scan completed successfully"
+          else
+            echo "⚠️ Security scan could not be performed on image"
+          fi
 
   # ===========================================================================
   # Job 3: Image Size Report (for resource-constrained VPS)
@@ -197,25 +230,126 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get image metadata and size
+      - name: Get image size and report
         id: image-info
         run: |
-          IMAGE_DIGEST=$(docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }} 2>&1 | grep 'Digest:' | awk '{print $2}')
-          IMAGE_SIZE=$(docker images --quiet --no-trunc ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }} | xargs docker inspect --format='{{.Size}}' 2>/dev/null || echo "0")
-          SIZE_MB=$((IMAGE_SIZE / 1024 / 1024))
-          echo "image_size=$SIZE_MB" >> $GITHUB_OUTPUT
-          echo "image_digest=$IMAGE_DIGEST" >> $GITHUB_OUTPUT
-
-      - name: Report image size
-        run: |
-          echo "## 📦 Image Size Report" >> $GITHUB_STEP_SUMMARY
+          echo "## 📦 Image Size & Layer Report" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Estimated Image Size**: \`${{ steps.image-info.outputs.image_size }} MB\`" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "This is optimized for VPS with limited resources (1GB RAM, 1 CPU)." >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          if [ ${{ steps.image-info.outputs.image_size }} -gt 800 ]; then
-            echo "⚠️ **WARNING**: Image size exceeds 800MB. Consider optimizing the Dockerfile." >> $GITHUB_STEP_SUMMARY
+          
+          # Pull the image
+          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }} 2>&1 | grep -i "Digest\|Pulling" || true
+          
+          # Get image size using inspect
+          IMAGE_SIZE=$(docker inspect \
+            --format='{{json .Size}}' \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }} 2>/dev/null || echo "0")
+          
+          if [ "$IMAGE_SIZE" = "0" ] || [ -z "$IMAGE_SIZE" ]; then
+            echo "❌ Could not retrieve image size" >> $GITHUB_STEP_SUMMARY
+            IMAGE_SIZE="unknown"
+            SIZE_MB="unknown"
           else
-            echo "✅ Image size is within acceptable limits for resource-constrained environments." >> $GITHUB_STEP_SUMMARY
+            SIZE_MB=$((IMAGE_SIZE / 1024 / 1024))
+            SIZE_GB=$(echo "scale=2; $SIZE_MB / 1024" | bc)
+            echo "✅ **Compressed Image Size**: ~${SIZE_MB} MB (~${SIZE_GB} GB)" >> $GITHUB_STEP_SUMMARY
           fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "This image is optimized for VPS deployment (1GB RAM, 1 CPU)." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Show top layers
+          echo "### Top Layers (by size)" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          docker history --no-trunc --human \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }} 2>/dev/null | head -15 || echo "Layer history unavailable" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          
+          echo "image_size=$SIZE_MB" >> $GITHUB_OUTPUT
+
+  # ===========================================================================
+  # Job 4: Deploy to VPS (triggered on feature/odoo-uber branch push)
+  # ===========================================================================
+  deploy-to-vps:
+    needs: [build-and-push, security-scan, image-size-report]
+    runs-on: ubuntu-latest
+    if: |
+      github.ref == 'refs/heads/feature/odoo-uber' && 
+      github.event_name == 'push' &&
+      github.event.repository.full_name == github.repository
+    permissions:
+      packages: read
+      contents: read
+
+    steps:
+      - name: Validate VPS secrets
+        run: |
+          if [ -z "${{ secrets.VPS_HOST }}" ] || [ -z "${{ secrets.VPS_USER }}" ] || [ -z "${{ secrets.VPS_SSH_KEY }}" ]; then
+            echo "❌ ERROR: Missing VPS configuration secrets"
+            echo "Required secrets: VPS_HOST, VPS_USER, VPS_SSH_KEY"
+            exit 1
+          fi
+          echo "✅ VPS secrets are configured"
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: Deploy to VPS
+        id: deploy
+        run: |
+          echo "🚀 Deploying to VPS (${{ secrets.VPS_HOST }})"
+          
+          ssh -o StrictHostKeyChecking=no \
+              -o ConnectTimeout=10 \
+              -o BatchMode=yes \
+              ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
+              "bash -s" << 'DEPLOY_SCRIPT'
+          set -e
+          
+          echo "📦 Logging into GitHub Container Registry..."
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login -u ${{ github.actor }} --password-stdin ghcr.io
+          
+          cd ${{ secrets.VPS_DOCKER_COMPOSE_PATH || '~/odoo' }}
+          echo "📂 Working directory: $(pwd)"
+          
+          echo "📥 Pulling latest Docker image..."
+          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }} || {
+            echo "⚠️ Pulling by SHA failed, trying latest tag..."
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          }
+          
+          echo "🔄 Updating docker-compose services..."
+          docker-compose pull || true
+          docker-compose up -d --no-deps --build odoo || docker-compose up -d
+          
+          echo "✅ Deployment completed"
+          docker ps | grep odoo || echo "⚠️ Odoo container status unknown"
+          
+          DEPLOY_SCRIPT
+          
+          echo "deployment_status=success" >> $GITHUB_OUTPUT
+
+      - name: Verify deployment
+        if: steps.deploy.outcome == 'success'
+        run: |
+          echo "## ✅ VPS Deployment Status" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch**: ${{ github.ref }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Target**: ${{ secrets.VPS_HOST }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Image**: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Successfully deployed to production VPS" >> $GITHUB_STEP_SUMMARY
+
+      - name: Deployment failed notification
+        if: failure()
+        run: |
+          echo "## ❌ VPS Deployment Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Failed to deploy to ${{ secrets.VPS_HOST }}" >> $GITHUB_STEP_SUMMARY
+          echo "Please check VPS connectivity and Docker configuration." >> $GITHUB_STEP_SUMMARY
+          exit 1

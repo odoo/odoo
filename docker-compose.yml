@@ -1,9 +1,71 @@
-version: "3.8"
-
 # Docker Compose for Odoo 19 with Uber Eats Integration
 # Optimized for VPS with 1GB RAM and 1 CPU core
+# Includes Traefik reverse proxy for SSL/TLS and routing
 
 services:
+  # ===========================================================================
+  # Traefik Reverse Proxy (lightweight, dynamic, SSL/TLS ready)
+  # ===========================================================================
+  traefik:
+    image: traefik:v2.11.2-alpine
+    container_name: odoo_traefik
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      # Traefik API (for dashboard and management)
+      TRAEFIK_API_DASHBOARD: "true"
+      TRAEFIK_API_INSECURE: "false"  # Don't expose dashboard without auth
+      TRAEFIK_API_ADDRESS: ":8081"
+      
+      # HTTP/HTTPS entry points
+      TRAEFIK_ENTRYPOINTS_HTTP_ADDRESS: ":80"
+      TRAEFIK_ENTRYPOINTS_HTTPS_ADDRESS: ":443"
+      TRAEFIK_ENTRYPOINTS_HTTP_HTTP_REDIRECTIONS_ENTRYPOINT_MAIN: "https"
+      TRAEFIK_ENTRYPOINTS_HTTP_HTTP_REDIRECTIONS_ENTRYPOINT_SCHEME: "https"
+      
+      # Docker provider
+      TRAEFIK_PROVIDERS_DOCKER: "true"
+      TRAEFIK_PROVIDERS_DOCKER_EXPOSEDBYDEFAULT: "false"
+      TRAEFIK_PROVIDERS_DOCKER_NETWORK: "odoo-network"
+      
+      # Let's Encrypt (optional - enable for production)
+      # TRAEFIK_CERTIFICATESRESOLVERS_LETSENCRYPT_ACME_EMAIL: "admin@example.com"
+      # TRAEFIK_CERTIFICATESRESOLVERS_LETSENCRYPT_ACME_STORAGE: "/etc/traefik/letsencrypt/acme.json"
+      # TRAEFIK_CERTIFICATESRESOLVERS_LETSENCRYPT_ACME_HTTPCHALLENGE_ENTRYPOINT: "http"
+      
+      # Logging
+      TRAEFIK_LOG_LEVEL: "info"
+      TRAEFIK_ACCESSLOG: "true"
+    ports:
+      - "80:80"      # HTTP
+      - "443:443"    # HTTPS
+      - "127.0.0.1:8081:8081"  # Dashboard (localhost only)
+    volumes:
+      # Docker socket for container discovery
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # SSL certificates (for Let's Encrypt)
+      - traefik-ssl:/etc/traefik/letsencrypt
+      # Config file (optional, for advanced routing)
+      # - ./traefik.yml:/etc/traefik/traefik.yml:ro
+    networks:
+      - odoo-network
+    deploy:
+      resources:
+        limits:
+          cpus: "0.05"    # 5% of 1 CPU (very lightweight)
+          memory: 50M     # 50MB limit
+    # Health check
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ===========================================================================
+  # PostgreSQL Database
+  # ===========================================================================
   db:
     image: postgres:15.15-alpine3.22
     container_name: odoo_db
@@ -15,6 +77,8 @@ services:
       POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
     volumes:
       - odoo-db-data:/var/lib/postgresql/data
+    networks:
+      - odoo-network
     # PostgreSQL config for low-memory environments
     command:
       - "postgres"
@@ -47,10 +111,11 @@ services:
           memory: 256M     # 256MB limit for DB
 
   odoo:
-    image: ghcr.io/YOUR_GH_USER/YOUR_REPO:odoo-uber-latest
+    image: ghcr.io/laxya911/custom-odoo:sha-b7d62f6-1
     container_name: odoo_uber
     depends_on:
       - db
+      - traefik
     restart: unless-stopped
     environment:
       # Database connection
@@ -74,8 +139,30 @@ services:
       UBER_WEBHOOK_BASIC_PASSWORD: "strongpassword"
       # Security
       LOG_LEVEL: info
-    ports:
-      - "8080:8069"      # Odoo HTTP port
+    # Traefik labels for automatic routing
+    labels:
+      # Enable Traefik for this service
+      traefik.enable: "true"
+      # Configure HTTP router
+      traefik.http.routers.odoo.rule: "Host(`${ODOO_DOMAIN:-localhost}`)"
+      traefik.http.routers.odoo.entrypoints: "http,https"
+      # HTTPS/TLS (uncomment for production with Let's Encrypt)
+      # traefik.http.routers.odoo-https.rule: "Host(`${ODOO_DOMAIN:-localhost}`)"
+      # traefik.http.routers.odoo-https.entrypoints: "https"
+      # traefik.http.routers.odoo-https.tls: "true"
+      # traefik.http.routers.odoo-https.tls.certresolver: "letsencrypt"
+      # Service configuration
+      traefik.http.services.odoo.loadbalancer.server.port: "8069"
+      # Middleware for security headers (optional)
+      traefik.http.middlewares.odoo-headers.headers.customrequestheaders.X-Script-Name: "/"
+      traefik.http.middlewares.odoo-headers.headers.customresponseheaders.X-Frame-Options: "SAMEORIGIN"
+      traefik.http.middlewares.odoo-headers.headers.customresponseheaders.X-Content-Type-Options: "nosniff"
+      traefik.http.routers.odoo.middlewares: "odoo-headers@docker"
+    # Only expose Traefik port, not direct 8080
+    # ports:
+    #   - "8080:8069"      # Odoo HTTP port (now via Traefik)
+    expose:
+      - "8069"  # Internal only, exposed to Traefik
     volumes:
       # Persistent data
       - odoo-data:/var/lib/odoo
@@ -83,33 +170,50 @@ services:
       - ./odoo-extra-addons:/mnt/extra-addons
       # Optional: Mount config (comment out if using env vars only)
       # - ./config/odoo.conf:/etc/odoo/odoo.conf:ro
-    command: >
-      odoo
-      --db_host=db
-      --db_user=odoo
-      --db_password=odoo_password
-      --db_name=odoo
-      --db_maxconn=20
-      --workers=2
-      --max_cron_threads=1
-      --limit_memory_hard=536870912
-      --limit_memory_soft=402653184
-      --limit_time_cpu=60
-      --limit_time_real=120
-      --limit_request=8192
+    command:
+      - server  
+      - --db_host=db
+      - --db_port=5432
+      - --db_user=odoo
+      - --db_password=odoo_password
+      - -d
+      - odoo
+      - --db-filter=^odoo$
+      - -i
+      - base
+      - --workers=2
+      - --max-cron-threads=1
+      - --limit-memory-hard=536870912
+      - --limit-memory-soft=402653184
+      - --limit-time-cpu=60
+      - --limit-time-real=120
+      - --limit-request=8192
+      - --log-level=info
+      - --without-demo=all
     deploy:
       resources:
         limits:
           cpus: "0.55"     # 55% of 1 CPU
           memory: 640M     # 640MB limit for Odoo process
+    networks:
+      - odoo-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8069/web/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
 volumes:
   odoo-db-data:
     driver: local
   odoo-data:
     driver: local
+  traefik-ssl:
+    driver: local
 
-# Networks (optional, for internal communication)
+# Network configuration
 networks:
-  default:
+  odoo-network:
     name: odoo-network
+    driver: bridge
