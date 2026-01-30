@@ -75,6 +75,7 @@ test("Barcode scanner crop overlay", async () => {
 
     const firstBarcodeFound = scanBarcode(env);
     await videoReady;
+    await animationFrame();
     await contains(".o_crop_icon").dragAndDrop(".o_crop_container", {
         relative: true,
         position: {
@@ -95,6 +96,7 @@ test("Barcode scanner crop overlay", async () => {
 
     const secondBarcodeFound = scanBarcode(env);
     await videoReady;
+    await animationFrame();
     const secondValueScanned = await secondBarcodeFound;
     expect(secondValueScanned).toBe(secondBarcodeValue, {
         message: `The detected barcode (${secondValueScanned}) should be the same as generated (${secondBarcodeValue})`,
