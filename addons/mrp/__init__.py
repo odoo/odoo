@@ -19,9 +19,11 @@ def _pre_init_mrp(cr):
     cr.execute("""ALTER TABLE "stock_move" ADD COLUMN "is_done" bool;""")
     cr.execute("""UPDATE stock_move
                      SET is_done=COALESCE(state in ('done', 'cancel'), FALSE);""")
-    cr.execute("""ALTER TABLE "stock_move" ADD COLUMN "unit_factor" double precision;""")
-    cr.execute("""UPDATE stock_move
-                     SET unit_factor=1;""")
+    cr.execute('ALTER TABLE stock_move ADD COLUMN IF NOT EXISTS unit_factor double precision DEFAULT 1')
+    # `stock.move.bom_line_id` is created in this module, so its default value will be NULL.
+    # `stock.move._is_manual_consumption` always returns False when there is no `bom_line_id`;
+    # therefore, we can just initialize `manual_consumption` to FALSE by default.
+    env.cr.execute('ALTER TABLE stock_move ADD COLUMN IF NOT EXISTS manual_consumption bool DEFAULT FALSE')
 
 def _create_warehouse_data(cr, registry):
     """ This hook is used to add a default manufacture_pull_id, manufacture
