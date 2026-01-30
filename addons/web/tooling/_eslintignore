@@ -306,8 +306,10 @@ addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js
 !voip*
 !voip*/**/*
 
-# BlackList voip libs
+# BlackList voip libs but the mock one
 voip/static/lib/**/*
+!voip/static/lib/_mock
+!voip/static/lib/_mock/**/*
 
 # Whitelist stock_barcode modules
 !stock_barcode
