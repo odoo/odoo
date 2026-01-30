@@ -98,19 +98,23 @@ export function addFieldDependencies(activeFields, fields, fieldDependencies = [
 
 function completeActiveField(activeField, extra) {
     if (extra.related) {
-        for (const fieldName in extra.related.activeFields) {
-            if (fieldName in activeField.related.activeFields) {
-                completeActiveField(
-                    activeField.related.activeFields[fieldName],
-                    extra.related.activeFields[fieldName]
-                );
-            } else {
-                activeField.related.activeFields[fieldName] = {
-                    ...extra.related.activeFields[fieldName],
-                };
+        if (activeField.related) {
+            for (const fieldName in extra.related.activeFields) {
+                if (fieldName in activeField.related.activeFields) {
+                    completeActiveField(
+                        activeField.related.activeFields[fieldName],
+                        extra.related.activeFields[fieldName]
+                    );
+                } else {
+                    activeField.related.activeFields[fieldName] = {
+                        ...extra.related.activeFields[fieldName],
+                    };
+                }
             }
+            Object.assign(activeField.related.fields, extra.related.fields);
+        } else {
+            activeField.related = extra.related;
         }
-        Object.assign(activeField.related.fields, extra.related.fields);
     }
 }
 
@@ -196,8 +200,11 @@ export function patchActiveFields(activeField, patch) {
             } else {
                 related.activeFields[fieldName] = { ...patch.related.activeFields[fieldName] };
             }
+            Object.assign(related.fields, patch.related.fields);
+        } 
+        if (!activeField.related) {
+            activeField.related = patch.related;
         }
-        Object.assign(related.fields, patch.related.fields);
     }
     if ("limit" in patch) {
         activeField.limit = patch.limit;
