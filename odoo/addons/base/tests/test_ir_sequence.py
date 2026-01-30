@@ -4,16 +4,12 @@ from contextlib import contextmanager
 from datetime import datetime
 
 import psycopg2
-import psycopg2.errors
 
-import odoo
+from odoo import Command, api
 from odoo.exceptions import UserError
 from odoo.modules.registry import Registry
-from odoo.tests import tagged, common
-from odoo.tests.common import BaseCase
+from odoo.tests import BaseCase, TransactionCase, get_db_name, tagged
 from odoo.tools.misc import mute_logger
-
-ADMIN_USER_ID = common.ADMIN_USER_ID
 
 
 @contextmanager
@@ -21,9 +17,9 @@ def environment():
     """ Return an environment with a new cursor for the current database; the
         cursor is committed and closed after the context block.
     """
-    registry = Registry(common.get_db_name())
+    registry = Registry(get_db_name())
     with registry.cursor() as cr:
-        yield odoo.api.Environment(cr, ADMIN_USER_ID, {})
+        yield api.Environment(cr, api.SUPERUSER_ID, {})
 
 
 def drop_sequence(code):
@@ -254,7 +250,7 @@ class TestIrSequenceGenerate(BaseCase):
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
-class TestIrSequenceInit(common.TransactionCase):
+class TestIrSequenceInit(TransactionCase):
 
     def test_00(self):
         """ test whether the read method returns the right number_next value
@@ -280,3 +276,37 @@ class TestIrSequenceInit(common.TransactionCase):
         # Read the value of the current sequence
         n = seq.next_by_id()
         self.assertEqual(n, "0001", 'The actual sequence value must be 1. reading : %s' % n)
+
+    def test_ir_sequence_parent_company(self):
+        IrSequence = self.env['ir.sequence']
+        parent = self.env['res.company'].create({
+            'name': "Seq Parent",
+            'sequence': 1,
+            'child_ids': [Command.create({'name': "Seq Branch", 'sequence': 5})],
+        })
+        branch = parent.child_ids
+
+        seq_a, seq_b = IrSequence.create([{
+            'name': f"{prefix} sequence",
+            'code': 'seq.test',
+            'prefix': prefix,
+            'company_id': company_id,
+        } for prefix, company_id in zip('AB', [parent.id, False])])
+
+        res = IrSequence.with_company(parent).next_by_code('seq.test')
+        self.assertEqual(res, 'A1')
+        res = IrSequence.with_company(branch).next_by_code('seq.test')
+        self.assertEqual(res, 'A2', "Branch company should continue parent sequence")
+
+        seq_b.company_id = branch
+        res = IrSequence.with_company(branch).next_by_code('seq.test')
+        self.assertEqual(res, 'B1', "Branch company should use own sequence if available")
+
+        parent.sequence, branch.sequence = branch.sequence, parent.sequence
+        res = IrSequence.with_company(branch).next_by_code('seq.test')
+        self.assertEqual(res, 'B2', "res.company.sequence shouldn't affect ir.sequence used")
+
+        seq_a.company_id = branch
+        seq_b.company_id = False
+        res = IrSequence.with_company(parent).next_by_code('seq.test')
+        self.assertEqual(res, 'B3', "Parent company shouldn't use branch sequence")
