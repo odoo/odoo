@@ -1087,7 +1087,6 @@ test("open author avatar card", async () => {
         partner_id: partnerId,
         name: "Demo",
     });
-    window.pyEnv = pyEnv;
     const [channelId_1] = pyEnv["discuss.channel"].create([
         { name: "General" },
         {

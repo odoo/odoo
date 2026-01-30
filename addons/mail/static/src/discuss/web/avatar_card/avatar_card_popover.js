@@ -38,18 +38,21 @@ export class AvatarCardPopover extends Component {
             model: this.props.model,
         });
         useDynamicInterval(
-            (partnerTz, currentUserTz) => {
-                this.state.partnerLocalDateTimeFormatted = formatLocalDateTime(
-                    partnerTz,
-                    currentUserTz
-                );
-                if (!this.state.partnerLocalDateTimeFormatted) {
-                    return;
-                }
-                return 60000 - (Date.now() % 60000);
-            },
+            (...args) => this.onChangeTz(...args),
             () => [this.partner?.tz, this.store.self?.tz]
         );
+    }
+
+    /**
+     * @param {string} partnerTz
+     * @param {string} currentUserTz
+     */
+    onChangeTz(partnerTz, currentUserTz) {
+        this.state.partnerLocalDateTimeFormatted = formatLocalDateTime(partnerTz, currentUserTz);
+        if (!this.state.partnerLocalDateTimeFormatted) {
+            return;
+        }
+        return 60000 - (Date.now() % 60000);
     }
 
     get openChatModel() {

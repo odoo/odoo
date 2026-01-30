@@ -28,7 +28,8 @@ export function formatLocalDateTime(partnerTz, currentUserTz) {
     if (
         !resolvedPartnerTz ||
         !resolvedCurrentUserTz ||
-        [resolvedPartnerTz, resolvedCurrentUserTz].includes("local")
+        [resolvedPartnerTz, resolvedCurrentUserTz].includes("local") ||
+        resolvedPartnerTz === resolvedCurrentUserTz
     ) {
         return null;
     }
