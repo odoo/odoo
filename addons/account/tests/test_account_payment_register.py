@@ -717,6 +717,51 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             },
         ])
 
+    def test_register_payment_multi_batches_grouped_with_credit_note(self):
+        ''' Choose to pay multiple batches, one with customer A bill + refund (1000 - 500)
+        and one with customer B bill (1000).
+        '''
+        partner_b = self.partner_b.copy({'property_account_position_id': False})
+        partner_b_bank_account = self.env['res.partner.bank'].create({
+            'acc_number': "123454321",
+            'partner_id': partner_b.id,
+            'acc_type': 'bank',
+        })
+        invoice_1 = self.in_invoice_1
+        invoice_2 = invoice_1.copy({
+                'invoice_date': invoice_1.invoice_date,
+                'partner_id': partner_b.id,
+                'partner_bank_id': partner_b_bank_account.id,
+        })
+        refund_1 = self.env['account.move'].create(
+            {
+                'move_type': 'in_refund',
+                'date': '2017-01-01',
+                'invoice_date': '2017-01-01',
+                'partner_id': self.partner_a.id,
+                'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 500.0, 'tax_ids': False})],
+            },
+        )
+        (invoice_2 + refund_1).action_post()
+        active_ids = (refund_1 + invoice_1 + invoice_2).ids
+        payment_register = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=active_ids)\
+            .create({'group_payment': True})
+        payments = payment_register._create_payments()
+
+        self.assertRecordValues(payments, [
+            {
+                'ref': 'BILL/2017/01/0001 RBILL/2017/01/0002',
+                'payment_method_line_id': self.outbound_payment_method_line.id,
+                'partner_bank_id': self.partner_bank_account1.id,
+            },
+            {
+                'ref': 'BILL/2017/01/0004',
+                'payment_method_line_id': self.outbound_payment_method_line.id,
+                'partner_bank_id': partner_b_bank_account.id,
+            },
+        ])
+
     def test_register_payment_multi_batches_not_grouped(self):
         ''' Choose to pay multiple batches, one with two customer invoices (1000 + 2000)
          and one with a vendor bill of 600, by splitting payments.
