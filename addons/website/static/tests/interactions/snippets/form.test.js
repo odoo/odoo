@@ -10,6 +10,7 @@ import {
     select,
     setInputFiles,
     edit,
+    waitFor,
 } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 
@@ -199,6 +200,82 @@ const formWithRestrictedFieldsTemplate = /* html */ `
     </div>
 `;
 
+const formWithRestrictedFileTypesTemplate = /* html */ `
+    <div id="wrapwrap">
+        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+            <div class="container-fluid">
+                <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
+                    <div class="s_website_form_rows row s_col_no_bgcolor">
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_dnone">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px">
+                                    <span class="s_website_form_label_content"></span>
+                                </label>
+                                <div class="col-sm">
+                                    <input type="hidden" class="form-control s_website_form_input" name="email_to" value="info@yourcompany.example.com">
+                                    <input type="hidden" value="08db0e335821ca759f38eb45c7c30f283406f390d04dcaec27402bddf24fc29a" class="form-control s_website_form_input s_website_form_custom" name="website_form_signature">
+                                </div>
+                            </div>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char" data-translated-name="Your Name">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ok0ney2v8rwf">
+                                    <span class="s_website_form_label_content">Your Name</span>
+                                    <span class="s_website_form_mark"> *</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input class="form-control s_website_form_input" type="text" name="name" required="" placeholder="" id="ok0ney2v8rwf" data-fill-with="name" maxlength="5" minlength="2">
+                                </div>
+                            </div>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="email" data-translated-name="Your Email">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ooas5l5yuhg">
+                                    <span class="s_website_form_label_content">Your Email</span>
+                                    <span class="s_website_form_mark"> *</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input class="form-control s_website_form_input" type="email" name="email_from" required="" placeholder="" id="ooas5l5yuhg" data-fill-with="email">
+                                </div>
+                            </div>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="char" data-translated-name="Subject">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="om2bnl7eqv9c">
+                                    <span class="s_website_form_label_content">Subject</span>
+                                    <span class="s_website_form_mark"> *</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input class="form-control s_website_form_input" type="text" name="subject" required="" value="" placeholder="" id="om2bnl7eqv9c" data-fill-with="undefined">
+                                </div>
+                            </div>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="binary" data-translated-name="Photo">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="onfhvm7weawe">
+                                    <span class="s_website_form_label_content">Photo</span>
+                                </label>
+                                <div class="col-sm">
+                                    <div class="o_files_zone row gx-1"></div>
+                                    <input type="file" class="form-control s_website_form_input" name="photo" id="onfhvm7weawe" data-max-files-number="1" data-max-file-size="64" data-fill-with="undefined" accept="image/*">
+                                    <div class="s_website_form_field_description small form-text text-muted">
+                                        Describe your field here.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label" data-name="Submit Button">
+                            <div style="width: 200px;" class="s_website_form_label"></div>
+                            <span id="s_website_form_result"></span>
+                            <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+`;
 const formWithCharacterLimitRuleTemplate = /* html */ `
     <div id="wrapwrap">
         <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
@@ -950,4 +1027,28 @@ test("checks character limit on (name) input fields", async () => {
     await advanceTime(400);
     await click("a.s_website_form_send");
     checkField(nameEl, true, true);
+});
+
+test("checks file input based on allowed filetypes", async () => {
+    const { core } = await startInteractions(formWithRestrictedFileTypesTemplate);
+    expect(core.interactions).toHaveLength(1);
+    const fileEl = queryOne("input[name=photo]");
+    // Try to upload a file with a non allowed mimetype.
+    const invalidFile = new File(["fake_file"], "fake_file.txt", { type: "text/plain" });
+    await contains("input[name=photo]").click();
+    await setInputFiles([invalidFile]);
+    await advanceTime(400);
+    await click("a.s_website_form_send");
+    await waitFor(".s_website_form_field[data-type=binary] .s_website_form_custom_error");
+    checkField(fileEl, true, true);
+    // Try to upload a file with an allowed mimetype.
+    await click(".o_file_delete");
+    const validFile = new File(new Uint8Array([255, 216, 255, 225]), "valid_image.jpeg", {
+        type: "image/jpeg",
+    });
+    await contains("input[name=photo]").click();
+    await setInputFiles([validFile]);
+    await advanceTime(400);
+    await click("a.s_website_form_send");
+    checkField(fileEl, true, false);
 });

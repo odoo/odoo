@@ -263,6 +263,31 @@
             />
         </BuilderRow>
     </t>
+    <BuilderRow label.translate="Restrict File Types">
+        <BuilderCheckbox
+            id="'restrict_file_types_opt'"
+            action="'toggleRestrictFileTypes'"
+            applyTo="`input[type='file']`"
+            preview="false"
+        />
+    </BuilderRow>
+    <t t-if="isActiveItem('restrict_file_types_opt')">
+        <BuilderRow label.translate="Only PDF" level="1" tooltip="'.pdf files only'">
+            <BuilderCheckbox action="'setAllowedFileTypes'" actionParam="'pdf'" applyTo="`input[type='file']`" preview="false"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Documents" level="1" tooltip="'.doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf etc.'">
+            <BuilderCheckbox action="'setAllowedFileTypes'" actionParam="'application/*'" applyTo="`input[type='file']`" preview="false"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Images" level="1" tooltip="'.jpg, .jpeg, .png, .gif, .svg, .webp etc.'">
+            <BuilderCheckbox action="'setAllowedFileTypes'" actionParam="'image/*'" applyTo="`input[type='file']`" preview="false"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Videos" level="1" tooltip="'.mov, .mpeg, .avi, .mkv, .mp4 etc.'">
+            <BuilderCheckbox action="'setAllowedFileTypes'" actionParam="'video/*'" applyTo="`input[type='file']`" preview="false"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Audios" level="1" tooltip="'.mp3, .m4a, .aac, .wav etc.'">
+            <BuilderCheckbox action="'setAllowedFileTypes'" actionParam="'audio/*'" applyTo="`input[type='file']`" preview="false"/>
+        </BuilderRow>
+    </t>
     <BuilderRow label.translate="Requirement"
             t-if="domStateCurrentFieldInput.hasDateTimePicker or domStateCurrentFieldInput.isTextArea or canHaveTextValidationCondition.includes(domStateCurrentFieldInput.type)">
         <BuilderSelect id="'require_condition_email_opt'"

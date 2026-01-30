@@ -12,6 +12,7 @@ from odoo import SUPERUSER_ID, _, api
 from odoo.exceptions import AccessError, UserError
 from odoo.http import Controller, request, route
 from odoo.http.stream import STATIC_CACHE_LONG, Stream
+from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools import file_open, file_path, replace_exceptions, str2bool
 from odoo.tools.image import image_guess_size_from_field_name
 
@@ -315,3 +316,10 @@ class Binary(Controller):
                     font = base64.b64encode(font_file.read())
                 fonts.append(font)
         return fonts
+
+    # Checks mimetype of base64 encoded file data
+    @route('/web/binary/guess_mimetype', type='jsonrpc', auth='user', methods=['POST'])
+    def guess_mimetype(self, file_data):
+        return {
+            'mimetype': guess_mimetype(base64.b64decode(file_data))
+        }

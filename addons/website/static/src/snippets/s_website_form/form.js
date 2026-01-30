@@ -8,6 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 import { post } from "@web/core/network/http_service";
 import { user } from "@web/core/user";
 import { delay } from "@web/core/utils/concurrency";
+import { rpc } from "@web/core/network/rpc";
 import { session } from "@web/session";
 import {
     formatDate,
@@ -317,7 +318,14 @@ export class Form extends Interaction {
     async send() {
         this.el.querySelector("#s_website_form_result, #o_website_form_result")?.replaceChildren(); // !compatibility
         this.removeErrorMessages();
-        if (!this.checkErrorFields({})) {
+        // Both functions must be executed at least once.
+        // They are written on separate lines to avoid short-circuit evaluation.
+        let isFormValid = this.checkErrorFields({});
+        isFormValid =
+            (await this.checkFileTypeValidationErrors(
+                this.el.querySelectorAll("input[type=file]:not([disabled])")
+            )) && isFormValid;
+        if (!isFormValid) {
             this.updateStatus("error", _t("Please fill in the form correctly."));
             return false;
         }
@@ -547,6 +555,30 @@ export class Form extends Interaction {
             delete inputEl.fileList;
         });
     }
+    /**
+     * Checks all file inputs for validation errors (number of files,
+     * size, type).
+     */
+    async checkFileTypeValidationErrors(inputEls) {
+        let allValid = true;
+        for (const inputEl of inputEls) {
+            const fieldEl = inputEl.closest(".form-field, .s_website_form_field");
+            const button = inputEl
+                .closest(".s_website_form_field")
+                .querySelector(".o_add_files_button");
+            fieldEl.classList.remove("o_has_error");
+            button?.classList.remove("is-invalid");
+            inputEl.classList.remove("is-invalid");
+            if (!(await this.isFileInputValid(inputEl))) {
+                // Update field color if invalid
+                fieldEl.classList.add("o_has_error");
+                button?.classList.add("is-invalid");
+                inputEl.classList.add("is-invalid");
+                allValid = false;
+            }
+        }
+        return allValid;
+    }
 
     checkErrorFields(errorFields) {
         let formValid = true;
@@ -603,8 +635,6 @@ export class Form extends Interaction {
                     if (!date || !date.isValid) {
                         return true;
                     }
-                } else if (inputEl.type === "file" && !this.isFileInputValid(inputEl)) {
-                    return true;
                 } else if (this.requirementFunction(fieldEl) === false) {
                     this.updateStatusInline(fieldEl.dataset.errorMessage, inputEl);
                     return true;
@@ -742,7 +772,7 @@ export class Form extends Interaction {
      * @param {HTMLElement} inputEl an input of type file
      * @returns {Boolean} true if the input is valid, false otherwise.
      */
-    isFileInputValid(inputEl) {
+    async isFileInputValid(inputEl) {
         // Note: the `maxFilesNumber` and `maxFileSize` data-attributes may
         // not always be present, if the Form comes from an older version
         // for example.
@@ -771,6 +801,43 @@ export class Form extends Interaction {
                     this.updateStatusInline(errorMessage, inputEl);
                     return false;
                 }
+            }
+        }
+        // Checking the files type.
+        const allowedMimetypes = inputEl.getAttribute("accept")
+            ? inputEl.getAttribute("accept").split(",")
+            : [];
+        const notValidFiles = [];
+        if (allowedMimetypes.length) {
+            for (const file of Object.values(inputEl.files)) {
+                try {
+                    // first 1024 bytes are enough to guess the mimetype
+                    const buffer = await file.slice(0, 1024).arrayBuffer();
+                    const bytes = new Uint8Array(buffer);
+                    const file_data = btoa(String.fromCharCode(...bytes));
+
+                    const result = await rpc("/web/binary/guess_mimetype", {
+                        file_data: file_data,
+                    });
+                    const mimetype = result.mimetype;
+
+                    if (
+                        !allowedMimetypes.includes(mimetype) &&
+                        !allowedMimetypes.includes(mimetype.split("/")[0] + "/*")
+                    ) {
+                        notValidFiles.push(file.name);
+                    }
+                } catch {
+                    notValidFiles.push(file.name);
+                }
+            }
+            if (notValidFiles.length) {
+                const errorMessage = _t(
+                    "The following file(s) have invalid type(s) or throws error while reading it/them: %(fileNames)s. Allowed type(s) is/are: %(allowedMimeTypes)s.",
+                    { fileNames: notValidFiles, allowedMimeTypes: allowedMimetypes }
+                );
+                this.updateStatusInline(errorMessage, inputEl);
+                return false;
             }
         }
         return true;
