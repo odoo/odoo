@@ -128,10 +128,21 @@ class Data_RecycleModel(models.Model):
             if recycle_model.include_archived:
                 model = model.with_context(active_test=False)
             records_to_recycle = model.search(rule_domain)
+
+            current_ids = set(records_to_recycle.ids)
+            existing_ids = set(mapped_existing_records[recycle_model])
+            ids_to_remove = existing_ids - current_ids
+
+            if ids_to_remove:
+                self.env['data_recycle.record'].search([
+                    ('recycle_model_id', '=', recycle_model.id),
+                    ('res_id', 'in', list(ids_to_remove))
+                ]).unlink()
+
             records_to_create = [{
                 'res_id': record.id,
                 'recycle_model_id': recycle_model.id,
-            } for record in records_to_recycle if record.id not in mapped_existing_records[recycle_model]]
+            } for record in records_to_recycle if record.id not in existing_ids]
 
             if recycle_model.recycle_mode == 'automatic':
                 for records_to_create_batch in split_every(DR_CREATE_STEP_AUTO, records_to_create):
@@ -207,3 +218,11 @@ class Data_RecycleModel(models.Model):
         if self.recycle_mode == 'manual':
             return self.open_records()
         return
+
+    def refresh_recycle_records(self):
+        self.search([])._recycle_records(batch_commits=True)
+        recycle_model_id = self.env.context.get('recycle_model_id')
+        action = self.env["ir.actions.actions"]._for_xml_id("data_recycle.action_data_recycle_record")
+        action['context'] = dict(ast.literal_eval(action.get('context')), searchpanel_default_recycle_model_id=recycle_model_id)
+        action['target'] = 'main'
+        return action
