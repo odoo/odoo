@@ -3,8 +3,8 @@
 import logging
 import random
 import string
-from urllib.parse import urlencode, urlparse, parse_qs, quote_plus
-
+from urllib.parse import urlencode, parse_qs, quote_plus
+from urllib3.util import parse_url
 
 from odoo import tools, models, fields, api, _
 from odoo.addons.mail.tools import link_preview
@@ -54,11 +54,11 @@ class LinkTracker(models.Model):
     @api.depends("url")
     def _compute_absolute_url(self):
         for tracker in self:
-            url = urlparse(tracker.url)
+            url = parse_url(tracker.url)
             if url.scheme:
                 tracker.absolute_url = tracker.url
             else:
-                tracker.absolute_url = tools.urls.urljoin(tracker.get_base_url(), url.geturl())
+                tracker.absolute_url = tools.urls.urljoin(tracker.get_base_url(), str(url))
 
     @api.depends('link_click_ids.link_id')
     def _compute_count(self):
@@ -107,10 +107,10 @@ class LinkTracker(models.Model):
         no_external_tracking = self.env['ir.config_parameter'].sudo().get_bool('link_tracker.no_external_tracking')
 
         for tracker in self:
-            base_domain = urlparse(tracker.get_base_url()).netloc
-            parsed = urlparse(tracker.url)
+            base_domain = parse_url(tracker.get_base_url()).netloc
+            parsed = parse_url(tracker.url)
             if no_external_tracking and parsed.netloc and parsed.netloc != base_domain:
-                tracker.redirected_url = parsed.geturl()
+                tracker.redirected_url = parsed.url
                 continue
 
             query = parse_qs(parsed.query)
@@ -126,7 +126,7 @@ class LinkTracker(models.Model):
             # '...' is detected as malicious by some nginx
             # configuration, encoding it solve the issue
             query = query.replace('...', '%2E%2E%2E')
-            tracker.redirected_url = parsed._replace(query=query).geturl()
+            tracker.redirected_url = parsed._replace(query=query).url
 
     @api.model
     @api.depends('url')

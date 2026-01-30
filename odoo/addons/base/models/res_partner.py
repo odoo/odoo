@@ -8,7 +8,7 @@ import re
 import typing
 from collections import defaultdict
 from random import randint
-from urllib.parse import urlparse
+from urllib3.util import parse_url
 from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models, tools, _, Command
@@ -798,11 +798,11 @@ class ResPartner(models.Model):
             parent._update_address(addr_vals)
 
     def _clean_website(self, website):
-        url = urlparse(website)
+        url = parse_url(website)
         if not url.scheme:
             if not url.netloc:
-                url = url._replace(netloc=url.path, path='')
-            website = url._replace(scheme='http').geturl()
+                url = url._replace(host=url.path, path='')
+            website = url._replace(scheme='http').url
         return website
 
     @api.depends('vat', 'commercial_partner_id')

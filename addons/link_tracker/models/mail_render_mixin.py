@@ -3,7 +3,7 @@
 
 import re
 from html import unescape
-from urllib.parse import urlparse
+from urllib3.util import parse_url
 
 import lxml
 import markupsafe
@@ -78,7 +78,7 @@ class MailRenderMixin(models.AbstractModel):
             if original_url.startswith(shortened_schema) or original_url.startswith(unsubscribe_schema):
                 continue
             # support blacklist items in path, like /u/
-            parsed = urlparse(original_url, scheme='http')
+            parsed = parse_url(original_url)
             if blacklist and any(re.search(item + r'([#?/]|$)', parsed.path) for item in blacklist):
                 continue
 

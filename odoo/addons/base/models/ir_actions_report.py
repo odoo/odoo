@@ -13,7 +13,7 @@ from ast import literal_eval
 from collections import OrderedDict
 from contextlib import ExitStack, closing
 from itertools import islice
-from urllib.parse import urlparse
+from urllib3.util import parse_url
 
 import lxml.html
 import requests
@@ -571,7 +571,7 @@ class IrActionsReport(models.Model):
                 stack.callback(root.session_store.delete, temp_session)
 
                 base_url = self._get_report_url()
-                domain = urlparse(base_url).hostname
+                domain = parse_url(base_url).hostname
                 cookie = f'session_id={temp_session.sid}; HttpOnly; domain={domain}; path=/;'
                 cookie_jar_file_fd, cookie_jar_file_path = tempfile.mkstemp(suffix='.txt', prefix='report.cookie_jar.tmp.')
                 stack.callback(delete_file, cookie_jar_file_path)

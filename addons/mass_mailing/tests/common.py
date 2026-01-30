@@ -4,7 +4,7 @@
 import datetime
 import random
 import re
-from urllib.parse import urlparse
+from urllib3.util import parse_url
 
 from unittest.mock import patch
 
@@ -282,7 +282,7 @@ class MassMailCase(MailCase, MockLinkTracker):
         self.assertTrue(bool(email))
         for (_url_href, link_url, _dummy, label) in re.findall(mail.HTML_TAG_URL_REGEX, email['body']):
             if label == click_label and '/r/' in link_url:  # shortened link, like 'http://localhost:8069/r/LBG/m/53'
-                parsed_url = urlparse(link_url)
+                parsed_url = parse_url(link_url)
                 path_items = parsed_url.path.split('/')
                 code, trace_id = path_items[2], int(path_items[4])
                 self.assertEqual(trace.id, trace_id)

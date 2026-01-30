@@ -13,7 +13,7 @@ from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
-from urllib.parse import urlsplit
+from urllib3.util import parse_url
 
 from . import jwt
 
@@ -145,11 +145,11 @@ def push_to_end_point(base_url, device, payload, vapid_private_key, vapid_public
     https://www.rfc-editor.org/rfc/rfc8291
     """
     endpoint = device["endpoint"]
-    url = urlsplit(endpoint)
+    url = parse_url(endpoint)
     # The TDL ".invalid" is intended for use in online construction of domain names that are sure to be invalid and
     # which it is obvious at a glance are invalid.
     # https://datatracker.ietf.org/doc/html/rfc2606#section-2
-    if url.netloc.endswith(".invalid"):
+    if url.host.endswith(".invalid"):
         raise DeviceUnreachableError("Device Unreachable")
     jwt_claims = {
         # aud: The “Audience” is a JWT construct that indicates the recipient scheme and host

@@ -6,7 +6,7 @@ import requests
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from lxml import html
-from urllib.parse import urlparse
+from urllib3.util import parse_url
 
 from odoo import api, models, fields, tools
 from odoo.tools.misc import OrderedSet
@@ -105,7 +105,7 @@ class MailLinkPreview(models.Model):
         return link_preview_throttle > 0
 
     def _is_domain_thottled(self, url):
-        domain = urlparse(url).netloc
+        domain = parse_url(url).netloc
         date_interval = fields.Datetime.to_string(datetime.now() - relativedelta(seconds=10))
         call_counter = self.env["mail.link.preview"].search_count(
             [("source_url", "ilike", domain), ("create_date", ">", date_interval)]

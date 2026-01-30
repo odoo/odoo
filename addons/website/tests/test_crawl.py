@@ -3,7 +3,7 @@
 import logging
 import re
 import time
-from urllib.parse import urlparse, urlunparse
+from urllib3.util import parse_url
 
 import lxml.html
 
@@ -79,7 +79,7 @@ class Crawler(HttpCaseWithUserDemo):
             # check local redirect to avoid fetch externals pages
             new_url = r.headers.get('Location')
             current_url = r.url
-            if urlparse(new_url).netloc != urlparse(current_url).netloc:
+            if parse_url(new_url).netloc != parse_url(current_url).netloc:
                 return seen
             r = self.url_open(new_url)
 
@@ -91,9 +91,9 @@ class Crawler(HttpCaseWithUserDemo):
             for link in doc.xpath('//a[@href]'):
                 href = link.get('href')
 
-                parts = urlparse(href)
+                parts = parse_url(href)
                 # href with any fragment removed
-                href = urlunparse(parts._replace(fragment=''))
+                href = str(parts._replace(fragment=None))
 
                 # FIXME: handle relative link (not parts.path.startswith /)
                 if parts.netloc or \

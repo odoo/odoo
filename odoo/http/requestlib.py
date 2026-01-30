@@ -8,7 +8,8 @@ import time
 import warnings
 from contextlib import contextmanager, nullcontext
 from datetime import datetime
-from urllib.parse import urlencode, urlparse
+from urllib.parse import urlencode
+from urllib3.util import parse_url
 
 import babel.core
 import psycopg2
@@ -385,7 +386,12 @@ class Request:
 
     def redirect(self, location, code=303, local=True):
         if local:
-            location = '/' + urlparse(location)._replace(scheme='', netloc='').geturl().lstrip('/\\')
+            url = parse_url(location)
+            if not url.scheme and url.host and not location.startswith('/'):
+                url = parse_url("/" + location)
+
+            url = url._replace(scheme=None, auth=None, host=None, port=None)
+            location = '/' + str(url).lstrip('/\\')
         if self.db:
             return self.env['ir.http']._redirect(location, code)
         return redirect(location, code, Response=Response)

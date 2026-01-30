@@ -4,7 +4,8 @@ import base64
 import gzip
 import uuid
 from datetime import UTC
-from urllib.parse import parse_qs, urlencode, urlparse
+from urllib.parse import parse_qs, urlencode
+from urllib3.util import parse_url
 
 from dateutil.relativedelta import relativedelta
 
@@ -198,10 +199,10 @@ class ProductFeed(models.Model):
 
         def format_product_link(url_):
             if self.pricelist_id:
-                parsed_url = urlparse(url_)
+                parsed_url = parse_url(url_)
                 query = parse_qs(parsed_url.query)
                 query['pricelist'] = self.pricelist_id.id
-                url_ = parsed_url._replace(query=urlencode(query, doseq=True)).geturl()
+                url_ = parsed_url._replace(query=urlencode(query, doseq=True)).url
             return urls.urljoin(
                 base_url, self.env['ir.http']._url_lang(url_, lang_code=self.lang_id.code)
             )

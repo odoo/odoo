@@ -4,7 +4,8 @@ import json
 import logging
 
 import werkzeug.exceptions
-from urllib.parse import urlparse, parse_qsl
+from urllib.parse import parse_qsl
+from urllib3.util import parse_url
 
 from odoo.http import Controller, request, route
 from odoo.http.dispatcher import serialize_exception
@@ -127,7 +128,7 @@ class ReportController(Controller):
                     response = self.report_routes(reportname, docids=docids, converter=converter, context=context)
                 else:
                     # Particular report:
-                    data = dict(parse_qsl(urlparse(url).query))
+                    data = dict(parse_qsl(parse_url(url).query))
                     if 'context' in data:
                         context, data_context = json.loads(context or '{}'), json.loads(data.pop('context'))
                         context = json.dumps({**context, **data_context})

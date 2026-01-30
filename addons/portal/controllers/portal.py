@@ -3,7 +3,8 @@
 import json
 import math
 import re
-from urllib.parse import urlencode, urlparse, parse_qsl, quote
+from urllib.parse import urlencode, parse_qsl, quote
+from urllib3.util import parse_url
 
 from werkzeug.exceptions import Forbidden
 
@@ -138,12 +139,12 @@ def _build_url_w_params(url_string, query_params, remove_duplicates=True):
      * if remove duplicates: result = '/my?foo=bar2&error=pay&alice=bob'
      * else: result = '/my?foo=bar&foo=bar2&error=pay&alice=bob'
     """
-    url = urlparse(url_string)
+    url = parse_url(url_string)
     url_params = parse_qsl(url.query)
     url_params.extend(query_params.items())
     if remove_duplicates:
         url_params = dict(url_params)  # convert to dict to remove duplicates (keep last value)
-    return url._replace(query=urlencode(url_params)).geturl()
+    return url._replace(query=urlencode(url_params)).url
 
 
 class CustomerPortal(Controller):

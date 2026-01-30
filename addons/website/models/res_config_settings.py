@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs
+from urllib3.util import parse_url
 
 from odoo import api, fields, models
 from odoo.tools.translate import _
@@ -131,7 +132,7 @@ class ResConfigSettings(models.TransientModel):
             value = config.plausible_shared_key
             if value and value.startswith('http'):
                 try:
-                    url = urlparse(value)
+                    url = parse_url(value)
                     config.plausible_shared_key = parse_qs(url.query).get('auth', [''])[0]
                     config.plausible_site = url.path.split('/')[-1]
                 except Exception:  # noqa

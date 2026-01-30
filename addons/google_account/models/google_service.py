@@ -4,7 +4,8 @@
 import json
 import logging
 from datetime import datetime
-from urllib.parse import urlencode, urlparse
+from urllib.parse import urlencode
+from urllib3.util import parse_url
 
 import requests
 
@@ -117,8 +118,8 @@ class GoogleService(models.AbstractModel):
         if headers is None:
             headers = {}
 
-        assert urlparse(preuri + uri).hostname in [
-            urlparse(url).hostname for url in (GOOGLE_TOKEN_ENDPOINT, GOOGLE_API_BASE_URL)
+        assert parse_url(preuri + uri).host in [
+            parse_url(url).host for url in (GOOGLE_TOKEN_ENDPOINT, GOOGLE_API_BASE_URL)
         ]
 
         # Remove client_secret key from logs

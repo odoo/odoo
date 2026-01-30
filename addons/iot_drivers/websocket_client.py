@@ -6,6 +6,7 @@ import urllib.parse
 import websocket
 
 from threading import Thread
+from urllib3.util import parse_url
 
 from odoo.addons.iot_drivers.tools import communication, helpers, system
 from odoo.addons.iot_drivers.tools.system import IOT_IDENTIFIER
@@ -76,7 +77,7 @@ class WebsocketClient(Thread):
         """
         self.channel = channel
         self.server_url = server_url
-        url_parsed = urllib.parse.urlsplit(server_url)
+        url_parsed = parse_url(server_url)
         scheme = url_parsed.scheme.replace("http", "ws", 1)
         self.websocket_url = urllib.parse.urlunsplit((scheme, url_parsed.netloc, 'websocket', '', ''))
         self.db_name = system.get_conf('db_name') or ''

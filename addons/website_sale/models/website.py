@@ -4,7 +4,7 @@ import base64
 import json
 import logging
 import re
-from urllib.parse import urlparse
+from urllib3.util import parse_url
 
 from lxml import etree
 from werkzeug.exceptions import NotFound
@@ -1045,7 +1045,7 @@ class Website(models.Model):
         same whether the category is present or not, the canonical URL shouldn't include the
         category.
         """
-        canonical_url = urlparse(super()._get_canonical_url())
+        canonical_url = parse_url(super()._get_canonical_url())
 
         try:
             rule = self.env['ir.http']._match(canonical_url.path)[0].rule
@@ -1057,7 +1057,7 @@ class Website(models.Model):
             path_parts = canonical_url.path.split('/')
             path_parts.pop(2)
             canonical_url = canonical_url._replace(path='/'.join(path_parts))
-        return canonical_url.geturl()
+        return canonical_url.url
 
     def _get_snippet_defaults(self, snippet):
         return super()._get_snippet_defaults(snippet) | const.SNIPPET_DEFAULTS.get(snippet, {})

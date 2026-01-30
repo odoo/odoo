@@ -7,7 +7,8 @@ import hmac
 import json
 import logging
 import odoo
-from urllib.parse import urlencode, urlparse, parse_qsl
+from urllib.parse import urlencode, parse_qsl
+from urllib3.util import parse_url
 
 from odoo import _, http
 from odoo.http import request
@@ -42,7 +43,7 @@ class Authenticate(http.Controller):
         old route name "/mail_client_extension/auth/confirm is deprecated as of saas-14.3,it is not needed for newer
         versions of the mail plugin but necessary for supporting older versions
         """
-        parsed_redirect = urlparse(redirect)
+        parsed_redirect = parse_url(redirect)
         params = parse_qsl(parsed_redirect.query)
         if do:
             name = friendlyname if not info else f'{friendlyname}: {info}'
@@ -53,7 +54,7 @@ class Authenticate(http.Controller):
         else:
             params.extend([('success', 0), ('state', kw.get('state', ''))])
         updated_redirect = parsed_redirect._replace(query=urlencode(params))
-        return request.redirect(updated_redirect.geturl(), local=False)
+        return request.redirect(updated_redirect.url, local=False)
 
     @http.route(['/mail_plugin/auth/check_version'], type='jsonrpc', auth="none", cors="*",
                 methods=['POST', 'OPTIONS'])

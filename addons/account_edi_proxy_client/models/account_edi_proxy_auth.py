@@ -7,6 +7,7 @@ from typing import Literal
 
 import requests
 import urllib.parse
+import urllib3
 
 
 class OdooEdiProxyAuth(requests.auth.AuthBase):
@@ -25,7 +26,7 @@ class OdooEdiProxyAuth(requests.auth.AuthBase):
 
     def __get_payload(self, request, msg_timestamp):
         # craft the message (timestamp|url path|id_client|query params|body content)
-        parsed_url = urllib.parse.urlparse(request.path_url)
+        parsed_url = urllib3.parse_url(request.path_url)
 
         body = request.body
         if isinstance(body, bytes):

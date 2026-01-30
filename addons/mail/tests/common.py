@@ -17,7 +17,8 @@ from lxml import html
 from markupsafe import Markup
 from random import randint
 from unittest.mock import patch
-from urllib.parse import urlparse, urlencode, parse_qsl
+from urllib.parse import urlencode, parse_qsl
+from urllib3.util import parse_url
 
 from odoo import tools, fields
 from odoo.addons.base.models.ir_mail_server import IrMail_Server
@@ -1392,8 +1393,8 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
         })
 
     def _url_update_query_parameters(self, url, **kwargs):
-        parsed_url = urlparse(url)
-        return parsed_url._replace(query=urlencode(dict(parse_qsl(parsed_url.query), **kwargs))).geturl()
+        parsed_url = parse_url(url)
+        return parsed_url._replace(query=urlencode(dict(parse_qsl(parsed_url.query), **kwargs))).url
 
     # ------------------------------------------------------------
     # MAIL ASSERTS WRAPPERS

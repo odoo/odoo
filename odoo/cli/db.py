@@ -1,13 +1,13 @@
 import io
 import sys
 import textwrap
-import urllib.parse
 import zipfile
 from argparse import RawTextHelpFormatter
 from functools import partial
 from pathlib import Path
 
 import requests
+import urllib3
 
 from ..modules import db
 from ..tools import config
@@ -216,7 +216,7 @@ class Db(Command):
         db_name = args.database or Path(args.dump_file).stem
         _exit_if_exists(db_name, drop_instead=args.force)
 
-        url = urllib.parse.urlparse(args.dump_file)
+        url = urllib3.util.parse_url(args.dump_file)
         if url.scheme:
             eprint(f"Fetching {args.dump_file}...", end='')
             r = requests.get(args.dump_file, timeout=10)

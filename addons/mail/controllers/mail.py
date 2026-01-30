@@ -4,7 +4,8 @@ import time
 
 from math import floor
 from PIL import Image, ImageFont, ImageDraw
-from urllib.parse import parse_qsl, urlencode, urlparse
+from urllib.parse import parse_qsl, urlencode
+from urllib3.util import parse_url
 from werkzeug.exceptions import NotFound
 
 from odoo import _, http
@@ -138,10 +139,10 @@ class MailController(http.Controller):
         if record_action['type'] == 'ir.actions.act_url':
             url = record_action["url"]
             if highlight_message_id := kwargs.get("highlight_message_id"):
-                parsed_url = urlparse(url)
+                parsed_url = parse_url(url)
                 url = parsed_url._replace(query=urlencode(
                     parse_qsl(parsed_url.query) + [("highlight_message_id", highlight_message_id)]
-                )).geturl()
+                )).url
             return request.redirect(url)
         # anything else than an act_window is not supported
         elif record_action['type'] != 'ir.actions.act_window':

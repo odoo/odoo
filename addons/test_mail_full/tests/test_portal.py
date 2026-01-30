@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
+from urllib.parse import parse_qs, urlencode
+from urllib3.util import parse_url
 
 from odoo.addons.auth_signup.models.res_partner import ResPartner
 from odoo.addons.mail.tests.common import MailCommon
@@ -141,10 +142,10 @@ class TestPortalFlow(MailCommon, HttpCase):
         else:
             raise AssertionError('Record access URL not found')
         # build altered access_token URL for testing security
-        parsed_url = urlparse(cls.record_portal_url_auth)
+        parsed_url = parse_url(cls.record_portal_url_auth)
         query_params = parse_qs(parsed_url.query)
         cls.record_portal_hash = query_params['hash'][0]
-        cls.record_portal_url_auth_wrong_token = urlunparse(parsed_url._replace(
+        cls.record_portal_url_auth_wrong_token = str(parsed_url._replace(
             query=urlencode(sorted({
                 **query_params,
                 'access_token': query_params['access_token'][0].translate(
@@ -184,7 +185,7 @@ class TestPortalFlow(MailCommon, HttpCase):
             self.record_portal_url_auth, self.record_portal_url_auth_wrong_token,
         ):
             with self.subTest(url=url):
-                parsed = urlparse(url)
+                parsed = parse_url(url)
                 self.assertEqual(parsed.path, '/mail/view')
                 params = parse_qs(parsed.query)
                 url_params.append(params)
@@ -354,7 +355,7 @@ class TestPortalFlow(MailCommon, HttpCase):
                 '/mail/view?model=%s&res_id=%s' % (model, res_id),
                 timeout=15
             )
-            path = urlparse(response.url).path
+            path = parse_url(response.url).path
             self.assertEqual(
                 path, '/web/login',
                 'Failed with %s - %s' % (model, res_id)
@@ -362,7 +363,7 @@ class TestPortalFlow(MailCommon, HttpCase):
 
     def assert_URL(self, url, expected_path, expected_fragment_params=None, expected_query=None):
         """Asserts that the URL has the expected path and if set, the expected fragment parameters and query."""
-        parsed_url = urlparse(url)
+        parsed_url = parse_url(url)
         fragment_params = parse_qs(parsed_url.fragment)
         self.assertEqual(parsed_url.path, expected_path)
         if expected_fragment_params:

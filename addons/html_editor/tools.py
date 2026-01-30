@@ -6,8 +6,8 @@ import re
 import requests
 
 from markupsafe import Markup
-from urllib.parse import parse_qs, urlparse
-from urllib.parse import urlencode
+from urllib.parse import parse_qs, urlencode
+from urllib3.util import parse_url
 
 from odoo import _
 from odoo.exceptions import ValidationError
@@ -136,7 +136,7 @@ def get_video_embed_code(video_url):
     """ Computes the valid iframe from given URL that can be embedded
         (or None in case of invalid URL).
     """
-    parsed_url = urlparse(video_url)
+    parsed_url = parse_url(video_url)
     query_params = parse_qs(parsed_url.query)
     param_name_mapping = {
         'autoplay': 'autoplay',

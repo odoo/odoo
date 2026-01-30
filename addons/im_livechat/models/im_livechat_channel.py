@@ -4,7 +4,8 @@ from collections import defaultdict
 from datetime import timedelta
 import random
 import re
-from urllib.parse import urlparse
+
+from urllib3.util import parse_url
 
 from odoo import api, Command, fields, models, release, _
 from odoo.exceptions import AccessError, ValidationError
@@ -141,7 +142,7 @@ class Im_LivechatChannel(models.Model):
     @api.constrains("review_link")
     def _check_review_link(self):
         for record in self.filtered("review_link"):
-            url = urlparse(record.review_link)
+            url = parse_url(record.review_link)
             if url.scheme not in ("http", "https") or not url.netloc:
                 raise ValidationError(
                     self.env._("Invalid URL '%s'. The Review Link must start with 'http://' or 'https://'.") % record.review_link

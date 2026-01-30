@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from urllib.parse import urlsplit
+from urllib3.util import parse_url
 from zoneinfo import ZoneInfo
 
 from werkzeug.exceptions import NotFound
@@ -30,7 +30,7 @@ class LivechatController(http.Controller):
 
     def _is_cors_request(self):
         headers = request.httprequest.headers
-        origin_url = urlsplit(headers.get("referer"))
+        origin_url = parse_url(headers.get("referer"))
         return (
             origin_url.netloc != headers.get("host")
             or origin_url.scheme != request.httprequest.scheme

@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import werkzeug.exceptions
-import urllib.parse
 
-from urllib.parse import urlparse, parse_qsl
+from urllib.parse import parse_qsl
+from urllib3.util import parse_url
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -233,10 +233,10 @@ class WebsiteMenu(models.Model):
             # Also, mega menu are never considered active.
             return False
 
-        request_url = urlparse(request.httprequest.url)
+        request_url = parse_url(request.httprequest.url)
 
         if not self.child_id:
-            menu_url = urlparse(self._clean_url())
+            menu_url = parse_url(self._clean_url())
             unslug_url = self.env['ir.http']._unslug_url
             if unslug_url(menu_url.path) == unslug_url(request_url.path):
                 # By default we compare the unslug version of the current URL
@@ -319,7 +319,7 @@ class WebsiteMenu(models.Model):
                     menu_id.page_id = None
                 if request and menu['url'].startswith('#') and len(menu['url']) > 1:
                     # Working on case 2.: prefix anchor with referer URL
-                    referer_url = urllib.parse.urlparse(request.httprequest.headers.get('Referer', '')).path
+                    referer_url = parse_url(request.httprequest.headers.get('Referer', '')).path
                     menu['url'] = referer_url + menu['url']
             else:
                 domain = self.env["website"].browse(website_id).website_domain() & (

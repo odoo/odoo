@@ -11,6 +11,8 @@ import datetime
 import hashlib
 import urllib
 
+from urllib3.util import parse_url
+
 try:
     from google.oauth2 import service_account
 except ImportError:
@@ -223,7 +225,7 @@ def generate_signed_url_v4(
 
     header_names = [key.lower() for key in headers]
     if "host" not in header_names:
-        headers["Host"] = urllib.parse.urlparse(api_access_endpoint).netloc
+        headers["Host"] = parse_url(api_access_endpoint).netloc
 
     if method.upper() == "RESUMABLE":
         method = "POST"

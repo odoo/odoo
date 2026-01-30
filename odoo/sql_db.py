@@ -19,7 +19,7 @@ import warnings
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 from inspect import currentframe
-from urllib.parse import urlparse
+from urllib3.util import parse_url
 
 import psycopg2
 import psycopg2.errorcodes
@@ -779,7 +779,7 @@ def connection_info_for(db_or_uri: str, readonly=False) -> tuple[str, dict]:
     app_name = app_name.replace('{pid}', str(os.getpid()))[:63]
     if db_or_uri.startswith(('postgresql://', 'postgres://')):
         # extract db from uri
-        us = urlparse(db_or_uri)  # type: ignore
+        us = parse_url(db_or_uri)  # type: ignore
         if len(us.path) > 1:
             db_name = us.path[1:]
         elif us.username:

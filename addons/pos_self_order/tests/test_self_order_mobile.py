@@ -3,7 +3,7 @@
 
 import odoo.tests
 
-from urllib.parse import urlparse
+from urllib3.util import parse_url
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 from unittest.mock import patch
 from datetime import datetime
@@ -145,7 +145,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         self_route = self.pos_config._get_self_order_route()
 
         # removing access token to simulate a request without it
-        route = urlparse(self_route)
+        route = parse_url(self_route)
         self.start_tour(route.path, "self_order_mobile_no_access_token")
 
     def test_self_order_mobile_0_price_order(self):

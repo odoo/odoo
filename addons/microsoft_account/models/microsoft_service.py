@@ -4,7 +4,8 @@
 import json
 import logging
 from datetime import datetime
-from urllib.parse import urlencode, urlparse
+from urllib.parse import urlencode
+from urllib3.util import parse_url
 
 import requests
 
@@ -145,8 +146,8 @@ class MicrosoftService(models.AbstractModel):
         if headers is None:
             headers = {}
 
-        assert urlparse(preuri + uri).hostname in [
-            urlparse(url).hostname for url in (DEFAULT_MICROSOFT_TOKEN_ENDPOINT, DEFAULT_MICROSOFT_GRAPH_ENDPOINT)
+        assert parse_url(preuri + uri).hostname in [
+            parse_url(url).hostname for url in (DEFAULT_MICROSOFT_TOKEN_ENDPOINT, DEFAULT_MICROSOFT_GRAPH_ENDPOINT)
         ]
 
         _logger.debug("Uri: %s - Type : %s - Headers: %s - Params : %s !" % (uri, method, headers, params))

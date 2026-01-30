@@ -15,12 +15,13 @@ import os
 import re
 from datetime import datetime, UTC
 from zoneinfo import ZoneInfo
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import parse_qs
 
 import babel
 import requests
 from lxml import etree, html
 from PIL import Image as I
+from urllib3.util import parse_url
 
 from odoo import _, api, models, fields
 from odoo.exceptions import UserError, ValidationError
@@ -370,7 +371,7 @@ class IrQwebFieldImage(models.AbstractModel):
             return False
         url = element.find('img').get('src')
 
-        url_object = urlparse(url)
+        url_object = parse_url(url)
         if url_object.path.startswith('/web/image'):
             fragments = url_object.path.split('/')
             query = parse_qs(url_object.query)
@@ -396,7 +397,7 @@ class IrQwebFieldImage(models.AbstractModel):
         return self.load_remote_url(url)
 
     def load_local_url(self, url):
-        match = self.local_url_re.match(urlparse(url).path)
+        match = self.local_url_re.match(parse_url(url).path)
         rest = match.group('rest')
 
         path = os.path.join(

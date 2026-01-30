@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
-from urllib.parse import urlparse
+from urllib3.util import parse_url
 
 from lxml import etree
 
@@ -117,7 +117,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
             response = self.url_open(self.items[product]['link'])
 
             self.assertEqual(200, response.status_code)
-            url = urlparse(product.website_url)
+            url = parse_url(product.website_url)
             self.assertURLEqual(
                 f'{url.path}'
                  f'?attribute_values={",".join(str(i) for i in product.product_template_attribute_value_ids.product_attribute_value_id.ids)}'

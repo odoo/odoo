@@ -2,7 +2,8 @@
 
 import json
 
-from urllib.parse import urlencode, urlparse
+from urllib.parse import urlencode
+from urllib3.util import parse_url
 
 from odoo import _, api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
@@ -248,7 +249,7 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
 
-        web_domain = urlparse(self.get_base_url()).netloc
+        web_domain = parse_url(self.get_base_url()).netloc
         response_content = self._send_api_request('POST', 'apple_pay/domains', data={
             'domain_name': web_domain
         })

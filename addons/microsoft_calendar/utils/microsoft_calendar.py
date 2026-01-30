@@ -3,7 +3,8 @@
 import requests
 import json
 import logging
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import parse_qs
+from urllib3.util import parse_url
 
 from odoo import fields
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
@@ -86,7 +87,7 @@ class MicrosoftCalendarService():
             events += data.get('value', [])
 
         token_url = data.get('@odata.deltaLink')
-        next_sync_token = parse_qs(urlparse(token_url).query).get('$deltatoken', [False])[0] if token_url else None
+        next_sync_token = parse_qs(parse_url(token_url).query).get('$deltatoken', [False])[0] if token_url else None
 
         return events, next_sync_token
 

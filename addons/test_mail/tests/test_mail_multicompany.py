@@ -5,7 +5,7 @@ import socket
 from itertools import product
 from freezegun import freeze_time
 from unittest.mock import patch
-from urllib.parse import urlparse
+from urllib3.util import parse_url
 
 from odoo.addons.mail.models.mail_message import MailMessage
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
@@ -370,7 +370,7 @@ class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
                 self.assertEqual(response.status_code, 200)
 
                 if not login:
-                    path = urlparse(response.url).path
+                    path = parse_url(response.url).path
                     self.assertEqual(path, '/web/login')
                     self.assertNotIn('cids', response.request._cookies)
                 else:
@@ -381,7 +381,7 @@ class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
                         # Logged into company main, try accessing record in other
                         # company -> _redirect_to_record should redirect to
                         # messaging as the user doesn't have any access
-                        parsed_url = urlparse(response.url)
+                        parsed_url = parse_url(response.url)
                         self.assertEqual(parsed_url.path, '/odoo/action-mail.action_discuss')
                     else:
                         # Logged into company main, try accessing record in same

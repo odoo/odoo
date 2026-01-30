@@ -4,7 +4,8 @@ from unittest.mock import patch
 from odoo.exceptions import UserError
 from odoo.addons.mail.models.mail_mail import MailDeliveryException
 from odoo.tests.common import tagged, HttpCase
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import parse_qs
+from urllib3.util import parse_url
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -26,13 +27,13 @@ class TestResetPassword(HttpCase):
             'signup_email' is used in the web controller (web_auth_reset_password) to detect this behaviour
         """
 
-        self.assertEqual([self.test_user.email], parse_qs(urlparse(self.test_user.with_context(create_user=True).partner_id._get_signup_url()).query)["signup_email"], "query must contain 'signup_email'")
+        self.assertEqual([self.test_user.email], parse_qs(parse_url(self.test_user.with_context(create_user=True).partner_id._get_signup_url()).query)["signup_email"], "query must contain 'signup_email'")
 
         # Invalidate signup_url to skip signup process
         self.env.invalidate_all()
         self.test_user.action_reset_password()
 
-        self.assertNotIn("signup_email", parse_qs(urlparse(self.test_user.partner_id._get_signup_url()).query), "query should not contain 'signup_email'")
+        self.assertNotIn("signup_email", parse_qs(parse_url(self.test_user.partner_id._get_signup_url()).query), "query should not contain 'signup_email'")
 
     @patch('odoo.addons.mail.models.mail_mail.MailMail.send')
     def test_reset_password_mail_server_error(self, mock_send):

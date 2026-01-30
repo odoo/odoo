@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import parse_qs
+from urllib3.util import parse_url
 
 from odoo.addons.test_mail_full.tests.common import TestMailFullCommon
 from odoo.tests.common import users
@@ -111,7 +112,7 @@ class TestMassMailing(TestMailFullCommon):
                         '%s/mailing/%s/confirm_unsubscribe' % (mailing.get_base_url(), mailing.id),
                         email['body'])
                     unsubscribe_href = self._get_href_from_anchor_id(email['body'], "url6")
-                    unsubscribe_url = urlparse(unsubscribe_href)
+                    unsubscribe_url = parse_url(unsubscribe_href)
                     unsubscribe_params = {k: v[0] for k, v in parse_qs(unsubscribe_url.query).items()}
                     self.assertEqual(int(unsubscribe_params['document_id']), recipient.id)
                     self.assertEqual(unsubscribe_params['email'], recipient.email_normalized)
@@ -124,7 +125,7 @@ class TestMassMailing(TestMailFullCommon):
                         '%s/mailing/%s/view' % (mailing.get_base_url(), mailing.id),
                         email['body'])
                     view_href = self._get_href_from_anchor_id(email['body'], "url6")
-                    view_url = urlparse(view_href)
+                    view_url = parse_url(view_href)
                     view_params = {k: v[0] for k, v in parse_qs(view_url.query).items()}
                     self.assertEqual(int(view_params['document_id']), recipient.id)
                     self.assertEqual(view_params['email'], recipient.email_normalized)

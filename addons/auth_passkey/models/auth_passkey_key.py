@@ -1,7 +1,8 @@
 import base64
 import json
 import logging
-from urllib.parse import urlparse
+
+from urllib3.util import parse_url
 
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import AccessDenied
@@ -69,7 +70,7 @@ class AuthPasskeyKey(models.Model):
     def _start_auth(self):
         assert request
         authentication_options = json.loads(options_to_json(generate_authentication_options(
-            rp_id=urlparse(self.get_base_url()).hostname,
+            rp_id=parse_url(self.get_base_url()).host,
             user_verification=UserVerificationRequirement.REQUIRED,
         )))
         request.session['webauthn_challenge'] = authentication_options['challenge']
@@ -77,12 +78,12 @@ class AuthPasskeyKey(models.Model):
 
     @api.model
     def _verify_auth(self, auth, public_key, sign_count):
-        parsed_url = urlparse(self.get_base_url())
+        parsed_url = parse_url(self.get_base_url())
         auth_verification = verify_authentication_response(
             credential=auth,
             expected_challenge=base64url_to_bytes(self._get_session_challenge()),
-            expected_origin=parsed_url._replace(path='').geturl(),
-            expected_rp_id=parsed_url.hostname,
+            expected_origin=parsed_url._replace(path='').url,
+            expected_rp_id=parsed_url.host,
             credential_public_key=base64url_to_bytes(public_key),
             credential_current_sign_count=sign_count,
             require_user_verification=True,
@@ -93,7 +94,7 @@ class AuthPasskeyKey(models.Model):
     def _start_registration(self):
         assert request
         registration_options = json.loads(options_to_json(generate_registration_options(
-            rp_id=urlparse(self.get_base_url()).hostname,
+            rp_id=parse_url(self.get_base_url()).host,
             rp_name='Odoo',
             user_id=str(self.env.user.id).encode(),
             user_name=self.env.user.login,
@@ -107,12 +108,12 @@ class AuthPasskeyKey(models.Model):
 
     @api.model
     def _verify_registration_options(self, registration):
-        parsed_url = urlparse(self.get_base_url())
+        parsed_url = parse_url(self.get_base_url())
         verification = verify_registration_response(
             credential=registration,
             expected_challenge=base64url_to_bytes(self._get_session_challenge()),
-            expected_origin=parsed_url._replace(path='').geturl(),
-            expected_rp_id=parsed_url.hostname,
+            expected_origin=parsed_url._replace(path='').url,
+            expected_rp_id=parsed_url.host,
             require_user_verification=True,
         )
         return {
