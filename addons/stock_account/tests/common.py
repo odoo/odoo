@@ -19,7 +19,7 @@ class TestStockValuationCommon(BaseCommon):
         invoice_vals = {
             "partner_id": self.vendor.id,
             "move_type": move_type,
-            "invoice_date": fields.Date.today(),
+            "invoice_date": kwargs.get('invoice_date', fields.Date.today()),
             "invoice_line_ids": [],
         }
         if kwargs.get('reversed_entry_id'):
