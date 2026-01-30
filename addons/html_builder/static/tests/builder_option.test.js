@@ -8,6 +8,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
 import { expect, test, describe } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 
@@ -298,4 +299,107 @@ test("Do not show parent container for no_parent_containers targets", async () =
     await contains(":iframe .test-parent-target").click();
     expect(".options-container").toHaveCount(1);
     expect(".options-container").toHaveAttribute("data-container-title", "Parent");
+});
+
+test("Option containers should update reactively", async () => {
+    class Option extends BaseOptionComponent {
+        static title = "Test";
+        static selector = ".test-options-target";
+        static template = xml`<BuilderButton classAction="'disabled_clone'">Disable clone</BuilderButton>`;
+    }
+
+    class TestPlugin extends Plugin {
+        static id = "test";
+        resources = {
+            builder_options: [Option],
+            clone_disabled_reason_providers: ({ el, reasons }) => {
+                if (el.classList.contains("disabled_clone")) {
+                    reasons.push("Test reason");
+                }
+            },
+            container_title: {
+                selector: ".test-options-target",
+                getTitleExtraInfo: (el) =>
+                    el.classList.contains("disabled_clone") ? " disabled clone" : " enabled clone",
+            },
+        };
+    }
+
+    addBuilderPlugin(TestPlugin);
+    await setupHTMLBuilder(`
+        <div data-name="Target" class="test-options-target target1">
+            Homepage
+        </div>
+    `);
+    await contains(":iframe .target1").click();
+    expect(".oe_snippet_clone").not.toHaveAttribute("disabled");
+    expect(".options-container-label").toHaveText("Test enabled clone");
+    await contains("[data-class-action='disabled_clone']").click();
+    await animationFrame();
+    expect(".oe_snippet_clone").toHaveAttribute("disabled");
+    expect(".options-container-label").toHaveText("Test disabled clone");
+});
+
+test("Option containers dispatched to plugins are updated reactively", async () => {
+    class Option extends BaseOptionComponent {
+        static title = "Test";
+        static selector = ".target";
+        static template = xml`
+            <BuilderButton classAction="'not_removable'">Disable remove</BuilderButton>
+            <BuilderButton action="'testAction'">Check if disabled</BuilderButton>
+        `;
+    }
+
+    class TestPlugin extends Plugin {
+        static id = "testPlugin";
+        static shared = ["isRemoveDisabled"];
+
+        resources = {
+            builder_options: [Option],
+            builder_actions: { TestAction },
+            remove_disabled_reason_providers: ({ el, reasons }) => {
+                if (el.classList.contains("not_removable")) {
+                    reasons.push("Class list has 'not_removable'");
+                }
+            },
+            change_current_options_containers_listeners: (containers) => {
+                expect.step("containers update dispatched");
+                this.optionContainers = containers;
+            },
+        };
+
+        isRemoveDisabled(el) {
+            return !this.optionContainers.find((container) => container.element === el)
+                .removeDisabledReason;
+        }
+    }
+
+    class TestAction extends BuilderAction {
+        static id = "testAction";
+        static dependencies = ["testPlugin"];
+        apply({ editingElement }) {
+            const isRemoveDisabled = this.dependencies.testPlugin.isRemoveDisabled(editingElement);
+            editingElement.textContent = isRemoveDisabled ? "Yes" : "No";
+        }
+    }
+
+    addBuilderPlugin(TestPlugin);
+    await setupHTMLBuilder(`
+        <div data-name="Target">
+            <div> Is removable? <p class="target">-</p></div>
+        </div>
+    `);
+
+    await contains(":iframe .target").click();
+    expect.verifySteps(["containers update dispatched"]);
+    await contains("button[data-action-id='testAction']").click();
+    expect(":iframe .target").toHaveText("Yes");
+    // now modify target to change some option containers properties, and check
+    // if the update is handled reactively
+    await contains("[data-class-action='not_removable']").click();
+    await contains("button[data-action-id='testAction']").click();
+    expect(":iframe .target").toHaveText("No");
+    // check that containers weren't dispatched to the plugin and they were
+    // updated reactively
+    expect.verifySteps([]);
 });
