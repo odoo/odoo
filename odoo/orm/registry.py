@@ -787,8 +787,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
             SELECT c.relname, a.attname
             FROM pg_attribute a
             JOIN pg_class c ON a.attrelid = c.oid
-            JOIN pg_namespace n ON c.relnamespace = n.oid
-            WHERE n.nspname = current_schema
+            WHERE c.relnamespace = current_schema::regnamespace
             AND a.attnotnull = true
             AND a.attnum > 0
             AND a.attname != 'id';
@@ -825,7 +824,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
             return
 
         # retrieve existing indexes with their corresponding table
-        cr.execute("SELECT indexname, tablename FROM pg_indexes WHERE indexname IN %s",
+        cr.execute("SELECT indexname, tablename FROM pg_indexes WHERE indexname IN %s"
+                   "   AND schemaname = current_schema",
                    [tuple(row[0] for row in expected)])
         existing = dict(cr.fetchall())
 
@@ -904,9 +904,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
             JOIN pg_class AS c2 ON fk.confrelid = c2.oid
             JOIN pg_attribute AS a1 ON a1.attrelid = c1.oid AND fk.conkey[1] = a1.attnum
             JOIN pg_attribute AS a2 ON a2.attrelid = c2.oid AND fk.confkey[1] = a2.attnum
-            JOIN pg_namespace n ON c1.relnamespace = n.oid
             WHERE fk.contype = 'f' AND c1.relname IN %s
-              AND n.nspname = current_schema
+            AND c1.relnamespace = current_schema::regnamespace
         """
         cr.execute(query, [tuple({table for table, column in self._foreign_keys})])
         existing = {
@@ -991,10 +990,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
             query = """
                 SELECT c.relname
                   FROM pg_class c
-                  JOIN pg_namespace n ON (n.oid = c.relnamespace)
                  WHERE c.relname IN %s
                    AND c.relkind = 'r'
-                   AND n.nspname = current_schema
+                   AND c.relnamespace = current_schema::regnamespace
             """
             tables = tuple(m._table for m in self.models.values())
             cr.execute(query, [tables])
@@ -1028,7 +1026,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
             # The `orm_signaling_...` sequences indicates when caches must
             # be invalidated (i.e. cleared).
             signaling_tables = tuple(f'orm_signaling_{cache_name}' for cache_name in ['registry', *_CACHES_BY_KEY])
-            cr.execute("SELECT table_name FROM information_schema.tables WHERE table_name IN %s", [signaling_tables])
+            cr.execute("SELECT table_name FROM information_schema.tables"
+                       " WHERE table_name IN %s AND table_schema = current_schema", [signaling_tables])
 
             existing_sig_tables = tuple(s[0] for s in cr.fetchall())  # could be a set but not efficient with such a little list
             # signaling was previously using sequence but this doesn't work with replication

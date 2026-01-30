@@ -124,6 +124,7 @@ class PopulateContext:
             SELECT indexname AS name, indexdef AS definition
               FROM pg_indexes
              WHERE tablename = %s
+               AND schemaname = current_schema
                AND indexname NOT LIKE %s
                AND indexdef NOT LIKE %s
         """, model._table, '%pkey', '%UNIQUE%'))
@@ -180,10 +181,9 @@ def field_needs_variation(model: Model, field: Field) -> bool:
                    JOIN pg_class t ON t.oid = idx.indrelid
                    JOIN pg_class i ON i.oid = idx.indexrelid
                    JOIN pg_attribute a ON a.attnum = ANY (idx.indkey) AND a.attrelid = t.oid
-                   JOIN pg_namespace n ON t.relnamespace = n.oid
               WHERE t.relname = %s  -- tablename
                 AND a.attname = %s  -- column
-                AND n.nspname = current_schema
+                AND t.relnamespace = current_schema::regnamespace
                 AND idx.indisunique = TRUE) AS is_unique;
         """, model_._table, field_.name)
         return model_.env.execute_query(query)[0][0]

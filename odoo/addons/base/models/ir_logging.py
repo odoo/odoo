@@ -35,7 +35,8 @@ class IrLogging(models.Model):
 
     def init(self):
         super().init()
-        self.env.cr.execute("select 1 from information_schema.constraint_column_usage where table_name = 'ir_logging' and constraint_name = 'ir_logging_write_uid_fkey'")
+        self.env.cr.execute("select 1 from information_schema.constraint_column_usage where table_name = 'ir_logging' and constraint_name = 'ir_logging_write_uid_fkey'"
+                            " and table_schema = current_schema")
         if self.env.cr.rowcount:
             # DROP CONSTRAINT unconditionally takes an ACCESS EXCLUSIVE lock
             # on the table, even "IF EXISTS" is set and not matching; disabling

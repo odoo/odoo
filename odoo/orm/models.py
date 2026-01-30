@@ -2361,10 +2361,9 @@ class BaseModel(metaclass=MetaModel):
                      if field.store and field.column_type]
         cr.execute(SQL(
             """ SELECT a.attname, a.attnotnull
-                  FROM pg_class c, pg_attribute a, pg_namespace n
+                  FROM pg_class c, pg_attribute a
                  WHERE c.relname=%s
-                   AND c.relnamespace = n.oid
-                   AND n.nspname = current_schema
+                   AND c.relnamespace = current_schema::regnamespace
                    AND c.oid=a.attrelid
                    AND a.attisdropped=%s
                    AND pg_catalog.format_type(a.atttypid, a.atttypmod) NOT IN ('cid', 'tid', 'oid', 'xid')
@@ -6440,10 +6439,9 @@ def get_columns_from_sql_diagnostics(cr, diagnostics, *, check_registry=False) -
             ) as "columns"
         FROM pg_constraint
         JOIN pg_class t ON t.oid = conrelid
-        JOIN pg_namespace n ON t.relnamespace = n.oid
         WHERE conname = %s
             AND t.relname = %s
-            AND n.nspname = current_schema
+            AND t.relnamespace = current_schema::regnamespace
     """, diagnostics.constraint_name, diagnostics.table_name))
     columns = cr.fetchone()
     return columns[0] if columns else []
