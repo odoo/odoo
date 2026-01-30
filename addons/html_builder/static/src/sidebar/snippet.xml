@@ -17,7 +17,7 @@
             <span class="o_snippet_thumbnail_title" t-out="this.snippet.title"/>
             <button
                 t-if="this.snippet.isInstallable"
-                class="o_install_btn btn btn-success btn-lg position-absolute start-50 bottom-50 translate-middle-x visually-hidden-focusable z-1"
+                class="o_install_btn btn btn-success position-absolute top-0 end-0 bottom-0 start-0 d-flex flex-wrap flex-column align-items-center justify-content-center visually-hidden-focusable z-1"
                 t-on-click="this.onClickInstall"
                 t-on-keydown="this.props.onSnippetKeydown"
                 >

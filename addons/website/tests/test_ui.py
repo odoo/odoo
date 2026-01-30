@@ -507,7 +507,7 @@ class TestUi(HttpCaseWithWebsiteUser):
                     </div>
                 </section>
             """,
-            thumbnail_url='/website/static/src/img/snippets_thumbs/s_text_block.svg',
+            thumbnail_url='/website/static/src/img/snippets_thumbs/thumb_snippets_intro.svg',
             snippet_key='s_carousel',
             template_key='website.snippets')
         self.start_tour(self.env["website"].get_client_action_url('/@/', True), 'snippet_cache_across_websites', login='admin', cookies={

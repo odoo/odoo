@@ -67,7 +67,7 @@ class TestCustomSnippet(TransactionCase):
         ).save_snippet(
             name=data_name_attr,
             arch=snippet_arch,
-            thumbnail_url='/website/static/src/img/snippets_thumbs/s_text_block.svg',
+            thumbnail_url='/website/static/src/img/snippets_thumbs/thumb_snippets_text.svg',
             snippet_key='s_text_block',
             template_key='website.snippets'
         )
@@ -86,7 +86,7 @@ class TestCustomSnippet(TransactionCase):
         ).save_snippet(
             name=data_name_attr2,
             arch=snippet_arch2,
-            thumbnail_url='/website/static/src/img/snippets_thumbs/s_text_block.svg',
+            thumbnail_url='/website/static/src/img/snippets_thumbs/thumb_snippets_text.svg',
             snippet_key='s_text_block',
             template_key='website.snippets'
         )
@@ -150,7 +150,7 @@ class TestCustomSnippet(TransactionCase):
         ).save_snippet(
             name='Test Translation MegaMenu',
             arch=snippet_arch,
-            thumbnail_url='/website/static/src/img/snippets_thumbs/s_text_block.svg',
+            thumbnail_url='/website/static/src/img/snippets_thumbs/thumb_snippets_text.svg',
             snippet_key='s_text_block',
             template_key='website.snippets'
         )
@@ -244,7 +244,7 @@ class TestCustomSnippet(TransactionCase):
         ).save_snippet(
             name=data_name_attr,
             arch=snippet_arch,
-            thumbnail_url='/website/static/src/img/snippets_thumbs/s_text_block.svg',
+            thumbnail_url='/website/static/src/img/snippets_thumbs/thumb_snippets_text.svg',
             snippet_key='s_text_block',
             template_key='website.snippets'
         )
