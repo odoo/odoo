@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
-from odoo.tests import tagged
+from odoo.tests import HttpCase, tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.product.tests.test_product_attribute_value_config import (
@@ -11,7 +11,7 @@ from odoo.addons.website_sale.tests.common import MockRequest
 
 
 @tagged('post_install', '-at_install', 'product_attribute')
-class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, TestProductAttributeValueCommon):
+class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, HttpCase, TestProductAttributeValueCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -175,3 +175,5 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
         product_template.product_variant_ids.unlink()
         previewed_attribute_values = product_template._get_previewed_attribute_values()
         self.assertFalse(previewed_attribute_values)
+        response = self.url_open('/shop')
+        self.assertEqual(response.status_code, 200)
