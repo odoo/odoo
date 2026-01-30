@@ -5,7 +5,7 @@ import { fields, Record } from "./record";
 import { debounce } from "@web/core/utils/timing";
 import { rpc } from "@web/core/network/rpc";
 
-const MESSAGE_SOUND = "mail.user_setting.message_sound";
+export const MESSAGE_SOUND = "mail.user_setting.message_sound";
 
 export class Settings extends Record {
     id;
@@ -44,17 +44,11 @@ export class Settings extends Record {
             return this.channel_notifications === false ? "mentions" : this.channel_notifications;
         },
     });
+    _recomputeMessageSound = 0;
     messageSound = fields.Attr(true, {
         compute() {
+            void this._recomputeMessageSound;
             return browser.localStorage.getItem(MESSAGE_SOUND) !== "false";
-        },
-        /** @this {import("models").Settings} */
-        onUpdate() {
-            if (this.messageSound) {
-                browser.localStorage.removeItem(MESSAGE_SOUND);
-            } else {
-                browser.localStorage.setItem(MESSAGE_SOUND, "false");
-            }
         },
     });
 
@@ -348,7 +342,7 @@ export class Settings extends Record {
     }
     onStorage(ev) {
         if (ev.key === MESSAGE_SOUND) {
-            this.messageSound = ev.newValue !== "false";
+            this._recomputeMessageSound++;
         }
     }
     /**
