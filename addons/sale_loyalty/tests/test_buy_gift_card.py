@@ -8,21 +8,30 @@ from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
 @tagged('-at_install', 'post_install')
 class TestBuyGiftCard(TestSaleCouponCommon):
-
     def test_buying_gift_card(self):
         self.immediate_promotion_program.active = False
-        order = self._create_so(order_line=[
-            (0, False, {
-                'product_id': self.product_A.id,
-                'name': 'Ordinary Product A',
-                'product_uom_qty': 1.0,
-            }),
-            (0, False, {
-                'product_id': self.product_gift_card.id,
-                'name': 'Gift Card Product',
-                'product_uom_qty': 1.0,
-            })
-        ])
+        order = self._create_so(
+            order_line=[
+                (
+                    0,
+                    False,
+                    {
+                        'product_id': self.product_A.id,
+                        'name': 'Ordinary Product A',
+                        'product_uom_qty': 1.0,
+                    },
+                ),
+                (
+                    0,
+                    False,
+                    {
+                        'product_id': self.product_gift_card.id,
+                        'name': 'Gift Card Product',
+                        'product_uom_qty': 1.0,
+                    },
+                ),
+            ]
+        )
         self.assertEqual(len(order.order_line.ids), 2)
         self.assertEqual(len(order._get_reward_coupons()), 0)
         order._update_programs_and_rewards()
@@ -43,13 +52,12 @@ class TestBuyGiftCard(TestSaleCouponCommon):
             'model_id': self.env.ref('loyalty.model_loyalty_card').id,
             'auto_delete': False,
         })
-        self.program_gift_card.communication_plan_ids = [Command.create({
-            'trigger': 'create',
-            'mail_template_id': mail_template.id,
-        })]
-        order = self._create_so(order_line=[
-            Command.create({'product_id': self.product_gift_card.id}),
-        ])
+        self.program_gift_card.communication_plan_ids = [
+            Command.create({'trigger': 'create', 'mail_template_id': mail_template.id})
+        ]
+        order = self._create_so(
+            order_line=[Command.create({'product_id': self.product_gift_card.id})]
+        )
         salesman = order.user_id.partner_id.ensure_one()
         salesman.email = "sales@company.co"
         company = order.company_id.partner_id

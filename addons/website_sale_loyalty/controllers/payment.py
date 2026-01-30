@@ -7,7 +7,6 @@ from odoo.addons.website_sale.controllers import payment
 
 
 class PaymentPortal(payment.PaymentPortal):
-
     def _validate_transaction_for_order(self, transaction, sale_order):
         """Update programs & rewards before finalizing transaction.
 

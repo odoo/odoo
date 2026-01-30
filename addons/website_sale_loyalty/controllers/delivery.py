@@ -9,7 +9,6 @@ from odoo.addons.website_sale.controllers.delivery import Delivery
 
 
 class WebsiteSaleLoyaltyDelivery(Delivery):
-
     @route()
     def express_checkout_process_delivery_address(self, partial_delivery_address):
         """Override of `website.sale` to include delivery discount if any."""

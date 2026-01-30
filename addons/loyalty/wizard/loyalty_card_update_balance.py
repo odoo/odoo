@@ -8,11 +8,7 @@ class LoyaltyCardUpdateBalance(models.TransientModel):
     _name = 'loyalty.card.update.balance'
     _description = "Update Loyalty Card Points"
 
-    card_id = fields.Many2one(
-        comodel_name='loyalty.card',
-        required=True,
-        readonly=True,
-    )
+    card_id = fields.Many2one(comodel_name='loyalty.card', required=True, readonly=True)
     old_balance = fields.Float(related='card_id.points')
     new_balance = fields.Float()
     description = fields.Char(required=True)

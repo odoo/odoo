@@ -9,12 +9,9 @@
     'auto_install': True,
     'data': [
         'security/ir.model.access.csv',
-
         'data/sale_loyalty_data.xml',
-
         'wizard/sale_loyalty_coupon_wizard_views.xml',
         'wizard/sale_loyalty_reward_wizard_views.xml',
-
         'views/loyalty_card_views.xml',
         'views/loyalty_program_views.xml',
         'views/sale_order_views.xml',
@@ -22,11 +19,7 @@
         'views/res_partner_views.xml',
         'views/sale_loyalty_menus.xml',
     ],
-    'assets': {
-        'web.assets_backend': [
-            'sale_loyalty/static/src/**/*',
-        ],
-    },
+    'assets': {'web.assets_backend': ['sale_loyalty/static/src/**/*']},
     'uninstall_hook': 'uninstall_hook',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

@@ -32,7 +32,7 @@ class SaleOrderLine(models.Model):
         return super().unlink()
 
     def _should_show_strikethrough_price(self):
-        """ Override of `website_sale` to hide the strikethrough price for rewards. """
+        """Override of `website_sale` to hide the strikethrough price for rewards."""
         return super()._should_show_strikethrough_price() and not self.is_reward_line
 
     def _is_sellable(self):
