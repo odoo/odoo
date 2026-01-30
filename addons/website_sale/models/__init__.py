@@ -40,4 +40,5 @@ from . import (
     website_snippet_filter,
     website_track,
     website_visitor,
+    product_attribute_value_product_template_attribute_line,
 )

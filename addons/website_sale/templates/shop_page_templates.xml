@@ -658,7 +658,7 @@
     <template id="website_sale.products_shop_title_align" active="False" name="Align Shop Title"/>
 
     <template id="website_sale.filter_color_attributes" name="Color attributes in Filter">
-        <t t-foreach="filtered_attribute_value_ids[a.id]" t-as="v">
+        <t t-foreach="pavs_per_attribute[a]" t-as="v">
             <t t-set="img_style"
                t-value="'background:url(/web/image/product.attribute.value/%s/image); background-size:cover;' % v.id if v.image else ''"
             />
@@ -680,7 +680,7 @@
     </template>
 
     <template id="website_sale.filter_image_attributes" name="Image attributes in Filter">
-        <t t-foreach="filtered_attribute_value_ids[a.id]" t-as="v">
+        <t t-foreach="pavs_per_attribute[a]" t-as="v">
             <label
                 t-attf-class="css_attribute_image size_small position-relative rounded-3 bg-body text-center cursor-pointer #{'active' if v.id in attrib_set else ''} #{'custom_value' if v.is_custom else ''} #{'transparent' if (not v.is_custom and not v.html_color) else ''}"
             >
@@ -703,7 +703,7 @@
     <template id="website_sale.filter_select_attributes" name="Select attributes in Filter">
         <select class="form-select css_attribute_select" name="attribute_value">
             <option value="" selected="true">All <t t-out="a.name"/></option>
-            <t t-foreach="filtered_attribute_value_ids[a.id]" t-as="v">
+            <t t-foreach="pavs_per_attribute[a]" t-as="v">
                 <option
                     t-att-value="'%s-%s' % (a.id,v.id)"
                     t-out="v.name"
@@ -719,7 +719,7 @@
     >
         <t
             t-set="sorted_values"
-            t-value="sorted(filtered_attribute_value_ids[a.id], key=lambda v: v.id not in attrib_set)"
+            t-value="sorted(pavs_per_attribute[a], key=lambda v: v.id not in attrib_set)"
         />
         <t t-if="len(sorted_values) &lt;= 20">
             <div
@@ -793,7 +793,7 @@
                 <input
                     type="text"
                     class="o_wsale_attribute_search_bar form-control"
-                    t-att-placeholder="'Search %s (%s)' % (a.name, len(filtered_attribute_value_ids[a.id]))"
+                    t-att-placeholder="'Search %s (%s)' % (a.name, len(pavs_per_attribute[a]))"
                     t-att-data-container-id="'searchable-values-%s' % a.id"
                 />
             </div>
@@ -826,7 +826,7 @@
     </template>
 
     <template id="website_sale.filter_pills_attributes" name="Pills attributes in Filter">
-        <t t-foreach="filtered_attribute_value_ids[a.id]" t-as="v">
+        <t t-foreach="pavs_per_attribute[a]" t-as="v">
             <input
                 type="checkbox"
                 name="attribute_value"
@@ -855,15 +855,15 @@
         >
             <t
                 t-set="visible_attributes"
-                t-value="len([a for a in attributes if filtered_attribute_value_ids[a.id] and len(filtered_attribute_value_ids[a.id]) &gt; 1])"
+                t-value="len([a for a in attributes if pavs_per_attribute[a] and len(pavs_per_attribute[a]) &gt; 1])"
             />
 
             <t t-foreach="attributes" t-as="a">
                 <t t-set="_status" t-value="'inactive'"/>
-                <t t-foreach="filtered_attribute_value_ids[a.id]" t-as="v" t-if="v.id in attrib_set" t-set="_status" t-value="'active'"/>
+                <t t-foreach="pavs_per_attribute[a]" t-as="v" t-if="v.id in attrib_set" t-set="_status" t-value="'active'"/>
                 <t t-set="_expand_attributes" t-value="_status == 'active' or visible_attributes &lt; 4"/>
                 <div
-                    t-if="filtered_attribute_value_ids[a.id] and len(filtered_attribute_value_ids[a.id]) &gt; 1"
+                    t-if="pavs_per_attribute[a] and len(pavs_per_attribute[a]) &gt; 1"
                     t-attf-class="accordion-item {{('border-top-0 ' + ('order-1' if _status == 'active' else 'order-2')) if isMobile else 'nav-item mb-1 rounded-0'}}"
                 >
                     <h2
