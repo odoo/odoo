@@ -3,7 +3,6 @@
 from odoo import fields, models, _
 from odoo.addons.im_livechat.models.discuss_channel import is_livechat_channel
 from odoo.addons.mail.tools.discuss import Store
-from odoo.tools import format_list
 from datetime import datetime, timedelta
 
 
@@ -44,13 +43,8 @@ class DiscussChannel(models.Model):
             if self.livechat_visitor_id.id:
                 return _("Visitor #%(id)d left the conversation.", id=self.livechat_visitor_id.id)
             return _("Visitor left the conversation.")
-        correspondents_names = correspondents.mapped(
-            lambda partner: partner.user_livechat_username or partner.name
-        ) if correspondents else [self.env._("an operator")]
         return _(
-            "%(visitor)s started a conversation with %(correspondents)s.\nThe chat request has been cancelled",
-            visitor=self.livechat_visitor_id.display_name or _("The visitor"),
-            correspondents=format_list(self.env, correspondents_names),
+            "Live chat conversation closed automatically: the visitor started a new conversation with another agent.",
         )
 
     def _store_livechat_extra_fields(self, res: Store.FieldList):
