@@ -407,6 +407,7 @@ class MailMessage(models.Model):
             forbidden_doc_ids = set()
             try:
                 operation_result = records._check_access(record_operation)
+                records = records.filtered(lambda r: r.id not in operation_result[0].ids if operation_result else True)
                 # Check that records really exist;
                 # lengthy way of checking first in cache and avoiding exists() call.
                 # see test_record_unlinked_orphan_activities
@@ -422,15 +423,8 @@ class MailMessage(models.Model):
                     if records.exists() != records:
                         raise MissingError(self.env._("Missing records"))  # noqa: TRY301
             except MissingError:
-                existing = records.exists()
-                forbidden_doc_ids = set((records - existing).ids)
-                operation_result = existing._check_access(record_operation)
-            forbidden_doc_ids |= set((operation_result or [self.env[doc_model]])[0]._ids)
-            # keep actually returned records for the opration, that are not forbidden
-            allowed_ids += [
-                record.id for record in records
-                if record.id not in forbidden_doc_ids
-            ]
+                records = records.exists()
+            allowed_ids.extend(records.ids)
 
         return self.env[doc_model].browse(allowed_ids)
 

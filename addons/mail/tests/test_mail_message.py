@@ -29,6 +29,27 @@ class TestMailMessage(common.MailCommon):
         self.assertTrue(inexisting_message.browse().has_access('read'))
         self.assertFalse(inexisting_message.has_access('read'))
 
+    def test_mail_message_read_access(self):
+        self.env['res.company'].invalidate_model(['name'])
+        message_c1 = self._add_messages(self.env.company, "Company Note 1", author=self.user_employee.partner_id)
+        message_c2 = self._add_messages(self.company_2, "Company Note 2", author=self.user_employee_c2.partner_id)
+        search_result = (
+            self.env["mail.message"]
+            .with_context(allowed_company_ids=[self.env.company.id])
+            .with_user(self.user_employee)
+            .search([("model", "=", "res.company")])
+        )
+        self.assertIn(message_c1, search_result)
+        self.assertNotIn(message_c2, search_result)
+
+        inaccessible_messages_with_missing_records = (
+            self.env["mail.message"]
+            .with_context(allowed_company_ids=[self.env.company.id])
+            .with_user(self.user_employee)
+            .browse([-100, message_c1.id, message_c2.id])
+        )._check_access('read')
+        self.assertEqual(inaccessible_messages_with_missing_records[0].ids, [-100, message_c2.id])
+
     def test_unlink_failure_message_notify_author(self):
         recipient = new_test_user(self.env, login="Bob", email="invalid_email_addr")
         with self.mock_mail_gateway():
