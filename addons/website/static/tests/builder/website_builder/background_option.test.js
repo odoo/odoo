@@ -1,16 +1,23 @@
 import { BackgroundOption } from "@html_builder/plugins/background_option/background_option";
 import { BackgroundPositionOverlay } from "@html_builder/plugins/background_option/background_position_overlay";
-import { expect, test } from "@odoo/hoot";
+import { beforeEach, expect, test } from "@odoo/hoot";
 import { animationFrame, queryOne, scroll, waitFor } from "@odoo/hoot-dom";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, dataURItoBlob, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
     addOption,
     defineWebsiteModels,
     setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
+import { dummyBase64Img } from "@html_builder/../tests/helpers";
 
 defineWebsiteModels();
+
+beforeEach(() => {
+    const fakeImg = dataURItoBlob(dummyBase64Img);
+    onRpc("/website/static/src/img/snippets_demo/s_text_image.jpg", () => fakeImg);
+    onRpc("/web/image/123/transparent.png", () => fakeImg);
+});
 
 test("show and leave the 'BackgroundShapeComponent'", async () => {
     await setupWebsiteBuilder(`<section>AAAA</section>`);
