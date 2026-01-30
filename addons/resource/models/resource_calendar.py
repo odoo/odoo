@@ -80,11 +80,11 @@ class ResourceCalendar(models.Model):
     hours_per_week = fields.Float(
         string="Hours per Week",
         compute="_compute_hours_per_week", store=True, readonly=False, copy=False)
-    is_fulltime = fields.Boolean(compute='_compute_work_time_rate', string="Is Full Time")
+    is_fulltime = fields.Boolean(compute='_compute_is_fulltime', string="Is Full Time")
     two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
     two_weeks_explanation = fields.Char('Explanation', compute="_compute_two_weeks_explanation")
     work_resources_count = fields.Integer("Work Resources count", compute='_compute_work_resources_count')
-    work_time_rate = fields.Float(string='Work Time Rate', compute='_compute_work_time_rate', search='_search_work_time_rate',
+    work_time_rate = fields.Float(string='Work Time Rate', compute='_compute_work_time_rate', store=True,
         help='Work time rate versus full time working schedule, should be between 0 and 100 %.')
 
     # --------------------------------------------------
@@ -179,36 +179,17 @@ class ResourceCalendar(models.Model):
             calendar.work_resources_count = resources_per_calendar.get(calendar, 0)
 
     @api.depends('hours_per_week', 'full_time_required_hours')
+    def _compute_is_fulltime(self):
+        for calendar in self:
+            calendar.is_fulltime = float_compare(calendar.full_time_required_hours, calendar.hours_per_week, 3) == 0
+
+    @api.depends('hours_per_week', 'full_time_required_hours')
     def _compute_work_time_rate(self):
         for calendar in self:
             if calendar.full_time_required_hours:
-                calendar.work_time_rate = calendar.hours_per_week / calendar.full_time_required_hours * 100
+                calendar.work_time_rate = calendar.hours_per_week / calendar.full_time_required_hours
             else:
-                calendar.work_time_rate = 100
-
-            calendar.is_fulltime = float_compare(calendar.full_time_required_hours, calendar.hours_per_week, 3) == 0
-
-    @api.model
-    def _search_work_time_rate(self, operator, value):
-        if operator in ('in', 'not in'):
-            if not all(isinstance(v, int) for v in value):
-                return NotImplemented
-        elif operator in ('<', '>'):
-            if not isinstance(value, int):
-                return NotImplemented
-        else:
-            return NotImplemented
-
-        calendar_ids = self.env['resource.calendar'].search([])
-        if operator == 'in':
-            calender = calendar_ids.filtered(lambda m: m.work_time_rate in value)
-        elif operator == 'not in':
-            calender = calendar_ids.filtered(lambda m: m.work_time_rate not in value)
-        elif operator == '<':
-            calender = calendar_ids.filtered(lambda m: m.work_time_rate < value)
-        elif operator == '>':
-            calender = calendar_ids.filtered(lambda m: m.work_time_rate > value)
-        return [('id', 'in', calender.ids)]
+                calendar.work_time_rate = 1.0
 
     # --------------------------------------------------
     # Actions

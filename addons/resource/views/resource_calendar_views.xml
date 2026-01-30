@@ -9,7 +9,7 @@
                <field name="company_id" groups="base.group_multi_company"/>
                <separator/>
                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
-               <filter string="Partial working schedules" name="partial_working_schedules" domain="[('work_time_rate', '&lt;', 100)]"/>
+               <filter string="Partial working schedules" name="partial_working_schedules" domain="[('work_time_rate', '&lt;', 1.0)]"/>
                <group>
                     <filter name="groupby_company" context="{'group_by': 'company_id'}"/>
                 </group>
@@ -75,8 +75,7 @@
                             </div>
                             <label for="work_time_rate" string="Work Time Rate" groups="base.group_no_one"/>
                             <div groups="base.group_no_one">
-                                <field name="work_time_rate" nolabel="1" style="width: 6ch;"/>
-                                <span class="ms-1">%</span>
+                                <field name="work_time_rate" nolabel="1" style="width: 6ch; " widget="percentage"/>
                             </div>
                         </group>
                     </group>
@@ -137,7 +136,7 @@
             <list string="Working Time">
                 <field name="name" string="Working Time"/>
                 <field name="hours_per_week" string="Schedule Total Time" optional="hide"/>
-                <field name="work_time_rate"/>
+                <field name="work_time_rate" widget="percentage"/>
                 <field name="full_time_required_hours" widget="float_time" optional="hide"/>
                 <field name="work_resources_count" string="# Work Resources" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>

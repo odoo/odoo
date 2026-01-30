@@ -204,7 +204,7 @@ class Test2WeeksCalendar(TransactionCase):
             'full_time_required_hours': 40,
             'attendance_ids': create_attendance_ids(attendance_list),
         })
-        self.assertAlmostEqual(resource_calendar.work_time_rate, 50, 2)
+        self.assertAlmostEqual(resource_calendar.work_time_rate, 0.5, 2)
 
         attendance_list = [
             {'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'},
@@ -217,7 +217,7 @@ class Test2WeeksCalendar(TransactionCase):
             'name': 'Calendar (4 / 5)',
             'attendance_ids': create_attendance_ids(attendance_list),
         })
-        self.assertAlmostEqual(resource_calendar.work_time_rate, 80, 2)
+        self.assertAlmostEqual(resource_calendar.work_time_rate, 0.8, 2)
 
         # Define a 9/10
         resource_calendar.write({
@@ -226,7 +226,7 @@ class Test2WeeksCalendar(TransactionCase):
                 {'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'},
             ]),
         })
-        self.assertAlmostEqual(resource_calendar.work_time_rate, 90, 2)
+        self.assertAlmostEqual(resource_calendar.work_time_rate, 0.9, 2)
 
     def test_empty_working_hours_for_two_weeks_resource(self):
         calendar = self.env['resource.calendar'].create([

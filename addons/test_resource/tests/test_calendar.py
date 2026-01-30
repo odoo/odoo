@@ -340,7 +340,7 @@ class TestCalendar(TestResourceCommon):
                 (0, 0, {'dayofweek': '2', 'hour_from': 8, 'hour_to': 12}),
             ],
         })
-        self.assertAlmostEqual(resource_calendar.work_time_rate, 50, 2)
+        self.assertAlmostEqual(resource_calendar.work_time_rate, 0.5, 2)
 
         # Define a 4/5
         resource_calendar.write({
@@ -351,18 +351,18 @@ class TestCalendar(TestResourceCommon):
                 (0, 0, {'dayofweek': '3', 'hour_from': 13, 'hour_to': 17}),
             ],
         })
-        self.assertAlmostEqual(resource_calendar.work_time_rate, 80, 2)
+        self.assertAlmostEqual(resource_calendar.work_time_rate, 0.8, 2)
 
         # Define a 9/10
         resource_calendar.write({
             'name': 'Calendar (9 / 10)',
             'attendance_ids': [(0, 0, {'dayofweek': '4', 'hour_from': 8, 'hour_to': 12})],
         })
-        self.assertAlmostEqual(resource_calendar.work_time_rate, 90, 2)
+        self.assertAlmostEqual(resource_calendar.work_time_rate, 0.9, 2)
 
         # Define a Full-Time
         resource_calendar.write({
             'name': 'Calendar Full-Time',
             'attendance_ids': [(0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 17})],
         })
-        self.assertAlmostEqual(resource_calendar.work_time_rate, 100, 2)
+        self.assertAlmostEqual(resource_calendar.work_time_rate, 1.0, 2)
