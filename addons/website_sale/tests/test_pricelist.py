@@ -39,6 +39,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         super().setUpClass()
         cls.env.user.partner_id.country_id = False  # Remove country to avoid property pricelist computed.
 
+        cls.pricelist = cls._enable_pricelists()
         cls.pricelist.name = "Public Pricelist"  # reduce diff in existing tests
         cls.country_be = cls.env.ref('base.be')
         cls.benelux = cls.env['res.country.group'].create({
@@ -201,6 +202,8 @@ class TestWebsitePriceList(WebsiteSaleCommon):
 
     def test_pricelist_combination(self):
         # Enable discounts to view discount in sale_order
+        self._enable_discounts()
+        self.pricelist = self._enable_pricelists()
         self.env.user.group_ids += self.env.ref('sale.group_discount_per_so_line')
 
         product = self.env['product.product'].create({
@@ -249,6 +252,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         self.assertEqual(sol.price_total, 13875)
 
     def test_pricelist_with_no_list_price(self):
+        self.pricelist = self._enable_pricelists()
         product = self.env['product.product'].create({
             'name': 'Super Product',
             'list_price': 0,
@@ -342,6 +346,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             'show_line_subtotals_tax_selection': 'tax_included',  # Set "Tax Included" on the "Display Product Prices"
             'group_product_price_comparison': True,               # price comparison
         }).execute()
+        self.pricelist = self._enable_pricelists()
 
         product_tmpl = self.env['product.template'].create({
             'name': 'Test Product',
@@ -456,7 +461,7 @@ class TestWebsitePriceListAvailable(WebsiteSaleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls._enable_pricelists()
+        cls.pricelist = cls._enable_pricelists()
         Pricelist = cls.env['product.pricelist']
         Website = cls.env['website']
 

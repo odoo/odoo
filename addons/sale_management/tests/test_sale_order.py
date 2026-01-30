@@ -109,7 +109,7 @@ class TestSaleOrder(SaleManagementCommon):
         ])
 
         # variable kept to reduce code diff
-        cls.sale_order = cls.empty_order
+        cls.sale_order = cls._create_so(order_line=[])
 
     def test_01_template_without_pricelist(self):
         """
@@ -455,7 +455,7 @@ class TestSaleOrder(SaleManagementCommon):
                 'name': False,
             }),
         ]
-        sale_order = self.empty_order
+        sale_order = self._create_so(order_line=[])
         sale_order.sale_order_template_id = quotation_template_no_description
         sale_order._onchange_sale_order_template_id()
         self.assertEqual(
@@ -477,7 +477,7 @@ class TestSaleOrder(SaleManagementCommon):
                 'name': "This is a template description",
             }),
         ]
-        sale_order = self.empty_order
+        sale_order = self._create_so(order_line=[])
         sale_order.sale_order_template_id = quotation_template_with_description
         sale_order._onchange_sale_order_template_id()
         self.assertEqual(
@@ -508,6 +508,7 @@ class TestSaleOrder(SaleManagementCommon):
         """Ensure the update pricelist button is disabled when opening a sale order
         with a default quotation template applied.
         """
+        self._enable_pricelists()
         quotation_template = self.env['sale.order.template'].create({
             'name': 'Test Quotation Template',
             'sale_order_template_line_ids': [

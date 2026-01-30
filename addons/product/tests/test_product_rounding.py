@@ -30,7 +30,7 @@ class TestProductRounding(ProductCommon):
             'rate_ids': [Command.create({'rate': 1.338800, 'name': time.strftime('%Y-%m-%d')})],
         })
 
-        cls.pricelist_usd = cls.pricelist
+        cls.pricelist_usd = cls._enable_pricelists()
 
         cls.pricelist_jpy = cls.env['product.pricelist'].create({
             'name': 'Pricelist Testing JPY',

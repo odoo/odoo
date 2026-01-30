@@ -173,7 +173,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
 
     def test_04_apply_empty_pl(self):
         """Ensure empty pl code reset the applied pl"""
-        self._enable_pricelists()
+        self.pricelist = self._enable_pricelists()
         so = self._create_so(partner_id=self.public_partner.id)
         eur_pl = self.env['product.pricelist'].create({
             'name': 'EUR_test',
@@ -189,8 +189,8 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             self.assertNotEqual(so.pricelist_id, eur_pl, "Pricelist should be removed when sending an empty pl code")
 
     def test_04_pl_reset_on_login(self):
-        self._enable_pricelists()
         """Check that after login, the SO pricelist is correctly recomputed."""
+        self.pricelist = self._enable_pricelists()
         test_user = self.env['res.users'].create({
             'name': 'Toto',
             'login': 'long_enough_password',
@@ -630,8 +630,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         self.product.taxes_id = [Command.set(tax_15_incl.ids)]
         self.partner.country_id = self.country_id
 
-        cart = self.empty_cart
-        cart.order_line = [Command.create({'product_id': self.product.id})]
+        cart = self._create_so(order_line=[Command.create({'product_id': self.product.id})])
         amount_untaxed = cart.amount_untaxed
 
         self.assertEqual(cart.fiscal_position_id, fpos_be)

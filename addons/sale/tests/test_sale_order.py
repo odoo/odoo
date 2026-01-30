@@ -661,6 +661,8 @@ class TestSaleOrder(SaleCommon):
         This test makes sure that the `technical_price_unit` is correctly discarded
         if not provided in the same request as the `price_unit`
         """
+        self.pricelist = self._enable_pricelists()
+        self.sale_order.pricelist_id = self.pricelist
         self.pricelist.item_ids = [
             Command.create({
                 'product_id': self.product.id,

@@ -13,6 +13,9 @@ class TestProductCatalog(HttpCase, SaleCommon):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.pricelist = cls._enable_pricelists()
+        cls.empty_order = cls._create_so(order_line=[])
+
         cls.res_model = cls.empty_order._name
         cls.res_id = cls.empty_order.id
         cls.base_url = cls.base_url()
@@ -171,12 +174,13 @@ class TestProductCatalog(HttpCase, SaleCommon):
         )
 
     def test_update(self):
-        self.assertFalse(self.empty_order.order_line)
+        order = self.empty_order
+        self.assertFalse(order.order_line)
 
         # Add product to order
         product = self.service_product
         update_data = self.request_update_order_line_info(product=product)
-        sol = self.empty_order.order_line
+        sol = order.order_line
         self.assertEqual(sol.product_id, product)
         self.assertEqual(sol.product_uom_qty, 1.0)
         self.assertEqual(update_data, sol.price_unit)
@@ -184,11 +188,6 @@ class TestProductCatalog(HttpCase, SaleCommon):
 
     def test_update_with_pricelist_rules(self):
         self._create_pricelist_discount_rules()
-        self.env['res.config.settings'].create({
-            # Discounts included in price
-            'group_product_pricelist': True,
-            'group_discount_per_so_line': False,
-        }).execute()
 
         # Add first item --> no discount
         product = self.service_product
@@ -206,6 +205,7 @@ class TestProductCatalog(HttpCase, SaleCommon):
 
         # Add a second item --> should trigger the pricelist discount
         update_data = self.request_update_order_line_info(product=product, quantity=2.0)
+        self.assertEqual(update_data, product.lst_price / 2)
         self.assertRecordValues(
             sol, [{
                 'product_id': product.id,
@@ -214,7 +214,6 @@ class TestProductCatalog(HttpCase, SaleCommon):
                 'discount': 0.0,
             }]
         )
-        self.assertEqual(update_data, product.lst_price / 2)
 
         # Enable discounts, add item --> discount should be on discount field
         self.env['res.config.settings'].create({
@@ -223,6 +222,7 @@ class TestProductCatalog(HttpCase, SaleCommon):
             'group_discount_per_so_line': True,
         }).execute()
         update_data = self.request_update_order_line_info(product=product, quantity=3.0)
+        self.assertEqual(update_data, product.lst_price / 2)
         self.assertRecordValues(
             sol, [{
                 'product_id': product.id,
@@ -231,7 +231,6 @@ class TestProductCatalog(HttpCase, SaleCommon):
                 'discount': 50.0,
             }]
         )
-        self.assertEqual(update_data, product.lst_price / 2)
 
     def test_remove_product_from_catalog_without_sol(self):
         """Test that removing a product from the catalog right after clicking Add button"""

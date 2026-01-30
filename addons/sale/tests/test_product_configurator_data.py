@@ -112,13 +112,12 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         self.assertEqual(len(self.product_template_sofa.product_variant_ids), 3)
 
         # Use variants s.t. they are archived and not deleted when value is removed
-        self.empty_order.order_line = [
-            Command.create({
-                'product_id': product.id
-            })
-            for product in self.product_template_sofa.product_variant_ids
-        ]
-        self.empty_order.action_confirm()
+        self._create_so(
+            order_line=[
+                Command.create({'product_id': product.id})
+                for product in self.product_template_sofa.product_variant_ids
+            ]
+        )
 
         # Remove attribute value
         self.product_template_sofa.attribute_line_ids.value_ids -= self.color_attribute_red
@@ -135,13 +134,12 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         self.assertEqual(len(product_template.product_variant_ids), 4)
 
         # Use variants s.t. they are archived and not deleted when value is removed
-        self.empty_order.order_line = [
-            Command.create({
-                'product_id': product.id
-            })
-            for product in product_template.product_variant_ids
-        ]
-        self.empty_order.action_confirm()
+        self._create_so(
+            order_line=[
+                Command.create({'product_id': product.id})
+                for product in product_template.product_variant_ids
+            ]
+        )
 
         # Remove attribute
         product_template.attribute_line_ids[0].unlink()
@@ -159,15 +157,12 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         self.assertEqual(len(product_template.product_variant_ids), 4)
 
         # Use variants s.t. they are archived and not deleted when value is removed
-        self.empty_order.order_line = [
-            Command.create(
-                {
-                    'product_id': product.id
-                }
-            )
-            for product in product_template.product_variant_ids
-        ]
-        self.empty_order.action_confirm()
+        self._create_so(
+            order_line=[
+                Command.create({'product_id': product.id})
+                for product in product_template.product_variant_ids
+            ]
+        )
 
         # Remove attribute value red
         product_template.attribute_line_ids.filtered(
@@ -273,15 +268,17 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
 
         # Use variants s.t. they are archived and not deleted when value is removed
 
-        self.empty_order.order_line = [
-            Command.create({
-                'product_id': product.id,
-                'product_no_variant_attribute_value_ids': product.attribute_line_ids.product_template_value_ids.filtered(
-                    lambda p: p.attribute_id.create_variant == 'no_variant'
-                ),
-            })
-            for product in product_template.product_variant_ids]
-        self.empty_order.action_confirm()
+        self._create_so(
+            order_line=[
+                Command.create({
+                    'product_id': product.id,
+                    'product_no_variant_attribute_value_ids': product.attribute_line_ids.product_template_value_ids.filtered(
+                        lambda p: p.attribute_id.create_variant == 'no_variant'
+                    ),
+                })
+                for product in product_template.product_variant_ids
+            ]
+        )
 
         # Remove attribute value extra
         product_template.attribute_line_ids.filtered(
@@ -338,12 +335,12 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         })
 
         # Sell all variants
-        self.empty_order.order_line = [
-            Command.create({
-                'product_id': product.id,
-            })
-            for product in product_template_2lines_2attributes.product_variant_ids
-        ]
+        self._create_so(
+            order_line=[
+                Command.create({'product_id': product.id})
+                for product in product_template_2lines_2attributes.product_variant_ids
+            ]
+        )
 
         def _get_ptavs():
             return product_template_2lines_2attributes.with_context(
@@ -367,12 +364,12 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         self.assertEqual(len(_get_ptavs()), 4)
 
         # Use products s.t. they are archived and not deleted
-        self.empty_order.order_line = [
-            Command.create({
-                'product_id': product.id,
-            })
-            for product in product_template_2lines_2attributes.product_variant_ids
-        ]
+        self._create_so(
+            order_line=[
+                Command.create({'product_id': product.id})
+                for product in product_template_2lines_2attributes.product_variant_ids
+            ]
+        )
 
         self.assertEqual(len(_get_archived_variants()), 4)
         self.assertEqual(len(_get_active_variants()), 2)

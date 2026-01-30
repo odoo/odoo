@@ -201,8 +201,8 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
         })
 
         self.product.accessory_product_ids = [Command.link(accessory_product.id)]
-        self.empty_cart._cart_add(product_id=self.product.id)
-        self.assertEqual(len(self.empty_cart.with_user(self.public_user)._cart_accessories()), 0)
+        cart = self._create_so()
+        self.assertEqual(len(cart.with_user(self.public_user).sudo()._cart_accessories()), 0)
 
     def test_cart_new_fpos_from_geoip(self):
         fpos_be = self.env["account.fiscal.position"].create({
@@ -227,8 +227,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
     def test_cart_update_with_fpos(self):
         # We will test that the mapping of an 10% included tax by a 6% by a fiscal position is taken
         # into account when updating the cart
-        self._enable_pricelists()
-        pricelist = self.pricelist
+        pricelist = self._enable_pricelists()
         # Create fiscal position mapping taxes 10% -> 6%
         fpos = self.env['account.fiscal.position'].create({
             'name': 'test',
@@ -371,41 +370,42 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
         })
         no_variant_ptavs = product_no_variants.attribute_line_ids.product_template_value_ids
         no_variant_ptav = no_variant_ptavs[0]
+        cart = self._create_so(order_line=[])
         add_one = partial(
-            self.empty_cart._cart_add,
+            cart._cart_add,
             product_id=product_no_variants.product_variant_id.id,
             quantity=1,
         )
-        self.assertEqual(len(self.empty_cart.order_line), 0)
+        self.assertEqual(len(cart.order_line), 0)
 
         add_one(no_variant_attribute_value_ids=no_variant_ptav.ids)
-        self.assertEqual(len(self.empty_cart.order_line), 1)
+        self.assertEqual(len(cart.order_line), 1)
 
         add_one(no_variant_attribute_value_ids=no_variant_ptav.ids)
-        self.assertEqual(len(self.empty_cart.order_line), 1)
-        self.assertEqual(self.empty_cart.order_line.product_uom_qty, 2)
+        self.assertEqual(len(cart.order_line), 1)
+        self.assertEqual(cart.order_line.product_uom_qty, 2)
 
         # Providing `no_variant_attribute_value_ids` should be optional if there's only 1 value...
         product_no_variants.attribute_line_ids.value_ids = self.no_variant_attribute.value_ids[0]
         add_one(no_variant_attribute_value_ids=[])
-        self.assertEqual(len(self.empty_cart.order_line), 1)
-        self.assertEqual(self.empty_cart.order_line.product_uom_qty, 3)
+        self.assertEqual(len(cart.order_line), 1)
+        self.assertEqual(cart.order_line.product_uom_qty, 3)
 
         # ...except if it's a multi-checkbox attribute, making the value optional
         self.no_variant_attribute.display_type = 'multi'
         add_one(no_variant_attribute_value_ids=[])
-        self.assertEqual(len(self.empty_cart.order_line), 2)
-        self.assertEqual(self.empty_cart.order_line.mapped('product_uom_qty'), [3, 1])
+        self.assertEqual(len(cart.order_line), 2)
+        self.assertEqual(cart.order_line.mapped('product_uom_qty'), [3, 1])
 
         add_one(no_variant_attribute_value_ids=no_variant_ptav.ids)
-        self.assertEqual(len(self.empty_cart.order_line), 2)
-        self.assertEqual(self.empty_cart.order_line.mapped('product_uom_qty'), [4, 1])
+        self.assertEqual(len(cart.order_line), 2)
+        self.assertEqual(cart.order_line.mapped('product_uom_qty'), [4, 1])
 
     def test_cart_new_pricelist_from_geoip(self):
         """Check that, when adding a new partner to a website order, the partner's GeoIP
         is factored into the pricelist recomputation.
         """
-        self._enable_pricelists()
+        self.pricelist = self._enable_pricelists()
         eu_group = self.env.ref('base.europe')
         not_eu_group = self.env['res.country.group'].create({
             'name': "Not EU",

@@ -10,6 +10,7 @@ class PartnershipCommon(ProductCommon):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.pricelist = cls._enable_pricelists()
         cls.partner_grade = cls.env['res.partner.grade'].create({
             'name': 'Unicorn',
             'default_pricelist_id': cls.pricelist.id,

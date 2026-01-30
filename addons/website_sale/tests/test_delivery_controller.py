@@ -14,6 +14,7 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
     def setUp(self):
         super().setUp()
         self.Controller = Delivery()
+        self.empty_cart = self._create_so(order_line=[])
 
     # test that changing the delivery method while there is a pending transaction raises an error
     def test_controller_change_carrier_when_transaction(self):

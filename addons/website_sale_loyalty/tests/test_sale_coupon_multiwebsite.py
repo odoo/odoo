@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError
+from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponNumbersCommon
@@ -20,13 +21,14 @@ class TestSaleCouponMultiwebsite(TestSaleCouponNumbersCommon):
         """ Ensure the multi website compliance of programs and coupons, both in
             backend and frontend.
         """
-        order = self.empty_order
-        self.env['sale.order.line'].create({
-            'product_id': self.largeCabinet.id,
-            'name': 'Large Cabinet',
-            'product_uom_qty': 2.0,
-            'order_id': order.id,
-        })
+        order = self._create_so(
+            order_line=[
+                Command.create({
+                    'product_id': self.largeCabinet.id,
+                    'product_uom_qty': 2.0,
+                })
+            ]
+        )
 
         def _remove_reward():
             order.order_line.filtered('is_reward_line').unlink()

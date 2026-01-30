@@ -210,14 +210,12 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         """
         computer = self.computer.product_variant_id
         monitor = self.monitor.product_variant_id
-        self.empty_cart.write({
-            'website_id': self.website.id,
-            'order_line': [
+        self._create_so(
+            order_line=[
                 Command.create({'product_id': product_id})
                 for product_id in (computer + monitor + self.pink_case_L).ids
-            ],
-        })
-        self.empty_cart.action_confirm()
+            ]
+        ).action_confirm()
 
         dyn_filter = self.env.ref('website_sale.dynamic_filter_cross_selling_recently_sold_with')
         with self.mock_request():

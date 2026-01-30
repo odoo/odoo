@@ -69,14 +69,13 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
             self._apply_promo_code(wrong_partner_order, coupon.code)
 
         # Test now on a valid sales order
-        order = self.empty_order
-        order.write({'order_line': [
+        order = self._create_so(order_line=[
             (0, False, {
                 'product_id': self.product_A.id,
                 'name': '1 Product A',
                 'product_uom_qty': 1.0,
             })
-        ]})
+        ])
         self._apply_promo_code(order, coupon.code)
         self.assertEqual(len(order.order_line.ids), 2)
 
@@ -103,8 +102,8 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         }).generate_coupons()
         coupon = self.code_promotion_program.coupon_ids
 
-        sale_order_a = self.empty_order.copy()
-        sale_order_b = self.empty_order.copy()
+        sale_order_a = self._create_so(order_line=[])
+        sale_order_b = self._create_so(order_line=[])
 
         sale_order_a.write({'order_line': [
             (0, False, {
@@ -156,15 +155,16 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
             })]
         })
 
-        order = self.empty_order
-        order.pricelist_id = first_pricelist
-        order.write({'order_line': [
-            (0, False, {
-                'product_id': self.product_C.id,
-                'name': '1 Product C',
-                'product_uom_qty': 1.0,
-            })
-        ]})
+        order = self._create_so(
+            pricelist_id=first_pricelist.id,
+            order_line=[
+                Command.create({
+                    'product_id': self.product_C.id,
+                    'name': '1 Product C',
+                    'product_uom_qty': 1.0,
+                })
+            ],
+        )
         self._apply_promo_code(order, coupon.code)
         self.assertEqual(len(order.order_line.ids), 2)
         self.assertEqual(order.amount_total, 81, "SO total should be 81: (10% of 100 with pricelist) + 10% of 90 with coupon code")
@@ -208,19 +208,18 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
             })],
         })
         # 3.
-        order = self.empty_order.copy()
         self.third_product = self.env['product.product'].create({
             'name': 'Thrid Product',
             'list_price': 5,
             'sale_ok': True
         })
-        order.write({'order_line': [
-            (0, False, {
+        order = self._create_so(order_line=[
+            Command.create({
                 'product_id': self.third_product.id,
                 'name': '1 Third Product',
                 'product_uom_qty': 1.0,
             })
-        ]})
+        ])
         order._update_programs_and_rewards()
         self.assertEqual(len(self.p1.coupon_ids.ids), 1, "You should get a coupon for you next order that will offer 10% discount")
         # 4.
@@ -228,7 +227,7 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
             self._apply_promo_code(order, 'free_B_on_next_order')
         # 5.
         order.write({'order_line': [
-            (0, False, {
+            Command.create({
                 'product_id': self.product_A.id,
                 'name': '1 Product A',
                 'product_uom_qty': 1.0,
@@ -239,16 +238,13 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         self.assertEqual(len(order._get_reward_coupons()), 2, "You should get a second coupon for your next order that will offer a free Product B")
         order.action_confirm()
         # 7.
-        order_bis = self.empty_order
-
-        # 8.
-        order_bis.write({'order_line': [
-            (0, False, {
+        order_bis = self._create_so(order_line=[
+            Command.create({
                 'product_id': self.product_B.id,
                 'name': '1 Product B',
                 'product_uom_qty': 1.0,
             })
-        ]})
+        ])
         # 9.
         self._apply_promo_code(order_bis, order._get_reward_coupons()[1].code)
         self.assertEqual(len(order_bis.order_line), 2, "You should get a free Product B")
@@ -268,7 +264,7 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
             'mode': 'with_code',
             'code': 'free_B_on_next_order',
         })
-        order = self.empty_order.copy()
+        order = self._create_so(order_line=[])
         self.product_A.lst_price = 700
         order.write({'order_line': [
             (0, False, {
@@ -279,7 +275,7 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         ]})
         self._apply_promo_code(order, 'free_B_on_next_order', no_reward_fail=False)
         self.assertEqual(len(self.immediate_promotion_program.coupon_ids.ids), 1, "You should get a coupon for you next order that will offer a free product B")
-        order_bis = self.empty_order
+        order_bis = self._create_so(order_line=[])
         order_bis.write({'order_line': [
             (0, False, {
                 'product_id': self.product_B.id,
@@ -318,14 +314,13 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
                 'discount_applicability': 'order',
             })],
         })
-        order = self.empty_order
-        order.write({'order_line': [
+        order = self._create_so(order_line=[
             Command.create({
                 'product_id': self.product_A.id,
                 'name': '1 Product A',
                 'product_uom_qty': 1.0,
             })
-        ]})
+        ])
         generated_coupons = order._try_apply_program(loyalty_program).get('coupon')
         self.assertTrue(generated_coupons, "A coupon should have been generated")
         self.assertEqual(generated_coupons.partner_id, order.partner_id,
@@ -355,11 +350,10 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
                 'discount_applicability': 'order',
             })],
         })
-        order = self.empty_order
-        order.write({
-            'partner_id': self.env.ref('base.public_partner').id,
-            'order_line': [Command.create({'product_id': self.product_A.id})],
-        })
+        order = self._create_so(
+            partner_id=self.env.ref('base.public_partner').id,
+            order_line=[Command.create({'product_id': self.product_A.id})],
+        )
         generated_coupons = order._try_apply_program(loyalty_program).get('coupon')
         self.assertTrue(generated_coupons, "A coupon should have been generated")
         self.assertEqual(
@@ -403,8 +397,7 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         }).generate_coupons()
         coupon = program.coupon_ids
 
-        order = self.empty_order
-        order.order_line = [Command.create({'product_id': self.product_C.id})]
+        order = self._create_so(order_line=[Command.create({'product_id': self.product_C.id})])
         order.action_confirm()
 
         order.order_line.product_updatable = True  # in case `sale_project` is installed
@@ -441,14 +434,13 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
             })]
         })
         # 2.
-        order = self.empty_order.copy()
-        order.write({'order_line': [
-            (0, False, {
+        order = self._create_so(order_line=[
+            Command.create({
                 'product_id': self.product_A.id,
                 'name': '1 Product A',
                 'product_uom_qty': 1.0,
             })
-        ]})
+        ])
         order._update_programs_and_rewards()
         self._claim_reward(order, self.p1)
         self.assertEqual(len(order.order_line), 2, "You should get a discount line") # product + discount
@@ -483,9 +475,7 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         coupon_1 = self._generate_coupons(self.code_promotion_program_with_discount)
         coupon_2 = self._generate_coupons(self.discount_with_multi_rewards)
 
-        order = self.empty_order
-        self.assertEqual(order.amount_total, 0.0)
-        order.write({'order_line': [
+        order = self._create_so(order_line=[
             Command.create({
                 'product_id': self.product_A.id,
                 'name': '1 Product A',
@@ -496,7 +486,7 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
                 'name': '1 Product B',
                 'product_uom_qty': 1.0,
             }),
-        ]})
+        ])
 
         # The order line should be created with the correct price unit
         self.assertEqual(len(order.order_line.ids), 2)
@@ -535,15 +525,13 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         self.discount_with_multi_rewards.reward_ids[1].discount = 15
         coupon_2 = self._generate_coupons(self.discount_with_multi_rewards)
 
-        order = self.empty_order
-        self.assertEqual(order.amount_total, 0.0)
-        order.write({'order_line': [
+        order = self._create_so(order_line=[
             Command.create({
                 'product_id': self.product_A.id,
                 'name': '1 Product A',
                 'product_uom_qty': 1.0,
             })
-        ]})
+        ])
 
         # The order line should be created with the correct price unit
         self.assertEqual(len(order.order_line.ids), 1)
@@ -586,15 +574,13 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         self.discount_with_multi_rewards.reward_ids[0].discount = 7
         coupon_2 = self._generate_coupons(self.discount_with_multi_rewards)
 
-        order = self.empty_order
-        self.assertEqual(order.amount_total, 0.0)
-        order.write({'order_line': [
+        order = self._create_so(order_line=[
             Command.create({
                 'product_id': self.product_A.id,
                 'name': '1 Product A',
                 'product_uom_qty': 1.0,
             })
-        ]})
+        ])
 
         # The order line should be created with the correct price unit
         self.assertEqual(len(order.order_line.ids), 1)

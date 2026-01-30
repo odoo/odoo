@@ -4,22 +4,19 @@ from odoo.fields import Command
 from odoo.tests import Form, tagged
 
 from odoo.addons.delivery.tests.common import DeliveryCommon
-from odoo.addons.sale.tests.common import SaleCommon
 
 
 @tagged('post_install', '-at_install')
-class TestDeliveryAvailability(DeliveryCommon, SaleCommon):
+class TestDeliveryAvailability(DeliveryCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.must_have_tag = cls.env['product.tag'].create({
-            'name': 'Must Have',
-        })
-        cls.exclude_tag = cls.env['product.tag'].create({
-            'name': 'Exclude',
-        })
+        cls.must_have_tag, cls.exclude_tag = cls.env['product.tag'].create([
+            {'name': 'Must Have'},
+            {'name': 'Exclude'},
+        ])
 
         cls.non_restricted_carrier = cls._prepare_carrier(cls.carrier.product_id)
 

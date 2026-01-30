@@ -89,7 +89,7 @@ class TestL10nArWebsiteSale(TestArCommon):
 
     def test_price_calculation_with_pricelist_rules(self):
         """Check that pricelist rules are taken into account."""
-        self._enable_pricelists()
+        self.pricelist = self._enable_pricelists()
         self.pricelist.update({
             'website_id': self.ar_website.id,
             'item_ids': [

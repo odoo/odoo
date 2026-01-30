@@ -36,7 +36,7 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
                 product_or_template=product,
                 date=datetime(2000, 1, 1),
                 currency=self.currency,
-                pricelist=self.pricelist,
+                pricelist=self.env['product.pricelist'],
             )
 
         self.assertEqual(configurator_data['free_qty'], 10)

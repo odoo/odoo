@@ -17,50 +17,47 @@ class SaleCommon(
         super().setUpClass()
 
         cls.env.company.country_id = cls.quick_ref('base.us')
-
-        # Not defined in product common because only used in sale
         cls.group_discount_per_so_line = cls.quick_ref('sale.group_discount_per_so_line')
 
-        (cls.product + cls.service_product).write({
-            'taxes_id': [Command.clear()],
-        })
-        cls._enable_pricelists()
-        cls.empty_order, cls.sale_order = cls.env['sale.order'].create([
+        if cls._disable_taxes():
+            (cls.product + cls.service_product).write({'taxes_id': [Command.clear()]})
+        cls.sale_order = cls.env['sale.order'].create([
             {
                 'partner_id': cls.partner.id,
-            }, {
-                'partner_id': cls.partner.id,
                 'order_line': [
-                    Command.create({
-                        'product_id': cls.product.id,
-                        'product_uom_qty': 5.0,
-                    }),
-                    Command.create({
-                        'product_id': cls.service_product.id,
-                        'product_uom_qty': 12.5,
-                    })
-                ]
-            },
+                    Command.create({'product_id': cls.product.id, 'product_uom_qty': 5.0}),
+                    Command.create({'product_id': cls.service_product.id, 'product_uom_qty': 12.5}),
+                ],
+            }
         ])
+
+        cls.group_user._remove_group(cls.group_discount_per_so_line)
+
+    @classmethod
+    def _disable_taxes(cls):
+        return True
 
     @classmethod
     def _enable_discounts(cls):
-        cls.env.user.group_ids += cls.group_discount_per_so_line
+        cls.group_user._apply_group(cls.group_discount_per_so_line)
 
-    def _create_so(self, **values):
+    @classmethod
+    def _create_so(cls, **values):
         default_values = {
-            'partner_id': self.partner.id,
-            'order_line': [
-                Command.create({
-                    'product_id': self.product.id,
-                }),
-            ],
-            **values
+            'partner_id': cls.partner.id,
+            'order_line': [Command.create({'product_id': cls.product.id})],
+            **values,
         }
-        return self.env['sale.order'].create(default_values)
+        return cls.env['sale.order'].create(default_values)
 
 
 class TestSaleCommon(AccountTestInvoicingCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.pricelist = cls._enable_pricelists()
 
     @classmethod
     def collect_company_accounting_data(cls, company):

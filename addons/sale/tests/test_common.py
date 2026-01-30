@@ -9,21 +9,22 @@ from odoo.addons.sale.tests.common import SaleCommon
 class TestSaleCommon(SaleCommon):
 
     def test_common(self):
-        self.assertFalse(self.empty_order.order_line)
-        self.assertEqual(self.empty_order.amount_total, 0.0)
+        empty_order = self._create_so(order_line=[])
+        self.assertFalse(empty_order.order_line)
+        self.assertEqual(empty_order.amount_total, 0.0)
 
-        self.assertEqual(self.empty_order.partner_id, self.partner)
-        self.assertEqual(self.empty_order.partner_invoice_id, self.partner)
-        self.assertEqual(self.empty_order.partner_shipping_id, self.partner)
-        self.assertEqual(self.empty_order.pricelist_id, self.pricelist)
-        self.assertEqual(self.empty_order.currency_id.name, self.currency.name)
-        self.assertEqual(self.empty_order.team_id, self.sale_team)
-        self.assertEqual(self.empty_order.state, 'draft')
+        self.assertEqual(empty_order.partner_id, self.partner)
+        self.assertEqual(empty_order.partner_invoice_id, self.partner)
+        self.assertEqual(empty_order.partner_shipping_id, self.partner)
+        self.assertFalse(empty_order.pricelist_id)
+        self.assertEqual(empty_order.currency_id.name, self.currency.name)
+        self.assertEqual(empty_order.team_id, self.sale_team)
+        self.assertEqual(empty_order.state, 'draft')
 
         self.assertEqual(self.sale_order.partner_id, self.partner)
         self.assertEqual(self.sale_order.partner_invoice_id, self.partner)
         self.assertEqual(self.sale_order.partner_shipping_id, self.partner)
-        self.assertEqual(self.sale_order.pricelist_id, self.pricelist)
+        self.assertFalse(self.sale_order.pricelist_id)
         self.assertEqual(self.sale_order.currency_id.name, self.currency.name)
         self.assertEqual(self.sale_order.team_id, self.sale_team)
         self.assertEqual(self.sale_order.state, 'draft')
@@ -43,3 +44,8 @@ class TestSaleCommon(SaleCommon):
         self.assertEqual(service_line.price_total, 12.5 * 50)
 
         self.assertEqual(self.sale_order.amount_total, 725.0)
+
+        self.pricelist = self._enable_pricelists()
+        self._create_pricelist()
+        empty_order = self._create_so(order_line=[])
+        self.assertEqual(empty_order.pricelist_id, self.pricelist)

@@ -22,7 +22,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
                 quantity=3,
                 date=datetime(2000, 1, 1),
                 currency=self.currency,
-                pricelist=self.pricelist,
+                pricelist=self.env['product.pricelist'],
             )
 
         self.assertEqual(configurator_price[0], 110)

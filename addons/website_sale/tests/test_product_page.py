@@ -71,7 +71,7 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
 
     def test_product_pricelist_qty_change(self):
         """Check that pricelist discounts based on product quantity display when applicable."""
-        self.env['res.config.settings'].create({'group_product_pricelist': True}).execute()
+        self.pricelist = self._enable_pricelists()
         self.pricelist.item_ids = [
             Command.clear(),
             Command.create({

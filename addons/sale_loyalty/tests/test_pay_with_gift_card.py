@@ -15,14 +15,7 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
             'points_granted': 100,
         }).generate_coupons()
         gift_card = self.program_gift_card.coupon_ids[0]
-        order = self.empty_order
-        order.write({'order_line': [
-            Command.create({
-                'product_id': self.product_A.id,
-                'name': 'Ordinary Product A',
-                'product_uom_qty': 1.0,
-            })
-        ]})
+        order = self._create_so(order_line=[Command.create({'product_id': self.product_A.id})])
         before_gift_card_payment = order.amount_total
         self.assertNotEqual(before_gift_card_payment, 0)
         self._apply_promo_code(order, gift_card.code)
@@ -35,14 +28,13 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
             'points_granted': 100,
         }).generate_coupons()
         gift_card = self.program_gift_card.coupon_ids[0]
-        order = self.empty_order
-        order.write({'order_line': [
+        order = self._create_so(order_line=[
             Command.create({
                 'product_id': self.product_B.id,
                 'name': 'Ordinary Product b',
                 'product_uom_qty': 1.0,
             })
-        ]})
+        ])
         before_gift_card_payment = order.amount_total
         self.assertNotEqual(before_gift_card_payment, 0)
         self._apply_promo_code(order, gift_card.code)
@@ -55,14 +47,12 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
             'points_granted': 100,
         }).generate_coupons()
         gift_card_1, gift_card_2 = self.program_gift_card.coupon_ids
-        order = self.empty_order
-        order.write({'order_line': [
+        order = self._create_so(order_line=[
             Command.create({
                 'product_id': self.product_A.id,
-                'name': 'Ordinary Product A',
                 'product_uom_qty': 20.0,
             })
-        ]})
+        ])
         before_gift_card_payment = order.amount_total
         self._apply_promo_code(order, gift_card_1.code)
         self._apply_promo_code(order, gift_card_2.code)
@@ -75,14 +65,13 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
             'points_granted': 50,
         }).generate_coupons()
         gift_card_1 = self.program_gift_card.coupon_ids
-        order = self.empty_order
-        order.write({'order_line': [
+        order = self._create_so(order_line=[
             Command.create({
                 'product_id': self.product_C.id,
                 'name': 'Ordinary Product C',
                 'product_uom_qty': 1.0,
             })
-        ]})
+        ])
         self.env['loyalty.program'].create({
             'name': 'Code for 10% on orders',
             'trigger': 'with_code',
@@ -115,14 +104,13 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
             'points_granted': 100,
         }).generate_coupons()
         gift_card_1 = self.program_gift_card.coupon_ids
-        order = self.empty_order
-        order.write({'order_line': [
+        order = self._create_so(order_line=[
             Command.create({
                 'product_id': self.product_C.id,
                 'name': 'Ordinary Product C',
                 'product_uom_qty': 1.0,
             })
-        ]})
+        ])
         self.env['loyalty.program'].create({
             'name': 'Code for 10% on orders',
             'trigger': 'with_code',
@@ -170,15 +158,13 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
         self.assertFalse(gift_card_program.reward_ids.discount_line_product_id.taxes_id)
 
     def test_paying_with_gift_card_uses_gift_card_product_taxes(self):
-        order = self.empty_order
-        order.order_line = [
+        order = self._create_so(order_line=[
             Command.create({
                 'product_id': self.product_B.id,
-                'name': 'Ordinary Product b',
                 'product_uom_qty': 1.0,
                 'price_unit': 200.0,
             })
-        ]
+        ])
         sol = order.order_line
         before_gift_card_payment = order.amount_total
         self.assertNotEqual(before_gift_card_payment, 0)
@@ -242,14 +228,13 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
         self.product_A.write({'list_price': 90})
         self.product_A.taxes_id = tax_10_fixed
 
-        order = self.empty_order
-        order.write({'order_line': [
+        order = self._create_so(order_line=[
             Command.create({
                 'product_id': self.product_A.id,
                 'name': "Ordinary Product A",
                 'product_uom_qty': 1.0,
             })
-        ]})
+        ])
         self._apply_promo_code(order, gift_card.code)
         order.action_confirm()
         self.assertEqual(order.amount_total, 0, "The order should be totally paid")

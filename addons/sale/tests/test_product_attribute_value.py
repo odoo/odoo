@@ -41,7 +41,7 @@ class TestProductAttributeValue(HttpCase, SaleCommon):
             }
         ])
         cls.archived_template.action_archive()
-        cls.empty_order.order_line = [
+        order = cls._create_so(order_line=[
             Command.create({
                 'product_id': cls.product_template.product_variant_id.id,
                 'product_no_variant_attribute_value_ids': [
@@ -52,8 +52,8 @@ class TestProductAttributeValue(HttpCase, SaleCommon):
                     ),
                 ],
             }),
-        ]
-        cls.order_line = cls.empty_order.order_line
+        ])
+        cls.order_line = order.order_line
 
     def test_attribute_values_deletion_or_archiving(self):
         """Check that product attributes can be deleted if product or linked ptav are archived."""

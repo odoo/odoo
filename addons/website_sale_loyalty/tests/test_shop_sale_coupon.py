@@ -286,17 +286,19 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
 
     def test_01_gc_coupon(self):
         # 1. Simulate a frontend order (website, product)
-        order = self.empty_cart
-        order.order_line = [
-            Command.create({
-                'product_id': self.env['product.product'].create({
-                    'name': 'Product A',
-                    'list_price': 100,
-                    'sale_ok': True,
-                }).id,
-                'product_uom_qty': 2.0,
-            })
-        ]
+        product = self.env['product.product'].create({
+            'name': 'Product A',
+            'list_price': 100,
+            'sale_ok': True,
+        })
+        order = self._create_so(
+            order_line=[
+                Command.create({
+                    'product_id': product.id,
+                    'product_uom_qty': 2.0,
+                })
+            ]
+        )
 
         # 2. Apply the coupon
         self._apply_promo_code(order, self.coupon.code)
@@ -367,14 +369,12 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
 
     def test_03_remove_coupon(self):
         # 1. Simulate a frontend order (website, product)
-        order = self.empty_cart
-        order.order_line = [
-            Command.create({
-                'product_id': self.env['product.product'].create({
-                    'name': 'Product A', 'list_price': 100, 'sale_ok': True
-                }).id,
-            })
-        ]
+        product = self.env['product.product'].create({
+            'name': 'Product A',
+            'list_price': 100,
+            'sale_ok': True,
+        })
+        order = self._create_so(order_line=[Command.create({'product_id': product.id})])
 
         # 2. Apply the coupon
         self._apply_promo_code(order, self.coupon.code)
@@ -406,8 +406,7 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
             'taxes_id': [],
         })
 
-        order = self.empty_cart
-        order.order_line = [Command.create({'product_id': product.id})]
+        order = self._create_so(order_line=[Command.create({'product_id': product.id})])
 
         WebsiteSaleController = WebsiteSale()
 
@@ -488,8 +487,9 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
             } for name, taxes_id in products_data]
         )
 
-        order = self.empty_cart
-        order.order_line = [Command.create({'product_id': product.id}) for product in products]
+        order = self._create_so(
+            order_line=[Command.create({'product_id': product.id}) for product in products]
+        )
 
         msg = "There should only be 4 lines for the 4 products."
         self.assertEqual(len(order.order_line), 4, msg=msg)
