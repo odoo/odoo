@@ -6,10 +6,7 @@
     <t t-set="head">
         <meta t-if="search_tags" name="robots" content="none"/>
     </t>
-    <t t-call="website.layout"
-        head="head"
-        opt_events_list_cards="is_view_active('website_event.opt_events_list_cards')">
-
+    <t t-call="website.layout" head="head">
         <div id="wrap" class="o_wevent_index">
             <!-- Options -->
             <t t-set="opt_events_list_columns" t-value="is_view_active('website_event.opt_events_list_columns')"/>
@@ -296,6 +293,7 @@
 <!-- Index - Events list -->
 <template id="events_list" name="Events list">
     <!-- Options -->
+    <t t-set="opt_events_list_cards" t-value="is_view_active('website_event.opt_events_list_cards')"/>
     <t t-set="opt_index_sidebar" t-value="is_view_active('website_event.opt_index_sidebar')"/>
     <t t-set="opt_events_event_location" t-value="is_view_active('website_event.event_location')"/>
     <t t-if="opt_events_list_columns" t-set="opt_event_size" t-value="opt_index_sidebar and 'col-md-6' or 'col-md-6 col-lg-4 col-xl-3'"/>
