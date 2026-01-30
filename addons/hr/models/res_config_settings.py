@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
@@ -13,8 +13,14 @@ class ResConfigSettings(models.TransientModel):
     hr_presence_control_login = fields.Boolean(related='company_id.hr_presence_control_login', readonly=False)
     hr_presence_control_email = fields.Boolean(related='company_id.hr_presence_control_email', readonly=False)
     hr_presence_control_ip = fields.Boolean(related='company_id.hr_presence_control_ip', readonly=False)
-    module_hr_attendance = fields.Boolean(related='company_id.hr_presence_control_attendance', readonly=False)
+    hr_presence_control_attendance = fields.Boolean(related='company_id.hr_presence_control_attendance', readonly=False)
+    module_hr_attendance = fields.Boolean(compute='_compute_module_hr_attendance', default=False)
     hr_presence_control_email_amount = fields.Integer(related="company_id.hr_presence_control_email_amount", readonly=False)
     hr_presence_control_ip_list = fields.Char(related="company_id.hr_presence_control_ip_list", readonly=False)
     contract_expiration_notice_period = fields.Integer(string="Contract Expiry Notice Period", related='company_id.contract_expiration_notice_period', readonly=False)
     work_permit_expiration_notice_period = fields.Integer(string="Work Permit Expiry Notice Period", related='company_id.work_permit_expiration_notice_period', readonly=False)
+
+    @api.depends('hr_presence_control_attendance')
+    def _compute_module_hr_attendance(self):
+        for record in self:
+            record.module_hr_attendance = True
