@@ -49,7 +49,7 @@ class AccountJournal(models.Model):
                 'mail.activity.mixin',
                ]
     _check_company_auto = True
-    _check_company_domain = models.check_company_domain_parent_of
+    _check_company_domain = models.check_company_domain_parent_of_false
     _rec_names_search = ['name', 'code']
 
     def _default_display_invoice_template_pdf_report_id(self):
