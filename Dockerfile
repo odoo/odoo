@@ -109,7 +109,7 @@ ENV PATH="/opt/venv/bin:$PATH" \
     WERKZEUG_RUN_MAIN=true
 
 # Expose Odoo port
-EXPOSE 8069
+EXPOSE 8069 8072
 
 # Switch to non-root user before running
 USER odoo
