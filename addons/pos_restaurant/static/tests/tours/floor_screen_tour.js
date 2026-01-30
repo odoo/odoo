@@ -74,14 +74,25 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
             Utils.negateStep(FloorScreen.isChildTable("5")),
 
             // Verify that tables are unlinked and original orders are restored after dragging a child table.
+            // Only products ordered will be used to restore the original orders.
             FloorScreen.isShown(),
             FloorScreen.clickTable("4"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickOrderButton(),
+            {
+                ...Dialog.confirm(),
+                content: "Acknowledge printing error (test does not use a printer).",
+            },
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
 
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Minute Maid"),
+            ProductScreen.clickOrderButton(),
+            {
+                ...Dialog.confirm(),
+                content: "Acknowledge printing error (test does not use a printer).",
+            },
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
 
@@ -104,11 +115,7 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
             // Check original orders for table 4
             FloorScreen.clickTable("4"),
             inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
-            ProductScreen.clickOrderButton(),
-            {
-                ...Dialog.confirm(),
-                content: "Acknowledge printing error (test does not use a printer).",
-            },
+            ProductScreen.noOrderButton(),
             ProductScreen.orderlinesHaveNoChange(),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
@@ -116,11 +123,7 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
             // Check original orders for table 5
             FloorScreen.clickTable("5"),
             inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1")),
-            ProductScreen.clickOrderButton(),
-            {
-                ...Dialog.confirm(),
-                content: "Acknowledge printing error (test does not use a printer).",
-            },
+            ProductScreen.noOrderButton(),
             ProductScreen.orderlinesHaveNoChange(),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
@@ -132,6 +135,8 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
             ProductScreen.orderlinesHaveNoChange(),
 
             // Add a new product to the merged order
+            // Once we order, the history for restoration is cleared
+            // The products are own by the root table
             ProductScreen.clickDisplayedProduct("Minute Maid"),
             ProductScreen.orderlineIsToOrder("Minute Maid"),
             ProductScreen.clickOrderButton(),
@@ -148,12 +153,12 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
             Utils.negateStep(FloorScreen.isChildTable("5")),
 
             // Verify orders after unlinking
-            FloorScreen.clickTable("5"),
-            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1")),
+            ProductScreen.orderIsEmpty(),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
             FloorScreen.clickTable("4"),
             inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
+            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "2")),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
         ].flat(),
