@@ -343,7 +343,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             # voip module read activity_type during create leading to one less query in enterprise on action_feedback
             _category = activity.activity_type_id.category
 
-        with self.assertQueryCount(admin=10, employee=9):  # tm: 7 / 7
+        with self.assertQueryCount(admin=9, employee=9):  # tm: 7 / 7
             activity.action_feedback(feedback='Zizisse Done !')
 
     @warmup
@@ -378,7 +378,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(admin=14, employee=13):  # tm: 11 / 11
+        with self.assertQueryCount(admin=13, employee=13):  # tm: 11 / 11
             record.action_close('Dupe feedback')
 
         self.assertEqual(record.activity_ids, self.env['mail.activity'])
@@ -404,7 +404,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(admin=14, employee=14):  # tm 10 / 10
+        with self.assertQueryCount(admin=15, employee=15):  # tm 10 / 10
             record.action_close('Dupe feedback', attachment_ids=attachments.ids)
 
         # notifications
@@ -475,7 +475,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 composer_form.attachment_ids.add(attachment)
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=56, employee=57):  # tm 53/53
+        with self.assertQueryCount(admin=55, employee=55):  # tm 53/53
             composer._action_send_mail()
 
         # notifications
@@ -557,7 +557,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     def test_mail_composer_w_template_attachments(self):
         test_record, test_template = self._create_test_records()
 
-        with self.assertQueryCount(admin=30, employee=30):  # tm: 24/24
+        with self.assertQueryCount(admin=28, employee=28):  # tm: 24/24
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
@@ -597,7 +597,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=51, employee=52):
+        with self.assertQueryCount(admin=49, employee=49):
             composer._action_send_mail()
 
         # notifications
@@ -627,7 +627,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=68, employee=69):
+        with self.assertQueryCount(admin=66, employee=66):
             composer._action_send_mail()
 
         # notifications
@@ -897,7 +897,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             'mail_message_id': message.id,
             'recipient_ids': [(4, pid) for pid in self.partners.ids],
         })
-        with self.assertQueryCount(admin=9, employee=9):
+        with self.assertQueryCount(admin=8, employee=8):
             self.env['mail.mail'].sudo().browse(mail.ids).send()
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
@@ -936,7 +936,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             unlinked_mails |= set(records.ids)
         unlinked_mails = set()
 
-        with self.assertQueryCount(admin=30, employee=30), \
+        with self.assertQueryCount(admin=29, employee=29), \
              self.mock_mail_gateway(), \
              patch.object(type(self.env['mail.mail']), 'unlink', _patched_unlink):
             self.env['mail.mail'].sudo().browse(mails.ids).send()
@@ -1007,7 +1007,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_get_suggested_recipients_batch(self):
         records = self.test_records_recipients.with_env(self.env)
-        with self.assertQueryCount(employee=32):  # tm: 25
+        with self.assertQueryCount(employee=28):  # tm: 25
             _recipients = records._message_get_suggested_recipients_batch(no_create=False)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
