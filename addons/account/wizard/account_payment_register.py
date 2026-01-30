@@ -397,8 +397,8 @@ class AccountPaymentRegister(models.TransientModel):
                 balance = sum(lines.mapped('balance'))
                 vals['payment_values']['payment_type'] = 'inbound' if balance > 0.0 else 'outbound'
                 if merge:
-                    partner_banks = banks_per_partner[batch_key['partner_id']]
-                    vals['partner_bank_id'] = partner_banks[vals['payment_values']['payment_type']]
+                    partner_banks = banks_per_partner[key['partner_id']]
+                    vals['payment_values']['partner_bank_id'] = next(iter(partner_banks[vals['payment_values']['payment_type']]))
                     vals['lines'] = lines
                 batch_vals.append(vals)
 
