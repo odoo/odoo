@@ -708,12 +708,24 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
         and one with customer B bill (1000).
         '''
         partner_b = self.partner_b.copy({'property_account_position_id': False})
+<<<<<<< 59e9b77bda1a1b90ea7fee9c7cc64ea7c8f33449
         self.env['res.partner.bank'].create({
             'account_number': "123454321",
+||||||| bc5cadbeffdc22df9ab7282e8183eb41d5aafdc3
+        self.env['res.partner.bank'].create({
+            'acc_number': "123454321",
+=======
+        partner_b_bank_account = self.env['res.partner.bank'].create({
+            'acc_number': "123454321",
+>>>>>>> 0856a18dce76151def792e7c39ccb8b201cd99b3
             'partner_id': partner_b.id,
         })
         invoice_1 = self.in_invoice_1
-        invoice_2 = invoice_1.copy({'invoice_date': invoice_1.invoice_date, 'partner_id': partner_b.id})
+        invoice_2 = invoice_1.copy({
+            'invoice_date': invoice_1.invoice_date,
+            'partner_id': partner_b.id,
+            'partner_bank_id': partner_b_bank_account.id
+        })
         refund_1 = self.env['account.move'].create(
             {
                 'move_type': 'in_refund',
@@ -724,7 +736,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
             },
         )
         (invoice_2 + refund_1).action_post()
-        active_ids = (invoice_1 + refund_1 + invoice_2).ids
+        active_ids = (refund_1 + invoice_1 + invoice_2).ids
         payment_register = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=active_ids)\
             .create({'group_payment': True})
@@ -734,10 +746,12 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
             {
                 'memo': 'BILL/2017/01/0001, RBILL/2017/01/0002',
                 'payment_method_line_id': self.outbound_payment_method_line.id,
+                'partner_bank_id': self.partner_bank_account1.id,
             },
             {
                 'memo': 'BILL/2017/01/0004',
                 'payment_method_line_id': self.outbound_payment_method_line.id,
+                'partner_bank_id': partner_b_bank_account.id,
             },
         ])
 
