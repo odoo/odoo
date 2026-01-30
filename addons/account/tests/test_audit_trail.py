@@ -64,6 +64,7 @@ class TestAuditTrail(AccountTestInvoicingCommon):
         self.env.company.restrictive_audit_trail = True
         self.move.action_post()
         audit_trail = self.get_trail(self.move)
+        self.env.cr.flush()
         with self.assertRaisesRegex(UserError, "remove parts of a restricted audit trail"):
             audit_trail.unlink()
 
@@ -71,6 +72,7 @@ class TestAuditTrail(AccountTestInvoicingCommon):
         self.env.company.restrictive_audit_trail = True
         self.move.action_post()
         audit_trail = self.get_trail(self.move)
+        self.env.cr.flush()
         with self.assertRaisesRegex(UserError, "remove parts of a restricted audit trail"):
             audit_trail.res_id = 0
 
