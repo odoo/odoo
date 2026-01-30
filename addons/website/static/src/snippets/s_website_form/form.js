@@ -772,6 +772,41 @@ export class Form extends Interaction {
                 }
             }
         }
+        // Checking the files type.
+        const allowedMimetypes = inputEl.accept ? inputEl.accept.split(",") : [];
+        if (allowedMimetypes.length) {
+            const allowedMimeTypesLabels = {
+                "image/*": "Image files",
+                "application/pdf": "PDF files",
+                "application/*": "Document files",
+                "video/*": "Video files",
+                "audio/*": "Audio files",
+            };
+            const invalidFiles = Object.values(inputEl.files)
+                .map((file) => {
+                    const mimetype = file.type;
+                    if (
+                        mimetype &&
+                        !allowedMimetypes.includes(mimetype) &&
+                        !allowedMimetypes.includes(mimetype.split("/")[0] + "/*")
+                    ) {
+                        return file.name; // return invalid file name
+                    }
+                    return null;
+                })
+                .filter(Boolean);
+            if (invalidFiles.length) {
+                const errorMessage = _t(
+                    "The following file(s) have invalid type: %(fileNames)s. Allowed type(s): %(allowedMimeTypesLabels)s.",
+                    {
+                        fileNames: invalidFiles,
+                        allowedMimeTypesLabels: allowedMimetypes.map((mimetype) => allowedMimeTypesLabels[mimetype]),
+                    }
+                );
+                this.updateStatusInline(errorMessage, inputEl);
+                return false;
+            }
+        }
         return true;
     }
 

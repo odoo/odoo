@@ -176,6 +176,8 @@ export class FormOptionPlugin extends Plugin {
             SetEmptyPlaceholderAction,
             ToggleCheckboxLabel,
             ToggleCharacterLimitAction,
+            SetAllowedFileTypesAction,
+            ToggleRestrictFileTypesAction,
         },
         content_not_editable_selectors: ".s_website_form form",
         content_editable_selectors: [
@@ -1542,6 +1544,50 @@ export class ToggleCharacterLimitAction extends BuilderAction {
     }
     isApplied({ editingElement: inputEl, params: { mainParam: activeValue } }) {
         return inputEl.hasAttribute("maxlength") && inputEl.hasAttribute("minlength");
+    }
+}
+/**
+ * Toggles the restriction of file types on file input fields.
+ */
+export class ToggleRestrictFileTypesAction extends BuilderAction {
+    static id = "toggleRestrictFileTypes";
+    setup() {
+        this.preview = false;
+    }
+    apply({ editingElement: inputEl }) {
+        inputEl.toggleAttribute("accept");
+    }
+    isApplied({ editingElement: inputEl }) {
+        return inputEl.hasAttribute("accept");
+    }
+}
+/**
+ * Restricts to the allowed file types on file input fields.
+ */
+export class SetAllowedFileTypesAction extends BuilderAction {
+    static id = "setAllowedFileTypes";
+    setup() {
+        this.preview = false;
+    }
+    apply({ editingElement: inputEl, params: { mainParam: activeValue } }) {
+        if (activeValue === "application/pdf") {
+            inputEl.setAttribute("accept", activeValue);
+        } else {
+            let allowedMimeTypes = inputEl.accept ? inputEl.accept.split(",") : [];
+            allowedMimeTypes = allowedMimeTypes.filter((type) => type !== "application/pdf");
+            if (!allowedMimeTypes.includes(activeValue)) {
+                allowedMimeTypes.push(activeValue);
+            }
+            inputEl.setAttribute("accept", allowedMimeTypes.join(","));
+        }
+    }
+    clean({ editingElement: inputEl, params: { mainParam: activeValue } }) {
+        let allowedMimeTypes = inputEl.accept ? inputEl.accept.split(",") : [];
+        allowedMimeTypes = allowedMimeTypes.filter((mimeType) => mimeType !== activeValue);
+        inputEl.setAttribute("accept", allowedMimeTypes.join(","));
+    }
+    isApplied({ editingElement: inputEl, params: { mainParam: activeValue } }) {
+        return !!inputEl.accept?.includes(activeValue);
     }
 }
 
