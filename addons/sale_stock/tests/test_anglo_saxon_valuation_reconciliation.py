@@ -1,128 +1,87 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest import skip
-
-from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+from odoo.addons.stock_account.tests.common import TestStockValuationCommon
+from odoo.addons.sale_stock.tests.common import TestSaleStockCommon
 from odoo.tests import Form, tagged
 
 
-class TestValuationReconciliationCommon(ValuationReconciliationTestCommon):
+@tagged('post_install', '-at_install')
+class TestValuationReconciliationCommon(TestStockValuationCommon, TestSaleStockCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.other_currency = cls.setup_other_currency('EUR')
-
-        # Set the invoice_policy to delivery to have an accurate COGS entry.
-        cls.test_product_delivery.invoice_policy = 'delivery'
-
-    def _create_sale(self, product, date, quantity=1.0):
-        order = self.env['sale.order'].sudo().create({
-            'partner_id': self.partner_a.id,
-            'currency_id': self.other_currency.id,
-            'order_line': [
-                (0, 0, {
-                    'name': product.name,
-                    'product_id': product.id,
-                    'product_uom_qty': quantity,
-                    'product_uom_id': product.uom_id.id,
-                    'price_unit': 66.0,
-                })],
-            'date_order': date,
+        cls.product_standard_auto = cls.env['product.product'].create({
+            'name': 'Test product template invoiced on delivery',
+            'standard_price': 42.0,
+            'is_storable': True,
+            'categ_id': cls.category_standard_auto.id,
+            'uom_id': cls.uom.id,
+            'invoice_policy': 'delivery',
         })
-        order.action_confirm()
-        return order
-
-    def _create_invoice_for_so(self, sale_order, product, date, quantity=1.0):
-        rslt = self.env['account.move'].create({
-            'partner_id': self.partner_a.id,
-            'currency_id': self.other_currency.id,
-            'move_type': 'out_invoice',
-            'invoice_date': date,
-            'invoice_line_ids': [(0, 0, {
-                'name': 'test line',
-                'account_id': self.company_data['default_account_revenue'].id,
-                'price_unit': 66.0,
-                'quantity': quantity,
-                'discount': 0.0,
-                'product_id': product.id,
-                'sale_line_ids': [(6, 0, sale_order.order_line.ids)],
-            })],
-        })
-
-        sale_order.invoice_ids += rslt
-        return rslt
-
-    def _set_initial_stock_for_product(self, product):
-        move1 = self.env['stock.move'].create({
-            'location_id': self.env.ref('stock.stock_location_suppliers').id,
-            'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
-            'product_id': product.id,
-            'product_uom': product.uom_id.id,
-            'product_uom_qty': 11,
-            'price_unit': 13,
-        })
-        move1._action_confirm()
-        move1._action_assign()
-        move1.move_line_ids.write({'quantity': 11, 'picked': True})
-        move1._action_done()
-
-
-@tagged('post_install', '-at_install')
-@skip('Temporary to fast merge new valuation')
-class TestValuationReconciliation(TestValuationReconciliationCommon):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
-        uom_unit = cls.env.ref('uom.product_uom_unit')
-
-        cls.test_product_delivery_2 = cls.env['product.product'].create({
+        cls.product_standard_auto_2 = cls.env['product.product'].create({
             'name': 'Test product template invoiced on delivery 2',
             'standard_price': 42.0,
-            'type': 'consu',
-            'categ_id': cls.stock_account_product_categ.id,
-            'uom_id': uom_unit.id,
+            'is_storable': True,
+            'categ_id': cls.category_standard_auto.id,
+            'uom_id': cls.uom.id,
+            'invoice_policy': 'delivery',
         })
+
+    def _process_pickings(self, pickings, quantity=None):
+        for move in pickings.move_ids:
+            move._action_assign()
+            if quantity is not None:
+                move.write({'quantity': quantity, 'picked': True})
+            else:
+                move.write({'quantity': move.product_uom_qty, 'picked': True})
+        pickings.button_validate()
 
     def test_shipment_invoice(self):
         """ Tests the case into which we send the goods to the customer before
         making the invoice
         """
-        test_product = self.test_product_delivery
-        self._set_initial_stock_for_product(test_product)
+        test_product = self.product_standard_auto
+        self._make_in_move(test_product, 11, 13)
 
-        sale_order = self._create_sale(test_product, '2108-01-01')
+        sale_order = self._so_deliver(test_product, quantity=1, price=66.0, picking=False, partner=self.partner_b, date_order='2108-01-01', currency=self.other_currency)
         self._process_pickings(sale_order.picking_ids)
 
-        invoice = self._create_invoice_for_so(sale_order, test_product, '2018-02-12')
-        invoice.action_post()
-        picking = self.env['stock.picking'].search([('sale_id', '=', sale_order.id)])
-        self.check_reconciliation(invoice, picking, operation='sale')
+        self._create_invoice(test_product, quantity=1, price_unit=66.0, invoice_date='2018-02-12', currency_id=self.other_currency.id, account_id=self.account_income.id)
+
+        amls = self.env['account.move.line'].search([('product_id', '=', test_product.id)])
+        self.assertRecordValues(amls, [
+            {'debit': 0.0, 'credit': 66.0, 'account_id': self.account_income.id},
+            {'debit': 0.0, 'credit': 42.0, 'account_id': self.account_stock_valuation.id},
+            {'debit': 42.0, 'credit': 0.0, 'account_id': self.account_expense.id},
+        ])
 
     def test_invoice_shipment(self):
         """ Tests the case into which we make the invoice first, and then send
         the goods to our customer.
         """
-        test_product = self.test_product_delivery
-        #since the invoice come first, the COGS will use the standard price on product
-        self.test_product_delivery.standard_price = 13
-        self._set_initial_stock_for_product(test_product)
+        test_product = self.product_standard_auto
+        # since the invoice come first, the COGS will use the standard price on product
+        self.product_standard_auto.standard_price = 13
+        self._make_in_move(test_product, 11, 13)
 
-        sale_order = self._create_sale(test_product, '2018-01-01')
+        sale_order = self._so_deliver(test_product, quantity=1, price=66.0, picking=False, partner=self.partner_b, date_order='2018-01-01', currency=self.other_currency)
 
-        invoice = self._create_invoice_for_so(sale_order, test_product, '2018-02-03')
-        invoice.action_post()
+        invoice = self._create_invoice(test_product, quantity=1, price_unit=66.0, invoice_date='2018-02-03', currency_id=self.other_currency.id, account_id=self.account_income.id)
 
         self._process_pickings(sale_order.picking_ids)
 
-        picking = self.env['stock.picking'].search([('sale_id', '=', sale_order.id)])
-        self.check_reconciliation(invoice, picking, operation='sale')
+        amls = self.env['account.move.line'].search([('product_id', '=', test_product.id)])
+        self.assertRecordValues(amls, [
+            {'debit': 0.0, 'credit': 66.0, 'account_id': self.account_income.id},
+            {'debit': 0.0, 'credit': 13.0, 'account_id': self.account_stock_valuation.id},
+            {'debit': 13.0, 'credit': 0.0, 'account_id': self.account_expense.id},
+        ])
 
         #return the goods and refund the invoice
         stock_return_picking_form = Form(self.env['stock.return.picking']
-            .with_context(active_ids=picking.ids, active_id=picking.ids[0],
+            .with_context(active_ids=sale_order.picking_ids.ids, active_id=sale_order.picking_ids.ids[0],
             active_model='stock.picking'))
         stock_return_picking = stock_return_picking_form.save()
         stock_return_picking.product_return_moves.quantity = 1.0
@@ -139,57 +98,59 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
         self.assertEqual(invoice.payment_state, 'reversed', "Invoice should be in 'reversed' state.")
         self.assertEqual(invoice.reversal_move_ids.payment_state, 'paid', "Refund should be in 'paid' state.")
         self.assertEqual(new_invoice.state, 'draft', "New invoice should be in 'draft' state.")
-        self.check_reconciliation(invoice.reversal_move_ids, return_pick, operation='sale')
 
     def test_multiple_shipments_invoices(self):
         """ Tests the case into which we deliver part of the goods first, then 2 invoices at different rates, and finally the remaining quantities
         """
-        test_product = self.test_product_delivery
-        self._set_initial_stock_for_product(test_product)
+        test_product = self.product_standard_auto
+        self._make_in_move(test_product, 11, 13)
 
-        sale_order = self._create_sale(test_product, '2018-01-01', quantity=5)
+        sale_order = self._so_deliver(test_product, quantity=5, price=66.0, picking=False, partner=self.partner_b, date_order='2018-01-01', currency=self.other_currency)
 
         self._process_pickings(sale_order.picking_ids, quantity=2.0)
-        picking = self.env['stock.picking'].search([('sale_id', '=', sale_order.id)], order="id asc", limit=1)
 
-        invoice = self._create_invoice_for_so(sale_order, test_product, '2018-02-03', quantity=3)
-        invoice.action_post()
-        self.check_reconciliation(invoice, picking, full_reconcile=False, operation='sale')
-
-        invoice2 = self._create_invoice_for_so(sale_order, test_product, '2018-03-12', quantity=2)
-        invoice2.action_post()
-        self.check_reconciliation(invoice2, picking, full_reconcile=False, operation='sale')
+        self._create_invoice(test_product, quantity=3, price_unit=66.0, invoice_date='2018-02-03', currency_id=self.other_currency.id, account_id=self.account_income.id)
+        self._create_invoice(test_product, quantity=2, price_unit=66.0, invoice_date='2018-03-12', currency_id=self.other_currency.id, account_id=self.account_income.id)
 
         self._process_pickings(sale_order.picking_ids.filtered(lambda x: x.state != 'done'), quantity=3.0)
-        picking = self.env['stock.picking'].search([('sale_id', '=', sale_order.id)], order='id desc', limit=1)
-        self.check_reconciliation(invoice2, picking, operation='sale')
+
+        # Final check, everything should be reconciled
+        amls = self.env['account.move.line'].search([('product_id', '=', test_product.id)])
+        self.assertRecordValues(amls, [
+            {'debit': 0.0, 'credit': 132.0, 'account_id': self.account_income.id},
+            {'debit': 0.0, 'credit': 84.0, 'account_id': self.account_stock_valuation.id},
+            {'debit': 84.0, 'credit': 0.0, 'account_id': self.account_expense.id},
+            {'debit': 0.0, 'credit': 198.0, 'account_id': self.account_income.id},
+            {'debit': 0.0, 'credit': 126.0, 'account_id': self.account_stock_valuation.id},
+            {'debit': 126.0, 'credit': 0.0, 'account_id': self.account_expense.id},
+        ])
 
     def test_fifo_multiple_products(self):
         """ Test Automatic Inventory Valuation with FIFO costs method, 3 products,
             2,3,4 out svls and 2 in moves by product. This tests a more complex use case with anglo-saxon accounting.
         """
-        wh = self.env['stock.warehouse'].search([
-            ('company_id', '=', self.env.company.id),
-        ])
+        wh = self.warehouse
         stock_loc = wh.lot_stock_id
         in_type = wh.in_type_id
-        product_1, product_2, = tuple(self.env['product.product'].create([{
-            'name': f'P{i}',
-            'list_price': 10 * i,
-            'standard_price': 10 * i,
-            'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_goods').id,
-        } for i in range(1, 3)]))
-        product_1.categ_id.property_valuation = 'real_time'
-        product_1.categ_id.property_cost_method = 'fifo'
-        # give another output account to product_2
+
+        product_1 = self.product_fifo_auto
+        product_1.standard_price = 10
+        product_1.list_price = 10
+
+        # product_2 similar to product_1 but with different output account
+        product_2 = product_1.copy({'name': 'P2', 'standard_price': 20, 'list_price': 20})
         categ_2 = product_1.categ_id.copy()
-        account_2 = categ_2.property_stock_account_output_categ_id.copy()
-        categ_2.property_stock_account_output_categ_id = account_2
+        account_2 = self.env['account.account'].create({
+            'name': 'Stock Valuation 2',
+            'code': '100105',
+            'account_type': 'asset_current',
+        })
+        categ_2.property_stock_valuation_account_id = account_2
         product_2.categ_id = categ_2
+
         # Create out_svls
         so = self.env['sale.order'].sudo().create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner_b.id,
             'currency_id': self.other_currency.id,
             'order_line': [
                 (0, 0, {
@@ -202,18 +163,18 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
             'date_order': '2021-01-01',
         })
         so.action_confirm()
-        so.picking_ids.move_ids.quantity = 2
-        so.picking_ids.move_ids.picked = True
-        so.picking_ids._action_done()
+
+        self._process_pickings(so.picking_ids)
         self.assertEqual(so.picking_ids.state, 'done')
+
         inv = self.env['account.move'].create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner_b.id,
             'currency_id': self.other_currency.id,
             'move_type': 'out_invoice',
             'invoice_date': '2021-01-10',
             'invoice_line_ids': [(0, 0, {
                 'name': 'test line',
-                'account_id': self.company_data['default_account_revenue'].id,
+                'account_id': self.account_income.id,
                 'price_unit': 10.0,
                 'quantity': 2,
                 'discount': 0.0,
@@ -224,9 +185,10 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
 
         so.invoice_ids += inv
         inv.action_post()
-        # Create in_moves for P1/P2 such that the first move compensates the out_svls
+
+        # Create in_moves for P1/P2
         in_moves = self.env['stock.move'].create([{
-            'description_picking': '%s-%s' % (str(quantity), str(product)),  # to not merge the moves
+            'description_picking': '%s-%s' % (str(quantity), str(product)),
             'product_id': product.id,
             'location_id': self.env.ref('stock.stock_location_suppliers').id,
             'location_dest_id': stock_loc.id,
@@ -244,147 +206,15 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
             move.picked = True
         in_moves._action_done()
 
-        self.assertEqual(product_1.value_svl, -20)
-        self.assertEqual(product_2.value_svl, 0)
-        # Check that the correct number of amls have been created and posted
-        input_aml = self.env['account.move.line'].search([
-            ('account_id', '=', product_1.categ_id.property_stock_account_input_categ_id.id),
-        ], order='date, id')
-        output1_aml = self.env['account.move.line'].search([
-            ('account_id', '=', product_1.categ_id.property_stock_account_output_categ_id.id),
-        ], order='date, id')
-        output2_aml = self.env['account.move.line'].search([
-            ('account_id', '=', product_2.categ_id.property_stock_account_output_categ_id.id),
-        ], order='date, id')
-        valo_aml = self.env['account.move.line'].search([
-            ('account_id', '=', product_1.categ_id.property_stock_valuation_account_id.id),
-        ], order='date, id')
-        self.assertEqual(len(input_aml), 2)
-        self.assertEqual(len(output1_aml), 6)
-        self.assertEqual(len(output2_aml), 4)
-        self.assertEqual(len(valo_aml), 7)
-        # All amls should be reconciled
-        self.assertTrue(all(aml.reconciled for aml in output1_aml + output2_aml))
-
-    def test_anglo_saxon_valuation_reconciliation(self):
-        """In some particular cases, _stock_account_anglo_saxon_reconcile_valuation tries to reconcile the same account_move_line twice.
-        This test checks if there is a step in the method that prevents this.
-        """
-
-        self.env.company.anglo_saxon_accounting = True
-
-        products = [self.test_product_delivery, self.test_product_delivery_2]
-
-        sale_order = self.env['sale.order'].sudo().create({
-            'name': "sale order product 2",
-            'company_id': self.env.company.id,
-            'partner_id': self.partner_a.id
-        })
-
-        # Create invoice on which the test will be run
-        move_form = Form(self.env["account.move"].with_context(default_move_type="out_invoice"))
-        move_form.partner_id = self.partner_a
-        move_form.currency_id = self.currency
-        with move_form.invoice_line_ids.new() as line_form:
-            line_form.product_id = products[0]
-            line_form.price_unit = products[0].standard_price
-            line_form.quantity = 1
-            line_form.account_id = self.company_data['default_account_stock_out']
-            line_form.tax_ids.clear()
-        with move_form.invoice_line_ids.new() as line_form:
-            line_form.product_id = products[1]
-            line_form.price_unit = products[1].standard_price
-            line_form.quantity = 1
-            line_form.account_id = self.company_data['default_account_stock_out']
-            line_form.tax_ids.clear()
-        invoice_1 = move_form.save()
-
-        # Create invoice 2
-        move_form = Form(self.env["account.move"].with_context(default_move_type="out_refund"))
-        move_form.partner_id = self.partner_a
-        move_form.currency_id = self.currency
-        with move_form.invoice_line_ids.new() as line_form:
-            line_form.product_id = products[1]
-            line_form.price_unit = products[1].standard_price
-            line_form.account_id = self.company_data['default_account_stock_out']
-            line_form.quantity = 1
-            line_form.tax_ids.clear()
-        invoice_2 = move_form.save()
-
-        invoice_2.action_post()
-
-        # Create invoice 3
-        move_form = Form(self.env["account.move"].with_context(default_move_type="out_refund"))
-        move_form.partner_id = self.partner_a
-        move_form.currency_id = self.currency
-        with move_form.invoice_line_ids.new() as line_form:
-            line_form.product_id = products[0]
-            line_form.price_unit = products[0].standard_price
-            line_form.account_id = self.company_data['default_account_stock_out']
-            line_form.quantity = 1
-            line_form.tax_ids.clear()
-        invoice_3 = move_form.save()
-
-        invoice_3.action_post()
-
-        # Creating stock moves and associated sale order lines
-        stock_location = self.env['stock.warehouse'].search([
-            ('company_id', '=', self.env.company.id),
-        ], limit=1).lot_stock_id
-
-        out_picking = self.env['stock.picking'].create({
-            'location_id': stock_location.id,
-            'location_dest_id': self.ref('stock.stock_location_customers'),
-            'picking_type_id': stock_location.warehouse_id.out_type_id.id,
-        })
-
-        sm_1 = self.env['stock.move'].create({
-            'product_id': products[0].id,
-            'product_uom_qty': 1,
-            'product_uom': products[0].uom_id.id,
-            'location_id': out_picking.location_id.id,
-            'location_dest_id': out_picking.location_dest_id.id,
-            'picking_id': out_picking.id,
-            'account_move_ids': invoice_1 | invoice_3,
-            'state': 'done'
-        })
-
-        sale_order_line_1 = self.env['sale.order.line'].sudo().create({
-            'product_id': products[0].id,
-            'order_id': sale_order.id,
-            'move_ids': sm_1
-        })
-
-        sm_2 = self.env['stock.move'].create({
-            'product_id': products[1].id,
-            'product_uom_qty': 1,
-            'product_uom': products[1].uom_id.id,
-            'location_id': out_picking.location_id.id,
-            'location_dest_id': out_picking.location_dest_id.id,
-            'picking_id': out_picking.id,
-            'account_move_ids': invoice_1 | invoice_2,
-            'state': 'done'
-        })
-
-        sale_order_line_2 = self.env['sale.order.line'].sudo().create({
-            'product_id': products[1].id,
-            'order_id': sale_order.id,
-            'move_ids': sm_2
-        })
-
-        invoice_1.invoice_line_ids.sale_line_ids = sale_order_line_1 | sale_order_line_2
-
-        # Creating a stock valuation layer for invoice_2 to populate the no_exchange_reconcile_plan
-        svl_vals = {
-            'company_id': self.env.company.id,
-            'product_id': products[1].id,
-            'description': "description",
-            'unit_cost': products[1].standard_price,
-            'quantity': 1,
-        }
-
-        invoice_2.stock_valuation_layer_ids |= self.env['stock.valuation.layer'].create(svl_vals)
-        invoice_2.stock_valuation_layer_ids.stock_valuation_layer_id |= self.env['stock.valuation.layer'].create(svl_vals)
-
-        invoice_1.action_post()
-        self.assertEqual(invoice_1.state, 'posted')
+        amls = self.env['account.move.line'].search([('product_id', 'in', [product_1.id, product_2.id])])
+        self.assertRecordValues(amls, [
+            {'debit': 0.0, 'credit': 10.0, 'account_id': self.account_income.id},
+            {'debit': 0.0, 'credit': 10.0, 'account_id': self.account_income.id},
+            {'debit': 0.0, 'credit': 10.0, 'account_id': self.account_income.id},
+            {'debit': 0.0, 'credit': 20.0, 'account_id': self.account_stock_valuation.id},
+            {'debit': 20.0, 'credit': 0.0, 'account_id': self.account_expense.id},
+            {'debit': 0.0, 'credit': 20.0, 'account_id': self.account_stock_valuation.id},
+            {'debit': 20.0, 'credit': 0.0, 'account_id': self.account_expense.id},
+            {'debit': 0.0, 'credit': 40.0, 'account_id': account_2.id},
+            {'debit': 40.0, 'credit': 0.0, 'account_id': self.account_expense.id},
+        ])
