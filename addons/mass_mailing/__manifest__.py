@@ -67,6 +67,7 @@
         'views/snippets/mass_mailing_masonry_snippets.xml',
         'views/snippets/mass_mailing_people_snippets.xml',
         'views/snippets/mass_mailing_text_snippets.xml',
+        'views/snippets/mass_mailing_website_snippets.xml',
     ],
     'demo': [
         'demo/utm.xml',
