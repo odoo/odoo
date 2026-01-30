@@ -583,6 +583,32 @@ export class Store extends BaseStore {
         }
     }
 
+    /**
+     * @param {HTMLElement[]} messageLinks
+     * @returns {boolean} whether at least one mention was updated
+     */
+    prettifyMessageMentions(messageLinks) {
+        let changed = false;
+        for (const linkEl of messageLinks) {
+            const href = linkEl.getAttribute("href");
+            if (href?.startsWith(getOrigin())) {
+                const message = this["mail.message"].get(Number(linkEl.dataset.oeId));
+                if (message?.thread?.displayName) {
+                    const messageLinkElement = renderToElement("mail.Message.messageLink", {
+                        message,
+                    });
+                    if (messageLinkElement.innerHTML === linkEl.innerHTML) {
+                        continue;
+                    }
+                    linkEl.classList.add("o_message_redirect_transformed");
+                    linkEl.replaceChildren(messageLinkElement);
+                    changed = true;
+                }
+            }
+        }
+        return changed;
+    }
+
     getMentionsFromText(
         body,
         { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [], thread } = {}
