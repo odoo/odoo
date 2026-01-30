@@ -5,7 +5,7 @@ import markupsafe
 
 from odoo import Command, models, fields, api, _
 from odoo.exceptions import UserError
-from odoo.tools import frozendict, SQL
+from odoo.tools import frozendict, OrderedSet
 from odoo.tools.misc import clean_context
 
 
@@ -347,7 +347,7 @@ class AccountPaymentRegister(models.TransientModel):
                 raise UserError(_("You can't open the register payment wizard without at least one receivable/payable line."))
 
             batches = defaultdict(lambda: {'lines': self.env['account.move.line']})
-            banks_per_partner = defaultdict(lambda: {'inbound': set(), 'outbound': set()})
+            banks_per_partner = defaultdict(lambda: {'inbound': OrderedSet(), 'outbound': OrderedSet()})
             for line in lines:
                 batch_key = self._get_line_batch_key(line)
                 vals = batches[frozendict(batch_key)]
@@ -388,8 +388,8 @@ class AccountPaymentRegister(models.TransientModel):
                 balance = sum(lines.mapped('balance'))
                 vals['payment_values']['payment_type'] = 'inbound' if balance > 0.0 else 'outbound'
                 if merge:
-                    partner_banks = banks_per_partner[batch_key['partner_id']]
-                    vals['partner_bank_id'] = partner_banks[vals['payment_values']['payment_type']]
+                    partner_banks = banks_per_partner[key['partner_id']]
+                    vals['payment_values']['partner_bank_id'] = next(iter(partner_banks[vals['payment_values']['payment_type']]))
                     vals['lines'] = lines
                 batch_vals.append(vals)
 
