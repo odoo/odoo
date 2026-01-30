@@ -193,16 +193,16 @@
         </template>
 
         <template id="report_productlabel_dymo">
-            <t t-call="web.html_container"
-                barcode_size.f="width:45.5mm;height:7.5mm"
-                table_style.f="width:100%;height:32mm;"
-                padding_page.f="padding: 2mm">
+            <t t-call="web.html_container">
                 <t t-foreach="quantity.items()" t-as="barcode_and_qty_by_product">
                     <t t-set="product" t-value="barcode_and_qty_by_product[0]"/>
                     <t t-foreach="barcode_and_qty_by_product[1]" t-as="barcode_and_qty">
                         <t t-set="barcode" t-value="barcode_and_qty[0]"/>
                         <t t-foreach="range(barcode_and_qty[1])" t-as="qty">
-                            <t t-call="product.report_simple_label_dymo"/>
+                            <t t-call="product.report_simple_label_dymo"
+                                barcode_size.f="width:45.5mm;height:7.5mm"
+                                table_style.f="width:100%;height:32mm;"
+                                padding_page.f="padding: 2mm"/>
                         </t>
                     </t>
                 </t>

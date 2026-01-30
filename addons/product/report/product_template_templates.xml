@@ -3,39 +3,33 @@
 
 <!-- IMPORTANT: explictly include col/row otherwise studio won't load report correctly -->
 <template id="report_producttemplatelabel2x7">
-    <t t-call="web.basic_layout" columns="2" rows="7">
+    <t t-call="web.basic_layout">
         <div class="page">
-            <t t-call="product.report_productlabel"/>
+            <t t-call="product.report_productlabel" columns="2" rows="7"/>
         </div>
     </t>
 </template>
 
 <template id="report_producttemplatelabel4x7">
-    <t t-call="web.basic_layout" columns="4" rows="7">
+    <t t-call="web.basic_layout">
         <div class="page">
-            <t t-call="product.report_productlabel"/>
+            <t t-call="product.report_productlabel" columns="4" rows="7"/>
         </div>
     </t>
 </template>
 
 <template id="report_producttemplatelabel4x12">
-    <t t-call="web.basic_layout"
-        columns="4"
-        rows="12"
-        price_included="True">
+    <t t-call="web.basic_layout">
         <div class="page">
-            <t t-call="product.report_productlabel"/>
+            <t t-call="product.report_productlabel" columns="4" rows="12" price_included="True"/>
         </div>
     </t>
 </template>
 
 <template id="report_producttemplatelabel4x12noprice">
-    <t t-call="web.basic_layout"
-        columns="4"
-        rows="12"
-        price_included="False">
+    <t t-call="web.basic_layout">
         <div class="page">
-            <t t-call="product.report_productlabel"/>
+            <t t-call="product.report_productlabel" columns="4" rows="12" price_included="False"/>
         </div>
     </t>
 </template>
