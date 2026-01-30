@@ -367,8 +367,12 @@ def parse_signature(method) -> Signature:
         break
 
     # replace BaseModel and such by list[int], see /json/2
-    if isign.return_annotation in (Self, 'Self', models.BaseModel, models.Model):
-        isign = isign.replace(return_annotation=list[int])
+    if isign.return_annotation in (
+        Self, 'Self',
+        models.BaseModel, 'models.BaseModel',
+        models.Model, 'models.Model'
+    ):
+        isign = isign.replace(return_annotation='list[int]')
 
     # parse the signature
     parameters = {
