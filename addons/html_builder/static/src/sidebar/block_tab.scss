@@ -7,40 +7,64 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     position: relative;
     z-index: $o-we-zindex;
     width: 77px;
-    background-color: $o-we-sidebar-blocks-content-snippet-bg;
+    // background-color: $o-we-sidebar-blocks-content-snippet-bg;
+    // background-color: #2b2b33;
+    background-color: #3e3e46;
 
     &.o_draggable_dragging {
         transform: rotate(-3deg) scale(1.2);
+        border-radius: map-get($spacers, 1);
         box-shadow: 0 5px 25px -10px black;
         transition: transform 0.3s, box-shadow 0.3s;
     }
 
+    // &.o_block_disabled {
+    //     opacity: 1;
+    // }
+
     .o_snippet_thumbnail {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: map-get($spacers, 2);
         width: 100%;
-        overflow: hidden;
+        padding: map-get($spacers, 2);
+        // overflow: hidden;
 
         .o_snippet_thumbnail_img {
-            width: 100%;
-            padding-top: 65%;
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center;
-            overflow: hidden;
+            width: auto;
+            height: 30px;
+            margin: map-get($spacers,2) 0;
+            // width: 100%;
+            // padding-top: 65%;
+            // background-repeat: no-repeat;
+            // background-size: cover;
+            // background-position: center;
+            // overflow: hidden;
         }
     }
 
-    &:not(:hover):not(.o_disabled):not(.o_to_install) {
-        background-color: rgba($o-we-sidebar-blocks-content-snippet-bg, .9);
+    // &:not(:hover):not(.o_block_disabled):not(.o_to_install) {
+    &:hover:not(.o_block_disabled):not(.o_to_install) {
+        background: #2b2b33;
+        // background-color: rgba($o-we-sidebar-blocks-content-snippet-bg, .9);
 
         .o_snippet_thumbnail {
-            filter: saturate(.7);
-            opacity: .9;
+            // filter: saturate(.7);
+            // opacity: .9;
         }
+
+        .o_snippet_thumbnail_title {
+            color: #fff;
+        }
+
+    
     }
 }
 
 .o_block_tab {
-    background-color: $o-we-sidebar-blocks-content-bg;
+    // background-color: $o-we-sidebar-blocks-content-bg;
     padding: map-get($spacers, 2);
     height: 100%; // give enough space for tips pointing at snippets after a snippet search
     z-index: 1;
@@ -53,42 +77,51 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     .o_snippets_container_header {
         position: sticky;
         top: 0;
-        background-color: $o-we-sidebar-blocks-content-bg;
+        background-color: $o-we-bg-darker;
         padding-top: $o-we-sidebar-blocks-content-spacing;
         z-index: 1;
     }
 
     .o_snippets_container_body {
-        display: flex; // Needed for too long snippet names
-        flex-wrap: wrap;
-        margin-left: -$o-we-sidebar-blocks-content-snippet-spacing;
+        display: grid;
+        grid-template-columns: repeat(var(--SnippetsContainer-columns, 3), 1fr);
+        gap: 2px;
+        // display: flex; // Needed for too long snippet names
+        // flex-wrap: wrap;
+        // margin-left: -$o-we-sidebar-blocks-content-snippet-spacing;
         z-index: 0;
         position: relative;
 
         &.o_snippets_container_body_row_cols_2 {
-            .o_snippet {
-                width: 50%;
-            }
-            .o_snippet_thumbnail_img {
-                padding-top: 45%;
-                background-size: contain;
-                background-position: center top;
-            }
+            --SnippetsContainer-columns: 2;
+            // .o_snippet {
+            //     width: 50%;
+            // }
+            // .o_snippet_thumbnail_img {
+            //     padding-top: 45%;
+            //     background-size: contain;
+            //     background-position: center top;
+            // }
         }
 
         .o_snippet {
-            flex: 0 0 auto;
-            width: percentage(1 / 3);
+            // flex: 0 0 auto;
+            // width: percentage(1 / 3);
+            width: 100%;
             background-clip: padding-box;
-            border-left: $o-we-sidebar-blocks-content-snippet-spacing solid transparent;
-            margin-bottom: $o-we-sidebar-blocks-content-snippet-spacing;
+            border-radius: map-get($spacers, 1);
+            // border-left: $o-we-sidebar-blocks-content-snippet-spacing solid transparent;
+            // margin-bottom: $o-we-sidebar-blocks-content-snippet-spacing;
             user-select: none;
             cursor: grab;
+            overflow: hidden;
 
             .o_snippet_thumbnail_title {
+                // padding: $o-we-sidebar-blocks-content-spacing / 2;
+                // word-wrap: break-word;
+                // word-break: break-all;
                 @include o-text-overflow(block);
                 white-space: normal;
-                padding: $o-we-sidebar-blocks-content-spacing / 2;
                 text-align: center;
             }
 
@@ -106,21 +139,21 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
                 }
             }
 
-            &.o_disabled {
-                pointer-events: initial;
+            &.o_block_disabled {
+                // pointer-events: initial;
 
                 .o_snippet_undroppable {
-                    @include o-position-absolute(8px, 6px, auto, auto);
+                    @include o-position-absolute(map-get($spacers, 2), map-get($spacers, 2), auto, auto);
                 }
             }
 
-            &.o_disabled, &.o_to_install {
+            &.o_block_disabled, &.o_to_install {
                 cursor: default;
                 background-color: rgba($o-we-sidebar-blocks-content-snippet-bg, .2);
 
                 .o_snippet_thumbnail_img {
-                    opacity: .4;
-                    filter: saturate(0) blur(1px);
+                    opacity: .5;
+                    filter: saturate(0);
                 }
             }
         }
@@ -158,7 +191,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
             padding-right: $o-we-sidebar-content-field-button-group-button-spacing;
         }
 
-        &:not(:hover, :focus-within), &.o_disabled:hover {
+        &:not(:hover, :focus-within), &.o_block_disabled:hover {
             .rename-delete-buttons button {
                 display: none;
             }
