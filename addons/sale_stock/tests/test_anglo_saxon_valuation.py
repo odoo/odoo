@@ -6,41 +6,16 @@ from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
+from odoo.addons.sale_stock.tests.common import TestSaleStockCommon
 
 
 @tagged('post_install', '-at_install')
-class TestAngloSaxonValuation(TestStockValuationCommon):
+class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.account_income = cls.company.income_account_id
         cls.partner_b = cls.env['res.partner'].create({'name': 'Partner B'})
-
-    def _inv_adj_two_units(self, product):
-        self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': product.id,  # tracking serial
-            'inventory_quantity': 2,
-            'location_id': self.stock_location.id,
-        }).action_apply_inventory()
-
-    def _so_deliver(self, product, quantity=1, price=1, picking=True):
-        so_2 = self.env['sale.order'].sudo().create({
-            'partner_id': self.owner.id,
-            'warehouse_id': self.warehouse.id,
-            'order_line': [Command.create({
-                'name': product.name,
-                'product_id': product.id,
-                'product_uom_qty': quantity,
-                'price_unit': price,
-                'tax_ids': False,
-            })],
-        })
-        so_2.action_confirm()
-        if picking:
-            so_2.picking_ids.move_ids.write({'quantity': quantity, 'picked': True})
-            so_2.picking_ids.button_validate()
-        return so_2
 
     def _fifo_in_one_eight_one_ten(self):
         # Put two items in stock.
