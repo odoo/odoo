@@ -4091,7 +4091,6 @@ class BaseModel(metaclass=MetaModel):
                         inconsistencies.append((record, name, corecords))
 
         if inconsistencies:
-            import pdb; pdb.set_trace()
             lines = [_("Uh-oh! You’ve got some company inconsistencies here:")]
             company_msg = _lt("- Record is company “%(company)s” while “%(field)s” (%(fname)s: %(values)s) belongs to another company.")
             record_msg = _lt("- “%(record)s” belongs to company “%(company)s” while “%(field)s” (%(fname)s: %(values)s) belongs to another company.")
