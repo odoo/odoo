@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component } from "@odoo/owl";
@@ -32,5 +33,8 @@ export class ProductInfoPopup extends Component {
         this.pos.data.write("product.template", [this.props.productTemplate.id], {
             is_favorite: !this.props.productTemplate.is_favorite,
         });
+    }
+    get vatLabel() {
+        return this.pos.company.country_id.vat_label || _t("VAT");
     }
 }

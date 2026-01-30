@@ -35,7 +35,9 @@ function commonParentGet(node1, node2, root = undefined) {
 //--------------------------------------------------------------------------
 
 const RE_COL_MATCH = /(^| )col(-[\w\d]+)*( |$)/;
-const RE_OFFSET_MATCH = /(^| )offset(-[\w\d]+)*( |$)/;
+const RE_COL_MD_MATCH = /(^| )col-md(-\d+)*( |$)/;
+const RE_OFFSET_MATCH = /(^| )offset(-[\w\d]+)+( |$)/;
+const RE_OFFSET_MD_MATCH = /(^| )offset-md(-\d+)+( |$)/;
 const RE_PADDING_MATCH = /[ ]*padding[^;]*;/g;
 const RE_PADDING = /([\d.]+)/;
 const RE_WHITESPACE = /[\s\u200b]*/;
@@ -294,9 +296,19 @@ export function bootstrapToTable(element) {
             bootstrapRow.remove();
 
             // COLUMNS
-            const bootstrapColumns = [...tr.children].filter(
-                (column) => column.className && column.className.match(RE_COL_MATCH)
-            );
+            const bootstrapColumns = [...tr.children].filter((column) => {
+                let match = column.className && column.className.match(RE_COL_MATCH);
+                const size = match ? _getColumnSize(column) : undefined;
+                while (match) {
+                    column.classList.remove(match[0].trim());
+                    match = column.className && column.className.match(RE_COL_MATCH);
+                }
+                if (size !== undefined) {
+                    // Only keep the final column size. Everything else was stripped.
+                    column.classList.add(`col${size ? `-${size}` : ``}`);
+                }
+                return size !== undefined;
+            });
 
             // 1. Replace generic "col" classes with specific "col-n", computed
             //    by sharing the available space between them.
@@ -320,9 +332,11 @@ export function bootstrapToTable(element) {
                 if (offsetSize) {
                     const newColumn = document.createElement("div");
                     newColumn.classList.add(`col-${offsetSize}`);
-                    bootstrapColumn.classList.remove(
-                        bootstrapColumn.className.match(RE_OFFSET_MATCH)[0].trim()
-                    );
+                    let match = bootstrapColumn.className.match(RE_OFFSET_MATCH);
+                    while (match) {
+                        bootstrapColumn.classList.remove(match[0].trim());
+                        match = bootstrapColumn.className.match(RE_OFFSET_MATCH);
+                    }
                     bootstrapColumn.before(newColumn);
                     bootstrapColumns.splice(columnIndex, 0, newColumn);
                     columnIndex++;
@@ -341,12 +355,6 @@ export function bootstrapToTable(element) {
                     currentCol = grid[gridIndex];
                     _applyColspan(currentCol, columnSize, containerWidth);
                     gridIndex += columnSize;
-                    if (columnIndex === bootstrapColumns.length - 1) {
-                        // We handled all the columns but there is still space
-                        // in the row. Insert the columns and fill the row.
-                        _applyColspan(grid[gridIndex], 12 - gridIndex, containerWidth);
-                        currentRow.append(...grid.filter((td) => td.getAttribute("colspan")));
-                    }
                 } else if (gridIndex + columnSize === 12) {
                     // Finish the row.
                     currentCol = grid[gridIndex];
@@ -362,9 +370,11 @@ export function bootstrapToTable(element) {
                         gridIndex = 0;
                     }
                 } else {
-                    // Fill the row with what was in the grid before it
-                    // overflowed.
-                    _applyColspan(grid[gridIndex], 12 - gridIndex, containerWidth);
+                    if (gridIndex < 12) {
+                        // Fill the row with what was in the grid before it
+                        // overflowed.
+                        _applyColspan(grid[gridIndex], 12 - gridIndex, containerWidth);
+                    }
                     currentRow.append(...grid.filter((td) => td.getAttribute("colspan")));
                     // Start a new row that starts with the current col.
                     const previousRow = currentRow;
@@ -374,12 +384,14 @@ export function bootstrapToTable(element) {
                     currentCol = grid[0];
                     _applyColspan(currentCol, columnSize, containerWidth);
                     gridIndex = columnSize;
-                    if (columnIndex === bootstrapColumns.length - 1 && gridIndex < 12) {
+                }
+                if (columnIndex === bootstrapColumns.length - 1) {
+                    if (gridIndex < 12) {
                         // We handled all the columns but there is still space
                         // in the row. Insert the columns and fill the row.
                         _applyColspan(grid[gridIndex], 12 - gridIndex, containerWidth);
-                        currentRow.append(...grid.filter((td) => td.getAttribute("colspan")));
                     }
+                    currentRow.append(...grid.filter((td) => td.getAttribute("colspan")));
                 }
                 if (currentCol) {
                     for (const attr of bootstrapColumn.attributes) {
@@ -1717,7 +1729,10 @@ function _createTable(attributes = []) {
  * @returns {number}
  */
 function _getColumnSize(column) {
-    const colMatch = column.className.match(RE_COL_MATCH);
+    let colMatch = column.className.match(RE_COL_MD_MATCH);
+    if (!colMatch) {
+        colMatch = column.className.match(RE_COL_MATCH);
+    }
     const colOptions = colMatch[2] && colMatch[2].substr(1).split("-");
     const colSize =
         (colOptions && (colOptions.length === 2 ? +colOptions[1] : +colOptions[0])) || 0;
@@ -1732,7 +1747,10 @@ function _getColumnSize(column) {
  * @returns {number}
  */
 function _getColumnOffsetSize(column) {
-    const offsetMatch = column.className.match(RE_OFFSET_MATCH);
+    let offsetMatch = column.className.match(RE_OFFSET_MD_MATCH);
+    if (!offsetMatch) {
+        offsetMatch = column.className.match(RE_OFFSET_MATCH);
+    }
     const offsetOptions = offsetMatch && offsetMatch[2] && offsetMatch[2].substr(1).split("-");
     const offsetSize =
         (offsetOptions && (offsetOptions.length === 2 ? +offsetOptions[1] : +offsetOptions[0])) ||

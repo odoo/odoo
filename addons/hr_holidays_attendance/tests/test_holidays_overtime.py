@@ -291,7 +291,7 @@ class TestHolidaysOvertime(TransactionCase):
             })
 
         self.assertEqual(self.employee.total_overtime, 0, 'Should have 0 hours of overtime')
-        self.assertEqual(self.manager.total_overtime, 0, "Should have 0 hours of overtime (because the employee ruleset doesn't have any timing rule)")
+        self.assertEqual(self.manager.total_overtime, 9, "Should have 9 hours of overtime (because of the quantity rule)")
 
     def test_worked_leave_type_overtime(self):
         """ Test that an attendance during a worked time off doesn't count as overtime. """

@@ -1871,6 +1871,7 @@ test("clicking on bar charts triggers a do_action", async () => {
                 domain: [["bar", "=", false]],
                 name: "Foo Analysis",
                 res_model: "foo",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 views: [
@@ -1885,6 +1886,7 @@ test("clicking on bar charts triggers a do_action", async () => {
     const view = await mountView({
         type: "graph",
         resModel: "foo",
+        searchViewId: 67,
         arch: /* xml */ `
             <graph string="Foo Analysis">
                 <field name="bar" />
@@ -1910,6 +1912,7 @@ test("middle click on bar charts triggers a do_action", async () => {
                 domain: [["bar", "=", false]],
                 name: "Foo Analysis",
                 res_model: "foo",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 views: [
@@ -1924,6 +1927,7 @@ test("middle click on bar charts triggers a do_action", async () => {
     const view = await mountView({
         type: "graph",
         resModel: "foo",
+        searchViewId: 67,
         arch: /* xml */ `
             <graph string="Foo Analysis">
                 <field name="bar" />
@@ -1949,6 +1953,7 @@ test("Clicking on bar charts removes group_by and search_default_* context keys"
                 domain: [["bar", "=", false]],
                 name: "Foo Analysis",
                 res_model: "foo",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 views: [
@@ -1963,6 +1968,7 @@ test("Clicking on bar charts removes group_by and search_default_* context keys"
     const view = await mountView({
         type: "graph",
         resModel: "foo",
+        searchViewId: 67,
         arch: /* xml */ `
             <graph string="Foo Analysis">
                 <field name="bar" />
@@ -1990,6 +1996,7 @@ test("clicking on a pie chart trigger a do_action with correct views", async () 
                 domain: [["bar", "=", false]],
                 name: "Foo Analysis",
                 res_model: "foo",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 views: [
@@ -2004,6 +2011,7 @@ test("clicking on a pie chart trigger a do_action with correct views", async () 
     const view = await mountView({
         type: "graph",
         resModel: "foo",
+        searchViewId: 67,
         arch: /* xml */ `
             <graph string="Foo Analysis" type="pie">
                 <field name="bar" />
@@ -2038,6 +2046,7 @@ test("middle click on a pie chart trigger a do_action with correct views", async
                 domain: [["bar", "=", false]],
                 name: "Foo Analysis",
                 res_model: "foo",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 views: [
@@ -2052,6 +2061,7 @@ test("middle click on a pie chart trigger a do_action with correct views", async
     const view = await mountView({
         type: "graph",
         resModel: "foo",
+        searchViewId: 67,
         arch: /* xml */ `
             <graph string="Foo Analysis" type="pie">
                 <field name="bar" />
@@ -2130,6 +2140,24 @@ test("graph view with invisible attribute on field", async () => {
         message: "there should be only two menu items in the measures dropdown (count and foo)",
     });
     expect(".o_menu_item:contains(Revenue)").toHaveCount(0);
+});
+
+test("graph view reserved word", async () => {
+    // Check that the use of reserved words does not interfere with the view.
+    Product._records.push({ id: 150, name: "constructor" });
+    Foo._records.at(-1).product_id = 150;
+
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: /* xml */ `
+            <graph order="DESC">
+                <field name="product_id" />
+            </graph>
+        `,
+    });
+    checkLabels(view, ["xphone", "xpad", "constructor"]);
+    checkDatasets(view, ["data", "label"], [{ data: [4, 3, 1], label: "Count" }]);
 });
 
 test("graph view sort by measure", async () => {

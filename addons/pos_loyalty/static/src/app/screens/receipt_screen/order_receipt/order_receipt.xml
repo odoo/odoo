@@ -32,10 +32,10 @@
                     <t t-foreach="order.new_coupon_info" t-as="coupon_info" t-key="coupon_info.code">
                         <div class="coupon-container">
                             <div class="row g-2">
-                                <div class="col-6">
+                                <div class="col-4">
                                     <t t-out="coupon_info['program_name']"/>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-8">
                                     <img style="transform: translateX(13%);" t-att-src="'/report/barcode/Code128/'+coupon_info['code']" class="img-fluid" alt="Barcode"/>
                                 </div>
                                 <div class="col-6">

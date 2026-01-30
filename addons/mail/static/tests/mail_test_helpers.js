@@ -106,6 +106,13 @@ export function defineMailModels() {
     return defineModels(mailModels);
 }
 
+export function getChannelCommandsForThread(threadId) {
+    const store = getService("mail.store");
+    const suggestionService = getService("mail.suggestion");
+    const thread = store.Thread.get({ model: "discuss.channel", id: threadId });
+    return suggestionService.getChannelCommands(thread);
+}
+
 export const mailModels = {
     ...webModels,
     ...busModels,
@@ -978,6 +985,19 @@ export function patchVoiceMessageAudio() {
         });
     });
     return res;
+}
+
+export function mockPermissionsPrompt() {
+    patchWithCleanup(browser.navigator.permissions, {
+        async query() {
+            return {
+                state: "prompt",
+                addEventListener: () => {},
+                removeEventListener: () => {},
+                onchange: null,
+            };
+        },
+    });
 }
 
 /**

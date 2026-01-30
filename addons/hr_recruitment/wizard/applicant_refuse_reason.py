@@ -167,13 +167,14 @@ class ApplicantGetRefuseReason(models.TransientModel):
         lang = self._render_lang(applicant.ids)[applicant.id]
         subject = self._render_field('subject', applicant.ids, set_lang=lang)[applicant.id]
         body = self._render_field('body', applicant.ids, set_lang=lang)[applicant.id]
+        email_from = self.template_id.email_from if self.template_id and self.template_id.email_from else self.env.user.email_formatted
         mail_values = {
             'attachment_ids': [(4, att.id) for att in self.attachment_ids],
             'author_id': self.env.user.partner_id.id,
             'auto_delete': True,
             'body_html': body,
             'email_to': applicant.email_from or applicant.partner_id.email,
-            'email_from': self.env.user.email_formatted,
+            'email_from': email_from,
             'model': None,
             'res_id': None,
             'subject': subject,

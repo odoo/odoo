@@ -386,6 +386,7 @@ class AccountMove(models.Model):
         copy=False,
         store=True,
         compute='_compute_delivery_date',
+        inverse='_inverse_delivery_date',
         precompute=True,
         readonly=False,
     )
@@ -749,6 +750,7 @@ class AccountMove(models.Model):
         groups="account.group_account_invoice,account.group_account_readonly",
     )
     duplicated_ref_ids = fields.Many2many(comodel_name='account.move', compute='_compute_duplicated_ref_ids')
+    is_draft_duplicated_ref_ids = fields.Boolean(compute="_compute_is_draft_duplicated_ref_ids")
     need_cancel_request = fields.Boolean(compute='_compute_need_cancel_request')
 
     show_update_fpos = fields.Boolean(string="Has Fiscal Position Changed", store=False)  # True if the fiscal position was changed
@@ -1503,6 +1505,7 @@ class AccountMove(models.Model):
                     'move_id': line.move_id.id,
                     'date': fields.Date.to_string(line.date),
                     'account_payment_id': line.payment_id.id,
+                    'move_ref': line.ref or "",
                 })
 
             if payments_widget_vals['content']:
@@ -1566,6 +1569,11 @@ class AccountMove(models.Model):
             else:
                 move.invoice_payments_widget = False
 
+    def _get_product_base_line_currency_rate(self, product_line):
+        if self.is_invoice(include_receipts=True):
+            return self.invoice_currency_rate
+        return abs(product_line.amount_currency / product_line.balance) if product_line.balance else 0.0
+
     def _prepare_product_base_line_for_taxes_computation(self, product_line):
         """ Convert an account.move.line having display_type='product' into a base line for the taxes computation.
 
@@ -1575,17 +1583,13 @@ class AccountMove(models.Model):
         self.ensure_one()
         is_invoice = self.is_invoice(include_receipts=True)
         sign = self.direction_sign if is_invoice else 1
-        if is_invoice:
-            rate = self.invoice_currency_rate
-        else:
-            rate = (abs(product_line.amount_currency) / abs(product_line.balance)) if product_line.balance else 0.0
 
         return self.env['account.tax']._prepare_base_line_for_taxes_computation(
             product_line,
             price_unit=product_line.price_unit if is_invoice else product_line.amount_currency,
             quantity=product_line.quantity if is_invoice else 1.0,
             discount=product_line.discount if is_invoice else 0.0,
-            rate=rate,
+            rate=self._get_product_base_line_currency_rate(product_line),
             sign=sign,
             special_mode=False if is_invoice else 'total_excluded',
             name=product_line.name,
@@ -2058,7 +2062,7 @@ class AccountMove(models.Model):
             move.duplicated_ref_ids = move_to_duplicate_move.get(move._origin, self.env['account.move'])
 
     def _fetch_duplicate_reference(self, matching_states=('draft', 'posted')):
-        moves = self.filtered(lambda m: m.is_sale_document() or m.is_purchase_document() and m.ref)
+        moves = self.filtered(lambda m: m.is_sale_document() or m.is_purchase_document())
 
         if not moves:
             return {}
@@ -2107,13 +2111,23 @@ class AccountMove(models.Model):
                 move.move_type in ('in_invoice', 'in_refund')
                 AND duplicate_move.move_type in ('in_invoice', 'in_refund')
                 AND (
-                   move.ref = duplicate_move.ref
-                   AND (
-                       move.invoice_date IS NULL
-                       OR
-                       duplicate_move.invoice_date IS NULL
-                       OR
-                       date_part('year', move.invoice_date) = date_part('year', duplicate_move.invoice_date)
+                   -- case 1: same ref and (no date or same year)
+                     (
+                         move.ref = duplicate_move.ref
+                         AND (
+                             move.invoice_date IS NULL
+                             OR
+                             duplicate_move.invoice_date IS NULL
+                             OR
+                             date_part('year', move.invoice_date) = date_part('year', duplicate_move.invoice_date)
+                         )
+                     )
+                     -- case 2: different refs, same partner, amount and date
+                     OR (
+                            move.commercial_partner_id = duplicate_move.commercial_partner_id
+                            AND move.amount_total = duplicate_move.amount_total
+                            AND move.amount_total != 0.0
+                            AND move.invoice_date = duplicate_move.invoice_date
                    )
                 )
             """)
@@ -2147,6 +2161,11 @@ class AccountMove(models.Model):
             self.env['account.move'].browse(move_id): self.env['account.move'].browse(duplicate_ids)
             for move_id, duplicate_ids in result
         }
+
+    @api.depends('duplicated_ref_ids')
+    def _compute_is_draft_duplicated_ref_ids(self):
+        for move in self:
+            move.is_draft_duplicated_ref_ids = any(duplicate_move.state == 'draft' for duplicate_move in move.duplicated_ref_ids)
 
     @api.depends('company_id')
     def _compute_display_qr_code(self):
@@ -2490,6 +2509,9 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # INVERSE METHODS
     # -------------------------------------------------------------------------
+
+    def _inverse_delivery_date(self):
+        pass
 
     def _inverse_tax_totals(self):
         with self._disable_recursion({'records': self}, 'skip_invoice_sync') as disabled:
@@ -4167,7 +4189,7 @@ class AccountMove(models.Model):
                 # "year range monthly"
                 param['anti_regex'] = self._make_regex_non_capturing(self._sequence_yearly_regex.split('(?P<seq>')[0]) + '$'
 
-            if param.get('anti_regex') and not self.journal_id.sequence_override_regex:
+            if param.get('anti_regex') and not self.journal_id.sequence_override_regex and not self.env.context.get('no_anti_regex'):
                 where_string += " AND sequence_prefix !~ %(anti_regex)s "
 
         if self.journal_id.refund_sequence:
@@ -4773,7 +4795,10 @@ class AccountMove(models.Model):
         if new_lines := (self.invoice_line_ids - existing_lines):
             new_lines.is_imported = True
             if not existing_lines:
-                self.with_context(default_move_type=self.move_type)._link_bill_origin_to_purchase_orders(timeout=4)
+                try:
+                    self.with_context(default_move_type=self.move_type)._link_bill_origin_to_purchase_orders(timeout=4)
+                except (UserError, ValueError):
+                    _logger.exception("Failed to link bill to purchase order")
 
         if new and res:
             try:
@@ -5209,7 +5234,10 @@ class AccountMove(models.Model):
         if self.env.context.get('name_as_amount_total'):
             currency_amount = self.currency_id.format(self.amount_total)
             if self.state == 'posted':
-                return _("%(ref)s (%(currency_amount)s)", ref=(self.ref or self.name), currency_amount=currency_amount)
+                ref = f" - {self.ref}" if self.ref else ""
+                return _("%(name)s%(ref)s at %(currency_amount)s", name=(self.name), ref=ref, currency_amount=currency_amount)
+            if self.name:
+                return _("%(name)s - Draft at (%(currency_amount)s)", name=(self.name), currency_amount=currency_amount)
             else:
                 return _("Draft (%(currency_amount)s)", currency_amount=currency_amount)
         name = ''
@@ -6120,6 +6148,10 @@ class AccountMove(models.Model):
 
     def action_activate_currency(self):
         self.currency_id.filtered(lambda currency: not currency.active).write({'active': True})
+
+    def action_delete_duplicates(self):
+        for move in self:
+            move.duplicated_ref_ids.unlink()
 
     def _get_mail_template(self):
         """

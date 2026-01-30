@@ -127,7 +127,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         })
 
         env['res.partner'].create({
-            'name': 'Deco Addict',
+            'name': 'Acme Corporation',
         })
 
         cash_journal = journal_obj.create({
@@ -712,6 +712,10 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_optional_product(self):
         # optional product in pos
+        image = _create_image(color="orange")
+
+        self.small_shelf.write({'image_1920': image})
+
         self.desk_pad.write({'pos_optional_product_ids': [
             Command.set([ self.small_shelf.id ])
         ]})
@@ -720,9 +724,14 @@ class TestUi(TestPointOfSaleHttpCommon):
             'pos_optional_product_ids': [Command.set([self.configurable_chair.id])],
             'barcode': 'lettertray'
         })
-
+        # Case 1: Images ON → images must be visible in optional product dialog
+        self.main_pos_config.show_product_images = True
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_optional_product')
+
+        # Case 2: Images OFF → product images should not be shown
+        self.main_pos_config.show_product_images = False
+        self.start_pos_tour('test_optional_product_image_not_display')
 
     @skip('Temporary to fast merge new valuation')
     def test_05_ticket_screen(self):
@@ -1689,6 +1698,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         current_session.post_closing_cash_details(total_cash_payment)
         current_session.close_session_from_ui()
         self.assertEqual(current_session.state, 'closed')
+        report_refund_order, report_order = self.env['report.pos.order'].sudo().search([('order_id', 'in', current_session.order_ids.ids)])
+        self.assertEqual(report_order.margin, 20.0)
+        self.assertEqual(report_refund_order.margin, -20.0)
 
     def test_product_combo_price(self):
         """ Check that the combo has the expected price """
@@ -2438,10 +2450,21 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_product_long_press(self):
         """ Test the long press on product to open the product info """
         archive_products(self.env)
+        group_tax = self.env['account.tax'].create({
+            'name': 'Parent Tax',
+            'amount_type': 'group',
+            'children_tax_ids': [(0, 0, {
+                'name': 'Child Tax 1',
+                'amount': 10,
+            }), (0, 0, {
+                'name': 'Child Tax 2',
+                'amount': 5,
+            })],
+        })
         self.env['product.product'].create({
             'name': 'Test Product',
             'list_price': 100,
-            'taxes_id': False,
+            'taxes_id': [(6, 0, [group_tax.id])],
             'available_in_pos': True,
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
@@ -3543,10 +3566,6 @@ class MobileTestUi(TestUi):
     browser_size = '375x667'
     touch_enabled = True
     allow_inherited_tests_method = True
-
-    # Skip customer display web tests on mobile
-    def test_customer_display_popup(self):
-        return
 
 
 class TestTaxCommonPOS(TestPointOfSaleHttpCommon, TestTaxCommon):

@@ -120,3 +120,16 @@ class TestReports(L10nInTestInvoicingCommon):
                 'l10n_in_state_id': self.env.ref("l10n_in.state_in_oc").id,
             }]
         )
+
+    def test_government_gstin_extraction_tan(self):
+        """ Verify that a GSTIN based on a TAN (Government entity) correctly populates the TAN field and leaves the PAN field empty. """
+        gov_partner = self.env['res.partner'].create({
+            'name': "Gov Partner",
+            'country_id': self.env.ref('base.in').id,
+            'state_id': self.env.ref('base.state_in_dl').id,
+            'vat': '07DELN10357E1DH',
+        })
+        self.assertRecordValues(gov_partner, [{
+            'l10n_in_pan_entity_id': False,
+            'l10n_in_tan': 'DELN10357E',
+        }])

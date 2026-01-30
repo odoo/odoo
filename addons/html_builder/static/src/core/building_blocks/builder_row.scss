@@ -1,6 +1,6 @@
 @mixin sublevel-line($_level-left: 0) {
     position: absolute;
-    top: 0;
+    top: var(--o-hb-row-sublevel-top, 0);
     bottom: 0;
     left: $_level-left - $o-we-border-width;
     border: $o-we-border-width solid var(--o-hb-row-sublevel-color, #{mix($o-we-bg-lighter, $o-we-fg-light)});
@@ -24,6 +24,7 @@
         }
         .hb-row-label {
             flex: 0 0 38%;
+            align-self: center;
         }
         .hb-row-content {
             flex: 0 0 62%;
@@ -55,7 +56,7 @@
         z-index: $_z-index;
         background-color: var(--o-hb-row-bg-color, #{$o-we-bg-lighter});
         padding: $o-hb-row-spacing 0 $o-hb-row-spacing $o-hb-row-padding-left;
-        align-self: center;
+        align-self: baseline;
     }
 
     .hb-row-content {

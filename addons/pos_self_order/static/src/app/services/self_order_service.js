@@ -295,7 +295,16 @@ export class SelfOrder extends Reactive {
             screenMode: screen_mode,
         });
         this.printKioskChanges(access_token);
+        this.resetCategorySelection();
     }
+
+    resetCategorySelection() {
+        if (!this.kioskMode) {
+            return;
+        }
+        this.currentCategory = this.availableCategories[0];
+    }
+
     hasPaymentMethod() {
         return this.filterPaymentMethods(this.models["pos.payment.method"].getAll()).length > 0;
     }
@@ -515,7 +524,7 @@ export class SelfOrder extends Reactive {
                 order,
                 Object.values(printer.config.product_categories_ids)
             );
-            if (orderlines) {
+            if (orderlines.length > 0) {
                 const printingChanges = {
                     new: orderlines,
                     tracker: order.table_stand_number,
@@ -622,7 +631,7 @@ export class SelfOrder extends Reactive {
         this.currentOrder.recomputeChanges();
         if (Math.max(this.currentOrder.lines.map((l) => l.qty)) <= 0) {
             this.router.navigate("default");
-            this.currentOrder.delete();
+            this.data.localDeleteCascade(this.currentOrder);
             this.selectedOrderUuid = null;
         }
     }
@@ -896,6 +905,25 @@ export class SelfOrder extends Reactive {
 
     hasPresets() {
         return this.config.use_presets && this.models["pos.preset"].length > 1;
+    }
+
+    get orderLineNotSend() {
+        return Object.entries(this.currentOrder.changes).reduce(
+            (acc, [key, { qty }]) => {
+                if (qty && qty > 0) {
+                    const line = this.models["pos.order.line"].getBy("uuid", key);
+                    if (!line.combo_parent_id) {
+                        acc.count += qty;
+                    }
+                    const { total_included, total_excluded } = line.unitPrices;
+                    acc.priceWithTax += total_included * qty;
+                    acc.priceWithoutTax += total_excluded * qty;
+                    acc.tax += (total_included - total_excluded) * qty;
+                }
+                return acc;
+            },
+            { priceWithTax: 0, priceWithoutTax: 0, count: 0, tax: 0 }
+        );
     }
 
     get kioskBackgroundImageUrl() {

@@ -590,7 +590,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                     continue
                 if move_update.date_deadline and delta:
                     move_update.date_deadline -= delta
-                else:
+                elif not move_update.date_deadline or move_update.date_deadline != new_deadline:
                     move_update.date_deadline = new_deadline
 
     @api.depends('move_line_ids.lot_id', 'move_line_ids.quantity')
@@ -1105,6 +1105,9 @@ Please change the quantity done or the rounding precision in your settings.""",
                         'id': value,
                         'display_name': self.env['stock.move.line'][key].browse(value).display_name
                     }
+        first_number = product.lot_sequence_id.number_next_actual - product.lot_sequence_id.number_increment
+        if (first_lot and first_lot == product.lot_sequence_id.get_next_char(first_number)):
+            product.lot_sequence_id.sudo().write({'number_next_actual': first_number + len(lot_qties)})
         return vals_list
 
     def _push_apply(self):
@@ -1663,6 +1666,11 @@ Please change the quantity done or the rounding precision in your settings.""",
 
         return quantities
 
+    def _get_partner_id(self):
+        if self.location_id == self.env.company.internal_transit_location_id:
+            return False
+        return self.partner_id.id
+
     def _prepare_procurement_values(self):
         """ Prepare specific key for moves or other componenets that will be created from a stock rule
         comming from a stock move. This method could be override in order to add other custom key that could
@@ -1693,6 +1701,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             'date_order': dates_info.get('date_order'),
             'date_deadline': self.date_deadline,
             'move_dest_ids': move_dest_ids,
+            'partner_id': move_dest_ids._get_partner_id() if move_dest_ids else False,
             'route_ids': route,
             'warehouse_id': warehouse,
             'priority': self.priority,

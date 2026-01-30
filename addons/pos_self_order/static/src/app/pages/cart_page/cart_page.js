@@ -9,6 +9,7 @@ import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { CancelPopup } from "@pos_self_order/app/components/cancel_popup/cancel_popup";
 import { _t } from "@web/core/l10n/translation";
+import { formatProductName } from "../../utils";
 
 export class CartPage extends Component {
     static template = "pos_self_order.CartPage";
@@ -48,6 +49,15 @@ export class CartPage extends Component {
                 : this.selfOrder.currentOrder.lines) || [];
 
         return lines.filter((line) => !line.combo_parent_id);
+    }
+
+    get totalPriceAndTax() {
+        const { amountTaxes, priceIncl } = this.selfOrder.currentOrder;
+        const { priceWithTax, tax, count } = this.selfOrder.orderLineNotSend;
+        return {
+            priceWithTax: count > 0 ? priceWithTax : priceIncl,
+            tax: count > 0 ? tax : amountTaxes,
+        };
     }
 
     get optionalProducts() {
@@ -252,6 +262,10 @@ export class CartPage extends Component {
     }
     get displayTaxes() {
         return !this.selfOrder.isTaxesIncludedInPrice();
+    }
+
+    formatProductName(product) {
+        return formatProductName(product);
     }
 
     /*

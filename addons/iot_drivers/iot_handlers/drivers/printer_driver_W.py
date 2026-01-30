@@ -6,12 +6,13 @@ from datetime import datetime, timezone
 from escpos import printer
 import escpos.exceptions
 import io
+import subprocess
 import win32print
 import pywintypes
 import ghostscript
 
 from odoo.addons.iot_drivers.controllers.proxy import proxy_drivers
-from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import PrinterDriverBase
+from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import EscposNotAvailableError, PrinterDriverBase
 from odoo.addons.iot_drivers.tools import helpers
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.addons.iot_drivers.iot_handlers.interfaces.printer_interface_W import win32print_lock
@@ -63,9 +64,12 @@ class PrinterDriver(PrinterDriverBase):
         super().disconnect()
 
     def print_raw(self, data, action_unique_id=None):
-        if not self.check_printer_status(action_unique_id):
-            _logger.warning("Printer %s is not ready, aborting raw print", self.device_name)
-            raise Exception("Printer not ready")
+        if self.escpos_device:
+            try:
+                return self.print_raw_escpos(data, action_unique_id)
+            except EscposNotAvailableError:
+                _logger.warning("Failed to print via python-escpos, falling back to Windows printing")
+
         job_id = False
         page_started = False
         try:
@@ -98,32 +102,48 @@ class PrinterDriver(PrinterDriverBase):
 
     def print_report(self, data):
         with win32print_lock:
-            helpers.write_file('document.pdf', data, 'wb')
             file_name = helpers.path_file('document.pdf')
-            printer = self.device_name
+            file_name.write_bytes(data)
+            sumatra_pdf_path = helpers.path_file("SumatraPDF") / "SumatraPDF.exe"
+            use_sumatra = sumatra_pdf_path.exists()
 
             args = [
+                str(sumatra_pdf_path),
+                "-print-to",
+                self.device_name,
+                str(file_name),
+                "-silent",
+                "-print-settings",
+                "duplex"
+            ] if use_sumatra else [
                 "-dPrinted", "-dBATCH", "-dNOPAUSE", "-dNOPROMPT",
                 "-q",
                 "-sDEVICE#mswinpr2",
-                f'-sOutputFile#%printer%{printer}',
+                f'-sOutputFile#%printer%{self.device_name}',
                 f'{file_name}'
             ]
 
-            _logger.debug("Printing report with ghostscript using %s", args)
-            stderr_buf = io.BytesIO()
-            stdout_buf = io.BytesIO()
-            stdout_log_level = logging.DEBUG
-            try:
-                ghostscript.Ghostscript(*args, stdout=stdout_buf, stderr=stderr_buf)
-                self.send_status(status='success')
-            except Exception:
-                _logger.exception("Error while printing report, ghostscript args: %s, error buffer: %s", args, stderr_buf.getvalue())
-                stdout_log_level = logging.ERROR  # some stdout value might contains relevant error information
-                self.send_status(status='error', message='ERROR_FAILED')
-                raise
-            finally:
-                _logger.log(stdout_log_level, "Ghostscript stdout: %s", stdout_buf.getvalue())
+            _logger.debug("Printing report with %s using %s", "SumatraPDF" if use_sumatra else "Ghostscript", args)
+            if use_sumatra:
+                try:
+                    subprocess.run(args, check=True)
+                    self.send_status(status='success')
+                except subprocess.CalledProcessError as error:
+                    _logger.exception("Error while printing report, SumatraPDF args: %s, exit code: %s", args, error.returncode)
+            else:
+                stderr_buf = io.BytesIO()
+                stdout_buf = io.BytesIO()
+                stdout_log_level = logging.DEBUG
+                try:
+                    ghostscript.Ghostscript(*args, stdout=stdout_buf, stderr=stderr_buf)
+                    self.send_status(status='success')
+                except Exception:
+                    _logger.exception("Error while printing report, ghostscript args: %s, error buffer: %s", args, stderr_buf.getvalue())
+                    stdout_log_level = logging.ERROR  # some stdout value might contains relevant error information
+                    self.send_status(status='error', message='ERROR_FAILED')
+                    raise
+                finally:
+                    _logger.log(stdout_log_level, "Ghostscript stdout: %s", stdout_buf.getvalue())
 
     def _action_default(self, data):
         _logger.debug("_action_default called for printer %s", self.device_name)

@@ -195,6 +195,20 @@ class ProductPricelistItem(models.Model):
             else:
                 item.name = _("All Products")
 
+    def _get_price_label_base_str(self):
+        """This method allows you to extend it to other modules with other
+        options in the base field to return a different text.
+        """
+        self.ensure_one()
+        base_str = ""
+        if self.base == 'pricelist' and self.base_pricelist_id:
+            base_str = self.base_pricelist_id.display_name
+        elif self.base == 'standard_price':
+            base_str = _("product cost")
+        else:
+            base_str = _("sales price")
+        return base_str
+
     @api.depends(
         'compute_price', 'fixed_price', 'pricelist_id', 'percent_price', 'price_discount',
         'price_markup', 'price_surcharge', 'base', 'base_pricelist_id',
@@ -218,13 +232,7 @@ class ProductPricelistItem(models.Model):
                         percentage=percentage
                     )
             else:
-                base_str = ""
-                if item.base == 'pricelist' and item.base_pricelist_id:
-                    base_str = item.base_pricelist_id.display_name
-                elif item.base == 'standard_price':
-                    base_str = _("product cost")
-                else:
-                    base_str = _("sales price")
+                base_str = item._get_price_label_base_str()
 
                 extra_fee_str = ""
                 if item.price_surcharge > 0:

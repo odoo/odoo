@@ -1,10 +1,8 @@
-import { after, animationFrame, before, describe, expect, test } from "@odoo/hoot";
+import { after, before, describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { setColor } from "./_helpers/user_actions";
 import { getContent } from "./_helpers/selection";
-import { click } from "@odoo/hoot-dom";
-import { expandToolbar } from "./_helpers/toolbar";
 
 const redToBlueGradient = "linear-gradient(rgb(255, 0, 0), rgb(0, 0, 255))";
 const greenToBlueGradient = "linear-gradient(rgb(0, 255, 0), rgb(0, 0, 255))";
@@ -991,7 +989,11 @@ test("should be able to remove color applied by 'text-*' classes (1)", async () 
 test("should be able to remove color applied by 'text-*' classes (2)", async () => {
     await testEditor({
         contentBefore: '<p><a href="#" class="text-muted">[a]</a></p>',
+        contentBeforeEdit:
+            '<p>\ufeff<a href="#" class="text-muted o_link_in_selection">\ufeff[a]\ufeff</a>\ufeff</p>',
         stepFunction: setColor("", "color"),
+        contentAfterEdit:
+            '<p>\ufeff<a href="#" class="o_link_in_selection">\ufeff[a]\ufeff</a>\ufeff</p>',
         contentAfter: '<p><a href="#">[a]</a></p>',
     });
 });
@@ -1023,14 +1025,7 @@ test("Should properly apply color when selection on feff", async () => {
         focusNode: feff1,
         focusOffset: 0,
     });
-    await animationFrame();
-    await expandToolbar();
-    await click(".o-select-color-foreground");
-    await animationFrame();
-    await click(".o_font_color_selector button");
-    await animationFrame();
-    await click('[data-color="#FF0000"]');
-    await animationFrame();
+    setColor("#FF0000", "color")(editor);
     expect(el).toHaveInnerHTML(
         unformat(`
             <div class="o-paragraph">

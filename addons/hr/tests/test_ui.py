@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import HttpCase, tagged, new_test_user
+from odoo.tests import HttpCase, freeze_time, tagged, new_test_user
 
 
 @tagged('-at_install', 'post_install', 'is_tour')
@@ -19,6 +19,7 @@ class TestEmployeeUi(HttpCase):
 
         self.start_tour("/odoo", 'hr_employee_tour', login="davidelora")
 
+    @freeze_time('2024-01-01')
     def test_version_timeline_auto_save_tour(self):
         # as payroll tap access will be overridden by hr_payroll
         is_payroll_installed = self.env['ir.module.module'].search_count([
@@ -36,6 +37,11 @@ class TestEmployeeUi(HttpCase):
             'name': 'Bob M.',
             "user_id": bob_user.id,
         }])
+
+        bob_employee.write({
+            'contract_date_start': '2024-01-01',
+            'contract_date_end': False,
+        })
 
         self.start_tour("/odoo", 'version_timeline_auto_save_tour', login="alice")
         self.assertFalse(bob_employee.version_ids[-1].contract_date_start)

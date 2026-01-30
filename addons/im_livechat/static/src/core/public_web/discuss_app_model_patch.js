@@ -11,7 +11,7 @@ import { patch } from "@web/core/utils/patch";
 // when the user closes the sidebar or switches to another app, wait for 5
 // minutes before unsubscribing.
 export const LFH_UNSUBSCRIBE_DELAY = 5 * 60 * 1000;
-const LIVECHAT_INFO_DEFAULT_OPEN_LS = "im_livechat.isInfoPanelOpenByDefault";
+export const LIVECHAT_INFO_DEFAULT_OPEN_LS = "im_livechat.isInfoPanelOpenByDefault";
 
 const discussAppStaticPatch = {
     new() {
@@ -84,19 +84,20 @@ patch(DiscussApp.prototype, {
         });
         this.lastThread = fields.One("Thread");
         this.livechats = fields.Many("Thread", { inverse: "appAsLivechats" });
+        this._recomputeIsLivechatInfoPanelOpenedByDefault = 0;
         this.isLivechatInfoPanelOpenByDefault = fields.Attr(true, {
             compute() {
+                void this._recomputeIsLivechatInfoPanelOpenedByDefault;
                 return browser.localStorage.getItem(LIVECHAT_INFO_DEFAULT_OPEN_LS) !== "false";
             },
-            /** @this {import("models").DiscussApp} */
-            onUpdate() {
-                if (this.isLivechatInfoPanelOpenByDefault) {
-                    browser.localStorage.removeItem(LIVECHAT_INFO_DEFAULT_OPEN_LS);
-                } else {
-                    browser.localStorage.setItem(LIVECHAT_INFO_DEFAULT_OPEN_LS, "false");
-                }
-            },
         });
+    },
+
+    shouldDisableMemberPanelAutoOpenFromClose(nextActiveAction) {
+        if (nextActiveAction?.id === "livechat-info") {
+            return false;
+        }
+        return super.shouldDisableMemberPanelAutoOpenFromClose(...arguments);
     },
 
     _threadOnUpdate() {
@@ -116,7 +117,7 @@ patch(DiscussApp.prototype, {
     onStorage(ev) {
         super.onStorage(ev);
         if (ev.key === LIVECHAT_INFO_DEFAULT_OPEN_LS) {
-            this.isLivechatInfoPanelOpenByDefault = ev.newValue !== "false";
+            this._recomputeIsLivechatInfoPanelOpenedByDefault++;
         }
     },
 });

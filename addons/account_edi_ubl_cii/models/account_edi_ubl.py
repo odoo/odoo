@@ -114,6 +114,63 @@ class AccountEdiUBL(models.AbstractModel):
             'currency': tax_subtotal_grouping_key['currency'],
         }
 
+    def _ubl_default_allowance_charge_early_payment_grouping_key(self, base_line, tax_data, vals, currency):
+        """ Give the grouping key when generating the allowance/charge from an early payment discount.
+
+        :param base_line:   A base line (see '_prepare_base_line_for_taxes_computation').
+        :param tax_data:    One of the tax data in base_line['tax_details']['taxes_data'].
+        :param vals:        Some custom data.
+        :param currency:    The currency for which the grouping key is expressed.
+        :return:            A dictionary that could be used as a grouping key for the taxes helpers.
+        """
+        if not self._ubl_is_early_payment_base_line(base_line):
+            return
+
+        tax_grouping_key = self._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, currency)
+        if not tax_grouping_key or tax_grouping_key['is_withholding']:
+            return
+        return tax_grouping_key
+
+    def _ubl_default_payable_amount_tax_withholding_grouping_key(self, base_line, tax_data, vals, currency):
+        """ Give the grouping key when moving the tax withholding amounts to PrepaidAmount.
+
+        :param base_line:   A base line (see '_prepare_base_line_for_taxes_computation').
+        :param tax_data:    One of the tax data in base_line['tax_details']['taxes_data'].
+        :param vals:        Some custom data.
+        :param currency:    The currency for which the grouping key is expressed.
+        :return:            A dictionary that could be used as a grouping key for the taxes helpers.
+        """
+        if not tax_data:
+            return
+        tax_grouping_key = self._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, currency)
+        if not tax_grouping_key:
+            return
+        return tax_grouping_key['is_withholding']
+
+    def _ubl_default_base_line_item_classified_tax_category_grouping_key(self, base_line, tax_data, vals, currency):
+        """ Give the grouping key when computing taxes for Item -> ClassifiedTaxCategory.
+
+        :param base_line:   A base line (see '_prepare_base_line_for_taxes_computation').
+        :param tax_data:    One of the tax data in base_line['tax_details']['taxes_data'].
+        :param vals:        Some custom data.
+        :param currency:    The currency for which the grouping key is expressed.
+        :return:            A dictionary that could be used as a grouping key for the taxes helpers.
+        """
+        tax_grouping_key = self._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, currency)
+        if not tax_grouping_key or tax_grouping_key['is_withholding']:
+            return
+        return tax_grouping_key
+
+    def _ubl_turn_base_lines_price_unit_as_always_positive(self, vals):
+        """ Helper to make sure the base_lines don't contain any negative price_unit.
+
+        :param vals: Some custom data.
+        """
+        for base_line in vals['base_lines']:
+            if base_line['price_unit'] < 0.0:
+                base_line['quantity'] *= -1
+                base_line['price_unit'] *= -1
+
     def _ubl_turn_emptying_taxes_as_new_base_lines(self, base_lines, company, vals):
         """ Extract emptying taxes such as "Vidanges" on bottles from the current base lines and turn them into
         additional base lines.
@@ -193,11 +250,13 @@ class AccountEdiUBL(models.AbstractModel):
                 if self._ubl_is_recycling_contribution_tax(tax_data):
                     allowance_charges_recycling_contribution.append({
                         'tax': tax_data['tax'],
+                        'is_charge': tax_data['tax_amount'] > 0.0,
                         'amount': tax_data['tax_amount'],
                         'currency': company_currency,
                     })
                     allowance_charges_recycling_contribution_currency.append({
                         'tax': tax_data['tax'],
+                        'is_charge': tax_data['tax_amount_currency'] > 0.0,
                         'amount': tax_data['tax_amount_currency'],
                         'currency': currency,
                     })
@@ -240,11 +299,13 @@ class AccountEdiUBL(models.AbstractModel):
                 if self._ubl_is_excise_tax(tax_data):
                     allowance_charges_excise.append({
                         'tax': tax_data['tax'],
+                        'is_charge': tax_data['tax_amount'] > 0.0,
                         'amount': tax_data['tax_amount'],
                         'currency': company_currency,
                     })
                     allowance_charges_excise_currency.append({
                         'tax': tax_data['tax'],
+                        'is_charge': tax_data['tax_amount_currency'] > 0.0,
                         'amount': tax_data['tax_amount_currency'],
                         'currency': currency,
                     })
@@ -283,6 +344,7 @@ class AccountEdiUBL(models.AbstractModel):
                 ubl_values['allowance_charge_discount'] = {
                     'currency': company_currency,
                     'percent': base_line['discount'],
+                    'is_charge': raw_discount_amount < 0.0,
                     'amount': raw_discount_amount,
                     'base_amount': tax_details['raw_gross_total_excluded'],
                 }
@@ -290,6 +352,7 @@ class AccountEdiUBL(models.AbstractModel):
                     'currency': currency,
                     'percent': base_line['discount'],
                     'amount': raw_discount_amount_currency,
+                    'is_charge': raw_discount_amount_currency < 0.0,
                     'base_amount': tax_details['raw_gross_total_excluded_currency'],
                 }
 
@@ -311,15 +374,15 @@ class AccountEdiUBL(models.AbstractModel):
                 tax_details[f'total_excluded{suffix}']
                 + tax_details[f'delta_total_excluded{suffix}']
                 + sum(
-                    allowance_charges_recycling_contribution['amount']
-                    for allowance_charges_recycling_contribution in ubl_values[f'allowance_charges_recycling_contribution{suffix}']
+                    (1 if allowance_charge_values['is_charge'] else -1) * allowance_charge_values['amount']
+                    for allowance_charge_values in ubl_values[f'allowance_charges_recycling_contribution{suffix}']
                 )
                 + sum(
-                    allowance_charges_excise['amount']
-                    for allowance_charges_excise in ubl_values[f'allowance_charges_excise{suffix}']
+                    (1 if allowance_charge_values['is_charge'] else -1) * allowance_charge_values['amount']
+                    for allowance_charge_values in ubl_values[f'allowance_charges_excise{suffix}']
                 )
             )
-            ubl_values['line_extension_amount'] = amount
+            ubl_values[f'line_extension_amount{suffix}'] = amount
 
     def _ubl_add_base_line_ubl_values_item(self, vals):
         """ Add 'base_line' -> '_ubl_values' -> 'item'.
@@ -335,11 +398,11 @@ class AccountEdiUBL(models.AbstractModel):
         for sub_currency, suffix in ((currency, '_currency'), (company_currency, '')):
             base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(
                 base_lines=base_lines,
-                grouping_function=lambda base_line, tax_data: self._ubl_default_tax_category_grouping_key(
-                    base_line,
-                    tax_data,
-                    vals,
-                    sub_currency,
+                grouping_function=lambda base_line, tax_data: self._ubl_default_base_line_item_classified_tax_category_grouping_key(
+                    base_line=base_line,
+                    tax_data=tax_data,
+                    vals=vals,
+                    currency=sub_currency,
                 ),
             )
             for base_line, aggregated_values in base_lines_aggregated_values:
@@ -544,6 +607,34 @@ class AccountEdiUBL(models.AbstractModel):
                         'subtotals': {},
                     }
 
+    def _ubl_add_values_payable_amount_tax_withholding(self, vals):
+        AccountTax = self.env['account.tax']
+        base_lines = vals['base_lines']
+        company = vals['company']
+        company_currency = company.currency_id
+        currency = vals['currency_id']
+
+        ubl_values = vals['_ubl_values']
+        ubl_values['payable_amount_tax_withholding'] = 0.0
+        ubl_values['payable_amount_tax_withholding_currency'] = 0.0
+        for sub_currency, suffix in ((currency, '_currency'), (company_currency, '')):
+            base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(
+                base_lines=base_lines,
+                grouping_function=lambda base_line, tax_data: self._ubl_default_payable_amount_tax_withholding_grouping_key(
+                    base_line=base_line,
+                    tax_data=tax_data,
+                    vals=vals,
+                    currency=sub_currency,
+                ),
+            )
+            values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+
+            for grouping_key, values in values_per_grouping_key.items():
+                if not grouping_key:
+                    continue
+
+                ubl_values[f'payable_amount_tax_withholding{suffix}'] -= values[f'tax_amount{suffix}']
+
     def _ubl_add_values_payable_rounding_amount(self, vals):
         """ Add
             'vals' -> '_ubl_values' -> 'payable_rounding_amount[_currency]'.
@@ -603,14 +694,15 @@ class AccountEdiUBL(models.AbstractModel):
 
         ubl_values = vals['_ubl_values']
 
-        def grouping_function(base_line, tax_data, sub_currency):
-            if self._ubl_is_early_payment_base_line(base_line):
-                return self._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, sub_currency)
-
         for sub_currency, suffix in ((currency, '_currency'), (company_currency, '')):
             base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(
                 base_lines=base_lines,
-                grouping_function=lambda base_line, tax_data: grouping_function(base_line, tax_data, sub_currency),
+                grouping_function=lambda base_line, tax_data: self._ubl_default_allowance_charge_early_payment_grouping_key(
+                    base_line=base_line,
+                    tax_data=tax_data,
+                    vals=vals,
+                    currency=sub_currency,
+                ),
             )
             values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
 
@@ -622,6 +714,7 @@ class AccountEdiUBL(models.AbstractModel):
                 allowance_charges_early_payment.append({
                     'currency': sub_currency,
                     'amount': values[f'total_excluded{suffix}'],
+                    'is_charge': values[f'total_excluded{suffix}'] > 0.0,
                     'tax_categories': {
                         grouping_key: {
                             **grouping_key,
@@ -717,9 +810,10 @@ class AccountEdiUBL(models.AbstractModel):
             charge_reason_code = 'CAV'
         else:
             charge_reason_code = 'AEO'
+        is_charge = recycling_contribution_values['is_charge']
         return {
             '_currency': currency,
-            'cbc:ChargeIndicator': {'_text': 'true' if amount > 0.0 else 'false'},
+            'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
             'cbc:AllowanceChargeReasonCode': {'_text': charge_reason_code},
             'cbc:AllowanceChargeReason': {'_text': tax.name},
             'cbc:Amount': {
@@ -732,9 +826,10 @@ class AccountEdiUBL(models.AbstractModel):
         currency = excise_values['currency']
         amount = excise_values['amount']
         tax = excise_values['tax']
+        is_charge = excise_values['is_charge']
         return {
             '_currency': currency,
-            'cbc:ChargeIndicator': {'_text': 'true' if amount > 0.0 else 'false'},
+            'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
             'cbc:AllowanceChargeReason': {'_text': tax.name},
             'cbc:Amount': {
                 '_text': FloatFmt(abs(amount), max_dp=currency.decimal_places),
@@ -747,9 +842,10 @@ class AccountEdiUBL(models.AbstractModel):
         amount = discount_values['amount']
         base_amount = discount_values['base_amount']
         percent = discount_values['percent']
+        is_charge = discount_values['is_charge']
         return {
             '_currency': currency,
-            'cbc:ChargeIndicator': {'_text': 'true' if amount < 0.0 else 'false'},
+            'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
             'cbc:MultiplierFactorNumeric': {'_text': abs(percent)},
             'cbc:AllowanceChargeReasonCode': {'_text': '95' if amount > 0.0 else 'ADK'},
             'cbc:AllowanceChargeReason': {'_text': _("Discount")},
@@ -766,7 +862,7 @@ class AccountEdiUBL(models.AbstractModel):
     def _ubl_get_allowance_charge_early_payment(self, vals, early_payment_values):
         currency = early_payment_values['currency']
         amount = early_payment_values['amount']
-        is_charge = amount > 0.0
+        is_charge = early_payment_values['is_charge']
         return {
             '_currency': currency,
             'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},

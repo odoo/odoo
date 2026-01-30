@@ -1,10 +1,10 @@
 from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingHttpCommon
-from odoo.addons.l10n_ar.tests.common import TestAr
+from odoo.addons.l10n_ar.tests.common import TestArCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestPosAR(AccountTestInvoicingHttpCommon, TestAr):
+class TestPosAR(AccountTestInvoicingHttpCommon, TestArCommon):
 
     @classmethod
     def setUpClass(cls):

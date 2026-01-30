@@ -8,6 +8,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
 import { expect, test, describe } from "@odoo/hoot";
+import { animationFrame, queryOne } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 
@@ -298,4 +299,37 @@ test("Do not show parent container for no_parent_containers targets", async () =
     await contains(":iframe .test-parent-target").click();
     expect(".options-container").toHaveCount(1);
     expect(".options-container").toHaveAttribute("data-container-title", "Parent");
+});
+
+test("Update containers if they changed", async () => {
+    class TestPlugin extends Plugin {
+        static id = "test";
+        resources = {
+            clone_disabled_reason_providers: ({ el, reasons }) => {
+                if (el.classList.contains("clonedisabled")) {
+                    reasons.push("Test reason");
+                }
+            },
+        };
+    }
+    addBuilderPlugin(TestPlugin);
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<BuilderButton classAction="'test'">Test</BuilderButton>`;
+        }
+    );
+    const { getEditor } = await setupHTMLBuilder(`
+        <div data-name="Target" class="test-options-target target1">
+            Homepage
+        </div>
+    `);
+    await contains(":iframe .target1").click();
+    expect(".oe_snippet_clone").not.toHaveAttribute("disabled");
+    const target = queryOne(":iframe .target1");
+    target.classList.add("clonedisabled");
+    const editor = getEditor();
+    editor.shared.history.addStep();
+    await animationFrame();
+    expect(".oe_snippet_clone").toHaveAttribute("disabled");
 });

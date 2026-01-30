@@ -77,12 +77,12 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
         pager_values = portal_pager(
             url=url,
-            total=SaleOrder.search_count(domain),
+            total=SaleOrder.search_count(domain) if SaleOrder.has_access('read') else 0,
             page=page,
             step=self._items_per_page,
             url_args=url_args,
         )
-        orders = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager_values['offset'])
+        orders = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager_values['offset']) if SaleOrder.has_access('read') else SaleOrder
 
         values.update({
             'date': date_begin,
@@ -233,6 +233,9 @@ class CustomerPortal(payment_portal.PaymentPortal):
         logged_in = not request.env.user._is_public()
         partner_sudo = request.env.user.partner_id if logged_in else order_sudo.partner_id
         currency = order_sudo.currency_id
+
+        if order_sudo.is_expired:
+            raise ValidationError(_("The sale order has expired."))
 
         if is_down_payment:
             if payment_amount and payment_amount < order_sudo.amount_total:

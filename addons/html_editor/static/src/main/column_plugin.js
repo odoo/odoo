@@ -6,7 +6,7 @@ import { closestElement, firstLeaf } from "@html_editor/utils/dom_traversal";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
-const REGEX_BOOTSTRAP_COLUMN = /(?:^| )col(-[a-zA-Z]+)?(-\d+)?(?= |$)/;
+const REGEX_BOOTSTRAP_COLUMN = /(^| )col(-[a-zA-Z]+)?(-\d+)?(?= |$)/;
 
 function isUnremovableColumn(node, root) {
     const isColumnInnerStructure =
@@ -81,8 +81,8 @@ export class ColumnPlugin extends Plugin {
         ],
         hints: [
             {
-                selector: `.odoo-editor-editable .o_text_columns div[class^='col-'],
-                            .odoo-editor-editable .o_text_columns div[class^='col-']>${baseContainerGlobalSelector}:first-child`,
+                selector: `.odoo-editor-editable .o_text_columns div[class*='col-'],
+                            .odoo-editor-editable .o_text_columns div[class*='col-']>${baseContainerGlobalSelector}:first-child`,
                 text: _t("Empty column"),
             },
         ],
@@ -100,9 +100,9 @@ export class ColumnPlugin extends Plugin {
             if (!columnContainer) {
                 return [];
             }
-            const closestColumn = closestElement(anchorNode, "div[class^='col-']");
+            const closestColumn = closestElement(anchorNode, "div[class*='col-']");
             const closestBlockEl = closestBlock(anchorNode);
-            return [...columnContainer.querySelectorAll("div[class^='col-']")]
+            return [...columnContainer.querySelectorAll("div[class*='col-']")]
                 .map((column) => {
                     const block = closestBlock(firstLeaf(column));
                     return column === closestColumn && block !== closestBlockEl ? null : block;
@@ -182,7 +182,7 @@ export class ColumnPlugin extends Plugin {
         for (const column of columns) {
             column.className = column.className.replace(
                 REGEX_BOOTSTRAP_COLUMN,
-                `col$1-${columnSize}`
+                `$1col$2-${columnSize}`
             );
         }
         if (diff > 0) {

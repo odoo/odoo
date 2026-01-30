@@ -58,3 +58,5 @@ Rafael Lima rafael.lima@camptocamp.com https://github.com/rlimaeco
 Luca Policastro luca.policastro@camptocamp.com https://github.com/Luca-Policastro
 Tomasz Walter tomasz.walter@camptocamp.com https://github.com/twalter-c2c
 Florent Xicluna florent.xicluna@camptocamp.com https://github.com/florentx
+Paolo Yammouni paolo.yammouni@camptocamp.com https://github.com/paoloyam
+Cyril Jeanneret cyril.jeanneret@camptocamp.com https://github.com/cyrilmanuel

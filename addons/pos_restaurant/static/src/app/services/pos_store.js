@@ -76,7 +76,7 @@ patch(PosStore.prototype, {
             for (const order of orders) {
                 // Avoid to block others devices on register screen when no table and name is set.
                 if (!order.table_id && !order.floating_order_name) {
-                    order.floating_order_name = order.pos_reference;
+                    order.floating_order_name = order.floatingOrderName || order.pos_reference;
                 }
             }
         }
@@ -164,6 +164,11 @@ patch(PosStore.prototype, {
     async mergeOrders(sourceOrder, destOrder) {
         let whileGuard = 0;
         const mergedCourses = this.mergeCourses(sourceOrder, destOrder);
+
+        // Sum the guest counts from both orders
+        const totalGuests = sourceOrder.getCustomerCount() + destOrder.getCustomerCount();
+        destOrder.setCustomerCount(totalGuests);
+
         while (sourceOrder.lines.length) {
             const orphanLine = sourceOrder.lines[0];
             const destinationLine = destOrder?.lines?.find((l) => l.canBeMergedWith(orphanLine));
@@ -548,6 +553,11 @@ patch(PosStore.prototype, {
         await this.ensureGuestCustomerCount(order);
         await this.sendOrderInPreparationUpdateLastChange(order);
         this.addPendingOrder([order.id]);
+        this.showDefault();
+    },
+    async reprintOrder() {
+        const order = this.getOrder();
+        await this.sendOrderInPreparation(order, { explicitReprint: true });
         this.showDefault();
     },
     async _askForPreparation() {
