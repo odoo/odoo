@@ -829,8 +829,8 @@ class EventEvent(models.Model):
         for event in self:
             cal = vobject.iCalendar()
             cal_event = cal.add('vevent')
-            start = slot.start_datetime or event.date_begin
-            end = slot.end_datetime or event.date_end
+            start = slot.start_datetime if slot else event.date_begin
+            end = slot.end_datetime if slot else event.date_end
 
             # vobject does *not* like datetime.UTC (this was fixed by
             # py-vobject/vobject#88 which isn't even in 0.9.9, current release
@@ -839,7 +839,11 @@ class EventEvent(models.Model):
             cal_event.add('dtstart').value = start.astimezone(ZoneInfo(event.date_tz))
             cal_event.add('dtend').value = end.astimezone(ZoneInfo(event.date_tz))
             cal_event.add('summary').value = event.name
-            cal_event.add('description').value = event._get_external_description()
+            external_description = event._get_external_description()
+            cal_event.add('description').value = external_description
+            xalt = cal_event.add('X-ALT-DESC')
+            xalt.value = external_description
+            xalt.params['FMTTYPE'] = ['text/html']
             if event.address_id:
                 cal_event.add('location').value = event.contact_address_inline or event.address_id.name
 
