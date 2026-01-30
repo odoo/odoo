@@ -1218,6 +1218,7 @@ class TestPrivateReadGroup(common.TransactionCase):
             GROUP BY "test_read_group_related_inherits__base_id__foo_id"."name"
             ORDER BY "test_read_group_related_inherits__base_id__foo_id"."name" ASC
         """
+        RelatedInherits._read_group([], ['foo_id_name'], ['__count'])  # warmup
         with self.assertQueries([expected_query, expected_query]):
             self.assertEqual(
                 RelatedInherits._read_group([], ['foo_id_name'], ['__count']),

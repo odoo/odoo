@@ -643,8 +643,10 @@ class Field[T]:
             self.inverse = self._inverse_related
         if (
             not self.store
-            and (self.compute_sudo or self.inherited)
-            and all(f.column_type and (f.store or f.compute_sql) for f in field_seq)
+            and all(f.column_type and (
+                f.store or f.compute_sql
+                or ((fi := f.inherited_field) is not None and (fi.store or fi.compute_sql))
+            ) for f in field_seq)
         ):
             self.compute_sql = self._compute_sql_related
         if not self.store and all(f._description_searchable for f in field_seq):
@@ -957,6 +959,9 @@ class Field[T]:
         if self.inherited_field and self.inherited_field._description_groupable(env):
             # avoid compuation for inherited field
             return True
+        if self.type != 'many2many' and env.registry[self.model_name]._read_group_groupby is env.registry['base']._read_group_groupby:
+            # the default implementation only has an edge case for many2many
+            return False
 
         model = env[self.model_name]
         groupby = self.name if self.type not in ('date', 'datetime') else f"{self.name}:month"
@@ -972,6 +977,9 @@ class Field[T]:
         if self.inherited_field and self.inherited_field._description_aggregator(env):
             # avoid compuation for inherited field
             return self.inherited_field.aggregator
+        if env.registry[self.model_name]._read_group_select is env.registry['base']._read_group_select:
+            # the default implementation does not handle additional fields
+            return False
 
         model = env[self.model_name]
         query = model._as_query(ordered=False)
