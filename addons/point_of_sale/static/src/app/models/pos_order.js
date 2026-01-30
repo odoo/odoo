@@ -68,7 +68,6 @@ export class PosOrder extends PosOrderAccounting {
         super.initState();
         // !!Keep all uiState in one object!!
         this.uiState = {
-            unmerge: {},
             lastPrints: [],
             lineToRefund: {},
             displayed: this.state !== "cancel",
@@ -238,6 +237,16 @@ export class PosOrder extends PosOrderAccounting {
                     note: line.getNote(),
                     customer_note: line.getCustomerNote(),
                 };
+
+                const resetHistoryQuanities = (prep) => {
+                    for (const history of prep.history || []) {
+                        history.quantity = 0;
+                        resetHistoryQuanities(history);
+                    }
+                };
+                resetHistoryQuanities(
+                    this.last_order_preparation_change.lines[line.preparationKey]
+                );
             } else {
                 this.last_order_preparation_change.lines[line.preparationKey] = {
                     attribute_value_names: line.attribute_value_ids.map((a) => a.name),
@@ -251,6 +260,7 @@ export class PosOrder extends PosOrderAccounting {
                     note: line.getNote(),
                     quantity: line.getQuantity(),
                     customer_note: line.getCustomerNote(),
+                    history: [],
                 };
             }
             line.setHasChange(false);
