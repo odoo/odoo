@@ -25,6 +25,17 @@ registerWebsitePreviewTour(
             content: "Check if the cover image option is not visible",
             trigger: "[data-container-title='Blog Post']:not(:has([data-label='Cover Image']))",
         },
+        ...changeOptionInPopover("Blog Post", "Tags", "hotels"),
+        {
+            content: "Check if the blog posts are filtered by the 'hotels' tag",
+            trigger: ":iframe .s_blog_posts",
+            run() {
+                const filterByTagIds = JSON.parse(this.anchor.dataset.filterByTagIds);
+                if (!filterByTagIds[0].display_name) {
+                    throw new Error("Blog posts are not filtered by the 'hotels' tag");
+                }
+            },
+        },
         ...changeOptionInPopover("Blog Post", "Fetched Elements", "[data-action-param='1']"),
         {
             content: "Check if the cover image option is visible",
