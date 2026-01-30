@@ -119,6 +119,36 @@ class LeaveReport(models.Model):
         """)
 
     @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        """
+        Override read_group to fix Total calculation for balance report: Total =  Left + Taken (= Allocated), excluding Planned.
+        """
+        is_grouping_by_status = groupby and any('holiday_status' in str(gb) for gb in (groupby if isinstance(groupby, list) else [groupby]))
+
+        res = super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+
+        if not is_grouping_by_status:
+            for data in res:
+                group_domain = list(domain) if domain else []
+                if groupby:
+                    for gb_field in (groupby if isinstance(groupby, list) else [groupby]):
+                        field_name = gb_field.split(':')[0]
+                        if field_name in data and data[field_name]:
+                            field_value = data[field_name][0] if isinstance(data[field_name], tuple) else data[field_name]
+                            group_domain.append((field_name, '=', field_value))
+
+                group_domain.append(('holiday_status', 'in', ['left', 'taken']))
+
+                allocated_records = self.search_read(group_domain, ['number_of_days', 'number_of_hours'])
+
+                if 'number_of_days' in data:
+                    data['number_of_days'] = sum(r.get('number_of_days', 0) for r in allocated_records)
+                if 'number_of_hours' in data:
+                    data['number_of_hours'] = sum(r.get('number_of_hours', 0) for r in allocated_records)
+
+        return res
+
+    @api.model
     def action_time_off_analysis(self):
         domain = [('company_id', 'in', self.env.companies.ids)]
         if self.env.context.get('active_ids'):
