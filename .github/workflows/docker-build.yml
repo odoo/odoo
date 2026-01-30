@@ -187,18 +187,6 @@ jobs:
             --severity CRITICAL,HIGH \
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${TAG_NAME} || true
 
-      - name: Run Trivy vulnerability scanner
-        id: trivy-scan
-        continue-on-error: true
-        run: |
-          docker run --rm \
-            -v /var/run/docker.sock:/var/run/docker.sock \
-            aquasec/trivy image \
-            --format sarif \
-            --output /tmp/trivy-results.sarif \
-            --severity CRITICAL,HIGH \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }} || true
-
       - name: Check if scan results exist
         id: scan-check
         run: |
