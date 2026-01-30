@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { reactive } from "@odoo/owl";
 import { uniqueId } from "@web/core/utils/functions";
 import { isRemovable } from "./remove_plugin";
 import { isClonable } from "./clone_plugin";
@@ -282,22 +283,11 @@ export class BuilderOptionsPlugin extends Plugin {
             const newOverlays = newContainers.map((c) => c.hasOverlayOptions);
             const areSameOverlays = previousOverlays.every((check, i) => check === newOverlays[i]);
             if (areSameElements && areSameOverlays) {
-                const previousOptions = this.lastContainers.flatMap((c) => [
-                    ...c.options,
-                    ...c.headerMiddleButtons,
-                    c.containerTitle,
-                ]);
-                const newOptions = newContainers.flatMap((c) => [
-                    ...c.options,
-                    ...c.headerMiddleButtons,
-                    c.containerTitle,
-                ]);
-                const areSameOptions =
-                    newOptions.length === previousOptions.length &&
-                    newOptions.every((option, i) => option.id === previousOptions[i].id);
-                if (areSameOptions) {
-                    return;
+                for (let i = 0; i < this.lastContainers.length; i++) {
+                    Object.assign(this.lastContainers[i], newContainers[i]);
                 }
+                // Skip full dispatch as reactivity handles the updates
+                return;
             }
         }
 
@@ -354,25 +344,27 @@ export class BuilderOptionsPlugin extends Plugin {
         }
 
         const previousElementToIdMap = new Map(this.lastContainers.map((c) => [c.element, c.id]));
-        let containers = [...elementToOptions]
-            .sort(([a], [b]) => (b.contains(a) ? 1 : -1))
-            .map(([element, Options]) => ({
-                id: previousElementToIdMap.get(element) || uniqueId(),
-                element,
-                options: Options,
-                optionTitleComponents: elementToOptionTitleComponents.get(element) || [],
-                headerMiddleButtons: elementToHeaderMiddleButtons.get(element) || [],
-                containerTitle: elementToContainerTitle.get(element)
-                    ? elementToContainerTitle.get(element)[0]
-                    : {},
-                hideOverlay: Options.every((Option) => Option.hideOverlay),
-                hasOverlayOptions: this.hasOverlayOptions(element),
-                isRemovable: isRemovable(element),
-                removeDisabledReason: this.getRemoveDisabledReason(element),
-                isClonable: isClonable(element),
-                cloneDisabledReason: this.getCloneDisabledReason(element),
-                optionsContainerTopButtons: this.getOptionsContainerTopButtons(element),
-            }));
+        let containers = reactive(
+            [...elementToOptions]
+                .sort(([a], [b]) => (b.contains(a) ? 1 : -1))
+                .map(([element, Options]) => ({
+                    id: previousElementToIdMap.get(element) || uniqueId(),
+                    element,
+                    options: Options,
+                    optionTitleComponents: elementToOptionTitleComponents.get(element) || [],
+                    headerMiddleButtons: elementToHeaderMiddleButtons.get(element) || [],
+                    containerTitle: elementToContainerTitle.get(element)
+                        ? elementToContainerTitle.get(element)[0]
+                        : {},
+                    hideOverlay: Options.every((Option) => Option.hideOverlay),
+                    hasOverlayOptions: this.hasOverlayOptions(element),
+                    isRemovable: isRemovable(element),
+                    removeDisabledReason: this.getRemoveDisabledReason(element),
+                    isClonable: isClonable(element),
+                    cloneDisabledReason: this.getCloneDisabledReason(element),
+                    optionsContainerTopButtons: this.getOptionsContainerTopButtons(element),
+                }))
+        );
         const lastValidContainerIdx = containers.findLastIndex((c) =>
             this.getResource("no_parent_containers").some((selector) => c.element.matches(selector))
         );
