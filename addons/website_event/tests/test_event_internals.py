@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import vobject
 from datetime import datetime, timedelta
 
 from odoo.fields import Datetime as FieldsDatetime
@@ -22,6 +23,32 @@ class TestEventData(EventCase, MockVisitor):
             'website_published': True,
         } for website_visibility in ['public', 'link', 'logged_users']])
         cls.events_visibility_test = cls.event_public | cls.event_link_only | cls.event_logged_users
+
+    @users('public_test')
+    def test_ics_file_generation(self):
+        """Verify that _get_ics_file returns a valid .ics description
+        that will be rendered correctly for the user.
+        """
+        event = self.event_public
+        event.write({
+            'date_begin': FieldsDatetime.to_string(datetime(2022, 12, 31, 10, 0, 0)),
+            'date_end': FieldsDatetime.to_string(datetime(2022, 12, 31, 12, 0, 0)),
+            'description': '<p>This is <b>HTML</b> description</p>',
+            'event_register_url': 'localhost:8069',
+        })
+
+        ics_map = event._get_ics_file()
+        ics_bytes = ics_map[event.id]
+        ics_str = ics_bytes.decode('utf-8')
+
+        cal = vobject.readOne(ics_str)
+        vevent = cal.vevent
+
+        self.assertEqual(vevent.description.value, event._get_external_description())
+        self.assertIn('x-alt-desc', vevent.contents)
+        xalt = vevent.contents['x-alt-desc'][0]
+        self.assertIn('This is HTML description', xalt.value)
+        self.assertEqual(xalt.params.get('FMTTYPE'), ['text/html'])
 
     def test_process_attendees_form(self):
         event = self.env['event.event'].create({

@@ -464,7 +464,7 @@ class Event(models.Model):
     def _get_external_description(self):
         """ Adding the URL of the event into the description """
         self.ensure_one()
-        event_url = f'<a href="{self.event_register_url}">{self.name}</a>'
+        event_url = f'<div style="white-space: pre-wrap;"><a href="{self.event_register_url}">{self.name}</a><div>'
         description = event_url + '\n' + super()._get_external_description()
         return description
 
