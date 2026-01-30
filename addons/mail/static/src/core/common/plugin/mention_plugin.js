@@ -1,9 +1,9 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { generateThreadMentionElement } from "@mail/utils/common/format";
+import { generatePartnerMentionElement, generateThreadMentionElement } from "@mail/utils/common/format";
 
 export class MentionPlugin extends Plugin {
-    static id = "mention";
+    static id = "mention_link";
     static dependencies = ["baseContainer", "selection", "history", "protectedNode"];
     resources = {
         selectionchange_handlers: this.detectMentions.bind(this),
@@ -59,7 +59,9 @@ export class MentionPlugin extends Plugin {
             },
             {
                 selector: "a.o_mail_redirect",
-                checker: (el) => true,
+                checker: (el) => this.isValidPartnerMentionElement(el),
+                validMentionsHandler: (partnerLinks) =>
+                    this.handleValidPartnerMention(partnerLinks),
             },
             {
                 selector: "a.o-discuss-mention",
@@ -126,5 +128,26 @@ export class MentionPlugin extends Plugin {
             validChannelMention.getAttribute("href") === el.getAttribute("href") &&
             [...validChannelMention.classList].every((cls) => el.classList.contains(cls))
         );
+    }
+
+    async isValidPartnerMentionElement(el) {
+        if (el.dataset.oeModel !== "res.partner") {
+            return false;
+        }
+        const id = Number(el.dataset.oeId);
+        const [partner] = await this.store["res.partner"].getOrFetch([id]);
+        if (!partner) {
+            return false;
+        }
+        const validPartnerMention = generatePartnerMentionElement(partner);
+        return (
+            validPartnerMention.getAttribute("href") === el.getAttribute("href") &&
+            [...validPartnerMention.classList].every((cls) => el.classList.contains(cls))
+        );
+    }
+
+    handleValidPartnerMention(partnerLinks) {
+        const handlers = this.getResource("valid_partner_mention_handlers") || [];
+        handlers.forEach((handler) => handler(partnerLinks));
     }
 }

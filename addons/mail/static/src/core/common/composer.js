@@ -299,6 +299,7 @@ export class Composer extends Component {
                 onFocusout: this.onFocusout.bind(this),
                 onInput: this.onInput.bind(this),
                 onKeydown: this.onKeydown.bind(this),
+                handleValidPartnerMention: this.handleValidPartnerMention.bind(this),
             },
             classList: ["o-mail-Composer-html"],
             onChange: () => this.onChangeWysiwygContent(),
@@ -687,6 +688,12 @@ export class Composer extends Component {
         return markup`<div>${defaultBody}</div>`; // as to not wrap in <p> by html_sanitize
     }
 
+    async handleValidPartnerMention(partnerLinks) {
+        this.props.composer.mentionedPartners = await this.store["res.partner"].getOrFetch(
+            partnerLinks.map((el) => Number(el.dataset.oeId))
+        );
+    }
+
     clear() {
         this.props.composer.clear();
         browser.localStorage.removeItem(this.props.composer.localId);
@@ -916,14 +923,16 @@ export class Composer extends Component {
         const saveContentToLocalStorage = ({
             composerHtml,
             emailAddSignature,
+            partnerIdsMentionToken,
             replyToMessageId,
         }) => {
             browser.localStorage.setItem(
                 composer.localId,
                 JSON.stringify({
-                    emailAddSignature,
-                    replyToMessageId,
                     composerHtml: isMarkup(composerHtml) ? ["markup", composerHtml] : composerHtml,
+                    emailAddSignature,
+                    partnerIdsMentionToken,
+                    replyToMessageId,
                 })
             );
         };
@@ -932,15 +941,22 @@ export class Composer extends Component {
                 onSaveContent: saveContentToLocalStorage,
             });
         } else {
+            const partner_ids_mention_token = {};
+            for (const partner of composer.mentionedPartners) {
+                if (partner?.mention_token) {
+                    partner_ids_mention_token[partner.id] = partner.mention_token;
+                }
+            }
             saveContentToLocalStorage({
                 composerHtml: composer.composerHtml,
                 emailAddSignature: true,
+                partnerIdsMentionToken: partner_ids_mention_token,
                 replyToMessageId: composer.replyToMessage?.id,
             });
         }
     }
 
-    restoreContent() {
+    async restoreContent() {
         const composer = toRaw(this.props.composer);
         let config;
         try {
@@ -957,6 +973,17 @@ export class Composer extends Component {
         }
         if (Number.isInteger(config.replyToMessageId)) {
             composer.replyToMessage = this.store["mail.message"].insert(config.replyToMessageId);
+        }
+        if (Array.isArray(config.partnerIdsMentionToken)) {
+            const partnerIds = config.partnerIdsMentionToken.keys();
+            await this.store.fetchStoreData("res.partner", {
+                partner_ids: Array.from(partnerIds),
+                partner_ids_mention_token: config.partnerIdsMentionToken,
+            });
+            for (const partnerId of partnerIds) {
+                const partner = this.store["res.partner"].get(partnerId);
+                partner.mention_token = config.partnerIdsMentionToken[partnerId];
+            }
         }
     }
 

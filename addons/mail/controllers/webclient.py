@@ -4,6 +4,7 @@ from collections import defaultdict
 
 from odoo import http
 from odoo.http import request
+from odoo.tools.misc import verify_limited_field_access_token
 from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 
@@ -72,6 +73,21 @@ class WebclientController(ThreadController):
                 )
             else:
                 store.add(thread, request_list=params["request_list"], as_thread=True)
+        if name == "res.partner":
+            partners = request.env["res.partner"].browse(params["partner_ids"])
+            partners.filtered(
+                lambda p: (not request.env.user.share and p.has_access("read"))
+                or (
+                    verify_limited_field_access_token(
+                        p,
+                        "id",
+                        params.get("partner_ids_mention_token", {}).get(str(p.id), ""),
+                        scope="mail.message_mention",
+                    )
+                )
+            )
+            # res.partner: reading access checked records is acceptable
+            store.add(partners.sudo())
 
     @classmethod
     def _process_request_for_logged_in_user(self, store: Store, name, params):
