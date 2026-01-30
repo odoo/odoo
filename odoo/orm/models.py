@@ -184,6 +184,23 @@ def check_company_domain_parent_of(self, companies):
         for parent in rec.parent_path.split('/')[:-1]
     ] + [False])]
 
+def check_company_domain_parent_of_false(self, companies):
+    """ A `_check_company_domain` function that lets a record be used if either:
+        - record.company_id = False (which implies that it is shared between all companies), or
+        - record.company_id is a parent of any of the given companies.
+    """
+    if isinstance(companies, str):
+        return ['|', ('company_id', '=', False), ('company_id', 'parent_of', companies)]
+
+    companies = to_record_ids(companies)
+    if not companies:
+        return []
+
+    return [('company_id', 'in', [
+        int(parent)
+        for rec in self.env['res.company'].sudo().browse(companies)
+        for parent in rec.parent_path.split('/')[:-1]
+    ] + [False])]
 
 def check_companies_domain_parent_of(self, companies):
     """ A `_check_company_domain` function that lets a record be used if
@@ -4074,6 +4091,7 @@ class BaseModel(metaclass=MetaModel):
                         inconsistencies.append((record, name, corecords))
 
         if inconsistencies:
+            import pdb; pdb.set_trace()
             lines = [_("Uh-oh! You’ve got some company inconsistencies here:")]
             company_msg = _lt("- Record is company “%(company)s” while “%(field)s” (%(fname)s: %(values)s) belongs to another company.")
             record_msg = _lt("- “%(record)s” belongs to company “%(company)s” while “%(field)s” (%(fname)s: %(values)s) belongs to another company.")
