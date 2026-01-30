@@ -55,7 +55,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full history for better tagging
+          fetch-depth: 1  # Full history for better tagging
 
       # -----------------------------------------------------------------------
       # Step 2: Set up Docker Buildx (for multi-platform builds)
