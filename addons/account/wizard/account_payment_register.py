@@ -505,15 +505,12 @@ class AccountPaymentRegister(models.TransientModel):
         self.ensure_one()
         amount = 0.0
         mode = False
-        moves = batch_result['lines'].mapped('move_id')
-        for move in moves:
+        for move, lines in batch_result['lines'].grouped('move_id').items():
             if early_payment_discount and move._is_eligible_for_early_payment_discount(move.currency_id, self.payment_date):
-                for aml in batch_result['lines'].filtered(lambda l: l.move_id.id == move.id):
-                    amount += aml.discount_amount_currency
                 mode = 'early_payment'
+                amount += sum(aml.discount_amount_currency for aml in lines)
             else:
-                for aml in batch_result['lines'].filtered(lambda l: l.move_id.id == move.id):
-                    amount += aml.amount_residual_currency
+                amount += sum(aml.amount_residual_currency for aml in lines)
         return abs(amount), mode
 
     def _get_total_amount_in_wizard_currency_to_full_reconcile(self, batch_result, early_payment_discount=True):
