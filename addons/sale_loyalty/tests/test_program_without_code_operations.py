@@ -7,8 +7,8 @@ from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
-    # Test some basic operation (create, write, unlink) on an immediate coupon program on which we should
-    # apply or remove the reward automatically, as there's no program code.
+    # Test some basic operation (create, write, unlink) on an immediate coupon program on which we
+    # should apply or remove the reward automatically, as there's no program code.
 
     def test_immediate_program_basic_operation(self):
 
@@ -37,7 +37,8 @@ class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
             "The promo offer shouldn't have been applied as the product B isn't in the order",
         )
 
-        # Test case 2 (1 A 1 B): Assert that no reward is given, as the product A is not present in the correct quantity
+        # Test case 2 (1 A 1 B): Assert that no reward is given, as the product A is not present in
+        # the correct quantity.
         order.write({
             'order_line': [
                 (
@@ -59,7 +60,8 @@ class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
             "The promo offer shouldn't have been applied as 2 product A aren't in the order",
         )
 
-        # Test case 3 (2 A 1 B): Assert that the reward is given as the product B is now in the order
+        # Test case 3 (2 A 1 B): Assert that the reward is given as the product B is now in the
+        # order.
         order.write({'order_line': [(1, order.order_line[0].id, {'product_uom_qty': 2.0})]})
         order._update_programs_and_rewards()
         self._claim_reward(order, self.immediate_promotion_program)
@@ -69,7 +71,8 @@ class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
             "The promo offer should have been applied, the discount is not created",
         )
 
-        # Test case 4 (1 A 1 B): Assert that the reward is removed as we don't buy 2 products B anymore
+        # Test case 4 (1 A 1 B): Assert that the reward is removed as we don't buy 2 products B
+        # anymore.
         order.write({'order_line': [(1, order.order_line[0].id, {'product_uom_qty': 1.0})]})
         order._update_programs_and_rewards()
         self._claim_reward(order, self.immediate_promotion_program)
@@ -85,7 +88,8 @@ class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
             order.order_line[1].product_id.id, self.product_B.id, "The wrong line has been removed"
         )
 
-        # Test case 5 (1 B): Assert that the reward is removed when the order is modified and doesn't match the rules anymore
+        # Test case 5 (1 B): Assert that the reward is removed when the order is modified and
+        # doesn't match the rules anymore.
         order.write({
             'order_line': [
                 (1, order.order_line[0].id, {'product_uom_qty': 2.0}),

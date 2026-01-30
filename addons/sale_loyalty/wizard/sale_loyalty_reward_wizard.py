@@ -40,7 +40,7 @@ class SaleLoyaltyRewardWizard(models.TransientModel):
     @api.depends('reward_product_ids')
     def _compute_selected_product_id(self):
         for wizard in self:
-            if not wizard.selected_reward_id.reward_type == 'product':
+            if wizard.selected_reward_id.reward_type != 'product':
                 wizard.selected_product_id = False
             else:
                 wizard.selected_product_id = wizard.reward_product_ids[:1]
@@ -63,7 +63,7 @@ class SaleLoyaltyRewardWizard(models.TransientModel):
                 )
             )
         self.order_id._apply_program_reward(
-            self.selected_reward_id, coupon, product=self.selected_product_id
+            self.selected_reward_id, selected_coupon, product=self.selected_product_id
         )
         self.order_id._update_programs_and_rewards()
         return True

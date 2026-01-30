@@ -75,7 +75,8 @@ class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon)
             self.assertEqual(
                 len(order.order_line),
                 3,
-                "There should be 3 lines 1 for the product, 1 for the free product and 1 for the discount",
+                "There should be 3 lines 1 for the product, 1 for the free product and 1 for the"
+                " discount",
             )
 
     def test_02_pending_coupon_with_existing_program(self):
@@ -107,12 +108,14 @@ class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon)
             self.assertEqual(
                 order.amount_total,
                 288,
-                "The order total should still equal 288 as the coupon for free product can't be applied since it requires 2 min qty",
+                "The order total should still equal 288 as the coupon for free product can't be"
+                " applied since it requires 2 min qty",
             )
             self.assertEqual(
                 promo_code,
                 self.coupon.code,
-                "The promo code should be set in the pending coupon dict as it couldn't be applied, we save it for later reuse",
+                "The promo code should be set in the pending coupon dict as it couldn't be applied,"
+                " we save it for later reuse",
             )
 
             self.WebsiteSaleCartController.add_to_cart(
@@ -123,7 +126,8 @@ class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon)
             promo_code = request.session.get('pending_coupon_code')
             self.assertFalse(
                 promo_code,
-                "The promo code should be removed from the pending coupon dict as it should have been applied",
+                "The promo code should be removed from the pending coupon dict as it should have"
+                " been applied",
             )
             self.assertEqual(order.amount_tax, 0)
             self.assertEqual(order.cart_quantity, 2)

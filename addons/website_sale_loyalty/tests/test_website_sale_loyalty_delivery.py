@@ -158,9 +158,8 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         )
 
     def test_shipping_discount(self):
-        """
-        Check display of shipping discount promotion on checkout,
-        combined with another reward (eWallet).
+        """Check display of shipping discount promotion on checkout, combined with another reward
+        (eWallet).
         """
         self.env['loyalty.program'].create({
             'name': "Buy 3, get up to $6 discount on shipping!",
@@ -177,8 +176,8 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         )
 
     def test_update_shipping_after_discount(self):
-        """
-        Verify that after applying a discount code, any `free_over` shipping gets recalculated.
+        """Verify that after applying a discount code, any `free_over` shipping gets
+        recalculated.
         """
         self.free_delivery.action_archive()
         self.normal_delivery.write({'free_over': True, 'amount': 75.0})
@@ -189,9 +188,8 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         )
 
     def test_express_checkout_shipping_discount(self):
-        """
-        Check display of shipping discount promotion in express checkout form by ensuring is present
-        in the values returned to the form.
+        """Check display of shipping discount promotion in express checkout form by ensuring is
+        present in the values returned to the form.
         """
         # Create a discount code
         program = (
@@ -217,7 +215,8 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
 
     def test_express_checkout_does_not_count_delivery_discount_in_payment_values(self):
         """Test that the amount to pay does not include the free delivery amount in express
-        checkout."""
+        checkout.
+        """
         program = (
             self.env['loyalty.program']
             .sudo()
@@ -243,7 +242,8 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
 
     def test_prevent_unarchive_when_conflicting_active_program_exists_on_same_website(self):
         """Unarchiving a program should fail if another active program already has the same
-        rule code on the same website."""
+        rule code on the same website.
+        """
         program = self.create_program_with_code("FREE", self.website)
         program.action_archive()
         self.create_program_with_code("FREE", self.website)
@@ -253,7 +253,8 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
 
     def test_unarchive_when_conflicting_active_program_exists_on_different_website(self):
         """Unarchiving a program should succeed when another active program already has the
-        same rule code on a different website."""
+        same rule code on a different website.
+        """
         program = self.create_program_with_code("FREE", self.website)
         program.action_archive()
 
@@ -262,7 +263,8 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
 
     def test_prevent_unarchive_when_batch_contains_duplicate_codes_on_same_website(self):
         """Unarchiving multiple programs at once should fail if they share the same rule code
-        on the same website."""
+        on the same website.
+        """
         program1 = self.create_program_with_code("FREE", self.website)
         program1.action_archive()
         program2 = self.create_program_with_code("FREE", self.website)

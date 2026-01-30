@@ -13,7 +13,9 @@ class SaleOrder(models.Model):
         res = super()._compute_amount_total_without_delivery()
         return res - sum(
             self.order_line.filtered(
-                lambda l: l.coupon_id and l.coupon_id.program_type in ['ewallet', 'gift_card']
+                lambda line: (
+                    line.coupon_id and line.coupon_id.program_type in ['ewallet', 'gift_card']
+                )
             ).mapped('price_unit')
         )
 
@@ -30,8 +32,8 @@ class SaleOrder(models.Model):
         order_line = super()._get_not_rewarded_order_lines()
         return order_line.filtered(lambda line: not line.is_delivery)
 
-    def _get_reward_values_free_shipping(self, reward, coupon, **kwargs):
-        delivery_line = self.order_line.filtered(lambda l: l.is_delivery)[:1]
+    def _get_reward_values_free_shipping(self, reward, coupon, **_kwargs):
+        delivery_line = self.order_line.filtered(lambda line: line.is_delivery)[:1]
         taxes = delivery_line.product_id.taxes_id._filter_taxes_by_company(self.company_id)
         taxes = self.fiscal_position_id.map_tax(taxes)
         max_discount = reward.discount_max_amount or float('inf')

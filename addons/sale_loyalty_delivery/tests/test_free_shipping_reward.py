@@ -147,7 +147,9 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         self.assertEqual(len(order.order_line.ids), 3)
 
     def test_shipping_cost(self):
-        # Free delivery should not be taken into account when checking for minimum required threshold
+        """Free delivery should not be taken into account when checking for minimum required
+        threshold.
+        """
         p_minimum_threshold_free_delivery = self.env['loyalty.program'].create({
             'name': 'free shipping if > 872 tax excl',
             'trigger': 'auto',
@@ -184,10 +186,14 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         self.assertEqual(
             len(order.order_line.ids),
             3,
-            "We should get the 10% discount line since we bought 872.73$ and a free shipping line with a value of 0",
+            "We should get the 10% discount line since we bought 872.73$ and a free shipping line"
+            " with a value of 0",
         )
         self.assertEqual(
-            order.order_line.filtered(lambda l: l.reward_id.reward_type == 'shipping').price_unit, 0
+            order.order_line.filtered(
+                lambda line: line.reward_id.reward_type == 'shipping'
+            ).price_unit,
+            0,
         )
         self.assertEqual(order.amount_total, 960 * 0.9)
         order.carrier_id = self.env['delivery.carrier'].search([])[1]
@@ -224,7 +230,9 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         )
 
     def test_shipping_cost_numbers(self):
-        # Free delivery should not be taken into account when checking for minimum required threshold
+        """Free delivery should not be taken into account when checking for minimum required
+        threshold.
+        """
         p_1 = self.env['loyalty.program'].create({
             'name': 'Free shipping if > 872 tax excl',
             'trigger': 'with_code',
@@ -274,7 +282,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         self.assertEqual(order.reward_amount, 0)
         # Shipping is 20 + 15%tax
         self.assertEqual(
-            sum([line.price_total for line in order._get_no_effect_on_threshold_lines()]), 23
+            sum(line.price_total for line in order._get_no_effect_on_threshold_lines()), 23
         )
         self.assertEqual(order.amount_untaxed, 872.73 + 20)
 
@@ -287,7 +295,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         )
         self.assertEqual(order.reward_amount, -20)
         self.assertEqual(
-            sum([line.price_total for line in order._get_no_effect_on_threshold_lines()]), 0
+            sum(line.price_total for line in order._get_no_effect_on_threshold_lines()), 0
         )
         self.assertEqual(order.amount_untaxed, 872.73)
 
@@ -296,7 +304,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         self.assertEqual(len(order.order_line.ids), 4, "We should get a free Large Cabinet")
         self.assertEqual(order.reward_amount, -20 - 320)
         self.assertEqual(
-            sum([line.price_total for line in order._get_no_effect_on_threshold_lines()]), 0
+            sum(line.price_total for line in order._get_no_effect_on_threshold_lines()), 0
         )
         self.assertEqual(order.amount_untaxed, 1163.64)
 
@@ -436,7 +444,10 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         self._auto_rewards(order, discount_program)
 
         # Make sure the promotion is NOT added
-        err_msg = "No reward lines should be created as the delivery line shouldn't be included in the promotion calculation"
+        err_msg = (
+            "No reward lines should be created as the delivery line shouldn't be included in"
+            " the promotion calculation"
+        )
         self.assertEqual(len(order.order_line.ids), 2, err_msg)
 
     def test_free_shipping_should_be_removed_when_rules_are_not_met(self):
@@ -499,9 +510,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         self.assertEqual(order.reward_amount, 0)
 
     def test_discount_reward_claimable_when_shipping_reward_already_claimed_from_same_coupon(self):
-        """
-        Check that a discount reward is still claimable after the shipping reward is claimed.
-        """
+        """Check that a discount reward is still claimable after the shipping reward is claimed."""
         program = self.env['loyalty.program'].create({
             'name': "10% Discount & Shipping",
             'applies_on': 'current',

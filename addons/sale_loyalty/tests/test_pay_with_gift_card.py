@@ -71,7 +71,7 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
         self.assertEqual(order.amount_total, before_gift_card_payment - 200)
 
     def test_paying_with_gift_card_and_discount(self):
-        # Test that discounts take precedence on payment rewards
+        """Test that discounts take precedence on payment rewards."""
         self.env['loyalty.generate.wizard'].with_context(
             active_id=self.program_gift_card.id
         ).create({'coupon_qty': 1, 'points_granted': 50}).generate_coupons()
@@ -115,7 +115,9 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
         self.assertEqual(order.amount_total, 40)  # 100 - 10% - 50
 
     def test_paying_with_gift_card_blocking_discount(self):
-        # Test that a payment program making the order total 0 still allows the user to claim discounts
+        """Test that a payment program making the order total 0 still allows the user to claim
+        discounts.
+        """
         self.env['loyalty.generate.wizard'].with_context(
             active_id=self.program_gift_card.id
         ).create({'coupon_qty': 1, 'points_granted': 100}).generate_coupons()
@@ -240,7 +242,7 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
         self.assertEqual(gift_card_line.tax_ids, self.tax_10pc_incl + self.tax_15pc_excl)
 
     def test_paying_with_gift_card_fixed_tax(self):
-        """Test payment of sale order with fixed tax using gift card"""
+        """Test payment of sale order with fixed tax using gift card."""
         self.env['loyalty.generate.wizard'].with_context(
             active_id=self.program_gift_card.id
         ).create({'coupon_qty': 1, 'points_granted': 100}).generate_coupons()

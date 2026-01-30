@@ -110,9 +110,9 @@ class TestLoyalty(TransactionCase):
 
         sent_mails = self.env['mail.template']
 
-        def mock_send_mail(self, *args, **kwargs):
+        def mock_send_mail(_self, *_args, **_kwargs):
             nonlocal sent_mails
-            sent_mails |= self
+            sent_mails |= _self
 
         partner = self.env['res.partner'].create({'name': 'Test Partner'})
         with patch(
@@ -193,9 +193,7 @@ class TestLoyalty(TransactionCase):
         self.product.action_archive()
 
     def test_prevent_archiving_product_used_for_discount_reward(self):
-        """
-        Ensure products cannot be archived while they have a specific program active.
-        """
+        """Ensure products cannot be archived while they have a specific program active."""
         self.program.write({
             'name': f"50% Discount on {self.product.name}",
             'program_type': 'promotion',
@@ -295,12 +293,14 @@ class TestLoyalty(TransactionCase):
         self.assertEqual(
             reward_description_product_tag,
             "Free Product - [Test Product, Test Product 2]",
-            "Reward description for reward with tag should be 'Free Product - [Test Product, Test Product 2]'",
+            "Reward description for reward with tag should be"
+            " 'Free Product - [Test Product, Test Product 2]'",
         )
 
     def test_prevent_unarchive_when_conflicting_active_program_exists(self):
         """Unarchiving a program should fail if another active program already has the same rule
-        code."""
+        code.
+        """
         program = self.create_program_with_code("FREE")
         program.action_archive()
         # create another active program with the same rule code

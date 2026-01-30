@@ -34,9 +34,9 @@ class TestSaleCouponMultiwebsite(TestSaleCouponNumbersCommon):
         def _apply_code(code, backend=True):
             try:
                 self._apply_promo_code(order, code)
-            except UserError as e:
+            except UserError:
                 if backend:
-                    raise e
+                    raise
 
         # ==========================================
         # ========== Programs (with code) ==========
@@ -85,7 +85,8 @@ class TestSaleCouponMultiwebsite(TestSaleCouponNumbersCommon):
             self.assertEqual(
                 len(order.order_line.ids),
                 2,
-                "Should get the discount line as it is a specific promo program for the correct website",
+                "Should get the discount line as it is a specific promo program for the correct"
+                " website",
             )
             _remove_reward()
 
@@ -150,7 +151,8 @@ class TestSaleCouponMultiwebsite(TestSaleCouponNumbersCommon):
             self.assertEqual(
                 len(order.order_line.ids),
                 2,
-                "Should get the discount line as it is a specific coupon program for the correct website",
+                "Should get the discount line as it is a specific coupon program for the correct"
+                " website",
             )
             _remove_reward()
 
@@ -215,7 +217,8 @@ class TestSaleCouponMultiwebsite(TestSaleCouponNumbersCommon):
             self.assertEqual(
                 len(order.order_line.ids),
                 2,
-                "Should get the discount line as it is a specific promo program for the correct website",
+                "Should get the discount line as it is a specific promo program for the correct"
+                " website",
             )
 
         # 5. Frontend - Specific - Wrong website

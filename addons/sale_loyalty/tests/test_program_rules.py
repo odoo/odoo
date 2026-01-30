@@ -153,8 +153,8 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
         self.assertEqual(order.amount_untaxed, 300)
 
     def test_program_rules_min_amount_reached_and_specific_product(self):
-        """
-        Test that the discount is applied if the min amount is reached for the specified product.
+        """Test that the discount is applied if the min amount is reached for the specified
+        product.
         """
         self.env['loyalty.program'].search([]).active = False
         order = self.empty_order
@@ -195,9 +195,10 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
 
     def test_program_rules_coupon_qty_and_amount_remove_not_eligible(self):
         """This test will:
-        * Check quantity and amount requirements works as expected (since it's slightly different from a promotion_program)
-        * Ensure that if a reward from a coupon_program was allowed and the conditions are not met anymore,
-          the reward will be removed on recompute.
+        * Check quantity and amount requirements works as expected (since it's slightly different
+          from a promotion_program).
+        * Ensure that if a reward from a coupon_program was allowed and the conditions are not met
+          anymore, the reward will be removed on recompute.
         """
         self.immediate_promotion_program.active = (
             False  # Avoid having this program to add rewards on this test
@@ -240,7 +241,8 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
             'order_id': order.id,
         })
 
-        # Default value for coupon generate wizard is generate by quantity and generate only one coupon
+        # Default value for coupon generate wizard is generate by quantity and generate only one
+        # coupon.
         self.env['loyalty.generate.wizard'].with_context(active_id=program.id).create({
             'coupon_qty': 1,
             'points_granted': 1,
@@ -347,7 +349,8 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
             len(discounts), 1, "The order should contains the Product A line and a discount"
         )
         # The name of the discount is dynamically changed to smth looking like:
-        # "Discount Get 5% discount if buy at least 2 Product - On product with following tax: Tax 15.00%"
+        # "Discount Get 5% discount if buy at least 2 Product - On product with following tax: Tax
+        # 15.00%"
         self.assertTrue(
             'Discount 5% on your order' in discounts.pop(), "The discount should be a 5% discount"
         )
@@ -469,7 +472,7 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
         self.assertEqual(len(order.order_line.ids), 1, msg)
 
     def test_program_rules_validity_date_timezones(self):
-        """Test that the validity dates are checked according to the company's time zone"""
+        """Test that the validity dates are checked according to the company's time zone."""
         self.env.company.partner_id.tz = 'Europe/London'
         self.partner.tz = 'America/Los_Angeles'
         midnight = Datetime.today()

@@ -108,8 +108,8 @@ class TestConcurrencyPromoCode(BaseCase):
 
     @mute_logger('odoo.sql_db')
     def test_lock_concurrent_promo_code(self):
-        """Test that two cursors cannot lock the same row simultaneously"""
-        # A simple barrier to make sure threads start roughly at the same time
+        """Test that two cursors cannot lock the same row simultaneously."""
+        # A simple barrier to make sure threads start roughly at the same time.
         start_barrier = threading.Barrier(2)
 
         def run(env, order_id):

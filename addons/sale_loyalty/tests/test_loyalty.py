@@ -147,7 +147,8 @@ class TestLoyalty(TestSaleCouponCommon):
 
     def test_cancel_order_with_coupons(self):
         """This test ensure that creating an order with coupons will not
-        raise an access error on POS line modele when canceling the order."""
+        raise an access error on POS line modele when canceling the order.
+        """
         self.env['loyalty.program'].create({
             'name': '10% Discount',
             'program_type': 'coupons',
@@ -314,13 +315,13 @@ class TestLoyalty(TestSaleCouponCommon):
         self.assertEqual(order.reward_amount, 0)
 
         self._auto_rewards(order, promotion)
-        reward_amount_tax_included = sum(l.price_total for l in order.order_line if l.reward_id)
+        reward_amount_tax_included = self._get_reward_amount_tax_included(order)
         msg = "Max discount amount reached, the reward amount should be the max amount value."
         self.assertEqual(reward_amount_tax_included, -9, msg)
 
         order.order_line = [Command.clear(), Command.create({'product_id': product_b.id})]
         self._auto_rewards(order, promotion)
-        reward_amount_tax_included = sum(l.price_total for l in order.order_line if l.reward_id)
+        reward_amount_tax_included = self._get_reward_amount_tax_included(order)
         msg = "This product is not eligible to the discount."
         self.assertEqual(reward_amount_tax_included, 0, msg=msg)
 
@@ -330,7 +331,7 @@ class TestLoyalty(TestSaleCouponCommon):
             Command.create({'product_id': product_b.id}),  # price_total = -20
         ]
         self._auto_rewards(order, promotion)
-        reward_amount_tax_included = sum(l.price_total for l in order.order_line if l.reward_id)
+        reward_amount_tax_included = self._get_reward_amount_tax_included(order)
         msg = "Reward amount above the max amount, the reward should be the max amount value."
         self.assertEqual(reward_amount_tax_included, -9, msg)
 
@@ -340,7 +341,7 @@ class TestLoyalty(TestSaleCouponCommon):
             Command.create({'product_id': product_b.id, 'price_unit': -95}),  # price_total = -114
         ]
         self._auto_rewards(order, promotion)
-        reward_amount_tax_included = sum(l.price_total for l in order.order_line if l.reward_id)
+        reward_amount_tax_included = self._get_reward_amount_tax_included(order)
         msg = "Reward amount should never surpass the order's current total amount."
         self.assertEqual(reward_amount_tax_included, -6, msg)
 
@@ -350,7 +351,7 @@ class TestLoyalty(TestSaleCouponCommon):
             Command.create({'product_id': product_b.id, 'price_unit': -5}),  # price_total = -6
         ]
         self._auto_rewards(order, promotion)
-        reward_amount_tax_included = sum(l.price_total for l in order.order_line if l.reward_id)
+        reward_amount_tax_included = self._get_reward_amount_tax_included(order)
         msg = "Reward amount should be the percentage one if under the max amount discount."
         self.assertEqual(reward_amount_tax_included, -6, msg)
 
@@ -463,8 +464,7 @@ class TestLoyalty(TestSaleCouponCommon):
         self.assertEqual(coupon.points, 0)
 
     def test_points_awarded_discount_code_no_domain_program(self):
-        """
-        Check the calculation for points awarded when there is a discount coupon applied and the
+        """Check the calculation for points awarded when there is a discount coupon applied and the
         loyalty program applies on all products (no domain).
         """
         LoyaltyProgram = self.env['loyalty.program']
@@ -491,11 +491,12 @@ class TestLoyalty(TestSaleCouponCommon):
         self.assertEqual(loyalty_card.points, 90)
 
     def test_points_awarded_general_discount_code_specific_domain_program(self):
-        """
-        Check the calculation for points awarded when there is a discount coupon applied and the
-        loyalty program applies on a specific domain. The discount code has no domain. The product
-        related to that discount is not in the domain of the loyalty program.
-        Expected behavior: The discount is not included in the computation of points
+        """Check the calculation for points awarded when there is a discount coupon applied and the
+        loyalty program applies on a specific domain.
+
+        The discount code has no domain. The product related to that discount is not in the domain
+        of the loyalty program.
+        Expected behavior: The discount is not included in the computation of points.
         """
         product_category_food = self.env['product.category'].create({'name': "Food"})
 
@@ -530,12 +531,12 @@ class TestLoyalty(TestSaleCouponCommon):
         self.assertEqual(loyalty_card.points, 100)
 
     def test_points_awarded_specific_discount_code_specific_domain_program(self):
-        """
-        Check the calculation for points awarded when there is a discount coupon applied and the
-        loyalty program applies on a specific domain. The discount code has the same domain as the
-        loyalty program. The product related to that discount code is set up to be included in the
-        domain of the loyalty program.
-        Expected behavior: The discount is included in the computation of points
+        """Check the calculation for points awarded when there is a discount coupon applied and the
+        loyalty program applies on a specific domain.
+
+        The discount code has the same domain as the loyalty program. The product related to that
+        discount code is set up to be included in the domain of the loyalty program.
+        Expected behavior: The discount is included in the computation of points.
         """
         product_category_food = self.env['product.category'].create({'name': "Food"})
 
@@ -579,9 +580,7 @@ class TestLoyalty(TestSaleCouponCommon):
         self.assertEqual(loyalty_card.points, 90)
 
     def test_points_awarded_ewallet(self):
-        """
-        Check the calculation for point awarded when using ewallet
-        """
+        """Check the calculation for point awarded when using ewallet."""
         LoyaltyProgram = self.env['loyalty.program']
         loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
         loyalty_card = self.env['loyalty.card'].create({
@@ -606,9 +605,7 @@ class TestLoyalty(TestSaleCouponCommon):
         self.assertEqual(loyalty_card.points, 100)
 
     def test_points_awarded_giftcard(self):
-        """
-        Check the calculation for point awarded when using a gift card
-        """
+        """Check the calculation for point awarded when using a gift card."""
         LoyaltyProgram = self.env['loyalty.program']
         loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
         loyalty_card = self.env['loyalty.card'].create({
@@ -658,9 +655,7 @@ class TestLoyalty(TestSaleCouponCommon):
         self.assertEqual(loyalty_card.points, 100)
 
     def test_multiple_discount_specific(self):
-        """
-        Check the discount calculation if it is based on the remaining amount
-        """
+        """Check the discount calculation if it is based on the remaining amount."""
         product_A = self.env['product.product'].create({
             'name': 'Product A',
             'list_price': 100,
@@ -1025,9 +1020,7 @@ class TestLoyalty(TestSaleCouponCommon):
         self.assertEqual(order.amount_total, 0, msg=msg)
 
     def test_discount_on_taxes_with_child_tax(self):
-        """
-        Check whether a program discount properly apply when product contain group of tax.
-        """
+        """Check whether a program discount properly apply when product contain group of tax."""
         self.env.company.tax_calculation_rounding_method = 'round_globally'
         loyalty_program = self.env['loyalty.program'].create([
             {
@@ -1120,8 +1113,8 @@ class TestLoyalty(TestSaleCouponCommon):
         self.assertEqual(self.ewallet.points, 50)
 
     def test_discount_reward_claimable_only_once(self):
-        """
-        Check that discount rewards already applied won't be shown in the claimable rewards anymore.
+        """Check that discount rewards already applied won't be shown in the claimable rewards
+        anymore.
         """
         program = self.env['loyalty.program'].create({
             'name': "10% Discount & Gift",
@@ -1281,9 +1274,8 @@ class TestLoyalty(TestSaleCouponCommon):
         self.assertEqual(order.order_line[1].name, updated_description)
 
     def test_archiving_loyalty_card_unlinks_draft_points_from_sale_order(self):
-        """
-        When a loyalty card has points accrued from a draft sale order, archiving the
-        card should unlink those draft points so they are no longer claimable on that order
+        """When a loyalty card has points accrued from a draft sale order, archiving the card should
+        unlink those draft points so they are no longer claimable on that order.
         """
         loyalty_program = self.env['loyalty.program'].create({
             'name': 'Loyalty Program',
@@ -1360,8 +1352,8 @@ class TestLoyalty(TestSaleCouponCommon):
         self.assertEqual(reward_line.price_total, 0)
 
     def test_reapplying_reward_keeps_reward_price_unit(self):
-        """
-        Ensure that re-applying a reward doesn't reset the existing reward line unit price to zero
+        """Ensure that re-applying a reward doesn't reset the existing reward line unit price to
+        zero.
         """
         self.immediate_promotion_program.active = True
         sale_order = self.empty_order
@@ -1375,3 +1367,7 @@ class TestLoyalty(TestSaleCouponCommon):
         sale_order._update_programs_and_rewards()
         self._claim_reward(sale_order, self.immediate_promotion_program)
         self.assertEqual(reward_line.price_unit, reward_line_price_unit)
+
+    @staticmethod
+    def _get_reward_amount_tax_included(order):
+        return sum(line.price_total for line in order.order_line if line.reward_id)

@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import _
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import Form, common
@@ -56,8 +57,8 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
         })
 
     def test_delivery_cost_gift_card(self):
-        """
-        Test that the order amount used to trigger the free delivery doesn't consider gift cards.
+        """Test that the order amount used to trigger the free delivery doesn't consider gift
+        cards.
         """
         program_gift_card = self.env['loyalty.program'].create({
             'name': 'Gift Cards',
@@ -98,9 +99,9 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
         self.assertEqual(order.order_line.filtered('is_delivery').price_total, 0)
 
     def test_free_delivery_cost_with_ewallet(self):
-        """
-        Automatic free shipping of a delivery method should not be affected by the
+        """Automatic free shipping of a delivery method should not be affected by the
         use of an ewallet when paying.
+
         Paying for an order of value 200 with an ewallet should still trigger the
         free shipping of the selected carrier if the free shipping is for amounts
         over 100.
@@ -141,9 +142,7 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
         self.assertEqual(order.order_line.filtered('is_delivery').price_total, 0)
 
     def test_delivery_cost_discounts(self):
-        """
-        Make sure discounts aren't taken into account for free delivery
-        """
+        """Make sure discounts aren't taken into account for free delivery."""
         discount90 = self.env['loyalty.program'].create({
             'name': '90% Discount',
             'program_type': 'coupons',
@@ -212,7 +211,7 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
             raise ValidationError(status['error'])
         if not status and no_reward_fail:
             # Can happen if global discount got filtered out in `_get_claimable_rewards`
-            raise ValidationError('No reward to claim with this coupon')
+            raise ValidationError(_("No reward to claim with this coupon"))
         coupons = self.env['loyalty.card']
         rewards = self.env['loyalty.reward']
         for coupon, coupon_rewards in status.items():

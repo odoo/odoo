@@ -48,7 +48,7 @@ class CustomerPortalLoyalty(CustomerPortal):
         auth='user',
         website=True,
     )
-    def portal_my_loyalty_card_history(self, card_id, page=1, sortby='date', **kw):
+    def portal_my_loyalty_card_history(self, card_id, page=1, sortby='date', **_kwargs):
         card_sudo = (
             request.env['loyalty.card']
             .sudo()

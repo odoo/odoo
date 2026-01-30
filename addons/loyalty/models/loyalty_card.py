@@ -15,9 +15,7 @@ class LoyaltyCard(models.Model):
 
     @api.model
     def _generate_code(self):
-        """
-        Barcode identifiable codes.
-        """
+        """Barcode identifiable codes."""
         return "044" + str(uuid4())[7:-18]
 
     @api.depends('program_id', 'code')
@@ -57,7 +55,7 @@ class LoyaltyCard(models.Model):
 
     @api.constrains('code')
     def _contrains_code(self):
-        # Prevent a coupon from having the same code a program
+        """Prevent a coupon from having the same code a program."""
         if self.env['loyalty.rule'].search_count([
             ('mode', '=', 'with_code'),
             ('code', 'in', self.mapped('code')),
@@ -114,15 +112,15 @@ class LoyaltyCard(models.Model):
         ).partner_id
 
     def _get_signature(self):
-        """To be overriden"""
+        """To be overriden."""
         self.ensure_one()
 
     def _has_source_order(self):
         return False
 
     def action_coupon_send(self):
-        """Open a window to compose an email, with the default template returned by `_get_default_template`
-        message loaded by default
+        """Open a window to compose an email, with the default template returned by
+        `_get_default_template` message loaded by default.
         """
         self.ensure_one()
         default_template = self._get_default_template()
@@ -147,9 +145,7 @@ class LoyaltyCard(models.Model):
         }
 
     def _send_creation_communication(self, force_send=False):
-        """
-        Sends the 'At Creation' communication plan if it exist for the given coupons.
-        """
+        """Send the 'At Creation' communication plan if it exists for the given coupons."""
         if self.env.context.get('loyalty_no_mail', False) or self.env.context.get(
             'action_no_send_mail', False
         ):

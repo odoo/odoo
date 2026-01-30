@@ -33,9 +33,10 @@ class SaleOrderLine(models.Model):
     def _compute_tax_ids(self):
         reward_lines = self.filtered('is_reward_line')
         super(SaleOrderLine, self - reward_lines)._compute_tax_ids()
-        # Discount reward line is split per tax, the discount is set on the line but not on the product
-        # as the product is the generic discount line.
-        # In case of a free product, retrieving the tax on the line instead of the product won't affect the behavior.
+        # Discount reward line is split per tax, the discount is set on the line but not on the
+        # product as the product is the generic discount line.
+        # In case of a free product, retrieving the tax on the line instead of the product won't
+        # affect the behavior.
         for line in reward_lines:
             line = line.with_company(line.company_id)
             fpos = (
@@ -50,7 +51,8 @@ class SaleOrderLine(models.Model):
 
     def _get_display_price(self):
         # A product created from a promotion does not have a list_price.
-        # The price_unit of a reward order line is computed by the promotion, so it can be used directly
+        # The price_unit of a reward order line is computed by the promotion, so it can be used
+        # directly.
         if self.is_reward_line and self.reward_id.reward_type != 'product':
             return self.price_unit
         return super()._get_display_price()
@@ -103,11 +105,15 @@ class SaleOrderLine(models.Model):
     def unlink(self):
         # Remove related reward lines
         reward_coupon_set = {
-            (l.reward_id, l.coupon_id, l.reward_identifier_code) for l in self if l.reward_id
+            (line.reward_id, line.coupon_id, line.reward_identifier_code)
+            for line in self
+            if line.reward_id
         }
         related_lines = self.env['sale.order.line']
         related_lines |= self.order_id.order_line.filtered(
-            lambda l: (l.reward_id, l.coupon_id, l.reward_identifier_code) in reward_coupon_set
+            lambda line: (
+                (line.reward_id, line.coupon_id, line.reward_identifier_code) in reward_coupon_set
+            )
         )
         # Remove the line's coupon from order if it is the last line using that coupon
         coupons_to_unlink = self.env['loyalty.card']
@@ -126,14 +132,16 @@ class SaleOrderLine(models.Model):
                         for oLine in line.order_id.order_line
                     )
                 ):
-                    # ondelete='restrict' would prevent deletion of the coupon unlink after unlinking lines
+                    # ondelete='restrict' would prevent deletion of the coupon unlink after
+                    # unlinking lines.
                     coupons_to_unlink |= line.coupon_id
                     line.order_id.code_enabled_rule_ids = (
                         line.order_id.code_enabled_rule_ids.filtered(
                             lambda r: r.program_id != line.coupon_id.program_id
                         )
                     )
-        # Give back the points if the order is confirmed, points are given back if the order is cancelled but in this case we need to do it directly
+        # Give back the points if the order is confirmed, points are given back if the order is
+        # canceled but in this case we need to do it directly.
         for line in related_lines:
             if line.state == 'sale':
                 line.coupon_id.points += line.points_cost

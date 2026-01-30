@@ -61,7 +61,8 @@ class LoyaltyRule(models.Model):
     # Only used for program_id.applies_on == 'future'
     reward_point_split = fields.Boolean(
         string="Split per unit",
-        help="Whether to separate reward coupons per matched unit, only applies to 'future' programs and trigger mode per money spent or unit paid...",
+        help="Whether to separate reward coupons per matched unit, only applies to 'future'"
+        " programs and trigger mode per money spent or unit paid...",
         default=False,
     )
     reward_point_name = fields.Char(related='program_id.portal_point_name', readonly=True)
@@ -92,7 +93,9 @@ class LoyaltyRule(models.Model):
 
     @api.constrains('reward_point_split')
     def _constraint_trigger_multi(self):
-        # Prevent setting trigger multi in case of nominative programs, it does not make sense to allow this
+        """Prevent setting trigger multi in case of nominative programs, it does not make sense to
+        allow this.
+        """
         for rule in self:
             if rule.reward_point_split and (
                 rule.program_id.applies_on == 'both' or rule.program_id.program_type == 'ewallet'

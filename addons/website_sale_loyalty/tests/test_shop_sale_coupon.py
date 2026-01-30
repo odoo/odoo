@@ -2,7 +2,7 @@
 
 from datetime import timedelta
 
-from odoo import fields, http
+from odoo import _, fields, http
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
@@ -310,7 +310,7 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
             raise ValidationError(status['error'])
         if not status and no_reward_fail:
             # Can happen if global discount got filtered out in `_get_claimable_rewards`
-            raise ValidationError('No reward to claim with this coupon')
+            raise ValidationError(_("No reward to claim with this coupon"))
         coupons = self.env['loyalty.card']
         rewards = self.env['loyalty.reward']
         for coupon, coupon_rewards in status.items():
@@ -367,7 +367,8 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
         self.assertEqual(
             len(order.applied_coupon_ids),
             1,
-            "The coupon shouldn't have been removed from the order the order is 4 days old but icp validity is 5 days",
+            "The coupon shouldn't have been removed from the order the order is 4 days old but icp"
+            " validity is 5 days",
         )
 
         # 5. Test order with no ICP and older then 4 default days -> Should be removed
@@ -381,8 +382,8 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
         )
 
     def test_02_apply_discount_code_program_multi_rewards(self):
-        """
-        Check the triggering of a promotion program based on a promo code with multiple rewards
+        """Check the triggering of a promotion program based on a promo code with multiple
+        rewards.
         """
         self.env['loyalty.program'].search([]).write({'active': False})
         chair = self.env['product.product'].create({
@@ -444,7 +445,7 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
 
         # 3. Remove the coupon
         coupon_line = order.website_order_line.filtered(
-            lambda l: l.coupon_id and l.coupon_id.id == self.coupon.id
+            lambda line: line.coupon_id and line.coupon_id.id == self.coupon.id
         )
 
         website = self.website
@@ -455,9 +456,9 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
         self.assertEqual(len(order.applied_coupon_ids), 0, msg=msg)
 
     def test_04_apply_coupon_code_twice(self):
-        """This test ensures that applying a coupon with code twice will:
-        1. Raise an error
-        2. Not delete the coupon
+        """Ensure that applying a coupon with code twice will:
+        1. Raise an error.
+        2. Not delete the coupon.
         """
         # Create product
         product = self.env['product.product'].create({
@@ -475,7 +476,7 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
         installed_modules = set(
             self.env['ir.module.module'].search([('state', '=', 'installed')]).mapped('name')
         )
-        for _ in http.routing_map._generate_routing_rules(installed_modules, nodb_only=False):
+        for __ in http.routing_map._generate_routing_rules(installed_modules, nodb_only=False):
             pass
 
         with MockRequest(self.env, website=self.website, sale_order_id=order.id) as request:
@@ -500,10 +501,9 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
             self.assertEqual(order.amount_total, 90.0, "Apply a coupon twice shouldn't delete it")
 
     def test_03_remove_coupon_with_different_taxes_on_products(self):
-        """
-        Tests the removal of a coupon from an order containing products with various tax rates,
-        ensuring that the system correctly handles multiple coupon lines created
-        for each unique tax scenario.
+        """Test the removal of a coupon from an order containing products with various tax rates,
+        ensuring that the system correctly handles multiple coupon lines created for each unique tax
+        scenario.
 
         Background:
             An order may include products with different tax implications,

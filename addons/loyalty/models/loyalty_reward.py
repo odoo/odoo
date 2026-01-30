@@ -231,9 +231,9 @@ class LoyaltyReward(models.Model):
                 lambda product: product.type != 'combo'
             )
             reward.multi_product = reward.reward_type == 'product' and len(products) > 1
-            reward.reward_product_ids = (
-                (reward.reward_type == 'product' and products) or self.env['product.product']
-            )
+            reward.reward_product_ids = (reward.reward_type == 'product' and products) or self.env[
+                'product.product'
+            ]
 
     def _search_reward_product_ids(self, operator, value):
         if operator != 'in':

@@ -54,7 +54,8 @@ class LoyaltyGenerateWizard(models.TransientModel):
         for wizard in self:
             program_desc = dict(wizard._fields['program_type']._description_selection(wizard.env))
             wizard.confirmation_message = _(
-                "You're about to generate %(program_type)s with a value of %(value)s for %(customer_number)i customers",
+                "You're about to generate %(program_type)s with a value of %(value)s for"
+                " %(customer_number)i customers",
                 program_type=program_desc[wizard.program_type],
                 value=wizard.points_granted,
                 customer_number=wizard.coupon_qty,
@@ -93,8 +94,7 @@ class LoyaltyGenerateWizard(models.TransientModel):
         coupon_create_vals = []
         for wizard in self:
             customers = wizard._get_partners() or range(wizard.coupon_qty)
-            for partner in customers:
-                coupon_create_vals.append(wizard._get_coupon_values(partner))
+            coupon_create_vals.extend(wizard._get_coupon_values(partner) for partner in customers)
         coupons = self.env['loyalty.card'].create(coupon_create_vals)
         self.env['loyalty.history'].create([
             {

@@ -116,9 +116,12 @@ class LoyaltyProgram(models.Model):
     limit_usage = fields.Boolean(string="Limit Usage")
     max_usage = fields.Integer()
     # Dictates when the points can be used:
-    # current: if the order gives enough points on that order, the reward may directly be claimed, points lost otherwise
-    # future: if the order gives enough points on that order, a coupon is generated for a next order
-    # both: points are accumulated on the coupon to claim rewards, the reward may directly be claimed
+    # current: if the order gives enough points on that order, the reward may directly be claimed,
+    #     points lost otherwise.
+    # future: if the order gives enough points on that order, a coupon is generated for a next
+    #     order.
+    # both: points are accumulated on the coupon to claim rewards, the reward may directly be
+    #     claimed.
     applies_on = fields.Selection(
         selection=[
             ('current', "Current order"),
@@ -290,7 +293,8 @@ class LoyaltyProgram(models.Model):
     @api.model
     def _program_type_default_values(self):
         # All values to change when program_type changes
-        # NOTE: any field used in `rule_ids`, `reward_ids` and `communication_plan_ids` MUST be present in the kanban view for it to work properly.
+        # NOTE: any field used in `rule_ids`, `reward_ids` and `communication_plan_ids` MUST be
+        # present in the kanban view for it to work properly.
         first_sale_product = self.env['product.product'].search(
             [('company_id', 'in', [False, self.env.company.id]), ('sale_ok', '=', True)], limit=1
         )
@@ -561,9 +565,7 @@ class LoyaltyProgram(models.Model):
             program.portal_point_name = program.currency_id.symbol or ''
 
     def _get_valid_products(self, products):
-        """
-        Returns a dict containing the products that match per rule of the program
-        """
+        """Return a dict containing the products that match per rule of the program."""
         rule_products = dict()
         for rule in self.rule_ids:
             domain = rule._get_valid_product_domain()
@@ -595,9 +597,10 @@ class LoyaltyProgram(models.Model):
             raise UserError(_("You can not delete a program in an active state"))
 
     def write(self, vals):
-        # There is an issue when we change the program type, since we clear the rewards and create new ones.
-        # The orm actually does it in this order upon writing, triggering the constraint before creating the new rewards.
-        # However we can check that the result of reward_ids would actually be empty or not, and if not, skip the constraint.
+        # There is an issue when we change the program type, since we clear the rewards and create
+        # new ones. The ORM actually does it in this order upon writing, triggering the constraint
+        # before creating the new rewards. However, we can check that the result of reward_ids would
+        # actually be empty or not, and if not, skip the constraint.
         if 'reward_ids' in vals and self._fields['reward_ids'].convert_to_cache(
             vals['reward_ids'], self
         ):
@@ -630,9 +633,7 @@ class LoyaltyProgram(models.Model):
 
     @api.model
     def get_program_templates(self):
-        """
-        Returns the templates to be used for promotional programs.
-        """
+        """Return the templates to be used for promotional programs."""
         ctx_menu_type = self.env.context.get('menu_type')
         if ctx_menu_type == 'gift_ewallet':
             return {
@@ -687,8 +688,7 @@ class LoyaltyProgram(models.Model):
 
     @api.model
     def create_from_template(self, template_id):
-        """
-        Creates the program from the template id defined in `get_program_templates`.
+        """Create the program from the template id defined in `get_program_templates`.
 
         Returns an action leading to that new record.
         """
@@ -714,9 +714,7 @@ class LoyaltyProgram(models.Model):
 
     @api.model
     def _get_template_values(self):
-        """
-        Returns the values to create a program using the template keys defined above.
-        """
+        """Return the values to create a program using the template keys defined above."""
         program_type_defaults = self._program_type_default_values()
         # For programs that require a product get the first sellable.
         product = self.env['product.product'].search([('sale_ok', '=', True)], limit=1)
@@ -785,9 +783,9 @@ class LoyaltyProgram(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        """
-        trigger_product_ids will overwrite product ids defined in a loyalty rule in certain instances. Thus, it should
-        be explicitly removed from an incoming vals dict unless, of course, it was actually a visible field.
+        """`trigger_product_ids` will overwrite product ids defined in a loyalty rule in certain
+        instances. Thus, it should be explicitly removed from an incoming vals dict unless, of
+        course, it was actually a visible field.
         """
         for vals in vals_list:
             if 'trigger_product_ids' in vals and vals.get('program_type') not in [

@@ -26,7 +26,8 @@ class ProductProduct(models.Model):
             if rewards:
                 raise ValidationError(
                     _(
-                        "This product may not be archived. It is being used for an active promotion program."
+                        "This product may not be archived. It is being used for an active promotion"
+                        " program."
                     )
                 )
         return super().write(vals)
