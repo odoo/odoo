@@ -12,6 +12,16 @@
         <t t-out="0"/>
     </t>
 </template>
+<!-- Carousel -->
+<template id="s_events_carousel" name="Events Carousel">
+    <t t-call="website.s_dynamic_snippet_template">
+        <t t-set="snippet_name" t-value="'s_events_carousel'"/>
+        <t t-set="main_page_url" t-value="'/event'"/>
+        <t t-set="custom_template_data" t-valuef='{"events_event_time_active":true, "events_event_location_active":true}'/>
+        <t t-set="template_key" t-value="'website_event.dynamic_filter_template_event_event_picture'"/>
+        <t t-call="website_event.s_event_upcoming_snippet_preview_data_carousel"/>
+    </t>
+</template>
 <!-- Multi record snippets -->
 <template id="s_events_picture" name="Events Picture">
     <t t-set="snippet_extra_classes" t-value="'s_event_event_picture'"/>
@@ -68,6 +78,8 @@
 <!-- Multi record templates-->
 <!-- Picture Layout -->
 <template id="dynamic_filter_template_event_event_picture" name="Picture Layout" priority="5"
+        data-number-of-elements="3"
+        data-number-of-elements-sm="1"
         data-extra-classes="g-3"
         data-column-classes="col-12 col-sm-6 col-lg-4">
     <div t-foreach="records" t-as="data" class="s_events_event w-100">

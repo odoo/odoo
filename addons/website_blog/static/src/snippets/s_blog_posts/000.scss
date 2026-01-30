@@ -1,4 +1,16 @@
 .s_dynamic {
+    &.s_blog_posts_carousel {
+        &.s_blog_post_horizontal {
+            .s_blog_posts_post > div {
+                border-bottom: 0 !important;
+                padding-bottom: 0 !important;
+            }
+        }
+        .carousel-item {
+            min-height: 0 !important;
+        }
+    }
+
     &.s_dynamic_snippet_blog_posts {
         --Avatar-size: 1.5em;
     }
