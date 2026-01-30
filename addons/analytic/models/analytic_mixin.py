@@ -6,6 +6,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL, unique
 from odoo.tools.float_utils import float_compare, float_round
+from odoo.tools.sql import table_exists
 
 
 class AnalyticMixin(models.AbstractModel):
@@ -30,11 +31,7 @@ class AnalyticMixin(models.AbstractModel):
 
     def init(self):
         # Add a gin index for json search on the keys, on the models that actually have a table
-        query = ''' SELECT table_name
-                    FROM information_schema.tables
-                    WHERE table_name=%s '''
-        self.env.cr.execute(query, [self._table])
-        if self.env.cr.dictfetchone() and self._fields['analytic_distribution'].store:
+        if table_exists(self.env.cr, self._table) and self._fields['analytic_distribution'].store:
             query = fr"""
                 CREATE INDEX IF NOT EXISTS {self._table}_analytic_distribution_accounts_gin_index
                                         ON {self._table} USING gin(regexp_split_to_array(jsonb_path_query_array(analytic_distribution, '$.keyvalue()."key"')::text, '\D+'));
