@@ -201,10 +201,9 @@ def has_unaccent(cr: BaseCursor) -> FunctionStatus:
     cr.execute("""
         SELECT p.provolatile
         FROM pg_proc p
-            LEFT JOIN pg_catalog.pg_namespace ns ON p.pronamespace = ns.oid
         WHERE p.proname = 'unaccent'
+              AND p.pronamespace = current_schema::regnamespace
               AND p.pronargs = 1
-              AND ns.nspname = current_schema
     """)
     result = cr.fetchone()
     if not result:
