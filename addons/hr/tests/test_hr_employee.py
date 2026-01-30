@@ -622,6 +622,66 @@ class TestHrEmployee(TestHrCommon):
         employee_A._cron_update_current_version_id()
         self.assertEqual(employee_A.work_phone, '+32222222222')
 
+    def test_get_first_version_with_gap(self):
+        """
+        Scenario:
+        - Jan 1 to Mar 31: Version with contract
+        - Apr 1: Version with NO contract
+        - Jan 1 (Next Year): Version with contract
+        Result: Should be considered a gap.
+        """
+        with freeze_time('2023-01-01'):
+            employee = self.env['hr.employee'].create({
+                'name': 'Test Employee',
+                'version_ids': [
+                    (0, 0, {
+                        'date_version': fields.Date.to_date('2026-01-01'),
+                        'contract_date_start': fields.Date.to_date('2026-01-01'),
+                        'contract_date_end': fields.Date.to_date('2026-03-31'),
+                    }),
+                    (0, 0, {
+                        'date_version': fields.Date.to_date('2026-04-01'),
+                    }),
+                    (0, 0, {
+                        'date_version': fields.Date.to_date('2027-01-01'),
+                        'contract_date_start': fields.Date.to_date('2027-01-01'),
+                    }),
+                ],
+            })
+
+        first_version = employee._get_first_version()
+        self.assertEqual(first_version.date_start, fields.Date.to_date('2027-01-01'))
+
+    def test_get_first_version_without_gap(self):
+        """
+        Scenario:
+        - Jan 1 to Mar 31: Version with contract
+        - Apr 1: Version with NO contract
+        - Apr 2: Version with contract
+        Result: Should NOT be considered a gap.
+        """
+        with freeze_time('2023-01-01'):
+            employee = self.env['hr.employee'].create({
+                'name': 'Test Employee',
+                'version_ids': [
+                    (0, 0, {
+                        'date_version': fields.Date.to_date('2026-01-01'),
+                        'contract_date_start': fields.Date.to_date('2026-01-01'),
+                        'contract_date_end': fields.Date.to_date('2026-03-31'),
+                    }),
+                    (0, 0, {
+                        'date_version': fields.Date.to_date('2026-04-01'),
+                    }),
+                    (0, 0, {
+                        'date_version': fields.Date.to_date('2026-04-02'),
+                        'contract_date_start': fields.Date.to_date('2026-04-02'),
+                    }),
+                ],
+            })
+
+        first_version = employee._get_first_version()
+        self.assertEqual(first_version.date_start, fields.Date.to_date('2026-01-01'))
+
 
 @tagged('-at_install', 'post_install')
 class TestHrEmployeeLinks(HttpCase):

@@ -326,7 +326,12 @@ class HrEmployee(models.Model):
 
     def _get_first_version_date(self, no_gap=True):
         self.ensure_one()
-        if not self.env.user.has_group("hr.group_hr_user"):
+        first_version = self._get_first_version(no_gap)
+        return first_version.date_start if first_version else False
+
+    def _get_first_version(self, no_gap=True):
+        self.ensure_one()
+        if not self.env.su and not self.env.user.has_group("hr.group_hr_user"):
             raise AccessError(_("Only HR users can access first version date on an employee."))
 
         def remove_gap(versions):
@@ -341,16 +346,17 @@ class HrEmployee(models.Model):
             current_date = current_version.date_start
             for i, other_version in enumerate(older_versions):
                 # Consider current_version.date_end being false as an error and cut the loop
-                gap = (current_date - (other_version.date_end or date(2100, 1, 1))).days
+                gap = (current_date - (other_version.date_end or date.max)).days
                 current_date = other_version.date_start
                 if gap >= 4:
-                    return older_versions[0:i] + current_version
-            return older_versions + current_version
+                    return current_version + older_versions[0:i]
+            return current_version + older_versions
 
         versions = self._get_first_versions().sorted('date_start', reverse=True)
         if no_gap:
+            versions = versions.filtered(lambda v: v.contract_date_start)
             versions = remove_gap(versions)
-        return min(versions.mapped('date_start')) if versions else False
+        return versions[-1] if versions else self.env['hr.version']
 
     @api.depends('name')
     def _compute_legal_name(self):
