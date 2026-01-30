@@ -4839,7 +4839,7 @@ test(`nolabel`, async () => {
                         </group>
                         <group class="secondgroup">
                             <field name="product_id"/>
-                            <field name="int_field" nolabel="1"/><field name="float_field" nolabel="1"/>
+                            <field name="int_field" nolabel="true"/><field name="float_field" nolabel="True"/>
                         </group>
                         <group>
                             <field name="bar"/>

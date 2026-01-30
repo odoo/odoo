@@ -341,7 +341,7 @@ export class FormCompiler extends ViewCompiler {
             let slotContent;
             if (getTag(child, true) === "field") {
                 const addLabel = child.hasAttribute("nolabel")
-                    ? child.getAttribute("nolabel") !== "1"
+                    ? !exprToBoolean(child.getAttribute("nolabel"))
                     : true;
                 slotContent = this.compileNode(child, { ...params, currentSlot: mainSlot }, false);
                 if (slotContent && addLabel && !isOuterGroup && !isTextNode(slotContent)) {
@@ -609,9 +609,8 @@ export class FormCompiler extends ViewCompiler {
                 if (field) {
                     append(fieldSlot, field);
                     setting.setAttribute("fieldInfo", field.getAttribute("fieldInfo"));
-
                     addLabel = child.hasAttribute("nolabel")
-                        ? child.getAttribute("nolabel") !== "1"
+                        ? !exprToBoolean(child.getAttribute("nolabel"))
                         : true;
                     const fieldName = child.getAttribute("name");
                     string = child.hasAttribute("string")
