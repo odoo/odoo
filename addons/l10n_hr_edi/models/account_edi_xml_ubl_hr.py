@@ -58,7 +58,7 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
     def _get_document_nsmap(self, vals):
         nsmap = super()._get_document_nsmap(vals)
         nsmap.update({
-            'hrextac': "urn:hzn.hr:schema:xsd:HRExtensionAggregateComponents-1",
+            'hrextac': "urn:mfin.gov.hr:schema:xsd:HRExtensionAggregateComponents-1",
         })
         return nsmap
 
