@@ -14,4 +14,9 @@ class IrUiMenu(models.Model):
         if self.env.user.has_group('project.group_project_stages'):
             res.append(self.env.ref('project.menu_projects').id)
             res.append(self.env.ref('project.menu_projects_config').id)
+        if not (
+            self.env.user.has_group('project.group_project_stages') and
+            self.env.user.has_group('base.group_no_one')
+        ):
+            res.append(self.env.ref('project.menu_project_config_project_stage').id)
         return res
