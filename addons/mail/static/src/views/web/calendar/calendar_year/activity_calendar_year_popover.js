@@ -12,6 +12,7 @@ export class ActivityCalendarYearPopover extends CalendarYearPopover {
         const action = await this.orm.call("mail.activity", "action_open_document", [
             record.rawRecord.id,
         ]);
-        this.actionService.doAction(action);
+        this.actionService.doAction(action, { onClose: () => this.props.model.load() });
+        this.props.close();
     }
 }
