@@ -13,7 +13,7 @@ patch(DiscussContent.prototype, {
     get threadDescriptionAttClass() {
         return {
             ...super.threadDescriptionAttClass,
-            "text-warning":
+            "text-muted":
                 this.thread.channel?.livechat_status === "need_help" && this.thread.description,
         };
     },
