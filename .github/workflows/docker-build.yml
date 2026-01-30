@@ -323,7 +323,7 @@ jobs:
           
           echo "🔄 Updating docker compose services..."
           docker compose pull || true
-          docker compose up -d --no-deps --build odoo || docker-compose up -d
+          docker compose up -d --no-deps --build odoo || docker compose up -d
           
           echo "✅ Deployment completed"
           docker ps | grep odoo || echo "⚠️ Odoo container status unknown"
