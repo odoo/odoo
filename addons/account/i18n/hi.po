@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-23 18:36+0000\n"
-"PO-Revision-Date: 2026-01-24 11:49+0000\n"
+"POT-Creation-Date: 2026-01-30 18:36+0000\n"
+"PO-Revision-Date: 2026-01-31 11:26+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/account/"
 "hi/>\n"
@@ -1745,7 +1745,7 @@ msgstr ""
 "                                    <td align=\"left\" style=\"padding-left: "
 "16px;\">\n"
 "                                        आपको <t t-if=\"invoice_count &gt; "
-"1\">नया इलेक्ट्रॉनिक इनवॉइस!</t><t t-else=\"\">इलेक्ट्रॉनिक इनवॉइस</t> मिला है!\n"
+"1\">नया इलेक्ट्रॉनिक इनवॉइस</t><t t-else=\"\">इलेक्ट्रॉनिक इनवॉइस</t> मिला है!\n"
 "                                    </td>\n"
 "                                    <td align=\"right\" style=\"padding-"
 "right: 16px;\">\n"
@@ -1840,9 +1840,9 @@ msgstr ""
 "                                        <br/>\n"
 "                                        <p style=\"text-align: center; "
 "margin-top: 16px;\">\n"
-"                                            अगर आप इनवॉइस आने पर ईमेल पाना बंद "
-"करना चाहते हैं, तो <a t-attf-href=\"/my/journal/{{ object.id }}/"
-"unsubscribe\">यहां</a> क्लिक करें.\n"
+"                                            अगर आप इनवॉइस के ईमेल नहीं पाना "
+"चाहते, तो <a t-attf-href=\"/my/journal/{{ object.id }}/unsubscribe\">यहां</a> "
+"क्लिक करके अनसब्सक्राइब करें.\n"
 "                                        </p>\n"
 "                                    </td>\n"
 "                                </tr>\n"
@@ -3628,7 +3628,7 @@ msgstr "अटैचमेंट"
 #: model:ir.model.fields,field_description:account.field_res_company__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__message_attachment_count
 msgid "Attachment Count"
-msgstr "अटैचमेंट काउंट"
+msgstr "अटैचमेंट की संख्या"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__attachment_ids
@@ -13088,7 +13088,7 @@ msgstr "समस्या का विवरण"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Product"
-msgstr "उत्पाद"
+msgstr "प्रॉडक्ट"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_product_product_categories
@@ -13103,7 +13103,7 @@ msgstr "प्रॉडक्ट कैटगरी"
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_category_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Product Category"
-msgstr "उत्पाद श्रेणी"
+msgstr "प्रॉडक्ट कैटगरी"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__quantity
@@ -13123,7 +13123,7 @@ msgstr "प्रॉडक्ट माप की इकाई"
 #. module: account
 #: model:ir.model,name:account.model_product_product
 msgid "Product Variant"
-msgstr "उत्पाद प्रकार"
+msgstr "प्रॉडक्ट वैरिएंट"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.product_product_action_purchasable
@@ -13291,7 +13291,7 @@ msgstr "क्वांटिटी:"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__quarterly
 msgid "Quarterly"
-msgstr "त्रैमासिक"
+msgstr "तिमाही"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__quick_edit_mode
@@ -19190,6 +19190,14 @@ msgstr ""
 "आपको अपनी कंपनी की सेटिंग्स में 'एक्सचेंज गेन या लॉस जर्नल' को सेट करना होगा. यह इसलिए "
 "ज़रूरी है, ताकि जब विदेशी मुद्रा की दरों में बदलाव के कारण आपके हिसाब-किताब में फायदा या "
 "नुकसान हो, तो उसकी एंट्री अपने-आप दर्ज हो सके."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+msgid ""
+"You may only use samples in demo mode, try uploading one of your invoices "
+"instead."
+msgstr ""
 
 #. module: account
 #. odoo-python
