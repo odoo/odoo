@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 19:02+0000\n"
+"POT-Creation-Date: 2026-01-29 19:00+0000\n"
 "PO-Revision-Date: 2026-01-22 19:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -27,8 +28,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_hr_edi/models/account_move.py:0
 msgid ""
-"%(ts)s: Payments for eRacun document (ElectroicId: %(eid)s) in the amount of"
-" %(mnt)s EUR has been reported successfully. (Request ID: %(req_id)s)"
+"%(ts)s: Payments for eRacun document (ElectroicId: %(eid)s) in the amount of "
+"%(mnt)s EUR has been reported successfully. (Request ID: %(req_id)s)"
 msgstr ""
 
 #. module: l10n_hr_edi
@@ -88,6 +89,18 @@ msgstr ""
 #. module: l10n_hr_edi
 #: model_terms:ir.ui.view,arch_db:l10n_hr_edi.account_move_form_inherit
 msgid ""
+"<span>This document is dated before 01.01.2026 and is not fiscalized by "
+"MojEracun</span>"
+msgstr ""
+
+#. module: l10n_hr_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hr_edi.account_move_form_inherit
+msgid "<span>This document is not successfully fiscalized by MojEracun</span>"
+msgstr ""
+
+#. module: l10n_hr_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hr_edi.account_move_form_inherit
+msgid ""
 "<span>Warning: some payments for this document are not reported to the Tax "
 "Autority</span>"
 msgstr ""
@@ -95,8 +108,8 @@ msgstr ""
 #. module: l10n_hr_edi
 #: model_terms:ir.ui.view,arch_db:l10n_hr_edi.account_move_form_inherit
 msgid ""
-"<span>Warning: this document was not successfully delivered to the recepient"
-" via EDI and needs to be sent manually (ex. via e-mail)</span>"
+"<span>Warning: this document was not successfully delivered to the recepient "
+"via EDI and needs to be sent manually (ex. via e-mail)</span>"
 msgstr ""
 
 #. module: l10n_hr_edi
@@ -779,8 +792,8 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_hr_edi.field_account_journal__l10n_hr_business_premises_label
 #: model:ir.model.fields,help:l10n_hr_edi.field_account_journal__l10n_hr_business_premises_label_refund
 msgid ""
-"Must contain at least one character and a maximum of 20 numeric (0-9) and/or"
-" alphabetic (a-z, A-Z) characters."
+"Must contain at least one character and a maximum of 20 numeric (0-9) and/or "
+"alphabetic (a-z, A-Z) characters."
 msgstr ""
 
 #. module: l10n_hr_edi
@@ -1099,8 +1112,7 @@ msgstr ""
 #. module: l10n_hr_edi
 #. odoo-python
 #: code:addons/l10n_hr_edi/models/account_move_send.py:0
-msgid ""
-"The document has been sent to MojEracun service provider for processing"
+msgid "The document has been sent to MojEracun service provider for processing"
 msgstr ""
 
 #. module: l10n_hr_edi
