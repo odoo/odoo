@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:36+0000\n"
-"PO-Revision-Date: 2026-01-23 16:16+0000\n"
+"POT-Creation-Date: 2026-01-30 18:36+0000\n"
+"PO-Revision-Date: 2026-01-31 13:10+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-4/sale/"
 "ja/>\n"
@@ -993,7 +993,7 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in "
 "('draft', 'sent') else 'order'\"/>\n"
-"        こんにちは。\n"
+"        いつもお世話になっております。\n"
 "        <br/><br/>\n"
 "        <t t-out=\"doc_name or ''\">見積書</t> <span style=\"font-weight: "
 "bold;\" t-out=\"object.name or ''\">S00052</span>\n"
@@ -1002,7 +1002,7 @@ msgstr ""
 "        </t>\n"
 "        金額 <span style=\"font-weight: bold;\" t-"
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"10.00</span> の見積送状のご用意ができました。\n"
+"10.00</span> の仮請求書のご用意ができました。\n"
 "        <br/><br/>\n"
 "         ご不明な点がございましたら、お気軽にお問合せ下さい。\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
@@ -1200,7 +1200,7 @@ msgstr "<span>警告: このオーダは以下と重複している可能性が�
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
-msgstr "<strong class=\"d-block mt-3\">配送先住所</strong>"
+msgstr "<strong class=\"d-block mt-3\">配送先</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1482,12 +1482,12 @@ msgstr "許可された単位"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr "顧客に見積送状を送る"
+msgstr "顧客に仮請求書を送る"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr "見積送状を送る"
+msgstr "仮請求書を送る"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_document__attached_on_sale
@@ -1566,7 +1566,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "分析用配分"
+msgstr "分析分配"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
@@ -2052,7 +2052,7 @@ msgstr "コネクター"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__consolidated_billing
 msgid "Consolidated Billing"
-msgstr "連結請求"
+msgstr "まとめ請求"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
@@ -2148,8 +2148,8 @@ msgid ""
 "Create one invoice for all orders related to same customer, same invoicing "
 "address and same delivery address."
 msgstr ""
-"同じ顧客、請求先住所、配送先住所に関連するすべてのオーダについて、1つの顧客請"
-"求書を作成します。"
+"同じ顧客、請求先住所、配送先に関連するすべてのオーダについて、1つの顧客請求書"
+"を作成します。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_uid
@@ -2364,13 +2364,18 @@ msgstr "配送済数量"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_shipping_id
 msgid "Delivery Address"
-msgstr "配送先住所"
+msgstr "配送先"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__commitment_date
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivery Date"
 msgstr "配送日"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Delivery Date:"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
@@ -3238,7 +3243,7 @@ msgstr "請求目標"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing and Shipping Address"
-msgstr "請求および配送先住所"
+msgstr "請求および配送先"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__is_downpayment
@@ -3904,7 +3909,7 @@ msgstr "PDF見積書ビルダ"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr "見積送状"
+msgstr "仮請求書"
 
 #. module: sale
 #. odoo-javascript
@@ -4099,17 +4104,17 @@ msgstr "印刷"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr "見積送状"
+msgstr "仮請求書"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro-Forma Invoice #"
-msgstr "見積送状番号"
+msgstr "仮請求書番号"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
 msgid "Pro-forma Invoices"
-msgstr "見積送状"
+msgstr "仮請求書"
 
 #. module: sale
 #. odoo-javascript
@@ -4780,7 +4785,7 @@ msgstr "販売：支払済"
 #. module: sale
 #: model:mail.template,name:sale.email_template_proforma
 msgid "Sales: Send Proforma"
-msgstr "販売: 見積送状を送付"
+msgstr "販売: 仮請求書を送付"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
@@ -4872,7 +4877,7 @@ msgstr "送信"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr "見積送状を送付"
+msgstr "仮請求書を送付"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5435,6 +5440,13 @@ msgstr "プロダクト(%(product)s)に互換性のない値があります:%(va
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/controllers/portal.py:0
+#: code:addons/sale/wizard/payment_link_wizard.py:0
+msgid "The sale order has expired."
+msgstr ""
+
+#. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 msgid "The value of the down payment amount must be positive."
 msgstr "前受金の金額は正の値でなければなりません。"
@@ -5497,7 +5509,7 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
-"これは、お客様に約束された納期です。設定されている場合、配送オーダは、製品の"
+"これは、お客様に約束された納期です。設定されている場合、出荷オーダは、製品の"
 "リードタイムではなく、この日付に基づいてスケジュールされます。"
 
 #. module: sale
@@ -5811,12 +5823,12 @@ msgstr ""
 #. module: sale
 #: model:mail.template,description:sale.email_template_proforma
 msgid "Used by salespeople when they send proforma to prospects"
-msgstr "営業担当者によって見積送状を見込み客に送付する際に使用される"
+msgstr "営業担当者によって仮請求書を見込み客に送付する際に使用される"
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
 msgid "Used by salespeople when they send quotations or proforma to prospects"
-msgstr "営業担当者によって見積書や見積送状を見込み客に送付する際に使用される"
+msgstr "営業担当者によって見積書や仮請求書を見込み客に送付する際に使用される"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations

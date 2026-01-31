@@ -7,13 +7,13 @@
 # lhmflexerp <lhm@flexerp.dk>, 2025
 # Wil Odoo, 2025
 # Kira Petersen, 2025
-# "Kira Petersen François (peti)" <peti@odoo.com>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:36+0000\n"
-"PO-Revision-Date: 2025-12-06 13:29+0000\n"
+"POT-Creation-Date: 2026-01-30 18:36+0000\n"
+"PO-Revision-Date: 2026-01-31 13:09+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/sale/"
 "da/>\n"
@@ -773,7 +773,7 @@ msgstr ""
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
 "                <td style=\"width: 30%;\" align=\"right\"><span style=\"font-"
-"weight:bold;\">Moms:</span></td>\n"
+"weight:bold;\">Skatter:</span></td>\n"
 "                <td style=\"width: 10%;\" align=\"right\" t-"
 "out=\"format_amount(object.amount_tax, object.currency_id) or ''\">0,00 kr.</"
 "td>\n"
@@ -846,7 +846,7 @@ msgstr ""
 "width=\"100%\" style=\"color: #454748; font-size: 12px;\">\n"
 "            <tr>\n"
 "                <td>\n"
-"                    <span style=\"font-weight:bold;\">Leveringsmetode:</"
+"                    <span style=\"font-weight:bold;\">Forsendelsesmetode:</"
 "span>\n"
 "                    <t t-out=\"object.carrier_id.name or ''\"/>\n"
 "                    <t t-if=\"object.amount_delivery == 0.0\">\n"
@@ -1967,7 +1967,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr "Beregn leveringsomkostninger, og send med Easypost"
+msgstr "Beregn leveringsomkostninger, og send med EasyPost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2404,6 +2404,11 @@ msgid "Delivery Date"
 msgstr "Leveringsdato"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Delivery Date:"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
 msgid "Delivery Methods"
 msgstr "Leveringsmetoder"
@@ -2698,7 +2703,7 @@ msgstr "Duplikeret ordre"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
 msgid "Easypost Connector"
-msgstr "Forsendelse med Easypost"
+msgstr "Forsendelse med EasyPost"
 
 #. module: sale
 #. odoo-javascript
@@ -5485,6 +5490,13 @@ msgstr "Den procentdel af beløbet, der skal betales for at bekræfte tilbuddet.
 #: code:addons/sale/models/product_template.py:0
 msgid "The product (%(product)s) has incompatible values: %(value_list)s"
 msgstr "Produktet (%(product)s) har uforenelige værdier: %(value_list)s"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/controllers/portal.py:0
+#: code:addons/sale/wizard/payment_link_wizard.py:0
+msgid "The sale order has expired."
+msgstr ""
 
 #. module: sale
 #. odoo-python
