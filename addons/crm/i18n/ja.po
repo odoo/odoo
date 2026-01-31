@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2026-01-24 12:17+0000\n"
+"POT-Creation-Date: 2026-01-30 18:35+0000\n"
+"PO-Revision-Date: 2026-01-31 12:25+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/crm/"
 "ja/>\n"
@@ -302,8 +302,8 @@ msgstr "<span>をこの案件に統合しました。</span>"
 #: model:mail.template,body_html:crm.mail_template_demo_crm_lead
 msgid ""
 "<t>\n"
-"Hi <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco "
-"Addict</t>,<br/><br/>\n"
+"Hi <t t-out=\"object.partner_id and object.partner_id.name or ''\">Acme "
+"Corporation</t>,<br/><br/>\n"
 "Welcome to <t t-out=\"object.company_id.name or ''\">My Company (San "
 "Francisco)</t>.\n"
 "It's great to meet you! Now that you're on board, you'll discover what <t t-"
@@ -325,37 +325,6 @@ msgid ""
 "</t>\n"
 "        </t>"
 msgstr ""
-"<t>\n"
-"<t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</"
-"t> 様<br/><br/>\n"
-"\n"
-"<t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> へよ"
-"うこそ。  \n"
-"このたびはご利用いただき、誠にありがとうございます。  \n"
-"<t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> がご"
-"提供する各種サービスについて、今後ご案内させていただきます。  \n"
-"担当の <t t-out=\"object.user_id.name or ''\">Marc Demo</t> が、Odoo を最大限"
-"にご活用いただけるよう、全力でサポートいたします。  \n"
-"差し支えなければ、近日中に簡単なデモンストレーションのご案内をさせていただけ"
-"ればと存じます。<br/>\n"
-"\n"
-"ご不明な点などございましたら、いつでもお気軽にご連絡くださいませ。<br/><br/>"
-"\n"
-"\n"
-"何卒よろしくお願い申し上げます。<br/>\n"
-"\n"
-"<t t-if=\"object.user_id\">\n"
-"    <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"    <br/>メールアドレス：<t t-out=\"object.user_id.email or ''\""
-">mark.brown23@example.com</t>\n"
-"    <br/>電話番号：<t t-out=\"object.user_id.phone or ''\">+1 "
-"650-123-4567</t>\n"
-"</t>\n"
-"<t t-else=\"\">\n"
-"    <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>"
-"\n"
-"</t>\n"
-"</t>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
@@ -635,7 +604,8 @@ msgstr "アーカイブ済"
 msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the "
 "<b>first team by default.</b>"
-msgstr "あなたは販売チームに所属していないため、<b>デフォルトで最初のチーム</b>のパイ"
+msgstr ""
+"あなたは販売チームに所属していないため、<b>デフォルトで最初のチーム</b>のパイ"
 "プラインが表示されます。"
 
 #. module: crm
@@ -1076,7 +1046,7 @@ msgstr "リードを案件に変換（一括ではない）"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Convert into an Opportunity to see it in your Pipeline"
-msgstr ""
+msgstr "案件に変換してパイプラインに表示"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -1169,7 +1139,7 @@ msgstr "定期的計画を作成"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Create a landing page"
-msgstr ""
+msgstr "ランディングページを作成"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_mining_in_pipeline
@@ -1206,7 +1176,7 @@ msgstr "案件を作成してパイプラインを始めましょう。"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Create leads on specific answers"
-msgstr ""
+msgstr "特定の回答に対してリードを作成"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__create_uid
@@ -1420,7 +1390,7 @@ msgstr "本当にこのステージを更新しますか?"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Do you want to install the \"%(module_name)s\" App?"
-msgstr ""
+msgstr "%(module_name)s アプリをインストールしますか?"
 
 #. module: crm
 #. odoo-javascript
@@ -1490,7 +1460,7 @@ msgstr "Eメールドメイン基準"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Email Marketing"
-msgstr ""
+msgstr "メールマーケティング"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_state
@@ -1616,7 +1586,7 @@ msgstr "項目追加..."
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Failed to install \"%(module_name)s\""
-msgstr ""
+msgstr "「%(module_name)s 」のインストールに失敗しました"
 
 #. module: crm
 #. odoo-javascript
@@ -1647,7 +1617,7 @@ msgstr "予測リードスコア計算に使用できるフィールド"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Fold by Default"
-msgstr ""
+msgstr "デフォルトで折りたたむ"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__fold
@@ -1722,13 +1692,13 @@ msgstr "今後の活動"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.xml:0
 msgid "Generate Leads"
-msgstr ""
+msgstr "リード生成"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Generate leads from any email you get"
-msgstr ""
+msgstr "受信したあらゆるメールからリードを自動生成"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_mine
@@ -1898,7 +1868,7 @@ msgstr "リードと案件のテンプレートをインポート"
 #. odoo-javascript
 #: code:addons/crm/static/src/webclient/share_target/crm_share_target_item.xml:0
 msgid "In sales team"
-msgstr ""
+msgstr "販売チーム内"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -1927,7 +1897,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Installing \"%(module_name)s\""
-msgstr ""
+msgstr "\"%(module_name)s\" をインストールしています"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_config_settings__crm_auto_assignment_interval_type
@@ -2165,7 +2135,7 @@ msgstr "ストリング内リードスコアリング開始日"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Lead Sourcing"
-msgstr ""
+msgstr "リードソーシング"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -2196,7 +2166,7 @@ msgstr "リード/案件が作成されました"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_creation_message
 msgid "Lead/Opportunity created<br/>"
-msgstr ""
+msgstr "リード/商談案件の創出<br/>"
 
 #. module: crm
 #. odoo-python
@@ -2438,7 +2408,7 @@ msgstr "MRR"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Mail plugins"
-msgstr ""
+msgstr "メールプラグイン"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2460,6 +2430,8 @@ msgid ""
 "Manage members or partners. Members get levels and pricelists, partners "
 "allow lead assignment and commission plans."
 msgstr ""
+"マネジャーまたはパートナーを管理します。メンバーにはレベルと価格表が設定さ"
+"れ、パートナーにはリード割り当てとコミッションプランが許可されます。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_config_settings__crm_auto_assignment_action
@@ -3893,7 +3865,8 @@ msgstr ""
 msgid ""
 "This can be used to automatically assign leads to sales persons based on "
 "rules"
-msgstr "これは、ルールに基づいて自動的にリードを営業担当者に割り当てるために使用する"
+msgstr ""
+"これは、ルールに基づいて自動的にリードを営業担当者に割り当てるために使用する"
 "ことができます。"
 
 #. module: crm
@@ -4609,6 +4582,64 @@ msgstr "有効なメールアドレス"
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "valid phone number"
 msgstr "有効な電話番号"
+
+#~ msgid ""
+#~ "<t>\n"
+#~ "Hi <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco "
+#~ "Addict</t>,<br/><br/>\n"
+#~ "Welcome to <t t-out=\"object.company_id.name or ''\">My Company (San "
+#~ "Francisco)</t>.\n"
+#~ "It's great to meet you! Now that you're on board, you'll discover what <t "
+#~ "t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> has "
+#~ "to offer. My name is <t t-out=\"object.user_id.name or ''\">Marc Demo</t> "
+#~ "and I'll help you get the most out of Odoo. Could we plan a quick demo "
+#~ "soon?<br/>\n"
+#~ "Feel free to reach out at any time!<br/><br/>\n"
+#~ "Best,<br/>\n"
+#~ "<t t-if=\"object.user_id\">\n"
+#~ "    <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
+#~ "    <br/>Email: <t t-out=\"object.user_id.email or "
+#~ "''\">mark.brown23@example.com</t>\n"
+#~ "    <br/>Phone: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</"
+#~ "t>\n"
+#~ "</t>\n"
+#~ "<t t-else=\"\">\n"
+#~ "    <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</"
+#~ "t>\n"
+#~ "</t>\n"
+#~ "        </t>"
+#~ msgstr ""
+#~ "<t>\n"
+#~ "<t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco "
+#~ "Addict</t> 様<br/><br/>\n"
+#~ "\n"
+#~ "<t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> "
+#~ "へようこそ。  \n"
+#~ "このたびはご利用いただき、誠にありがとうございます。  \n"
+#~ "<t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> "
+#~ "がご提供する各種サービスについて、今後ご案内させていただきます。  \n"
+#~ "担当の <t t-out=\"object.user_id.name or ''\">Marc Demo</t> が、Odoo を最"
+#~ "大限にご活用いただけるよう、全力でサポートいたします。  \n"
+#~ "差し支えなければ、近日中に簡単なデモンストレーションのご案内をさせていただ"
+#~ "ければと存じます。<br/>\n"
+#~ "\n"
+#~ "ご不明な点などございましたら、いつでもお気軽にご連絡くださいませ。<br/"
+#~ "><br/>\n"
+#~ "\n"
+#~ "何卒よろしくお願い申し上げます。<br/>\n"
+#~ "\n"
+#~ "<t t-if=\"object.user_id\">\n"
+#~ "    <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
+#~ "    <br/>メールアドレス：<t t-out=\"object.user_id.email or "
+#~ "''\">mark.brown23@example.com</t>\n"
+#~ "    <br/>電話番号：<t t-out=\"object.user_id.phone or ''\">+1 "
+#~ "650-123-4567</t>\n"
+#~ "</t>\n"
+#~ "<t t-else=\"\">\n"
+#~ "    <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</"
+#~ "t>\n"
+#~ "</t>\n"
+#~ "</t>"
 
 #~ msgid "<i class=\"fa fa-building\" title=\"Company\"/>"
 #~ msgstr "<i class=\"fa fa-building\" title=\"Company\"/>"

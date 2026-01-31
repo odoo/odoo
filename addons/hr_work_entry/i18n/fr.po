@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 18:35+0000\n"
+"POT-Creation-Date: 2026-01-30 18:35+0000\n"
 "PO-Revision-Date: 2026-01-13 11:15+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -21,8 +21,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : "
-"((n != 0 && n % 1000000 == 0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_work_entry
@@ -51,12 +51,6 @@ msgstr ""
 "Planning : les prestations seront générées à partir du planning de "
 "l'employé. (nécessite l'application Planning)\n"
 "    "
-
-#. module: hr_work_entry
-#. odoo-python
-#: code:addons/hr_work_entry/models/hr_work_entry.py:0
-msgid "%(employee)s does not have a contract on %(date)s."
-msgstr "%(employee)s n’a pas de contrat le %(date)s."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -97,10 +91,10 @@ msgid ""
 "                            <span class=\"o_row mw-50 mw-sm-25\" "
 "invisible=\"not is_manual\">Manual</span>"
 msgstr ""
-"<span class=\"text-muted fw-medium\" invisible=\"not is_manual\""
-">Source</span>\n"
-"                            <span class=\"o_row mw-50 mw-sm-25\" invisible="
-"\"not is_manual\">Manuel</span>"
+"<span class=\"text-muted fw-medium\" invisible=\"not is_manual\">Source</"
+"span>\n"
+"                            <span class=\"o_row mw-50 mw-sm-25\" "
+"invisible=\"not is_manual\">Manuel</span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
@@ -186,7 +180,8 @@ msgstr "Temps supplémentaire (payé)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_adoption_legal
 msgid "Adoption leave and foster parent leave not paid by the employer"
-msgstr "Congé d’adoption et congé de parent d’accueil non payés par l’employeur"
+msgstr ""
+"Congé d’adoption et congé de parent d’accueil non payés par l’employeur"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_defence
@@ -1147,8 +1142,8 @@ msgid ""
 "Maternity leave or maternity leave converted in the event of death or "
 "hospitalization of the mother"
 msgstr ""
-"Congé de maternité ou congé de maternité converti en cas de décès ou d’"
-"hospitalisation de la mère"
+"Congé de maternité ou congé de maternité converti en cas de décès ou "
+"d’hospitalisation de la mère"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__user_id
@@ -1320,7 +1315,8 @@ msgstr "Heures supplémentaires (rémunérées à 150 %)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_overtime_no_onss
 msgid "Overtime Hours not suject to social security contribution"
-msgstr "Heures supplémentaires non soumises aux cotisations de sécurité sociale"
+msgstr ""
+"Heures supplémentaires non soumises aux cotisations de sécurité sociale"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_overtime_rest_days
@@ -1343,8 +1339,8 @@ msgid ""
 "Overtime not subject to contributions in the horeca sector (hotel, "
 "restaurant, catering)"
 msgstr ""
-"Heures supplémentaires non soumises aux cotisations dans le secteur de l’"
-"horeca (hôtel, restaurant, services de traiteur)"
+"Heures supplémentaires non soumises aux cotisations dans le secteur de "
+"l’horeca (hôtel, restaurant, services de traiteur)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_pto
@@ -1720,8 +1716,8 @@ msgid ""
 "Service planned but not provided by childminders due to the absence of "
 "children for reasons beyond the control of the childminder"
 msgstr ""
-"Service planifié mais non presté par les gardes d’enfants en raison de l’"
-"absence d’enfants, pour des raisons indépendantes de leur volonté"
+"Service planifié mais non presté par les gardes d’enfants en raison de "
+"l’absence d’enfants, pour des raisons indépendantes de leur volonté"
 
 #. module: hr_work_entry
 #. odoo-javascript
@@ -2054,8 +2050,8 @@ msgid ""
 "that day"
 msgstr ""
 "Ce champ détermine le comportement du raccourci dans la vue Gantt des "
-"entrées de travail. L’option Ajouter demandera toujours une durée et l’"
-"ajoutera aux entrées de travail existantes, tandis que l’option Remplacer "
+"entrées de travail. L’option Ajouter demandera toujours une durée et "
+"l’ajoutera aux entrées de travail existantes, tandis que l’option Remplacer "
 "remplacera simplement toutes les entrées de travail de la journée"
 
 #. module: hr_work_entry
@@ -2161,8 +2157,8 @@ msgid ""
 "Unpaid compensatory rest at the time of recovery following hours worked at "
 "another time"
 msgstr ""
-"Repos compensatoire non rémunéré lors de la récupération, à la suite d’"
-"heures prestées à un autre moment"
+"Repos compensatoire non rémunéré lors de la récupération, à la suite "
+"d’heures prestées à un autre moment"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_unpredictable
@@ -2342,8 +2338,8 @@ msgid ""
 "Work accident or occupational illness with employer supplement from the 2nd "
 "week of CCT 12bis/13bis"
 msgstr ""
-"Accident du travail ou maladie professionnelle avec supplément de l’"
-"employeur à partir de la 2e semaine (CCT 12bis/13bis)"
+"Accident du travail ou maladie professionnelle avec supplément de "
+"l’employeur à partir de la 2e semaine (CCT 12bis/13bis)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident_guaranteed_monthly
@@ -2461,3 +2457,6 @@ msgstr "par ex. WORK100, LEAVE210, OUT, ..."
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar_multi_create_form
 msgid "hours"
 msgstr "heures"
+
+#~ msgid "%(employee)s does not have a contract on %(date)s."
+#~ msgstr "%(employee)s n’a pas de contrat le %(date)s."

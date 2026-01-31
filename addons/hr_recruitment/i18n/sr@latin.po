@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 18:35+0000\n"
+"POT-Creation-Date: 2026-01-30 18:35+0000\n"
 "PO-Revision-Date: 2026-01-24 12:25+0000\n"
 "Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
@@ -351,9 +351,9 @@ msgid ""
 "<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All "
 "emails sent or received are saved in the history here</i>"
 msgstr ""
-"<div><b>Probajte da pošaljete email</b> kandidatu/"
-"kandidatkinji.</div><div><i>Savet: Svi email-ovi poslati ili primljeni se "
-"čuvaju ovde kao istorija</i>"
+"<div><b>Probajte da pošaljete email</b> kandidatu/kandidatkinji.</"
+"div><div><i>Savet: Svi email-ovi poslati ili primljeni se čuvaju ovde kao "
+"istorija</i>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -711,11 +711,6 @@ msgstr "Svojstva kandidata"
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_stage_changed
 msgid "Applicant Stage Changed"
 msgstr "Faza kandidata je promenjena"
-
-#. module: hr_recruitment
-#: model:mail.message.subtype,description:hr_recruitment.mt_applicant_new
-msgid "Applicant created"
-msgstr "Kandidat je kreiran"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_name
@@ -3334,7 +3329,8 @@ msgid "Talent Pools"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:mail.message.subtype,description:hr_recruitment.mt_talent_new
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "Talent created"
 msgstr ""
 
@@ -3865,6 +3861,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "to<br/><span class=\"text-nowrap\">recruit</span>"
 msgstr ""
+
+#~ msgid "Applicant created"
+#~ msgstr "Kandidat je kreiran"
 
 #~ msgid ""
 #~ "<span invisible=\"not is_warning_visible\">\n"

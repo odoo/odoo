@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 18:35+0000\n"
+"POT-Creation-Date: 2026-01-30 18:35+0000\n"
 "PO-Revision-Date: 2026-01-24 12:20+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -625,8 +625,8 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-envelope flex-shrink-0 me-1 text-center\" title=\"Email\"/>"
 msgstr ""
-"<i class=\"fa fa-envelope flex-shrink-0 me-1 text-center\" title="
-"\"Correo electrónico\"/>"
+"<i class=\"fa fa-envelope flex-shrink-0 me-1 text-center\" title=\"Correo "
+"electrónico\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -639,8 +639,8 @@ msgid ""
 "<i class=\"fa fa-user\" title=\"new_applications_icon\" aria-hidden=\"true\"/"
 ">"
 msgstr ""
-"<i class=\"fa fa-user\" title=\"new_applications_icon\" aria-hidden=\"true\""
-"/>"
+"<i class=\"fa fa-user\" title=\"new_applications_icon\" aria-hidden=\"true\"/"
+">"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -977,11 +977,6 @@ msgstr "Propiedades del postulante"
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_stage_changed
 msgid "Applicant Stage Changed"
 msgstr "Etapa del postulante cambiada"
-
-#. module: hr_recruitment
-#: model:mail.message.subtype,description:hr_recruitment.mt_applicant_new
-msgid "Applicant created"
-msgstr "Postulante creado"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_name
@@ -3654,7 +3649,8 @@ msgid "Talent Pools"
 msgstr "Bases de talentos"
 
 #. module: hr_recruitment
-#: model:mail.message.subtype,description:hr_recruitment.mt_talent_new
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "Talent created"
 msgstr "Talento creado"
 
@@ -4206,6 +4202,9 @@ msgstr "base de talentos"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "to<br/><span class=\"text-nowrap\">recruit</span>"
 msgstr "por<br/><span class=\"text-nowrap\">reclutar</span>"
+
+#~ msgid "Applicant created"
+#~ msgstr "Postulante creado"
 
 #~ msgid ""
 #~ "<span invisible=\"not is_warning_visible\">\n"

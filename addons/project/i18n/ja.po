@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2026-01-24 12:32+0000\n"
+"PO-Revision-Date: 2026-01-31 12:37+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "project/ja/>\n"
@@ -1813,7 +1813,8 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project_stage__rotting_threshold_days
 msgid ""
 "Day count before projects in this stage become stale. Set to 0 to disable."
-msgstr ""
+msgstr "このステージのプロジェクトが期限切れになるまでの日数。無効化するには0に設定し"
+"てください。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rotting_threshold_days
@@ -1876,7 +1877,7 @@ msgstr "Dear"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Default"
-msgstr ""
+msgstr "デフォルト"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
@@ -1940,7 +1941,7 @@ msgstr "ステージを削除"
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_one2many_field/subtask_list_renderer.js:0
 msgid "Delete Subtask"
-msgstr ""
+msgstr "サブタスクを削除"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__milestone_id
@@ -1996,7 +1997,7 @@ msgstr "デザイン"
 #. module: project
 #: model:project.role,name:project.project_role_2
 msgid "Design Architect"
-msgstr ""
+msgstr "設計建築家"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2154,7 +2155,7 @@ msgstr "編集中"
 #. module: project
 #: model:project.role,name:project.project_role_5
 msgid "Electrician"
-msgstr ""
+msgstr "電気技術者"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_email
@@ -2279,7 +2280,7 @@ msgstr "財務"
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Fold by Default"
-msgstr ""
+msgstr "デフォルトで折りたたむ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage__fold
@@ -2296,7 +2297,7 @@ msgstr "フォロー"
 #. module: project
 #: model:portal.entry,description:project.portal_tasks
 msgid "Follow and comments tasks of your projects"
-msgstr ""
+msgstr "プロジェクトのタスクをフォローし、コメントを追加"
 
 #. module: project
 #: model:portal.entry,description:project.portal_projects
@@ -2347,7 +2348,7 @@ msgstr "今後の活動"
 #. module: project
 #: model:project.role,name:project.project_role_6
 msgid "Gas Technician"
-msgstr ""
+msgstr "ガス技術者"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_update_all_action
@@ -2394,6 +2395,9 @@ msgid ""
 "individual tasks. Internal users automatically gain access to tasks they are "
 "assigned to."
 msgstr ""
+"ユーザをフォロワーとして追加することでアクセス権を付与します。プロジェクト全"
+"体または個々のタスクに対して追加できます。内部ユーザは、割り当てられたタスク"
+"へのアクセス権を自動的に取得します。"
 
 #. module: project
 #. odoo-javascript
@@ -2428,7 +2432,7 @@ msgstr "メッセージあり"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__has_template_ancestor
 msgid "Has Template Ancestor"
-msgstr ""
+msgstr "テンプレートの上位要素あり"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_invitation_follower
@@ -2576,6 +2580,9 @@ msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban and List "
 "views of your projects. Projects in a folded stage are considered as closed."
 msgstr ""
+"有効にすると、このステージはプロジェクトのかんばんビューおよびリストビューで"
+"折りたたんで表示されます。折りたたまれたステージにあるプロジェクトは、完了(ク"
+"ローズ)したものとして扱われます。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -2608,7 +2615,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Import Template for Tasks"
-msgstr ""
+msgstr "タスク用テンプレートをインポート"
 
 #. module: project
 #. odoo-javascript
@@ -2626,7 +2633,7 @@ msgstr "進行中"
 #. odoo-javascript
 #: code:addons/project/static/src/webclient/share_target/project_share_target_item.xml:0
 msgid "In Project"
-msgstr ""
+msgstr "プロジェクト内"
 
 #. module: project
 #. odoo-javascript
@@ -2667,17 +2674,17 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.js:0
 msgid "Invalid Display Name"
-msgstr ""
+msgstr "無効な表示名"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
 msgid "Invited internal and portal users"
-msgstr ""
+msgstr "招待された内部ユーザおよびポータルユーザ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited internal users"
-msgstr ""
+msgstr "招待された内部ユーザ"
 
 #. module: project
 #. odoo-javascript
@@ -2749,7 +2756,7 @@ msgstr ""
 #. module: project
 #: model:project.project,name:project.project_template_2
 msgid "Kitchen Assembly"
-msgstr ""
+msgstr "キッチン組立"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -2852,7 +2859,7 @@ msgstr "以降"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Let's create a regular <b>project</b>."
-msgstr ""
+msgstr "定期的な<b>プロジェクト</b>を作成しましょう。"
 
 #. module: project
 #. odoo-javascript
@@ -2916,7 +2923,7 @@ msgstr "ローカルパートに基づく着信検知"
 #. module: project
 #: model:project.role,name:project.project_role_3
 msgid "Logistics Staff"
-msgstr ""
+msgstr "物流スタッフ"
 
 #. module: project
 #. odoo-javascript

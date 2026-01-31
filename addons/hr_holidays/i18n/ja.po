@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2026-01-24 12:21+0000\n"
+"PO-Revision-Date: 2026-01-31 12:28+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "hr_holidays/ja/>\n"
@@ -1673,7 +1673,7 @@ msgstr "日付"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_report__working_schedule_aligned_date_from
 msgid "Date From"
-msgstr ""
+msgstr "開始日"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_to_period
@@ -2397,6 +2397,8 @@ msgid ""
 "{{ object.holiday_status_id.name }} from {{ object.request_date_from }} to "
 "{{ object.request_date_to }}"
 msgstr ""
+"{{ object.request_date_from }} の{{ object.holiday_status_id.name }} にある{{"
+" object.duration_display }} を申請します。{{ object.request_date_to }}"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_calendar_event__id
@@ -2487,7 +2489,8 @@ msgstr "イドダ休暇"
 msgid ""
 "If checked, every time this time off type is taken, the time off officers of "
 "the same company will be notified"
-msgstr ""
+msgstr "チェックされている場合、この休暇タイプが取得されるたびに、同じ会社の休暇担当"
+"者に通知されます"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction
@@ -2755,7 +2758,7 @@ msgstr "失われる"
 #. module: hr_holidays
 #: model:mail.template,description:hr_holidays.new_timeoff_request_template
 msgid "Mail for new leave request"
-msgstr ""
+msgstr "新たな休暇申請のメール"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_main_attachment_id
@@ -3448,12 +3451,12 @@ msgstr "父親育児休暇"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_be_leave_type_paternity_legal
 msgid "Paternity Time Off (Legal)"
-msgstr ""
+msgstr "父親育児休暇 (法定)"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_be_leave_type_paternity_paid_company
 msgid "Paternity Time Off (Paid By Company)"
-msgstr ""
+msgstr "父親の育児休暇(会社負担)"
 
 #. module: hr_holidays
 #. odoo-javascript

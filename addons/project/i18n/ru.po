@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2026-01-16 05:49+0000\n"
+"PO-Revision-Date: 2026-01-31 12:39+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-1/"
 "project/ru/>\n"
@@ -280,6 +280,114 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
+"\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            <t t-if=\"partner.name\">\n"
+"                Здравствуйте, <t t-out=\"partner.name or ''\">Брэндон "
+"Фримен</t>!<br/><br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Здравствуйте!<br/><br/>\n"
+"            </t>\n"
+"            Пожалуйста, уделите минуту, чтобы оценить качество наших услуг "
+"по задаче <strong t-out=\"object.name or ''\">Планирование и бюджет</strong>"
+"\n"
+"            <t t-if=\"object._rating_get_operator().name\">, \n"
+"                за которую отвечает <strong t-out="
+"\"object._rating_get_operator().name or ''\">Митчелл Админ</strong>.<br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                .<br/>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style="
+"\"width:100%; margin: 32px 0px 32px 0px; display: inline-table;\">\n"
+"                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
+"                    <strong>Поделитесь вашими впечатлениями о нашей "
+"работе:</strong><br/>\n"
+"                    <span style=\"font-size: 12px; opacity: 0.5; color: "
+"#454748;\">нажмите на один из этих смайликов)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style="
+"\"width:100%;text-align:center;margin-top:2rem;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/5\""
+" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Доволен\" src="
+"\"/rating/static/src/img/rating_5.png\" title=\"Доволен\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/3\""
+" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Нейтрально\" src="
+"\"/rating/static/src/img/rating_3.png\" title=\"Нейтрально\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/1\""
+" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Недоволен\" src="
+"\"/rating/static/src/img/rating_1.png\" title=\"Недоволен\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Мы ценим обратную связь. Ваши отзывы помогают нам постоянно "
+"совершенствоваться.\n"
+"            <t t-if=\"object.stage_id.rating_status == 'stage'\">\n"
+"                <br/><span style="
+"\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Этот опрос был "
+"отправлен, так как ваша задача перешла на этап <b t-out="
+"\"object.stage_id.name or ''\">«В работе»</b>.</span>\n"
+"            </t>\n"
+"            <t t-if=\"object.stage_id.rating_status == 'periodic'\">\n"
+"                <br/><span style="
+"\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Этот опрос "
+"отправляется <b t-out=\"object.stage_id.rating_status_period or ''\"> "
+"еженедельно</b>, пока задача находится на этапе <b t-out="
+"\"object.stage_id.name or ''\">«В работе»</b>.</span>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        <tr><td><br/>С уважением,</td></tr>\n"
+"        <tr><td>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\""
+">YourCompany</t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"opacity: 0.5;\">\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
+"650-123-4567</t>\n"
+"            <t t-if=\"object.project_id.company_id.email\">\n"
+"                | <a t-attf-href="
+"\"mailto:{{ object.project_id.company_id.email }}\" style=\"text-"
+"decoration:none; color: #454748;\" t-out=\""
+"object.project_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.company_id.website\">\n"
+"                | <a t-attf-href="
+"\"{{ object.project_id.company_id.website }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.website or ''\""
+">http://www.example.com</a>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.project_done_email_template
@@ -301,6 +409,23 @@ msgid ""
 "out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    Здравствуйте, <t t-out=\"object.partner_id.name or 'customer'\">Брэндон "
+"Фримен</t>!<br/>\n"
+"    Рады сообщить, что мы успешно завершили проект «<strong t-out="
+"\"object.name or ''\">Ремонтные работы</strong>».\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
+"\"user.signature or ''\">Митчелл Админ</t></div>\n"
+"    </t>\n"
+"</div>\n"
+"<br/><span style="
+"\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" "
+"groups=\"project.group_project_stages\">Вы получили это письмо, так как "
+"проект был перемещен на этап <b t-out=\"object.stage_id.name or ''\""
+">Готово</b></span>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -324,6 +449,24 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Здравствуйте, <t t-out=\"object.partner_id.name or 'уважаемый клиент'\""
+">Брэндон Фримен</t>!<br/><br/>\n"
+"    Благодарим вас за обращение. Мы ценим ваш интерес к нашим "
+"товарам/услугам.<br/>\n"
+"    Наша команда рассматривает ваш запрос и ответит на ваше письмо в "
+"ближайшее время.<br/>\n"
+"    Если у вас возникнут дополнительные вопросы, пожалуйста, сообщите нам. "
+"Мы всегда готовы помочь.<br/><br/>\n"
+"    Спасибо за ваше терпение.<br/>\n"
+"    С наилучшими пожеланиями,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
+"\"user.signature or ''\">Митчелл Админ</t></div>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -336,6 +479,14 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o "
 "text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Unhappy\"/>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible="
+"\"rating_avg &lt; 3.66\" title=\"Доволен\"/>\n"
+"                            <i class="
+"\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible="
+"\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"Нейтрально\"/>\n"
+"                            <i class="
+"\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible="
+"\"rating_avg &gt;= 2.33\" title=\"Недоволен\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -635,13 +786,13 @@ msgstr "Тип дела"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 msgid "Add Milestones"
-msgstr ""
+msgstr "Добавить вехи"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.xml:0
 msgid "Add Sub-task"
-msgstr ""
+msgstr "Добавить подзадачу"
 
 #. module: project
 #. odoo-javascript
@@ -699,7 +850,7 @@ msgstr "Администратор"
 #. module: project
 #: model:res.groups,comment:project.group_project_manager
 msgid "Administrator can manage the employees' schedule"
-msgstr ""
+msgstr "Администратор может управлять расписанием сотрудников"
 
 #. module: project
 #. odoo-javascript
@@ -873,6 +1024,8 @@ msgstr "Вы уверены, что хотите удалить эти этап�
 msgid ""
 "Are you sure you want to delete this subtask? All its content will be lost."
 msgstr ""
+"Вы уверены, что хотите удалить эту подзадачу? Все ее содержимое будет "
+"утеряно."
 
 #. module: project
 #. odoo-javascript
@@ -883,7 +1036,7 @@ msgstr "Вы уверены, что хотите восстановить эту
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Ask for Ratings"
-msgstr ""
+msgstr "Запросить оценки"
 
 #. module: project
 #. odoo-javascript
@@ -900,7 +1053,7 @@ msgstr "Назначьте ответственного за задачу"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign at project creation"
-msgstr ""
+msgstr "Назначить при создании проекта"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_roles_action
@@ -909,6 +1062,9 @@ msgid ""
 "                When creating a new project from the template, choose who "
 "will take on each role."
 msgstr ""
+"Назначьте роли для задач в шаблонах ваших проектов.\n"
+"                При создании нового проекта на основе шаблона выберите, кто "
+"будет выполнять каждую роль."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -1039,19 +1195,19 @@ msgstr "Средний рейтинг (1-5)"
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Happy"
-msgstr ""
+msgstr "Средняя оценка: Доволен"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Neutral"
-msgstr ""
+msgstr "Средняя оценка: Нейтрально"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Unhappy"
-msgstr ""
+msgstr "Средняя оценка: Недоволен"
 
 #. module: project
 #. odoo-javascript
@@ -1248,6 +1404,13 @@ msgid ""
 "Periodic rating: an email will be automatically sent at regular intervals as "
 "long as the task remains in the stage."
 msgstr ""
+"Собирайте отзывы от клиентов, отправляя им запрос на оценку, когда задача "
+"переходит на определенный этап. Для этого выберите шаблон письма с оценкой в "
+"настройках этапа.\n"
+"Оценка при смене этапа: Письмо будет отправлено автоматически, когда задача "
+"достигнет этого этапа.\n"
+"Периодическая оценка: Письмо будет отправляться автоматически через "
+"регулярные промежутки времени, пока задача остается на определенном этапе."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_role__color
@@ -1368,7 +1531,7 @@ msgstr "Преобразовать в задачу/подзадачу"
 #: model:ir.actions.server,name:project.action_server_convert_project_to_template
 #: model:ir.actions.server,name:project.action_server_convert_to_template
 msgid "Convert to Template"
-msgstr ""
+msgstr "Преобразовать в шаблон"
 
 #. module: project
 #. odoo-javascript
@@ -1664,6 +1827,10 @@ msgid ""
 "disable         Changing this parameter will not affect the rotting status/"
 "date of resources last updated before this change."
 msgstr ""
+"Количество дней до того, как задачи на этом этапе станут «устаревшими». "
+"Установите 0 для отключения         Изменение этого параметра не затронет "
+"статус неактуальности ресурсов, последнее обновление которых было "
+"произведено до этого изменения."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rotting_days
@@ -2258,7 +2425,7 @@ msgstr "Передача"
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Happy face"
-msgstr "Счастливое лицо"
+msgstr "Довольное лицо"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__has_message
@@ -2271,7 +2438,7 @@ msgstr "Есть сообщение"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__has_template_ancestor
 msgid "Has Template Ancestor"
-msgstr ""
+msgstr "Есть родительский шаблон"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_invitation_follower
@@ -2510,7 +2677,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.js:0
 msgid "Invalid Display Name"
-msgstr ""
+msgstr "Недопустимое отображаемое имя"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
@@ -2520,7 +2687,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited internal users"
-msgstr ""
+msgstr "Приглашенные внутренние пользователи"
 
 #. module: project
 #. odoo-javascript
@@ -3093,7 +3260,7 @@ msgstr "Нет вехи"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Parent Task"
-msgstr ""
+msgstr "Нет родительской задачи"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -3263,7 +3430,7 @@ msgstr "По графику"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__periodic
 msgid "On a periodic basis"
-msgstr ""
+msgstr "Периодически"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__monthly
@@ -3723,6 +3890,30 @@ msgid ""
 "access.\n"
 "- Project admins have access to private projects, even if not followers.\n"
 msgstr ""
+"Видимость проектов и задач:\n"
+"– Приглашенные внутренние пользователи: могут получить доступ только к "
+"проектам или задачам, где они являются наблюдателями. Назначенные "
+"пользователи и соисполнители автоматически получают доступ.\n"
+"– Приглашенные внутренние пользователи и пользователи портала: то же, что и "
+"выше, с расширением на пользователей портала.\n"
+"– Все внутренние пользователи: полный доступ к проекту и всем его задачам.\n"
+"– Все внутренние пользователи и приглашенные пользователи портала: "
+"внутренние пользователи получают полный доступ. Пользователи портала могут "
+"получить доступ только к проектам или задачам, где они являются "
+"наблюдателями.\n"
+"\n"
+"Уровни доступа к порталу:\n"
+"– Только для чтения: пользователи портала видят задачи через свой портал, но "
+"не могут их редактировать.\n"
+"– Редактирование (ограниченное): пользователи портала получают доступ к "
+"просмотру Канбан – доски/списка и могут редактировать ограниченные поля в "
+"задачах, где они являются наблюдателями.\n"
+"– Редактирование: то же, что и выше, с доступом ко всем задачам.\n"
+"Другие правила:\n"
+"– Внутренние пользователи могут открывать задачу по прямой ссылке, даже не "
+"имея доступа к проекту.\n"
+"– Администраторы проектов имеют доступ к частным проектам, даже если они не "
+"являются наблюдателями.\n"
 
 #. module: project
 #. odoo-javascript
@@ -4428,7 +4619,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 msgid "Show to all companies"
-msgstr ""
+msgstr "Показать всем компаниям"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -5499,7 +5690,7 @@ msgstr "Отписаться"
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Unhappy face"
-msgstr ""
+msgstr "Недовольное лицо"
 
 #. module: project
 #. odoo-python
@@ -5733,7 +5924,7 @@ msgstr "Недели"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__stage
 msgid "When reaching this stage"
-msgstr ""
+msgstr "При достижении этого этапа"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__role_ids
@@ -5742,6 +5933,9 @@ msgid ""
 "takes each role. These employees will be added to the tasks, along with "
 "anyone already assigned."
 msgstr ""
+"При создании проекта из шаблона вы можете выбрать, какой сотрудник будет "
+"выполнять каждую роль. Эти сотрудники будут добавлены в задачи вместе со "
+"всеми, кто уже на них назначен."
 
 #. module: project
 #: model:project.tags,name:project.project_tags_14
@@ -5807,7 +6001,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.js:0
 msgid "Write a task name"
-msgstr ""
+msgstr "Напишите название задачи"
 
 #. module: project
 #. odoo-javascript

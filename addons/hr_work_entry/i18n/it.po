@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-04 18:35+0000\n"
+"POT-Creation-Date: 2026-01-30 18:35+0000\n"
 "PO-Revision-Date: 2026-01-24 12:24+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -20,8 +20,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
-" ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_work_entry
@@ -50,12 +50,6 @@ msgstr ""
 "        Pianificazione: le voci di lavoro saranno generate a partire dalla "
 "pianificazione dei dipendenti. (App Pianificazione richiesta)\n"
 "    "
-
-#. module: hr_work_entry
-#. odoo-python
-#: code:addons/hr_work_entry/models/hr_work_entry.py:0
-msgid "%(employee)s does not have a contract on %(date)s."
-msgstr "%(employee)s non ha un contratto al %(date)s."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -96,10 +90,10 @@ msgid ""
 "                            <span class=\"o_row mw-50 mw-sm-25\" "
 "invisible=\"not is_manual\">Manual</span>"
 msgstr ""
-"<span class=\"text-muted fw-medium\" invisible=\"not is_manual\">Fonte</span>"
-"\n"
-"                            <span class=\"o_row mw-50 mw-sm-25\" invisible="
-"\"not is_manual\">Manuale</span>"
+"<span class=\"text-muted fw-medium\" invisible=\"not is_manual\">Fonte</"
+"span>\n"
+"                            <span class=\"o_row mw-50 mw-sm-25\" "
+"invisible=\"not is_manual\">Manuale</span>"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
@@ -509,7 +503,8 @@ msgstr "Descrizione"
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry__category
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__category
 msgid "Determines if the entry counts as working time or absence."
-msgstr "Determina se la voce viene considerata come orario di lavoro o assenza."
+msgstr ""
+"Determina se la voce viene considerata come orario di lavoro o assenza."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_mx_work_entry_type_disability_due_to_illness_imss
@@ -1337,8 +1332,8 @@ msgid ""
 "Overtime not subject to contributions in the horeca sector (hotel, "
 "restaurant, catering)"
 msgstr ""
-"Straordinari non soggetti a contributi nel settore horeca "
-"(hotel, ristorazione, catering)"
+"Straordinari non soggetti a contributi nel settore horeca (hotel, "
+"ristorazione, catering)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_overtime_pto
@@ -1940,7 +1935,8 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_bad_weather
 msgid "Temporary unemployment due to bad weather"
-msgstr "Disoccupazione temporanea dovuta alle cattive condizioni meteorologiche"
+msgstr ""
+"Disoccupazione temporanea dovuta alle cattive condizioni meteorologiche"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_collective_closure
@@ -2467,3 +2463,6 @@ msgstr "ad es. LAVORO100, FERIE210, FUORI..."
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar_multi_create_form
 msgid "hours"
 msgstr "ore"
+
+#~ msgid "%(employee)s does not have a contract on %(date)s."
+#~ msgstr "%(employee)s non ha un contratto al %(date)s."

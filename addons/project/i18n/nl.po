@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2026-01-24 12:33+0000\n"
+"PO-Revision-Date: 2026-01-31 12:39+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/project/"
 "nl/>\n"
@@ -417,6 +417,24 @@ msgid ""
 "out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    Beste <t t-out=\"object.partner_id.name or 'customer'\">Brandon "
+"Freeman</t>,<br/>\n"
+"    Het is mij een genoegen om je te laten weten dat we het project "
+"\"<strong t-out=\"object.name or ''\">Renovaties</strong>\" succesvol hebben "
+"afgerond.\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
+"\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"    </t>\n"
+"</div>\n"
+"<br/><span style="
+"\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" "
+"groups=\"project.group_project_stages\">Je ontvangt deze e-mail omdat je "
+"project is verplaatst naar de fase <b t-out=\"object.stage_id.name or ''\""
+">Gereed</b></span>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -440,6 +458,24 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Beste <t t-out=\"object.partner_id.name or 'customer'\">Brandon "
+"Freeman</t>,<br/><br/>\n"
+"    Bedankt voor je bericht. We waarderen je interesse in onze producten/"
+"diensten.<br/>\n"
+"    Ons team bekijkt je aanvraag en zal zo snel mogelijk reageren op je "
+"e-mail.<br/>\n"
+"    Als je in de tussentijd nog vragen of opmerkingen hebt, laat het ons "
+"gerust weten. We helpen je graag verder.<br/><br/>\n"
+"    Bedankt voor je geduld.<br/>\n"
+"    Met vriendelijke groet,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
+"\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -576,7 +612,7 @@ msgstr "<span>Overzicht</span>"
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "<span>days</span>"
-msgstr ""
+msgstr "<span>dagen</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -992,7 +1028,7 @@ msgstr "Weet je zeker dat je deze fases wilt verwijderen?"
 #: code:addons/project/static/src/components/subtask_one2many_field/subtask_list_renderer.js:0
 msgid ""
 "Are you sure you want to delete this subtask? All its content will be lost."
-msgstr ""
+msgstr "Weet je deze subtaak wilt verwijderen? Alle inhoud ervan gaat verloren."
 
 #. module: project
 #. odoo-javascript
@@ -1003,7 +1039,7 @@ msgstr "Weet je zeker dat je deze versie wilt herstellen?"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Ask for Ratings"
-msgstr ""
+msgstr "Vraag om beoordelingen"
 
 #. module: project
 #. odoo-javascript
@@ -1787,6 +1823,8 @@ msgstr ""
 msgid ""
 "Day count before projects in this stage become stale. Set to 0 to disable."
 msgstr ""
+"Aantal dagen voordat projecten in deze fase verouderd raken. Stel in op 0 om "
+"uit te schakelen."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rotting_threshold_days
@@ -1850,7 +1888,7 @@ msgstr "Beste"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Default"
-msgstr ""
+msgstr "Standaard"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
@@ -1916,7 +1954,7 @@ msgstr "Verwijder fase"
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_one2many_field/subtask_list_renderer.js:0
 msgid "Delete Subtask"
-msgstr ""
+msgstr "Subtaak verwijderen"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__milestone_id
@@ -1972,7 +2010,7 @@ msgstr "Ontwerp"
 #. module: project
 #: model:project.role,name:project.project_role_2
 msgid "Design Architect"
-msgstr ""
+msgstr "Ontwerparchitect"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2131,7 +2169,7 @@ msgstr "Bewerkend"
 #. module: project
 #: model:project.role,name:project.project_role_5
 msgid "Electrician"
-msgstr ""
+msgstr "Elektricien"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_email
@@ -2254,7 +2292,7 @@ msgstr "Boekhouding"
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Fold by Default"
-msgstr ""
+msgstr "Standaard samengevouwen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage__fold
@@ -2271,7 +2309,7 @@ msgstr "Volgen"
 #. module: project
 #: model:portal.entry,description:project.portal_tasks
 msgid "Follow and comments tasks of your projects"
-msgstr ""
+msgstr "Volg en reageer op taken van je projecten"
 
 #. module: project
 #: model:portal.entry,description:project.portal_projects
@@ -2322,7 +2360,7 @@ msgstr "Toekomstige activiteiten"
 #. module: project
 #: model:project.role,name:project.project_role_6
 msgid "Gas Technician"
-msgstr ""
+msgstr "Gastechnicus"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_update_all_action
@@ -2607,7 +2645,7 @@ msgstr "In behandeling"
 #. odoo-javascript
 #: code:addons/project/static/src/webclient/share_target/project_share_target_item.xml:0
 msgid "In Project"
-msgstr ""
+msgstr "In Project"
 
 #. module: project
 #. odoo-javascript
@@ -2732,7 +2770,7 @@ msgstr ""
 #. module: project
 #: model:project.project,name:project.project_template_2
 msgid "Kitchen Assembly"
-msgstr ""
+msgstr "Keukenmontage"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -2821,7 +2859,7 @@ msgstr "Te late activiteiten"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Late Milestones"
-msgstr "Late milstones"
+msgstr "Late mijlpalen"
 
 #. module: project
 #. odoo-python
@@ -2901,7 +2939,7 @@ msgstr "Inkomende mail detectie alleen op eerste deel en niet het domein"
 #. module: project
 #: model:project.role,name:project.project_role_3
 msgid "Logistics Staff"
-msgstr ""
+msgstr "Logistiek personeel"
 
 #. module: project
 #. odoo-javascript
@@ -3230,7 +3268,7 @@ msgstr "Geen mijlpaal"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Parent Task"
-msgstr ""
+msgstr "Geen bovenliggende taak"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -3400,7 +3438,7 @@ msgstr "Op schema"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__periodic
 msgid "On a periodic basis"
-msgstr ""
+msgstr "Periodiek"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__monthly
@@ -3577,7 +3615,7 @@ msgstr "Geplande datum"
 #. module: project
 #: model:project.role,name:project.project_role_8
 msgid "Plumber"
-msgstr ""
+msgstr "Loodgieter"
 
 #. module: project
 #. odoo-javascript
@@ -3800,7 +3838,7 @@ msgstr "Projectfases"
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Project Tag"
-msgstr ""
+msgstr "Projectlabel"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
@@ -4024,7 +4062,7 @@ msgstr "Publiceren"
 #. module: project
 #: model:project.role,name:project.project_role_9
 msgid "Quality & Safety Officer"
-msgstr ""
+msgstr "Kwaliteits- en veiligheidsverantwoordelijke"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__quarterly
@@ -4067,7 +4105,7 @@ msgstr "Beoordeling gem. tekst"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Rating Email"
-msgstr ""
+msgstr "Beoordelingsmail"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
@@ -4097,7 +4135,7 @@ msgstr "Beoordeling laatste waarde"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Rating Periodicity"
-msgstr ""
+msgstr "Beoordelingsfrequentie"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
@@ -4340,7 +4378,7 @@ msgstr "Verouderd"
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Rotting in"
-msgstr ""
+msgstr "Verouderd over"
 
 #. module: project
 #. odoo-javascript
@@ -4417,7 +4455,7 @@ msgstr "Zoeken in mijlpaal"
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "Search in Parent Task"
-msgstr ""
+msgstr "Zoek in bovenliggende taak"
 
 #. module: project
 #. odoo-python
@@ -4458,7 +4496,7 @@ msgstr "Veiligheidstoken"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "See Parent Task"
-msgstr ""
+msgstr "Bovenliggende taak bekijken"
 
 #. module: project
 #. odoo-javascript
@@ -4586,7 +4624,7 @@ msgstr "Subtaken & bovenste menu tonen"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 msgid "Show to all companies"
-msgstr ""
+msgstr "Aan alle bedrijven weergeven"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4696,7 +4734,7 @@ msgstr "Fase veranderd"
 #: model:ir.model.fields,field_description:project.field_project_project_stage__name
 #: model:ir.model.fields,field_description:project.field_project_task_type__name
 msgid "Stage Name"
-msgstr ""
+msgstr "Naam fase"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__user_id
@@ -4804,8 +4842,9 @@ msgstr "Samenvatting"
 
 #. module: project
 #: model:project.role,name:project.project_role_7
+#, fuzzy
 msgid "Surface Installer"
-msgstr ""
+msgstr "Oppervlakte-installateur"
 
 #. module: project
 #. odoo-javascript
@@ -5074,7 +5113,7 @@ msgstr "Tasks.test"
 #: model:ir.model.fields,field_description:project.field_project_role__user_ids
 #: model_terms:ir.ui.view,arch_db:project.project_role_view_search
 msgid "Team Members"
-msgstr ""
+msgstr "Teamleden"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__template_id
@@ -5335,13 +5374,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "This new task has been created in the \"%(project_name)s\" project."
-msgstr ""
+msgstr "Deze nieuwe taak is aangemaakt in het Project \"%(project_name)s\"."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "This new task is not part of any project."
-msgstr ""
+msgstr "Deze nieuwe taak maakt geen deel uit van een project."
 
 #. module: project
 #. odoo-python
@@ -5697,7 +5736,7 @@ msgstr "Update gemaakt"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Update Stage"
-msgstr ""
+msgstr "Fase bijwerken"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__3
@@ -5901,7 +5940,7 @@ msgstr "Weken"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__stage
 msgid "When reaching this stage"
-msgstr ""
+msgstr "Wanneer deze fase wordt bereikt"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__role_ids
@@ -5922,7 +5961,7 @@ msgstr "Werk"
 #. module: project
 #: model:project.role,name:project.project_role_4
 msgid "Worker"
-msgstr ""
+msgstr "Arbeider"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
@@ -6183,7 +6222,7 @@ msgstr "bijv. Product lancering"
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "e.g. Qualification"
-msgstr ""
+msgstr "bv. Kwalificatie"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
