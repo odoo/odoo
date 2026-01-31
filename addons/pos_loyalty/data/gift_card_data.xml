@@ -9,7 +9,8 @@
         <field name="taxes_id" eval="False"/>
     </record>
     <!-- Gift Cards -->
-    <record id="loyalty.gift_card_program" model="loyalty.program">
-        <field name="pos_report_print_id" ref="loyalty.report_gift_card"/>
-    </record>
+    <function name="write" model="loyalty.program">
+        <value model="loyalty.program" eval="obj().search([('id', '=', ref('loyalty.gift_card_program'))]).filtered(lambda l: l.mail_template_id).id"/>
+        <value eval="{'pos_report_print_id': ref('loyalty.report_gift_card', False)}"/>
+    </function>
 </odoo>
