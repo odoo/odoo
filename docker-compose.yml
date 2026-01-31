@@ -97,9 +97,9 @@ services:
     restart: unless-stopped
 
     environment:
-      POSTGRES_DB: odoo
-      POSTGRES_USER: odoo
-      POSTGRES_PASSWORD: odoo_password
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
 
     volumes:
@@ -137,25 +137,25 @@ services:
 
     environment:
       HOST: db
-      USER: odoo
-      PASSWORD: odoo_password
+      USER: ${POSTGRES_USER}
+      PASSWORD: ${POSTGRES_PASSWORD}
       PORT: 5432
-      DB_NAME: odoo
+      DB_NAME: ${POSTGRES_DB}
       WORKERS: 2
-      LOG_LEVEL: info
-      ADMIN_PASSWD: MasterPassword
+      LOG_LEVEL: ${LOG_LEVEL}
+      ADMIN_PASSWD: ${ODOO_ADMIN_PASSWD}
 
       # -------------------------------------------------------
       # Uber configuration
       # -------------------------------------------------------
-      UBER_ENVIRONMENT: sandbox
-      UBER_CLIENT_ID: your_sandbox_client_id_here
-      UBER_CLIENT_SECRET: your_sandbox_client_secret_here
-      UBER_SCOPES: "eats.store eats.order eats.store.orders.read"
-      UBER_AUTH_URL: "https://sandbox-login.uber.com/oauth/v2/token"
-      UBER_API_BASE_URL: "https://test-api.uber.com"
-      UBER_WEBHOOK_BASIC_USER: "webhookuser"
-      UBER_WEBHOOK_BASIC_PASSWORD: "strongpassword"
+      UBER_ENVIRONMENT: ${UBER_ENVIRONMENT}
+      UBER_CLIENT_ID: ${UBER_CLIENT_ID}
+      UBER_CLIENT_SECRET: ${UBER_CLIENT_SECRET}
+      UBER_SCOPES: ${UBER_SCOPES}
+      UBER_AUTH_URL: ${UBER_AUTH_URL}
+      UBER_API_BASE_URL: ${UBER_API_BASE_URL}
+      UBER_WEBHOOK_BASIC_USER: ${UBER_WEBHOOK_BASIC_USER}
+      UBER_WEBHOOK_BASIC_PASSWORD: ${UBER_WEBHOOK_BASIC_PASSWORD}
 
     labels:
       # -------------------------------------------------------
@@ -217,28 +217,7 @@ services:
 
     command:
       - server
-      - --db_host=db
-      - --db_port=5432
-      - --db_user=odoo
-      - --db_password=odoo_password
-      - --admin_passwd=MasterPassword
-      - -d
-      - odoo
-      - -i
-      - base,web,sale,purchase,stock,account,point_of_sale,website,pos_restaurant
       - --http-interface=0.0.0.0
-      - --db-filter=.*
-      - --proxy-mode
-      - --workers=2
-      - --max-cron-threads=1
-      - --limit-memory-hard=536870912
-      - --limit-memory-soft=402653184
-      - --limit-time-cpu=60
-      - --limit-time-real=120
-      - --limit-request=8192
-      - --log-level=info
-
-
 
     deploy:
       resources:
