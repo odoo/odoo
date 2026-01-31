@@ -56,7 +56,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-15 18:38+0000\n"
+"POT-Creation-Date: 2026-01-29 18:36+0000\n"
 "PO-Revision-Date: 2026-01-10 09:14+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/account/"
@@ -16651,18 +16651,6 @@ msgstr "Tämä vuosi"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"This account is configured in %(journal_names)s journal(s) (ids %"
-"(journal_ids)s) as payment debit or credit account. This means that this "
-"account's type should be reconcilable."
-msgstr ""
-"Tämä tili on määritetty päiväkirjassa/kirjoissa %(journal_names)s (tunnukset "
-"%(journal_ids)s) maksun debet- tai kredit-tiliksi. Se tarkoittaa, että tämän "
-"tilityypin pitäisi olla täsmäytettävissä."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
 msgid "This account was split off from %(account_name)s (%(company_name)s)."
 msgstr "Tämä tili erotettiin tilistä %(account_name)s (%(company_name)s)."
 
@@ -19102,6 +19090,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+msgid ""
+"You may only use samples in demo mode, try uploading one of your invoices "
+"instead."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "You must select at least 2 accounts."
 msgstr "Sinun on valittava vähintään kaksi tiliä."
@@ -19673,6 +19669,15 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Maksukuitti (viite {{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "This account is configured in %(journal_names)s journal(s) (ids %"
+#~ "(journal_ids)s) as payment debit or credit account. This means that this "
+#~ "account's type should be reconcilable."
+#~ msgstr ""
+#~ "Tämä tili on määritetty päiväkirjassa/kirjoissa %(journal_names)s "
+#~ "(tunnukset %(journal_ids)s) maksun debet- tai kredit-tiliksi. Se "
+#~ "tarkoittaa, että tämän tilityypin pitäisi olla täsmäytettävissä."
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr "Tätä asetusta ei voi muuttaa laskun luomisen jälkeen."
