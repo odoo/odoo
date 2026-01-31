@@ -201,8 +201,8 @@ def _mer_api_query_document_process_status_inbox(company, electronic_id=None, st
         'StatusId': status_id,
         'InvoiceYear': invoice_year,
         'InvoiceNumber': invoice_number,
-        'From': date_from,
-        'To': date_to,
+        'DateFrom': date_from,
+        'DateTo': date_to,
         'ByUpdateDate': by_update_date,
     }
     response_list = _call_mer_service(company, 'query_status_inbox', params=params)
@@ -218,8 +218,8 @@ def _mer_api_query_document_process_status_outbox(company, electronic_id=None, s
         'StatusId': status_id,
         'InvoiceYear': invoice_year,
         'InvoiceNumber': invoice_number,
-        'From': date_from,
-        'To': date_to,
+        'DateFrom': date_from,
+        'DateTo': date_to,
         'ByUpdateDate': by_update_date,
     }
     response_list = _call_mer_service(company, 'query_status_outbox', params=params)
@@ -243,7 +243,7 @@ def _mer_api_mark_paid(company, electronic_id, payment_date, payment_amount, pay
     params = {
         'ElectronicId': electronic_id,
         'PaymentDate': payment_date,
-        'PaymentAmoung': payment_amount,
+        'PaymentAmount': payment_amount,
         'PaymentMethod': payment_method,
     }
     response_dict = _call_mer_service(company, 'mark_paid', params=params)
@@ -264,7 +264,7 @@ def _mer_api_reject_with_id(company, electronic_id, rejection_date, rejection_ty
     return response_dict
 
 
-def _mer_api_check_fiscalization_status_outbox(company, electronic_id=False, message_type=False, date_from=False, date_to=False, request_id=False, status=False):
+def _mer_api_check_fiscalization_status_outbox(company, electronic_id=False, message_type=False, date_from=False, date_to=False, by_update_date=False, request_id=False, status=False):
     """
     This endpoint retrieves the fiscalization status of a document using its ElectronicId and MessageType.
     """
@@ -273,6 +273,7 @@ def _mer_api_check_fiscalization_status_outbox(company, electronic_id=False, mes
         'MessageType': message_type,
         'DateFrom': date_from,
         'DateTo': date_to,
+        'ByUpdateDate': by_update_date,
         'FiscalizationRequestID': request_id,
         'Status': status,
     }
@@ -280,7 +281,7 @@ def _mer_api_check_fiscalization_status_outbox(company, electronic_id=False, mes
     return response_list
 
 
-def _mer_api_check_fiscalization_status_inbox(company, electronic_id=False, message_type=False, date_from=False, date_to=False, request_id=False, status=False):
+def _mer_api_check_fiscalization_status_inbox(company, electronic_id=False, message_type=False, date_from=False, date_to=False, by_update_date=False, request_id=False, status=False):
     """
     This endpoint retrieves the fiscalization status of a document using its ElectronicId and MessageType.
     """
@@ -289,6 +290,7 @@ def _mer_api_check_fiscalization_status_inbox(company, electronic_id=False, mess
         'MessageType': message_type,
         'DateFrom': date_from,
         'DateTo': date_to,
+        'ByUpdateDate': by_update_date,
         'FiscalizationRequestID': request_id,
         'Status': status,
     }

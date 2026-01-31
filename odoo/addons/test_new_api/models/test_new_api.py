@@ -1508,6 +1508,25 @@ class SelectionRequiredWithWriteOverride(models.Model):
         return super().write(vals)
 
 
+class SelectionCompanyDependent(models.Model):
+    _name = 'test_new_api.model_selection_company_dependent'
+    _description = "Model with a company dependent selection field"
+
+    my_selection = fields.Selection([
+        ('manual', "Manual"),
+        ('auto', "Automatic"),
+    ], company_dependent=True)
+
+
+class SelectionCompanyDependentNullImplicit(models.Model):
+    _inherit = 'test_new_api.model_selection_company_dependent'
+    _description = "Model with a company dependent selection field extension without ondelete"
+
+    my_selection = fields.Selection(selection_add=[
+        ('semi_auto', "Semi-Automatic"),
+    ])
+
+
 # Special classes to ensure the correct usage of a shared cache amongst users.
 # See the method test_shared_cache_computed_field
 class SharedCacheComputeParent(models.Model):

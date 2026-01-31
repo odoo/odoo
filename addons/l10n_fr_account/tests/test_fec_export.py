@@ -21,9 +21,9 @@ class TestFECExport(AccountTestInvoicingCommon):
             'date_from': '2020-01-01',
             'date_to': '2020-12-31',
         })
-        result = fec_export.generate_fec()
+        result = fec_export.with_context(fec_test_mode=True).generate_fec()
         self.assertEqual(
-            result['file_content'].decode(),
+            b''.join(result['file_content']).decode(),
             'JournalCode|JournalLib|EcritureNum|EcritureDate|CompteNum|CompteLib|CompAuxNum|CompAuxLib|PieceRef|PieceDate|EcritureLib|Debit|Credit|EcritureLet|DateLet|ValidDate|Montantdevise|Idevise\r\n'
             'OUV|Balance initiale|OUVERTURE/2020|20200101|999999|Undistributed Profits/Losses|||-|20200101|/|0,00| 000000000003000,00|||20200101||\r\n'
             f'OUV|Balance initiale|OUVERTURE/2020|20200101|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20200101|/| 000000000003000,00|0,00|||20200101||\r\n'
@@ -62,9 +62,9 @@ class TestFECExport(AccountTestInvoicingCommon):
             'date_from': '2021-01-01',
             'date_to': '2021-12-31',
         })
-        result = fec_export.generate_fec()
+        result = fec_export.with_context(fec_test_mode=True).generate_fec()
         self.assertEqual(
-            result['file_content'].decode(),
+            b''.join(result['file_content']).decode(),
             "JournalCode|JournalLib|EcritureNum|EcritureDate|CompteNum|CompteLib|CompAuxNum|CompAuxLib|PieceRef|PieceDate|EcritureLib|Debit|Credit|EcritureLet|DateLet|ValidDate|Montantdevise|Idevise\r\n"
             "INV|Customer Invoices|INV/2021/00001|20210101|400000|Product Sales|||-|20210101|test line|0,00| 000000000000100,00|||20210101|-000000000000100,00|USD\r\n"
             f"INV|Customer Invoices|INV/2021/00001|20210101|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20210101|INV/2021/00001| 000000000000100,00|0,00|||20210101| 000000000000100,00|USD\r\n"
@@ -86,9 +86,9 @@ class TestFECExport(AccountTestInvoicingCommon):
             'date_from': '2021-01-01',
             'date_to': '2021-12-31',
         })
-        result = fec_export.generate_fec()
+        result = fec_export.with_context(fec_test_mode=True).generate_fec()
         self.assertEqual(
-            result['file_content'].decode(),
+            b''.join(result['file_content']).decode(),
             "JournalCode|JournalLib|EcritureNum|EcritureDate|CompteNum|CompteLib|CompAuxNum|CompAuxLib|PieceRef|PieceDate|EcritureLib|Debit|Credit|EcritureLet|DateLet|ValidDate|Montantdevise|Idevise\r\n"
             "INV|Customer Invoices|INV/2021/00001|20210101|400000|Product Sales|||-|20210101|test line|0,00| 000000000000100,00|||20210101|-000000000000100,00|USD\r\n"
             f"INV|Customer Invoices|INV/2021/00001|20210101|121000|Account Receivable|{self.partner_a.id}|partner_a|-|20210101|INV/2021/00001| 000000000000100,00|0,00|||20210101| 000000000000100,00|USD"

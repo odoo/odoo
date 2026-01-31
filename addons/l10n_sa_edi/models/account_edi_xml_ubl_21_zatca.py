@@ -104,7 +104,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
         """ Override to include/update values specific to ZATCA's UBL 2.1 specs """
         identification_number = partner.l10n_sa_additional_identification_number
         vat = re.sub(r'[^a-zA-Z0-9]', '', partner.vat or "")
-        if partner.country_code != "SA":
+        if partner.country_code != "SA" and vat:
             identification_number = vat
         elif partner.l10n_sa_additional_identification_scheme == 'TIN':
             # according to ZATCA, the TIN number is always the first 10 digits of the VAT number

@@ -141,16 +141,19 @@ class AccountEdiProxyClientUser(models.Model):
         })
         if 'is_in_extractable_state' in move._fields:
             move.is_in_extractable_state = False
+        try:
+            move._extend_with_attachments(attachment, new=True)
+            move._message_log(
+                body=_(
+                    "Peppol document (UUID: %(uuid)s) has been received successfully",
+                    uuid=uuid,
+                ),
+                attachment_ids=attachment.ids,
+            )
+            move._autopost_bill()
+        except Exception:
+            _logger.exception("Unexpected error occurred during the import of bill with id %s", move.id)
 
-        move._extend_with_attachments(attachment, new=True)
-        move._message_log(
-            body=_(
-                "Peppol document (UUID: %(uuid)s) has been received successfully",
-                uuid=uuid,
-            ),
-            attachment_ids=attachment.ids,
-        )
-        move._autopost_bill()
         attachment.write({'res_model': 'account.move', 'res_id': move.id})
         return True
 
@@ -290,6 +293,7 @@ class AccountEdiProxyClientUser(models.Model):
                 if e.code == 'client_gone':
                     # reset the connection if it was archived/deleted on IAP side
                     edi_user.sudo().company_id._reset_peppol_configuration()
+                    edi_user.action_archive()
                 else:
                     # don't auto-deregister users on any other errors to avoid settings client-side to states
                     # that are not recoverable without user action if an error on IAP side ever occurs

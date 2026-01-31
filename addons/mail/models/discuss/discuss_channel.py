@@ -732,13 +732,27 @@ class Channel(models.Model):
 
     def _message_post_after_hook(self, message, msg_vals):
         """
-        Automatically set the message posted by the current user as seen for themselves.
+            - Automatically set the message posted by the current user as seen for themselves.
+            - Invite mentioned partners to sub-channel.
         """
         if (current_channel_member := self.env["discuss.channel.member"].search([
             ("channel_id", "=", self.id), ("is_self", "=", True)
         ])) and message.is_current_user_or_guest_author:
             current_channel_member._set_last_seen_message(message, notify=False)
             current_channel_member._set_new_message_separator(message.id + 1, sync=True)
+        if self.parent_channel_id and message.partner_ids:
+            members = self.env["discuss.channel.member"].search([
+                ("channel_id", "=", self.parent_channel_id.id),
+                ("partner_id", "in", message.partner_ids.ids),
+            ])
+            members_to_invite = members.filtered(lambda m:
+                m.custom_notifications != "no_notif" if m.custom_notifications
+                else m.partner_id.user_ids.res_users_settings_id.channel_notifications != "no_notif"
+            ).partner_id
+            non_members_to_invite = (message.partner_ids - members.partner_id).filtered(lambda p:
+                p.user_ids.res_users_settings_id.channel_notifications != "no_notif"
+            )
+            self._add_members(partners=members_to_invite | non_members_to_invite)
         return super()._message_post_after_hook(message, msg_vals)
 
     def _check_can_update_message_content(self, message):

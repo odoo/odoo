@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="demo_l10n_pl_partner_a" model="res.partner">
+            <field name="name">Polskie Pierogi Sp. z o.o.</field>
+            <field name="company_type">company</field>
+            <field name="country_id" ref="base.pl"/>
+            <field name="street">ul. Marszałkowska 126</field>
+            <field name="city">Warszawa</field>
+            <field name="zip">00-008</field>
+            <field name="vat">PL1111111111</field>
+        </record>
+        <function model="ir.config_parameter" name="set_param" eval="('l10n_pl_edi_ksef.mode', 'test')"/>
+    </data>
+</odoo>
