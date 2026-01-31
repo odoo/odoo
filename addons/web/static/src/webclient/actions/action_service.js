@@ -931,6 +931,7 @@ export function makeActionManager(env, router = _router) {
                         pushState(nextStack);
                     },
                 });
+                // env.bus.trigger("ACTION_MANAGER:BEFORE-UI-UPDATE", _getActionMode(action));
                 if (action.target !== "new") {
                     this.__beforeLeave__ = new CallbackRecorder();
                     this.__getGlobalState__ = new CallbackRecorder();
@@ -1447,6 +1448,7 @@ export function makeActionManager(env, router = _router) {
         let action = await keepLast.add(actionProm);
         action = _preprocessAction(action, options.additionalContext);
         options.clearBreadcrumbs = action.target === "main" || options.clearBreadcrumbs;
+        env.bus.trigger("ACTION_MANAGER:BEFORE-UI-UPDATE", _getActionMode(action));
         switch (action.type) {
             case "ir.actions.act_url":
                 return _executeActURLAction(action, options);

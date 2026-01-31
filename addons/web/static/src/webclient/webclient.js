@@ -38,7 +38,7 @@ export class WebClient extends Component {
         }
         this.localization = localization;
         this.state = useState({
-            fullscreen: false,
+            fullscreen: true,
         });
         useBus(routerBus, "ROUTE_CHANGE", async () => {
             document.body.style.pointerEvents = "none";
@@ -46,6 +46,11 @@ export class WebClient extends Component {
                 await this.loadRouterState();
             } finally {
                 document.body.style.pointerEvents = "auto";
+            }
+        });
+        useBus(this.env.bus, "ACTION_MANAGER:BEFORE-UI-UPDATE", ({ detail: mode }) => {
+            if (mode !== "new") {
+                this.state.fullscreen = mode === "fullscreen";
             }
         });
         useBus(this.env.bus, "ACTION_MANAGER:UI-UPDATED", ({ detail: mode }) => {
@@ -79,9 +84,7 @@ export class WebClient extends Component {
 
             if (matchingMenus.length > 0) {
                 // Use sessionStorage context to determine the correct menu
-                menuId = matchingMenus.find(m => 
-                    m.appID === storedMenuId
-                )?.appID;
+                menuId = matchingMenus.find((m) => m.appID === storedMenuId)?.appID;
                 if (!menuId) {
                     menuId = matchingMenus[0]?.appID;
                 }
@@ -145,6 +148,9 @@ export class WebClient extends Component {
         const root = this.menuService.getMenu("root");
         const firstApp = root.children[0];
         if (firstApp) {
+            if (!firstApp.actionID) {
+                this.state.fullscreen = false;
+            }
             return this.menuService.selectMenu(firstApp);
         }
     }
