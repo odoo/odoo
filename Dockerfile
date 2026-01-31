@@ -95,9 +95,13 @@ COPY --chown=odoo:odoo addons ./addons
 COPY --chown=odoo:odoo setup.py setup.cfg ./
 
 # Create required directories with proper permissions
-RUN mkdir -p /var/lib/odoo /opt/odoo/extra-addons /opt/odoo/logs && \
-    chown -R odoo:odoo /var/lib/odoo /opt/odoo && \
-    chmod 750 /var/lib/odoo /opt/odoo
+RUN mkdir -p /var/lib/odoo \
+    /opt/odoo/extra-addons \
+    /opt/odoo/logs \
+    /tmp/odoo-sessions \
+    /tmp/odoo-session-config \
+    && chown -R odoo:odoo /var/lib/odoo /opt/odoo /tmp/odoo-sessions /tmp/odoo-session-config \
+    && chmod 755 /var/lib/odoo /opt/odoo /tmp/odoo-sessions /tmp/odoo-session-config
 
 # Environment variables
 ENV PATH="/opt/venv/bin:$PATH" \

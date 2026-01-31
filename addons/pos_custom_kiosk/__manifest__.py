@@ -2,6 +2,7 @@
     'name': 'POS Custom Kiosk',
     'version': '19.0.1.0.0',
     'category': 'Point of Sale',
+    'author': 'Laxya',
     'summary': 'UX Tweaks for Native POS Self-Order',
     'description': """
         Customizations for the Self-Order UI.

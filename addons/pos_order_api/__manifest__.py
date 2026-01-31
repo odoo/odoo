@@ -2,6 +2,7 @@
     'name': 'POS Order API',
     'version': '19.0.1.0.0',
     'category': 'Point of Sale',
+    'author': 'Laxya',
     'summary': 'API for Server-Side POS Order Creation',
     'description': """
         Core Service module to inject orders into POS.

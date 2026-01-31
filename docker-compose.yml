@@ -143,6 +143,7 @@ services:
       DB_NAME: odoo
       WORKERS: 2
       LOG_LEVEL: info
+      ADMIN_PASSWD: MasterPassword
 
       # -------------------------------------------------------
       # Uber configuration
@@ -210,6 +211,7 @@ services:
 
     volumes:
       - odoo-data:/var/lib/odoo
+      - odoo-sessions:/tmp/odoo-sessions
       - ./odoo-extra-addons:/mnt/extra-addons
 
 
@@ -219,11 +221,14 @@ services:
       - --db_port=5432
       - --db_user=odoo
       - --db_password=odoo_password
+      - --admin_passwd=MasterPassword
       - -d
       - odoo
       - -i
-      - base
+      - base,web,sale,purchase,stock,account,point_of_sale,website,pos_restaurant
+      - --http-interface=0.0.0.0
       - --db-filter=.*
+      - --proxy-mode
       - --workers=2
       - --max-cron-threads=1
       - --limit-memory-hard=536870912
@@ -232,7 +237,6 @@ services:
       - --limit-time-real=120
       - --limit-request=8192
       - --log-level=info
-      - --without-demo=all
 
 
 
@@ -260,6 +264,8 @@ volumes:
     name: odoo-db-data
   odoo-data:
     name: odoo-data
+  odoo-sessions:
+    name: odoo-sessions
   traefik-ssl:
     name: traefik-ssl
 
