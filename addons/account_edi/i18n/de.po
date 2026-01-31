@@ -3,13 +3,13 @@
 # * account_edi
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-30 18:36+0000\n"
-"PO-Revision-Date: 2025-11-28 14:27+0000\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-01-28 12:32+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "account_edi/de/>\n"
@@ -30,7 +30,7 @@ msgstr "%(count)s Fehler bei der elektronischen Rechnungsstellung"
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 msgid "%(count)s Electronic invoicing info(s)"
-msgstr "%(count)s Info(s) zur elektronischen Rechnungsstellung"
+msgstr "%(count)s Mitteilungen zur elektronischen Rechnungsstellung"
 
 #. module: account_edi
 #. odoo-python
@@ -89,7 +89,7 @@ msgid ""
 msgstr ""
 "Blockiert den aktuellen Vorgang des Dokuments in Abhängigkeit von der "
 "Fehlerschwere:\n"
-"* Info: Das Dokument ist nicht blockiert und alles funktioniert wie "
+"* Mitteilung: Das Dokument ist nicht blockiert und alles funktioniert wie "
 "gewünscht.\n"
 "* Warnung: Es liegt ein Fehler vor, der den aktuellen Vorgang der "
 "elektronischen Rechnungsstellung nicht behindert.\n"
@@ -114,7 +114,7 @@ msgid ""
 "Cannot deactivate (%s) on this journal because not all documents are "
 "synchronized"
 msgstr ""
-"Deaktivierung von (%s) ist für dieses Journal nicht möglich, da nicht alle "
+"Deaktivierung (%s) ist für dieses Journal nicht möglich, da nicht alle "
 "Dokumente synchronisiert sind"
 
 #. module: account_edi
@@ -125,7 +125,7 @@ msgstr "Code"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_journal__compatible_edi_ids
 msgid "Compatible Edi"
-msgstr "Kompatible EDI"
+msgstr "Kompatibler EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__create_uid
@@ -203,12 +203,12 @@ msgstr "Anzahl EDI-Fehler"
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_message
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_message
 msgid "Edi Error Message"
-msgstr "Edi-Fehlermeldung"
+msgstr "EDI-Fehlermeldung"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_id
 msgid "Edi Format"
-msgstr "EDi-Format"
+msgstr "EDI-Format"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_abandon_cancel_button
@@ -232,7 +232,7 @@ msgstr "EDI-Schaltfläche „Stornierung erzwingen“ anzeigen"
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_web_services_to_process
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_web_services_to_process
 msgid "Edi Web Services To Process"
-msgstr "Zu verarbeitende Edi-Web-Services"
+msgstr "Zu verarbeitende EDI-Webservices"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_document
@@ -255,7 +255,7 @@ msgstr "Verarbeitung elektronischer Rechnungen erforderlich"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
 msgid "Electronic invoicing state"
-msgstr "Status elektronische Rechnungsstellung"
+msgstr "Status der elektronischen Rechnungsstellung"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__error
@@ -296,7 +296,7 @@ msgstr "ID"
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__blocking_level__info
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_blocking_level__info
 msgid "Info"
-msgstr "Information"
+msgstr "Mitteilung"
 
 #. module: account_edi
 #. odoo-python
@@ -393,7 +393,7 @@ msgstr "Status"
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_state
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_state
 msgid "The aggregated state of all the EDIs with web-service of this move"
-msgstr "Der aggregierte Status aller EDIs mit Web-Service dieser Buchung"
+msgstr "Der aggregierte Status aller EDIs mit Webservice dieser Buchung"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__attachment_id
@@ -435,7 +435,7 @@ msgstr "Dieser Code existiert bereits"
 #. odoo-python
 #: code:addons/account_edi/models/account_edi_document.py:0
 msgid "This document is being sent by another process already. "
-msgstr "Dieses Dokument wird bereits von einem anderen Prozess gesendet. "
+msgstr "Dieses Dokument wird bereits aus einem anderen Prozess gesendet. "
 
 #. module: account_edi
 #. odoo-python
@@ -444,7 +444,7 @@ msgid ""
 "This invoice was canceled while the EDIs %s still had a pending cancellation "
 "request."
 msgstr ""
-"Diese Rechnung wurde storniert, während die EDIs %s immer noch ausstehende "
+"Diese Rechnung wurde storniert, während die EDIs %s weiterhin ausstehende "
 "Stornierungsanfragen hatten."
 
 #. module: account_edi
@@ -474,7 +474,7 @@ msgid ""
 "instead."
 msgstr ""
 "Sie können die folgende Journalbuchung %s nicht bearbeiten, da bereits ein "
-"elektronisches Dokument versendet wurde. Bitte verwenden Sie stattdessen die "
+"elektronisches Dokument versendet wurde. Verwenden Sie stattdessen die "
 "Schaltfläche „EDI-Storno anfordern“."
 
 #. module: account_edi
