@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-01-24 08:09+0000\n"
+"POT-Creation-Date: 2026-01-29 18:36+0000\n"
+"PO-Revision-Date: 2026-01-30 09:50+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/sale/ja/"
 ">\n"
@@ -836,11 +836,11 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in "
 "('draft', 'sent') else 'order'\"></t>\n"
-"        こんにちは。\n"
+"        お世話になっております。\n"
 "        <br><br>\n"
 "        お客様の\n"
 "        <t t-if=\"ctx.get('proforma')\">\n"
-"            見積送状： <t t-out=\"doc_name or ''\">見積書</t> <span "
+"            仮請求書： <t t-out=\"doc_name or ''\">見積書</t> <span "
 "style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                （参照番号 <t t-out=\"object.origin or ''\"></t> ）\n"
@@ -1891,7 +1891,7 @@ msgstr "コネクタ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__consolidated_billing
 msgid "Consolidated Billing"
-msgstr "連結請求"
+msgstr "まとめ請求"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
@@ -3678,7 +3678,7 @@ msgstr "PDTIDトークン"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr "見積送状"
+msgstr "仮請求書"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_id
@@ -5227,6 +5227,14 @@ msgstr ""
 #, python-format
 msgid "The provided parameters are invalid."
 msgstr "指定されたパラメータが無効です。"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/controllers/portal.py:0
+#: code:addons/sale/wizard/payment_link_wizard.py:0
+#, python-format
+msgid "The sale order has expired."
+msgstr ""
 
 #. module: sale
 #. odoo-python

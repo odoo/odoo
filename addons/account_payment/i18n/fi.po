@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_payment
+# * account_payment
 #
 # Translators:
 # Mikko Salmela <salmemik@gmail.com>, 2023
@@ -16,25 +16,27 @@
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2023
 # Miika Nissi <miika.nissi@tawasta.fi>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-#
+# Saara Hakanen <sahak@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
-"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"PO-Revision-Date: 2026-01-29 16:55+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-17/"
+"account_payment/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
 msgid "<b>Communication: </b>"
-msgstr "<b>Viite: </b>"
+msgstr "<b>Viesti: </b>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -81,7 +83,7 @@ msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Odottaa"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "<span class=\"d-none d-md-inline\"> Pending</span>"
-msgstr "<span class=\"d-none d-md-inline\"> Vireillä</span>"
+msgstr "<span class=\"d-none d-md-inline\"> Odottaa</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
@@ -110,25 +112,26 @@ msgid ""
 "                        few minutes, please check your payment provider "
 "configuration."
 msgstr ""
-"<strong>Varoitus!</strong> Tästä maksusta on vireillä palautus.\n"
-"                        Odota hetki, että se käsitellään. Jos palautus on "
-"edelleen vireillä\n"
-"                        muutaman minuutin kuluttua, tarkista maksupalvelun "
-"tarjoajan asetukset."
+"<strong>Varoitus!</strong> Tähän maksuun liittyy käsiteltävänä oleva "
+"takaisinmaksu.\n"
+"                        Odota, että se käsitellään. Jos takaisinmaksu "
+"odottaa edelleen\n"
+"                        muutaman minuutin kuluttua, tarkista "
+"maksupalveluntarjoajan asetukset."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
-msgstr "Maksutapahtuma, jonka viite on %s, on jo olemassa."
+msgstr "Maksutapahtuma viitteellä %s on jo olemassa."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A token is required to create a new payment transaction."
-msgstr "Uuden maksutapahtuman luomiseen vaaditaan tunnus."
+msgstr "Uuden maksutapahtuman luomiseen vaaditaan tunniste."
 
 #. module: account_payment
 #: model:onboarding.onboarding.step,button_text:account_payment.onboarding_onboarding_step_payment_provider
@@ -138,7 +141,7 @@ msgstr "Aktivoi Stripe"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_available_for_refund
 msgid "Amount Available For Refund"
-msgstr "Palautettavaksi käytettävissä oleva määrä"
+msgstr "Takaisinmaksuun saatavilla oleva määrä"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
@@ -153,8 +156,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
-"Are you sure you want to void the authorized transaction? This action can't "
-"be undone."
+"Haluatko varmasti mitätöidä valtuutetun tapahtuman? Tätä toimintoa ei voi "
+"peruuttaa."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__authorized_transaction_ids
@@ -166,7 +169,7 @@ msgstr "Valtuutetut tapahtumat"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Capture Transaction"
-msgstr "Vastaanota siirto"
+msgstr "Tallenna tapahtuma"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -209,7 +212,7 @@ msgstr "Näyttönimi"
 msgid ""
 "Done, your online payment has been successfully processed. Thank you for "
 "your order."
-msgstr "Valmis, verkkomaksusi on käsitelty. Kiitos tilauksestasi."
+msgstr "Valmis, verkkomaksusi on käsitelty onnistuneesti. Kiitos tilauksestasi."
 
 #. module: account_payment
 #: model:onboarding.onboarding.step,description:account_payment.onboarding_onboarding_step_payment_provider
@@ -219,7 +222,7 @@ msgstr "Ota käyttöön Stripen tukemat luotto- ja pankkikorttimaksut."
 #. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
 msgid "Full Only"
-msgstr "Vain täysi"
+msgstr "Vain kokonainen"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_link_wizard
@@ -234,12 +237,12 @@ msgstr "Luo maksulinkki"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__has_pending_refund
 msgid "Has a pending refund"
-msgstr "Maksun palautus on käynnissä"
+msgstr "Sisältää odottavan takaisinmaksun"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
@@ -247,8 +250,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
-"Testitilassa väärennetty maksu käsitellään testimaksuliittymän kautta.\n"
-"Tätä tilaa suositellaan palveluntarjoajan perustamisen yhteydessä."
+"Testitilassa epäaidot maksut käsitellään testimaksuliittymän kautta.\n"
+"Tätä tilaa suositellaan palveluntarjoajan käyttöönoton yhteydessä."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.res_config_settings_view_form
@@ -271,7 +274,7 @@ msgstr "Laskut"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoices_count
 msgid "Invoices Count"
-msgstr "Laskujen määrä"
+msgstr "Laskujen lukumäärä"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_journal
@@ -304,8 +307,8 @@ msgid ""
 "Note that only tokens from providers allowing to capture the amount are "
 "available."
 msgstr ""
-"Huomaa, että saatavilla on vain sellaisten palveluntarjoajien tunnisteita, "
-"jotka mahdollistavat summan tallentamisen."
+"Huomaa, että käytettävissä on vain sellaisten palveluntarjoajien "
+"tunnisteita, jotka sallivat summan tallentamisen."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
@@ -313,9 +316,9 @@ msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
-"Huomaa, että sellaisten palveluntarjoajien tunnisteet, jotka on asetettu "
-"vain hyväksymään tapahtumia (eikä tallentamaan summaa), eivät ole "
-"käytettävissä."
+"Huomaa, että sellaisten palveluntarjoajien tunnisteet, jotka on määritetty "
+"ainaoastaan valtuuttamaan tapahtumia (summan tallentamisen sijaan), eivät "
+"ole käytettävissä."
 
 #. module: account_payment
 #: model:onboarding.onboarding.step,step_image_alt:account_payment.onboarding_onboarding_step_payment_provider
@@ -345,7 +348,7 @@ msgstr "Maksa laskut verkossa"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "Pay Now"
-msgstr "Tilaa"
+msgstr "Maksa nyt"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -366,7 +369,7 @@ msgstr "Maksu"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_amount
 msgid "Payment Amount"
-msgstr "Maksumäärä"
+msgstr "Maksun summa"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_provider__journal_id
@@ -389,12 +392,12 @@ msgstr "Maksupalveluntarjoaja"
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_provider_menu
 msgid "Payment Providers"
-msgstr "Maksupalvelujen tarjoajat"
+msgstr "Maksupalveluntarjoajat"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
 msgid "Payment Refund Wizard"
-msgstr "Maksujen palautuksen ohjattu toiminto"
+msgstr "Ohjattu takaisinmaksutoiminto"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_token_menu
@@ -432,7 +435,7 @@ msgstr "Palveluntarjoaja"
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
 #, python-format
 msgid "Refund"
-msgstr "Hyvitys"
+msgstr "Takaisinmaksu"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_to_refund
@@ -447,12 +450,12 @@ msgstr "Hyvitetty summa"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
 msgid "Refunds"
-msgstr "Hyvitykset"
+msgstr "Takaisinmaksut"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__refunds_count
 msgid "Refunds Count"
-msgstr "Palautusten määrä"
+msgstr "Hyvitysten lukumäärä"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_register
@@ -462,7 +465,7 @@ msgstr "Kirjaa maksu"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_journal_form
 msgid "SETUP"
-msgstr "ASETUS"
+msgstr "KÄYTTÖÖNOTTO"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_token_id
@@ -482,7 +485,7 @@ msgstr "Maksun lähde"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
 msgid "State"
-msgstr "Alue"
+msgstr "Tila"
 
 #. module: account_payment
 #: model:onboarding.onboarding.step,done_text:account_payment.onboarding_onboarding_step_payment_provider
@@ -509,8 +512,8 @@ msgstr "Pääsytunniste on virheellinen."
 msgid ""
 "The amount to be refunded must be positive and cannot be superior to %s."
 msgstr ""
-"Palautettavan määrän on oltava positiivinen, eikä se voi olla suurempi kuin "
-"%s."
+"Takaisinmaksettavan summan on oltava positiivinen, eikä se voi olla suurempi "
+"kuin %s."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
@@ -537,7 +540,7 @@ msgstr "Annetut parametrit ovat virheellisiä."
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__source_payment_id
 msgid "The source payment of related refund payments"
-msgstr "Tähän liittyvien maksupalautusten lähdemaksu"
+msgstr "Liittyvien takaisinmaksujen lähdemaksu"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -584,7 +587,7 @@ msgstr "Käytä sähköistä maksutapaa"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Void Transaction"
-msgstr "Mitätön kauppa"
+msgstr "Mitätöity tapahtuma"
 
 #. module: account_payment
 #. odoo-python
@@ -595,8 +598,8 @@ msgid ""
 "enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"Et voi poistaa maksutapaa, joka on linkitetty palveluntarjoajaan, joka on "
-"käytössä tai testitilassa.\n"
+"Et voi poistaa maksutapaa, joka on linkitetty palveluntarjoajaan sallitussa- "
+"tai testitilassa.\n"
 "Linkitetyt palveluntarjoajat: %s"
 
 #. module: account_payment
@@ -607,7 +610,7 @@ msgid ""
 "You cannot uninstall this module as payments using this payment method "
 "already exist."
 msgstr ""
-"Et voi poistaa tätä moduulia, koska tätä maksutapaa käyttävät maksut ovat jo "
+"Et voi poistaa tätä moduulia, koska tätä maksutapaa käyttäviä maksuja on jo "
 "olemassa."
 
 #. module: account_payment
@@ -618,6 +621,6 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
-"Maksupalveluntarjoaja on ensin poistettava käytöstä, ennen kuin sen "
-"päiväkirja voidaan poistaa.\n"
+"Maksupalveluntarjoaja on poistettava käytöstä ennen sen päiväkirjan "
+"poistamista.\n"
 "Linkitetyt palveluntarjoajat: %s"
