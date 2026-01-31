@@ -382,92 +382,94 @@ jobs:
   # ===========================================================================
   # Job 4: Deploy to VPS (triggered on feature/odoo-uber branch push)
   # ===========================================================================
+    # ===========================================================================
+  # Job 4: Deploy to VPS (triggered on feature/odoo-uber branch push)
+  # ===========================================================================
   deploy-to-vps:
-  needs: [build-and-push, security-scan, image-size-report]
-  runs-on: ubuntu-latest
-  if: |
-    github.ref == 'refs/heads/feature/odoo-uber' &&
-    github.event_name == 'push' &&
-    github.event.repository.full_name == github.repository
-  permissions:
-    packages: read
-    contents: read
+    needs: [build-and-push, security-scan, image-size-report]
+    runs-on: ubuntu-latest
+    if: |
+      github.ref == 'refs/heads/feature/odoo-uber' &&
+      github.event_name == 'push' &&
+      github.event.repository.full_name == github.repository
+    permissions:
+      packages: read
+      contents: read
 
-  env:
-    VPS_PATH: ${{ vars.VPS_PATH || '/home/ubuntu/odoo' }}
+    env:
+      VPS_PATH: ${{ vars.VPS_PATH || '/home/ubuntu/odoo' }}
 
-  steps:
-    - name: Validate VPS secrets
-      run: |
-        if [ -z "${{ secrets.VPS_HOST }}" ] || [ -z "${{ secrets.VPS_USER }}" ] || [ -z "${{ secrets.VPS_SSH_KEY }}" ]; then
-          echo "❌ ERROR: Missing VPS configuration secrets"
-          echo "Required secrets: VPS_HOST, VPS_USER, VPS_SSH_KEY"
-          exit 1
-        fi
-        echo "✅ VPS secrets are configured"
+    steps:
+      - name: Validate VPS secrets
+        run: |
+          if [ -z "${{ secrets.VPS_HOST }}" ] || [ -z "${{ secrets.VPS_USER }}" ] || [ -z "${{ secrets.VPS_SSH_KEY }}" ]; then
+            echo "❌ ERROR: Missing VPS configuration secrets"
+            echo "Required secrets: VPS_HOST, VPS_USER, VPS_SSH_KEY"
+            exit 1
+          fi
+          echo "✅ VPS secrets are configured"
 
-    - name: Setup SSH key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
 
-    - name: Deploy to VPS with docker-compose
-      id: deploy
-      run: |
-        echo "🚀 Deploying to VPS (${{ secrets.VPS_HOST }})"
+      - name: Deploy to VPS with docker-compose
+        id: deploy
+        run: |
+          echo "🚀 Deploying to VPS (${{ secrets.VPS_HOST }})"
 
-        TAG_NAME=$(echo "${{ github.ref_name }}" | sed 's/\//-/g')
-        VPS_PATH="${{ env.VPS_PATH }}"
+          TAG_NAME=$(echo "${{ github.ref_name }}" | sed 's/\//-/g')
+          VPS_PATH="${{ env.VPS_PATH }}"
 
-        echo "Using VPS_PATH=$VPS_PATH, TAG_NAME=$TAG_NAME"
+          echo "Using VPS_PATH=$VPS_PATH, TAG_NAME=$TAG_NAME"
 
-        ssh -o StrictHostKeyChecking=no \
-            -o ConnectTimeout=10 \
-            -o BatchMode=yes \
-            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
-            "bash -s" -- "$VPS_PATH" "$TAG_NAME" << 'DEPLOY_SCRIPT'
-        set -e
+          ssh -o StrictHostKeyChecking=no \
+              -o ConnectTimeout=10 \
+              -o BatchMode=yes \
+              "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
+              "bash -s" -- "$VPS_PATH" "$TAG_NAME" << 'DEPLOY_SCRIPT'
+          set -e
 
-        VPS_PATH="$1"
-        TAG_NAME="$2"
+          VPS_PATH="$1"
+          TAG_NAME="$2"
 
-        echo "📦 Logging into GitHub Container Registry..."
-        echo "${{ secrets.GITHUB_TOKEN }}" | docker login -u ${{ github.actor }} --password-stdin ghcr.io
+          echo "📦 Logging into GitHub Container Registry..."
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login -u ${{ github.actor }} --password-stdin ghcr.io
 
-        if [ ! -d "$VPS_PATH" ]; then
-          echo "❌ Directory $VPS_PATH does not exist on VPS"
-          exit 1
-        fi
+          if [ ! -d "$VPS_PATH" ]; then
+            echo "❌ Directory $VPS_PATH does not exist on VPS"
+            exit 1
+          fi
 
-        cd "$VPS_PATH"
-        echo "📂 Working directory: $(pwd)"
+          cd "$VPS_PATH"
+          echo "📂 Working directory: $(pwd)"
 
-        if [ ! -f docker-compose.yml ]; then
-          echo "❌ docker-compose.yml not found in $VPS_PATH"
-          exit 1
-        fi
+          if [ ! -f docker-compose.yml ]; then
+            echo "❌ docker-compose.yml not found in $VPS_PATH"
+            exit 1
+          fi
 
-        echo "📥 Updating application image tag to $TAG_NAME..."
-        # Update only the Odoo image line; adjust pattern if you change the image name
-        sed -i "s|^\(\s*image:\s*ghcr.io/laxya911/custom-odoo:\).*|\1${TAG_NAME}|g" docker-compose.yml
+          echo "📥 Updating application image tag to $TAG_NAME..."
+          sed -i "s|^\(\s*image:\s*ghcr.io/laxya911/custom-odoo:\).*|\1${TAG_NAME}|g" docker-compose.yml
 
-        echo "📥 Pulling latest images..."
-        docker compose pull
+          echo "📥 Pulling latest images..."
+          docker compose pull
 
-        echo "🔄 Starting all services..."
-        docker compose up -d
+          echo "🔄 Starting all services..."
+          docker compose up -d
 
-        echo "✅ Deployment completed. Listing services..."
-        docker ps --filter "label=com.docker.compose.project" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+          echo "✅ Deployment completed. Listing services..."
+          docker ps --filter "label=com.docker.compose.project" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 
-        if docker ps | grep -q odoo_uber; then
-          echo "✅ Odoo application (odoo_uber) is running"
-        else
-          echo "❌ ERROR: Odoo application (odoo_uber) is not running"
-          exit 1
-        fi
-        DEPLOY_SCRIPT
+          if docker ps | grep -q odoo_uber; then
+            echo "✅ Odoo application (odoo_uber) is running"
+          else
+            echo "❌ ERROR: Odoo application (odoo_uber) is not running"
+            exit 1
+          fi
+          DEPLOY_SCRIPT
 
-        echo "deployment_status=success" >> $GITHUB_OUTPUT
+          echo "deployment_status=success" >> $GITHUB_OUTPUT
