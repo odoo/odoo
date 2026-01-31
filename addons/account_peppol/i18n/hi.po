@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:35+0000\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
 "PO-Revision-Date: 2025-11-08 22:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-19/"
@@ -51,6 +51,12 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid " Expected format: %(expected_format)s."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 msgstr "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
@@ -60,6 +66,11 @@ msgstr "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "%s has requested electronic invoices reception on Peppol."
 msgstr "%s ने Peppol पर इलेक्ट्रॉनिक इनवॉइस की रसीद का अनुरोध किया है।"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "<b>Authentify with itsme</b>"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -607,6 +618,18 @@ msgid ""
 msgstr ""
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid "Authentication failed"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid "Authentication successful"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__available_peppol_edi_formats
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__available_peppol_edi_formats
 msgid "Available Peppol Edi Formats"
@@ -620,11 +643,8 @@ msgstr "उपलब्ध Peppol भेजने के तरीके"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid ""
-"By clicking the button below I accept that Odoo may process my e-invoices."
+msgid "By clicking the button below:"
 msgstr ""
-"नीचे दिए गए बटन पर क्लिक करने का मतलब है कि आप इस बात से सहमत हैं कि Odoo कंपनी आपके "
-"इलेक्ट्रॉनिक बिल को प्रोसेस कर सकती है।"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__can_use_parent_connection
@@ -741,6 +761,12 @@ msgstr "संपर्क के लिए ईमेल और फ़ोन नं
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Could not connect to Proxy Server."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
 "Could not find an XSD with which to validate the document with identifier "
@@ -820,6 +846,11 @@ msgid "Disconnected this branch company peppol configuration from %s."
 msgstr ""
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__display_itsme_login
+msgid "Display Itsme Login"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_20__display_name
@@ -836,6 +867,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__display_name
 msgid "Display Name"
 msgstr "डिस्प्ले का नाम"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__display_no_auth_buttons
+msgid "Display No Auth Buttons"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__display_use_parent_connection_selection
@@ -918,6 +954,12 @@ msgstr "ईडीआई दस्तावेज़ बनाते समय �
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/tools/peppol_iap_connector.py:0
+msgid "Failed to connect to Odoo Peppol Proxy."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid ""
 "Failed to connect to Peppol Access Point. This might happen if you restored "
@@ -943,6 +985,16 @@ msgstr "पूरी तरह से ऑटोमेटेड"
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.js:0
 msgid "Got it !"
 msgstr "समझ गया!"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "I accept that Odoo may process my e-invoices,"
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "I reckon I'm allowed to register this company."
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__id
@@ -978,6 +1030,11 @@ msgid ""
 msgstr ""
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "If you don't have Itsme, please contact"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/controllers/portal.py:0
 msgid "If you want to be invoiced by Peppol, your configuration must be valid."
@@ -1003,6 +1060,11 @@ msgstr "इनवॉइस भेजा जा रहा है"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__is_branch_company
 msgid "Is Branch Company"
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "Itsme"
 msgstr ""
 
 #. module: account_peppol
@@ -1222,6 +1284,16 @@ msgid "Peppol Address should be provided."
 msgstr "Peppol का पता दिया जाना चाहिए।"
 
 #. module: account_peppol
+#: model:ir.actions.client,name:account_peppol.action_peppol_auth_callback
+msgid "Peppol Auth Callback action"
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_can_connect_data
+msgid "Peppol Can Connect Data"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_can_send
 msgid "Peppol Can Send"
 msgstr "Peppol के ज़रिए भेजा सकता है"
@@ -1246,7 +1318,7 @@ msgstr "Peppol एंडपॉइंट"
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+#: code:addons/account_peppol/exceptions.py:0
 msgid ""
 "Peppol Error [code=%(error_code)s]: %(error_subject)s\n"
 "%(error_message)s"
@@ -1410,6 +1482,12 @@ msgstr "कृपया फ़ोन नंबर लाइब्रेरी �
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Please select a country for your company."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid ""
 "Please set a journal for Peppol invoices on %s before receiving documents."
@@ -1482,18 +1560,6 @@ msgstr "Odoo के साथ रजिस्टर करें"
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/tools/demo_utils.py:0
-msgid "Registered as a sender (demo)."
-msgstr "भेजने वाले (डेमो) के तौर पर रजिस्टर किया गया।"
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/tools/demo_utils.py:0
-msgid "Registered to receive documents via Peppol (demo)."
-msgstr "Peppol के माध्यम से दस्तावेज़ पाने के लिए रजिस्टर किया गया (demo)।"
-
-#. module: account_peppol
-#. odoo-python
 #: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid "Registered to receive documents via Peppol."
 msgstr "Peppol के माध्यम से दस्तावेज़ पाने के लिए रजिस्टर किया गया।"
@@ -1522,6 +1588,12 @@ msgstr "सहेज"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__selected_company_id
 msgid "Selected Company"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Selected authentication method is not available."
 msgstr ""
 
 #. module: account_peppol
@@ -1621,13 +1693,10 @@ msgstr "टेस्ट"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid ""
-"Test mode allows sending e-invoices through the test Peppol network.\n"
-"                                    By clicking the button below I accept "
-"that Odoo may process my e-invoices."
+"Test mode allows sending e-invoices through the test Peppol network.<br/>\n"
+"                            By clicking the button below I accept that Odoo "
+"may process my e-invoices."
 msgstr ""
-"टेस्ट मोड आपको Peppol के टेस्ट नेटवर्क का उपयोग करके इलेक्ट्रॉनिक इनवॉइस भेजने की सुविधा "
-"देता है. नीचे दिए गए बटन पर क्लिक करके, आप Odoo को अपने ई-इनवॉइस पर प्रोसेस करने की "
-"अनुमति देते हैं।"
 
 #. module: account_peppol
 #. odoo-python
@@ -1733,6 +1802,12 @@ msgstr "XML डॉक्यूमेंट, XSD स्कीमा के हि
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The XML document is not valid according to the schematron."
 msgstr "XML डॉक्यूमेंट, शेमाट्रॉन के नियमों के हिसाब से सही नहीं है।"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "The database you are trying to connect to is not suitable for Peppol."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -2150,12 +2225,6 @@ msgstr "आप Odoo और अपनी Peppol आईडी से ई-इनव
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/tools/demo_utils.py:0
-msgid "You can now receive demo vendor bills."
-msgstr "आप अब डेमो वेंडर बिल पा सकते हैं।"
-
-#. module: account_peppol
-#. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "You can now send and receive electronic invoices via Peppol"
 msgstr "अब आप Peppol के ज़रिए इलेक्ट्रॉनिक इनवॉइस बिल भेज और पा सकते हैं"
@@ -2165,12 +2234,6 @@ msgstr "अब आप Peppol के ज़रिए इलेक्ट्रॉ�
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "You can now send electronic invoices via Peppol."
 msgstr "अब आप Peppol के ज़रिए इलेक्ट्रॉनिक इनवॉइस भेज सकते हैं"
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/tools/demo_utils.py:0
-msgid "You can now send invoices in demo mode."
-msgstr "अब आप डेमो मोड में इनवॉइस भेज सकते हैं।"
 
 #. module: account_peppol
 #. odoo-python
@@ -2193,6 +2256,12 @@ msgid ""
 msgstr ""
 "आप आज जितने दस्तावेज़ भेज सकते थे, उतने भेज चुके हैं. बाद में फिर कोशिश करें. अगर आपको यह "
 "सीमा बढ़वानी है, तो कृपया सहायता टीम से संपर्क करें।"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "You need to authenticate to continue."
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -2261,6 +2330,24 @@ msgstr "इस काम को करने के लिए आपकी प�
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Your identifier does not have a valid format.%s"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Your identifier is invalid."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Your identifier you entered is invalid for Peppol."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid ""
 "Your registration has been rejected. Please contact the support for further "
 "assistance."
@@ -2311,6 +2398,11 @@ msgid "sent via Peppol"
 msgstr "Peppol के ज़रिए भेजा गया"
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid "support"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "to send invoices, but this one"
 msgstr "इनवॉइस भेजने के लिए, हालांकि"
@@ -2319,6 +2411,33 @@ msgstr "इनवॉइस भेजने के लिए, हालांक�
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "इस्तेमाल"
+
+#~ msgid ""
+#~ "By clicking the button below I accept that Odoo may process my e-invoices."
+#~ msgstr ""
+#~ "नीचे दिए गए बटन पर क्लिक करने का मतलब है कि आप इस बात से सहमत हैं कि Odoo कंपनी "
+#~ "आपके इलेक्ट्रॉनिक बिल को प्रोसेस कर सकती है।"
+
+#~ msgid "Registered as a sender (demo)."
+#~ msgstr "भेजने वाले (डेमो) के तौर पर रजिस्टर किया गया।"
+
+#~ msgid "Registered to receive documents via Peppol (demo)."
+#~ msgstr "Peppol के माध्यम से दस्तावेज़ पाने के लिए रजिस्टर किया गया (demo)।"
+
+#~ msgid ""
+#~ "Test mode allows sending e-invoices through the test Peppol network.\n"
+#~ "                                    By clicking the button below I accept "
+#~ "that Odoo may process my e-invoices."
+#~ msgstr ""
+#~ "टेस्ट मोड आपको Peppol के टेस्ट नेटवर्क का उपयोग करके इलेक्ट्रॉनिक इनवॉइस भेजने की "
+#~ "सुविधा देता है. नीचे दिए गए बटन पर क्लिक करके, आप Odoo को अपने ई-इनवॉइस पर प्रोसेस "
+#~ "करने की अनुमति देते हैं।"
+
+#~ msgid "You can now receive demo vendor bills."
+#~ msgstr "आप अब डेमो वेंडर बिल पा सकते हैं।"
+
+#~ msgid "You can now send invoices in demo mode."
+#~ msgstr "अब आप डेमो मोड में इनवॉइस भेज सकते हैं।"
 
 #~ msgid "Incoming Invoices Journal"
 #~ msgstr "इनकमिंग इनवॉइस जर्नल"

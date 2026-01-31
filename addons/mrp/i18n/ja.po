@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-30 18:36+0000\n"
-"PO-Revision-Date: 2026-01-23 09:26+0000\n"
+"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"PO-Revision-Date: 2026-01-30 07:44+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/mrp/ja/>"
 "\n"
@@ -713,7 +713,8 @@ msgstr ""
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
-msgstr "キットタイプ部品表のあるプロダクトは再オーダルールを持つことはできません。"
+msgstr ""
+"キットタイプ部品表のあるプロダクトは再オーダルールを持つことはできません。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__action
@@ -2675,13 +2676,13 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
-"予測数量(受注数量 - 受注数量+入庫数量−除去予定数量)\n"
-"単一のストックロケーションを持つコンテキストでは、このロケーションに格納され"
-"ている製品、またはその子製品が含まれます。\n"
-"単一の倉庫のコンテキストでは、この倉庫の在庫ロケーションに保管されている製品"
-"またはその子製品が含まれます。\n"
-"それ以外の場合は、「内部」タイプの在庫ロケーションに保管されている製品が含ま"
-"れます。"
+"予測数量(在庫数量 − 出庫予定数 ＋ 入庫予定数 − 除去予定数量として算出)\n"
+"単一の在庫ロケーションの文脈では、そのロケーションおよびその下位ロケーション"
+"に保管されている商品が含まれます。\n"
+"単一の倉庫の文脈では、その倉庫の在庫ロケーションおよびその下位ロケーションに"
+"保管されている商品が含まれます。\n"
+"それ以外の場合は、「内部」タイプのすべての在庫ロケーションに保管されている商"
+"品が含まれます。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -6599,8 +6600,8 @@ msgstr ""
 "調達が、同じオペレーションタイプが設定された'生産'ルートを持つとき、同じオペ"
 "レーションタイプの部品表を使用して、そのプロダクトの製造オーダの作成を試みま"
 "す。そうでない場合、オペレーションタイプは部品表検索では考慮されません。これ"
-"により、異なる部品表で異なる製造オーダのトリガとなる在庫ルールを定義できます"
-"。"
+"により、異なる部品表で異なる製造オーダのトリガとなる在庫ルールを定義できま"
+"す。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__manual_consumption
@@ -6921,7 +6922,8 @@ msgstr ""
 msgid ""
 "You can not create a kit-type bill of materials for products that have at "
 "least one reordering rule."
-msgstr "少なくとも1つの再オーダルールを持つプロダクト用のキットタイプ部品表を作成する"
+msgstr ""
+"少なくとも1つの再オーダルールを持つプロダクト用のキットタイプ部品表を作成する"
 "ことはできません。"
 
 #. module: mrp
@@ -7233,7 +7235,7 @@ msgstr "製造オーダに構成品として追加されました。"
 msgid ""
 "it is moved via a transfer, such as a receipt or a delivery order for "
 "instance."
-msgstr "例えば、入荷または配送オーダなどの転送によって移動されます。"
+msgstr "例えば、入荷または出荷オーダなどの転送によって移動されます。"
 
 #. module: mrp
 #. odoo-python
