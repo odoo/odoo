@@ -406,7 +406,7 @@ class configmanager:
                                  "Also disable access to the database manager and selector, "
                                  "so be sure to set a proper --database parameter first")
         security.add_option('--protected-db', dest='protected_db', type='comma', metavar="DATABASE,...", my_default=[],
-                            help="A list of databases that cannot be removed by the database manager (separated by commas).")
+                            help="Disable the ability to delete protected databases (separated by commas).")
         parser.add_option_group(security)
 
         # Advanced options
