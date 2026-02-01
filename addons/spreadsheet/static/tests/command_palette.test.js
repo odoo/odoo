@@ -33,3 +33,14 @@ test("First item of command palette is insert link", async function () {
     await animationFrame();
     expect(".o_command_name:first").toHaveText("Insert / Link");
 });
+
+test("First item with a shortcut is Edit / Copy and the shortcut is displayed", async function () {
+    await mountWithCleanup(WebClient);
+    const { model } = await createModelWithDataSource({
+        serverData,
+    });
+    await mountSpreadsheet(model);
+    await press(["control", "k"]);
+    await animationFrame();
+    expect(".o_command_hotkey:first").toHaveText("Edit / Copy\nCONTROL + C");
+});
