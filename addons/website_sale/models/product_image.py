@@ -43,14 +43,8 @@ class ProductImage(models.Model):
         compute='_compute_can_image_1024_be_zoomed',
         store=True,
     )
-    attribute_value_ids = fields.Many2many(
-        'product.attribute.value',
-    )
-    is_template_image = fields.Boolean(
-        compute='_compute_is_template_image',
-        store=True,
-        index=True,
-    )
+    attribute_value_ids = fields.Many2many('product.template.attribute.value')
+    is_template_image = fields.Boolean(compute='_compute_is_template_image', store=True)
 
     #=== COMPUTE METHODS ===#
 
@@ -101,15 +95,18 @@ class ProductImage(models.Model):
 
         for vals in vals_list:
             if vals.get('product_variant_ids') and 'default_product_tmpl_id' in self.env.context:
-                variant = self.env['product.product'].browse(vals['product_variant_ids'][0][1])
-                vals['attribute_value_ids'] = [
-                    (4, ptav.product_attribute_value_id.id) for ptav in variant.product_template_attribute_value_ids
-                ]
+                if not vals.get('attribute_value_ids'):
+                    variant = self.env['product.product'].browse(vals['product_variant_ids'][0][1])
+                    vals['attribute_value_ids'] = [
+                        Command.set(variant.product_template_attribute_value_ids.ids)
+                    ]
                 variant_vals_list.append(vals)
             else:
                 normal_vals.append(vals)
 
-        return super().create(normal_vals) + super(ProductImage, context_without_template).create(variant_vals_list)
+        images = super().create(normal_vals) + super(ProductImage, context_without_template).create(variant_vals_list)
+        images.filtered(lambda img: img.attribute_value_ids)._sync_variant_images()
+        return images
 
     def write(self, vals):
         res = super().write(vals)
@@ -119,51 +116,54 @@ class ProductImage(models.Model):
 
     # === BUSINESS METHODS === #
 
-    def get_attribute_values_for_image_assignment(self):
-        product_template = self.product_variant_ids[:1].product_tmpl_id or self.product_tmpl_id
-        if not product_template:
-            return []
-
-        return [
-            {
-                'id': line.attribute_id.id,
-                'name': line.attribute_id.name,
-                'values': [
-                    {
-                        'id': ptav.product_attribute_value_id.id,
-                        'name': ptav.product_attribute_value_id.name,
-                    }
-                    for ptav in line.product_template_value_ids
-                    if ptav.ptav_active
-                ],
-            }
-            for line in product_template.attribute_line_ids
-        ]
-
     def _sync_variant_images(self):
+        """Update the product variants to which each image applies.
+
+        For each image, this method computes the set of product variants that match the image's
+        attribute values and updates the image's linked variants accordingly. Images without
+        attribute value are not applied to any variant.
+
+        :return: None
+        :rtype: None
+        """
         for image in self:
-            product_template = image.product_variant_ids[:1].product_tmpl_id or image.product_tmpl_id
+            product_template = (
+                image.product_variant_ids[:1].product_tmpl_id or image.product_tmpl_id
+            )
 
             if not product_template or not image.attribute_value_ids:
                 image.product_variant_ids = [Command.clear()]
                 continue
 
-            image_vals_by_attr = defaultdict(set)
-            for val in image.attribute_value_ids:
-                image_vals_by_attr[val.attribute_id.id].add(val.id)
+            compatible_variants = product_template.product_variant_ids.filtered(
+                image._is_applicable_to_variant
+            )
 
-            compatible_variant_ids = []
+            image.product_variant_ids = [Command.set(compatible_variants.ids)]
 
-            for variant in product_template.product_variant_ids:
-                variant_vals = {
-                    ptav.attribute_id.id: ptav.product_attribute_value_id.id
-                    for ptav in variant.product_template_attribute_value_ids
-                }
+    def _is_applicable_to_variant(self, variant):
+        """Check whether this image applies to the given product variant.
 
-                if all(
-                    variant_vals.get(attr_id) in allowed_vals
-                    for attr_id, allowed_vals in image_vals_by_attr.items()
-                ):
-                    compatible_variant_ids.append(variant.id)
+        The image applies if the variant matches all attribute values set on the image.
+        Attributes that are not set do not affect the result.
 
-            image.product_variant_ids = [Command.set(compatible_variant_ids)]
+        :param variant: product.product recordset
+        :return: Whether the image applies to the variant or not.
+        :rtype: bool
+        """
+        self.ensure_one()
+        variant.ensure_one()
+
+        variant_vals = {
+            ptav.attribute_id.id: ptav.id
+            for ptav in variant.product_template_attribute_value_ids
+        }
+
+        image_vals_by_attr = defaultdict(set)
+        for val in self.attribute_value_ids:
+            image_vals_by_attr[val.attribute_id.id].add(val.id)
+
+        return all(
+            variant_vals.get(attr_id) in allowed_vals
+            for attr_id, allowed_vals in image_vals_by_attr.items()
+        )

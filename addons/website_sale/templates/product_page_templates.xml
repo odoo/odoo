@@ -100,6 +100,7 @@
                         <div
                             t-attf-class="o_wsale_product_images col o_wsale_sticky_object"
                             t-att-data-image-amount="len(product_variant._get_images() if product_variant else product._get_images())"
+                            t-att-data-product-variant-id="product_variant.id"
                         >
                             <t t-call="website_sale.shop_product_images"/>
                         </div>

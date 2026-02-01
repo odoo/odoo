@@ -29,26 +29,43 @@ export class ProductImage extends Component {
     }
 
     get showDropdown() {
-        if (!this.record.resId) {
+        const parent = this.record._parentRecord;
+        if (!parent.resId) {
             return false;
         }
-
-        if (this.record.data.product_tmpl_id && this.record._parentRecord?.resModel === 'product.template') {
-            return this.record._parentRecord.data.attribute_line_ids.count > 0;
+        if (this.record.data.product_tmpl_id) {
+            return parent.data.product_variant_count > 1
         }
         return true;
     }
 
+    get selectedCount() {
+        return this.record.data[this.props.name].count || 0;
+    }
+
     async beforeOpen() {
-        this.state.attributes = await this.orm.call(
-            'product.image',
+        const isNewRecord = !this.record.resId;
+        const productTmplId = this.record.data.product_tmpl_id.id || this.record.context.active_id;
+        const productVariantId = isNewRecord
+            ? this.record.context.default_product_variant_ids?.[0]
+            : false;
+
+        const { attributes, current_value_ids } = await this.orm.call(
+            'product.template',
             'get_attribute_values_for_image_assignment',
-            [this.record.resId],
+            [productTmplId, productVariantId],
         );
 
-        this.state.checkedIds = new Set(
-            this.record.data[this.props.name].resIds || []
-        );
+        this.state.attributes = attributes;
+
+        const ids = current_value_ids.length
+            ? current_value_ids
+            : this.record.data[this.props.name]._currentIds;
+
+        if (current_value_ids.length) {
+            this.record.update({ [this.props.name]: [x2ManyCommands.set(current_value_ids)] });
+        }
+        this.state.checkedIds = new Set(ids);
     }
 
     toggleValue(valueId) {

@@ -7,36 +7,50 @@
             state="dropdownState"
             beforeOpen.bind="beforeOpen"
         >
-            <button class="btn btn-outline-secondary w-100">
+            <button class="btn btn-outline-secondary rounded-0 w-100">
                 <div class="d-flex align-items-center justify-content-between">
-                    <span>Assign</span>
+                    <div class="d-flex align-items-center gap-2">
+                        <span>Assign</span>
+                        <span
+                            t-if="selectedCount"
+                            class="badge my-1 rounded-2 bg-secondary"
+                        >
+                            <t t-out="selectedCount"/>
+                        </span>
+                    </div>
                     <i t-if="!dropdownState.isOpen" class="fa fa-caret-down ms-1"/>
                     <i t-else="" class="fa fa-caret-up ms-1"/>
                 </div>
             </button>
             <t t-set-slot="content">
-                <t t-if="state.attributes.length" t-foreach="state.attributes" t-as="attr" t-key="attr.id">
-                <t t-foreach="attr.values" t-as="val" t-key="val.id">
-                    <DropdownItem
-                        class="'d-flex align-items-center justify-content-between px-3'"
-                        onSelected="() => this.toggleValue(val.id)"
-                        closingMode="'none'"
-                    >
-                        <div
-                            class="d-flex align-items-center gap-2">
-                            <input class="cursor-pointer" type="checkbox"
-                                t-att-checked="state.checkedIds.has(val.id)"
-                            />
-                            <span class="small">
-                                <t t-out="val.name"/>
-                            </span>
-                        </div>
-
-                        <span class="text-muted small">
-                            <t t-out="attr.name"/>
-                        </span>
-                    </DropdownItem>
-                </t>
+                <t
+                    t-if="state.attributes.length"
+                    t-foreach="state.attributes"
+                    t-as="attr"
+                    t-key="attr.id"
+                >
+                    <t t-foreach="attr.values" t-as="val" t-key="val.id">
+                        <DropdownItem
+                            class="'d-flex align-items-center justify-content-between px-3'"
+                            onSelected="() => this.toggleValue(val.id)"
+                            closingMode="'none'"
+                        >
+                            <div class="d-flex align-items-center gap-2">
+                                <input
+                                    class="cursor-pointer"
+                                    type="checkbox"
+                                    t-att-checked="state.checkedIds.has(val.id)"
+                                />
+                                <span class="small">
+                                    <t t-out="val.name"/>
+                                </span>
+                            </div>
+                        </DropdownItem>
+                    </t>
+                    <div t-if="!attr_last" class="d-flex align-items-center my-1 px-2">
+                        <span class="mx-2 small text-muted">And</span>
+                        <div class="flex-grow-1 border-top"/>
+                    </div>
                 </t>
             </t>
         </Dropdown>

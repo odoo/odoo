@@ -56,6 +56,7 @@ export class SetPositionAction extends BuilderAction {
             image_res_model: el.parentElement.dataset.oeModel,
             image_res_id: el.parentElement.dataset.oeId,
             move: value,
+            product_variant_id: this.document.querySelector('[data-product-variant-id]').dataset.productVariantId,
         };
 
         await rpc("/shop/product/resequence-image", params);

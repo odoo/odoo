@@ -14,14 +14,6 @@ class ProductProduct(models.Model):
     variant_ribbon_id = fields.Many2one(string="Variant Ribbon", comodel_name='product.ribbon')
     website_id = fields.Many2one(related='product_tmpl_id.website_id', readonly=False)
 
-    image_variant_1920 = fields.Image(
-        string="Variant Image",
-        max_width=1920,
-        max_height=1920,
-        compute='_compute_image_variant_1920',
-        store=True,
-        readonly=True,
-    )
     product_variant_image_ids = fields.Many2many(
         'product.image',
         string="Extra Variant Images",
@@ -60,19 +52,38 @@ class ProductProduct(models.Model):
 
     #=== COMPUTE METHODS ===#
 
-    @api.depends(
-        'product_variant_image_ids',
-        'product_variant_image_ids.image_1920',
-        'product_variant_image_ids.sequence',
-    )
-    def _compute_image_variant_1920(self):
+    def _compute_image_1920(self):
         for product in self:
-            if product.product_variant_image_ids:
-                product.image_variant_1920 = (
-                    product.product_variant_image_ids.sorted('sequence')[0].image_1920
-                )
+            extra_image = product.product_variant_image_ids.sorted('sequence')[:1]
+            if (
+                extra_image
+                and extra_image.attribute_value_ids
+                and extra_image._is_applicable_to_variant(product)
+            ):
+                product.image_1920 = extra_image.image_1920
             else:
-                product.image_variant_1920 = False
+                product.image_1920 = product.product_tmpl_id.image_1920
+
+            product._set_image_fields('image_1920', 'image_variant_1920')
+
+    def _set_image_fields(self, template_field, variant_field):
+        for record in self:
+            # There is only one variant, always write on the template.
+            if (
+                self.search_count([
+                    ('product_tmpl_id', '=', record.product_tmpl_id.id),
+                    ('active', '=', True),
+                ]) <= 1
+            ):
+                record[variant_field] = False
+                record.product_tmpl_id[template_field] = record[template_field]
+            # We are trying to add a field to the variant, but the template field is
+            # not set, write on the template instead and then set variant field same as template.
+            elif (record[template_field] and not record.product_tmpl_id[template_field]):
+                record.product_tmpl_id[template_field] = record[template_field]
+                record[variant_field] = record.product_tmpl_id[template_field]
+            else:
+                record[variant_field] = record[template_field]
 
     def _get_base_unit_price(self, price):
         self.ensure_one()
@@ -136,16 +147,13 @@ class ProductProduct(models.Model):
         """Return a list of records implementing `image.mixin` to
         display on the carousel on the website for this variant.
 
-        This returns a list and not a recordset because the records might be
-        from different models (template, variant and image).
-
-        It contains in this order: the main image of the variant (which will fall back on the main
-        image of the template, if unset), the Variant Extra Images, and the Template Extra Images.
+        It contains in this order: the main image of the variant the Variant Extra Images,
+        and the Template Extra Images.
         """
         self.ensure_one()
-        variant_images = list(self.product_variant_image_ids[1:])
+        variant_images = list(self.product_variant_image_ids)
         template_images = list(self.product_tmpl_id.product_template_image_ids.filtered('is_template_image'))
-        return [self] + variant_images + template_images
+        return variant_images + template_images if (variant_images + template_images) else [self]
 
     def _get_combination_info_variant(self, **kwargs):
         """Return the variant info based on its combination.
@@ -247,7 +255,8 @@ class ProductProduct(models.Model):
         self.ensure_one()
         return [
             self.env['website'].image_url(extra_image, 'image_1920')
-            for extra_image in self.product_variant_image_ids + self.product_template_image_ids
+            for extra_image in self.product_variant_image_ids
+            + self.product_template_image_ids.filtered('is_template_image')
             if extra_image.image_128  # only images, no video urls
         ]
 
@@ -259,6 +268,7 @@ class ProductProduct(models.Model):
                 ('product_id', 'in', self.ids),
                 ('order_id', 'any', [('website_id', '!=', False)]),
             ]).unlink()
+
         return super().write(vals)
 
     def _is_in_wishlist(self):
