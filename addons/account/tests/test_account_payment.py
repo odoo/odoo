@@ -2,6 +2,7 @@
 from contextlib import contextmanager
 
 from odoo import Command, fields
+from odoo.exceptions import UserError
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import Form, tagged
@@ -879,3 +880,31 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
             'amount_signed': -100,
             'amount_company_currency_signed': -50,
         }])
+
+    def test_payment_move_with_multiple_liquidity_lines(self):
+        payment = self.env['account.payment'].create({
+            'amount': 150.0,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'partner_id': self.partner_a.id,
+            'journal_id': self.company_data['default_journal_bank'].id,
+        })
+        payment.action_post()
+        move = payment.move_id
+        move.button_draft()
+        liquidity_lines = payment._seek_for_lines()[0]
+        move.write({
+            'line_ids': [
+                Command.update(liquidity_lines.id, {'amount_currency': 100}),
+                Command.create({
+                    'account_id': liquidity_lines.account_id.id,
+                    'balance': 50.0,
+                    'amount_currency': 50.0,
+                    'currency_id': payment.currency_id.id,
+                }),
+            ],
+        })
+        move.action_post()
+        payment.action_draft()
+        with self.assertRaises(UserError):
+            payment.amount = 300.0
