@@ -191,7 +191,6 @@ export class ComboPage extends Component {
         this.router.back();
     }
 
-
     editCombo(combo_id) {
         this.state.currentComboIndex = this.comboIds.findIndex((c) => c === combo_id);
         this.state.showResume = false;
