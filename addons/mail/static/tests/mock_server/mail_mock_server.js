@@ -721,7 +721,9 @@ async function mail_message_update_content(request) {
     const [message] = MailMessage.browse(message_id);
     const msg_values = {};
     if (update_data.body !== null) {
-        const edit_label = "<span class='o-mail-Message-edited'/>";
+        const edit_label = `<span class='o-mail-Message-edited' data-o-datetime="${serializeDateTime(
+            DateTime.now()
+        )}"/>`;
         msg_values.body =
             update_data.body === "" && update_data.attachment_ids.length === 0
                 ? ""

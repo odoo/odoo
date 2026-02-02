@@ -492,7 +492,9 @@ export class Message extends Component {
             return;
         }
         const editedEl = bodyEl.querySelector(".o-mail-Message-edited");
-        editedEl?.replaceChildren(renderToElement("mail.Message.edited"));
+        editedEl?.replaceChildren(
+            renderToElement("mail.Message.edited", { message: this.message })
+        );
         const channelLinks = bodyEl.querySelectorAll("a.o_channel_redirect");
         this.store.handleValidChannelMention(Array.from(channelLinks));
         for (const el of bodyEl.querySelectorAll(".o_message_redirect")) {

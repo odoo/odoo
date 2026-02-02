@@ -1,3 +1,4 @@
+from freezegun import freeze_time
 from markupsafe import Markup
 from unittest.mock import patch
 from unittest.mock import DEFAULT
@@ -191,8 +192,9 @@ class TestAPI(ThreadRecipients):
             partner_ids=self.partner_1.ids,
         )
         self.assertEqual(message.body, expected)
-        ticket_record._message_update_content(message, body="Hello <R&D/>")
-        self.assertEqual(message.body, Markup('<p>Hello &lt;R&amp;D/&gt;<span class="o-mail-Message-edited"></span></p>'))
+        with freeze_time('2025-04-08 10:00:00'):
+            ticket_record._message_update_content(message, body="Hello <R&D/>")
+        self.assertEqual(message.body, Markup('<p>Hello &lt;R&amp;D/&gt;<span class="o-mail-Message-edited" data-o-datetime="2025-04-08 10:00:00"></span></p>'))
 
     @users('employee')
     def test_mail_partner_find_from_emails(self):
@@ -949,38 +951,42 @@ class TestAPI(ThreadRecipients):
         self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
 
         # clear the content when having attachments should show edit label
-        ticket_record._message_update_content(message, body="")
+        with freeze_time('2025-04-08 10:00:00'):
+            ticket_record._message_update_content(message, body="")
         self.assertEqual(message.attachment_ids, attachments)
-        self.assertEqual(message.body, Markup('<span class="o-mail-Message-edited"></span>'))
+        self.assertEqual(message.body, Markup('<span class="o-mail-Message-edited" data-o-datetime="2025-04-08 10:00:00"></span>'))
         # update the content with new attachments
         new_attachments = self.env['ir.attachment'].create(
             self._generate_attachments_data(2, 'mail.compose.message', 0)
         )
-        ticket_record._message_update_content(
-            message,
-            body=Markup("<div>New Body</div>"),
-            attachment_ids=new_attachments.ids,
-        )
+        with freeze_time('2025-04-08 11:00:00'):
+            ticket_record._message_update_content(
+                message,
+                body=Markup("<div>New Body</div>"),
+                attachment_ids=new_attachments.ids,
+            )
         self.assertEqual(message.attachment_ids, attachments + new_attachments)
         self.assertEqual(set(message.mapped('attachment_ids.res_id')), set(ticket_record.ids))
         self.assertEqual(set(message.mapped('attachment_ids.res_model')), set([ticket_record._name]))
-        self.assertEqual(message.body, Markup('<div>New Body <span class="o-mail-Message-edited"></span></div>'))
+        self.assertEqual(message.body, Markup('<div>New Body <span class="o-mail-Message-edited" data-o-datetime="2025-04-08 11:00:00"></span></div>'))
 
         # void attachments
-        ticket_record._message_update_content(
-            message,
-            body=Markup("<p>Another Body, void attachments</p>"),
-            attachment_ids=[],
-        )
+        with freeze_time('2025-04-08 12:00:00'):
+            ticket_record._message_update_content(
+                message,
+                body=Markup("<p>Another Body, void attachments</p>"),
+                attachment_ids=[],
+            )
         self.assertFalse(message.attachment_ids)
         self.assertFalse((attachments + new_attachments).exists())
-        self.assertEqual(message.body, Markup('<p>Another Body, void attachments <span class="o-mail-Message-edited"></span></p>'))
+        self.assertEqual(message.body, Markup('<p>Another Body, void attachments <span class="o-mail-Message-edited" data-o-datetime="2025-04-08 12:00:00"></span></p>'))
 
-        ticket_record._message_update_content(
-            message,
-            body=Markup("line1<br>edit<br>line2<br>line3"),
-        )
-        self.assertEqual(message.body, Markup('<p>line1 <br>edit<br>line2<br>line3<span class="o-mail-Message-edited"></span></p>'))
+        with freeze_time('2025-04-08 13:00:00'):
+            ticket_record._message_update_content(
+                message,
+                body=Markup("line1<br>edit<br>line2<br>line3"),
+            )
+        self.assertEqual(message.body, Markup('<p>line1 <br>edit<br>line2<br>line3<span class="o-mail-Message-edited" data-o-datetime="2025-04-08 13:00:00"></span></p>'))
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     @users('employee')

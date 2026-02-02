@@ -30,7 +30,7 @@
                         </t>
                         <t t-elif="message.isPending" t-call="mail.Message.pendingStatus"/>
                         <t t-elif="!message.is_transient">
-                            <small t-if="isActive and props.showDates" class="o-mail-Message-date o-xsmaller mt-2 text-center lh-1" t-att-title="message.datetimeShort">
+                            <small t-if="isActive and props.showDates" class="o-mail-Message-date o-xsmaller mt-2 text-center lh-1" t-att-title="message.datetimeMedium">
                                 <t t-esc="message.dateSimple"/>
                             </small>
                             <t t-elif="message.starred" t-call="mail.Message.sidebarStarred"/>
@@ -43,7 +43,7 @@
                             </span>
                             <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
                             <t t-if="isAlignedRight and !message.bubbleColor and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
-                            <small t-if="!message.is_transient" class="o-mail-Message-date o-xsmaller" t-att-title="message.datetimeShort">
+                            <small t-if="!message.is_transient" class="o-mail-Message-date o-xsmaller" t-att-title="message.datetimeMedium">
                                 <t t-if="message.isPending" t-call="mail.Message.pendingStatus"/>
                                 <t t-else="" t-out="message.dateSimpleWithDay"/>
                             </small>
@@ -155,7 +155,7 @@
     </t>
 
 <t t-name="mail.Message.edited">
-    <span class="o-xsmaller opacity-50"> (edited)</span>
+    <span class="o-xsmaller opacity-50" t-att-title="message.editedDatetimeMedium"> (edited)</span>
 </t>
 
 <t t-name="mail.Message.actions">

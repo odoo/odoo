@@ -940,7 +940,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                         "mail.message": [
                             {
                                 "attachment_ids": [],
-                                "body": ['markup', '<p>Test update <span class="o-mail-Message-edited"></span></p>'],
+                                "body": ['markup', '<p>Test update <span class="o-mail-Message-edited" data-o-datetime="2025-04-08 10:00:00"></span></p>'],
                                 "id": message.id,
                                 "parent_id": False,
                                 "partner_ids": message.partner_ids.ids,
@@ -953,11 +953,12 @@ class TestChannelInternals(MailCommon, HttpCase):
                 },
             ],
         ):
-            channel._message_update_content(
-                message,
-                body=Markup("<p>Test update</p>"),
-                attachment_ids=[],
-            )
+            with freeze_time('2025-04-08 10:00:00'):
+                channel._message_update_content(
+                    message,
+                    body=Markup("<p>Test update</p>"),
+                    attachment_ids=[],
+                )
 
     def test_member_based_channel_naming(self):
         john = mail_new_test_user(self.env, groups="base.group_user", login="john")
