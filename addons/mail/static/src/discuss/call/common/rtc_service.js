@@ -273,6 +273,8 @@ export class Network {
  */
 
 export class Rtc extends Record {
+    static singleton = true;
+
     /** @type {typeof CONNECTION_TYPES[keyof typeof CONNECTION_TYPES]} */
     connectionType;
     /** @type {ReturnType<debounce>} */
