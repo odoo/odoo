@@ -30,7 +30,7 @@
                             <field name="service_id" readonly="service_locked" options="{'no_open': True, 'no_create': True}"/>
                             <field name="description"/>
                             <field name="company_ids" widget="many2many_tags" domain="[('id', 'in', allowed_company_ids)]" />
-                            <field name="account_token" groups="base.group_no_one" readonly="1"/>
+                            <field name="account_token" groups="base.group_no_one"/>
                         </group>
                         <group name="external" string="Email Alert">
                             <field name="warning_threshold"/>
