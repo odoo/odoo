@@ -16,7 +16,7 @@ const alignmentItems = [
 
 export class AlignPlugin extends Plugin {
     static id = "align";
-    static dependencies = ["history", "selection"];
+    static dependencies = ["domMutation", "selection"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -115,7 +115,7 @@ export class AlignPlugin extends Plugin {
             }
         }
         if (mode && isAlignmentUpdated) {
-            this.dependencies.history.addStep();
+            this.dependencies.domMutation.commit();
         }
         this.updateAlignmentParams();
     }

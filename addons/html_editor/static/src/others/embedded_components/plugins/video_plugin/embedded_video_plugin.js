@@ -6,7 +6,7 @@ import { EmbeddedVideoSelector } from "./video_selector_dialog/embedded_video_se
  */
 export class EmbeddedVideoPlugin extends VideoPlugin {
     static id = "embeddedVideo";
-    static dependencies = ["embeddedComponents", "selection", "history", "overlay", "media"];
+    static dependencies = ["embeddedComponents", "selection", "domMutation", "overlay", "media"];
 
     // Extends the base class resources
     /** @type {import("plugins").EditorResources} */
@@ -29,7 +29,7 @@ export class EmbeddedVideoPlugin extends VideoPlugin {
                 createOverlay: (Component, props = {}, options) =>
                     this.dependencies.overlay.createOverlay(Component, props, options),
                 focusEditable: () => this.dependencies.selection.focusEditable(),
-                addStep: () => this.dependencies.history.addStep(),
+                commit: () => this.dependencies.domMutation.commit(),
                 openVideoSelectorDialog: (save, media) => {
                     this.openVideoSelectorDialog(save, media);
                 },

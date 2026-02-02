@@ -101,7 +101,7 @@ function websiteEditEventTourSteps() {
                 const descriptionEl = this.anchor.querySelector("[itemprop='description']");
                 descriptionEl.textContent = "new short description";
                 const editor = editorsWeakMap.get(this.anchor.ownerDocument);
-                editor.shared.history.addStep();
+                editor.shared.domMutation.commit();
             },
         },
         ...clickOnSave(),

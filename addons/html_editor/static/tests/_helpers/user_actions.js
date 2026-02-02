@@ -217,7 +217,7 @@ export function deleteBackward(editor, isMobileTest = false) {
 // history
 /** @param {Editor} editor */
 export function addStep(editor) {
-    editor.shared.history.addStep();
+    editor.shared.domMutation.commit();
 }
 /** @param {Editor} editor */
 export function undo(editor) {
@@ -305,7 +305,7 @@ export function switchDirection(editor) {
 /** @param {Editor} editor */
 export function splitBlock(editor) {
     editor.shared.split.splitBlock();
-    editor.shared.history.addStep();
+    editor.shared.domMutation.commit();
 }
 
 export async function simulateArrowKeyPress(editor, keys) {

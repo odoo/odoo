@@ -10,7 +10,7 @@ import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
 
 export class EmojiPlugin extends Plugin {
     static id = "emoji";
-    static dependencies = ["history", "overlay", "dom", "selection"];
+    static dependencies = ["domMutation", "overlay", "dom", "selection"];
     static shared = ["showEmojiPicker"];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -92,7 +92,7 @@ export class EmojiPlugin extends Plugin {
                 focusOffset: start,
             });
             this.dependencies.dom.insert(emoji.codepoints);
-            this.dependencies.history.addStep();
+            this.dependencies.domMutation.commit();
             this.match = match;
             return;
         }
@@ -118,7 +118,7 @@ export class EmojiPlugin extends Plugin {
                         return;
                     }
                     this.dependencies.dom.insert(str);
-                    this.dependencies.history.addStep();
+                    this.dependencies.domMutation.commit();
                 },
             },
             target,

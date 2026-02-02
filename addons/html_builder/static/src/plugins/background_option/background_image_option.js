@@ -5,7 +5,7 @@ import { getHtmlStyle } from "@html_editor/utils/formatting";
 
 export class BackgroundImageOption extends BaseOptionComponent {
     static template = "html_builder.BackgroundImageOption";
-    static dependencies = ["history", "backgroundImageOption"];
+    static dependencies = ["domMutation", "backgroundImageOption"];
     static components = { ImageSize };
     setup() {
         this.editingElement = this.env.getEditingElement();
@@ -15,7 +15,7 @@ export class BackgroundImageOption extends BaseOptionComponent {
         this.toggleBgImageClasses();
     }
     toggleBgImageClasses() {
-        this.dependencies.history.ignoreDOMMutations(() => {
+        this.dependencies.domMutation.ignoreDOMMutations(() => {
             const backgroundURL = getBgImageURLFromEl(this.editingElement);
             this.dependencies.backgroundImageOption.setImageBackground(
                 this.editingElement,

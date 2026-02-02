@@ -10,7 +10,7 @@ import { patch } from "@web/core/utils/patch";
 
 export class PopupVisibilityPlugin extends Plugin {
     static id = "popupVisibilityPlugin";
-    static dependencies = ["visibility", "history"];
+    static dependencies = ["visibility", "domMutation"];
     static shared = ["onTargetShow", "onTargetHide"];
 
     /** @type {import("plugins").WebsiteResources} */
@@ -32,17 +32,17 @@ export class PopupVisibilityPlugin extends Plugin {
                 this.dependencies.visibility.hideElement(popupEl);
             }
         });
-        const history = this.dependencies.history;
+        const domMutation = this.dependencies.domMutation;
         this.unpatchModal = this.window.Modal // null in tests without loadAssetsFrontendJS
             ? patch(this.window.Modal.prototype, {
                   _hideModal() {
-                      return history.ignoreDOMMutations(() => super._hideModal());
+                      return domMutation.ignoreDOMMutations(() => super._hideModal());
                   },
                   show() {
-                      return history.ignoreDOMMutations(() => super.show());
+                      return domMutation.ignoreDOMMutations(() => super.show());
                   },
                   hide() {
-                      return history.ignoreDOMMutations(() => super.hide());
+                      return domMutation.ignoreDOMMutations(() => super.hide());
                   },
               })
             : () => {};

@@ -9,7 +9,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 export class TableOfContentPlugin extends Plugin {
     static id = "tableOfContent";
-    static dependencies = ["dom", "selection", "embeddedComponents", "link", "history"];
+    static dependencies = ["dom", "selection", "embeddedComponents", "link", "domMutation"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -33,8 +33,10 @@ export class TableOfContentPlugin extends Plugin {
         restore_savepoint_handlers: () => this.delayedUpdateTableOfContents(this.editable),
         history_reset_handlers: () => this.delayedUpdateTableOfContents(this.editable),
         history_reset_from_steps_handlers: () => this.delayedUpdateTableOfContents(this.editable),
-        step_added_handlers: ({ stepCommonAncestor }) =>
-            this.delayedUpdateTableOfContents(stepCommonAncestor),
+        step_added_handlers: (step) =>
+            this.delayedUpdateTableOfContents(
+                this.dependencies.domMutation.getNodeById(step.commit.root)
+            ),
         external_step_added_handlers: this.delayedUpdateTableOfContents.bind(this, this.editable),
         clean_for_save_handlers: this.cleanForSave.bind(this),
         mount_component_handlers: this.setupNewToc.bind(this),
@@ -51,7 +53,7 @@ export class TableOfContentPlugin extends Plugin {
     insertTableOfContent() {
         const tableOfContentBlueprint = renderToElement("html_editor.TableOfContentBlueprint");
         this.dependencies.dom.insert(tableOfContentBlueprint);
-        this.dependencies.history.addStep();
+        this.dependencies.domMutation.commit();
     }
 
     /**

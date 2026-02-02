@@ -27,7 +27,7 @@ export function isClonable(el) {
 
 export class ClonePlugin extends Plugin {
     static id = "clone";
-    static dependencies = ["history", "builderOptions", "dom"];
+    static dependencies = ["domMutation", "builderOptions", "dom"];
     static shared = ["cloneElement"];
 
     /** @type {import("plugins").BuilderResources} */
@@ -59,7 +59,7 @@ export class ClonePlugin extends Plugin {
             disabledReason,
             handler: async () => {
                 await this.cloneElement(this.overlayTarget, { activateClone: false });
-                this.dependencies.history.addStep();
+                this.dependencies.domMutation.commit();
             },
         });
         return buttons;
@@ -108,12 +108,12 @@ export class ClonePlugin extends Plugin {
 
 export class CloneItemAction extends BuilderAction {
     static id = "addItem";
-    static dependencies = ["clone", "history"];
+    static dependencies = ["clone", "domMutation"];
     async apply({ editingElement, params: { mainParam: itemSelector }, value: position }) {
         const itemEl = editingElement.querySelector(itemSelector);
         if (itemEl) {
             await this.dependencies.clone.cloneElement(itemEl, { position, scrollToClone: true });
-            this.dependencies.history.addStep();
+            this.dependencies.domMutation.commit();
         }
     }
 }

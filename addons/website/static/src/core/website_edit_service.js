@@ -307,8 +307,8 @@ export const websiteEditService = {
                 })
             );
             Object.assign(shared, ev.shared);
-            historyCallbacks.ignoreDOMMutations = shared.history.ignoreDOMMutations;
-            setupIgnoreDOMMutations(shared.history.ignoreDOMMutations);
+            historyCallbacks.ignoreDOMMutations = shared.domMutation.ignoreDOMMutations;
+            setupIgnoreDOMMutations(shared.domMutation.ignoreDOMMutations);
         });
 
         return websiteEditService;

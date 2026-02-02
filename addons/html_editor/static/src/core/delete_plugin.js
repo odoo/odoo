@@ -97,7 +97,7 @@ export const unremovableNodePredicates = [
 ];
 
 export class DeletePlugin extends Plugin {
-    static dependencies = ["baseContainer", "selection", "history", "input", "userCommand"];
+    static dependencies = ["baseContainer", "selection", "domMutation", "input", "userCommand"];
     static id = "delete";
     static shared = [
         "deleteBackward",
@@ -257,7 +257,7 @@ export class DeletePlugin extends Plugin {
             throw new Error("Invalid direction");
         }
         this.dispatchTo("delete_handlers");
-        this.dependencies.history.addStep({ batchable: true });
+        this.dependencies.domMutation.commit({ batchable: true });
     }
 
     // --------------------------------------------------------------------------
@@ -1337,7 +1337,7 @@ export class DeletePlugin extends Plugin {
      * @param {InputEvent} beforeInputEvent
      */
     preventDefaultDeleteAndroidChrome(beforeInputEvent) {
-        const restoreDOM = this.dependencies.history.makeSavePoint();
+        const restoreDOM = this.dependencies.domMutation.makeSavePoint();
         this.onAndroidChromeInput = (ev) => {
             if (ev.inputType !== beforeInputEvent.inputType) {
                 return;

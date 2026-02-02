@@ -232,7 +232,7 @@ export class HtmlField extends Component {
         this.state.showCodeView = !this.state.showCodeView;
         if (!this.state.showCodeView && this.editor) {
             this.editor.editable.innerHTML = this.value;
-            this.editor.shared.history.addStep();
+            this.editor.shared.domMutation.commit();
         }
     }
 

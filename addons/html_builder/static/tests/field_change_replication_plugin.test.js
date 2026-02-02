@@ -20,7 +20,7 @@ describe("replicate changes", () => {
         });
         queryOne(":iframe .test-2 span").append(" ici");
         const editor = getEditor();
-        editor.shared.history.addStep();
+        editor.shared.domMutation.commit();
         expect(":iframe span:contains(Contactez-nous ici)").toHaveCount(2);
     });
 
@@ -47,14 +47,14 @@ describe("replicate changes", () => {
         );
         const editor = getEditor();
         queryOne(":iframe .test-1 b").append(" Abroad");
-        editor.shared.history.addStep();
+        editor.shared.domMutation.commit();
         expect(":iframe .test-1 b").toHaveText("Travel Abroad");
         expect(":iframe .test-2 a").toHaveText("Travel Abroad");
         expect(":iframe .test-3 span").toHaveText("Travel Abroad");
         expect(":iframe .test-4 a").toHaveInnerHTML("\u{FEFF}Travel Abroad\u{FEFF}"); // link in editable get feff
 
         queryOne(":iframe .test-4 a").append("!"); // the feff should not be forwarded
-        editor.shared.history.addStep();
+        editor.shared.domMutation.commit();
         expect(":iframe .test-1 b").toHaveText("Travel Abroad!");
         expect(":iframe .test-2 a").toHaveText("Travel Abroad!");
         expect(":iframe .test-3 span").toHaveText("Travel Abroad!");
@@ -74,7 +74,7 @@ describe("replicate changes", () => {
         });
         queryOne(":iframe .test-1 span").append("y");
         const editor = getEditor();
-        editor.shared.history.addStep();
+        editor.shared.domMutation.commit();
         expect(":iframe span:contains(Homey)").toHaveCount(2);
     });
 
@@ -143,14 +143,14 @@ describe("replicate changes", () => {
 
         const editor = getEditor();
         span2.append(" ici");
-        editor.shared.history.addStep();
+        editor.shared.domMutation.commit();
         expect(span1).not.toHaveClass("o_dirty");
         expect(span2).toHaveClass("o_dirty");
         expect(span3).not.toHaveClass("o_dirty");
         expect([span1, span2, span3]).toHaveText("Contactez-nous ici");
 
         span1.append("!");
-        editor.shared.history.addStep();
+        editor.shared.domMutation.commit();
         expect(span1).toHaveClass("o_dirty");
         expect(span2).toHaveClass("o_dirty");
         expect(span3).not.toHaveClass("o_dirty");
@@ -184,7 +184,7 @@ describe("replicate changes", () => {
         span2.append(" ici");
         span1.append("!");
         const editor = getEditor();
-        editor.shared.history.addStep();
+        editor.shared.domMutation.commit();
         expect(span1).toHaveClass("o_dirty");
         expect(span2).toHaveClass("o_dirty");
         expect(span3).not.toHaveClass("o_dirty");

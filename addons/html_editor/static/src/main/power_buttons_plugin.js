@@ -58,7 +58,7 @@ export class PowerButtonsPlugin extends Plugin {
         "localOverlay",
         "powerbox",
         "userCommand",
-        "history",
+        "domMutation",
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -157,7 +157,7 @@ export class PowerButtonsPlugin extends Plugin {
 
     getPlaceholderWidth(block) {
         let width;
-        this.dependencies.history.ignoreDOMMutations(() => {
+        this.dependencies.domMutation.ignoreDOMMutations(() => {
             const clone = block.cloneNode(true);
             clone.innerText = clone.getAttribute("o-we-hint-text");
             clone.style.width = "fit-content";

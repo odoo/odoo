@@ -36,7 +36,7 @@ export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
 
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
-    static dependencies = ["builderActions", "history", "savePlugin", "edit_interaction"];
+    static dependencies = ["builderActions", "domMutation", "savePlugin", "edit_interaction"];
     static shared = [
         "customizeWebsiteColors",
         "customizeWebsiteVariables",
@@ -325,7 +325,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                     .finally(() => this.services.ui.unblock());
             };
             await blockedApply(value);
-            this.dependencies.history.addCustomMutation({
+            this.dependencies.domMutation.addCustomMutation({
                 apply: () => blockedApply(value),
                 revert: () => blockedApply(oldValue),
             });
@@ -476,7 +476,7 @@ export class AddLanguageAction extends BuilderAction {
 
 export class CustomizeBodyBgTypeAction extends BuilderAction {
     static id = "customizeBodyBgType";
-    static dependencies = ["builderActions", "history", "customizeWebsite"];
+    static dependencies = ["builderActions", "domMutation", "customizeWebsite"];
     isApplied({ value }) {
         const getAction = this.dependencies.builderActions.getAction;
         const currentValue = getAction("customizeBodyBgType").getValue();
@@ -523,7 +523,7 @@ export class CustomizeBodyBgTypeAction extends BuilderAction {
             return;
         }
         const getAction = this.dependencies.builderActions.getAction;
-        this.dependencies.history.addCustomMutation({
+        this.dependencies.domMutation.addCustomMutation({
             apply: () => {
                 this.services.ui.block({ delay: 2500 });
                 getAction("customizeBodyBgType")
@@ -735,7 +735,7 @@ export class WebsiteConfigAction extends BuilderAction {
 
 export class PreviewableWebsiteConfigAction extends BuilderAction {
     static id = "previewableWebsiteConfig";
-    static dependencies = ["customizeWebsite", "history"];
+    static dependencies = ["customizeWebsite", "domMutation"];
     getPriority({ params }) {
         return (params.previewClass || "")?.trim().split(/\s+/).filter(Boolean).length || 0;
     }
@@ -752,7 +752,7 @@ export class PreviewableWebsiteConfigAction extends BuilderAction {
         if (!isPreviewing) {
             const viewsToApply = params["views"] || [];
             let undoApplyCallback;
-            this.dependencies.history.applyCustomMutation({
+            this.dependencies.domMutation.applyCustomMutation({
                 apply: () => {
                     undoApplyCallback = this.dependencies.customizeWebsite.setViewsOnSave(
                         viewsToApply,
@@ -772,7 +772,7 @@ export class PreviewableWebsiteConfigAction extends BuilderAction {
         if (!isPreviewing) {
             const viewsToClean = params["views"] || [];
             let undoCleanCallback;
-            this.dependencies.history.applyCustomMutation({
+            this.dependencies.domMutation.applyCustomMutation({
                 apply: () => {
                     undoCleanCallback = this.dependencies.customizeWebsite.setViewsOnSave(
                         viewsToClean,

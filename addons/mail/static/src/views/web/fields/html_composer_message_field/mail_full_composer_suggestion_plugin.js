@@ -6,7 +6,7 @@ import { url } from "@web/core/utils/urls";
 
 export class MailFullComposerSuggestionPlugin extends Plugin {
     static id = "mail_full_composer_suggestion";
-    static dependencies = ["overlay", "dom", "history", "input", "selection"];
+    static dependencies = ["overlay", "dom", "domMutation", "input", "selection"];
 
     resources = {
         beforeinput_handlers: this.onBeforeInput.bind(this),
@@ -34,14 +34,14 @@ export class MailFullComposerSuggestionPlugin extends Plugin {
             `${option.partner ? "@" : "#"}${option.label}`
         );
         mentionBlock.appendChild(nameNode);
-        this.historySavePointRestore();
+        this.mutationSavePointRestore();
         this.dependencies.dom.insert(mentionBlock);
-        this.dependencies.history.addStep();
+        this.dependencies.domMutation.commit();
     }
 
     onBeforeInput(ev) {
         if (ev.data === "@" || ev.data === "#") {
-            this.historySavePointRestore = this.dependencies.history.makeSavePoint();
+            this.mutationSavePointRestore = this.dependencies.domMutation.makeSavePoint();
             this.mentionList.open({
                 props: {
                     onSelect: this.onSelect.bind(this),

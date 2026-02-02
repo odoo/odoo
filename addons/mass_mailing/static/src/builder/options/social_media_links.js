@@ -6,7 +6,7 @@ import { ResCompanyUpdateDialog } from "../components/company_update_dialog";
 
 export class SocialMediaLinks extends BaseOptionComponent {
     static template = "mass_mailing.SocialMediaLinks";
-    static dependencies = ["builderActions", "history", "massMailingSocialMediaOptionPlugin"];
+    static dependencies = ["builderActions", "domMutation", "massMailingSocialMediaOptionPlugin"];
     static name = "social_media_links";
     static selector = ".s_social_media";
 
@@ -181,7 +181,7 @@ export class SocialMediaLinks extends BaseOptionComponent {
                         }
                     }
                     this.domState.medias = Object.entries(medias);
-                    this.dependencies.history.addStep();
+                    this.dependencies.domMutation.commit();
                 },
             },
             {

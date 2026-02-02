@@ -17,7 +17,7 @@ export class ProductHeaderShopOption2 extends ProductsRibbonOption {
 
 class ProductsRibbonOptionPlugin extends Plugin {
     static id = 'productsRibbonOptionPlugin';
-    static dependencies = ['history'];
+    static dependencies = ['domMutation'];
     static shared = [
         'getRibbonsObject',
         'setRibbonObject',
@@ -351,7 +351,7 @@ class CreateRibbonAction extends BuilderAction {
 }
 class ModifyRibbonAction extends BuilderAction {
     static id = 'modifyRibbon';
-    static dependencies = ['productsRibbonOptionPlugin', 'history'];
+    static dependencies = ['productsRibbonOptionPlugin', 'domMutation'];
     setup() {
         this.ribbonOptions = this.dependencies.productsRibbonOptionPlugin
     }
@@ -375,7 +375,7 @@ class ModifyRibbonAction extends BuilderAction {
         return this.ribbonOptions.getRibbonsObject()[ribbonId][params.mainParam] === value;
     }
     apply({ editingElement, params, value }) {
-        const isPreviewMode = this.dependencies.history.getIsPreviewing();
+        const isPreviewMode = this.dependencies.domMutation.getIsPreviewing();
         const ribbonEl = editingElement.querySelector('.o_ribbons')
         const setting = params.mainParam;
         const ribbonId = parseInt(ribbonEl.dataset.ribbonId);

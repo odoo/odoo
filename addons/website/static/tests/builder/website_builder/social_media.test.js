@@ -13,7 +13,7 @@ defineWebsiteModels();
 async function setupEmptySocialMedia(options) {
     const builder = await setupWebsiteBuilderWithSnippet("s_social_media", options);
     queryAll(":iframe div.s_social_media a").forEach((el) => el.remove());
-    builder.getEditor().shared.history.addStep();
+    builder.getEditor().shared.domMutation.commit();
     return builder;
 }
 async function setDropdownOption(

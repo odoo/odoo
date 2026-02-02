@@ -28,13 +28,13 @@ const HISTORY_SNAPSHOT_BUFFER_TIME = 1000 * 10;
 
 export class CollaborationPlugin extends Plugin {
     static id = "collaboration";
-    static dependencies = ["history", "selection", "sanitize"];
+    static dependencies = ["history", "domMutation", "selection", "sanitize"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
         history_cleaned_handlers: this.onHistoryClean.bind(this),
         history_reset_handlers: this.onHistoryReset.bind(this),
-        step_added_handlers: ({ step }) => this.onStepAdded(step),
+        step_added_handlers: (step) => this.onStepAdded(step),
 
         /** Overrides */
         set_attribute_overrides: this.setAttribute.bind(this),
@@ -139,7 +139,11 @@ export class CollaborationPlugin extends Plugin {
             if (typeof insertIndex === "undefined") {
                 continue;
             }
-            this.dependencies.history.addExternalStep(newStep, insertIndex);
+            // TODO AGE: should `ignoreDomMutations` be done manually in
+            // `before_add_external_step_handlers` and `after_add_external_step_handlers`?
+            this.dependencies.domMutation.ignoreDOMMutations(() => {
+                this.dependencies.history.addExternalStep(newStep, insertIndex);
+            });
             stepIndex++;
         }
         if (selectionData.documentSelectionIsInEditable) {
@@ -201,7 +205,9 @@ export class CollaborationPlugin extends Plugin {
         index++;
         while (index < steps.length) {
             if (steps[index].previousStepId === newStep.previousStepId) {
-                if (steps[index].id.localeCompare(newStep.id) === 1) {
+                if (
+                    steps[index].commit.data.authorTimestamp > newStep.commit.data.authorTimestamp
+                ) {
                     break;
                 } else {
                     concurentSteps = [steps[index].id];
@@ -282,12 +288,15 @@ export class CollaborationPlugin extends Plugin {
         const historyLength = this.dependencies.history.getHistorySteps().length;
         if (!this.lastSnapshotLength || this.lastSnapshotLength < historyLength) {
             this.lastSnapshotLength = historyLength;
-            const step = this.dependencies.history.makeSnapshotStep();
+            const commit = this.dependencies.domMutation.createSnapshotCommit();
+            const step = this.dependencies.history.createStep(commit);
             const snapshot = {
                 time: Date.now(),
                 step: step,
             };
             this.snapshots = [snapshot, this.snapshots[0]];
+            // TODO AGE: is it ok to return it? It's just for tests.
+            return snapshot;
         }
     }
 

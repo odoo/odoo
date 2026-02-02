@@ -9,7 +9,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 export class FilePlugin extends Plugin {
     static id = "file";
-    static dependencies = ["dom", "history"];
+    static dependencies = ["dom", "domMutation"];
     static defaultConfig = {
         allowFile: true,
     };
@@ -83,7 +83,7 @@ export class FilePlugin extends Plugin {
         const fileCards = attachments.map(this.renderDownloadBox.bind(this));
         // Insert
         fileCards.forEach(this.dependencies.dom.insert);
-        this.dependencies.history.addStep();
+        this.dependencies.domMutation.commit();
     }
 
     renderDownloadBox(attachment) {

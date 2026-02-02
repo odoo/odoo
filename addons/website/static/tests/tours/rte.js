@@ -156,7 +156,7 @@ registerWebsitePreviewTour(
             <p>&lt;b&gt;&lt;/b&gt; is an HTML&nbsp;tag &amp; is empty</p>';
                 this.anchor.querySelector(".oe_img_bg").title = "test translate image title";
                 const editor = editorsWeakMap.get(this.anchor.ownerDocument);
-                editor.shared.history.addStep();
+                editor.shared.domMutation.commit();
             },
         },
         {
@@ -223,7 +223,7 @@ registerWebsitePreviewTour(
                 await actionHelper.click();
                 this.anchor.textContent = "<{translated}>" + this.anchor.textContent;
                 const editor = editorsWeakMap.get(this.anchor.ownerDocument);
-                editor.shared.history.addStep();
+                editor.shared.domMutation.commit();
                 setSelection({ anchorNode: this.anchor.childNodes[0], anchorOffset: 0 });
                 this.anchor.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: "_" }));
                 this.anchor.dispatchEvent(new InputEvent("input", { bubbles: true }));
@@ -405,7 +405,7 @@ registerWebsitePreviewTour(
                         .querySelector("iframe:not(.o_ignore_in_tour)")
                         .contentDocument.body.classList.add("rte_translator_error");
                     const editor = editorsWeakMap.get(this.anchor.ownerDocument);
-                    editor.shared.history.addStep();
+                    editor.shared.domMutation.commit();
                 }
             },
         },

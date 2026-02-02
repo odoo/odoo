@@ -48,7 +48,7 @@ function findOEditable(containerEl) {
 
 export class TranslationPlugin extends Plugin {
     static id = "translation";
-    static dependencies = ["history"];
+    static dependencies = ["domMutation"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -288,8 +288,8 @@ export class TranslationPlugin extends Plugin {
                 this.dialogService.add(AttributeTranslateDialog, {
                     node: translateEl,
                     elToTranslationInfoMap: elToTranslationInfoMap,
-                    addStep: this.dependencies.history.addStep,
-                    applyCustomMutation: this.dependencies.history.applyCustomMutation,
+                    addStep: this.dependencies.domMutation.commit,
+                    applyCustomMutation: this.dependencies.domMutation.applyCustomMutation,
                 });
             });
         }
@@ -297,7 +297,7 @@ export class TranslationPlugin extends Plugin {
             this.addDomListener(translateSelectEl, "click", (ev) => {
                 this.dialogService.add(SelectTranslateDialog, {
                     node: ev.currentTarget,
-                    addStep: this.dependencies.history.addStep,
+                    addStep: this.dependencies.domMutation.commit,
                 });
             });
         }

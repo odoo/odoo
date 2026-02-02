@@ -343,7 +343,7 @@ export class StateChangeManager {
      * @param { Object } options
      * @param {boolean} options.reverse whether to read the stateChange from
      *        next to previous
-     * @param {boolean} options.forNewStep whether the attribute change is being
+     * @param {boolean} options.ensureNewMutations whether the attribute change is being
      *        used to create a new step.
      * @returns {string} new JSON representation of a stateChange, in case
      *          it needs to be represented under another form to be shared
@@ -351,7 +351,7 @@ export class StateChangeManager {
      *          that collaborators will do applyMutations, so the stateChange
      *          must be expressed with another form for them).
      */
-    onStateChanged(attrState, { reverse = false, forNewStep = false } = {}) {
+    onStateChanged(attrState, { reverse = false, ensureNewMutations = false } = {}) {
         const stateChange = attrState ? JSON.parse(attrState) : this.defaultStateChange;
         const state = this.getState();
         if (reverse) {
@@ -370,7 +370,7 @@ export class StateChangeManager {
                 // pending change is applied in `changeState`.
                 this.assignDeepProxyCopy(toRaw(this.embeddedState), sortedState);
             }
-            if (!forNewStep) {
+            if (!ensureNewMutations) {
                 this.previousStateChange = stateChange;
             } else {
                 // If mutations are being applied to create a new step, the

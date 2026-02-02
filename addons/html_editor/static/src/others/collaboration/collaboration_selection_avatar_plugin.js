@@ -7,7 +7,7 @@ import { user } from "@web/core/user";
 
 /**
  * @typedef {Object} SelectionInfo
- * @property {import("@html_editor/core/history_plugin").SerializedSelection} selection
+ * @property {import("@html_editor/utils/dom_map").SerializedSelection} selection
  * @property {string} color
  * @property {string} peerId
  * @property {string} peerName
@@ -20,7 +20,7 @@ export const AVATAR_SIZE = 25;
 
 export class CollaborationSelectionAvatarPlugin extends Plugin {
     static id = "collaborationSelectionAvatar";
-    static dependencies = ["history", "position", "localOverlay", "collaborationOdoo"];
+    static dependencies = ["domMutation", "position", "localOverlay", "collaborationOdoo"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
@@ -75,8 +75,8 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
             return;
         }
         const { avatarUrl, peerName = _t("Anonymous") } = peerMetadata;
-        const anchorNode = this.dependencies.history.getNodeById(selection.anchorNodeId);
-        const focusNode = this.dependencies.history.getNodeById(selection.focusNodeId);
+        const anchorNode = this.dependencies.domMutation.getNodeById(selection.anchorNodeId);
+        const focusNode = this.dependencies.domMutation.getNodeById(selection.focusNodeId);
         if (!anchorNode || !focusNode || !anchorNode.isConnected || !focusNode.isConnected) {
             return;
         }

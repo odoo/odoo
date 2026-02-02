@@ -23,7 +23,7 @@ export class PopupCookiesOption extends BaseOptionComponent {
 
 class PopupOptionPlugin extends Plugin {
     static id = "PopupOption";
-    static dependencies = ["anchor", "visibility", "history", "popupVisibilityPlugin"];
+    static dependencies = ["anchor", "visibility", "domMutation", "popupVisibilityPlugin"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -67,7 +67,7 @@ class PopupOptionPlugin extends Plugin {
     onSnippetDropped({ snippetEl }) {
         if (snippetEl.matches(".s_popup")) {
             this.assignUniqueID(snippetEl);
-            this.dependencies.history.addCustomMutation({
+            this.dependencies.domMutation.addCustomMutation({
                 apply: () => {
                     this.dependencies.visibility.toggleTargetVisibility(snippetEl, true);
                 },
@@ -80,7 +80,7 @@ class PopupOptionPlugin extends Plugin {
 
     onWillRemove(el) {
         this.dependencies.visibility.toggleTargetVisibility(el, false);
-        this.dependencies.history.addCustomMutation({
+        this.dependencies.domMutation.addCustomMutation({
             apply: () => {
                 this.dependencies.visibility.toggleTargetVisibility(el, false);
             },

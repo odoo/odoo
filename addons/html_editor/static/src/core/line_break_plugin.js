@@ -20,7 +20,7 @@ import { nextLeaf } from "../utils/dom_info";
  */
 
 export class LineBreakPlugin extends Plugin {
-    static dependencies = ["selection", "history", "input", "delete"];
+    static dependencies = ["selection", "domMutation", "input", "delete"];
     static id = "lineBreak";
     static shared = ["insertLineBreak", "insertLineBreakNode", "insertLineBreakElement"];
     /** @type {import("plugins").EditorResources} */
@@ -50,7 +50,7 @@ export class LineBreakPlugin extends Plugin {
         const targetOffset = selection.anchorOffset;
 
         this.insertLineBreakNode({ targetNode, targetOffset });
-        this.dependencies.history.addStep();
+        this.dependencies.domMutation.commit();
     }
 
     /**

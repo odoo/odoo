@@ -21,7 +21,7 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class OverlayButtonsPlugin extends Plugin {
     static id = "overlayButtons";
-    static dependencies = ["builderOptions", "overlay", "history", "operation", "toolbar"];
+    static dependencies = ["builderOptions", "overlay", "domMutation", "operation", "toolbar"];
     static shared = [
         "hideOverlayButtons",
         "showOverlayButtons",
@@ -131,7 +131,7 @@ export class OverlayButtonsPlugin extends Plugin {
             button.handler = (...args) => {
                 this.dependencies.operation.next(async () => {
                     await handler(...args);
-                    this.dependencies.history.addStep();
+                    this.dependencies.domMutation.commit();
                 });
             };
         }

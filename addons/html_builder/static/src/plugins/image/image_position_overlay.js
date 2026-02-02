@@ -23,7 +23,7 @@ export class ImagePositionOverlay extends Component {
          */
         getDelta: { type: Function },
         editable: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
-        history: Object,
+        domMutation: Object,
     };
 
     setup() {
@@ -74,7 +74,7 @@ export class ImagePositionOverlay extends Component {
         });
 
         onMounted(() => {
-            this.reloadSavePoint = this.props.history.makeSavePoint();
+            this.reloadSavePoint = this.props.domMutation.makeSavePoint();
             this.dimensionOverlay();
             this.props.targetEl.classList.add("o_we_image_positioning");
         });

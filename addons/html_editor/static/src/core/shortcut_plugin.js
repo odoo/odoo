@@ -39,7 +39,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 
 export class ShortCutPlugin extends Plugin {
     static id = "shortcut";
-    static dependencies = ["userCommand", "selection", "split", "dom", "history"];
+    static dependencies = ["userCommand", "selection", "split", "dom", "domMutation"];
 
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -120,7 +120,7 @@ export class ShortCutPlugin extends Plugin {
 
     replaceSymbol(symbol) {
         this.dependencies.dom.insert(symbol + "\u00A0");
-        this.dependencies.history.addStep();
+        this.dependencies.domMutation.commit();
     }
 
     onInput(ev) {

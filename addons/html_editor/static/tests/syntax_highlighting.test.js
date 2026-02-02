@@ -588,7 +588,7 @@ test("can switch between code blocks without issues", async () => {
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         ),
         // TODO: is it correct to not move the focus?
-        `Undo 6 changed back the language of the second textarea to "plaintext" (without losing the current focus, editor).`,
+        `Undo 6 changed back the language of the second textarea to "plaintext" (without losing the current focus).`,
         editor
     );
     // UNDO action 5: change the language of first textarea.
@@ -603,7 +603,7 @@ test("can switch between code blocks without issues", async () => {
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         ),
         // TODO: is it correct to move the focus?
-        `Undo 5 changed back the language of the first textarea to "plaintext" (and move the focus to the last focused textarea, editor).`,
+        `Undo 5 changed back the language of the first textarea to "plaintext" (and move the focus to the last focused textarea).`,
         editor
     );
     // UNDO action 4: insert "i" in second paragraph.
@@ -1123,7 +1123,7 @@ test("can copy/paste a highlighted code block", async () => {
                 `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
             );
             editor.shared.dom.insert(parseHTML(editor.document, copiedValue));
-            editor.shared.history.addStep();
+            editor.shared.domMutation.commit();
             await animationFrame();
         },
         contentAfterEdit: unformat(

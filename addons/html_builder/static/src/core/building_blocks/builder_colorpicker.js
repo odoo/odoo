@@ -24,7 +24,7 @@ export function useColorPickerBuilderComponent() {
     const getAction = comp.env.editor.shared.builderActions.getAction;
     let selectedTab;
     const state = useDomState(getState);
-    const applyOperation = comp.env.editor.shared.history.makePreviewableAsyncOperation(
+    const applyOperation = comp.env.editor.shared.domMutation.makePreviewableAsyncOperation(
         (applySpecs, isPreviewing) => {
             const proms = [];
             for (const applySpec of applySpecs) {

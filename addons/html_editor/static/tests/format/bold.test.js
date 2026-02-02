@@ -79,10 +79,10 @@ test("should make qweb tag bold and create a step even with partial selection in
     const historySteps = editor.shared.history.getHistorySteps();
     expect(historySteps.length).toBe(2);
     const lastStep = historySteps.at(-1);
-    expect(lastStep.mutations.length).toBe(1);
-    expect(lastStep.mutations[0].type).toBe("attributes");
-    expect(lastStep.mutations[0].attributeName).toBe("style");
-    expect(lastStep.mutations[0].value).toBe("font-weight: bolder;");
+    expect(lastStep.commit.data.mutations.length).toBe(1);
+    expect(lastStep.commit.data.mutations[0].type).toBe("attributes");
+    expect(lastStep.commit.data.mutations[0].attributeName).toBe("style");
+    expect(lastStep.commit.data.mutations[0].value).toBe("font-weight: bolder;");
 });
 
 test.tags("desktop");

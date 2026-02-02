@@ -384,7 +384,7 @@ test("Should be able to undo after adding spin effect to an icon", async () => {
         focusNode: el.firstChild,
         focusOffset: 2,
     });
-    editor.shared.history.stageSelection();
+    editor.shared.domMutation.stageSelection();
     expect(getContent(el)).toBe(
         `<p>\ufeff[<span class="fa fa-glass" contenteditable="false">\u200b</span>]\ufeff</p>`
     );

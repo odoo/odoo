@@ -14,7 +14,7 @@ import { Plugin } from "@html_editor/plugin";
 export class BuilderActionsPlugin extends Plugin {
     static id = "builderActions";
     static shared = ["getAction", "applyAction"];
-    static dependencies = ["operation", "history"];
+    static dependencies = ["operation", "domMutation"];
     setup() {
         /** @type { BuilderAction[] } */
         this.actions = {};
@@ -57,7 +57,7 @@ export class BuilderActionsPlugin extends Plugin {
         this.dependencies.operation.next(
             async () => {
                 await action.apply(spec);
-                this.dependencies.history.addStep();
+                this.dependencies.domMutation.commit();
             },
             {
                 ...action,

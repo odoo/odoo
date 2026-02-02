@@ -226,7 +226,7 @@ export class UseSuggestion {
             const [anchorNode, anchorOffset] = rightPos(inlineElement);
             this.comp.editor.shared.selection.setSelection({ anchorNode, anchorOffset });
             this.comp.editor.shared.dom.insert("\u00A0");
-            this.comp.editor.shared.history.addStep();
+            this.comp.editor.shared.domMutation.commit();
         } else {
             // remove the user-typed search delimiter
             this.composer.composerText =

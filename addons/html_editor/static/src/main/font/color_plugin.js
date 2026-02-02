@@ -44,7 +44,7 @@ const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`)
 
 export class ColorPlugin extends Plugin {
     static id = "color";
-    static dependencies = ["selection", "split", "history", "format"];
+    static dependencies = ["selection", "split", "domMutation", "format"];
     static shared = [
         "colorElement",
         "removeAllColor",
@@ -59,7 +59,7 @@ export class ColorPlugin extends Plugin {
                 id: "applyColor",
                 run: ({ color, mode }) => {
                     this.applyColor(color, mode);
-                    this.dependencies.history.addStep();
+                    this.dependencies.domMutation.commit();
                 },
                 isAvailable: isHtmlContentSupported,
             },

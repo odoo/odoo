@@ -13,7 +13,7 @@ import { TableDragDrop } from "./table_drag_drop";
  */
 export class TableUIPlugin extends Plugin {
     static id = "tableUi";
-    static dependencies = ["history", "overlay", "table"];
+    static dependencies = ["domMutation", "overlay", "table"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -151,7 +151,7 @@ export class TableUIPlugin extends Plugin {
             (fn) =>
             (...args) => {
                 fn(...args);
-                this.dependencies.history.addStep();
+                this.dependencies.domMutation.commit();
             };
         const tableMethods = {
             moveColumn: withAddStep(this.dependencies.table.moveColumn),

@@ -12,7 +12,7 @@ export class FacebookOption extends BaseOptionComponent {
 
 class FacebookOptionPlugin extends Plugin {
     static id = "facebookOption";
-    static dependencies = ["history"];
+    static dependencies = ["domMutation"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [FacebookOption],
@@ -63,7 +63,7 @@ class FacebookOptionPlugin extends Plugin {
 
             // WARNING: the call to ignoreDOMMutations is very dangerous,
             // and should be avoided in most cases (if you think you need those, ask html_editor team)
-            const hasChanged = this.dependencies.history.ignoreDOMMutations(() =>
+            const hasChanged = this.dependencies.domMutation.ignoreDOMMutations(() =>
                 this.setEmptyLink(nodes)
             );
 

@@ -159,7 +159,7 @@ export class LinkPlugin extends Plugin {
     static id = "link";
     static dependencies = [
         "dom",
-        "history",
+        "domMutation",
         "input",
         "selection",
         "split",
@@ -428,7 +428,7 @@ export class LinkPlugin extends Plugin {
             link = this.createLink(url, label);
             this.dependencies.dom.insert(link);
         }
-        this.dependencies.history.addStep();
+        this.dependencies.domMutation.commit();
         const linkParent = link.parentElement;
         const linkOffset = Array.from(linkParent.childNodes).indexOf(link);
         this.dependencies.selection.setSelection(
@@ -448,7 +448,7 @@ export class LinkPlugin extends Plugin {
             icon: "fa-link",
             run: () => {
                 this.dependencies.dom.insert(this.createLink(url, text));
-                this.dependencies.history.addStep();
+                this.dependencies.domMutation.commit();
             },
         };
         return pasteAsURLCommand;
@@ -496,7 +496,7 @@ export class LinkPlugin extends Plugin {
         ) {
             this.extendLinkToSelection(linkElement, selection);
             linkElement = findInSelection(selection, "a");
-            this.dependencies.history.addStep();
+            this.dependencies.domMutation.commit();
             cursorsToRestore = this.dependencies.selection.preserveSelection();
         }
         this.linkInDocument = linkElement;
@@ -614,19 +614,19 @@ export class LinkPlugin extends Plugin {
             }
         };
 
-        this.restoreSavePoint = this.dependencies.history.makeSavePoint();
+        this.restoreSavePoint = this.dependencies.domMutation.makeSavePoint();
         const props = {
             document: this.document,
             linkElement,
             isImage: isImage,
             containerElement: closestElement(selection.anchorNode),
-            ignoreDOMMutations: this.dependencies.history.ignoreDOMMutations,
+            ignoreDOMMutations: this.dependencies.domMutation.ignoreDOMMutations,
             onApply: (...args) => {
                 delete this._isNavigatingByMouse;
                 applyCallback(...args);
                 this.closeLinkTools(cursorsToRestore);
                 this.dependencies.selection.focusEditable();
-                this.dependencies.history.addStep();
+                this.dependencies.domMutation.commit();
             },
             onChange: applyCallback,
             onDiscard: () => {
@@ -649,7 +649,7 @@ export class LinkPlugin extends Plugin {
                 this.currentOverlay.close();
             },
             onEdit: () => {
-                this.restoreSavePoint = this.dependencies.history.makeSavePoint();
+                this.restoreSavePoint = this.dependencies.domMutation.makeSavePoint();
             },
             getInternalMetaData: this.getInternalMetaData,
             getExternalMetaData: this.getExternalMetaData,
@@ -901,7 +901,7 @@ export class LinkPlugin extends Plugin {
         cursors.restore();
         this.linkInDocument = null;
         this.dependencies.selection.focusEditable();
-        this.dependencies.history.addStep();
+        this.dependencies.domMutation.commit();
     }
 
     removeLinkFromSelectionIsDisabled(selection) {
@@ -983,7 +983,7 @@ export class LinkPlugin extends Plugin {
                 selectedImageNodes.length === 1 &&
                 selectedImageNodes.length === targetedNodes.length
             ) {
-                this.dependencies.history.addStep();
+                this.dependencies.domMutation.commit();
                 return;
             }
         }
@@ -1045,7 +1045,7 @@ export class LinkPlugin extends Plugin {
         if (endBlock && endBlock !== startBlock) {
             this.removeEmptyLinks(endBlock);
         }
-        this.dependencies.history.addStep();
+        this.dependencies.domMutation.commit();
     }
 
     removeEmptyLinks(root) {
@@ -1093,28 +1093,29 @@ export class LinkPlugin extends Plugin {
             const nodeForSelectionRestore = this.handleAutomaticLinkInsertion();
             if (nodeForSelectionRestore) {
                 this.dependencies.selection.setCursorStart(nodeForSelectionRestore);
-                this.dependencies.history.addStep();
+                this.dependencies.domMutation.commit();
             }
         }
         if (ev.inputType === "insertText" && ev.data === " ") {
             const nodeForSelectionRestore = this.handleAutomaticLinkInsertion();
             if (nodeForSelectionRestore) {
-                // Since we manually insert a space here, we will be adding a history step
-                // after link creation with selection at the end of the link and another
-                // after inserting the space. So first undo will remove the space, and the
-                // second will undo the link creation.
+                // Since we manually insert a space here, we will be committing
+                // the mutations after link creation with selection at the end
+                // of the link and another after inserting the space. So first
+                // undo will remove the space, and the second will undo the link
+                // creation.
                 this.dependencies.selection.setSelection({
                     anchorNode: nodeForSelectionRestore,
                     anchorOffset: 0,
                 });
-                this.dependencies.history.addStep();
+                this.dependencies.domMutation.commit();
                 nodeForSelectionRestore.textContent =
                     "\u00A0" + nodeForSelectionRestore.textContent;
                 this.dependencies.selection.setSelection({
                     anchorNode: nodeForSelectionRestore,
                     anchorOffset: 1,
                 });
-                this.dependencies.history.addStep();
+                this.dependencies.domMutation.commit();
                 ev.preventDefault();
             }
         }
@@ -1152,7 +1153,7 @@ export class LinkPlugin extends Plugin {
             cursors.update(callbacksForCursorUpdate.remove(imageToDelete));
             imageToDelete.remove();
             this.closeLinkTools(cursors);
-            this.dependencies.history.addStep();
+            this.dependencies.domMutation.commit();
             return true;
         }
         return false;

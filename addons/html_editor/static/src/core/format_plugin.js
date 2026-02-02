@@ -61,7 +61,7 @@ function isFormatted(formatPlugin, format) {
 
 export class FormatPlugin extends Plugin {
     static id = "format";
-    static dependencies = ["selection", "history", "input", "split", "delete"];
+    static dependencies = ["selection", "domMutation", "input", "split", "delete"];
     // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing mergeAdjacentInlines.
     static shared = [
         "isSelectionFormat",
@@ -233,7 +233,7 @@ export class FormatPlugin extends Plugin {
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
         this.removeFormats(Object.keys(formatsSpecs), targetedNodes);
         this.dispatchTo("remove_all_formats_handlers");
-        this.dependencies.history.addStep();
+        this.dependencies.domMutation.commit();
     }
 
     removeFontSizeFormat(el) {
@@ -293,7 +293,7 @@ export class FormatPlugin extends Plugin {
     formatSelection(formatName, options) {
         this.dispatchTo("format_selection_handlers", formatName, options);
         if (this._formatSelection(formatName, options) && !options?.removeFormat) {
-            this.dependencies.history.addStep();
+            this.dependencies.domMutation.commit();
         }
     }
 

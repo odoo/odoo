@@ -22,7 +22,7 @@ test("Opening a dropdown should not add mutations to the history", async () => {
     await contains(":iframe .dropdown-toggle").click();
     const editor = getEditor();
     expect(":iframe .dropdown-toggle").toHaveClass("show");
-    expect(editor.shared.history.addStep()).toBe(false);
+    expect(editor.shared.domMutation.commit()).toBe(false);
 });
 
 test("Opening an offcancas should not add mutations to the history", async () => {
@@ -44,5 +44,5 @@ test("Opening an offcancas should not add mutations to the history", async () =>
     await contains(":iframe .toggleCanvas").click();
     const editor = getEditor();
     await waitFor(":iframe .offcanvas.show");
-    expect(editor.shared.history.addStep()).toBe(false);
+    expect(editor.shared.domMutation.commit()).toBe(false);
 });
