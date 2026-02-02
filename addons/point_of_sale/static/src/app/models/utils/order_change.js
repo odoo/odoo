@@ -156,6 +156,7 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                 pos_categ_sequence: product.pos_categ_ids[0]?.sequence ?? 0,
                 display_name: product.display_name,
                 group: receiptLineGrouper.getGroup(orderline),
+                pack_lot_names: orderline.packLotLines,
             };
 
             if (quantityDiff) {

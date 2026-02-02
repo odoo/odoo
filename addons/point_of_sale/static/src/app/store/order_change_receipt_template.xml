@@ -73,6 +73,9 @@
                     </p>
                 </t>
             </div>
+            <ul t-if="line.pack_lot_names?.length" style="font-size: 91%;">
+                <li t-foreach="line.pack_lot_names" t-as="lot_name" t-key="lot_name_index" style="list-style-type: '- ';" t-out="lot_name" />
+            </ul>
             <div t-if="line.note" class="fst-italic" style="font-size: 91%;">
                 <t t-esc="line.note.split('\n').join(', ')"/><br/>
             </div>

@@ -701,7 +701,24 @@ class TestUi(TestPointOfSaleHttpCommon):
         # open a session, the /pos/ui controller will redirect to it
         self.main_pos_config.with_user(self.pos_user).open_ui()
 
-        self.monitor_stand.tracking = 'lot'
+        self.monitor_stand.write({
+            'tracking': 'lot',
+            'is_storable': True,
+            'pos_categ_ids': [Command.set(self.pos_desk_misc_test.ids)],
+        })
+        preparation_printer = self.env['pos.printer'].create({
+            'name': 'Prep Printer',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'use_type': 'preparation',
+            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+        })
+        self.main_pos_config.write({
+            'preparation_printer_ids': [Command.set([preparation_printer.id])],
+            'other_devices': True,
+            'preparation_devices': True,
+            'use_order_printer': True,
+        })
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_03_pos_with_lots', login="pos_user")
 
     def test_04_product_configurator(self):

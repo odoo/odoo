@@ -462,7 +462,7 @@ export class PosOrderline extends PosOrderlineAccounting {
     }
 
     get packLotLines() {
-        return this.pack_lot_ids.map(
+        return this.pack_lot_ids?.map(
             (l) =>
                 `${l.pos_order_line_id.product_id.tracking == "lot" ? "Lot Number" : "SN"} ${
                     l.lot_name
