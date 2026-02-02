@@ -136,6 +136,24 @@ export class ListDataSource extends OdooViewsDataSource {
                     this._addSpecForFieldPath(spec[field.name].fields, newPathInfo);
                 }
                 break;
+            case "properties": {
+                spec[field.name] = {};
+                const propertyFields = othersModelsInfo[0]?.fieldDefs;
+                for (const propertyName of rest) {
+                    if (propertyFields[propertyName]?.type === "monetary") {
+                        spec[propertyFields[propertyName].currency_field] = {
+                            fields: {
+                                ...spec[propertyFields[propertyName].currency_field]?.fields,
+                                name: {},
+                                symbol: {},
+                                decimal_places: {},
+                                position: {},
+                            },
+                        };
+                    }
+                }
+                break;
+            }
             default:
                 spec[field.name] = {};
                 break;
@@ -196,12 +214,15 @@ export class ListDataSource extends OdooViewsDataSource {
      * @returns {object | object[]}
      */
     _getRecordFromRelation(mainRecord, fieldPath) {
+        const field = this.getFieldFromFieldPath(fieldPath);
         const fields = fieldPath.split(".");
         let record = mainRecord;
         // The last item of fields is the name of the field. As we want to
         // get the record on which the field is defined, we need to iterate until
         // the penultimate item of fields.
-        for (let i = 0; i < fields.length - 1; i++) {
+        // Property fields have an additional depth level (eg. root_property.property_name)
+        const end = field.is_property ? fields.length - 2 : fields.length - 1;
+        for (let i = 0; i < end; i++) {
             if (Array.isArray(record)) {
                 record = record.map((r) => r[fields[i]]).flat();
             } else {
@@ -249,6 +270,13 @@ export class ListDataSource extends OdooViewsDataSource {
         if (!record) {
             return "";
         }
+        if (field.is_property) {
+            const fieldParts = fieldPath.split(".");
+            const propertyField = fieldParts.pop();
+            const rootPropertyField = fieldParts.pop();
+            const propertyValue = record[rootPropertyField].find((p) => p.name === propertyField);
+            return propertyValue ? this._parsePropertyFieldServerValue(field, propertyValue) : "";
+        }
         const lastField = fieldPath.split(".").at(-1);
         if (Array.isArray(record)) {
             // remove duplicates?
@@ -281,8 +309,7 @@ export class ListDataSource extends OdooViewsDataSource {
             case "datetime":
                 return value ? toNumber(this._formatDateTime(value), DEFAULT_LOCALE) : "";
             case "properties": {
-                const properties = value || [];
-                return properties.map((property) => property.string).join(", ");
+                return new EvaluationError(_t("Please specify the property field name"));
             }
             case "json":
                 return new EvaluationError(_t('Fields of type "%s" are not supported', "json"));
@@ -292,6 +319,37 @@ export class ListDataSource extends OdooViewsDataSource {
                 return value ?? "";
             default:
                 return value || "";
+        }
+    }
+
+    _parsePropertyFieldServerValue(field, propertyValue) {
+        const { type, value } = propertyValue;
+        if (!value) {
+            return "";
+        }
+        switch (type) {
+            case "date":
+                return toNumber(this._formatDate(value), DEFAULT_LOCALE);
+            case "datetime":
+                return toNumber(this._formatDateTime(value), DEFAULT_LOCALE);
+            case "many2one":
+                return value[1];
+            case "many2many":
+                return value.map((v) => v[1]).join(", ");
+            case "tags":
+                return value
+                    .map((tagId) => {
+                        const tag = field.tags.find((tag) => tag[0] === tagId);
+                        return tag ? tag[1] : "";
+                    })
+                    .join(", ");
+            case "selection": {
+                const key = value;
+                const selectedOption = field.selection.find((array) => array[0] === key);
+                return selectedOption ? selectedOption[1] : "";
+            }
+            default:
+                return value;
         }
     }
 
