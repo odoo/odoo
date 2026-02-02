@@ -81,8 +81,9 @@
     </template>
 
     <template id="country_selector" name="Country Selector">
-        <div t-attf-class="#{_div_classes} d-print-none">
-            <t t-set="website_sale_countries" t-value="website.get_website_countries()"/>
+        <t t-set="website_sale_countries" t-value="website.get_website_countries()"/>
+        <t t-set="country_selector_visible" t-value="len(website_sale_countries) &gt; 1"/>
+        <div t-attf-class="#{_div_classes} d-print-none" t-if="country_selector_visible">
             <t t-set="active_country" t-value="request.country"/>
             <button t-attf-class="border-0 dropdown-toggle #{_btn_class or 'btn btn-sm btn-outline-secondary'}"
                     type="button"
@@ -105,9 +106,9 @@
     </template>
 
     <template id="pricelist_selector" name="Pricelist Selector">
-        <t t-set="pricelists" t-value="website.get_pricelist_available()"/>
+        <t t-set="pricelists" t-value="website.get_pricelist_available(show_visible=True)"/>
         <t t-set="pricelist_selector_visible" t-value="len(pricelists) &gt; 1"/>
-        <div t-attf-class="#{_div_classes} d-print-none">
+        <div t-attf-class="#{_div_classes} d-print-none" t-if="pricelist_selector_visible">
             <t t-set="active_pricelist" t-value="request.pricelist"/>
             <button t-attf-class="border-0 dropdown-toggle #{_btn_class or 'btn btn-sm btn-outline-secondary'}"
                     type="button"

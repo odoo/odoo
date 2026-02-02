@@ -685,13 +685,10 @@ class Website(models.Model):
         return pl_id in self.get_pricelist_available(show_visible=False).ids
 
     def _get_geoip_country_code(self):
-        return request and request.geoip.country_code or False
+        return request and (request.country.code or request.geoip.country_code) or False
 
     def get_website_countries(self):
-        all_countries = self.env['res.country.group'].search([
-            ('pricelist_ids.website_id', '=', self.id),
-        ]).mapped('country_ids')
-        return self.env['res.country'].search([('id', 'in', all_countries.ids)])
+        return self.env['res.country'].search([])
 
     def sale_product_domain(self):
         website_domain = self.get_current_website().website_domain()
@@ -765,6 +762,7 @@ class Website(models.Model):
             )
             return country_sudo
         else:
+            # TODO-PDA cover country not in available countries
             return partner_sudo.country_id
 
     def _get_and_cache_current_pricelist(self):
