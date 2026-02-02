@@ -172,7 +172,7 @@ class StockMove(models.Model):
         'Quantity', compute='_compute_quantity', digits='Product Unit', inverse='_set_quantity', store=True)
     # TODO: delete this field `show_operations`
     show_operations = fields.Boolean(related='picking_id.picking_type_id.show_operations')
-    picking_code = fields.Selection(related='picking_id.picking_type_id.code', readonly=True)
+    picking_code = fields.Selection(related='picking_type_id.code', readonly=True)
     show_details_visible = fields.Boolean('Details Visible', compute='_compute_show_details_visible')
     is_storable = fields.Boolean(related='product_id.is_storable')
     additional = fields.Boolean("Whether the move was added after the picking's confirmation", default=False)
