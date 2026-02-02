@@ -1645,7 +1645,7 @@ class BaseModel(metaclass=MetaModel):
         # first determine a query that satisfies the domain and access rules
         query = self._search(domain, offset=offset, limit=limit, order=order or self._order)
 
-        if query.is_empty():
+        if isinstance(query, list) or query.is_empty():
             # optimization: don't execute the query at all
             return self.browse()
 
@@ -3962,9 +3962,11 @@ class BaseModel(metaclass=MetaModel):
                     sql = SQL("pg_size_pretty(length(%s)::bigint)", sql)
                 sql_terms.append(sql)
 
-            # select the given columns from the rows in the query
-            self.env.cr.execute(query.select(*sql_terms))
-            rows = self.env.cr.fetchall()
+            rows = None
+            if not isinstance(query, list):
+                # select the given columns from the rows in the query
+                self.env.cr.execute(query.select(*sql_terms))
+                rows = self.env.cr.fetchall()
 
             if not rows:
                 return self.browse()
