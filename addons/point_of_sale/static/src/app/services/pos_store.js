@@ -320,24 +320,51 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async initServerData() {
-        await this.processServerData();
-        await this.handleUrlParams();
-        this.data.connectWebSocket("CLOSING_SESSION", this.closingSessionNotification.bind(this));
-        const process = await this.afterProcessServerData();
+        try {
+            await this.processServerData();
+            await this.handleUrlParams();
+            this.data.connectWebSocket(
+                "CLOSING_SESSION",
+                this.closingSessionNotification.bind(this)
+            );
+            const process = await this.afterProcessServerData();
 
-        if (this.router.state.current !== "LoginScreen" && !this.config.module_pos_hr) {
-            this.setCashier(this.user);
+            if (this.router.state.current !== "LoginScreen" && !this.config.module_pos_hr) {
+                this.setCashier(this.user);
+            }
+
+            const page =
+                this.router.state.current === "LoginScreen"
+                    ? this.firstPage
+                    : {
+                          page: this.router.state.current,
+                          params: this.router.state.params,
+                      };
+            this.navigate(page.page, page.params);
+            return process;
+        } catch (error) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Error"),
+                body: _t(
+                    "Failed to initialize the application. This is often caused by outdated cached data.\nWould you like to clear the cache and reload?"
+                ),
+                confirmLabel: _t("Clear cache"),
+                cancelLabel: _t("Continue"),
+                cancel: () => {},
+                confirm: () => this.reloadData(true),
+                dismiss: () => this.reloadData(true),
+            });
+
+            logPosMessage(
+                "Store",
+                "initServerData",
+                "Error while initializing server data",
+                CONSOLE_COLOR,
+                error
+            );
+
+            return false;
         }
-
-        const page =
-            this.router.state.current === "LoginScreen"
-                ? this.firstPage
-                : {
-                      page: this.router.state.current,
-                      params: this.router.state.params,
-                  };
-        this.navigate(page.page, page.params);
-        return process;
     }
 
     async closingSessionNotification(data) {

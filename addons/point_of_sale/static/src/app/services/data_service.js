@@ -11,22 +11,24 @@ import { browser } from "@web/core/browser/browser";
 import { ConnectionLostError, rpc, RPCError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { logPosMessage } from "../utils/pretty_console_log";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 const { DateTime } = luxon;
 const CONSOLE_COLOR = "#28ffeb";
 
 export class PosData extends Reactive {
     static modelToLoad = []; // When empty all models are loaded
-    static serviceDependencies = ["orm", "bus_service"];
+    static serviceDependencies = ["orm", "bus_service", "dialog"];
 
     constructor() {
         super();
         this.ready = this.setup(...arguments).then(() => this);
     }
 
-    async setup(env, { orm, bus_service }) {
+    async setup(env, { orm, bus_service, dialog }) {
         this.orm = orm;
         this.bus = bus_service;
+        this.dialog = dialog;
         this.relations = [];
         this.custom = {};
         this.syncInProgress = false;
@@ -134,58 +136,76 @@ export class PosData extends Reactive {
     }
 
     async initIndexedDB(relations) {
-        // This method initializes indexedDB with all models loaded into the PoS. The default key is ID.
-        // But some models have another key configured in data_service_options.js. These models are
-        // generally those that can be created in the frontend.
         const allModelNames = Array.from(
             new Set([...Object.keys(relations), ...Object.keys(this.opts.databaseTable)])
         );
+
         const models = allModelNames.map((model) => {
             const key = this.opts.databaseTable[model]?.key || "id";
             return [key, model];
         });
 
-        return new Promise((resolve) => {
-            this.indexedDB = new IndexedDB(this.databaseName, false, models, resolve);
-        });
+        const result = await new Promise(
+            (resolve) => new IndexedDB(this.databaseName, false, models, resolve)
+        );
+        this.indexedDB = result.instance;
+
+        if (!result.success && result.timeout) {
+            //TODO display a dialog for other IndexedDB init errors?
+            this.dialog.add(AlertDialog, {
+                title: _t("IndexedDB Initialization error"),
+                body: _t(
+                    "The IndexedDB database is taking too long to initialize. This may be due to a corrupted IndexedDB database. " +
+                        "We recommend you to clear your browser's IndexedDB for this site and reload the Point of Sale."
+                ),
+                confirmLabel: _t("Clear cache"),
+                cancelLabel: _t("Continue"),
+                cancel: () => {},
+                confirm: async () => {
+                    await this.resetIndexedDB();
+                    window.location.reload();
+                },
+            });
+        }
     }
 
     async synchronizeLocalDataInIndexedDB() {
         // This methods will synchronize local data and state in indexedDB. This methods is mostly
         // used with models like pos.order, pos.order.line, pos.payment etc. These models are created
         // in the frontend and are not loaded from the backend.
-        const modelsParams = Object.entries(this.opts.databaseTable);
         const data = {};
-        for (const [model, params] of modelsParams) {
-            const put = [];
-            const remove = [];
-            const modelData = this.models[model].getAll();
+        try {
+            const modelsParams = Object.entries(this.opts.databaseTable);
+            for (const [model, params] of modelsParams) {
+                const put = [];
+                const remove = [];
+                const modelData = this.models[model].getAll();
 
-            for (const record of modelData) {
-                const isToRemove = params.condition(record);
+                for (const record of modelData) {
+                    const isToRemove = params.condition(record);
 
-                if (isToRemove === undefined || isToRemove === true) {
-                    if (record[params.key]) {
-                        remove.push(record[params.key]);
+                    if (isToRemove === undefined || isToRemove === true) {
+                        if (record[params.key]) {
+                            remove.push(record[params.key]);
+                        }
+                    } else {
+                        put.push(record.serializeForIndexedDB());
                     }
-                } else {
-                    put.push(record.serializeForIndexedDB());
                 }
-            }
 
-            await this.indexedDB.delete(model, remove);
-            await this.indexedDB.create(model, put);
-            data[model] = put;
-
-            if (remove.length) {
                 await this.indexedDB.delete(model, remove);
-            }
-
-            if (put.length) {
                 await this.indexedDB.create(model, put);
+                data[model] = put;
             }
+        } catch (error) {
+            logPosMessage(
+                "DataService",
+                "synchronizeLocalDataInIndexedDB",
+                "Error while synchronizing server data in indexedDB.",
+                CONSOLE_COLOR,
+                [error]
+            );
         }
-
         return data;
     }
 
@@ -220,6 +240,9 @@ export class PosData extends Reactive {
         const models = Object.keys(this.opts.databaseTable);
 
         if (!data) {
+            if (!this.indexedDB) {
+                return {};
+            }
             data = await this.indexedDB.readAll(models);
         }
 
@@ -246,6 +269,10 @@ export class PosData extends Reactive {
     }
 
     async getCachedServerDataFromIndexedDB() {
+        if (!this.indexedDB) {
+            return {};
+        }
+
         // Used to load models that have not yet been loaded into related_models.
         // These models have been sent to the indexedDB directly after the RPC load_data.
         const data = await this.indexedDB.readAll();
