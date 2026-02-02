@@ -1197,6 +1197,41 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('ProductComboMaxFreeQtyTour')
 
+    def test_combo_remaining_amount_applied_to_last_line(self):
+        """Test remaining combo amount is correctly applied to the last combo line"""
+        combo_items = self.env["product.product"].create([
+            {
+                "name": "Combo Item A",
+                "is_storable": True,
+                "available_in_pos": True,
+                "list_price": 0.0,
+            },
+            {
+                "name": "Combo Item B",
+                "is_storable": True,
+                "available_in_pos": True,
+                "list_price": 0.0,
+            },
+        ])
+        combo = self.env["product.combo"].create({
+            "name": "combo",
+            "qty_free": 2,
+            "qty_max": 2,
+            "combo_item_ids": [
+                Command.create({"product_id": combo_items[0].id}),
+                Command.create({"product_id": combo_items[1].id}),
+            ],
+        })
+        self.env["product.product"].create({
+            "name": "Test Combo",
+            "type": "combo",
+            "available_in_pos": True,
+            "list_price": 40,
+            "combo_ids": [(6, 0, [combo.id])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour("test_combo_remaining_amount_applied_to_last_line")
+
     def test_line_configurators(self):
         setup_product_combo_items(self)
         self.env['product.combo.item'].create({

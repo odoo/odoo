@@ -211,6 +211,22 @@ registry.category("web_tour.tours").add("ProductComboMaxFreeQtyTour", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_combo_remaining_amount_applied_to_last_line", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Combo"),
+            combo.checkTotal("40.00"),
+            combo.select("Combo Item A"),
+            combo.clickQtyBtnAdd("Combo Item A"),
+            Dialog.confirm(),
+            inLeftSide([...ProductScreen.selectedOrderlineHasDirect("Test Combo", "1", "46.00")]),
+            ProductScreen.totalAmountIs("46.00"),
+            ProductScreen.clickPayButton(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("ProductComboChangePricelist", {
     steps: () =>
         [

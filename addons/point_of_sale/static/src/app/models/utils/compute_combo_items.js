@@ -27,8 +27,11 @@ export const computeComboItems = (
         let priceUnit = ProductPrice.round((combo.base_price * parentLstPrice) / originalTotal);
         remainingTotal -= priceUnit * conf.qty;
 
-        if (comboItem.id == childLineConf[childLineConf.length - 1].combo_item_id.id) {
-            priceUnit += remainingTotal;
+        if (
+            remainingTotal &&
+            comboItem.id == childLineConf[childLineConf.length - 1].combo_item_id.id
+        ) {
+            priceUnit += ProductPrice.round(remainingTotal / conf.qty);
         }
         const attribute_value_ids = conf.configuration?.attribute_value_ids?.map(
             (id) => productTemplateAttributeValueById[id]
