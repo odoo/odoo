@@ -292,7 +292,7 @@ export class PosData extends Reactive {
                 if (serverDateTime < lastConfigChange) {
                     await this.resetIndexedDB();
                     await this.initIndexedDB(this.relations);
-                    localData = [];
+                    localData = {};
                 }
 
                 const data = await this.orm.call(
@@ -339,7 +339,7 @@ export class PosData extends Reactive {
                     }
                 }
 
-                this.synchronizeServerDataInIndexedDB(localData);
+                await this.synchronizeServerDataInIndexedDB(localData);
             } catch (error) {
                 let message = _t("An error occurred while loading the Point of Sale: \n");
                 if (error instanceof RPCError) {
