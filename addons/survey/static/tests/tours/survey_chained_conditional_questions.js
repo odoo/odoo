@@ -80,10 +80,6 @@ registry.category("web_tour.tours").add('test_survey_chained_conditional_questio
         content: 'Click Submit and finish the survey',
         trigger: 'button[value="finish"]',
         run: "click",
-    }, {
-        content: "Click on Submit",
-        trigger: 'button.btn-primary:contains("Yes, submit")',
-        run: "click",
     },
     // Final page
     {

@@ -69,10 +69,6 @@ const survey_steps = (checkPageTranslation) => [
         content: 'Click Submit and finish the survey',
         trigger: 'button[value="finish"]',
         run: "click",
-    }, {
-        content: "Click on Submit",
-        trigger: ".modal-footer button.btn-primary",
-        run: "click",
     },
     // Final page
     {
