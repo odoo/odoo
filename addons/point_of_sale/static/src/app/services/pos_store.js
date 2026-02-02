@@ -674,7 +674,7 @@ export class PosStore extends WithLazyGetterTrap {
     async deleteOrders(orders, serverIds = [], ignoreChange = false) {
         const ordersToDelete = [];
         const actionPosOrderCancelCall = async (orderIds) => {
-            await this.data.call("pos.order", "cancel_order_from_pos", orderIds, {
+            await this.data.call("pos.order", "cancel_order_from_pos", [orderIds], {
                 context: {
                     device_identifier: this.device.identifier,
                 },
