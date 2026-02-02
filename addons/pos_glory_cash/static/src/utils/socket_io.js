@@ -19,28 +19,87 @@ const MSG_TYPES = {
 };
 
 const CONNECTION_TIMEOUT_MS = 10000;
+const RECONNECT_DELAY_MS = 5000;
 
 export class SocketIoService {
     /**
-     * @param {string} url
      * @param {import("models").SocketIoCallbacks} callbacks
      */
-    constructor(url, callbacks) {
+    constructor(callbacks) {
         this.setup(...arguments);
     }
 
     /**
-     * @param {string} url
      * @param {import("models").SocketIoCallbacks} callbacks
      */
-    setup(url, callbacks) {
-        this.websocket = null;
-        this.socketId = null;
-        this.pingIntervalId = null;
-        this.pongTimeoutIds = [];
-
+    setup(callbacks) {
         this.callbacks = callbacks;
-        this._connect(url);
+        this._reset();
+
+        // Chrome slows down our pings when the tab is inactive, causing the websocket
+        // to disconnect. Instead of this, we disconnect it ourselves when the tab
+        // loses focus, and reconnect once focus is restored.
+        document.addEventListener("visibilitychange", () => {
+            if (!this.websocket) {
+                return;
+            }
+            if (document.visibilityState === "hidden") {
+                this.websocket.close();
+            } else if (document.visibilityState === "visible" && this.closed) {
+                this.connect(this.currentUrl);
+            }
+        });
+    }
+
+    _reset() {
+        if (this.websocket && this.websocket.readyState === WebSocket.OPEN) {
+            this.websocket.onclose = null;
+            this.websocket.close();
+        }
+        this.websocket = null;
+        this.currentUrl = null;
+        this.socketId = null;
+
+        if (this.pingIntervalId) {
+            clearInterval(this.pingIntervalId);
+        }
+        this.pingIntervalId = null;
+        if (this.reconnectTimeoutId) {
+            clearInterval(this.reconnectTimeoutId);
+        }
+        this.reconnectTimeoutId = null;
+
+        if (this.pongTimeoutIds) {
+            for (const timeoutId of this.pongTimeoutIds) {
+                clearTimeout(timeoutId);
+            }
+        }
+        this.pongTimeoutIds = [];
+    }
+
+    /**
+     * @param {string} url
+     */
+    connect(url) {
+        if (this.websocket) {
+            this._reset();
+        }
+        this.currentUrl = url;
+        this.websocket = new WebSocket(this.currentUrl);
+
+        this.websocket.onclose = () => {
+            if (this.pingIntervalId) {
+                clearInterval(this.pingIntervalId);
+            }
+            if (document.visibilityState === "visible") {
+                this.callbacks.onClose();
+                this.reconnectTimeoutId = setTimeout(
+                    () => this.connect(this.currentUrl),
+                    RECONNECT_DELAY_MS
+                );
+            }
+        };
+        this.websocket.onmessage = (event) => this._onMessageReceived(event.data);
     }
 
     sendMessage(message) {
@@ -52,18 +111,6 @@ export class SocketIoService {
 
     get closed() {
         return this.websocket?.readyState !== WebSocket.OPEN;
-    }
-
-    _connect(url) {
-        this.websocket = new WebSocket(url);
-        this.websocket.onclose = () => {
-            if (this.pingIntervalId) {
-                clearInterval(this.pingIntervalId);
-            }
-            this.callbacks.onClose();
-            setTimeout(() => this._connect(url), 5000);
-        };
-        this.websocket.onmessage = (event) => this._onMessageReceived(event.data);
     }
 
     _sendPacket(packetType, data) {

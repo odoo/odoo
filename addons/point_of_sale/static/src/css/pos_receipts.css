@@ -63,6 +63,14 @@
 .pos-payment-terminal-receipt pre {
     font-family: inherit;
     font-size: 75%;
+
+    /* The following prevents html_editor/main/font/font_plugin.scss
+       from interfering (included by pos_appointment module) */
+    padding: unset;
+    border: unset;
+    border-radius: unset;
+    background-color: unset;
+    color: unset;
 }
 
 .responsive-price {
