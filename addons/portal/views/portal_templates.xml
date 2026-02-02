@@ -618,17 +618,17 @@
     <template id="pager" name="Pager">
         <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination m-0 #{_classes}" t-att-style="style or None">
             <li t-attf-class="page-item #{'disabled' if pager['page']['num'] == 1 else ''}">
-                <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None" t-attf-class="page-link #{extraLinkClass}">
+                <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None" t-attf-class="page-link #{extraLinkClass}" data-reveal-me="load">
                     <span class="oi oi-chevron-left" role="img" aria-label="Previous" title="Previous"/>
                 </a>
             </li>
             <t t-foreach="pager['pages']" t-as="page">
                 <li t-attf-class="page-item #{'active' if page['num'] == pager['page']['num'] else ''} #{'disabled' if page['num'] == '…' else ''}">
-                    <a t-att-href="page['url']" t-attf-class="page-link #{extraLinkClass} #{'px-0' if page['num'] == '…' else ''}" t-out="page['num']"/>
+                    <a t-att-href="page['url']" t-attf-class="page-link #{extraLinkClass} #{'px-0' if page['num'] == '…' else ''}" t-out="page['num']" data-reveal-me="hover"/>
                 </li>
             </t>
             <li t-attf-class="page-item #{'disabled' if pager['page']['num'] == pager['page_count'] else ''}">
-                <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None" t-attf-class="page-link #{extraLinkClass}">
+                <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None" t-attf-class="page-link #{extraLinkClass}" data-reveal-me="load">
                     <span class="oi oi-chevron-right" role="img" aria-label="Next" title="Next"/>
                 </a>
             </li>
