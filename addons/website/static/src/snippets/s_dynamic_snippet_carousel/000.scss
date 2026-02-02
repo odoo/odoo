@@ -38,16 +38,6 @@
 
     @include media-breakpoint-up(md) {
         &:where(:not([class*="o_arrows_"])){
-            .carousel-control-prev {
-                transform: translateX(-50%);
-            }
-
-            .carousel-control-next {
-                transform: translateX(50%);
-            }
-        }
-
-        &.o_arrows_inside {
             .s_dynamic_snippet_arrows a {
                 margin: 0 map-get($spacers, 3);
             }
