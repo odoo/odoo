@@ -270,8 +270,14 @@ class ResourceCalendar(models.Model):
             calendar_data_by_resource = tz_resources._get_calendar_data_at(start_dt, tz)
 
             res_intervals = Intervals(res, keep_distinct=True)
-            start_datetime = start_dt.astimezone(tz)
-            end_datetime = end_dt.astimezone(tz)
+
+            """
+                In saas-19.1 and previous versions, timezone tz was passing to this function.
+                Now, only resources_per_tz is passed in master and the timezone of resources_per_tz comes from employee
+                Thus, converting start_dt to start_dt.astimezone(tz) or end_dt to end_dt.astimezone(tz) causes wrong calculations.
+            """
+            start_datetime = start_dt
+            end_datetime = end_dt
 
             for resource in chain(tz_resources, (self.env['resource.resource'],) if self else ()):
                 calendar_data = calendar_data_by_resource.get(resource, {})
