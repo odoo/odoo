@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
 
 
 class CrmLead2opportunityPartnerMass(models.TransientModel):
@@ -44,7 +43,6 @@ class CrmLead2opportunityPartnerMass(models.TransientModel):
     @api.depends('lead_tomerge_ids')
     def _compute_lead_count_message(self):
         for convert in self:
-            count = len(convert.lead_tomerge_ids)
             selected_duplicate_count = len(convert.duplicated_lead_ids)
             convert.lead_count_message = _(
                 "Found potential duplicates for %(selected_duplicate_count)s of the leads you have selected. "

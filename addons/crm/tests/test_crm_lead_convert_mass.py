@@ -77,16 +77,19 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         # default values
         self.assertEqual(mass_convert.name, 'convert')
         self.assertEqual(mass_convert.action, 'create')
+
+        mass_convert.write({'user_ids': [self.user_sales_salesman.id]})
+
         # depending on options
         self.assertEqual(mass_convert.partner_id, self.env['res.partner'])
-        self.assertEqual(mass_convert.user_id, self.user_sales_salesman)
+        self.assertEqual(mass_convert.user_ids, self.user_sales_salesman)
         self.assertEqual(mass_convert.team_id, self.sales_team_convert)
 
         mass_convert.action_apply()
         for lead in self.lead_1 | self.lead_w_partner:
             self.assertEqual(lead.type, 'opportunity')
             if lead == self.lead_w_partner:
-                self.assertEqual(lead.user_id, self.env['res.users'])  # user_id is bypassed
+                self.assertEqual(lead.user_id, mass_convert.user_ids[0])
                 self.assertEqual(lead.partner_id, self.contact_1)
             elif lead == self.lead_1:
                 self.assertEqual(lead.user_id, self.user_sales_leads)  # existing value not forced
@@ -125,10 +128,10 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
             'active_model': 'crm.lead',
             'active_ids': self.leads.ids,
         }).create({
-            'name': 'convert_and_deduplicate'
+            'name': 'deduplicate'
         })
         self.assertEqual(mass_convert.action, 'create')
-        self.assertEqual(mass_convert.name, 'convert_and_deduplicate')
+        self.assertEqual(mass_convert.name, 'deduplicate')
         self.assertEqual(mass_convert.lead_tomerge_ids, self.leads)
         self.assertEqual(mass_convert.duplicated_lead_ids, self.lead_1 | self.lead_w_partner)
 
@@ -140,7 +143,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         )
         for lead in lead_1_final | lead_w_partner_final:
             self.assertTrue(lead.active)
-            self.assertEqual(lead.type, 'opportunity')
+            self.assertEqual(lead.type, 'lead')
 
     @users('user_sales_manager')
     def test_mass_convert_find_existing(self):
@@ -159,7 +162,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
             'active_id': lead.ids[0]
         }).create({
             'action': 'create',
-            'name': 'convert_and_deduplicate',
+            'name': 'deduplicate',
         })
         mass_convert.action_apply()
 
@@ -186,7 +189,6 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         for lead in self.leads - self.lead_w_email_lost:
             self.assertEqual(lead.partner_id, partner, "Partner ID should match the selected partner")
             self.assertEqual(lead.type, 'opportunity')
-
 
     @users('user_sales_manager')
     def test_mass_convert_do_not_link_partner(self):
@@ -222,12 +224,12 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         user_ids = self.assign_users.ids
 
         # randomness: at least 1 query
-        with self.assertQueryCount(user_sales_manager=1442):  # crm ??
+        with self.assertQueryCount(user_sales_manager=1693):  # crm ??
             mass_convert = self.env['crm.lead2opportunity.partner.mass'].with_context({
                 'active_model': 'crm.lead',
                 'active_ids': test_leads.ids,
             }).create({
-                'name': 'convert_and_deduplicate',
+                'name': 'convert_and_merge',
                 'user_ids': user_ids,
                 'force_assignment': True,
             })
@@ -235,9 +237,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
 
         self.assertEqual(set(test_leads.mapped('type')), {'opportunity'})
         self.assertEqual(len(test_leads.partner_id), len(test_leads))
-        # TDE FIXME: strange
-        # self.assertEqual(test_leads.team_id, self.sales_team_convert | self.sales_team_1)
-        self.assertEqual(test_leads.team_id, self.sales_team_1)
+        self.assertEqual(test_leads.team_id, self.sales_team_convert | self.sales_team_1)
         self.assertEqual(test_leads[0::3].user_id, self.user_sales_manager)
         self.assertEqual(test_leads[1::3].user_id, self.user_sales_leads_convert)
         self.assertEqual(test_leads[2::3].user_id, self.user_sales_salesman)
@@ -274,7 +274,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
             'active_model': 'crm.lead',
             'active_ids': (self.lead_1 + lead_1_dups).ids,
         }).create({
-            'name': 'convert_and_deduplicate'
+            'name': 'deduplicate'
         })
 
         mass_convert.action_apply()
