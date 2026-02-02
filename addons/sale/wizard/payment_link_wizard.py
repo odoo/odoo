@@ -29,6 +29,9 @@ class PaymentLinkWizard(models.TransientModel):
             if sale_order.state in ('draft', 'sent') and wizard.amount < wizard.prepayment_amount:
                 wizard.warning_message = _("The amount must be greater than the prepayment amount.")
                 sale_wizards |= wizard  # Prevent the super call from clearing the warning message.
+            if sale_order.is_expired:
+                wizard.warning_message = _("The sale order has expired.")
+                sale_wizards |= wizard
         super(PaymentLinkWizard, self - sale_wizards)._compute_warning_message()
 
     def _prepare_url(self, base_url, related_document):
@@ -37,13 +40,6 @@ class PaymentLinkWizard(models.TransientModel):
             return f'{base_url}{related_document.get_portal_url()}'
         else:
             return super()._prepare_url(base_url, related_document)
-
-    def _compute_warning_message(self):
-        super()._compute_warning_message()
-        for wizard in self.filtered(lambda w: w.res_model == 'sale.order'):
-            sale_order = self.env['sale.order'].browse(wizard.res_id)
-            if sale_order.is_expired:
-                wizard.warning_message = _("The sale order has expired.")
 
     def _prepare_query_params(self, *args):
         """ Override of `payment` to add SO-related values to the query params. """
