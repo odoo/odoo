@@ -10,7 +10,7 @@ class HrWorkEntryType(models.Model):
 
     name = fields.Char(required=True, translate=True)
     display_code = fields.Char(string="Display Code", size=3, translate=True, help="This code can be changed, it is only for a display purpose (3 letters max)")
-    code = fields.Char(string="Payroll Code", required=True, help="The code is used as a reference in salary rules. Careful, changing an existing code can lead to unwanted behaviors.")
+    code = fields.Char(string="Payroll Code", copy=False, help="The code is used as a reference in salary rules. Careful, changing an existing code can lead to unwanted behaviors.")
     external_code = fields.Char(help="Use this code to export your data to a third party")
     color = fields.Integer(default=0)
     sequence = fields.Integer(default=25)
@@ -54,7 +54,7 @@ class HrWorkEntryType(models.Model):
     @api.constrains('code', 'country_id')
     def _check_code_unicity(self):
         similar_work_entry_types = self.search([
-            ('code', 'in', self.mapped('code')),
+            ('code', 'in', self.filtered(lambda m: m.code).mapped('code')),
             ('country_id', 'in', self.country_id.ids + [False]),
             ('id', 'not in', self.ids)
         ])
