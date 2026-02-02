@@ -27,6 +27,7 @@ Print product labels with barcode.
     """,
     'data': [
         'data/product_data.xml',
+        'security/ir_rules.xml',
         'security/product_security.xml',
         'security/ir.model.access.csv',
         'data/product_attribute_data.xml',

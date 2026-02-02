@@ -71,10 +71,13 @@ class ProductPricelistItem(models.Model):
 
     # Product Related Fields
     categ_id = fields.Many2one(
-        comodel_name='product.category',
         string="Category",
+        help="Specify a product category if this rule only applies to products belonging to this"
+        " category or its children categories. Keep empty otherwise.",
+        comodel_name='product.category',
         ondelete='cascade',
-        help="Specify a product category if this rule only applies to products belonging to this category or its children categories. Keep empty otherwise.")
+        check_company=True,
+    )
     product_tmpl_id = fields.Many2one(
         comodel_name='product.template',
         string="Product",
