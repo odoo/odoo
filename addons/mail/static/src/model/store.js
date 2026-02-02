@@ -5,6 +5,7 @@ import { reactive, toRaw } from "@odoo/owl";
 /** @typedef {import("./record_list").RecordList} RecordList */
 
 export class Store extends Record {
+    static singleton = true;
     /** @type {import("./store_internal").StoreInternal} */
     _;
     [STORE_SYM] = true;

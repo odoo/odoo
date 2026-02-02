@@ -63,6 +63,9 @@ export class Record {
     static localId(data) {
         const Model = toRaw(this);
         let idStr;
+        if (Model.singleton) {
+            return Model.getName();
+        }
         if (typeof data === "object" && data !== null) {
             idStr = Model._localId(Model.id, data);
         } else {
@@ -72,6 +75,9 @@ export class Record {
     }
     static _localId(expr, data, { brackets = false } = {}) {
         const Model = toRaw(this);
+        if (Model.singleton) {
+            return Model.name;
+        }
         if (!Array.isArray(expr)) {
             if (Model._.fields.get(expr)) {
                 if (Model._.fieldsMany.get(expr)) {
@@ -111,6 +117,9 @@ export class Record {
     static _retrieveIdFromData(data) {
         const Model = toRaw(this);
         const res = {};
+        if (Model.singleton) {
+            return {};
+        }
         function _deepRetrieve(expr2) {
             if (typeof expr2 === "string") {
                 if (isCommand(data[expr2])) {
@@ -248,18 +257,20 @@ export class Record {
         const ModelFullProxy = this;
         const Model = toRaw(ModelFullProxy);
         const ids = Model._retrieveIdFromData(data);
-        for (const name in ids) {
-            if (
-                ids[name] &&
-                !isRecord(ids[name]) &&
-                !isCommand(ids[name]) &&
-                isRelation(Model, name)
-            ) {
-                // preinsert that record in relational field,
-                // as it is required to make current local id
-                ids[name] = Model._rawStore[Model._.fieldsTargetModel.get(name)].preinsert(
-                    ids[name]
-                );
+        if (!Model.singleton) {
+            for (const name in ids) {
+                if (
+                    ids[name] &&
+                    !isRecord(ids[name]) &&
+                    !isCommand(ids[name]) &&
+                    isRelation(Model, name)
+                ) {
+                    // preinsert that record in relational field,
+                    // as it is required to make current local id
+                    ids[name] = Model._rawStore[Model._.fieldsTargetModel.get(name)].preinsert(
+                        ids[name]
+                    );
+                }
             }
         }
         return Model.get.call(ModelFullProxy, data) ?? Model.new(data, ids);

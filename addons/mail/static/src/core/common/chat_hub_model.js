@@ -15,6 +15,8 @@ const CHAT_HUB_COMPACT_LS = "mail.user_setting.chathub_compact";
  */
 
 export class ChatHub extends Record {
+    static singleton = true;
+
     BUBBLE = 56; // same value as $o-mail-ChatHub-bubblesWidth
     recomputeBubbleStart = 0;
     BUBBLE_START = fields.Attr(CHAT_HUB_DEFAULT_BUBBLE_START, {

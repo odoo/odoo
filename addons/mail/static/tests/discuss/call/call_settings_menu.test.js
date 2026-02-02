@@ -124,11 +124,15 @@ test("local storage for call settings", async () => {
     localStorage.setItem(showOnlyVideoKey, toRawValue(true));
     const useBlurLocalStorageKey = makeRecordFieldLocalId(Settings.localId(), "useBlur");
     localStorage.setItem(useBlurLocalStorageKey, toRawValue(true));
+    const voiceActivationThresholdKey = makeRecordFieldLocalId(
+        Settings.localId(),
+        "voiceActivationThreshold"
+    );
     const callSettingsKeys = [
-        "Settings,undefined:backgroundBlurAmount",
-        "Settings,undefined:edgeBlurAmount",
-        "Settings,undefined:showOnlyVideo",
-        "Settings,undefined:voiceActivationThreshold",
+        backgroundBlurAmountKey,
+        edgeBlurAmountKey,
+        showOnlyVideoKey,
+        voiceActivationThresholdKey,
     ];
     patchWithCleanup(localStorage, {
         setItem(key, value) {
@@ -159,9 +163,9 @@ test("local storage for call settings", async () => {
 
     // testing save to local storage
     await click("input[title='Show video participants only']");
-    await expect.waitForSteps(["Settings,undefined:showOnlyVideo: removed"]);
+    await expect.waitForSteps([`${showOnlyVideoKey}: removed`]);
     await click("input[title='Blur video background']");
     expect(localStorage.getItem(useBlurLocalStorageKey)).toBe(null);
     await editInput(document.body, ".o-Discuss-CallSettings-thresholdInput", 0.3);
-    await expect.waitForSteps(["Settings,undefined:voiceActivationThreshold: 0.3"]);
+    await expect.waitForSteps([`${voiceActivationThresholdKey}: 0.3`]);
 });

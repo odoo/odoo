@@ -5,7 +5,7 @@ import { fields, Record } from "@mail/model/export";
 import { rpc } from "@web/core/network/rpc";
 
 export class Settings extends Record {
-    static id = undefined; // as to not be affected by res.users.settings's id`
+    static singleton = true;
 
     id;
 

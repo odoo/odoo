@@ -1,6 +1,8 @@
 import { fields, Record } from "@mail/model/export";
 
 export class DiscussApp extends Record {
+    static singleton = true;
+
     INSPECTOR_WIDTH = 300;
     COMPACT_SIDEBAR_WIDTH = 60;
     /** @type {'notification'|'channel'|'chat'|'livechat'|'inbox'} */
