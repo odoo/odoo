@@ -125,6 +125,16 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
+    <!-- give access to all records, in case it is combined with another rule, like point_of_sale.rule_pos_bank_statement_line_user -->
+    <record id="account_bank_statement_line_rule_readonly_user" model="ir.rule" forcecreate="1">
+        <field name="name">account.bank.statement.line.readonly.user</field>
+        <field name="model_id" ref="model_account_bank_statement_line"/>
+        <field name="groups" eval="[(4, ref('account.group_account_readonly'))]"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
     <record id="account_move_comp_rule" model="ir.rule">
         <field name="name">Account Entry</field>
         <field name="model_id" ref="model_account_move"/>
