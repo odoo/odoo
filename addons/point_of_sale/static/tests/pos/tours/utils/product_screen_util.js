@@ -206,12 +206,12 @@ export function clickPartnerButton() {
         },
         {
             content: "partner screen is shown",
-            trigger: `${PartnerList.clickPartner().trigger}`,
+            trigger: PartnerList.partnerListTrigger(),
         },
     ];
 }
 export function clickCustomer(name) {
-    return [PartnerList.clickPartner(name), { ...back(), isActive: ["mobile"] }];
+    return [...PartnerList.clickPartner(name), { ...back(), isActive: ["mobile"] }];
 }
 export function selectPreset(selectedPreset, presetToSelect) {
     return [
