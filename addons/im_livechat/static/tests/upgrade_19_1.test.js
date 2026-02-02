@@ -29,7 +29,7 @@ test("category 'Livechat' is folded", async () => {
     localStorage.setItem("discuss_sidebar_category_folded_im_livechat.category_default", "true");
     await start();
     await openDiscuss();
-    await contains(".o-mail-DiscussSidebarCategory:contains('Livechat') .oi.oi-chevron-right");
+    await contains(".o-mail-DiscussSidebarCategory:contains('Live Chat') .oi.oi-chevron-right");
     const defaultLivechat_is_open = makeRecordFieldLocalId(
         DiscussAppCategory.localId("im_livechat.category_default"),
         "is_open"

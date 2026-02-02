@@ -83,7 +83,7 @@ test("tab on discuss composer goes to oldest unread livechat", async () => {
     await openDiscuss(channelIds[0]);
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 11" });
     await focus(".o-mail-Composer-input");
-    await contains(".o-mail-Composer-input[placeholder='Tab to next livechat']");
+    await contains(".o-mail-Composer-input[placeholder='Tab to next live chat']");
     await contains(".o-active .o-mail-DiscussSidebar-badge", { count: 0 });
     triggerHotkey("Tab");
     await contains(".o-mail-DiscussSidebarChannel.o-active", { text: "Visitor 13" });
@@ -229,7 +229,7 @@ test("Tab livechat picks ended livechats last", async () => {
     await contains(".o-mail-ChatWindow:contains('Visitor 0') .badge", { count: 0 });
     await press("Tab");
     await contains(".o-mail-ChatWindow:contains('Visitor 1') .o-mail-Message:contains('Hello')");
-    await contains("span", { text: "This livechat conversation has ended" });
+    await contains("span", { text: "This live chat conversation has ended" });
 });
 
 test.tags("focus required");

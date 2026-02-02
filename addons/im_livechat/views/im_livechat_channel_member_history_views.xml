@@ -88,7 +88,7 @@
             <field name="name">im_livechat.agent.history.graph</field>
             <field name="model">im_livechat.channel.member.history</field>
             <field name="arch" type="xml">
-                <graph js_class="im_livechat.agent_history_graph" string="Livechat Support Statistics" type="line" stacked="1" sample="1">
+                <graph js_class="im_livechat.agent_history_graph" string="Live Chat Support Statistics" type="line" stacked="1" sample="1">
                     <field name="has_call" invisible="1"/>
                     <field name="session_start_hour" invisible="1"/>
                     <field name="session_week_day" invisible="1"/>
@@ -105,7 +105,7 @@
             <field name="name">im_livechat.agent.history.pivot</field>
             <field name="model">im_livechat.channel.member.history</field>
             <field name="arch" type="xml">
-                <pivot js_class="im_livechat.agent_history_pivot" string="Livechat Support Statistics" sample="1" display_quantity="1">
+                <pivot js_class="im_livechat.agent_history_pivot" string="Live Chat Support Statistics" sample="1" display_quantity="1">
                     <field name="has_call" invisible="1"/>
                     <field name="session_start_hour" invisible="1"/>
                     <field name="session_week_day" invisible="1"/>

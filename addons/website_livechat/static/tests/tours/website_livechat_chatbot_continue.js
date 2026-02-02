@@ -12,7 +12,7 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_continue_tour"
             run: "click",
         },
         {
-            trigger: ".o-livechat-root:shadow span:contains(This livechat conversation has ended)",
+            trigger: ".o-livechat-root:shadow span:contains(This live chat conversation has ended)",
         },
         {
             trigger: ".o-livechat-root:shadow button[title='Give your feedback']",
