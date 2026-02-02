@@ -4526,7 +4526,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(op_2.blocked_by_workorder_ids, op_1)
         self.assertEqual(op_3.blocked_by_workorder_ids, op_2)
 
-    def _prepare_report_values(self, qty_final=5, qty_base_1=4, qty_base_2=1, mto=False, bom_2=False, extra_component=False, extra_operation=False):
+    def _prepare_report_values(self, qty_final=5, qty_base_1=1, qty_base_2=1, mto=False, bom_2=False, extra_component=False, extra_operation=False):
         grp_multi_step_rule = self.env.ref('stock.group_adv_location')
         self.env.user.write({'group_ids': [(3, grp_multi_step_rule.id)]})
         routes = [Command.link(self.route_manufacture.id)]
@@ -4578,7 +4578,7 @@ class TestMrpOrder(TestMrpCommon):
                 'product_qty': 1.0,
                 'type': 'normal',
                 'bom_line_ids': [
-                    Command.create({'product_id': product_to_use_1.id, 'product_qty': 1}),
+                    Command.create({'product_id': product_to_use_1.id, 'product_qty': qty_base_1}),
                 ],
                 'operation_ids': [Command.create({
                     'name': 'Component assembly',
@@ -4647,9 +4647,9 @@ class TestMrpOrder(TestMrpCommon):
         # No changes expected with the base scenario
         # Here no colors are expected except when the mo is started. The components are not consumed yet so a few colors are expected.
         mo = self._prepare_report_values(bom_2=True)
-        self._verify_report_main_decorators(mo)
+        self._verify_report_main_decorators(mo, sum_mo_cost='success', comp_mo_cost='success')
         mo.action_confirm()
-        self._verify_report_main_decorators(mo)
+        self._verify_report_main_decorators(mo, sum_mo_cost='success', comp_mo_cost='success')
         mo.action_start()
         self._verify_report_main_decorators(mo, sum_mo_cost='danger', comp_mo_cost='danger', op_real_cost='success')
         mo.button_mark_done()
@@ -4659,9 +4659,9 @@ class TestMrpOrder(TestMrpCommon):
         # Test for decorators colors of the report with a component having a bom (with MTO)
         # Colors are expected when the MO is confirmed as the BoM does not take the component MO cost into account
         mo = self._prepare_report_values(mto=True, bom_2=True)
-        self._verify_report_main_decorators(mo)
+        self._verify_report_main_decorators(mo, sum_mo_cost='success', comp_mo_cost='success')
         mo.action_confirm()
-        self._verify_report_main_decorators(mo, sum_mo_cost='danger', comp_mo_cost='danger')
+        self._verify_report_main_decorators(mo, sum_mo_cost='success', comp_mo_cost='success')
         mo.action_start()
         self._verify_report_main_decorators(mo, sum_mo_cost='danger', comp_mo_cost='danger', op_real_cost='success')
         mo.button_mark_done()
@@ -4692,6 +4692,16 @@ class TestMrpOrder(TestMrpCommon):
         self._verify_report_main_decorators(mo, sum_mo_cost='danger', comp_mo_cost='danger', op_real_cost='danger')
         mo.button_mark_done()
         self._verify_report_main_decorators(mo, op_real_cost='danger', sum_real_cost='danger')
+
+    def test_mo_overview_bom_cost(self):
+        """ The bom cost in the MO overview should reflect the sum of the costs of the lowest components
+        plus the sum of operation costs at every bom level. """
+        mo_1 = self._prepare_report_values(qty_final=13, qty_base_2=17)
+        data = self.env['report.mrp.report_mo_overview'].get_report_values(mo_1.id)
+        self.assertEqual(data['data']['summary']['bom_cost'], 4550)
+        mo_2 = self._prepare_report_values(qty_final=13, qty_base_2=17, bom_2=True, qty_base_1=43)
+        data = self.env['report.mrp.report_mo_overview'].get_report_values(mo_2.id)
+        self.assertEqual(data['data']['summary']['bom_cost'], 144885)
 
     def test_update_mo_from_bom_with_kit(self):
         """
