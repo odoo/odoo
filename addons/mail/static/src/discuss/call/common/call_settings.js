@@ -116,7 +116,7 @@ export class CallSettings extends Component {
     }
 
     onChangeBlur(ev) {
-        this.store.settings.useBlur = ev.target.checked;
+        this.store.settings.setUseBlur(ev.target.checked);
     }
 
     onChangeShowOnlyVideo(ev) {
