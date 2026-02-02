@@ -2852,16 +2852,6 @@ export class PosStore extends WithLazyGetterTrap {
         return date.toFormat("hh:mm");
     }
 
-    orderDone(order) {
-        order.setScreenData({ name: "" });
-        if (!this.config.module_pos_restaurant) {
-            this.selectedOrderUuid = this.getEmptyOrder().uuid;
-        }
-        this.searchProductWord = "";
-        const nextPage = this.defaultPage;
-        this.navigate(nextPage.page, nextPage.params);
-    }
-
     displayPrinterWarning(printResult, printerName) {
         let notification;
         if (printResult.warningCode === "ROLL_PAPER_HAS_ALMOST_RUN_OUT") {
