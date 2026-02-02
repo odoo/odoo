@@ -256,3 +256,46 @@ test("Test taxes after fiscal position", async () => {
     const lineValues = orderLine.prepareBaseLineForTaxesComputationExtraValues();
     expect(lineValues.tax_ids.length).toBe(0);
 });
+
+test("Test serial number requirements", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const serial_line = order.lines[0];
+    serial_line.product_id.tracking = "serial";
+    expect(serial_line.hasValidProductLot()).toBe(false); // No SN set
+    serial_line.setPackLotLines({
+        modifiedPackLotLines: {},
+        newPackLotLines: [
+            {
+                lot_name: "SN001",
+            },
+        ],
+    });
+    expect(serial_line.hasValidProductLot()).toBe(true);
+    serial_line.qty = 2;
+    expect(serial_line.hasValidProductLot()).toBe(false); // Only one SN set
+    serial_line.setPackLotLines({
+        modifiedPackLotLines: {},
+        newPackLotLines: [
+            {
+                lot_name: "SN002",
+            },
+        ],
+    });
+    expect(serial_line.hasValidProductLot()).toBe(true);
+
+    const lot_line = order.lines[1];
+    lot_line.product_id.tracking = "lot";
+    expect(lot_line.hasValidProductLot()).toBe(false);
+    lot_line.setPackLotLines({
+        modifiedPackLotLines: {},
+        newPackLotLines: [
+            {
+                lot_name: "LOT001",
+            },
+        ],
+    });
+    expect(lot_line.hasValidProductLot()).toBe(true);
+    lot_line.qty = 2;
+    expect(lot_line.hasValidProductLot()).toBe(true); // One lot is enough
+});
