@@ -283,6 +283,8 @@ export class LinkPlugin extends Plugin {
             }),
         ],
 
+        advanced_popover_options: [],
+
         immutable_link_selectors: [
             '[data-bs-toggle="tab"]',
             '[data-bs-toggle="collapse"]',
@@ -495,6 +497,16 @@ export class LinkPlugin extends Plugin {
         );
     }
 
+    applyAttributes(el, attributes = {}) {
+        for (const [attr, value] of Object.entries(attributes)) {
+            if (value) {
+                el.setAttribute(attr, value);
+            } else {
+                el.removeAttribute(attr);
+            }
+        }
+    }
+
     /**
      * open the Link popover to edit links
      *
@@ -533,29 +545,11 @@ export class LinkPlugin extends Plugin {
         const selectionTextContent = selection?.textContent();
         const isImage = !!findInSelection(selection, "img");
 
-        const applyCallback = (url, label, classes, linkTarget, attachmentId, relValue) => {
+        const applyCallback = (params) => {
+            const { attributes, label, attachmentId } = params;
             if (this.linkInDocument) {
-                if (url) {
-                    this.linkInDocument.href = url;
-                } else {
-                    this.linkInDocument.removeAttribute("href");
-                }
-                if (relValue) {
-                    this.linkInDocument.setAttribute("rel", relValue);
-                } else {
-                    this.linkInDocument.removeAttribute("rel");
-                }
-                if (linkTarget) {
-                    this.linkInDocument.setAttribute("target", linkTarget);
-                } else {
-                    this.linkInDocument.removeAttribute("target");
-                }
+                this.applyAttributes(this.linkInDocument, attributes);
                 if (!isImage) {
-                    if (classes) {
-                        this.linkInDocument.className = classes;
-                    } else {
-                        this.linkInDocument.removeAttribute("class");
-                    }
                     if (
                         this.linkInDocument.childElementCount == 0 &&
                         cleanZWChars(this.linkInDocument.innerText) !== label
@@ -564,15 +558,12 @@ export class LinkPlugin extends Plugin {
                         cursorsToRestore = null;
                     }
                 }
-            } else if (url) {
+            } else if (attributes.href) {
                 // prevent the link creation if the url field was empty
 
                 // create a new link with current selection as a content
                 if ((selectionTextContent && selectionTextContent === label) || isImage) {
-                    const link = this.createLink(url);
-                    if (relValue) {
-                        link.setAttribute("rel", relValue);
-                    }
+                    const link = this.createLink(attributes.href);
                     const image = isImage && findInSelection(selection, "img");
                     const figure =
                         image?.parentElement?.matches("figure[contenteditable=false]") &&
@@ -606,13 +597,8 @@ export class LinkPlugin extends Plugin {
                     }
                     this.linkInDocument = link;
                 } else if (label) {
-                    const link = this.createLink(url, label);
-                    if (classes) {
-                        link.className = classes;
-                    }
-                    if (linkTarget) {
-                        link.setAttribute("target", linkTarget);
-                    }
+                    const link = this.createLink(attributes.href, label);
+                    this.applyAttributes(link, attributes);
                     this.linkInDocument = link;
                     cursorsToRestore = null;
                     this.dependencies.dom.insert(link);
@@ -678,6 +664,7 @@ export class LinkPlugin extends Plugin {
             includeStyling: !this.config.hideStylingInLinkPopover,
             allowTargetBlank: this.config.allowTargetBlank,
             allowStripDomain: this.config.allowStripDomain,
+            advancedAttributeOptions: this.getResource("advanced_popover_options"),
         };
 
         const popover = this.getActivePopover(linkElement);

@@ -14,31 +14,14 @@
                     <t t-if="this.state.showAdvancedOptions">
                         <div class="o_advance_option_panel">
                             <div class="o_advance_options_grid" style="width: 200px;">
-                                <button t-if="this.state.showAdvancedOptions" class="fa fa-angle-left btn btn-secondary border-10" t-on-click="this.toggleAdvancedOptions"/>
-                                    <t t-foreach="Object.values(this.state.relAttributeOptions)" t-as="opt" t-key="opt.label">
-                                        <t t-if="opt.label !== 'noopener'">
-                                            <div class="o_seo_option_row d-flex justify-content-between align-items-center py-1 gap-2">
-                                                <span t-att-title="opt.description"><t t-out="opt.label"/></span>
-                                                <CheckBox
-                                                    value="opt.isChecked"
-                                                    onChange="this.toggleRelAttr.bind(this, opt.label)"/>
-                                            </div>
-                                        </t>
+                                <button class="fa fa-angle-left btn btn-secondary border-10" t-on-click="this.toggleAdvancedOptions"/>
+                                <t t-foreach="Object.values(this.state.advancedAttributeOptions)" t-as="opt" t-key="opt.label">
+                                    <t t-if="!opt.requires or this.state.advancedAttributeOptions[opt.requires].isChecked">
+                                        <div class="o_seo_option_row d-flex justify-content-between align-items-center py-1 gap-2">
+                                            <span t-att-title="opt.description"><t t-out="opt.label"/></span>
+                                            <CheckBox value="opt.isChecked" onChange="this.toggleAdvancedAttr.bind(this, opt.id)"/>
+                                        </div>
                                     </t>
-                                <div class="o_seo_option_row d-flex justify-content-between align-items-center py-1 gap-2">
-                                    <span>Open in new tab</span>
-                                    <CheckBox
-                                        value="this.state.linkTarget === '_blank'"
-                                        onChange="this.onClickNewWindow.bind(this)"
-                                        className="'target-blank-option'"/>
-                                </div>
-                                <t t-if="this.state.linkTarget === '_blank'">
-                                    <div class="o_seo_option_row o_seo_option_child d-flex justify-content-between align-items-center py-1 gap-2 ps-4">
-                                        <span>noopener</span>
-                                        <CheckBox
-                                            value="this.state.relAttributeOptions.noopener.isChecked"
-                                            onChange="this.toggleRelAttr.bind(this, 'noopener')"/>
-                                    </div>
                                 </t>
                             </div>
                         </div>
@@ -131,7 +114,11 @@
                                 <a t-if="this.props.canRemove and this.state.url" href="#" class="o_we_remove_link text-dark d-flex me-1" t-on-click.prevent="this.onClickRemove" title="Remove Link">
                                     <i class="fa fa-chain-broken"></i>
                                 </a>
-                                <button class="btn btn-sm btn-secondary" title="Advanced mode" t-att-disabled="!this.state.url" t-on-click="this.toggleAdvancedOptions">
+                                <button t-if="Object.keys(this.state.advancedAttributeOptions).length"
+                                    class="btn btn-sm btn-secondary"
+                                    title="Advanced mode"
+                                    t-att-disabled="!this.state.url"
+                                    t-on-click="this.toggleAdvancedOptions">
                                     <i class="fa fa-gear"/>
                                 </button>
                             </div>
