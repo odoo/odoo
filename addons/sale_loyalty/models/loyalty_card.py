@@ -19,11 +19,15 @@ class LoyaltyCard(models.Model):
     def _get_default_template(self):
         default_template = super()._get_default_template()
         if not default_template:
-            default_template = self.env.ref('loyalty.mail_template_loyalty_card', raise_if_not_found=False)
+            default_template = self.env.ref(
+                'loyalty.mail_template_loyalty_card', raise_if_not_found=False
+            )
         return default_template
 
     def _mail_get_partner_fields(self, introspect_fields=False):
-        return super()._mail_get_partner_fields(introspect_fields=introspect_fields) + ['order_id_partner_id']
+        return super()._mail_get_partner_fields(introspect_fields=introspect_fields) + [
+            'order_id_partner_id'
+        ]
 
     def _get_mail_author(self):
         # Default author is the order's salesperson if available, else the order's company.
@@ -38,7 +42,8 @@ class LoyaltyCard(models.Model):
     def _compute_use_count(self):
         super()._compute_use_count()
         read_group_res = self.env['sale.order.line']._read_group(
-            [('coupon_id', 'in', self.ids)], ['coupon_id'], ['__count'])
+            [('coupon_id', 'in', self.ids)], ['coupon_id'], ['__count']
+        )
         count_per_coupon = {coupon.id: count for coupon, count in read_group_res}
         for card in self:
             card.use_count += count_per_coupon.get(card.id, 0)

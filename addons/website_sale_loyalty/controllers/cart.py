@@ -6,7 +6,6 @@ from odoo.addons.website_sale.controllers.cart import Cart as WebsiteSaleCart
 
 
 class Cart(WebsiteSaleCart):
-
     @route()
     def cart(self, **post):
         if order_sudo := request.cart:

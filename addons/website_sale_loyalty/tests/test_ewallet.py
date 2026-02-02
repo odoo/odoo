@@ -11,7 +11,6 @@ from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
 @tagged('post_install', '-at_install')
 class TestEwallet(HttpCase, WebsiteSaleCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -27,26 +26,32 @@ class TestEwallet(HttpCase, WebsiteSaleCommon):
             'website_published': True,
         })
 
-        cls.ewallet_program = cls.env['loyalty.program'].create([{
-            'name': 'E-wallet Card Program',
-            'program_type': 'ewallet',
-            'trigger': 'auto',
-            'applies_on': 'future',
-            'rule_ids': [Command.create({
-                'reward_point_mode': 'money',
-                'reward_point_amount': 10,
-                'product_ids': cls.topup,
-            })],
-            'reward_ids': [Command.create({
-                'discount_mode': 'per_point',
-                'discount': 1,
-                'discount_applicability': 'order',
-            })],
-        }])
+        cls.ewallet_program = cls.env['loyalty.program'].create([
+            {
+                'name': 'E-wallet Card Program',
+                'program_type': 'ewallet',
+                'trigger': 'auto',
+                'applies_on': 'future',
+                'rule_ids': [
+                    Command.create({
+                        'reward_point_mode': 'money',
+                        'reward_point_amount': 10,
+                        'product_ids': cls.topup,
+                    })
+                ],
+                'reward_ids': [
+                    Command.create({
+                        'discount_mode': 'per_point',
+                        'discount': 1,
+                        'discount_applicability': 'order',
+                    })
+                ],
+            }
+        ])
 
-        installed_modules = set(cls.env['ir.module.module'].search([
-            ('state', '=', 'installed'),
-        ]).mapped('name'))
+        installed_modules = set(
+            cls.env['ir.module.module'].search([('state', '=', 'installed')]).mapped('name')
+        )
         for _ in http.routing_map._generate_routing_rules(installed_modules, nodb_only=False):
             pass
 

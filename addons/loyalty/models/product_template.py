@@ -12,7 +12,7 @@ class ProductTemplate(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        """ Override of `product` to set a default image for gift cards. """
+        """Override of `product` to set a default image for gift cards."""
         templates = super().create(vals_list)
         if templates and self.env.context.get('loyalty_is_gift_card_product'):
             with file_open('loyalty/static/img/gift_card.png', 'rb') as f:
@@ -27,8 +27,10 @@ class ProductTemplate(models.Model):
             self.env.ref('loyalty.ewallet_product_50', False),
         ]
         for product in self.filtered(lambda p: p.product_variant_id in product_data):
-            raise UserError(_(
-                "You cannot delete %(name)s as it is used in 'Coupons & Loyalty'."
-                " Please archive it instead.",
-                name=product.with_context(display_default_code=False).display_name
-            ))
+            raise UserError(
+                _(
+                    "You cannot delete %(name)s as it is used in 'Coupons & Loyalty'."
+                    " Please archive it instead.",
+                    name=product.with_context(display_default_code=False).display_name,
+                )
+            )

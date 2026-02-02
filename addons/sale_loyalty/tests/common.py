@@ -2,6 +2,7 @@
 
 from collections import defaultdict
 
+from odoo import _
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 
@@ -9,7 +10,6 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 
 class TestSaleCouponCommon(SaleCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -21,9 +21,7 @@ class TestSaleCouponCommon(SaleCommon):
         cls.env['loyalty.program'].search([]).sudo().write({'active': False})
 
         # Taxes
-        tax_group_group = cls.env['account.tax.group'].create({
-            'name': 'Test Account Tax Group'
-        })
+        tax_group_group = cls.env['account.tax.group'].create({'name': 'Test Account Tax Group'})
         cls.tax_15pc_excl = cls.env['account.tax'].create({
             'name': "Tax 15%",
             'amount_type': 'percent',
@@ -72,7 +70,7 @@ class TestSaleCouponCommon(SaleCommon):
             'tax_group_id': tax_group_group.id,
         })
 
-        #products
+        # products
         cls.product_A = cls.env['product.product'].create({
             'name': 'Product A',
             'list_price': 100,
@@ -116,18 +114,30 @@ class TestSaleCouponCommon(SaleCommon):
             'applies_on': 'future',
             'program_type': 'gift_card',
             'trigger': 'auto',
-            'rule_ids': [(0, 0, {
-                'product_ids': cls.product_gift_card,
-                'reward_point_amount': 1,
-                'reward_point_mode': 'money',
-                'reward_point_split': True,
-            })],
-            'reward_ids': [(0, 0, {
-                'reward_type': 'discount',
-                'discount': 1,
-                'discount_mode': 'per_point',
-                'discount_applicability': 'order',
-            })]
+            'rule_ids': [
+                (
+                    0,
+                    0,
+                    {
+                        'product_ids': cls.product_gift_card,
+                        'reward_point_amount': 1,
+                        'reward_point_mode': 'money',
+                        'reward_point_split': True,
+                    },
+                )
+            ],
+            'reward_ids': [
+                (
+                    0,
+                    0,
+                    {
+                        'reward_type': 'discount',
+                        'discount': 1,
+                        'discount_mode': 'per_point',
+                        'discount_applicability': 'order',
+                    },
+                )
+            ],
         })
         cls.immediate_promotion_program = cls.env['loyalty.program'].create({
             'name': 'Buy A + 1 B, 1 B are free',
@@ -135,18 +145,30 @@ class TestSaleCouponCommon(SaleCommon):
             'applies_on': 'current',
             'company_id': cls.env.company.id,
             'trigger': 'auto',
-            'rule_ids': [(0, 0, {
-                'product_ids': cls.product_A,
-                'reward_point_amount': 1,
-                'reward_point_mode': 'order',
-                'minimum_qty': 1,
-            })],
-            'reward_ids': [(0, 0, {
-                'reward_type': 'product',
-                'reward_product_id': cls.product_B.id,
-                'reward_product_qty': 1,
-                'required_points': 1,
-            })],
+            'rule_ids': [
+                (
+                    0,
+                    0,
+                    {
+                        'product_ids': cls.product_A,
+                        'reward_point_amount': 1,
+                        'reward_point_mode': 'order',
+                        'minimum_qty': 1,
+                    },
+                )
+            ],
+            'reward_ids': [
+                (
+                    0,
+                    0,
+                    {
+                        'reward_type': 'product',
+                        'reward_product_id': cls.product_B.id,
+                        'reward_product_qty': 1,
+                        'required_points': 1,
+                    },
+                )
+            ],
         })
         cls.code_promotion_program = cls.env['loyalty.program'].create({
             'name': 'Buy 1 A + Enter code, 1 A is free',
@@ -154,18 +176,30 @@ class TestSaleCouponCommon(SaleCommon):
             'trigger': 'with_code',
             'applies_on': 'current',
             'company_id': cls.env.company.id,
-            'rule_ids': [(0, 0, {
-                'product_ids': cls.product_A,
-                'reward_point_amount': 1,
-                'reward_point_mode': 'order',
-                'minimum_qty': 1,
-            })],
-            'reward_ids': [(0, 0, {
-                'reward_type': 'product',
-                'reward_product_id': cls.product_A.id,
-                'reward_product_qty': 1,
-                'required_points': 1,
-            })],
+            'rule_ids': [
+                (
+                    0,
+                    0,
+                    {
+                        'product_ids': cls.product_A,
+                        'reward_point_amount': 1,
+                        'reward_point_mode': 'order',
+                        'minimum_qty': 1,
+                    },
+                )
+            ],
+            'reward_ids': [
+                (
+                    0,
+                    0,
+                    {
+                        'reward_type': 'product',
+                        'reward_product_id': cls.product_A.id,
+                        'reward_product_qty': 1,
+                        'required_points': 1,
+                    },
+                )
+            ],
         })
         cls.code_promotion_program_with_discount = cls.env['loyalty.program'].create({
             'name': 'Buy 1 C + Enter code, 10 percent discount on C',
@@ -173,21 +207,33 @@ class TestSaleCouponCommon(SaleCommon):
             'trigger': 'with_code',
             'applies_on': 'current',
             'company_id': cls.env.company.id,
-            'rule_ids': [(0, 0, {
-                'mode': 'with_code',
-                'code': 'promotion_code_disc',
-                'product_ids': cls.product_C,
-                'reward_point_amount': 1,
-                'reward_point_mode': 'order',
-                'minimum_qty': 1,
-            })],
-            'reward_ids': [(0, 0, {
-                'reward_type': 'discount',
-                'discount_mode': 'percent',
-                'discount': 10,
-                'discount_applicability': 'order',
-                'required_points': 1,
-            })],
+            'rule_ids': [
+                (
+                    0,
+                    0,
+                    {
+                        'mode': 'with_code',
+                        'code': 'promotion_code_disc',
+                        'product_ids': cls.product_C,
+                        'reward_point_amount': 1,
+                        'reward_point_mode': 'order',
+                        'minimum_qty': 1,
+                    },
+                )
+            ],
+            'reward_ids': [
+                (
+                    0,
+                    0,
+                    {
+                        'reward_type': 'discount',
+                        'discount_mode': 'percent',
+                        'discount': 10,
+                        'discount_applicability': 'order',
+                        'required_points': 1,
+                    },
+                )
+            ],
         })
 
     def _extract_rewards_from_claimable(self, status):
@@ -202,7 +248,7 @@ class TestSaleCouponCommon(SaleCommon):
             raise ValidationError(status['error'])
         if not status and no_reward_fail:
             # Can happen if global discount got filtered out in `_get_claimable_rewards`
-            raise ValidationError('No reward to claim with this coupon')
+            raise ValidationError(_("No reward to claim with this coupon"))
         coupons = self.env['loyalty.card']
         rewards = self.env['loyalty.reward']
         for coupon, coupon_rewards in status.items():
@@ -218,7 +264,9 @@ class TestSaleCouponCommon(SaleCommon):
     def _claim_reward(self, order, program, coupon=False):
         if len(program.reward_ids) != 1:
             return False
-        coupon = coupon or order.coupon_point_ids.coupon_id.filtered(lambda c: c.program_id == program)
+        coupon = coupon or order.coupon_point_ids.coupon_id.filtered(
+            lambda c: c.program_id == program
+        )
         if len(coupon) != 1:
             return False
         status = order._apply_program_reward(program.reward_ids, coupon)
@@ -230,15 +278,20 @@ class TestSaleCouponCommon(SaleCommon):
         for coupon in order.coupon_point_ids.coupon_id:
             coupons_per_program[coupon.program_id] |= coupon
         for program in programs:
-            if len(program.reward_ids) > 1 or len(coupons_per_program[program]) != 1 or not program.active:
+            if (
+                len(program.reward_ids) > 1
+                or len(coupons_per_program[program]) != 1
+                or not program.active
+            ):
                 continue
             self._claim_reward(order, program, coupons_per_program[program])
 
     def _generate_coupons(self, loyality_program, coupon_qty=1):
         self.env['loyalty.generate.wizard'].with_context(active_id=loyality_program.id).create({
-            'coupon_qty': coupon_qty,
+            'coupon_qty': coupon_qty
         }).generate_coupons()
         return loyality_program.coupon_ids
+
 
 class TestSaleCouponNumbersCommon(TestSaleCouponCommon):
     @classmethod
@@ -276,66 +329,97 @@ class TestSaleCouponNumbersCommon(TestSaleCouponCommon):
             'trigger': 'with_code',
             'program_type': 'promotion',
             'applies_on': 'current',
-            'rule_ids': [(0, 0, {
-                'mode': 'with_code',
-                'code': 'test_10pc',
-            })],
-            'reward_ids': [(0, 0, {
-                'reward_type': 'discount',
-                'discount_mode': 'percent',
-                'discount': 10,
-                'discount_applicability': 'order',
-                'required_points': 1,
-            })],
+            'rule_ids': [(0, 0, {'mode': 'with_code', 'code': 'test_10pc'})],
+            'reward_ids': [
+                (
+                    0,
+                    0,
+                    {
+                        'reward_type': 'discount',
+                        'discount_mode': 'percent',
+                        'discount': 10,
+                        'discount_applicability': 'order',
+                        'required_points': 1,
+                    },
+                )
+            ],
         })
         cls.p2 = cls.env['loyalty.program'].create({
             'name': 'Buy 3 cabinets, get one for free',
             'trigger': 'auto',
             'program_type': 'promotion',
             'applies_on': 'current',
-            'rule_ids': [(0, 0, {
-                'product_ids': cls.largeCabinet,
-                'reward_point_mode': 'unit',
-                'minimum_qty': 3,
-            })],
-            'reward_ids': [(0, 0, {
-                'reward_type': 'product',
-                'reward_product_id': cls.largeCabinet.id,
-                'reward_product_qty': 1,
-                'required_points': 3,
-            })],
+            'rule_ids': [
+                (
+                    0,
+                    0,
+                    {
+                        'product_ids': cls.largeCabinet,
+                        'reward_point_mode': 'unit',
+                        'minimum_qty': 3,
+                    },
+                )
+            ],
+            'reward_ids': [
+                (
+                    0,
+                    0,
+                    {
+                        'reward_type': 'product',
+                        'reward_product_id': cls.largeCabinet.id,
+                        'reward_product_qty': 1,
+                        'required_points': 3,
+                    },
+                )
+            ],
         })
         cls.p3 = cls.env['loyalty.program'].create({
             'name': 'Buy 1 drawer black, get a free Large Meeting Table',
             'trigger': 'auto',
             'program_type': 'promotion',
             'applies_on': 'current',
-            'rule_ids': [(0, 0, {
-                'product_ids': cls.drawerBlack,
-                'reward_point_mode': 'order',
-                'minimum_qty': 1,
-            })],
-            'reward_ids': [(0, 0, {
-                'reward_type': 'product',
-                'reward_product_id': cls.largeMeetingTable.id,
-                'reward_product_qty': 1,
-                'required_points': 1,
-            })],
+            'rule_ids': [
+                (
+                    0,
+                    0,
+                    {
+                        'product_ids': cls.drawerBlack,
+                        'reward_point_mode': 'order',
+                        'minimum_qty': 1,
+                    },
+                )
+            ],
+            'reward_ids': [
+                (
+                    0,
+                    0,
+                    {
+                        'reward_type': 'product',
+                        'reward_product_id': cls.largeMeetingTable.id,
+                        'reward_product_qty': 1,
+                        'required_points': 1,
+                    },
+                )
+            ],
         })
         cls.discount_coupon_program = cls.env['loyalty.program'].create({
             'name': '$100 coupon',
             'program_type': 'coupons',
             'trigger': 'with_code',
             'applies_on': 'current',
-            'rule_ids': [(0, 0, {
-                'minimum_amount': 100,
-            })],
-            'reward_ids': [(0, 0, {
-                'reward_type': 'discount',
-                'discount_mode': 'per_point',
-                'discount': 100,
-                'discount_applicability': 'order',
-                'required_points': 1,
-            })],
+            'rule_ids': [(0, 0, {'minimum_amount': 100})],
+            'reward_ids': [
+                (
+                    0,
+                    0,
+                    {
+                        'reward_type': 'discount',
+                        'discount_mode': 'per_point',
+                        'discount': 100,
+                        'discount_applicability': 'order',
+                        'required_points': 1,
+                    },
+                )
+            ],
         })
         cls.all_programs = cls.env['loyalty.program'].search([])

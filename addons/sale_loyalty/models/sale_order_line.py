@@ -9,9 +9,7 @@ class SaleOrderLine(models.Model):
     is_reward_line = fields.Boolean(
         string="Is a program reward line", compute='_compute_is_reward_line'
     )
-    reward_id = fields.Many2one(
-        comodel_name='loyalty.reward', ondelete='restrict', readonly=True
-    )
+    reward_id = fields.Many2one(comodel_name='loyalty.reward', ondelete='restrict', readonly=True)
     coupon_id = fields.Many2one(comodel_name='loyalty.card', ondelete='restrict', readonly=True)
     reward_identifier_code = fields.Char(
         help="Technical field used to link multiple reward lines from the same reward together."
@@ -35,19 +33,26 @@ class SaleOrderLine(models.Model):
     def _compute_tax_ids(self):
         reward_lines = self.filtered('is_reward_line')
         super(SaleOrderLine, self - reward_lines)._compute_tax_ids()
-        # Discount reward line is split per tax, the discount is set on the line but not on the product
-        # as the product is the generic discount line.
-        # In case of a free product, retrieving the tax on the line instead of the product won't affect the behavior.
+        # Discount reward line is split per tax, the discount is set on the line but not on the
+        # product as the product is the generic discount line.
+        # In case of a free product, retrieving the tax on the line instead of the product won't
+        # affect the behavior.
         for line in reward_lines:
             line = line.with_company(line.company_id)
-            fpos = line.order_id.fiscal_position_id or line.order_id.fiscal_position_id._get_fiscal_position(line.order_partner_id)
+            fpos = (
+                line.order_id.fiscal_position_id
+                or line.order_id.fiscal_position_id._get_fiscal_position(line.order_partner_id)
+            )
             # If company_id is set, always filter taxes by the company
-            taxes = line.tax_ids.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
+            taxes = line.tax_ids.filtered(
+                lambda r: not line.company_id or r.company_id == line.company_id
+            )
             line.tax_ids = fpos.map_tax(taxes)
 
     def _get_display_price(self):
         # A product created from a promotion does not have a list_price.
-        # The price_unit of a reward order line is computed by the promotion, so it can be used directly
+        # The price_unit of a reward order line is computed by the promotion, so it can be used
+        # directly.
         if self.is_reward_line and self.reward_id.reward_type != 'product':
             return self.price_unit
         return super()._get_display_price()
@@ -66,16 +71,9 @@ class SaleOrderLine(models.Model):
 
         Returns self
         """
-        vals = {
-            'points_cost': 0,
-            'price_unit': 0,
-            'technical_price_unit': 0,
-        }
+        vals = {'points_cost': 0, 'price_unit': 0, 'technical_price_unit': 0}
         if complete:
-            vals.update({
-                'coupon_id': False,
-                'reward_id': False,
-            })
+            vals.update({'coupon_id': False, 'reward_id': False})
         self.write(vals)
         return self
 
@@ -106,9 +104,17 @@ class SaleOrderLine(models.Model):
 
     def unlink(self):
         # Remove related reward lines
-        reward_coupon_set = {(l.reward_id, l.coupon_id, l.reward_identifier_code) for l in self if l.reward_id}
+        reward_coupon_set = {
+            (line.reward_id, line.coupon_id, line.reward_identifier_code)
+            for line in self
+            if line.reward_id
+        }
         related_lines = self.env['sale.order.line']
-        related_lines |= self.order_id.order_line.filtered(lambda l: (l.reward_id, l.coupon_id, l.reward_identifier_code) in reward_coupon_set)
+        related_lines |= self.order_id.order_line.filtered(
+            lambda line: (
+                (line.reward_id, line.coupon_id, line.reward_identifier_code) in reward_coupon_set
+            )
+        )
         # Remove the line's coupon from order if it is the last line using that coupon
         coupons_to_unlink = self.env['loyalty.card']
         for line in self:
@@ -118,12 +124,24 @@ class SaleOrderLine(models.Model):
                 #  case 2: coupon was created from a program
                 if line.coupon_id in line.order_id.applied_coupon_ids:
                     line.order_id.applied_coupon_ids -= line.coupon_id
-                elif line.coupon_id.order_id == line.order_id and line.coupon_id.program_id.applies_on == 'current' and\
-                    not any(oLine.coupon_id == line.coupon_id and oLine not in related_lines for oLine in line.order_id.order_line):
-                    # ondelete='restrict' would prevent deletion of the coupon unlink after unlinking lines
+                elif (
+                    line.coupon_id.order_id == line.order_id
+                    and line.coupon_id.program_id.applies_on == 'current'
+                    and not any(
+                        oLine.coupon_id == line.coupon_id and oLine not in related_lines
+                        for oLine in line.order_id.order_line
+                    )
+                ):
+                    # ondelete='restrict' would prevent deletion of the coupon unlink after
+                    # unlinking lines.
                     coupons_to_unlink |= line.coupon_id
-                    line.order_id.code_enabled_rule_ids = line.order_id.code_enabled_rule_ids.filtered(lambda r: r.program_id != line.coupon_id.program_id)
-        # Give back the points if the order is confirmed, points are given back if the order is cancelled but in this case we need to do it directly
+                    line.order_id.code_enabled_rule_ids = (
+                        line.order_id.code_enabled_rule_ids.filtered(
+                            lambda r: r.program_id != line.coupon_id.program_id
+                        )
+                    )
+        # Give back the points if the order is confirmed, points are given back if the order is
+        # canceled but in this case we need to do it directly.
         for line in related_lines:
             if line.state == 'sale':
                 line.coupon_id.points += line.points_cost
