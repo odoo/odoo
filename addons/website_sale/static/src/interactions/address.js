@@ -1,7 +1,6 @@
 import { CustomerAddress } from '@portal/interactions/address';
 import { patch } from '@web/core/utils/patch';
-import { createElementWithContent } from '@web/core/utils/html';
-import { markup } from '@odoo/owl';
+import { AlertBanner } from '@website_sale/js/components/alert_banner/alert_banner';
 
 patch(CustomerAddress.prototype, {
     // /shop/address
@@ -18,12 +17,22 @@ patch(CustomerAddress.prototype, {
         });
         // Display errors as nice alerts at the top of the checkout page.
         this.errorsDiv = document.getElementById('checkout_alerts') ?? this.errorsDiv;
+        this.errorCleanups = [];
+    },
+
+    _replaceErrorMessages(messages) {
+        this._cleanupErrorComponents();
+        super._replaceErrorMessages(messages);
     },
 
     _renderErrorMessage(message) {
-        if (!message.html) {
-            return super._renderErrorMessage(...arguments);
-        }
-        return createElementWithContent('div', markup(message.html));
+        this.errorCleanups.push(
+            this.mountComponent(this.errorsDiv, AlertBanner, {level: 'danger', message})
+        );
     },
+
+    _cleanupErrorComponents() {
+        this.errorCleanups.forEach(cleanup => cleanup());
+        this.errorCleanups = [];
+    }
 });

@@ -153,6 +153,9 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
                 quantity=1,
             )
 
+        self.partner.write(self.dummy_partner_address_values.copy())
+        self.cart._set_delivery_method(self.free_delivery)
+
         # Try processing payment with the old amount
         with self.assertRaises(JsonRpcException, msg='odoo.exceptions.ValidationError'):
             self.make_jsonrpc_request(

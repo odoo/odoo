@@ -5,7 +5,7 @@ from datetime import timedelta
 from odoo import Command
 from odoo.exceptions import ValidationError
 from odoo.fields import Datetime
-from odoo.tests import JsonRpcException, tagged
+from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo

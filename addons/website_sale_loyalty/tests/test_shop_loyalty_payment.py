@@ -4,7 +4,7 @@ from datetime import date, timedelta
 from freezegun import freeze_time
 
 from odoo import Command
-from odoo.tests import JsonRpcException, tagged
+from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon

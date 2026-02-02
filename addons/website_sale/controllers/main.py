@@ -1231,17 +1231,6 @@ class WebsiteSale(payment_portal.PaymentPortal, Checkout):
         )
 
         if feedback_dict.get('invalid_fields'):
-            # Prettify error messages
-            if feedback_dict.get('messages'):
-                feedback_dict['messages'] = [
-                    {
-                        'html': request.env['ir.ui.view']._render_template(
-                            'website_sale.alert_banner',
-                            {'message': message.strip(), 'level': 'danger'},
-                        )
-                    }
-                    for message in feedback_dict['messages']
-                ]
             return json.dumps(feedback_dict) # Return if error when creating/updating partner.
 
         is_anonymous_cart = order_sudo._is_anonymous_cart()

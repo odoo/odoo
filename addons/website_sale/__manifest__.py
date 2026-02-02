@@ -129,6 +129,8 @@
             'website/static/src/interactions/multirange_input.js',
             'website_sale/static/src/xml/website_sale_image_viewer.xml',
             'website_sale/static/src/js/components/website_sale_image_viewer.js',
+            'website_sale/static/src/js/components/alert_banner/alert_banner.js',
+            'website_sale/static/src/js/components/alert_banner/alert_banner.xml',
             'website_sale/static/src/js/cart_notification/item_added_notification/item_added_notification.js',
             'website_sale/static/src/js/cart_notification/item_added_notification/item_added_notification.xml',
             'website_sale/static/src/js/cart_notification/cart_notification_container/cart_notification_container.js',

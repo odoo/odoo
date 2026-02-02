@@ -196,14 +196,12 @@
                             <t t-call="website_sale.wizard_checkout"/>
                         </div>
                         <div id="checkout_alerts" class="col-12">
-                            <t
-                                t-foreach="website_sale_order._get_alerts()"
-                                t-as="alert"
-                                t-call="website_sale.alert_banner"
-                                level="alert['level']"
-                                message="alert['message']"
-                                classes.f="col-12"
-                            />
+                            <t t-foreach="website_sale_order._get_alerts()" t-as="alert">
+                                <owl-component
+                                    name="website_sale.AlertBanner"
+                                    t-att-props="json.dumps({**alert, 'className': 'col-12'})"
+                                />
+                            </t>
                         </div>
 
                         <!-- Checkout Page Content | Left Column -->
@@ -505,16 +503,6 @@
                 </t>
             </t>
         </tbody>
-    </template>
-
-    <template id="website_sale.alert_banner">
-        <div
-            t-attf-class="alert alert-#{level or 'danger'} alert-dismissible #{classes}"
-            role="alert"
-        >
-            <div t-out="message" class="text-prewrap"/>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"/>
-        </div>
     </template>
 
     <template id="website_sale.alert_inline">
