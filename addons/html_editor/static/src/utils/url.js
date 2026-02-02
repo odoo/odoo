@@ -58,6 +58,25 @@ export function getVideoUrl(platform, videoId, params) {
             url = new URL(`https://www.facebook.com/plugins/video.php`);
             params.href = `https://www.facebook.com/facebook/videos/${videoId}/`;
             break;
+        case "gdrive":
+            url = new URL(`https://drive.google.com/file/d/${videoId}/preview`);
+            break;
+        case "twitch": {
+            // twitch video id are alphanumeric, while clip contains any characters
+            const isVideo = /^[0-9]+$/.test(videoId);
+            if (isVideo) {
+                url = new URL(`https://player.twitch.tv/`);
+                params.video = videoId;
+            } else {
+                url = new URL(`https://clips.twitch.tv/embed`);
+                params.clip = videoId;
+            }
+            params.parent = window.location.hostname;
+            break;
+        }
+        case "loom":
+            url = new URL(`https://www.loom.com/embed/${videoId}`);
+            break;
         default:
             throw new Error(`Unsupported platform: ${platform}`);
     }

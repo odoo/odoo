@@ -1,12 +1,9 @@
-import { YoutubePlugin } from "@html_editor/main/media/video/youtube_plugin";
 import { EmbeddedVideoSelector } from "./video_selector_dialog/embedded_video_selector";
+import { GDriveVideoPlugin } from "@html_editor/main/media/video/gdrive_video_plugin";
 
-export class EmbeddedYoutubePlugin extends YoutubePlugin {
-    static id = "embeddedYoutube";
+export class EmbeddedGDriveVideoPlugin extends GDriveVideoPlugin {
+    static id = "embeddedGDriveVideo";
     static dependencies = [...super.dependencies, "embeddedComponents"];
-
-    /** @override */
-    mediaSpecificClasses = EmbeddedVideoSelector.mediaSpecificClasses;
 
     /** @override */
     createVideoElement(videoData) {

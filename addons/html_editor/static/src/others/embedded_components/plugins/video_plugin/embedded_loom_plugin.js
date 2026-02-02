@@ -1,12 +1,9 @@
-import { YoutubePlugin } from "@html_editor/main/media/video/youtube_plugin";
 import { EmbeddedVideoSelector } from "./video_selector_dialog/embedded_video_selector";
+import { LoomPlugin } from "@html_editor/main/media/video/loom_plugin";
 
-export class EmbeddedYoutubePlugin extends YoutubePlugin {
-    static id = "embeddedYoutube";
+export class EmbeddedLoomPlugin extends LoomPlugin {
+    static id = "embeddedLoomVideo";
     static dependencies = [...super.dependencies, "embeddedComponents"];
-
-    /** @override */
-    mediaSpecificClasses = EmbeddedVideoSelector.mediaSpecificClasses;
 
     /** @override */
     createVideoElement(videoData) {

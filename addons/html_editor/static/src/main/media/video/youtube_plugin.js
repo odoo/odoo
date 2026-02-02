@@ -1,12 +1,12 @@
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { Plugin } from "../plugin";
-import { VideoSelector } from "./media/media_dialog/video_selector";
+import { VideoSelector } from "@html_editor/main/media/media_dialog/video_selector";
+import { ThirdPartyVideoAbstract } from "@html_editor/main/media/video/third_party_video_abstract";
 
 export const YOUTUBE_URL_GET_VIDEO_ID =
     /^(?:(?:https?:)?\/\/)?(?:(?:www|m)\.)?(?:youtube\.com|youtu\.be)(?:\/(?:[\w-]+\?v=|embed\/|v\/)?)([^\s?&#]+)(?:\S+)?$/i;
 
-export class YoutubePlugin extends Plugin {
+export class YoutubePlugin extends ThirdPartyVideoAbstract {
     static id = "youtube";
     static dependencies = ["history", "dom"];
 
@@ -18,6 +18,7 @@ export class YoutubePlugin extends Plugin {
             paste_media_url_command_providers: this.getCommandForVideoUrlPaste.bind(this),
         }),
     };
+
     /**
      * @param {string} url
      */
@@ -29,15 +30,11 @@ export class YoutubePlugin extends Plugin {
                 title: _t("Embed Youtube Video"),
                 description: _t("Embed the youtube video in the document."),
                 icon: "fa-youtube-play",
-                run: async () => {
-                    const videoElement = await this.getYoutubeVideoElement(youtubeUrl[0]);
-                    this.dependencies.dom.insert(videoElement);
-                    this.dependencies.history.addStep();
-                },
+                run: () => this.insertVideoElement(youtubeUrl[0]),
             };
         }
     }
-    // @todo @phoenix: Should this be in this plugin?
+
     /**
      * @param {string} url
      * @returns {HTMLElement} saved video element or undefined if the URL
@@ -67,9 +64,5 @@ export class YoutubePlugin extends Plugin {
         const savedVideo = this.createVideoElement(videoData);
         savedVideo.classList.add(...this.mediaSpecificClasses);
         return savedVideo;
-    }
-
-    createVideoElement(videoData) {
-        return VideoSelector.createElements([{ src: videoData.embed_url }])[0];
     }
 }

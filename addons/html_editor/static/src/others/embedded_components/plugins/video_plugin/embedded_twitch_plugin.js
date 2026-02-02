@@ -1,12 +1,9 @@
-import { YoutubePlugin } from "@html_editor/main/media/video/youtube_plugin";
 import { EmbeddedVideoSelector } from "./video_selector_dialog/embedded_video_selector";
+import { TwitchPlugin } from "@html_editor/main/media/video/twitch_plugin";
 
-export class EmbeddedYoutubePlugin extends YoutubePlugin {
-    static id = "embeddedYoutube";
+export class EmbeddedTwitchPlugin extends TwitchPlugin {
+    static id = "embeddedTwitchVideo";
     static dependencies = [...super.dependencies, "embeddedComponents"];
-
-    /** @override */
-    mediaSpecificClasses = EmbeddedVideoSelector.mediaSpecificClasses;
 
     /** @override */
     createVideoElement(videoData) {

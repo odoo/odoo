@@ -28,7 +28,7 @@ import { SearchPowerboxPlugin } from "@html_editor/main/powerbox/search_powerbox
 import { withSequence } from "@html_editor/utils/resource";
 import { execCommand } from "./_helpers/userCommands";
 import { expectElementCount } from "./_helpers/ui_expectations";
-import { VideoPlugin } from "@html_editor/main/media/video_plugin";
+import { VideoPlugin } from "@html_editor/main/media/video/video_plugin";
 import { deepEqual } from "@web/core/utils/objects";
 
 function commandNames() {
