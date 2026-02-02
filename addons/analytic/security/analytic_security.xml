@@ -15,6 +15,13 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'parent_of', company_ids)]</field>
     </record>
 
+    <!-- give access to all records, in case it is combined with another rule, like hr_timesheet.timesheet_line_rule_user -->
+    <record id="analytic_line_analytic" model="ir.rule">
+        <field name="name">Analytic line for Analytic Accounting</field>
+        <field name="model_id" ref="model_account_analytic_line"/>
+        <field name="groups" eval="[(4, ref('analytic.group_analytic_accounting'))]"/>
+    </record>
+
     <record id="analytic_line_comp_rule" model="ir.rule">
         <field name="name">Analytic line multi company rule</field>
         <field name="model_id" ref="model_account_analytic_line"/>
