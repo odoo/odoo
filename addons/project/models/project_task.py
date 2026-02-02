@@ -64,6 +64,26 @@ PROJECT_TASK_READABLE_FIELDS = {
     'access_token',
     'access_url',
 }
+MONTH_BY_SELECTION = [
+    ('date', 'Date of month'),
+    ('day', 'Day of month'),
+]
+BYDAY_SELECTION = [
+    ('1', 'First'),
+    ('2', 'Second'),
+    ('3', 'Third'),
+    ('4', 'Fourth'),
+    ('-1', 'Last'),
+]
+WEEKDAY_SELECTION = [
+    ('MON', 'Monday'),
+    ('TUE', 'Tuesday'),
+    ('WED', 'Wednesday'),
+    ('THU', 'Thursday'),
+    ('FRI', 'Friday'),
+    ('SAT', 'Saturday'),
+    ('SUN', 'Sunday'),
+]
 
 PROJECT_TASK_WRITABLE_FIELDS = {
     'name',
@@ -86,6 +106,14 @@ CLOSED_STATES = {
     '1_done': 'Done',
     '1_canceled': 'Cancelled',
 }
+REPEAT_UNIT_SELECTION = [
+    ('day', 'Days'),
+    ('week', 'Weeks'),
+    ('weekday', 'Weekdays'),
+    ('month', 'Months'),
+    ('monthday', 'Month Days'),
+    ('year', 'Years'),
+]
 
 
 class ProjectTask(models.Model):
@@ -225,7 +253,7 @@ class ProjectTask(models.Model):
         group_expand='_read_group_personal_stage_type_ids')
     partner_id = fields.Many2one('res.partner',
         string='Customer', recursive=True, tracking=True, compute='_compute_partner_id', store=True, readonly=False, index='btree_not_null',
-        domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]", )
+        domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]")
     partner_phone = fields.Char(
         compute='_compute_partner_phone', inverse='_inverse_partner_phone',
         string="Contact Number", readonly=False, store=True, copy=False
@@ -300,12 +328,18 @@ class ProjectTask(models.Model):
     recurring_count = fields.Integer(string="Tasks in Recurrence", compute='_compute_recurring_count')
     recurrence_id = fields.Many2one('project.task.recurrence', copy=False, index='btree_not_null')
     repeat_interval = fields.Integer(string='Repeat Every', default=1, compute='_compute_repeat', compute_sudo=True, readonly=False)
-    repeat_unit = fields.Selection([
-        ('day', 'Days'),
-        ('week', 'Weeks'),
-        ('month', 'Months'),
-        ('year', 'Years'),
-    ], default='week', compute='_compute_repeat', compute_sudo=True, readonly=False)
+    repeat_unit = fields.Selection(REPEAT_UNIT_SELECTION, default='week', compute='_compute_repeat', compute_sudo=True, readonly=False)
+    mon = fields.Boolean(compute='_compute_repeat', compute_sudo=True, readonly=False)
+    tue = fields.Boolean(compute='_compute_repeat', compute_sudo=True, readonly=False)
+    wed = fields.Boolean(compute='_compute_repeat', compute_sudo=True, readonly=False)
+    thu = fields.Boolean(compute='_compute_repeat', compute_sudo=True, readonly=False)
+    fri = fields.Boolean(compute='_compute_repeat', compute_sudo=True, readonly=False)
+    sat = fields.Boolean(compute='_compute_repeat', compute_sudo=True, readonly=False)
+    sun = fields.Boolean(compute='_compute_repeat', compute_sudo=True, readonly=False)
+    month_by = fields.Selection(MONTH_BY_SELECTION, compute='_compute_repeat', compute_sudo=True, readonly=False, default='date')
+    repeat_date_of_month = fields.Integer(compute='_compute_repeat', compute_sudo=True, readonly=False)
+    repeat_by_day_month = fields.Selection(BYDAY_SELECTION, string='By day', compute='_compute_repeat', compute_sudo=True, readonly=False)
+    repeat_by_weekday_month = fields.Selection(WEEKDAY_SELECTION, string='Weekday', compute='_compute_repeat', compute_sudo=True, readonly=False)
     repeat_type = fields.Selection([
         ('forever', 'Forever'),
         ('until', 'Until'),
@@ -508,6 +542,17 @@ class ProjectTask(models.Model):
             'repeat_unit',
             'repeat_type',
             'repeat_until',
+            'mon',
+            'tue',
+            'wed',
+            'thu',
+            'fri',
+            'sat',
+            'sun',
+            'month_by',
+            'repeat_date_of_month',
+            'repeat_by_day_month',
+            'repeat_by_weekday_month',
         ]
 
     @api.depends('recurring_task')
@@ -1624,7 +1669,7 @@ class ProjectTask(models.Model):
             res -= self.env.ref('project.mt_task_rating')
         if len(self) == 1:
             waiting_subtype = self.env.ref('project.mt_task_waiting')
-            if ((self.project_id and not self.project_id.allow_task_dependencies)\
+            if ((self.project_id and not self.project_id.allow_task_dependencies)
                 or (not self.project_id and not self.env.user.has_group('project.group_project_task_dependencies')))\
                 and waiting_subtype in res:
                 res -= waiting_subtype
