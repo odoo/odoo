@@ -42,7 +42,8 @@ def _odoo_guess_mimetype(bin_data, default='application/octet-stream'):
 
 
 def _magic_guess_mimetype(bin_data):
-    mimetype = magic.from_buffer(bin_data, mime=True)
+    magic_data = bytes(bin_data)
+    mimetype = magic.from_buffer(magic_data, mime=True)
 
     # magic.from_buffer() doesn't properly detect DOC, XLS, and PPT documents.
     if mimetype in _olecf_mimetypes:
