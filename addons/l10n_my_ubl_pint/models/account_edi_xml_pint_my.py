@@ -16,6 +16,10 @@ class AccountEdiXmlPint_My(models.AbstractModel):
         # EXTENDS account_edi_ubl_cii
         return f"{invoice.name.replace('/', '_')}_pint_my.xml"
 
+    def _get_customization_id(self, process_type='billing'):
+        if process_type == 'billing':
+            return 'urn:peppol:pint:billing-1@my-1'
+
     # -------------------------------------------------------------------------
     # EXPORT: Templates
     # -------------------------------------------------------------------------
@@ -46,9 +50,18 @@ class AccountEdiXmlPint_My(models.AbstractModel):
 
         return grouping_key
 
-    def _get_customization_id(self, process_type='billing'):
-        if process_type == 'billing':
-            return 'urn:peppol:pint:billing-1@my-1'
+    def _add_invoice_tax_total_nodes(self, document_node, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._add_invoice_tax_total_nodes(document_node, vals)
+        nodes = document_node['cac:TaxTotal']
+
+        if not nodes:
+            tax_total_node = self._ubl_get_tax_total_node(vals, {
+                'currency': vals['currency_id'],
+                'amount': 0.0,
+                'subtotals': {},
+            })
+            nodes.append(tax_total_node)
 
     def _add_invoice_header_nodes(self, document_node, vals):
         # EXTENDS account.edi.xml.ubl_bis3
