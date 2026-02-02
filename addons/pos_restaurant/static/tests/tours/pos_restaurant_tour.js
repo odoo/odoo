@@ -646,6 +646,7 @@ registry.category("web_tour.tours").add("test_customer_alone_saved", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("5"),
+<<<<<<< a44d0f79a57b4b54e6954d405f98779068c8f63e
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             Chrome.clickOrders(),
             Chrome.clickRegister(),
@@ -661,6 +662,24 @@ registry.category("web_tour.tours").add("test_transfering_orders", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+||||||| 8e60084924d390632934b5a9bd82a6954d6484de
+            ProductScreen.bookOrReleaseTable(),
+            waitForLoading(),
+            {
+                content: "Check if order has a server ID",
+                trigger: "body",
+                run: () => {
+                    const order = posmodel.models["pos.order"].getFirst();
+=======
+            ProductScreen.bookOrReleaseTable(),
+            FloorScreen.isShown(),
+            waitForLoading(),
+            {
+                content: "Check if order has a server ID",
+                trigger: "body",
+                run: () => {
+                    const order = posmodel.models["pos.order"].getFirst();
+>>>>>>> 4efe8b30c9d4524c24c8b030c96e1f6385ad86c3
 
             // Create a floating order with 3 cola
             FloorScreen.clickNewOrder(),
