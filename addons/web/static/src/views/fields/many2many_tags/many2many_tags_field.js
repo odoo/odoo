@@ -113,8 +113,8 @@ export class Many2ManyTagsField extends Component {
         this.update = (recordlist) => {
             recordlist = recordlist
                 ? recordlist.filter(
-                      (element) => !this.tags.some((record) => record.resId === element.id)
-                  )
+                    (element) => !this.tags.some((record) => record.resId === element.id)
+                )
                 : [];
             if (!recordlist.length) {
                 return;
@@ -230,8 +230,8 @@ export const many2ManyTagsField = {
             name: "color_field",
             type: "field",
             isRelationalField: true,
-            availableTypes: ["integer"],
-            help: _t("Set an integer field to use colors with the tags."),
+            availableTypes: ["integer", "char"],
+            help: _t("Set an integer or char field (for hex colors) to use colors with the tags."),
         },
         {
             label: _t("Typeahead search"),
@@ -252,7 +252,7 @@ export const many2ManyTagsField = {
     relatedFields: ({ options }) => {
         const relatedFields = [{ name: "display_name", type: "char" }];
         if (options.color_field) {
-            relatedFields.push({ name: options.color_field, type: "integer", readonly: false });
+            relatedFields.push({ name: options.color_field, type: "char", readonly: false });
         }
         return relatedFields;
     },
