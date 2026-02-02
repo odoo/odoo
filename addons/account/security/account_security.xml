@@ -135,6 +135,34 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
+    <!-- give access to all records, in case it is combined with another rule, like sale.account_invoice_report_rule_see_personal -->
+    <record id="account_invoice_report_rule_readonly" model="ir.rule" forcecreate="1">
+        <field name="name">account.invoice.report.readonly</field>
+        <field name="model_id" ref="model_account_invoice_report"/>
+        <field name="groups" eval="[(4, ref('account.group_account_readonly'))]"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    <record id="account_invoice_report_rule_invoice" model="ir.rule">
+        <field name="name">account.invoice.report.invoice</field>
+        <field name="model_id" ref="model_account_invoice_report"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    <record id="account_invoice_report_rule_manager" model="ir.rule">
+        <field name="name">account.invoice.report.manager</field>
+        <field name="model_id" ref="model_account_invoice_report"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('account.group_account_manager'))]"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
     <record id="account_move_comp_rule" model="ir.rule">
         <field name="name">Account Entry</field>
         <field name="model_id" ref="model_account_move"/>
