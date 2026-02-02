@@ -10,7 +10,8 @@
                     'o_badge badge rounded-pill': !tag.img,
                     'cursor-pointer': tag.canEdit,
                 }"
-                t-attf-class="{{ !tag.img ? 'o_tag_color_' + (tag.colorIndex ? tag.colorIndex : '0') : '' }}"
+                t-attf-class="{{ !tag.img and tag.colorIndex and !tag.colorIndex.toString().startsWith('#') ? 'o_tag_color_' + tag.colorIndex : '' }}"
+                t-att-style="getTagStyle(tag)"
                 tabindex="-1"
                 t-att-data-color="tag.colorIndex"
                 t-att-aria-label="tag.title || tag.text"
