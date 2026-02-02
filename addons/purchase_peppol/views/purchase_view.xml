@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="purchase_order_form_inherit_purchase_edi_ubl_bis3_advanced_order" model="ir.ui.view">
+            <field name="name">purchase.order.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form" />
+            <field name="arch" type="xml">
+                <header position="inside">
+                    <button name="action_send_advanced_order" string="Send Order" type="object" class="oe_highlight"/>
+                    <button name="action_send_order_change" string="Send Order Change" type="object" class="oe_highlight"/>
+                    <button name="action_send_order_cancel" string="Send Order Cancellation" type="object" class="oe_highlight"/>
+                </header>
+                <div name="reminder" position="after">
+                    <field name="l10n_sg_peppol_advanced_order_state"/>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

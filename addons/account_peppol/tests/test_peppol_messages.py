@@ -17,7 +17,6 @@ from odoo.addons.mail.tests.common import MailCommon
 ID_CLIENT = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 FAKE_UUID = ['yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy',
              'zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzzzzzz']
-FILE_PATH = 'account_peppol/tests/assets'
 
 @freeze_time('2023-01-01')
 @tagged('-at_install', 'post_install')
@@ -28,6 +27,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         super().setUpClass()
         cls.env['ir.config_parameter'].sudo().set_param('account_peppol.edi.mode', 'test')
         cls.mocked_incoming_invoice_fname = 'incoming_invoice'
+        cls.file_path = 'account_peppol/tests/assets'  # Refactoring so the path can be overridden in inheriting modules
 
         cls.env.company.write({
             'country_id': cls.env.ref('base.be').id,
@@ -39,7 +39,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         edi_identification = cls.env['account_edi_proxy_client.user']._get_proxy_identification(cls.env.company, 'peppol')
         cls.private_key = cls.env['certificate.key'].create({
             'name': 'Test key PEPPOL',
-            'content': b64encode(file_open(f'{FILE_PATH}/private_key.pem', 'rb').read()),
+            'content': b64encode(file_open(f'{cls.file_path}/private_key.pem', 'rb').read()),
         })
         cls.proxy_user = cls.env['account_edi_proxy_client.user'].create({
             'id_client': ID_CLIENT,
@@ -208,8 +208,8 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                 response_content = {
                     'accounting_supplier_party': '0198:dk16356706',
                     'filename': 'test_incoming',
-                    'enc_key': file_open(f'{FILE_PATH}/enc_key', mode='rb').read(),
-                    'document': b64encode(file_open(f'{FILE_PATH}/{cls.mocked_incoming_invoice_fname}', mode='rb').read()),
+                    'enc_key': file_open(f'{cls.file_path}/encrypted_order_key', mode='rb').read(),
+                    'document': b64encode(file_open(f'{cls.file_path}/{cls.mocked_incoming_invoice_fname}', mode='rb').read()),
                     'state': 'done' if not cls.env.context.get('error') else 'error',
                     'direction': 'incoming',
                     'document_type': 'Invoice',

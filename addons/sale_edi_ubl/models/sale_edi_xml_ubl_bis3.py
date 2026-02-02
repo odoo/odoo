@@ -348,21 +348,20 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         order_vals['client_order_ref'] = tree.findtext('./{*}ID')
         order_vals['origin'] = tree.findtext('./{*}QuotationDocumentReference/{*}ID')
 
-        delivery_partner, delivery_logs = self._import_partner(
-            order.company_id,
-            **self._import_retrieve_partner_vals(tree, 'Delivery'),
-        )
-        if delivery_partner:
-            order_vals['partner_shipping_id'] = delivery_partner.id
+        delivery_logs = []
+        delivery_partner_node = tree.findtext('./{*}Delivery/{*}DeliveryParty')
+        if delivery_partner_node:
+            delivery_partner, delivery_logs = self._import_partner(
+                order.company_id,
+                **self._import_retrieve_partner_vals(tree, 'Delivery'),
+            )
+            if delivery_partner:
+                order_vals['partner_shipping_id'] = delivery_partner.id
 
         allowance_charges_line_vals, allowance_charges_logs = self._import_document_allowance_charges(tree, order, 'sale')
         lines_vals, line_logs = self._import_lines(order, tree, './{*}OrderLine/{*}LineItem', document_type='order', tax_type='sale')
         # adapt each line to sale.order.line
         for line in lines_vals:
-            line['product_uom_qty'] = line.pop('quantity')
-            # remove invoice line fields
-            line.pop('deferred_start_date', False)
-            line.pop('deferred_end_date', False)
             if not line.get('product_id'):
                 line_logs.append(_("Could not retrieve the product named: %(name)s", name=line['name']))
             if line.get('discount'):  # Exclude discounts
@@ -374,6 +373,26 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         logs += partner_logs + delivery_logs + line_logs + allowance_charges_logs
 
         return order_vals, logs
+
+    def _import_lines(self, record, tree, xpath, document_type=False, tax_type=False, qty_factor=1):
+        """ OVERRIDE of `account_edi_ubl_cii` to create linkage from order lines to their related
+            charge lines.
+        """
+        logs = []
+        lines_values = []
+        for line_tree in tree.iterfind(xpath):
+            line_values = self.with_company(record.company_id)._retrieve_line_vals(line_tree, document_type, qty_factor)
+            line_values['tax_ids'], tax_logs = self._retrieve_taxes(record, line_values, tax_type)
+            logs += tax_logs
+            if not line_values['product_uom_id']:
+                line_values.pop('product_uom_id')  # if no uom, pop it so it's inferred from the product_id
+            charge_lines_values = self._retrieve_line_charges(record, line_values, line_values['tax_ids'])
+            line_values['linked_line_ids'] = [Command.create({
+                    'order_id': record.id,
+                    **charge_line_values,
+                }) for charge_line_values in charge_lines_values]
+            lines_values.append(line_values)
+        return lines_values, logs
 
     def _import_order_ubl(self, order, file_data, new):
         # Overriding the main method to recalculate the price unit and discount
@@ -393,3 +412,10 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
             'variant_barcode': './cac:Item/cac:StandardItemIdentification/cbc:ExtendedID',
             'variant_default_code': './cac:Item/cac:SellersItemIdentification/cbc:ExtendedID',
         }
+
+    def _retrieve_line_vals(self, tree, document_type=False, qty_factor=1):
+        """Override of `account.edi.common` to adapt dictionary keys from the base method to be
+        compatible with the `sale.order.line` model."""
+        line_vals = super()._retrieve_line_vals(tree, document_type, qty_factor)
+        line_vals['product_uom_qty'] = line_vals.pop('quantity')
+        return line_vals

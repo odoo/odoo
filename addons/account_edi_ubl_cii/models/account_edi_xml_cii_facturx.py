@@ -218,9 +218,9 @@ class AccountEdiXmlCii(models.AbstractModel):
             if tax_detail_vals.get('tax_category_code') == 'K':
                 template_values['intracom_delivery'] = True
 
-        # Fixed taxes: add them as charges on the invoice lines
         for line_vals in template_values['invoice_line_vals_list']:
             line_vals['allowance_charge_vals_list'] = []
+            # Fixed taxes: add them as charges on the invoice lines
             for grouping_key, tax_detail in tax_details['tax_details_per_record'][line_vals['line']]['tax_details'].items():
                 if grouping_key['amount_type'] == 'fixed':
                     line_vals['allowance_charge_vals_list'].append({
@@ -234,6 +234,15 @@ class AccountEdiXmlCii(models.AbstractModel):
 
             # The quantity is the line.quantity since we keep the unece_uom_code!
             line_vals['quantity'] = line_vals['line'].quantity
+
+            # Line level discounts
+            if line_vals['line'].currency_id.compare_amounts(line_vals['price_discount'], 0) > 0:
+                line_vals['allowance_charge_vals_list'].append({
+                    'indicator': 'false',
+                    'amount': line_vals['price_discount'],
+                })
+
+            line_vals['quantity'] = line_vals['line'].quantity #/!\ The quantity is the line.quantity since we keep the unece_uom_code!
 
             # Invert the quantity and the gross_price_total_unit if a line has a negative price total
             if line_vals['line'].currency_id.compare_amounts(line_vals['gross_price_total_unit'], 0) == -1:

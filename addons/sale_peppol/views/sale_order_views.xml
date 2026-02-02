@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="sale_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="after">
+                <div class="alert alert-warning w-100 d-flex align-items-center gap-1"
+                    invisible="not l10n_sg_has_pending_order" role="alert">
+                    <span>This order is generated via PEPPOL advanced order.</span>
+                    <button name="action_accept_peppol_order"
+                        type="object"
+                        string="Accept"
+                        class="btn-link"
+                        style="padding: 0; vertical-align: baseline; border: none;" />
+                    <button name="action_reject_peppol_order"
+                        type="object"
+                        string="Reject"
+                        class="btn-link"
+                        style="padding: 0; vertical-align: baseline; border: none;" />
+                </div>
+                <div class="alert alert-warning w-100 d-flex align-items-center gap-1"
+                    invisible="not l10n_sg_has_pending_order_change" role="alert">
+                    <span>You have a new PEPPOL order change request.</span>
+                    <button name="action_apply_peppol_order_change"
+                        type="object"
+                        string="Apply"
+                        class="btn-link"
+                        style="padding: 0; vertical-align: baseline; border: none;" />
+                    <button name="action_reject_peppol_order_change"
+                        type="object"
+                        string="Reject"
+                        class="btn-link"
+                        style="padding: 0; vertical-align: baseline; border: none;" />
+                </div>
+                <div class="alert alert-warning w-100 d-flex align-items-center gap-1"
+                    invisible="not l10n_sg_has_pending_order_cancel" role="alert">
+                    <span>You have a new PEPPOL cancellation request.</span>
+                    <button name="action_apply_peppol_order_cancel"
+                        type="object"
+                        string="Apply"
+                        class="btn-link"
+                        style="padding: 0; vertical-align: baseline; border: none;" />
+                    <button name="action_reject_peppol_order_cancel"
+                        type="object"
+                        string="Reject"
+                        class="btn-link"
+                        style="padding: 0; vertical-align: baseline; border: none;" />
+                </div>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="EDI Trackers" name="order_lines">
+                    <field
+                        name="peppol_order_transaction_ids"
+                        mode="list"
+                    >
+                        <list
+                            string="EDI Trackerz"
+                            editable="bottom"
+                            limit="200"
+                        >
+                            <field name="sequence"/>
+                            <field name="document_type"/>
+                            <field name="state"/>
+                            <field name="attachment_id"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

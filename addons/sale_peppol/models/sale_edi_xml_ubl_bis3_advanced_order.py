@@ -1,0 +1,350 @@
+import os
+
+from lxml import etree
+from markupsafe import Markup
+
+from odoo import models
+from odoo.exceptions import UserError, ValidationError
+
+from odoo.addons.account.tools import dict_to_xml
+from odoo.addons.sale_peppol.tools import OrderResponse
+
+
+class SaleEdiXmlUbl_Bis3_AdvancedOrder(models.AbstractModel):
+    _name = 'sale.edi.xml.ubl_bis3_advanced_order'
+    _inherit = ['sale.edi.xml.ubl_bis3']
+    _description = "Sale BIS Advanced Ordering 3.0"
+
+    # -------------------------------------------------------------------------
+    # Order import common
+    # -------------------------------------------------------------------------
+
+    def _retrieve_order_vals(self, order, tree):
+        """ OVERRIDE of `sale_edi_ubl.sale.edi.xml.ubl_bis3` to retrieve advanced order values
+            from incoming order documents
+        """
+        order_vals, logs = super()._retrieve_order_vals(order, tree)
+
+        # For advanced orders, use peppol_order_id as a readonly reference to match documents.
+        order_vals['peppol_order_id'] = order_vals.pop('client_order_ref')
+
+        # Reference ID for order change and cancellation documents
+        order_ref_id = tree.findtext('.//{*}OrderReference/{*}ID')
+        if order_ref_id is not None:
+            order_vals['order_ref_id'] = order_ref_id
+
+        return order_vals, logs
+
+    def _retrieve_line_vals(self, tree, document_type=False, qty_factor=1):
+        """
+        EXTENSION of `sale.edi.xml.ubl_bis3` module. Adds 'line_item_id' which is used to identify
+        order lines when importing/exporting orders to PEPPOL advanced document.
+        """
+        xpath_dict = self._get_line_xpaths(document_type, qty_factor)
+
+        line_item_id = None
+        line_item_id_node = tree.find(xpath_dict['line_item_id'])
+        if line_item_id_node is not None:
+            line_item_id = line_item_id_node.text
+
+        return {
+            'l10n_sg_ubl_line_item_ref': line_item_id,
+            **super()._retrieve_line_vals(tree, document_type, qty_factor),
+        }
+
+    def _get_line_xpaths(self, document_type=False, qty_factor=1):
+        """OVERRIDE of `account.edi.xml.ubl_bis3` to update dictionary key used for extracting
+        document line item ID. This is crucial for advanced order to match line items to update on
+        order change request.
+        """
+        return {
+            **super()._get_line_xpaths(document_type=document_type, qty_factor=qty_factor),
+            'line_item_id': './{*}ID',
+        }
+
+    # -------------------------------------------------------------------------
+    # Order export common
+    # -------------------------------------------------------------------------
+    def _get_document_nsmap(self, vals):
+        return {
+            None: {
+                'order': "urn:oasis:names:specification:ubl:schema:xsd:Order-2",
+                'order_change': "urn:oasis:names:specification:ubl:schema:xsd:OrderChange-2",
+                'order_cancel': "urn:oasis:names:specification:ubl:schema:xsd:OrderCancellation-2",
+                'order_response_advanced': "urn:oasis:names:specification:ubl:schema:xsd:OrderResponse-2",
+            }[vals['document_type']],
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+            'ext': "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2",
+        }
+
+
+class SaleEdiXmlUbl_Bis3_OrderChange(models.AbstractModel):
+    _name = 'sale.edi.xml.ubl_bis3_order_change'
+    _inherit = ['sale.edi.xml.ubl_bis3_advanced_order']
+    _description = "Peppol Order Change transaction 3.1"
+
+    # -------------------------------------------------------------------------
+    # Order change EDI import
+    # -------------------------------------------------------------------------
+
+    def _retrieve_line_vals(self, tree, document_type=False, qty_factor=1):
+        """
+        EXTENSION of `sale.edi.xml.ubl_bis3_advanced_order` module. Adds 'line_status_code' in
+        'order change' document import. The code is used to identify whether the lines are added,
+        deleted, changed, or unchanged.
+        """
+        line_status_code = None
+        line_status_code_node = tree.find('./{*}LineStatusCode')
+        if line_status_code_node is not None:
+            line_status_code = line_status_code_node.text
+
+        return {
+            'line_status_code': line_status_code,
+            **super()._retrieve_line_vals(tree, document_type, qty_factor),
+        }
+
+    def log_order_change_diff(self, order, tree):
+        """
+        Compare the order's order line data with the tree's order line data then log the difference.
+        This is to help users to know what the incoming changes are about.
+        """
+        html_output = "<b>Received order change request via PEPPOL:</b><ul>"
+        for line_tree in tree.iterfind('./{*}OrderLine/{*}LineItem'):
+            line_vals = self._retrieve_line_vals(line_tree, 'order_change')
+            line_status_code = line_vals.pop('line_status_code')
+            if line_status_code == '1':
+                html_output += f"<li>Line added: {line_vals['name']}</li>"
+                html_output += "<ul>"
+                html_output += f"<li>Quantity: {line_vals['product_uom_qty']}</li>"
+                html_output += f"<li>Unit Price: {line_vals['price']}</li>"
+                if line_vals['discount'] != 0:
+                    html_output += f"<li>Discount {line_vals['discount']}</li>"
+                html_output += "</ul>"
+                continue
+
+            updated_line_ref = line_vals.pop('l10n_sg_ubl_line_item_ref')
+            line = order.order_line.search(
+                    [('l10n_sg_ubl_line_item_ref', '=', updated_line_ref)],
+                    limit=1,
+                )
+            if not line:
+                continue
+
+            if line_status_code == '2':  # Order line is deleted
+                html_output += f"<li>Line deleted: {line.name}</li>"
+            elif line_status_code == '3':  # Order line is changed
+                currency = order.currency_id
+
+                html_output += f"<li>Line changed: {line.name}</li>"
+                html_output += "<ul>"
+
+                if line.product_id.id != line_vals['product_id']:
+                    html_output += f"<li>Product ID: {line.product_id.id} -> {line_vals['product_id']}</li>"
+                if line.product_uom_qty != line_vals['product_uom_qty']:
+                    html_output += f"<li>Quantity: {line.product_uom_qty} -> {line_vals['product_uom_qty']}</li>"
+                if line.product_uom_id.id != line_vals['product_uom_id']:
+                    html_output += f"<li>Product UOM ID: {line.product_uom_id.id} -> {line_vals['product_uom_id']}</li>"
+                if currency.compare_amounts(line.price_unit, line_vals['price_unit']) != 0:
+                    html_output += f"<li>Unit Price: {line.price_unit} -> {line_vals['price_unit']}</li>"
+                if currency.compare_amounts(line.discount, line_vals['discount']) != 0:
+                    html_output += f"<li>Discount: {line.discount} -> {currency.round(line_vals['discount'])}</li>"
+
+                html_output += "</ul>"
+
+        html_output += "</ul>"
+        order.message_post(body=Markup(html_output))
+
+    def process_peppol_order_change(self, order, attachment):
+        """
+        Apply PEPPOL order change document to `sale_order`. Searches through the sale order's
+        PEPPOL transactions and apply the most recent order change request to the order.
+        """
+        tree = self.env['account.move']._to_files_data(attachment)[0]['xml_tree']
+        order_vals, logs = self._retrieve_order_vals(order, tree)
+        order.peppol_order_change_id = order_vals['peppol_order_id']
+
+        for order_line in order_vals['order_line']:
+            # order_vals['order_line'] is a Command.create tuple (i.e. (0, 0, values_dict))
+            # Maybe we can refactor _retrieve_order_vals > _import_lines so we can use the
+            # method outside of _retrieve_order_vals as well.
+            order_line_vals = order_line[2]
+            line_status_code = order_line_vals.pop('line_status_code', None)
+
+            if line_status_code == "1":  # Line is being added
+                order.write({'order_line': [order_line]})
+
+            elif line_status_code == "2":  # Line is being deleted
+                updated_line_ref = order_line_vals.get('l10n_sg_ubl_line_item_ref')
+                if updated_line_ref is None:
+                    continue
+                order.order_line.search(
+                    [('l10n_sg_ubl_line_item_ref', '=', updated_line_ref)],
+                    limit=1,
+                ).unlink()
+
+            elif line_status_code == "3":  # Line is being updated
+                updated_line_ref = order_line_vals.get('l10n_sg_ubl_line_item_ref')
+                if updated_line_ref is None:
+                    continue
+                line_to_update = next(filter(
+                    lambda line: line.l10n_sg_ubl_line_item_ref == updated_line_ref,
+                    order.order_line,
+                ), None)
+                if line_to_update:
+                    line_to_update['linked_line_ids'].unlink()
+                    line_to_update.write(order_line_vals)
+                else:
+                    logs.append(self.env._(
+                        "Failed to apply line changes because order line with line item reference"
+                        " %s is not found.", updated_line_ref,
+                    ))
+
+        order.message_post(body=self.env._("Applied PEPPOL order change document"))
+        order.message_post(body=Markup("<strong>%s</strong>") % self.env._("Format used to import the document: %s", self._description))
+        if logs:
+            order._create_activity_set_details(Markup("<ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % log for log in logs))
+
+
+class SaleEdiXmlUbl_Bis3_OrderCancel(models.AbstractModel):
+    _name = 'sale.edi.xml.ubl_bis3_order_cancel'
+    _inherit = ['sale.edi.xml.ubl_bis3_advanced_order']
+    _description = "Peppol Order Cancellation transaction 3.0"
+
+    # -------------------------------------------------------------------------
+    # Order cancellation EDI import
+    # -------------------------------------------------------------------------
+
+    def _retrieve_order_vals(self, order, tree):
+        order_vals, logs = super()._retrieve_order_vals(order, tree)
+        order_vals['cancellation_note'] = tree.findtext('./{*}CancellationNote')
+
+        return order_vals, logs
+
+    def process_peppol_order_cancel(self, order, attachment):
+        """
+        Apply PEPPOL order cancellation document to `sale_order`. Searches through the sale order's
+        PEPPOL transactions and apply the most recent order cancellation request to the order.
+        """
+        # Call cancellation first to check for any UserError
+        order.action_cancel()
+
+        tree = self.env['account.move']._to_files_data(attachment)[0]['xml_tree']
+        order_vals, logs = self._retrieve_order_vals(order, tree)
+        msg = "Applied PEPPOL order cancellation document"
+        if order_vals['cancellation_note']:
+            msg = f"{msg}: {order_vals['cancellation_note']}"
+
+        order.message_post(body=self.env._(msg))
+        order.message_post(body=Markup("<strong>%s</strong>") % self.env._("Format used to import the document: %s", self._description))
+        if logs:
+            order._create_activity_set_details(Markup("<ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % log for log in logs))
+
+
+class SaleEdiXmlUbl_Bis3_OrderResponseAdvanced(models.AbstractModel):
+    _name = 'sale.edi.xml.ubl_bis3_order_response_advanced'
+    _inherit = ['sale.edi.xml.ubl_bis3_advanced_order']
+    _description = "Peppol Order Response Advanced transaction 3.1"
+
+    # -------------------------------------------------------------------------
+    # Order Response Advanced EDI export
+    # -------------------------------------------------------------------------
+
+    def _get_order_response_node(self, vals, response_code):
+        if response_code not in ['AB', 'AP', 'RE']:
+            raise ValidationError(self.env._("Unknown response code %s", response_code))
+
+        self._add_sale_order_config_vals(vals)
+        self._add_sale_order_currency_vals(vals)
+
+        document_node = {}
+        self._add_sale_order_header_nodes(document_node, vals)
+        document_node['cbc:OrderResponseCode'] = {'_text': response_code}
+        self._add_sale_order_seller_supplier_party_nodes(document_node, vals)
+        self._add_sale_order_buyer_customer_party_nodes(document_node, vals)
+        self._add_sale_order_delivery_nodes(document_node, vals)
+        # TODO: Order response with code CA (Conditionally Accepted) would require cac:OrderLine
+
+        return document_node
+
+    def _add_sale_order_config_vals(self, vals):
+        super()._add_sale_order_config_vals(vals)
+        vals.update({'document_type': 'order_response_advanced'})
+
+    def _add_sale_order_header_nodes(self, document_node, vals):
+        super()._add_sale_order_header_nodes(document_node, vals)
+        sale_order = vals['sale_order']
+        document_node.update({
+            'cbc:CustomizationID': {'_text': 'urn:fdc:peppol.eu:poacc:trns:order_response_advanced:3'},
+            'cbc:ProfileID': {'_text': 'urn:fdc:peppol.eu:poacc:bis:advanced_ordering:3'},  # Move to parent (common) if used in other documents
+            'cbc:OrderResponseCode': {'_text': 'urn:fdc:peppol.eu:poacc:bis:advanced_ordering:3'},
+            'cac:OrderReference': {
+                'cbc:ID': {'_text': sale_order.peppol_order_id},
+            },
+        })
+        document_node.pop('cbc:OrderTypeCode')
+        document_node.pop('cac:ValidityPeriod')
+        document_node.pop('cac:OriginatorDocumentReference')
+
+        if sale_order.peppol_order_change_id:
+            document_node['cac:OrderChangeDocumentReference'] = {
+                'cbc:ID': {'_text': sale_order.peppol_order_change_id},
+            }
+
+    def _get_party_node(self, vals):
+        """ Override of `account.edi.xml.ubl_bis3`. Creates seller and buyer party node dict.
+        """
+        # Similar to UBL BIS3 Order export, but omitted child nodes make inheritance impractical.
+        # Logic rewritten to avoid complex overrides.
+        partner = vals['partner']
+        commercial_partner = partner.commercial_partner_id
+
+        party_node = {
+            'cac:PartyIdentification': {
+                'cbc:ID': {'_text': commercial_partner.ref},
+            },
+            'cac:PartyLegalEntity': {
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+            },
+        }
+
+        if commercial_partner.peppol_endpoint:
+            party_node['cbc:EndpointID'] = {
+                '_text': commercial_partner.peppol_endpoint,
+                'schemeID': commercial_partner.peppol_eas,
+            }
+
+        return party_node
+
+    def _add_sale_order_delivery_nodes(self, document_node, vals):
+        sale_order = vals['sale_order']
+
+        if sale_order.commitment_date:
+            date_str = sale_order.commitment_date.strftime("%Y-%m-%d")
+            time_str = sale_order.commitment_date.strftime("%H:%M:%S")
+
+            document_node['cac:Delivery'] = {
+                'cac:PromisedDeliveryPeriod': {
+                    'cbc:EndDate': {'_text': date_str},
+                    'cbc:EndTime': {'_text': time_str},
+                },
+            }
+
+    def build_order_response_xml(self, order, response_code):
+        # TODO: Create constraint on creating order response. The PEPPOL endpoint ID of buyer should
+        # be handled by order import. Since the recepient needs to have PEPPOL id to receive the
+        # order this shouldn't really be a problem, it's just nice to have
+        vals = {'sale_order': order}
+        document_node = self._get_order_response_node(vals, response_code)
+        xml_content = dict_to_xml(document_node, nsmap=self._get_document_nsmap(vals), template=OrderResponse)
+
+        xml_bytes = etree.tostring(xml_content, xml_declaration=True, encoding='UTF-8')
+        filename = "test_wopy.xml"
+        file_path = os.path.join('/home/odoo/workspace/sg-peppol-order-balance/odoo/addons/sale_peppol/tests/assets', filename)
+
+        # Write file and return its path
+        with open(file_path, 'wb') as f:
+            f.write(xml_bytes)
+
+        return xml_bytes
+        # return etree.tostring(xml_content, xml_declaration=True, encoding='UTF-8')

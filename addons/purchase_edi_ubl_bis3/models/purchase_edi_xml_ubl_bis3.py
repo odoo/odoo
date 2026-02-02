@@ -344,12 +344,15 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         order_vals['partner_ref'] = tree.findtext('./{*}ID')
         order_vals['origin'] = tree.findtext('./{*}OriginatorDocumentReference/{*}ID')
 
-        delivery_partner, delivery_logs = self._import_partner(
-            order.company_id,
-            **self._import_retrieve_partner_vals(tree, 'Delivery'),
-        )
-        if delivery_partner:
-            order_vals['dest_address_id'] = delivery_partner.id
+        delivery_logs = []
+        delivery_partner_node = tree.findtext('./{*}Delivery/{*}DeliveryParty')
+        if delivery_partner_node:
+            delivery_partner, delivery_logs = self._import_partner(
+                order.company_id,
+                **self._import_retrieve_partner_vals(tree, 'Delivery'),
+            )
+            if delivery_partner:
+                order_vals['dest_address_id'] = delivery_partner.id
 
         allowance_charges_line_vals, allowance_charges_logs = self._import_document_allowance_charges(tree, order, 'purchase')
         lines_vals, line_logs = self._import_lines(order, tree, './{*}OrderLine/{*}LineItem', document_type='order', tax_type='purchase')

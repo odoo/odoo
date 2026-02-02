@@ -689,7 +689,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _get_line_xpaths(self, document_type=False, qty_factor=1):
-        if document_type == 'order':
+        if document_type in ['order', 'order_change', 'order_cancel']:
             return {
                 **super()._get_line_xpaths(document_type=document_type, qty_factor=qty_factor),
                 'delivered_qty': ('./{*}Quantity'),
