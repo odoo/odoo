@@ -8,7 +8,7 @@ class MediaSizeOptionPlugin extends Plugin {
         builder_actions: {
             MediaSizeSliderAction,
             MediaSizeTextAction,
-            SetMediaSizeAutoAction,
+            ResetMediaSizeAction,
         },
     };
 }
@@ -62,18 +62,11 @@ export class MediaSizeTextAction extends BuilderAction {
     }
 }
 
-export class SetMediaSizeAutoAction extends BuilderAction {
-    static id = "setMediaSizeAuto";
+export class ResetMediaSizeAction extends BuilderAction {
+    static id = "resetMediaSize";
     static dependencies = ["builderActions"];
-    isApplied({ editingElement }) {
-        // The "Auto" button is active when width is auto or not set
-        return editingElement.style.width === "auto" || editingElement.style.width === "";
-    }
     apply({ editingElement }) {
         setWidth(this.dependencies.builderActions.getAction, editingElement, "auto");
-    }
-    clean({ editingElement }) {
-        setWidth(this.dependencies.builderActions.getAction, editingElement, "100%");
     }
 }
 

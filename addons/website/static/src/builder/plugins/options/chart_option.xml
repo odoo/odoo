@@ -54,7 +54,7 @@
                         action="'addColumn'"
                         className="'add_column fa fa-fw fa-plus text-success d-inline-block'"
                         title.translate="Add Dataset"
-                        type="' '"
+                        type="''"
                         preview="false"/>
                 </th>
             </tr>
@@ -82,7 +82,7 @@
                         actionParam="label_index"
                         className="'o_builder_matrix_remove_row visually-hidden-focusable text-danger fa fa-fw fa-minus'"
                         title.translate="Remove Row"
-                        type="' '"
+                        type="''"
                         preview="false"/>
                 </td>
             </tr>
@@ -93,7 +93,7 @@
                         action="'addRow'"
                         className="'add_row fa fa-fw fa-plus text-success d-inline-block'"
                         title.translate="Add Row"
-                        type="' '"
+                        type="''"
                         preview="false"/>
                 </th>
                 <t t-foreach="domState.data.datasets" t-as="dataset" t-key="dataset.key">
@@ -103,7 +103,7 @@
                             actionParam="dataset.key"
                             className="'o_builder_matrix_remove_col visually-hidden-focusable text-danger fa fa-fw fa-minus'"
                             title.translate="Remove Column"
-                            type="' '"
+                            type="''"
                             preview="false"/>
                     </td>
                 </t>

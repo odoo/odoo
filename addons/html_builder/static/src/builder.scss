@@ -207,3 +207,11 @@
     overflow-y: scroll;
     scroll-behavior: smooth;
 }
+
+.o_builder_open:has(.o_datetime_picker, .o-hb-colorpicker) {
+    .o_customize_tab {
+        button {
+            pointer-events: none;
+        }
+    }
+}

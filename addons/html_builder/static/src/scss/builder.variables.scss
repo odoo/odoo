@@ -50,7 +50,9 @@ $o-we-dropzone-size: 30px !default; // $grid-gutter-width (todo: allow to use th
 $o-we-dropzone-border-width: 2px !default;
 $o-we-dropzone-border: $o-we-dropzone-border-width dashed $o-brand-odoo !default;
 $o-we-dropzone-accent-color: $o-we-color-accent !default;
+$o-we-dropzone-accent-color-alt: lighten(mix($o-we-color-accent, $o-brand-odoo, 75%), 25%) !default;
 $o-we-dropzone-bg-color: rgba($o-we-dropzone-accent-color, .5) !default;
+$o-we-dropzone-bg-color-alt: lighten(mix($o-we-dropzone-bg-color, $o-brand-odoo, 75%), 25%) !default;
 
 $o-we-toolbar-height: 40px !default;
 $o-we-toolbar-color-accent: #018597 !default;
@@ -590,7 +592,7 @@ $o-bg-shapes: (
     border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
     border-radius: $o-we-sidebar-content-field-border-radius;
     background-color: var(--o-hb-field-input-bg, #{$o-we-sidebar-content-field-input-bg});
-    padding: 0.15rem $o-we-sidebar-content-field-clickable-spacing;
+    padding: 0.15rem $o-we-sidebar-content-field-clickable-spacing * 0.5;
     color: inherit;
 
     &:focus, &:focus-within {
