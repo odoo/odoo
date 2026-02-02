@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 from odoo.addons.hr_homeworking.models.hr_homeworking import DAYS
 
 
@@ -20,7 +20,7 @@ class HomeworkLocationWizard(models.TransientModel):
     @api.depends('date')
     def _compute_day_week_string(self):
         for record in self:
-            record.day_week_string = record.date.strftime("%A") if record.date else ''
+            record.day_week_string = tools.format_date(record.env, record.date, date_format='EEEE') if record.date else ''
 
     def delete_employee_location(self):
         employee_id, employee_location, default_location_for_current_date = self.get_employee_location_info()
