@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-from odoo import api, models
+from odoo import api, fields, models
 from odoo.tools.misc import formatLang
 
 
@@ -100,7 +100,7 @@ class AccountMove(models.Model):
             effective_date_res = max(sale_order_effective_date) if sale_order_effective_date else False
             # if multiple sale order we take the bigger effective_date
             if effective_date_res:
-                move.delivery_date = effective_date_res
+                move.delivery_date = fields.Datetime.context_timestamp(self, effective_date_res)
 
     def _get_anglo_saxon_price_ctx(self):
         ctx = super()._get_anglo_saxon_price_ctx()
