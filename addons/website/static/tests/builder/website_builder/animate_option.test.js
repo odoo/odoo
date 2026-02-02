@@ -38,6 +38,8 @@ test("visibility of animation animation=none", async () => {
     expect(".options-container [data-label='Start After']").not.toHaveCount();
     expect(".options-container [data-label='Duration']").not.toHaveCount();
 });
+
+// SHSA: Is it really needed for this test ? its mearly testing builderActions
 describe("onAppearance", () => {
     test("visibility of animation animation=onAppearance", async () => {
         const { waitSidebarUpdated } = await setupWebsiteBuilder(
@@ -46,7 +48,12 @@ describe("onAppearance", () => {
                     ${testImg}
                 </div>
             `,
-            { styleContent }
+            {
+                styleContent,
+                enableInteractions: true,
+                interactions: ["animation"],
+                interactionEditMode: true,
+            }
         );
         await contains(":iframe .test-options-target img").click();
         await waitSidebarUpdated();
@@ -75,7 +82,12 @@ describe("onAppearance", () => {
                     ${testImg}
                 </div>
             `,
-            { styleContent }
+            {
+                styleContent,
+                enableInteractions: true,
+                interactions: ["animation"],
+                interactionEditMode: true,
+            }
         );
         await contains(":iframe .test-options-target img").click();
         await waitSidebarUpdated();
@@ -104,7 +116,12 @@ describe("onAppearance", () => {
                     ${testImg}
                 </div>
             `,
-            { styleContent }
+            {
+                styleContent,
+                enableInteractions: true,
+                interactions: ["animation"],
+                interactionEditMode: true,
+            }
         );
         await contains(":iframe .test-options-target img").click();
         await waitSidebarUpdated();
@@ -133,7 +150,12 @@ describe("onAppearance", () => {
                     ${testImg}
                 </div>
             `,
-            { styleContent }
+            {
+                styleContent,
+                enableInteractions: true,
+                interactions: ["animation"],
+                interactionEditMode: true,
+            }
         );
         await contains(":iframe .test-options-target img").click();
         await waitSidebarUpdated();
@@ -157,11 +179,18 @@ describe("onAppearance", () => {
     });
 });
 test("visibility of animation animation=onScroll", async () => {
-    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `
         <div class="test-options-target">
             ${testImg}
         </div>
-    `);
+    `,
+        {
+            enableInteractions: true,
+            interactions: ["animation"],
+            interactionEditMode: true,
+        }
+    );
     await contains(":iframe .test-options-target img").click();
     await waitSidebarUpdated();
 
@@ -187,7 +216,12 @@ test("animation=onScroll should not be visible when the animation is limited", a
                     ${testImg}
                 </div>
             `,
-        { styleContent }
+        {
+            styleContent,
+            enableInteractions: true,
+            interactions: ["animation"],
+            interactionEditMode: true,
+        }
     );
     await contains(":iframe .test-options-target img").click();
     await waitSidebarUpdated();
@@ -232,11 +266,18 @@ test("visibility of animation animation=onHover", async () => {
         }
     }
 
-    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `
         <div class="test-options-target">
             ${testImg}
         </div>
-    `);
+    `,
+        {
+            enableInteractions: true,
+            interactions: ["animation"],
+            interactionEditMode: true,
+        }
+    );
     await contains(":iframe .test-options-target img").click();
     await waitSidebarUpdated();
 
@@ -275,22 +316,36 @@ test("visibility of animation animation=onHover", async () => {
     expectOnHoverOptions({ Effect: "Mirror Blur", Intensity: 1 });
 });
 test("animation=onHover should not be visible when the image is a device shape", async () => {
-    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `
         <div class="test-options-target">
             <img data-shape="html_builder/devices/iphone_front_portrait" src='${base64Img}'>
         </div>
-    `);
+    `,
+        {
+            enableInteractions: true,
+            interactions: ["animation"],
+            interactionEditMode: true,
+        }
+    );
     await contains(":iframe .test-options-target img").click();
     await waitSidebarUpdated();
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
     expect(".o-dropdown--menu [data-action-value='onHover']").not.toHaveCount();
 });
 test("animation=onHover should not be visible when the image has a wrong mimetype", async () => {
-    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `
         <div class="test-options-target">
             <img data-attachment-id="1" data-original-id="1" data-mimetype="foo/bar" src='${base64Img}'>
         </div>
-    `);
+    `,
+        {
+            enableInteractions: true,
+            interactions: ["animation"],
+            interactionEditMode: true,
+        }
+    );
     await contains(":iframe .test-options-target img").click();
     await waitSidebarUpdated();
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
