@@ -183,6 +183,8 @@ class TestLintOverrideSignatures(LintCase):
                     method = getattr(parent_class, method_name, None)
                     if callable(method):
                         break
+                else:
+                    raise LookupError(f"Unable to find callable {method_name!r} in mro of {model_name!r}")
 
                 parent_module = get_odoo_module_name(parent_class.__module__)
                 original_signature = inspect.signature(method)
