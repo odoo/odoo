@@ -6,6 +6,7 @@ import { isImageCorsProtected } from "@html_editor/utils/image";
 import { TABS } from "@html_editor/main/media/media_dialog/media_dialog_utils";
 import { WebsiteConfigAction, PreviewableWebsiteConfigAction } from "@website/builder/plugins/customize_website_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { withSequence } from "@html_editor/utils/resource";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 
 export class ProductPageOptionPlugin extends Plugin {
@@ -69,7 +70,8 @@ export class ProductPageOptionPlugin extends Plugin {
         },
         builder_options_render_context: {
             productPageOptionSelector: PRODUCT_PAGE_OPTION_SELECTOR,
-        }
+        },
+        popup_container_selectors: withSequence(5, "#product_full_description"),
     };
 
     setup() {
