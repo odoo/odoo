@@ -6452,8 +6452,8 @@ class TestStockMove(TestStockCommon):
             'picking_type_id': self.picking_type_in.id,
         })
         self.assertFalse(move1.show_lots_text)
-        self.assertFalse(move1.show_lots_m2o)
-        self.assertTrue(move1.show_quant)
+        self.assertTrue(move1.show_lots_m2o)
+        self.assertFalse(move1.show_quant)
 
     def test_recompute_stock_reference(self):
         receipt = self.env['stock.picking'].create({
