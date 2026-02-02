@@ -759,6 +759,93 @@ class TestDomainOptimize(TransactionCase):
             Domain('id', 'in', OrderedSet([categ_child.id, categ.id])),
         )
 
+    def test_condition_optimize_access(self):
+        model = self.env['test_orm.mixed']
+        records = model.create([
+            {'number': 11},
+            {'number': 22},
+            {'number': 23, 'currency_id': self.env.ref('base.USD').id},
+        ])
+        user_group = self.ref('base.group_user')
+        elevated_group = self.ref('base.group_allow_export')
+        internal_user, elevated_user, portal_user = self.env['res.users'].create([{
+            'name': 'test internal user',
+            'login': 'test_user',
+            'group_ids': [(6, 0, [user_group])],
+        }, {
+            'name': 'test elevated user',
+            'login': 'test_user_more',
+            'group_ids': [(6, 0, [user_group, elevated_group])],
+        }, {
+            'name': 'test poral user',
+            'login': 'test_portal',
+            'group_ids': [(6, 0, [self.ref('base.group_portal')])],
+        }])
+        self.env['ir.model.access'].create({
+            'name': "read",
+            'model_id': self.env['ir.model']._get_id('res.currency'),
+            'group_id': user_group,
+            'perm_write': True,
+        })
+        rules = self.env['ir.rule'].search([('model_id.name', 'in', [model._name, 'res.currency'])])
+        rules.unlink()
+        rules.create([{
+            'model_id': self.env['ir.model']._get_id(model._name),
+            'groups': [user_group],
+            'domain_force': str([('number', '>', 20)]),
+        }, {
+            'model_id': self.env['ir.model']._get_id(model._name),
+            'groups': [elevated_group],
+            'domain_force': str([]),
+        }, {
+            'model_id': self.env['ir.model']._get_id('res.currency'),
+            'groups': [user_group],
+            'domain_force': str([('name', '=', 'EUR')]),
+            'perm_read': False,
+        }, {
+            'model_id': self.env['ir.model']._get_id('res.currency'),
+            'groups': [elevated_group],
+            'domain_force': str([('name', 'in', ['EUR', 'USD'])]),
+            'perm_read': False,
+        }])
+
+        for user in (internal_user, elevated_user, portal_user):
+            for su in (False, True):
+                with self.subTest("", user=user.display_name, su=su):
+                    env = self.env(user=user, su=su)
+                    self._test_condition_optimize_access(records.with_env(env))
+
+    def _test_condition_optimize_access(self, records):
+        model = records.browse()
+        domain = Domain('id', 'access', 'read')
+        self.assertEqual(domain.optimize(model), domain)
+        domain_custom = domain.optimize_dynamic(model)
+        self.assertEqual(records.filtered_domain(domain_custom), records.sudo(False)._filtered_access('read'))
+
+        domain_full = domain_custom.optimize_full(model)
+        if model.sudo(False).has_access('read'):
+            access_rule = model.env['ir.rule'].sudo(False)._compute_domain(model._name, 'read').optimize_full(model)
+        else:
+            access_rule = Domain.FALSE
+        self.assertEqual(domain_full, access_rule)
+
+        domain = Domain('currency_id', 'access', 'write')
+        domain_full = domain.optimize_full(model)
+        currency_model = model.env['res.currency']
+        if currency_model.sudo(False).has_access('write'):
+            access_rule = model.env['ir.rule'].sudo(False)._compute_domain(currency_model._name, 'write')
+            access_rule = Domain('currency_id', 'any!', access_rule)
+            access_rule = access_rule.optimize_full(model)
+        else:
+            access_rule = Domain.FALSE
+        self.assertEqual(domain_full, access_rule)
+
+        with self.assertRaises(ValueError):
+            Domain('number', 'access', 'read').optimize_dynamic(model)
+        with self.assertRaises(AssertionError):
+            assert not model.sudo(False).env.su, 'Just raise an assert for super-user'
+            Domain('currency_id', 'access', 'blabla').optimize_dynamic(model)
+
     def test_not_optimize(self):
         # optimizations are tested with nary
         self.assertEqual(

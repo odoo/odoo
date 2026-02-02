@@ -282,16 +282,19 @@ class Domain:
     @staticmethod
     def custom(
         *,
-        to_sql: Callable[[TableSQL], SQL],
+        to_sql: Callable[[TableSQL], SQL] | None = None,
         predicate: Callable[[BaseModel], bool] | None = None,
+        optimize: Callable[[DomainCustom, BaseModel], Domain] | None = None,
     ) -> DomainCustom:
         """Create a custom domain.
 
         :param to_sql: callable(model, alias, query) that returns the SQL
+        :param optimize: callable(custom_domain, model) that runs for full
+                         optimization in order to translate to a normal domain
         :param predicate: callable(record) that checks whether a record is kept
                           when filtering
         """
-        return DomainCustom(to_sql, predicate)
+        return DomainCustom(to_sql, predicate, optimize)
 
     @staticmethod
     def AND(items: Iterable) -> Domain:
@@ -752,15 +755,17 @@ class DomainOr(DomainNary):
 
 class DomainCustom(Domain):
     """Domain condition that generates directly SQL and possibly a ``filtered`` predicate."""
-    __slots__ = ('_filtered', '_sql')
+    __slots__ = ('_filtered', '_optimize_func', '_sql')
 
     _filtered: Callable[[BaseModel], bool] | None
-    _sql: Callable[[BaseModel, str, Query], SQL]
+    _optimize_func: Callable[[DomainCustom, BaseModel], Domain] | None
+    _sql: Callable[[BaseModel, str, Query], SQL] | None
 
     def __new__(
         cls,
-        sql: Callable[[TableSQL], SQL],
+        sql: Callable[[TableSQL], SQL] | None = None,
         filtered: Callable[[BaseModel], bool] | None = None,
+        optimize_func: Callable[[DomainCustom, BaseModel], Domain] | None = None,
     ):
         """Create a new domain.
 
@@ -768,11 +773,21 @@ class DomainCustom(Domain):
                        which is used to generate the query for searching
         :param predicate: callable(record) that checks whether a record is kept
                           when filtering (``Model.filtered``)
+        :param optimize_func: callable(custom_domain, model) when set this
+                              domain is at dynamic level and can be fully
+                              optimized by that function
         """
+        assert sql or optimize_func, "Need optimization or sql function"
         self = object.__new__(cls)
         object.__setattr__(self, '_sql', sql)
         object.__setattr__(self, '_filtered', filtered)
-        object.__setattr__(self, '_opt_level', OptimizationLevel.FULL)
+        object.__setattr__(self, '_optimize_func', optimize_func)
+        object.__setattr__(self, '_opt_level', OptimizationLevel.FULL if optimize_func is None else OptimizationLevel.DYNAMIC_VALUES)
+        return self
+
+    def _optimize_step(self, model, level):
+        if level == OptimizationLevel.FULL and self._optimize_func:
+            return self._optimize_func(self, model)
         return self
 
     def _as_predicate(self, records):
@@ -790,10 +805,11 @@ class DomainCustom(Domain):
             isinstance(other, DomainCustom)
             and self._sql == other._sql
             and self._filtered == other._filtered
+            and self._optimize_func == other._optimize_func
         )
 
     def __hash__(self):
-        return hash(self._sql)
+        return hash(self._sql or self._optimize_func)
 
     def __iter__(self):
         yield self
@@ -802,6 +818,8 @@ class DomainCustom(Domain):
         return object.__repr__(self)
 
     def _to_sql(self, table: TableSQL) -> SQL:
+        assert self._sql is not None, \
+            f"Must fully optimize before generating the query {self}"
         return self._sql(table)
 
 
@@ -1792,6 +1810,46 @@ def _operator_parent_of_domain(comodel: BaseModel, parent):
             parent_ids.update(comodel._ids)
             comodel = comodel[parent].filtered(lambda p: p.id not in parent_ids)
     return parent_ids
+
+
+@operator_optimization(['access'], level=OptimizationLevel.DYNAMIC_VALUES)
+def _operator_access_rule_domain(condition, model):
+    operation = condition.value
+    field = condition._field(model)
+    if condition.field_expr != field.name:
+        condition._raise("The 'access' operator does not work for properties")
+    if field.relational and field.comodel_name:
+        comodel = model.env[field.comodel_name]
+    elif field.name == 'id':
+        comodel = model
+    else:
+        condition._raise("The 'access' operator works only for relational fields")
+        assert False, "no return above"  # for pylint
+    if not comodel.sudo(False).has_access(operation):
+        # no access to the comodel for any record
+        return Domain.FALSE
+    if comodel.sudo(False).env.su:
+        # edge-case for super user
+        return Domain.TRUE
+    comodel = comodel.sudo()
+
+    def filtered_access(record):
+        if field.name == 'id':
+            corecords = record
+        else:
+            if not record.has_access('read'):
+                return False
+            corecords = field.__get__(record.sudo())
+        return corecords.sudo(False).has_access(operation)
+
+    def optimize_sql(custom, model):
+        model = model.sudo(False)
+        # get the record rule
+        codomain = model.env['ir.rule']._compute_domain(comodel._name, operation)
+        codomain = codomain.optimize_full(comodel)
+        return DomainCondition(field.name, 'any!', codomain)
+
+    return DomainCustom(filtered=filtered_access, optimize_func=optimize_sql)
 
 
 @operator_optimization(['any', 'not any'], level=OptimizationLevel.FULL)
