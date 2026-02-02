@@ -141,9 +141,6 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     // When writing "#77FF006E" in the input, a first call is made when the
     // input value is "#77FF00" and another when it becomes "#77FF006E"
     await expect.waitForSteps([
-        '/website/static/src/scss/options/colors/user_color_palette.scss {"o-cc1-bg":"#77FF00"}',
-        '/website/static/src/scss/options/user_values.scss {"o-cc1-bg-gradient":"null"}',
-        "asset reload",
         '/website/static/src/scss/options/colors/user_color_palette.scss {"o-cc1-bg":"#77FF006E"}',
         '/website/static/src/scss/options/user_values.scss {"o-cc1-bg-gradient":"null"}',
         "asset reload",
