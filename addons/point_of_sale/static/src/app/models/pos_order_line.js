@@ -396,10 +396,17 @@ export class PosOrderline extends Base {
             ...customValues,
         };
         if (order.fiscal_position_id) {
+            const originalTaxes = values.tax_ids;
             values.tax_ids = getTaxesAfterFiscalPosition(
-                values.tax_ids,
+                originalTaxes,
                 order.fiscal_position_id,
                 order.models
+            );
+            values.price_unit = accountTaxHelpers.adapt_price_unit_to_another_taxes(
+                values.price_unit,
+                product,
+                originalTaxes,
+                values.tax_ids
             );
         }
         return values;
