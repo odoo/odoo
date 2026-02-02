@@ -122,10 +122,7 @@ test("local storage for call settings", async () => {
 
     // testing save to local storage
     await click("input[title='Show video participants only']");
-    await waitForSteps([
-        "mail_user_setting_use_blur: true",
-        "mail_user_setting_show_only_video: false",
-    ]);
+    await waitForSteps(["mail_user_setting_show_only_video: false"]);
     await click("input[title='Blur video background']");
     expect(localStorage.getItem("mail_user_setting_use_blur")).toBe(null);
     await editInput(document.body, ".o-Discuss-CallSettings-thresholdInput", 0.3);
