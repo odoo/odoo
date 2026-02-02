@@ -23,7 +23,7 @@ const composerPatch = {
     },
     get placeholder() {
         if (this.displayNextLivechatHint() && this.props.composer.isFocused) {
-            return _t("Tab to next livechat");
+            return _t("Tab to next live chat");
         }
         return super.placeholder;
     },

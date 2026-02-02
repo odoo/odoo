@@ -69,7 +69,7 @@ test("Last operator leaving ends the livechat", async () => {
             [Object.values(getService("mail.store")["mail.thread"].records).at(-1).id],
         ])
     );
-    await contains("span", { text: "This livechat conversation has ended" });
+    await contains("span", { text: "This live chat conversation has ended" });
     await contains(".o-mail-Composer-input", { count: 0 });
     await click("[title*='Close Chat Window']");
     await contains("p", { text: "Did we correctly answer your question?" }); // shows immediately feedback

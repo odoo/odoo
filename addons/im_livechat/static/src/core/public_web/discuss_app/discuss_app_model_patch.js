@@ -59,7 +59,7 @@ patch(DiscussApp.prototype, {
                     hideWhenEmpty: true,
                     icon: "fa fa-commenting-o",
                     id: `im_livechat.category_default`,
-                    name: _t("Livechat"),
+                    name: _t("Live Chat"),
                     sequence: 21,
                 };
             },

@@ -97,8 +97,8 @@ export class NewContentSystrayItem extends Component {
                     moduleXmlId: "base.module_website_livechat",
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: "/website_livechat/static/description/icon.png",
-                    title: _t("Livechat Widget"),
-                    description: _t("Add a livechat widget"),
+                    title: _t("Live Chat Widget"),
+                    description: _t("Add a live chat widget"),
                 },
             ],
         });
