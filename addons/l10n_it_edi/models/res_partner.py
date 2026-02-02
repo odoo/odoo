@@ -223,3 +223,10 @@ class ResPartner(models.Model):
             return 'it_edi_xml'
         else:
             return res
+
+    def _create_parent_from_name(self, parent_name, additional_values=None):
+        parent_company = super()._create_parent_from_name(parent_name=parent_name, additional_values=additional_values)
+        if parent_company:
+            it_values = self._convert_fields_to_values(('l10n_it_codice_fiscale', 'l10n_it_pa_index'))
+            parent_company.update(it_values)
+        return parent_company
