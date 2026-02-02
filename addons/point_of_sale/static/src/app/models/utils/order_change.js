@@ -1,4 +1,5 @@
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
+import { _t } from "@web/core/l10n/translation";
 const CONSOLE_COLOR = "#F5B427";
 
 export const getStrNotes = (note) => {
@@ -141,6 +142,7 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                 (oldChanges[relatedKey].note !== note ||
                     oldChanges[relatedKey].customer_note !== customerNote);
 
+            const trackingStr = orderline.product_id.tracking == "lot" ? _t("Lot:") : _t("SN:");
             const lineDetails = {
                 uuid: orderline.uuid,
                 name: orderline.getFullProductName(),
@@ -158,6 +160,7 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                 pos_categ_sequence: product.pos_categ_ids[0]?.sequence ?? 0,
                 display_name: product.display_name,
                 group: receiptLineGrouper.getGroup(orderline),
+                pack_lot_lines: orderline.pack_lot_ids?.map((l) => `${trackingStr} ${l.lot_name}`),
             };
 
             if (quantityDiff) {

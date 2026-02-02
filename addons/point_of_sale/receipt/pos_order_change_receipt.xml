@@ -80,6 +80,11 @@
                         <div class="text-normal">- <t t-out="name" /></div>
                     </t>
                 </div>
+                <div t-if="line.get('pack_lot_lines') and len(line['pack_lot_lines'])" class="ps-5">
+                    <t t-foreach="line['pack_lot_lines']" t-as="name">
+                        <div class="text-normal">• <t t-out="name" /></div>
+                    </t>
+                </div>
                 <div t-if="line.get('note')" class="text-italic">
                     <t t-out="line['note']"/>
                 </div>
