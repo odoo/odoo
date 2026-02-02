@@ -1,6 +1,6 @@
 <templates xml:space="preserve">
     <span t-name="mail.MailActivityListRescheduleDropdown">
-        <Dropdown>
+        <Dropdown t-if="props.record.data.can_write">
             <button class="btn btn-link p-0 text-dark" type="button">
                 <i class="fa fa-calendar o_button_icon"/> <span class="o_dropdown_title">Reschedule</span>
             </button>

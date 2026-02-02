@@ -56,7 +56,7 @@
                             </group>
                             <field name="note" class="oe-bordered-editor embedded-editor-height-4" placeholder="Log a note..." widget="html_mail" />
                         </group>
-                        <div role="alert" class="alert alert-danger mb8" invisible="not has_error">
+                        <div role="alert" class="alert alert-danger mb8" invisible="not (has_error and error)">
                             <field name="error"/>
                         </div>
                         <div role="alert" class="alert alert-warning mb8" invisible="not has_warning">

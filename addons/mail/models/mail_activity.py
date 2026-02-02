@@ -111,7 +111,7 @@ class MailActivity(models.Model):
     mail_template_ids = fields.Many2many(related='activity_type_id.mail_template_ids', readonly=True)
     chaining_type = fields.Selection(related='activity_type_id.chaining_type', readonly=True)
     # access
-    can_write = fields.Boolean(compute='_compute_can_write') # used to hide buttons if the current user has no access
+    can_write = fields.Boolean(compute='_compute_can_write')  # used to hide buttons if the current user has no write access
     active = fields.Boolean(default=True)
 
     # if model: valid res_id
@@ -181,9 +181,16 @@ class MailActivity(models.Model):
 
     @api.depends('res_model', 'res_id', 'user_id')
     def _compute_can_write(self):
-        valid_records = self._filtered_access('write')
         for record in self:
-            record.can_write = record in valid_records
+            record.can_write = record.user_id == self.env.user
+        for model, data in self._classify_by_model().items():
+            filtered_records = self.env[model].browse(data['record_ids'])._filtered_access('write')
+            if isinstance(filtered_records, tuple):
+                filtered_records = filtered_records[0]
+            valid_records = set(filtered_records.ids)
+            for activity in data['activities']:
+                if not activity.can_write:
+                    activity.can_write = activity.res_id in valid_records
 
     @api.onchange('activity_type_id')
     def _onchange_activity_type_id(self):
