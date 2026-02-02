@@ -19,3 +19,16 @@ registerThreadAction("unstar-all", {
     sequence: 2,
     name: _t("Unstar all"),
 });
+registerThreadAction("inbox-filters", {
+    condition: ({ owner, store, thread }) =>
+        store.self_user?.notification_type === "inbox" &&
+        thread?.model === "mail.box" &&
+        !owner.isDiscussSidebarChannelActions,
+    dropdown: true,
+    dropdownTemplate: "mail.MailboxesSelection",
+    dropdownPosition: "bottom-end",
+    sequence: 10,
+    sequenceGroup: 20,
+    icon: "fa fa-fw fa-filter",
+    name: _t("Change Mailbox"),
+});

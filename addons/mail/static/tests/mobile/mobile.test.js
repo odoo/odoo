@@ -41,7 +41,7 @@ test("auto-select 'Inbox' when discuss had channel as active thread", async () =
     await contains(".o-mail-MessagingMenu-tab.active:text('Channels')");
     await click("button:text('Inbox')");
     await contains(".o-mail-MessagingMenu-tab.active:text('Inbox')");
-    await contains(".btn-secondary.active:text('Inbox')"); // in header
+    await contains(".o-mail-DiscussContent-threadName", { value: "Unread" });
 });
 
 test("show loading on initial opening", async () => {

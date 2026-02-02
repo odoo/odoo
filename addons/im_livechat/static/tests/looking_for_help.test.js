@@ -208,7 +208,7 @@ test("Hide 'help already received' notification when channel is not visible", as
     canRespondDeferred = new Deferred();
     await click("button[name='join-channel']");
     await click(".o-mail-DiscussSidebar-item", { text: "Inbox" });
-    await contains(".o-mail-DiscussContent-threadName[title='Inbox']");
+    await contains(".o-mail-DiscussContent-threadName[title='Unread']");
     canRespondDeferred.resolve();
     await tick();
     await expect.waitForSteps([]);

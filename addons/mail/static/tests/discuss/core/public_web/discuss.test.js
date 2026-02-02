@@ -27,7 +27,7 @@ test("open channel in discuss from push notification", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss("mail.box_inbox");
-    await contains(".o-mail-DiscussContent-threadName[title='Inbox']");
+    await contains(".o-mail-DiscussContent-threadName[title='Unread']");
     browser.navigator.serviceWorker.dispatchEvent(
         new MessageEvent("message", {
             data: { action: "OPEN_CHANNEL", data: { id: channelId } },

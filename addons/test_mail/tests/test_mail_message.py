@@ -114,14 +114,14 @@ class TestMessageHelpersRobustness(MailCommon, HttpCase):
         p2_notifications.is_read = False
 
         self.authenticate(self.user_employee_2.login, self.user_employee_2.login)
-        result = self.make_jsonrpc_request("/mail/inbox/messages", {})['data']
+        result = self.make_jsonrpc_request("/mail/mailbox/messages", {"mailbox_id": "inbox"})['data']
         self.assertEqual(
             {r['thread']['id'] for r in result['mail.message']}, set(self.test_records_simple.ids),
             'Currently reading message on missing record, crash avoided'
         )
         p2_notifications.with_user(self.user_employee_2).mail_message_id.set_message_done()
 
-        result = self.make_jsonrpc_request("/mail/history/messages", {})['data']
+        result = self.make_jsonrpc_request("/mail/mailbox/messages", {"mailbox_id": "history"})['data']
         self.assertEqual(
             {r['thread']['id'] for r in result['mail.message']}, set(self.test_records_simple.ids),
             'Currently reading message on missing record, crash avoided'

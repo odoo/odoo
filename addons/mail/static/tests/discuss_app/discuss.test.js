@@ -74,7 +74,7 @@ test("sanity check", async () => {
     await waitStoreFetch(["failures", "systray_get_activities", "init_messaging"]);
     await openDiscuss("mail.box_inbox");
     await waitStoreFetch(["channels_as_member"], {
-        stepsAfter: ['/mail/inbox/messages - {"fetch_params":{"limit":30}}'],
+        stepsAfter: ['/mail/mailbox/messages - {"mailbox_id":"inbox","fetch_params":{"limit":30}}'],
     });
     await contains(".o-mail-DiscussSidebar");
     await contains("h4:contains('Congratulations, your inbox is empty')");
@@ -615,8 +615,6 @@ test("basic rendering: sidebar", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebar button:text('Inbox')");
-    await contains(".o-mail-DiscussSidebar button:text('Starred messages')");
-    await contains(".o-mail-DiscussSidebar button:text('History')");
     await contains(".o-mail-DiscussSidebarCategory", { count: 2 });
     await contains(".o-mail-DiscussSidebarCategory-channel:text('Channels')");
     await contains(".o-mail-DiscussSidebarCategory-chat:text('Direct messages')");
@@ -661,17 +659,18 @@ test("channel deletion fallbacks to no conversation selected", async () => {
 
 test("sidebar: change active", async () => {
     const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const LAST_DISCUSS_ACTIVE_ID_LS = makeRecordFieldLocalId(DiscussApp.localId(), "lastActiveId");
     await start();
     await openDiscuss("mail.box_inbox");
     await contains("button.o-active:text('Inbox')");
-    await contains("button:not(.o-active):text('Starred messages')");
-    await click("button:text('Starred messages')");
+    await contains("button:not(.o-active):text('General')");
+    await click("button:text('General')");
     await contains("button:not(.o-active):text('Inbox')");
-    await contains("button.o-active:text('Starred messages')");
+    await contains("button.o-active:text('General')");
     expect(browser.localStorage.getItem(LAST_DISCUSS_ACTIVE_ID_LS)).toBe(
-        toRawValue("mail.box_starred")
+        toRawValue("discuss.channel_1")
     );
 });
 
@@ -744,8 +743,9 @@ test("initially load messages from inbox", async () => {
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
-    onRpcBefore("/mail/inbox/messages", (args) => {
+    onRpcBefore("/mail/mailbox/messages", (args) => {
         expect.step("/discuss/inbox/messages");
+        expect(args.mailbox_id).toBe("inbox");
         expect(args.fetch_params.limit).toBe(30);
     });
     await start();
@@ -762,14 +762,16 @@ test("default active id on mailbox", async () => {
 
 test("basic top bar rendering", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss("mail.box_inbox");
     await contains("button:disabled:text('Mark all read')");
-    await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
-    await click("button:text('Starred messages')");
+    await contains(".o-mail-DiscussContent-threadName", { value: "Unread" });
+    await click("button[title='Change Mailbox']");
+    await click(".o-dropdown-item:text('Starred')");
     await contains("button:disabled:text('Unstar all')");
-    await contains(".o-mail-DiscussContent-threadName", { value: "Starred messages" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "Starred" });
     await click(".o-mail-DiscussSidebarChannel-itemName:text('General')");
     await contains(".o-mail-DiscussContent-threadName", { value: "General" });
     await contains(".o-mail-DiscussContent-header button", { count: 8 });
@@ -997,17 +999,17 @@ test('messages marked as read move to "History" mailbox', async () => {
     ]);
     await start();
     await openDiscuss("mail.box_history");
-    await contains("button.o-active:text('History')");
     await contains(".o-mail-Thread h4:text('No history messages')");
-    await click("button:has(:text('Inbox'))");
+    await click("button[title='Change Mailbox']");
+    await click(".o-dropdown-item:text('Unread')");
     await contains("button.o-active:has(:text('Inbox'))");
     await contains(".o-mail-Thread h4:text('Congratulations, your inbox is empty')", { count: 0 });
     await contains(".o-mail-Thread .o-mail-Message", { count: 2 });
     await click("button:text('Mark all read')");
     await contains("button.o-active:has(:text('Inbox'))");
     await contains(".o-mail-Thread h4:text('Congratulations, your inbox is empty')");
-    await click("button:text('History')");
-    await contains("button.o-active:text('History')");
+    await click("button[title='Change Mailbox']");
+    await click(".o-dropdown-item:text('Read')");
     await contains(".o-mail-Thread h4:text('No history messages')", { count: 0 });
     await contains(".o-mail-Thread .o-mail-Message", { count: 2 });
 });
@@ -1039,18 +1041,17 @@ test('mark a single message as read should only move this message to "History" m
     ]);
     await start();
     await openDiscuss("mail.box_history");
-    await contains("button.o-active:text('History')");
     await contains(".o-mail-Thread h4:text('No history messages')");
-    await click("button:has(:text('Inbox'))");
-    await contains("button.o-active:has(:text('Inbox'))");
+    await click("button[title='Change Mailbox']");
+    await click(".o-dropdown-item:text('Unread')");
     await contains(".o-mail-Message", { count: 2 });
     await click("[title='Mark as Read']", {
         parent: [".o-mail-Message:has(:text('not empty 1'))"],
     });
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-content:has(:text('not empty 2'))");
-    await click("button:text('History')");
-    await contains("button.o-active:text('History')");
+    await click("button[title='Change Mailbox']");
+    await click(".o-dropdown-item:text('Read')");
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-content:has(:text('not empty 1'))");
 });
@@ -1074,7 +1075,8 @@ test('all messages in "Inbox" in "History" after marked all as read', async () =
     await contains(".o-mail-Message", { count: 30 });
     await click("button:text('Mark all read')");
     await contains(".o-mail-Message", { count: 0 });
-    await click("button:text('History')");
+    await click("button[title='Change Mailbox']");
+    await click(".o-dropdown-item:text('Read')");
     await contains(".o-mail-Message", { count: 30 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-Thread", 0);
@@ -1444,7 +1446,7 @@ test("new message in tab title has precedence over action name", async () => {
     const pyEnv = await startServer();
     patchWithCleanup(document, {
         set title(newTitle) {
-            if (newTitle?.includes("Inbox")) {
+            if (newTitle?.includes("Unread")) {
                 expect.step(newTitle);
             }
         },
@@ -1460,8 +1462,8 @@ test("new message in tab title has precedence over action name", async () => {
     });
     await start();
     await openDiscuss("mail.box_inbox");
-    await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" }); // wait for action name being Inbox
-    await expect.waitForSteps(["Inbox"]);
+    await contains(".o-mail-DiscussContent-threadName", { value: "Unread" }); // wait for action name being Inbox
+    await expect.waitForSteps(["Unread"]);
     // simulate receiving a new message in chat 1 with odoo out-of-focused
     await withUser(bobUserId, () =>
         rpc("/mail/message/post", {
@@ -1470,14 +1472,14 @@ test("new message in tab title has precedence over action name", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await expect.waitForSteps(["(1) Inbox"]);
+    await expect.waitForSteps(["(1) Unread"]);
 });
 
 test("out-of-focus notif takes new inbox messages into account", async () => {
     const pyEnv = await startServer();
     patchWithCleanup(document, {
         set title(newTitle) {
-            if (newTitle === "(1) Inbox") {
+            if (newTitle === "(1) Unread") {
                 expect.step(newTitle);
             }
         },
@@ -1489,7 +1491,7 @@ test("out-of-focus notif takes new inbox messages into account", async () => {
     await start();
     await waitStoreFetch("init_messaging");
     await openDiscuss("mail.box_inbox");
-    await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" }); // wait for action name being Inbox
+    await contains(".o-mail-DiscussContent-threadName", { value: "Unread" }); // wait for action name being Inbox
     // simulate receiving a new needaction message with odoo out-of-focused
     const adminId = serverState.partnerId;
     await withUser(userId, () =>
@@ -1504,14 +1506,14 @@ test("out-of-focus notif takes new inbox messages into account", async () => {
         })
     );
     await contains(".o-mail-DiscussSidebar-item:has(.badge:contains(1)):has(:text('Inbox'))");
-    await expect.waitForSteps(["(1) Inbox"]);
+    await expect.waitForSteps(["(1) Unread"]);
 });
 
 test("out-of-focus notif on needaction message in group chat contributes only once", async () => {
     const pyEnv = await startServer();
     patchWithCleanup(document, {
         set title(newTitle) {
-            if (newTitle === "(1) Inbox") {
+            if (newTitle === "(1) Unread") {
                 expect.step(newTitle);
             }
         },
@@ -1530,7 +1532,7 @@ test("out-of-focus notif on needaction message in group chat contributes only on
     await start();
     await waitStoreFetch("init_messaging");
     await openDiscuss("mail.box_inbox");
-    await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" }); // wait for action name being Inbox
+    await contains(".o-mail-DiscussContent-threadName", { value: "Unread" }); // wait for action name being Inbox
     // simulate receiving a new needaction message with odoo out-of-focused
     const adminId = serverState.partnerId;
     await withUser(userId, () =>
@@ -1548,7 +1550,7 @@ test("out-of-focus notif on needaction message in group chat contributes only on
     await contains(
         ".o-mail-DiscussSidebar-item:has(.badge:contains(1)):has(:text('Mitchell Admin and Dumbledore'))"
     );
-    await expect.waitForSteps(["(1) Inbox"]);
+    await expect.waitForSteps(["(1) Unread"]);
 });
 
 test("inbox notifs shouldn't play sound nor open chat bubble", async () => {
@@ -1928,10 +1930,11 @@ test("select another mailbox", async () => {
     await openDiscuss();
     await contains(".o-mail-Discuss");
     await click("button:contains('Inbox')");
-    await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
-    await click("button:text('Starred messages')");
+    await contains(".o-mail-DiscussContent-threadName", { value: "Unread" });
+    await click("button[title='Change Mailbox']");
+    await click(".o-dropdown-item:text('Starred')");
     await contains("button:disabled:text('Unstar all')");
-    await contains(".o-mail-DiscussContent-threadName", { value: "Starred messages" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "Starred" });
 });
 
 test('auto-select "Inbox nav bar" when discuss had inbox as active thread', async () => {
@@ -1941,9 +1944,8 @@ test('auto-select "Inbox nav bar" when discuss had inbox as active thread', asyn
     await start();
     await openDiscuss();
     await click("button:contains('Inbox')");
-    await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "Unread" });
     await contains(".o-mail-MessagingMenu-navbar button.active:text('Inbox')");
-    await contains("button.active.o-active:text('Inbox')");
     await contains("h4:text('Congratulations, your inbox is empty')");
 });
 
@@ -2555,7 +2557,7 @@ test("Read of unread chat where new message is deleted should mark as read", asy
 test("do not show control panel without breadcrumbs", async () => {
     await start();
     await openDiscuss("mail.box_inbox");
-    await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
+    await contains(".o-mail-DiscussContent-threadName", { value: "Unread" });
     await contains(".o_control_panel", { count: 0 });
     await openFormView("res.partner", serverState.partnerId);
     await openDiscuss();
