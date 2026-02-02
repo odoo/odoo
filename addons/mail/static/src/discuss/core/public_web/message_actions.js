@@ -2,8 +2,8 @@ import { registerMessageAction } from "@mail/core/common/message_actions";
 import { _t } from "@web/core/l10n/translation";
 
 registerMessageAction("create-or-view-thread", {
-    condition: ({ message, store, thread }) =>
-        message.thread?.eq(thread) &&
+    condition: ({ channel, message, store }) =>
+        message.channel_id?.eq(channel) &&
         message.channel_id?.hasSubChannelFeature &&
         store.self_user?.share === false,
     icon: "fa fa-comments-o",
