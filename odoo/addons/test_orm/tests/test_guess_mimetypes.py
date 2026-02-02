@@ -152,6 +152,12 @@ class MimeGuessingCases:
             'application/octet-stream',
         )
 
+    def test_bytearray(self):
+        self.assertEqual(
+            self.guess_mimetype(bytearray((TEST_FOLDER / 'file.png').read_bytes())),
+            'image/png',
+        )
+
 
 @tagged('at_install', '-post_install')
 class TestMimeGuessingOdoo(BaseCase, MimeGuessingCases):
