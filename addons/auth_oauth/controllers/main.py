@@ -153,7 +153,7 @@ class OAuthController(Controller):
             resp.autocorrect_location_header = False
 
             # Since /web is hardcoded, verify user has right to land on it
-            if urllib3.parse_url(resp.location).path == '/web' and not request.env.user._is_internal():
+            if urllib3.util.parse_url(resp.location).path == '/web' and not request.env.user._is_internal():
                 resp.location = '/'
             return resp
         except AttributeError:  # TODO juc master: useless since ensure_db()
