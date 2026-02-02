@@ -21,7 +21,8 @@ export function uuidv4() {
  * @returns {string}
  */
 export function deduceUrl(url) {
-    const { protocol } = window.location;
+    const protocol = odoo.use_lna ? "http:" : window.location.protocol;
+    url = odoo.use_lna ? url.replace(/^(\d+)-(\d+)-(\d+)-(\d+).*/, "$1.$2.$3.$4") : url;
     if (!url.includes("//")) {
         url = `${protocol}//${url}`;
     }
