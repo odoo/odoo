@@ -24,6 +24,37 @@
         width: auto;
     }
 
+    // Rounded arrows (default selected)
+    .o_carousel_arrow {
+        border-radius: $border-radius-pill;
+        background-color: $carousel-dark-indicator-active-bg;
+        color: $carousel-control-color;
+    }
+
+    &.o_light_arrows, &.o_default_arrows {
+        .o_carousel_arrow {
+            filter: $carousel-dark-control-icon-filter;
+        }
+    }
+
+    &.o_default_arrows {
+        .o_carousel_arrow {
+            background: none;
+        }
+
+        &.o_light_arrows .o_carousel_arrow {
+            filter: none;
+        }
+    }
+
+    &.o_boxed_arrows .o_carousel_arrow {
+        border-radius: $border-radius;
+    }
+
+    &.o_hidden_arrows .o_carousel_arrow {
+        display: none;
+    }
+
     &:where(:not(.o_carousel_multi_items)) > :where(:not(.container-fluid)) {
         .s_dynamic_snippet_title_aside + .s_dynamic_snippet_content {
             .s_dynamic_snippet_arrows {
@@ -37,13 +68,21 @@
     }
 
     @include media-breakpoint-up(md) {
-        &:where(:not([class*="o_arrows_"])){
+        --o-DynamicCarousel__arrowPrev-offset: -50% /* rtl: 50% */;
+        --o-DynamicCarousel__arrowNext-offset: 50% /* rtl: -50% */;
+
+        &.o_default_arrows {
+            --o-DynamicCarousel__arrowPrev-offset: -100% /* rtl: 100% */;
+            --o-DynamicCarousel__arrowNext-offset: 100% /* rtl: -100% */;
+        }
+
+        &:where(:not([class*="o_arrows_"])) {
             .carousel-control-prev {
-                transform: translateX(-50%);
+                transform: translateX(var(--o-DynamicCarousel__arrowPrev-offset));
             }
 
             .carousel-control-next {
-                transform: translateX(50%);
+                transform: translateX(var(--o-DynamicCarousel__arrowNext-offset));
             }
         }
 
