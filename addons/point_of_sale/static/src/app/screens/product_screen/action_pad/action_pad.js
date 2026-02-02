@@ -14,6 +14,7 @@ export class ActionpadWidget extends Component {
         actionToTrigger: Function,
         showActionButton: { type: Boolean, optional: true },
         fastValidate: { type: Function, optional: true },
+        actionBtnClass: { type: String, optional: true },
     };
     static defaultProps = {
         showActionButton: true,
