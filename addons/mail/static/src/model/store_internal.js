@@ -4,7 +4,7 @@
 import { htmlEscape, markup, toRaw } from "@odoo/owl";
 import { RecordInternal } from "./record_internal";
 import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
-import { IS_DELETED_SYM, isCommand, isMany } from "./misc";
+import { IS_DELETED_SYM, isCommand, isMany, normalizeManyCommands } from "./misc";
 import { browser } from "@web/core/browser/browser";
 import { parseRawValue } from "@mail/utils/common/local_storage";
 
@@ -243,6 +243,9 @@ export class StoreInternal extends RecordInternal {
             Object.getOwnPropertySymbols(vals).map((sym) => [sym, vals[sym]])
         );
         for (const [fieldName, value] of fieldEntries) {
+            const valueNormalized = isMany(record.Model, fieldName)
+                ? normalizeManyCommands(value)
+                : value;
             if (record.Model._.fieldsLocalStorage.has(fieldName)) {
                 // should immediately write in local storage, for immediately correct next compute
                 if (!this.isUpdatingFromStorageEvent) {
@@ -250,14 +253,14 @@ export class StoreInternal extends RecordInternal {
                     if (value === record._.fieldsDefault.get(fieldName)) {
                         lse.remove();
                     } else {
-                        lse.set(value);
+                        lse.set(valueNormalized);
                     }
                 }
             }
             if (!record.Model._.fields.get(fieldName) || record.Model._.fieldsAttr.get(fieldName)) {
-                this.updateAttr(record, fieldName, value);
+                this.updateAttr(record, fieldName, valueNormalized);
             } else {
-                this.updateRelation(record, fieldName, value);
+                this.updateRelation(record, fieldName, valueNormalized);
             }
         }
     }
@@ -280,38 +283,32 @@ export class StoreInternal extends RecordInternal {
      * @param {any} value
      */
     updateRelationMany(recordList, value) {
-        if (isCommand(value)) {
-            for (const [cmd, cmdData] of value) {
-                if (Array.isArray(cmdData)) {
-                    for (const item of cmdData) {
-                        if (cmd === "ADD") {
-                            recordList.add(item);
-                        } else if (cmd === "ADD.noinv") {
-                            recordList._.addNoinv(recordList, item);
-                        } else if (cmd === "DELETE.noinv") {
-                            recordList._.deleteNoinv(recordList, item);
-                        } else {
-                            recordList.delete(item);
-                        }
-                    }
+        for (const [cmd, cmdData] of value) {
+            const normalizedData = Array.isArray(cmdData) ? cmdData : [cmdData];
+            if (cmd === "REPLACE") {
+                if (!cmdData.length) {
+                    recordList.clear();
                 } else {
-                    if (cmd === "ADD") {
-                        recordList.add(cmdData);
-                    } else if (cmd === "ADD.noinv") {
-                        recordList._.addNoinv(recordList, cmdData);
-                    } else if (cmd === "DELETE.noinv") {
-                        recordList._.deleteNoinv(recordList, cmdData);
-                    } else {
-                        recordList.delete(cmdData);
-                    }
+                    recordList._.assign(recordList, normalizedData);
+                }
+                continue;
+            }
+            for (const item of normalizedData) {
+                switch (cmd) {
+                    case "ADD":
+                        recordList.add(item);
+                        break;
+                    case "ADD.noinv":
+                        recordList._.addNoinv(recordList, item);
+                        break;
+                    case "DELETE":
+                        recordList.delete(item);
+                        break;
+                    case "DELETE.noinv":
+                        recordList._.deleteNoinv(recordList, item);
+                        break;
                 }
             }
-        } else if ([null, false, undefined].includes(value)) {
-            recordList.clear();
-        } else if (!Array.isArray(value)) {
-            recordList._.assign(recordList, [value]);
-        } else {
-            recordList._.assign(recordList, value);
         }
     }
     /**

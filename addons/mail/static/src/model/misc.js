@@ -27,6 +27,45 @@ export function OR(...args) {
 export function isCommand(data) {
     return ["ADD", "DELETE", "ADD.noinv", "DELETE.noinv"].includes(data?.[0]?.[0]);
 }
+
+/**
+ * Normalize a list of many commands from the server. `REPLACE` commands
+ * are returned as a raw list, whereas `ADD` and `DELETE commands are
+ * wrapped in a `[mode, value]` tuple. This function converts all
+ * commands into a consistent `[(mode, value), ...]` format, making it
+ * easier to process them.
+ *
+ * @param {Array|Object} cmdList Array of commands from the server; elements
+ * can be either raw ID lists (for `REPLACE`) or [mode, value] tuples.
+ * Can also be an object, in which case it should be interpreted as a replace
+ * command.
+ * @returns {Array<[string, Object|Object[]]>} Normalized list of `[mode, value]` tuples.
+ */
+export function normalizeManyCommands(cmdList) {
+    cmdList = Array.isArray(cmdList) ? cmdList : [cmdList];
+    const formattedCmdList = [];
+    let currentReplaceValues;
+    for (const cmdOrValue of cmdList) {
+        if (!Array.isArray(cmdOrValue)) {
+            currentReplaceValues ??= [];
+            if (cmdOrValue) {
+                // Handle falsy values, which must be interpreted as "clear".
+                currentReplaceValues.push(cmdOrValue);
+            }
+            continue;
+        }
+        if (currentReplaceValues) {
+            formattedCmdList.push(["REPLACE", currentReplaceValues]);
+            currentReplaceValues = null;
+        }
+        formattedCmdList.push(cmdOrValue);
+    }
+    if (currentReplaceValues) {
+        formattedCmdList.push(["REPLACE", currentReplaceValues]);
+    }
+    return formattedCmdList.length ? formattedCmdList : [["REPLACE", []]];
+}
+
 /**
  * @param {typeof import("./record").Record} Model
  * @param {string} fieldName

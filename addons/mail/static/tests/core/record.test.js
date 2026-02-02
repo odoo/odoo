@@ -1589,3 +1589,22 @@ test("Record exists is reactive", async () => {
     thread.delete();
     await expect.waitForSteps(["thread does not exist"]);
 });
+
+test("Can insert mixed up many commands", async () => {
+    (class Message extends Record {
+        static id = "id";
+        id;
+    }).register(localRegistry);
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        messages = fields.Many("Message");
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert("General");
+    store.Thread.insert({
+        name: "General",
+        messages: [{ id: 1 }, { id: 2 }, ["ADD", [{ id: 3 }, { id: 4 }]], ["DELETE", [{ id: 4 }]]],
+    });
+    expect(thread.messages.map((msg) => msg.id).sort()).toEqual([1, 2, 3]);
+});
