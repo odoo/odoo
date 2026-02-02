@@ -566,7 +566,7 @@ class IrActionsReport(models.Model):
                     '_trace_disable': True,
                 })
                 if temp_session.uid:
-                    temp_session._update_session_token(self.env)
+                    temp_session.__.update_session_token(self.env)
                 root.session_store.save(temp_session)
                 stack.callback(root.session_store.delete, temp_session)
 

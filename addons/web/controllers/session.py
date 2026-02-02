@@ -39,7 +39,7 @@ class Session(Controller):
                 env = request.env
 
             credential = {'login': login, 'password': password, 'type': 'password'}
-            auth_info = request.session.authenticate(env, credential)
+            auth_info = request.session.__.authenticate(env, credential)
             if auth_info['uid'] != request.session.uid:
                 # Crapy workaround for unupdatable Odoo Mobile App iOS (Thanks Apple :@) and Android
                 # Correct behavior should be to raise AccessError("Renewing an expired session for user that has multi-factor-authentication is not supported. Please use /web/login instead.")

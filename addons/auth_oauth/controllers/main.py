@@ -147,7 +147,7 @@ class OAuthController(Controller):
                 url = '/odoo?menu_id=%s' % menu
 
             credential = {'login': login, 'token': key, 'type': 'oauth_token'}
-            auth_info = request.session.authenticate(request.env, credential)
+            auth_info = request.session.__.authenticate(request.env, credential)
             resp = request.redirect(_get_login_redirect_url(auth_info['uid'], url), 303)
             resp.autocorrect_location_header = False
 

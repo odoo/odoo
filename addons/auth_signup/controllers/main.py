@@ -179,7 +179,7 @@ class AuthSignupHome(Home):
         login, password = request.env['res.users'].sudo().signup(values, token)
         credential = {'login': login, 'password': password, 'type': 'password'}
         if do_login:
-            request.session.authenticate(request.env, credential)
+            request.session.__.authenticate(request.env, credential)
 
 class AuthBaseSetup(BaseSetup):
     @http.route()

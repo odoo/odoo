@@ -34,7 +34,7 @@ def _get_session_token_query_params(cr, session):
 
 
 def check_session(cr, session):
-    session._delete_old_sessions()
+    session.__.delete_old_sessions()
     if 'deletion_time' in session and session['deletion_time'] <= time.time():
         e = "session is too old"
         raise SessionExpiredException(e)

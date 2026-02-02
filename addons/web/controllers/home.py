@@ -51,7 +51,7 @@ class Home(Controller):
             return request.redirect_query('/web/login', query={'redirect': request.httprequest.full_path}, code=303)
         if kw.get('redirect'):
             return request.redirect(kw.get('redirect'), 303)
-        request.session._check(request)
+        request.session.__.check(request)
         if not is_user_internal(request.session.uid):
             return request.redirect('/web/login_successful', 303)
 
@@ -136,7 +136,7 @@ class Home(Controller):
                 credential.setdefault('type', 'password')
                 if request.env['res.users']._should_captcha_login(credential):
                     request.env['ir.http']._verify_request_recaptcha_token('login')
-                auth_info = request.session.authenticate(request.env, credential)
+                auth_info = request.session.__.authenticate(request.env, credential)
                 request.params['login_success'] = True
                 return request.redirect(self._login_redirect(auth_info['uid'], redirect=redirect))
             except odoo.exceptions.AccessDenied as e:
@@ -173,7 +173,7 @@ class Home(Controller):
             uid = request.session.uid = odoo.SUPERUSER_ID
             # invalidate session token cache as we've changed the uid
             request.env.registry.clear_cache()
-            request.session._update_session_token(request.env)
+            request.session.__.update_session_token(request.env)
 
         return request.redirect(self._login_redirect(uid))
 

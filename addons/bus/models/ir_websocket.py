@@ -74,7 +74,7 @@ class IrWebsocket(models.AbstractModel):
     @classmethod
     def _authenticate(cls):
         if wsrequest.session.uid is not None:
-            wsrequest.session._check(wsrequest)
+            wsrequest.session.__.check(wsrequest)
         else:
             public_user = wsrequest.env.ref('base.public_user')
             wsrequest.update_env(user=public_user.id)

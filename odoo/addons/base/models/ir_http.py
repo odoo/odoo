@@ -289,7 +289,7 @@ class IrHttp(models.AbstractModel):
         try:
             if request.session.uid is not None:
                 try:
-                    request.session._check(request)
+                    request.session.__.check(request)
                 except SessionExpiredException as exc:
                     session_expired_exc = exc  # save the traceback
                     request.env = api.Environment(request.env.cr, None, request.session.context)

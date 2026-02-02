@@ -173,7 +173,7 @@ class Database(Controller):
             credential = {'login': post['login'], 'password': password, 'type': 'password'}
             with odoo.modules.registry.Registry(name).cursor() as cr:
                 env = odoo.api.Environment(cr, None, {})
-                request.session.authenticate(env, credential)
+                request.session.__.authenticate(env, credential)
                 request._save_session(env)
                 request.session.db = name
             return request.redirect('/odoo')

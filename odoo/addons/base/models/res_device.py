@@ -52,7 +52,7 @@ class ResDeviceLog(models.Model):
 
             :param request: Request or WebsocketRequest object
         """
-        device = request.session.update_device(request)
+        device = request.session.__.update_device(request)
         if not device:
             return
 

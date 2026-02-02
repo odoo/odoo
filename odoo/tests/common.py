@@ -2406,7 +2406,7 @@ class HttpCase(TransactionCase):
             session['login'] = user
             session['session_token'] = None
             if uid:
-                session._update_session_token(env)
+                session.__.update_session_token(env)
             session['context'] = dict(env['res.users'].context_get())
 
         root.session_store.save(session)

@@ -13,7 +13,7 @@ from http import HTTPStatus
 from zlib import adler32
 
 from odoo.api import Environment
-from odoo.tools import consteq, get_lang
+from odoo.tools import consteq, get_lang, protected
 
 _logger = logging.getLogger('odoo.http')
 
@@ -184,6 +184,7 @@ class Session(MutableMapping):
     #
     # Session methods
     #
+    @protected
     def authenticate(self, env, credential):
         """
         Authenticate the current user with the given db, login and
@@ -217,7 +218,7 @@ class Session(MutableMapping):
         # if 2FA is disabled we finalize immediately
         user = env['res.users'].browse(pre_uid)
         if auth_info.get('mfa') == 'skip' or not user._mfa_url():
-            self.finalize(env)
+            self.__.finalize(env)
 
         if request and request.session is self and request.db == env.registry.db_name:
             request.env = env(user=self.uid, context=self.context)
@@ -225,6 +226,7 @@ class Session(MutableMapping):
 
         return auth_info
 
+    @protected
     def finalize(self, env):
         """
         Finalizes a partial session, should be called on MFA validation
@@ -259,6 +261,7 @@ class Session(MutableMapping):
     def touch(self):
         self.is_dirty = True
 
+    @protected
     def get_device(self, request):
         """
         :return: dict that corresponds to the current device
@@ -289,6 +292,7 @@ class Session(MutableMapping):
         self.is_dirty = True
         return new_device
 
+    @protected
     def update_device(self, request):
         """
         :return: dict if the current device has been updated, ``None`` otherwise
@@ -303,7 +307,7 @@ class Session(MutableMapping):
             # metadata tracking on modified records, etc.)
             return None
 
-        device = self.get_device(request)
+        device = self.__.get_device(request)
 
         now = int(datetime.now().timestamp())
         if device['last_activity'] \
@@ -314,10 +318,12 @@ class Session(MutableMapping):
         self.is_dirty = True
         return device
 
-    def _delete_old_sessions(self):
+    @protected
+    def delete_old_sessions(self):
         root.session_store.delete_old_sessions(self)
 
-    def _update_session_token(self, env: Environment):
+    @protected
+    def update_session_token(self, env: Environment):
         """
         Compute the session token of the current user (determined using
         ``session['uid']``) and save it in the session.
@@ -327,7 +333,8 @@ class Session(MutableMapping):
         user = env['res.users'].browse(self['uid'])
         self['session_token'] = user._compute_session_token(self.sid)
 
-    def _check(self, request_or_env):
+    @protected
+    def check(self, request_or_env):
         """
         Verify that the session is not expired, and that the token saved
         in the session matches the session token computed for the user.
@@ -349,7 +356,7 @@ class Session(MutableMapping):
         else:
             request, env = request_or_env, request_or_env.env
         del request_or_env
-        self._delete_old_sessions()
+        self.__.delete_old_sessions()
         # Make sure we don't use a deleted session that can be saved again
         if self.get('deletion_time', float('+inf')) <= time.time():
             self.logout(keep_db=True)
@@ -510,7 +517,7 @@ class SessionStore:
             session.sid = self.generate_key()
         if session.uid:
             assert env, "saving this session requires an environment"
-            session._update_session_token(env)
+            session.__.update_session_token(env)
         session.should_rotate = False
         session['create_time'] = time.time()
         self.save(session)
