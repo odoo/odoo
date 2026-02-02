@@ -1211,3 +1211,65 @@ class TestLoyalty(TestSaleCouponCommon):
         sale_order._update_programs_and_rewards()
         claimable_rewards = sale_order._get_claimable_rewards()
         self.assertFalse(claimable_rewards.get(self.ewallet))
+
+    def test_program_with_small_amount_in_different_currency(self):
+        company_currency = self.env['res.currency'].create({
+            'name': 'HRC',
+            'symbol': '$',
+            'rounding': 1.0,
+            'position': 'after',
+        })
+        test_company = self.env['res.company'].create({
+            'name': 'Test Company',
+            'currency_id': company_currency.id,
+        })
+        other_currency = self.env['res.currency'].create({
+            'name': 'TST',
+            'symbol': 'T',
+            'rounding': 0.01,
+            'position': 'after',
+        })
+        self.env['res.currency.rate'].create({
+            'name': '2026-01-01',
+            'rate': 1.0,
+            'currency_id': other_currency.id,
+            'company_id': test_company.id,
+        })
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Test Pricelist',
+            'currency_id': other_currency.id,
+            'company_id': test_company.id,
+        })
+        program = self.env['loyalty.program'].create({
+            'name': 'Test Promotion',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'company_id': test_company.id,
+            'rule_ids': [Command.create({
+                'minimum_amount': 0,
+                'minimum_amount_tax_mode': 'excl',
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+            })],
+        })
+        order = self.env['sale.order'].with_company(test_company).create({
+            'partner_id': self.partner.id,
+            'pricelist_id': pricelist.id,
+        })
+        order.write({'order_line': [
+            (0, False, {
+                'product_id': self.product_A.id,
+                'name': 'Product A',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+                'price_unit': 0.34,
+            })
+        ]})
+        order._update_programs_and_rewards()
+        self._claim_reward(order, program)
+        self.assertEqual(len(order.order_line.ids), 2)
