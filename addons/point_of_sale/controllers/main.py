@@ -206,6 +206,9 @@ class PosController(PortalAccount):
         if pos_order.account_move and pos_order.account_move.is_sale_document():
             return request.redirect('/my/invoices/%s?access_token=%s' % (pos_order.account_move.id, pos_order.account_move._portal_ensure_token()))
 
+        if not request.env['res.company']._with_locked_records(pos_order, allow_raising=False):
+            return
+
         # Get the optional extra fields that could be required for a localisation.
         pos_order_country = pos_order.company_id.account_fiscal_country_id
         additional_partner_fields = request.env['res.partner'].get_partner_localisation_fields_required_to_invoice(pos_order_country)
