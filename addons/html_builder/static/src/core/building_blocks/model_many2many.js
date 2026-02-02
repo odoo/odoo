@@ -1,4 +1,4 @@
-import { Component, useState, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, useState, onWillStart, onWillUpdateProps, status } from "@odoo/owl";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { useDomState } from "@html_builder/core/utils";
@@ -57,6 +57,11 @@ export class ModelMany2Many extends Component {
             [props.recordId],
             [props.m2oField]
         );
+
+        if (status(this) === "destroyed") {
+            return;
+        }
+
         const selectedRecordIds = record[props.m2oField];
         // TODO: handle no record
         const modelData = await this.fields.loadFields(props.baseModel, {
