@@ -52,7 +52,7 @@ test("Use the 'move arrows' overlay buttons", async () => {
     expect(".overlay .o_overlay_options").toHaveCount(1);
     expect(".overlay .fa-angle-right").toHaveCount(1);
     expect(".overlay .fa-angle-left").toHaveCount(0);
-    expect(".overlay .fa-angle-up, .overlay .fa-angle-down").toHaveCount(0);
+    expect(".overlay .fa-angle-up, .overlay .fa-angle-down").toHaveCount(1);
 
     await contains(":iframe .col-lg-3").click();
     expect(".overlay .fa-angle-right").toHaveCount(0);
@@ -137,7 +137,7 @@ test("Use the 'move arrows' overlay buttons within an editable div", async () =>
     expect(".overlay .o_overlay_options").toHaveCount(1);
     expect(".overlay .fa-angle-right").toHaveCount(1);
     expect(".overlay .fa-angle-left").toHaveCount(0);
-    expect(".overlay .fa-angle-up, .overlay .fa-angle-down").toHaveCount(0);
+    expect(".overlay .fa-angle-up, .overlay .fa-angle-down").toHaveCount(1);
 
     await contains(":iframe .col-lg-3").click();
     expect(".overlay .fa-angle-right").toHaveCount(0);
@@ -151,6 +151,13 @@ test("Use the 'move arrows' overlay buttons within an editable div", async () =>
     expect(":iframe .col-lg-4:nth-child(1)").toHaveCount(1);
     expect(".overlay .fa-angle-right").toHaveCount(1);
     expect(".overlay .fa-angle-left").toHaveCount(0);
+
+    // Test moving top and bottom buttons
+    expect(".overlay .fa-angle-up, .overlay .fa-angle-down").toHaveCount(1);
+    await contains(".overlay .fa-angle-down").click();
+    // Now the col will have one sibling above, so both up and down arrows
+    // should be visible
+    expect(".overlay .fa-angle-up, .overlay .fa-angle-down").toHaveCount(2);
 });
 
 test("Use the 'grid' overlay buttons", async () => {
