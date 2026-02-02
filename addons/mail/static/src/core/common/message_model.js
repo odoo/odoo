@@ -74,6 +74,13 @@ export class Message extends Record {
             );
         },
     });
+    editedDate = fields.Datetime({
+        compute() {
+            return createDocumentFragmentFromContent(this.body).querySelector(
+                ".o-mail-Message-edited"
+            )?.dataset.oDatetime;
+        },
+    });
     hasLink = fields.Attr(false, {
         compute() {
             if (this.isBodyEmpty) {
@@ -274,6 +281,10 @@ export class Message extends Record {
         return this.date || DateTime.now();
     }
 
+    get editedDatetimeMedium() {
+        return this.editedDate?.toLocaleString({ ...DateTime.DATETIME_MED }, { locale: user.lang });
+    }
+
     /**
      * Get the effective persona performing actions on this message.
      * Priority order: logged-in user, portal partner (token-authenticated), guest.
@@ -284,8 +295,8 @@ export class Message extends Record {
         return this.thread?.effectiveSelf ?? this.store.self;
     }
 
-    get datetimeShort() {
-        return this.datetime.toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS);
+    get datetimeMedium() {
+        return this.datetime.toLocaleString({ ...DateTime.DATETIME_MED }, { locale: user.lang });
     }
 
     get isSelfMentioned() {
