@@ -228,11 +228,12 @@ class AccountMove(models.Model):
             self.env.cr.commit()
 
     @api.model
-    def _l10n_ro_edi_fetch_invoices(self):
+    def _l10n_ro_edi_fetch_invoices(self, nb_days=1):
         """ Synchronize bills/invoices from SPV """
         result = _request_ciusro_synchronize_invoices(
             company=self.env.company,
             session=requests.Session(),
+            nb_days=nb_days,
         )
         if 'error' in result:
             raise UserError(result['error'])
@@ -493,8 +494,10 @@ class AccountMove(models.Model):
             bill.message_post(body=_("Synchronized with SPV from message %s", message['id']))
 
     def action_l10n_ro_edi_fetch_invoices(self):
-        self._l10n_ro_edi_fetch_invoices()
         return {
-            'type': 'ir.actions.client',
-            'tag': 'reload',
+            'name': _("Period selection"),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'l10n_ro_edi.account_move_fetch_invoices.wizard',
+            'target': 'new',
         }
