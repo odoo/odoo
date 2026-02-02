@@ -112,7 +112,9 @@ class upgrade:
                     perm
                     for perm in perms
                     if operation in perm.operations and not any(
-                        operation in rule.operations and rule.group in group_defs.implied(perm.group)
+                        operation in rule.operations
+                        and rule.group in group_defs.implied(perm.group)
+                        and rule.module in self.get_all_modules(perm.module)
                         for rule in rules
                     )
                 ]
@@ -129,7 +131,7 @@ class upgrade:
                 groups_with_perm = {
                     perm.group for perm in perms if operation in perm.operations
                 }
-                lines = [f"/!\\ {model=}, {operation=}"]
+                lines = [f"WARNING with {model=}, {operation=}"]
                 lines.append("    acl groups without rules, giving access to ALL records:")
                 for perm in sorted(perms_without_rule, key=lambda perm: perm.group):
                     lines.append(f"     - {perm.group}: acl {perm.id}")
@@ -150,9 +152,10 @@ class upgrade:
             # prepare entries in the same order as permissions
             accesses = ir_accesses[perm.module][perm.model][perm.group]
             groups = set(group_defs.implied(perm.group))
+            modules = self.get_all_modules(perm.module)
             if unrestricted_operations := {
                 op for op in perm.operations if not any(
-                    rule.group in groups and op in rule.operations
+                    op in rule.operations and rule.group in groups and rule.module in modules
                     for rule in ir_rules[perm.model]
                 )
             }:
@@ -528,6 +531,14 @@ class upgrade:
             for access in self.extract_accesses(module)
             if access.group
         ]
+
+    @functools.cache
+    def get_all_modules(self, module: str) -> set[str]:
+        """ Return ``module`` with all its dependencies. """
+        result = {module}
+        for dep in self.get_manifest(module)['depends'] or ('base',):
+            result.update(self.get_all_modules(dep))
+        return result
 
     def extract_accesses(self, module: str, remove=False) -> Iterator[Access]:
         """ Extract ir.model.access or ir.access records from the given module. """
