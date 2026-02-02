@@ -47,6 +47,7 @@
                     domain="[('current_journal_id.inbound_payment_method_line_ids.payment_method_id.code', '=', 'in_third_party_checks')]"/>
             </filter>
             <field name="original_journal_id" position="before">
+                <field name="bank_account_id"/>
                 <field name="issuer_vat"/>
                 <field name="current_journal_id"/>
             </field>
@@ -133,6 +134,7 @@
                         </group>
                         <group>
                             <field name="amount"/>
+                            <field name="bank_account_id" invisible="issue_state"/>
                             <field name="issuer_vat"  invisible="issue_state"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>

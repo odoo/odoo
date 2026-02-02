@@ -56,6 +56,7 @@ class L10n_LatamCheck(models.Model):
         related='payment_id.payment_method_line_id',
         store=True,
     )
+    bank_account_id = fields.Many2one('res.partner.bank', compute='_compute_bank_account_id', store=True, readonly=False)
 
     # issue_state is used to know that is an own check and also that is posted
     _unique = models.UniqueIndex("(name, payment_method_line_id) WHERE outstanding_line_id IS NOT NULL")
@@ -108,6 +109,13 @@ class L10n_LatamCheck(models.Model):
                     rec.issue_state = 'debited'
             else:
                 rec.issue_state = 'handed'
+
+    @api.depends('payment_method_line_id.code', 'partner_id')
+    def _compute_bank_account_id(self):
+        for rec in self:
+            rec.bank_account_id = False
+            if rec.payment_method_line_id.code == 'new_third_party_checks':
+                rec.bank_account_id = rec.partner_id.bank_ids[:1].id
 
     def action_void(self):
         for rec in self.filtered('outstanding_line_id'):
