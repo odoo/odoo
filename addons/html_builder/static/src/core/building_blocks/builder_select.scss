@@ -115,6 +115,35 @@
         background-color: $o-we-bg-darker;
         color: var(--o-hb-select-color);
     }
+    // Optional searchbox related style.
+    .o_builder_select_searchbox {
+        background-color: $o-we-sidebar-content-field-input-bg;
+        color: var(--o-hb-select-color, $white);
+        padding: 5px;
+        z-index: 1;
+
+        input {
+            cursor: text !important;
+            padding-left: 20px;
+            border: 0;
+        }
+        &:before {
+            @include o-position-absolute($top: 50%);
+            transform: translateY(-50%);
+            content: "\f002";
+            font-family: "FontAwesome";
+        }
+    }
+    // Dropdown items & categories visibility.
+    .o-hb-select-dropdown-category:has(+ .o-hb-select-dropdown-category) {
+        display: none;
+    }
+    .o-hb-select-dropdown-category:has(+ .o_builder_select_no_result) {
+        display: none;
+    }
+    .dropdown-item ~ .o_builder_select_no_result {
+        display: none;
+    }
 }
 
 .o_builder_open {

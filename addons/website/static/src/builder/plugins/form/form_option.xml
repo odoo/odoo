@@ -89,7 +89,7 @@
 <t t-name="website.s_website_form_field_option">
     <BuilderRow label.translate="Type">
         <BuilderSelect t-if="!domState.elClassList.includes('s_website_form_model_required')"
-            id="'type_opt'" preview="false"
+            id="'type_opt'" preview="false" searchable="true"
         >
             <div class="o-hb-select-dropdown-category py-2 ps-2 fst-italic">Custom Field</div>
             <BuilderContext action="'customField'">
