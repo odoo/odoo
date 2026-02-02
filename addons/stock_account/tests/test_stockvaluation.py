@@ -3521,3 +3521,46 @@ class TestStockValuation(TestStockValuationCommon):
         closing = self.branch.with_context(allowed_company_ids=[self.branch.id, self.company.id]).action_close_stock_valuation()
         closing_lines = self.env['account.move'].browse(closing['res_id']).line_ids
         self.assertEqual(closing_lines.move_id.company_id.id, self.branch.id)
+
+    def test_avco_valuation_multicompany(self):
+        """
+        Test that changing values manually for an AVCO product in different companies results
+        in the correct total value when the product is viewed in a single or multi-company context.
+        """
+        product_avco = self.product_avco
+        now = Datetime.now()
+
+        c1 = self.env.company
+        c2 = self.env['res.company'].create({'name': 'Test Company'})
+        c1_stock_loc = self.warehouse.lot_stock_id
+        c2_stock_loc = self.env['stock.warehouse'].search([('company_id', '=', c2.id)], limit=1).lot_stock_id
+        product_company1 = product_avco.with_context(allowed_company_ids=[c1.id])
+        product_company2 = product_avco.with_context(allowed_company_ids=[c2.id])
+
+        # Change cost manually and create stock move for each company
+        with freeze_time(now + timedelta(minutes=1)):
+            product_company1.standard_price = 10
+        with freeze_time(now + timedelta(minutes=2)):
+            self._make_in_move(product_company1, 2.0, company=c1, location_id=self.supplier_location.id, location_dest_id=c1_stock_loc.id)
+        with freeze_time(now + timedelta(minutes=3)):
+            product_company2.standard_price = 50
+        with freeze_time(now + timedelta(minutes=4)):
+            self._make_in_move(product_company2, 1.0, company=c2, location_id=self.supplier_location.id, location_dest_id=c2_stock_loc.id)
+
+        self.assertRecordValues(product_company1, [{
+            'total_value': 20,
+            'qty_available': 2,
+            'avg_cost': 10,
+        }])
+        self.assertRecordValues(product_company2, [{
+            'total_value': 50,
+            'qty_available': 1,
+            'avg_cost': 50,
+        }])
+        product_companies = product_avco.with_context(allowed_company_ids=[c1.id, c2.id])
+        product_companies.invalidate_recordset(fnames=['total_value'])
+        self.assertRecordValues(product_companies, [{
+            'total_value': 70,  # sum of both total_values
+            'qty_available': 3,
+            'avg_cost': 23.33,
+        }])
