@@ -464,6 +464,9 @@ class ProductProduct(models.Model):
         for product in self:
             if product.cost_method == 'standard':
                 continue
+            if product.lot_valuated:
+                product.sudo().with_context(disable_auto_revaluation=True).standard_price = product.avg_cost
+                continue
             if product.cost_method == 'fifo':
                 qty_available = product._with_valuation_context().qty_available
                 if product.uom_id.compare(qty_available, 0) > 0:
