@@ -183,6 +183,7 @@ export class SnippetModel extends Reactive {
                     imagePreviewSrc: snippetEl.dataset.oImagePreview,
                     isCustom: false,
                     label: this.getSnippetLabel(snippetEl),
+                    originalLabel: snippetEl.dataset.oLabel,
                     isDisabled: false,
                     forbidSanitize: false,
                 };
@@ -238,6 +239,16 @@ export class SnippetModel extends Reactive {
             }
         }
         this.snippetsByCategory["snippet_custom_content"] = customInnerContent;
+
+        // Apply to custom snippets the labels from their original snippets
+        for (const snippet of this.snippetsByCategory.snippet_custom) {
+            if (!snippet.label && snippet.name) {
+                const originalSnippet = this.getOriginalSnippet(snippet.name);
+                if (originalSnippet && originalSnippet.originalLabel) {
+                    snippet.label = originalSnippet.originalLabel;
+                }
+            }
+        }
     }
 
     async deleteCustomSnippet(snippet) {

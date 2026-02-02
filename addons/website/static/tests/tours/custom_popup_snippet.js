@@ -17,7 +17,7 @@ registerWebsitePreviewTour(
         edition: true,
     },
     () => [
-        ...insertSnippet(snippets[0]),
+        ...insertSnippet(snippets[0], { label: "Popup" }),
         ...clickOnSnippet(snippets[1]),
         {
             content: "save this snippet to save later",
@@ -34,7 +34,7 @@ registerWebsitePreviewTour(
             trigger: ".o_we_invisible_entry i",
             run: "click",
         },
-        ...insertSnippet(snippets[2]),
+        ...insertSnippet(snippets[2], { label: "Popup" }),
         {
             content: "check whether new custom popup is visible or not.",
             trigger: ":iframe section[data-snippet='s_banner']",

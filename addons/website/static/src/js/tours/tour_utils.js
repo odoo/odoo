@@ -358,13 +358,14 @@ export function clickOnText(snippet, element, position = "bottom") {
  * dialog.
  * @param {*} position Where the purple arrow will show up
  */
-export function insertSnippet(snippet, { position = "bottom", ignoreLoading = false } = {}) {
+export function insertSnippet(snippet, { position = "bottom", ignoreLoading = false, label } = {}) {
     const blockEl = snippet.groupName || snippet.name;
     const insertSnippetSteps = [{
         trigger: ".o_builder_sidebar_open",
         noPrepend: true,
     }];
     const snippetIDSelector = snippet.id ? `[data-snippet-id="${snippet.id}"]` : `[data-snippet-id^="${snippet.customID}_"]`;
+    const labelSelector = label ? `[data-label="${label}"]` : ``;
     if (snippet.groupName) {
         insertSnippetSteps.push({
             content: markup(_t("Click on the <b>%s</b> category.", blockEl)),
@@ -376,7 +377,7 @@ export function insertSnippet(snippet, { position = "bottom", ignoreLoading = fa
             content: markup(_t("Click on the <b>%s</b> building block.", snippet.name)),
             // FIXME `:not(.d-none)` should obviously not be needed but it seems
             // currently needed when using a tour in user/interactive mode.
-            trigger: `.modal .show:iframe .o_snippet_preview_wrap${snippetIDSelector}:not(.d-none)`,
+            trigger: `.modal .show:iframe .o_snippet_preview_wrap${snippetIDSelector}${labelSelector}:not(.d-none)`,
             noPrepend: true,
             tooltipPosition: "top",
             run: "click",
