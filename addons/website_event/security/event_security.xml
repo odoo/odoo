@@ -88,6 +88,16 @@
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
     </record>
+
+    <record id="ir_rule_view_event_manager" model="ir.rule">
+        <field name="name">even manager: global view</field>
+        <field name="model_id" ref="base.model_ir_ui_view"/>
+        <field name="groups" eval="[(4, ref('event.group_event_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
     </data>
 
     <record id="event.group_event_manager" model="res.groups">

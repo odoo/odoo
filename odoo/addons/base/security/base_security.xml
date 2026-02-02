@@ -109,6 +109,12 @@
             <field name="perm_unlink" eval="True"/>
         </record>
 
+        <record id="ir_ui_view_rule_system" model="ir.rule">
+            <field name="name">Views: Administrator has full access</field>
+            <field name="model_id" ref="model_ir_ui_view"/>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+        </record>
+
         <!-- Used for dashboard customizations, users should only be able to edit their own dashboards -->
         <!-- Remove me? users never create those directly -->
         <record model="ir.rule" id="ir_ui_view_custom_personal">
