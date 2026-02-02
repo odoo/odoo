@@ -400,6 +400,19 @@ export class Action {
         );
     }
 
+    /** @param {Action} action @returns {boolean} */
+    _inlineIcon(action) {}
+    /** When action is used in inline, determines whether the icon should be displayed or not. */
+    get inlineIcon() {
+        return (
+            this._inlineIcon(this.params) ??
+            (typeof this.definition.inlineIcon === "function"
+                ? this.definition.inlineIcon.call(this, this.params)
+                : this.definition.inlineIcon) ??
+            true
+        );
+    }
+
     /** @param {Action} action @returns {string|undefined} */
     _inlineName(action) {}
     /** If set, when action is used in inline, shows action name in addition to icon. */
