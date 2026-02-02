@@ -310,5 +310,5 @@ test("Save image with correct parameter", async () => {
             >
         </div>`);
     await contains(".o-snippets-top-actions button:contains(Save)").click();
-    expect.verifySteps(["modify_image"]);
+    await expect.waitForSteps(["modify_image"]);
 });
