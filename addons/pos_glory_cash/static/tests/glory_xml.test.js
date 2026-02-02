@@ -79,4 +79,10 @@ describe("make glory header", () => {
         expect(result[2].name).toBe("SessionID");
         expect(result[2].children[0]).toBe("mockSessionId");
     });
+
+    test("does not include the session ID if it is empty", () => {
+        const result = makeGloryHeader(1, "");
+
+        expect(result).toHaveLength(2);
+    });
 });
