@@ -56,15 +56,9 @@ class AccountEdiXmlPint_Jp(models.AbstractModel):
 
         return tax_subtotal_node
 
-    def _add_invoice_tax_total_nodes(self, document_node, vals):
-        # EXTENDS account.edi.xml.ubl_bis3
-        document_node['cac:TaxTotal'] = [
-            self._ubl_get_tax_total_node(vals, tax_total)
-            for tax_total in vals['_ubl_values']['tax_totals_currency'].values()
-        ] + [
-            self._ubl_get_tax_total_node(vals, tax_total)
-            for tax_total in vals['_ubl_values']['tax_totals'].values()
-        ]
+    def _ubl_tax_totals_node_grouping_key(self, base_line, tax_data, vals, currency):
+        # OVERRIDE
+        return self.env['account.edi.ubl']._ubl_tax_totals_node_grouping_key(base_line, tax_data, vals, currency)
 
     def _add_invoice_header_nodes(self, document_node, vals):
         invoice = vals['invoice']

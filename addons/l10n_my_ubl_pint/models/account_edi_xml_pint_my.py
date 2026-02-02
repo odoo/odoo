@@ -46,6 +46,19 @@ class AccountEdiXmlPint_My(models.AbstractModel):
 
         return grouping_key
 
+    def _add_invoice_tax_total_nodes(self, document_node, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._add_invoice_tax_total_nodes(document_node, vals)
+        nodes = document_node['cac:TaxTotal']
+
+        if not nodes:
+            tax_total_node = self._ubl_get_tax_total_node(vals, {
+                'currency': vals['currency_id'],
+                'amount': 0.0,
+                'subtotals': {},
+            })
+            nodes.append(tax_total_node)
+
     def _add_invoice_header_nodes(self, document_node, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._add_invoice_header_nodes(document_node, vals)
