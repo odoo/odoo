@@ -359,17 +359,17 @@ class IrModel(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_related_attachments(self):
         """ Delete attachment associated with the models being deleted. """
-        models = tuple(self.mapped('model'))
+        models = list(self.mapped('model'))
 
         # Get files attached solely to the models being deleted (and none other)
         fname_rows = self.env.execute_query(SQL(
-            "SELECT DISTINCT store_fname FROM ir_attachment WHERE res_model IN %s",
-            models,
+            "SELECT DISTINCT store_fname FROM ir_attachment WHERE res_model = ANY(%s)",
+            (models,),
         ))
 
         self.env.execute_query(SQL(
-            "DELETE FROM ir_attachment WHERE res_model IN %s",
-            models,
+            "DELETE FROM ir_attachment WHERE res_model = ANY(%s)",
+            (models,),
         ))
 
         for (fname,) in fname_rows:
