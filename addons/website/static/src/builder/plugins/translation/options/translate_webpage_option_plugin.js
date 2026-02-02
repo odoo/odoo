@@ -251,7 +251,7 @@ export class TranslateWebpageOptionPlugin extends Plugin {
         builder_actions: {
             TranslateToAction,
         },
-        builder_options: withSequence(1, TranslateWebpageOption),
+        builder_options: [withSequence(1, TranslateWebpageOption)],
     };
 
     getTranslationState() {

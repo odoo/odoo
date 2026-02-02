@@ -20,7 +20,7 @@ class DynamicSnippetBlogPostsOptionPlugin extends Plugin {
     modelNameFilter = "blog.post";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: withSequence(DYNAMIC_SNIPPET, DynamicSnippetBlogPostsOption),
+        builder_options: [withSequence(DYNAMIC_SNIPPET, DynamicSnippetBlogPostsOption)],
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
     setup() {
