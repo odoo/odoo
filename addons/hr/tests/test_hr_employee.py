@@ -116,6 +116,10 @@ class TestHrEmployee(TestHrCommon):
         with mute_logger('odoo.sql_db'), self.assertRaises(NotNullViolation):
             self.res_users_hr_officer.tz = False
 
+    def test_employee_null_timezone(self):
+        with mute_logger('odoo.sql_db'), self.assertRaises(NotNullViolation):
+            self.res_users_hr_officer.company_id.resource_calendar_id.write({'tz': None})
+
     def test_employee_from_user(self):
         _tz = 'Pacific/Apia'
         _tz2 = 'America/Tijuana'
