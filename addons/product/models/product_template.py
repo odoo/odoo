@@ -92,6 +92,7 @@ class ProductTemplate(models.Model):
         group_expand='_read_group_categ_id',
         index='btree_not_null',
         tracking=True,
+        check_company=True,
     )
 
     currency_id = fields.Many2one(
