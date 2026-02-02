@@ -542,13 +542,16 @@ class AccountJournal(models.Model):
             journal.default_account_id = False
             journal.profit_account_id = False
             journal.loss_account_id = False
-            if journal.type == 'sale':
-                journal.default_account_id = journal.company_id.income_account_id
-            elif journal.type == 'purchase':
-                journal.default_account_id = journal.company_id.expense_account_id
+            company = journal.company_id
+            if journal.type == 'sale' and company.income_account_id.active:
+                journal.default_account_id = company.income_account_id
+            elif journal.type == 'purchase' and company.expense_account_id.active:
+                journal.default_account_id = company.expense_account_id
             elif journal.type in ('cash', 'bank'):
-                journal.profit_account_id = journal.company_id.default_cash_difference_income_account_id
-                journal.loss_account_id = journal.company_id.default_cash_difference_expense_account_id
+                if company.default_cash_difference_income_account_id.active:
+                    journal.profit_account_id = company.default_cash_difference_income_account_id
+                if company.default_cash_difference_expense_account_id.active:
+                    journal.loss_account_id = company.default_cash_difference_expense_account_id
 
         # codes are reset and recomputed whenever the
         # journal type changes through the form view
