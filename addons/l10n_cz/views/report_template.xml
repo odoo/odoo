@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="registry_vat_external_layout">
-        <li t-if="company.company_registry and company.account_fiscal_country_id.code == 'CZ'">
+        <li t-if="company.company_registry and company.country_code == 'CZ'">
             Company ID: <span t-field="company.company_registry"/>
         </li>
-        <li t-if="company.vat and company.account_fiscal_country_id.code == 'CZ'">
+        <li t-if="company.vat and company.country_code == 'CZ'">
             <t t-set="default_vat_label">Tax ID</t>
             <t t-out="company.country_id.vat_label or default_vat_label"/>:
             <span t-out="company.vat"/>
@@ -22,10 +22,10 @@
             <t t-set="hide_registry_vat" t-value="True"/>
         </xpath>
         <xpath expr="//div[hasclass('o_folder_company_info')]" position="after">
-            <div t-if="company.company_registry and company.account_fiscal_country_id.code == 'CZ'">
+            <div t-if="company.company_registry and company.country_code == 'CZ'">
                 Company ID: <span t-field="company.company_registry"/>
             </div>
-            <div t-if="company.vat and company.account_fiscal_country_id.code == 'CZ'">
+            <div t-if="company.vat and company.country_code == 'CZ'">
                 <t t-set="default_vat_label">Tax ID</t>
                 <t t-out="company.country_id.vat_label or default_vat_label"/>:
                 <span t-out="company.vat"/>

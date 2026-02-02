@@ -50,8 +50,8 @@ class BaseDocumentLayout(models.TransientModel):
     logo = fields.Binary(related='company_id.logo', readonly=False)
     preview_logo = fields.Binary(related='logo', string="Preview logo")
     report_header = fields.Html(related='company_id.report_header', readonly=False)
-    report_footer = fields.Html(related='company_id.report_footer', readonly=False, default=_default_report_footer)
-    company_details = fields.Html(related='company_id.company_details', readonly=False, default=_default_company_details)
+    report_footer = fields.Html(related='company_id.report_footer', readonly=False, default=lambda doc: doc._default_report_footer())
+    company_details = fields.Html(related='company_id.company_details', readonly=False, default=lambda doc: doc._default_company_details())
     is_company_details_empty = fields.Boolean(compute='_compute_empty_company_details')
 
     # The paper format changes won't be reflected in the preview.

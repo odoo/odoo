@@ -9,6 +9,7 @@ class BaseDocumentLayout(models.TransientModel):
     vat = fields.Char(related='company_id.vat', readonly=False,)
     account_number = fields.Char(compute='_compute_account_number', inverse='_inverse_account_number',)
     country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
+    company_registry = fields.Char(related='company_id.company_registry')
 
     def document_layout_save(self):
         """Save layout and onboarding step progress, return super() result"""
