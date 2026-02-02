@@ -7,8 +7,13 @@
         'views/pos_payment_method_views.xml',
     ],
     'assets': {
+        'web.assets_backend': [
+            'pos_glory_cash/static/src/**/*',
+            ('remove', 'pos_glory_cash/static/src/app/**/*'),
+        ],
         'point_of_sale._assets_pos': [
             'pos_glory_cash/static/src/**/*',
+            ('remove', 'pos_glory_cash/static/src/backend/**/*'),
         ],
         'web.assets_unit_tests': [
             'pos_glory_cash/static/tests/**/*',
