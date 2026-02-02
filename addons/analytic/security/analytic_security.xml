@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<data noupdate="0">
+
+    <record id="group_analytic_accounting" model="res.groups">
+        <field name="name">Analytic Accounting</field>
+    </record>
+
+</data>
 <data noupdate="1">
 
     <record id="analytic_comp_rule" model="ir.rule">
@@ -7,6 +14,13 @@
         <field name="model_id" ref="model_account_analytic_account"/>
         <field eval="True" name="global"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'parent_of', company_ids)]</field>
+    </record>
+
+    <!-- give access to all records, in case it is combined with another rule, like hr_timesheet.timesheet_line_rule_user -->
+    <record id="analytic_line_analytic" model="ir.rule" forcecreate="1">
+        <field name="name">Analytic line for Analytic Accounting</field>
+        <field name="model_id" ref="model_account_analytic_line"/>
+        <field name="groups" eval="[(4, ref('analytic.group_analytic_accounting'))]"/>
     </record>
 
     <record id="analytic_line_comp_rule" model="ir.rule">
@@ -29,12 +43,5 @@
         <field eval="True" name="global"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'parent_of', company_ids)]</field>
     </record>
-</data>
-<data noupdate="0">
-
-    <record id="group_analytic_accounting" model="res.groups">
-        <field name="name">Analytic Accounting</field>
-    </record>
-
 </data>
 </odoo>

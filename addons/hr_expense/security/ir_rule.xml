@@ -65,6 +65,13 @@
             <field name="groups" eval="[(4, ref('hr_expense.group_hr_expense_team_approver'))]"/>
         </record>
 
+        <!-- give access to all records, in case it is combined with another rule, like hr_timesheet.timesheet_line_rule_user -->
+        <record id="hr_expense_team_approver_account_analytic_line_rule" model="ir.rule" forcecreate="1">
+            <field name="name">Expense Team Approver Account Analytic Line</field>
+            <field name="model_id" ref="analytic.model_account_analytic_line"/>
+            <field name="groups" eval="[(4, ref('hr_expense.group_hr_expense_team_approver'))]"/>
+        </record>
+
         <record id="ir_rule_hr_expense_split_employee" model="ir.rule">
             <field name="name">Employee Expense Split</field>
             <field name="model_id" ref="model_hr_expense_split_wizard"/>
