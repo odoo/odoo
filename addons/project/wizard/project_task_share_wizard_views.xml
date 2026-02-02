@@ -19,6 +19,13 @@
             <xpath expr="//field[@name='partner_ids']" position="attributes">
                 <attribute name="invisible">project_privacy_visibility in ['invited_users', 'followers']</attribute>
             </xpath>
+            <xpath expr="//field[@name='share_link']" position="attributes">
+                <attribute name="help">You can only share this task by copying the link and sending it, because the privacy of the project is too restricted. This link is not revokable once it has been shared.</attribute>
+                <attribute name="invisible">not (project_privacy_visibility in ['invited_users', 'followers'])</attribute>
+            </xpath>
+            <xpath expr="//field[@name='share_link']" position="before">
+                <field name="share_link" widget="CopyClipboardChar" options="{'string': 'Copy Link'}" invisible="project_privacy_visibility in ['invited_users', 'followers']"/>
+            </xpath>
         </field>
     </record>
 </odoo>
