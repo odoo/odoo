@@ -357,7 +357,7 @@ export class SelectMenu extends Component {
             }
         } else if (!this.selectedChoice || this.selectedChoice.value !== value) {
             this.props.onSelect(value);
-            if (this.inputRef.el) {
+            if (this.inputRef.el && this.state.choices && this.state.choices.length) {
                 this.inputRef.el.value = this.state.choices.find((c) => c.value === value).label;
             }
         }
