@@ -10,7 +10,7 @@ import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
-import { describe } from "@odoo/hoot";
+import { describe, after } from "@odoo/hoot";
 import { advanceTime, animationFrame, click, queryOne, tick, waitFor } from "@odoo/hoot-dom";
 import {
     contains,
@@ -39,6 +39,22 @@ import { BorderConfigurator } from "@html_builder/plugins/border_configurator_op
 import { WebsiteBuilder } from "@website/builder/website_builder";
 import { session } from "@web/session";
 import { getTranslatedElements } from "./translated_elements_getter.hoot";
+import {
+    initializeBuilderInteractions,
+    setupBuilderInteractionWhiteList,
+    cleanupBuilderInteractions,
+    patchBuilderInteraction,
+    switchToEditMode,
+    mockInteractionBundle,
+} from "./interaction_helpers";
+
+// Re-export commonly used interaction helpers
+export {
+    setupBuilderInteractionWhiteList,
+    patchBuilderInteraction,
+    switchToEditMode,
+    mockInteractionBundle,
+};
 
 class Website extends models.Model {
     _name = "website";
@@ -116,6 +132,11 @@ export async function setupWebsiteBuilder(
         translateMode = false,
         onIframeLoaded = () => {},
         delayReload = async () => {},
+        enableInteractions = false,
+        interactions = [], // NEW: Array of specific interactions to load
+        interactionEditMode = true,
+        interactionPatches = {}, // NEW: Patches for interactions
+        waitForInteractionStart = true,
     } = {}
 ) {
     // TODO: fix when the iframe is reloaded and become empty (e.g. discard button)
@@ -190,15 +211,11 @@ export async function setupWebsiteBuilder(
         // with Hoot.
         preparePublicRootReady() {},
         async loadAssetsEditBundle() {
-            // To instantiate interactions in the iframe test we need to load
-            // the frontend bundle in it. The problem is that Hoot does not have
-            // control of this iframe and therefore does not mock anything in it
-            // (location, rpc, ...). So we don't load the js part of the bundle
-
+            // Load the edit bundle with JS when interactions are enabled
             if (loadIframeBundles) {
                 await loadBundle("website.assets_inside_builder_iframe", {
                     targetDoc: queryOne("iframe[data-src^='/website/force/1']").contentDocument,
-                    js: false,
+                    js: enableInteractions ? loadAssetsFrontendJS : false,
                 });
             }
             await resolveEditAssetsLoaded();
@@ -225,17 +242,26 @@ export async function setupWebsiteBuilder(
         type: "ir.actions.client",
     });
 
+    // Patch EditInteractionPlugin to handle cases where iframe services aren't ready yet
     patchWithCleanup(EditInteractionPlugin.prototype, {
         setup() {
             super.setup();
-            // See loadAssetsEditBundle override in WebsiteBuilderClientAction
-            // patch.
-            this.websiteEditService = {
-                update: () => {},
-                refresh: () => {},
-                stop: () => {},
-                stopInteraction: () => {},
-            };
+            // When interactions are disabled, provide stub methods
+            if (!enableInteractions) {
+                this.websiteEditService = {
+                    update: () => {},
+                    refresh: () => {},
+                    stop: () => {},
+                    stopInteraction: () => {},
+                };
+            }
+        },
+        refreshInteractions(element) {
+            // Only call refresh if websiteEditService is available
+            if (this.websiteEditService) {
+                this.websiteEditService.refresh(element);
+            }
+            // Otherwise silently ignore - service will be available soon
         },
     });
 
@@ -290,7 +316,9 @@ export async function setupWebsiteBuilder(
     if (isBrowserFirefox()) {
         await originalIframeLoaded;
     }
-    if (loadIframeBundles) {
+
+    // Load bundles in iframe if requested OR if interactions are enabled
+    if (loadIframeBundles || enableInteractions) {
         const targetDoc = iframe.contentDocument;
         const sessionScriptEl = targetDoc.createElement("script");
         sessionScriptEl.type = "text/javascript";
@@ -301,19 +329,61 @@ export async function setupWebsiteBuilder(
         targetDoc.head.append(sessionScriptEl);
         await loadBundle("web.assets_frontend", {
             targetDoc,
-            js: loadAssetsFrontendJS,
+            js: enableInteractions || loadAssetsFrontendJS,
         });
+
+        // Load edit bundles when interactions are enabled
+        if (enableInteractions) {
+            await loadBundle("website.assets_inside_builder_iframe", {
+                targetDoc,
+                js: true,
+            });
+        }
     }
     await resolveIframeLoaded(iframe);
     await animationFrame();
+
+    // Initialize interactions if requested
+    // When enableInteractions is true, the iframe will load the bundles
+    // and we inject the loader for advanced control
+    let interactionUtils = null;
+    if (enableInteractions) {
+        // Wait for iframe services to be fully initialized
+        await animationFrame();
+        await animationFrame();
+
+        try {
+            interactionUtils = await initializeBuilderInteractions(iframe, {
+                interactions, // Specific interactions to load
+                editMode: interactionEditMode,
+                patches: interactionPatches, // Patches to apply
+                autoStart: true,
+                waitForStart: waitForInteractionStart,
+            });
+        } catch (error) {
+            console.error("Failed to initialize interactions in iframe:", error);
+            throw error; // Re-throw to make test fail clearly
+        }
+    }
+
     if (openEditor) {
         await openBuilderSidebar(editAssetsLoaded);
     }
+
+    // Cleanup function for interactions
+    after(() => {
+        if (interactionUtils) {
+            interactionUtils.stopInteractions();
+        }
+        cleanupBuilderInteractions();
+    });
+
     return {
         getEditor: () => editor,
         getEditableContent: () => editableContent,
         openBuilderSidebar: async () => await openBuilderSidebar(editAssetsLoaded),
         waitSidebarUpdated,
+        interactions: interactionUtils,
     };
 }
 
@@ -469,6 +539,7 @@ export async function setupWebsiteBuilderWithSnippet(snippetName, options = {}) 
         hasToCreateWebsite: false,
     });
 }
+
 export const websiteServiceInTranslateMode = {
     currentWebsite: {
         metadata: {
