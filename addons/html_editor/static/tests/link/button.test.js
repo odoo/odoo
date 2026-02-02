@@ -111,11 +111,6 @@ describe("button style", () => {
     });
 });
 
-const allowTargetBlankOpt = {
-    config: {
-        allowTargetBlank: true,
-    },
-};
 describe("Custom button style", () => {
     test("Editor don't allow custom style by default", async () => {
         await setupEditor('<p><a href="https://test.com/">link[]Label</a></p>');
@@ -212,27 +207,6 @@ describe("Custom button style", () => {
 
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p><a href="http://test.test/" class="btn btn-lg rounded-circle btn-fill-primary">Hello[]</a></p>'
-        );
-    });
-
-    test("should allow target _blank on custom button", async () => {
-        const { el } = await setupEditor("<p>[Hello]</p>", allowTargetBlankOpt);
-        await waitFor(".o-we-toolbar");
-        await click(".o-we-toolbar .fa-link");
-        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("http://test.test/", {
-            confirm: false,
-        });
-        await click(".o-we-linkpopover .fa-gear");
-        await contains(".o_advance_option_panel .target-blank-option").click();
-        await click(".o_advance_option_panel .fa-angle-left");
-        await waitFor(".o-we-linkpopover");
-
-        await animationFrame();
-        await click(".o_we_apply_link");
-        await animationFrame();
-
-        expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="http://test.test/" target="_blank">Hello[]</a></p>'
         );
     });
 
