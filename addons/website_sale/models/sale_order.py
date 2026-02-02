@@ -920,7 +920,7 @@ class SaleOrder(models.Model):
     def _archive_partner_if_no_user(self):
         partners_to_archive = self.env['res.partner']
         for order in self:
-            if not (commercial_partner := order.partner_id).user_ids:
+            if not (commercial_partner := order.partner_id).user_ids and not order.is_subscription:
                 partners_to_archive |= commercial_partner + commercial_partner.child_ids
 
         partners_to_archive.active = False
