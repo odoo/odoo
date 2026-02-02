@@ -18,7 +18,7 @@ class StockLot(models.Model):
         Used to compute margins on sale orders."""
     )
 
-    @api.depends('product_id.lot_valuated', 'product_id.product_tmpl_id.lot_valuated')
+    @api.depends('product_id.lot_valuated', 'product_id.product_tmpl_id.lot_valuated', 'product_id.stock_move_ids.value')
     @api.depends_context('to_date', 'company', 'warehouse_id')
     def _compute_value(self):
         """Compute totals of multiple svl related values"""
