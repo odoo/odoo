@@ -9,6 +9,7 @@
     'depends': ['stock_account', 'purchase'],
     'data': [
         'security/ir.model.access.csv',
+        'security/purchase_stock_security.xml',
         'data/purchase_stock_data.xml',
         'data/mail_templates.xml',
         'report/vendor_delay_report.xml',

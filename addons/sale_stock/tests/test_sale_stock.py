@@ -2614,7 +2614,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         read access to (i.e. their own sale orders in this scenario).
         """
         user = new_test_user(self.env, login='fgh',
-                             groups='base.group_user,stock.group_stock_user, sales_team.group_sale_salesman')
+                             groups='sales_team.group_sale_salesman')
         self.new_product.tracking = 'lot'
         lot = self.env['stock.lot'].create({
             'name': 'SN001',

@@ -142,6 +142,13 @@
             <field name="groups" eval="[(4, ref('hr_attendance.group_hr_attendance_officer'))]"/>
         </record>
 
+        <record id="hr_attendance_overtime_line_rule_own" model="ir.rule">
+            <field name="name">Overtime Line self edit: Read and modify his own overtime lines</field>
+            <field name="model_id" ref="model_hr_attendance_overtime_line"/>
+            <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('hr_attendance.group_hr_attendance_own'))]"/>
+        </record>
+
         <record id="hr_attendance_overtime_line_rule_own_reader" model="ir.rule">
             <field name="name">Overtime Line base user: Read his own overtime lines</field>
             <field name="model_id" ref="model_hr_attendance_overtime_line"/>
