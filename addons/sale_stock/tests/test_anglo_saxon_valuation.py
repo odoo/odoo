@@ -1361,3 +1361,33 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
                 {'credit': 0, 'debit': 500},
             ]
         )
+
+    def test_cogs_valued_by_lots(self):
+        self.product_avco_auto.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product_avco_auto.write({
+            'lot_valuated': True,
+            'tracking': 'lot',
+        })
+        self.lot1, self.lot2 = self.env['stock.lot'].create([
+            {'name': 'lot1', 'product_id': self.product_avco_auto.id},
+            {'name': 'lot2', 'product_id': self.product_avco_auto.id},
+        ])
+        self._make_in_move(self.product_avco_auto, 2, 10, lot_ids=[self.lot1])
+        self._make_in_move(self.product_avco_auto, 2, 16, lot_ids=[self.lot2])
+        self.assertEqual(self.product_avco_auto.standard_price, 13)
+        self.assertEqual(self.lot1.standard_price, 10)
+        self.assertEqual(self.lot2.standard_price, 16)
+        so = self._so_deliver(self.product_avco_auto, 1, 1)
+        invoice = so._create_invoices()
+        invoice.action_post()
+        invoice_cogs_lines = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('debit')
+        self.assertRecordValues(
+            invoice_cogs_lines,
+            [
+                {'credit': 10, 'debit': 0},
+                {'credit': 0, 'debit': 10},
+            ]
+        )
+        self.assertEqual(self.lot1.standard_price, 10)
+        self.assertEqual(self.lot2.standard_price, 16)
+        self.assertEqual(self.product_avco_auto.standard_price, 14)
