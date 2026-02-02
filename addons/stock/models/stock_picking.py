@@ -1312,7 +1312,7 @@ class StockPicking(models.Model):
             if pickings._is_single_transfer() and pickings._check_move_lines_map_quant_package(package):
                 move_lines_to_pack = pickings.move_line_ids.filtered(lambda ml: ml.package_id == package and not ml.result_package_id and ml.state not in ('done', 'cancel'))
                 if package.package_type_id.package_use != 'reusable':
-                    move_lines_to_pack.write({
+                    move_lines_to_pack.with_context(skip_entire_packs_check=True).write({
                         'result_package_id': package.id,
                         'is_entire_pack': True,
                     })
@@ -1484,6 +1484,10 @@ class StockPicking(models.Model):
                     break
             if has_quantity and not has_pick:
                 picking.move_ids.picked = True
+        if not self.env.context.get('skip_entire_packs'):
+            ml_with_issues_ids = self._check_entire_packages()
+            if ml_with_issues_ids:
+                return self._action_generate_not_entire_pack_wizard(ml_with_issues_ids)
         if not self.env.context.get('skip_backorder'):
             pickings_to_backorder = self._check_backorder()
             if pickings_to_backorder:
@@ -1524,6 +1528,24 @@ class StockPicking(models.Model):
             'context': dict(self.env.context, default_show_transfers=show_transfers, default_pick_ids=[(4, p.id) for p in self]),
         }
 
+    def _action_generate_not_entire_pack_wizard(self, ml_with_issues_ids):
+        view = self.env.ref('stock.stock_not_entire_pack_warning_view_form', raise_if_not_found=False)
+        if view:
+            return {
+                'name': self.env._('Incomplete packages'),
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'res_model': 'stock.not.entire.pack.warning',
+                'views': [(view.id, 'form')],
+                'view_id': view.id,
+                'target': 'new',
+                'context': {
+                    **self.env.context,
+                    'default_move_line_ids': [Command.set(ml_with_issues_ids)],
+                },
+            }
+        return self.with_context(skip_entire_packs=True)._pre_action_done_hook()
+
     def action_toggle_is_locked(self):
         self.ensure_one()
         self.is_locked = not self.is_locked
@@ -1543,6 +1565,19 @@ class StockPicking(models.Model):
             ):
                 backorder_pickings |= picking
         return backorder_pickings
+
+    def _check_entire_packages(self):
+        """ Checks if all move lines within the pickings that are supposed to be entire packs are still entire at the validation.
+            :return: A list of all move line ids that are no longer entire packs.
+        """
+        ml_with_issues_ids = set()
+        for (pickings, package), move_lines in self.move_line_ids.grouped(lambda ml: (ml._get_related_pickings(), ml.package_id)).items():
+            if not package:
+                continue
+            if not package._check_move_lines_map_quant(move_lines):
+                ml_with_issues_ids.update(move_lines.filtered(lambda ml: ml.package_id == ml.result_package_id).ids)
+
+        return list(ml_with_issues_ids)
 
     def _autoconfirm_picking(self):
         """ Automatically run `action_confirm` on `self` if one of the
