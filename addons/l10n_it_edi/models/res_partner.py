@@ -210,3 +210,10 @@ class ResPartner(models.Model):
             return 'it_edi_xml'
         else:
             return res
+
+    def create_company(self):
+        res = super().create_company()
+        if res:
+            it_values = self._update_fields_values(('l10n_it_codice_fiscale', 'l10n_it_pa_index'))
+            self.parent_id.update(it_values)
+        return res
