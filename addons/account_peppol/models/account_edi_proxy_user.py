@@ -372,7 +372,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             if edi_user.proxy_type != 'peppol':
                 continue
             try:
-                proxy_user = edi_user._make_request(f"{self._get_server_url()}/api/peppol/2/participant_status")
+                proxy_user = edi_user._make_request(f"{edi_user._get_server_url()}/api/peppol/2/participant_status")
             except AccountEdiProxyError as e:
                 if e.code == 'client_gone':
                     # reset the connection if it was archived/deleted on IAP side
