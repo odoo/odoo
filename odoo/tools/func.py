@@ -5,12 +5,14 @@ import functools
 import typing
 from collections.abc import Callable  # noqa: TC003
 from inspect import Parameter, getsourcefile, signature
+from types import MethodType
 
 __all__ = [
     'classproperty',
     'conditional',
     'lazy',
     'lazy_classproperty',
+    'protected',
     'reset_cached_properties',
 ]
 
@@ -237,3 +239,68 @@ class lazy:
     def __aenter__(self): return self._value.__aenter__()
     def __aexit__(self, exc_type, exc_value, traceback):
         return self._value.__aexit__(exc_type, exc_value, traceback)
+
+
+class _ProtectedAccessor:
+
+    def __init__(self, cls):
+        setattr(cls, '__', self)
+        self.cls_name = cls.__name__
+        self.protected = {
+            # Manage abstract class machinery
+            '__isabstractmethod__': property(lambda _: False),
+        }
+
+    def __repr__(self):
+        return f'<Protected accessor ({self.cls_name})>'
+
+    def register(self, name, callee):
+        self.protected[name] = callee
+
+    def __get__(self, instance, owner):
+        self.instance = instance
+        self.owner = owner
+        return self
+
+    def __getattr__(self, name):
+        callee = self.protected[name]
+        if isinstance(callee, property):
+            return callee.fget(self.instance)
+        if isinstance(callee, classmethod):
+            return MethodType(callee.__func__, self.owner)
+        if isinstance(callee, staticmethod):
+            return callee.__func__
+        return MethodType(callee, self.instance)
+
+
+class protected:
+    """ Makes a callable attribute accessible only via the `__` accessor.
+
+    .. code-block::
+
+        class C:
+
+            @protected
+            def func(self): ...
+
+        c = C()
+        c.__.func()
+        c.func()  # `AttributeError`
+    """
+
+    def __init__(self, callee):
+        assert callable(callee) or isinstance(callee, property)
+        self.callee = callee
+        self.name = getattr(callee, '__name__', None)
+
+    def __repr__(self):
+        return f"<Protected function: {self.name}>"
+
+    def __set_name__(self, owner, name):
+        self.name = self.name or name
+        accessor = getattr(owner, '__', None) or _ProtectedAccessor(owner)
+        accessor.register(self.name, self.callee)
+        del self.callee
+
+    def __call__(self):
+        raise AttributeError(f"Use `<obj>.__.{self.name}` instead.")
