@@ -30,21 +30,8 @@ class WebsiteVisitor(models.Model):
         compute='_compute_event_statistics',
     )
 
-    @api.depends('website_track_ids')
     def _compute_event_statistics(self):
-        results = self.env['website.track']._read_group([
-            ('visitor_id', 'in', self.ids),
-            ('event_id', '!=', False),
-        ], ['visitor_id'], ['event_id:array_agg', '__count'])
-        mapped_data = {
-            visitor.id: {'visitor_event_count': count, 'event_ids': event_ids}
-            for visitor, event_ids, count in results
-        }
-
-        for visitor in self:
-            visitor_info = mapped_data.get(visitor.id, {'event_ids': [], 'visitor_event_count': 0})
-            visitor.event_ids = [(6, 0, visitor_info['event_ids'])]
-            visitor.visitor_event_count = len(visitor_info['event_ids'])
+        self._compute_visitor_agg(field_name='event_ids', rel_field='event_id', count_field='visitor_event_count')
 
     def _add_viewed_event(self, event_id):
         """ add a website_track with a page marked as viewed"""

@@ -39,7 +39,7 @@
         <field name="name">Event Views History</field>
         <field name="res_model">website.track</field>
         <field name="view_mode">list</field>
-        <field name="view_ids" eval="[(5, 0, 0),
+        <field name="view_ids" eval="[
             (0, 0, {'view_mode': 'list', 'view_id': ref('website_event_visitor_page_view_tree')}),
             (0, 0, {'view_mode': 'graph', 'view_id': ref('website_event_visitor_page_view_graph')}),
         ]"/>
