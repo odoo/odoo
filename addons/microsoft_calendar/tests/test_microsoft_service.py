@@ -463,7 +463,7 @@ class TestMicrosoftService(TransactionCase):
         ])
 
     @patch.object(MicrosoftService, "_do_request")
-    def test_decline_event_updates_attendee_state(self, mock_do_request):
+    def test_refresh_microsoft_calendar_token_uses_correct_endpoint(self, mock_do_request):
         # Ensure we use the correct endpoint (useful for single/multi-tenant deployments).
         mock_do_request.return_value = self._do_request_result(
             {
