@@ -304,6 +304,10 @@
                             <ram:DueDateDateTime t-if="record.invoice_date_due">
                                 <udt:DateTimeString format="102" t-out="format_date(record.invoice_date_due)"/>
                             </ram:DueDateDateTime>
+                            <ram:ApplicableTradePaymentDiscountTerms t-if="record.invoice_payment_term_id.early_discount">
+                                <ram:BasisPeriodMeasure unitCode="DAY" t-out="record.invoice_payment_term_id.discount_days"/>
+                                <ram:CalculationPercent t-out="record.invoice_payment_term_id.discount_percentage"/>
+                            </ram:ApplicableTradePaymentDiscountTerms>
                         </ram:SpecifiedTradePaymentTerms>
 
                         <!-- Summary. -->
