@@ -12,12 +12,12 @@
                         <iframe t-att-sandbox="this.isBrowserSafari ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
                             t-att-scrolling="this.state.isMobile ? '' : 'no'"
                             t-att-class="{ 'd-none': props.showThemeSelector or props.showCodeView }"
-                            t-ref="iframeRef" t-on-blur="onBlur"/>
+                            t-custom-ref="iframeRef" t-on-blur="onBlur"/>
                     </div>
                 </div>
                 <div t-if="!props.readonly and props.withBuilder and !props.showThemeSelector and !props.showCodeView">
                     <div class="position-sticky o_mass_mailing-builder_sidebar o_builder_sidebar_open"
-                        t-att-class="{ 'd-none': this.env.isSmall }" t-ref="sidebarRef">
+                        t-att-class="{ 'd-none': this.env.isSmall }" t-custom-ref="sidebarRef">
                         <LazyComponent t-if="state.ready" Component="'mass_mailing.MassMailingBuilder'"
                             props="() => ({
                                 builderProps: this.getBuilderProps(),

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.AutoComplete">
-        <div class="o-autocomplete" t-ref="root" t-att-class="autoCompleteRootClass">
+        <div class="o-autocomplete" t-custom-ref="root" t-att-class="autoCompleteRootClass">
             <input
                 type="text"
                 t-att-id="props.id"
@@ -14,21 +14,21 @@
                 t-att-aria-expanded="displayOptions ? 'true' : 'false'"
                 aria-autocomplete="list"
                 aria-haspopup="listbox"
-                t-model="state.value"
+                t-custom-model="state.value"
                 t-on-blur="onInputBlur"
                 t-on-click="onInputClick"
                 t-on-change="onInputChange"
                 t-on-input="onInput"
                 t-on-keydown="onInputKeydown"
                 t-on-focus="onInputFocus"
-                t-ref="input"
+                t-custom-ref="input"
             />
             <t t-if="displayOptions">
                 <ul
                     role="menu"
                     class="o-autocomplete--dropdown-menu ui-widget show"
                     t-att-class="ulDropdownClass"
-                    t-ref="sourcesList">
+                    t-custom-ref="sourcesList">
                     <t t-foreach="sources" t-as="source" t-key="source.id">
                         <t t-if="source.isLoading">
                             <li class="ui-menu-item"

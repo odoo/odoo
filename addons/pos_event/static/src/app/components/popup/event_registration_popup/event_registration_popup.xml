@@ -6,13 +6,13 @@
                 <t t-esc="question.title"/>
                 <span t-if="question.is_mandatory_answer" class="text-danger">*</span>
             </span>
-            <select t-if="question.question_type === 'simple_choice'" t-model="stateObject[question.id]" class="form-select">
+            <select t-if="question.question_type === 'simple_choice'" t-custom-model="stateObject[question.id]" class="form-select">
                 <option value="">--- Select ---</option>
                 <option t-foreach="question.answer_ids" t-as="choice" t-key="choice.id" t-att-value="choice.id">
                     <t t-esc="choice.name"/>
                 </option>
             </select>
-            <input t-else="" t-model="stateObject[question.id]" class="form-control flex-grow-1"/>
+            <input t-else="" t-custom-model="stateObject[question.id]" class="form-control flex-grow-1"/>
         </div>
     </t>
     <t t-name="pos_event.EventRegistrationPopup">

@@ -17,7 +17,7 @@
                         <i class="oi oi-search p-2 fs-5 rounded-start-0 rounded-3 o-active" title="Search..." role="img" aria-label="Search..."/>
                     </span>
                 </div>
-                <div class="o-discuss-GifPicker-content overflow-y-auto overflow-x-hidden ps-2 pe-3 pb-2 h-100" t-ref="scroller">
+                <div class="o-discuss-GifPicker-content overflow-y-auto overflow-x-hidden ps-2 pe-3 pb-2 h-100" t-custom-ref="scroller">
                     <div t-if="state.loadingError" class="text-center">
                         <span class="o-discuss-GifPicker-error d-block">😵‍💫</span>
                         <span class="fs-5 text-muted d-block">Failed to load gifs...</span>
@@ -98,6 +98,6 @@
     </t>
 
     <t t-name="discuss.GifPicker.searchInput">
-        <input class="form-control border-0 flex-grow-1 rounded-3 rounded-end-0 o-active" placeholder="Search for a GIF" t-model="localState.searchTerm" t-ref="autofocus" />
+        <input class="form-control border-0 flex-grow-1 rounded-3 rounded-end-0 o-active" placeholder="Search for a GIF" t-custom-model="localState.searchTerm" t-custom-ref="autofocus" />
     </t>
 </templates>

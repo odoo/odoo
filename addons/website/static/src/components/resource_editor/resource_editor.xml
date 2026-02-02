@@ -71,7 +71,7 @@
                 </div>
                 <span class="o_resource_editor_resource_info" t-esc="resourceInfo"/>
             </div>
-            <div t-if="state.currentResource" id="resource-editor" t-ref="editor">
+            <div t-if="state.currentResource" id="resource-editor" t-custom-ref="editor">
                 <CodeEditor
                     class="'h-100'"
                     value="state.currentResource.arch"

@@ -5,7 +5,7 @@
             <t t-call="mail.DiscussSidebarSubchannel.main"/>
             <t t-set-slot="content">
                 <UseHoverOverlay hover="hover">
-                    <div class="overflow-hidden d-flex flex-column" t-ref="floating">
+                    <div class="overflow-hidden d-flex flex-column" t-custom-ref="floating">
                         <span class="fw-bolder user-select-none text-truncate d-inline-block p-2 pb-0" t-esc="channel.displayName"/>
                         <DiscussSidebarChannelActions channel="channel"/>
                     </div>
@@ -16,7 +16,7 @@
     </t>
 
     <t t-name="mail.DiscussSidebarSubchannel.main">
-        <li class="o-mail-DiscussSidebarSubchannel d-flex align-items-center flex-grow-1 position-relative" t-att-class="{ 'p-0': !store.discuss.isSidebarCompact, 'o-pt-0_5': !store.discuss.isSidebarCompact and props.isFirst }" t-ref="root">
+        <li class="o-mail-DiscussSidebarSubchannel d-flex align-items-center flex-grow-1 position-relative" t-att-class="{ 'p-0': !store.discuss.isSidebarCompact, 'o-pt-0_5': !store.discuss.isSidebarCompact and props.isFirst }" t-custom-ref="root">
             <t t-if="!store.discuss.isSidebarCompact">
                 <svg t-if="props.isFirst" class="position-absolute opacity-75" style="top: -8px;" xmlns="http://www.w3.org/2000/svg" width="10" height="25" viewBox="0 0 10 25">
                     <line x1="0" y1="3" x2="0" y2="100%" stroke="currentColor" stroke-width="3"/>

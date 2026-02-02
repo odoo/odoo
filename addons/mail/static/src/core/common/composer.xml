@@ -8,7 +8,7 @@
     <t t-set="normal" t-value="props.mode === 'normal'"/>
     <t t-set="extended" t-value="props.mode === 'extended'"/>
     <t t-set="actionsContainerClass" t-value="'o-mail-Composer-actions d-flex o-rounded-bubble'"/>
-    <div t-ref="root">
+    <div t-custom-ref="root">
         <div class="o-mail-Composer d-grid flex-shrink-0 pt-0 position-relative"
                 t-att-class="{
                     'pb-2': extended and !props.composer.message,
@@ -26,7 +26,7 @@
                 }" t-attf-class="{{ props.className }}">
             <FileUploader t-if="allowUpload" multiUpload="isMultiUpload" onUploaded.bind="(data) => { attachmentUploader.uploadData(data) }">
                 <t t-set-slot="toggler">
-                    <button t-att-disabled="!state.active or areAllActionsDisabled" class="d-none" title="Attach files" aria-label="Attach files" t-ref="file-uploader"><i class="fa fa-fw fa-paperclip"/></button>
+                    <button t-att-disabled="!state.active or areAllActionsDisabled" class="d-none" title="Attach files" aria-label="Attach files" t-custom-ref="file-uploader"><i class="fa fa-fw fa-paperclip"/></button>
                 </t>
             </FileUploader>
             <div t-if="showComposerAvatar" class="o-mail-Composer-sidebarMain flex-shrink-0 d-flex">
@@ -56,7 +56,7 @@
                         'align-self-stretch' : extended,
                         'w-100': props.composer.message,
                     }"
-                    t-ref="input-container"
+                    t-custom-ref="input-container"
                 >
                     <div t-if="!extended" t-attf-class="{{ actionsContainerClass }}">
                         <Dropdown t-if="partitionedActions.other.length > 0" position="'top-start'" menuClass="store.discussDropdownMenuClass(this)">
@@ -76,13 +76,13 @@
                         <t t-else="">
                                 <textarea class="o-mail-Composer-input o-mail-Composer-bg shadow-none overflow-auto o-scrollbar-thin o-discuss-text-body user-select-auto"
                                 t-att-class="inputClasses"
-                                t-ref="textarea"
+                                t-custom-ref="textarea"
                                 t-on-keydown="onKeydown"
                                 t-on-focusin="onFocusin"
                                 t-on-focusout="onFocusout"
                                 t-on-click="(ev) => markEventHandled(ev, 'composer.onClickTextarea')"
                                 t-on-paste="onPaste"
-                                t-model="props.composer.composerText"
+                                t-custom-model="props.composer.composerText"
                                 t-on-input="(ev) => this.onInput(ev)"
                                 t-att-placeholder="placeholder"
                                 t-att-readOnly="!state.active"
@@ -98,7 +98,7 @@
                                 class="o-mail-Composer-fake position-absolute overflow-hidden"
                                 t-att-class="inputClasses"
                                 t-att-value="props.composer.composerText"
-                                t-ref="fakeTextarea"
+                                t-custom-ref="fakeTextarea"
                                 disabled="1"
                             />
                         </t>
@@ -111,13 +111,13 @@
                     t-if="props.composer.attachments.length > 0"
                     attachments="props.composer.attachments"
                     unlinkAttachment.bind="(...args) => attachmentUploader.unlink(...args)"/>
-                <div t-if="!extended and !props.composer.message" class="o-mail-Composer-pickerContainer" t-att-class="{ 'o-active': composerActions.activePicker and ui.isSmall }" t-ref="picker-container">
+                <div t-if="!extended and !props.composer.message" class="o-mail-Composer-pickerContainer" t-att-class="{ 'o-active': composerActions.activePicker and ui.isSmall }" t-custom-ref="picker-container">
                     <div t-if="partitionedActions.pickers.length > 1 and composerActions.activePicker and ui.isSmall" class="o-mail-Composer-pickerSelection btn-group w-100">
                         <button t-foreach="partitionedActions.pickers" t-as="pickerAction" t-key="'PICKER_' + pickerAction.id" class="btn btn-secondary" t-esc="pickerAction.pickerName" t-on-click="(ev) => pickerAction.onSelected(ev)" t-att-class="{
                             'active': pickerAction.picker.isOpen
                         }"/>
                     </div>
-                    <div t-ref="picker-target"/>
+                    <div t-custom-ref="picker-target"/>
                 </div>
                 <div t-else="" class="d-flex align-items-center gap-1 w-100 pe-1">
                     <div class="pt-1" t-att-class="{ 'mt-2': !props.composer.message }">
@@ -155,7 +155,7 @@
 </t>
 
 <t t-name="mail.Composer.quickActions">
-    <div class="o-mail-Composer-quickActions o-mail-Composer-bg" t-attf-class="{{ actionsContainerClass }}" t-ref="quick-actions">
+    <div class="o-mail-Composer-quickActions o-mail-Composer-bg" t-attf-class="{{ actionsContainerClass }}" t-custom-ref="quick-actions">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
             <ActionList actions="partitionedActions.quick" inline="true"/>
         </div>
@@ -163,7 +163,7 @@
 </t>
 
 <t t-name="mail.Composer.moreActions">
-    <button class="btn btn-link p-0 d-flex border-0" t-att-disabled="areAllActionsDisabled" t-ref="more-actions">
+    <button class="btn btn-link p-0 d-flex border-0" t-att-disabled="areAllActionsDisabled" t-custom-ref="more-actions">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
             <t t-set="moreName">More Actions</t>
             <ActionList inline="true" actions="[{
@@ -178,7 +178,7 @@
 </t>
 
 <t t-name="mail.Composer.extraActions">
-    <div class="o-mail-Composer-extraActions" t-attf-class="{{ actionsContainerClass }}" t-ref="extra-actions">
+    <div class="o-mail-Composer-extraActions" t-attf-class="{{ actionsContainerClass }}" t-custom-ref="extra-actions">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
             <ActionList actions="partitionedActions.other" inline="true"/>
         </div>

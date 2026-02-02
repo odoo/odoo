@@ -3,7 +3,7 @@
     <t t-name="mail.CallPreview">
         <div class="o-mail-CallPreview ratio ratio-16x9">
             <div t-att-class="{'bg-dark': env.inWelcomePage}">
-                <video t-if="state.videoStream" class="object-fit-cover h-100 w-100 position-relative z-0" autoplay="" t-ref="video"/>
+                <video t-if="state.videoStream" class="object-fit-cover h-100 w-100 position-relative z-0" autoplay="" t-custom-ref="video"/>
                 <div t-else="" class="position-absolute top-0 start-0 end-0 bottom-0 d-flex flex-column align-items-center justify-content-center text-center px-3 z-1" t-att-class="{'text-white': env.inWelcomePage}">
                     <t t-if="env.inWelcomePage and rtc.cameraPermission !== 'granted'">
                         <span class="fs-3">Do you want people to see and hear you in the meeting?</span>
@@ -24,7 +24,7 @@
                     <ActionList actions="actions" inline="true" hasBtnBg="true"/>
                 </div>
             </div>
-            <audio autoplay="" t-ref="audio"/>
+            <audio autoplay="" t-custom-ref="audio"/>
         </div>
         <div t-if="props.hasSettingsAtBottom" class="d-flex flex-row justify-content-between mt-2 w-100 mw-100 flex-nowrap px-3">
             <div class="px-2" style="width: 30%">

@@ -2,7 +2,7 @@
 <templates>
     <t t-name="website_sale.ProductImageViewer">
         <div class="o_dialog" t-att-id="id" t-att-class="{ o_inactive_modal: !data.isActive }">
-            <div role="dialog" class="modal" t-ref="modalRef">
+            <div role="dialog" class="modal" t-custom-ref="modalRef">
                 <div class="o_wsale_image_viewer flex-column align-items-center d-flex w-100 h-100" t-on-mousemove="onGlobalMousemove">
                     <!-- Header -->
                     <div class="o_wsale_image_viewer_header d-flex w-100 text-white">
@@ -13,7 +13,7 @@
                     </div>
                     <!-- Content -->
                     <div class="o_wsale_image_viewer_image position-absolute top-0 bottom-0 start-0 end-0 align-items-center justify-content-center d-flex o_with_img overflow-hidden">
-                        <div class="o_wsale_image_viewer_void position-absolute align-items-center justify-content-center d-flex w-100 h-100" t-ref="imageContainer" t-att-style="imageContainerStyle">
+                        <div class="o_wsale_image_viewer_void position-absolute align-items-center justify-content-center d-flex w-100 h-100" t-custom-ref="imageContainer" t-att-style="imageContainerStyle">
                             <img
                                 alt="Viewer"
                                 class="mw-100 mh-100 transition-base"

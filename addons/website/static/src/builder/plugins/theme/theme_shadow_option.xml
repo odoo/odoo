@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.ThemeShadowOption">
-    <div t-ref="root" />
+    <div t-custom-ref="root" />
     <BuilderContext action="'customizeWebsiteVariable'">
         <BuilderRow label.translate="Normal" initialExpandAnim="shadowSizeToShow === 'shadow'" tooltip.translate="Horizontal and Vertical Offset">
             <BuilderNumberInput actionParam="'box-shadow-offset-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>

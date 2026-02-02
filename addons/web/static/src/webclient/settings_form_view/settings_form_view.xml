@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.SettingsFormView" t-inherit="web.FormView" t-inherit-mode="primary">
-        <xpath expr="./div[@t-ref='root']" position="attributes">
+        <xpath expr="./div[@t-custom-ref='root']" position="attributes">
             <attribute name="class">o-settings-form-view o_field_highlight</attribute>
         </xpath>
         <xpath expr="//Layout/t[@t-set-slot='control-panel-actions']" position="replace">
@@ -10,7 +10,7 @@
                     <div class="o_searchview form-control d-flex align-items-center py-1" role="search" aria-autocomplete="list">
                         <i class="o_searchview_icon oi oi-search me-2" role="img" aria-label="Search..." title="Search..." />
                         <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1">
-                            <input type="text" class="o_searchview_input o_input flex-grow-1 w-auto border-0" accesskey="Q" placeholder="Search..." role="searchbox" t-model="searchState.value" t-ref="autofocus"/>
+                            <input type="text" class="o_searchview_input o_input flex-grow-1 w-auto border-0" accesskey="Q" placeholder="Search..." role="searchbox" t-custom-model="searchState.value" t-custom-ref="autofocus"/>
                         </div>
                     </div>
                 </div>

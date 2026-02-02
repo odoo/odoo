@@ -2,17 +2,17 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Thread">
-    <div class="o-mail-Thread position-relative flex-grow-1 d-flex flex-column overflow-auto o-scrollbar-thin bg-inherit" t-att-class="{ 'pb-5': env.inChatter?.aside, 'o-pb-3_5': !env.inChatter?.aside, 'ps-2 pe-3': env.inDiscussApp and !ui.isSmall, 'o-focused': state.isFocused }" t-att-data-transient="props.thread.isTransient" t-ref="messages" tabindex="-1" t-on-focusin="onFocusin" t-on-focusout="onFocusout">
+    <div class="o-mail-Thread position-relative flex-grow-1 d-flex flex-column overflow-auto o-scrollbar-thin bg-inherit" t-att-class="{ 'pb-5': env.inChatter?.aside, 'o-pb-3_5': !env.inChatter?.aside, 'ps-2 pe-3': env.inDiscussApp and !ui.isSmall, 'o-focused': state.isFocused }" t-att-data-transient="props.thread.isTransient" t-custom-ref="messages" tabindex="-1" t-on-focusin="onFocusin" t-on-focusout="onFocusout">
         <t t-if="!props.thread.isEmpty or props.thread.loadOlder or props.thread.hasLoadingFailed" name="content">
             <div class="d-flex flex-column position-relative flex-grow-1 bg-inherit" t-att-class="{'justify-content-end': !env.inChatter and props.thread.model !== 'mail.box'}">
-                <span class="position-absolute w-100 invisible" t-att-class="props.order === 'asc' ? 'bottom-0' : 'top-0'" t-ref="present-treshold" t-att-style="`height: Min(${PRESENT_THRESHOLD}px, 100%)`"/>
+                <span class="position-absolute w-100 invisible" t-att-class="props.order === 'asc' ? 'bottom-0' : 'top-0'" t-custom-ref="present-treshold" t-att-style="`height: Min(${PRESENT_THRESHOLD}px, 100%)`"/>
                 <t t-set="currentDay" t-value="0"/>
                 <t t-if="props.order === 'asc'">
                     <t t-if="showLoadOlder" t-call="mail.Thread.loadOlder"/>
                     <t t-elif="props.thread.hasLoadingFailed" t-call="mail.Thread.loadingError"/>
                     <t t-elif="showStartMessage" t-call="mail.Thread.startMessage"/>
                 </t>
-                <span t-else="" class="pt-1" t-ref="load-newer"/>
+                <span t-else="" class="pt-1" t-custom-ref="load-newer"/>
                 <t t-set="messages" t-value="orderedMessages"/>
                 <t t-foreach="messages" t-as="msg" t-key="msg.id">
                     <t t-set="prevMsg" t-value="messages[msg_index -1]"/>
@@ -40,7 +40,7 @@
                         showDates="props.showDates"
                     />
                 </t>
-                <span t-if="props.order === 'asc'" class="pt-1" t-ref="load-newer"/>
+                <span t-if="props.order === 'asc'" class="pt-1" t-custom-ref="load-newer"/>
                 <t t-else="">
                     <t t-if="showLoadOlder" t-call="mail.Thread.loadOlder"/>
                     <t t-if="props.thread.hasLoadingFailed" t-call="mail.Thread.loadingError"/>
@@ -70,11 +70,11 @@
 </t>
 
 <t t-name="mail.Thread.jumpPresent">
-    <button t-if="props.showJumpPresent and state.showJumpPresent" class="o-mail-Thread-jumpPresent position-fixed p-2 rounded-circle lh-1 m-n3 user-select-none btn btn-light shadow-sm border border-secondary" t-att-class="{ 'bottom-0': env.inChatter and !env.inChatter.aside }" t-ref="jump-present" t-on-click="() => this.jumpToPresent()" title="Jump to Present"><i class="oi text-muted" t-att-class="{ 'oi-chevron-down': props.order === 'asc', 'oi-chevron-up': props.order !== 'asc' }"/></button>
+    <button t-if="props.showJumpPresent and state.showJumpPresent" class="o-mail-Thread-jumpPresent position-fixed p-2 rounded-circle lh-1 m-n3 user-select-none btn btn-light shadow-sm border border-secondary" t-att-class="{ 'bottom-0': env.inChatter and !env.inChatter.aside }" t-custom-ref="jump-present" t-on-click="() => this.jumpToPresent()" title="Jump to Present"><i class="oi text-muted" t-att-class="{ 'oi-chevron-down': props.order === 'asc', 'oi-chevron-up': props.order !== 'asc' }"/></button>
 </t>
 
 <t t-name="mail.Thread.loadOlder">
-    <button class="btn btn-link" t-att-class="{ 'opacity-0': !mountedAndLoaded }" t-on-click="onClickLoadOlder" t-ref="load-older">Load More</button>
+    <button class="btn btn-link" t-att-class="{ 'opacity-0': !mountedAndLoaded }" t-on-click="onClickLoadOlder" t-custom-ref="load-older">Load More</button>
 </t>
 
 <t t-name="mail.Thread.loadingError">

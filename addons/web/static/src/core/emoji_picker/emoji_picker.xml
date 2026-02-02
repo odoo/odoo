@@ -19,7 +19,7 @@
             </div>
             <t t-set="itemIndex" t-value="0"/>
             <t t-set="emojisFromSearch" t-value="getEmojisFromSearch()"/>
-            <div class="o-EmojiPicker-content overflow-auto d-flex flex-grow-1 w-100 flex-wrap align-items-center user-select-none mt-1" t-att-class="emojisFromSearch.length === 0 ? 'flex-column justify-content-center' : 'align-content-start'" t-ref="emoji-grid" t-on-scroll="highlightActiveCategory">
+            <div class="o-EmojiPicker-content overflow-auto d-flex flex-grow-1 w-100 flex-wrap align-items-center user-select-none mt-1" t-att-class="emojisFromSearch.length === 0 ? 'flex-column justify-content-center' : 'align-content-start'" t-custom-ref="emoji-grid" t-on-scroll="highlightActiveCategory">
                 <t t-if="searchTerm and emojisFromSearch.length === 0" class="d-flex flex-column">
                     <span class="o-EmojiPicker-empty">😢</span>
                     <span class="fs-5 text-muted">No emoji matches your search</span>
@@ -52,7 +52,7 @@
                     <t t-set="itemIndex" t-value="itemIndex + 1"/>
                 </t>
             </div>
-            <div class="o-EmojiPicker-navbar d-flex flex-shrink-0 w-100 align-items-center justify-content-center overflow-auto px-1 gap-1 border-top border-secondary" t-att-class="{ 'opacity-0': !state.emojiNavbarRepr }" t-ref="navbar">
+            <div class="o-EmojiPicker-navbar d-flex flex-shrink-0 w-100 align-items-center justify-content-center overflow-auto px-1 gap-1 border-top border-secondary" t-att-class="{ 'opacity-0': !state.emojiNavbarRepr }" t-custom-ref="navbar">
                 <t t-if="currentNavbarPanel">
                     <t t-set="allCategories" t-value="getAllCategories()"/>
                     <t t-foreach="currentNavbarPanel" t-as="navbarItemId" t-key="navbarItemId">
@@ -116,7 +116,7 @@
 </t>
 
 <t t-name="web.EmojiPicker.searchInput">
-    <input class="form-control border-0 flex-grow-1 rounded-3 rounded-end-0 o-active lh-1" t-att-placeholder="placeholder" t-model="localState.searchTerm" t-ref="autofocus" t-att-model="localState.searchTerm" t-on-input="() => this.state.activeEmojiIndex = 0" t-att-tabindex="isMobileOS ? -1 : 0"/>
+    <input class="form-control border-0 flex-grow-1 rounded-3 rounded-end-0 o-active lh-1" t-att-placeholder="placeholder" t-custom-model="localState.searchTerm" t-custom-ref="autofocus" t-att-model="localState.searchTerm" t-on-input="() => this.state.activeEmojiIndex = 0" t-att-tabindex="isMobileOS ? -1 : 0"/>
 </t>
 
 </templates>

@@ -20,7 +20,7 @@
                     <span class="input-group-text">Barcode</span>
                     <input type="text"
                         class="form-control ean"
-                        t-model="state.barcodeInput"
+                        t-custom-model="state.barcodeInput"
                         t-att-disabled="!barcodeReader"
                         t-attf-placeholder="{{ !barcodeReader ? 'No nomenclature' : '' }}"/>
                     <div class="d-flex align-items-center gap-1 ms-1">
@@ -54,7 +54,7 @@
                         </button>
                     </div>
                     <div data-tooltip="Import orders" data-tooltip-delay="0">
-                        <button t-ref="import-order-input" class="btn btn-danger btn-sm text-nowrap">
+                        <button t-custom-ref="import-order-input" class="btn btn-danger btn-sm text-nowrap">
                             <i class="fa fa-upload" aria-hidden="true" /> Import data
                         </button>
                         <input t-on-change="importData" type="file" class="d-none" id="import-order-input" />

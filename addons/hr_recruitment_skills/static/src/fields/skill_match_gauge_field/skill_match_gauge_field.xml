@@ -3,7 +3,7 @@
 
     <t t-name="hr_recruitment.SkillMatchGaugeField">
         <div class="oe_gauge position-relative pt-3">
-            <canvas t-ref="canvas"/>
+            <canvas t-custom-ref="canvas"/>
             <span class="o_gauge_value position-absolute start-0 end-0 bottom-0 text-center fs-2 fw-bolder">
                 <t t-esc="this.formattedValue"/>%
             </span>

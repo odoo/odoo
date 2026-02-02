@@ -16,7 +16,7 @@
             </select>
         </div>
         <div class="col justify-content-end flex-nowrap input-group has-validation">
-            <input type="text" class="form-control o_input o_we_url_input o_we_transition_ease flex-grow-0" t-att-class="{ o_we_horizontal_collapse: !state.showUrlInput, 'w-auto': state.showUrlInput }" name="url" t-att-placeholder="props.urlPlaceholder" t-model="state.urlInput" t-on-input="onUrlInput" t-if="state.showUrlInput" t-ref="urlInput"/>
+            <input type="text" class="form-control o_input o_we_url_input o_we_transition_ease flex-grow-0" t-att-class="{ o_we_horizontal_collapse: !state.showUrlInput, 'w-auto': state.showUrlInput }" name="url" t-att-placeholder="props.urlPlaceholder" t-custom-model="state.urlInput" t-on-input="onUrlInput" t-if="state.showUrlInput" t-custom-ref="urlInput"/>
             <button type="button" class="btn o_upload_media_url_button text-nowrap" t-att-class="{ 'btn-primary': state.urlInput, 'btn-secondary': !state.urlInput}" t-on-click="onUrlUploadClick" t-att-disabled="!enableUrlUploadClick">
                     <t t-esc="props.addText"/>
             </button>
@@ -27,7 +27,7 @@
                 <span t-elif="props.urlWarningTitle and state.urlInput and state.isValidUrl and !state.isValidFileFormat" class="o_we_url_warning text-warning mx-2 fa fa-lg fa-warning" t-att-title="props.urlWarningTitle"/>
             </div>
         </div>
-        <input type="file" class="d-none o_file_input" t-on-change="onChangeFileInput" t-ref="file-input" t-att-accept="props.accept" t-att-multiple="props.multiSelect and 'multiple'"/>
+        <input type="file" class="d-none o_file_input" t-on-change="onChangeFileInput" t-custom-ref="file-input" t-att-accept="props.accept" t-att-multiple="props.multiSelect and 'multiple'"/>
         <div class="col-auto btn-group">
             <button type="button" class="btn btn-secondary o_upload_media_button" t-on-click="onClickUpload">
                 <t t-esc="props.uploadText"/>
@@ -59,7 +59,7 @@
         <t t-call="{{ constructor.attachmentsListTemplate }}"/>
         <div name="load_more_attachments"
             class="pt-3 pb-1 text-center mx-auto o_we_load_more"
-            t-ref="load-more-button">
+            t-custom-ref="load-more-button">
             <button t-if="canLoadMore"
                 class="btn btn-primary o_load_more"
                 type="button"

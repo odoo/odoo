@@ -4,7 +4,7 @@
     <t t-name="web.KanbanRenderer">
         <div class="o_kanban_renderer o_renderer d-flex user-select-none"
             t-attf-class="{{ props.list.isGrouped ? 'o_kanban_grouped align-content-stretch' : 'o_kanban_ungrouped align-content-start flex-wrap justify-content-start' }}"
-            t-ref="root"
+            t-custom-ref="root"
         >
             <t t-foreach="getGroupsOrRecords()" t-as="groupOrRecord" t-key="groupOrRecord.key">
                 <t t-if="groupOrRecord.group">
@@ -121,7 +121,7 @@
     </t>
 
     <t t-name="web.KanbanDropdownMenuWrapper">
-        <div t-on-click="onClick" style="display:contents" t-ref="rootRef">
+        <div t-on-click="onClick" style="display:contents" t-custom-ref="rootRef">
             <t t-slot="default"/>
         </div>
     </t>

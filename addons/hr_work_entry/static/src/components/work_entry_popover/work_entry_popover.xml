@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="hr_work_entry.WorkEntryPopover">
-        <div class="o_work_entry_popover" t-ref="root">
+        <div class="o_work_entry_popover" t-custom-ref="root">
             <Record t-props="currentRecordProps" t-slot-scope="currentRecord">
                 <div class="popover-header d-flex justify-content-between py-0 pe-2"
                      t-attf-class="o_gantt_color_#{currentRecord.record.data.color}">

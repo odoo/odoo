@@ -5,7 +5,7 @@
         <span t-if="props.readonly" t-esc="formattedValue" />
         <input 
             t-else="" 
-            t-ref="numpadDecimal" 
+            t-custom-ref="numpadDecimal" 
             t-on-focusin="onFocusIn" 
             t-on-focusout="onFocusOut" 
             t-att-id="props.id" 

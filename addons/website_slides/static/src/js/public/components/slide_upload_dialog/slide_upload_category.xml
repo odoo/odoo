@@ -81,7 +81,7 @@
         <div class="mb-3">
             <label for="name" class="col-form-label">Title</label>
             <input
-                t-model="state.form.slideName"
+                t-custom-model="state.form.slideName"
                 id="name"
                 name="name"
                 placeholder="Title"
@@ -135,7 +135,7 @@
             <label for="duration" class="col-form-label">Estimated Completion Time</label>
             <div class="input-group">
                 <input
-                    t-model="state.form.duration"
+                    t-custom-model="state.form.duration"
                     type="number"
                     id="duration"
                     min="0"

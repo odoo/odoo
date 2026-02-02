@@ -7,13 +7,13 @@
             </button>
         </button>
 
-        <button t-ref="addButton" position="replace">
-            <button class="btn btn-secondary" data-tooltip="Add" t-on-click="(ev) => this.onAdd(ev.currentTarget)" t-ref="addButton">
+        <button t-custom-ref="addButton" position="replace">
+            <button class="btn btn-secondary" data-tooltip="Add" t-on-click="(ev) => this.onAdd(ev.currentTarget)" t-custom-ref="addButton">
                 Set
             </button>
         </button>
 
-        <div t-ref="root" position="inside">
+        <div t-custom-ref="root" position="inside">
             <div class="ms-3 d-flex flex-row gap-1">
                 <t t-foreach="favoritesWorkEntries" t-as="workEntryType" t-key="workEntryType.id">
                     <button t-if="workEntryType.shortcut_behavior === 'replace'"

@@ -5,7 +5,7 @@
             <Dropdown t-if="compact" state="floating" position="'right-start'" manual="true" menuClass="'o-mail-DiscussSidebar-floatingMenu ' + store.discussDropdownMenuClass(this)">
                 <t t-call="mail.DiscussSidebarCallParticipants.main"/>
                 <t t-set-slot="content">
-                    <div class="p-2" t-ref="floating">
+                    <div class="p-2" t-custom-ref="floating">
                         <t t-call="mail.DiscussSidebarCallParticipants.list">
                             <t t-set="isCompact" t-value="false"/>
                         </t>
@@ -17,7 +17,7 @@
     </t>
 
     <t t-name="mail.DiscussSidebarCallParticipants.main">
-        <div class="o-mail-DiscussSidebarCallParticipants d-flex pb-1 bg-inherit" t-ref="root" t-att-class="{
+        <div class="o-mail-DiscussSidebarCallParticipants d-flex pb-1 bg-inherit" t-custom-ref="root" t-att-class="{
             'justify-content-center': compact,
             'ps-3 pe-2': props.compact === undefined and !compact,
             'px-2': props.compact === false,

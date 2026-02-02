@@ -3,7 +3,7 @@
 
 <t t-name="mail.NotificationItem">
     <ActionSwiper onLeftSwipe="props.onSwipeLeft ? props.onSwipeLeft : undefined" onRightSwipe="props.onSwipeRight ? props.onSwipeRight : undefined">
-        <button class="o-mail-NotificationItem list-group-item d-flex cursor-pointer align-items-center w-100 position-relative" t-on-click="onClick" t-ref="root" t-att-class="{
+        <button class="o-mail-NotificationItem list-group-item d-flex cursor-pointer align-items-center w-100 position-relative" t-on-click="onClick" t-custom-ref="root" t-att-class="{
             'o-important': props.important,
             'o-interest': props.muted === 0,
             'border-secondary': props.muted === 1,
@@ -41,7 +41,7 @@
                     <div class="d-flex align-items-start position-relative">
                         <span class="position-absolute" t-if="props.hasMarkAsReadButton">
                             <span t-if="rootHover.isHover" class="ms-1 bg-view">
-                                <span class="o-mail-NotificationItem-badge o-discuss-badgeShape d-flex align-items-center justify-content-center mx-1 my-0 rounded fw-bold o-mail-NotificationItem-markAsRead text-600 cursor-pointer shadow-sm position-absolute top-0 end-0 z-1" title="Mark As Read" t-ref="markAsRead"><i class="fa fa-check text-success"/></span>
+                                <span class="o-mail-NotificationItem-badge o-discuss-badgeShape d-flex align-items-center justify-content-center mx-1 my-0 rounded fw-bold o-mail-NotificationItem-markAsRead text-600 cursor-pointer shadow-sm position-absolute top-0 end-0 z-1" title="Mark As Read" t-custom-ref="markAsRead"><i class="fa fa-check text-success"/></span>
                             </span>
                         </span>
                         <span t-if="!props.muted" t-attf-class="o-mail-NotificationItem-badge o-discuss-badge {{ props.counter > 0 and props.muted === 2 ? 'o-muted' : '' }} {{ props.important ? 'o-important' : '' }} {{ props.counter === 0 ? 'o-empty me-1' : '' }} d-flex align-items-center justify-content-center m-0 o-mx-0_5 badge rounded-pill fw-bold o-mail-NotificationItem-counter shadow-sm"><t t-if="props.counter" t-esc="props.counter"/></span>

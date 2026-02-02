@@ -4,7 +4,7 @@
         <div t-attf-class="o_wsale_soptions_menu_sizes {{domState.displaySizeOption ? '' : 'd-none'}}">
             <BuilderRow label.translate="Size">
                 <BuilderButtonGroup action="'setItemSize'">
-                    <table t-ref="table" t-on-mouseenter="_onTableMouseEnter" t-on-mouseleave="_onTableMouseLeave">
+                    <table t-custom-ref="table" t-on-mouseenter="_onTableMouseEnter" t-on-mouseleave="_onTableMouseLeave">
                         <t t-foreach="Array(4)" t-as="i" t-key="i_index">
                             <tr>
                                 <t t-foreach="Array(this.maxWidth)" t-as="j" t-key="j_index">

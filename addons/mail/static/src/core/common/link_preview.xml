@@ -23,7 +23,7 @@
                     </div>
                     <div class="position-relative d-flex align-items-center o-pt-0_5">
                         <a t-att-href="linkPreview.source_url" target="_blank">
-                            <img t-ref="image" class="o-mail-LinkPreviewCardImage-squarish rounded object-fit-contain" t-att-src="linkPreview.og_image" t-att-alt="linkPreview.og_title" t-on-load="onImageLoaded"/>
+                            <img t-custom-ref="image" class="o-mail-LinkPreviewCardImage-squarish rounded object-fit-contain" t-att-src="linkPreview.og_image" t-att-alt="linkPreview.og_title" t-on-load="onImageLoaded"/>
                         </a>
                     </div>
                     <t t-call="mail.LinkPreview.aside">
@@ -38,7 +38,7 @@
                     </div>
                     <div class="px-2 pb-2 d-flex justify-content-center">
                         <a t-att-href="linkPreview.source_url" target="_blank">
-                            <img t-ref="image" class="o-mail-LinkPreviewCardImage w-100 rounded object-fit-contain" t-att-src="linkPreview.og_image" t-att-alt="linkPreview.og_title" t-on-load="onImageLoaded"/>
+                            <img t-custom-ref="image" class="o-mail-LinkPreviewCardImage w-100 rounded object-fit-contain" t-att-src="linkPreview.og_image" t-att-alt="linkPreview.og_title" t-on-load="onImageLoaded"/>
                         </a>
                     </div>
                 </div>

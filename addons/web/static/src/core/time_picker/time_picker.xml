@@ -18,10 +18,10 @@
             >
                 <input
                     type="text"
-                    t-ref="inputRef"
+                    t-custom-ref="inputRef"
                     class="o_time_picker_input form-control px-0"
                     t-att-class="inputCssClass"
-                    t-model="state.inputValue"
+                    t-custom-model="state.inputValue"
                     t-on-input="onInput"
                     t-on-focus="ensureOpen"
                     t-on-click="ensureOpen"
@@ -44,10 +44,10 @@
             <input
                 t-if="env.isSmall"
                 type="time"
-                t-ref="inputRef"
+                t-custom-ref="inputRef"
                 class="o_time_picker_input form-control px-0"
                 t-att-class="inputCssClass"
-                t-model="state.inputValue"
+                t-custom-model="state.inputValue"
                 t-on-change="onChange"
             />
         </div>

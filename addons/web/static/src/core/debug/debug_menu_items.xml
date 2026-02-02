@@ -12,7 +12,7 @@
                         </label>
                     </td>
                     <td class="oe_form_required">
-                        <select id="formview_default_fields" class="o_input" t-model="state.fieldToSet">
+                        <select id="formview_default_fields" class="o_input" t-custom-model="state.fieldToSet">
                             <option value=""/>
                             <option t-foreach="defaultFields" t-as="field" t-att-value="field.name" t-key="field.name">
                                 <t t-esc="field.string"/> = <t t-esc="field.displayed"/>
@@ -28,7 +28,7 @@
                         </label>
                     </td>
                     <td>
-                        <select id="formview_default_conditions" class="o_input" t-model="state.condition">
+                        <select id="formview_default_conditions" class="o_input" t-custom-model="state.condition">
                             <option value=""/>
                             <option t-foreach="conditions" t-as="cond" t-att-value="cond.name + '=' + cond.value" t-key="cond.name">
                                 <t t-esc="cond.string"/>=<t t-esc="cond.displayed"/>
@@ -39,14 +39,14 @@
                 <tr>
                     <td colspan="2">
                         <input type="radio" id="formview_default_self"
-                            value="self" name="scope" t-model="state.scope"/>
+                            value="self" name="scope" t-custom-model="state.scope"/>
                         <label for="formview_default_self" class="oe_label"
                             style="display: inline;">
                             Only you
                         </label>
                         <br/>
                         <input type="radio" id="formview_default_all"
-                            value="all" name="scope" t-model="state.scope"/>
+                            value="all" name="scope" t-custom-model="state.scope"/>
                         <label for="formview_default_all" class="oe_label"
                             style="display: inline;">
                             All users

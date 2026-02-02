@@ -6,7 +6,7 @@
             <span t-esc="props.record.data[props.name] or ''" />
         </t>
         <t t-else="">
-            <div t-ref="div">
+            <div t-custom-ref="div">
                 <textarea
                     class="o_input"
                     t-att-class="{
@@ -16,7 +16,7 @@
                     t-att-id="props.id"
                     t-att-placeholder="props.placeholder"
                     t-att-rows="rowCount"
-                    t-ref="textarea"
+                    t-custom-ref="textarea"
                     t-on-blur="onBlur"
                 />
                 <div class="o_field_input_buttons">

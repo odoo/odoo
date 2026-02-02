@@ -6,8 +6,8 @@
             <div class="search position-relative h-100 d-flex flex-grow-1">
                 <div class="input-group">
                     <span class="input-group-text"><i class="fa-fw oi oi-search" role="img" aria-label="Search Products" title="Search Products"/></span>
-                    <input class="form-control form-control-lg" t-ref="autofocus"
-                    t-model="state.searchInput" t-on-keydown="onSearchInputKeydown" t-on-keyup="onSearchInputKeyup" type="text" t-att-placeholder="props.placeholder" />
+                    <input class="form-control form-control-lg" t-custom-ref="autofocus"
+                    t-custom-model="state.searchInput" t-on-keydown="onSearchInputKeydown" t-on-keyup="onSearchInputKeyup" type="text" t-att-placeholder="props.placeholder" />
                     <div t-if="state.showSearchFields and state.searchInput" class="fields z-1 bg-light">
                         <ul class="py-1 px-0 small">
                             <t t-foreach="searchFieldsList" t-as="fieldName" t-key="fieldName" t-if="state.selectedFilter === 'SYNCED' or fieldName !== 'INVOICE_NUMBER'">

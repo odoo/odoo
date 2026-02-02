@@ -2,7 +2,7 @@
 
     <!-- Template for the widget SignatureForm. -->
     <t t-name="portal.SignatureForm">
-        <div t-ref="root">
+        <div t-custom-ref="root">
             <div t-if="state.success" class="alert alert-success" role="status">
                 <span t-if="state.success.message" t-esc="state.success.message"/>
                 <span t-else="">Thank You!</span>

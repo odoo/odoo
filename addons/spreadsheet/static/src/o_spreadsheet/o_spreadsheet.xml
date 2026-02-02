@@ -56,7 +56,7 @@
       <div
         class="d-flex o-topbar-responsive"
         t-att-class="{'o-topbar-responsive': !env.model.getters.isReadonly()}"
-        t-ref="toolBarContainer">
+        t-custom-ref="toolBarContainer">
         <div
           class="o-topbar-toolbar d-flex flex-grow-1"
           t-att-class="{'flex-shrink-0': env.model.getters.isReadonly()}">
@@ -69,7 +69,7 @@
               Readonly Access
             </span>
           </div>
-          <div t-else="" class="o-toolbar-tools d-flex ms-4 flex-grow-1" t-ref="toolBar">
+          <div t-else="" class="o-toolbar-tools d-flex ms-4 flex-grow-1" t-custom-ref="toolBar">
             <div
               class="d-flex tool-container"
               t-foreach="toolsCategories"
@@ -85,11 +85,11 @@
               <div t-if="showDivider(category_index)" class="o-topbar-divider border-end"/>
             </div>
             <div
-              t-ref="moreToolsContainer"
+              t-custom-ref="moreToolsContainer"
               class="d-flex align-items-center flex-grow-1 me-auto more-tools-container">
               <span
                 class="o-toolbar-button o-menu-item-button o-hoverable-button  me-2 px-1 py-2 more-tools"
-                t-ref="moreToolsButton"
+                t-custom-ref="moreToolsButton"
                 t-on-click.stop="toggleMoreTools">
                 <t t-call="o-spreadsheet-Icon.SHORT_THIN_DRAG_HANDLE"/>
               </span>
@@ -153,7 +153,7 @@
     </Popover>
   </t>
 
-  <div t-name="o-spreadsheet-TopBarZoom" t-ref="buttonRef" t-on-click.stop="">
+  <div t-name="o-spreadsheet-TopBarZoom" t-custom-ref="buttonRef" t-on-click.stop="">
     <NumberEditor
       currentValue="currentFontSize"
       onValueChange.bind="this.setZoom"
@@ -168,7 +168,7 @@
     />
   </div>
 
-  <div t-name="o-spreadsheet-NumberFormatsTool" t-ref="buttonRef" t-on-click.stop="">
+  <div t-name="o-spreadsheet-NumberFormatsTool" t-custom-ref="buttonRef" t-on-click.stop="">
     <ActionButton
       action="formatNumberMenuItemSpec"
       hasTriangleDownIcon="true"
@@ -197,7 +197,7 @@
   <div
     t-name="o-spreadsheet-DropdownAction"
     class="o-dropdown"
-    t-ref="actionRef"
+    t-custom-ref="actionRef"
     t-on-click.stop="">
     <ActionButton
       action="props.parentAction"
@@ -236,7 +236,7 @@
     <div class="position-relative">
       <input
         type="text"
-        t-ref="{{refName}}"
+        t-custom-ref="{{refName}}"
         t-att-class="inputClass"
         t-att-id="props.id"
         t-att-placeholder="props.placeholder"
@@ -259,7 +259,7 @@
     <Popover t-if="props.popoverProps" t-props="props.popoverProps">
       <div
         class="o-table-style-popover d-flex flex-column py-3 bg-white"
-        t-ref="tableStyleList"
+        t-custom-ref="tableStyleList"
         t-on-contextmenu.prevent="">
         <div class="d-flex o-notebook ps-4 mb-3">
           <div
@@ -306,7 +306,7 @@
       t-on-click="props.onClick"
       t-on-contextmenu.prevent="(ev) => this.onContextMenu(ev)">
       <div class="o-table-preview">
-        <canvas t-ref="canvas" class="w-100 h-100"/>
+        <canvas t-custom-ref="canvas" class="w-100 h-100"/>
       </div>
       <div
         class="o-table-style-edit-button position-absolute d-none bg-white border"
@@ -388,7 +388,7 @@
     <div
       class="o-spreadsheet h-100 w-100"
       t-att-class="getSpreadSheetClasses()"
-      t-ref="spreadsheet"
+      t-custom-ref="spreadsheet"
       t-att-style="getStyle()">
       <t t-if="env.isDashboard()">
         <SpreadsheetDashboard getGridSize.bind="getGridSize"/>
@@ -430,7 +430,7 @@
       </t>
       <t t-else="">
         <div class="o-small-composer px-2 py-2 position-relative bg-white border">
-          <div class="w-100" t-ref="bottombarComposer">
+          <div class="w-100" t-custom-ref="bottombarComposer">
             <Composer t-props="composerProps"/>
             <span
               t-if="showFxIcon"
@@ -474,7 +474,7 @@
   </t>
 
   <div t-name="o-spreadsheet-RibbonMenu">
-    <div class="o-ribbon-menu d-flex flex-column" t-ref="menu">
+    <div class="o-ribbon-menu d-flex flex-column" t-custom-ref="menu">
       <div class="o-ribbon-title d-flex py-2 fw-bold">
         <div
           class="o-previous-button px-3 py-1 mx-2 rounded"
@@ -486,7 +486,7 @@
       </div>
       <div
         class="o-ribbon-menu-wrapper overflow-auto"
-        t-ref="container"
+        t-custom-ref="container"
         t-on-scroll="updateShadows">
         <Menu t-props="menuProps"/>
       </div>
@@ -496,7 +496,7 @@
   <t t-name="o-spreadsheet-TableStyleEditorPanel">
     <div class="o-table-style-editor-panel">
       <Section title.translate="Style name">
-        <input type="text" class="o-input" t-model="state.styleName"/>
+        <input type="text" class="o-input" t-custom-model="state.styleName"/>
       </Section>
       <Section class="'pt-1'" title.translate="Style color">
         <RoundColorPicker
@@ -900,7 +900,7 @@
         </div>
       </div>
 
-      <div class="o-panel-content overflow-y-auto h-100" t-ref="panelContent">
+      <div class="o-panel-content overflow-y-auto h-100" t-custom-ref="panelContent">
         <div class="h-100" t-att-class="{ 'd-none': state.panel !== 'configuration' }">
           <t
             t-component="sidePanelEditor"
@@ -918,7 +918,7 @@
   <t t-name="o-spreadsheet-PivotSpreadsheetSidePanel">
     <t t-set="isReadonly" t-value="env.model.getters.isReadonly()"/>
     <div class="d-flex flex-column h-100 justify-content-between overflow-hidden">
-      <div class="h-100 position-relative overflow-x-hidden overflow-y-auto" t-ref="pivotSidePanel">
+      <div class="h-100 position-relative overflow-x-hidden overflow-y-auto" t-custom-ref="pivotSidePanel">
         <div
           t-att="isReadonly ? ['inert', 1] : []"
           t-att-class="{ 'pe-none opacity-50': isReadonly }">
@@ -1119,7 +1119,7 @@
   </t>
 
   <t t-name="o-spreadsheet-PivotLayoutConfigurator">
-    <div class="pivot-dimensions o-section" t-ref="pivot-dimensions">
+    <div class="pivot-dimensions o-section" t-custom-ref="pivot-dimensions">
       <div
         class="o-fw-bold py-1 d-flex flex-row justify-content-between align-items-center o-section-title">
         Columns
@@ -1364,7 +1364,7 @@
   </t>
 
   <t t-name="o-spreadsheet-AddDimensionButton">
-    <button class="add-dimension o-button" t-on-click="togglePopover" t-ref="button">Add</button>
+    <button class="add-dimension o-button" t-on-click="togglePopover" t-custom-ref="button">Add</button>
     <Popover t-if="popover.isOpen" t-props="popoverProps">
       <div
         class="p-2 bg-white border-bottom d-flex sticky-top align-items-baseline pivot-dimension-search bg-white">
@@ -1375,7 +1375,7 @@
           t-on-input="(ev) => this.updateSearch(ev.target.value)"
           t-on-keydown="onKeyDown"
           class="border-0 w-100 pivot-dimension-search-field"
-          t-ref="autofocus"
+          t-custom-ref="autofocus"
         />
       </div>
       <TextValueProvider
@@ -1544,7 +1544,7 @@
         <div class="o-input-search-container">
           <input
             type="text"
-            t-ref="searchInput"
+            t-custom-ref="searchInput"
             class="o-input o-input-with-count o-search"
             t-on-input="onSearchInput"
             t-on-focus="onFocusSearch"
@@ -1622,7 +1622,7 @@
               type="text"
               class="o-input o-input-without-count o-replace"
               t-on-keydown="onKeydownReplace"
-              t-model="store.toReplace"
+              t-custom-model="store.toReplace"
               placeholder="e.g. 'replace me'"
             />
           </div>
@@ -1662,7 +1662,7 @@
     <div
       class="o-dv-preview d-flex justify-content-between p-3 border-bottom"
       t-on-click="onPreviewClick"
-      t-ref="dvPreview">
+      t-custom-ref="dvPreview">
       <div>
         <div class="o-dv-preview-description o-fw-bold text-truncate" t-esc="descriptionString"/>
         <div class="o-dv-preview-ranges text-truncate" t-esc="rangesString"/>
@@ -1866,7 +1866,7 @@
       <t t-if="allowedValues === 'onlyLiterals'">
         <input
           type="text"
-          t-ref="input"
+          t-custom-ref="input"
           t-on-input="onInputValueChanged"
           t-att-value="props.value"
           class="o-input"
@@ -1892,7 +1892,7 @@
   </t>
 
   <t t-name="o-spreadsheet-ConditionalFormatPreviewList">
-    <div class="o-cf-preview-list h-100 overflow-auto" t-ref="cfList">
+    <div class="o-cf-preview-list h-100 overflow-auto" t-custom-ref="cfList">
       <t t-foreach="conditionalFormats" t-as="cf" t-key="cf.id">
         <div
           class="o-cf-preview-container d-flex position-relative"
@@ -1916,7 +1916,7 @@
     <t t-set="cf" t-value="props.conditionalFormat"/>
     <div
       class="o-cf-preview w-100 d-flex align-items-center border-bottom"
-      t-ref="cfPreview"
+      t-custom-ref="cfPreview"
       t-att-class="props.class"
       t-att-data-id="cf.id"
       t-on-click="editConditionalFormat"
@@ -2341,7 +2341,7 @@
   <t t-name="o-spreadsheet.RoundColorPicker">
     <div
       class="o-round-color-picker-button rounded-circle border"
-      t-ref="colorPickerButton"
+      t-custom-ref="colorPickerButton"
       t-on-click.stop="togglePicker"
       t-att-title="props.title"
       t-att-style="buttonStyle"
@@ -2403,7 +2403,7 @@
   </t>
 
   <t t-name="o-spreadsheet-Collapse">
-    <div t-ref="content" class="os-collapse">
+    <div t-custom-ref="content" class="os-collapse">
       <t t-slot="default"/>
     </div>
   </t>
@@ -2412,7 +2412,7 @@
     <span
       class="fa fa-cog os-cog-wheel-menu-icon o-button-icon"
       t-on-click="toggleMenu"
-      t-ref="button"
+      t-custom-ref="button"
     />
     <MenuPopover
       t-if="menuState.isOpen"
@@ -2929,7 +2929,7 @@
       </div>
 
       <t t-set="definition" t-value="getChartDefinition(this.chartId)"/>
-      <div class="o-panel-content" t-ref="panelContent">
+      <div class="o-panel-content" t-custom-ref="panelContent">
         <div t-att-class="store.panel !== 'configuration' ? 'd-none' : ''">
           <ChartTypePicker chartId="chartId" chartPanelStore="store"/>
           <t
@@ -3373,7 +3373,7 @@
       <div class="position-relative">
         <select
           class="o-input o-type-selector"
-          t-ref="selectRef"
+          t-custom-ref="selectRef"
           t-on-pointerdown.prevent="onPointerDown">
           <option
             t-esc="selectedChartProperties.displayName"
@@ -3387,7 +3387,7 @@
     </Section>
     <Popover t-if="state.popoverProps" t-props="state.popoverProps">
       <div
-        t-ref="popoverRef"
+        t-custom-ref="popoverRef"
         class="o-chart-select-popover px-3 pb-4 bg-white"
         t-att-style="state.popoverStyle">
         <t t-foreach="categories" t-as="category" t-key="category">
@@ -4265,7 +4265,7 @@
           </span>
         </div>
         <Popover t-if="state.popoverProps" t-props="state.popoverProps">
-          <table t-ref="popoverRef" class="bg-white" t-att-style="state.popoverStyle">
+          <table t-custom-ref="popoverRef" class="bg-white" t-att-style="state.popoverStyle">
             <tr
               class="color-scale-container custom-color-scale-container"
               t-on-click="() => this.onColorScaleChange('custom')">
@@ -4448,7 +4448,7 @@
       <div class="o-section pb-1 pt-0">
         <div class="o-section-title">Carousel Sections</div>
       </div>
-      <div class="o-carousel-preview-list overflow-auto bg-white" t-ref="previewList">
+      <div class="o-carousel-preview-list overflow-auto bg-white" t-custom-ref="previewList">
         <t t-foreach="carouselItems" t-as="item" t-key="getItemId(item)">
           <div
             class="o-carousel-preview border-bottom pe-2 position-relative w-100 d-flex align-items-center"
@@ -4497,7 +4497,7 @@
   </t>
 
   <t t-name="o-spreadsheet-SelectionInput">
-    <div class="o-selection" t-ref="o-selection">
+    <div class="o-selection" t-custom-ref="o-selection">
       <div
         t-foreach="ranges"
         t-as="range"
@@ -4529,7 +4529,7 @@
               'o-invalid border-danger position-relative': isInvalid || !range.isValidRange,
               'text-decoration-underline': range.xc and range.isFocused and state.mode === 'select-range'
             }"
-            t-ref="{{range.isFocused ? 'focusedInput' : 'unfocusedInput' + range_index}}"
+            t-custom-ref="{{range.isFocused ? 'focusedInput' : 'unfocusedInput' + range_index}}"
           />
           <span
             t-if="isInvalid || !range.isValidRange"
@@ -4578,7 +4578,7 @@
   <t t-name="o-spreadsheet-Select">
     <div
       tabIndex="0"
-      t-ref="selectRef"
+      t-custom-ref="selectRef"
       class="o-input o-select"
       t-att-class="props.class"
       t-att-name="props.name"
@@ -4591,7 +4591,7 @@
       <div
         class="o-select-dropdown bg-white overflow-hidden py-2"
         t-att-class="props.popoverClass"
-        t-ref="dropdownRef">
+        t-custom-ref="dropdownRef">
         <t t-foreach="props.values" t-as="value" t-key="value_index">
           <div
             class="o-select-option"
@@ -4611,7 +4611,7 @@
   </t>
 
   <t t-name="o-spreadsheet-ScrollBar">
-    <div class="o-scrollbar" t-on-scroll="onScroll" t-ref="scrollbar" t-att-style="positionCss">
+    <div class="o-scrollbar" t-on-scroll="onScroll" t-custom-ref="scrollbar" t-att-style="positionCss">
       <div t-att-style="sizeCss"/>
     </div>
   </t>
@@ -4621,10 +4621,10 @@
       <div
         class="o-popover rounded"
         t-att-class="props.class"
-        t-ref="popover"
+        t-custom-ref="popover"
         t-on-wheel="props.onMouseWheel"
         t-on-click.stop="">
-        <div class="o-popover-content" t-ref="popoverContent">
+        <div class="o-popover-content" t-custom-ref="popoverContent">
           <t t-slot="default"/>
         </div>
       </div>
@@ -4697,7 +4697,7 @@
   <t t-name="o-spreadsheet-NumberInput">
     <input
       type="number"
-      t-ref="{{refName}}"
+      t-custom-ref="{{refName}}"
       t-att-class="inputClass"
       t-att-id="props.id"
       t-att-placeholder="props.placeholder"
@@ -4712,7 +4712,7 @@
   </t>
 
   <t t-name="o-spreadsheet-NumberEditor">
-    <div class="o-dropdown" t-ref="NumberEditor">
+    <div class="o-dropdown" t-custom-ref="NumberEditor">
       <div
         class="o-number-editor d-flex align-items-center"
         t-att-class="props.class"
@@ -4728,7 +4728,7 @@
           t-on-click.stop="props.onFocusInput"
           t-on-focus.stop="onInputFocused"
           t-on-change="setValueFromInput"
-          t-ref="inputNumber"
+          t-custom-ref="inputNumber"
         />
         <t t-esc="props.valueIcon"/>
         <span>
@@ -4736,7 +4736,7 @@
         </span>
       </div>
       <Popover t-if="dropdown.isOpen" t-props="popoverProps">
-        <div class="o-text-options bg-white" t-on-click.stop="" t-ref="numberList">
+        <div class="o-text-options bg-white" t-on-click.stop="" t-custom-ref="numberList">
           <t t-foreach="props.valueList" t-as="value" t-key="value">
             <div t-att-data-size="value" t-on-click="() => this.setValueFromList(value)">
               <t t-esc="value"/>
@@ -4751,7 +4751,7 @@
   <t t-name="o-spreadsheet-Menu-Popover">
     <Popover t-if="menuItems.length" t-props="popoverProps">
       <div
-        t-ref="menu"
+        t-custom-ref="menu"
         class="o-menu-wrapper bg-white"
         t-on-mouseover="() => this.onMouseOverMainMenu()">
         <Menu t-props="menuProps"/>
@@ -4774,7 +4774,7 @@
 
   <t t-name="o-spreadsheet-Menu">
     <div
-      t-ref="menu"
+      t-custom-ref="menu"
       class="o-menu bg-white"
       t-att-style="menuStyle"
       t-on-scroll="props.onScroll"
@@ -4843,7 +4843,7 @@
             title="Link label"
             placeholder="e.g. 'Link label'"
             class="o-input"
-            t-model="link.label"
+            t-custom-model="link.label"
           />
         </div>
 
@@ -4855,8 +4855,8 @@
               type="text"
               placeholder="e.g. 'http://www.odoo.com'"
               title="Link URL"
-              t-ref="urlInput"
-              t-model="link.url"
+              t-custom-ref="urlInput"
+              t-custom-model="link.url"
             />
           </t>
           <t t-else="">
@@ -4875,7 +4875,7 @@
             t-if="!link.url"
             t-on-click.stop="openMenu"
             class="o-special-link o-button-icon bg-white"
-            t-ref="linkEditorMenuButton">
+            t-custom-ref="linkEditorMenuButton">
             <t t-call="o-spreadsheet-Icon.LIST"/>
           </button>
         </div>
@@ -6091,7 +6091,7 @@
   </t>
 
   <t t-name="o-spreadsheet-Highlight">
-    <div class="o-highlight" t-ref="highlight">
+    <div class="o-highlight" t-custom-ref="highlight">
       <t
         t-if="!env.isMobile()"
         t-foreach="['n', 's', 'w', 'e']"
@@ -6228,7 +6228,7 @@
   <t t-name="o-spreadsheet-RowResizer">
     <div
       class="o-row-resizer o-zoomable"
-      t-ref="rowResizer"
+      t-custom-ref="rowResizer"
       t-on-pointermove.self="onMouseMove"
       t-on-mouseleave="onMouseLeave"
       t-on-pointerdown.self.prevent="select"
@@ -6271,7 +6271,7 @@
   <t t-name="o-spreadsheet-ColResizer">
     <div
       class="o-col-resizer d-flex o-zoomable"
-      t-ref="colResizer"
+      t-custom-ref="colResizer"
       t-on-pointermove.self="onMouseMove"
       t-on-mouseleave="onMouseLeave"
       t-on-pointerdown.self.prevent="select"
@@ -6427,7 +6427,7 @@
       <FiguresContainer/>
     </div>
     <div
-      t-ref="gridOverlay"
+      t-custom-ref="gridOverlay"
       class="o-grid-overlay overflow-hidden o-zoomable"
       t-att-class="{'o-paint-format-cursor': isPaintingFormat}"
       t-att-style="style"
@@ -6459,7 +6459,7 @@
       <input
         type="text"
         class="o-grid-add-rows-input o-input mt-0 me-2"
-        t-ref="inputRef"
+        t-custom-ref="inputRef"
         value="100"
         t-on-click.stop=""
         t-on-keydown.stop="onKeydown"
@@ -6480,7 +6480,7 @@
       t-on-click="focusDefaultElement"
       t-on-keydown="onKeydown"
       t-on-wheel.prevent="onMouseWheel"
-      t-ref="grid">
+      t-custom-ref="grid">
       <GridOverlay
         onCellClicked.bind="onCellClicked"
         onCellDoubleClicked.bind="onCellDoubleClicked"
@@ -6494,7 +6494,7 @@
         gridDims="env.model.getters.getSheetViewDimensionWithHeaders()"
         onInputContextMenu.bind="onInputContextMenu"
       />
-      <canvas t-ref="canvas"/>
+      <canvas t-custom-ref="canvas"/>
       <t t-set="focused" t-value="focusedClients"/>
       <t
         t-foreach="env.model.getters.getClientsToDisplay()"
@@ -6555,7 +6555,7 @@
         <div
           class="o-fullscreen-figure o-figure position-relative border rounded shadow"
           tabindex="1"
-          t-ref="fullScreenFigure"
+          t-custom-ref="fullScreenFigure"
           t-on-click.stop=""
           t-on-keydown="(ev) => this.onKeyDown(ev)">
           <t>
@@ -6593,7 +6593,7 @@
     <div class="position-relative">
       <input
         class="w-100 o-input my-2"
-        t-ref="filterMenuSearchBar"
+        t-custom-ref="filterMenuSearchBar"
         type="text"
         t-on-input="updateSearch"
         placeholder="Search..."
@@ -6605,7 +6605,7 @@
     </div>
     <div
       class="o-filter-menu-list d-flex flex-column border"
-      t-ref="filterValueList"
+      t-custom-ref="filterValueList"
       t-on-click="this.clearScrolledToValue"
       t-on-scroll="this.clearScrolledToValue">
       <t t-foreach="state.displayedValues" t-as="value" t-key="value.string">
@@ -6636,7 +6636,7 @@
     <div
       t-on-pointermove="this.props.onMouseMove"
       class="o-filter-menu-item o-filter-menu-value"
-      t-ref="menuValueItem"
+      t-custom-ref="menuValueItem"
       t-att-class="{'selected': this.props.isSelected}">
       <t t-set="value">
         <t t-if="this.props.value === ''">(Blanks)</t>
@@ -6798,7 +6798,7 @@
           t-att-title="title"
           t-att-style="titleStyle"
         />
-        <div class="o-carousel-tabs d-flex flex-fill justify-content-end" t-ref="carouselTabs">
+        <div class="o-carousel-tabs d-flex flex-fill justify-content-end" t-custom-ref="carouselTabs">
           <t t-foreach="visibleCarouselItems" t-as="item" t-key="item_index">
             <div
               class="o-carousel-tab text-truncate px-2 mt-1 flex-shrink-0"
@@ -6812,7 +6812,7 @@
         <div
           class="o-carousel-tabs-dropdown o-carousel-button flex-shrink-0 rounded p-1"
           t-att-class="{'active': menuState.isOpen}"
-          t-ref="carouselTabsDropdown"
+          t-custom-ref="carouselTabsDropdown"
           t-on-click="toggleMenu">
           <div class="fa fa-angle-down"/>
           <MenuPopover
@@ -6872,14 +6872,14 @@
       class="o-figure-wrapper"
       t-att-class="{'o-figure-selected': isSelected}"
       t-att-style="wrapperStyle"
-      t-ref="figureWrapper">
+      t-custom-ref="figureWrapper">
       <div
         class="o-figure w-100 h-100"
         t-att-class="props.class"
         t-on-pointerdown.stop="(ev) => this.onMouseDown(ev)"
         t-on-click="onClick"
         t-on-contextmenu.prevent.stop="(ev) => !env.model.getters.isReadonly() and this.onContextMenu(ev)"
-        t-ref="figure"
+        t-custom-ref="figure"
         t-att-style="props.style"
         t-att-data-id="props.figureUI.id"
         tabindex="0"
@@ -6897,7 +6897,7 @@
             class="o-figure-menu-item d-flex-align-items-center"
             t-if="!env.model.getters.isReadonly() and props.figureUI.tag !== 'carousel'"
             t-on-click="showMenu"
-            t-ref="menuButton"
+            t-custom-ref="menuButton"
             t-on-contextmenu.prevent.stop="showMenu">
             <t t-call="o-spreadsheet-Icon.LIST"/>
           </div>
@@ -6979,13 +6979,13 @@
   <t t-name="o-spreadsheet-ScorecardChart">
     <canvas
       class="o-figure-canvas o-scorecard w-100 h-100 d-block"
-      t-ref="chartContainer"
+      t-custom-ref="chartContainer"
       t-att-title="title"
     />
   </t>
 
   <t t-name="o-spreadsheet-GaugeChartComponent">
-    <canvas class="o-figure-canvas o-gauge-chart w-100 h-100 d-block" t-ref="chartContainer"/>
+    <canvas class="o-figure-canvas o-gauge-chart w-100 h-100 d-block" t-custom-ref="chartContainer"/>
   </t>
 
   <t t-name="o-spreadsheet-ChartDashboardMenu">
@@ -7016,13 +7016,13 @@
   </t>
 
   <t t-name="o-spreadsheet-ChartJsComponent">
-    <canvas class="o-figure-canvas w-100 h-100" t-att-style="canvasStyle" t-ref="graphContainer"/>
+    <canvas class="o-figure-canvas w-100 h-100" t-att-style="canvasStyle" t-custom-ref="graphContainer"/>
   </t>
 
   <t t-name="o-spreadsheet-ZoomableChartJsComponent">
     <div class="w-100 h-100" t-att-style="canvasStyle">
       <div t-att-style="containerStyle">
-        <canvas class="o-figure-canvas w-100 h-100" t-ref="graphContainer"/>
+        <canvas class="o-figure-canvas w-100 h-100" t-custom-ref="graphContainer"/>
       </div>
       <div
         t-if="sliceable"
@@ -7030,7 +7030,7 @@
         t-att-style="masterChartContainerStyle">
         <canvas
           class="o-figure-canvas o-master-chart-canvas w-100 h-100"
-          t-ref="masterChartCanvas"
+          t-custom-ref="masterChartCanvas"
           t-on-dblclick="onMasterChartDoubleClick"
           t-on-pointerdown="onMasterChartPointerDown"
           t-on-pointermove="onMasterChartPointerMove"
@@ -7067,8 +7067,8 @@
   </t>
 
   <t t-name="o-spreadsheet-SpreadsheetDashboard">
-    <div class="o-grid o-two-columns" t-ref="dashboard" tabindex="-1" t-on-wheel="onMouseWheel">
-      <div class="mx-auto h-100 position-relative" t-ref="grid" t-att-style="gridContainer">
+    <div class="o-grid o-two-columns" t-custom-ref="dashboard" tabindex="-1" t-on-wheel="onMouseWheel">
+      <div class="mx-auto h-100 position-relative" t-custom-ref="grid" t-att-style="gridContainer">
         <GridOverlay
           onGridResized.bind="onGridResized"
           onGridMoved.bind="moveCanvas"
@@ -7090,7 +7090,7 @@
             />
           </div>
         </GridOverlay>
-        <canvas t-ref="canvas"/>
+        <canvas t-custom-ref="canvas"/>
         <GridPopover
           gridRect="getGridRect()"
           onMouseWheel.bind="onMouseWheel"
@@ -7157,7 +7157,7 @@
 
   <t t-name="o-spreadsheet-SpeechBubble">
     <t t-portal="'.o-spreadsheet'">
-      <div class="o-speech-bubble position-absolute px-3 border" t-ref="bubble">
+      <div class="o-speech-bubble position-absolute px-3 border" t-custom-ref="bubble">
         <div class="o-speech-content text-truncate pb-1" t-esc="props.content"/>
       </div>
     </t>
@@ -7170,7 +7170,7 @@
       t-att-style="cellReferenceStyle"
       t-esc="cellReference"
     />
-    <div class="o-grid-composer" t-att-style="containerStyle" t-ref="gridComposer">
+    <div class="o-grid-composer" t-att-style="containerStyle" t-custom-ref="gridComposer">
       <Composer t-props="composerProps"/>
     </div>
   </t>
@@ -7244,7 +7244,7 @@
   </t>
 
   <t t-name="o-spreadsheet-Composer">
-    <div class="o-composer-container w-100 h-100" t-ref="composerContainer">
+    <div class="o-composer-container w-100 h-100" t-custom-ref="composerContainer">
       <t t-set="autoCompleteProposals" t-value="props.composerStore.autoCompleteProposals"/>
       <t t-set="canBeToggled" t-value="props.composerStore.canBeToggled"/>
       <t
@@ -7267,7 +7267,7 @@
           class="o-composer w-100 text-start"
           t-att-class="{ 'text-muted': env.model.getters.isReadonly(), 'active': props.focus !== 'inactive' }"
           t-att-style="props.inputStyle"
-          t-ref="o_composer"
+          t-custom-ref="o_composer"
           tabindex="1"
           t-att-contenteditable="env.model.getters.isReadonly() ? 'false' : 'plaintext-only'"
           t-att-placeHolder="props.placeholder"
@@ -7336,7 +7336,7 @@
 
   <t t-name="o-spreadsheet-TextValueProvider">
     <div
-      t-ref="autoCompleteList"
+      t-custom-ref="autoCompleteList"
       t-on-pointerdown.prevent=""
       t-att-class="{
           'o-autocomplete-dropdown bg-white': props.proposals.length}">
@@ -7371,7 +7371,7 @@
     <div class="o-color-picker-widget">
       <span
         class="o-color-picker-button"
-        t-ref="colorPickerButton"
+        t-custom-ref="colorPickerButton"
         t-on-click.stop="props.toggleColorPicker"
         t-att-title="props.title"
         t-att-class="props.class ? props.class : 'o-color-picker-button-style'"
@@ -7493,7 +7493,7 @@
     <div
       class="o-spreadsheet-bottom-bar o-two-columns d-flex flex-fill align-items-center overflow-hidden border-top"
       t-on-click="props.onClick"
-      t-ref="bottomBar"
+      t-custom-ref="bottomBar"
       t-on-contextmenu.prevent="">
       <Ripple class="'add-sheet-container'">
         <div
@@ -7519,7 +7519,7 @@
         />
         <div
           class="o-sheet-list d-flex w-100 px-1"
-          t-ref="sheetList"
+          t-custom-ref="sheetList"
           t-on-wheel="onWheel"
           t-on-scroll="onScroll">
           <t t-foreach="getVisibleSheets()" t-as="sheet" t-key="sheet.id">
@@ -7609,7 +7609,7 @@
         t-on-pointerdown="(ev) => this.onMouseDown(ev)"
         t-on-click="onClick"
         t-on-contextmenu.prevent="(ev) => this.onContextMenu(ev)"
-        t-ref="sheetDiv"
+        t-custom-ref="sheetDiv"
         t-key="sheetName"
         t-att-style="props.style"
         t-att-title="sheetName"
@@ -7621,7 +7621,7 @@
         <span
           class="o-sheet-name"
           t-att-class="{'o-sheet-name-editable': state.isEditing }"
-          t-ref="sheetNameSpan"
+          t-custom-ref="sheetNameSpan"
           t-esc="sheetName"
           t-on-pointerdown="(ev) => this.onMouseEventSheetName(ev)"
           t-on-click="(ev) => this.onMouseEventSheetName(ev)"
@@ -7633,7 +7633,7 @@
         <span
           class="o-sheet-icon ms-1 rounded"
           tabindex="-1"
-          t-ref="icon"
+          t-custom-ref="icon"
           t-on-click.stop="(ev) => this.onIconClick(ev)">
           <t t-call="o-spreadsheet-Icon.CARET_DOWN"/>
         </span>
@@ -7658,7 +7658,7 @@
       t-att-class="{'o-disabled': env.model.getters.isCurrentSheetLocked()}"
       title="Borders">
       <span
-        t-ref="borderEditorButton"
+        t-custom-ref="borderEditorButton"
         t-on-click.stop="toggleBorderEditor"
         t-att-class="props.class ? props.class : ''"
         t-att-disabled="props.disabled">
@@ -7726,7 +7726,7 @@
           <div
             class="o-border-style-tool d-flex align-items-center justify-content-center o-hoverable-button"
             title="Line style"
-            t-ref="lineStyleButton"
+            t-custom-ref="lineStyleButton"
             t-on-click.stop="(ev) => this.toggleDropdownTool('borderTypeTool')">
             <t t-call="o-spreadsheet-Icon.BORDER_TYPE"/>
             <t t-call="o-spreadsheet-Icon.CARET_DOWN"/>
@@ -7781,7 +7781,7 @@
           <RippleEffect t-props="getRippleEffectProps(ripple.id)"/>
         </t>
       </div>
-      <div class="position-relative" t-ref="childContainer">
+      <div class="position-relative" t-custom-ref="childContainer">
         <t t-slot="default"/>
       </div>
     </div>
@@ -7792,7 +7792,7 @@
       class="position-absolute"
       t-att-class="{ 'overflow-hidden': !props.allowOverflow }"
       t-att-style="props.style">
-      <div class="o-ripple position-relative pe-none" t-ref="ripple" t-att-style="rippleStyle"/>
+      <div class="o-ripple position-relative pe-none" t-custom-ref="ripple" t-att-style="rippleStyle"/>
     </div>
   </t>
 

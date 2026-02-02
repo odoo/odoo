@@ -7,7 +7,7 @@
             <t t-set="isMany2X" t-value="this.allRecords and this.allRecords.length"/>
             <t t-if="state.value?.length > 2">
                 <div class="o_we_table_wrapper">
-                    <table t-ref="table">
+                    <table t-custom-ref="table">
                         <t t-set="items" t-value="formatRawValue(state.value)"/>
                         <t t-foreach="items" t-as="item" t-key="item._id">
                             <tr class="o_row_draggable" t-att-data-id="item._id">

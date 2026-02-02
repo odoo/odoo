@@ -90,13 +90,13 @@
                     </div>
                     <div role="form" class="flex-grow-1">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" t-att-id="'decorative-' + img.id" t-model="img.decorative" t-on-change="() => imgUpdated(img)"/>
+                            <input class="form-check-input" type="checkbox" t-att-id="'decorative-' + img.id" t-custom-model="img.decorative" t-on-change="() => imgUpdated(img)"/>
                             <label t-att-for="'decorative-' + img.id">Mark as decorative
                                 <i class="fa fa-question-circle text-primary" data-tooltip-position="right" data-tooltip="The alt attribute is used to describe the image, optimizing both accessibility and SEO. If you select this option, the image will be hidden from screen readers and not considered for your SEO."/>
                             </label>
                         </div>
                         <div t-if="!img.decorative" class="input-group mt-2">
-                            <input placeholder="Describe the image..." t-model="img.alt" type="text" t-att-class="'form-control ' + (img.alt.trim().length ? 'is-valid' : 'is-invalid')" t-on-change="() => imgUpdated(img)"/>
+                            <input placeholder="Describe the image..." t-custom-model="img.alt" type="text" t-att-class="'form-control ' + (img.alt.trim().length ? 'is-valid' : 'is-invalid')" t-on-change="() => imgUpdated(img)"/>
                         </div>
                     </div>
                 </div>
@@ -139,7 +139,7 @@
     </div>
     <div class="col-10" role="form">
         <div class="input-group w-auto">
-            <input t-model="link.newLink" type="text" class="form-control" t-ref="url-input"
+            <input t-custom-model="link.newLink" type="text" class="form-control" t-custom-ref="url-input"
                     t-att-class="link.validLink == link.newLink.trim() ? 'is-valid' : 'is-invalid'"
                     t-on-blur="() => this.modifyLink(link)"/>
             <button class="btn btn-primary" t-on-click="() => this.modifyLink(link)"
@@ -176,9 +176,9 @@
         <div role="form" class="input-group w-50">
             <t t-set="placeholderRemove">Remove a keyword first</t>
             <t t-set="placeholderAdd">Add your keyword</t>
-            <input t-model="state.keyword" type="text" class="form-control" t-att-placeholder="isFull ? placeholderRemove : placeholderAdd" t-att-readonly="isFull" t-on-keyup="onKeyup"/>
+            <input t-custom-model="state.keyword" type="text" class="form-control" t-att-placeholder="isFull ? placeholderRemove : placeholderAdd" t-att-readonly="isFull" t-on-keyup="onKeyup"/>
             <select t-if="languages.length > 1" title="The language of the keyword and related keywords."
-                    t-model="state.language" class="btn btn-outline-primary pe-5 form-select">
+                    t-custom-model="state.language" class="btn btn-outline-primary pe-5 form-select">
                 <t t-foreach="languages" t-as="lang" t-key="lang[0]">
                     <option t-att-value="lang[0]"><t t-esc="lang[2]"/></option>
                 </t>
@@ -249,7 +249,7 @@
                     <label for="website_meta_title">
                         Title <i class="fa fa-question-circle text-primary" data-tooltip-position="right" t-att-data-tooltip="titleTooltip"/>
                     </label>
-                    <input type="text" t-model="seoContext.title" t-att-disabled="!props.canEditTitle" class="form-control" t-att-placeholder="props.defaultTitle" maxlength="70" size="70" t-ref="autofocus"/>
+                    <input type="text" t-custom-model="seoContext.title" t-att-disabled="!props.canEditTitle" class="form-control" t-att-placeholder="props.defaultTitle" maxlength="70" size="70" t-custom-ref="autofocus"/>
                 </div>
                 <div class="mb-3">
                     <div class="d-flex justify-content-between align-items-center">
@@ -260,7 +260,7 @@
                             <small class="text-warning" t-esc="descriptionWarning"/>
                         </t>
                     </div>
-                    <textarea t-model="seoContext.description" t-att-disabled="!props.canEditDescription" name="website_meta_description" placeholder="Describe the content of this page" class="form-control" rows="4"/>
+                    <textarea t-custom-model="seoContext.description" t-att-disabled="!props.canEditDescription" name="website_meta_description" placeholder="Describe the content of this page" class="form-control" rows="4"/>
                 </div>
                 <div class="mb-3" t-if='props.canEditUrl'>
                     <label for="website_seo_name">

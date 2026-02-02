@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.FeedbackScreen">
-        <div t-ref="feedback-screen" class="feedback-screen bg-100 fixed-top w-100 h-100 d-flex flex-column align-items-center justify-content-center" t-on-click="() => this.onClick()">
+        <div t-custom-ref="feedback-screen" class="feedback-screen bg-100 fixed-top w-100 h-100 d-flex flex-column align-items-center justify-content-center" t-on-click="() => this.onClick()">
             <div class="amount-paid fw-bolder">Amount Paid</div>
             <div class="amount-container">
-                <div t-ref="amount" class="amount lh-sm">
+                <div t-custom-ref="amount" class="amount lh-sm">
                     <PriceFormatter price="this.env.utils.formatCurrency(this.currentOrder.totalDue, false)"/>
                 </div>
             </div>

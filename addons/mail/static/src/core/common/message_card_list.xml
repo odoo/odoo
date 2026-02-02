@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.MessageCardList">
-        <div class="o-mail-MessageCardList d-flex flex-column" t-att-class="{ 'justify-content-center flex-grow-1': props.messages.length === 0 }" t-ref="message-list">
+        <div class="o-mail-MessageCardList d-flex flex-column" t-att-class="{ 'justify-content-center flex-grow-1': props.messages.length === 0 }" t-custom-ref="message-list">
             <div class="card mb-2 rounded-3 border-dark shadow-sm" t-foreach="props.messages" t-as="message" t-key="message.id">
                 <div class="card-body ps-0 py-2 rounded-3">
                     <div class="position-absolute top-0 end-0 z-1 mx-2 my-1 d-flex align-items-center">
@@ -13,7 +13,7 @@
                     <Message hasActions="false" message="message" thread="props.thread" messageSearch="props.messageSearch"/>
                 </div>
             </div>
-            <span t-if="props.loadMore" class="mb-1" t-ref="load-more"/>
+            <span t-if="props.loadMore" class="mb-1" t-custom-ref="load-more"/>
             <p t-if="props.showEmpty !== undefined ? props.showEmpty : props.messages.length === 0" t-esc="emptyText" class="text-center fst-italic text-500 fs-6"/>
         </div>
     </t>

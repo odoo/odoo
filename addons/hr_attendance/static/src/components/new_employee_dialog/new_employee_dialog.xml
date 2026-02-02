@@ -6,7 +6,7 @@
                 <div class="mb-3">
                     <label class="form-label">Create the name of the new employee below</label>
                     <div class="d-flex">
-                        <input type="text" t-model="state.employeeName" class="form-control me-2" placeholder="e.g. John Doe"/>
+                        <input type="text" t-custom-model="state.employeeName" class="form-control me-2" placeholder="e.g. John Doe"/>
                         <button class="btn btn-primary" t-on-click="onCreate">Confirm</button>
                     </div>
                 </div>
@@ -19,7 +19,7 @@
                                 <Many2One value="state.searchName" update.bind="onSelectEmployee" token="props.token"/>
                             </div>
                         </div>
-                        <input type="text" t-model="state.badgeId" class="form-control" placeholder="Enter Badge Number"/>
+                        <input type="text" t-custom-model="state.badgeId" class="form-control" placeholder="Enter Badge Number"/>
                         <div class="d-flex flex-column gap-2">
                             <button class="btn btn-primary"
                                 style="min-width: max-content;"

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CalendarCommonRenderer">
-        <div class="o_calendar_widget" t-att-class="{ o_multi_create_mode: this.props.model.hasMultiCreate, 'o_calendar_current': !this.props.isDisabled }" t-ref="fullCalendar" />
+        <div class="o_calendar_widget" t-att-class="{ o_multi_create_mode: this.props.model.hasMultiCreate, 'o_calendar_current': !this.props.isDisabled }" t-custom-ref="fullCalendar" />
     </t>
 
     <t t-name="web.CalendarCommonRenderer.event">

@@ -5,7 +5,7 @@
         <div class="o_action">
             <Layout display="display">
                 <t t-set-slot="control-panel-buttons">
-                    <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
+                    <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-custom-ref="buttons">
                         <button type="button" class="btn btn-primary" t-on-click="() => this.onClickPrint()">Print</button>
                     </div>
                 </t>

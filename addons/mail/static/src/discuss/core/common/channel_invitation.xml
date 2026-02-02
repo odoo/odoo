@@ -12,7 +12,7 @@
         <div class="d-flex flex-column flex-grow-1 bg-inherit o-min-height-0" t-att-class="{ 'o-mail-Discuss-threadActionPopover w-100': props.hasSizeConstraints, 'px-1': !props.channel }">
             <t t-if="store.self_user">
                 <div class="position-relative">
-                    <input class="o-discuss-ChannelInvitation-search form-control lh-1 px-2 bg-view" t-att-value="searchStr" t-ref="input" t-att-placeholder="searchPlaceholder" t-on-input="onInput"/>
+                    <input class="o-discuss-ChannelInvitation-search form-control lh-1 px-2 bg-view" t-att-value="searchStr" t-custom-ref="input" t-att-placeholder="searchPlaceholder" t-on-input="onInput"/>
                     <div t-if="props.channel?.allow_invite_by_email" class="o-discuss-ChannelInvitation-iconContainer position-absolute top-50 end-0 translate-middle-y me-2 smaller opacity-50" data-tooltip="Type email to invite">
                         <i class="fa fa-envelope-o fa-lg"/>
                         <i class="fa fa-plus-circle o-discuss-ChannelInvitation-iconPlus position-absolute bg-white rounded-circle"/>

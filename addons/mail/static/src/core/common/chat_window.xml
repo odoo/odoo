@@ -20,7 +20,7 @@
                             t-att-class="{ 'rounded-top-3': !ui.isSmall, 'o-active': state.actionsMenuOpened, 'o-hover': actionsMenuButtonHover.isHover and !parentChannelHover.isHover }"
                             t-att-disabled="state.editingName or props.chatWindow.actionsDisabled"
                             t-att-title="actionsMenuTitleText"
-                            t-ref="actionsMenuButton"
+                            t-custom-ref="actionsMenuButton"
                         >
                             <t t-call="mail.ChatWindow.headerContent"/>
                             <i t-if="!state.editingName" class="fa fa-fw fa-caret-down"/>
@@ -46,7 +46,7 @@
             <t t-else="">
                 <t t-call="mail.ChatWindow.headerContent"/>
             </t>
-            <div t-if="channel.importantCounter > 0" class="o-mail-ChatWindow-counter mx-1 badge rounded-pill fw-bold o-discuss-badge shadow-sm" t-ref="needactionCounter">
+            <div t-if="channel.importantCounter > 0" class="o-mail-ChatWindow-counter mx-1 badge rounded-pill fw-bold o-discuss-badge shadow-sm" t-custom-ref="needactionCounter">
                 <t t-out="channel.importantCounter"/>
             </div>
             <div class="ms-1 flex-grow-1"/>
@@ -66,7 +66,7 @@
                 />
             </t>
         </div>
-        <div t-if="!props.chatWindow.folded or ui.isSmall" class="d-flex flex-column h-100 overflow-auto o-scrollbar-thin position-relative bg-inherit" t-att-class="{ 'opacity-50': state.editingName }" t-ref="content">
+        <div t-if="!props.chatWindow.folded or ui.isSmall" class="d-flex flex-column h-100 overflow-auto o-scrollbar-thin position-relative bg-inherit" t-att-class="{ 'opacity-50': state.editingName }" t-custom-ref="content">
             <t name="thread content">
                 <div t-if="threadActions.activeAction?.actionPanelComponentCondition" class="h-100" t-attf-class="{{ threadActions.activeAction.actionPanelOuterClass }}">
                     <t t-component="threadActions.activeAction.actionPanelComponent" t-props="threadActions.activeAction.actionPanelComponentProps"/>
@@ -90,7 +90,7 @@
         <DiscussAvatar channel="channel" size="24" typing="false"/>
     </div>
     <t t-if="channel.parent_channel_id">
-        <span class="fw-bold small o-mx-0_5 opacity-75 opacity-100-hover cursor-pointer o-hover-text-underline rounded fs-6" t-esc="channel.parent_channel_id.displayName" title="Open Channel" t-ref="parentChannel" t-on-click.stop="() => this.channel.parent_channel_id.open({ focus: true })"/>
+        <span class="fw-bold small o-mx-0_5 opacity-75 opacity-100-hover cursor-pointer o-hover-text-underline rounded fs-6" t-esc="channel.parent_channel_id.displayName" title="Open Channel" t-custom-ref="parentChannel" t-on-click.stop="() => this.channel.parent_channel_id.open({ focus: true })"/>
         <i class="fa fa-chevron-right o-xsmaller ms-1 mt-1 text-muted opacity-75"/>
     </t>
     <CountryFlag t-if="channel.showCorrespondentCountry" country="channel.correspondentCountry" class="'o-mail-ChatWindow-country border shadow-sm'"/>

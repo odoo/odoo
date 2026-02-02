@@ -6,8 +6,8 @@
             <t t-set="has_sub_categories" t-value="state.subCategories?.length > 0"/>
             <div class="bg-view border-bottom user-select-none" t-att-class="{'o_self_shadow_top': !has_sub_categories and scrollShadow.top }" >
                 <div class="container o_self_container px-kiosk-p-0 ">
-                    <div class="category_container d-flex" t-ref="category_container">
-                        <div class="category_list d-flex mw-100 mx-kiosk-p-auto py-3 px-kiosk-p-4 gap-0 gap-kiosk-p-3 overflow-x-auto overflow-y-hidden position-relative" t-ref="category_list">
+                    <div class="category_container d-flex" t-custom-ref="category_container">
+                        <div class="category_list d-flex mw-100 mx-kiosk-p-auto py-3 px-kiosk-p-4 gap-0 gap-kiosk-p-3 overflow-x-auto overflow-y-hidden position-relative" t-custom-ref="category_list">
                             <t t-foreach="state.topCategories" t-as="category" t-key="category.id">
                                 <t t-set="isSelectedCategory" t-value="category === topSelectedCategory"/>
                                 <button t-on-click="() => this.selectCategory(category)" class="category_btn btn d-flex flex-column align-items-center p-0 border-0 "  t-att-data-category-pill="category.id">
@@ -28,11 +28,11 @@
                </div>
             </div>
              <!-- Sub Categories -->
-            <div class="sub_category_container d-flex flex-shrink-0" t-ref="sub_cat_container" t-att-class="{'show': has_sub_categories, 'o_self_shadow_top': has_sub_categories and scrollShadow.top }">
+            <div class="sub_category_container d-flex flex-shrink-0" t-custom-ref="sub_cat_container" t-att-class="{'show': has_sub_categories, 'o_self_shadow_top': has_sub_categories and scrollShadow.top }">
                 <div t-if="has_sub_categories" class="position-relative d-flex flex-nowrap flex-column w-100 text-bg-primary user-select-none">
                    <!-- <div class="d-none d-kiosk-block triangle_pointer position-absolute start-50 translate-middle-x"></div> -->
                     <div class="container o_self_container px-kiosk-p-0 d-flex">
-                        <div class="category_list d-flex mw-100 mx-kiosk-p-auto py-3 px-kiosk-p-4 gap-0 gap-kiosk-p-3 overflow-x-auto overflow-y-hidden" t-ref="sub_category_list">
+                        <div class="category_list d-flex mw-100 mx-kiosk-p-auto py-3 px-kiosk-p-4 gap-0 gap-kiosk-p-3 overflow-x-auto overflow-y-hidden" t-custom-ref="sub_category_list">
                             <t t-set="isAllSelected" t-value="!selectedCategory.parent_id "/>
                             <button t-on-click="() => this.selectCategory(topSelectedCategory)" class="child_category_btn child_category_all btn px-3 py-1 rounded-pill border-0" t-att-class="{'btn-light': isAllSelected, 'btn-link text-reset': !isAllSelected}" >
                                 All
@@ -50,7 +50,7 @@
             </div>
 
             <!-- Products -->
-            <div class="d-flex flex-grow-1 overflow-y-auto o_self_fade position-relative" t-ref="product_list">
+            <div class="d-flex flex-grow-1 overflow-y-auto o_self_fade position-relative" t-custom-ref="product_list">
                 <div class="product_container container o_self_container">
                      <section t-foreach="productCategories" t-as="category" t-key="category.id" t-att-data-category="category.id" class="pb-sm-3 pb-lg-4">
                          <div class="fs-2 fw-bold ps-3 ps-sm-0 py-2 py-sm-3 py-lg-4" t-esc="category.name" t-if="!selfOrder.kioskMode"/>

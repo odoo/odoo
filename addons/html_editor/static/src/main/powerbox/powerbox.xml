@@ -1,6 +1,6 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.Powerbox">
-        <div t-ref="root" class="o-we-powerbox py-2 bg-light overflow-auto my-1" style="width:300px;max-height:40vh;" t-on-mousedown.stop="" t-on-scroll="onScroll" >
+        <div t-custom-ref="root" class="o-we-powerbox py-2 bg-light overflow-auto my-1" style="width:300px;max-height:40vh;" t-on-mousedown.stop="" t-on-scroll="onScroll" >
             <t t-foreach="commands" t-as="command" t-key="command_index">
                 <t t-if="showCategories and command.categoryId !== lastCategory">
                     <div class="o-we-category mx-3 my-1 text-uppercase"><t t-esc="command.categoryName"/></div></t>

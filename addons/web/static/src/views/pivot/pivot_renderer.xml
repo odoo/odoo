@@ -8,7 +8,7 @@
                 <table
                     class="table-hover table table-sm table-bordered table-borderless"
                     t-att-class="{ o_enable_linking: !model.metaData.disableLinking }"
-                    t-ref="table"
+                    t-custom-ref="table"
                 >
                     <thead>
                         <tr t-foreach="table.headers" t-as="row" t-key="'header_' + row_index" class="border-top-0">

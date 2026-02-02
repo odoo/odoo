@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.BadgeTag">
-        <span class="o_tag position-relative d-inline-flex align-items-center user-select-none mw-100 o_badge badge rounded-pill lh-1" tabindex="-1" t-att-class="this.cssClass" t-att-data-color="this.props.color" t-att-data-tooltip="this.props.tooltip or this.props.text" t-att-aria-label="this.props.tooltip or this.props.text" t-on-click="(ev) => this.props.onClick?.(ev)" t-ref="ref">
+        <span class="o_tag position-relative d-inline-flex align-items-center user-select-none mw-100 o_badge badge rounded-pill lh-1" tabindex="-1" t-att-class="this.cssClass" t-att-data-color="this.props.color" t-att-data-tooltip="this.props.tooltip or this.props.text" t-att-aria-label="this.props.tooltip or this.props.text" t-on-click="(ev) => this.props.onClick?.(ev)" t-custom-ref="ref">
             <t t-slot="default">
                 <div class="o_tag_badge_text o_badge_text" t-out="this.props.text"/>
             </t>

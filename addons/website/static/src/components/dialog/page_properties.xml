@@ -8,7 +8,7 @@
                 Page Name
             </label>
             <div class="col-md-9">
-                <input type="text" t-model="state.name" class="form-control" required="required" t-ref="autofocus"/>
+                <input type="text" t-custom-model="state.name" class="form-control" required="required" t-custom-ref="autofocus"/>
             </div>
         </div>
     </WebsiteDialog>
@@ -20,7 +20,7 @@
             <t t-set="depTemplate">
                 <t t-call="{{ constructor.popoverTemplate }}"/>
             </t>
-            <div t-att-data-bs-template="depTemplate" data-bs-html="true" title="Dependencies" t-ref="action">
+            <div t-att-data-bs-template="depTemplate" data-bs-html="true" title="Dependencies" t-custom-ref="action">
                 Could be used in many places, see here: <a href="#" t-on-click="showDependencies">Dependencies</a>
             </div>
         </t>

@@ -7,7 +7,7 @@
     </div>
     <div class="mb-3 row">
         <div class="col-11 offset-1" t-attf-style="font-family: '{{previewFontName}}';">
-            <input t-if="previewFontName" class="w-100 border-0 bg-transparent" t-model="state.previewText" t-attf-style="font-weight: {{previewWeight}};"/>
+            <input t-if="previewFontName" class="w-100 border-0 bg-transparent" t-custom-model="state.previewText" t-attf-style="font-weight: {{previewWeight}};"/>
             <input t-else="" class="w-100 border-0 bg-transparent" readonly="1" t-attf-style="font-weight: {{previewWeight}};"/>
         </div>
     </div>
@@ -55,7 +55,7 @@
                         </sup>
                     </label>
                     <label class="o_switch col-form-label col-md-8" t-att-class="{'o_switch_disabled': !state.googleFontFamily}" for="google_font_serve">
-                        <input type="checkbox" checked="checked" class="visually-hidden" t-att-disabled="!state.googleFontFamily" id="google_font_serve" t-model="state.googleServe"/>
+                        <input type="checkbox" checked="checked" class="visually-hidden" t-att-disabled="!state.googleFontFamily" id="google_font_serve" t-custom-model="state.googleServe"/>
                         <span/>
                     </label>
                 </div>
@@ -67,7 +67,7 @@
                         <div class="text-muted">zip, ttf, woff, woff2, otf</div>
                     </div>
                     <div class="col-md-8">
-                        <input t-ref="fileInput" type="file" class="form-control s_website_form_input" name="Custom Font"
+                        <input t-custom-ref="fileInput" type="file" class="form-control s_website_form_input" name="Custom Font"
                             id="upload_font" accept=".woff, .woff2, .ttf, .zip, .otf, font/*"
                             t-on-change="onUploadChange"
                         />

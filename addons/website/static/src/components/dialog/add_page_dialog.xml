@@ -11,7 +11,7 @@
                 Page Title
             </label>
             <div class="col-md-9">
-                <input type="text" t-model="state.name" class="form-control" required="required" t-ref="autofocus"/>
+                <input type="text" t-custom-model="state.name" class="form-control" required="required" t-custom-ref="autofocus"/>
             </div>
             <Switch extraClasses="'offset-md-3 col-md-9 text-start'" label.translate="Add to menu" value="state.addMenu" onChange="(value) => this.onChangeAddMenu(value)"/>
         </div>
@@ -19,8 +19,8 @@
 </t>
 
 <t t-name="website.AddPageTemplatePreviewWrapper">
-    <div t-ref="holder" class="o_page_template position-relative placeholder-glow mx-auto transition-base" t-att-class="{ 'mt-4': !props.firstRow }" t-att-data-configurator-page="props.template and props.template.is_from_configurator">
-        <div t-ref="preview" class="o_page_template_preview border border-white bg-white rounded" t-out="0" inert="inert"/>
+    <div t-custom-ref="holder" class="o_page_template position-relative placeholder-glow mx-auto transition-base" t-att-class="{ 'mt-4': !props.firstRow }" t-att-data-configurator-page="props.template and props.template.is_from_configurator">
+        <div t-custom-ref="preview" class="o_page_template_preview border border-white bg-white rounded" t-out="0" inert="inert"/>
         <span class="placeholder position-absolute top-0 w-100 h-100 rounded" t-attf-style="animation-duration: #{props.animationDelay + 500}ms"/>
         <button class="btn o_button_area position-absolute top-0 w-100 h-100 start-0 cursor-pointer rounded" t-on-click="select">
             <div t-if="props.template and props.template.name" class="position-absolute start-0 bottom-100 w-100 fw-bold lh-1 pb-1 pe-none text-center o_page_name" t-out="props.template.name"/>
@@ -42,7 +42,7 @@
 
 <t t-name="website.AddPageTemplatePreview">
     <t t-call="website.AddPageTemplatePreviewWrapper">
-        <iframe class="border-0 pe-none transition-base" t-ref="iframe" src="about:blank" aria-label="Add page template"/>
+        <iframe class="border-0 pe-none transition-base" t-custom-ref="iframe" src="about:blank" aria-label="Add page template"/>
     </t>
 </t>
 
@@ -77,7 +77,7 @@
         <!-- Do not rely on Notebook to avoid pages from needing reload -->
         <div class="d-flex w-100 h-100 vertical flex-row">
             <aside class="border-end overflow-auto">
-                <div t-ref="tabs"
+                <div t-custom-ref="tabs"
                     class="list-group list-group-flush flex-column flex-nowrap overflow-y-auto"
                     role="tablist"
                     aria-orientation="vertical"
@@ -92,7 +92,7 @@
                             t-att-tabindex="state.activePageId === page.id ? 0 : -1"
                             t-att-aria-selected="state.activePageId === page.id ? 'true' : 'false'"
                             t-att-aria-controls="'pane_' + page.id"
-                            t-ref="{{state.activePageId === page.id ? 'autofocus' : page.id}}"
+                            t-custom-ref="{{state.activePageId === page.id ? 'autofocus' : page.id}}"
                         >
                             <span t-if="page.isPreloading" class="fa fa-spin fa-circle-o-notch me-1"/>
                             <t t-out="page.title"/>
@@ -100,7 +100,7 @@
                     </t>
                 </div>
             </aside>
-            <div t-ref="panes" class="position-relative flex-grow-1 flex-shrink-1 bg-200">
+            <div t-custom-ref="panes" class="position-relative flex-grow-1 flex-shrink-1 bg-200">
                 <t t-foreach="state.pages" t-as="page" t-key="page.id">
                     <div t-att-data-id="page.id"
                         t-att-id="'pane_' + page.id"

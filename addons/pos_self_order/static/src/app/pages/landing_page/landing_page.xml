@@ -10,7 +10,7 @@
             </div>
         </div>
         <div t-if="selfOrder.config._self_ordering_image_home_ids.length > 0" t-on-click="start" class="d-flex flex-column vh-100 align-items-center overflow-hidden">
-            <div id="carouselAutoplaying" t-ref="carousel" class="carousel slide w-100 h-100" data-bs-ride="true">
+            <div id="carouselAutoplaying" t-custom-ref="carousel" class="carousel slide w-100 h-100" data-bs-ride="true">
                 <div class="carousel-inner h-100 w-100">
                     <div
                         t-foreach="selfOrder.config._self_ordering_image_home_ids"

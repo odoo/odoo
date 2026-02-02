@@ -15,12 +15,12 @@
             </header>
 
             <!-- Main Content -->
-            <main class="d-flex flex-column overflow-y-auto h-100 position-relative" t-ref="scrollContainer">
+            <main class="d-flex flex-column overflow-y-auto h-100 position-relative" t-custom-ref="scrollContainer">
                 <div class="flex-grow-1 pb-4">
                     <!-- Title & Image -->
                     <section class="py-3 text-bg-primary">
                         <div class="container o_self_container d-flex flex-column align-items-center">
-                            <h1 class="mt-kiosk-p-3 mb-3" t-esc="event.name" t-ref="eventName"/>
+                            <h1 class="mt-kiosk-p-3 mb-3" t-esc="event.name" t-custom-ref="eventName"/>
                             <div class="o_self_event_image ratio ratio-1x1 rounded-4 w-70 w-m-50">
                                 <img class="rounded-4" t-att-src="selfOrder.eventImageUrl(event)" loading="lazy" alt="Event Image"/>
                             </div>

@@ -4,7 +4,7 @@
     <t t-name="html_editor.EmbeddedFile" t-inherit="html_editor.ReadonlyEmbeddedFile" t-inherit-mode="primary">
         <xpath expr="//span[hasclass('o_file_name_container')]" position="after">
             <input t-attf-class="rounded border-0 mx-2 #{ localState.editFileName ? '' : 'd-none'}"
-                t-ref="nameInput" type="text" maxLength="100" t-att-placeholder="fileModel.filename"
+                t-custom-ref="nameInput" type="text" maxLength="100" t-att-placeholder="fileModel.filename"
                 t-on-blur="onBlurNameInput" t-on-input.stop="" t-on-keydown.stop="onKeydownNameInput"
                 t-att-value="fileModel.filename"/>
         </xpath>
