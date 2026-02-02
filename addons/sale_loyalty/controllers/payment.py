@@ -3,16 +3,16 @@
 from odoo import _
 from odoo.exceptions import ValidationError
 
-from odoo.addons.website_sale.controllers import payment
+from odoo.addons.sale.controllers import portal as payment_portal
 
 
-class PaymentPortal(payment.PaymentPortal):
+class PaymentPortal(payment_portal.PaymentPortal):
 
     def _validate_transaction_for_order(self, transaction, sale_order):
         """Update programs & rewards before finalizing transaction.
 
         :param payment.transaction transaction: The payment transaction
-        :param int order_id: The id of the sale order to pay
+        :param sale.order sale_order: The sale order to pay
         :raise: ValidationError if the order amount changed after updating rewards
         """
         super()._validate_transaction_for_order(transaction, sale_order)
@@ -23,6 +23,6 @@ class PaymentPortal(payment.PaymentPortal):
                 raise ValidationError(
                     _(
                         "Cannot process payment: applied reward was changed or has expired.\n"
-                        "Please refresh the page and try again."
+                        "Please try again."
                     )
                 )
