@@ -5411,10 +5411,10 @@ class TestTourMrpOrder(HttpCase):
         self.assertEqual(mo.move_byproduct_ids.quantity, 7)
         self.assertEqual(len(mo.move_byproduct_ids.move_line_ids), 1)
 
-    def test_mrp_multi_step_product_catalog_component_transfer(self):
+    def test_mrp_multi_step_draft_mo_creates_component_transfer(self):
         '''
-        Ensure a transfer to pre-prod is created for components added through
-        the catalog.
+        Ensure a transfer to pre-prod is created for components even when the MO
+        is in draft.
         '''
         # Enable storage locations
         self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
@@ -5431,9 +5431,22 @@ class TestTourMrpOrder(HttpCase):
             'warehouse_id': warehouse.id,
         })
         self.assertEqual(len(mo.move_raw_ids), 0)
+        self.assertEqual(mo.state, 'draft')
 
-        url = f'/odoo/action-mrp.mrp_production_action/{mo.id}'
-        self.start_tour(url, 'test_mrp_multi_step_product_catalog_component_transfer', login='admin')
+        self.authenticate('admin', 'admin')
+        self.opener.post(
+            url=self.base_url() + '/product/catalog/update_order_line_info',
+            json={
+                "params": {
+                    'res_model': 'mrp.production',
+                    'order_id': mo.id,
+                    'product_id': component.id,
+                    'quantity': 2,
+                    'child_field': 'move_raw_ids',
+                },
+            },
+        )
+
         self.assertEqual(len(mo.move_raw_ids), 1)
 
         mo.action_confirm()
