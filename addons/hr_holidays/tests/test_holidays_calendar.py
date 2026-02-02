@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date, datetime, time, timedelta
+from datetime import date, timedelta
 
 from odoo.addons.base.tests.common import HttpCase
 from odoo.tests.common import tagged
@@ -45,12 +45,21 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
         Test that single-day time off requests have a single day display in calendar
         """
 
-        leave_type = self.env['hr.leave.type'].create({
-            'name': 'Test Leave Type',
-            'requires_allocation': False,
-            'leave_validation_type': 'no_validation',
-            'create_calendar_meeting': True,
-        })
+        leave_type, leave_type_half = self.env['hr.leave.type'].create([
+            {
+                'name': 'Test Leave Type',
+                'requires_allocation': False,
+                'leave_validation_type': 'no_validation',
+                'create_calendar_meeting': True,
+            },
+            {
+                'name': 'Test Leave Type Half Day',
+                'requires_allocation': False,
+                'leave_validation_type': 'no_validation',
+                'create_calendar_meeting': True,
+                'request_unit': 'half_day',
+            },
+        ])
 
         # case 1: full day in Los/Angeles tz
 
@@ -63,41 +72,32 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
             'holiday_status_id': leave_type.id,
             'request_date_from': test_date,
             'request_date_to': test_date,
-            'request_unit_half': False,
         })
 
         leave.action_approve()
 
-        expected_fd_start = datetime.combine(test_date, time(8, 0))
-        expected_fd_stop = datetime.combine(test_date, time(17, 0))
-        self.assertEqual(leave.meeting_id.start, expected_fd_start,
-                        f"Meeting start date should be {expected_fd_start}")
-        self.assertEqual(leave.meeting_id.stop, expected_fd_stop,
-                        f"Meeting end date should be {expected_fd_stop}")
+        self.assertEqual(leave.meeting_id.allday, True)
+        self.assertEqual(leave.meeting_id.start_date, test_date,
+                        f"Meeting start date should be {test_date}")
+        self.assertEqual(leave.meeting_id.stop_date, test_date,
+                        f"Meeting end date should be {test_date}")
 
         # case 2: half day in Los/Angeles tz
 
         test_date_half = date(2025, 4, 23)
-        half_day_leave = self.env['hr.leave.type'].create([{
-            'name': 'half day',
-            'requires_allocation': False,
-            'request_unit': 'half_day',
-        }])
+
         leave_half = self.env['hr.leave'].create({
             'name': 'Half Day Leave LA',
             'employee_id': self.employee_emp.id,
-            'holiday_status_id': half_day_leave.id,
+            'holiday_status_id': leave_type_half.id,
             'request_date_from': test_date_half,
             'request_date_to': test_date_half,
             'request_date_from_period': 'pm',
+            'request_date_to_period': 'pm',
         })
 
         leave_half.action_approve()
 
-        expected_hd_start = datetime.combine(test_date_half, time(13, 0))
-        expected_hd_stop = datetime.combine(test_date_half, time(17, 0))
-
-        self.assertEqual(leave_half.meeting_id.start, expected_hd_start,
-                        f"Half-day meeting start date should be {expected_hd_start}")
-        self.assertEqual(leave_half.meeting_id.stop, expected_hd_stop,
-                        f"Half-day meeting end date should be {expected_hd_stop}")
+        self.assertEqual(leave_half.meeting_id.allday, False)
+        self.assertEqual(leave_half.meeting_id.start, leave_half.date_from)
+        self.assertEqual(leave_half.meeting_id.stop, leave_half.date_to)
