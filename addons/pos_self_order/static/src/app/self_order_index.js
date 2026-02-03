@@ -1,4 +1,4 @@
-import { Component, whenReady } from "@odoo/owl";
+import { mount, Component, reactive, whenReady } from "@odoo/owl";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { Router } from "@pos_self_order/app/router";
@@ -15,6 +15,8 @@ import { OrdersHistoryPage } from "@pos_self_order/app/pages/order_history_page/
 import { LoadingOverlay } from "@pos_self_order/app/components/loading_overlay/loading_overlay";
 import { mountComponent } from "@web/env";
 import { hasTouch } from "@web/core/browser/feature_detection";
+import { Loader } from "@point_of_sale/app/components/loader/loader";
+import { getTemplate } from "@web/core/templates";
 
 export class selfOrderIndex extends Component {
     static template = "pos_self_order.selfOrderIndex";
@@ -33,6 +35,7 @@ export class selfOrderIndex extends Component {
         LandingPage,
         LoadingOverlay,
         MainComponentsContainer,
+        Loader,
     };
 
     setup() {
@@ -48,4 +51,18 @@ export class selfOrderIndex extends Component {
         return this.selfOrder.models["product.product"].length > 0;
     }
 }
-whenReady(() => mountComponent(selfOrderIndex, document.body));
+whenReady(async () => {
+    try {
+        await mountComponent(selfOrderIndex, document.body);
+    } catch (err) {
+        const loader = reactive({ isShown: true, error: err });
+        mount(Loader, document.body, {
+            getTemplate,
+            props: { loader },
+            translatableAttributes: ["data-tooltip"],
+            translateFn: (s) => s,
+        });
+
+        console.log(err);
+    }
+});
