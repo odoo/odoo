@@ -197,7 +197,21 @@ export const customDirectives = {
      */
     ref: (node, value) => {
         const refName = value.startsWith("{{") ? value.slice(2, -2).trim() : `'${value}'`;
-        node.setAttribute("t-ref", `__globals__.ref(this, ${refName})`);
+        node.setAttribute("t-ref", `__globals__.createRefSignal(this, ${refName})`);
+    },
+    /**
+     * @param {HTMLElement} node
+     * @param {string} value
+     * @param {string[]} modifiers
+     */
+    model: (node, value, modifiers) => {
+        let attribute = "t-model";
+        for (const modifier of modifiers) {
+            attribute += `.${modifier}`;
+        }
+        const getter = `() => ${value}`;
+        const setter = `(nv) => {${value} = nv;}`;
+        node.setAttribute(attribute, `__globals__.createModelSignal(${getter}, ${setter})`);
     },
 };
 
@@ -222,12 +236,17 @@ export const globalValues = {
      * @param {any} component
      * @param {string} refName
      */
-    ref: (component, refName) => ({
+    createRefSignal: (component, refName) => ({
         /** @param {HTMLElement | null} value */
         set(value) {
             component.__refs__[refName] = value;
         },
     }),
+    /**
+     * @param {Function} getter
+     * @param {Function} setter
+     */
+    createModelSignal: (getter, setter) => Object.assign(getter, { set: setter }),
 };
 
 /**
