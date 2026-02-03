@@ -140,8 +140,8 @@ test("recent category (basic)", async () => {
     await click("button[title='Add Emojis']");
     await contains(".o-EmojiPicker-navbar [title='Frequently used']");
     await contains(".o-Emoji:text('😀')", {
-        after: ["span", { textContent: "Frequently used" }],
-        before: ["span", { textContent: "Smileys & Emotion" }],
+        after: ["small", { textContent: "Frequently used" }],
+        before: ["small", { textContent: "Smileys & Emotion" }],
     });
 });
 
@@ -194,12 +194,12 @@ test("emoji usage amount orders frequent emojis", async () => {
     await click(".o-EmojiPicker-content .o-Emoji:text('👽')");
     await click("button[title='Add Emojis']");
     await contains(".o-Emoji:text('👽')", {
-        after: ["span", { textContent: "Frequently used" }],
+        after: ["small", { textContent: "Frequently used" }],
         before: [
             ".o-Emoji:text('😀')",
             {
-                after: ["span", { textContent: "Frequently used" }],
-                before: ["span", { textContent: "Smileys & Emotion" }],
+                after: ["small", { textContent: "Frequently used" }],
+                before: ["small", { textContent: "Smileys & Emotion" }],
             },
         ],
     });
