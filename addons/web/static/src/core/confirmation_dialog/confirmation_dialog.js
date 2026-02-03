@@ -24,6 +24,7 @@ export class ConfirmationDialog extends Component {
             },
             optional: true,
         },
+        size: { type: String, optional: true },
         body: { type: String, optional: true },
         confirm: { type: Function, optional: true },
         confirmLabel: { type: String, optional: true },
@@ -37,6 +38,7 @@ export class ConfirmationDialog extends Component {
         cancelLabel: _t("Discard"),
         confirmClass: "btn-primary",
         title: _t("Confirmation"),
+        size: "sm",
     };
 
     setup() {
