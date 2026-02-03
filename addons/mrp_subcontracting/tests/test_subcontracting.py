@@ -1469,6 +1469,26 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
             ]
         })
 
+    def generate_subcontracting_receipt_and_mo(self, product_qty, warehouse=None):
+        if not warehouse:
+            warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': warehouse.in_type_id.id,
+            'partner_id': self.subcontractor.id,
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': warehouse.lot_stock_id.id,
+            'move_ids': [Command.create({
+                'product_id': self.finished.id,
+                'product_uom_qty': product_qty,
+                'product_uom': self.finished.uom_id.id,
+                'location_id': self.ref('stock.stock_location_suppliers'),
+                'location_dest_id': warehouse.lot_stock_id.id,
+            })]
+        })
+        receipt.action_confirm()
+        action = receipt.move_ids.action_show_subcontract_details()
+        return receipt, self.env['mrp.production'].browse(action['res_id'])
+
     def test_receive_after_resupply(self):
         quantities = [5, 4, 1]
         # Make needed component stock
@@ -1626,25 +1646,7 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
         """
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
 
-        def generate_subcontracting_receipt_and_mo(product_qty):
-            receipt = self.env['stock.picking'].create({
-                'picking_type_id': warehouse.in_type_id.id,
-                'partner_id': self.subcontractor.id,
-                'location_id': self.ref('stock.stock_location_suppliers'),
-                'location_dest_id': warehouse.lot_stock_id.id,
-                'move_ids': [Command.create({
-                   'product_id': self.finished.id,
-                   'product_uom_qty': product_qty,
-                   'product_uom': self.finished.uom_id.id,
-                   'location_id': self.ref('stock.stock_location_suppliers'),
-                   'location_dest_id': warehouse.lot_stock_id.id,
-                })]
-            })
-            receipt.action_confirm()
-            action = receipt.move_ids.action_show_subcontract_details()
-            return receipt, self.env['mrp.production'].browse(action['res_id'])
-
-        receipt, mo = generate_subcontracting_receipt_and_mo(2)
+        receipt, mo = self.generate_subcontracting_receipt_and_mo(2, warehouse)
         self.finished.lot_sequence_id.prefix = 'TEST'
         self.finished.lot_sequence_id.number_next_actual = 1
         serials_wizard = Form.from_action(self.env, mo.action_generate_serial())
@@ -1667,7 +1669,7 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
         ])
         self.assertEqual(self.finished.serial_prefix_format + self.finished.next_serial, 'TEST0000003')
 
-        second_receipt, second_mo = generate_subcontracting_receipt_and_mo(5)
+        second_receipt, second_mo = self.generate_subcontracting_receipt_and_mo(5, warehouse)
         second_serials_wizard = Form.from_action(self.env, second_mo.action_generate_serial())
         self.assertEqual(second_serials_wizard.lot_name, 'TEST0000003')
         second_serials_wizard.serial_numbers = 'TEST0000005\nLOREM002\nTEST0000003\nIPSUM101\nTEST0000004'
@@ -1698,7 +1700,36 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
             {'name': 'TEST0000005'},
         ])
 
-        _third_receipt, third_mo = generate_subcontracting_receipt_and_mo(2)
+        _third_receipt, third_mo = self.generate_subcontracting_receipt_and_mo(2, warehouse)
         third_mo.action_confirm()
         third_serials_wizard = Form.from_action(self.env, third_mo.action_generate_serial())
         self.assertEqual(third_serials_wizard.lot_name, 'TEST0000006')
+
+    @freeze_time('2024-02-03')
+    def test_use_interpolated_prefix_in_subcontracting_productions(self):
+        """
+        Test that prefixes are correctly interpolated when generating a subcontracting MO
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        receipt, mo = self.generate_subcontracting_receipt_and_mo(2, warehouse)
+        self.finished.lot_sequence_id.prefix = '%(day)s-%(month)s-'
+        self.finished.lot_sequence_id.number_next_actual = 1
+        serials_wizard = Form.from_action(self.env, mo.action_generate_serial())
+        self.assertEqual(serials_wizard.lot_name, '03-02-0000001')
+        serials_wizard.save().action_generate_serial_numbers()
+        serials_wizard.save().action_apply()
+        self.assertRecordValues(mo._get_subcontract_move().lot_ids.sorted('name'), [
+            {'name': '03-02-0000001'},
+            {'name': '03-02-0000002'},
+        ])
+        self.assertRecordValues(receipt.move_ids.lot_ids.sorted('name'), [
+            {'name': '03-02-0000001'},
+            {'name': '03-02-0000002'},
+        ])
+        receipt.button_validate()
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.finished, warehouse.lot_stock_id), 2)
+        self.assertRecordValues(self.env['stock.lot'].search([('product_id', '=', self.finished.id)]).sorted('name'), [
+            {'name': '03-02-0000001'},
+            {'name': '03-02-0000002'},
+        ])
+        self.assertEqual(self.finished.next_serial, '0000003')
