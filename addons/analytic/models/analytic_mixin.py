@@ -4,6 +4,7 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
+from odoo.models import Query
 from odoo.tools import SQL, unique
 from odoo.tools.float_utils import float_compare, float_round
 from odoo.tools.sql import table_exists
@@ -64,6 +65,14 @@ class AnalyticMixin(models.AbstractModel):
             rec.distribution_analytic_account_ids = self.env['account.analytic.account'].browse(ids)
 
     def _search_distribution_analytic_account_ids(self, operator, value):
+        if operator in ('any', 'not any', 'any!', 'not any!'):
+            if isinstance(value, Domain):
+                value = self.env['account.analytic.account'].search(value).ids
+            elif isinstance(value, Query):
+                value = value.get_result_ids()
+            else:
+                return NotImplemented
+            operator = 'in' if operator in ('any', 'any!') else 'not in'
         return [('analytic_distribution', operator, value)]
 
     def _compute_analytic_distribution(self):
