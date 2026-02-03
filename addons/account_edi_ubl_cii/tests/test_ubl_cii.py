@@ -546,10 +546,10 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
             self.assertFalse(line.discount, "A discount on the imported lines signals a rounding error in the discount computation")
 
     def test_export_xml_with_multiple_invoices(self):
-        partner = self.env['res.partner'].create({
-            'name': 'Test Partner',
-            'invoice_edi_format': 'ubl_bis3',
-            'country_id': self.env.ref('base.be').id,
+        partner = self._create_partner_be(invoice_edi_format='ubl_bis3')
+        self.company_data['company'].partner_id.write({
+            'peppol_eas': '0230',
+            'peppol_endpoint': 'C2584563200',
         })
         invoices = self.env['account.move'].create([
             {
