@@ -2,7 +2,7 @@
     grid-auto-flow: row;
     grid-template-rows: repeat(3, auto);
 
-    .o_lead_mining_element_tile {
+    .o_lead_mining_element_icon {
         background: $popover-bg;
         width: 2.5rem;
         min-width: 2.5rem;
@@ -13,7 +13,21 @@
         }
     }
 
+    .o_lead_mining_element_title {
+        max-width: 12rem;
+    }
+
     .o_lead_mining_element:where(:not(:hover, :focus)) .o_uninstalled_module {
         filter: grayscale(1);
+    }
+}
+
+/* Single column on small devices */
+@media (max-width: 767px) {
+    .o_lead_mining_menu_choices {
+        grid-template-columns: 1fr;
+        .o_lead_mining_element_title {
+            max-width: none;
+        }
     }
 }
