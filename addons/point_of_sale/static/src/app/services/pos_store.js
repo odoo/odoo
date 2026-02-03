@@ -1100,7 +1100,7 @@ export class PosStore extends WithLazyGetterTrap {
                       });
 
             if (!payload) {
-                return;
+                return false;
             }
 
             // Product template of combo should not have more than 1 variant.
