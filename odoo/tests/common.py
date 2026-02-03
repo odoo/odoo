@@ -551,7 +551,7 @@ class BaseCase(case.TestCase):
                     # When checking for an `AccessError`, the cache is cleared
                     # before executing the code. This avoids cache pollution issues and
                     # ensures that access are re-evaluated correctly.
-                    self.env.cr.clear()
+                    self.env.transaction.clear()
 
             with ExitStack() as inner:
                 cm = inner.enter_context(method(expected_exception, *args, **kwargs))
@@ -2168,7 +2168,8 @@ class Opener(requests.Session):
     def request(self, *args, **kwargs):
         assert self.test_case.opener == self
         self.cr.flush()
-        self.cr.clear()
+        if transaction := self.cr.transaction:
+            transaction.clear()
         with self.test_case.allow_requests():
             res = super().request(*args, **kwargs)
             res.__class__ = Response
@@ -2205,7 +2206,8 @@ class Transport(xmlrpclib.Transport):
 
     def request(self, *args, **kwargs):
         self.cr.flush()
-        self.cr.clear()
+        if transaction := self.cr.transaction:
+            transaction.clear()
         with self.test_case.allow_requests(all_requests=True):
             return super().request(*args, **kwargs)
 
@@ -2403,7 +2405,8 @@ class HttpCase(TransactionCase):
             # the call below opens a test cursor, which uses a different cache
             # than this transaction.
             self.cr.flush()
-            self.cr.clear()
+            if transaction := self.cr.transaction:
+                transaction.clear()
 
             def patched_check_credentials(self, credential, env):
                 return {'uid': self.id, 'auth_method': 'password', 'mfa': 'default'}
@@ -2532,7 +2535,8 @@ class HttpCase(TransactionCase):
             # we make requests to the server, as these requests are made with
             # test cursors, which uses different caches than this transaction.
             self.cr.flush()
-            self.cr.clear()
+            if transaction := self.cr.transaction:
+                transaction.clear()
             url = urljoin(self.base_url(), url_path)
             if watch:
                 parsed = urlsplit(url)

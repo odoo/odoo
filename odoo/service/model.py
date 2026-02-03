@@ -98,9 +98,8 @@ def dispatch(method, params):
 
 
 def execute_cr(cr, uid, obj, method, args, kw):
-    # clean cache etc if we retry the same transaction
-    cr.reset()
     env = api.Environment(cr, uid, {})
+    env.transaction.reset()  # clean cache etc if we retry the same transaction
     env.transaction.default_env = env  # ensure this is the default env for the call
     recs = env.get(obj)
     if recs is None:

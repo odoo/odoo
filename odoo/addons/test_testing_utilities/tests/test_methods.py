@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import itertools
 from unittest import mock, TestCase
@@ -170,8 +169,11 @@ First differing element 0:
             if next(call_count) == 0:
                 self.env.cr.execute('select nonsense')
 
-        with mock.patch.object(BaseCursor, 'clear', side_effect=clear),\
-             TestCase.assertRaises(self, psycopg2.Error):
+        from odoo.orm.environments import Transaction  # noqa: PLC0415
+        with (
+            mock.patch.object(Transaction, 'clear', side_effect=clear),
+            TestCase.assertRaises(self, psycopg2.Error),
+        ):
             with self.assertRaises(AccessError):
                 raise NotImplementedError
 
