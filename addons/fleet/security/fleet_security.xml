@@ -40,6 +40,11 @@
             <field name="model_id" ref="model_fleet_vehicle"/>
             <field name="groups" eval="[Command.link(ref('fleet_group_manager'))]"/>
         </record>
+        <record id="fleet_rule_vehicle_visibility_user" model="ir.rule" forcecreate="1">
+            <field name="name">User has all rights on vehicle</field>
+            <field name="model_id" ref="model_fleet_vehicle"/>
+            <field name="groups" eval="[Command.link(ref('fleet_group_user'))]"/>
+        </record>
         <record id="ir_rule_fleet_vehicle" model="ir.rule">
             <field name="name">Fleet vehicle: Multi Company</field>
             <field name="model_id" ref="model_fleet_vehicle"/>
