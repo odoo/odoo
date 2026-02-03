@@ -34,6 +34,7 @@ import { uniqueId } from '@web/core/utils/functions';
 // must override the html field in the registry.
 import '@web/views/fields/html/html_field';
 import { Deferred } from "@web/core/utils/concurrency";
+import {getHtmlFieldMetadata, setHtmlFieldMetadata} from '@web_editor/js/common/utils'
 
 let stripHistoryIds;
 
@@ -281,6 +282,7 @@ export class HtmlField extends Component {
             }
         }
     }
+
     async updateValue() {
         const value = this.getEditingValue();
         const lastValue = (this.props.record.data[this.props.name] || "").toString();
@@ -291,7 +293,9 @@ export class HtmlField extends Component {
         ) {
             this.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
             this.currentEditingValue = value;
-            await this.props.record.update({ [this.props.name]: value });
+            const contentMetadata = getHtmlFieldMetadata(lastValue);
+            let restoredData = setHtmlFieldMetadata(value, contentMetadata);
+            await this.props.record.update({ [this.props.name]: restoredData });
         }
     }
     async startWysiwyg(wysiwyg) {
