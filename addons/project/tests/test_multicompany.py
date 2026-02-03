@@ -2,9 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from contextlib import contextmanager
+from datetime import datetime
+from freezegun import freeze_time
 from lxml import etree
 
-from odoo.tests import tagged, Form, TransactionCase
+from odoo.tests import Command, Form, TransactionCase
 from odoo.exceptions import AccessError, UserError
 
 class TestMultiCompanyCommon(TransactionCase):
@@ -482,3 +484,41 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
             with self.assertRaises(AccessError):
                 with Form(task) as task_form:
                     task_form.name = "Testing changing name in a company I can not read/write"
+
+    def test_date_to_assign_project(self):
+        company_0 = self.env['res.company'].create({'name': 'Test company 0'})
+
+        leaves = self.env['resource.calendar.leaves'].with_company(company_0).create([{
+            'name': 'Public Holiday for company 0',
+            'company_id': company_0.id,
+            'date_from': datetime(2019, 5, 27, 0, 0, 0),
+            'date_to': datetime(2019, 5, 29, 23, 0, 0),
+            'resource_id': False,
+            'count_as': 'absence'
+        }])
+
+        company_1 = self.env['res.company'].create({'name': 'Test company 1'})
+        project = self.env['project.project'].with_company(company_1).create({
+            'name': 'Project for company 1',
+            'company_id': company_1.id
+        })
+        task = self.env['project.task'].with_company(company_1).create({
+            'name': 'Task for company 1',
+            'project_id': project.id,
+            'user_ids': False
+        })
+
+        self.env.cr.execute("""
+                       UPDATE
+                       project_task
+                       SET create_date = '%s'
+                       WHERE id = %s
+                       """ % ("2019-05-28 10:00:00", task.id))
+        task.invalidate_recordset(['create_date'])
+
+        with freeze_time("2019-05-28 14:00:00"):
+            task.user_ids = [Command.set([self.user_employee_company_a.id])]
+            task.date_assign = datetime.now()
+            self.assertEqual(leaves.company_id.id, company_0.id)
+            self.assertEqual(task.working_hours_open, 4.0)
+            self.assertEqual(task.working_days_open, 0.5)
