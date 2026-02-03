@@ -5,6 +5,7 @@ import { getTemplate } from "@web/core/templates";
 import { appTranslateFn } from "@web/core/l10n/translation";
 import { session } from "@web/session";
 import { isMacOS } from "@web/core/browser/feature_detection";
+import { compatibilityDirectives, compatibilityGlobals } from "@web/owl2_compatibility";
 
 // -----------------------------------------------------------------------------
 // Types
@@ -191,28 +192,7 @@ export const customDirectives = {
         node.setAttribute(`t-on-click${mods}`, handlerFunction);
         node.setAttribute(`t-on-auxclick${mods}`, handlerFunction);
     },
-    /**
-     * @param {HTMLElement} node
-     * @param {string} value
-     */
-    ref: (node, value) => {
-        const refName = value.startsWith("{{") ? value.slice(2, -2).trim() : `'${value}'`;
-        node.setAttribute("t-ref", `__globals__.createRefSignal(this, ${refName})`);
-    },
-    /**
-     * @param {HTMLElement} node
-     * @param {string} value
-     * @param {string[]} modifiers
-     */
-    model: (node, value, modifiers) => {
-        let attribute = "t-model";
-        for (const modifier of modifiers) {
-            attribute += `.${modifier}`;
-        }
-        const getter = `() => ${value}`;
-        const setter = `(nv) => {${value} = nv;}`;
-        node.setAttribute(attribute, `__globals__.createModelSignal(${getter}, ${setter})`);
-    },
+    ...compatibilityDirectives,
 };
 
 export const globalValues = {
@@ -232,21 +212,7 @@ export const globalValues = {
             value(ev, isMiddleClick);
         }
     },
-    /**
-     * @param {any} component
-     * @param {string} refName
-     */
-    createRefSignal: (component, refName) => ({
-        /** @param {HTMLElement | null} value */
-        set(value) {
-            component.__refs__[refName] = value;
-        },
-    }),
-    /**
-     * @param {Function} getter
-     * @param {Function} setter
-     */
-    createModelSignal: (getter, setter) => Object.assign(getter, { set: setter }),
+    ...compatibilityGlobals,
 };
 
 /**
