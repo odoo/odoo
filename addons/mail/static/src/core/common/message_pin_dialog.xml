@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mail.MessagePinDialog">
+    <Dialog size="'md'" title="title" contentClass="'o-bg-body'">
+        <p class="mx-3 mb-0" t-out="prompt"/>
+        <p class="mx-3 text-muted small" t-out="promptSecondary"/>
+        <blockquote class="mx-3 fst-normal pe-none">
+            <t t-component="messageComponent" message="props.message" isReadOnly="true" hasActions="false"/>
+        </blockquote>
+        <t t-set-slot="footer">
+            <button class="btn me-2" t-att-class="props.isUnpin ? 'btn-danger' : 'btn-primary'" t-on-click="onClickConfirm">
+                <i t-if="!props.isUnpin" class="fa fa-thumb-tack me-2 opacity-50"/>
+                <t t-out="confirmText"/>
+            </button>
+            <button class="btn btn-secondary me-2" t-on-click="props.close">
+                <i class="oi oi-close me-1 opacity-50"/>
+                Discard
+            </button>
+        </t>
+    </Dialog>
+</t>
+
+</templates>

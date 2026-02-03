@@ -737,15 +737,8 @@ export class Message extends Record {
      */
     showDeleteConfirm(owner) {
         this.store.env.services.dialog.add(
-            discussComponentRegistry.get("MessageConfirmDialog"),
-            {
-                message: this,
-                confirmText: _t("Delete"),
-                onConfirm: () => this.onShowDeleteConfirm(owner),
-                prompt: _t("Are you sure you want to bid farewell to this message forever?"),
-                size: "xl",
-                title: _t("Send this message to the great trash can in the sky?"),
-            },
+            discussComponentRegistry.get("MessageDeleteDialog"),
+            { message: this, onConfirm: () => this.onShowDeleteConfirm(owner) },
             { context: owner }
         );
     }
