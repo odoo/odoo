@@ -5,7 +5,6 @@ from urllib.parse import quote, urlencode, urlparse
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import SQL
 from odoo.addons.l10n_tr_nilvera.const import NILVERA_ERROR_CODE_MESSAGES
 from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
 
@@ -102,6 +101,17 @@ class AccountMove(models.Model):
     l10n_tr_nilvera_customer_status = fields.Selection(
         string="Partner Nilvera Status",
         related='partner_id.l10n_tr_nilvera_customer_status',
+    )
+    l10n_tr_nilvera_pdf_file = fields.Binary(
+        attachment=True,
+        string="Nilvera PDF File",
+        copy=False,
+    )
+    l10n_tr_nilvera_pdf_id = fields.Many2one(
+        comodel_name='ir.attachment',
+        string="Nilvera PDF Attachment",
+        compute=lambda self: self._compute_linked_attachment_id('l10n_tr_nilvera_pdf_id', 'l10n_tr_nilvera_pdf_file'),
+        depends=['l10n_tr_nilvera_pdf_file'],
     )
 
     @api.depends("l10n_tr_gib_invoice_scenario", "l10n_tr_gib_invoice_type", "l10n_tr_is_export_invoice")
@@ -411,11 +421,13 @@ class AccountMove(models.Model):
         attachment = self.env['ir.attachment'].create({
             'name': filename,
             'res_id': invoice.id,
+            'res_field': 'l10n_tr_nilvera_pdf_file',
             'res_model': 'account.move',
             'raw': base64.b64decode(response),
             'type': 'binary',
             'mimetype': 'application/pdf',
         })
+        self.invalidate_recordset(fnames=["l10n_tr_nilvera_pdf_id", "l10n_tr_nilvera_pdf_file"])
         # The created attachement coming form Nilvera should be the main attachment
         invoice.message_main_attachment_id = attachment
         invoice.with_context(no_new_invoice=True).message_post(attachment_ids=attachment.ids)
@@ -425,7 +437,7 @@ class AccountMove(models.Model):
             for invoice in self:
                 if (
                         invoice.l10n_tr_nilvera_customer_status not in {'einvoice', 'earchive'}
-                        or invoice.message_main_attachment_id.id != invoice.invoice_pdf_report_id.id
+                        or invoice.l10n_tr_nilvera_pdf_id
                         or invoice.l10n_tr_nilvera_send_status != 'succeed'
                 ):
                     continue
@@ -502,28 +514,12 @@ class AccountMove(models.Model):
 
     def _cron_nilvera_get_sale_pdf(self, batch_size=100):
         """ Fetches the Nilvera generated PDFs for the sales generated on Odoo. """
-        # We fetch all invoices whose message_main_attachment_id is the same
-        # as their invoice_pdf_report_id attachment. After we add the Nilvera
-        # PDF, `_l10n_tr_nilvera_add_pdf_to_invoice` will set
-        # `message_main_attachment_id` to the Nilvera attachment, so they
-        # won't be picked up by next runs.
-        # This is a workaround to do this in stable without adding a dedicated field.
-        sql = SQL("""
-          SELECT am.id
-            FROM account_move am
-            JOIN ir_attachment ia
-              ON ia.res_model = 'account.move'
-             AND ia.res_id = am.id
-             AND ia.mimetype = 'application/pdf'
-             AND ia.res_field = 'invoice_pdf_report_file'
-           WHERE am.message_main_attachment_id = ia.id
-             AND am.l10n_tr_nilvera_send_status = 'succeed'
-             AND am.move_type = 'out_invoice'
-           LIMIT %s
-        """, batch_size)
-        move_ids = [row[0] for row in self.env.execute_query(sql)]
-        invoice_to_fetch_pdf = self.env['account.move'].browse(move_ids)
-        for company, invoices in invoice_to_fetch_pdf.grouped("company_id").items():
+        invoices_to_fetch_pdf = self.env['account.move'].search([
+            ('l10n_tr_nilvera_send_status', '=', 'succeed'),
+            ('move_type', '=', 'out_invoice'),
+            ('l10n_tr_nilvera_pdf_file', '=', False),
+        ], limit=batch_size)
+        for company, invoices in invoices_to_fetch_pdf.grouped("company_id").items():
             with _get_nilvera_client(company) as client:
                 for invoice in invoices:
                     self._l10n_tr_nilvera_add_pdf_to_invoice(

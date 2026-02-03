@@ -279,4 +279,5 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
 
             invoice = self.env['account.move'].search([('l10n_tr_nilvera_uuid', '=', 'invoice_uuid')])
             self.assertEqual(len(invoice), 1)
-            self.assertListEqual(sorted(invoice.attachment_ids.mapped('mimetype')), ['application/pdf', 'application/xml'])
+            self.assertListEqual(sorted(invoice.attachment_ids.mapped('mimetype')), ['application/xml'])
+            self.assertTrue(invoice.l10n_tr_nilvera_pdf_id)

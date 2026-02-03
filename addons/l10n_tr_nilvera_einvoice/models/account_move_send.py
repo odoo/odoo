@@ -29,8 +29,8 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         # Add the Nilvera PDF to the mail attachments.
         attachments = super()._get_invoice_extra_attachments(move)
-        if move.l10n_tr_nilvera_send_status == 'succeed' and move.message_main_attachment_id.id != move.invoice_pdf_report_id.id:
-            attachments += move.message_main_attachment_id
+        if move.l10n_tr_nilvera_send_status == 'succeed' and move.l10n_tr_nilvera_pdf_id:
+            attachments += move.l10n_tr_nilvera_pdf_id
         return attachments
 
     # -------------------------------------------------------------------------
