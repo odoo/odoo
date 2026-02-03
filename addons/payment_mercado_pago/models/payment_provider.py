@@ -33,8 +33,9 @@ class PaymentProvider(models.Model):
         """ Override of `payment` to return the supported currencies. """
         supported_currencies = super()._get_supported_currencies()
         if self.code == 'mercado_pago':
+            active_currencies = self.env['res.currency'].search([])
             supported_currencies = supported_currencies.filtered(
-                lambda c: c.name in const.SUPPORTED_CURRENCIES
+                lambda c: c.name in const.SUPPORTED_CURRENCIES and c in active_currencies
             )
         return supported_currencies
 
@@ -95,3 +96,24 @@ class PaymentProvider(models.Model):
         if self.code != 'mercado_pago':
             return default_codes
         return const.DEFAULT_PAYMENT_METHOD_CODES
+
+    def write(self, vals):
+        res = super().write(vals)
+        for line in self:
+            if line.code == 'mercado_pago':
+                active_currencies = self.env['res.currency'].search([])
+                invalid_currencies = line.available_currency_ids.filtered(
+                    lambda c: (
+                        c.name not in const.SUPPORTED_CURRENCIES or
+                        c not in active_currencies
+                    )
+                )
+                if invalid_currencies:
+                    invalid_currencies_names = ', '.join(invalid_currencies.mapped('name'))
+                    raise ValidationError("Mercado Pago: " + _(
+                        "The following currencies are not supported and should be removed from"
+                        " currencies: %s",
+                        invalid_currencies_names,
+                    )
+                )
+        return res
