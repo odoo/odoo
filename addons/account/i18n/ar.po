@@ -12,14 +12,14 @@
 # Wil Odoo, 2025
 # MAHAMADASIF ANSARI <maan@odoo.com>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-15 18:38+0000\n"
-"PO-Revision-Date: 2026-01-10 09:10+0000\n"
-"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
+"POT-Creation-Date: 2026-01-29 18:36+0000\n"
+"PO-Revision-Date: 2026-01-30 16:27+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-18/account/"
 "ar/>\n"
 "Language: ar\n"
@@ -2386,6 +2386,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
+"تم إنشاء قيد الاستحقاق بتاريخ %(date)s: %(accrual_entry)s.                "
+"والقيد المعاكس له هو: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -3334,7 +3336,7 @@ msgstr "المرفقات "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__attachments_not_supported
 msgid "Attachments Not Supported"
-msgstr ""
+msgstr "المرفقات غير مدعومة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_activated
@@ -3873,6 +3875,8 @@ msgid ""
 "Batch invoice sending is unavailable. Please, activate the cron to enable "
 "batch sending of invoices."
 msgstr ""
+"خاصية إرسال الفواتير المجمعة غير متوفرة في الوقت الحالي. يرجى تفعيل cron "
+"لتمكين خاصية إرسال الفواتير المجمعة."
 
 #. module: account
 #. odoo-python
@@ -6480,7 +6484,7 @@ msgstr "مبلغ العرض "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__display_attachments_widget
 msgid "Display Attachments Widget"
-msgstr ""
+msgstr "عرض أداة المرفقات"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_days_next_month
@@ -7972,7 +7976,7 @@ msgstr "تاريخ الإقفال العام "
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "Go to cron configuration"
-msgstr ""
+msgstr "انتقل إلى تهيئة cron"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
@@ -16461,18 +16465,6 @@ msgstr "هذه السنة"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"This account is configured in %(journal_names)s journal(s) (ids %"
-"(journal_ids)s) as payment debit or credit account. This means that this "
-"account's type should be reconcilable."
-msgstr ""
-"تمت تهيئة الحساب في يومية/يوميات %(journal_names)s (المُعرّفات %"
-"(journal_ids)s) كحساب دفع عن طريق الخصم أو حساب الرصيد. هذا يعني أن نوع "
-"الحساب هذا قابل للتسوية. "
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
 msgid "This account was split off from %(account_name)s (%(company_name)s)."
 msgstr "تم تقسيم الحساب من %(account_name)s (%(company_name)s). "
 
@@ -16771,7 +16763,7 @@ msgstr "سيتم ترحيل هذخ الحركة الدورية حتى وفي ه�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting locks once a journal entry is created."
-msgstr ""
+msgstr "يتم قفل هذا الإعداد بمجرد أن يتم إنشاء قييد في دفتر اليومية."
 
 #. module: account
 #. odoo-python
@@ -18858,6 +18850,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+msgid ""
+"You may only use samples in demo mode, try uploading one of your invoices "
+"instead."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "You must select at least 2 accounts."
 msgstr "عليك تحديد حسابين على الأقل. "
@@ -19424,6 +19424,15 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} إيصال الدفع  (المرجع {{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "This account is configured in %(journal_names)s journal(s) (ids %"
+#~ "(journal_ids)s) as payment debit or credit account. This means that this "
+#~ "account's type should be reconcilable."
+#~ msgstr ""
+#~ "تمت تهيئة الحساب في يومية/يوميات %(journal_names)s (المُعرّفات %"
+#~ "(journal_ids)s) كحساب دفع عن طريق الخصم أو حساب الرصيد. هذا يعني أن نوع "
+#~ "الحساب هذا قابل للتسوية. "
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr "لا يمكن تغيير هذا الإعداد بعد إنشاء الفاتورة. "

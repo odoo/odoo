@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-15 18:38+0000\n"
-"PO-Revision-Date: 2026-01-03 18:01+0000\n"
+"POT-Creation-Date: 2026-01-29 18:36+0000\n"
+"PO-Revision-Date: 2026-01-30 16:27+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/account/hi/"
 ">\n"
@@ -16330,18 +16330,6 @@ msgstr "इस साल"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"This account is configured in %(journal_names)s journal(s) (ids %"
-"(journal_ids)s) as payment debit or credit account. This means that this "
-"account's type should be reconcilable."
-msgstr ""
-"यह खाता %(journal_names)s जर्नल (जिनकी आईडी %(journal_ids)s हैं) में पेमेंट के डेबिट "
-"या क्रेडिट अकाउंट के तौर पर सेट है. इसका मतलब है कि इस खाते का प्रकार 'मिलान करने "
-"योग्य' होना चाहिए."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
 msgid "This account was split off from %(account_name)s (%(company_name)s)."
 msgstr "यह खाता %(account_name)s (%(company_name)s) से अलग किया गया था."
 
@@ -17181,7 +17169,7 @@ msgstr "अनमर्ज अकाउं"
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2many_tax_tags/many2many_tax_tags.js:0
 msgid "Unnamed"
-msgstr ""
+msgstr "नाम नहीं है"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -18741,6 +18729,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+msgid ""
+"You may only use samples in demo mode, try uploading one of your invoices "
+"instead."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "You must select at least 2 accounts."
 msgstr "आपको कम से कम 2 खातों को चुनना चाहिए."
@@ -19309,6 +19305,15 @@ msgstr "{{ object.company_id.name }} इनवॉइस (Ref {{ object.name or '
 msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} पेमेंट रसीद (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "This account is configured in %(journal_names)s journal(s) (ids %"
+#~ "(journal_ids)s) as payment debit or credit account. This means that this "
+#~ "account's type should be reconcilable."
+#~ msgstr ""
+#~ "यह खाता %(journal_names)s जर्नल (जिनकी आईडी %(journal_ids)s हैं) में पेमेंट के "
+#~ "डेबिट या क्रेडिट अकाउंट के तौर पर सेट है. इसका मतलब है कि इस खाते का प्रकार 'मिलान "
+#~ "करने योग्य' होना चाहिए."
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr "एक बार इनवॉइस बन जाने के बाद, इस सेटिंग में बदलाव नहीं किया जा सकता."

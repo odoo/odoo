@@ -1451,4 +1451,16 @@ export const accountTaxHelpers = {
         }
         return values_per_grouping_key;
     },
+
+    // -------------------------------------------------------------------------
+    // ADVANCED LINES MANIPULATION HELPERS
+    // -------------------------------------------------------------------------
+
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
+    can_be_discounted(tax) {
+        return !["fixed", "code"].includes(tax.amount_type);
+    },
 };

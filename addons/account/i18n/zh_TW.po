@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-15 18:38+0000\n"
+"POT-Creation-Date: 2026-01-29 18:36+0000\n"
 "PO-Revision-Date: 2026-01-10 09:14+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -16176,17 +16176,6 @@ msgstr "本年度"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"This account is configured in %(journal_names)s journal(s) (ids %"
-"(journal_ids)s) as payment debit or credit account. This means that this "
-"account's type should be reconcilable."
-msgstr ""
-"此科目在 %(journal_names)s 個日記帳 (ids %(journal_ids)s) 中設定為付款借記或"
-"貸記科目. 這意味著該科目的類型應該是可核銷的."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
 msgid "This account was split off from %(account_name)s (%(company_name)s)."
 msgstr "賬戶已從 %(account_name)s（%(company_name)s）分拆出來。"
 
@@ -18481,6 +18470,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+msgid ""
+"You may only use samples in demo mode, try uploading one of your invoices "
+"instead."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "You must select at least 2 accounts."
 msgstr "必須至少選擇 2 個賬戶。"
@@ -19034,6 +19031,14 @@ msgstr ""
 msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} 付款收據(編號 {{ object.name 或 'n/a' }})"
+
+#~ msgid ""
+#~ "This account is configured in %(journal_names)s journal(s) (ids %"
+#~ "(journal_ids)s) as payment debit or credit account. This means that this "
+#~ "account's type should be reconcilable."
+#~ msgstr ""
+#~ "此科目在 %(journal_names)s 個日記帳 (ids %(journal_ids)s) 中設定為付款借記"
+#~ "或貸記科目. 這意味著該科目的類型應該是可核銷的."
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr "建立發票後，將無法更改此設定。"

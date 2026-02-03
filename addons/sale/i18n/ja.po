@@ -7,15 +7,15 @@
 # Junko Augias, 2025
 # Wil Odoo, 2025
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Yoshi Tashiro <tashiro@quartile.co>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-01-24 09:13+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"POT-Creation-Date: 2026-01-29 18:37+0000\n"
+"PO-Revision-Date: 2026-01-31 18:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/sale/ja/"
 ">\n"
 "Language: ja\n"
@@ -930,11 +930,11 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in "
 "('draft', 'sent') else 'order'\"/>\n"
-"        こんにちは。\n"
+"        お世話になっております。\n"
 "        <br/><br/>\n"
 "        お客様の\n"
 "        <t t-if=\"ctx.get('proforma')\">\n"
-"            見積送状 <t t-out=\"doc_name or ''\">見積書</t> <span "
+"            仮請求書 <t t-out=\"doc_name or ''\">見積書</t> <span "
 "style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (参照番号: <t t-out=\"object.origin or ''\"/> )\n"
@@ -1622,7 +1622,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "分析用配分"
+msgstr "分析分配"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
@@ -2103,7 +2103,7 @@ msgstr "コネクタ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__consolidated_billing
 msgid "Consolidated Billing"
-msgstr "連結請求"
+msgstr "まとめ請求"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
@@ -2440,6 +2440,11 @@ msgstr "配送先"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivery Date"
 msgstr "配送日"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Delivery Date:"
+msgstr "納品予定日:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
@@ -3963,7 +3968,7 @@ msgstr "PDF見積書ビルダ"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr "見積送状"
+msgstr "仮請求書"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_id
@@ -4803,7 +4808,8 @@ msgid ""
 "Sales order item to which the time spent will be added in order to be "
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
-msgstr "顧客に請求するために、使用した時間を追加する販売オーダ項目。タイムシートエン"
+msgstr ""
+"顧客に請求するために、使用した時間を追加する販売オーダ項目。タイムシートエン"
 "トリーを非請求対象にするには、販売オーダ項目を削除して下さい。"
 
 #. module: sale
@@ -5489,6 +5495,13 @@ msgstr "プロダクト(%(product)s)に互換性のない値があります:%(va
 #: code:addons/sale/controllers/portal.py:0
 msgid "The provided parameters are invalid."
 msgstr "指定されたパラメータが無効です。"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/controllers/portal.py:0
+#: code:addons/sale/wizard/payment_link_wizard.py:0
+msgid "The sale order has expired."
+msgstr ""
 
 #. module: sale
 #. odoo-python

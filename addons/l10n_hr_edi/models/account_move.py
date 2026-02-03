@@ -167,11 +167,6 @@ class AccountMove(models.Model):
         else:
             return super()._get_invoice_reference_odoo_invoice()
 
-    def _get_l10n_hr_fiscal_user_id_domain(self):
-        internal_users = self.env.ref('base.group_user')
-        domain = [('user_ids', 'in', internal_users.users.ids)]
-        return domain
-
     def _post(self, soft=True):
         for move in self:
             if move.country_code == 'HR' and move.is_sale_document():

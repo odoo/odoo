@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-01-17 09:10+0000\n"
+"POT-Creation-Date: 2026-01-29 18:37+0000\n"
+"PO-Revision-Date: 2026-01-31 18:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-18/sale/sk/>"
 "\n"
@@ -1912,6 +1912,11 @@ msgid "Delivery Date"
 msgstr "Dátum doručenia"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Delivery Date:"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
 msgid "Delivery Methods"
 msgstr "Dodacie metódy"
@@ -2154,7 +2159,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_category__property_account_downpayment_categ_id
 msgid "Downpayment Account"
-msgstr ""
+msgstr "Účet záloh"
 
 #. module: sale
 #. odoo-python
@@ -4314,7 +4319,7 @@ msgstr "Obchodníci"
 #. module: sale
 #: model:ir.model,name:sale.model_mail_scheduled_message
 msgid "Scheduled Message"
-msgstr ""
+msgstr "Naplánované správy"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4927,6 +4932,13 @@ msgstr "Zadané parametre sú neplatné."
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/controllers/portal.py:0
+#: code:addons/sale/wizard/payment_link_wizard.py:0
+msgid "The sale order has expired."
+msgstr ""
+
+#. module: sale
+#. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 msgid "The value of the down payment amount must be positive."
 msgstr "Suma zálohy musí byť kladná."
@@ -4958,7 +4970,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_category__property_account_downpayment_categ_id
 msgid "This account will be used on Downpayment invoices."
-msgstr ""
+msgstr "Tento účet sa bude používať na zálohových faktúrach."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form

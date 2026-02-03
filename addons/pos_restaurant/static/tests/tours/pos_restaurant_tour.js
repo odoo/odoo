@@ -746,6 +746,7 @@ registry.category("web_tour.tours").add("test_book_and_release_table", {
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("5"),
             ProductScreen.bookOrReleaseTable(),
+            FloorScreen.isShown(),
             waitForLoading(),
             {
                 content: "Check if order has a server ID",
