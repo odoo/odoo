@@ -8260,9 +8260,9 @@ test(`list view, editable, without data`, async () => {
         type: "list",
         arch: `
             <list editable="top">
+                <field name="foo"/>
                 <field name="date"/>
                 <field name="m2o"/>
-                <field name="foo"/>
                 <button type="object" icon="fa-plus-square" name="method"/>
             </list>
         `,
@@ -8284,7 +8284,7 @@ test(`list view, editable, without data`, async () => {
     expect(`tbody tr:eq(0)`).toHaveClass("o_selected_row", {
         message: "the date field td should be in edit mode",
     });
-    expect(`tbody tr:eq(0) td:eq(1)`).toHaveText("Feb 10, 2017", {
+    expect(`tbody tr:eq(0) td:eq(2)`).toHaveText("Feb 10, 2017", {
         message: "the date field td should have the default value",
     });
     expect(`tr.o_selected_row .o_list_record_selector input`).toHaveProperty("disabled", true, {
@@ -8436,6 +8436,10 @@ test(`editable list view, should refocus date field`, async () => {
 
     await contains(getPickerCell("15")).click();
     expect(`.o_datetime_picker`).toHaveCount(0);
+
+    // the datetime field is rendered multiple times before `picker.activeInput`
+    // is reset, and so before the field displays a button instead of the input
+    await waitFor(`.o_field_widget[name=date] button`);
     expect(`.o_field_widget[name=date] button`).toHaveValue("02/15/2017");
     expect(`.o_field_widget[name=date] button`).toBeFocused();
 });
