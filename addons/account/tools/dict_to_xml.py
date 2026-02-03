@@ -45,6 +45,9 @@ def dict_to_xml(node, *, nsmap={}, template=None, render_empty_nodes=False, tag=
                 return etree.QName(nsmap[namespace], local_name).text
         return tag
 
+    if template is None and node.get('_template'):
+        template = node['_template']
+
     if template is not None:
         # Ensure order of keys
         node = dict.fromkeys(template) | node
@@ -56,6 +59,9 @@ def dict_to_xml(node, *, nsmap={}, template=None, render_empty_nodes=False, tag=
 
     if path is None:
         path = tag
+
+    if not nsmap and node.get('_nsmap'):
+        nsmap = node['_nsmap']
 
     element = etree.Element(convert_tag_to_lxml_convention(tag), nsmap=nsmap)
 

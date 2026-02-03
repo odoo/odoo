@@ -1613,7 +1613,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             financial_institution_branch = {
                 'cbc:ID': {
                     '_text': bank.bic,
-                    'schemeID': 'BIC'
+                    'schemeID': 'BIC',
                 },
                 'cac:FinancialInstitution': {
                     'cbc:ID': {
