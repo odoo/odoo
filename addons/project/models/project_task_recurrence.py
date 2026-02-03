@@ -67,16 +67,23 @@ class ProjectTaskRecurrence(models.Model):
     @api.model
     def _create_next_occurrences(self, occurrences_from):
         tasks_copy = self.env['project.task']
-        occurrences_from = occurrences_from.filtered(lambda task:
-            task.recurrence_id.repeat_type != 'until' or
-            not task.date_deadline or task.recurrence_id.repeat_until and
-            (task.date_deadline + task.recurrence_id._get_recurrence_delta()).date() <= task.recurrence_id.repeat_until
-        )
-        if occurrences_from:
-            recurrence_by_task = {task: task.recurrence_id for task in occurrences_from}
-            tasks_copy = self.env['project.task'].create(
-                self._create_next_occurrences_values(recurrence_by_task)
+
+        def should_create_occurrence(task):
+            rec = task.recurrence_id.sudo()
+            return (
+                rec.repeat_type != 'until' or
+                not task.date_deadline or
+                rec.repeat_until and
+                (task.date_deadline + rec._get_recurrence_delta()).date() <= rec.repeat_until
             )
+
+        occurrences_from = occurrences_from.filtered(should_create_occurrence)
+
+        if occurrences_from:
+            recurrence_by_task = {task: task.recurrence_id.sudo() for task in occurrences_from}
+            tasks_copy = self.env['project.task'].sudo().create(
+                self._create_next_occurrences_values(recurrence_by_task)
+            ).sudo(False)
             occurrences_from._resolve_copied_dependencies(tasks_copy)
         return tasks_copy
 

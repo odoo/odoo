@@ -671,3 +671,41 @@ class TestProjectSharing(TestProjectSharingCommon):
         project_share_wizard.action_send_mail()
         self.assertIn(self.user_projectmanager.partner_id, project.message_partner_ids, "Project manager should still be a follower after sharing the project")
         self.assertEqual(len(project.message_follower_ids), 2, "number of followers should be 2")
+
+    def test_portal_user_with_edit_rights_can_close_recurring_task(self):
+        """
+            Test that a portal user with edit rights can close a recurrent task.
+
+            Test Case:
+            ==========
+            1) Create a project with a recurrent task.
+            2) Create a portal user and give them edit rights on the project.
+            3) Ensure the portal user can close the recurrent task.
+        """
+        portal_user = self.env['res.users'].create({
+            'name': 'Portal User',
+            'login': 'portaluser',
+            'email': 'portaluser@odoo.com',
+            'group_ids': [(6, 0, [self.env.ref('base.group_portal').id])],
+        })
+        project = self.env['project.project'].create({
+            'name': 'Project with Portal User',
+        })
+        project.task_ids = [Command.create({
+            'name': 'Recurrent Task',
+            'recurring_task': True,
+            'repeat_type': 'forever',
+        })]
+        self.env['project.share.wizard'].create({
+            'res_model': 'project.project',
+            'res_id': project.id,
+            'collaborator_ids': [
+                Command.create({'partner_id': portal_user.partner_id.id, 'access_mode': 'edit'}),
+            ],
+        })
+        task = project.task_ids[0]
+        self.env.invalidate_all()
+        task.with_user(portal_user).write({'state': '1_done'})
+        self.assertEqual(task.state, '1_done', "The portal user with edit rights should be able to mark the task as done.")
+        next_task = task.recurrence_id.task_ids.filtered(lambda t: t != task)
+        self.assertTrue(next_task, "The next occurrence of the recurrent task should be created.")
