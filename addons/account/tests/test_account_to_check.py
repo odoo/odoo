@@ -1,7 +1,7 @@
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
@@ -149,3 +149,10 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
         self.assertFalse(bank_line_1.move_id.review_state)
         with self.assertRaisesRegex(ValidationError, 'Validated entries can only be changed by your accountant.'):
             bank_line_1.with_user(self.simple_accountman).delete_reconciled_line(payment.move_id.line_ids[0].id)
+
+    def test_auto_post_invoicing_only(self):
+        """ Test that an Administrator user with only invoicing installed can still auto post invoice"""
+        # By default, invoicing users don't have group_account_user
+        self.env.user.write({'group_ids': [Command.unlink(self.env.ref('account.group_account_user').id)]})
+        invoice = self._create_invoice(date=fields.Date.today(), auto_post='monthly')
+        invoice.action_post()
