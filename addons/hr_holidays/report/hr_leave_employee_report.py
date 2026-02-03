@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, tools
 from odoo.tools import SQL
 
 python_to_sql_types = {
@@ -32,6 +32,10 @@ class HrLeaveEmployeeReport(models.Model):
         ('cancel', 'Cancelled'),
     ])
     color = fields.Integer(string="Color", related='holiday_status_id.color')
+
+    def init(self):
+        tools.drop_view_if_exists(self.env.cr, self._table)
+        self.env.cr.execute(SQL("""CREATE or REPLACE VIEW %s as (%s)""", SQL.identifier(self._table), self._table_query))
 
     @property
     def _table_query(self):
@@ -100,7 +104,20 @@ class HrLeaveEmployeeReport(models.Model):
     def _generate_report_query(self, report_records):
         report_records = [report_record for report_record in report_records if report_record.get('number_of_days', 0) > 0]
         if not report_records:
-            return ""
+            return SQL("""
+                SELECT
+                    NULL::INTEGER as id,
+                    NULL::INTEGER as leave_id,
+                    NULL::INTEGER as employee_id,
+                    NULL::TIMESTAMP as working_schedule_aligned_date_from,
+                    NULL::REAL as number_of_days,
+                    NULL::REAL as number_of_hours,
+                    NULL::TEXT as description,
+                    NULL::INTEGER as holiday_status_id,
+                    NULL::VARCHAR as state,
+                    NULL::INTEGER as color
+                WHERE FALSE
+            """)
 
         column_names = list(report_records[0].keys())
         report_records_tuples = []
