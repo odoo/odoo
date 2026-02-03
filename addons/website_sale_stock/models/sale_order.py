@@ -74,10 +74,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         product.ensure_one()
 
-        return self._get_cart_qty(product.id), self._get_free_qty(product)
-
-    def _get_free_qty(self, product):
-        return self.website_id._get_product_available_qty(product)
+        return self._get_cart_qty(product.id), self.website_id._get_product_available_qty(product)
 
     def _get_shop_warehouse_id(self):
         """Return the warehouse to use for shop availability checks.

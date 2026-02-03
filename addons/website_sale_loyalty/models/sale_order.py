@@ -262,15 +262,10 @@ class SaleOrder(models.Model):
         """Override of `website_sale` to ensure rewards are up to date before paying."""
         changed = super()._update_cart_taxes_and_prices(**kwargs)
 
-        initial_amount = self.amount_total
         # self._update_programs_and_rewards() is already called by self._recompute_prices()
-        self._auto_apply_rewards()
-        if self.currency_id.compare_amounts(self.amount_total, initial_amount):
+        if self._auto_apply_rewards():
             self._add_warning_alert(
-                self.env._(
-                    "Applied rewards have changed or expired. Please review your cart."
-                    "\nYou might need to refresh the page."
-                )
+                self.env._("Applied rewards have changed. Please review your cart.")
             )
             return True
 

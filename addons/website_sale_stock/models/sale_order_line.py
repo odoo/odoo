@@ -6,15 +6,16 @@ from odoo import models
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    def _get_shop_warning_stock(self, desired_qty, avl_qty):
+    def _get_shop_warning_stock(self, desired_quantity, available_quantity):
         self.ensure_one()
-        if avl_qty <= 0.0:
+        if available_quantity <= 0.0:
             return self.env._("This product is no longer available.")
         return self.env._(
-            "You requested %(qty)g %(product_name)s, but only %(avl_qty)g are available in stock.",
-            qty=desired_qty,
+            "You requested %(desired)g %(product_name)s, but only %(available)g are available in"
+            " stock.",
+            desired=desired_quantity,
             product_name=self.product_id.display_name,
-            avl_qty=avl_qty,
+            available=available_quantity,
         )
 
     def _get_max_line_qty(self):

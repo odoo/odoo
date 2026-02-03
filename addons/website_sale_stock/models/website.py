@@ -11,10 +11,6 @@ class Website(models.Model):
     def _get_product_available_qty(self, product, **kwargs):
         """Give the available quantity of a given product.
 
-        NB: this method is only meant to be used on the shop before the checkout.
-        For checkout steps, please use `cart._get_free_qty` instead to consider
-        the chosen warehouse for delivery (website_sale_collect).
-
         :param product: product.product record
         :param dict kwargs: unused parameters, available for overrides
         :return: available quantity

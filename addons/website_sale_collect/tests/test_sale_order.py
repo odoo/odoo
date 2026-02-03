@@ -77,13 +77,22 @@ class TestSaleOrder(ClickAndCollectCommon):
         so._set_delivery_method(self.free_delivery)
         self.assertNotEqual(so.fiscal_position_id, fp_us)
 
-    def test_free_qty_calculated_from_order_wh_if_dm_is_in_store(self):
+    def test_01_free_qty_includes_in_store_warehouses(self):
         self.warehouse_2 = self._create_warehouse()
         self.website.warehouse_id = self.warehouse_2
         so = self._create_in_store_delivery_order()
         so.warehouse_id = self.warehouse
-        free_qty = so._get_free_qty(self.storable_product)
-        self.assertEqual(free_qty, 10)
+        _, free_qty = so._get_cart_and_free_qty(self.storable_product)
+        self.assertEqual(free_qty, 10, msg="in store stock > website stock (10 > 0)")
+
+    def test_02_free_qty_includes_in_store_warehouses(self):
+        self.warehouse_2 = self._create_warehouse()
+        self.website.warehouse_id = self.warehouse_2
+        self._add_product_qty_to_wh(self.storable_product.id, 20, self.warehouse_2.lot_stock_id.id)
+        so = self._create_in_store_delivery_order()
+        so.warehouse_id = self.warehouse
+        _, free_qty = so._get_cart_and_free_qty(self.storable_product)
+        self.assertEqual(free_qty, 20, msg="in store stock < website stock (10 < 20)")
 
     def test_prevent_buying_out_of_stock_products(self):
         cart = self._create_in_store_delivery_order(order_line=[Command.create({
