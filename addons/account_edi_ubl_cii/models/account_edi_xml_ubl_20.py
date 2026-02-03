@@ -582,6 +582,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         partner = vals['partner']
         commercial_partner = partner.commercial_partner_id
         party_node = {
+            'cbc:EndpointID': {
+                '_text': None,
+                'schemeID': None,
+            },
             'cac:PartyIdentification': {
                 'cbc:ID': {'_text': commercial_partner.ref},
             },

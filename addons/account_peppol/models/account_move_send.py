@@ -21,7 +21,7 @@ class AccountMoveSend(models.AbstractModel):
         if invoice_sending_method := move.commercial_partner_id.with_company(move.company_id).invoice_sending_method:
             return {invoice_sending_method}
 
-        if self._is_applicable_to_company('peppol', move.company_id):
+        if self._is_applicable_to_move('peppol', move):
             return {'email', 'peppol'}
 
         return {'email'}
