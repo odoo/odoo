@@ -818,7 +818,8 @@ class AccountMove(models.Model):
         for move in self.filtered(lambda m: (
             m.state == 'posted'
             and m.move_type == 'out_invoice'
-            and not m.payment_reference
+            and not m.inalterable_hash
+            and not (m.is_move_sent or m.is_being_sent)
         )):
             move.payment_reference = move._get_invoice_computed_reference()
         self._inverse_payment_reference()
