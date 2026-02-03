@@ -1,3 +1,4 @@
+import { CHAT_HUB_COMPACT_LS } from "@mail/core/common/chat_hub_model";
 import { ChatWindow } from "@mail/core/common/chat_window";
 import { ActionList } from "@mail/core/common/action_list";
 import { useHover, useMovable } from "@mail/utils/common/hooks";
@@ -157,7 +158,8 @@ export class ChatHub extends Component {
     }
 
     expand() {
-        this.chatHub.compact = false;
+        browser.localStorage.removeItem(CHAT_HUB_COMPACT_LS);
+        this.chatHub._recomputeCompact++;
         this.more.isOpen = this.chatHub.folded.length > this.chatHub.maxFolded;
         if (this.chatHub.opened.length > 0) {
             this.resetPosition();
