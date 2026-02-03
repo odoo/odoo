@@ -63,7 +63,7 @@ class EventMail(models.Model):
     mail_done = fields.Boolean("Sent", copy=False, readonly=True)
     mail_state = fields.Selection(
         [('running', 'Running'), ('scheduled', 'Scheduled'), ('sent', 'Sent'), ('error', 'Error'), ('cancelled', 'Cancelled')],
-        string='Global communication Status', compute='_compute_mail_state')
+        string='Scheduler Status', compute='_compute_mail_state')
     mail_count_done = fields.Integer('# Sent', copy=False, readonly=True)
     notification_type = fields.Selection([('mail', 'Mail')], string='Send', compute='_compute_notification_type')
     template_ref = fields.Reference(string='Template', ondelete={'mail.template': 'cascade'}, required=True, selection=[('mail.template', 'Mail')])
@@ -91,7 +91,7 @@ class EventMail(models.Model):
             if scheduler.error_datetime:
                 scheduler.mail_state = 'error'
             # event cancelled
-            elif not scheduler.mail_done and scheduler.event_id.kanban_state == 'cancel':
+            elif scheduler.event_id.kanban_state == 'cancel':
                 scheduler.mail_state = 'cancelled'
             # registrations based
             elif scheduler.interval_type == 'after_sub':
