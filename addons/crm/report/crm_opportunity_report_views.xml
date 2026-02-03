@@ -183,7 +183,11 @@
             <field name="res_model">crm.lead</field>
             <field name="view_mode">graph,pivot,list,form</field>
             <field name="search_view_id" ref="crm.crm_opportunity_report_view_search"/>
-            <field name="context">{'search_default_filter_opportunity': True, 'search_default_current': True}</field>
+            <field name="context">{
+                'search_default_filter_opportunity': True,
+                'search_default_current': True,
+                'show_lead_gen_button': True
+            }</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph')}),
