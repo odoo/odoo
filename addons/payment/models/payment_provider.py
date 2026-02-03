@@ -275,7 +275,10 @@ class PaymentProvider(models.Model):
 
         :return: None
         """
-        self.is_published = self.state == 'enabled'
+        if self.state in ['enabled', 'test']:
+            self.is_published = True
+        elif self.state == 'disabled':
+            self.is_published = False
 
     @api.onchange('state')
     def _onchange_state_warn_before_disabling_tokens(self):
@@ -361,6 +364,11 @@ class PaymentProvider(models.Model):
         activated_providers._activate_default_pms()
         if activated_providers or deactivated_providers:
             self._toggle_post_processing_cron()
+
+        # Ensure is_published is updated based on state
+        if 'state' in values:
+            for provider in self:
+                provider.is_published = (self.state in ['enabled', 'test'])
 
         return result
 
