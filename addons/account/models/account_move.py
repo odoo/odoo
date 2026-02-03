@@ -4853,7 +4853,7 @@ class AccountMove(models.Model):
 
         if new and res:
             try:
-                attachments = self._from_files_data(files_data + self._unwrap_attachments(files_data))
+                attachments = set(self.attachment_ids + self._from_files_data(files_data + self._unwrap_attachments(files_data)))
                 self.journal_id._notify_invoice_subscribers(
                     invoice=self,
                     mail_params={
