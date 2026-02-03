@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mail.MessageDeleteDialog">
+    <Dialog size="'md'" title.translate="Send this message to the great trash can in the sky?" contentClass="'o-bg-body'">
+        <p class="mx-3">Are you sure you want to bid farewell to this message forever?</p>
+        <blockquote class="mx-3 fst-normal pe-none">
+            <t t-component="messageComponent" message="props.message" isReadOnly="true" hasActions="false"/>
+        </blockquote>
+        <t t-set-slot="footer">
+            <button class="btn btn-danger me-2" t-on-click="onClickConfirm">
+                <i class="fa fa-trash me-1 opacity-50"/>
+                Delete
+            </button>
+            <button class="btn btn-secondary me-2" t-on-click="props.close">
+                <i class="oi oi-close me-1 opacity-50"/>
+                Discard
+            </button>
+        </t>
+    </Dialog>
+</t>
+
+</templates>
