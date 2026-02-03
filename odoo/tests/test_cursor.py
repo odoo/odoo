@@ -82,7 +82,9 @@ class TestCursor(BaseCursor):
         if not self._closed:
             try:
                 self.rollback()
-                self.reset()
+                if self.transaction is not None:
+                    self.transaction.default_env = None  # break the cyclic reference
+                    self.transaction.reset()
                 if self._savepoint:
                     self._savepoint.close(rollback=False)
             finally:
@@ -103,19 +105,22 @@ class TestCursor(BaseCursor):
         if self._savepoint:
             self._savepoint.close(rollback=self.readonly)
             self._savepoint = None
-        self.clear()
+        if self.transaction is not None:
+            self.transaction.clear()
         self.prerollback.clear()
         self.postrollback.clear()
         self.postcommit.clear()         # TestCursor ignores post-commit hooks by default
 
     def rollback(self) -> None:
         """ Perform an SQL `ROLLBACK` """
-        self.clear()
+        self.precommit.clear()
         self.postcommit.clear()
         self.prerollback.run()
         if self._savepoint:
             self._savepoint.close(rollback=True)
             self._savepoint = None
+        if self.transaction is not None:
+            self.transaction.clear()
         self.postrollback.run()
 
     def __getattr__(self, name):

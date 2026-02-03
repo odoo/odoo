@@ -392,7 +392,7 @@ class TestCursorHooksTransactionCaseCleanup(common.TransactionCase):
 
     def test_4_isolation(self):
         self.assertHookData()
-        self.env.cr.clear()
+        self.env.transaction.clear()
 
     def test_5_isolation(self):
         self.assertHookData()

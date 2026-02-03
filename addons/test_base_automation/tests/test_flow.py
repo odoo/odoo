@@ -1806,7 +1806,7 @@ class TestHttp(common.HttpCase):
         self.cr.flush()
         with self.allow_requests(all_requests=True):
             self.cr.postcommit.run()  # webhooks run in postcommit
-        self.cr.clear()
+        self.cr.transaction.clear()
         self._wait_remaining_requests()  # just in case the request timeouts
         self.assertEqual(json.loads(obj.another_field), {
             '_action': f'Send Webhook Notification(#{automation_sender.action_server_ids[0].id})',
