@@ -12,9 +12,11 @@ E-invoice implementation for Romania
     ],
     'data': [
         'data/ir_cron.xml',
+        'data/l10n_ro.cpv.code.csv',
         'security/ir.model.access.csv',
         'views/account_move_views.xml',
         'views/res_config_settings_views.xml',
+        'views/product_views.xml',
     ],
     'auto_install': True,
     'uninstall_hook': 'uninstall_hook',
