@@ -33,36 +33,21 @@ class PrinterInterface(Interface):
         self.PPDs = self.conn.getPPDs()
 
     def get_devices(self):
-        discovered_devices = {}
-        printers = self.conn.getPrinters()
-        devices = self.conn.getDevices()
+        # get printers already configured in Cups
+        discovered_devices = {
+            name: {"identifier": name, "already-configured": True, **printer}
+            for name, printer in self.conn.getPrinters().items()
+        }
 
-        # get and adjust configuration of printers already added in cups
-        for printer_name, printer in printers.items():
-            path = printer.get('device-uri')
-            if path and printer_name != self.get_identifier(path):
-                device_class = 'direct' if 'usb' in path else 'network'
-                printer.update({
-                    'already-configured': True,
-                    'device-class': device_class,
-                    'device-make-and-model': printer_name,  # give name set in Cups
-                    'device-id': '',
-                })
-                devices.update({printer_name: printer})
+        # Check if new printers available, and configure them if so
+        for name, printer in self.conn.getDevices().items():
+            identifier, printer = self.process_device(name, printer)
 
-        # filter devices (both added and not added in cups) to show as detected by the IoT Box
-        for path, device in devices.items():
-            identifier, device = self.process_device(path, device)
+            url_is_supported = bool(re.match(r'^(dnssd|lpd|socket).+', printer["url"]))
+            model_is_valid = printer["device-make-and-model"] != "Unknown"
 
-            url_is_supported = any(protocol in device["url"] for protocol in ['dnssd', 'lpd', 'socket'])
-            model_is_valid = device["device-make-and-model"] != "Unknown"
-            printer_is_usb = "direct" in device["device-class"]
-
-            if (url_is_supported and model_is_valid) or printer_is_usb:
-                discovered_devices.update({identifier: device})
-
-                if not device.get("already-configured"):
-                    self.set_up_printer_in_cups(device)
+            if (url_is_supported and model_is_valid) or printer.get("is_usb"):
+                discovered_devices.update({identifier: printer})
 
         # Let get_devices be called again every 20 seconds (get_devices of PrinterInterface
         # takes between 4 and 15 seconds) but increase the delay to 2 minutes if it has been
@@ -94,37 +79,27 @@ class PrinterInterface(Interface):
             'url': path,
             'disconnect_counter': 0,
         })
-        if device['device-class'] == 'direct':
+        if path.startswith("usb"):
             device.update(self.get_usb_info(path))
-        elif device['device-class'] == 'network':
+        else:
             device['ip'] = self.get_ip(path)
 
         return identifier, device
 
     def get_identifier(self, path: str):
-        """
-        Necessary because the path is not always a valid Cups identifier,
-        as it may contain characters typically found in URLs or paths,
-        or it may exceed the length limit.
+        """Parse the path to get a valid Cups identifier.
+        Removes: ``:``, ``/``, ``.``, ``\\``, ``space``, ``uuid=`` and ``serial=``
+        and truncates the string to 127 characters.
 
-          - Removes characters: ':', '/', '.', '\', and space.
-          - Removes the exact strings: "uuid=" and "serial=".
-          - Truncates the string to 127 characters.
-
-        Example 1:
-            Input: "ipp://printers/printer1:1234/abcd"
-            Output: "ippprintersprinter11234abcd"
-
-        Example 2:
-            Input: "uuid=1234-5678-90ab-cdef"
-            Output: "1234-5678-90ab-cdef
+        e.g. ``ipp://printers/printer1:1234/abcd`` -> ``ippprintersprinter11234abcd``
+        e.g. ``uuid=1234-5678-90ab-cdef`` -> ``1234-5678-90ab-cdef``
         """
         ip = self.get_ip(path)
         if ip:
             mac_address = self.get_mac_from_ip(ip)
             if mac_address:
-                path = path.replace(ip, mac_address)
-        return re.sub(r'[:\/\.\\ ]|(uuid=)|(serial=)', '', path)[:127]
+                path = f"dnssd{mac_address}" if path.startswith("dnssd") else path.replace(ip, mac_address)
+        return re.sub(r'[:/.?@\\ ]|(uuid=)|(serial=)', '', unquote(path))[:127]
 
     def get_ip(self, device_path):
         hostname = urlsplit(device_path).hostname
@@ -158,12 +133,12 @@ class PrinterInterface(Interface):
                 "usb_manufacturer": manufacturer,
                 "usb_product": product,
                 "usb_serial_number": serial,
+                "is_usb": True,
             }
         else:
             return {}
 
-    @staticmethod
-    def deduplicate_printers(discovered_printers):
+    def deduplicate_printers(self, discovered_printers):
         result = []
         sorted_printers = sorted(discovered_printers.values(), key=lambda printer: str(printer.get('ip')))
 
@@ -173,7 +148,11 @@ class PrinterInterface(Interface):
                 if device.device_type == 'printer' and ip and ip == device.ip
             ), None)
             if already_registered_identifier:
-                result.append({'identifier': already_registered_identifier, 'disconnect_counter': 0})
+                result.append({
+                    'identifier': already_registered_identifier,
+                    'disconnect_counter': 0,
+                    'already-configured': True,
+                })
                 continue
 
             printers_with_same_ip = sorted(printers_with_same_ip, key=lambda printer: printer['identifier'])
@@ -189,7 +168,11 @@ class PrinterInterface(Interface):
                 chosen_printer = printers_with_same_ip[0]
             result.append(chosen_printer)
 
-        return {printer['identifier']: printer for printer in result}
+        return {
+            printer["identifier"]: printer
+            for printer in result
+            if not printer.get("already-configured") and self.set_up_printer_in_cups(printer)
+        }
 
     def monitor_for_printers(self):
         context = pyudev.Context()
@@ -211,7 +194,7 @@ class PrinterInterface(Interface):
 
             path = f"usb://{manufacturer}/{product}?serial={serial}"
             iot_device = {
-                'device-class': 'direct',
+                'is_usb': True,
                 'device-make-and-model': f'{manufacturer} {product}',
                 'device-id': device_id,
             }
@@ -241,10 +224,11 @@ class PrinterInterface(Interface):
         zeroconf = Zeroconf(ip_version=IPVersion.V4Only)
         self.zeroconf_browser = ServiceBrowser(zeroconf, service_types, handlers=[on_service_change])
 
-    def set_up_printer_in_cups(self, device):
+    def set_up_printer_in_cups(self, device: dict) -> bool:
         """Configure detected printer in cups: ppd files, name, info, groups, ...
 
         :param dict device: printer device to configure in cups (detected but not added)
+        :return: True if printer is configured in cups, False otherwise
         """
         fallback_model = device.get('device-make-and-model', "")
         model = next((
@@ -263,8 +247,10 @@ class PrinterInterface(Interface):
             self.conn.setPrinterUsersAllowed(device['identifier'], ['all'])
             self.conn.addPrinterOptionDefault(device['identifier'], "usb-no-reattach", "true")
             self.conn.addPrinterOptionDefault(device['identifier'], "usb-unidir", "true")
+            return True
         except IPPError:
             _logger.exception("Failed to add printer '%s'", device['identifier'])
+            return False
 
     def start(self):
         super().start()
