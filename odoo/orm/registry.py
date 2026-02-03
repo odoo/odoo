@@ -193,6 +193,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     cr = exit_stack.enter_context(registry.cursor())
                     reset_cr = _cr_registry_loading.set(cr)
                     exit_stack.push(lambda *a: _cr_registry_loading.reset(reset_cr))
+                initialized = db.is_initialized(cr)
                 if not update_module:
                     # acquire the shared lock
                     if lock_wait:
@@ -202,7 +203,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     else:
                         wait_sql = " NOWAIT"
                     cr.execute("SELECT pg_advisory_xact_lock_shared(hashtext('registry_loading'))" + wait_sql)
-                    if db.is_initialized(cr):
+                    if initialized:
                         # check whether module updates are pending
                         cr.execute("SELECT FROM ir_config_parameter WHERE key='base.partially_updated_database'")
                         if cr.rowcount:
@@ -215,6 +216,11 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 if update_module:
                     # acquire the exclusive lock
                     cr.execute("SELECT pg_advisory_xact_lock(hashtext('registry_loading'))")
+                    if initialized:
+                        # Deleting the marker. Only one will succeed if deleting concurrently.
+                        _logger.debug("Database %s initialized, removing upgrade marker", cr.dbname)
+                        with registry.cursor() as del_cr:
+                            del_cr.execute("DELETE FROM ir_config_parameter WHERE key='base.partially_updated_database'")
 
                 # now load modules
                 if new_db_demo is None:
@@ -234,6 +240,17 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 except Exception:
                     reset_modules_state(db_name)
                     raise
+                else:
+                    if update_module:
+                        with registry.cursor() as partial_cr:
+                            partial_cr.execute(
+                                """
+                                INSERT INTO ir_config_parameter(key, value)
+                                SELECT 'base.partially_updated_database', '1'
+                                WHERE EXISTS(SELECT FROM ir_module_module WHERE state IN ('to upgrade', 'to install', 'to remove'))
+                                ON CONFLICT DO NOTHING
+                                """
+                            )
 
         except Exception:
             _logger.error('Failed to load registry')

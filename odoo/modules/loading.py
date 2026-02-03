@@ -362,9 +362,6 @@ def load_modules(
         # borrowed from the pool
         cr.execute("SET SESSION lock_timeout = '15s'")
         if modules_db.is_initialized(cr):
-            _logger.debug("Database %s initialized, removing upgrade marker", cr.dbname)
-            cr.execute("DELETE FROM ir_config_parameter WHERE key='base.partially_updated_database'")
-            cr.commit()
             if 'base' in reinit_modules:
                 registry._reinit_modules.add('base')
         else:
@@ -597,15 +594,6 @@ def load_modules(
         # STEP 10: check that we can trust nullable columns
         registry.check_null_constraints(cr)
 
-        if update_module:
-            cr.execute(
-                """
-                INSERT INTO ir_config_parameter(key, value)
-                SELECT 'base.partially_updated_database', '1'
-                WHERE EXISTS(SELECT FROM ir_module_module WHERE state IN ('to upgrade', 'to install', 'to remove'))
-                ON CONFLICT DO NOTHING
-                """
-            )
 
 
 def reset_modules_state(db_name: str) -> None:
