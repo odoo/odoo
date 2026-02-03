@@ -27,6 +27,6 @@ export class SearchMessagesPanel extends Component {
     }
 
     get title() {
-        return _t("Search Message");
+        return _t("Search Messages");
     }
 }
