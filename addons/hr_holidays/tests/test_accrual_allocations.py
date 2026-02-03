@@ -18,6 +18,9 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):
         super(TestAccrualAllocations, cls).setUpClass()
+        cls.department = cls.env['hr.department'].create({
+            'name': 'Test Department',
+        })
         cls.work_entry_type = cls.env['hr.work.entry.type'].create({
             'name': 'Paid Time Off',
             'code': 'Paid Time Off',
@@ -5027,3 +5030,36 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 with freeze_time(test_date):
                     allocation._update_accrual()
                     self.assertEqual(allocation.number_of_days, expected_remaining_leaves)
+
+    def test_department_accrual_allocation(self):
+        """
+        Make sure when creating a multi employee accrual allocation the correct
+        number of days will be assigned to each child allocation
+        """
+        employees = self.env['hr.employee'].create([
+            {
+                'name': 'Test Department Employee',
+                'company_id': self.company.id,
+            },
+            {
+                'name': 'Department Employee 1',
+                'company_id': self.company.id,
+            },
+        ])
+
+        multi_employee_allocation = self.env['hr.leave.allocation.generate.multi.wizard'].create({
+            'name': 'Multi-Allocation',
+            'employee_ids': [(4, employees[0].id), (4, employees[1].id)],
+            'work_entry_type_id': self.work_entry_type_day.id,
+            'date_from': '2026-01-01',
+            'allocation_type': 'accrual',
+            'accrual_plan_id': self.accrual_plan_yearly_max_postponed_days_start.id
+        })
+
+        multi_employee_allocation.action_generate_allocations()
+
+        children_allocations = self.env['hr.leave.allocation'].search(
+            [('employee_id', 'in', employees.ids)])
+        self.assertEqual(len(children_allocations), 2)
+        self.assertEqual(children_allocations[0].number_of_days, 21.0)
+        self.assertEqual(children_allocations[1].number_of_days, 21.0)
