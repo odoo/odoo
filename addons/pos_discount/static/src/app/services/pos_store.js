@@ -92,6 +92,7 @@ patch(PosStore.prototype, {
             const existingLine = discountLinesMap[key];
 
             if (existingLine) {
+                existingLine.extra_tax_data = extra_tax_data;
                 existingLine.price_unit = baseLine.price_unit;
                 delete discountLinesMap[key];
             } else {
