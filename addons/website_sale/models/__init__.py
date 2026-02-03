@@ -32,7 +32,6 @@ from . import (
     sale_order_line,
     theme_utils,
     website,
-    website_base_unit,
     website_checkout_step,
     website_menu,
     website_page,

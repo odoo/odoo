@@ -397,6 +397,14 @@
                             <group name="pricing" string="Pricing">
                                 <field name="product_variant_count" invisible="1"/>
                                 <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                <label for="base_unit_count" groups="product.group_show_uom_price"/>
+                                <div name="base_unit_price" groups="product.group_show_uom_price" class="d-flex flex-row">
+                                    <field name="base_unit_count" style="width: 4rem;"/>
+                                    <field name="base_unit_id" options="{'no_open': True}" placeholder="Specify unit" style="width: 10rem;"/>
+                                    <div class="d-flex flex-row" invisible="base_unit_price == 0">
+                                        (<field name="base_unit_price" class="oe_inline"/> / <field name="base_unit_name" class="oe_inline"/>)
+                                    </div>
+                                </div>
                                 <field name="standard_price"
                                     widget="monetary"
                                     options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
@@ -558,6 +566,16 @@
                 <field name="list_price" position="after">
                    <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                 </field>
+                <div name="list_price_per_uom_id" position="after">
+                    <label for="base_unit_count" groups="product.group_show_uom_price"/>
+                    <div name="base_unit_price" groups="product.group_show_uom_price" class="d-flex flex-row">
+                        <field name="base_unit_count" style="width: 4rem;"/>
+                        <field name="base_unit_id" options="{'no_open': True}" placeholder="Specify unit" style="width: 10rem;"/>
+                        <div class="d-flex flex-row" invisible="base_unit_price == 0">
+                            (<field name="base_unit_price" class="oe_inline"/> / <field name="base_unit_name" class="oe_inline"/>)
+                        </div>
+                    </div>
+                </div>
                 <field name="name" position="after">
                     <field name="product_tmpl_id" readonly="1" invisible="1" required="id"/>
                 </field>
