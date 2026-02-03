@@ -364,7 +364,7 @@ class TestPortalFlow(MailCommon, HttpCase):
     def assert_URL(self, url, expected_path, expected_fragment_params=None, expected_query=None):
         """Asserts that the URL has the expected path and if set, the expected fragment parameters and query."""
         parsed_url = parse_url(url)
-        fragment_params = parse_qs(parsed_url.fragment)
+        fragment_params = parse_qs(parsed_url.fragment or '')
         self.assertEqual(parsed_url.path, expected_path)
         if expected_fragment_params:
             for key, expected_value in expected_fragment_params.items():

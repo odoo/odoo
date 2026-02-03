@@ -85,7 +85,7 @@ class MockLinkTracker(common.BaseCase):
         # check UTMS are correctly set on redirect URL
         original_url = parse_url(url)
         redirect_url = parse_url(link_tracker.redirected_url)
-        redirect_params = {k: v[0] for k, v in parse_qs(redirect_url.query).items()}
+        redirect_params = {k: v[0] for k, v in parse_qs(redirect_url.query or '').items()}
         self.assertEqual(redirect_url.scheme, original_url.scheme)
         self.assertEqual(redirect_url.authority, original_url.authority)
         self.assertEqual(redirect_url.path, original_url.path)
