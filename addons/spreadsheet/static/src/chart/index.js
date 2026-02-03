@@ -17,7 +17,7 @@ chartComponentRegistry.add("odoo_sunburst", ChartJsComponent);
 chartComponentRegistry.add("odoo_treemap", ChartJsComponent);
 chartComponentRegistry.add("odoo_waterfall", ZoomableChartJsComponent);
 chartComponentRegistry.add("odoo_pyramid", ChartJsComponent);
-chartComponentRegistry.add("odoo_scatter", ZoomableChartJsComponent);
+chartComponentRegistry.add("odoo_scatter", ChartJsComponent);
 chartComponentRegistry.add("odoo_combo", ZoomableChartJsComponent);
 chartComponentRegistry.add("odoo_geo", ChartJsComponent);
 chartComponentRegistry.add("odoo_funnel", ChartJsComponent);
