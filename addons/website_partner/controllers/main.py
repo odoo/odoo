@@ -6,6 +6,14 @@ from odoo.http import request
 
 class WebsitePartnerPage(http.Controller):
 
+    def _get_partners_detail_values(self, partner_id, **post):
+        partner_sudo = request.env['res.partner'].sudo().browse(partner_id)
+        return {
+            'main_object': partner_sudo,
+            'partner': partner_sudo,
+            'edit_page': False
+        }
+
     # Do not use semantic controller due to SUPERUSER_ID
     @http.route(['/partners/<partner_id>'], type='http', auth="public", website=True)
     def partners_detail(self, partner_id, **post):
@@ -18,10 +26,6 @@ class WebsitePartnerPage(http.Controller):
                 partner_slug = request.env['ir.http']._slug(partner_sudo)
                 if partner_slug != current_slug:
                     return request.redirect('/partners/%s' % partner_slug)
-                values = {
-                    'main_object': partner_sudo,
-                    'partner': partner_sudo,
-                    'edit_page': False
-                }
+                values = self._get_partners_detail_values(partner_id, **post)
                 return request.render("website_partner.partner_page", values)
         raise request.not_found()
