@@ -258,10 +258,11 @@ class SaleOrder(models.Model):
     def _needs_customer_address(self):
         """Return whether we need the address details of the customer (country, street, ...).
 
-        If an order only has services, unless the customer wants an invoice, their checkout can
-        be sped up by allowing them to only provide their name, email and phone numbers.
+        Make it true by default as it's required before payment for taxes based on fiscal position.
         """
-        return not self.only_services
+        # TODO: should probably be removed in master, as we cannot skip the address form
+        # when the taxes applied on product/service depend on the fiscal position.
+        return True
 
     def _update_address(self, partner_id, fnames=None):
         if not fnames:
