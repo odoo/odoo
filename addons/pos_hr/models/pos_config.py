@@ -53,7 +53,7 @@ class PosConfig(models.Model):
 
     def _employee_domain(self, user_id):
         domain = self._check_company_domain(self.company_id)
-        if len(self.basic_employee_ids) > 0:
+        if len(self.basic_employee_ids + self.advanced_employee_ids + self.minimal_employee_ids) > 0:
             domain = AND([
                 domain,
                 ['|', ('user_id', '=', user_id), ('id', 'in', self.basic_employee_ids.ids + self.advanced_employee_ids.ids + self.minimal_employee_ids.ids)]
