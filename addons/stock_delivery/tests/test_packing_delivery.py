@@ -328,3 +328,100 @@ class TestPacking(TestPackingCommon):
         pack_wiz.action_put_in_pack()
         self.assertTrue(move_line_1.result_package_id, 'A package should have been created for the selected move line')
         self.assertFalse(move_line_2.result_package_id, 'The other move line should not be packed')
+<<<<<<< 758c10a47b83f4facf7bd3348ca1382c495e7f72
+||||||| 5fc1e34d174f7f61d692d086d0ff65fbfc72b013
+
+    def test_delivery_shipping_weight_with_package_before_validation(self):
+        """Check that package and picking shipping weights are correctly computed
+        on delivery pickings when products are put into a package.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product_aw, self.stock_location, 1)
+        picking_ship = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [Command.create({
+                'name': self.product_aw.name,
+                'product_id': self.product_aw.id,
+                'quantity': 1,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id
+            })],
+        })
+        picking_ship.action_confirm()
+        self.assertEqual(picking_ship.shipping_weight, self.product_aw.weight)
+        picking_ship.action_put_in_pack()
+        package = picking_ship.move_line_ids.result_package_id
+        self.assertEqual(picking_ship.shipping_weight, self.product_aw.weight)
+        self.assertFalse(package.quant_ids, "No quant should be linked to the package yet.")
+        picking_ship.button_validate()
+        self.assertEqual(picking_ship.state, 'done')
+        self.assertTrue(package.quant_ids)
+        self.assertEqual(package.weight, self.product_aw.weight, "As the package contains quants, its weight is correctly computed from them.")
+        self.assertEqual(picking_ship.shipping_weight, self.product_aw.weight)
+=======
+
+    def test_delivery_shipping_weight_with_package_before_validation(self):
+        """Check that package and picking shipping weights are correctly computed
+        on delivery pickings when products are put into a package.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product_aw, self.stock_location, 1)
+        picking_ship = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [Command.create({
+                'name': self.product_aw.name,
+                'product_id': self.product_aw.id,
+                'quantity': 1,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id
+            })],
+        })
+        picking_ship.action_confirm()
+        self.assertEqual(picking_ship.shipping_weight, self.product_aw.weight)
+        picking_ship.action_put_in_pack()
+        package = picking_ship.move_line_ids.result_package_id
+        self.assertEqual(picking_ship.shipping_weight, self.product_aw.weight)
+        self.assertFalse(package.quant_ids, "No quant should be linked to the package yet.")
+        picking_ship.button_validate()
+        self.assertEqual(picking_ship.state, 'done')
+        self.assertTrue(package.quant_ids)
+        self.assertEqual(package.weight, self.product_aw.weight, "As the package contains quants, its weight is correctly computed from them.")
+        self.assertEqual(picking_ship.shipping_weight, self.product_aw.weight)
+
+    def test_outgoing_picking_return_status(self):
+        '''
+        Ensure outgoing pickings are not considered returns.
+        '''
+        picking_in = self.env['stock.picking'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': self.customer_location.id,
+            'location_dest_id': self.stock_location.id,
+            'carrier_id': self.test_carrier.id,
+        })
+        self.env['stock.move.line'].create({
+            'product_id': self.product_aw.id,
+            'product_uom_id': self.uom_kg.id,
+            'picking_id': picking_in.id,
+            'quantity': 5,
+            'location_id': self.customer_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picked': True,
+        })
+        picking_in.button_validate()
+        self.assertEqual(picking_in.state, 'done')
+
+        # Process return
+        wiz_form_return = Form(self.env['stock.return.picking'].with_context(active_id=picking_in.id, active_model='stock.picking'))
+        wiz_return = wiz_form_return.save()
+        wiz_return.product_return_moves.quantity = 3
+        action = wiz_return.action_create_returns()
+        return_picking = self.env["stock.picking"].browse(action["res_id"])
+        return_picking.move_line_ids.quantity = 3
+        return_picking.carrier_id = self.test_carrier
+        return_picking.button_validate()
+        self.test_carrier.can_generate_return = True
+        self.assertFalse(return_picking.is_return_picking)
+>>>>>>> 94f51dedadfe60687a15cb668acad351d53cda0b
