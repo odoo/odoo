@@ -11,15 +11,17 @@ owl.Component = class Component extends owl.Component {
 
     /**
      * @param {any} props
-     * @param {any} env
      * @param {any} node
      */
-    constructor(props, env, node) {
-        super(props, env, node);
+    constructor(props, node) {
+        super(props, node);
         this.props = props;
-        this.env = env;
         this.__owl__ = node;
         this.__refs__ = {};
+        const envPlugin =
+            this.__owl__.pluginManager.get(EnvPlugin) ||
+            this.__owl__.pluginManager.startPlugin(EnvPlugin);
+        this.env = envPlugin;
         currentNode = node;
     }
 
@@ -161,20 +163,41 @@ export function useEffect(effect, computeDependencies = () => [NaN]) {
     owl.onWillUnmount(() => cleanup && cleanup());
 }
 
+class EnvPlugin extends owl.Plugin {
+    static id = "EnvPlugin";
+    env = {};
+}
+
 export function useEnv() {
-    return owl.useEnv();
+    return getCurrentNode().component.env;
+}
+
+/**
+ * @param {object} env
+ * @param {object} extension
+ */
+function extendEnv(env, extension) {
+    const subEnv = Object.assign(Object.create(env), extension);
+    class SubEnvPlugin extends owl.Plugin {
+        static id = "EnvPlugin";
+        env = subEnv;
+    }
+    owl.providePlugins([SubEnvPlugin]);
+    return subEnv;
 }
 
 /**
  * @param {object} extension
  */
 export function useSubEnv(extension) {
-    return owl.useSubEnv(extension);
+    const component = getCurrentNode().component;
+    component.env = extendEnv(component.env, extension);
 }
 
 /**
  * @param {object} extension
  */
 export function useChildSubEnv(extension) {
-    return owl.useChildSubEnv(extension);
+    const component = getCurrentNode().component;
+    extendEnv(component.env, extension);
 }
