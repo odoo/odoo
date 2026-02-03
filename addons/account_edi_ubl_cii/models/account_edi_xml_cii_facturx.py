@@ -404,3 +404,15 @@ class AccountEdiXmlCII(models.AbstractModel):
                 return 'refund', -1
             return 'invoice', 1
         return None, None
+
+    # -------------------------------------------------------------------------
+    # PDF/A-3 METADATA
+    # -------------------------------------------------------------------------
+
+    def _patch_facturx_pdfa3_metadata(self, metadata_content, xml_filename):
+        """Patch the PDF/A-3 XMP metadata for Factur-X.
+
+        Override in specific builders (e.g., facturx_fr_*) to customize metadata.
+        Default implementation returns the content unchanged.
+        """
+        return metadata_content
