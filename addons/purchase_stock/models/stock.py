@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from collections import defaultdict
 from odoo import api, fields, models, _
 from odoo.osv.expression import AND
 
@@ -225,14 +225,18 @@ class StockLot(models.Model):
 
     @api.depends('name')
     def _compute_purchase_order_ids(self):
+        purchase_order_ids_map = defaultdict(set)
+        move_lines = self.env['stock.move.line'].search([
+            ('lot_id', 'in', self.ids),
+            ('state', '=', 'done')
+        ])
+        for move_line in move_lines:
+            move = move_line.move_id
+            if move.picking_id.location_id.usage == 'supplier' and move.purchase_line_id.order_id:
+                purchase_order_ids_map[move_line.lot_id.id].add(move.purchase_line_id.order_id.id)
         for lot in self:
-            stock_moves = self.env['stock.move.line'].search([
-                ('lot_id', '=', lot.id),
-                ('state', '=', 'done')
-            ]).mapped('move_id')
-            stock_moves = stock_moves.search([('id', 'in', stock_moves.ids)]).filtered(
-                lambda move: move.picking_id.location_id.usage == 'supplier' and move.state == 'done')
-            lot.purchase_order_ids = stock_moves.mapped('purchase_line_id.order_id')
+            po_ids = purchase_order_ids_map.get(lot.id, [])
+            lot.purchase_order_ids = self.env['purchase.order'].browse(po_ids)
             lot.purchase_order_count = len(lot.purchase_order_ids)
 
     def action_view_po(self):
