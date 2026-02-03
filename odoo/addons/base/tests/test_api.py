@@ -420,7 +420,7 @@ class TestAPI(SavepointCaseWithUserDemo):
 
             # union with all children
             children |= children.parent_id.child_ids
-            main_size *= (CHILDREN + 1)  # FIXME should not grow this much
+            main_size *= 2  # because PrefetchUnion has both prefetch and ids
             self.assertEqual(len(list(children._prefetch_ids)), main_size + CHILDREN)
 
             # now incrementally build
@@ -434,7 +434,7 @@ class TestAPI(SavepointCaseWithUserDemo):
             result = partners.country_id.browse()
             for partner in partners[:11]:
                 result += partner.child_ids[0].country_id
-            main_size = RECORDS * CHILDREN + (CHILDREN + 1) * 11
+            main_size = RECORDS * CHILDREN + 11
             self.assertEqual(len(list(result._prefetch_ids)), main_size)
 
         # when building subsets of large recordsets, prefetch in priority the
