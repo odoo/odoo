@@ -597,7 +597,7 @@
                                                     'partner_id': parent.partner_id,
                                                 }"
                                                 readonly="not product_updatable"
-                                                required="not display_type and not is_downpayment"
+                                                required="not display_type"
                                                 force_save="1"
                                                 widget="many2one_barcode"
                                             />
@@ -612,7 +612,7 @@
                                                 class="oe_no_button"
                                                 widget="many2one_uom"
                                                 readonly="product_uom_readonly"
-                                                required="not display_type and not is_downpayment"/>
+                                                required="not display_type"/>
                                             <widget name="simple_qty_at_date_widget"/>
                                         </div>
                                         <label for="qty_delivered" string="Delivered" invisible="parent.state != 'sale'"/>
@@ -715,7 +715,7 @@
                                     name="product_id"
                                     string="Product Variant"
                                     readonly="not product_updatable"
-                                    required="not display_type and not is_downpayment"
+                                    required="not display_type"
                                     force_save="1"
                                     context="{
                                         'default_lst_price': price_unit,
@@ -730,7 +730,7 @@
                                 <field name="product_template_id"
                                     string="Product"
                                     readonly="id and not product_updatable"
-                                    required="not display_type and not is_downpayment"
+                                    required="not display_type"
                                     context="{
                                         'default_list_price': price_unit,
                                         'default_uom_id': product_uom_id,
@@ -757,7 +757,7 @@
                                     name="product_uom_qty"
                                     decoration-info="(not display_type and invoice_status == 'to invoice')"
                                     decoration-bf="(not display_type and invoice_status == 'to invoice')"
-                                    readonly="is_downpayment"/>
+                                    readonly="display_type == 'downpayment'"/>
                                 <widget name="simple_qty_at_date_widget" width="20px"/>
                                 <field
                                     name="qty_delivered"
@@ -765,7 +765,7 @@
                                     decoration-info="(not display_type and invoice_status == 'to invoice')"
                                     decoration-bf="(not display_type and invoice_status == 'to invoice')"
                                     column_invisible="parent.state != 'sale'"
-                                    readonly="qty_delivered_method != 'manual' or is_downpayment"
+                                    readonly="qty_delivered_method != 'manual' or display_type == 'downpayment'"
                                     optional="show"/>
                                 <field
                                     name="qty_invoiced"
@@ -778,7 +778,7 @@
                                     name="product_uom_id"
                                     force_save="1"
                                     readonly="product_uom_readonly"
-                                    required="not display_type and not is_downpayment"
+                                    required="not display_type"
                                     widget="many2one_uom"
                                     groups="uom.group_uom"
                                     options='{"no_open": True, "no_create": True}'
@@ -788,14 +788,14 @@
                                     name="customer_lead"
                                     optional="hide"
                                     width="80px"
-                                    readonly="parent.state not in ['draft', 'sent', 'sale'] or is_downpayment or product_type != 'consu'"/>
+                                    readonly="parent.state not in ['draft', 'sent', 'sale'] or display_type == 'downpayment' or product_type != 'consu'"/>
                                 <field name="price_unit" readonly="qty_invoiced &gt; 0"/>
                                 <field
                                     name="tax_ids"
                                     widget="many2many_tax_tags"
                                     options="{'no_create': True}"
                                     context="{'active_test': True}"
-                                    readonly="qty_invoiced &gt; 0 or is_downpayment"
+                                    readonly="qty_invoiced &gt; 0 or display_type == 'downpayment'"
                                     optional="show"/>
                                 <field
                                     name="discount"
@@ -807,25 +807,25 @@
                                     name="price_subtotal"
                                     string="Amount"
                                     column_invisible="parent.company_price_include == 'tax_included'"
-                                    invisible="is_downpayment"/>
+                                    invisible="display_type == 'downpayment'"/>
                                 <field
                                     name="price_total"
                                     string="Amount"
                                     column_invisible="parent.company_price_include == 'tax_excluded'"
-                                    invisible="is_downpayment"/>
+                                    invisible="display_type == 'downpayment'"/>
                                 <!-- Optional amounts columns -->
                                 <field
                                     name="price_total"
                                     string="Tax Incl."
                                     column_invisible="parent.company_price_include == 'tax_included'"
-                                    invisible="is_downpayment"
+                                    invisible="display_type == 'downpayment'"
                                     optional="hide"
                                 />
                                 <field
                                     name="price_subtotal"
                                     string="Tax Excl."
                                     column_invisible="parent.company_price_include == 'tax_excluded'"
-                                    invisible="is_downpayment"
+                                    invisible="display_type == 'downpayment'"
                                     optional="hide"
                                 />
                                 <widget name="section_state"/>

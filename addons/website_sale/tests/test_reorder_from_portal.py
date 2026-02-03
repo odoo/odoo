@@ -113,7 +113,7 @@ class TestWebsiteSaleReorderFromPortal(HttpCaseWithUserPortal):
         })
         line_downpayment = Command.create({
             'name': "Down with the Payment",
-            'is_downpayment': True,
+            'display_type': 'downpayment',
             'price_unit': 5,
         })
 

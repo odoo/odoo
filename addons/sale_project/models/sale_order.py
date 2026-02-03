@@ -174,7 +174,7 @@ class SaleOrder(models.Model):
         sorted_line = self.order_line.sorted('sequence')
         default_sale_line = next((
             sol for sol in sorted_line
-            if sol.product_id.type == 'service' and not sol.is_downpayment
+            if sol.product_id.type == 'service' and sol.display_type not in ['downpayment', 'line_section']
         ), self.env['sale.order.line'])
         view_id = self.env.ref('sale_project.sale_project_view_form_simplified_template', raise_if_not_found=False)
         return {

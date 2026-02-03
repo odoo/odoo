@@ -248,7 +248,7 @@ class TestSaleOrder(SaleCommon):
         })
 
         self.sale_order.order_line = [
-            Command.create({'is_downpayment': True}),
+            Command.create({'display_type': 'downpayment'}),
             Command.create({'display_type': 'line_note', 'name': "Foo\nBar\nBaz"}),
             Command.create({
                 'product_id': no_variant_product.id,

@@ -636,7 +636,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         )
         #downpayment invoiced amount are not updated when the SO is canceled.
         for sol in self.sale_order.order_line:
-            if sol.is_downpayment:
+            if sol.display_type == 'downpayment':
                 continue
             self.assertEqual(sol.untaxed_amount_to_invoice, 0.0)
             self.assertEqual(sol.untaxed_amount_invoiced, 0.0)

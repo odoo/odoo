@@ -693,7 +693,6 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         if any(
             not line.display_type
-            and not line.is_downpayment
             and not line.product_id
             for line in self.order_line
         ):
@@ -762,7 +761,6 @@ class PurchaseOrder(models.Model):
             'product_qty': 0.0,
             'order_id': self.id,
             'display_type': 'line_section',
-            'is_downpayment': True,
             'sequence': (self.order_line[-1:].sequence or 9) + 1,
             'name': _("Down Payments"),
         }
@@ -773,10 +771,10 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
 
         # create section
-        if not any(line.display_type and line.is_downpayment for line in self.order_line):
+        if not any(line.display_type == 'line_section' for line in self.order_line):
             section_line = self.order_line.create(self._prepare_down_payment_section_values())
         else:
-            section_line = self.order_line.filtered(lambda line: line.display_type and line.is_downpayment)
+            section_line = self.order_line.filtered(lambda line: line.display_type == 'line_section')
         vals = [
             {
                 **line_val,

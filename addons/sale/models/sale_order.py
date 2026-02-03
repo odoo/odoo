@@ -680,7 +680,7 @@ class SaleOrder(models.Model):
         orders_to_compute = confirmed_orders - closed_orders
         if not orders_to_compute:
             return
-        lines_domain = [('is_downpayment', '=', False), ('display_type', '=', False)]
+        lines_domain = [('display_type', '=', False)]
         line_invoice_status_all = [
             (order.id, invoice_status)
             for order, invoice_status in self.env['sale.order.line']._read_group(
@@ -1083,7 +1083,7 @@ class SaleOrder(models.Model):
 
     def _get_copiable_order_lines(self):
         """Returns the order lines that can be copied to a new order."""
-        return self.order_line.filtered(lambda l: not l.is_downpayment)
+        return self.order_line.filtered(lambda l: l.display_type not in ['downpayment', 'line_section'])
 
     def copy_data(self, default=None):
         default = dict(default or {})
@@ -1277,7 +1277,6 @@ class SaleOrder(models.Model):
             return _("Some orders are not in a state requiring confirmation.")
         if any(
             not line.display_type
-            and not line.is_downpayment
             and not line.product_id
             for line in self.order_line
         ):
@@ -1623,7 +1622,7 @@ class SaleOrder(models.Model):
             if line.display_type != 'line_note' and float_is_zero(line.qty_to_invoice, precision_digits=precision):
                 continue
             if line.qty_to_invoice > 0 or (line.qty_to_invoice < 0 and final) or line.display_type == 'line_note':
-                if line.is_downpayment:
+                if line.display_type == 'downpayment':
                     # Keep down payment lines separately, to put them together
                     # at the end of the invoice, in a specific dedicated section.
                     down_payment_line_ids.append(line.id)
@@ -1689,7 +1688,7 @@ class SaleOrder(models.Model):
             invoice_line_vals = []
             down_payment_section_added = False
             for line in invoiceable_lines:
-                if not down_payment_section_added and line.is_downpayment:
+                if not down_payment_section_added and line.display_type == 'downpayment':
                     # Create a dedicated section for the down payments
                     # (put at the end of the invoiceable_lines)
                     invoice_line_vals.append(
@@ -1706,7 +1705,7 @@ class SaleOrder(models.Model):
                 # the full order but negate the already created down payment lines.
                 # At this point, on the sale order, the down payment lines have a non-empty
                 # 'extra_tax_data' containing a price unit greater than zero and a quantity of 0.0.
-                if line.is_downpayment:
+                if line.display_type == 'downpayment':
                     optional_values['quantity'] = -1.0
                     optional_values['extra_tax_data'] = self.env['account.tax']\
                         ._reverse_quantity_base_line_extra_tax_data(line.extra_tax_data)
@@ -1923,13 +1922,12 @@ class SaleOrder(models.Model):
 
     def _get_order_lines_to_report(self):
         down_payment_lines = self.order_line.filtered(lambda line:
-            line.is_downpayment
-            and not line.display_type
+            line.display_type == 'downpayment'
             and not line._get_downpayment_state()
         )
 
         def show_line(line):
-            if line.is_downpayment:
+            if line.display_type == 'downpayment':
                 return (
                     # Only show the down payment section if down payments were posted
                     (line.display_type and down_payment_lines)
@@ -2154,7 +2152,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         # If a down payment is already there, then the section is not needed and
         # has already been created.
-        if any(line.display_type and line.is_downpayment for line in self.order_line):
+        if any(line.display_type == 'downpayment' for line in self.order_line):
             return
 
         sequence = max(self.order_line.mapped('sequence') or [10]) + 1
@@ -2174,7 +2172,6 @@ class SaleOrder(models.Model):
         return {
             'order_id': self.id,
             'display_type': 'line_section',
-            'is_downpayment': True,
         }
 
     def _prepare_down_payment_line_values_from_base_line(self, base_line):
@@ -2188,7 +2185,7 @@ class SaleOrder(models.Model):
         extra_tax_data = self.env['account.tax']._export_base_line_extra_tax_data(base_line)
         return {
             'order_id': self.id,
-            'is_downpayment': True,
+            'display_type': 'downpayment',
             'product_uom_qty': 0.0,
             'price_unit': base_line['price_unit'],
             'tax_ids': [Command.set(base_line['tax_ids'].ids)],

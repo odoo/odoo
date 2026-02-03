@@ -15,6 +15,7 @@ const DISPLAY_TYPES = {
     NOTE: "line_note",
     SECTION: "line_section",
     SUBSECTION: "line_subsection",
+    DOWNPAYMENT_SECTION: "line_section",
 };
 
 export function getParentSectionRecord(list, record) {
@@ -43,7 +44,7 @@ function hasPreviousSection(list, record) {
 }
 
 function getRecordsUntilSection(list, record, asc, subSection) {
-    const stopAtTypes = [DISPLAY_TYPES.SECTION];
+    const stopAtTypes = [DISPLAY_TYPES.SECTION, DISPLAY_TYPES.DOWNPAYMENT_SECTION];
     if (subSection ?? record.data.display_type === DISPLAY_TYPES.SUBSECTION) {
         stopAtTypes.push(DISPLAY_TYPES.SUBSECTION);
     }
@@ -549,7 +550,7 @@ export class SectionAndNoteText extends Component {
 
 export class ListSectionAndNoteText extends SectionAndNoteText {
     get componentToUse() {
-        return this.props.record.data.display_type !== "line_section"
+        return this.props.record.data.display_type === "line_section"
             ? ListTextField
             : super.componentToUse;
     }

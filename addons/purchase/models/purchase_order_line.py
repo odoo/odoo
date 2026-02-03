@@ -89,16 +89,17 @@ class PurchaseOrderLine(models.Model):
     display_type = fields.Selection([
         ('line_section', "Section"),
         ('line_subsection', "Subsection"),
-        ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
-    is_downpayment = fields.Boolean()
+        ('line_note', "Note"),
+        ('downpayment', "Downpayment"),
+    ], default=False, help="Technical field for UX purpose.")
     selected_seller_id = fields.Many2one('product.supplierinfo', compute='_compute_selected_seller_id', help='Technical field to get the vendor pricelist used to generate this line')
 
     _accountable_required_fields = models.Constraint(
-        'CHECK(display_type IS NOT NULL OR is_downpayment OR (product_id IS NOT NULL AND uom_id IS NOT NULL AND date_planned IS NOT NULL))',
+        'CHECK(display_type IS NOT NULL OR (product_id IS NOT NULL AND uom_id IS NOT NULL AND date_planned IS NOT NULL))',
         'Missing required fields on accountable purchase order line.',
     )
     _non_accountable_null_fields = models.Constraint(
-        'CHECK(display_type IS NULL OR (product_id IS NULL AND price_unit = 0 AND product_uom_qty = 0 AND uom_id IS NULL AND date_planned is NULL))',
+        'CHECK(display_type IS NULL or display_type IN (\'downpayment\') OR (product_id IS NULL AND price_unit = 0 AND product_uom_qty = 0 AND uom_id IS NULL AND date_planned is NULL))',
         'Forbidden values on non-accountable purchase order line',
     )
     product_template_attribute_value_ids = fields.Many2many(related='product_id.product_template_attribute_value_ids', readonly=True)
@@ -591,7 +592,7 @@ class PurchaseOrderLine(models.Model):
         date = move and move.date or fields.Date.today()
 
         res = {
-            'display_type': self.display_type or 'product',
+            'display_type': self.display_type != 'downpayment' and self.display_type or 'product',
             'name': self.env['account.move.line']._get_journal_items_full_name(self.name, self.product_id.display_name),
             'product_id': self.product_id.id,
             'product_uom_id': self.uom_id.id,
@@ -600,7 +601,6 @@ class PurchaseOrderLine(models.Model):
             'price_unit': self.currency_id._convert(self.price_unit, aml_currency, self.company_id, date, round=False),
             'tax_ids': [(6, 0, self.tax_ids.ids)],
             'purchase_line_id': self.id,
-            'is_downpayment': self.is_downpayment,
         }
         return res
 

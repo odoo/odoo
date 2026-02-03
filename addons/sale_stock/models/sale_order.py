@@ -175,9 +175,9 @@ class SaleOrder(models.Model):
         if values.get('order_line') and self.state == 'sale':
             for order in self:
                 to_log = {}
-                order.order_line.fetch(['product_uom_id', 'product_uom_qty', 'display_type', 'is_downpayment'])
+                order.order_line.fetch(['product_uom_id', 'product_uom_qty', 'display_type'])
                 for order_line in order.order_line:
-                    if order_line.display_type or order_line.is_downpayment:
+                    if order_line.display_type:
                         continue
                     if float_compare(order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0), precision_rounding=order_line.product_uom_id.rounding) < 0:
                         to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))

@@ -89,7 +89,7 @@ class SaleOrder(models.Model):
             if order.invoice_status == 'invoiced':
                 continue
             # We need to account for the downpayment paid in POS with and without invoice
-            order_amount = sum(order.sudo().pos_order_line_ids.filtered(lambda pol: pol.order_id.state in ['paid', 'done', 'invoiced'] and pol.sale_order_line_id.is_downpayment).mapped('price_subtotal_incl'))
+            order_amount = sum(order.sudo().pos_order_line_ids.filtered(lambda pol: pol.order_id.state in ['paid', 'done', 'invoiced'] and pol.sale_order_line_id.display_type == 'downpayment').mapped('price_subtotal_incl'))
             order.amount_invoiced += order_amount
 
     def _prepare_down_payment_line_values_from_base_line(self, base_line):
@@ -124,7 +124,7 @@ class SaleOrderLine(models.Model):
     @api.model
     def _load_pos_data_fields(self, config):
         return ['discount', 'display_name', 'price_total', 'price_unit', 'product_id', 'product_uom_qty', 'qty_delivered',
-            'qty_invoiced', 'qty_to_invoice', 'display_type', 'name', 'tax_ids', 'is_downpayment', 'extra_tax_data',
+            'qty_invoiced', 'qty_to_invoice', 'display_type', 'name', 'tax_ids', 'extra_tax_data',
             'write_date', 'product_custom_attribute_value_ids'
         ]
 
@@ -160,13 +160,13 @@ class SaleOrderLine(models.Model):
         return invoiced_qties
 
     def _get_sale_order_fields(self):
-        return ["product_id", "display_name", "price_unit", "product_uom_qty", "tax_ids", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total", "is_downpayment"]
+        return ["product_id", "display_name", "price_unit", "product_uom_qty", "tax_ids", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total", "display_type"]
 
     def read_converted(self):
         field_names = self._get_sale_order_fields()
         results = []
         for sale_line in self:
-            if sale_line.product_type or (sale_line.is_downpayment and sale_line.price_unit != 0):
+            if sale_line.product_type or (sale_line.display_type == 'downpayment' and sale_line.price_unit != 0):
                 product_uom = sale_line.product_id.uom_id
                 sale_line_uom = sale_line.product_uom_id
                 item = sale_line.read(field_names, load=False)[0]
@@ -210,7 +210,7 @@ class SaleOrderLine(models.Model):
 
     def unlink(self):
         # do not delete downpayment lines created from pos
-        pos_downpayment_lines = self.filtered(lambda line: line.is_downpayment and line.sudo().pos_order_line_ids)
+        pos_downpayment_lines = self.filtered(lambda line: line.display_type == 'downpayment' and line.sudo().pos_order_line_ids)
         return super(SaleOrderLine, self - pos_downpayment_lines).unlink()
 
     @api.depends('pos_order_line_ids')

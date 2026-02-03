@@ -443,7 +443,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             'order_line': [
                 Command.create({'name': "UoM Test", 'display_type': 'line_note'}),
                 Command.create({'product_id': item1.id, 'product_uom_id': uom_dozen.id}),
-                Command.create({'name': "Downpayment", 'is_downpayment': True}),
+                Command.create({'name': "Downpayment", 'display_type': 'downpayment'}),
             ],
         })
         so1.action_confirm()

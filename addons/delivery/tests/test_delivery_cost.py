@@ -318,7 +318,7 @@ class TestDeliveryCost(DeliveryCommon, SaleCommon):
             Command.create({'product_id': weightless_product.id, 'product_uom_qty': 0}),
             Command.create({'product_id': self.service_product.id}),
             Command.create({'display_type': 'line_section', 'name': "Misc."}),
-            Command.create({'is_downpayment': True, 'price_unit': 5.0}),
+            Command.create({'display_type': 'downpayment', 'price_unit': 5.0}),
         ]
         error_lines = order.order_line._get_invalid_delivery_weight_lines()
         self.assertIn(

@@ -48,7 +48,7 @@ export class SectionListRenderer extends ListRenderer {
     }
 
     isSection(record) {
-        return record.data.display_type === this.displayType;
+        return this.displayType.includes(record.data.display_type);
     }
 }
 SectionListRenderer.recordRowTemplate = "resource.SectionListRenderer.RecordRow";

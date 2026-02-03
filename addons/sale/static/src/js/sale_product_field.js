@@ -119,7 +119,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         return this.props.record.data.product_template_id && this.props.record.data.product_type === 'combo';
     }
     get isDownpayment() {
-        return this.props.record.data.is_downpayment;
+        return this.props.record.data.display_type === 'downpayment';
     }
 
     get configurationButtonHelp() {

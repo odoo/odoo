@@ -69,7 +69,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _compute_has_down_payments(self):
         for wizard in self:
             wizard.has_down_payments = bool(
-                wizard.sale_order_ids.order_line.filtered('is_downpayment')
+                wizard.sale_order_ids.order_line.filtered(lambda line: line.display_type == 'downpayment')
             )
 
     # next computed fields are only used for down payments invoices and therefore should only
@@ -145,7 +145,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             order = self.sale_order_ids
 
             AccountTax = self.env['account.tax']
-            order_lines = order.order_line.filtered(lambda x: not x.display_type)
+            order_lines = order.order_line.filtered(lambda x: not x.display_type or x.display_type == 'downpayment')
             base_lines = [
                 line._prepare_base_line_for_taxes_computation(
                     quantity=line.product_uom_qty or line.qty_delivered

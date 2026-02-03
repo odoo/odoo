@@ -24,7 +24,7 @@ class AccountMove(models.Model):
         compute="_compute_sale_warning_text")
 
     def unlink(self):
-        downpayment_lines = self.mapped('line_ids.sale_line_ids').filtered(lambda line: line.is_downpayment and line.invoice_lines <= self.mapped('line_ids'))
+        downpayment_lines = self.mapped('line_ids.sale_line_ids').filtered(lambda line: line.display_type == 'downpayment' and line.invoice_lines <= self.mapped('line_ids'))
         res = super(AccountMove, self).unlink()
         if downpayment_lines:
             downpayment_lines.unlink()
@@ -85,7 +85,7 @@ class AccountMove(models.Model):
         res = super(AccountMove, self).action_post()
 
         # We cannot change lines content on locked SO, changes on invoices are not forwarded to the SO if the SO is locked
-        dp_lines = self.line_ids.sale_line_ids.filtered(lambda l: l.is_downpayment and not l.display_type)
+        dp_lines = self.line_ids.sale_line_ids.filtered(lambda l: l.display_type == 'downpayment' and not l.display_type)
         dp_lines._compute_name()  # Update the description of DP lines (Draft -> Posted)
         downpayment_lines = dp_lines.filtered(lambda sol: not sol.order_id.locked)
         other_so_lines = downpayment_lines.order_id.order_line - downpayment_lines
@@ -99,7 +99,7 @@ class AccountMove(models.Model):
     def button_draft(self):
         res = super().button_draft()
 
-        self.line_ids.filtered('is_downpayment').sale_line_ids.filtered(
+        self.line_ids.filtered(lambda l: l.display_type == 'downpayment').sale_line_ids.filtered(
             lambda sol: not sol.display_type)._compute_name()
 
         return res
@@ -107,7 +107,7 @@ class AccountMove(models.Model):
     def button_cancel(self):
         res = super().button_cancel()
 
-        self.line_ids.filtered('is_downpayment').sale_line_ids.filtered(
+        self.line_ids.filtered(lambda l: l.display_type == 'downpayment').sale_line_ids.filtered(
             lambda sol: not sol.display_type)._compute_name()
 
         return res
@@ -161,11 +161,6 @@ class AccountMove(models.Model):
             result = {'type': 'ir.actions.act_window_close'}
         return result
 
-    def _is_downpayment(self):
-        # OVERRIDE
-        self.ensure_one()
-        return self.line_ids.sale_line_ids and all(sale_line.is_downpayment for sale_line in self.line_ids.sale_line_ids) or False
-
     def _get_sale_order_invoiced_amount(self, order):
         """
         Consider all lines on any invoice in self that stem from the sales order `order`. (All those invoices belong to order.company_id)
@@ -175,7 +170,7 @@ class AccountMove(models.Model):
         order_amount = 0
         for invoice in self:
             prices = sum(invoice.line_ids.filtered(
-                lambda x: x.display_type not in ('line_note', 'line_section') and order in x.sale_line_ids.order_id
+                lambda x: x.display_type not in ('line_note', 'line_section', 'downpayment') and order in x.sale_line_ids.order_id
             ).mapped('price_total'))
             order_amount += invoice.currency_id._convert(
                 prices * -invoice.direction_sign,

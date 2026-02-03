@@ -102,7 +102,7 @@ patch(PosStore.prototype, {
                 continue;
             }
 
-            if (line.is_downpayment) {
+            if (line.display_type === "downpayment") {
                 line.product_id = this.config.down_payment_product_id;
             }
 

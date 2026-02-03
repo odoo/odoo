@@ -54,10 +54,14 @@ class SaleOrderTemplateLine(models.Model):
         digits='Product Unit',
         default=1)
 
-    display_type = fields.Selection([
-        ('line_section', "Section"),
-        ('line_subsection', "Subsection"),
-        ('line_note', "Note")], default=False)
+    display_type = fields.Selection(
+        selection=[
+            ('line_section', "Section"),
+            ('line_subsection', "Subsection"),
+            ('line_note', "Note"),
+        ],
+        default=False
+    )
 
     # Section-related fields
     parent_id = fields.Many2one(

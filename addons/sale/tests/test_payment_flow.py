@@ -425,7 +425,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
 
         invoice = self.sale_order.invoice_ids
         self.assertTrue(len(invoice) == 1)
-        self.assertTrue(invoice.line_ids[0].is_downpayment)
+        self.assertTrue(invoice.line_ids[0].display_type == 'downpayment')
 
     @mute_logger('odoo.http')
     def test_transaction_route_rejects_unexpected_kwarg(self):

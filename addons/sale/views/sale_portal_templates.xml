@@ -718,7 +718,7 @@
                             <t t-foreach="lines_to_report" t-as="line">
 
                                 <t t-set="is_note" t-value="line.display_type == 'line_note'"/>
-                                <t t-set="is_section" t-value="line.display_type == 'line_section'"/>
+                                <t t-set="is_section" t-value="line.display_type === 'line_section'"/>
                                 <t t-set="is_subsection" t-value="line.display_type == 'line_subsection'"/>
                                 <t t-set="is_combo" t-value="line.product_type == 'combo'"/>
 
@@ -865,7 +865,7 @@
                                         <td t-if="display_taxes" name="td_product_taxes" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                             <span t-out="', '.join(map(lambda x: (x.name), line.tax_ids))"/>
                                         </td>
-                                        <td t-if="not line.is_downpayment" name="td_product_subtotal" class="text-end">
+                                        <td t-if="line.display_type not in ['downpayment', 'line_section']" name="td_product_subtotal" class="text-end">
                                             <t t-if="not collapse_prices">
                                                 <span
                                                     t-if="price_field == 'price_subtotal'"

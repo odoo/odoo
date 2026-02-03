@@ -344,6 +344,8 @@ class AccountMoveLine(models.Model):
             ('non_deductible_product_total', 'Non Deductible Products Total'),
             ('non_deductible_product', 'Non Deductible Products'),
             ('non_deductible_tax', 'Non Deductible Tax'),
+            ('downpayment', 'Downpayment'),
+            ('line_section', 'Downpayment Section'),
         ],
         compute='_compute_display_type', store=True, readonly=False, precompute=True,
         required=True,
@@ -3693,7 +3695,6 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
 
     def _get_downpayment_lines(self):
-        ''' Return the downpayment move lines associated with the move line.
-        This method is overridden in the sale order module.
+        ''' Returns the downpayment move lines associated with the move line.
         '''
-        return self.env['account.move.line']
+        return self.sale_line_ids.filtered(lambda line: line.display_type == 'downpayment').invoice_lines.filtered(lambda line: line.move_id._is_downpayment())

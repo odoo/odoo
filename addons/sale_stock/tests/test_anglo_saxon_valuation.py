@@ -1732,7 +1732,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         credit_note = so.invoice_ids.filtered(lambda i: i.state != 'posted')
         self.assertEqual(len(credit_note), 1)
         self.assertEqual(len(credit_note.invoice_line_ids.filtered(lambda line: line.display_type == 'product')), 2)
-        down_payment_line = credit_note.invoice_line_ids.filtered(lambda line: line.sale_line_ids.is_downpayment)
+        down_payment_line = credit_note.invoice_line_ids.filtered(lambda line: line.sale_line_ids.display_type == 'downpayment')
         down_payment_line.quantity = 0.4
         credit_note.action_post()
         # Deliver the remaining part and invoice itµ

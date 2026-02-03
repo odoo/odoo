@@ -7133,10 +7133,7 @@ class AccountMove(models.Model):
         return 'account.report_invoice_document'
 
     def _is_downpayment(self):
-        ''' Return true if the invoice is a downpayment.
-        Down-payments can be created from a sale order. This method is overridden in the sale order module.
-        '''
-        return False
+        return any(aml.display_type == 'downpayment' for aml in self.invoice_line_ids)
 
     def _refunds_origin_required(self):
         return False

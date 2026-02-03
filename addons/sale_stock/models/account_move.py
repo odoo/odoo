@@ -105,7 +105,7 @@ class AccountMove(models.Model):
     def _get_anglo_saxon_price_ctx(self):
         ctx = super()._get_anglo_saxon_price_ctx()
         move_is_downpayment = self.invoice_line_ids.filtered(
-            lambda line: any(line.sale_line_ids.mapped("is_downpayment"))
+            lambda lines: any(line.sale_line_ids.display_type in ['downpayment', 'line_section'] for line in lines)
         )
         return dict(ctx, move_is_downpayment=move_is_downpayment)
 

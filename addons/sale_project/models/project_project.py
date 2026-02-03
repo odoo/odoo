@@ -498,7 +498,6 @@ class ProjectProject(models.Model):
         sale_items = self.sudo()._get_sale_order_items()
         domain = [
             ('order_id', 'in', sale_items.sudo().order_id.ids),
-            ('is_downpayment', '=', False),
             ('state', '=', 'sale'),
             ('display_type', '=', False),
             '|',
@@ -550,7 +549,7 @@ class ProjectProject(models.Model):
     def _get_profitability_sale_order_items_domain(self, domain=None):
         domain = Domain(domain or Domain.TRUE)
         return Domain([
-            '|', ('product_id', '!=', False), ('is_downpayment', '=', True),
+            '|', ('product_id', '!=', False), ('display_type', '=', 'downpayment'),
             ('is_expense', '=', False),
             ('state', '=', 'sale'),
             '|', ('qty_to_invoice', '>', 0), ('qty_invoiced', '>', 0),
@@ -559,7 +558,7 @@ class ProjectProject(models.Model):
     def _get_revenues_items_from_sol(self, domain=None, with_action=True):
         sale_line_read_group = self.env['sale.order.line'].sudo()._read_group(
             self._get_profitability_sale_order_items_domain(domain),
-            ['currency_id', 'product_id', 'is_downpayment'],
+            ['currency_id', 'product_id', 'display_type'],
             ['id:array_agg', 'untaxed_amount_to_invoice:sum', 'untaxed_amount_invoiced:sum'],
         )
         display_sol_action = with_action and len(self) == 1 and self.env.user.has_group('sales_team.group_sale_salesman')
@@ -574,8 +573,8 @@ class ProjectProject(models.Model):
             sols_per_product = defaultdict(lambda: [0.0, 0.0, []])
             downpayment_amount_invoiced = 0
             downpayment_sol_ids = []
-            for currency, product, is_downpayment, sol_ids, untaxed_amount_to_invoice, untaxed_amount_invoiced in sale_line_read_group:
-                if is_downpayment:
+            for currency, product, display_type, sol_ids, untaxed_amount_to_invoice, untaxed_amount_invoiced in sale_line_read_group:
+                if display_type == 'downpayment':
                     downpayment_amount_invoiced += currency._convert(untaxed_amount_invoiced, convert_company.currency_id, convert_company, round=False)
                     downpayment_sol_ids += sol_ids
                 else:
@@ -666,7 +665,7 @@ class ProjectProject(models.Model):
             ('move_id.move_type', 'in', self.env['account.move'].get_sale_types()),
             ('parent_state', 'in', ['draft', 'posted']),
             ('price_subtotal', '!=', 0),
-            ('is_downpayment', '=', False),
+            ('display_type', '!=', 'downpayment'),
             ('id', 'not in', included_invoice_line_ids),
         ])
 

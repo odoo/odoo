@@ -56,7 +56,7 @@ class BillToPoWizard(models.TransientModel):
                 'name': _("Down Payment (ref: %(ref)s)", ref=aml.display_name),
                 'product_qty': 0.0,
                 'uom_id': aml.product_uom_id.id,
-                'is_downpayment': True,
+                'display_type': 'downpayment',
                 'price_unit': aml.currency_id._convert(aml.price_unit, po_currency, company, date) if aml.currency_id != po_currency else aml.price_unit,
                 'tax_ids': aml.tax_ids,
                 'order_id': self.purchase_order_id.id,

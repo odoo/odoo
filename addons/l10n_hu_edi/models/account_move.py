@@ -893,7 +893,7 @@ class AccountMove(models.Model):
                 'lineDescription': line.name.replace('\n', ' '),
             }
 
-            if 'is_downpayment' in line and line.is_downpayment:
+            if line.display_type == 'downpayment':
                 # Advance and final invoices.
                 line_values['advanceIndicator'] = True
 

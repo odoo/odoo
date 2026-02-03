@@ -20,9 +20,9 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         wizard = self.env['bill.to.po.wizard'].with_context({**action['context'], 'active_ids': match_lines.ids}).create({})
         wizard.action_add_downpayment()
 
-        po_dp_section_line = po.order_line.filtered(lambda l: l.display_type == 'line_section' and l.is_downpayment)
+        po_dp_section_line = po.order_line.filtered(lambda l: l.display_type == 'line_section' and l.name == 'Down Payment')
         self.assertEqual(len(po_dp_section_line), 1)
-        po_dp_line = po.order_line.filtered(lambda l: l.display_type != 'line_section' and l.is_downpayment)
+        po_dp_line = po.order_line.filtered(lambda l: l.display_type == 'downpayment')
         self.assertEqual(po_dp_line.name, 'Down Payment (ref: %s)' % dp_bill.invoice_line_ids.display_name)
         self.assertEqual(po_dp_line.sequence, po_dp_section_line.sequence + 1)
 
@@ -32,9 +32,9 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
 
         self.assertRecordValues(generated_bill.invoice_line_ids, [
             # pylint: disable=C0326
-            {'product_id': self.product_order.id, 'display_type': 'product',      'quantity': 10, 'is_downpayment': False, 'balance': 10.0 * self.product_order.standard_price},
-            {'product_id': False,                 'display_type': 'line_section', 'quantity': 0,  'is_downpayment': True,  'balance': 0.0},
-            {'product_id': False,                 'display_type': 'product',      'quantity': -1, 'is_downpayment': True,  'balance': -69.0},
+            {'product_id': self.product_order.id, 'display_type': 'product',                  'quantity': 10, 'balance': 10.0 * self.product_order.standard_price},
+            {'product_id': False,                 'display_type': 'line_section', 'quantity': 0,  'balance': 0.0},
+            {'product_id': False,                 'display_type': 'downpayment',              'quantity': -1, 'balance': -69.0},
         ])
 
         # Normal flow: New bill with negative down payment line
@@ -134,5 +134,5 @@ class TestPurchaseDownpayment(TestPurchaseToInvoiceCommon):
         wizard = self.env['bill.to.po.wizard'].with_context({**action['context'], 'active_ids': match_lines.ids}).create({})
         wizard.action_add_downpayment()
 
-        po_dp_line = po.order_line.filtered(lambda l: l.display_type != 'line_section' and l.is_downpayment)
+        po_dp_line = po.order_line.filtered(lambda l: l.display_type == 'downpayment')
         self.assertEqual(po_dp_line.price_unit, 66.67)

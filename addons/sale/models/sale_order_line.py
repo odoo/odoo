@@ -18,11 +18,11 @@ class SaleOrderLine(models.Model):
     _check_company_auto = True
 
     _accountable_required_fields = models.Constraint(
-        'CHECK(display_type IS NOT NULL OR is_downpayment OR (product_id IS NOT NULL AND product_uom_id IS NOT NULL))',
+        'CHECK(display_type IS NOT NULL OR (product_id IS NOT NULL AND product_uom_id IS NOT NULL))',
         'Missing required fields on accountable sale order line.',
     )
     _non_accountable_null_fields = models.Constraint(
-        'CHECK(display_type IS NULL OR (product_id IS NULL AND price_unit = 0 AND product_uom_qty = 0 AND product_uom_id IS NULL AND customer_lead = 0))',
+        'CHECK(display_type IS NULL or display_type IN (\'downpayment\') OR (product_id IS NULL AND price_unit = 0 AND product_uom_qty = 0 AND product_uom_id IS NULL AND customer_lead = 0))',
         'Forbidden values on non-accountable sale order line',
     )
 
@@ -65,16 +65,13 @@ class SaleOrderLine(models.Model):
             ('line_section', "Section"),
             ('line_subsection', "Subsection"),
             ('line_note', "Note"),
+            ('downpayment', "Downpayment"),
         ],
         default=False)
     is_configurable_product = fields.Boolean(
         string="Is the product configurable?",
         related='product_template_id.has_configurable_attributes',
         depends=['product_template_id'])
-    is_downpayment = fields.Boolean(
-        string="Is a down payment",
-        help="Down payments are made when creating invoices from a sales order."
-            " They are not copied when duplicating a sales order.")
     is_expense = fields.Boolean(
         string="Is expense",
         help="Is true if the sales order line comes from an expense or a vendor bills")
@@ -409,7 +406,7 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id', 'linked_line_id', 'linked_line_ids')
     def _compute_name(self):
         for line in self:
-            if not line.product_id and not line.is_downpayment:
+            if not line.product_id and line.display_type not in ['downpayment', 'line_section']:
                 continue
 
             lang = line.order_id._get_lang()
@@ -420,7 +417,7 @@ class SaleOrderLine(models.Model):
                 line.name = line._get_sale_order_line_multiline_description_sale()
                 continue
 
-            if line.is_downpayment:
+            if line.display_type in ['downpayment', 'line_section']:
                 line.name = line._get_downpayment_description()
 
     def _get_sale_order_line_multiline_description_sale(self):
@@ -488,7 +485,7 @@ class SaleOrderLine(models.Model):
 
     def _get_downpayment_description(self):
         self.ensure_one()
-        if self.display_type:
+        if self.display_type and self.display_type != 'downpayment':
             return _("Down Payments")
 
         dp_state = self._get_downpayment_state()
@@ -610,7 +607,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             # Don't compute the price for deleted lines or lines for which the
             # price unit doesn't come from the product.
-            if not line.order_id or line.is_downpayment or line._is_global_discount():
+            if not line.order_id or line.display_type == 'downpayment' or line._is_global_discount():
                 continue
 
             # check if the price has been manually set or there is already invoiced amount.
@@ -867,7 +864,7 @@ class SaleOrderLine(models.Model):
         }
         if self._is_global_discount():
             base_values['special_type'] = 'global_discount'
-        elif self.is_downpayment:
+        elif self.display_type == 'downpayment':
             base_values['special_type'] = 'down_payment'
         base_values.update(kwargs)
         return self.env['account.tax']._prepare_base_line_for_taxes_computation(self, **base_values)
@@ -961,7 +958,7 @@ class SaleOrderLine(models.Model):
     def _get_downpayment_state(self):
         self.ensure_one()
 
-        if self.display_type:
+        if self.display_type not in ['downpayment', 'line_section']:
             return ''
 
         invoice_lines = self._get_invoice_lines()
@@ -1117,7 +1114,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             if line.state != 'sale':
                 line.invoice_status = 'no'
-            elif line.is_downpayment and line.untaxed_amount_to_invoice == 0:
+            elif line.display_type == 'downpayment' and line.untaxed_amount_to_invoice == 0:
                 line.invoice_status = 'invoiced'
             elif not float_is_zero(line.qty_to_invoice, precision_digits=precision):
                 line.invoice_status = 'to invoice'
@@ -1259,7 +1256,7 @@ class SaleOrderLine(models.Model):
         self.product_updatable = True
         for line in self:
             if (
-                line.is_downpayment
+                line.display_type == 'downpayment'
                 or line.state == 'cancel'
                 or line.state == 'sale' and (
                     line.order_id.locked
@@ -1402,7 +1399,7 @@ class SaleOrderLine(models.Model):
         if any(self.order_id.mapped('locked')) and any(f in values.keys() for f in protected_fields):
             protected_fields_modified = list(set(protected_fields) & set(values.keys()))
 
-            if 'name' in protected_fields_modified and all(self.mapped('is_downpayment')):
+            if 'name' in protected_fields_modified and all(sol.display_type == 'downpayment' for sol in self):
                 protected_fields_modified.remove('name')
 
             fields = self.env['ir.model.fields'].sudo().search([
@@ -1461,7 +1458,7 @@ class SaleOrderLine(models.Model):
         return self.filtered(
             lambda line:
                 line.state == 'sale'
-                and (line.invoice_lines or not line.is_downpayment)
+                and (line.invoice_lines or line.display_type != 'downpayment')
                 and not line.display_type
         )
 
@@ -1529,7 +1526,7 @@ class SaleOrderLine(models.Model):
                 **optional_values,
             }
         res = {
-            'display_type': self.display_type or 'product',
+            'display_type': self.display_type != 'downpayment' and self.display_type or 'product',
             'sequence': self.sequence,
             'name': self.env['account.move.line']._get_journal_items_full_name(self.name, self.product_id.display_name),
             'product_id': self.product_id.id,
@@ -1539,17 +1536,16 @@ class SaleOrderLine(models.Model):
             'price_unit': self.price_unit,
             'tax_ids': [Command.set(self.tax_ids.ids)],
             'sale_line_ids': [Command.link(self.id)],
-            'is_downpayment': self.is_downpayment,
             'extra_tax_data': self.extra_tax_data,
             'collapse_prices': self.collapse_prices,
             'collapse_composition': self.collapse_composition,
         }
-        downpayment_lines = self.invoice_lines.filtered('is_downpayment')
-        if self.is_downpayment and downpayment_lines:
+        downpayment_lines = self.invoice_lines.filtered(lambda l: l.display_type == 'downpayment')
+        if self.display_type == 'downpayment' and downpayment_lines:
             res['account_id'] = downpayment_lines.account_id[:1].id
         if optional_values:
             res.update(optional_values)
-        if self.display_type:
+        if self.display_type and self.display_type != 'downpayment':
             res['account_id'] = False
         return res
 
@@ -1806,7 +1802,7 @@ class SaleOrderLine(models.Model):
 
     def _sellable_lines_domain(self):
         discount_products_ids = self.env.companies.sale_discount_product_id.ids
-        domain = Domain('is_downpayment', '=', False)
+        domain = Domain('display_type', '!=', 'downpayment')
         if discount_products_ids:
             domain &= Domain('product_id', 'not in', discount_products_ids)
         return domain
