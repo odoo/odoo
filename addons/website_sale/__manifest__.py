@@ -66,7 +66,6 @@
         'views/product_views.xml',
         'views/res_config_settings_views.xml',
         'views/sale_order_views.xml',
-        'views/website_base_unit_views.xml',
         'views/website_sale_menus.xml',
         'views/website_sale_visitor_views.xml',
         'views/website_views.xml',

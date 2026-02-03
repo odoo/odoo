@@ -241,9 +241,9 @@
             <t t-call="website_sale.cart_product_price"/>
         </h6>
         <small
-            t-if="line._is_sellable() and line.env['res.groups']._is_feature_enabled('website_sale.group_show_uom_price') and line.product_id.base_unit_price"
+            t-if="line._is_sellable() and line.env['res.groups']._is_feature_enabled('product.group_show_uom_price') and line.product_id.base_unit_price"
             class="cart_product_base_unit_price d-block text-muted text-end"
-            groups="website_sale.group_show_uom_price"
+            groups="product.group_show_uom_price"
         >
             <t t-set="product" t-value="line.product_id"/>
             <t t-call="website_sale.base_unit_price"
