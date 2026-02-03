@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 from odoo import api, fields, models, _
 
 
@@ -148,10 +149,13 @@ class PosOrder(models.Model):
 
     def _get_invoice_lines_values(self, line_values, pos_line, move_type):
         inv_line_vals = super()._get_invoice_lines_values(line_values, pos_line, move_type)
-
         if pos_line.sale_order_origin_id:
+            inv_line_vals["name"] = pos_line.display_name
+            if inv_line_vals['extra_tax_data'].get('computation_key') == 'down_payment' and pos_line.down_payment_details:
+                downpayment_details = ast.literal_eval(pos_line.down_payment_details)
+                if downpayment_details and downpayment_details[0].get('percentage_value'):
+                    inv_line_vals["name"] += " of " + str(downpayment_details[0].get('percentage_value')) + "%"
             origin_line = pos_line.sale_order_line_id
-            inv_line_vals["name"] = origin_line.name
             origin_line._set_analytic_distribution(inv_line_vals)
 
         return inv_line_vals

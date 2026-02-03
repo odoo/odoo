@@ -310,6 +310,10 @@ patch(PosStore.prototype, {
         }
     },
     addDownPaymentProductOrderlineToOrder(saleOrder, amount, isPercentage) {
+        let percentage_value = 0;
+        if (isPercentage) {
+            percentage_value = amount;
+        }
         this.loadDownPaymentProduct();
         const saleOrderLines = saleOrder.order_line.filter((soLine) => !soLine.display_type);
         const baseLines = [];
@@ -382,6 +386,7 @@ patch(PosStore.prototype, {
                     product_uom_qty: saleOrderLine.product_uom_qty,
                     price_unit: saleOrderLine.price_unit,
                     total: saleOrderLine.price_total,
+                    percentage_value: isPercentage ? percentage_value : 0,
                 })),
                 tax_ids: [["link", ...baseLine.tax_ids]],
                 extra_tax_data: accountTaxHelpers.export_base_line_extra_tax_data(baseLine),
