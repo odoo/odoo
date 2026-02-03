@@ -57,16 +57,16 @@ class HolidaysAllocation(models.Model):
         for allocation in self.sudo().filtered('overtime_id'):
             employee = allocation.employee_id
             duration = allocation.number_of_hours_display
-            overtime_duration = allocation.overtime_id.sudo().duration
+            overtime_duration = allocation.sudo().overtime_id.duration
             if overtime_duration != -1 * duration:
                 if duration > employee.total_overtime - overtime_duration:
                     raise ValidationError(_('The employee does not have enough extra hours to extend this allocation.'))
-                allocation.overtime_id.sudo().duration = -1 * duration
+                allocation.sudo().overtime_id.duration = -1 * duration
         return res
 
     def action_refuse(self):
         res = super().action_refuse()
-        self.overtime_id.sudo().unlink()
+        self.sudo().overtime_id.unlink()
         return res
 
     def _get_accrual_plan_level_work_entry_prorata(self, level, start_period, start_date, end_period, end_date):
