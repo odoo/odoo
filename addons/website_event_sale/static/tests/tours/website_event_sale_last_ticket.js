@@ -53,10 +53,11 @@ registry.category("web_tour.tours").add('event_buy_last_ticket', {
         run: "click",
         expectUnloadPage: true,
     },
-        ...wsTourUtils.payWithTransfer({
-            redirect: true,
-            expectUnloadPage: true,
-            waitFinalizeYourPayment: true,
-        }),
+    ...wsTourUtils.fillAddressForm(),
+    ...wsTourUtils.payWithTransfer({
+        redirect: true,
+        expectUnloadPage: true,
+        waitFinalizeYourPayment: true,
+    }),
     ],
 });
