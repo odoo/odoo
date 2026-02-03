@@ -383,7 +383,7 @@ export function useVisible(refName, cb, { ready = true } = {}) {
  * @property {number|null} highlightedMessageId
  * @returns {MessageScrolling}
  */
-export function useMessageScrolling(duration = 2000) {
+export function useMessageScrolling(duration = 1500) {
     let timeout;
     const state = useState({
         clear() {
