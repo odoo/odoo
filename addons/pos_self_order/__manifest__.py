@@ -79,6 +79,8 @@
             'web_editor/static/src/js/editor/odoo-editor/src/base_style.scss',
             'web_editor/static/src/scss/web_editor.common.scss',
             "point_of_sale/static/src/app/components/numpad/*",
+            "point_of_sale/static/src/app/components/loader/*",
+            "point_of_sale/static/src/app/components/loader/critical_pos_error/*",
             "point_of_sale/static/src/app/components/product_card/*",
             "point_of_sale/static/src/app/components/order_display/*",
             "point_of_sale/static/src/app/components/orderline/*",
