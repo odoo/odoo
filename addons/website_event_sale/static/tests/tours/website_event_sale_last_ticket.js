@@ -56,10 +56,21 @@ registry.category("web_tour.tours").add('event_buy_last_ticket', {
         run: "click",
         expectUnloadPage: true,
     },
-        ...wsTourUtils.payWithTransfer({
-            redirect: true,
-            expectUnloadPage: true,
-            waitFinalizeYourPayment: true,
-        }),
+    ...wsTourUtils.fillAdressForm(
+        {
+            name: "John Doe",
+            phone: "123456789",
+            email: "johndoe@gmail.com",
+            street: "1 rue de la paix",
+            city: "Paris",
+            zip: "75000",
+        },
+        true,
+    ),
+    ...wsTourUtils.payWithTransfer({
+        redirect: true,
+        expectUnloadPage: true,
+        waitFinalizeYourPayment: true,
+    }),
     ],
 });
