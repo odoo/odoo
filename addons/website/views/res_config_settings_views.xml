@@ -43,6 +43,10 @@
                         <setting string="Languages"
                                  title="Languages available on your website"
                                  documentation="/applications/websites/website/configuration/translate.html">
+                            <div class="text-muted mt-n3 mb16">
+                                <span invisible="website_language_count &lt; 2">Website visitors see the version matching their browser language, or the default if unavailable.</span>
+                                <span invisible="website_language_count &gt;= 2">Install multiple languages to enable translation across your website.</span>
+                            </div>
                             <field name="language_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" required="website_id"/>
                             <div class="row mt8" invisible="website_language_count &lt; 2">
                                 <label class="col-lg-3" string="Default" for="website_default_lang_id"/>

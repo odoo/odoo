@@ -206,6 +206,7 @@ class ResConfigSettings(models.TransientModel):
             self.website_default_lang_id = False
         elif self.website_default_lang_id not in language_ids:
             self.website_default_lang_id = language_ids[0]
+        self.website_language_count = len(language_ids)
 
     def action_website_create_new(self):
         return {
