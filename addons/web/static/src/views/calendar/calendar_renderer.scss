@@ -571,6 +571,19 @@
                     width: 21rem;
                     margin: auto;
 
+                    // On mobile view, adapt the month width to be as close as possible to
+                    // the screen width while still keeping the same size for each day cells.
+                    @include media-breakpoint-down(md) {
+                        // Pivot widths (number of pixels divisible per 7 as calendar = 7 cells wide)
+                        // Between min width of 21 rem and md screen width.
+                        $widths: 22.75, 24.5, 28, 31.5, 35, 38.5, 42;
+                        @each $w in $widths {
+                            @media (min-width: #{$w + 2}rem) { // Keep some margins and space for scrollbar
+                                width: #{$w}rem;
+                            }
+                        }
+                    }
+
                     > .fc-toolbar.fc-header-toolbar {
                         margin-bottom: 4px;
                         cursor: default;
