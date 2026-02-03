@@ -27,7 +27,9 @@ class WebsiteForm(form.WebsiteForm):
         custom_label = nl2br_enclose(_("Other Information"), 'h4')  # Title for custom fields
         default_field = model.website_form_default_field_id
         default_field_data = values.get(default_field.name, '')
-        default_field_content = nl2br_enclose(default_field.name.capitalize(), 'h4') + nl2br_enclose(html2plaintext(default_field_data), 'p')
+        default_field_content = nl2br_enclose(html2plaintext(default_field_data), 'p')
+        if default_field.name and default_field.name != 'description':
+            default_field_content = nl2br_enclose(default_field.name.capitalize(), 'h4') + default_field_content
         custom_content = (default_field_content if default_field_data else '') \
                         + (custom_label + custom if custom else '') \
                         + (self._meta_label + meta if meta else '')
