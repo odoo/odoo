@@ -2454,6 +2454,16 @@ class AccountMove(models.Model):
                     'message': _("You must specify the Profit Account (company dependent)")
                 }}
 
+    @api.onchange('name')
+    def _onchange_name(self):
+        if (self._origin
+            and self.payment_reference == self._origin._get_invoice_computed_reference()
+            and self.journal_id.invoice_reference_model == 'odoo'
+            and self.journal_id.invoice_reference_type
+            and not self.inalterable_hash
+            and not self.is_move_sent):
+            self.payment_reference = False
+
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
     # -------------------------------------------------------------------------

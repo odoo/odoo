@@ -2439,6 +2439,41 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 1430.0,
         })
 
+    def test_out_invoice_name_change(self):
+        ''' Check the invoice.name, payment_term and invoice_line.name.'''
+        # Create an invoice.
+        move = self._create_invoice(invoice_date='2016-01-01', post=True)
+        payment_term_line = move.line_ids.filtered(lambda m: m.display_type == 'payment_term')
+
+        self.assertRecordValues(move, [{'payment_reference': 'INV/2016/00001'}])
+        self.assertRecordValues(
+            payment_term_line,
+            [{'name': 'INV/2016/00001'}])
+
+        move.button_draft()
+        with Form(move) as move_form:
+            move_form.name = 'INV/2016/00003'
+        move.action_post()
+
+        self.assertRecordValues(move, [{'payment_reference': 'INV/2016/00003'}])
+        self.assertRecordValues(
+            payment_term_line,
+            [{'name': 'INV/2016/00003'}])
+
+        move.button_draft()
+        with Form(move) as move_form:
+            move_form.payment_reference = 'MyCustomer - 00001'
+        with Form(move) as move_form:
+            move_form.name = 'INV/2016/00002'
+        move.action_post()
+
+        self.assertRecordValues(move, [{
+            'name': 'INV/2016/00002',
+            'payment_reference': 'MyCustomer - 00001'}])
+        self.assertRecordValues(
+            payment_term_line,
+            [{'name': 'MyCustomer - 00001'}])
+
     def test_out_invoice_switch_out_refund_1(self):
         # Test creating an account_move with an out_invoice_type and switch it in an out_refund.
         move = self.env['account.move'].create({
