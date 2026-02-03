@@ -12,7 +12,7 @@
             <field name="name">mrp.bom.byproduct.form</field>
             <field name="model">mrp.bom.byproduct</field>
             <field name="arch" type="xml">
-                <form string="Byproduct">
+                <form string="Byproduct" create="0" edit="0">
                     <group>
                         <field name="allowed_operation_ids" invisible="1"/>
                         <field name="company_id"/>
@@ -22,9 +22,9 @@
                             <field name="product_qty"/>
                             <field name="uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                         </div>
-                        <field name="operation_id" groups="mrp.group_mrp_routings" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                        <field name="operation_id" groups="mrp.group_mrp_routings"/>
                         <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>
-                        <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
+                        <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
                     </group>
                 </form>
             </field>
@@ -347,10 +347,10 @@
                                 <label for="product_qty" string="Quantity"/>
                                 <div class="o_row">
                                     <field name="product_qty"/>
-                                    <field name="uom_id" options="{'no_open':True,'no_create':True, 'quantity_field': 'product_qty'}" groups="uom.group_uom" widget="many2one_uom"/>
+                                    <field name="uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                                 </div>
                                 <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>
-                                <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
+                                <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
                             </group>
                             <group string="Operation">
                                 <field name="company_id" invisible="1"/>
