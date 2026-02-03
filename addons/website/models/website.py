@@ -1356,8 +1356,12 @@ class Website(models.CachedModel):
                     'record_name': page.name,
                     'link': page.url,
                     'model_name': page_model_name,
+                    'url': _choose_url(page.arch_db),
                 } for page in page_views.page_ids]
             return views
+
+        def _choose_url(field_value):
+            return next((url for url, _domain in search_criteria if url in field_value), '')
 
         # Prepare what's needed to later generate the URL search domain for the
         # given records
@@ -1376,7 +1380,7 @@ class Website(models.CachedModel):
             domains = []
             for url, website_domain in search_criteria:
                 domains.append(Domain.AND([
-                    [(field_name, 'ilike', url)],
+                    [(field_name, 'ilike', f'href=%{url}')],
                     website_domain if hasattr(Model, 'website_id') else [],
                 ]))
 
@@ -1393,6 +1397,7 @@ class Website(models.CachedModel):
                     'record_name': rec.display_name,
                     'link': 'website_url' in rec and rec.website_url or f'/odoo/{model_name}/{rec.id}',
                     'model_name': model_display_name,
+                    'url': _choose_url(rec[field_name]),
                 } for rec in dependency_records]
 
         return dependencies
