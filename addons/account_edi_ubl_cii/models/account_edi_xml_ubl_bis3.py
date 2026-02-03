@@ -645,10 +645,8 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         commercial_partner = partner.commercial_partner_id
 
         if commercial_partner.peppol_endpoint:
-            party_node['cbc:EndpointID'] = {
-                '_text': commercial_partner.peppol_endpoint,
-                'schemeID': commercial_partner.peppol_eas
-            }
+            party_node['cbc:EndpointID']['_text'] = commercial_partner.peppol_endpoint
+            party_node['cbc:EndpointID']['schemeID'] = commercial_partner.peppol_eas
 
         if commercial_partner.country_code == 'NL' and commercial_partner.peppol_endpoint:
             # [UBL-SR-16] Buyer identifier shall occur maximum once
@@ -908,6 +906,21 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                     "The VAT number of the supplier does not seem to be valid. It should be of the form: NO179728982MVA."
                 ) if not mva.is_valid(vat) or len(vat) != 14 or vat[:2] != 'NO' or vat[-3:] != 'MVA' else "",
             })
+
+        # [PEPPOL-EN16931-R010]
+        if not vals['document_node']['cac:AccountingCustomerParty']['cac:Party']['cbc:EndpointID']['_text']:
+            constraints['ubl_peppol_en16931-r010'] = _(
+                "[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the customer '%s'.",
+                vals['customer'].display_name,
+            )
+
+        # [PEPPOL-EN16931-R020]
+        if not vals['document_node']['cac:AccountingSupplierParty']['cac:Party']['cbc:EndpointID']['_text']:
+            constraints['ubl_peppol_en16931-r020'] = _(
+                "[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the company '%s'.",
+                vals['supplier'].display_name,
+            )
+
         return constraints
 
     # -------------------------------------------------------------------------
