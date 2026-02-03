@@ -1060,31 +1060,31 @@ class TestSalePrices(SaleCommon):
         order.order_line = [Command.create({
             'product_id': self.product.id,
             'product_uom_qty': 1,
-            'price_unit': 100.0,
-            'discount': 1.00,
+            'price_unit': 100.11,
+            'discount': 50.00,
         })]
         order.action_confirm()
         order_line = order.order_line
 
         # test discount and qty 1
-        self.assertEqual(order.amount_undiscounted, 100.0)
-        self.assertEqual(order_line.price_subtotal, 99.0)
+        self.assertEqual(order.amount_undiscounted, 100.11)
+        self.assertEqual(order_line.price_subtotal, 50.06)
 
         # more quantity 1 -> 3
         order_line.write({
             'product_uom_qty': 3.0,
-            'price_unit': 100.0,
-            'discount': 1.0,
+            'price_unit': 100.11,
+            'discount': 50.0,
         })
         order.invalidate_recordset(['amount_undiscounted'])
 
-        self.assertEqual(order.amount_undiscounted, 300.0)
-        self.assertEqual(order_line.price_subtotal, 297.0)
+        self.assertEqual(order.amount_undiscounted, 300.33)
+        self.assertEqual(order_line.price_subtotal, 150.17)
 
         # undiscounted
         order_line.discount = 0.0
-        self.assertEqual(order_line.price_subtotal, 300.0)
-        self.assertEqual(order.amount_undiscounted, 300.0)
+        self.assertEqual(order_line.price_subtotal, 300.33)
+        self.assertEqual(order.amount_undiscounted, 300.33)
 
         # Same with an included-in-price tax
         order = order.copy()
@@ -1098,10 +1098,10 @@ class TestSalePrices(SaleCommon):
         line.discount = 50.0
         order.action_confirm()
 
-        # 300 with 10% incl tax -> 272.72 total tax excluded without discount
-        # 136.36 price tax excluded with discount applied
-        self.assertEqual(order.amount_undiscounted, 272.72)
-        self.assertEqual(line.price_subtotal, 136.36)
+        # 300.33 with 10% incl tax -> 273.03 total tax excluded without discount
+        # 136.51 price tax excluded with discount applied
+        self.assertEqual(order.amount_undiscounted, 273.03)
+        self.assertEqual(line.price_subtotal, 136.51)
 
     def test_product_quantity_rounding(self):
         """When adding a sale order line, product quantity should be rounded

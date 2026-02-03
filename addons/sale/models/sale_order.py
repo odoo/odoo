@@ -293,7 +293,8 @@ class SaleOrder(models.Model):
     # Remaining non stored computed fields (hide/make fields readonly, ...)
     amount_undiscounted = fields.Float(
         string="Amount Before Discount",
-        compute='_compute_amount_undiscounted', digits=0)
+        compute='_compute_amount_undiscounted',
+        digits="Product Price")
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', string="Country code")
     company_price_include = fields.Selection(related='company_id.account_price_include')
     duplicated_order_ids = fields.Many2many(comodel_name='sale.order', compute='_compute_duplicated_order_ids')
@@ -675,11 +676,25 @@ class SaleOrder(models.Model):
             )
 
     def _compute_amount_undiscounted(self):
+        AccountTax = self.env['account.tax']
         for order in self:
-            total = 0.0
+            subtotal = 0
             for line in order.order_line:
-                total += (line.price_subtotal * 100)/(100-line.discount) if line.discount != 100 else (line.price_unit * line.product_uom_qty)
-            order.amount_undiscounted = total
+                # Exclude discount lines
+                if line.price_subtotal <= 0:
+                    continue
+                # Get the not-rounded price_subtotal
+                company = line.company_id or self.env.company
+                base_line = line._prepare_base_line_for_taxes_computation()
+                AccountTax._add_tax_details_in_base_line(base_line, company)
+                # Calculate the price_subtotal before discount
+                discount_factor = (
+                    (1 - base_line['discount'] / 100) if base_line['discount'] != 100 else 1
+                )
+                excl_tax_discounted_price = base_line['tax_details']['raw_total_excluded_currency']
+                excl_tax_original_price = excl_tax_discounted_price / discount_factor
+                subtotal += excl_tax_original_price
+            order.amount_undiscounted = subtotal
 
     @api.depends('client_order_ref', 'origin', 'partner_id')
     def _compute_duplicated_order_ids(self):
