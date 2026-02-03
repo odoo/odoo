@@ -62,7 +62,7 @@ from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.http.requestlib import Request, _request_stack, request
 from odoo.http.router import root
-from odoo.http.session import DEFAULT_LANG, get_default_session
+from odoo.http.session import DEFAULT_LANG, get_default_session, logout, update_session_token
 from odoo.http.session import Session as OdooHttpSession
 from odoo.modules.registry import Registry
 from odoo.sql_db import Cursor, Savepoint
@@ -2375,7 +2375,7 @@ class HttpCase(TransactionCase):
             odoo.tools.misc.dumpstacks()
 
     def logout(self, keep_db=True):
-        self.session.logout(keep_db=keep_db)
+        logout(self.session, keep_db=keep_db)
         root.session_store.save(self.session)
 
     def authenticate(self, user, password, browser: ChromeBrowser = None):
@@ -2406,7 +2406,7 @@ class HttpCase(TransactionCase):
             session['login'] = user
             session['session_token'] = None
             if uid:
-                session._update_session_token(env)
+                update_session_token(session, env)
             session['context'] = dict(env['res.users'].context_get())
 
         root.session_store.save(session)

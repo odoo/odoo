@@ -9,6 +9,7 @@ import odoo.exceptions
 from odoo.exceptions import AccessError
 from odoo.http import Controller, request, route
 from odoo.http.router import db_list
+from odoo.http.session import authenticate, check, touch, update_session_token
 from odoo.http.stream import STATIC_CACHE_LONG
 from odoo.tools import LazyTranslate, _, config, hmac
 
@@ -51,12 +52,12 @@ class Home(Controller):
             return request.redirect_query('/web/login', query={'redirect': request.httprequest.full_path}, code=303)
         if kw.get('redirect'):
             return request.redirect(kw.get('redirect'), 303)
-        request.session._check(request)
+        check(request.session, request)
         if not is_user_internal(request.session.uid):
             return request.redirect('/web/login_successful', 303)
 
         # Side-effect, refresh the session lifetime
-        request.session.touch()
+        touch(request.session)
 
         # Restore the user on the environment, it was lost due to auth="none"
         request.update_env(user=request.session.uid)
@@ -136,7 +137,7 @@ class Home(Controller):
                 credential.setdefault('type', 'password')
                 if request.env['res.users']._should_captcha_login(credential):
                     request.env['ir.http']._verify_request_recaptcha_token('login')
-                auth_info = request.session.authenticate(request.env, credential)
+                auth_info = authenticate(request.session, request.env, credential)
                 request.params['login_success'] = True
                 return request.redirect(self._login_redirect(auth_info['uid'], redirect=redirect))
             except odoo.exceptions.AccessDenied as e:
@@ -173,7 +174,7 @@ class Home(Controller):
             uid = request.session.uid = odoo.SUPERUSER_ID
             # invalidate session token cache as we've changed the uid
             request.env.registry.clear_cache()
-            request.session._update_session_token(request.env)
+            update_session_token(request.session, request.env)
 
         return request.redirect(self._login_redirect(uid))
 

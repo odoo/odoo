@@ -10,6 +10,7 @@ from odoo import http, tools, models
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.http.session import touch
 from odoo.tools import html2plaintext
 from odoo.tools.misc import get_lang
 from odoo.tools import sql
@@ -337,5 +338,5 @@ class WebsiteBlog(http.Controller):
                 if not request.session.get('posts_viewed'):
                     request.session['posts_viewed'] = []
                 request.session['posts_viewed'].append(blog_post.id)
-                request.session.touch()
+                touch(request.session)
         return response

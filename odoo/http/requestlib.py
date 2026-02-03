@@ -125,7 +125,7 @@ class Request:
         if session.db != dbname:
             if session.db:
                 _logger.warning("Logged into database %r, but dbfilter rejects it; logging session out.", session.db)
-                session.logout(keep_db=False)
+                logout(session, keep_db=False)
             session.db = dbname
 
         session.is_dirty = False
@@ -678,6 +678,7 @@ from .session import (
     STORED_SESSION_BYTES,
     get_default_session,
     get_session_max_inactivity,
+    logout,
 )
 from .stream import STATIC_CACHE, Stream
 

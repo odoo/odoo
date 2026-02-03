@@ -254,7 +254,7 @@ class Application:
                         _logger.warning("Database or registry unusable, trying without", exc_info=e.__cause__)
                         # TODO: move those bits in a dedicated function
                         request.db = None
-                        request.session.logout()
+                        logout(request.session)
                         if (httprequest.path.startswith('/odoo/')
                             or httprequest.path in (
                                 '/odoo', '/web', '/web/login', '/test_http/ensure_db',
@@ -307,4 +307,4 @@ from .requestlib import (
     request,
 )
 from .routing_map import ROUTING_KEYS, _generate_routing_rules
-from .session import SessionExpiredException, SessionStore
+from .session import SessionExpiredException, SessionStore, logout

@@ -12,6 +12,7 @@ from odoo.addons.base_setup.controllers.main import BaseSetup
 from odoo.exceptions import UserError
 from odoo.tools.translate import LazyTranslate
 from odoo.http import request
+from odoo.http.session import authenticate
 from markupsafe import Markup
 
 _lt = LazyTranslate(__name__)
@@ -179,7 +180,7 @@ class AuthSignupHome(Home):
         login, password = request.env['res.users'].sudo().signup(values, token)
         credential = {'login': login, 'password': password, 'type': 'password'}
         if do_login:
-            request.session.authenticate(request.env, credential)
+            authenticate(request.session, request.env, credential)
 
 class AuthBaseSetup(BaseSetup):
     @http.route()

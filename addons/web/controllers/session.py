@@ -11,6 +11,7 @@ import odoo.modules.registry
 from odoo.exceptions import AccessError
 from odoo.http import Controller, request, route
 from odoo.http.router import db_filter
+from odoo.http.session import authenticate, logout, touch
 
 _logger = logging.getLogger(__name__)
 
@@ -20,7 +21,7 @@ class Session(Controller):
     @route('/web/session/get_session_info', type='jsonrpc', auth='user', readonly=True)
     def get_session_info(self):
         # Crapy workaround for unupdatable Odoo Mobile App iOS (Thanks Apple :@)
-        request.session.touch()
+        touch(request.session)
         return request.env['ir.http'].session_info()
 
     @route('/web/session/authenticate', type='jsonrpc', auth="none", readonly=False)
@@ -39,7 +40,7 @@ class Session(Controller):
                 env = request.env
 
             credential = {'login': login, 'password': password, 'type': 'password'}
-            auth_info = request.session.authenticate(env, credential)
+            auth_info = authenticate(request.session, env, credential)
             if auth_info['uid'] != request.session.uid:
                 # Crapy workaround for unupdatable Odoo Mobile App iOS (Thanks Apple :@) and Android
                 # Correct behavior should be to raise AccessError("Renewing an expired session for user that has multi-factor-authentication is not supported. Please use /web/login instead.")
@@ -72,11 +73,11 @@ class Session(Controller):
 
     @route('/web/session/destroy', type='jsonrpc', auth='user', readonly=True)
     def destroy(self):
-        request.session.logout()
+        logout(request.session)
 
     @route('/web/session/logout', type='http', auth='none', methods=['POST'], readonly=True)
     def logout(self, redirect='/odoo'):
-        request.session.logout(keep_db=True)
+        logout(request.session, keep_db=True)
         return request.redirect(redirect, 303)
 
     @route('/web/session/identity', type='http', auth='user', methods=['GET'], sitemap=False, check_identity=False)

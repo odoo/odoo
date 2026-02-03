@@ -212,7 +212,7 @@ class HttpDispatcher(Dispatcher):
                 })
             session = self.request.session
             was_connected = session.uid is not None
-            session.logout(keep_db=True)
+            logout(session, keep_db=True)
             response = self.request.redirect_query('/web/login', {
                 'redirect': self.request.httprequest.full_path})
             if was_connected:
@@ -400,4 +400,5 @@ from .session import (
     CheckIdentityException,
     SessionExpiredException,
     get_session_max_inactivity,
+    logout,
 )

@@ -9,6 +9,7 @@ from psycopg2.errors import SerializationFailure
 from odoo import http
 from odoo.exceptions import AccessError, ConcurrencyError, UserError
 from odoo.http import request
+from odoo.http.session import touch
 from odoo.tools import replace_exceptions, str2bool
 
 from odoo.addons.web.controllers.utils import ensure_db
@@ -194,12 +195,12 @@ class TestHttp(http.Controller):
 
     @http.route('/test_http/save_session', type='http', auth='none')
     def touch(self):
-        request.session.touch()
+        touch(request.session)
         return ''
 
     @http.route('/test_http/no_save_session', type='http', auth='none', save_session=False)
     def no_touch(self):
-        request.session.touch()
+        touch(request.session)
         return ''
 
     # =====================================================
