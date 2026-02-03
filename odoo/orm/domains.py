@@ -1365,6 +1365,21 @@ def _optimize_any_domain_at_level(level: OptimizationLevel, condition, model):
         comodel = model.env[field.comodel_name]
     except KeyError:
         condition._raise("Cannot determine the comodel relation")
+
+    # Virtual relational field (JSON bridge, computed x2many, etc.)
+    # ANY cannot be expressed as SQL EXISTS → resolve to ids
+    if (
+        field.type in ('one2many', 'many2many')
+        and field.search
+        and not field.store
+        and not field.related
+    ):
+        subdomain = domain._optimize(comodel, level)
+        query = comodel._search(subdomain)
+        right_ids = query.get_result_ids()
+        new_operator = 'in' if condition.operator in ('any', 'any!') else 'not in'
+        return DomainCondition(condition.field_expr, new_operator, right_ids)
+
     domain = domain._optimize(comodel, level)
     # const if the domain is empty, the result is a constant
     # if the domain is True, we keep it as is
