@@ -289,9 +289,6 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         # Add 'price_amount' being the original price unit without tax.
         self._ubl_add_base_line_ubl_values_price(vals)
 
-        # Add 'item' being information about item taxes.
-        self._ubl_add_base_line_ubl_values_item(vals)
-
         # Add 'tax_currency_code'.
         self._ubl_add_values_tax_currency_code(vals)
 
@@ -377,8 +374,14 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
 
     def _add_invoice_line_item_nodes(self, line_node, vals):
         # OVERRIDE
-        item_values = vals['base_line']['_ubl_values']['item_currency']
-        line_node['cac:Item'] = self._ubl_get_line_item_node(vals, item_values)
+        sub_vals = {
+            **vals,
+            'line_node': line_node,
+            'line_vals': {
+                'base_line': vals['base_line'],
+            },
+        }
+        self._ubl_add_line_item_node(sub_vals)
 
     def _add_invoice_line_tax_category_nodes(self, line_node, vals):
         # OVERRIDE
@@ -754,14 +757,6 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
     # -------------------------------------------------------------------------
     # Sale/Purchase Order: Import
     # -------------------------------------------------------------------------
-
-    def _get_line_xpaths(self, document_type=False, qty_factor=1):
-        if document_type == 'order':
-            return {
-                **super()._get_line_xpaths(document_type=document_type, qty_factor=qty_factor),
-                'delivered_qty': ('./{*}Quantity'),
-            }
-        return super()._get_line_xpaths(document_type=document_type, qty_factor=qty_factor)
 
     def _import_order_payment_terms_id(self, company_id, tree, xpath):
         """ Return payment term name from given tree and try to find a match. """
