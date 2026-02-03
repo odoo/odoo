@@ -15,7 +15,7 @@ from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import convert, format_datetime, format_duration, format_time
-from odoo.tools.date_utils import sum_intervals
+from odoo.tools.date_utils import float_to_time, sum_intervals
 from odoo.tools.intervals import Intervals
 
 
@@ -595,6 +595,10 @@ class HrAttendance(models.Model):
         self.linked_overtime_ids.action_refuse()
 
     def _cron_auto_check_out(self):
+        self._cron_auto_check_out_tolerance()
+        self._cron_auto_check_out_specific_time()
+
+    def _cron_auto_check_out_tolerance(self):
         def check_in_tz(attendance):
             """Returns check-in time in calendar's timezone."""
             return attendance.check_in.astimezone(ZoneInfo(attendance.employee_id._get_tz(attendance.date)))
@@ -602,6 +606,7 @@ class HrAttendance(models.Model):
         to_verify = self.env['hr.attendance'].search(
             [('check_out', '=', False),
              ('employee_id.company_id.auto_check_out', '=', True),
+             ('employee_id.company_id.auto_check_out_mode', '=', 'tolerance'),
              ('employee_id.resource_calendar_id', '!=', False)]
         )
 
@@ -687,6 +692,52 @@ class HrAttendance(models.Model):
             technical_attendance.message_post(body=body)
 
         to_unlink.unlink()
+
+    def _cron_auto_check_out_specific_time(self):
+        """
+        Automatically check-out all employees still checked in
+        when company is in 'specific_time' mode.
+        """
+        current_utc_dt = fields.Datetime.now()
+        utc_tz = ZoneInfo('UTC')
+        all_open_attendances = self.search([
+            ('check_out', '=', False),
+            ('employee_id.company_id', 'any', [
+                ('auto_check_out', '=', True),
+                ('auto_check_out_mode', '=', 'specific_time'),
+            ]),
+        ])
+
+        for company, company_attendances in all_open_attendances.grouped(lambda att: att.employee_id.company_id).items():
+            cutoff_time = float_to_time(company.auto_check_out_specific_time)
+            cutoff_hour, cutoff_minute = cutoff_time.hour, cutoff_time.minute
+            for att in company_attendances:
+                employee_tz = ZoneInfo(att.employee_id._get_tz())
+                current_employee_dt = current_utc_dt.astimezone(employee_tz)
+                check_in_employee_dt = att.check_in.astimezone(employee_tz)
+                same_day_cutoff_dt = check_in_employee_dt.replace(
+                    hour=cutoff_hour, minute=cutoff_minute, second=0, microsecond=0,
+                )
+
+                if check_in_employee_dt.time() < same_day_cutoff_dt.time():
+                    next_cutoff = same_day_cutoff_dt
+                else:
+                    next_cutoff = same_day_cutoff_dt + relativedelta(days=1)
+
+                if current_employee_dt < next_cutoff:
+                    continue
+
+                employee_checkout = next_cutoff.astimezone(utc_tz).replace(tzinfo=None)
+                employee_checkout = max(employee_checkout, att.check_in + relativedelta(seconds=1))
+
+                att.write({
+                    'check_out': employee_checkout,
+                    'out_mode': 'auto_check_out',
+                })
+
+                att.message_post(body=self.env._(
+                    'This attendance was automatically checked out based on company specific time configuration.',
+                ))
 
     def _get_localized_times(self):
         self.ensure_one()
