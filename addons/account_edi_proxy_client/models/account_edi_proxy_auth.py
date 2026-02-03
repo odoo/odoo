@@ -27,6 +27,7 @@ class OdooEdiProxyAuth(requests.auth.AuthBase):
     def __get_payload(self, request, msg_timestamp):
         # craft the message (timestamp|url path|id_client|query params|body content)
         parsed_url = urllib3.util.parse_url(request.path_url)
+        query = {k: v[0] for k, v in urllib.parse.parse_qs(parsed_url.query).items()}
 
         body = request.body
         if isinstance(body, bytes):
@@ -37,7 +38,7 @@ class OdooEdiProxyAuth(requests.auth.AuthBase):
             msg_timestamp,  # timestamp
             parsed_url.path,  # url path
             self.id_client,
-            json.dumps(urllib.parse.parse_qs(parsed_url.query), sort_keys=True),  # url query params sorted by key
+            json.dumps(query, sort_keys=True),  # url query params sorted by key
             json.dumps(body, sort_keys=True))  # http request body
 
     def __sign_request_with_token(self, message):

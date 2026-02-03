@@ -1076,7 +1076,8 @@ class SurveySurvey(models.Model):
     def action_start_survey(self, answer=None):
         """ Open the website page with the survey form """
         self.ensure_one()
-        url = '%s?%s' % (self.get_start_url(), urlencode({'answer_token': answer and answer.access_token or None}))
+        query = {'answer_token': answer.access_token} if answer and answer.access_token else {}
+        url = '%s?%s' % (self.get_start_url(), urlencode(query))
         return {
             'type': 'ir.actions.act_url',
             'name': "Start Survey",
@@ -1087,7 +1088,8 @@ class SurveySurvey(models.Model):
     def action_print_survey(self, answer=None):
         """ Open the website page with the survey printable view """
         self.ensure_one()
-        url = '%s?%s' % (self.get_print_url(), urlencode({'answer_token': answer and answer.access_token or None}))
+        query = {'answer_token': answer.access_token} if answer and answer.access_token else {}
+        url = '%s?%s' % (self.get_print_url(), urlencode(query))
         return {
             'type': 'ir.actions.act_url',
             'name': "Print Survey",
