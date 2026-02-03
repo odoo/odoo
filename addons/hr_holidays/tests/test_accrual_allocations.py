@@ -16,6 +16,9 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):
         super(TestAccrualAllocations, cls).setUpClass()
+        cls.department = cls.env['hr.department'].create({
+            'name': 'Test Department',
+        })
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
             'time_type': 'leave',
@@ -63,6 +66,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'action_with_unused_accruals': 'all',
                 'cap_accrued_time': True,
                 'maximum_leave': 10,
+            })],
+        })
+        cls.accrual_plan_yearly_start = cls.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual Plan For Test',
+            'is_based_on_worked_time': False,
+            'accrued_gain_time': 'start',
+            'carryover_date': 'allocation',
+            'level_ids': [Command.create({
+                'start_count': 0,
+                'added_value_type': 'day',
+                'added_value': 20,
+                'frequency': 'yearly',
             })],
         })
 
@@ -3076,3 +3091,39 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_get_allocation_future_leaves_regular2(self):
         self._test_get_allocation_future_leaves_regular(regular_before=True)
+
+    def test_department_accrual_allocation(self):
+        """
+        Make sure when creating a multi employee accrual allocation the correct
+        number of days will be assigned to each child allocation
+        """
+        self.env['hr.employee'].create([
+            {
+                'name': 'Test Department Employee',
+                'company_id': self.company.id,
+                'department_id': self.department.id,
+            },
+            {
+                'name': 'Department Employee 1',
+                'company_id': self.company.id,
+                'department_id': self.department.id,
+            },
+        ])
+
+        with Form(self.env['hr.leave.allocation']) as f:
+            f.allocation_type = "accrual"
+            f.accrual_plan_id = self.accrual_plan_yearly_start
+            f.date_from = '2026-01-01'
+            f.holiday_type = 'department'
+            f.department_id = self.department
+            f.holiday_status_id = self.leave_type
+            f.private_name = "Department Allocation"
+
+        department_allocation = f.record
+        department_allocation.action_validate()
+
+        children_allocations = self.env['hr.leave.allocation'].search(
+            [('employee_id', 'in', self.department.member_ids.ids)])
+        self.assertEqual(len(children_allocations), 2)
+        self.assertEqual(children_allocations[0].number_of_days, 20.0)
+        self.assertEqual(children_allocations[1].number_of_days, 20.0)

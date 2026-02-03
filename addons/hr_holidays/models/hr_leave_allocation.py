@@ -832,10 +832,14 @@ class HolidaysAllocation(models.Model):
 
                 allocation_vals += allocation._prepare_holiday_values(employees)
         if allocation_vals:
-            self.env['hr.leave.allocation'].with_context(
+            allocations = self.env['hr.leave.allocation'].with_context(
                 mail_notify_force_send=False,
                 mail_activity_automation_skip=True
             ).create(allocation_vals)
+            accrual_allocations = allocations.filtered(lambda a: a.allocation_type == 'accrual')
+            for date_to, allocation in accrual_allocations.grouped('date_to').items():
+                date_to = min(date_to, date.today()) if date_to else False
+                allocation._process_accrual_plans(date_to)
         self.linked_request_ids.filtered(lambda c: c.state != 'validate').action_validate()
 
     def action_refuse(self):
