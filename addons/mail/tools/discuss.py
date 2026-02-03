@@ -528,9 +528,12 @@ class Store:
             super()._add_to_store(store, target, key)
             if not self.only_data and (self.records or self.mode == "REPLACE"):
                 rel_val = self._get_id()
-                target[key] = (
-                    target[key] + rel_val if key in target and self.mode != "REPLACE" else rel_val
-                )
+                if self.mode == "REPLACE" or key not in target:
+                    target[key] = rel_val
+                    return
+                if target[key] and not isinstance(target[key][0], tuple):
+                    target[key] = [("REPLACE", target[key])]
+                target[key] += rel_val
 
         def _get_id(self):
             """Return the ids that can be used to insert the current relation in the store."""

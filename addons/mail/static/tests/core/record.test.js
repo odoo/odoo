@@ -5,7 +5,7 @@ import { markup, reactive, toRaw } from "@odoo/owl";
 import { mockService, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { Record, Store, makeStore } from "@mail/model/export";
-import { AND, fields, makeRecordFieldLocalId } from "@mail/model/misc";
+import { AND, fields, makeRecordFieldLocalId, normalizeManyCommands } from "@mail/model/misc";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { effect } from "@web/core/utils/reactive";
@@ -873,7 +873,7 @@ test("onAdd/onDelete hooks on many without inverse", async () => {
     general.members = [["ADD", john]];
     await expect.waitForSteps(["members.onAdd(John)"]);
     general.members = undefined;
-    await expect.waitForSteps(["members.onDelete(John)", "members.onDelete(Jane)"]);
+    await expect.waitForSteps(["members.onDelete(Jane)", "members.onDelete(John)"]);
 });
 
 test("record list assign should update inverse fields", async () => {
@@ -1588,4 +1588,33 @@ test("Record exists is reactive", async () => {
     await expect.waitForSteps(["thread exists"]);
     thread.delete();
     await expect.waitForSteps(["thread does not exist"]);
+});
+
+test("Normalize many commands", () => {
+    // Falsy values or empty array are interpreted as clear.
+    for (const clearValues of [null, undefined, false, []]) {
+        expect(normalizeManyCommands(clearValues)).toEqual([["REPLACE", []]]);
+    }
+    // Raw values are interpreted as "REPLACE".
+    expect(normalizeManyCommands({ id: 1, name: "Test" })).toEqual([
+        ["REPLACE", [{ id: 1, name: "Test" }]],
+    ]);
+    expect(normalizeManyCommands([1, 2, 3])).toEqual([["REPLACE", [1, 2, 3]]]);
+    // Commands with non array value should normalize to array.
+    expect(normalizeManyCommands(["ADD", { id: 10 }])).toEqual([["ADD", [{ id: 10 }]]]);
+    const cmdList = [
+        ["ADD", { id: 1 }],
+        ["DELETE", { id: 2 }],
+    ];
+    expect(normalizeManyCommands(cmdList)).toEqual([
+        ["ADD", [{ id: 1 }]],
+        ["DELETE", [{ id: 2 }]],
+    ]);
+    // Single command should normalize to command list including the command.
+    expect(normalizeManyCommands(["DELETE", [10, 20]])).toEqual([["DELETE", [10, 20]]]);
+    // Mixed of raw values and commands should throw error.
+    const mixed = [1, ["ADD", 2]];
+    expect(() => normalizeManyCommands(mixed)).toThrow(
+        "Many commands cannot mix raw values and commands"
+    );
 });
