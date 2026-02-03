@@ -6,7 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 
 const { pivotTimeAdapterRegistry } = registries;
-const { toNumber, toJsDate, toString } = helpers;
+const { toNumber, toJsDate, toString, periodYearToComparable } = helpers;
 const { DEFAULT_LOCALE } = constants;
 
 const { DateTime } = luxon;
@@ -114,6 +114,9 @@ const odooWeekAdapter = {
         const nextWeek = date.plus({ weeks: step });
         return `${nextWeek.weekNumber}/${nextWeek.weekYear}`;
     },
+    toComparableValue(normalizedValue) {
+        return periodYearToComparable(normalizedValue);
+    },
 };
 
 /**
@@ -130,6 +133,9 @@ const odooMonthAdapter = {
         return DateTime.fromFormat(normalizedValue, "MM/yyyy", { numberingSystem: "latn" })
             .plus({ months: step })
             .toFormat("MM/yyyy");
+    },
+    toComparableValue(normalizedValue) {
+        return periodYearToComparable(normalizedValue);
     },
 };
 
@@ -169,6 +175,9 @@ const odooQuarterAdapter = {
         const date = DateTime.fromObject({ year: Number(year), month: Number(quarter) * 3 });
         const nextQuarter = date.plus({ quarters: step });
         return `${nextQuarter.quarter}/${nextQuarter.year}`;
+    },
+    toComparableValue(normalizedValue) {
+        return periodYearToComparable(normalizedValue);
     },
 };
 
@@ -257,6 +266,12 @@ function falseHandlerDecorator(adapter) {
                 return "FALSE";
             }
             return adapter.toFunctionValue(value);
+        },
+        toComparableValue(value) {
+            if (value === false) {
+                return undefined;
+            }
+            return adapter.toComparableValue?.(value);
         },
     };
 }
