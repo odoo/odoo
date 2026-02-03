@@ -2,6 +2,7 @@
 
 from odoo.fields import Command
 from odoo.tests.common import tagged, TransactionCase
+from odoo.exceptions import UserError
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -145,3 +146,7 @@ class TestPointOfSale(TransactionCase):
         models_to_filter = {'product.template': products_to_display}
         products_to_display = list(set(products_to_display) - set(session.filter_local_data(models_to_filter)['product.template']))
         self.assertEqual(products_to_display, [])
+
+        # Cannot archive config while session is active
+        with self.assertRaises(UserError):
+            config.write({'active': False})
