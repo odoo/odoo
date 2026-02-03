@@ -5,7 +5,7 @@ from collections.abc import Set as AbstractSet
 import dateutil.relativedelta
 
 from odoo.exceptions import ValidationError
-from odoo.tools import SQL
+from odoo.tools import SQL, unique
 
 regex_alphanumeric = re.compile(r'^[a-z0-9_]+$')
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
@@ -145,7 +145,7 @@ class PrefetchRelational(Reversible):  # noqa: PLW1641
                 if (coid := field_cache.get(id_)) is not None:
                     yield coid
         else:
-            for id_ in self._records._prefetch_ids:
+            for id_ in unique(self._records._prefetch_ids):
                 if (coids := field_cache.get(id_)):
                     yield from coids
 
@@ -156,7 +156,7 @@ class PrefetchRelational(Reversible):  # noqa: PLW1641
                 if (coid := field_cache.get(id_)) is not None:
                     yield coid
         else:
-            for id_ in reversed(self._records._prefetch_ids):
+            for id_ in unique(reversed(self._records._prefetch_ids)):
                 if (coids := field_cache.get(id_)):
                     yield from coids
 
