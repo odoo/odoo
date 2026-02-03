@@ -4,7 +4,6 @@ import logging
 import mimetypes
 import requests
 import werkzeug.utils
-from urllib.parse import urlencode
 
 from odoo import http, modules, _
 from odoo.http import request
@@ -34,7 +33,7 @@ class Web_Unsplash(http.Controller):
             if not url.startswith('https://api.unsplash.com/photos/') and not modules.module.current_test:
                 raise Exception(_("ERROR: Unknown Unsplash notify URL!"))
             access_key = self._get_access_key()
-            requests.get(url, params=urlencode({'client_id': access_key}))
+            requests.get(url, params={'client_id': access_key})
         except Exception as e:
             logger.exception("Unsplash download notification failed: " + str(e))
 
@@ -133,7 +132,7 @@ class Web_Unsplash(http.Controller):
                 return {'error': 'no_access'}
             return {'error': 'key_not_found'}
         post['client_id'] = access_key
-        response = requests.get('https://api.unsplash.com/search/photos/', params=urlencode(post))
+        response = requests.get('https://api.unsplash.com/search/photos/', params=post)
         if response.status_code == requests.codes.ok:
             return response.json()
         else:
