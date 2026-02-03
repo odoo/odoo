@@ -18,6 +18,9 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):
         super(TestAccrualAllocations, cls).setUpClass()
+        cls.department = cls.env['hr.department'].create({
+            'name': 'Test Department',
+        })
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
             'time_type': 'leave',
@@ -4881,3 +4884,37 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 with freeze_time(test_date):
                     allocation._update_accrual()
                     self.assertEqual(allocation.number_of_days, expected_remaining_leaves)
+
+    def test_department_accrual_allocation(self):
+        """
+        Make sure when creating a multi employee accrual allocation the correct
+        number of days will be assigned to each child allocation
+        """
+        self.env['hr.employee'].create([
+            {
+                'name': 'Test Department Employee',
+                'company_id': self.company.id,
+                'department_id': self.department.id,
+            },
+            {
+                'name': 'Department Employee 1',
+                'company_id': self.company.id,
+                'department_id': self.department.id,
+            },
+        ])
+        with Form(self.env['hr.leave.allocation.generate.multi.wizard']) as f:
+            f.allocation_type = "accrual"
+            f.accrual_plan_id = self.accrual_plan_yearly_max_postponed_days_start
+            f.date_from = '2026-01-01'
+            f.allocation_mode = 'department'
+            f.department_id = self.department
+            f.holiday_status_id = self.leave_type
+
+        department_allocation = f.record
+        department_allocation.action_generate_allocations()
+
+        children_allocations = self.env['hr.leave.allocation'].search(
+            [('employee_id', 'in', self.department.member_ids.ids)])
+        self.assertEqual(len(children_allocations), 2)
+        self.assertEqual(children_allocations[0].number_of_days, 21.0)
+        self.assertEqual(children_allocations[1].number_of_days, 21.0)
