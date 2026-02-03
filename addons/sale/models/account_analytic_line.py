@@ -15,7 +15,7 @@ class AccountAnalyticLine(models.Model):
     so_line = fields.Many2one(
         'sale.order.line',
         string='Sales Order Item',
-        domain=[('qty_delivered_method', '=', 'analytic')],
+        domain=[('qty_delivered_method', 'in', ('analytic', 'analytic_upsell'))],
         index='btree_not_null',
     )
     order_id = fields.Many2one('sale.order', string="Customer Order", index=True)
@@ -36,27 +36,15 @@ class AccountAnalyticLine(models.Model):
         # completely against this shit but without this it could be problematic when order_id is
         # recomputed from some other place for ex. see test_sol_determined_when_project_is_employee_rate
         if self.env.context.get('from_services_and_material'):
-            if 'order_id' in vals:
-                self._sync_so_quantity(0, self.so_line, True)
-
-            if 'unit_amount' in vals:
-                self._sync_so_quantity(vals['unit_amount'], self.so_line, True)
-
             res = super().write(vals)
 
-            if 'order_id' in vals:
+            if 'order_id' in vals or 'product_id' in vals:
                 self._sync_so_lines()
 
         else:
             res = super().write(vals)
 
         return res
-
-    @api.ondelete(at_uninstall=False)
-    def _unsync_so_lines(self):
-        if self.env.context.get('from_services_and_material'):
-            for line in self:
-                line._sync_so_quantity(-line.unit_amount, line.so_line)
 
     def _sync_so_lines(self):
         for line in self:
@@ -74,11 +62,9 @@ class AccountAnalyticLine(models.Model):
                 line.so_line = so_line
 
             elif policy == 'sales_price':
-                so_line = line._get_existing_so_line()
+                so_line = line._get_and_update_existing_so_line()
 
-                if so_line:
-                    line._sync_so_quantity(line.unit_amount, so_line)
-                else:
+                if not so_line:
                     so_line = self._create_so_line(
                         qty_delivered=line.unit_amount,
                         description=line.name,
@@ -87,8 +73,13 @@ class AccountAnalyticLine(models.Model):
 
                 line.so_line = so_line
 
-    def _get_existing_so_line(self):
-        return self.order_id.order_line.filtered(lambda line: line.product_id == self.product_id)[:1]
+    def _get_and_update_existing_so_line(self):
+        so_line = self.order_id.order_line.filtered(lambda line: line.product_id == self.product_id)[:1]
+
+        if so_line:
+            so_line.qty_delivered_method = 'analytic_upsell'
+
+        return so_line
 
     def _create_so_line(self, qty_delivered, description, policy):
         values = {
@@ -97,6 +88,7 @@ class AccountAnalyticLine(models.Model):
             'product_uom_id': self.product_id.uom_id.id,
             'product_uom_qty': 0,
             'qty_delivered': qty_delivered,
+            'qty_delivered_method': 'analytic_upsell',
         }
 
         if description:
@@ -108,15 +100,6 @@ class AccountAnalyticLine(models.Model):
             values['price_unit'] = self.product_id.list_price
 
         return self.env['sale.order.line'].create(values)
-
-    def _sync_so_quantity(self, quantity, so_line, from_write=False):
-        if not so_line:
-            return
-        if from_write:
-            quantity_diff = quantity - self.unit_amount
-        else:
-            quantity_diff = quantity
-        so_line.qty_delivered += quantity_diff
 
     def _get_or_create_account_from_so(self, order_id):
         sale_order = self.env['sale.order'].browse(order_id)

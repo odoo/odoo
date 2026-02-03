@@ -223,6 +223,7 @@ class SaleOrderLine(models.Model):
         selection=[
             ('manual', "Manual"),
             ('analytic', "Analytic From Expenses"),
+            ('analytic_upsell', "Analytic From Upsell"),
         ],
         string="Method to update delivered qty",
         compute='_compute_qty_delivered_method',
@@ -230,6 +231,7 @@ class SaleOrderLine(models.Model):
         help="According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
              "  - Manual: the quantity is set manually on the line\n"
              "  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
+             "  - Analytic From upsell: the quantity is the quantity sum from upsell lines in services & material view\n"
              "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
              "  - Stock Moves: the quantity comes from confirmed pickings\n")
     qty_delivered = fields.Float(
@@ -238,6 +240,17 @@ class SaleOrderLine(models.Model):
         default=0.0,
         digits='Product Unit',
         store=True, readonly=False, copy=False)
+    # Indicates whether qty_delivered should be considered manually editable.
+    # This can occur in two situations:
+    # 1. The line was initially created with a manual delivery method.
+    # 2. The line was originally manual, and its qty_delivered_method may have
+    #    been updated later from the Services and Materials view, which is only
+    #    possible when the product's expense policy is "sale_price".
+    is_delivered_qty_manual = fields.Boolean(
+        compute='_compute_is_delivered_qty_manual',
+        search='_search_is_delivered_qty_manual',
+        help="If True, the quantity delivered can be set manually on the line",
+    )
 
     # Analytic & Invoicing fields
     qty_invoiced = fields.Float(
@@ -915,16 +928,19 @@ class SaleOrderLine(models.Model):
             and sale_timesheet implements the behavior of 'service' + service_type=timesheet.
         """
         for line in self:
-            if line.is_expense:
-                line.qty_delivered_method = 'analytic'
-            else:  # service and consu
-                line.qty_delivered_method = 'manual'
+            if line.qty_delivered_method != 'analytic_upsell':
+                if line.is_expense:
+                    line.qty_delivered_method = 'analytic'
+                else:  # service and consu
+                    line.qty_delivered_method = 'manual'
 
     @api.depends(
         'qty_delivered_method',
         'analytic_line_ids.so_line',
         'analytic_line_ids.unit_amount',
-        'analytic_line_ids.product_uom_id')
+        'analytic_line_ids.product_uom_id',
+        'analytic_line_ids.product_id'
+    )
     def _compute_qty_delivered(self):
         """ This method compute the delivered quantity of the SO lines: it covers the case provide by sale module, aka
             expense/vendor bills (sum of unit_amount of AAL), and manual case.
@@ -936,6 +952,34 @@ class SaleOrderLine(models.Model):
         for so_line in self:
             if not so_line.qty_delivered or so_line in delivered_qties:
                 so_line.qty_delivered = delivered_qties[so_line]
+
+    @api.depends('qty_delivered_method', 'product_id.expense_policy')
+    def _compute_is_delivered_qty_manual(self):
+        for line in self:
+            line.is_delivered_qty_manual = (
+                line.qty_delivered_method == 'manual'
+                or (
+                    line.qty_delivered_method == 'analytic_upsell'
+                    and line.product_id.expense_policy == 'cost'
+                )
+            )
+
+    def _search_is_delivered_qty_manual(self, operator, value):
+        if operator not in ('=', '!='):
+            return NotImplemented
+
+        if (operator == '=' and value) or (operator == '!=' and not value):
+            effective_operator = '='
+        else:
+            effective_operator = '!='
+
+        return (
+            Domain('qty_delivered_method', effective_operator, 'manual')
+            | (
+                Domain('qty_delivered_method', '=', 'analytic_upsell')
+                & Domain('product_id.expense_policy', effective_operator, 'sales_price')
+            )
+        )
 
     @api.depends('qty_delivered')
     @api.depends_context('accrual_entry_date')
@@ -952,7 +996,7 @@ class SaleOrderLine(models.Model):
     def _prepare_qty_delivered(self):
         # compute for analytic lines
         delivered_qties = defaultdict(float)
-        lines_by_analytic = self.filtered(lambda sol: sol.qty_delivered_method == 'analytic')
+        lines_by_analytic = self.filtered(lambda sol: sol.qty_delivered_method in ('analytic', 'analytic_upsell'))
         mapping = lines_by_analytic._get_delivered_quantity_by_analytic([('amount', '<=', 0.0)])
         for so_line in lines_by_analytic:
             delivered_qties[so_line] = mapping.get(so_line.id or so_line._origin.id, 0.0)
@@ -1347,7 +1391,7 @@ class SaleOrderLine(models.Model):
             return lines
 
         for line in lines:
-            if line.qty_delivered_method == 'manual' and line.is_storable:
+            if line.is_delivered_qty_manual and line.is_storable:
                 qty_delivered = line.product_uom_id._compute_quantity(line.qty_delivered, line.product_id.uom_id)
                 line.product_id.with_context(skip_qty_available_update=True).qty_available -= qty_delivered
             if line.product_id and line.state == 'sale':
@@ -1391,7 +1435,7 @@ class SaleOrderLine(models.Model):
 
         if 'qty_delivered' in values:
             for line in self:
-                if line.qty_delivered_method != 'manual' or not line.is_storable:
+                if not line.is_delivered_qty_manual or not line.is_storable:
                     continue
                 delta_qty_delivered = values['qty_delivered'] - line.qty_delivered
                 delta_qty_delivered = line.product_uom_id._compute_quantity(delta_qty_delivered, line.product_id.uom_id)

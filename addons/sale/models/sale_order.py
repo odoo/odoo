@@ -830,7 +830,7 @@ class SaleOrder(models.Model):
             order.show_deliver_button = (
                 order.state == 'sale'
                 and any(line.qty_delivered < line.product_uom_qty for line in order.order_line)
-                and all(line.qty_delivered_method == "manual" for line in order.order_line)
+                and all(line.is_delivered_qty_manual for line in order.order_line)
             )
 
     @api.depends('company_id', 'fiscal_position_id')
@@ -2251,7 +2251,7 @@ class SaleOrder(models.Model):
     def deliver_sold_quantity(self):
         invalid_targets = self.filtered(
             lambda o: o.state != "sale" or
-            any(line.qty_delivered_method != "manual" for line in o.order_line)
+            any(not line.is_delivered_qty_manual for line in o.order_line)
         )
         if invalid_targets:
             raise UserError(
