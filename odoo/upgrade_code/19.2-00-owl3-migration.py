@@ -247,7 +247,7 @@ def upgrade_t_esc(file_manager, log_info, log_error):
 
     reg_t_esc = re.compile(r"""\bt-esc=""")
     # matches: <attribute name="t-esc">  /  <attribute name="t-esc"/> /  <attribute remove="1" name="t-esc" />
-    # reg_att_t_esc = re.compile(r'(<attribute\b[^>]*\bname\s*=\s*(["\']))t-esc(\2)')
+    reg_att_t_esc = re.compile(r'(<attribute\b[^>]*\bname\s*=\s*(["\']))t-esc(\2)')
 
     for fileno, file in enumerate(files, start=1):
         try:
@@ -268,7 +268,7 @@ def upgrade_t_esc(file_manager, log_info, log_error):
         if file.path.suffix == ".xml":
             try:
                 file.content = reg_t_esc.sub(r't-out=', file.content)
-                # file.content = reg_att_t_esc.sub(r"\1t-out\3", content)
+                file.content = reg_att_t_esc.sub(r"\1t-out\3", content)
             except Exception as e:
                 log_error(file.path, e)
         file_manager.print_progress(fileno, len(files))
