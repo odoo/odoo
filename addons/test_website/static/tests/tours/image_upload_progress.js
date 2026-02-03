@@ -130,15 +130,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "there should only have one notification toaster",
-            trigger: "body",
-            run() {
-                const notificationCount = document.querySelectorAll(".o_notification").length;
-                if (notificationCount !== 1) {
-                    throw new Error(
-                        `There should be one notification toaster opened, and only one, found ${notificationCount}.`
-                    );
-                }
-            },
+            trigger: ".o_notification:count(1)",
         },
         {
             content: "close media dialog",
@@ -173,15 +165,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "there should only have one notification toaster",
-            trigger: ".o_notification",
-            run() {
-                const notificationCount = document.querySelectorAll(".o_notification").length;
-                if (notificationCount !== 1) {
-                    throw new Error(
-                        `There should be one notification toaster opened, and only one, found ${notificationCount}.`
-                    );
-                }
-            },
+            trigger: ".o_notification:count(1)",
         },
         {
             content: "media dialog has closed after the upload",
@@ -228,14 +212,8 @@ registerWebsitePreviewTour(
         },
         {
             content: "there should only have one notification toaster",
-            trigger: ".o_notification",
+            trigger: ".o_notification:count(1)",
             run() {
-                const notificationCount = document.querySelectorAll(".o_notification").length;
-                if (notificationCount !== 1) {
-                    throw new Error(
-                        `There should be one noficiation toaster opened, and only one, found ${notificationCount}.`
-                    );
-                }
                 unpatchMediaDialog();
             },
         },

@@ -10,14 +10,9 @@ registry.category("web_tour.tours").add("portal_composer_actions_tour_internal_u
             run: "click",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Composer-input",
-            run() {
-                if (this.anchor.value !== "::") {
-                    console.error(
-                        "Clicking on the canned response button should insert the '::' into the composer."
-                    );
-                }
-            },
+            content:
+                "Clicking on the canned response button should insert the '::' into the composer.",
+            trigger: "#chatterRoot:shadow .o-mail-Composer-input:value(::)",
         },
         {
             trigger:

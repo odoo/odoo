@@ -225,9 +225,9 @@ registerWebsitePreviewTour(
         {
             content: "Apply the first gradient option to the breadcrumb background",
             trigger: ".o_colorpicker_sections button.o_gradient_color_button",
-            run() {
+            async run({ click }) {
                 selectedGradient = this.anchor.dataset.color;
-                this.anchor.click();
+                await click();
             },
         },
         {

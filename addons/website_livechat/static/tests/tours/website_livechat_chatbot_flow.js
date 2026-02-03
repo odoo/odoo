@@ -29,19 +29,10 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             },
             {
                 trigger: messagesContain("How can I help you?"),
-                // check question_selection message is posted and reactions are not
-                // available since the thread is not yet persisted
-                run() {
-                    if (
-                        this.anchor.querySelector(
-                            ".o-mail-Message-actions [title='Add a Reaction']"
-                        )
-                    ) {
-                        console.error(
-                            "Reactions should not be available before thread is persisted."
-                        );
-                    }
-                },
+            },
+            {
+                content: "Reactions should not be available before thread is persisted.",
+                trigger: `body:not(:has(.o-mail-Message-actions [title='Add a Reaction']))`,
             },
             {
                 trigger: '.o-livechat-root:shadow button:contains("I\'d like to buy the software")',

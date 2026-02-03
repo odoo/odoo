@@ -32,29 +32,6 @@ export function assertCssVariable(variableName, variableValue, trigger = ":ifram
         },
     };
 }
-export function assertPathName(pathname, trigger) {
-    return {
-        content: `Check if we have been redirected to ${pathname}`,
-        trigger: trigger,
-        async run() {
-            await new Promise((resolve) => {
-                let elapsedTime = 0;
-                const intervalTime = 100;
-                const interval = setInterval(() => {
-                    if (window.location.pathname.startsWith(pathname)) {
-                        clearInterval(interval);
-                        resolve();
-                    }
-                    elapsedTime += intervalTime;
-                    if (elapsedTime >= 5000) {
-                        clearInterval(interval);
-                        console.error(`The pathname ${pathname} has not been found`);
-                    }
-                }, intervalTime);
-            });
-        },
-    };
-}
 
 export function changeBackground(snippet, position = "bottom") {
     return [
