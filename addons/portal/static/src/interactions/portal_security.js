@@ -72,6 +72,7 @@ export class PortalSecurity extends Interaction {
                 duration_selection: duration.selection.filter((option) => option[0] !== "-1"),
             }),
             confirmLabel: _t("Confirm"),
+            size: 'md',
             confirm: async ({ inputEl }) => {
                 const formData = Object.fromEntries(new FormData(inputEl.closest("form")));
                 const wizardId = await this.services.orm.create("res.users.apikeys.description", [{
@@ -168,6 +169,7 @@ export async function handleCheckIdentity(wrapped, ormService, dialogService) {
                 title: _t("Security Control"),
                 body: renderToMarkup("portal.identitycheck"),
                 confirmLabel: _t("Confirm Password"),
+                size: 'md',
                 confirm: async ({ inputEl }) => {
                     if (!inputEl.reportValidity()) {
                         inputEl.classList.add("is-invalid");
