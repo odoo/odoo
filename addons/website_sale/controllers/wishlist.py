@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.http import Controller, request, route
+from odoo.http.session import touch
 
 
 class ProductWishlist(Controller):
@@ -50,7 +51,7 @@ class ProductWishlist(Controller):
             wish_ids = request.session.get('wishlist_ids') or []
             if wish_id in wish_ids:
                 request.session['wishlist_ids'].remove(wish_id)
-                request.session.touch()
+                touch(request.session)
                 wish.sudo().unlink()
         else:
             wish.unlink()

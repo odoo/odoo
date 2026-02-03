@@ -19,6 +19,7 @@ import odoo.modules.registry
 from odoo import release
 from odoo.http import Controller, Response, request, route
 from odoo.http.router import db_list
+from odoo.http.session import authenticate, logout
 from odoo.sql_db import db_connect
 from odoo.tools.misc import file_open, str2bool
 from odoo.tools.translate import _
@@ -173,7 +174,7 @@ class Database(Controller):
             credential = {'login': post['login'], 'password': password, 'type': 'password'}
             with odoo.modules.registry.Registry(name).cursor() as cr:
                 env = odoo.api.Environment(cr, None, {})
-                request.session.authenticate(env, credential)
+                authenticate(request.session, env, credential)
                 request._save_session(env)
                 request.session.db = name
             return request.redirect('/odoo')
@@ -207,7 +208,7 @@ class Database(Controller):
             verify_access(master_pwd)
             odoo.modules.db.drop(name)
             if request.session.db == name:
-                request.session.logout()
+                logout(request.session)
             return request.redirect('/web/database/manager')
         except Exception as e:
             e.error_response = _render_exception(e)

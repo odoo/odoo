@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import glob
 import json
 import logging
@@ -6,6 +8,7 @@ import re
 import secrets
 import tempfile
 import time
+import typing
 from collections.abc import MutableMapping
 from contextlib import suppress
 from datetime import datetime
@@ -14,6 +17,10 @@ from zlib import adler32
 
 from odoo.api import Environment
 from odoo.tools import consteq, get_lang
+
+if typing.TYPE_CHECKING:
+    from .requestlib import Request
+
 
 _logger = logging.getLogger('odoo.http')
 
@@ -63,28 +70,6 @@ class SessionExpiredException(Exception):
 class CheckIdentityException(SessionExpiredException):
     """ Exception raised when a user is requested to re-authenticate. """
     loglevel = logging.DEBUG
-
-
-def get_default_session():
-    """ The dictionary to initialise a new session with. """
-    return {
-        'context': {},  # 'lang': request.default_lang()  # must be set at runtime
-        'create_time': time.time(),
-        'db': None,
-        'debug': '',
-        'login': None,
-        'uid': None,
-        'session_token': None,
-        '_devices': {},
-    }
-
-
-def get_session_max_inactivity(env):
-    if not env or env.cr.closed:
-        return SESSION_LIFETIME
-
-    ICP = env['ir.config_parameter'].sudo()
-    return ICP.get_int('sessions.max_inactivity_seconds') or SESSION_LIFETIME
 
 
 class Session(MutableMapping):
@@ -181,199 +166,227 @@ class Session(MutableMapping):
     def session_token(self, session_token):
         self['session_token'] = session_token
 
-    #
-    # Session methods
-    #
-    def authenticate(self, env, credential):
-        """
-        Authenticate the current user with the given db, login and
-        credential. If successful, store the authentication parameters in
-        the current session, unless multi-factor-auth (MFA) is
-        activated. In that case, that last part will be done by
-        :ref:`finalize`.
 
-        .. versionchanged:: saas-15.3
-           The current request is no longer updated using the user and
-           context of the session when the authentication is done using
-           a database different than request.db. It is up to the caller
-           to open a new cursor/registry/env on the given database.
-        """
-        wsgienv = {
-            'interactive': True,
-            'base_location': request.httprequest.url_root.rstrip('/'),
-            'HTTP_HOST': request.httprequest.environ['HTTP_HOST'],
-            'REMOTE_ADDR': request.httprequest.environ['REMOTE_ADDR'],
-        }
-        env = env(user=None, su=False)
-        auth_info = env['res.users'].authenticate(credential, wsgienv)
-        pre_uid = auth_info['uid']
+def get_default_session() -> dict:
+    """ The dictionary to initialise a new session with. """
+    return {
+        'context': {},  # 'lang': request.default_lang()  # must be set at runtime
+        'create_time': time.time(),
+        'db': None,
+        'debug': '',
+        'login': None,
+        'uid': None,
+        'session_token': None,
+        '_devices': {},
+    }
 
-        self.uid = None
-        self['pre_login'] = credential['login']
-        self['pre_uid'] = pre_uid
 
-        env = env(user=pre_uid)
+def get_session_max_inactivity(env: Environment) -> int:
+    if not env or env.cr.closed:
+        return SESSION_LIFETIME
 
-        # if 2FA is disabled we finalize immediately
-        user = env['res.users'].browse(pre_uid)
-        if auth_info.get('mfa') == 'skip' or not user._mfa_url():
-            self.finalize(env)
+    ICP = env['ir.config_parameter'].sudo()
+    return ICP.get_int('sessions.max_inactivity_seconds') or SESSION_LIFETIME
 
-        if request and request.session is self and request.db == env.registry.db_name:
-            request.env = env(user=self.uid, context=self.context)
-            request.update_context(lang=get_lang(request.env(user=pre_uid)).code)
 
-        return auth_info
+def authenticate(session: Session, env: Environment, credential: dict) -> dict:
+    """
+    Authenticate the current user with the given db, login and
+    credential. If successful, store the authentication parameters in
+    the current session, unless multi-factor-auth (MFA) is
+    activated. In that case, that last part will be done by
+    :ref:`finalize`.
 
-    def finalize(self, env):
-        """
-        Finalizes a partial session, should be called on MFA validation
-        to convert a partial / pre-session into a logged-in one.
-        """
-        login = self.pop('pre_login')
-        uid = self.pop('pre_uid')
+    .. versionchanged:: saas-15.3
+        The current request is no longer updated using the user and
+        context of the session when the authentication is done using
+        a database different than request.db. It is up to the caller
+        to open a new cursor/registry/env on the given database.
+    """
+    wsgienv = {
+        'interactive': True,
+        'base_location': request.httprequest.url_root.rstrip('/'),
+        'HTTP_HOST': request.httprequest.environ['HTTP_HOST'],
+        'REMOTE_ADDR': request.httprequest.environ['REMOTE_ADDR'],
+    }
+    env = env(user=None, su=False)
+    auth_info = env['res.users'].authenticate(credential, wsgienv)
+    pre_uid = auth_info['uid']
 
-        env = env(user=uid)
-        user_context = dict(env['res.users'].context_get())
+    session.uid = None
+    session['pre_login'] = credential['login']
+    session['pre_uid'] = pre_uid
 
-        self.should_rotate = True
-        self.update({
-            'db': env.registry.db_name,
-            'login': login,
-            'uid': uid,
-            'context': user_context,
-            'session_token': env.user._compute_session_token(self.sid),
-        })
+    env = env(user=pre_uid)
 
-    def logout(self, keep_db=False):
-        db = self.db if keep_db else get_default_session()['db']  # None
-        debug = self.debug
-        self.clear()
-        self.update(get_default_session(), db=db, debug=debug)
-        self.context['lang'] = request.default_lang() if request else DEFAULT_LANG
-        self.should_rotate = True
+    # if 2FA is disabled we finalize immediately
+    user = env['res.users'].browse(pre_uid)
+    if auth_info.get('mfa') == 'skip' or not user._mfa_url():
+        finalize(session, env)
 
-        if request and request.env:
-            request.env['ir.http']._post_logout()
+    if request and request.session is session and request.db == env.registry.db_name:
+        request.env = env(user=session.uid, context=session.context)
+        request.update_context(lang=get_lang(request.env(user=pre_uid)).code)
 
-    def touch(self):
-        self.is_dirty = True
+    return auth_info
 
-    def get_device(self, request):
-        """
-        :return: dict that corresponds to the current device
-        """
-        # TODO (v20): remove backward compatibility
-        if '_devices' not in self:
-            self['_devices'] = {}
-            self.is_dirty = True
 
-        ip_address = request.httprequest.remote_addr
-        user_agent = request.httprequest.user_agent.string
-        # No collision with different IP addresses
-        device_key = f'{ip_address.encode().hex()}{adler32(user_agent.encode()):x}'
+def finalize(session: Session, env: Environment) -> None:
+    """
+    Finalizes a partial session, should be called on MFA validation
+    to convert a partial / pre-session into a logged-in one.
+    """
+    login = session.pop('pre_login')
+    uid = session.pop('pre_uid')
 
-        with suppress(KeyError):
-            return self['_devices'][device_key]
+    env = env(user=uid)
+    user_context = dict(env['res.users'].context_get())
 
-        geoip = GeoIP(ip_address)
+    session.should_rotate = True
+    session.update({
+        'db': env.registry.db_name,
+        'login': login,
+        'uid': uid,
+        'context': user_context,
+        'session_token': env.user._compute_session_token(session.sid),
+    })
 
-        self['_devices'][device_key] = new_device = {
-            'ip_address': ip_address,
-            'user_agent': user_agent,
-            'first_activity': int(datetime.now().timestamp()),
-            'last_activity': None,
-            'country': geoip.country.name,
-            'city': geoip.city.name,
-        }
-        self.is_dirty = True
-        return new_device
 
-    def update_device(self, request):
-        """
-        :return: dict if the current device has been updated, ``None`` otherwise
-        """
-        if self.get('_trace_disable'):
-            # To avoid generating useless logs, e.g. for automated technical sessions,
-            # a session can be flagged with `_trace_disable`. This should never be done
-            # without a proper assessment of the consequences for auditability.
-            # Non-admin users have no direct or indirect way to set this flag, so it can't
-            # be abused by unprivileged users. Such sessions will of course still be
-            # subject to all other auditing mechanisms (server logs, web proxy logs,
-            # metadata tracking on modified records, etc.)
-            return None
+def logout(session: Session, *, keep_db: bool = False) -> None:
+    db = session.db if keep_db else get_default_session()['db']  # None
+    debug = session.debug
+    session.clear()
+    session.update(get_default_session(), db=db, debug=debug)
+    session.context['lang'] = request.default_lang() if request else DEFAULT_LANG
+    session.should_rotate = True
 
-        device = self.get_device(request)
+    if request and request.env:
+        request.env['ir.http']._post_logout()
 
-        now = int(datetime.now().timestamp())
-        if device['last_activity'] \
-            and (now - device['last_activity']) < DEVICE_ACTIVITY_UPDATE_FREQUENCY:
-            return None
 
-        device['last_activity'] = now
-        self.is_dirty = True
-        return device
+def touch(session: Session):
+    session.is_dirty = True
 
-    def _delete_old_sessions(self):
-        root.session_store.delete_old_sessions(self)
 
-    def _update_session_token(self, env: Environment):
-        """
-        Compute the session token of the current user (determined using
-        ``session['uid']``) and save it in the session.
+def get_device(session: Session, request: Request) -> dict:
+    """
+    :return: dict that corresponds to the current device
+    """
+    # TODO (v20): remove backward compatibility
+    if '_devices' not in session:
+        session['_devices'] = {}
+        session.is_dirty = True
 
-        :param env: An environment to access ``res.users``.
-        """
-        user = env['res.users'].browse(self['uid'])
-        self['session_token'] = user._compute_session_token(self.sid)
+    ip_address = request.httprequest.remote_addr
+    user_agent = request.httprequest.user_agent.string
+    # No collision with different IP addresses
+    device_key = f'{ip_address.encode().hex()}{adler32(user_agent.encode()):x}'
 
-    def _check(self, request_or_env):
-        """
-        Verify that the session is not expired, and that the token saved
-        in the session matches the session token computed for the user.
+    with suppress(KeyError):
+        return session['_devices'][device_key]
 
-        The session token changes when some sensitive informations about
-        the user changed: active, login, password, ...
+    geoip = GeoIP(ip_address)
 
-        On success, it logs the request in the ``res.device.log`` and
-        returns.
+    session['_devices'][device_key] = new_device = {
+        'ip_address': ip_address,
+        'user_agent': user_agent,
+        'first_activity': int(datetime.now().timestamp()),
+        'last_activity': None,
+        'country': geoip.country.name,
+        'city': geoip.city.name,
+    }
+    session.is_dirty = True
+    return new_device
 
-        On failure, it logs the session out (but keep the database) and
-        raises a :class:`SessionExpiredException` with an appropriate
-        message. See also :meth:`logout`.
 
-        :raises SessionExpiredException: when the session is expired.
-        """
-        if isinstance(request_or_env, Environment):
-            request, env = None, request_or_env
-        else:
-            request, env = request_or_env, request_or_env.env
-        del request_or_env
-        self._delete_old_sessions()
-        # Make sure we don't use a deleted session that can be saved again
-        if self.get('deletion_time', float('+inf')) <= time.time():
-            self.logout(keep_db=True)
-            e = "session is too old"
-            raise SessionExpiredException(e)
-        user = env['res.users'].browse(self['uid'])
-        expected = user._compute_session_token(self.sid)
-        if expected:
-            # TODO: use secrets.compare_digest
-            if consteq(expected, self['session_token']):
-                if request:
-                    env['res.device.log']._update_device(request)
-                return
-            # If the session token is not valid, we check if the legacy
-            # version works and convert the session token to the new one
-            legacy_expected = user._legacy_session_token_hash_compute(self.sid)
-            if legacy_expected and consteq(legacy_expected, self['session_token']):
-                self['session_token'] = expected
-                if request:
-                    env['res.device.log']._update_device(request)
-                return
-        self.logout(keep_db=True)
-        e = "session token mismatch; likely because the user credentials changed"
+def update_device(session: Session, request: Request) -> dict | None:
+    """
+    :return: dict if the current device has been updated, ``None`` otherwise
+    """
+    if session.get('_trace_disable'):
+        # To avoid generating useless logs, e.g. for automated technical sessions,
+        # a session can be flagged with `_trace_disable`. This should never be done
+        # without a proper assessment of the consequences for auditability.
+        # Non-admin users have no direct or indirect way to set this flag, so it can't
+        # be abused by unprivileged users. Such sessions will of course still be
+        # subject to all other auditing mechanisms (server logs, web proxy logs,
+        # metadata tracking on modified records, etc.)
+        return None
+
+    device = get_device(session, request)
+
+    now = int(datetime.now().timestamp())
+    if device['last_activity'] \
+        and (now - device['last_activity']) < DEVICE_ACTIVITY_UPDATE_FREQUENCY:
+        return None
+
+    device['last_activity'] = now
+    session.is_dirty = True
+    return device
+
+
+def delete_old_sessions(session: Session) -> None:
+    root.session_store.delete_old_sessions(session)
+
+
+def update_session_token(session: Session, env: Environment) -> None:
+    """
+    Compute the session token of the current user (determined using
+    ``session['uid']``) and save it in the session.
+
+    :param env: An environment to access ``res.users``.
+    """
+    user = env['res.users'].browse(session['uid'])
+    session['session_token'] = user._compute_session_token(session.sid)
+
+
+def check(session: Session, request_or_env: Request | Environment) -> None:
+    """
+    Verify that the session is not expired, and that the token saved
+    in the session matches the session token computed for the user.
+
+    The session token changes when some sensitive informations about
+    the user changed: active, login, password, ...
+
+    On success, it logs the request in the ``res.device.log`` and
+    returns.
+
+    On failure, it logs the session out (but keep the database) and
+    raises a :class:`SessionExpiredException` with an appropriate
+    message. See also :meth:`logout`.
+
+    :raises SessionExpiredException: when the session is expired.
+    """
+    if isinstance(request_or_env, Environment):
+        request, env = None, request_or_env
+    else:
+        request, env = request_or_env, request_or_env.env
+    del request_or_env
+    delete_old_sessions(session)
+    # Make sure we don't use a deleted session that can be saved again
+    if session.get('deletion_time', float('+inf')) <= time.time():
+        logout(session, keep_db=True)
+        e = "session is too old"
         raise SessionExpiredException(e)
+    user = env['res.users'].browse(session['uid'])
+    expected = user._compute_session_token(session.sid)
+    if expected:
+        # TODO: use secrets.compare_digest
+        if consteq(expected, session['session_token']):
+            if request:
+                env['res.device.log']._update_device(request)
+            return
+        # If the session token is not valid, we check if the legacy
+        # version works and convert the session token to the new one
+        legacy_expected = user._legacy_session_token_hash_compute(session.sid)
+        if legacy_expected and consteq(legacy_expected, session['session_token']):
+            session['session_token'] = expected
+            if request:
+                env['res.device.log']._update_device(request)
+            return
+    logout(session, keep_db=True)
+    e = "session token mismatch; likely because the user credentials changed"
+    raise SessionExpiredException(e)
 
 
 class SessionStore:
@@ -510,7 +523,7 @@ class SessionStore:
             session.sid = self.generate_key()
         if session.uid:
             assert env, "saving this session requires an environment"
-            session._update_session_token(env)
+            update_session_token(session, env)
         session.should_rotate = False
         session['create_time'] = time.time()
         self.save(session)

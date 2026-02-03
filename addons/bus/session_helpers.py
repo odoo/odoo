@@ -3,7 +3,7 @@ import hmac
 import time
 
 from odoo.api import Environment
-from odoo.http.session import SessionExpiredException
+from odoo.http.session import delete_old_sessions, SessionExpiredException
 from odoo.modules.registry import Registry
 from odoo.sql_db import SQL
 from odoo.tools.lru import LRU
@@ -34,7 +34,7 @@ def _get_session_token_query_params(cr, session):
 
 
 def check_session(cr, session):
-    session._delete_old_sessions()
+    delete_old_sessions(session)
     if 'deletion_time' in session and session['deletion_time'] <= time.time():
         e = "session is too old"
         raise SessionExpiredException(e)

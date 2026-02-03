@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from odoo import api, fields, models, tools
 from odoo.http import request
 from odoo.http.router import root
-from odoo.http.session import STORED_SESSION_BYTES, get_session_max_inactivity
+from odoo.http.session import STORED_SESSION_BYTES, get_session_max_inactivity, logout, update_device
 from odoo.tools import SQL
 from odoo.tools._vendor.useragents import UserAgent
 from odoo.tools.translate import _
@@ -52,7 +52,7 @@ class ResDeviceLog(models.Model):
 
             :param request: Request or WebsocketRequest object
         """
-        device = request.session.update_device(request)
+        device = update_device(request.session, request)
         if not device:
             return
 
@@ -300,4 +300,4 @@ class ResSession(models.Model):
 
         must_logout = bool(self.filtered('is_current'))
         if must_logout:
-            request.session.logout()
+            logout(request.session)

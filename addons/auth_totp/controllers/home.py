@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from odoo import http, _
 from odoo.exceptions import AccessDenied
 from odoo.http import request
+from odoo.http.session import finalize, touch
 from odoo.addons.web.controllers import home as web_home
 
 TRUSTED_DEVICE_COOKIE = 'td_id'
@@ -35,7 +36,7 @@ class Home(web_home.Home):
                 user_match = request.env['auth_totp.device']._check_credentials_for_uid(
                     scope="browser", key=key, uid=user.id)
                 if user_match:
-                    request.session.finalize(request.env)
+                    finalize(request.session, request.env)
                     request.update_env(user=request.session.uid)
                     request.update_context(**request.session.context)
                     return request.redirect(self._login_redirect(request.session.uid, redirect=redirect))
@@ -53,7 +54,7 @@ class Home(web_home.Home):
             except ValueError:
                 error = _("Invalid authentication code format.")
             else:
-                request.session.finalize(request.env)
+                finalize(request.session, request.env)
                 request.update_env(user=request.session.uid)
                 request.update_context(**request.session.context)
                 response = request.redirect(self._login_redirect(request.session.uid, redirect=redirect))
@@ -80,11 +81,11 @@ class Home(web_home.Home):
                         samesite='Lax'
                     )
                 # Crapy workaround for unupdatable Odoo Mobile App iOS (Thanks Apple :@)
-                request.session.touch()
+                touch(request.session)
                 return response
 
         # Crapy workaround for unupdatable Odoo Mobile App iOS (Thanks Apple :@)
-        request.session.touch()
+        touch(request.session)
         return request.render('auth_totp.auth_totp_form', {
             'user': user,
             'error': error,

@@ -38,6 +38,7 @@ from odoo.http.requestlib import is_cors_preflight
 from odoo.http.router import root
 from odoo.http.routing_map import ROUTING_KEYS
 from odoo.http.session import (
+    check,
     CheckIdentityException,
     SessionExpiredException,
     get_session_max_inactivity,
@@ -289,7 +290,7 @@ class IrHttp(models.AbstractModel):
         try:
             if request.session.uid is not None:
                 try:
-                    request.session._check(request)
+                    check(request.session, request)
                 except SessionExpiredException as exc:
                     session_expired_exc = exc  # save the traceback
                     request.env = api.Environment(request.env.cr, None, request.session.context)

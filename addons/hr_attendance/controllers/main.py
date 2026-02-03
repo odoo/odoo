@@ -8,6 +8,7 @@ from odoo import _, http
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.http.session import logout, touch
 from odoo.http.stream import content_disposition
 from odoo.tools import SQL, float_round, py_to_js_locale
 from odoo.tools.image import image_data_uri
@@ -83,7 +84,7 @@ class HrAttendance(http.Controller):
             # before leaving the kiosk mode open to the public. This is a prevention security
             # measure.
             if self.has_password():
-                request.session.logout(keep_db=True)
+                logout(request.session, keep_db=True)
             return request.redirect(request.env['res.company'].browse(company_id).attendance_kiosk_url)
         else:
             return request.not_found()
@@ -155,7 +156,7 @@ class HrAttendance(http.Controller):
 
     @http.route('/hr_attendance/kiosk_keepalive', auth='user', type='jsonrpc')
     def kiosk_keepalive(self):
-        request.session.touch()
+        touch(request.session)
         return {}
 
     @http.route(["/hr_attendance/<token>"], type='http', auth='public', website=True, sitemap=True)
@@ -176,7 +177,7 @@ class HrAttendance(http.Controller):
             ]
             has_password = self.has_password()
             if not from_trial_mode and has_password:
-                request.session.logout(keep_db=True)
+                logout(request.session, keep_db=True)
             if (from_trial_mode or (not has_password and not request.env.user.is_public)):
                 kiosk_mode = "settings"
             else:
