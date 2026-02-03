@@ -2318,17 +2318,20 @@ class MrpProduction(models.Model):
         self._button_mark_done_sanity_checks()
         production_auto_ids = set()
         for production in self:
-            if not production.product_uom_id.is_zero(production.qty_producing):
-                production.move_raw_ids.filtered(
-                    lambda move: move.manual_consumption and not move.picked
-                ).picked = True
-                continue
             if production._auto_production_checks():
                 production_auto_ids.add(production.id)
 
         productions_auto = self.env['mrp.production'].browse(production_auto_ids)
         for production in productions_auto:
             production._set_quantities()
+
+        for production in self:
+            if not production.product_uom_id.is_zero(production.qty_producing):
+                production.move_raw_ids.filtered(
+                    lambda move: move.manual_consumption and not move.picked
+                ).picked = True
+                continue
+
         # Produce by-products also for not auto productions.
         (self - productions_auto)._mark_byproducts_as_produced()
 
@@ -2892,8 +2895,25 @@ class MrpProduction(models.Model):
 
     def _set_quantities(self):
         self.ensure_one()
+<<<<<<< 9c3af68c0b33bdd6778f3087c5a7b85b93315ff8
         self.qty_producing = self.product_qty - self.qty_produced
         self._set_qty_producing()
+||||||| 7a39185f83d0daca207c8007512f4700537c7e88
+        missing_lot_id_products = ""
+        if self.product_tracking in ('lot', 'serial') and not self.lot_producing_ids:
+            self.action_generate_serial()
+        self.qty_producing = self.product_qty - self.qty_produced
+        self._set_qty_producing()
+=======
+        missing_lot_id_products = ""
+        if self.product_tracking in ('lot', 'serial') and not self.lot_producing_ids:
+            self.action_generate_serial()
+
+        if not self.qty_producing:
+            self.qty_producing = self.product_qty - self.qty_produced
+            self._set_qty_producing()
+
+>>>>>>> 06e2112e9eafd564325c7e026d14a9ad019eb4aa
         self._mark_byproducts_as_produced()
 
         missing_lot_id_products = ""
