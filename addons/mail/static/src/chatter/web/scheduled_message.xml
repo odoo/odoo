@@ -31,7 +31,7 @@
                                 <div t-on-click="onClick"
                                     t-attf-class="position-relative text-break o-mail-Message-body #{props.scheduledMessage.is_note ? 'p-1' : 'mb-0 py-2 px-3 align-self-start'}">
                                     <t t-if="props.scheduledMessage.subject and !props.scheduledMessage.isSubjectThreadName">
-                                        <em class="mb-1 me-2">Subject: <t t-esc="props.scheduledMessage.subject"/></em>
+                                        <em class="mb-1 me-2">Subject: <t t-out="props.scheduledMessage.subject"/></em>
                                     </t>
                                     <t t-if="isShort or state.readMore" t-out="props.scheduledMessage.body || ''"/>
                                     <p t-else="" t-out="truncatedMessage"/>

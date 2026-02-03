@@ -4,7 +4,7 @@
     <t t-name="web.WarningDialog">
         <Dialog title="title" size="'sm'" contentClass="'o_error_dialog'">
             <div role="alert">
-                <p t-esc="message" class="text-prewrap mb-0"/>
+                <p t-out="message" class="text-prewrap mb-0"/>
             </div>
             <t t-set-slot="footer">
                 <button class="btn btn-primary o-default-button" t-on-click="props.close" data-available-offline="">Close</button>
@@ -15,10 +15,10 @@
     <t t-name="web.RedirectWarningDialog">
         <Dialog title="title" size="'xl'" contentClass="'o_error_dialog'">
             <div role="alert">
-                <p t-esc="message" class="text-prewrap"/>
+                <p t-out="message" class="text-prewrap"/>
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="onClick" t-esc="buttonText"/>
+                <button class="btn btn-primary" t-on-click="onClick" t-out="buttonText"/>
                 <button class="btn btn-secondary" t-on-click="props.close" data-available-offline="">Close</button>
             </t>
         </Dialog>
@@ -57,17 +57,17 @@
                     Something went wrong... If you really are stuck, share the report with your friendly support service
                 </p>
                 <details t-on-toggle="() => { state.showTraceback = !state.showTraceback }">
-                    <summary t-esc="state.showTraceback ? this.constructor.hideTracebackButtonText : this.constructor.showTracebackButtonText" class="mb-1 link-info"/>
+                    <summary t-out="state.showTraceback ? this.constructor.hideTracebackButtonText : this.constructor.showTracebackButtonText" class="mb-1 link-info"/>
                     <div class="text-bg-100 clearfix mt-2 position-relative o_error_detail pb-2">
                         <button class="btn position-absolute top-0 end-0 pt-2 btn-link link-body-emphasis" t-ref="copyButton" t-on-click="onClickClipboard" data-available-offline="">
                             <span class="fa fa-clipboard"/>
                         </button>
                         <div class="ps-1 pt-1 ps-md-3 pt-md-3">
-                            <p class="m-0"><b t-esc="title or this.constructor.title"></b></p>
-                            <p class="d-block small text-info" t-if="contextDetails" t-esc="contextDetails"/>
-                            <code t-if="props.name" t-esc="props.name"></code>
-                            <code class="d-block" t-if="props.message" t-esc="props.message"/>
-                            <pre class="border-0 m-0 p-0 mt-3 smaller" t-esc="traceback or props.traceback"/>
+                            <p class="m-0"><b t-out="title or this.constructor.title"></b></p>
+                            <p class="d-block small text-info" t-if="contextDetails" t-out="contextDetails"/>
+                            <code t-if="props.name" t-out="props.name"></code>
+                            <code class="d-block" t-if="props.message" t-out="props.message"/>
+                            <pre class="border-0 m-0 p-0 mt-3 smaller" t-out="traceback or props.traceback"/>
                         </div>
                     </div>
                 </details>

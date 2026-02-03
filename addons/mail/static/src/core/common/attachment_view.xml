@@ -10,7 +10,7 @@
                 <i class="fa fa-window-restore" aria-hidden="Pop out"/>
             </div>
             <t t-if="state.thread.message_main_attachment_id">
-                <h3 t-if="!state.thread.message_main_attachment_id.isPdf" class="mt0 mb8 ps-2 text-muted text-center"><t t-esc="displayName"/></h3>
+                <h3 t-if="!state.thread.message_main_attachment_id.isPdf" class="mt0 mb8 ps-2 text-muted text-center"><t t-out="displayName"/></h3>
                 <div t-if="state.thread.message_main_attachment_id.isImage" class="o-mail-Attachment-imgContainer">
                     <img id="attachment_img" class="img img-fluid d-block" t-att-src="state.thread.message_main_attachment_id.defaultSource"/>
                 </div>

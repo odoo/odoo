@@ -10,7 +10,7 @@
     <t t-name="stock.ForcedPlaceholder" t-inherit="web.Many2One">
         <xpath expr="//t[@t-if='props.value']" position="after">
             <t t-else="">
-                <span t-esc="props.placeholder"/>
+                <span t-out="props.placeholder"/>
             </t>
         </xpath>
     </t>

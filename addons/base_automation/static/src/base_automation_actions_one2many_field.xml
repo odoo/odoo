@@ -27,7 +27,7 @@
                                 'whatsapp': 'fa-whatsapp',
                             }[action.data.state] || 'fa-circle-thin'"
                         />
-                        <div class="ps-2" t-esc="action.data.name" />
+                        <div class="ps-2" t-out="action.data.name" />
                     </div>
                 </div>
                 <div t-if="!action_last" class="px-3 align-self-center" t-att-data-action-id="action.id">

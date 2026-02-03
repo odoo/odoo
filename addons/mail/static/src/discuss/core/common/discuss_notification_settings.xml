@@ -10,7 +10,7 @@
                     <button class="btn d-flex my-1" t-att-class="{'o-selected' : notif.label === store.settings.channel_notifications}" t-on-click="()=> this.store.settings.setCustomNotifications(notif.label)">
                         <input class="form-check-input" type="radio" t-att-checked="notif.label === store.settings.channel_notifications"/>
                         <div class="d-flex flex-column text-start flex-grow-1 mx-3">
-                            <span t-esc="notif.name"/>
+                            <span t-out="notif.name"/>
                         </div>
                     </button>
                 </t>

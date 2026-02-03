@@ -90,11 +90,11 @@
         <DiscussAvatar channel="channel" size="24" typing="false"/>
     </div>
     <t t-if="channel.parent_channel_id">
-        <span class="fw-bold small o-mx-0_5 opacity-75 opacity-100-hover cursor-pointer o-hover-text-underline rounded fs-6" t-esc="channel.parent_channel_id.displayName" title="Open Channel" t-ref="parentChannel" t-on-click.stop="() => this.channel.parent_channel_id.open({ focus: true })"/>
+        <span class="fw-bold small o-mx-0_5 opacity-75 opacity-100-hover cursor-pointer o-hover-text-underline rounded fs-6" t-out="channel.parent_channel_id.displayName" title="Open Channel" t-ref="parentChannel" t-on-click.stop="() => this.channel.parent_channel_id.open({ focus: true })"/>
         <i class="fa fa-chevron-right o-xsmaller ms-1 mt-1 text-muted opacity-75"/>
     </t>
     <CountryFlag t-if="channel.showCorrespondentCountry" country="channel.correspondentCountry" class="'o-mail-ChatWindow-country border shadow-sm'"/>
-    <div t-if="!state.editingName" class="text-truncate fw-bold border border-transparent o-mx-0_5 my-0 py-1" t-att-title="props.chatWindow.channel.displayName" t-esc="props.chatWindow.channel.displayName" t-att-class="{ 'fs-4': ui.isSmall, 'fs-5': !ui.isSmall }"/>
+    <div t-if="!state.editingName" class="text-truncate fw-bold border border-transparent o-mx-0_5 my-0 py-1" t-att-title="props.chatWindow.channel.displayName" t-out="props.chatWindow.channel.displayName" t-att-class="{ 'fs-4': ui.isSmall, 'fs-5': !ui.isSmall }"/>
 </t>
 
 <t t-name="mail.ChatWindow.memberTyping">

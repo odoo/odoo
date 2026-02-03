@@ -11,7 +11,7 @@
                         <i class="oi oi-close fa-fw" aria-hidden="true"/>
                         <span  t-att-class="{'invisible': state.showStickyTitle}">Discard</span>
                     </button>
-                    <h2 class="o_self_product_name position-absolute mb-0 text-truncate text-center" t-att-class="{'d-none': !state.showStickyTitle}" t-esc="product.name"/>
+                    <h2 class="o_self_product_name position-absolute mb-0 text-truncate text-center" t-att-class="{'d-none': !state.showStickyTitle}" t-out="product.name"/>
                 </div>
             </div>
 
@@ -22,7 +22,7 @@
                         <div class="container o_self_container ">
                              <!-- Name & Image -->
                             <div class="d-flex flex-column align-items-center">
-                                <h1 class="mt-kiosk-p-3 mb-3 " t-esc="product.name" t-ref="productName"/>
+                                <h1 class="mt-kiosk-p-3 mb-3 " t-out="product.name" t-ref="productName"/>
                                 <div class="o_self_product_image ratio ratio-1x1 rounded-4 w-70 w-m-50 ">
                                     <img class="rounded-4" t-attf-src="/web/image/product.template/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
                                 </div>
@@ -53,7 +53,7 @@
                    <div class="d-flex justify-content-between align-items-center  gap-2 gap-md-5">
                         <div class="ms-auto text-start">
                             <h4 class="d-none d-sm-block text-muted opacity-75 mb-1">Selection</h4>
-                            <div class="fs-2 fw-bold o-so-tabular-nums mx-2 text-primary" t-esc="selfOrder.formatMonetary(getProductPrice())" />
+                            <div class="fs-2 fw-bold o-so-tabular-nums mx-2 text-primary" t-out="selfOrder.formatMonetary(getProductPrice())" />
                         </div>
                         <button t-if="selfOrder.ordering" class="btn btn-lg btn-primary text-truncate ps-auto" t-on-click="addToCart" t-att-disabled="!this.isAddToCartEnabled()" >
                             <span>Add to cart</span>

@@ -18,11 +18,11 @@
                             <button t-foreach="pos.models['pos.preset'].getAll()" t-as="preset" t-key="preset.id"
                                 class="btn btn-lg btn-secondary text-nowrap" t-on-click="() => this.onPresetSelected(preset)"
                                 t-att-class="{'active': this.state.selectedPreset === preset}">
-                                <t t-esc="preset.name"/>
+                                <t t-out="preset.name"/>
                             </button>
                         </div>
                         <div class="item d-none d-xl-flex align-items-center justify-content-end">
-                            <span class="page me-2" t-on-click="onClickPageNbr"><t t-esc="getPageNumber()" /></span>
+                            <span class="page me-2" t-on-click="onClickPageNbr"><t t-out="getPageNumber()" /></span>
                             <div class="page-controls d-flex align-items-center gap-1">
                                 <button class="previous btn btn-secondary" t-on-click="() => this.onPrevPage()">
                                     <i class="fa fa-fw fa-caret-left" role="img" aria-label="Previous Order List" title="Previous Order List"></i>
@@ -41,33 +41,33 @@
                                         <tr class="order-row" t-attf-class="{{ isHighlighted(order) ? 'highlight active': '' }}" t-att-orderUuid="order.uuid"
                                             t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => order.finalized ? ()=>{} : this.setOrder(order)" >
                                             <td>
-                                                <div class="fs-6 fw-bolder"><t t-esc="this.pos.getDate(order.date_order)"></t></div>
-                                                <div class="small text-muted"><t t-esc="this.pos.getTime(order.date_order)"></t></div>
+                                                <div class="fs-6 fw-bolder"><t t-out="this.pos.getDate(order.date_order)"></t></div>
+                                                <div class="small text-muted"><t t-out="this.pos.getTime(order.date_order)"></t></div>
                                             </td>
                                             <td>
-                                                <div class="fw-bolder"><t t-esc="order.getName()"></t></div>
-                                                <div class="small text-muted"><t t-esc="order.pos_reference"></t></div>
+                                                <div class="fw-bolder"><t t-out="order.getName()"></t></div>
+                                                <div class="small text-muted"><t t-out="order.pos_reference"></t></div>
                                             </td>
                                             <td class="align-middle">
-                                                <div class="fw-bolder"><t t-esc="order.partner_id?.name"></t></div>
+                                                <div class="fw-bolder"><t t-out="order.partner_id?.name"></t></div>
                                                 <div id="order-tags" t-if="usePreset" t-attf-class="badge rounded o_colorlist_item_color_{{order.preset_id?.color}}" style="font-size: 0.75rem !important;">
-                                                    <t t-esc="order.preset_id?.name"></t>
+                                                    <t t-out="order.preset_id?.name"></t>
                                                 </div>
                                             </td>
                                             <td class="align-middle">
                                                 <t t-if="order.presetTime">
-                                                    <div t-if="order.isFutureDate" class="fw-bolder" t-esc="order.presetDate" />
-                                                    <div t-attf-class="fs-6 badge rounded {{ this.getPresetTimeColor(order) }}" t-esc="order.presetTime"/>
+                                                    <div t-if="order.isFutureDate" class="fw-bolder" t-out="order.presetDate" />
+                                                    <div t-attf-class="fs-6 badge rounded {{ this.getPresetTimeColor(order) }}" t-out="order.presetTime"/>
                                                 </t>
                                             </td>
                                             <td t-if="showCardholderName()">
-                                                <div><t t-esc="getCardholderName(order)"></t></div>
+                                                <div><t t-out="getCardholderName(order)"></t></div>
                                             </td>
                                             <td>
-                                                <t t-esc="getCashier(order)"></t>
+                                                <t t-out="getCashier(order)"></t>
                                             </td>
                                             <td class="align-middle">
-                                                <div class="fw-bolder"><t t-esc="getTotal(order)"></t></div>
+                                                <div class="fw-bolder"><t t-out="getTotal(order)"></t></div>
                                             </td>
                                             <td class="align-middle text-end">
                                                 <t t-set="status" t-value="getStatus(order)" />
@@ -78,7 +78,7 @@
                                                     ? 'success'
                                                     : 'secondary'
                                                 }}">
-                                                    <t t-esc="status"></t>
+                                                    <t t-out="status"></t>
                                                 </div>
                                             </td>
                                             <td class="text-end delete-column" name="delete-column">
@@ -99,15 +99,15 @@
                                 <div class="mobileOrderList order-row d-flex flex-row ps-1" t-attf-class="{{ isHighlighted(order) ? 'highlight': '' }}"
                                     t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() =>  order.finalized ? ()=>{} : this.setOrder(order)" >
                                     <div class="p-2">
-                                            <div class="fw-bolder"><t t-esc="this.pos.getDate(order.date_order)"></t></div>
-                                            <div class="small text-muted"><t t-esc="this.pos.getTime(order.date_order)"></t></div>
+                                            <div class="fw-bolder"><t t-out="this.pos.getDate(order.date_order)"></t></div>
+                                            <div class="small text-muted"><t t-out="this.pos.getTime(order.date_order)"></t></div>
                                     </div>
                                     <div class="p-2 d-flex flex-column flex-grow-1 justify-content-center align-items-start">
-                                        <div class="fw-bolder"><t t-esc="order.getName()"></t></div>
-                                        <div class="small text-muted"><t t-esc="order.pos_reference"></t></div>
+                                        <div class="fw-bolder"><t t-out="order.getName()"></t></div>
+                                        <div class="small text-muted"><t t-out="order.pos_reference"></t></div>
                                     </div>
                                     <div class="p-2 d-flex flex-column flex-grow-1 justify-content-center align-items-end">
-                                        <div class="fw-bolder"><t t-esc="getTotal(order)"></t></div>
+                                        <div class="fw-bolder"><t t-out="getTotal(order)"></t></div>
                                                 <t t-set="status" t-value="getStatus(order)" />
                                                 <div t-attf-class="badge rounded fs-6 text-bg-{{
                                                     status === 'Ongoing' || status === 'Payment'
@@ -116,7 +116,7 @@
                                                     ? 'success'
                                                     : 'secondary'
                                                 }}">
-                                                    <t t-esc="status"></t>
+                                                    <t t-out="status"></t>
                                                 </div>
                                     </div>
                                     <div class="mx-2" name="delete-column">
@@ -168,20 +168,20 @@
                                 <t t-set="toRefundDetail" t-value="line.order_id?.uiState?.lineToRefund?.[line.uuid]" />
                                 <li t-if="!pos.isProductQtyZero(line.refundedQty)"
                                     class="info refund-note mt-1">
-                                    <strong t-esc="env.utils.formatProductQty(line.refundedQty)" />
+                                    <strong t-out="env.utils.formatProductQty(line.refundedQty)" />
                                     <span> Refunded</span>
                                 </li>
                                 <li t-if="!pos.isProductQtyZero(toRefundDetail?.qty)" class="info to-refund-highlight refund-note mt-1 fw-bold text-primary">
                                     <t t-set="_destinationOrderUid" t-value="toRefundDetail.destinationOrder?.uuid"/>
                                     <t t-set="refundQty" t-value="env.utils.formatProductQty(toRefundDetail.qty)"/>
                                     <t t-if="_destinationOrderUid">
-                                        Refunding <t t-esc="refundQty" /> in
-                                        <span t-esc="_destinationOrderUid"
+                                        Refunding <t t-out="refundQty" /> in
+                                        <span t-out="_destinationOrderUid"
                                             class="order-link ms-1 text-decoration-underline cursor-pointer"
                                             t-on-click.stop="() => this.onClickRefundOrderUid(_destinationOrderUid)" />
                                     </t>
                                     <t t-else="">
-                                        To Refund: <t t-esc="refundQty" />
+                                        To Refund: <t t-out="refundQty" />
                                     </t>
                                 </li>
                             </Orderline>

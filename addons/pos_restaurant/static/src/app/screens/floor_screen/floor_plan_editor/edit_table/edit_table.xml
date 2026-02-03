@@ -6,7 +6,7 @@
         <div class="fs-4 fw-bold mb-2 mt-3">Number of Seats</div>
         <div class="d-flex align-items-center">
             <button class="button btn btn-secondary py-2" t-att-class="{'disabled': table.seats === 0}" t-on-click="()=>this.incrNumberOfSeats(-1)"><i class="fa fa-minus fa-fw"/></button>
-            <span class="fs-4 mx-3 text-center" style="font-variant-numeric:tabular-nums;min-width: 2ch;" t-esc="table.seats"/>
+            <span class="fs-4 mx-3 text-center" style="font-variant-numeric:tabular-nums;min-width: 2ch;" t-out="table.seats"/>
             <button class="button btn btn-secondary py-2" t-on-click="()=>this.incrNumberOfSeats(1)" ><i class="fa fa-plus fa-fw"/></button>
         </div>
 

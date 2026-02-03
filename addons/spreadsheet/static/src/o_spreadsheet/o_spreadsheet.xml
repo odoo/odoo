@@ -19,7 +19,7 @@
               t-key="msg_index"
               class="ps-2"
               t-att-class="{'text-truncate': props.singleBox }"
-              t-esc="msg"
+              t-out="msg"
             />
           </div>
         </div>
@@ -42,7 +42,7 @@
               t-on-click="(ev) => this.toggleContextMenu(menu, ev)"
               t-on-mouseover="(ev) => this.onMenuMouseOver(menu, ev)"
               t-att-data-id="menu.id">
-              <t t-esc="getMenuName(menu)"/>
+              <t t-out="getMenuName(menu)"/>
             </div>
           </t>
         </div>
@@ -270,7 +270,7 @@
             t-att-class="{ 'selected': state.selectedCategory === category }"
             t-on-click="() => state.selectedCategory = category"
             t-att-data-id="category"
-            t-esc="categories[category_value]"
+            t-out="categories[category_value]"
           />
         </div>
         <div
@@ -454,7 +454,7 @@
             t-as="symbol"
             t-key="symbol_index"
             class="o-spreadsheet-editor-symbol w-100 d-flex justify-content-center align-items-center mx-1"
-            t-esc="symbol"
+            t-out="symbol"
             tabindex="-1"
             t-att-title="symbol"
             t-on-click="() => this.insertSymbol(symbol)"
@@ -482,7 +482,7 @@
           t-att-title="backTitle">
           <i class="fa fa-angle-left"/>
         </div>
-        <span class="d-flex align-items-center" t-esc="state.title"/>
+        <span class="d-flex align-items-center" t-out="state.title"/>
       </div>
       <div
         class="o-ribbon-menu-wrapper overflow-auto"
@@ -718,7 +718,7 @@
           t-on-click="props.onToggleCollapsePanel">
           <i class="fa fa-angle-double-right"/>
         </div>
-        <div class="o-sidePanelTitle o-fw-bold ms-2" t-esc="getTitle()"/>
+        <div class="o-sidePanelTitle o-fw-bold ms-2" t-out="getTitle()"/>
         <div
           t-if="props.isPinned"
           class="o-pin-panel o-sidePanelAction ms-auto rounded active"
@@ -774,7 +774,7 @@
           ✕
         </div>
 
-        <div class="o-sidePanelTitle o-fw-bold" t-esc="getTitle()"/>
+        <div class="o-sidePanelTitle o-fw-bold" t-out="getTitle()"/>
       </div>
     </div>
   </t>
@@ -790,19 +790,19 @@
         <div class="o-locale-preview mt-4 p-3 rounded border">
           <div>
             <span class="o-fw-bold me-1">Number:</span>
-            <span t-esc="numberFormatPreview"/>
+            <span t-out="numberFormatPreview"/>
           </div>
           <div>
             <span class="o-fw-bold me-1">Date:</span>
-            <span t-esc="dateFormatPreview"/>
+            <span t-out="dateFormatPreview"/>
           </div>
           <div>
             <span class="o-fw-bold me-1">Date time:</span>
-            <span t-esc="dateTimeFormatPreview"/>
+            <span t-out="dateTimeFormatPreview"/>
           </div>
           <div>
             <span class="o-fw-bold me-1">First day of week:</span>
-            <span t-esc="firstDayOfWeek"/>
+            <span t-out="firstDayOfWeek"/>
           </div>
         </div>
       </Section>
@@ -935,7 +935,7 @@
             <span
               class="text-danger sp_range_error_message"
               t-if="shouldDisplayInvalidRangeError"
-              t-esc="pivot.invalidRangeMessage"
+              t-out="pivot.invalidRangeMessage"
             />
           </Section>
 
@@ -1076,7 +1076,7 @@
       />
       <div
         class="o-pivot-measure-display-description mt-3 ps-3 border-start"
-        t-esc="measureDisplayDescription[store.measureDisplay.type]"
+        t-out="measureDisplayDescription[store.measureDisplay.type]"
       />
     </Section>
 
@@ -1239,15 +1239,15 @@
   <t t-name="o-spreadsheet-PivotSortSection">
     <Section t-if="hasValidSort" class="'o-pivot-sort'">
       <t t-set-slot="title">Sorting</t>
-      <div t-esc="sortDescription" class="pb-2"/>
+      <div t-out="sortDescription" class="pb-2"/>
       <div class="d-flex flex-column gap-2">
         <t t-foreach="sortValuesAndFields" t-as="valueAndField" t-key="valueAndField_index">
           <div class="o-sort-card d-flex gap-1 px-2 border">
             <t t-if="valueAndField.field">
-              <span class="fw-bolder" t-esc="valueAndField.field"/>
+              <span class="fw-bolder" t-out="valueAndField.field"/>
               =
             </t>
-            <span class="fw-bolder o-sort-value" t-esc="valueAndField.value"/>
+            <span class="fw-bolder o-sort-value" t-out="valueAndField.value"/>
           </div>
         </t>
       </div>
@@ -1343,7 +1343,7 @@
             class="'o-fw-bold'"
             selectContentOnFocus="true"
           />
-          <span t-else="1" class="o-fw-bold" t-esc="props.dimension.displayName"/>
+          <span t-else="1" class="o-fw-bold" t-out="props.dimension.displayName"/>
         </div>
         <div class="d-flex flex-rows" t-on-pointerdown.stop="">
           <t t-slot="upper-right-icons"/>
@@ -1484,8 +1484,8 @@
           <table class="w-100">
             <t t-foreach="examples" t-as="example" t-key="example_index">
               <tr>
-                <td class="w-25 pe-3 o-fw-bold" t-esc="example.label"/>
-                <td class="w-75 text-truncate" t-esc="example.value"/>
+                <td class="w-25 pe-3 o-fw-bold" t-out="example.label"/>
+                <td class="w-75 text-truncate" t-out="example.value"/>
               </tr>
             </t>
           </table>
@@ -1547,9 +1547,9 @@
             placeholder="e.g. 'search me'"
           />
           <div class="o-input-count" t-if="hasSearchResult">
-            <t t-esc="store.selectedMatchIndex+1"/>
+            <t t-out="store.selectedMatchIndex+1"/>
             /
-            <t t-esc="store.searchMatches.length"/>
+            <t t-out="store.searchMatches.length"/>
           </div>
           <div t-elif="!this.pendingSearch and store.toSearch !== ''" class="o-input-count">
             0 / 0
@@ -1659,8 +1659,8 @@
       t-on-click="onPreviewClick"
       t-ref="dvPreview">
       <div>
-        <div class="o-dv-preview-description o-fw-bold text-truncate" t-esc="descriptionString"/>
-        <div class="o-dv-preview-ranges text-truncate" t-esc="rangesString"/>
+        <div class="o-dv-preview-description o-fw-bold text-truncate" t-out="descriptionString"/>
+        <div class="o-dv-preview-ranges text-truncate" t-out="rangesString"/>
       </div>
       <div
         class="o-dv-delete-button d-flex align-items-center o-button-icon px-3"
@@ -1937,10 +1937,10 @@
       <div class="o-cf-preview-description me-3 overflow-auto">
         <div class="o-cf-preview-ruletype">
           <div class="o-cf-preview-description-rule o-fw-bold text-truncate">
-            <t t-esc="description"/>
+            <t t-out="description"/>
           </div>
         </div>
-        <div class="o-cf-preview-range text-truncate" t-esc="cf.ranges"/>
+        <div class="o-cf-preview-range text-truncate" t-out="cf.ranges"/>
       </div>
       <div class="o-cf-delete ms-auto">
         <div
@@ -2237,7 +2237,7 @@
                        font-style:{{currentStyle.italic?'italic':'normal'}};
                        color:{{currentStyle.textColor || '#000'}};
                        background-color:{{currentStyle.fillColor}};">
-      <t t-if="previewText" t-esc="previewText"/>
+      <t t-if="previewText" t-out="previewText"/>
       <t t-else="">Preview text</t>
     </div>
   </t>
@@ -2325,7 +2325,7 @@
     <div class="o-section" t-att-class="props.class">
       <t t-if="props.slots.title or props.title">
         <div class="o-section-title">
-          <t t-esc="props.title"/>
+          <t t-out="props.title"/>
           <t t-slot="title"/>
         </div>
       </t>
@@ -2369,7 +2369,7 @@
             t-att-checked="choice.value === props.selectedValue"
             t-on-change="() => props.onChange(choice.value)"
           />
-          <t t-esc="choice.label"/>
+          <t t-out="choice.label"/>
         </label>
       </t>
     </div>
@@ -2386,7 +2386,7 @@
           <span class="collapsor-arrow">
             <t t-call="o-spreadsheet-Icon.ANGLE_DOWN"/>
           </span>
-          <div class="ps-2" t-esc="props.title"/>
+          <div class="ps-2" t-out="props.title"/>
         </div>
       </div>
       <Collapse isCollapsed="state.isCollapsed">
@@ -2435,7 +2435,7 @@
         t-on-change="onChange"
         t-on-click.stop=""
       />
-      <span class="text-truncate" t-if="props.label" t-esc="props.label"/>
+      <span class="text-truncate" t-if="props.label" t-out="props.label"/>
     </label>
   </t>
 
@@ -2444,7 +2444,7 @@
       <t t-foreach="props.choices" t-as="choice" t-key="choice.value">
         <button
           class="flex-grow-1 o-button"
-          t-esc="choice.label"
+          t-out="choice.label"
           t-att-class="{ 'selected': props.selectedValue === choice.value }"
           t-on-click="() => props.onChange(choice.value)"
           t-att-data-id="choice.value"
@@ -2693,8 +2693,8 @@
             onColorPicked="(color) => this.onGroupColorChanged(group_index, color)"
           />
           <span class="ps-2">
-            <span t-esc="'(#' + (group_index +1 ) + ')'" class="o-text-bolder pe-1"/>
-            <span class="text-muted" t-esc="group.label"/>
+            <span t-out="'(#' + (group_index +1 ) + ')'" class="o-text-bolder pe-1"/>
+            <span class="text-muted" t-out="group.label"/>
           </span>
         </div>
       </t>
@@ -2729,8 +2729,8 @@
                 onColorPicked="(color) => this.onGroupColorChanged(item_index, color)"
               />
               <span class="ps-2">
-                <span t-esc="'(#' + (item_index +1 ) + ')'" class="o-text-bolder pe-1"/>
-                <span class="text-muted" t-esc="item.label"/>
+                <span t-out="'(#' + (item_index +1 ) + ')'" class="o-text-bolder pe-1"/>
+                <span class="text-muted" t-out="item.label"/>
               </span>
             </div>
           </t>
@@ -3282,7 +3282,7 @@
                 currentColor="item.color"
                 onColorPicked="(color) => this.updateFunnelItemColor(item_index, color)"
               />
-              <span class="ps-2" t-esc="item.label"/>
+              <span class="ps-2" t-out="item.label"/>
             </div>
           </t>
         </Section>
@@ -3371,7 +3371,7 @@
           t-ref="selectRef"
           t-on-pointerdown.prevent="onPointerDown">
           <option
-            t-esc="selectedChartProperties.displayName"
+            t-out="selectedChartProperties.displayName"
             t-att-value="selectedChartProperties.chartSubtype"
           />
         </select>
@@ -3387,7 +3387,7 @@
         t-att-style="state.popoverStyle">
         <t t-foreach="categories" t-as="category" t-key="category">
           <t t-if="chartTypeByCategories[category]">
-            <h5 class="my-3" t-esc="category_value"/>
+            <h5 class="my-3" t-out="category_value"/>
             <div class="d-flex flex-wrap">
               <t
                 t-foreach="chartTypeByCategories[category]"
@@ -4207,7 +4207,7 @@
     <Section class="'o-data-series'">
       <t t-set-slot="title">
         <div class="d-flex flex-row justify-content-between">
-          <t t-esc="title"/>
+          <t t-out="title"/>
           <div t-if="props.onFlipAxis and props.canChangeDatasetOrientation" class="d-flex">
             <span
               t-if="props.datasetOrientation !== 'rows'"
@@ -4248,7 +4248,7 @@
           class="color-scale-container d-flex justify-content-end"
           t-on-click.stop="onPointerDown">
           <span class="color-scale-label">
-            <t t-esc="currentColorScaleLabel"/>
+            <t t-out="currentColorScaleLabel"/>
           </span>
           <div
             class="color-scale-preview w-100"
@@ -4278,7 +4278,7 @@
                 t-on-click="() => this.onColorScaleChange(colorScale.value)"
                 t-att-title="colorScale.label">
                 <td class="p-1 text-end">
-                  <t t-esc="colorScale.label"/>
+                  <t t-out="colorScale.label"/>
                 </td>
                 <td class="w-100 p-1">
                   <div
@@ -4579,7 +4579,7 @@
       t-att-name="props.name"
       t-on-pointerdown="onMouseDown"
       t-on-keydown="onKeyDown"
-      t-esc="selectedLabel"
+      t-out="selectedLabel"
     />
 
     <Popover t-if="state.isPopoverOpen" t-props="popoverProps">
@@ -4594,7 +4594,7 @@
               'o-active': value.value === activeValue
             }"
             t-att-data-id="value.value"
-            t-esc="value.label"
+            t-out="value.label"
             t-att-title="value.label"
             t-on-click="() => this.onOptionClick(value.value)"
             t-on-mouseenter="() => this.onOptionHover(value.value)"
@@ -4649,7 +4649,7 @@
               t-att-style="cell.style"
               t-att-class="{ o_missing_value: cell.isMissing }"
               t-on-click="() => props.onCellClicked(cell.formula)">
-              <t t-esc="cell.value"/>
+              <t t-out="cell.value"/>
             </th>
           </t>
         </tr>
@@ -4659,13 +4659,13 @@
               t-att-style="row.style"
               t-att-class="{ o_missing_value: row.isMissing }"
               t-on-click="() => props.onCellClicked(row.formula)">
-              <t t-esc="row.value"/>
+              <t t-out="row.value"/>
             </th>
             <t t-foreach="tableData.values" t-as="col" t-key="col_index">
               <td
                 t-att-class="{ o_missing_value: col[row_index].isMissing }"
                 t-on-click="() => props.onCellClicked(col[row_index].formula)">
-                <t t-esc="col[row_index].value"/>
+                <t t-out="col[row_index].value"/>
               </td>
             </t>
           </tr>
@@ -4725,7 +4725,7 @@
           t-on-change="setValueFromInput"
           t-ref="inputNumber"
         />
-        <t t-esc="props.valueIcon"/>
+        <t t-out="props.valueIcon"/>
         <span>
           <t t-call="o-spreadsheet-Icon.CARET_DOWN"/>
         </span>
@@ -4734,8 +4734,8 @@
         <div class="o-text-options bg-white" t-on-click.stop="" t-ref="numberList">
           <t t-foreach="props.valueList" t-as="value" t-key="value">
             <div t-att-data-size="value" t-on-click="() => this.setValueFromList(value)">
-              <t t-esc="value"/>
-              <t t-esc="props.valueIcon"/>
+              <t t-out="value"/>
+              <t t-out="props.valueIcon"/>
             </div>
           </t>
         </div>
@@ -4800,12 +4800,12 @@
                 t-att-style="getIconColor(menuItem)">
                 <t t-if="getIconName(menuItem)" t-call="{{getIconName(menuItem)}}"/>
               </div>
-              <div class="o-menu-item-name align-middle text-truncate" t-esc="getName(menuItem)"/>
+              <div class="o-menu-item-name align-middle text-truncate" t-out="getName(menuItem)"/>
               <t t-set="description" t-value="menuItem.description(env) or menuItem.shortcut"/>
               <div
                 t-if="description"
                 class="o-menu-item-description ms-auto text-truncate"
-                t-esc="description"
+                t-out="description"
               />
               <t t-set="secondaryIcon" t-value="menuItem.secondaryIcon(env)"/>
               <div
@@ -4907,7 +4907,7 @@
         target="_blank"
         t-on-click.prevent="openLink"
         t-att-title="link.url">
-        <t t-esc="getUrlRepresentation(link)"/>
+        <t t-out="getUrlRepresentation(link)"/>
       </a>
       <a
         t-else=""
@@ -4915,7 +4915,7 @@
         t-on-click.prevent="openLink"
         t-on-auxclick.prevent="openLink"
         t-att-title="getUrlRepresentation(link)">
-        <t t-esc="getUrlRepresentation(link)"/>
+        <t t-out="getUrlRepresentation(link)"/>
       </a>
       <span
         t-if="!env.model.getters.isReadonly()"
@@ -6630,7 +6630,7 @@
       t-att-class="{'selected': this.props.isSelected}">
       <t t-set="value">
         <t t-if="this.props.value === ''">(Blanks)</t>
-        <t t-else="" t-esc="this.props.value"/>
+        <t t-else="" t-out="this.props.value"/>
       </t>
       <!-- toString because t-set with a body creates a LazyValue instead of a string -->
       <Checkbox
@@ -6784,7 +6784,7 @@
         t-att-style="headerStyle">
         <div
           class="o-carousel-title text-truncate flex-shrink-0 pe-2"
-          t-esc="title"
+          t-out="title"
           t-att-title="title"
           t-att-style="titleStyle"
         />
@@ -6794,7 +6794,7 @@
               class="o-carousel-tab text-truncate px-2 mt-1 flex-shrink-0"
               t-att-class="{ 'selected': isItemSelected(item) }"
               t-att-data-type="item.type"
-              t-esc="getItemTitle(item)"
+              t-out="getItemTitle(item)"
               t-on-click.stop="() => this.onCarouselTabClick(item)"
             />
           </t>
@@ -7035,11 +7035,11 @@
       <t t-if="evaluationError">
         <div class="o-error-tooltip-title fw-bold text-danger">Error</div>
         <div class="o-error-tooltip-message">
-          <t t-esc="evaluationError.message"/>
+          <t t-out="evaluationError.message"/>
           <div class="fst-italic" t-if="errorOriginPositionString">
             Caused by
             <span
-              t-esc="errorOriginPositionString"
+              t-out="errorOriginPositionString"
               class="o-button-link"
               t-on-click="selectCell"
               title="Click to select the cell"
@@ -7050,7 +7050,7 @@
       <t t-if="dataValidationErrorMessage">
         <div class="o-error-tooltip-title fw-bold text-danger">Invalid</div>
         <div class="o-error-tooltip-message">
-          <t t-esc="dataValidationErrorMessage"/>
+          <t t-out="dataValidationErrorMessage"/>
         </div>
       </t>
     </div>
@@ -7148,7 +7148,7 @@
   <t t-name="o-spreadsheet-SpeechBubble">
     <t t-portal="'.o-spreadsheet'">
       <div class="o-speech-bubble position-absolute px-3 border" t-ref="bubble">
-        <div class="o-speech-content text-truncate pb-1" t-esc="props.content"/>
+        <div class="o-speech-content text-truncate pb-1" t-out="props.content"/>
       </div>
     </t>
   </t>
@@ -7158,7 +7158,7 @@
       class="o-cell-reference rounded"
       t-if="shouldDisplayCellReference"
       t-att-style="cellReferenceStyle"
-      t-esc="cellReference"
+      t-out="cellReference"
     />
     <div class="o-grid-composer" t-att-style="containerStyle" t-ref="gridComposer">
       <Composer t-props="composerProps"/>
@@ -7179,7 +7179,7 @@
           <div>
             <t t-foreach="formulaHeaderContent" t-as="part" t-key="part_index">
               <span
-                t-esc="part.content"
+                t-out="part.content"
                 t-att-class="part.focused ? 'o-formula-assistant-focus' : ''"
               />
             </t>
@@ -7198,7 +7198,7 @@
         <Collapse isCollapsed="state.isCollapsed">
           <div class="o-formula-assistant-core pb-3 m-3 border-bottom">
             <div class="o-formula-assistant-gray">ABOUT</div>
-            <div t-esc="context.functionDescription.description"/>
+            <div t-out="context.functionDescription.description"/>
           </div>
 
           <t
@@ -7213,19 +7213,19 @@
               <div
                 t-att-class="{'o-formula-assistant-focus': context.argsToFocus.includes(arg_index)}">
                 <span t-if="arg.repeating">
-                  <span t-esc="arg.name + (context.repeatingArgGroupIndex + 1)"/>
+                  <span t-out="arg.name + (context.repeatingArgGroupIndex + 1)"/>
                 </span>
                 <span t-else="">
-                  <span t-esc="arg.name"/>
+                  <span t-out="arg.name"/>
                 </span>
                 <span
                   t-if="arg.optional || arg.default || (arg.repeating and (firstRepeatableGroupOptional or context.repeatingArgGroupIndex > 0))">&#xA0;- [optional]&#xA0;</span>
                 <span t-if="arg.default">
                   <span>default:&#xA0;</span>
-                  <t t-esc="arg.defaultValue"/>
+                  <t t-out="arg.defaultValue"/>
                 </span>
               </div>
-              <div class="o-formula-assistant-arg-description" t-esc="arg.description"/>
+              <div class="o-formula-assistant-arg-description" t-out="arg.description"/>
             </div>
           </t>
         </Collapse>
@@ -7344,12 +7344,12 @@
               t-key="content_index"
               t-att-class="content.classes?.join(' ')"
               t-att-style="getCss(content)"
-              t-esc="content.value"
+              t-out="content.value"
             />
           </div>
           <div
             class="o-autocomplete-description text-truncate"
-            t-esc="proposal.description"
+            t-out="proposal.description"
             t-if="props.selectedIndex === proposal_index || proposal.alwaysExpanded"
           />
         </div>
@@ -7476,7 +7476,7 @@
   </t>
 
   <t t-name="o-spreadsheet-ClientTag">
-    <div t-if="props.active" class="o-client-tag" t-att-style="tagStyle" t-esc="props.name"/>
+    <div t-if="props.active" class="o-client-tag" t-att-style="tagStyle" t-out="props.name"/>
   </t>
 
   <t t-name="o-spreadsheet-BottomBar">
@@ -7582,7 +7582,7 @@
       <div
         class="o-selection-statistic text-truncate user-select-none me-4 bg-white rounded shadow d-flex align-items-center"
         t-on-click="listSelectionStatistics">
-        <t t-esc="selectedStatistic"/>
+        <t t-out="selectedStatistic"/>
         <span class="ms-2">
           <t t-call="o-spreadsheet-Icon.CARET_DOWN"/>
         </span>
@@ -7612,7 +7612,7 @@
           class="o-sheet-name"
           t-att-class="{'o-sheet-name-editable': state.isEditing }"
           t-ref="sheetNameSpan"
-          t-esc="sheetName"
+          t-out="sheetName"
           t-on-pointerdown="(ev) => this.onMouseEventSheetName(ev)"
           t-on-click="(ev) => this.onMouseEventSheetName(ev)"
           t-on-dblclick="() => this.onDblClick()"

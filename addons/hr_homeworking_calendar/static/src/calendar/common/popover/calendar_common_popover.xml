@@ -20,7 +20,7 @@
                     <t t-else="">
                     <i class="fa fa-fw fa-map-marker me-2" t-att-class="`wl_color_${props.record.colorIndex}`" role="img"/>
                     </t>
-                    <t t-esc="props.record.title"/>
+                    <t t-out="props.record.title"/>
                 </span>
                 <span class="o_cw_popover_close ms-4 mt-2 me-2" t-on-click.stop="() => props.close()">
                     <i class="fc-close fc-icon fc-icon-x" />
@@ -44,10 +44,10 @@
                     <div class="list-group-item">
                         <i class="fa fa-fw fa-calendar me-2" t-att-class="`wl_color_${props.record.colorIndex}`"/>
                         <t t-if="props.record.start.ts != props.record.end.ts">
-                            <t t-esc="props.record.start.toFormat('d MMMM')" t-options="{'widget': 'date'}"/>
+                            <t t-out="props.record.start.toFormat('d MMMM')" t-options="{'widget': 'date'}"/>
                         </t>
                         <t t-else="">
-                            <t t-esc="props.record.start.toFormat('d MMMM yyyy')" t-options="{'widget': 'date'}"/>
+                            <t t-out="props.record.start.toFormat('d MMMM yyyy')" t-options="{'widget': 'date'}"/>
                         </t>
                     </div>
                     <div class="list-group-item">

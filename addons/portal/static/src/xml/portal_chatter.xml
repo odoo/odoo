@@ -60,7 +60,7 @@
                     <a t-attf-href="/web/content/#{attachment.id}?download=true&amp;#{attachment.access_token and 'access_token=' + attachment.access_token}" target="_blank" class="d-flex flex-row">
                         <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype"/>
                         <div class='o_portal_chatter_attachment_name align-self-center text-truncate' t-att-data-tooltip="attachment.name" data-tooltip-position="top">
-                            <t t-esc='attachment.name'/>
+                            <t t-out='attachment.name'/>
                         </div>
                     </a>
                 </div>
@@ -81,7 +81,7 @@
                     </li>
                     <t t-foreach="widget._pagerData['pages']" t-as="page" t-key="page_index">
                         <li t-att-data-page="page" t-attf-class="page-item #{page == widget._pagerData['page'] ? 'o_portal_chatter_pager_btn active' : 'o_portal_chatter_pager_btn'}">
-                            <a href="#" class="page-link"><t t-esc="page"/></a>
+                            <a href="#" class="page-link"><t t-out="page"/></a>
                         </li>
                     </t>
                     <li t-if="widget._pagerData['page'] != widget._pagerData['page_next']" t-att-data-page="widget._pagerData['page_next']" class="page-item o_portal_chatter_pager_btn">

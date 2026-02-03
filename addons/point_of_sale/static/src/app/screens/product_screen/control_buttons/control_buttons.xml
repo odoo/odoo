@@ -10,7 +10,7 @@
             class="btn btn-secondary btn-lg flex-shrink-0 border-0"
             t-attf-class="{{currentOrder.preset_id?.color and `o_colorlist_item_color_${currentOrder.preset_id?.color}`}}"
             t-on-click="() => this.pos.selectPreset()">
-            <span t-if="currentOrder.preset_id?.name" t-esc="currentOrder.preset_id?.name" />
+            <span t-if="currentOrder.preset_id?.name" t-out="currentOrder.preset_id?.name" />
             <span t-else="">Preset</span>
         </button>
         <button class="btn btn-secondary btn-lg flex-shrink-0 ms-auto more-btn" t-if="!props.showRemainingButtons and !ui.isSmall and props.onClickMore" t-on-click="props.onClickMore">
@@ -30,7 +30,7 @@
                 </button>
                 <button t-if="this.pos.cashier._role != 'minimal'" class="o_pricelist_button" t-att-class="buttonClass" t-on-click="() => this.clickPricelist()">
                     <i class="fa fa-th-list me-2" role="img" aria-label="Price list" title="Price list" />
-                    <t t-if="currentOrder?.pricelist_id" t-esc="currentOrder.pricelist_id.display_name" />
+                    <t t-if="currentOrder?.pricelist_id" t-out="currentOrder.pricelist_id.display_name" />
                     <t t-else="">Pricelist</t>
                 </button>
                 <button t-if="this.pos.cashier._role != 'minimal'" t-att-class="buttonClass" t-on-click="() => this.clickRefund()">
@@ -43,7 +43,7 @@
                     t-on-click="() => this.clickFiscalPosition()">
                     <i class="fa fa-book me-1" role="img" aria-label="Set fiscal position"
                     title="Set fiscal position" />
-                    <t t-if="currentOrder?.fiscal_position_id" t-esc="currentOrder.fiscal_position_id.display_name" />
+                    <t t-if="currentOrder?.fiscal_position_id" t-out="currentOrder.fiscal_position_id.display_name" />
                     <t t-else="">Tax</t>
                 </button>
                 <button t-if="this.displayProductInfoBtn()" t-att-class="buttonClass" t-on-click="() => this.pos.onProductInfoClick(currentOrder.getSelectedOrderline().product_id.product_tmpl_id, currentOrder.getSelectedOrderline().product_id)">

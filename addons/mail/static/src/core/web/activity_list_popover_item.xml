@@ -4,10 +4,10 @@
         <div class="o-mail-ActivityListPopoverItem d-flex flex-column border-bottom py-2">
             <div class="overflow-auto d-flex align-items-baseline ms-3 me-1">
                 <t t-if="props.activity.summary">
-                    <b class="text-900 me-2 text-truncate flex-grow-1 flex-basis-0" t-esc="props.activity.summary"/>
+                    <b class="text-900 me-2 text-truncate flex-grow-1 flex-basis-0" t-out="props.activity.summary"/>
                 </t>
                 <t t-if="!props.activity.summary and props.activity.activity_type_id">
-                    <b class="text-900 me-2 text-truncate flex-grow-1" t-esc="props.activity.activity_type_id[1]"/>
+                    <b class="text-900 me-2 text-truncate flex-grow-1" t-out="props.activity.activity_type_id[1]"/>
                 </t>
                 <t t-if="props.activity.can_write">
                     <FileUploader t-if="hasFileUploader" onUploaded.bind="onFileUploaded">
@@ -31,10 +31,10 @@
             <div class="d-flex align-items-center flex-wrap mx-3">
                 <img class="me-2 rounded object-fit-cover" t-if="props.activity.user_id?.partner_id" t-att-src="props.activity.user_id.partner_id.avatarUrl" style="max-width: 1.5rem; max-height: 1.5rem;"/>
                 <div class="mt-1">
-                    <small t-if="props.activity.user_id" class="text-truncate" t-esc="props.activity.user_id.name"/>
+                    <small t-if="props.activity.user_id" class="text-truncate" t-out="props.activity.user_id.name"/>
                     <small t-if="props.activity.state !== 'today'" class="mx-1">-</small>
-                    <small t-if="['overdue', 'planned'].includes(props.activity.state)" class="fw-bold" t-att-title="props.activity.dateDeadlineFormatted" t-esc="delayLabel"/>
-                    <small t-if="props.activity.state === 'done'" class="fw-bold" t-att-title="dateDoneFormatted" t-esc="props.activity.dateDoneFormatted"/>
+                    <small t-if="['overdue', 'planned'].includes(props.activity.state)" class="fw-bold" t-att-title="props.activity.dateDeadlineFormatted" t-out="delayLabel"/>
+                    <small t-if="props.activity.state === 'done'" class="fw-bold" t-att-title="dateDoneFormatted" t-out="props.activity.dateDoneFormatted"/>
                 </div>
             </div>
             <div t-if="props.activity.attachment_ids?.length" class="mx-5">

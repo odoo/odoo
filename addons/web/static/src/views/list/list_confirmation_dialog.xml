@@ -7,10 +7,10 @@
                 <p>
                     <t t-if="props.isDomainSelected">This update will only consider the records of the current page.<br/><br/></t>
                     <t t-if="props.nbRecords != props.nbValidRecords">
-                        <t t-esc="validRecordsText"/>
+                        <t t-out="validRecordsText"/>
                         <br/>
                     </t>
-                    <t t-esc="updateConfirmationText"/>
+                    <t t-out="updateConfirmationText"/>
                 </p>
                 <div class="table-responsive">
                     <table class="o_modal_changes">
@@ -18,7 +18,7 @@
                             <t t-foreach="props.fields" t-as="field" t-key="field_index">
                                 <tr>
                                     <td>Field:</td>
-                                    <td><t t-esc="field.label"/></td>
+                                    <td><t t-out="field.label"/></td>
                                 </tr>
                                 <t t-if="field.fieldNode?.type === 'many2many'">
                                     <tr t-if="props.changes[field.name].add.length">
@@ -47,7 +47,7 @@
                                     <td style="pointer-events: none;">
                                         <span t-if="isValueEmpty(field)">None</span>
                                         <span t-elif="isValueOperation(field)" t-att-name="field.name">
-                                            <t t-out="field.label"></t> <t t-esc="props.changes[field.name]"></t>
+                                            <t t-out="field.label"></t> <t t-out="props.changes[field.name]"></t>
                                         </span>
                                         <Field t-else="" name="field.name" record="props.record" type="field.widget" readonly="true" fieldInfo="field.fieldNode"/>
                                     </td>
@@ -63,8 +63,8 @@
                                 <div>For example, if the value is "1" and you enter "+=2", it will be updated to "3".</div>
                             </t>
                             <t t-elif="showDateTip">
-                                <div t-esc="dateTip"/>
-                                <div t-esc="dateTipExample"/>
+                                <div t-out="dateTip"/>
+                                <div t-out="dateTipExample"/>
                             </t>
                         </div>
                     </div>

@@ -19,7 +19,7 @@
         t-custom-click.stop="onClick"
     >
       <t t-if="icon" t-tag="icon.tag" t-att-class="icon.class + (buttonLabel ? ' me-1' : '')" t-att-src="icon.src"/>
-      <t t-slot="contents"><span t-if="buttonLabel" t-esc="buttonLabel"/></t>
+      <t t-slot="contents"><span t-if="buttonLabel" t-out="buttonLabel"/></t>
     </t>
   </t>
 
@@ -31,55 +31,55 @@
                 <t t-if="button.string">: </t>
                 <t t-if="!button.string"> (no string)</t>
             </t>
-            <t t-esc="button.string"/>
+            <t t-out="button.string"/>
         </div>
         <p t-if="button.title" class="o-tooltip--help" role="tooltip">
-            <t t-esc="button.title"/>
+            <t t-out="button.title"/>
         </p>
         <p t-if="button.help" class="o-tooltip--help" role="tooltip">
-            <t t-esc="button.help"/>
+            <t t-out="button.help"/>
         </p>
         <ul t-if="debug" class="o-tooltip--technical" role="tooltip">
             <li data-item="object">
                 <span class="o-tooltip--technical--title">Object:</span>
-                <t t-esc="model"/>
+                <t t-out="model"/>
             </li>
             <li t-if="button.context" data-item="context">
                 <span class="o-tooltip--technical--title">Context:</span>
-                <t t-esc="button.context || context"/>
+                <t t-out="button.context || context"/>
             </li>
             <li t-if="'invisible' in button" data-item="invisible">
                 <span class="o-tooltip--technical--title">Invisible:</span>
-                <t t-esc="button.invisible"/>
+                <t t-out="button.invisible"/>
             </li>
             <li t-if="'column_invisible' in button" data-item="column_invisible">
                 <span class="o-tooltip--technical--title">Column invisible:</span>
-                <t t-esc="button.column_invisible"/>
+                <t t-out="button.column_invisible"/>
             </li>
             <li t-if="'required' in button" data-item="required">
                 <span class="o-tooltip--technical--title">Required:</span>
-                <t t-esc="button.required"/>
+                <t t-out="button.required"/>
             </li>
             <li t-if="'readonly' in button" data-item="readonly">
                 <span class="o-tooltip--technical--title">Readonly:</span>
-                <t t-esc="button.readonly"/>
+                <t t-out="button.readonly"/>
             </li>
             <li t-if="button.special" data-item="special">
                 <span class="o-tooltip--technical--title">Special:</span>
-                <t t-esc="button.special"/>
+                <t t-out="button.special"/>
             </li>
             <t t-set="button_type" t-value="button.type"/>
             <li t-if="button_type" data-item="button_type">
                 <span class="o-tooltip--technical--title">Button Type:</span>
-                <t t-esc="button_type"/>
+                <t t-out="button_type"/>
             </li>
             <li t-if="button_type === 'object'" data-item="button_method">
                 <span class="o-tooltip--technical--title">Method:</span>
-                <t t-esc="button.name"/>
+                <t t-out="button.name"/>
             </li>
             <li t-if="button_type === 'action'" data-item="button_action">
                 <span class="o-tooltip--technical--title">Action ID:</span>
-                <t t-esc="button.name"/>
+                <t t-out="button.name"/>
             </li>
         </ul>
       </t>

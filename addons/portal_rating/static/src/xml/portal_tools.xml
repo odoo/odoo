@@ -25,12 +25,12 @@
             <div t-attf-class="#{two_columns and 'col-lg-12' or 'col-lg-5'}" t-if="rating_stats.total">
                 <p t-if="!two_columns" class="text-center"><strong>Average</strong></p>
                 <div t-attf-class="o_website_rating_avg #{two_columns and 'mb-2' or 'text-center'}">
-                    <h1><t t-esc="Math.round(rating_stats.avg * 100) / 100"/></h1>
+                    <h1><t t-out="Math.round(rating_stats.avg * 100) / 100"/></h1>
                     <t t-call="portal_rating.rating_stars_static">
                         <t t-set="val" t-value="rating_stats.avg || 0"/>
                     </t>
                     <span class="fa fa-comments" />
-                    <span class="px-1"> <t t-esc="rating_stats.total"/> </span>
+                    <span class="px-1"> <t t-out="rating_stats.total"/> </span>
                     comments
                 </div>
             </div>
@@ -44,7 +44,7 @@
                         <tr t-attf-class="o_website_rating_table_row #{row_selected ? 'o_website_rating_table_row_selected' : (selected_rating ? 'opacity-50' : '')}"
                             t-att-data-star="percent" t-on-click="() => this.onClickStarDomain(percent)">
                             <td class="o_website_rating_table_star_num text-nowrap" t-att-data-star="percent">
-                                <t t-esc="percent"/> stars
+                                <t t-out="percent"/> stars
                             </td>
                             <td class="o_website_rating_table_progress">
                                 <div class="progress rounded-2">
@@ -53,7 +53,7 @@
                                 </div>
                             </td>
                             <td class="o_website_rating_table_percent">
-                                <strong><t t-esc="Math.round(percents[percent] * 100) / 100"/>%</strong>
+                                <strong><t t-out="Math.round(percents[percent] * 100) / 100"/>%</strong>
                             </td>
                             <td class="o_website_rating_table_reset">
                                 <button t-attf-class="btn btn-link o_website_rating_selection_reset #{row_selected and 'visible' or 'invisible'}"

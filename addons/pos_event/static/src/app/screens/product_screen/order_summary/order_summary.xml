@@ -5,7 +5,7 @@
             <t t-if="line.event_ticket_id">
                 <li class="info ms-2">
                     <i class="fa fa-ticket me-2" role="img" aria-label="Event name" title="Event name"/>
-                    <t t-esc="line.event_ticket_id.event_id.name" />
+                    <t t-out="line.event_ticket_id.event_id.name" />
                 </li>
             </t>
         </xpath>

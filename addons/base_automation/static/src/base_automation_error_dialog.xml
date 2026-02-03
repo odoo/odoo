@@ -8,8 +8,8 @@
         <xpath expr="//div[@role='alert']/p[1]" position="after">
             <p class="mt-2">
                 The error occurred during the execution of the automation rule
-                "<t t-esc="automationName"/>"
-                (ID: <t t-esc="automationId"/>).
+                "<t t-out="automationName"/>"
+                (ID: <t t-out="automationId"/>).
             </p>
             <p t-if="!isUserAdmin">
                 You can ask an administrator to disable or fix this automation.

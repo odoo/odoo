@@ -49,7 +49,7 @@
                         <button t-att-class="'o-mail-Followers-button btn btn-link d-flex align-items-center text-action px-1 my-2 ' + (state.thread.selfFollower ? 'active' : '')" t-att-disabled="isDisabled" t-att-title="followerButtonLabel">
                             <i class="fa fa-fw" role="img" t-attf-class="{{ state.thread.selfFollower ? 'fa-user' : 'fa-user-o' }}"/>
                             <i t-if="state.thread.id and state.thread.followersCount === undefined" class="fa fa-circle-o-notch fa-spin"/>
-                            <sup t-else="" class="o-mail-Followers-counter" t-esc="state.thread.followersCount ?? 0"/>
+                            <sup t-else="" class="o-mail-Followers-counter" t-out="state.thread.followersCount ?? 0"/>
                         </button>
                         <t t-set-slot="content">
                             <FollowerList onAddFollowers.bind="onAddFollowers" onFollowerChanged.bind="onFollowerChanged" thread="state.thread" dropdown="followerListDropdown"/>
@@ -122,7 +122,7 @@
             <div class="d-flex align-items-center px-3">
                 <i class="fa fa-fw" t-att-class="state.showActivities ? 'fa-caret-down' : 'fa-caret-right'"/>
                 Planned Activities
-                <span t-if="!state.showActivities" class="badge rounded-pill ms-2 text-bg-success"><t t-esc="activities.length"/></span>
+                <span t-if="!state.showActivities" class="badge rounded-pill ms-2 text-bg-success"><t t-out="activities.length"/></span>
             </div>
             <hr class="flex-grow-1 fe-3"/>
         </div>
@@ -157,7 +157,7 @@
     <button class="o-mail-Chatter-attachFiles btn btn-link text-action px-1 d-flex align-items-center" aria-label="Attach files" t-on-click="onClickAddAttachments"
             t-att-disabled="state.isSearchOpen || (!state.thread.canPostMessage and attachments.length === 0)">
         <i class="fa fa-paperclip fa-lg fa-fw"/>
-        <sup t-if="attachments.length > 0" t-esc="attachments.length"/>
+        <sup t-if="attachments.length > 0" t-out="attachments.length"/>
         <i t-if="!state.thread.areAttachmentsLoaded and state.thread.isLoadingAttachments and state.showAttachmentLoading" class="fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>
     </button>
 </t>

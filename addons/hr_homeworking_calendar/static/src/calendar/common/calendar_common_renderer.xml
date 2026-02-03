@@ -24,7 +24,7 @@
                         <i t-attf-class="o_homework_content d-flex align-items-center justify-content-center flex-wrap border border-1 rounded-circle me-0 fa {{iconMap[wl.icon] || 'fa-map-marker'}} wl_color_{{wl.colorIndex}}"/>
                     </div>
                 </t>
-                <span class="fw-bolder" t-esc="worklocation[location][0].title"/>
+                <span class="fw-bolder" t-out="worklocation[location][0].title"/>
             </t>
         </div>
         <button t-if="!workLocationSetForCurrentUser" class="o_worklocation_text bg-info bg-opacity-25 border-0 rounded-pill px-lg-2 py-0 text-nowrap opacity-0 opacity-100-hover wl_action" data-create="1">
@@ -37,7 +37,7 @@
             <t t-if="worklocation.display">
                 <button t-attf-class='o_worklocation_text border-0 rounded-pill px-lg-2 py-0 text-nowrap wl_color_{{worklocation.colorIndex}}'>
                     <i t-attf-class="fa {{iconMap[worklocation.icon] || 'fa-map-marker'}} me-lg-1" aria-hidden="true"></i>
-                    <span class="d-none d-lg-inline fw-bold" t-esc="worklocation.title"/>
+                    <span class="d-none d-lg-inline fw-bold" t-out="worklocation.title"/>
                 </button>
                 <button t-if="showLine" t-attf-class="o_worklocation_line d-lg-block w-100 border-0 p-0 wl_color_{{worklocation.colorIndex}}"/>
             </t>

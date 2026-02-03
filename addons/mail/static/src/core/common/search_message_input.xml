@@ -22,7 +22,7 @@
                     <t t-foreach="searchFilters" t-as="searchFilter" t-key="searchFilter.label">
                         <DropdownItem onSelected="() => this.onChangeSearchFilter(searchFilter)">
                             <input type="radio" class="form-check-input ms-0 me-2" t-att-checked="searchFilter.is_notification === this.props.messageSearch.is_notification" value="searchFilter.label"/>
-                            <t t-esc="searchFilter.name"/>
+                            <t t-out="searchFilter.name"/>
                         </DropdownItem>
                     </t>
                 </t>

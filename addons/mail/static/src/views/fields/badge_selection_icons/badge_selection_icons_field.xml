@@ -2,7 +2,7 @@
 
     <div t-name="mail.BadgeSelectionIconsField" class="d-flex flex-wrap gap-1 mb-3">
         <t t-if="props.readonly">
-            <span t-esc="string" t-att-raw-value="value" />
+            <span t-out="string" t-att-raw-value="value" />
         </t>
         <t t-else="">
             <t t-foreach="options" t-as="option" t-key="option[0]">

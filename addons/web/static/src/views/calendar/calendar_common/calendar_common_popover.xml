@@ -19,7 +19,7 @@
         <div class="card-header d-flex justify-content-between py-2 pe-2">
             <span class="popover-header border-0 text-truncate">
                 <i t-if="props.record.titleIcon" t-attf-class="me-2 {{props.record.titleIcon}}"/>
-                <span t-esc="props.record.title" t-att-data-tooltip="props.record.title"/>
+                <span t-out="props.record.title" t-att-data-tooltip="props.record.title"/>
             </span>
             <span class="o_cw_popover_close ms-4 mt-2 me-2" t-on-click.stop="() => props.close()">
                 <i class="fc-close fc-icon fc-icon-x" />
@@ -37,11 +37,11 @@
         <ul class="list-group list-group-flush">
             <li t-if="date" class="list-group-item">
                 <i class="fa fa-fw fa-calendar text-400" />
-                <span class="fw-bold ms-2" t-esc="date" /> <small t-if="dateDuration != 'All day'"><b t-esc="dateDuration" /></small>
+                <span class="fw-bold ms-2" t-out="date" /> <small t-if="dateDuration != 'All day'"><b t-out="dateDuration" /></small>
             </li>
             <li t-if="time" class="list-group-item">
                 <i class="fa fa-fw fa-clock-o text-400" />
-                <span class="fw-bold ms-2" t-esc="time" /> <small t-if="timeDuration"><b t-esc="`(${timeDuration})`" /></small>
+                <span class="fw-bold ms-2" t-out="time" /> <small t-if="timeDuration"><b t-out="`(${timeDuration})`" /></small>
             </li>
         </ul>
         <ul class="list-group list-group-flush o_cw_popover_fields_secondary">
@@ -56,7 +56,7 @@
                                     <i t-attf-class="fa-fw {{fieldInfo.options.icon}} text-400" />
                                 </t>
                                 <t t-else="">
-                                    <t t-esc="fieldInfo.string" />
+                                    <t t-out="fieldInfo.string" />
                                 </t>
                             </span>
                             <div class="flex-grow-1 o_cw_popover_field overflow-hidden">

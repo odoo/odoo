@@ -78,7 +78,7 @@
                     <div class="d-flex flex-column gap-1 px-3 py-2 bg-view">
                         <p t-if="linkPreview.og_site_name" class="mb-0 card-text text-muted smaller overflow-hidden" t-out="linkPreview.og_site_name"></p>
                         <h6 class="o-mail-LinkPreviewVideo-title card-title mb-0 me-2" t-attf-class="{{ linkPreview.og_description ? 'text-truncate' : 'o-mail-LinkPreviewVideo-hasDescription overflow-hidden' }}">
-                            <a t-att-href="linkPreview.source_url" target="_blank" t-esc="linkPreview.og_title"/>
+                            <a t-att-href="linkPreview.source_url" target="_blank" t-out="linkPreview.og_title"/>
                         </h6>
                         <p t-if="linkPreview.og_description" class="o-mail-LinkPreviewVideo-description o-mail-LinkPreviewVideo-hasDescription card-text mb-0 text-muted small overflow-hidden" t-out="linkPreview.og_description"></p>
                     </div>

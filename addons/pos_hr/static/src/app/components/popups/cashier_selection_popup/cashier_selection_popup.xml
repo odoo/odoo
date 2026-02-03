@@ -14,7 +14,7 @@
                     <div class="d-flex flex-column">
                         <span class="fs-4 fw-bold current-cashier-name" t-out="cashier.name"/>
                         <span t-if="cashier.subtitle" class="employee-subtitle fs-6 text-muted">
-                            <t t-esc="cashier.subtitle"/>
+                            <t t-out="cashier.subtitle"/>
                         </span>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                     <div class="d-flex flex-column">
                         <span class="fs-4 fw-bold" t-out="employee.name"/>
                         <span t-if="employee.subtitle" class="employee-subtitle fs-6 text-muted">
-                            <t t-esc="employee.subtitle"/>
+                            <t t-out="employee.subtitle"/>
                         </span>
                     </div>
                 </div>

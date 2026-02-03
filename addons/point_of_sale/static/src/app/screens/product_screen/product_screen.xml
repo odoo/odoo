@@ -45,7 +45,7 @@
                         </div>
                     </div>
                     <div t-else="" class="flex-grow-1 text-center mt-5">
-                        <p t-if="searchWord">No products found for <b>"<t t-esc="searchWord"/>"</b> in this category.</p>
+                        <p t-if="searchWord">No products found for <b>"<t t-out="searchWord"/>"</b> in this category.</p>
                          <div t-elif="!pos.selectedCategory" class="o_view_nocontent">
                             <div class="o_nocontent_help">
                                 <p class="o_view_nocontent_smiling_face">No Product Yet?</p>
@@ -69,11 +69,11 @@
                     <div class="switchpane d-flex gap-2 p-2 border-top bg-view">
                         <button t-if="!pos.scanning" class="btn-switchpane pay-button btn btn-lg flex-grow-1" t-attf-class="{{ currentOrder.isEmpty() ? 'btn-secondary' : 'btn-primary' }}" t-on-click="() => this.pos.pay()">
                             <span class="d-block">Pay</span>
-                            <span t-esc="total" />
+                            <span t-out="total" />
                         </button>
                         <button class="btn-switchpane btn btn-secondary review-button flex-grow-1" t-on-click="switchPane">
                             <span class="d-block">Cart</span>
-                            <small><t t-esc="items"/> items</small>
+                            <small><t t-out="items"/> items</small>
                         </button>
                         <button t-if="pos.scanning" class="btn-switchpane btn btn-secondary btn-lg flex-grow-1" t-on-click="() => this.pos.scanning = false">
                             <span class="d-block">Products</span>

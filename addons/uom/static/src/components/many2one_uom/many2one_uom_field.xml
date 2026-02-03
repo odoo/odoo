@@ -7,7 +7,7 @@
                 <t t-if="autoCompleteItemScope.record?.relative_info">
                     <div class="uom_autocomplete_grid">
                         <span t-out="autoCompleteItemScope.label"/>
-                        <div t-esc="autoCompleteItemScope.record.relative_info" class="text-muted"/>
+                        <div t-out="autoCompleteItemScope.record.relative_info" class="text-muted"/>
                     </div>
                 </t>
                 <t t-else="">

@@ -45,17 +45,17 @@
               </t>
                <t t-elif="shape.isText">
                      <!-- Use a separate contenteditable element to avoid reactive glitches where text renders twice with trailing \n -->
-                   <span t-if="shape.textEditing and this.floorPlanStore.isContentEditableTextEnabled()" _text="1" class="o_fp_text_content" t-esc="shape.initialText" t-att-style="shape.getTextCssStyle()"
+                   <span t-if="shape.textEditing and this.floorPlanStore.isContentEditableTextEnabled()" _text="1" class="o_fp_text_content" t-out="shape.initialText" t-att-style="shape.getTextCssStyle()"
                          contenteditable="true"
                          t-on-input="(ev) => this.onTextInput(ev, shape)"
                          t-on-paste="(ev) => this.onTextPaste(ev)"
                          t-on-mousedown.stop="(ev) => this.onTextMouseDown(ev)"
                          />
-                   <span t-else="" class="o_fp_text_content" _text="1" t-esc="shape.text" t-att-style="shape.getTextCssStyle()"/>
+                   <span t-else="" class="o_fp_text_content" _text="1" t-out="shape.text" t-att-style="shape.getTextCssStyle()"/>
                 </t>
                  <t t-elif="shape.allowText and shape.text">
                      <div class="h-100 w-100 d-flex align-items-center" >
-                         <span  class="o_fp_text_content" t-esc="shape.text" t-att-style="shape.getTextCssStyle()"/>
+                         <span  class="o_fp_text_content" t-out="shape.text" t-att-style="shape.getTextCssStyle()"/>
                      </div>
                  </t>
          </div>

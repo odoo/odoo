@@ -8,14 +8,14 @@
                     <input type="text" class="o_pager_value o_input d-inline-block w-auto text-end mb-n1" size="7" t-ref="autofocus" t-att-value="value" t-on-blur="onInputBlur" t-on-change="onInputChange" t-on-keydown.stop="onInputKeydown" />
                 </t>
                 <t t-else="">
-                    <span class="o_pager_value d-inline-block border-bottom border-transparent mb-n1" t-esc="value" t-on-click="onValueClick" />
+                    <span class="o_pager_value d-inline-block border-bottom border-transparent mb-n1" t-out="value" t-on-click="onValueClick" />
                 </t>
                 <span> / </span>
                 <t t-if="props.updateTotal">
-                    <span class="o_pager_limit o_pager_limit_fetch" t-att-class="{ 'disabled': state.isDisabled }" t-on-click.stop="updateTotal"><t t-esc="props.total"/>+</span>
+                    <span class="o_pager_limit o_pager_limit_fetch" t-att-class="{ 'disabled': state.isDisabled }" t-on-click.stop="updateTotal"><t t-out="props.total"/>+</span>
                 </t>
                 <t t-else="">
-                    <span class="o_pager_limit" t-esc="props.total"/>
+                    <span class="o_pager_limit" t-out="props.total"/>
                 </t>
             </span>
             <span class="btn-group d-print-none" aria-atomic="true">

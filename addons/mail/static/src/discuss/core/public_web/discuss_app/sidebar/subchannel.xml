@@ -6,7 +6,7 @@
             <t t-set-slot="content">
                 <UseHoverOverlay hover="hover">
                     <div class="overflow-hidden d-flex flex-column" t-ref="floating">
-                        <span class="fw-bolder user-select-none text-truncate d-inline-block p-2 pb-0" t-esc="channel.displayName"/>
+                        <span class="fw-bolder user-select-none text-truncate d-inline-block p-2 pb-0" t-out="channel.displayName"/>
                         <DiscussSidebarChannelActions channel="channel"/>
                     </div>
                 </UseHoverOverlay>
@@ -34,13 +34,13 @@
                 'o-unread': channel.self_member_id?.message_unread_counter > 0 and !channel.self_member_id?.mute_until_dt,
                 'opacity-50': channel.self_member_id?.mute_until_dt,
             }">
-                <span class="text-truncate" t-esc="channel.displayName" t-att-class="{
+                <span class="text-truncate" t-out="channel.displayName" t-att-class="{
                     'fw-bolder': channel.self_member_id?.message_unread_counter > 0,
                     'opacity-75 opacity-100-hover': !(channel.self_member_id?.message_unread_counter > 0 and !channel.self_member_id?.mute_until_dt),
                 }" t-att-style="store.discuss.isSidebarCompact ? 'text-overflow: clip;' : ''"/>
                 <span class="flex-grow-1"/>
                 <t t-if="!store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarChannel.actions"/>
-                <span t-if="channel.importantCounter > 0" t-attf-class="o-mail-DiscussSidebar-badge shadow-sm badge rounded-pill o-discuss-badge fw-bold {{channel.self_member_id?.mute_until_dt ? 'o-muted' : ''}}" t-att-class="{ 'mx-1': !store.discuss.isSidebarCompact, 'position-absolute o-compact': store.discuss.isSidebarCompact }" t-esc="channel.importantCounter"/>
+                <span t-if="channel.importantCounter > 0" t-attf-class="o-mail-DiscussSidebar-badge shadow-sm badge rounded-pill o-discuss-badge fw-bold {{channel.self_member_id?.mute_until_dt ? 'o-muted' : ''}}" t-att-class="{ 'mx-1': !store.discuss.isSidebarCompact, 'position-absolute o-compact': store.discuss.isSidebarCompact }" t-out="channel.importantCounter"/>
             </button>
             <t t-if="channel.self_member_id?.message_unread_counter > 0 and !channel.self_member_id?.mute_until_dt and channel.importantCounter === 0" t-call="mail.DiscussSidebar.unreadIndicator"/>
         </li>

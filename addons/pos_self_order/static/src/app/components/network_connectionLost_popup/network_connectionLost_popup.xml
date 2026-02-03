@@ -30,7 +30,7 @@
                                         <i class="fa fa-spinner fa-spin"></i> Retrying...
                                     </t>
                                     <t t-else="">
-                                        <t t-esc="getRetryText(state.time)"/>
+                                        <t t-out="getRetryText(state.time)"/>
                                     </t>
                                 </div>
 

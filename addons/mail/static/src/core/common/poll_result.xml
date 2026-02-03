@@ -16,10 +16,10 @@
                         <t t-else="">
                             <div class="d-flex flex-column">
                                 <div class="d-flex align-items-center">
-                                    <p class="text-start fw-bold mb-0" t-esc="props.poll.winning_option_id.option_label"/>
+                                    <p class="text-start fw-bold mb-0" t-out="props.poll.winning_option_id.option_label"/>
                                     <i t-if="props.poll.winning_option_id.selected_by_self" class="ms-1 fa fa-check-circle text-primary"/>
                                 </div>
-                                <p class="card-subtitle mb-0 text-muted smaller">Winning Answer<span class="mx-1">&#8729;</span><t t-esc="props.poll.winning_option_id.vote_percentage"/>%</p>
+                                <p class="card-subtitle mb-0 text-muted smaller">Winning Answer<span class="mx-1">&#8729;</span><t t-out="props.poll.winning_option_id.vote_percentage"/>%</p>
                             </div>
                         </t>
                     </div>

@@ -4,16 +4,16 @@
         <Dialog t-if="this.hasMultipleChoices()" title="this.title" contentClass="'combo-configurator-popup'">
             <div t-foreach="props.productTemplate.combo_ids" t-as="combo" t-key="combo.id" class="d-flex flex-column m-3 mb-4">
                 <div class="d-flex align-items-center mb-3">
-                    <h3 class="mb-0" t-esc="combo.name"></h3>
+                    <h3 class="mb-0" t-out="combo.name"></h3>
                     <t t-if="combo.qty_free > 0">
                         <h5 class="text-muted ms-2 mb-0">
-                            <t t-esc="this.getSelectedComboItemsText(combo)"/>
+                            <t t-out="this.getSelectedComboItemsText(combo)"/>
                             <span class="fst-italic"> included</span>
                         </h5>
                     </t>
                     <t t-else="">
                         <h5 class="text-muted ms-2 mb-0">
-                            <span class="fst-italic">As from <t t-esc="env.utils.formatCurrency(combo.base_price)"/></span>
+                            <span class="fst-italic">As from <t t-out="env.utils.formatCurrency(combo.base_price)"/></span>
                         </h5>
                     </t>
                 </div>
@@ -48,14 +48,14 @@
             <t t-set-slot="footer">
                 <div class="d-flex flex-column flex-lg-row align-items-center gap-2 w-100">
                     <t t-if="this.ui.isSmall">
-                        <div class="h3 ms-lg-auto mb-0 fw-bold">Total: <t t-esc="this.formatTotalPrice(props.productTemplate)"/></div>
+                        <div class="h3 ms-lg-auto mb-0 fw-bold">Total: <t t-out="this.formatTotalPrice(props.productTemplate)"/></div>
                     </t>
                     <button class="confirm btn btn-primary btn-lg lh-lg w-100 w-lg-25"
                         t-att-disabled="!this.isConfirmButtonEnabled()" t-on-click="confirm">
                         Add to order
                     </button>
                     <t t-if="!this.ui.isSmall">
-                        <div class="h3 ms-lg-auto mb-0 fw-bold">Total: <t t-esc="this.formatTotalPrice(props.productTemplate)"/></div>
+                        <div class="h3 ms-lg-auto mb-0 fw-bold">Total: <t t-out="this.formatTotalPrice(props.productTemplate)"/></div>
                     </t>
                 </div>
             </t>

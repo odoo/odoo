@@ -7,14 +7,14 @@
                 <strong>Tip Receipt</strong>
             </div>
             <div class="pos-payment-terminal-receipt">
-                <pre t-esc="data" />
+                <pre t-out="data" />
             </div>
             <br/>
 
 
             <div class="subtotal">
                 <span>Subtotal</span>
-                <div class="pos-receipt-right-align"><t t-esc="total"/></div>
+                <div class="pos-receipt-right-align"><t t-out="total"/></div>
             </div>
             <br/>
 

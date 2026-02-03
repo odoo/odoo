@@ -10,7 +10,7 @@
                         <t t-set="employeeAvatar" t-value="this.props.employeeData.employee_avatar"/>
                         <t t-set="employeeAvatarHeight" t-value="'60'"/>
                     </t>
-                    <h3 class="mt-2 mb-1"><t t-esc="this.props.employeeData.employee_name"/></h3>
+                    <h3 class="mt-2 mb-1"><t t-out="this.props.employeeData.employee_name"/></h3>
                     <h5 class="text-muted my-0">
                         Please enter your PIN to
                         <t t-if="checkedIn">check out</t>
@@ -25,7 +25,7 @@
                                 <div class="row g-2">
                                     <div class="col-4" t-foreach="padButtons" t-as="btn" t-key="btn[0]">
                                         <a href="#" t-on-click="() => this.onClickPadButton(btn[0])" t-attf-class="o_hr_attendance_PINbox_button btn {{btn[1]? btn[1] : 'btn-secondary'}} d-flex align-items-center justify-content-center py-2 py-xl-3 rounded-1">
-                                            <t t-esc="btn[0]"/>
+                                            <t t-out="btn[0]"/>
                                         </a>
                                     </div>
                                 </div>

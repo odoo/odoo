@@ -5,7 +5,7 @@
             <b>When a value cannot be matched:</b>
             <select class="o_import_create_option form-select w-auto bg-light" t-att-type="props.fieldInfo.type" t-on-change="onSelectionChanged">
                 <option t-foreach="state.options" t-as="option" t-key="option" t-att-value="option[0]">
-                    <t t-esc="option[1]"/>
+                    <t t-out="option[1]"/>
                 </option>
             </select>
         </div>
