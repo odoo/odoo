@@ -32,13 +32,6 @@ owl.Component = class Component extends owl.Component {
     }
 
     setup() {}
-
-    /**
-     * @param {boolean} deep
-     */
-    render(deep) {
-        this.__owl__.render(deep);
-    }
 };
 
 function getCurrentNode() {
