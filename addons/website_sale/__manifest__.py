@@ -129,8 +129,7 @@
             'website/static/src/interactions/multirange_input.js',
             'website_sale/static/src/xml/website_sale_image_viewer.xml',
             'website_sale/static/src/js/components/website_sale_image_viewer.js',
-            'website_sale/static/src/js/components/alert_banner/alert_banner.js',
-            'website_sale/static/src/js/components/alert_banner/alert_banner.xml',
+            'website_sale/static/src/js/components/alert_banner/*',
             'website_sale/static/src/js/cart_notification/item_added_notification/item_added_notification.js',
             'website_sale/static/src/js/cart_notification/item_added_notification/item_added_notification.xml',
             'website_sale/static/src/js/cart_notification/cart_notification_container/cart_notification_container.js',
@@ -221,6 +220,7 @@
             'website_sale/static/src/js/wishlist_utils.js',
             'website_sale/static/src/js/website_sale_utils.js',
             'website_sale/static/src/js/components/website_sale_image_viewer.js',
+            'website_sale/static/src/js/components/alert_banner/*',
             # TODO Find out why these do not work:
             #'website_sale/static/src/snippets/**/*.js',
             # TODO Re-activate when testing edit mode
