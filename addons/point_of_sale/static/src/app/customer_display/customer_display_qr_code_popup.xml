@@ -13,7 +13,7 @@
 
                             <div class="small mb-3">
                                 <t t-set="customerDisplayURL" t-value="props.customerDisplayURL"/>
-                                <a t-att-href="customerDisplayURL" target="_blank" t-esc="customerDisplayURL" />
+                                <a t-att-href="customerDisplayURL" target="_blank" t-out="customerDisplayURL" />
                                 <CopyButton content="customerDisplayURL" className="'ms-2 btn-primary'" successText.translate="Link copied to clipboard" icon="'fa-clone'"/>
                             </div>
                         </div>

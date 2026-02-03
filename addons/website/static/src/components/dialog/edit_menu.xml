@@ -38,7 +38,7 @@
                 role="img" aria-label="Dropdown menu" title="Dropdown menu"/>
             <span class="form-control d-flex align-items-center bg-view ms-0 border-start-0 border-end-0">
                 <span t-on-dblclick="edit" class="js_menu_label o_text_overflow flex-grow-1">
-                    <t t-esc="props.menu.fields['name']"/>
+                    <t t-out="props.menu.fields['name']"/>
                 </span>
                 <span t-if="props.menu.fields['is_mega_menu']" class="badge text-bg-primary rounded-pill">Mega Menu</span>
                 <i t-if="props.menu.is_homepage" class="fa fa-home ms-3" role="img" aria-label="Home" title="Home"/>

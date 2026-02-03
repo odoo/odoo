@@ -16,7 +16,7 @@
                                     <div class="ratio ratio-1x1 me-3" style="width:50px">
                                         <img class="object-fit-cover rounded" t-attf-src="/web/image/pos.category/#{category.id}/image_128?unique=#{category.write_date}"/>
                                     </div>
-                                    <t t-esc="category.name"/>
+                                    <t t-out="category.name"/>
                                 </div>
                             </t>
                         </div>

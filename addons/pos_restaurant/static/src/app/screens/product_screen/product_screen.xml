@@ -16,8 +16,8 @@
                         <t t-if="displayCategoryCount.length">
                             <t t-foreach="displayCategoryCount" t-as="categoryCountLine"  t-key="categoryCountLine_index">
                                 <div class="d-flex align-items-center justify-content-center mt-1 small" t-att-class="{ 'gap-2' : !(displayCategoryCount.length > 2) }">
-                                    <label class="text-truncate"><t t-esc="categoryCountLine.name"/></label>
-                                    <label class="rounded px-2 py-0" style="background-color:rgba(0, 0, 0, 0.3);"><t t-esc="categoryCountLine.count"/></label>
+                                    <label class="text-truncate"><t t-out="categoryCountLine.name"/></label>
+                                    <label class="rounded px-2 py-0" style="background-color:rgba(0, 0, 0, 0.3);"><t t-out="categoryCountLine.count"/></label>
                                 </div>
                             </t>
                         </t>
@@ -44,7 +44,7 @@
                         t-on-click="() => this.pos.pay()"
                         t-att-disabled="currentOrder.isEmpty()">
                         <span class="d-block">Pay</span>
-                        <small><t t-esc="total" /></small>
+                        <small><t t-out="total" /></small>
                     </button>
                 </t>
             </t>
@@ -52,8 +52,8 @@
         <xpath expr="//button[hasclass('review-button')]" position="replace">
             <button class="btn-switchpane btn btn-lg flex-grow-1 review-button lh-sm" t-attf-class="{{ primaryReviewButton ? 'btn-primary' : 'btn-secondary' }}" t-on-click="switchPane">
                 <span class="d-block">Cart</span>
-                <small t-if="this.swapButton"><t t-esc="total" /></small>
-                <small t-else=""><t t-esc="items"/> items</small>
+                <small t-if="this.swapButton"><t t-out="total" /></small>
+                <small t-else=""><t t-out="items"/> items</small>
             </button>
         </xpath>
         <xpath expr="//ActionpadWidget" position="attributes">
@@ -66,7 +66,7 @@
         <xpath expr="//div[hasclass('control-buttons')]" position="after">
             <div t-if="this.pos.numpadMode == 'table'" class="input">
                 <div class="d-flex justify-content-center p-3">
-                    <span t-if="this.state.tableBuffer" t-esc="this.state.tableBuffer" class="input-value fs-2 fw-bolder" t-att-class="{'text-danger opacity-75': !this.state.isValidBuffer}"/>
+                    <span t-if="this.state.tableBuffer" t-out="this.state.tableBuffer" class="input-value fs-2 fw-bolder" t-att-class="{'text-danger opacity-75': !this.state.isValidBuffer}"/>
                     <span t-else="" class="text-muted fs-2">Enter a table number</span>
                 </div>
             </div>

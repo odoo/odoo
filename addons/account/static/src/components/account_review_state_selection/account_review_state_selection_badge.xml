@@ -5,14 +5,14 @@
         <t t-if="this.editableOptions.includes(value)">
             <Dropdown>
                 <button t-attf-class="btn {{ this.getDropdownButtonDecoration(value) }} d-flex justify-content-center align-items-center rounded-pill o_account_review_state_selection_badge_button {{ this.additionalClassName }}">
-                    <div t-esc="display || '&#8203;'"/>
+                    <div t-out="display || '&#8203;'"/>
                 </button>
                 <t t-set-slot="content">
                     <t t-if="this.editableOptions.includes(false)">
                         <DropdownItem
                             class="'o_account_review_state_selection_badge_dropdown_item'"
                             t-if="!required || !value"
-                            t-esc="this.props.placeholder || ''"
+                            t-out="this.props.placeholder || ''"
                             onSelected="() => this.onChange(false)"
                         />
                     </t>
@@ -23,7 +23,7 @@
                                 onSelected="() => this.onChange(option[0])"
                             >
                                 <div class="rounded-circle me-2" style="width: 10px; height: 10px;" t-att-class="this.getDropdownItemDecoration(option[0])"/>
-                                <span t-esc="option[1]"/>
+                                <span t-out="option[1]"/>
                             </DropdownItem>
                         </t>
                     </t>
@@ -39,7 +39,7 @@
                     t-attf-class="btn {{ this.getDropdownButtonDecoration(value) }} d-flex justify-content-center align-items-center rounded-pill o_account_review_state_selection_badge_button {{ this.additionalClassName }}"
                     t-att-disabled="true"
                 >
-                    <div t-esc="display || '&#8203;'"/>
+                    <div t-out="display || '&#8203;'"/>
                 </button>
             </div>
         </t>

@@ -6,7 +6,7 @@
             <div class="contents d-flex flex-column flex-nowrap h-100 my-0 mx-auto">
                 <div class="top-content d-flex align-items-center p-2 border-bottom text-center bg-view">
                     <button class="button back back-button btn btn-secondary lh-lg" t-on-click="back">
-                        <i class="oi oi-chevron-left fa-fw"/><t t-if="!this.ui.isSmall" t-esc="' Back'"/>
+                        <i class="oi oi-chevron-left fa-fw"/><t t-if="!this.ui.isSmall" t-out="' Back'"/>
                     </button>
                     <div class="top-content-center flex-grow-1" t-att-class="{'pe-5':!this.ui.isSmall}">
                         <h4 class="mb-0">Bill Splitting</h4>
@@ -40,12 +40,12 @@
                             </div>
                             <div class="text-dark"
                                 t-attf-class="{{ this.ui.isSmall ? 'fs-6' : 'fs-2' }}">
-                                <t t-esc="this.getNumberOfProducts()" /> product(s) selected
+                                <t t-out="this.getNumberOfProducts()" /> product(s) selected
                             </div>
                             <t t-set="discountPc" t-value="getGlobalDiscountPc()" />
                             <div t-if="discountPc" class="text-dark"
                                 t-attf-class="{{ this.ui.isSmall ? 'fs-6' : 'fs-2' }}">
-                                With <t t-esc="discountPc" />% discount
+                                With <t t-out="discountPc" />% discount
                             </div>
                         </div>
 

@@ -9,7 +9,7 @@
             </t>
             <t t-set-slot="default">
                 <div t-att-class="{'alert alert-danger': state.error}">
-                    <p t-esc="state.message"/>
+                    <p t-out="state.message"/>
                     <t t-if="!state.error">
                         <div t-attf-class="o_progressbar align-items-center w-100 d-flex">
                             <div class="o_progress w-100 flex-fill"
@@ -20,7 +20,7 @@
                                      t-att-style="'width: min(' + 100 * state.successfullySent / props.invoices.length + '%, 100%)'"/>
                             </div>
                             <div class="o_progressbar_value flex-shrink-0 ms-2"
-                                 t-esc="state.successfullySent + ' / ' + props.invoices.length"/>
+                                 t-out="state.successfullySent + ' / ' + props.invoices.length"/>
                         </div>
                     </t>
                 </div>

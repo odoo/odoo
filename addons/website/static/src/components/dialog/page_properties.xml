@@ -32,8 +32,8 @@
                 t-attf-href="#collapseDependencies{{ dependency_index }}"
                 aria-expanded="false">
                     <i class="fa fa-caret-right me-1"/>
-                    <t t-esc="dependency"/>:
-                    <span class="text-muted"> <t t-esc="dependency_value.length"/> found(s)</span>
+                    <t t-out="dependency"/>:
+                    <span class="text-muted"> <t t-out="dependency_value.length"/> found(s)</span>
                 </a>
                 <div t-attf-id="collapseDependencies{{ dependency_index }}" class="collapse" aria-expanded="false">
                     <ul>
@@ -52,7 +52,7 @@
 
 <t t-name="website.PageDependencies.Tooltip">
     <t t-foreach="dependencies" t-as="dependency" t-key="dependency">
-        <b><t t-esc="dependency"/></b>
+        <b><t t-out="dependency"/></b>
         <ul>
             <li t-foreach="dependency_value" t-as="item" t-key="item_index">
                 <a t-att-href="item.link" t-att-title="item.record_name" class="o_text_overflow" target="_blank">

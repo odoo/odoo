@@ -12,14 +12,14 @@
                             class="o_day_of_week_cell fw-bolder d-flex align-items-center justify-content-center"
                             t-att-title="dayOfWeek[1]"
                         >
-                            <div class="text-nowrap overflow-hidden" t-esc="props.daysOfWeekFormat === 'narrow' ? dayOfWeek[2] : dayOfWeek[0]"/>
+                            <div class="text-nowrap overflow-hidden" t-out="props.daysOfWeekFormat === 'narrow' ? dayOfWeek[2] : dayOfWeek[0]"/>
                         </div>
                     </t>
                     <t t-foreach="month.weeks" t-as="week" t-key="week.number">
                         <t t-if="props.showWeekNumbers">
                             <div
                                 class="o_week_number_cell d-flex justify-content-center align-items-center fw-bolder"
-                                t-esc="week.number"
+                                t-out="week.number"
                             />
                         </t>
                         <t t-foreach="week.days" t-as="itemInfo" t-key="itemInfo.id">
@@ -42,7 +42,7 @@
                                 t-on-click="() => this.zoomOrSelect(itemInfo)"
                             >
                                 <div t-att-class="{'w-75 align-content-center text-center rounded-circle': itemInfo.includesToday}">
-                                    <t t-esc="itemInfo.label" />
+                                    <t t-out="itemInfo.label" />
                                 </div>
                             </div>
                         </t>
@@ -91,7 +91,7 @@
                     t-att-disabled="!itemInfo.isValid"
                     t-on-click="() => this.zoomOrSelect(itemInfo)"
                 >
-                    <t t-esc="itemInfo.label" />
+                    <t t-out="itemInfo.label" />
                 </div>
             </t>
         </div>
@@ -127,7 +127,7 @@
                     <t t-foreach="titles" t-as="title" t-key="title">
                         <strong
                             class="o_header_part"
-                            t-esc="title"
+                            t-out="title"
                         />
                     </t>
                 </button>

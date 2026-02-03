@@ -5,7 +5,7 @@
             <div class="container o_self_container mt-4 d-flex justify-content-end">
                 <div class="o_self_language_selector p-3 bg-white cursor-pointer user-select-none ">
                     <img class="rounded" t-attf-src="{{currentLanguage.flag_image_url}}" />
-                    <span t-esc="currentLanguage.display_name" class="ms-3"/>
+                    <span t-out="currentLanguage.display_name" class="ms-3"/>
                 </div>
             </div>
         </div>
@@ -45,7 +45,7 @@
                             <a type="button"
                                 t-on-click="(event) => this.clickCustomLink(link)"
                                 t-attf-class="btn btn-lg btn-{{link.style}} w-100">
-                                <t t-esc="link.name"/>
+                                <t t-out="link.name"/>
                             </a>
                         </div>
                     </t>

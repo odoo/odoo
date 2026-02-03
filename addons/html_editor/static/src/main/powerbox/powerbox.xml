@@ -3,7 +3,7 @@
         <div t-ref="root" class="o-we-powerbox py-2 bg-light overflow-auto my-1" style="width:300px;max-height:40vh;" t-on-mousedown.stop="" t-on-scroll="onScroll" >
             <t t-foreach="commands" t-as="command" t-key="command_index">
                 <t t-if="showCategories and command.categoryId !== lastCategory">
-                    <div class="o-we-category mx-3 my-1 text-uppercase"><t t-esc="command.categoryName"/></div></t>
+                    <div class="o-we-category mx-3 my-1 text-uppercase"><t t-out="command.categoryName"/></div></t>
                     <t t-set="lastCategory" t-value="command.categoryId">
                 </t>
                 <div class="o-we-command d-flex align-items-center px-3 py-2 cursor-pointer"
@@ -16,10 +16,10 @@
                     </div>
                     <div class="ms-3 flex-fill">
                         <div class="d-flex justify-content-between">
-                            <div class="o-we-command-name" t-esc="command.title"/>
-                            <div t-if="command.shorthandLiteral" class="o-we-command-shorthand" t-esc="command.shorthandLiteral"/>
+                            <div class="o-we-command-name" t-out="command.title"/>
+                            <div t-if="command.shorthandLiteral" class="o-we-command-shorthand" t-out="command.shorthandLiteral"/>
                         </div>
-                        <div class="o-we-command-description" t-esc="command.description"/>
+                        <div class="o-we-command-description" t-out="command.description"/>
                     </div>
                 </div>
             </t>

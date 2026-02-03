@@ -7,14 +7,14 @@
             <t t-if="isMobileOS">
                 <Dropdown>
                     <button class="btn btn-light d-flex justify-content-between w-100 border border-dark">
-                        <span class="px-1" t-esc="state.activeTab"/>
+                        <span class="px-1" t-out="state.activeTab"/>
                         <i class="fa fa-caret-down ms-2"/>
                     </button>
                     <t t-set-slot="content">
                         <t t-foreach="this.tabs" t-as="item" t-key="item.id">
                             <DropdownItem
                                 onSelected="() => this.setTab(item.id)">
-                                    <t t-esc="item.name"/>
+                                    <t t-out="item.name"/>
                             </DropdownItem>
                         </t>
                     </t>

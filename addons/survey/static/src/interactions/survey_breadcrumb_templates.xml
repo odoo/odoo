@@ -16,12 +16,12 @@
                 </t>
                 <t t-if="canGoBack">
                     <a class="text-primary text-break" href="#">
-                        <span t-esc="page.title" />
+                        <span t-out="page.title" />
                     </a>
                 </t>
                 <t t-else="">
                     <span t-att-class="'text-break ' + (isActivePage ? 'text-black' : 'text-muted')"
-                          t-esc="page.title" />
+                          t-out="page.title" />
                 </t>
             </li>
         </t>

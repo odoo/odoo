@@ -7,7 +7,7 @@
             <span t-if="showCallPreview">You've been invited to a meeting!</span>
             <span t-else="">You've been invited to a chat!</span>
         </h1>
-        <h2 class="m-3 m-md-5" t-esc="store.companyName"/>
+        <h2 class="m-3 m-md-5" t-out="store.companyName"/>
         <div class="w-100 d-flex justify-content-center gap-5" t-att-class="{'flex-column': ui.isSmall}">
             <div t-if="showCallPreview" class="w-100 rounded-3 overflow-hidden" style="max-width: 640px;">
                 <CallPreview activateCamera="state.activateCamera" activateMicrophone="state.activateMicrophone" onSettingsChanged="(settings) => this.onCallSettingsChanged(settings)" hasSettingsAtBottom="true"/>
@@ -25,7 +25,7 @@
                 <button class="d-flex btn btn-light rounded-pill align-items-center justify-content-center gap-3 px-4 fs-3" title="Join Channel" t-att-disabled="!canJoin" t-on-click="joinChannel">
                     <t t-if="showCallPreview" t-set="joinText">Join call</t>
                     <t t-else="" t-set="joinText">Join</t>
-                    <span class="mb-0 text-success" t-esc="joinText"/>
+                    <span class="mb-0 text-success" t-out="joinText"/>
                     <span class="rounded-circle bg-success d-flex align-items-center justify-content-center p-2">
                         <i class="oi oi-arrow-right text-white"/>
                     </span>

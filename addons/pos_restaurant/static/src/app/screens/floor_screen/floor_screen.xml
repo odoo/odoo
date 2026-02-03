@@ -22,7 +22,7 @@
                             <button class="button button-floor btn btn-outline-secondary btn-lg px-3 lh-lg text-nowrap text-body"
                                     t-att-class="{'active': floor === floorPlanStore.selectedFloor}"
                                     t-on-click="() => this.selectFloor(floor.uuid)">
-                                <t t-esc="floor.name" />
+                                <t t-out="floor.name" />
                             </button>
                         </t>
                     </div>

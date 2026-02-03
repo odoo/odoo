@@ -74,7 +74,7 @@
                             t-att-checked="isBtnActive"
                             class="form-check-input m-0"
                     />
-                    <span class="o-livechat-LivechatStatusSelection-Label text-truncate cursor-pointer flex-grow-1 " t-esc="btn.label"/>
+                    <span class="o-livechat-LivechatStatusSelection-Label text-truncate cursor-pointer flex-grow-1 " t-out="btn.label"/>
                     <t t-call="im_livechat.LivechatStatusLabel">
                         <t t-set="templateParams" t-value="{ btn }"/>
                     </t>

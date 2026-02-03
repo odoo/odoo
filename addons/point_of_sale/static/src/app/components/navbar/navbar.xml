@@ -21,7 +21,7 @@
                     <OrderTabs orders="getOrderTabs()" class="'h-50'"/>
                     <button class="btn btn-secondary d-flex align-items-center gap-1 h-100 ms-2 p-2 preset-time-btn" t-on-click="openPresetTiming" t-if="shouldDisplayPresetTime">
                         <i class="fa fa-clock-o" aria-hidden="true"/>
-                        <span class="fw-bolder lh-1" t-esc="this.pos.getOrder()?.presetTime || '--:--'" />
+                        <span class="fw-bolder lh-1" t-out="this.pos.getOrder()?.presetTime || '--:--'" />
                     </button>
                 </div>
             </div>
@@ -31,7 +31,7 @@
             <div class="pos-rightheader flex-grow-1">
                 <div class="status-buttons d-flex flex-grow-1 align-items-center justify-content-end gap-1">
                     <div t-if="this.pos.data.network.offline or this.pos.data.network.loading" class="oe_status btn btn-light btn-lg lh-lg h-100 pe-none">
-                        <span t-if="this.pos.data.network.unsyncData.length > 0" t-esc="this.pos.data.network.unsyncData.length" />
+                        <span t-if="this.pos.data.network.unsyncData.length > 0" t-out="this.pos.data.network.unsyncData.length" />
                         <div t-if="this.pos.data.network.offline" class="fa fa-fw fa-chain-broken text-danger"/>
                         <div t-else="" class="fa fa-fw fa-spin fa-circle-o-notch text-warning"/>
                     </div>

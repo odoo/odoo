@@ -85,13 +85,13 @@
         </t>
         <t t-if="props.readonly">
             <div class="o_tree_editor_connector_value px-1">
-                <strong class="text-primary" t-esc="title"/>
+                <strong class="text-primary" t-out="title"/>
             </div>
         </t>
         <t t-else="">
             <div class="o_tree_editor_connector_value px-1" aria-atomic="true">
                 <button class="btn o-dropdown o-dropdown-caret p-0 opacity-75" t-on-click="() => this.updateConnector(node)">
-                    <strong class="text-primary" t-esc="title"/>
+                    <strong class="text-primary" t-out="title"/>
                 </button>
             </div>
         </t>
@@ -148,16 +148,16 @@
     <t t-name="web.TreeEditor.condition:readonly">
         <t t-set="description" t-value="getConditionDescription(node)" />
         <div class="o_tree_editor_condition d-flex gap-1 px-2 border bg-100">
-            <div class="fw-bolder text-nowrap" t-esc="description.pathDescription" />
-            <div class="fst-italic text-nowrap" t-esc="description.operatorDescription" />
+            <div class="fw-bolder text-nowrap" t-out="description.pathDescription" />
+            <div class="fst-italic text-nowrap" t-out="description.operatorDescription" />
             <t t-if="description.valueDescription">
                 <t t-set="values" t-value="description.valueDescription.values" />
                 <t t-set="join" t-value="description.valueDescription.join" />
                 <t t-set="addParenthesis" t-value="description.valueDescription.addParenthesis" />
                 <t t-if="addParenthesis">( </t>
                 <t t-foreach="values" t-as="val" t-key="val_index">
-                    <span class="text-primary fw-bolder"><t t-esc="val" /></span>
-                    <t t-if="!val_last"> <t t-esc="join" /> </t>
+                    <span class="text-primary fw-bolder"><t t-out="val" /></span>
+                    <t t-if="!val_last"> <t t-out="join" /> </t>
                 </t>
                 <t t-if="addParenthesis"> )</t>
             </t>
@@ -168,7 +168,7 @@
         <t t-if="!info.isSupported(value)">
             <div t-attf-class="o_tree_editor_editor #{_classes}">
                 <div class="o_input d-flex align-items-center">
-                    <span class="flex-grow-1 text-truncate" t-esc="info.stringify(value)" />
+                    <span class="flex-grow-1 text-truncate" t-out="info.stringify(value)" />
                     <i role="alert" class="fa fa-exclamation-triangle text-warning mx-2" t-att-data-tooltip="(typeof info.message === 'function') ? info.message(value) : info.message" />
                     <i class="fa fa-times" data-tooltip="Clear" t-on-click="() => update(info.defaultValue())" />
                 </div>

@@ -16,10 +16,10 @@
                 </option>
                 <t t-foreach="selfOrder.models['restaurant.floor'].getAll()" t-as="floor" t-key="floor.id">
                     <option value="floor" disabled="true">
-                        <t t-esc="floor.name" />
+                        <t t-out="floor.name" />
                     </option>
                     <option t-foreach="floor.sortedTable" t-as="table" t-key="table.id" t-att-value="table.id">
-                        <t t-esc="table.table_number" />
+                        <t t-out="table.table_number" />
                     </option>
                 </t>
             </select>
@@ -29,7 +29,7 @@
                 t-att-class="{'disabled': !this.validSelection}"
                 class="btn btn-primary py-3 my-2">
                     <t t-if="this.validSelection">
-                        Continue with table <t t-esc="this.selectedTable.table_number" />
+                        Continue with table <t t-out="this.selectedTable.table_number" />
                     </t>
                     <t t-else="">
                         Select a table

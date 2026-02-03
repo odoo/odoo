@@ -8,7 +8,7 @@
                     <t t-set-slot="content">
                         <UseHoverOverlay hover="hover">
                             <div class="overflow-hidden d-flex flex-column" t-ref="floating">
-                                <span class="o-mail-DiscussSidebarChannel-floatingName fw-bolder user-select-none text-truncate d-inline-block p-2 pb-0" t-esc="channel.displayName"/>
+                                <span class="o-mail-DiscussSidebarChannel-floatingName fw-bolder user-select-none text-truncate d-inline-block p-2 pb-0" t-out="channel.displayName"/>
                                 <DiscussSidebarChannelActions channel="channel"/>
                             </div>
                         </UseHoverOverlay>
@@ -36,7 +36,7 @@
                 </div>
                 <div t-if="!store.discuss.isSidebarCompact" class="o-mail-DiscussSidebarChannel-itemName overflow-hidden mx-2 text-start flex-grow-1" t-att-class="itemNameAttClass">
                     <div class="d-flex justify-content-between align-items-baseline o-min-width-0">
-                        <span class="text-truncate" t-esc="channel.displayName"/>
+                        <span class="text-truncate" t-out="channel.displayName"/>
                         <div class="d-flex" t-if="!store.discuss.isSidebarCompact" t-ref="displayNameAdditionalContent"/>
                     </div>
                 </div>

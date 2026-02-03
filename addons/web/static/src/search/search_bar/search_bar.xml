@@ -24,7 +24,7 @@
                     }"
                     >
                     <i t-if="facet.icon" class="small fa-fw" t-att-class="facet.icon" role="image"/>
-                    <small t-else="" class="px-1" t-esc="facet.title"/>
+                    <small t-else="" class="px-1" t-out="facet.title"/>
 
                     <!-- Editable facets' overlay -->
                     <span t-if="facet.domain"
@@ -43,8 +43,8 @@
 
                 <div class="o_facet_values position-relative d-flex flex-wrap align-items-center ps-2 rounded-end-2 text-wrap overflow-hidden">
                     <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
-                        <em t-if="!facetValue_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-esc="facet.separator"/>
-                        <small class="o_facet_value text-truncate" t-esc="facetValue" t-att-title="facet.tooltip or facetValue"/>
+                        <em t-if="!facetValue_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-out="facet.separator"/>
+                        <small class="o_facet_value text-truncate" t-out="facetValue" t-att-title="facet.tooltip or facetValue"/>
                     </t>
                     <button class="o_facet_remove oi oi-close btn btn-link py-0 px-2 text-danger d-print-none"
                         aria-label="Remove"
@@ -74,11 +74,11 @@
                 </t>
                 <a href="#" t-on-click.prevent="" t-att-class="{'ps-3 pe-2 text-truncate': item.isFieldProperty }" t-att-title="item.title">
                     <t t-if="item.isAddCustomFilterButton"><span class="text-action">Custom Filter...</span></t>
-                    <t t-elif="item.loadMore"><span class="text-action"><t t-esc="item.label"/></span></t>
+                    <t t-elif="item.loadMore"><span class="text-action"><t t-out="item.label"/></span></t>
                     <t t-elif="item.isChild">
-                        <t t-esc="item.label"/>
+                        <t t-out="item.label"/>
                     </t>
-                    <t t-elif="!item.isFieldProperty" > Search </t> <b t-esc="item.searchItemDescription"/> <t t-if="item.preposition"> <t t-esc="item.preposition"/>: <b class="fst-italic text-primary" t-esc="item.label"/> </t>
+                    <t t-elif="!item.isFieldProperty" > Search </t> <b t-out="item.searchItemDescription"/> <t t-if="item.preposition"> <t t-out="item.preposition"/>: <b class="fst-italic text-primary" t-out="item.label"/> </t>
                 </a>
             </DropdownItem>
         </t>

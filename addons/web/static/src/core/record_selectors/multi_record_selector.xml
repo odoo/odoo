@@ -26,9 +26,9 @@
                 <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
                     <span t-if="isAvatarModel" class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
                         <img class="rounded me-1" t-attf-src="/web/image/{{props.resModel}}/{{autoCompleteItemScope.data.record.id}}/avatar_128"/>
-                        <t t-esc="autoCompleteItemScope.label"/>
+                        <t t-out="autoCompleteItemScope.label"/>
                     </span>
-                    <t t-else="" t-esc="autoCompleteItemScope.label"/>
+                    <t t-else="" t-out="autoCompleteItemScope.label"/>
                 </t>
             </RecordAutocomplete>
         </div>

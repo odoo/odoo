@@ -20,16 +20,16 @@
                         <t t-else="" t-out="this.getContent(snippet.content)"/>
                     </div>
                     <button t-if="snippet.moduleId" class="o_snippet_preview_install_btn btn text-white rounded-1 mx-auto p-2 bottom-50"
-                            t-esc="this.getButtonInstallName(snippet)"/>
+                            t-out="this.getButtonInstallName(snippet)"/>
                 </div>
                 <div t-if="snippet.isCustom" class="d-grid mt-2 mx-5 gap-2 d-md-flex justify-content-md-end o_custom_snippet_edit">
-                    <span class="w-100" t-esc="snippet.title"></span>
+                    <span class="w-100" t-out="snippet.title"></span>
                     <button class="o_btn_reset me-md-2" t-on-click="() => this.onClickRename(snippet)" title="Rename">
-                        <span class="visually-hidden" t-esc="getRenameBtnLabel(snippet.title)"/>
+                        <span class="visually-hidden" t-out="getRenameBtnLabel(snippet.title)"/>
                         <span class="fa fa-pencil"/>
                     </button>
                     <button class="o_btn_reset" t-on-click="() => this.onClickDelete(snippet)" title="Remove">
-                        <span class="visually-hidden" t-esc="getDeleteBtnLabel(snippet.title)"/>
+                        <span class="visually-hidden" t-out="getDeleteBtnLabel(snippet.title)"/>
                         <span class="fa fa-trash"/>
                     </button>
                 </div>

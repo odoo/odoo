@@ -9,7 +9,7 @@
                     <t t-foreach="state.websites" t-as="website" t-key="website.id">
                         <button class="btn btn-secondary text-truncate js_website" style="max-width: 200px;" t-att-class="{'active': website.selected}"
                                 t-on-click="() => this.state.website = website.id">
-                            <t t-esc="website.name"/>
+                            <t t-out="website.name"/>
                         </button>
                     </t>
                 </div>

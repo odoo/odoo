@@ -13,7 +13,7 @@
                 <div t-foreach="this.tours" t-as="name" t-key="name">
                     <input class="form-check-input d-none" type="checkbox" t-att-name="name" t-att-id="name" t-on-change="onCheck" />
                     <label class="btn btn-secondary btn d-flex" t-att-for="name" t-att-class="{'active': this.state.selectedTours.has(name)}">
-                        <span t-esc="name" />
+                        <span t-out="name" />
                     </label>
                 </div>
             </div>

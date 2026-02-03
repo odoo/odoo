@@ -18,7 +18,7 @@
                                 <i t-if="button.icon.indexOf('fa-') === 0" role="img" t-att-aria-label="button.name" t-att-title="button.name" t-attf-class="fa fa-fw {{button.icon}} me-1"/>
                                 <img t-else="" t-att-src="button.icon" t-att-alt="button.name"/>
                             </t>
-                            <span class="fw-bolder" t-esc="button.name"/>
+                            <span class="fw-bolder" t-out="button.name"/>
                         </button>
                     </div>
                 </div>

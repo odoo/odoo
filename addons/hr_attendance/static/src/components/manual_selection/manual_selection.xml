@@ -38,8 +38,8 @@
                             </a>
                             <t t-foreach="this.props.departments" t-as="dep" t-key="dep.id">
                                 <a t-on-click="() => this.onDepartmentClick(dep.id)" class="list-group-item py-3 list-group-item-action d-flex justify-content-between align-items-center">
-                                    <span class="text-truncate"><t t-esc="dep.name"/></span>
-                                    <small class="badge bg-secondary rounded-pill ms-3"><t t-esc="dep.count"/></small>
+                                    <span class="text-truncate"><t t-out="dep.name"/></span>
+                                    <small class="badge bg-secondary rounded-pill ms-3"><t t-out="dep.count"/></small>
                                 </a>
                             </t>
                         </div>
@@ -48,7 +48,7 @@
                 <t t-else="">
                     <Dropdown>
                         <button class="btn btn-light m-2 me-auto align-self-start">
-                            <span id="departmentButton" ><i class="fa fa-users me-2"/><t t-esc="departmentName"/></span>
+                            <span id="departmentButton" ><i class="fa fa-users me-2"/><t t-out="departmentName"/></span>
                             <i class="fa fa-caret-down ms-2"/>
                         </button>
                         <t t-set-slot="content">
@@ -61,8 +61,8 @@
                                 t-key="dep.id"
                                 class="'py-3 d-flex justify-content-between align-items-center'"
                                 onSelected="() => this.onDepartmentClick(dep.id)">
-                                <span class="text-truncate"><t t-esc="dep.name"/></span>
-                                <small class="badge bg-secondary rounded-pill ms-3"><t t-esc="dep.count"/></small>
+                                <span class="text-truncate"><t t-out="dep.name"/></span>
+                                <small class="badge bg-secondary rounded-pill ms-3"><t t-out="dep.count"/></small>
                             </DropdownItem>
                         </t>
                     </Dropdown>
@@ -86,8 +86,8 @@
                                     </div>
                                     <img class="rounded-circle" alt="Employee Avatar" loading="lazy" t-attf-src="{{employee.avatar}}"/>
                                     <div class="d-flex flex-column align-items-center mt-2">
-                                        <h6 class="mb-0" t-esc="employee.display_name"/>
-                                        <p class="small text-muted text-center mb-1" t-if="employee.job_id" t-esc="employee.job_id"/>
+                                        <h6 class="mb-0" t-out="employee.display_name"/>
+                                        <p class="small text-muted text-center mb-1" t-if="employee.job_id" t-out="employee.job_id"/>
                                     </div>
                                 </div>
                             </div>

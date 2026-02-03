@@ -10,7 +10,7 @@
                         <i class="oi oi-close fa-fw"/>
                         <span t-att-class="{'invisible': state.showStickyTitle}">Discard</span>
                     </button>
-                    <h2 class="o_self_event_name position-absolute mb-0 text-truncate text-center" t-att-class="{'d-none': !state.showStickyTitle}" t-esc="event.name"/>
+                    <h2 class="o_self_event_name position-absolute mb-0 text-truncate text-center" t-att-class="{'d-none': !state.showStickyTitle}" t-out="event.name"/>
                 </div>
             </header>
 
@@ -20,7 +20,7 @@
                     <!-- Title & Image -->
                     <section class="py-3 text-bg-primary">
                         <div class="container o_self_container d-flex flex-column align-items-center">
-                            <h1 class="mt-kiosk-p-3 mb-3" t-esc="event.name" t-ref="eventName"/>
+                            <h1 class="mt-kiosk-p-3 mb-3" t-out="event.name" t-ref="eventName"/>
                             <div class="o_self_event_image ratio ratio-1x1 rounded-4 w-70 w-m-50">
                                 <img class="rounded-4" t-att-src="selfOrder.eventImageUrl(event)" loading="lazy" alt="Event Image"/>
                             </div>
@@ -47,9 +47,9 @@
                                             t-att-class="{'border-primary': state.selectedSlot === slot.id}"
                                             t-on-click="() => this.selectSlot(slot)">
                                             <div class="card-body text-center">
-                                                <h6 class="card-title fw-bolder" t-esc="slot.display_name"/>
+                                                <h6 class="card-title fw-bolder" t-out="slot.display_name"/>
                                                 <p class="text-primary fw-bold mb-0">
-                                                    <t t-esc="slotAvailabilityText(slot)"/>
+                                                    <t t-out="slotAvailabilityText(slot)"/>
                                                 </p>
                                             </div>
                                         </div>
@@ -80,7 +80,7 @@
                                                      alt="Ticket Image"/>
                                             </div>
                                             <div class="flex-grow-1 mb-2">
-                                                <span class="fw-bold d-block"><t t-esc="ticket.name"/></span>
+                                                <span class="fw-bold d-block"><t t-out="ticket.name"/></span>
                                                 <span t-if="ticket.price"
                                                     class="badge mt-1 px-2 py-1 rounded-3 text-bg-primary small">
                                                     <t t-out="selfOrder.formatMonetary(ticket.price)"/>
@@ -99,7 +99,7 @@
                                                         <i class="oi oi-minus fa-fw"/>
                                                     </button>
                                                     <div class="o-so-tabular-nums fs-4 d-flex align-items-center m-0 px-4 py-2 text-bg-secondary fw-bolder">
-                                                        <t t-esc="state.ticketQuantities[ticket.id] || 0"/>
+                                                        <t t-out="state.ticketQuantities[ticket.id] || 0"/>
                                                     </div>
                                                     <button type="button"
                                                             class="btn btn-secondary py-1 px-2"
@@ -124,7 +124,7 @@
                                 </div>
                                 <div class="card-body bg-light p-3">
                                     <div t-foreach="eventQuestions().global" t-as="question" t-key="question.id" class="mb-3">
-                                        <label class="form-label fw-semibold mb-1" t-esc="question.title"/>
+                                        <label class="form-label fw-semibold mb-1" t-out="question.title"/>
                                         <span t-if="question.is_mandatory_answer" class="text-danger"> *</span>
                                         <t t-if="isTextInput(question)">
                                             <t t-set="props" t-value="getInputProps(question)"/>
@@ -143,7 +143,7 @@
                                                     aria-label="question.title">
                                                 <option value="">-- Select --</option>
                                                 <t t-foreach="question.answer_ids" t-as="ans" t-key="ans.id">
-                                                    <option t-att-value="ans.id" t-esc="ans.name"/>
+                                                    <option t-att-value="ans.id" t-out="ans.name"/>
                                                 </t>
                                             </select>
                                         </t>
@@ -156,12 +156,12 @@
                                     <div class="card shadow-sm border-0 mb-4">
                                         <div class="card-header bg-primary py-2 px-3 rounded-top">
                                             <h6 class="mb-0 text-white">
-                                                Ticket #<t t-esc="form.index"/> for <t t-esc="form.ticketName"/>
+                                                Ticket #<t t-out="form.index"/> for <t t-out="form.ticketName"/>
                                             </h6>
                                         </div>
                                         <div class="card-body bg-light p-3">
                                             <div t-foreach="eventQuestions().ticket" t-as="question" t-key="question.id + '_' + form.index" class="mb-3">
-                                                <label class="form-label fw-semibold mb-1" t-esc="question.title"/>
+                                                <label class="form-label fw-semibold mb-1" t-out="question.title"/>
                                                 <span t-if="question.is_mandatory_answer" class="text-danger"> *</span>
                                                 <t t-if="isTextInput(question)">
                                                     <t t-set="props" t-value="getInputProps(question)"/>
@@ -180,7 +180,7 @@
                                                             aria-label="question.title">
                                                         <option value="">-- Select --</option>
                                                         <t t-foreach="question.answer_ids" t-as="ans" t-key="ans.id">
-                                                            <option t-att-value="ans.id" t-esc="ans.name"/>
+                                                            <option t-att-value="ans.id" t-out="ans.name"/>
                                                         </t>
                                                     </select>
                                                 </t>
@@ -206,7 +206,7 @@
                         <div class="d-flex justify-content-between align-items-center gap-2 gap-md-5">
                             <div class="ms-auto text-start">
                                 <h4 class="d-none d-sm-block text-muted opacity-75 mb-1">Event</h4>
-                                <div class="fs-2 fw-bold o-so-tabular-nums mx-2 text-primary" t-esc="selfOrder.formatMonetary(this.state.totalPrice)" />
+                                <div class="fs-2 fw-bold o-so-tabular-nums mx-2 text-primary" t-out="selfOrder.formatMonetary(this.state.totalPrice)" />
                             </div>
                             <button
                                 t-if="state.selectedStep.id !== 'info'"

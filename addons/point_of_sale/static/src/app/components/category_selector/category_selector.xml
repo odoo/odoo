@@ -17,7 +17,7 @@
                     />
                     <span t-if="category.name"
                           t-att-class="{'px-2': category.imgSrc, 'px-3': !category.imgSrc and this.pos.config.show_category_images}"
-                          class="text-center text-wrap-categ fs-5" t-esc="category.name" />
+                          class="text-center text-wrap-categ fs-5" t-out="category.name" />
                 </button>
             </t>
         </div>

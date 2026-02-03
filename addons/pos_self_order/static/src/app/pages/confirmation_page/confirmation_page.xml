@@ -26,8 +26,8 @@
                         <t t-if="confirmedOrder.preset_id?.use_timing">
                             <t t-set="slotDate" t-value="confirmedOrder.preset_id.slotPrefix(confirmedOrder.preset_time) or confirmedOrder.preset_id.formatDate(confirmedOrder.preset_time)"/>
                             <h1 class="mb-0">Order for
-                                <t t-if="slotDate"><t t-esc="slotDate"/>, </t>
-                                <t t-esc="orderTimeStr"/>
+                                <t t-if="slotDate"><t t-out="slotDate"/>, </t>
+                                <t t-out="orderTimeStr"/>
                             </h1>
                         </t>
                         <t t-else="">
@@ -38,12 +38,12 @@
                 <div t-if="state.payment and confirmedOrder.state !== 'paid'" 
                     class="px-4 py-3 m-n1 rounded-bottom rounded-4 border border-light bg-light text-body fw-bold" style="max-width: 95%; text-wrap: pretty;">
                     Pay
-                    <span class="fw-bolder" t-esc="selfOrder.formatMonetary(confirmedOrder.amount_total || 0)"/>
+                    <span class="fw-bolder" t-out="selfOrder.formatMonetary(confirmedOrder.amount_total || 0)"/>
                     at the counter
                 </div>
                 <div class="bg-white w-100 w-md-auto py-4 px-5 rounded-4 border border-light">
                     <h3 class="d-block text-muted">Your order number</h3>
-                    <span class="tracking-number fw-bold lh-1 text-primary" t-esc="confirmedOrder.tracking_number" />
+                    <span class="tracking-number fw-bold lh-1 text-primary" t-out="confirmedOrder.tracking_number" />
                 </div>
             </div>
             <div class="d-flex flex-column align-items-center w-100 w-md-auto">

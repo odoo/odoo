@@ -17,7 +17,7 @@
                 <span
                     class="pe-2 d-inline-block text-truncate flex-grow-1 min-w-0"
                     t-attf-class="{{ props.icon ? 'ps-2' : '' }}"
-                    t-esc="selectLabel || BROWSER_DEFAULT"/>
+                    t-out="selectLabel || BROWSER_DEFAULT"/>
                 <span t-attf-class="oi smaller {{state.isSelectOpen ? 'oi-chevron-up': 'oi-chevron-down'}}"/>
             </button>
             <button
@@ -33,18 +33,18 @@
                     class="d-inline-block text-truncate flex-grow-1 min-w-0"
                     t-attf-class="{{ props.icon ? 'ps-2' : '' }}"
                 >
-                    <t t-esc="PERMISSION_NEEDED"/>
+                    <t t-out="PERMISSION_NEEDED"/>
                 </span>
             </button>
             <t t-set-slot="content">
                 <DropdownItem t-if="!isBrowserChrome or props.kind === 'videoinput'" onSelected="onSelectAudioDevice.bind(this)">
                     <i class="fa fa-check me-2" t-if="isSelected()"/>
-                    <span t-esc="BROWSER_DEFAULT"/>
+                    <span t-out="BROWSER_DEFAULT"/>
                 </DropdownItem>
                 <t t-foreach="state.userDevices" t-as="device" t-key="device_index">
                     <DropdownItem t-if="device.kind === props.kind" onSelected="onSelectAudioDevice.bind(this, device)">
                         <i t-if="isSelected(device.deviceId)" class="fa fa-check me-2"/>
-                        <span t-esc="device.label || 'device ' + device_index"/>
+                        <span t-out="device.label || 'device ' + device_index"/>
                     </DropdownItem>
                 </t>
             </t>

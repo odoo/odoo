@@ -8,7 +8,7 @@
     </t>
 
     <t t-name="web.CheckIdentityForm">
-        <p role="alert" class="alert alert-danger" t-if="state.error" t-esc="state.error"/>
+        <p role="alert" class="alert alert-danger" t-if="state.error" t-out="state.error"/>
         <div class="text-center border rounded mb-3 p-3">
             <img t-attf-src="/web/image/res.users/{{user.userId}}/avatar_128" class="o_avatar rounded me-1"/>
             Signed in as <strong t-out="user.name"/>

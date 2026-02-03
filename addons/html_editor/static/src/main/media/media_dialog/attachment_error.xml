@@ -8,7 +8,7 @@
             <ul t-foreach="props.views" t-as="view" t-key="view.id">
                 <li>
                     <a t-att-href="'/odoo/ir.ui.view/' + window.encodeURIComponent(view.id)">
-                        <t t-esc="view.name"/>
+                        <t t-out="view.name"/>
                     </a>
                 </li>
             </ul>

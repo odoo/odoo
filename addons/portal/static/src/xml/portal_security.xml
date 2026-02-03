@@ -27,7 +27,7 @@
             <select name="duration" class="form-control">
                 <option t-foreach="duration_selection" t-as="duration" t-key="duration[0]"
                     t-att-id="`duration_${duration[0]}`"
-                    t-esc="duration[1]"
+                    t-out="duration[1]"
                     t-att-value="duration[0]"/>
             </select>
             <p>

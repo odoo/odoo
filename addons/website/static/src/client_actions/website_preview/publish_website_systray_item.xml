@@ -10,7 +10,7 @@
             <CheckBox disabled="true" value="state.published" className="'form-switch d-flex justify-content-center m-0 pe-none'"/>
         </a>
         <a t-else="" href="#" class="o_nav_entry d-flex align-items-center mx-1" data-hotkey="p">
-            <span class="d-none d-md-block mx-0 pe-1" t-esc="this.label"/>
+            <span class="d-none d-md-block mx-0 pe-1" t-out="this.label"/>
             <CheckBox value="state.published" className="'form-switch d-flex justify-content-center m-0 pe-none'"/>
         </a>
     </div>

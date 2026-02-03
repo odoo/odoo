@@ -6,7 +6,7 @@
             <div t-if="currentOrder.getCustomerCount() > 1" t-attf-class="message text-center {{ui.isSmall ? 'fs-2' : 'fs-1'}}" >
                 <PriceFormatter price="this.env.utils.formatCurrency(currentOrder.amountPerGuest())" /> / Guest
                 <button class="btn rounded-lg p" t-on-click="clickTableGuests" style="background-color: #ced4da;">
-                    <span class="text-black fs-4 fw-bolder" t-esc="currentOrder?.getCustomerCount() || 0"/>
+                    <span class="text-black fs-4 fw-bolder" t-out="currentOrder?.getCustomerCount() || 0"/>
                 </button>
             </div>
         </xpath>

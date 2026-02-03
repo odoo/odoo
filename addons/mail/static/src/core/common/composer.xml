@@ -35,10 +35,10 @@
             <div class="o-mail-Composer-coreHeader">
                 <div t-if="props.composer.replyToMessage" class="text-truncate small p-2">
                     <span class="cursor-pointer" t-on-click="() => env.messageHighlight?.highlightMessage(props.composer.replyToMessage, props.composer.thread)">
-                        Replying to <b t-esc="props.composer.replyToMessage.authorName"/>
+                        Replying to <b t-out="props.composer.replyToMessage.authorName"/>
                     </span>
                     <span t-if="props.composer.replyToMessage.thread?.notEq(props.composer.thread)">
-                        on: <b><t t-esc="props.composer.replyToMessage.thread.displayName"/></b>
+                        on: <b><t t-out="props.composer.replyToMessage.thread.displayName"/></b>
                     </span>
                     <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="() => (props.composer.replyToMessage = undefined)"/>
                 </div>
@@ -113,7 +113,7 @@
                     unlinkAttachment.bind="(...args) => attachmentUploader.unlink(...args)"/>
                 <div t-if="!extended and !props.composer.message" class="o-mail-Composer-pickerContainer" t-att-class="{ 'o-active': composerActions.activePicker and ui.isSmall }" t-ref="picker-container">
                     <div t-if="partitionedActions.pickers.length > 1 and composerActions.activePicker and ui.isSmall" class="o-mail-Composer-pickerSelection btn-group w-100">
-                        <button t-foreach="partitionedActions.pickers" t-as="pickerAction" t-key="'PICKER_' + pickerAction.id" class="btn btn-secondary" t-esc="pickerAction.pickerName" t-on-click="(ev) => pickerAction.onSelected(ev)" t-att-class="{
+                        <button t-foreach="partitionedActions.pickers" t-as="pickerAction" t-key="'PICKER_' + pickerAction.id" class="btn btn-secondary" t-out="pickerAction.pickerName" t-on-click="(ev) => pickerAction.onSelected(ev)" t-att-class="{
                             'active': pickerAction.picker.isOpen
                         }"/>
                     </div>
@@ -187,10 +187,10 @@
 
     <t t-name="mail.Composer.suggestionSpecial">
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-            <t t-esc="option.displayName"/>
+            <t t-out="option.displayName"/>
         </strong>
         <em class="text-600 text-truncate align-self-center">
-            <t t-esc="option.description"/>
+            <t t-out="option.description"/>
         </em>
     </t>
 
@@ -198,16 +198,16 @@
         <t t-set="partner" t-value="option.partner"/>
         <DiscussAvatar t-if="partner" persona="partner" size="24"/>
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-            <t t-esc="partner.name"/>
+            <t t-out="partner.name"/>
             <t t-if="option.thread and partner.name !== option.thread.getPersonaName(partner)">
-                "<t t-esc="option.thread.getPersonaName(partner)"/>"
+                "<t t-out="option.thread.getPersonaName(partner)"/>"
             </t>
         </strong>
-        <span t-if="partner.email" class="text-600 text-truncate align-self-center">(<t t-esc="partner.email"/>)</span>
+        <span t-if="partner.email" class="text-600 text-truncate align-self-center">(<t t-out="partner.email"/>)</span>
     </t>
 
     <t t-name="mail.Composer.suggestionRole">
-        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate" t-esc="option.label"/>
+        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate" t-out="option.label"/>
         <em class="text-600 text-truncate align-self-center">
             <t t-if="option.thread?.channel?.channel_type === 'channel'">Notify users with this role who have permission to view this channel</t>
             <t t-else="">Notify users with this role</t>
@@ -218,36 +218,36 @@
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
             <i t-attf-class="fa #{option.channel?.parent_channel_id ? 'fa-comments-o' : 'fa-hashtag'} me-2"/>
             <t t-if="option.channel.parent_channel_id">
-                <t t-esc="option.channel.parent_channel_id.displayName"/>
+                <t t-out="option.channel.parent_channel_id.displayName"/>
                 <i class="oi oi-chevron-right o-xsmaller mx-1"/>
             </t>
-            <t t-esc="option.channel.displayName"/>
+            <t t-out="option.channel.displayName"/>
         </strong>
     </t>
 
     <t t-name="mail.Composer.suggestionChannelCommand">
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-            <t t-esc="option.label"/>
+            <t t-out="option.label"/>
         </strong>
         <span class="text-600 text-truncate align-self-center">
-            <t t-esc="option.help"/>
+            <t t-out="option.help"/>
         </span>
     </t>
 
     <t t-name="mail.Composer.suggestionCannedResponse">
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate mw-100">
-            <t t-esc="option.source"/>
+            <t t-out="option.source"/>
         </strong>
         <span class="text-600 text-truncate align-self-center">
-            <t t-esc="option.label"/>
+            <t t-out="option.label"/>
         </span>
     </t>
     <t t-name="mail.Composer.suggestionEmoji">
         <strong class="px-2 align-self-center flex-shrink-1 fs-3">
-            <t t-esc="option.emoji.codepoints"/>
+            <t t-out="option.emoji.codepoints"/>
         </strong>
         <em class="text-600 text-truncate align-self-center">
-            <t t-esc="option.emoji.shortcodes.join(' ')"/>
+            <t t-out="option.emoji.shortcodes.join(' ')"/>
         </em>
     </t>
 </templates>

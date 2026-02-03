@@ -2,9 +2,9 @@
 <templates id="template" xml:space="preserve">
     <t t-name="lunch.LunchCurrency">
         <span>
-            <t t-if="props.currency.position == 'before'" t-esc="props.currency.symbol"/>
-            <t t-esc="amount"/>
-            <t t-if="props.currency.position == 'after'" t-esc="props.currency.symbol"/>
+            <t t-if="props.currency.position == 'before'" t-out="props.currency.symbol"/>
+            <t t-out="amount"/>
+            <t t-if="props.currency.position == 'after'" t-out="props.currency.symbol"/>
         </span>
     </t>
 
@@ -21,19 +21,19 @@
                     <t t-out="line.product[1]"/>
                     <span t-if="!props.isToOrder"> &#8226; <LunchCurrency currency="props.currency" amount="line.product[2]"/></span>
                 </h6>
-                <span t-esc="line.state" t-attf-class="badge flex-shrink-0 rounded-pill text-bg-#{badgeClass}"/>
+                <span t-out="line.state" t-attf-class="badge flex-shrink-0 rounded-pill text-bg-#{badgeClass}"/>
             </div>
             <div t-if="line.note" class="p-2 rounded bg-100 text-muted">
                 <i class="fa fa-fw fa-sticky-note pe-2"/>
                 <t t-out="line.note"/>
             </div>
             <div class="d-flex justify-content-between">
-                <span class="text-nowrap" t-esc="line.location"/>
-                <span class="text-nowrap" t-esc="line.date"/>
+                <span class="text-nowrap" t-out="line.location"/>
+                <span class="text-nowrap" t-out="line.date"/>
             </div>
             <ul t-if="hasToppings" class="list-group list-group-flush" t-foreach="line.toppings" t-as="topping" t-key="topping">
                 <li class="list-group-item d-flex justify-content-between ps-2 pe-0 py-1">
-                    <span>+ <t t-esc="topping[0]"/></span>
+                    <span>+ <t t-out="topping[0]"/></span>
                     <LunchCurrency currency="props.currency" amount="topping[1]"/>
                 </li>
             </ul>
@@ -79,7 +79,7 @@
 
     <t t-name="lunch.LunchUser">
         <div class="lunch_user flex-grow-1">
-            <span t-if="!props.isManager" t-esc="props.username"/>
+            <span t-if="!props.isManager" t-out="props.username"/>
             <div t-else="" class="o_field_widget w-100">
                 <Many2XAutocomplete
                     value="props.username"
