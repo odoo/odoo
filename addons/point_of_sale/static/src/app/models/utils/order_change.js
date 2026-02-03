@@ -104,6 +104,13 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
     let changesCount = 0;
     let changeAbsCount = 0;
 
+    const hasPreparationCategory = (product) => {
+        if (!product) {
+            return false;
+        }
+        return product.parentPosCategIds.some((id) => prepaCategoryIds.has(id));
+    };
+
     // Compares the orderlines of the order with the last ones sent.
     // When one of them has changed, we add the change.
     for (const orderline of order.getOrderlines()) {
@@ -111,16 +118,14 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
         const note = orderline.getNote();
         const customerNote = orderline.getCustomerNote();
         const lineKey = orderline.uuid;
-        const baseProduct = orderline.combo_parent_id
-            ? orderline.combo_parent_id.product_id
-            : product;
-        const productCategoryIds = baseProduct.parentPosCategIds.filter((id) =>
-            prepaCategoryIds.has(id)
-        );
         const quantity = orderline.getQuantity();
-
+        const hasPrepaCategory =
+            hasPreparationCategory(product) ||
+            hasPreparationCategory(orderline.combo_parent_id?.product_id) ||
+            orderline.combo_line_ids?.some((line) => hasPreparationCategory(line.getProduct())) ||
+            false;
         if (
-            productCategoryIds.length > 0 &&
+            hasPrepaCategory &&
             order.last_order_preparation_change[lineKey]?.ignoreQty !== quantity
         ) {
             const key = Object.keys(order.last_order_preparation_change.lines).find((k) =>
