@@ -5973,12 +5973,12 @@ class AccountMove(models.Model):
 
         try:  # try posting in batch
             with self.env.cr.savepoint():
-                moves._post()
+                moves.with_context(skip_account_deprecation_check=True)._post()
         except UserError:  # if at least one move cannot be posted, handle moves one by one
             for move in moves:
                 try:
                     with self.env.cr.savepoint():
-                        move._post()
+                        move.with_context(skip_account_deprecation_check=True)._post()
                 except UserError as e:
                     move.checked = False
                     move.auto_post = 'no'
