@@ -325,6 +325,30 @@ class PurchaseOrderLine(models.Model):
             if seller or not line.date_planned:
                 line.date_planned = line._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
+            # record product names to avoid resetting custom descriptions
+            default_names = []
+            display_names = []
+            vendors = line.product_id._prepare_sellers(params=params)
+            product_ctx = {'seller_id': None, 'partner_id': None, 'lang': get_lang(line.env, line.partner_id.lang).code}
+            line_without_seller = line.product_id.with_context(product_ctx)
+            default_names.append(line._get_product_purchase_description(line_without_seller))
+            for vendor in vendors:
+                product_ctx = {'seller_id': vendor.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
+                default_names.append(line._get_product_purchase_description(line.product_id.with_context(product_ctx)))
+                display_names.append(line.product_id.with_context(product_ctx).display_name)
+            if not line.name or line.name in default_names:
+                product_ctx = {'seller_id': seller.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
+                line.name = line._get_product_purchase_description(line.product_id.with_context(product_ctx))
+            else:
+                # Checks that the product vendor and vendor name are correct
+                for vendor, display_name in zip(vendors, display_names):
+                    if line.name.startswith(display_name):
+                        if not seller:
+                            line.name = line_without_seller.display_name + line.name[len(display_name):]
+                        elif vendor.id != seller.id:
+                            line.name = display_names[vendors.ids.index(seller.id)] + line.name[len(display_name):]
+                        break
+
             # If not seller, use the standard price. It needs a proper currency conversion.
             if not seller:
                 line.discount = 0
@@ -356,18 +380,6 @@ class PurchaseOrderLine(models.Model):
                 price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
                 line.price_unit = seller.product_uom._compute_price(price_unit, line.product_uom)
                 line.discount = seller.discount or 0.0
-
-            # record product names to avoid resetting custom descriptions
-            default_names = []
-            vendors = line.product_id._prepare_sellers(params=params)
-            product_ctx = {'seller_id': None, 'partner_id': None, 'lang': get_lang(line.env, line.partner_id.lang).code}
-            default_names.append(line._get_product_purchase_description(line.product_id.with_context(product_ctx)))
-            for vendor in vendors:
-                product_ctx = {'seller_id': vendor.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
-                default_names.append(line._get_product_purchase_description(line.product_id.with_context(product_ctx)))
-            if not line.name or line.name in default_names:
-                product_ctx = {'seller_id': seller.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
-                line.name = line._get_product_purchase_description(line.product_id.with_context(product_ctx))
 
     @api.depends('product_id', 'product_qty', 'product_uom')
     def _compute_product_packaging_id(self):
