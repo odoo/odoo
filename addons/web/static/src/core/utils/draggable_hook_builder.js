@@ -5,6 +5,47 @@ import { setRecurringAnimationFrame } from "@web/core/utils/timing";
 import { browser } from "../browser/browser";
 import { hasTouch, isBrowserFirefox, isIOS } from "../browser/feature_detection";
 
+function translatePoint(point, vector) {
+    return {
+        x: point.x + vector.x,
+        y: point.y + vector.y,
+    };
+}
+function scaleVector(vector, scaleX = 1, scaleY = scaleX) {
+    return {
+        x: vector.x * scaleX,
+        y: vector.y * scaleY,
+    };
+}
+
+function getIframeOffsetVector(el) {
+    const vector = { x: 0, y: 0 };
+    while (el) {
+        const frameElement =
+            "frameElement" in el ? el.frameElement : el.ownerDocument.defaultView?.frameElement;
+        if (frameElement) {
+            const iRect = frameElement.getBoundingClientRect();
+            vector.x += iRect.x;
+            vector.y += iRect.y;
+            el = frameElement;
+            continue;
+        }
+        break;
+    }
+    return vector;
+}
+
+function pointerInsideElementOffset(pointer, elementRect) {
+    const pointerView = pointer.view || window;
+    if (pointerView === elementRect.view) {
+        return translatePoint(pointer, scaleVector(elementRect, -1));
+    }
+    const pointerIframeVector = getIframeOffsetVector(pointerView);
+    const pointerInMain = translatePoint(pointer, pointerIframeVector);
+    const elementInMain = translatePoint(elementRect, elementRect.iframeOffset);
+    return translatePoint(pointerInMain, scaleVector(elementInMain, -1));
+}
+
 /**
  * @typedef {ReturnType<typeof makeCleanupManager>} CleanupManager
  *
@@ -290,6 +331,7 @@ function makeDOMHelpers(cleanup) {
             rect.width -= pl + pr;
             rect.height -= pt + pb;
         }
+        rect.view = el.ownerDocument.defaultView;
         return rect;
     };
 
@@ -532,14 +574,12 @@ export function makeDraggableHook(hookParams) {
                     : getScrollParents(scrollingElement);
 
                 updateRects();
-                const { x, y, width, height } = ctx.current.elementRect;
-
+                const { width, height } = ctx.current.elementRect;
                 // Adjusts the offset
-                ctx.current.offset = {
-                    x: ctx.current.initialPosition.x - x,
-                    y: ctx.current.initialPosition.y - y,
-                };
-
+                ctx.current.offset = pointerInsideElementOffset(
+                    ctx.current.initialPosition,
+                    ctx.current.elementRect
+                );
                 if (ctx.followCursor) {
                     dom.addStyle(ctx.current.element, {
                         width: `${width}px`,
@@ -849,10 +889,18 @@ export function makeDraggableHook(hookParams) {
                 const { width: ew, height: eh } = elementRect;
                 const { x: cx, y: cy, width: cw, height: ch } = containerRect;
 
-                // Updates the position of the dragged element.
+                let pointer = ctx.pointer;
+                const pointerView = ctx.pointer.view || window;
+                if (pointerView === window && pointerView !== elementRect.view) {
+                    // We know here that the element's coordinates are relative to the
+                    // iframe. Convert the pointer's position in terms of that referential
+                    pointer = translatePoint(pointer, scaleVector(elementRect.iframeOffset, -1));
+                }
+
+                const pointerTranslated = translatePoint(pointer, scaleVector(offset, -1));
                 dom.addStyle(element, {
-                    left: `${clamp(ctx.pointer.x - offset.x, cx, cx + cw - ew)}px`,
-                    top: `${clamp(ctx.pointer.y - offset.y, cy, cy + ch - eh)}px`,
+                    left: `${clamp(pointerTranslated.x, cx, cx + cw - ew)}px`,
+                    top: `${clamp(pointerTranslated.y, cy, cy + ch - eh)}px`,
                 });
             };
 
@@ -863,6 +911,7 @@ export function makeDraggableHook(hookParams) {
             const updatePointerPosition = (ev) => {
                 ctx.pointer.x = ev.clientX;
                 ctx.pointer.y = ev.clientY;
+                ctx.pointer.view = ev.view;
             };
 
             const updateRects = () => {
@@ -923,6 +972,7 @@ export function makeDraggableHook(hookParams) {
 
                 // Element rect
                 ctx.current.elementRect = dom.getRect(element);
+                ctx.current.elementRect.iframeOffset = getIframeOffsetVector(element);
             };
 
             /**
@@ -993,7 +1043,7 @@ export function makeDraggableHook(hookParams) {
                 fullSelector: null,
                 followCursor: true,
                 cursor: null,
-                pointer: { x: 0, y: 0 },
+                pointer: { x: 0, y: 0, view: window },
                 edgeScrolling: { enabled: true },
                 get dragging() {
                     return state.dragging;
