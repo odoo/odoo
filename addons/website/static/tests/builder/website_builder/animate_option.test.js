@@ -125,6 +125,10 @@ describe("onAppearance", () => {
         expect(".options-container [data-label='Scroll Zone']").not.toHaveCount();
         expect(".options-container [data-label='Start After'] input").toHaveValue(0);
         expect(".options-container [data-label='Duration'] input").toHaveValue(1);
+        await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
+        await contains(".o-dropdown--menu [data-action-value='onScroll']").click();
+        await waitSidebarUpdated();
+        expect(".options-container [data-label='Intensity']").toHaveCount(1);
     });
     test("visibility of animation animation=onAppearance effect=flash", async () => {
         const { waitSidebarUpdated } = await setupWebsiteBuilder(
