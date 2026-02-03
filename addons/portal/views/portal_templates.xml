@@ -81,7 +81,7 @@
     </template>
 
     <template id="country_selector" name="Country Selector">
-        <t t-set="website_sale_countries" t-value="website.get_website_countries()"/>
+        <t t-set="website_sale_countries" t-value="website.get_available_countries()"/>
         <t t-set="country_selector_visible" t-value="len(website_sale_countries) &gt; 1"/>
         <div t-attf-class="#{_div_classes} d-print-none" t-if="country_selector_visible">
             <t t-set="active_country" t-value="request.country"/>
@@ -96,7 +96,7 @@
                 <t t-foreach="website_sale_countries" t-as="co">
                     <a t-attf-class="dropdown-item"
                        t-att-aria-current="request.country"
-                       t-att-href="'/shop/country/%s' % co.id"
+                       t-att-href="'/shop/change_country/%s' % co.id"
                        role="menuitem">
                         <span t-out="co.name" t-attf-class="#{_txt_class}"/>
                     </a>
@@ -121,7 +121,7 @@
                 <t t-foreach="pricelists" t-as="pl">
                     <a t-attf-class="dropdown-item"
                        t-att-aria-current="request.pricelist"
-                       t-att-href="'/shop/pricelist/%s' % pl.id"
+                       t-att-href="'/shop/change_pricelist/%s' % pl.id"
                        role="menuitem">
                         <span t-out="pl.name" t-attf-class="#{_txt_class}"/>
                     </a>

@@ -626,18 +626,6 @@ class Website(models.Model):
         # we only want to reorder the records on hand, not filter them.
         return pricelists.sudo().sorted().ids
 
-    def _get_available_languages(self, country_group):
-        """Return the list of languages associated with the selected country.
-        Languages have to be defined on the website and on the related country group.
-        """
-        self.ensure_one()
-
-        website_languages = self.language_ids
-        country_group_languages = country_group.language_ids
-        common_languages = website_languages and country_group_languages
-        return self.env['res.lang'].browse(common_languages.ids)
-
-
     def get_pricelist_available(self, show_visible=False):
         """ Return the list of pricelists that can be used on website for the current user.
         Country restrictions will be detected with GeoIP (if installed).
@@ -651,7 +639,7 @@ class Website(models.Model):
         if not self.env['res.groups']._is_feature_enabled('product.group_product_pricelist'):
             return ProductPricelist  # Skip pricelist computation if pricelists are disabled.
 
-        country_code = self._get_geoip_country_code()
+        country_code = request.country.code or self._get_geoip_country_code()
         website = self.with_company(self.company_id)
 
         partner_sudo = website.env.user.partner_id
@@ -684,11 +672,33 @@ class Website(models.Model):
         """
         return pl_id in self.get_pricelist_available(show_visible=False).ids
 
-    def _get_geoip_country_code(self):
-        return request and (request.country.code or request.geoip.country_code) or False
+    def _get_country_group_and_pricelist(self, country_code):
+        country_group = pricelist = None
+        if country_code:
+            country_groups = self.env['res.country.group'].search([
+                ('country_ids.code', '=', country_code),
+            ])
+            for country_group in country_groups:
+                for pl in country_group.pricelist_ids:
+                    pricelist = pl if pl._is_available_on_website(self) and pl.selectable else None
+                if pricelist:
+                    break
+        return country_group, pricelist
 
-    def get_website_countries(self):
+    def get_available_countries(self):
         return self.env['res.country'].search([])
+
+    def _get_geoip_country_code(self):
+        return request and request.geoip.country_code or False
+
+    def _get_available_languages(self, country_group):
+        """Return the list of languages associated with the selected country.
+        Languages have to be defined on the website and on the related country group.
+        """
+        languages = self.language_ids
+        if country_group:
+            languages = (country_group.language_ids and languages) or languages
+        return self.env['res.lang'].browse(languages.ids)
 
     def sale_product_domain(self):
         website_domain = self.get_current_website().website_domain()
@@ -762,7 +772,6 @@ class Website(models.Model):
             )
             return country_sudo
         else:
-            # TODO-PDA cover country not in available countries
             return partner_sudo.country_id
 
     def _get_and_cache_current_pricelist(self):

@@ -938,54 +938,35 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return request.redirect(redirect_url or self._get_shop_path())
 
-    # get lang, pricelist, currency from country and country group
-    def _get_country_group_from_country(self, website, country):
-        if not country:
-            return False
-        # First country group containing the country and having a pricelist linked to the website
-        country_group = self.env['res.country.group'].search([
-            ('country_ids', 'in', country.id),
-            ('pricelist_ids.website_id', '=', website.id),
-            ('pricelist_ids.currency_id', '=', website.currency_id.id),
-        ], order='id', limit=1)
-        return country_group
-
     @route(
-        '/shop/country/<model("res.country"):country>',
+        '/shop/change_country/<model("res.country"):country>',
         type='http',
         auth='public',
         website=True,
         sitemap=False,
     )
-    def country(self, country, **post):
+    def country_change(self, country, **post):
         website = request.env['website'].get_current_website()
         redirect_url = request.httprequest.referrer
-        if country not in website.get_website_countries():
+        if country not in website.get_available_countries():
             return request.redirect(redirect_url or self._get_shop_path())
 
         request.session[COUNTRY_SESSION_CACHE_KEY] = country.id
-        country_group = self._get_country_group_from_country(website, country)
+        country_group, pricelist = website._get_country_group_and_pricelist(country.code)
 
-        if country_group:
-            # pricelist_sudo = country_group.pricelist_ids.filtered_domain([
-            #     ('website_id', '=', website.id),
-            #     ('currency_id', '=', website.currency_id.id),
-            # ]).sudo()
-            # self._apply_pricelist(pricelist=pricelist_sudo)
+        self._apply_pricelist(pricelist=pricelist)
 
-            langs = website._get_available_languages(country_group)
-            lang = langs[0] if langs else website.default_lang_id
-            # redirect url with the previous lang removed if any and the new one set
-            lang_code = request.env['res.lang']._get_data(url_code=lang.url_code).code or lang
-            previous_lang = request.env['res.lang'].search([('code','=',request.env.lang)]).url_code
-            if redirect_url.endswith(f'/{previous_lang}'):
-                redirect_url = redirect_url.replace(f'/{previous_lang}', f'/{lang.url_code}')
-
-            return request.redirect(
-                f'/website/lang/{lang.url_code}?{url_encode({"r": redirect_url})}'
-            )
-        # TODO-PDA restrictions based on delivery address. On the address page/checkout?
-        return request.redirect(redirect_url or self._get_shop_path())
+        # TODO-PDA adapt languages when changing the country
+        lang = website._get_available_languages(country_group)[0]
+        # redirect url with the previous lang removed if any and the new one set
+        lang_code = request.env['res.lang']._get_data(url_code=lang.url_code).code or lang
+        previous_lang = request.env['res.lang'].search([('code','=',request.env.lang)]).url_code
+        if redirect_url.endswith(f'/{previous_lang}'):
+            redirect_url = redirect_url.replace(f'/{previous_lang}', f'/{lang.url_code}')
+        return request.redirect(
+            f'/website/lang/{lang.url_code}?{url_encode({"r": redirect_url})}'
+        )
+        # TODO-PDA restrictions based on delivery address. If I first update the address, then the pricelist, NOK.
 
     @route('/shop/pricelist', type='http', auth='public', website=True, sitemap=False)
     def pricelist(self, promo, **post):
