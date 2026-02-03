@@ -492,13 +492,17 @@ export class AddPageDialog extends Component {
             // create its menu afterwards if needed.
             await this.createPage(sectionsArch, this.props.forcedURL, false, this.props.pageTitle);
         } else {
-            this.dialogs.add(AddPageConfirmDialog, {
-                createPage: (...args) => this.createPage(...args),
-                name: name || this.lastTabName,
-                sectionsArch: sectionsArch || "",
-                templateId: templateId || "",
-            });
+            this.openAddPageConfirmDialog(sectionsArch, name || this.lastTabName, templateId);
         }
+    }
+
+    openAddPageConfirmDialog(sectionsArch, name, templateId) {
+        this.dialogs.add(AddPageConfirmDialog, {
+            createPage: (...args) => this.createPage(...args),
+            name: name,
+            sectionsArch: sectionsArch || "",
+            templateId: templateId || "",
+        });
     }
 
     async createPage(sectionsArch, name = "", addMenu = false, pageTitle = "") {
