@@ -57,6 +57,10 @@ class ResConfigSettings(models.TransientModel):
     website_cookies_bar = fields.Boolean(
         related='website_id.cookies_bar',
         readonly=False)
+    cookie_policy_id = fields.Many2one(
+        related='website_id.cookie_policy_id',
+        string='Cookie Policy Page',
+        readonly=False)
     website_block_third_party_domains = fields.Boolean(
         'Block 3rd-party domains',
         related='website_id.block_third_party_domains',

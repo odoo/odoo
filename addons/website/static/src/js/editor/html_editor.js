@@ -29,6 +29,7 @@ export class AutoCompleteInLinkPopover extends AutoComplete {
         ...AutoComplete.props,
         inputClass: { type: String, optional: true },
         updateValue: { type: Function, optional: true },
+        readonly: { type: Boolean, optional: true },
     };
     static template = "website.AutoCompleteInLinkPopover";
 
@@ -64,6 +65,7 @@ patch(LinkPopover.prototype, {
     setup() {
         super.setup();
         this.urlRef = useChildRef();
+        this.isLinkNotEditable = this.props.linkElement.dataset.linkNotEditable === "true";
         useEffect(
             (el) => {
                 if (el && (this.state.isImage || (!this.state.url && this.state.label))) {

@@ -5,6 +5,7 @@
     <xpath expr="//input[@t-ref='input']" position="attributes">
         <attribute name="class" remove="o_input pe-3" separator=" "/>
         <attribute name="t-attf-class" add="{{inputClass}}" separator=" "/>
+        <attribute name="t-att-readonly">props.readonly</attribute>
     </xpath>
 </t>
 
@@ -29,6 +30,7 @@
         placeholder.translate="Enter URL, /page, or #anchor"
         inputClass="'o_we_href_input_link border-dark-subtle form-control form-control-sm'"
         t-on-keydown="onKeydownEnter"
+        readonly="isLinkNotEditable"
         updateValue.bind="updateValue"
     >
         <t t-set-slot="urlOption" t-slot-scope="urlOptionScope">

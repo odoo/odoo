@@ -159,3 +159,15 @@ class TestSnippets(HttpCase):
         website.google_analytics_key = 'G-XXXXXXXXXXX'
         website.cookies_bar = True
         self.start_tour(website.get_client_action_url('/'), 'cookie_bar_updates_gtag_consent')
+
+    def test_change_cookie_policy_page(self):
+        website = self.env.ref('website.default_website')
+        website.cookies_bar = True
+        cookie_page = self.env["website.page"].create({
+            "name": "Test Cookie Policy",
+            "type": "qweb",
+            "url": "/test-cookie-policy",
+            "website_id": website.id,
+        })
+        website.cookie_policy_id = cookie_page
+        self.start_tour(website.get_client_action_url('/'), 'change_cookie_policy_page', login='admin')

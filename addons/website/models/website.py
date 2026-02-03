@@ -151,6 +151,11 @@ class Website(models.CachedModel):
     default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language, required=True)
     auto_redirect_lang = fields.Boolean('Autoredirect Language', default=True, help="Should users be redirected to their browser's language")
     cookies_bar = fields.Boolean('Cookies Bar', help="Display a customizable cookies bar on your website.")
+    cookie_policy_id = fields.Many2one(
+        'website.page',
+        string="Cookie Policy Page",
+        help="Page used as the Cookie Policy link in the cookies bar.",
+    )
     configurator_done = fields.Boolean(help='True if configurator has been completed or ignored')
     block_third_party_domains = fields.Boolean(
         'Block 3rd-party domains',
@@ -163,6 +168,10 @@ class Website(models.CachedModel):
     blocked_third_party_domains = fields.Text(
         'List of blocked 3rd-party domains',
         compute='_compute_blocked_third_party_domains')
+
+    def get_cookie_policy_url(self):
+        self.ensure_one()
+        return self.cookie_policy_id.sudo().url if self.cookie_policy_id else False
 
     def _default_social_facebook(self):
         return self.env.ref('base.main_company').social_facebook
@@ -333,6 +342,25 @@ class Website(models.CachedModel):
             lambda menu: re.search(r"[/](([^/=?&]+-)?[0-9]+)([/]|$)", menu.url) or menu.sudo().group_ids
         ))
 
+    def _update_cookie_policy_link(self, new_url):
+        self.ensure_one()
+        cookie_view = self.with_context(website_id=self.id).viewref('website.cookies_bar')
+        if not cookie_view or not cookie_view.arch_db:
+            return
+        xml_tree = etree.fromstring(cookie_view.arch_db)
+        node = xml_tree.xpath(
+            "//a[contains(@class, 'o_cookies_bar_text_policy')]"
+        )
+        if not node:
+            return
+        node = node[0]
+        if node.get('href') == new_url:
+            return
+        node.set('href', new_url)
+        cookie_view.write({
+            'arch_db': etree.tostring(xml_tree, encoding="unicode"),
+        })
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -378,24 +406,31 @@ class Website(models.CachedModel):
             (original_company | self.company_id)._compute_website_id()
 
         if 'cookies_bar' in values:
-            existing_policy_page = self.env['website.page'].search([
+            default_policy_page = self.env['website.page'].search([
                 ('website_id', '=', self.id),
                 ('url', '=', '/cookie-policy'),
             ])
             if not values['cookies_bar']:
-                existing_policy_page.unlink()
-            elif not existing_policy_page:
+                default_policy_page.unlink()
+                self.cookie_policy_id = False
+            elif not default_policy_page:
                 cookies_view = self.env.ref('website.cookie_policy', raise_if_not_found=False)
                 if cookies_view:
                     cookies_view.with_context(website_id=self.id).write({'website_id': self.id})
                     specific_cook_view = self.with_context(website_id=self.id).viewref('website.cookie_policy')
-                    self.env['website.page'].create({
+                    cookie_page = self.env['website.page'].create({
                         'is_published': True,
                         'website_indexed': False,
                         'url': '/cookie-policy',
                         'website_id': self.id,
                         'view_id': specific_cook_view.id,
                     })
+                    if not self.cookie_policy_id:
+                        self.cookie_policy_id = cookie_page
+
+        if 'cookie_policy_id' in values:
+            new_policy_url = self.cookie_policy_id.url if self.cookie_policy_id else '/cookie-policy'
+            self._update_cookie_policy_link(new_policy_url)
 
         return result
 
