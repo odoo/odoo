@@ -10,14 +10,20 @@ owl.Component = class Component extends owl.Component {
     static template = "";
 
     /**
-     * @param {any} props
      * @param {any} node
      */
-    constructor(props, node) {
-        super(props, node);
-        this.props = props;
+    constructor(node) {
+        super(node);
         this.__owl__ = node;
         this.__refs__ = {};
+        this.props = new Proxy(
+            {},
+            {
+                get(_, p) {
+                    return node.props[p];
+                },
+            }
+        );
         const envPlugin =
             this.__owl__.pluginManager.get(EnvPlugin) ||
             this.__owl__.pluginManager.startPlugin(EnvPlugin);
