@@ -24,9 +24,9 @@ class PrinterDriver(PrinterDriverBase):
         super().__init__(identifier, device)
         self.conn = Connection()
         self.cups_lock = Lock()
-        self.device_connection = device['device-class'].lower()
         self.receipt_protocol = 'star' if 'STR_T' in device['device-id'] else 'escpos'
-        self.connected_by_usb = self.device_connection == 'direct'
+        self.connected_by_usb = device.get("is_usb", False)
+        self.device_connection = "direct" if self.connected_by_usb else "network"
         self.device_name = device['device-make-and-model']
         self.ip = device.get('ip')
 
