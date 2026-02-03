@@ -17,6 +17,7 @@ from odoo.http import request
 from odoo.tools import convert, format_datetime, format_duration, format_time
 from odoo.tools.date_utils import sum_intervals
 from odoo.tools.intervals import Intervals
+from odoo.tools.date_utils import float_to_time
 
 
 def get_google_maps_url(latitude, longitude):
@@ -582,6 +583,7 @@ class HrAttendance(models.Model):
         to_verify = self.env['hr.attendance'].search(
             [('check_out', '=', False),
              ('employee_id.company_id.auto_check_out', '=', True),
+             ('employee_id.company_id.auto_check_out_mode', '=', 'tolerance'),
              ('employee_id.resource_calendar_id', '!=', False)]
         )
 
@@ -668,6 +670,46 @@ class HrAttendance(models.Model):
             technical_attendance.message_post(body=body)
 
         to_unlink.unlink()
+
+    def _cron_auto_check_out_specific_time(self):
+        """
+        Automatically check-out all employees still checked in
+        when company is in 'specific_time' mode.
+        """
+        now_utc = fields.Datetime.now()
+        companies = self.env['res.company'].search([
+            ('auto_check_out', '=', True),
+            ('auto_check_out_mode', '=', 'specific_time'),
+        ])
+        for company in companies:
+            company_timezone = ZoneInfo(company.partner_id.tz or 'UTC')
+            now_local = now_utc.astimezone(company_timezone)
+            specific_time_obj = float_to_time(company.auto_check_out_specific_time)
+            hours, minutes = specific_time_obj.hour, specific_time_obj.minute
+            open_attendances = self.search([
+                ('check_out', '=', False),
+                ('employee_id.company_id', '=', company.id),
+            ])
+            for att in open_attendances:
+                check_in_local = att.check_in.astimezone(company_timezone)
+                cutoff_same_day = check_in_local.replace(
+                    hour=hours, minute=minutes, second=0, microsecond=0
+                )
+                if check_in_local.time() < cutoff_same_day.time():
+                    next_cutoff = cutoff_same_day
+                else:
+                    next_cutoff = cutoff_same_day + relativedelta(days=1)
+                if now_local < next_cutoff:
+                    continue
+                employee_checkout = next_cutoff.astimezone(ZoneInfo('UTC')).replace(tzinfo=None)
+                employee_checkout = max(employee_checkout, att.check_in + relativedelta(seconds=1))
+                att.write({
+                    'check_out': employee_checkout,
+                    'out_mode': 'auto_check_out',
+                })
+                att.message_post(body=self.env._(
+                    'This attendance was automatically checked out based on company specific time configuration.'
+                ))
 
     def _get_localized_times(self):
         self.ensure_one()

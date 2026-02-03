@@ -5,6 +5,7 @@ import uuid
 from odoo import fields, models, api
 from odoo.fields import Domain
 from odoo.tools.urls import urljoin as url_join
+from odoo.exceptions import ValidationError
 
 
 class ResCompany(models.Model):
@@ -38,7 +39,9 @@ class ResCompany(models.Model):
         ('by_manager', 'Approved by Manager'),
     ], string='Extra Hours Validation', default='no_validation')
     auto_check_out = fields.Boolean(string="Automatic Check Out", default=False)
+    auto_check_out_mode = fields.Selection([('tolerance', 'Tolerance'), ('specific_time', 'Specific Time')], default='tolerance')
     auto_check_out_tolerance = fields.Float(default=2, export_string_translation=False)
+    auto_check_out_specific_time = fields.Float(export_string_translation=False)
     absence_management = fields.Boolean(string="Absence Management", default=False)
     attendance_device_tracking = fields.Boolean(string="Device & Location Tracking", default=False)
 
@@ -46,6 +49,15 @@ class ResCompany(models.Model):
     def _compute_attendance_kiosk_url(self):
         for company in self:
             company.attendance_kiosk_url = url_join(self.env['res.company'].get_base_url(), '/hr_attendance/%s' % company.attendance_kiosk_key)
+
+    @api.constrains('auto_check_out', 'auto_check_out_mode', 'partner_id')
+    def _check_auto_checkout_timezone(self):
+        for company in self:
+            if company.auto_check_out and company.auto_check_out_mode == 'specific_time':
+                if not company.partner_id.tz:
+                    raise ValidationError(self.env._(
+                        "You must set a company timezone to use Specific Time auto checkout."
+                    ))
 
     # ---------------------------------------------------------
     # ORM Overrides
