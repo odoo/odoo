@@ -5,7 +5,7 @@ import { Deferred, Mutex } from "@web/core/utils/concurrency";
 
 export const CHAT_HUB_DEFAULT_BUBBLE_START = 15;
 export const CHAT_HUB_KEY = "mail.ChatHub";
-const CHAT_HUB_COMPACT_LS = "mail.user_setting.chathub_compact";
+export const CHAT_HUB_COMPACT_LS = "mail.user_setting.chathub_compact";
 
 /**
  * @typedef AwaitChatHubInit
@@ -46,7 +46,7 @@ export class ChatHub extends Record {
                 chatHub.load();
             }
             if (ev.key === CHAT_HUB_COMPACT_LS) {
-                chatHub.compact = ev.newValue === "true";
+                chatHub._recomputeCompact++;
             }
         });
         chatHub
@@ -55,17 +55,11 @@ export class ChatHub extends Record {
         return chatHub;
     }
 
+    _recomputeCompact = 0;
     compact = fields.Attr(false, {
         compute() {
+            void this._recomputeCompact;
             return browser.localStorage.getItem(CHAT_HUB_COMPACT_LS) === "true";
-        },
-        /** @this {import("models").Chathub} */
-        onUpdate() {
-            if (this.compact) {
-                browser.localStorage.setItem(CHAT_HUB_COMPACT_LS, this.compact.toString());
-            } else {
-                browser.localStorage.removeItem(CHAT_HUB_COMPACT_LS);
-            }
         },
     });
     canShowOpened = fields.Many("ChatWindow");
@@ -98,7 +92,8 @@ export class ChatHub extends Record {
         for (const chatWindow of this.opened) {
             chatWindow.bypassCompact = false;
         }
-        this.compact = true;
+        browser.localStorage.setItem(CHAT_HUB_COMPACT_LS, true);
+        this._recomputeCompact++;
     }
 
     onRecompute() {
