@@ -19,6 +19,7 @@ owl.Component = class Component extends owl.Component {
         this.props = props;
         this.env = env;
         this.__owl__ = node;
+        this.__refs__ = {};
         currentNode = node;
     }
 
@@ -78,9 +79,15 @@ export function onRendered(cb) {
 /**
  * @deprecated
  * @param {string} name
+ * @returns {{ readonly el: HTMLElement | null }}
  */
 export function useRef(name) {
-    return owl.useRef(name);
+    const component = getCurrentNode().component;
+    return {
+        get el() {
+            return component.__refs__[name] || null;
+        },
+    };
 }
 
 /**

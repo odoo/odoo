@@ -191,6 +191,14 @@ export const customDirectives = {
         node.setAttribute(`t-on-click${mods}`, handlerFunction);
         node.setAttribute(`t-on-auxclick${mods}`, handlerFunction);
     },
+    /**
+     * @param {HTMLElement} node
+     * @param {string} value
+     */
+    ref: (node, value) => {
+        const refName = value.startsWith("{{") ? value.slice(2, -2).trim() : `'${value}'`;
+        node.setAttribute("t-ref", `__globals__.ref(this, ${refName})`);
+    },
 };
 
 export const globalValues = {
@@ -210,6 +218,16 @@ export const globalValues = {
             value(ev, isMiddleClick);
         }
     },
+    /**
+     * @param {any} component
+     * @param {string} refName
+     */
+    ref: (component, refName) => ({
+        /** @param {HTMLElement | null} value */
+        set(value) {
+            component.__refs__[refName] = value;
+        },
+    }),
 };
 
 /**
