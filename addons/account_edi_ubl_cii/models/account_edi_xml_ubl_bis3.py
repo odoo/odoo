@@ -1028,8 +1028,14 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
 
     def _add_invoice_line_item_nodes(self, line_node, vals):
         # OVERRIDE
-        item_values = vals['base_line']['_ubl_values']['item_currency']
-        line_node['cac:Item'] = self._ubl_get_line_item_node(vals, item_values)
+        sub_vals = {
+            **vals,
+            'line_node': line_node,
+            'line_vals': {
+                'base_line': vals['base_line'],
+            },
+        }
+        self._ubl_add_line_item_node(sub_vals)
 
     def _add_invoice_line_tax_category_nodes(self, line_node, vals):
         # OVERRIDE
