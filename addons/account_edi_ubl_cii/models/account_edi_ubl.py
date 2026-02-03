@@ -460,53 +460,10 @@ class AccountEdiUBL(models.AbstractModel):
             'unitCode': self._get_uom_unece_code(base_line['product_uom_id']),
         }
 
-    def _ubl_get_line_item_node_classified_tax_category_node(self, vals, tax_category):
-        """ Generate the node 'cac:ClassifiedTaxCategory' in 'cac:Item'.
-
-        :param vals:            Some custom data.
-        :param tax_category:    An entry of vals['_ubl_values']['item_classified_tax_categories']
-                                containing all the necessary data to build the node.
-        :return:                A new node in 'cac:Item' -> 'cac:ClassifiedTaxCategory'.
-        """
-        return {
-            '_currency': tax_category['currency'],
-            'cbc:ID': {'_text': tax_category['tax_category_code']},
-            'cbc:Name': {'_text': None},
-            'cbc:Percent': {'_text': tax_category['percent']},
-            'cbc:TaxExemptionReasonCode': {'_text': None},
-            'cbc:TaxExemptionReason': {'_text': None},
-            'cac:TaxScheme': {
-                'cbc:ID': {'_text': tax_category['scheme_id']},
-            }
-        }
-
-    def _ubl_get_line_item_node(self, vals, item_values):
-        item_node = {}
-        base_line = item_values['base_line']
+    def _ubl_add_line_item_name_description_nodes(self, vals):
+        item_node = vals['item_node']
+        base_line = vals['line_vals']['base_line']
         product = base_line['product_id']
-
-        if product.default_code:
-            item_node['cac:SellersItemIdentification'] = {
-                'cbc:ID': {'_text': product.default_code},
-            }
-        else:
-            item_node['cac:SellersItemIdentification'] = None
-        if product.barcode:
-            item_node['cac:StandardItemIdentification'] = {
-                'cbc:ID': {
-                    '_text': product.barcode,
-                    'schemeID': '0160',  # GTIN
-                },
-            }
-        else:
-            item_node['cac:StandardItemIdentification'] = None
-        item_node['cac:AdditionalItemProperty'] = [
-            {
-                'cbc:Name': {'_text': value.attribute_id.name},
-                'cbc:Value': {'_text': value.name},
-            }
-            for value in product.product_template_attribute_value_ids
-        ]
 
         if base_line.get('_removed_tax_data'):
             # Emptying tax extra line.
@@ -532,11 +489,147 @@ class AccountEdiUBL(models.AbstractModel):
         else:
             item_node['cbc:Name'] = None
 
-        item_node['cac:ClassifiedTaxCategory'] = [
-            self._ubl_get_line_item_node_classified_tax_category_node(vals, tax_category)
-            for tax_category in item_values['classified_tax_categories'].values()
+    def _ubl_add_line_item_identification_nodes(self, vals):
+        item_node = vals['item_node']
+        base_line = vals['line_vals']['base_line']
+        product = base_line['product_id']
+
+        item_node['cac:BuyersItemIdentification'] = None
+
+        if product.default_code:
+            item_node['cac:SellersItemIdentification'] = {
+                'cbc:ID': {'_text': product.default_code},
+            }
+        else:
+            item_node['cac:SellersItemIdentification'] = None
+        if product.barcode:
+            item_node['cac:StandardItemIdentification'] = {
+                'cbc:ID': {
+                    '_text': product.barcode,
+                    'schemeID': '0160',  # GTIN
+                },
+            }
+        else:
+            item_node['cac:StandardItemIdentification'] = None
+
+    def _ubl_add_line_item_additional_item_property_nodes(self, vals):
+        item_node = vals['item_node']
+        base_line = vals['line_vals']['base_line']
+        product = base_line['product_id']
+
+        item_node['cac:AdditionalItemProperty'] = [
+            {
+                'cbc:Name': {'_text': value.attribute_id.name},
+                'cbc:Value': {'_text': value.name},
+            }
+            for value in product.product_template_attribute_value_ids
         ]
-        return item_node
+
+    def _ubl_get_line_item_commodity_classification_node_from_intrastat_code(self, vals, intrastat_code):
+        return {
+            'cbc:ItemClassificationCode': {
+                '_text': intrastat_code.code,
+                'listID': 'HS',
+                'listVersionID': None,
+            }
+        }
+
+    def _ubl_get_line_item_commodity_classification_node_from_unspsc_code(self, vals, unspsc_code):
+        return {
+            'cbc:ItemClassificationCode': {
+                '_text': unspsc_code.code,
+                'listID': 'UNSPSC',
+                'listVersionID': None,
+            }
+        }
+
+    def _ubl_get_line_item_commodity_classification_node_from_cpv_code(self, vals, cpv_code):
+        return {
+            'cbc:ItemClassificationCode': {
+                '_text': cpv_code.code,
+                'listID': 'CPV',
+                'listVersionID': None,
+            }
+        }
+
+    def _ubl_add_line_item_commodity_classification_nodes(self, vals):
+        item_node = vals['item_node']
+        base_line = vals['line_vals']['base_line']
+        product = base_line['product_id']
+        nodes = item_node['cac:CommodityClassification'] = []
+
+        if self.module_installed('account_intrastat'):
+            intrastat_code = product.intrastat_code_id
+            if intrastat_code.code:
+                nodes.append(self._ubl_get_line_item_commodity_classification_node_from_intrastat_code(vals, intrastat_code))
+
+        if self.module_installed('product_unspsc'):
+            unspsc_code = product.unspsc_code_id
+            if unspsc_code.code:
+                nodes.append(self._ubl_get_line_item_commodity_classification_node_from_unspsc_code(vals, unspsc_code))
+
+        if self.module_installed('l10n_ro_edi'):
+            cpv_code = product.cpv_code_id
+            if cpv_code.code:
+                nodes.append(self._ubl_get_line_item_commodity_classification_node_from_cpv_code(vals, cpv_code))
+
+        return nodes
+
+    def _ubl_get_line_item_node_classified_tax_category_node(self, vals, tax_category):
+        """ Generate the node 'cac:ClassifiedTaxCategory' in 'cac:Item'.
+
+        :param vals:            Some custom data.
+        :param tax_category:    An entry of vals['_ubl_values']['item_classified_tax_categories']
+                                containing all the necessary data to build the node.
+        :return:                A new node in 'cac:Item' -> 'cac:ClassifiedTaxCategory'.
+        """
+        return {
+            '_currency': tax_category['currency'],
+            'cbc:ID': {'_text': tax_category['tax_category_code']},
+            'cbc:Name': {'_text': None},
+            'cbc:Percent': {'_text': tax_category['percent']},
+            'cbc:TaxExemptionReasonCode': {'_text': None},
+            'cbc:TaxExemptionReason': {'_text': None},
+            'cac:TaxScheme': {
+                'cbc:ID': {'_text': tax_category['scheme_id']},
+            }
+        }
+
+    def _ubl_add_line_item_classified_tax_category_nodes(self, vals, in_foreign_currency=True):
+        AccountTax = self.env['account.tax']
+        item_node = vals['item_node']
+        base_line = vals['line_vals']['base_line']
+        currency = base_line['currency_id'] if in_foreign_currency else vals['company_currency']
+        suffix = '_currency' if in_foreign_currency else ''
+
+        classified_tax_category_nodes = item_node['cac:ClassifiedTaxCategory'] = []
+        aggregated_values = AccountTax._aggregate_base_line_tax_details(
+            base_line=base_line,
+            grouping_function=lambda base_line, tax_data: self._ubl_default_base_line_item_classified_tax_category_grouping_key(
+                base_line=base_line,
+                tax_data=tax_data,
+                vals=vals,
+                currency=currency,
+            ),
+        )
+        for grouping_key, values in aggregated_values.items():
+            if not grouping_key:
+                continue
+
+            classified_tax_category_nodes.append(self._ubl_get_line_item_node_classified_tax_category_node(vals, {
+                **grouping_key,
+                'base_amount': values[f'base_amount{suffix}'],
+                'tax_amount': values[f'tax_amount{suffix}'],
+            }))
+
+    def _ubl_add_line_item_node(self, vals):
+        node = vals['line_node']['cac:Item'] = {}
+        sub_vals = {**vals, 'item_node': node}
+        self._ubl_add_line_item_name_description_nodes(sub_vals)
+        self._ubl_add_line_item_identification_nodes(sub_vals)
+        self._ubl_add_line_item_additional_item_property_nodes(sub_vals)
+        self._ubl_add_line_item_commodity_classification_nodes(sub_vals)
+        self._ubl_add_line_item_classified_tax_category_nodes(sub_vals)
 
     def _ubl_get_line_allowance_charge_recycling_contribution_node(self, vals, recycling_contribution_values):
         currency = recycling_contribution_values['currency']
