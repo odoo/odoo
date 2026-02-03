@@ -1,3 +1,22 @@
+/*
+
+This file contains the following deprecated features:
+- onRendered
+- onWillRender
+- reactive
+- this.env
+- this.props
+- this.render
+- useComponent
+- useEffect
+- useExternalListener
+- useRef
+- useState
+
+It also defines old implementation of t-ref and t-model.
+
+*/
+
 // @ts-ignore
 const owl = globalThis.owl;
 
