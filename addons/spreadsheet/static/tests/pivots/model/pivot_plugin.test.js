@@ -1261,6 +1261,31 @@ test("PIVOT functions can accept spreadsheet dates", async function () {
     expect(getCellValue(model, "A1")).toBe(10);
 });
 
+test("PIVOT.VALUE running total carries forward for month granularity", async function () {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+            <pivot>
+                <field name="date" interval="month" type="row"/>
+                <field name="foo" type="measure"/>
+            </pivot>`,
+    });
+    updatePivot(model, pivotId, {
+        rows: [{ fieldName: "date", granularity: "month", order: "asc" }],
+    });
+    await waitForDataLoaded(model);
+
+    setCellContent(model, "A1", '=PIVOT.VALUE(1,"foo:sum","date:month",DATE(2016,11,1))');
+    expect(getCellValue(model, "A1")).toBe("");
+
+    updatePivotMeasureDisplay(model, pivotId, "foo:sum", {
+        type: "running_total",
+        fieldNameWithGranularity: "date:month",
+    });
+    await waitForDataLoaded(model);
+
+    expect(getCellValue(model, "A1")).toBe(13);
+});
+
 test("PIVOT formulas are correctly formatted at evaluation", async function () {
     const { model } = await createSpreadsheetWithPivot({
         arch: /* xml */ `

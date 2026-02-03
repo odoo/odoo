@@ -259,6 +259,12 @@ describe("pivot time adapters formatted value", () => {
         expect(adapter.toValueAndFormat("3/1998", DEFAULT_LOCALE)).toEqual({ value: "Q3 1998" });
     });
 
+    test("Week/Month/Quarter comparable values", () => {
+        expect(pivotTimeAdapter("week").toComparableValue("5/2024")).toBe(202405);
+        expect(pivotTimeAdapter("month").toComparableValue("02/2024")).toBe(202402);
+        expect(pivotTimeAdapter("quarter").toComparableValue("2/2025")).toBe(202502);
+    });
+
     test("Year adapter", () => {
         const adapter = pivotTimeAdapter("year");
         expect(adapter.toValueAndFormat("2020", DEFAULT_LOCALE)).toEqual({
