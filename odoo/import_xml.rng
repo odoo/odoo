@@ -177,6 +177,9 @@
                 </rng:optional>
             </rng:optional>
             <rng:attribute name="model" />
+            <rng:optional>
+                <rng:attribute name="skip_unique_constraint" />
+            </rng:optional>
             <rng:ref name="env"/>
             <rng:zeroOrMore>
                 <rng:ref name="field" />
