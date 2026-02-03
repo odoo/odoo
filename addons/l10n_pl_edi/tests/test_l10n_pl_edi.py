@@ -1,4 +1,6 @@
 import base64
+from datetime import timedelta
+
 from lxml import etree
 
 from odoo import Command, fields, tools
@@ -6,6 +8,7 @@ from odoo.exceptions import UserError
 from odoo.tests import freeze_time, patch, tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
 
 
@@ -14,7 +17,7 @@ def attachment_to_dict(attachment):
 
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
-class TestL10nPlEdi(AccountTestInvoicingCommon):
+class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
 
     @classmethod
     @AccountTestInvoicingCommon.setup_country('pl')
@@ -486,3 +489,132 @@ class TestL10nPlEdi(AccountTestInvoicingCommon):
         self.assertEqual(invoice.l10n_pl_edi_session_id, False)
         self.assertEqual(invoice.l10n_pl_edi_ref, False)
         self.assertEqual(invoice.l10n_pl_edi_attachment_id.name, False)
+
+    def test_l10n_pl_edi_download_bill_success(self):
+
+        def query_invoice_metadata(query_criteria, page_size=100, page_offset=0):
+            return {
+                'hasMore': False,
+                'invoices': [
+                    {
+                        'acquisitionDate': '2026-02-10T10:50:29.348439+00:00',
+                        'buyer': {'identifier': {'type': 'Nip', 'value': '5795955811'}, 'name': 'PL Company'},
+                        'currency': 'PLN',
+                        'formCode': {'schemaVersion': '1-0E', 'systemCode': 'FA (3)', 'value': 'FA'},
+                        'hasAttachment': False,
+                        'invoiceHash': 'DOFApZsfUkl3BLgW1nd7frNq4IVHvYoXHEudpyCFbpg=',
+                        'invoiceNumber': 'FV/2026/00001-demo-test-005',
+                        'invoiceType': 'Vat',
+                        'invoicingDate': '2026-02-10T10:50:29.189345+00:00',
+                        'invoicingMode': 'Online',
+                        'isSelfInvoicing': False,
+                        'issueDate': '2026-02-10',
+                        'ksefNumber': '7492091229-20260210-0700A043714A-5E',
+                        'permanentStorageDate': '2026-02-10T10:50:30.40494+00:00',
+                        'seller': {'name': 'HADRON FOR BUSINESS SP Z O O', 'nip': '7492091229'},
+                    },
+                ],
+            }
+
+        def get_invoice_by_ksef_number(ksef_number):
+            path = 'l10n_pl_edi/tests/export_xmls/fa3_bill.xml'
+            with tools.file_open(path, mode='rb') as file:
+                return {'xml_content': file.read()}
+
+        with (
+            patch.object(KsefApiService, 'query_invoice_metadata', side_effect=query_invoice_metadata),
+            patch.object(KsefApiService, 'get_invoice_by_ksef_number', side_effect=get_invoice_by_ksef_number),
+        ):
+            self.env['account.move'].with_company(self.company)._l10n_pl_edi_download_bills_from_ksef()
+
+        created_move = self.env['account.move'].search([('l10n_pl_edi_number', '=', '7492091229-20260210-0700A043714A-5E')])
+        self.assertTrue(created_move)
+        self.assertEqual(created_move.partner_id.vat, '7492091229')
+        self.assertEqual(len(created_move), 1)
+        self.assertRecordValues(
+            created_move, [
+                {
+                    'state': 'draft',
+                    'move_type': 'in_invoice',
+                    'invoice_date': fields.Date.to_date('2026-02-10'),
+                    'invoice_date_due': fields.Date.to_date('2026-02-10'),
+                    'ref': 'FV/2026/00001-demo-test-005',
+                    'currency_id': self.env['res.currency'].search([('name', '=', 'PLN')]).id,
+                },
+            ],
+        )
+        self.assertRecordValues(
+            created_move.invoice_line_ids, [
+                {
+                    'name': "[FURN_0006] Podstawka pod monitor",
+                    'quantity': 1.0,
+                    'price_unit': 3.19,
+                },
+                {
+                    'name': "[FOOD_0001] Chleb pszenny",
+                    'quantity': 2.5,
+                    'price_unit': 5.00,
+                },
+                {
+                    'name': "[BOOK_0001] Podręcznik szkolny",
+                    'quantity': 4.0,
+                    'price_unit': 5.00,
+                },
+            ],
+        )
+
+        self.assertEqual(
+            created_move.invoice_line_ids.tax_ids.ids,
+            self.env['account.tax'].search(
+                [
+                    ('name', 'in', ('23% G', '8%', '5%')),
+                    ('type_tax_use', '=', 'purchase'),
+                    *self.env['account.tax']._check_company_domain(self.company),
+                ],
+            ).ids,
+        )
+
+    def test_l10n_pl_edi_download_bill_retry_after(self):
+        """Test that when a rate limit error occurs the progress is preserved and the cron is rescheduled."""
+
+        def query_invoice_metadata(query_criteria, page_size=100, page_offset=0):
+            return {
+                'hasMore': False,
+                'invoices': [
+                    {
+                        'ksefNumber': 'KSEF-BILL-001',
+                    },
+                    {
+                        'ksefNumber': 'KSEF-BILL-002',
+                    },
+                ],
+            }
+
+        call_count = 0
+
+        def get_invoice_by_ksef_number(ksef_number):
+            nonlocal call_count
+            call_count += 1
+            if call_count == 1:
+                path = 'l10n_pl_edi/tests/export_xmls/fa3_bill.xml'
+                with tools.file_open(path, mode='rb') as file:
+                    return {'xml_content': file.read()}
+            return {'error': {'retry_after': 120, 'message': 'Too Many Requests'}}
+
+        with (
+            patch.object(KsefApiService, 'query_invoice_metadata', side_effect=query_invoice_metadata),
+            patch.object(KsefApiService, 'get_invoice_by_ksef_number', side_effect=get_invoice_by_ksef_number),
+            self.capture_triggers() as capt,
+        ):
+            cron_runs_before = len(capt.records)
+            self.env['account.move'].with_company(self.company)._l10n_pl_edi_download_bills_from_ksef()
+
+        bill_1 = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'KSEF-BILL-001')])
+        self.assertTrue(bill_1)
+
+        bill_2 = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'KSEF-BILL-002')])
+        self.assertFalse(bill_2)
+
+        self.assertEqual(len(capt.records), cron_runs_before + 1)
+        self.assertGreaterEqual(capt.records[-1].call_at, fields.Datetime.now() + timedelta(seconds=120))
+        self.assertLessEqual(capt.records[-1].call_at, fields.Datetime.now() + timedelta(seconds=240))
