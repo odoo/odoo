@@ -22,6 +22,23 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         xml_content = dict_to_xml(document_node, template=Order, nsmap=self._get_document_nsmap(vals))
         return etree.tostring(xml_content, xml_declaration=True, encoding='UTF-8')
 
+    def _setup_base_lines(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._setup_base_lines(vals)
+
+        for base_line in vals['base_lines']:
+            product = base_line['product_id']
+            partner = base_line['partner_id']
+            supplier_info = product.variant_seller_ids.filtered(lambda s:
+                s.partner_id == partner
+                and (
+                    s.product_id == product
+                    or (not s.product_id and s.product_tmpl_id == product.product_tmpl_id)
+                )
+                and (s.product_code or s.product_name),
+            )[:1]
+            base_line['supplier_info'] = supplier_info
+
     def _get_purchase_order_node(self, vals):
         self._add_purchase_order_config_vals(vals)
         self._add_purchase_order_base_lines_vals(vals)
@@ -260,34 +277,38 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
         # Excise taxes.
         self._ubl_add_line_allowance_charge_nodes_for_excise_taxes(sub_vals)
 
+    def _ubl_add_line_item_name_description_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_line_item_name_description_nodes(vals)
+
+        item_node = vals['item_node']
+        base_line = vals['line_vals']['base_line']
+        supplier_info = base_line['supplier_info']
+        if supplier_info.product_name:
+            item_node['cbc:Name']['_text'] = supplier_info.product_name
+
+    def _ubl_add_line_item_identification_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_line_item_identification_nodes(vals)
+
+        item_node = vals['item_node']
+        base_line = vals['line_vals']['base_line']
+        supplier_info = base_line['supplier_info']
+        if supplier_info.product_code:
+            item_node['cac:SellersItemIdentification'] = {
+                'cbc:ID': {'_text': supplier_info.product_code},
+            }
+
     def _add_purchase_order_line_item_nodes(self, line_node, vals):
         # OVERRIDE
-        item_values = vals['base_line']['_ubl_values']['item_currency']
-        line_item_node = self._ubl_get_line_item_node(vals, item_values)
-
-        base_line = item_values['base_line']
-        product = base_line['product_id']
-        partner = base_line['partner_id']
-        supplier_info = product.variant_seller_ids.filtered(lambda s:
-            s.partner_id == partner
-            and (
-                s.product_id == product
-                or (not s.product_id and s.product_tmpl_id == product.product_tmpl_id)
-            )
-            and (s.product_code or s.product_name),
-        )[:1]
-
-        # Prefer the seller's product name over our (buyer) product name
-        if supplier_info.product_name:
-            line_item_node['cbc:Name']['_text'] = supplier_info.product_name
-
-        # When generating purchase order (PO) we are not considered as the seller of the sale but
-        # buyer. The `SellersItemIdentification` is therefore the PO's partner product ID.
-        line_item_node['cac:SellersItemIdentification'] = {
-            'cbc:ID': {'_text': supplier_info.product_code or None},
+        sub_vals = {
+            **vals,
+            'line_node': line_node,
+            'line_vals': {
+                'base_line': vals['base_line'],
+            },
         }
-
-        line_node['cac:Item'] = line_item_node
+        self._ubl_add_line_item_node(sub_vals)
 
     def _add_purchase_order_line_price_nodes(self, line_node, vals):
         # OVERRIDE

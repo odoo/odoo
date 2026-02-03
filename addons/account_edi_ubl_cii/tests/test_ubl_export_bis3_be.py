@@ -574,5 +574,55 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         )
 
         self._generate_invoice_ubl_file(invoice)
-
         self._assert_invoice_ubl_file(invoice, 'test_invoice_negative_discount_upsell')
+
+    def test_invoice_product_commodity_code_intrastat(self):
+        self.ensure_installed('account_intrastat')
+        tax_21 = self.percent_tax(21.0)
+        product = self._create_product(
+            lst_price=10.0,
+            taxes_id=tax_21,
+            intrastat_code_id=self.env.ref('account_intrastat.commodity_code_2018_25309000'),
+        )
+        invoice = self._create_invoice_one_line(
+            product_id=product,
+            partner_id=self.partner_be,
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_product_commodity_code_intrastat')
+
+    def test_invoice_product_commodity_code_unspsc(self):
+        self.ensure_installed('product_unspsc')
+        tax_21 = self.percent_tax(21.0)
+        product = self._create_product(
+            lst_price=10.0,
+            taxes_id=tax_21,
+            unspsc_code_id=self.env.ref('product_unspsc.unspsc_code_12141906'),
+        )
+        invoice = self._create_invoice_one_line(
+            product_id=product,
+            partner_id=self.partner_be,
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_product_commodity_code_unspsc')
+
+    def test_invoice_product_commodity_code_cpv(self):
+        self.ensure_installed('l10n_ro_cpv_code')
+        tax_21 = self.percent_tax(21.0)
+        product = self._create_product(
+            lst_price=10.0,
+            taxes_id=tax_21,
+            cpv_code_id=self.env.ref('l10n_ro_cpv_code.351131100'),
+        )
+        invoice = self._create_invoice_one_line(
+            product_id=product,
+            partner_id=self.partner_be,
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_product_commodity_code_cpv')
