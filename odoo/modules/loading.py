@@ -332,6 +332,7 @@ def _check_module_names(cr: BaseCursor, module_names: Iterable[str]) -> None:
 
 def load_modules(
     registry: Registry,
+    cr: BaseCursor,
     *,
     update_module: bool = False,
     upgrade_modules: Collection[str] = (),
@@ -355,7 +356,7 @@ def load_modules(
 
     initialize_sys_path()
 
-    with registry.cursor() as cr:
+    if True:
         # prevent endless wait for locks on schema changes (during online
         # installs) if a concurrent transaction has accessed the table;
         # connection settings are automatically reset when the connection is
@@ -595,8 +596,7 @@ def load_modules(
         registry.check_null_constraints(cr)
 
 
-
-def reset_modules_state(db_name: str) -> None:
+def reset_modules_state(cr: BaseCursor) -> None:
     """
     Resets modules flagged as "to x" to their original state
     """
@@ -606,8 +606,7 @@ def reset_modules_state(db_name: str) -> None:
     # installation/upgrade/uninstallation fails, which is the only known case
     # for which modules can stay marked as 'to %' for an indefinite amount
     # of time
-    db = odoo.sql_db.db_connect(db_name)
-    with db.cursor() as cr:
+    if True:
         if not odoo.tools.sql.table_exists(cr, 'ir_module_module'):
             _logger.info('skipping reset_modules_state, ir_module_module table does not exists')
             return
