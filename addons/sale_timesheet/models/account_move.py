@@ -9,7 +9,15 @@ from odoo.fields import Domain
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    timesheet_ids = fields.One2many('account.analytic.line', 'reinvoice_id', string='Timesheets', readonly=True, copy=False, export_string_translation=False)
+    timesheet_ids = fields.One2many(
+        'account.analytic.line',
+        'reinvoice_id',
+        string='Timesheets',
+        domain=[('project_id', '!=', False)],
+        readonly=True,
+        copy=False,
+        export_string_translation=False
+    )
     timesheet_count = fields.Integer("Number of timesheets", compute='_compute_timesheet_count', compute_sudo=True, export_string_translation=False)
     timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id', export_string_translation=False)
     timesheet_total_duration = fields.Integer("Timesheet Total Duration",
@@ -36,7 +44,14 @@ class AccountMove(models.Model):
 
     @api.depends('timesheet_ids')
     def _compute_timesheet_count(self):
-        timesheet_data = self.env['account.analytic.line']._read_group([('reinvoice_id', 'in', self.ids)], ['reinvoice_id'], ['__count'])
+        timesheet_data = self.env['account.analytic.line']._read_group(
+            [
+                ('reinvoice_id', 'in', self.ids),
+                ('project_id', '!=', False),
+            ],
+            ['reinvoice_id'],
+            ['__count'],
+        )
         mapped_data = {timesheet_invoice.id: count for timesheet_invoice, count in timesheet_data}
         for invoice in self:
             invoice.timesheet_count = mapped_data.get(invoice.id, 0)
