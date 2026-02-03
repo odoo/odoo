@@ -290,7 +290,7 @@ class Website(models.CachedModel):
             menus.mapped('is_visible')
 
             top_menus = menus.filtered(lambda m: not m.parent_id)
-            website.menu_id = top_menus[:1].id
+            website.menu_id = (top_menus.filtered(lambda m: m.original_id) or top_menus)[:1]
 
     @api.depends('custom_blocked_third_party_domains')
     def _compute_blocked_third_party_domains(self):
@@ -1194,6 +1194,7 @@ class Website(models.CachedModel):
             new_menu = menu.copy({
                 'parent_id': t_menu.id,
                 'website_id': self.id,
+                'original_id': menu.id,
             })
             for submenu in menu.child_id:
                 copy_menu(submenu, new_menu)
@@ -1201,6 +1202,7 @@ class Website(models.CachedModel):
             new_top_menu = top_menu.copy({
                 'name': _('Top Menu for Website %s', website.id),
                 'website_id': website.id,
+                'original_id': top_menu.id,
             })
             for submenu in top_menu.child_id:
                 copy_menu(submenu, new_top_menu)

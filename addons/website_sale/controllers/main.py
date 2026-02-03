@@ -174,7 +174,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 domains.append(Domain.OR(subdomains))
 
         if category:
-            domains.append(Domain('public_categ_ids', 'child_of', int(category)))
+            domains.append(Domain('public_categ_ids', 'child_of', [int(category)]))
 
         if attribute_value_dict:
             domains.extend(
