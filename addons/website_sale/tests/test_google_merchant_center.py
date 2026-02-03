@@ -119,10 +119,10 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
             self.assertEqual(200, response.status_code)
             url = parse_url(product.website_url)
             self.assertURLEqual(
-                f'{url.path}'
+                f'{url.path or ""}'
                  f'?attribute_values={",".join(str(i) for i in product.product_template_attribute_value_ids.product_attribute_value_id.ids)}'
                  f'&pricelist={self.eur_pricelist.id}'
-                 f'#{url.fragment}',
+                 f'#{url.fragment or ""}',
                 response.url,
             )
 

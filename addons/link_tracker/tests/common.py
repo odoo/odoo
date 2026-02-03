@@ -88,6 +88,7 @@ class MockLinkTracker(common.BaseCase):
         redirect_params = {k: v[0] for k, v in parse_qs(redirect_url.query or '').items()}
         self.assertEqual(redirect_url.scheme, original_url.scheme)
         self.assertEqual(redirect_url.authority, original_url.authority)
-        self.assertEqual(redirect_url.path, original_url.path)
+        # no path or empty path is equivalent
+        self.assertEqual(redirect_url.path or '', original_url.path or '')
         if link_params:
             self.assertEqual(redirect_params, link_params)
