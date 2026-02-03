@@ -646,3 +646,29 @@ describe("animate text in toolbar", () => {
         expect("button[title='Animate Text']").toHaveClass("active");
     });
 });
+
+test("animation intensity should remain visible when switching animation mode.", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `
+            <div class="test-options-target">
+                ${testImg}
+            </div>
+        `,
+        { styleContent }
+    );
+    await contains(":iframe .test-options-target img").click();
+    await waitSidebarUpdated();
+
+    await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
+    await contains(".o-dropdown--menu [data-action-value='onAppearance']").click();
+
+    await contains(".options-container [data-label='Effect'] .dropdown-toggle").click();
+    await contains(".o-dropdown--menu [data-action-value='o_anim_zoom_out']").click();
+    await waitSidebarUpdated();
+    expect(".options-container [data-label='Intensity']").toHaveCount(1);
+
+    await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
+    await contains(".o-dropdown--menu [data-action-value='onScroll']").click();
+    await waitSidebarUpdated();
+    expect(".options-container [data-label='Intensity']").toHaveCount(1);
+});
