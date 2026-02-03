@@ -13,7 +13,7 @@ This file contains the following deprecated features:
 - useRef
 - useState
 
-It also defines old implementation of t-ref and t-model.
+It also defines old implementation of t-ref, t-model and t-portal.
 
 */
 
@@ -220,6 +220,29 @@ export function useChildSubEnv(extension) {
     extendEnv(component.env, extension);
 }
 
+class Portal extends owl.Component {
+    static template = owl.xml`<t t-slot="default"/>`;
+
+    setup() {
+        const node = this.__owl__;
+
+        owl.onMounted(() => {
+            const portal = node.bdom;
+            const target = document.querySelector(this.props.target);
+            if (target) {
+                portal.moveBeforeDOMNode(target.firstChild, target);
+            } else {
+                throw new Error("invalid portal target");
+            }
+        });
+
+        owl.onWillUnmount(() => {
+            const portal = node.bdom;
+            portal.remove();
+        });
+    }
+}
+
 export const compatibilityDirectives = {
     /**
      * @param {HTMLElement} node
@@ -243,6 +266,17 @@ export const compatibilityDirectives = {
         const setter = `(nv) => {${value} = nv;}`;
         node.setAttribute(attribute, `__globals__.createModelSignal(${getter}, ${setter})`);
     },
+    /**
+     * @param {HTMLElement} node
+     * @param {string} value
+     */
+    portal: (node, value) => {
+        if (node.nodeName.toLowerCase() !== "t") {
+            throw new Error("t-custom-portal should be on a 't' element");
+        }
+        node.setAttribute("t-component", "__globals__.Portal");
+        node.setAttribute("target", value);
+    },
 };
 
 export const compatibilityGlobals = {
@@ -261,4 +295,5 @@ export const compatibilityGlobals = {
      * @param {Function} setter
      */
     createModelSignal: (getter, setter) => Object.assign(getter, { set: setter }),
+    Portal,
 };
