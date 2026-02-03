@@ -25,7 +25,12 @@ import { EmphasizeAnimatedText } from "./emphasize_animated_text";
 export class AnimateOptionPlugin extends Plugin {
     static id = "animateOption";
     static dependencies = ["history", "selection", "split"];
-    static shared = ["forceAnimation", "getDirectionsItems", "getEffectsItems"];
+    static shared = [
+        "forceAnimation",
+        "getDirectionsItems",
+        "getEffectsItems",
+        "hasAnimationEffect",
+    ];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         toolbar_items: [
@@ -109,6 +114,20 @@ export class AnimateOptionPlugin extends Plugin {
             { className: "o_anim_from_bottom_left", label: "From bottom left", check: isRotate },
         ];
     }
+
+    /**
+     * Checks whether the given element contains any animation class from the
+     * list returned by getEffectsItems().
+     *
+     * @param {HTMLElement} editingElement- The element to check
+     * @returns {boolean} True if at least one animation class is present
+     */
+    hasAnimationEffect(editingElement) {
+        return this.getEffectsItems().some(({ className }) =>
+            editingElement.classList.contains(className)
+        );
+    }
+
     async forceAnimation(editingElement) {
         editingElement.style.animationName = "dummy";
         if (editingElement.classList.contains("o_animate_on_scroll")) {
@@ -398,7 +417,9 @@ export class SetAnimationModeAction extends BuilderAction {
     }
 
     async apply({ editingElement, value: effectName, params: { forceAnimation } }) {
-        if (this.animationWithFadein.includes(effectName)) {
+        const { hasAnimationEffect } = this.dependencies.animateOption;
+        // Prevent adding fade-in when another animation class is already present.
+        if (this.animationWithFadein.includes(effectName) && !hasAnimationEffect(editingElement)) {
             editingElement.classList.add("o_anim_fade_in");
         }
         if (effectName === "onScroll") {
