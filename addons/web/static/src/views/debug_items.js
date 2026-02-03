@@ -191,7 +191,7 @@ function sortKeysDeep(obj) {
 class RawRecordDialog extends Component {
     static template = xml`
         <Dialog title="props.title">
-            <pre t-esc="content"/>
+            <pre t-out="content"/>
         </Dialog>
     `;
     static components = { Dialog };

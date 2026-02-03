@@ -10,7 +10,7 @@ import { Component, useRef, useState, xml } from "@odoo/owl";
 export class Counter extends Component {
     static props = ["*"];
     static template = xml`
-        <span t-ref="root" class="counter" t-on-click="increment">Counter:<t t-esc="state.value"/></span>`;
+        <span t-ref="root" class="counter" t-on-click="increment">Counter:<t t-out="state.value"/></span>`;
 
     state = useState({ value: 0 });
     ref = useRef("root");
@@ -56,7 +56,7 @@ export class EmbeddedWrapper extends Component {
 export class OffsetCounter extends Component {
     static props = ["*"];
     static template = xml`
-        <span class="counter" t-on-click="increment">Counter:<t t-esc="counterValue"/></span>`;
+        <span class="counter" t-on-click="increment">Counter:<t t-out="counterValue"/></span>`;
 
     setup() {
         this.embeddedState = useEmbeddedState(this.props.host);
@@ -94,7 +94,7 @@ export const offsetCounter = {
 export class SavedCounter extends Component {
     static props = ["*"];
     static template = xml`
-        <span class="counter" t-on-click="increment">Counter:<t t-esc="counterValue"/></span>`;
+        <span class="counter" t-on-click="increment">Counter:<t t-out="counterValue"/></span>`;
 
     setup() {
         this.embeddedState = useEmbeddedState(this.props.host);
@@ -122,7 +122,7 @@ export const savedCounter = {
 export class CollaborativeObject extends Component {
     static props = ["*"];
     static template = xml`
-        <div class="obj"><t t-esc="collaborativeObject"/></div>`;
+        <div class="obj"><t t-out="collaborativeObject"/></div>`;
 
     setup() {
         this.embeddedState = useEmbeddedState(this.props.host);
@@ -154,7 +154,7 @@ export const collaborativeObject = {
 export class NamedCounter extends Component {
     static props = ["*"];
     static template = xml`
-        <span class="counter" t-on-click="increment"><t t-esc="props.name"/>:<t t-esc="counterValue"/></span>`;
+        <span class="counter" t-on-click="increment"><t t-out="props.name"/>:<t t-out="counterValue"/></span>`;
 
     setup() {
         this.embeddedState = useEmbeddedState(this.props.host);

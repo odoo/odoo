@@ -54,7 +54,7 @@ export class HootButtons extends Component {
                 t-att-disabled="state.disable"
             >
                 <i t-attf-class="fa fa-{{ isRunning ? 'stop' : 'play' }}" />
-                <span t-esc="isRunning ? 'Stop' : 'Run'" />
+                <span t-out="isRunning ? 'Stop' : 'Run'" />
             </button>
             <t t-if="showAll or showFailed">
                 <button

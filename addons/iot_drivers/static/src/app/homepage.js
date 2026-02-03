@@ -130,7 +130,7 @@ export class Homepage extends Component {
                     </small>
                 </div>
                 <div t-if="store.advanced and state.data.certificate_end_date and !store.base.is_access_point_up" class="alert alert-info" role="alert">
-                    Your IoT Box subscription is valid until <span class="fw-bold" t-esc="state.data.certificate_end_date"/>.
+                    Your IoT Box subscription is valid until <span class="fw-bold" t-out="state.data.certificate_end_date"/>.
                 </div>
                 <div t-if="store.base.is_access_point_up" class="alert alert-info" role="alert">
                     <p class="m-0 fw-bold">No Internet Connection</p>

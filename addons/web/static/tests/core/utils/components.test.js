@@ -5,7 +5,7 @@ import { ErrorHandler } from "@web/core/utils/components";
 
 test("ErrorHandler component", async () => {
     class Boom extends Component {
-        static template = xml`<div><t t-esc="this.will.throw"/></div>`;
+        static template = xml`<div><t t-out="this.will.throw"/></div>`;
         static props = ["*"];
     }
 

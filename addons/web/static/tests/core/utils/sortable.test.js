@@ -15,7 +15,7 @@ test("Parameters error handling", async () => {
             static template = xml`
                     <div t-ref="root" class="root">
                         <ul class="list">
-                            <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                            <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                         </ul>
                     </div>`;
             setup() {
@@ -78,7 +78,7 @@ test("Simple sorting in single group", async () => {
         static template = xml`
             <div t-ref="root" class="root">
                 <ul class="list">
-                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                 </ul>
             </div>`;
         setup() {
@@ -135,7 +135,7 @@ test("Simple sorting in multiple groups", async () => {
         static template = xml`
                 <div t-ref="root" class="root">
                     <ul t-foreach="[1, 2, 3]" t-as="l" t-key="l" t-attf-class="list p-3 list{{ l }}">
-                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="l + ' ' + i" class="item" />
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="l + ' ' + i" class="item" />
                     </ul>
                 </div>`;
         setup() {
@@ -216,7 +216,7 @@ test("Sorting in groups with distinct per-axis scrolling", async () => {
                             <div style="padding-left: 20px;"
                                 t-foreach="[1, 2, 3]" t-as="c" t-key="c" t-attf-class="list m-0 list{{ c }}">
                                 <div style="min-width: 50px; min-height: 50px; padding-top: 20px;"
-                                    t-foreach="[1, 2, 3]" t-as="l" t-key="l" t-esc="'item' + l + '' + c" t-attf-class="item item{{ l + '' + c }}"/>
+                                    t-foreach="[1, 2, 3]" t-as="l" t-key="l" t-out="'item' + l + '' + c" t-attf-class="item item{{ l + '' + c }}"/>
                             </div>
                         </div>
                     </div>
@@ -337,7 +337,7 @@ test("draggable area contains overflowing visible elements", async () => {
                         <div t-ref="renderer" class="renderer d-flex" style="overflow: visible;">
                             <div t-foreach="[1, 2, 3]" t-as="c" t-key="c" t-attf-class="list m-0 list{{ c }}">
                                 <div style="min-width: 300px; min-height: 50px;"
-                                    t-foreach="[1, 2, 3]" t-as="l" t-key="l" t-esc="'item' + l + '' + c" t-attf-class="item item{{ l + '' + c }}"/>
+                                    t-foreach="[1, 2, 3]" t-as="l" t-key="l" t-out="'item' + l + '' + c" t-attf-class="item item{{ l + '' + c }}"/>
                             </div>
                         </div>
                     </div>
@@ -396,7 +396,7 @@ test("Dynamically disable sortable feature", async () => {
         static template = xml`
                 <div t-ref="root" class="root">
                     <ul class="list">
-                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                     </ul>
                 </div>`;
         setup() {
@@ -440,7 +440,7 @@ test("Drag has a default tolerance of 10 pixels before initiating the dragging",
         static template = xml`
                 <div t-ref="root" class="root">
                     <ul class="list">
-                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                     </ul>
                 </div>`;
 
@@ -489,8 +489,8 @@ test("Ignore specified elements", async () => {
                 <div t-ref="root" class="root">
                     <ul class="list">
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" class="item">
-                            <span class="ignored" t-esc="i" />
-                            <span class="not-ignored" t-esc="i" />
+                            <span class="ignored" t-out="i" />
+                            <span class="not-ignored" t-out="i" />
                         </li>
                     </ul>
                 </div>`;
@@ -536,7 +536,7 @@ test("the classes parameters (placeholderElement, helpElement)", async () => {
         static template = xml`
                 <div t-ref="root" class="root">
                     <ul class="list">
-                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                     </ul>
                 </div>`;
         setup() {
@@ -575,7 +575,7 @@ test("applyChangeOnDrop option", async () => {
         static template = xml`
                 <div t-ref="root" class="root">
                     <ul class="list">
-                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                     </ul>
                 </div>`;
         setup() {
@@ -607,7 +607,7 @@ test("clone option", async () => {
         static template = xml`
                 <div t-ref="root" class="root">
                     <ul class="list">
-                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                        <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                     </ul>
                 </div>`;
         setup() {
@@ -635,7 +635,7 @@ test("dragged element is removed from the DOM while being dragged", async () => 
         static template = xml`
             <div t-ref="root" class="root">
                 <ul class="list">
-                    <li t-foreach="state.items" t-as="i" t-key="i" t-esc="i" class="item" />
+                    <li t-foreach="state.items" t-as="i" t-key="i" t-out="i" class="item" />
                 </ul>
             </div>`;
         setup() {

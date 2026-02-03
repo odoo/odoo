@@ -250,7 +250,7 @@ test("[cache] update the cache if hash are different - js", async () => {
         expect.step(`hash: ${new URL(request.url).searchParams.get("hash")}`);
     });
     class MyTestComponent extends Component {
-        static template = xml`<div id="main" t-translation-context="web"><t t-esc="otherText"/></div>`;
+        static template = xml`<div id="main" t-translation-context="web"><t t-out="otherText"/></div>`;
         static props = ["*"];
 
         get otherText() {

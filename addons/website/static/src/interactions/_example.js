@@ -9,7 +9,7 @@ export class Counter extends Component {
     static selector = "#wrapwrap h1";
     static template = xml`
         <div class="btn btn-primary" t-on-click="increment">
-            Counter. Value=<t t-esc="state.value"/>
+            Counter. Value=<t t-out="state.value"/>
         </div>`;
     static props = {};
 

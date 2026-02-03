@@ -104,7 +104,7 @@ export class HandlerDialog extends Component {
                     <div class="mb-3">
                         <h5>Global logs level</h5>
                         <div t-foreach="Object.entries(this.state.globalLogger)" t-as="global" t-key="global[0]" class="input-group input-group-sm mb-3">
-                            <label class="input-group-text w-50" t-att-for="global[0]" t-esc="global[0]" />
+                            <label class="input-group-text w-50" t-att-for="global[0]" t-out="global[0]" />
                             <select t-att-name="global[0]"
                                 t-if="global[1]"
                                 class="form-select"
@@ -123,7 +123,7 @@ export class HandlerDialog extends Component {
                     <div class="mb-3">
                         <h5>Interfaces logs level</h5>
                         <div t-foreach="Object.entries(this.state.handlerData.interfaces_logger_info)" t-as="interface" t-key="interface[0]" class="input-group input-group-sm mb-3">
-                            <label class="input-group-text w-50" t-att-for="interface[0]" t-esc="interface[0]" />
+                            <label class="input-group-text w-50" t-att-for="interface[0]" t-out="interface[0]" />
                             <select t-att-name="'iot-logging-interface-'+interface[0]"
                                 t-if="interface[1]"
                                 class="form-select"
@@ -142,7 +142,7 @@ export class HandlerDialog extends Component {
                     <div class="mb-3">
                         <h5>Drivers logs level</h5>
                         <div t-foreach="Object.entries(this.state.handlerData.drivers_logger_info)" t-as="drivers" t-key="drivers[0]" class="input-group input-group-sm mb-3">
-                            <label class="input-group-text w-50" t-att-for="drivers[0]" t-esc="drivers[0]" />
+                            <label class="input-group-text w-50" t-att-for="drivers[0]" t-out="drivers[0]" />
                             <select t-att-name="'iot-logging-driver-'+drivers[0]"
                                 t-if="drivers[1]"
                                 class="form-select"

@@ -131,25 +131,25 @@ export class HootStatusPanel extends Component {
                         role="status"
                         title="Running"
                     />
-                    <strong class="text-primary" t-esc="env.runner.totalTime" />
+                    <strong class="text-primary" t-out="env.runner.totalTime" />
                 </t>
                 <t t-else="">
                     <span class="hidden md:block">
-                        <strong class="text-primary" t-esc="runnerReporting.tests" />
+                        <strong class="text-primary" t-out="runnerReporting.tests" />
                         tests completed
-                        (total time: <strong class="text-primary" t-esc="env.runner.totalTime" />
+                        (total time: <strong class="text-primary" t-out="env.runner.totalTime" />
                         <t t-if="env.runner.aborted">, run aborted by user</t>)
                     </span>
                     <span class="md:hidden flex items-center gap-1">
                         <i class="fa fa-clock-o" />
-                        <strong class="text-primary" t-esc="env.runner.totalTime" />
+                        <strong class="text-primary" t-out="env.runner.totalTime" />
                     </span>
                 </t>
                 <t t-if="runnerState.currentTest">
                     <HootTestPath test="runnerState.currentTest" />
                 </t>
                 <t t-if="state.timer">
-                    <span class="text-cyan" t-esc="formatTime(state.timer, 's')" />
+                    <span class="text-cyan" t-out="formatTime(state.timer, 's')" />
                 </t>
             </div>
             <div class="flex items-center gap-1">
@@ -161,7 +161,7 @@ export class HootStatusPanel extends Component {
                         t-attf-title="Show {{ runnerReporting.passed }} passed tests"
                     >
                         <i class="fa fa-check-circle" />
-                        <t t-esc="runnerReporting.passed" />
+                        <t t-out="runnerReporting.passed" />
                     </button>
                 </t>
                 <t t-if="runnerReporting.failed">
@@ -172,7 +172,7 @@ export class HootStatusPanel extends Component {
                         t-attf-title="Show {{ runnerReporting.failed }} failed tests"
                     >
                         <i class="fa fa-times-circle" />
-                        <t t-esc="runnerReporting.failed" />
+                        <t t-out="runnerReporting.failed" />
                     </button>
                 </t>
                 <t t-if="runnerReporting.skipped">
@@ -183,7 +183,7 @@ export class HootStatusPanel extends Component {
                         t-attf-title="Show {{ runnerReporting.skipped }} skipped tests"
                     >
                         <i class="fa fa-pause-circle" />
-                        <t t-esc="runnerReporting.skipped" />
+                        <t t-out="runnerReporting.skipped" />
                     </button>
                 </t>
                 <t t-if="runnerReporting.todo">
@@ -194,7 +194,7 @@ export class HootStatusPanel extends Component {
                         t-attf-title="Show {{ runnerReporting.todo }} tests to do"
                     >
                         <i class="fa fa-exclamation-circle" />
-                        <t t-esc="runnerReporting.todo" />
+                        <t t-out="runnerReporting.todo" />
                     </button>
                 </t>
                 <t t-if="uiState.totalResults gt uiState.resultsPerPage">
@@ -208,9 +208,9 @@ export class HootStatusPanel extends Component {
                         >
                             <i class="fa fa-chevron-left" />
                         </button>
-                        <strong class="text-primary" t-esc="uiState.resultsPage + 1" />
+                        <strong class="text-primary" t-out="uiState.resultsPage + 1" />
                         <span class="text-gray">/</span>
-                        <t t-esc="lastPage + 1" />
+                        <t t-out="lastPage + 1" />
                         <button
                             class="px-1 transition-color"
                             title="Next page"

@@ -24,8 +24,8 @@ export class Switch extends Component {
                 t-on-change="(ev) => props.onChange(ev.target.checked)"
                 t-on-keyup="onKeyup"/>
         <span/>
-        <span t-if="props.label" t-esc="props.label" class="ms-2"/>
-        <span t-if="props.description" class="text-muted ms-2" t-esc="props.description"/>
+        <span t-if="props.label" t-out="props.label" class="ms-2"/>
+        <span t-if="props.description" class="text-muted ms-2" t-out="props.description"/>
     </label>
     `;
 

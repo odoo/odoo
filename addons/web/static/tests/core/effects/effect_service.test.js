@@ -74,7 +74,7 @@ test("rendering a rainbowman with a custom component", async () => {
     const props = { foo: "bar" };
 
     class Custom extends Component {
-        static template = xml`<div class="custom">foo is <t t-esc="props.foo"/></div>`;
+        static template = xml`<div class="custom">foo is <t t-out="props.foo"/></div>`;
         static props = ["*"];
         setup() {
             expect(this.props).toEqual(props);

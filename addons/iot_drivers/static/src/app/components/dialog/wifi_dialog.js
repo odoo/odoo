@@ -154,7 +154,7 @@ export class WifiDialog extends Component {
                         <select name="essid" class="form-control" id="wifi-ssid" t-model="this.form.essid">
                             <option>Select Network...</option>
                             <option t-foreach="this.state.availableWiFi.filter((wifi) => wifi)" t-as="wifi" t-key="wifi" t-att-value="wifi">
-                                <t t-esc="wifi"/>
+                                <t t-out="wifi"/>
                             </option>
                         </select>
                     </div>

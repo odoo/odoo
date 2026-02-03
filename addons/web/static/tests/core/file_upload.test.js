@@ -18,8 +18,8 @@ class FileUploadProgressTestRecord extends FileUploadProgressRecord {
     static template = xml`
         <t t-set="progressTexts" t-value="getProgressTexts()"/>
         <div class="file_upload">
-            <div class="file_upload_progress_text_left" t-esc="progressTexts.left"/>
-            <div class="file_upload_progress_text_right" t-esc="progressTexts.right"/>
+            <div class="file_upload_progress_text_left" t-out="progressTexts.left"/>
+            <div class="file_upload_progress_text_right" t-out="progressTexts.right"/>
             <FileUploadProgressBar fileUpload="props.fileUpload"/>
         </div>
     `;

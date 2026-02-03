@@ -140,15 +140,15 @@ class JSTooling:
         Returns:
             The JS content with transformed XML templates.
         """
-        pattern = r'(xml\s*`)(.*?)(`)'
+        pattern = re.compile(r"(\bxml\s*`)(.*?)(`)", re.DOTALL)
 
-        def replacer(match):
+        def replacer(match: re.Match) -> str:
             prefix = match.group(1)
             xml_content = match.group(2)
             suffix = match.group(3)
             return f"{prefix}{transform_func(xml_content)}{suffix}"
 
-        return re.sub(pattern, replacer, content, flags=re.DOTALL)
+        return pattern.sub(replacer, content)
 
     @staticmethod
     def clean_whitespace(content: str) -> str:
@@ -230,7 +230,7 @@ def upgrade(file_manager) -> str:
     """Main upgrade_code entry point."""
     collector = MigrationCollector()
 
-    collector.run_sub("Migrating t-tesc", upgrade_t_esc, file_manager)
+    collector.run_sub("Replacing 't-esc' with 't-out'", upgrade_t_esc, file_manager)
 
     return collector.get_final_logs()
 
@@ -239,15 +239,20 @@ def upgrade_t_esc(file_manager, log_info, log_error):
     """Replaces the t-esc directive in xml templates with the t-out directive"""
     files = [
         file for file in file_manager
-        if file.path.suffix == '.xml'
+        if file.path.suffix in ['.xml', '.js']
         and not any(file.path._str.endswith(p) for p in EXCLUDED_FILES + CHECKSUM_FILES)
     ]
     if not files:
         return
 
-    reg_t_esc = re.compile(r"""\bt-esc=""")
+    reg_t_esc_attr = re.compile(r"\bt-esc(?=\s*=\s*['\"])")
     # matches: <attribute name="t-esc">  /  <attribute name="t-esc"/> /  <attribute remove="1" name="t-esc" />
     reg_att_t_esc = re.compile(r'(<attribute\b[^>]*\bname\s*=\s*(["\']))t-esc(\2)')
+
+    def replace_t_esc(s: str) -> str:
+        s = reg_t_esc_attr.sub("t-out", s)
+        s = reg_att_t_esc.sub(r"\1t-out\3", s)
+        return s
 
     for fileno, file in enumerate(files, start=1):
         try:
@@ -260,15 +265,13 @@ def upgrade_t_esc(file_manager, log_info, log_error):
         if "t-esc" not in content:
             continue
 
-        # if file.path.suffix == ".js":
-        #     try:
-        #         file.content = JSTooling.transform_xml_literals(file.content, 't-esc=', 't-out=')
-        #     except Exception as e:
-        #         log_error(file.path, e)
-        if file.path.suffix == ".xml":
-            try:
-                file.content = reg_t_esc.sub(r't-out=', file.content)
-                file.content = reg_att_t_esc.sub(r"\1t-out\3", content)
-            except Exception as e:
-                log_error(file.path, e)
+        try:
+            if file.path.suffix == ".js":
+                content = JSTooling.transform_xml_literals(content, replace_t_esc)
+            else:  # .xml
+                content = replace_t_esc(content)
+            file.content = content
+        except Exception as e:
+            log_error(file.path, e)
+
         file_manager.print_progress(fileno, len(files))

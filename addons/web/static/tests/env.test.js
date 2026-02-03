@@ -223,7 +223,7 @@ test(`mountComponent uses the env when provided and doesn't start the services`,
 
 test(`mountComponent: can pass props to the root component`, async () => {
     class Root extends Component {
-        static template = xml`<t t-esc="props.text"/>`;
+        static template = xml`<t t-out="props.text"/>`;
         static props = ["*"];
     }
 

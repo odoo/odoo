@@ -7,7 +7,7 @@ const HOUR = 60 * MINUTE;
 
 export class RelativeTime extends Component {
     static props = ["datetime"];
-    static template = xml`<t t-esc="relativeTime"/>`;
+    static template = xml`<t t-out="relativeTime"/>`;
 
     setup() {
         super.setup();

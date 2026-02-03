@@ -9782,7 +9782,7 @@ test(`rainbowman attributes correctly passed on button click`, async () => {
 test(`basic support for widgets`, async () => {
     class MyComponent extends Component {
         static props = ["*"];
-        static template = xml`<div t-esc="value"/>`;
+        static template = xml`<div t-out="value"/>`;
         get value() {
             return JSON.stringify(this.props.record.data);
         }
@@ -9821,7 +9821,7 @@ test(`widget with class attribute`, async () => {
 test(`widget with readonly attribute`, async () => {
     class MyComponent extends Component {
         static props = ["*"];
-        static template = xml`<span t-esc="value"/>`;
+        static template = xml`<span t-out="value"/>`;
         get value() {
             return this.props.readonly ? "readonly" : "not readonly";
         }
@@ -9875,7 +9875,7 @@ test(`support header button as widgets on form statusbar on mobile`, async () =>
 test(`basic support for widgets: onchange update`, async () => {
     class MyWidget extends Component {
         static props = ["*"];
-        static template = xml`<t t-esc="state.dataToDisplay" />`;
+        static template = xml`<t t-out="state.dataToDisplay" />`;
         setup() {
             this.state = useState({
                 dataToDisplay: this.props.record.data.foo,
@@ -10966,7 +10966,7 @@ test(`fieldDependencies support for fields`, async () => {
     fieldsRegistry.add("custom_field", {
         component: class CustomField extends Component {
             static props = ["*"];
-            static template = xml`<span t-esc="props.record.data.int_field"/>`;
+            static template = xml`<span t-out="props.record.data.int_field"/>`;
         },
         fieldDependencies: [{ name: "int_field", type: "integer" }],
     });
@@ -10986,7 +10986,7 @@ test(`fieldDependencies support for fields: dependence on a relational field`, a
     registry.category("fields").add("custom_field", {
         component: class CustomField extends Component {
             static props = ["*"];
-            static template = xml`<span t-esc="props.record.data.product_id.display_name"/>`;
+            static template = xml`<span t-out="props.record.data.product_id.display_name"/>`;
         },
         fieldDependencies: [{ name: "product_id", type: "many2one", relation: "product" }],
     });
@@ -12385,10 +12385,10 @@ test(`custom many2one with relatedFields`, async () => {
         static template = xml`
             <t t-set="value" t-value="props.record.data[props.name]"/>
             <div class="content">
-                <div t-esc="value.id"/>
-                <div t-esc="value.display_name"/>
-                <div t-esc="value.foo"/>
-                <div t-esc="value.int_field"/>
+                <div t-out="value.id"/>
+                <div t-out="value.display_name"/>
+                <div t-out="value.foo"/>
+                <div t-out="value.int_field"/>
             </div>
             <button id="update-m2o" t-on-click="() => this.update()">Update</button>
         `;
@@ -12494,7 +12494,7 @@ test(`field with special data`, async () => {
 test(`field with special data (with persistent Cache)`, async () => {
     class MyWidget extends Component {
         static props = ["*"];
-        static template = xml`<div class="my_widget">MyWidget <t t-esc="specialData.data.test"/></div>`;
+        static template = xml`<div class="my_widget">MyWidget <t t-out="specialData.data.test"/></div>`;
         setup() {
             this.specialData = useSpecialData((orm, props) => {
                 const { record } = props;

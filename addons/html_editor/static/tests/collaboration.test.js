@@ -1627,7 +1627,7 @@ describe("Collaboration with embedded components", () => {
         test("A pending change applied after collaborative changes only update modified properties of that change (other properties are left untouched)", async () => {
             class NamedCounter extends SavedCounter {
                 static template = xml`
-                    <span class="counter" t-on-click="increment"><t t-esc="embeddedState.name"/>:<t t-esc="counterValue"/></span>`;
+                    <span class="counter" t-on-click="increment"><t t-out="embeddedState.name"/>:<t t-out="counterValue"/></span>`;
             }
             const namedCounter = {
                 ...savedCounter,

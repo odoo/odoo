@@ -310,7 +310,7 @@ describe("Mount and Destroy embedded components", () => {
         class RecursiveComponent extends Component {
             static template = xml`
                 <div>
-                    <div t-on-click="increment" t-att-class="'click count-' + props.index">Count:<t t-esc="state.value"/></div>
+                    <div t-on-click="increment" t-att-class="'click count-' + props.index">Count:<t t-out="state.value"/></div>
                     <div t-ref="innerEditable" t-att-class="'innerEditable-' + props.index"/>
                 </div>
             `;
@@ -776,7 +776,7 @@ describe("Mount processing", () => {
         class LabeledCounter extends Counter {
             static template = xml`
                 <span t-ref="root" class="counter" t-on-click="increment">
-                    <span t-ref="label"/>:<t t-esc="state.value"/>
+                    <span t-ref="label"/>:<t t-out="state.value"/>
                 </span>
             `;
             static props = {
@@ -886,7 +886,7 @@ describe("Mount processing", () => {
         class EmbeddedCounter extends Counter {
             static template = xml`
                 <span class="counter" t-on-click="increment">
-                    <t t-esc="state.value"/>
+                    <t t-out="state.value"/>
                 </span>
             `;
             setup() {

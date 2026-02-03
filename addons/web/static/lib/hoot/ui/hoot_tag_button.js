@@ -27,7 +27,7 @@ export class HootTagButton extends Component {
                 t-att-style="style"
                 t-att-title="title"
             >
-                <small class="text-xs font-bold" t-esc="props.tag.name" />
+                <small class="text-xs font-bold" t-out="props.tag.name" />
             </span>
         </t>
         <t t-else="">
@@ -37,7 +37,7 @@ export class HootTagButton extends Component {
                 style="style"
                 title="title"
             >
-                <small class="text-xs font-bold hidden md:inline" t-esc="props.tag.name" />
+                <small class="text-xs font-bold hidden md:inline" t-out="props.tag.name" />
                 <span class="md:hidden">&#8205;</span>
             </HootLink>
         </t>

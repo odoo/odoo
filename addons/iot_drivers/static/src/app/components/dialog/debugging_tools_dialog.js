@@ -118,7 +118,7 @@ export class DebuggingToolsDialog extends Component {
                     <div t-if="state.loadingRemoteDebug" class="spinner-border spinner-border-sm" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
-                    <t t-else="" t-esc="state.remoteDebug ? 'Disable' : 'Enable'" />
+                    <t t-else="" t-out="state.remoteDebug ? 'Disable' : 'Enable'" />
                 </button>
                 </div>
 

@@ -193,19 +193,19 @@ export class HootDebugToolBar extends Component {
                         status:
                         <strong
                             t-attf-class="text-{{ info.className }}"
-                            t-esc="info.status"
+                            t-out="info.status"
                         />
                         <span class="hidden sm:flex items-center gap-1">
                             <span class="text-gray">-</span>
                             assertions:
                             <span class="contents text-emerald">
-                                <strong t-esc="info.passed" />
+                                <strong t-out="info.passed" />
                                 passed
                             </span>
                             <t t-if="info.failed">
                                 <span class="text-gray">/</span>
                                 <span class="contents text-rose">
-                                    <strong t-esc="info.failed" />
+                                    <strong t-out="info.failed" />
                                     failed
                                 </span>
                             </t>
@@ -214,7 +214,7 @@ export class HootDebugToolBar extends Component {
                         time:
                         <span
                             class="text-primary"
-                            t-esc="formatTime(props.test.lastResults?.duration, 'ms')"
+                            t-out="formatTime(props.test.lastResults?.duration, 'ms')"
                         />
                     </button>
                     <button class="p-2" t-on-click="toggleConfig">
