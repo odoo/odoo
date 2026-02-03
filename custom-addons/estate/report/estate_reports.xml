@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Main report templates -->
+    <template id="report_property">
+        <t t-foreach="docs" t-as="property">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>
+                            <span t-field="property.name"/>
+                        </h2>
+                        <div>
+                            <strong>Salesman: </strong>
+                            <span t-field="property.salesperson_id.name"/>
+                        </div>
+                        <t t-call="estate.report_property_bid_info"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_salesman_properties">
+        <t t-foreach="docs" t-as="salesman">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>
+                            <strong>Salesman: </strong>
+                            <span t-field="salesman.name"/>
+                        </h2>
+                        <t t-if="salesman.property_ids">
+                            <t t-set="properties" t-value="salesman.mapped('property_ids')"/>
+                            <t t-foreach="properties" t-as="property">
+                                <h3>
+                                    <span t-field="property.name"/>
+                                </h3>
+                                <t t-call="estate.report_property_bid_info"/>
+                            </t>
+                        </t>
+                        <strong t-else="">Salesman has no properties!</strong>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Sub-template -->
+    <template id="report_property_bid_info">
+        <!-- Get current date for report -->
+        <t t-set="current_date" t-value="datetime.datetime.now().strftime('%Y-%m-%d %H:%M')"/>
+        
+        <!-- <div>
+            <strong>Property Type: </strong>
+            <span t-field="property.property_type_id.name"/>
+        </div> -->
+        <!-- <div>
+            <strong>Postcode: </strong>
+            <span t-field="property.postcode"/>
+        </div> -->
+        <div>
+            <strong>Expected Price: </strong>
+            <span t-field="property.expected_price"/>
+        </div>
+        <div>
+            <strong>Status: </strong>
+            <span t-field="property.state"/>
+        </div>
+        <!-- <div>
+            <strong>Buyer: </strong>
+            <span t-if="property.buyer_id" t-field="property.buyer_id.name"/>
+            <span t-else="">Not sold yet</span>
+        </div> -->
+        
+        <!-- Offers Table with t-if/t-else logic -->
+        <div class="mt-3">
+            <!-- <h4>Offers</h4> -->
+            <t t-if="property.offer_ids">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Price</th>
+                            <th>Partner</th>
+                            <th>Validity (days)</th>
+                            <th>Deadline</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="offers" t-value="property.mapped('offer_ids')"/>
+                        <tr t-foreach="offers" t-as="offer">
+                            <td>
+                                <span t-field="offer.price"/>
+                            </td>
+                            <td>
+                                <span t-field="offer.partner_id.name"/>
+                            </td>
+                            <td>
+                                <span t-field="offer.validity"/>
+                            </td>
+                            <td>
+                                <span t-field="offer.date_deadline"/>
+                            </td>
+                            <td>
+                                <t t-if="offer.status == 'accepted'">
+                                    <span class="text">Accepted</span>
+                                </t>
+                                <t t-elif="offer.status == 'refused'">
+                                    <span class="text">Refused</span>
+                                </t>
+                                <t t-else="">
+                                    <span class="text">Pending</span>
+                                </t>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <!-- Offer Statistics -->
+                <!-- <div class="mt-2">
+                    <t t-set="total_offers" t-value="len(property.offer_ids)"/>
+                    <t t-set="accepted_offers" t-value="len([o for o in property.offer_ids if o.status == 'accepted'])"/>
+                    <t t-set="refused_offers" t-value="len([o for o in property.offer_ids if o.status == 'refused'])"/>
+                    <t t-set="pending_offers" t-value="total_offers - accepted_offers - refused_offers"/>
+                    
+                    <p>
+                        Total Offers: <strong><span t-esc="total_offers"/></strong> |
+                        Accepted: <strong><span t-esc="accepted_offers"/></strong> |
+                        Refused: <strong><span t-esc="refused_offers"/></strong> |
+                        Pending: <strong><span t-esc="pending_offers"/></strong>
+                    </p>
+                </div> -->
+            </t>
+            <t t-else="">
+                <div class="alert alert-info">
+                    <p>No offers have been made yet</p>
+                </div>
+            </t>
+        </div>
+        
+        <!-- Property Details -->
+        <!-- <div class="mt-3">
+            <h4>Property Details</h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Bedrooms:</strong> <span t-field="property.bedrooms"/></p>
+                    <p><strong>Living Area:</strong> <span t-field="property.living_area"/> sqm</p>
+                    <p><strong>Total Area:</strong> <span t-field="property.total_area"/> sqm</p>
+                </div>
+                <div class="col-md-6">
+                    <p>
+                        <strong>Garage:</strong> 
+                        <t t-if="property.garage">Yes</t>
+                        <t t-else="">No</t>
+                    </p>
+                    <p>
+                        <strong>Garden:</strong> 
+                        <t t-if="property.garden">Yes</t>
+                        <t t-else="">No</t>
+                    </p>
+                    <t t-if="property.garden">
+                        <p><strong>Garden Area:</strong> <span t-field="property.garden_area"/> sqm</p>
+                        <p><strong>Garden Orientation:</strong> <span t-field="property.garden_orientation"/></p>
+                    </t>
+                </div>
+            </div>
+        </div> -->
+        
+        <!-- Report Footer -->
+        <div class="mt-4 pt-3 border-top">
+            <div class="text-center">
+                <small class="text-muted">
+                    Report generated on: <span t-esc="current_date"/>
+                </small>
+            </div>
+        </div>
+    </template>
+</odoo>

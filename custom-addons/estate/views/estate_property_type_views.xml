@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Property Type List View -->
+    <record id="view_estate_property_type_list" model="ir.ui.view">
+        <field name="name">estate.property.type.list</field>
+        <field name="model">estate.property.type</field>
+        <field name="arch" type="xml">
+            <list string="Property Types">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="offer_count" string="Offers"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Property Type Form View -->
+    <record id="view_estate_property_type_form" model="ir.ui.view">
+        <field name="name">estate.property.type.form</field>
+        <field name="model">estate.property.type</field>
+        <field name="arch" type="xml">
+            <form string="Property Type">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <!-- Stat Button -->
+                        <button name="%(action_estate_property_type_offer)d" 
+                                type="action" 
+                                class="oe_stat_button" 
+                                icon="fa-money"
+                                context="{'search_default_group_by_status': 1}">
+                            <div class="o_stat_info">
+                                <field name="offer_count" string="Offers" 
+                                       widget="statinfo"/>
+                            </div>
+                        </button>
+                    </div>
+                    
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    
+                    <!-- Sequence field -->
+                    <!-- <group>
+                        <group string="Configuration">
+                            <field name="sequence"/>
+                            <field name="offer_count" string="Total Offers" readonly="1"/>
+                        </group>
+                    </group> -->
+                    
+                    <!-- Notebook with tabs -->
+                    <notebook>
+                        <page string="Properties">
+                            <field name="property_ids">
+                                <list string="Properties">
+                                    <field name="name" string="Title"/>
+                                    <field name="expected_price" string="Expected Price"/>
+                                    <field name="state" string="Status"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

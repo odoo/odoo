@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="estate_property_kanban_grouped" model="ir.ui.view">
+        <field name="name">estate.property.kanban.grouped</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <kanban 
+                default_group_by="property_type_id" 
+                disable_drag_drop="true"
+                quick_create="true"
+                create="true">
+                
+                <field name="name"/>
+                <field name="expected_price"/>
+                <field name="best_price"/>
+                <field name="tag_ids"/>
+                <field name="property_type_id"/>
+                
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <!-- Name -->
+                                <div class="mb-1">
+                                    <strong><field name="name"/></strong>
+                                </div>
+                                
+                                <!-- Prices -->
+                                <div class="mb-1">
+                                    <div>Expected Price: <field name="expected_price"/></div>
+                                    <div t-if="record.best_price.raw_value &gt; 0">
+                                        Best Offer: <field name="best_price"/>
+                                    </div>
+                                </div>
+                                
+                                <!-- Tags -->
+                                <div t-if="record.tag_ids.raw_value.length &gt; 0" class="mt-1">
+                                    <div class="o_tags">
+                                        <group>
+                                            <field name="tag_ids" widget="many2many_tags" 
+                                                options="{'color_field': 'color', 'no_create': True}"/>
+                                        </group>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

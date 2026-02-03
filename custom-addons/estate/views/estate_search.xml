@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Property Search View -->
+    <record id="view_estate_property_search" model="ir.ui.view">
+        <field name="name">estate.property.search</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <search string="Property Search">
+                <!-- Search fields -->
+                <field name="name"/>
+                <field name="postcode"/>
+                <field name="expected_price"/>
+                <field name="selling_price"/>
+                <field name="living_area" string="Living Area(sqm)"
+                       filter_domain="[('living_area', '>=', self)]"/>
+                
+                <!-- Filters -->
+
+                <filter name="available_properties" 
+                        string="Available"
+                        domain="['|', ('state', '=', 'new'), ('state', '=', 'offer_received')]"/>
+                        
+                <filter name="active_properties" 
+                        string="Active"
+                        domain="[('active', '=', True)]"/>
+                
+                <filter name="inactive_properties" 
+                        string="Inactive"
+                        domain="[('active', '=', False)]"/>
+                
+                <filter name="with_garden" 
+                        string="With Garden"
+                        domain="[('garden', '=', True)]"/>
+                
+                <filter name="with_garage" 
+                        string="With Garage"
+                        domain="[('garage', '=', True)]"/>
+                
+                <filter name="new_properties" 
+                        string="New"
+                        domain="[('state', '=', 'new')]"/>
+                
+                <filter name="sold_properties" 
+                        string="Sold"
+                        domain="[('state', '=', 'sold')]"/>
+                
+                <filter name="cancelled_properties" 
+                        string="Cancelled"
+                        domain="[('state', '=', 'cancelled')]"/>
+                
+                <separator/>
+                
+                <!-- Group By -->
+                <group expand="0" string="Group By">
+                    <filter name="group_by_postcode" 
+                            string="Postcode"
+                            context="{'group_by': 'postcode'}"/>
+                    
+                    <filter name="group_by_state" 
+                            string="State"
+                            context="{'group_by': 'state'}"/>
+                    
+                    <filter name="group_by_garden" 
+                            string="Garden"
+                            context="{'group_by': 'garden'}"/>
+                    
+                    <filter name="group_by_garage" 
+                            string="Garage"
+                            context="{'group_by': 'garage'}"/>
+                    
+                    <filter name="group_by_property_type" 
+                            string="Property Type"
+                            context="{'group_by': 'property_type_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

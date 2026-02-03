@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Property Action -->
+    <record id="action_estate_property" model="ir.actions.act_window">
+        <field name="name">Properties</field>
+        <field name="res_model">estate.property</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{"search_default_active_properties": 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create a new property</p>
+        </field>
+    </record>
+    
+    <!-- Property Type Action -->
+    <record id="action_estate_property_type" model="ir.actions.act_window">
+        <field name="name">Property Types</field>
+        <field name="res_model">estate.property.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    
+    <!-- Property Tag Action -->
+    <record id="action_estate_property_tag" model="ir.actions.act_window">
+        <field name="name">Property Tags</field>
+        <field name="res_model">estate.property.tag</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    
+    <!-- Property Offer Action -->
+    <record id="action_estate_property_offer" model="ir.actions.act_window">
+        <field name="name">Property Offers</field>
+        <field name="res_model">estate.property.offer</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_estate_property_offer_list"/>
+    </record>
+    
+    <!-- Property Offer Action filtered by Property Type -->
+    <record id="action_estate_property_type_offer" model="ir.actions.act_window">
+        <field name="name">Offers</field>
+        <field name="res_model">estate.property.offer</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_estate_property_offer_list"/>
+        <field name="domain">[('property_type_id', '=', active_id)]</field>
+    </record>
+    
+</odoo>

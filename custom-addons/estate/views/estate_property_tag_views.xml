@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Property Tag List View - Editable -->
+    <record id="view_estate_property_tag_list" model="ir.ui.view">
+        <field name="name">estate.property.tag.list</field>
+        <field name="model">estate.property.tag</field>
+        <field name="arch" type="xml">
+            <list string="Property Tags" editable="bottom">
+                <field name="name"/>
+                <!-- <field name="color" widget="color"/> -->
+            </list>
+        </field>
+    </record>
+    
+    <!-- Property Tag Form View -->
+    <record id="view_estate_property_tag_form" model="ir.ui.view">
+        <field name="name">estate.property.tag.form</field>
+        <field name="model">estate.property.tag</field>
+        <field name="arch" type="xml">
+            <form string="Property Tag">
+                <sheet>
+                    <group>
+                        <field name="name" placeholder="Enter tag name..."/>
+                      <!--  <field name="color" widget="color"/> -->
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

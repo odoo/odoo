@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Demo data for Estate Properties -->
+        
+        <!-- Big Villa -->
+        <record id="estate_property_big_villa" model="estate.property">
+            <field name="name">Big Villa</field>
+            <field name="state">new</field>
+            <field name="description">A nice and big villa</field>
+            <field name="postcode">12345</field>
+            <field name="date_availability">2020-02-02</field>
+            <field name="expected_price">1600000</field>
+            <field name="selling_price">0.0</field>
+            <field name="bedrooms">6</field>
+            <field name="living_area">100</field>
+            <field name="facades">4</field>
+            <field name="garage">True</field>
+            <field name="garden">True</field>
+            <field name="garden_area">100000</field>
+            <field name="garden_orientation">south</field>
+            <field name="property_type_id" ref="estate_property_type_residential"/>
+        </record>
+        
+        <!-- Trailer home -->
+        <record id="estate_property_trailer_home" model="estate.property">
+            <field name="name">Trailer home</field>
+            <field name="state">cancelled</field>
+            <field name="description">Home in a trailer park</field>
+            <field name="postcode">54321</field>
+            <field name="date_availability">1970-01-01</field>
+            <field name="expected_price">100000</field>
+            <field name="selling_price">120000</field>
+            <field name="bedrooms">1</field>
+            <field name="living_area">10</field>
+            <field name="facades">4</field>
+            <field name="garage">False</field>
+            <field name="garden">True</field>
+            <field name="garden_area">0</field>
+            <field name="garden_orientation">north</field>
+            <!-- Убедитесь, что это тот же ID что в CSV -->
+            <field name="property_type_id" ref="estate_property_type_residential"/>
+        </record>
+    </data>
+</odoo>

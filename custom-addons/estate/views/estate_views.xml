@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Property List View -->
+    <record id="view_estate_property_list" model="ir.ui.view">
+        <field name="name">estate.property.list</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <list string="Properties" 
+                  decoration-success="state in ['sold', 'offer_received']"
+                  decoration-danger="state == 'cancelled'">
+
+                  <button name="%(action_report_estate_property)d"
+                    type="action"
+                    string="Print"
+                    class="oe_highlight"
+                    icon="fa-print"/>
+                    
+                <field name="name"/>
+                <field name="property_type_id" string="Property Type"/>
+                <field name="postcode" string="Postcode"/>
+                <field name="tag_ids" widget="many2many_tags" string="Tags"
+                    options="{'color_field': 'color', 'no_create': True}"/>
+                <field name="bedrooms" string="Bedrooms"/>
+                <field name="living_area" string="Living Area(sqm)"/>
+                <field name="expected_price" string="Expected Price"/>
+                <!-- <field name="best_price" string="Best Offer"/> -->
+                <field name="selling_price" string="Selling Price"/>
+                <field name="state"/>
+                <!-- <field name="active" widget="boolean"/> -->
+                <!-- Optional field hidden by default -->
+                <field name="date_availability" optional="hide"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Property Form View -->
+    <record id="view_estate_property_form" model="ir.ui.view">
+        <field name="name">estate.property.form</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <form string="Property">
+                <header>
+                    <!-- Status Bar Widget -->
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="new,offer_received,offer_accepted,sold"
+                           options="{'clickable': '1'}"/>
+                    
+                    <!-- Action buttons with conditional display -->
+                    <button name="action_sold" 
+                            type="object" 
+                            string="Sold" 
+                            class="btn-success"
+                            invisible="state in ['sold', 'cancelled']"/>
+                    
+                    <button name="action_cancel" 
+                            type="object" 
+                            string="Cancel" 
+                            class="btn-danger"
+                            invisible="state in ['sold', 'cancelled']"/>
+
+                    <button name="%(action_report_estate_property)d"
+                            type="action"
+                            string="Print"
+                            class="oe_highlight"
+                            icon="fa-print"/>
+                </header>
+                <sheet>
+                    <!-- Title -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    
+                    <!-- Tags under Title with color picker -->
+                    <group>
+                        <field name="tag_ids" widget="many2many_tags" 
+                               options="{'color_field': 'color', 'no_create': True}"/>
+                    </group>
+                    
+                    <!-- Basic Information -->
+                    <group>
+                        <group>
+                            <!-- Prevent creating/editing property type from here -->
+                            <field name="property_type_id" 
+                                   options="{'no_create': True, 'no_quick_create': True, 'no_create_edit': True}"/>
+                            <field name="postcode"/>
+                            <field name="date_availability"/>
+                        </group>
+                        <group>
+                            <field name="expected_price"/>
+                            <field name="best_price"/>
+                            <field name="selling_price" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <!-- Notebook with tabs -->
+                    <notebook>
+                        <!-- Description Tab -->
+                        <page string="Description">
+                            <group string="Description">
+                                <field name="description" nolabel="1"/>
+                            </group>
+                            
+                            <!-- Area Information moved here -->
+                            <group string="Area Information">
+                                <field name="living_area"/>
+                                <field name="garden_area" invisible="not garden"/>
+                                <!-- <field name="garden_area"/> -->
+                                <field name="total_area" readonly="1"/>
+                            </group>
+                            
+                            <!-- Other Details moved here -->
+                            <group>
+                                <field name="bedrooms"/>
+                                <field name="facades"/>
+                                <field name="garage"/>
+                                <field name="garden"/>
+                                
+                                <!-- Conditional display for garden fields -->
+                                <!-- <field name="garden_area" invisible="not garden"/> -->
+                                <field name="garden_orientation" invisible="not garden"/>
+                            </group>
+                            
+                        </page>
+                        
+                        <!-- Offers Tab -->
+                        <page string="Offers">
+                            <field name="offer_ids" 
+                                   readonly="state in ['offer_accepted', 'sold', 'cancelled']">
+                                <list editable="bottom" 
+                                      decoration-success="status == 'accepted'"
+                                      decoration-danger="status == 'refused'">
+                                    <field name="price"/>
+                                    <field name="partner_id"/>
+                                    <field name="validity"/>
+                                    <field name="date_deadline"/>
+                                    <field name="status"/>
+                                    
+                                    <!-- Action buttons for offers with conditional display -->
+                                    <button name="action_accept" 
+                                            type="object" 
+                                            string="Accept" 
+                                            class="btn-success"
+                                            icon="fa-check"
+                                            invisible="status in ['accepted', 'refused']"/>
+                                    
+                                    <button name="action_refuse" 
+                                            type="object" 
+                                            string="Refuse" 
+                                            class="btn-danger"
+                                            icon="fa-times"
+                                            invisible="status in ['accepted', 'refused']"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <!-- Other Info Tab -->
+                        <page string="Other Info">
+                            <group string="Sales Information">
+                                <field name="salesperson_id"/>
+                                <field name="buyer_id"/>
+                            </group>
+                            <group string="Status Information">
+                                <field name="active"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

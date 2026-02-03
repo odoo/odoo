@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Property Offer List View - Editable with decorations -->
+    <record id="view_estate_property_offer_list" model="ir.ui.view">
+        <field name="name">estate.property.offer.list</field>
+        <field name="model">estate.property.offer</field>
+        <field name="arch" type="xml">
+            <list string="Property Offers" 
+                  editable="bottom"
+                  decoration-success="status == 'accepted'"
+                  decoration-danger="status == 'refused'">
+                <field name="price"/>
+                <field name="partner_id"/>
+                <field name="validity"/>
+                <field name="date_deadline"/>
+                <field name="status"/>
+                <field name="property_id"/>
+                <field name="property_type_id" string="Property Type"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Property Offer Form View -->
+    <record id="view_estate_property_offer_form" model="ir.ui.view">
+        <field name="name">estate.property.offer.form</field>
+        <field name="model">estate.property.offer</field>
+        <field name="arch" type="xml">
+            <form string="Property Offer">
+                <header>
+                    <!-- Action buttons for offers in form view with conditional display -->
+                    <button name="action_accept" 
+                            type="object" 
+                            string="Accept" 
+                            class="btn-success"
+                            invisible="status in ['accepted', 'refused']"/>
+                    
+                    <button name="action_refuse" 
+                            type="object" 
+                            string="Refuse" 
+                            class="btn-danger"
+                            invisible="status in ['accepted', 'refused']"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="price"/>
+                        <field name="validity"/>
+                        <field name="date_deadline"/>
+                        <field name="partner_id"/>
+                        <field name="status"/>
+                        <field name="property_id"/>
+                        <field name="property_type_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
