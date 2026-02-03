@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date
+
 from odoo import _, api, fields, models
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
 
@@ -94,6 +96,10 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
                 mail_notify_force_send=False,
                 mail_activity_automation_skip=True
             ).create(vals_list)
+            accrual_allocations = allocations.filtered(lambda a: a.allocation_type == 'accrual')
+            for date_to, allocation in accrual_allocations.grouped('date_to').items():
+                date_to = min(date_to, date.today()) if date_to else False
+                allocation._process_accrual_plans(date_to)
             allocations.filtered(lambda c: c.validation_type != 'no_validation').action_validate()
 
             return {
