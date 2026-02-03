@@ -571,6 +571,12 @@
                     width: 21rem;
                     margin: auto;
 
+                    // On mobile year view, make months take the full screen width.
+                    // Using "vw" instead of "%" to keep each month weekday columns aligned.
+                    @include media-breakpoint-down(md) {
+                        width: calc(100vw - #{map-get($spacers, 5)});
+                    }
+
                     > .fc-toolbar.fc-header-toolbar {
                         margin-bottom: 4px;
                         cursor: default;
