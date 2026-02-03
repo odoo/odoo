@@ -636,13 +636,14 @@ export class DiscussChannel extends Record {
 
     messagePin(message) {
         this.store.env.services.dialog.add(MessageConfirmDialog, {
-            confirmText: _t("Yeah, pin it!"),
+            confirmText: _t("Pin Message"),
             message,
-            prompt: _t("You sure want this message pinned to %(conversation)s forever and ever?", {
-                conversation: this.prefix + this.displayName,
-            }),
+            prompt: _t(
+                "Are you sure you want to pin this message to %(conversation)s? It will remain pinned until you decide to remove it.",
+                { conversation: this.prefix + this.displayName }
+            ),
             size: "md",
-            title: _t("Pin It"),
+            title: _t("Pin this message?"),
             onConfirm: () => {
                 this.setMessagePin(message, true);
             },
@@ -652,10 +653,10 @@ export class DiscussChannel extends Record {
     messageUnpin(message) {
         this.store.env.services.dialog.add(MessageConfirmDialog, {
             confirmColor: "btn-danger",
-            confirmText: _t("Yes, remove it please"),
+            confirmText: _t("Unpin Message"),
             message,
             prompt: _t(
-                "Well, nothing lasts forever, but are you sure you want to unpin this message?"
+                "Are you sure you want to unpin this message? You can always pin it again later if needed."
             ),
             size: "md",
             title: _t("Unpin Message"),
