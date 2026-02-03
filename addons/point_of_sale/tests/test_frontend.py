@@ -1526,6 +1526,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.printer.write({
             'product_categories_ids': [Command.set(self.env['pos.category'].search([('name', '=', 'Category 2')]).ids)],
         })
+        self.office_combo.write({
+            'pos_categ_ids': [Command.set(self.env['pos.category'].search([('name', '=', 'Category 1')]).ids)],
+        })
         self.main_pos_config.write({
             'is_order_printer': True,
             'printer_ids': [Command.set(self.printer.ids)],
