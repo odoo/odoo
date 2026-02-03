@@ -46,6 +46,9 @@
                             <field name="language_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" required="website_id"/>
                             <div class="row mt8" invisible="website_language_count &lt; 2">
                                 <label class="col-lg-3" string="Default" for="website_default_lang_id"/>
+                                <div class="text-muted">
+                                    If the visitor’s browser language is not available, the website opens in the selected language.
+                                </div>
                                 <field name="website_default_lang_id" options="{'no_open': True, 'no_create': True}" required="website_id"/>
                             </div>
                             <div class="mt8">
