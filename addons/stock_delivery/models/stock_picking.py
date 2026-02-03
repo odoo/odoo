@@ -38,7 +38,7 @@ class StockPicking(models.Model):
     def _compute_return_picking(self):
         for picking in self:
             if picking.carrier_id and picking.carrier_id.can_generate_return:
-                picking.is_return_picking = any(m.origin_returned_move_id for m in picking.move_ids_without_package)
+                picking.is_return_picking = any(m.origin_returned_move_id and m.location_dest_usage == 'internal' for m in picking.move_ids_without_package)
             else:
                 picking.is_return_picking = False
 
