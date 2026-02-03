@@ -570,6 +570,9 @@ class HrEmployee(models.Model):
             versions = remove_gap(versions)
         return min(versions.mapped('date_start')) if versions else False
 
+    def get_first_version_dates_by_employee(self):
+        return {employee.id: employee._get_first_version_date() for employee in self}
+
     @api.depends('name')
     def _compute_legal_name(self):
         for employee in self:
