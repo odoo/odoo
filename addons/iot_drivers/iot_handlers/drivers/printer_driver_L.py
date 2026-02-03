@@ -52,7 +52,7 @@ class PrinterDriver(PrinterDriverBase):
                         usb_device.serial_number == device['usb_serial_number']
                     )
 
-                self.escpos_device = printer.Usb(usb_args={"custom_match": usb_matcher})
+                self.escpos_device = printer.Usb(usb_args={"custom_match": usb_matcher}, timeout=5)
             elif device.get('ip'):
                 self.escpos_device = printer.Network(device['ip'], timeout=5)
             else:
