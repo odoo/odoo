@@ -98,16 +98,8 @@ registry.category("web_tour.tours").add("mail_template_dynamic_field_tour", {
         },
         {
             content: "Check if subject value was correctly updated",
-            trigger: 'div[name="subject"] input[type="text"]',
-            run() {
-                const subjectValue = this.anchor.value;
-                const correctValue = "yes_model_id {{object.parent_name|||defValue}}";
-                if (subjectValue !== correctValue) {
-                    console.error(
-                        `Email template should have "${correctValue}" in subject input (actual: ${subjectValue})`
-                    );
-                }
-            },
+            trigger:
+                'div[name="subject"] input[type="text"]:value(yes_model_id {{object.parent_name|||defValue}})',
         },
         {
             content: "Insert text inside editable",

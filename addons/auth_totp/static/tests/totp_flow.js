@@ -4,20 +4,6 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 import { whenReady } from "@odoo/owl";
 
-function openRoot() {
-    return [{
-        content: "return to client root to avoid race condition",
-        trigger: 'body',
-        run() {
-            document.querySelector("body").classList.add("wait");
-            window.location = '/odoo';
-        },
-        expectUnloadPage: true,
-    }, {
-        content: "wait for client reload",
-        trigger: 'body:not(.wait)',
-    }];
-}
 function openUserPreferencesAtSecurityTab() {
     return [{
         content: 'Open user account menu',
@@ -122,8 +108,11 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
 },
 {
     trigger: ".o_notification_content:contains(2-Factor authentication is now enabled)",
+    run() {
+        window.location = '/odoo';
+    },
+    expectUnloadPage: true,
 },
-...openRoot(),
 ...openUserPreferencesAtSecurityTab(),
 ...closePreferencesDialog({
     content: "Check that the button has changed",
@@ -321,8 +310,11 @@ registry.category("web_tour.tours").add('totp_login_device', {
 },
 {
     trigger:".o_notification_content:contains(Two-factor authentication disabled)",
+    run() {
+        window.location = '/odoo';
+    },
+    expectUnloadPage: true,
 },
-...openRoot(),
 ...openUserPreferencesAtSecurityTab(),
 ...closePreferencesDialog({
     content: "Check that the button has changed",

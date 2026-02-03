@@ -8,7 +8,6 @@ import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
-import { delay } from "@web/core/utils/concurrency";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("EWalletProgramTour1", {
@@ -44,14 +43,6 @@ registry.category("web_tour.tours").add("EWalletProgramTour1", {
             }),
             PosLoyalty.orderTotalIs("0.00"),
             ...ProductScreen.clickLine("eWallet"),
-            // Added a small wait because the clickLine function uses a 300ms timeout
-            {
-                content: "Wait 300ms after clicking orderline",
-                trigger: "body",
-                async run() {
-                    await delay(300);
-                },
-            },
             Numpad.isVisible(),
             ...Order.hasLine({
                 withClass: ".selected",
@@ -59,13 +50,6 @@ registry.category("web_tour.tours").add("EWalletProgramTour1", {
                 productName: "eWallet",
                 quantity: "1.0",
             }),
-            {
-                content: "Wait 300ms after clicking orderline",
-                trigger: "body",
-                async run() {
-                    await delay(300);
-                },
-            },
             negateStep(Numpad.isVisible()),
             {
                 content: "Click Current Balance line in orderline",

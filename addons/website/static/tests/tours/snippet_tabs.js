@@ -24,12 +24,7 @@ registerWebsitePreviewTour(
         changeOption("Tabs", "button[aria-label='Remove Tab']"),
         {
             content: "Check that only 2 tab panes remain",
-            trigger: ":iframe .s_tabs .s_tabs_content",
-            run() {
-                if (this.anchor.querySelectorAll(".tab-pane").length !== 2) {
-                    console.error("There should be exactly 2 tab panes in the DOM.");
-                }
-            },
+            trigger: ":iframe .s_tabs .s_tabs_content .tab-pane:count(2)",
         },
         {
             content: "Check that the first tab link is active",
@@ -38,12 +33,7 @@ registerWebsitePreviewTour(
         changeOption("Tabs", "button[aria-label='Add Tab']"),
         {
             content: "Check there are 3 tab panes",
-            trigger: ":iframe .s_tabs .s_tabs_content",
-            run() {
-                if (this.anchor.querySelectorAll(".tab-pane").length !== 3) {
-                    console.error("There should be exactly 3 tab panes in the DOM.");
-                }
-            },
+            trigger: ":iframe .s_tabs .s_tabs_content .tab-pane:count(3)",
         },
     ]
 );

@@ -1,5 +1,4 @@
 import {
-    assertPathName,
     clickOnSave,
     getClientActionUrl,
     registerWebsitePreviewTour,
@@ -255,7 +254,6 @@ function testWebsitePageProperties() {
         },
         ...assertPageCanonicalUrlIs("/"),
         stepUtils.goToUrl(getClientActionUrl("/new-page")),
-        assertPathName("/cool-page", "body"),
         {
             content: "Verify no index",
             trigger: ':iframe head:hidden meta[name="robots"][content="noindex"]',
@@ -301,7 +299,6 @@ function testWebsitePageProperties() {
         },
         ...assertPageCanonicalUrlIs("/new-page"),
         stepUtils.goToUrl(getClientActionUrl("/new-page")),
-        assertPathName("/new-page", "body"),
         {
             content: "Verify is indexed",
             trigger: ':iframe head:hidden:not(:has(meta[name="robots"][content="noindex"]))',

@@ -22,12 +22,10 @@ registry.category("web_tour.tours").add("test_company_access_error_redirect", {
         },
         {
             trigger: ".o-dropdown--menu",
+        },
+        {
+            trigger: ".o_switch_company_item [role=menuitemcheckbox][aria-checked=true]:count(2)",
             run() {
-                assertEqual(
-                    document.querySelectorAll(".o_switch_company_item [role=menuitemcheckbox][aria-checked=true]")
-                        .length,
-                    2
-                );
                 assertEqual(
                     cookie.get("cids"),
                     [...document.querySelectorAll(".o_switch_company_item[data-company-id]")]

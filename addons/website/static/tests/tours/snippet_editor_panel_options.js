@@ -117,16 +117,8 @@ registerWebsitePreviewTour(
         ...changeOptionInPopover("Text", "Layout", "[data-action-value='3']"),
         {
             content: "The snippet should have the correct number of columns.",
-            trigger: ":iframe .s_text_block .container > .row .col-lg-4:eq(3)",
-            run() {
-                if (
-                    [...this.anchor.children].filter(
-                        (child) => !child.hasAttribute("data-selection-placeholder")
-                    ).length !== 3
-                ) {
-                    console.error("The snippet does not have the correct number of columns");
-                }
-            },
+            trigger:
+                ":iframe .s_text_block .container > .row:has(.col-lg-4:not([data-selection-placeholder]):count(3))",
         },
         checkIfParagraphSelected(":iframe .s_text_block p:not([data-selection-placeholder])"),
         // Test keeping the text selection when removing all columns of a

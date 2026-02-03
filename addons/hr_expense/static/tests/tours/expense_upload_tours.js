@@ -16,13 +16,7 @@
         },
         {
             content: "Check Upload Button",
-            trigger: '.o_button_upload_expense',
-            run() {
-                const button = document.querySelector('.o_button_upload_expense');
-                if(!button) {
-                    console.error('Missing Upload button in My Expenses > List View');
-                }
-            }
+            trigger: ".o_button_upload_expense",
         },
         {
             content: "Create a new expense",
@@ -57,12 +51,10 @@
         {
             content: "Check Upload Button",
             trigger: "button.o_switch_view.o_kanban.active",
-            run() {
-                const button = document.querySelector('.o_button_upload_expense');
-                if(!button) {
-                    console.error('Missing Upload button in My Expenses > Kanban View');
-                }
-            }
+        },
+        {
+            content: "Missing Upload button in My Expenses > Kanban View",
+            trigger: ".o_button_upload_expense",
         },
         {
             content: "Go to Reporting",
@@ -82,13 +74,11 @@
         {
             content: "Check Upload Button",
             trigger: "button.o_switch_view.o_list.active",
-            run() {
-                const button = document.querySelector('.o_button_upload_expense');
-                if(!button) {
-                    console.error('Missing Upload button in Expenses Analysis > List View');
-                }
-            }
         },
+        {
+            content: "Missing Upload button in Expenses Analysis > List View",
+            trigger: ".o_button_upload_expense",
+        }
     ]});
 
     registry.category("web_tour.tours").add('hr_expense_access_rights_test_tour', {
