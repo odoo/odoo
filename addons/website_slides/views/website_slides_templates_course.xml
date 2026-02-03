@@ -650,7 +650,7 @@
                     t-attf-href="/slides/slide/#{slug(slide_promoted)}#{query_string}"
                     class="h4 d-block pb-2 border-bottom" t-att-title="slide_promoted.name" t-field="slide_promoted.name"/>
                     <h4 t-else="" class="text-muted pb-2 border-bottom" t-field="slide_promoted.name"/>
-                    <div class="o_wslides_desc_truncate_10 mt-3" t-field="slide_promoted.description"/>
+                    <div class="o_line_clamp mt-3" style="--lines-clamp: 10;" t-field="slide_promoted.description"/>
                     <div t-if="slide_promoted.tag_ids" class="mt-2 pt-1">
                         <t t-foreach="slide_promoted.tag_ids" t-as="tag">
                             <h4 t-if="invite_preview" class="badge text-bg-info" t-out="tag.name"/>
@@ -849,16 +849,16 @@
         <i t-if="channel_progress[slide.id].get('completed')" class="position-absolute py-1 px-2 h5 fa fa-check-circle text-primary" style="right:0; top:0;"/>
 
         <div class="card-body d-flex flex-column px-3">
-            <a t-if="can_access" class="card-title h5 o_wslides_desc_truncate_2" t-attf-href="/slides/slide/#{slug(slide)}#{query_string}" t-out="slide.name"/>
-            <span t-else="" class="card-title h5 o_wslides_desc_truncate_2 text-muted" t-out="slide.name"/>
-            <div class="text-muted o_wslides_desc_truncate_2 mb-2" t-if="slide.is_preview or (not slide.is_published and user.has_group('website_slides.group_website_slides_officer'))">
+            <a t-if="can_access" class="card-title h5 o_line_clamp" t-attf-href="/slides/slide/#{slug(slide)}#{query_string}" t-out="slide.name"/>
+            <span t-else="" class="card-title h5 o_line_clamp text-muted" t-out="slide.name"/>
+            <div class="text-muted o_line_clamp mb-2" t-if="slide.is_preview or (not slide.is_published and user.has_group('website_slides.group_website_slides_officer'))">
                 <span t-if="slide.is_preview" class="badge text-bg-info">Preview</span>
                 <span t-if="not slide.is_published and channel.can_publish" class="badge text-bg-danger">Unpublished</span>
             </div>
             <div class="card-text mb-auto">
-                <div class="o_wslides_desc_truncate_3 fw-light oe_no_empty" t-field="slide.description"/>
+                <div class="o_line_clamp fw-light oe_no_empty" style="--lines-clamp: 3;" t-field="slide.description"/>
             </div>
-            <div class="text-muted o_wslides_desc_truncate_2 my-2">
+            <div class="text-muted o_line_clamp my-2">
                 <t t-foreach="slide.tag_ids" t-as="tag">
                     <h4 t-if="invite_preview" class="badge text-bg-info" t-out="tag.name"/>
                     <a t-else="" t-attf-href="/slides/#{slug(slide.channel_id)}/tag/#{slug(tag)}" class="badge text-bg-primary" t-out="tag.name"/>

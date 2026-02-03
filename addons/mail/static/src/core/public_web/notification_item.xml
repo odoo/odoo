@@ -20,7 +20,7 @@
             </div>
             <div class="d-flex flex-column flex-grow-1 align-self-start overflow-auto o-scrollbar-thin" t-att-class="{ 'o-ps-1_5': ui.isSmall, 'ps-1': !ui.isSmall }">
                 <div class="o-mail-NotificationItem-line d-flex text-nowrap">
-                    <span class="o-mail-NotificationItem-name o-fw-600" t-att-class="{ 'fs-5': ui.isSmall }" t-att-style="props.nameMaxLine !== undefined ? webkitLineClamp(props.nameMaxLine) : ''">
+                    <span class="o-mail-NotificationItem-name o-fw-600" t-att-class="{ 'fs-5': ui.isSmall, 'o_line_clamp': props.nameMaxLine !== undefined }" t-att-style="props.nameMaxLine !== undefined ? `--lines-clamp: ${props.nameMaxLine}` : ''">
                         <t t-slot="name"/>
                     </span>
                     <span class="flex-grow-1"/>
@@ -32,7 +32,7 @@
                     </t>
                 </div>
                 <div class="d-flex o-mail-NotificationItem-line">
-                    <div class="o-mail-NotificationItem-text" t-att-class="{ 'text-truncate': props.textTruncate, 'text-start': !props.textTruncate, 'small': !ui.isSmall, 'o-muted': props.muted }" t-att-style="props.textMaxLine !== undefined ? webkitLineClamp(props.textMaxLine) : ''">
+                    <div class="o-mail-NotificationItem-text" t-att-class="{ 'text-truncate': props.textTruncate, 'text-start': !props.textTruncate, 'small': !ui.isSmall, 'o-muted': props.muted, 'o_line_clamp': props.textMaxLine !== undefined }" t-att-style="props.textMaxLine !== undefined ? `--lines-clamp: ${props.textMaxLine}` : ''">
                         <t t-slot="body-icon"/>
                         <MessageSeenIndicator t-if="message?.showSeenIndicator(props.thread)" message="message"/>
                         <t t-if="props.slots?.body" name="notificationBody" t-slot="body"/>

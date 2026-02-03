@@ -43,7 +43,7 @@
                                         </div>
                                         <span
                                             t-if="lineName.attributes"
-                                            class="m-0 text-muted small break-line"
+                                            class="m-0 text-muted small o_line_clamp"
                                             t-esc="lineName.attributes"
                                             />
                                         <t t-set="comboParent" t-value="line.combo_parent_id" />
@@ -51,7 +51,7 @@
                                             <i class="fa fa-th-large me-2" role="img" aria-label="Combo" title="Combo"/>
                                             <t t-esc="line.combo_parent_id.product_id.name" />
                                         </div>
-                                        <div t-if="line.customer_note" class="d-inline-block m-0 text-muted small break-line">
+                                        <div t-if="line.customer_note" class="d-inline-block m-0 text-muted small o_line_clamp">
                                             <i class="fa fa-pencil-square-o" aria-hidden="true" />
                                             <span t-esc="line.customer_note" class="customer_note ms-1" />
                                         </div>

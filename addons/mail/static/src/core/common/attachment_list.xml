@@ -56,7 +56,7 @@
                         <div class="d-flex flex-row align-items-start gap-2">
                             <img t-if="attachment.isImage" src="/mail/static/src/img/image_icon.png" class="mw-100 mh-100 rounded o-mt-0_5" draggable="false"/>
                             <div t-else="" class="o-mail-Attachment-hover-image o_image flex-shrink-0" t-att-data-mimetype="attachment.mimetype"/>
-                            <div t-if="attachment.name" class="o-mail-Attachment-hoverImageText fw-bold overflow-hidden text-break" t-att-class="{ 'o-text-white': attachment.isImage }" t-out="props.messageSearch?.highlight(attachment.name) ?? attachment.name"/>
+                            <div t-if="attachment.name" class="o_line_clamp o-mail-Attachment-hoverImageText fw-bold text-break lh-sm" t-att-class="{ 'o-text-white': attachment.isImage }" t-out="props.messageSearch?.highlight(attachment.name) ?? attachment.name"/>
                         </div>
                         <div t-if="attachment.file_size" class="ms-4 o-mt-0_5" t-att-class="{ 'ps-1': !attachment.isImage }">
                             <span class="opacity-75" t-att-class="{ 'o-text-white': attachment.isImage }"><t t-out="Math.round(attachment.file_size / 1024, 4)"/>KB</span>
