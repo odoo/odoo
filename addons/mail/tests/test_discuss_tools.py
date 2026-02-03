@@ -250,3 +250,46 @@ class TestDiscussTools(TransactionCase):
         data = store.get_result()
         self.assertEqual(data["res.partner"][0]["email"], "test_user_355_a@example.com")
         self.assertNotIn("email", data["res.partner"][1])
+
+    # 4xx Tests many command modes
+
+    def test_450_replace_clear_existing_data(self):
+        general = self.env["discuss.channel"].create({"name": "General"})
+        general.message_post(body="Message 1")
+        general.message_post(body="Message 2")
+        store = Store()
+        store.add(
+            general,
+            lambda res: (
+                res.many("messages", [], value=general.message_ids[0], mode="ADD"),
+                res.many("messages", [], value=general.message_ids[1], mode="REPLACE"),
+            ),
+        )
+        data = store.get_result()
+        self.assertEqual(data["discuss.channel"][0]["messages"], general.message_ids[1].ids)
+
+    def test_460_replace_wrapped_into_command_when_multiple_commands_are_added(self):
+        general = self.env["discuss.channel"].create({"name": "General"})
+        general.message_post(body="Message 1")
+        general.message_post(body="Message 2")
+        general.message_post(body="Message 3")
+        store = Store()
+        store.add(
+            general,
+            lambda res: res.many("messages", [], value=general.message_ids, mode="REPLACE"),
+        )
+        data = store.get_result()
+        store = Store()
+        self.assertEqual(data["discuss.channel"][0]["messages"], general.message_ids.ids)
+        store.add(
+            general,
+            lambda res: (
+                res.many("messages", [], value=general.message_ids, mode="REPLACE"),
+                res.many("messages", [], value=general.message_ids[2], mode="DELETE"),
+            ),
+        )
+        data = store.get_result()
+        self.assertEqual(
+            data["discuss.channel"][0]["messages"],
+            [("REPLACE", general.message_ids.ids), ("DELETE", general.message_ids[2].ids)],
+        )

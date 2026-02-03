@@ -2,7 +2,7 @@ import { markup, toRaw } from "@odoo/owl";
 import {
     IS_DELETED_SYM,
     OR_SYM,
-    isCommand,
+    isCommandList,
     isMany,
     isOne,
     isRecord,
@@ -86,7 +86,7 @@ export class Record {
                 if (!isRelation(Model, expr)) {
                     return data[expr];
                 }
-                if (isCommand(data[expr])) {
+                if (isCommandList(data[expr])) {
                     // Note: only fields.One is supported
                     const [cmd, data2] = data[expr].at(-1);
                     if (cmd === "DELETE") {
@@ -122,7 +122,7 @@ export class Record {
         }
         function _deepRetrieve(expr2) {
             if (typeof expr2 === "string") {
-                if (isCommand(data[expr2])) {
+                if (isCommandList(data[expr2])) {
                     // Note: only fields.One() is supported
                     const [cmd, data2] = data[expr2].at(-1);
                     return Object.assign(res, {
@@ -154,7 +154,7 @@ export class Record {
             if (typeof data !== "object" || data === null) {
                 return { [Model.id]: data }; // non-object data => single id
             }
-            if (isCommand(data[Model.id])) {
+            if (isCommandList(data[Model.id])) {
                 // Note: only fields.One is supported
                 const [cmd, data2] = data[Model.id].at(-1);
                 return Object.assign(res, {
@@ -262,7 +262,7 @@ export class Record {
                 if (
                     ids[name] &&
                     !isRecord(ids[name]) &&
-                    !isCommand(ids[name]) &&
+                    !isCommandList(ids[name]) &&
                     isRelation(Model, name)
                 ) {
                     // preinsert that record in relational field,
