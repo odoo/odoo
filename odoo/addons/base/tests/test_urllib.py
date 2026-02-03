@@ -11,6 +11,8 @@ class TestUrllib(TransactionCase):
     def test_urlencode_monkeypatch(self):
         """Try to use `urlencode` incorrectly, and check that warnings are emitted."""
         self.assertEqual(urlencode({"a": "b", "foo": "bar"}), "a=b&foo=bar")
+        self.assertEqual(urlencode({"a": ["b", "c"]}, doseq=True), "a=b&a=c")
+
         with self.assertWarns(UserWarning):
             self.assertEqual(urlencode({"a": ["b"]}), "a=%5B%27b%27%5D")
 
