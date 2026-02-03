@@ -330,6 +330,7 @@ class HrEmployee(models.Model):
         compute='_compute_has_country_contract_type',
         groups="hr.group_hr_user",
     )
+    employee_issues = fields.Json(compute='_compute_employee_issues')
 
     def _prepare_create_values(self, vals_list):
         result = super()._prepare_create_values(vals_list)
@@ -350,6 +351,39 @@ class HrEmployee(models.Model):
                 **{k: v for k, v in version_vals.items() if k in version_fields},
             })
         return new_vals_list
+
+    @api.depends('is_trusted_bank_account', 'is_in_contract', 'bank_account_ids')
+    def _compute_employee_issues(self):
+        for employee in self:
+            issues = {}
+            cnt = 0
+            if not employee.is_in_contract:
+                issues[cnt] = {
+                    'message': _("Employee does not have running contract."),
+                }
+                cnt += 1
+            if not employee.bank_account_ids:
+                issues[cnt] = {
+                    'message': _("Employee does not have a bank account."),
+                }
+                cnt += 1
+            elif any(not b.allow_out_payment for b in employee.bank_account_ids):
+                untrusted_banks = employee.bank_account_ids.filtered(lambda b: not b.allow_out_payment)
+                issues[cnt] = {
+                    'message': _("Untrusted bank accounts"),
+                    'action_text': _("Bank Accounts"),
+                    'action': {
+                        'type': 'ir.actions.act_window',
+                        'name': _('Bank Accounts'),
+                        'res_model': 'res.partner.bank',
+                        'view_mode': 'list,form',
+                        'views': [[False, 'list'], [False, 'form']],
+                        'domain': [('id', 'in', untrusted_banks.ids)],
+                        'context': {'create': False},
+                    },
+                }
+                cnt += 1
+            employee.employee_issues = issues
 
     @api.depends('bank_account_ids.allow_out_payment')
     def _compute_is_trusted_bank_account(self):

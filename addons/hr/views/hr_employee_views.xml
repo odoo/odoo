@@ -109,6 +109,7 @@
                             groups="hr.group_hr_user" invisible="not id or not departure_id or not departure_apply_date"/>
                         <field name="version_id" widget="versions_timeline" invisible="not id" options="{'clickable': True}" readonly="False"/>
                     </header>
+                    <field name="employee_issues" invisible="not employee_issues" widget="work_entry_warnings"/>
                     <sheet>
                         <div name="button_box" class="oe_button_box">
                             <button name="action_open_versions"
