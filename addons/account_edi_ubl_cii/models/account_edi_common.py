@@ -265,6 +265,9 @@ class AccountEdiCommon(models.AbstractModel):
     # HELPERS
     # -------------------------------------------------------------------------
 
+    def module_installed(self, module_name):
+        return self.env['ir.module.module']._get(module_name).state == 'installed'
+
     def format_float(self, amount, precision_digits):
         if amount is None:
             return None

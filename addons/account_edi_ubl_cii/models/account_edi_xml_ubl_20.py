@@ -1169,16 +1169,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         }
 
     def _get_line_xpaths(self, document_type=False, qty_factor=1):
-        return {
+        results = {
             'basis_qty': './cac:Price/cbc:BaseQuantity',
             'gross_price_unit': './{*}Price/{*}AllowanceCharge/{*}BaseAmount',
             'rebate': './{*}Price/{*}AllowanceCharge/{*}Amount',
             'net_price_unit': './{*}Price/{*}PriceAmount',
-            'delivered_qty': (
-                './{*}InvoicedQuantity'
-                if document_type and document_type in ('in_invoice', 'out_invoice') or qty_factor == -1
-                else './{*}CreditedQuantity'
-            ),
             'allowance_charge': './/{*}AllowanceCharge',
             'allowance_charge_indicator': './{*}ChargeIndicator',
             'allowance_charge_amount': './{*}Amount',
@@ -1191,6 +1186,15 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             ],
             'product': self._get_product_xpaths(),
         }
+
+        if document_type == 'order':
+            results['delivered_qty'] = './{*}Quantity'
+        elif document_type and document_type in ('in_invoice', 'out_invoice') or qty_factor == -1:
+            results['delivered_qty'] = './{*}InvoicedQuantity'
+        else:
+            results['delivered_qty'] = './{*}CreditedQuantity'
+
+        return results
 
     def _get_product_xpaths(self):
         return {

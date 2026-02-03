@@ -803,6 +803,119 @@ class AccountEdiUBL(models.AbstractModel):
             'unitCode': self._get_uom_unece_code(base_line['product_uom_id']),
         }
 
+    def _ubl_add_line_item_name_description_nodes(self, vals):
+        item_node = vals['item_node']
+        base_line = vals['line_vals']['base_line']
+        product = base_line['product_id']
+
+        if base_line.get('_removed_tax_data'):
+            # Emptying tax extra line.
+            name = description = base_line['_removed_tax_data']['tax'].name
+        else:
+            name = product.name or ''
+            if line_name := base_line.get('name'):
+                # Regular business line.
+                description = line_name
+                if not name:
+                    name = line_name
+            else:
+                # Undefined line.
+                description = product.description_sale or ''
+
+        if description:
+            item_node['cbc:Description'] = {'_text': description}
+        else:
+            item_node['cbc:Description'] = None
+
+        if name:
+            item_node['cbc:Name'] = {'_text': name}
+        else:
+            item_node['cbc:Name'] = None
+
+    def _ubl_add_line_item_identification_nodes(self, vals):
+        item_node = vals['item_node']
+        base_line = vals['line_vals']['base_line']
+        product = base_line['product_id']
+
+        if product.default_code:
+            item_node['cac:SellersItemIdentification'] = {
+                'cbc:ID': {'_text': product.default_code},
+            }
+        else:
+            item_node['cac:SellersItemIdentification'] = None
+        if product.barcode:
+            item_node['cac:StandardItemIdentification'] = {
+                'cbc:ID': {
+                    '_text': product.barcode,
+                    'schemeID': '0160',  # GTIN
+                },
+            }
+        else:
+            item_node['cac:StandardItemIdentification'] = None
+
+    def _ubl_add_line_item_additional_item_property_nodes(self, vals):
+        item_node = vals['item_node']
+        base_line = vals['line_vals']['base_line']
+        product = base_line['product_id']
+
+        item_node['cac:AdditionalItemProperty'] = [
+            {
+                'cbc:Name': {'_text': value.attribute_id.name},
+                'cbc:Value': {'_text': value.name},
+            }
+            for value in product.product_template_attribute_value_ids
+        ]
+
+    def _ubl_get_line_item_commodity_classification_node_from_intrastat_code(self, vals, intrastat_code):
+        return {
+            'cbc:ItemClassificationCode': {
+                '_text': intrastat_code.code,
+                'listID': 'HS',
+                'listVersionID': None,
+            }
+        }
+
+    def _ubl_get_line_item_commodity_classification_node_from_unspsc_code(self, vals, unspsc_code):
+        return {
+            'cbc:ItemClassificationCode': {
+                '_text': unspsc_code.code,
+                'listID': 'UNSPSC',
+                'listVersionID': None,
+            }
+        }
+
+    def _ubl_get_line_item_commodity_classification_node_from_cpv_code(self, vals, cpv_code):
+        return {
+            'cbc:ItemClassificationCode': {
+                '_text': cpv_code.code,
+                'listID': 'CPV',
+                'listVersionID': None,
+            }
+        }
+
+    def _ubl_add_line_item_commodity_classification_nodes(self, vals):
+        item_node = vals['item_node']
+        base_line = vals['line_vals']['base_line']
+        product = base_line['product_id']
+        nodes = item_node['cac:CommodityClassification'] = []
+
+        if self.module_installed('account_intrastat'):
+            intrastat_code = product.intrastat_code_id
+            if intrastat_code.code:
+                nodes.append(self._ubl_get_line_item_commodity_classification_node_from_intrastat_code(vals, intrastat_code))
+
+        if self.module_installed('product_unspsc'):
+            unspsc_code = product.unspsc_code_id
+            if unspsc_code.code:
+                nodes.append(self._ubl_get_line_item_commodity_classification_node_from_unspsc_code(vals, unspsc_code))
+
+        if self.module_installed('l10n_ro_cpv_code'):
+            cpv_code = product.cpv_code_id
+            if cpv_code.code:
+                nodes.append(self._ubl_get_line_item_commodity_classification_node_from_cpv_code(vals, cpv_code))
+
+        return nodes
+
     def _ubl_get_line_item_node_classified_tax_category_node(self, vals, tax_category):
         """ Generate the node 'cac:ClassifiedTaxCategory' in 'cac:Item'.
 
@@ -823,7 +936,44 @@ class AccountEdiUBL(models.AbstractModel):
             }
         }
 
+    def _ubl_add_line_item_classified_tax_category_nodes(self, vals, in_foreign_currency=True):
+        AccountTax = self.env['account.tax']
+        item_node = vals['item_node']
+        base_line = vals['line_vals']['base_line']
+        currency = base_line['currency_id'] if in_foreign_currency else vals['company_currency']
+        suffix = '_currency' if in_foreign_currency else ''
+
+        classified_tax_category_nodes = item_node['cac:ClassifiedTaxCategory'] = []
+        aggregated_values = AccountTax._aggregate_base_line_tax_details(
+            base_line=base_line,
+            grouping_function=lambda base_line, tax_data: self._ubl_default_base_line_item_classified_tax_category_grouping_key(
+                base_line=base_line,
+                tax_data=tax_data,
+                vals=vals,
+                currency=currency,
+            ),
+        )
+        for grouping_key, values in aggregated_values.items():
+            if not grouping_key:
+                continue
+
+            classified_tax_category_nodes.append(self._ubl_get_line_item_node_classified_tax_category_node(vals, {
+                **grouping_key,
+                'base_amount': values[f'base_amount{suffix}'],
+                'tax_amount': values[f'tax_amount{suffix}'],
+            }))
+
+    def _ubl_add_line_item_node(self, vals):
+        node = vals['line_node']['cac:Item'] = {}
+        sub_vals = {**vals, 'item_node': node}
+        self._ubl_add_line_item_name_description_nodes(sub_vals)
+        self._ubl_add_line_item_identification_nodes(sub_vals)
+        self._ubl_add_line_item_additional_item_property_nodes(sub_vals)
+        self._ubl_add_line_item_commodity_classification_nodes(sub_vals)
+        self._ubl_add_line_item_classified_tax_category_nodes(sub_vals)
+
     def _ubl_get_line_item_node(self, vals, item_values):
+        # TO BE REMOVED IN MASTER
         item_node = {}
         base_line = item_values['base_line']
         product = base_line['product_id']
