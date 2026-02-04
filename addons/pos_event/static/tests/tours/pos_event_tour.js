@@ -7,11 +7,32 @@ import * as EventTourUtils from "@pos_event/../tests/tours/utils/event_tour_util
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add("SellingEventInPos", {
+registry.category("web_tour.tours").add("SellingEventInPosWithTextAnswers", {
     steps: () =>
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+            // Buy a VIP Ticket
+            ProductScreen.clickDisplayedProduct("My Awesome Event"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.confirm(),
+            EventTourUtils.answerGlobalTextQuestion("Text Box 1", "TB1-Answer"),
+            EventTourUtils.answerTicketQuestion("1", "Text Box 2", "T1-TB2-Answer"),
+            EventTourUtils.answerTicketQuestion("2", "Text Box 2", "T2-TB2-Answer"),
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs("400.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("SellingEventInPosWithChoiceAnswers", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
             // Confirm popup - There isn't enough tickets available
             ProductScreen.clickDisplayedProduct("My Awesome Event"),
             EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
