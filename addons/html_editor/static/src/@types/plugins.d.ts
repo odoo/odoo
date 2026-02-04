@@ -8,7 +8,7 @@ declare module "plugins" {
     import { content_editable_providers, content_not_editable_providers, contenteditable_to_remove_selector, is_valid_contenteditable_predicates } from "@html_editor/core/content_editable_plugin";
     import { on_will_delete_handlers, delete_backward_line_overrides, delete_backward_overrides, delete_backward_word_overrides, delete_forward_line_overrides, delete_forward_overrides, delete_forward_word_overrides, on_deleted_handlers, delete_range_overrides, DeleteShared, is_functional_empty_node_predicates, removable_descendants_providers, system_node_selectors, is_node_removable_predicates } from "@html_editor/core/delete_plugin";
     import { DialogShared } from "@html_editor/core/dialog_plugin";
-    import { on_inserted_handlers, before_insert_processors, on_will_set_tag_handlers, DomShared, node_to_insert_processors, system_attributes, system_classes, system_style_properties } from "@html_editor/core/dom_plugin";
+    import { on_inserted_handlers, before_insert_processors, on_will_set_tag_handlers, DomShared, node_to_insert_processors, system_attributes, system_classes, system_style_properties, are_inlines_allowed_at_root_predicates } from "@html_editor/core/dom_plugin";
     import { is_format_class_predicates, on_will_format_selection_handlers, FormatShared, has_format_predicates, on_all_formats_removed_handlers } from "@html_editor/core/format_plugin";
     import { on_attribute_changed_handlers, attribute_change_processors, on_will_add_step_handlers, on_will_filter_mutation_record_handlers, on_content_updated_handlers, on_external_step_added_handlers, on_new_records_handled_handlers, on_history_cleaned_handlers, on_history_reset_from_steps_handlers, on_history_reset_handlers, history_step_processors, HistoryShared, on_redone_handlers, on_undone_handlers, on_savepoint_restored_handlers, is_mutation_record_savable_predicates, serializable_descendants_processors, set_attribute_overrides, on_step_added_handlers, is_step_reversible_predicates } from "@html_editor/core/history_plugin";
     import { on_beforeinput_handlers, on_input_handlers } from "@html_editor/core/input_plugin";
@@ -214,6 +214,7 @@ declare module "plugins" {
         should_bypass_paste_image_files_predicates: should_bypass_paste_image_files_predicates;
         should_show_power_buttons_predicates: should_show_power_buttons_predicates;
         would_feff_be_legit_predicates: would_feff_be_legit_predicates;
+        are_inlines_allowed_at_root_predicates: are_inlines_allowed_at_root_predicates;
 
         // Processors
         apply_background_color_processors: apply_background_color_processors;
