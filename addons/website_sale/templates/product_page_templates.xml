@@ -167,12 +167,11 @@
                                     </div>
 
                                     <div
-                                        t-if="combination_info['prevent_zero_price_sale']"
                                         class="o_wsale_product_details_content_section o_wsale_product_details_content_section_contact mb-4"
                                     >
                                         <div
                                             id="contact_us_wrapper"
-                                            t-attf-class="d-flex oe_structure oe_structure_solo #{_div_classes}"
+                                            t-attf-class="d-flex oe_structure oe_structure_solo #{_div_classes} {{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}}"
                                         >
                                             <section
                                                 class="s_text_block"
