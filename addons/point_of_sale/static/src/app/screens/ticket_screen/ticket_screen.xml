@@ -140,7 +140,7 @@
                             t-on-click="() => this.setOrder(_selectedSyncedOrder)">
                             <span class="d-block">Load Order</span>
                         </button>
-                        <button class="btn-switchpane btn btn-lg lh-lg w-50 py-3 secondary review-button" t-att-class="{'btn-primary': isOrderSynced, 'btn-light': !isOrderSynced}" t-on-click="switchPane">
+                        <button class="btn-switchpane btn btn-lg lh-lg py-3 secondary review-button" t-att-class="isOrderSynced ? 'w-100 btn-primary' : 'w-50 btn-light'" t-on-click="switchPane">
                             <span class="d-block">Review</span>
                         </button>
                     </div>
