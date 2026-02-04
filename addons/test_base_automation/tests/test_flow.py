@@ -6,7 +6,7 @@ import sys
 
 from odoo.tools import mute_logger
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.tests import common, tagged
+from odoo.tests import Form, common, tagged
 from odoo.exceptions import AccessError, ValidationError
 from odoo import Command
 
@@ -978,6 +978,31 @@ class TestCompute(common.TransactionCase):
         r.parent_id = company2
         self.assertEqual(r.display_name, 'Awiclo, Bob')
 
+    def test_computation_sequence(self):
+        """ This test ensure sequential computation is done and all fields are correctly set
+        when a filter_pre_domain trigger computation of one of the chain element
+        """
+        project = self.env['test_base_automation.project'].create({})
+        task = self.env['test_base_automation.task'].create({
+            'project_id': project.id,
+            'allocated_hours': 100,
+        })
+
+        # this action is executed every time a task is modified
+        create_automation(
+            self,
+            model_id=self.env.ref('test_base_automation.model_test_base_automation_task').id,
+            trigger='on_create_or_write',
+            filter_pre_domain="[('remaining_hours', '>', 0)]",
+            _actions={'state': 'code'},  # no-op action
+        )
+
+        task.trigger_hours = 5
+        self.assertRecordValues(task, [{
+            'effective_hours': 5,
+            'remaining_hours': 95,
+        }])
+
     def test_recursion(self):
         project = self.env['test_base_automation.project'].create({})
 
@@ -1149,6 +1174,51 @@ class TestCompute(common.TransactionCase):
         partner_count = self.env['res.partner'].search_count([('name', '=', 'Test Partner Automation')])
         self.assertEqual(partner_count, 1, "Only one partner should have been created")
 
+    def test_00_form_save_update_related_model_id(self):
+        with Form(self.env['ir.actions.server'], view="base.view_server_action_form") as f:
+            f.name = "Test Action"
+            f.model_id = self.env["ir.model"]._get("res.partner")
+            f.state = "object_write"
+            f.update_path = "user_id"
+            f.evaluation_type = "value"
+            f.resource_ref = "res.users,2"
+
+        res_users_model = self.env["ir.model"]._get("res.users")
+        self.assertEqual(f.update_related_model_id, res_users_model)
+
+    def test_01_form_object_write_o2m_field(self):
+        aks_partner = self.env["res.partner"].create({"name": "A Kind Shepherd"})
+        bs_partner = self.env["res.partner"].create({"name": "Black Sheep"})
+
+        # test the 'object_write' type shows a resource_ref field for o2many
+        f = Form(self.env['ir.actions.server'], view="base.view_server_action_form")
+        f.name = "Adopt The Black Sheep"
+        f.model_id = self.env["ir.model"]._get("res.partner")
+        f.state = "object_write"
+        f.evaluation_type = "value"
+        f.update_path = "child_ids"
+        self.assertEqual(f.update_m2m_operation, "add")
+        self.assertEqual(f.value_field_to_show, "resource_ref")
+        f.resource_ref = f"res.partner,{bs_partner.id}"
+        action = f.save()
+
+        # test the action runs correctly
+        action.with_context(
+            active_model="res.partner",
+            active_id=aks_partner.id,
+        ).run()
+        self.assertEqual(aks_partner.child_ids, bs_partner)
+        self.assertEqual(bs_partner.parent_id, aks_partner)
+
+        # also check with 'remove' operation
+        f.update_m2m_operation = "remove"
+        action = f.save()
+        action.with_context(
+            active_model="res.partner",
+            active_id=aks_partner.id,
+        ).run()
+        self.assertEqual(aks_partner.child_ids.ids, [])
+        self.assertEqual(bs_partner.parent_id.id, False)
 
 @common.tagged("post_install", "-at_install")
 class TestHttp(common.HttpCase):
@@ -1232,6 +1302,7 @@ class TestHttp(common.HttpCase):
         obj.name = "new_name"
         self.cr.flush()
         self.cr.clear()
+        self._wait_remaining_requests()  # just in case the request timeouts
         self.assertEqual(json.loads(obj.another_field), {
             '_action': f'Send Webhook Notification(#{automation_sender.action_server_ids[0].id})',
             "_id": obj.id,

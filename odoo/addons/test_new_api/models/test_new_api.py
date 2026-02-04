@@ -1116,7 +1116,8 @@ class ModelChild(models.Model):
 
     name = fields.Char()
     company_id = fields.Many2one('res.company')
-    parent_id = fields.Many2one('test_new_api.model_parent', check_company=True)
+    parent_id = fields.Many2one('test_new_api.model_parent', string="Parent", check_company=True)
+    parent_ids = fields.Many2many('test_new_api.model_parent', string="Parents", check_company=True)
 
 
 class ModelChildNoCheck(models.Model):
@@ -1952,3 +1953,14 @@ class ModelAutovacuumed(models.Model):
     @api.autovacuum
     def _gc(self):
         self.search([('expire_at', '<', datetime.datetime.now() - datetime.timedelta(days=1))]).unlink()
+
+
+class BinaryTest(models.Model):
+    _name = _description = "binary.test"
+
+    img = fields.Image()
+    bin1 = fields.Binary()
+    bin2 = fields.Binary(compute="_compute_bin2")
+
+    def _compute_bin2(self):
+        self.bin2 = {}

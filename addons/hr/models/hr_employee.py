@@ -238,6 +238,11 @@ class HrEmployeePrivate(models.Model):
         self.flush_recordset(field_names)
         public = self.env['hr.employee.public'].browse(self._ids)
         public.fetch(field_names)
+        # make sure all related fields from employee are in cache
+        for field_name in field_names:
+            field = self.env['hr.employee.public']._fields[field_name]
+            if field.related and field.related_field.model_name == 'hr.employee':
+                public.mapped(field_name)
         self._copy_cache_from(public, field_names)
 
     def _check_private_fields(self, field_names):
@@ -462,9 +467,10 @@ class HrEmployeePrivate(models.Model):
                 ('subscription_department_ids', 'in', department_id)
             ])._subscribe_users_automatically()
         if vals.get('departure_description'):
-            self.message_post(body=_(
-                'Additional Information: \n %(description)s',
-                description=vals.get('departure_description')))
+            for employee in self:
+                employee.message_post(body=_(
+                    'Additional Information: \n %(description)s',
+                    description=vals.get('departure_description')))
         return res
 
     def unlink(self):
@@ -493,7 +499,7 @@ class HrEmployeePrivate(models.Model):
             employee_fields_to_empty = self._get_employee_m2o_to_empty_on_archived_employees()
             user_fields_to_empty = self._get_user_m2o_to_empty_on_archived_employees()
             employee_domain = [[(field, 'in', archived_employees.ids)] for field in employee_fields_to_empty]
-            user_domain = [[(field, 'in', archived_employees.user_id.ids) for field in user_fields_to_empty]]
+            user_domain = [[(field, 'in', archived_employees.user_id.ids)] for field in user_fields_to_empty]
             employees = self.env['hr.employee'].search(expression.OR(employee_domain + user_domain))
             for employee in employees:
                 for field in employee_fields_to_empty:

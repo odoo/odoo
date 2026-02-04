@@ -9,8 +9,6 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo import fields
 from odoo.tools import misc
 
-from lxml import etree
-
 
 class TestUBLCommon(AccountTestInvoicingCommon):
 
@@ -207,7 +205,7 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         account_move = self.env['account.move'].create({
             'partner_id': buyer.id,
             'partner_bank_id': (seller if move_type == 'out_invoice' else buyer).bank_ids[:1].id,
-            'invoice_payment_term_id': self.pay_terms_b.id,
+            'invoice_payment_term_id': invoice_kwargs.get('invoice_payment_term_id', self.pay_terms_b.id),
             'invoice_date': '2017-01-01',
             'date': '2017-01-01',
             'currency_id': self.currency_data['currency'].id,
@@ -235,19 +233,16 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         self.assertTrue(attachment)
 
         xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
-        xml_etree = self.get_xml_tree_from_string(xml_content)
+        expected_file_path = expected_file_path.replace('.xml', '')
+        if '/' not in expected_file_path:
+            expected_file_path = '/' + expected_file_path
+        subfolder, test_name = expected_file_path.rsplit('/', maxsplit=1)
 
-        expected_file_full_path = misc.file_path(f'{self.test_module}/tests/test_files/{expected_file_path}')
-        expected_etree = etree.parse(expected_file_full_path).getroot()
-
-        modified_etree = self.with_applied_xpath(
-            expected_etree,
-            xpaths
-        )
-
-        self.assertXmlTreeEqual(
-            xml_etree,
-            modified_etree,
+        self.assert_xml(
+            xml_element=xml_content,
+            test_name=test_name,
+            subfolder=subfolder,
+            xpath_to_apply=xpaths,
         )
 
         return attachment

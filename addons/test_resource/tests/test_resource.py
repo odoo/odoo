@@ -91,6 +91,22 @@ class TestIntervals(TransactionCase):
             [(0, 5), (12, 13), (20, 22), (23, 24)],
         )
 
+    def test_intervals_normalization(self):
+        """
+        Test the merge operation between normalized Intervals
+        and unnormalized Intervals. It must return normalized
+        intervals.
+        """
+        # Simulating unnormalized Intervals. E.g: WorkIntervals
+        class Intervals2(Intervals):
+            def __init__(self, intervals=()):
+                self._items = intervals
+
+        A = Intervals(self.ints([(0, 10)]))
+        B = Intervals2(self.ints([(-5, 5), (5, 15)]))
+        C = A & B
+        self.assertEqual(len(C), 1)
+        self.assertEqual(list(C), self.ints([(0, 10)]))
 
 class TestErrors(TestResourceCommon):
     def setUp(self):

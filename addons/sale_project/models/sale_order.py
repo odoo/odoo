@@ -6,8 +6,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError
-from odoo.tools.safe_eval import safe_eval
-from odoo.osv.expression import AND
+from odoo.osv.expression import AND, NEGATIVE_TERM_OPERATORS, TERM_OPERATORS_NEGATION, ANY_IN
 
 
 class SaleOrder(models.Model):
@@ -19,7 +18,7 @@ class SaleOrder(models.Model):
     visible_project = fields.Boolean('Display project', compute='_compute_visible_project', readonly=True)
     project_id = fields.Many2one('project.project', 'Project',
         help='Select a non billable project on which tasks can be created.')
-    project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user", help="Projects used in this sales order.")
+    project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user,project.group_project_milestone", help="Projects used in this sales order.")
     project_count = fields.Integer(string='Number of Projects', compute='_compute_project_ids', groups='project.group_project_user')
     milestone_count = fields.Integer(compute='_compute_milestone_count')
     is_product_milestone = fields.Boolean(compute='_compute_is_product_milestone')
@@ -54,21 +53,18 @@ class SaleOrder(models.Model):
             order.show_create_project_button = is_project_manager and order.id in show_button_ids and not order.project_count and order.order_line.product_template_id.filtered(lambda x: x.service_policy in ['delivered_timesheet', 'delivered_milestones'])
 
     def _search_tasks_ids(self, operator, value):
-        is_name_search = operator in ['=', '!=', 'like', '=like', 'ilike', '=ilike'] and isinstance(value, str)
-        is_id_eq_search = operator in ['=', '!='] and isinstance(value, int)
-        is_id_in_search = operator in ['in', 'not in'] and isinstance(value, list) and all(isinstance(item, int) for item in value)
-        if not (is_name_search or is_id_eq_search or is_id_in_search):
-            raise NotImplementedError(_('Operation not supported'))
-
-        if is_name_search:
-            tasks_ids = self.env['project.task']._name_search(value, operator=operator, limit=None)
-        elif is_id_eq_search:
-            tasks_ids = value if operator == '=' else self.env['project.task']._search([('id', '!=', value)], order='id')
-        else:  # is_id_in_search
-            tasks_ids = self.env['project.task']._search([('id', operator, value)], order='id')
-
-        tasks = self.env['project.task'].browse(tasks_ids)
-        return [('id', 'in', tasks.sale_order_id.ids)]
+        if operator in NEGATIVE_TERM_OPERATORS:
+            positive_operator = TERM_OPERATORS_NEGATION[operator]
+        else:
+            positive_operator = operator
+        if operator in ANY_IN:
+            new_operator = ANY_IN[operator]
+            task_domain = AND([value, [('sale_order_id', '!=', False)]])
+        else:
+            new_operator = 'in' if positive_operator == operator else 'not in'
+            task_domain = [('display_name' if isinstance(value, str) else 'id', positive_operator, value), ('sale_order_id', '!=', False)]
+        query = self.env['project.task']._search(task_domain)
+        return [('id', new_operator, query.subselect('sale_order_id'))]
 
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):
@@ -119,7 +115,7 @@ class SaleOrder(models.Model):
             if not is_project_manager:
                 projects = projects._filter_access_rules('read')
             order.project_ids = projects
-            order.project_count = len(projects)
+            order.project_count = len(projects.filtered('active'))
 
     @api.onchange('project_id')
     def _onchange_project_id(self):
@@ -208,7 +204,7 @@ class SaleOrder(models.Model):
         action = {
             'type': 'ir.actions.act_window',
             'name': _('Projects'),
-            'domain': ['|', ('sale_order_id', '=', self.id), ('id', 'in', self.with_context(active_test=False).project_ids.ids), ('active', 'in', [True, False])],
+            'domain': ['|', ('sale_order_id', '=', self.id), ('id', 'in', self.project_ids.ids)],
             'res_model': 'project.project',
             'views': [(False, 'kanban'), (False, 'tree'), (False, 'form')],
             'view_mode': 'kanban,tree,form',
@@ -219,7 +215,7 @@ class SaleOrder(models.Model):
                 'default_allow_billable': 1,
             }
         }
-        if len(self.with_context(active_test=False).project_ids) == 1:
+        if len(self.project_ids) == 1:
             action.update({'views': [(False, 'form')], 'res_id': self.project_ids.id})
         return action
 

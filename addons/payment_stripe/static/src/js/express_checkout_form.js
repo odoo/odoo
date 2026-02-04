@@ -179,6 +179,9 @@ paymentExpressCheckoutForm.include({
                         },
                     },
                 );
+                this.paymentContext['minorAmount'] = await this.rpc(
+                    this.paymentContext['shippingAddressUpdateRoute'] + '/compute_taxes',
+                );
                 if (availableCarriers.length === 0) {
                     ev.updateWith({status: 'invalid_shipping_address'});
                 } else {

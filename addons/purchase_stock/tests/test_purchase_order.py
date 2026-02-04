@@ -4,7 +4,7 @@ import re
 from datetime import datetime, timedelta
 from freezegun import freeze_time
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.exceptions import UserError
@@ -429,14 +429,19 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(len(purchase_order.picking_ids.move_line_ids), 1)
         self.assertEqual(purchase_order.picking_ids.move_line_ids.quantity_product_uom, 7)
 
-
+        # -- Decrease the quantity -- #
         purchase_order.order_line.product_qty = 4
-        # updating quantity shouldn't create a seperate stock move
+        # updating quantity shouldn't create a separate stock move
         # the new stock move (-3) should be merged with the previous
-        purchase_order.button_confirm()
         self.assertEqual(len(purchase_order.picking_ids), 1)
         self.assertEqual(len(purchase_order.picking_ids.move_line_ids), 1)
         self.assertEqual(purchase_order.picking_ids.move_line_ids.quantity_product_uom, 4)
+
+        # -- Increase the quantity -- #
+        purchase_order.order_line.product_qty = 14
+        self.assertEqual(len(purchase_order.picking_ids), 1)
+        self.assertEqual(len(purchase_order.picking_ids.move_line_ids), 1)
+        self.assertEqual(purchase_order.picking_ids.move_line_ids.quantity_product_uom, 14)
 
     def test_message_qty_already_received(self):
         self.env.user.write({'company_id': self.company_data['company'].id})
@@ -692,6 +697,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         """
         Receive a negative quantity, the picking should be a delivery and the quantity received
         negative. """
+        self.product_id_2.type = 'consu'
         po_vals = {
             'partner_id': self.partner_a.id,
             'order_line': [Command.create({
@@ -784,3 +790,153 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         stock_move.quantity = 1.0
         picking.button_validate()
         self.assertEqual(picking.move_ids.location_dest_id, sub_location)
+
+    def test_foreign_bill_autocomplete_with_payment_term(self):
+        """ Test the bill auto-complete with a PO having a payment term in a foreign currency """
+        currency = self.env['res.currency'].create({
+            'name': "Test",
+            'symbol': 'T',
+            'rounding': 0.01,
+            'rate_ids': [
+                Command.create({'name': '2025-01-01', 'rate': 1.5}),
+            ],
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': currency.id,
+            'payment_term_id': self.pay_terms_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_id_1.id,
+                'price_unit': 100.0,
+                'taxes_id': [Command.set(self.tax_purchase_a.ids)],
+            })],
+        })
+        po.button_confirm()
+
+        picking = po.picking_ids[0]
+        picking.move_line_ids.quantity = 1.0
+        picking.move_ids.picked = True
+        picking.button_validate()
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po.id)
+        invoice = move_form.save()
+
+        self.assertEqual(invoice.currency_id, currency)
+        self.assertEqual(invoice.invoice_payment_term_id, self.pay_terms_a)
+
+        line = invoice.invoice_line_ids[0]
+        self.assertEqual(line.amount_currency, 100.0)
+        self.assertEqual(line.balance, 66.67)
+
+    def test_bill_on_ordered_qty_correct_converted_amount_on_bill(self):
+        """ Ensure bill line balance is correctly calculated from a purchase order line."""
+        product1, product2 = self.test_product_order, self.test_product_delivery
+        product1.write({'purchase_method': 'purchase', 'standard_price': 500})
+        euro = self.env.ref('base.EUR')
+        euro.active = True
+        self.env['res.currency.rate'].create({
+            'name': fields.Date.today(),
+            'company_rate': 1.10,
+            'currency_id': euro.id,
+            'company_id': self.env.company.id,
+        })
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': euro.id,
+            'order_line': [Command.create({
+                'product_id': product1.id,
+                'product_qty': 8,
+            }), Command.create({
+                'product_id': product2.id,
+                'product_qty': 8,
+            })],
+        })
+        purchase_order.button_confirm()
+        purchase_order.action_create_invoice()
+        product1_order_line_price_unit = purchase_order.order_line.filtered(
+            lambda ol: ol.product_id == product1
+        ).price_unit
+        bill1_line_balance = purchase_order.invoice_ids.invoice_line_ids.balance
+        self.assertAlmostEqual(
+            bill1_line_balance,
+            purchase_order.currency_id._convert(
+                product1_order_line_price_unit * 8,
+                self.env.company.currency_id,
+            ),
+            places=self.env.company.currency_id.decimal_places,
+        )
+
+        purchase_order.picking_ids.button_validate()
+        purchase_order.action_create_invoice()
+        product2_order_line_price_unit = purchase_order.order_line.filtered(
+            lambda ol: ol.product_id == product2
+        ).price_unit
+        bill2_line_balance = purchase_order.invoice_ids.invoice_line_ids.filtered(
+            lambda bl: bl.product_id == product2
+        ).balance
+        self.assertAlmostEqual(
+            bill2_line_balance,
+            purchase_order.currency_id._convert(
+                product2_order_line_price_unit * 8,
+                self.env.company.currency_id,
+            ),
+            places=self.env.company.currency_id.decimal_places,
+        )
+
+    def test_foreign_bill_tax_included(self):
+        """ Test the bill values with a PO having tax included in price """
+        currency = self.env['res.currency'].create({
+            'name': "Test",
+            'symbol': 'T',
+            'rounding': 0.01,
+            'rate_ids': [
+                Command.create({'name': '2025-01-01', 'rate': 1.5}),
+            ],
+        })
+        tax_price_include = self.env['account.tax'].create({
+            'name': '10% incl',
+            'type_tax_use': 'purchase',
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': currency.id,
+            'payment_term_id': self.pay_terms_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_id_1.id,
+                'price_unit': 100.0,
+                'product_qty': 3,
+                'taxes_id': [Command.set(tax_price_include.ids)],
+            })],
+        })
+        po.button_confirm()
+
+        picking = po.picking_ids[0]
+        picking.move_line_ids.quantity = 3.0
+        picking.move_ids.picked = True
+        picking.button_validate()
+
+        po.action_create_invoice()
+
+        self.assertRecordValues(po.invoice_ids.line_ids.sorted('tax_line_id'), [
+            {
+                'amount_currency': 272.73,
+                'credit': 0,
+                'debit': 181.82,
+            },
+            {
+                'amount_currency': -300.0,
+                'credit': 200,
+                'debit': 0,
+            },
+            {
+                'amount_currency': 27.27,
+                'credit': 0,
+                'debit': 18.18,
+            },
+        ])

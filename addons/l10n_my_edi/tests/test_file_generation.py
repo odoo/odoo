@@ -49,6 +49,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             'street': 'that other street, 3',
             'city': 'Main city',
             'phone': '+60123456786',
+            'ref': "MY-REF",
         })
         cls.partner_b.write({
             'vat': 'EI00000000020',
@@ -218,7 +219,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         self._assert_node_values(
             root,
             'cac:AdditionalDocumentReference[descendant::*[local-name() = "DocumentType"]]/cbc:DocumentType',
-            'CustomsImportForm',
+            'K2',
         )
         self._assert_node_values(
             root,
@@ -332,6 +333,123 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             customer_root,
             'cac:PartyIdentification/cbc:ID[@schemeID="BRN"]',
             self.partner_b.commercial_partner_id.l10n_my_identification_number,
+        )
+
+    def test_07_bill_imports_form(self):
+        """
+        Ensure that when a bill contains a customs number; it is treated as an importation and not exportation.
+        """
+        bill = self.init_invoice(
+            'in_invoice', currency=self.currency_data['currency'], products=self.product_a
+        )
+        bill.write({
+            'l10n_my_edi_custom_form_reference': 'E12345678912',
+        })
+
+        bill.action_post()
+
+        file, _errors = bill._l10n_my_edi_generate_invoice_xml()
+        root = etree.fromstring(file)
+
+        self._assert_node_values(
+            root,
+            'cac:AdditionalDocumentReference[descendant::*[local-name() = "DocumentType"]]/cbc:DocumentType',
+            'CustomsImportForm',
+        )
+
+    def test_08_partner_ref_not_in_party_id(self):
+        """
+        Ensure that when an invoice contains a customs number; it is treated as an importation and not exportation.
+        """
+        invoice = self.init_invoice(
+            'out_invoice', currency=self.currency_data['currency'], products=self.product_a
+        )
+        invoice.action_post()
+
+        file, _errors = invoice._l10n_my_edi_generate_invoice_xml()
+        root = etree.fromstring(file)
+
+        # There should not be any ID without attribute
+        customer_root = root.xpath('cac:AccountingCustomerParty/cac:Party', namespaces=NS_MAP)[0]
+        node = customer_root.xpath('cac:PartyIdentification/cbc:ID[count(@*)=0]', namespaces=NS_MAP)
+        self.assertEqual(node, [])
+
+    def test_09_prepaid_amount_present(self):
+        """
+        Ensure the prepaid amount is present in the UBL XML under <cac:PrepaidPayment>.
+        """
+        basic_invoice = self.init_invoice('out_invoice', currency=self.currency_data['currency'], products=self.product_a)
+        basic_invoice.action_post()
+        vals = self.env['account.edi.xml.ubl_myinvois_my']._export_invoice_vals(
+            basic_invoice.with_context(lang=basic_invoice.partner_id.lang)
+        )
+        vals['vals']['prepaid_payment_vals'].update({
+            'amount': 2200.0,
+            'currency': self.currency_data['currency'],
+            'currency_dp': 2,
+        })
+        xml_content = self.env['ir.qweb']._render(vals['main_template'], vals)
+        file = etree.tostring(cleanup_xml_node(xml_content), xml_declaration=True, encoding='UTF-8')
+        root = etree.fromstring(file)
+        prepaid_node = root.xpath('cac:PrepaidPayment/cbc:PaidAmount', namespaces=NS_MAP)
+        self.assertEqual(prepaid_node[0].text, '2200.00')
+
+    def test_10_original_document_id(self):
+        """
+        Ensure the original document id is present in the reversed document.
+        """
+        bill = self.init_invoice('in_invoice', currency=self.currency_data['currency'], products=self.product_a, post=True)
+        bill.ref = 'BILL-123'
+        action = bill.action_reverse()
+        reversal_wizard = self.env[action['res_model']].with_context(
+            active_ids=bill.ids,
+            active_model='account.move',
+            default_journal_id=bill.journal_id.id,
+        ).create({})
+        action = reversal_wizard.reverse_moves()
+        credit_note = self.env['account.move'].browse(action['res_id'])
+        credit_note.action_post()
+
+        file, _errors = credit_note._l10n_my_edi_generate_invoice_xml()
+        root = etree.fromstring(file)
+        self._assert_node_values(
+            root,
+            'cac:BillingReference/cac:InvoiceDocumentReference/cbc:ID',
+            'BILL-123',
+        )
+
+    def test_11_original_document_id_from_xml(self):
+        """
+        Ensure the original document id is present in the reversed document even if bill reference has changed after
+        sending.
+        """
+        bill = self.init_invoice('in_invoice', currency=self.currency_data['currency'], products=self.product_a, post=True)
+
+        # Set reference before generating e-invoice
+        bill.ref = 'Initial Reference'
+
+        # Generate e-invoice and mock values
+        bill_file, _errors = bill._l10n_my_edi_generate_invoice_xml()
+        bill.l10n_my_edi_file_id = self.env['ir.attachment'].create({'name': 'test myinvois', 'raw': bill_file})
+        bill.ref = 'Some other reference'
+
+        # Generate credit note
+        action = bill.action_reverse()
+        reversal_wizard = self.env[action['res_model']].with_context(
+            active_ids=bill.ids,
+            active_model='account.move',
+            default_journal_id=bill.journal_id.id,
+        ).create({})
+        action = reversal_wizard.reverse_moves()
+        credit_note = self.env['account.move'].browse(action['res_id'])
+        credit_note.action_post()
+
+        credit_note_file, _errors = credit_note._l10n_my_edi_generate_invoice_xml()
+        root = etree.fromstring(credit_note_file)
+        self._assert_node_values(
+            root,
+            'cac:BillingReference/cac:InvoiceDocumentReference/cbc:ID',
+            'Initial Reference',
         )
 
     def _assert_node_values(self, root, node_path, text, attributes=None):

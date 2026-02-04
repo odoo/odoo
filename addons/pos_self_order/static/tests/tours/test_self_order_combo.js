@@ -50,3 +50,44 @@ registry.category("web_tour.tours").add("self_combo_selector", {
         Utils.checkIsNoBtn("Order Now"),
     ],
 });
+
+registry.category("web_tour.tours").add("test_self_order_combo_correct_order", {
+    steps: () =>
+        [
+            Utils.clickBtn("Order Now"),
+            ProductPage.clickProduct("Office Combo"),
+            ...ProductPage.setupCombo([
+                {
+                    product: "Combo Product 1",
+                    attributes: [],
+                },
+                {
+                    product: "Combo Product 5",
+                    attributes: [],
+                },
+                {
+                    product: "Combo Product 8",
+                    attributes: [],
+                },
+            ]),
+            ProductPage.clickProduct("Office Combo"),
+            ...ProductPage.setupCombo([
+                {
+                    product: "Combo Product 2",
+                    attributes: [],
+                },
+                {
+                    product: "Combo Product 5",
+                    attributes: [],
+                },
+                {
+                    product: "Combo Product 8",
+                    attributes: [],
+                },
+            ]),
+            Utils.clickBtn("Order"),
+            Utils.clickBtn("Pay"),
+            Utils.clickBtn("Ok"),
+            Utils.checkIsNoBtn("Order Now"),
+        ].flat(),
+});

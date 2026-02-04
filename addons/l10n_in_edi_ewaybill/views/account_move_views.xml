@@ -11,7 +11,7 @@
             </xpath>
             <xpath expr="//notebook/page[@name='other_info']" position="before">
                 <page string="eWayBill" name="l10n_in_edi_ewaybill_page"
-                    invisible="move_type == 'entry' or country_code != 'IN'">
+                    invisible="move_type in ('entry', 'out_refund') or country_code != 'IN'">
                     <field name="l10n_in_edi_ewaybill_direct_api" invisible="1"/>
                     <group name="ewaybill_group">
                         <group string="Transaction Details" name="Transaction_group" 
@@ -37,6 +37,9 @@
                                 domain="[('vat','not in', ['', False]), ('country_id.code','=','IN')]"
                                 invisible="l10n_in_mode != '0'"
                                 required="l10n_in_mode == '0'"/>
+                            <field name="l10n_in_transporter_id"
+                                domain="[('country_id.code','=','IN')]"
+                                invisible="l10n_in_mode != '1'"/>
                             <field name="l10n_in_transportation_doc_no" 
                                 invisible="l10n_in_mode not in ('2', '3', '4')"
                                 required="l10n_in_mode in ('2', '3', '4')"

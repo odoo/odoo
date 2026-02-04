@@ -219,7 +219,7 @@
                type="base64"
                file="payment_flutterwave/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_flutterwave"/>
-        <!-- https://developer.flutterwave.com/docs/collecting-payments/payment-methods/ -->
+        <!-- https://developer.flutterwave.com/v3.0.0/docs/payment-methods -->
         <field name="payment_method_ids"
                eval="[Command.set([
                          ref('payment.payment_method_card'),
@@ -271,7 +271,6 @@
                          ref('payment.payment_method_paypal'),
                          ref('payment.payment_method_paysafecard'),
                          ref('payment.payment_method_p24'),
-                         ref('payment.payment_method_sofort'),
                          ref('payment.payment_method_twint'),
                      ])]"
         />

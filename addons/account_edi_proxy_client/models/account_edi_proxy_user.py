@@ -59,24 +59,19 @@ class AccountEdiProxyClientUser(models.Model):
 
     _sql_constraints = [
         ('unique_id_client', 'unique(id_client)', 'This id_client is already used on another user.'),
-        ('unique_active_edi_identification', '', 'This edi identification is already assigned to an active user'),
         ('unique_active_company_proxy', '', 'This company has an active user already created for this EDI type'),
     ]
 
     def _auto_init(self):
         super()._auto_init()
-        if not index_exists(self.env.cr, 'account_edi_proxy_client_user_unique_active_edi_identification'):
-            self.env.cr.execute("""
-                CREATE UNIQUE INDEX account_edi_proxy_client_user_unique_active_edi_identification
-                                 ON account_edi_proxy_client_user(edi_identification, proxy_type, edi_mode)
-                              WHERE (active = True)
-            """)
         if not index_exists(self.env.cr, 'account_edi_proxy_client_user_unique_active_company_proxy'):
             self.env.cr.execute("""
                 CREATE UNIQUE INDEX account_edi_proxy_client_user_unique_active_company_proxy
                                  ON account_edi_proxy_client_user(company_id, proxy_type, edi_mode)
                               WHERE (active = True)
             """)
+
+        self.env.cr.execute("DROP INDEX IF EXISTS account_edi_proxy_client_user_unique_active_edi_identification")
 
     def _compute_private_key_filename(self):
         for record in self:
@@ -132,7 +127,8 @@ class AccountEdiProxyClientUser(models.Model):
                 _('The url that this service requested returned an error. The url it tried to contact was %s', url))
 
         if 'error' in response:
-            message = _('The url that this service requested returned an error. The url it tried to contact was %s. %s', url, response['error']['message'])
+            error_detail = response['error'].get('data', {}).get('message') or response['error']['message']
+            message = _('The url that this service requested returned an error. The url it tried to contact was %s. %s', url, error_detail)
             if response['error']['code'] == 404:
                 message = _('The url that this service tried to contact does not exist. The url was %r', url)
             raise AccountEdiProxyError('connection_error', message)
@@ -142,11 +138,15 @@ class AccountEdiProxyClientUser(models.Model):
             error_code = proxy_error['code']
             if error_code == 'refresh_token_expired':
                 self._renew_token()
-                self.env.cr.commit() # We do not want to lose it if in the _make_request below something goes wrong
+                self.env.cr.commit()  # We do not want to lose it if in the _make_request below something goes wrong
                 return self._make_request(url, params)
-            if error_code == 'no_such_user':
-                # This error is also raised if the user didn't exchange data and someone else claimed the edi_identificaiton.
-                self.sudo().active = False
+            if error_code == 'invalid_signature':
+                raise AccountEdiProxyError(
+                    error_code,
+                    _("Invalid signature for request. This might be due to another connection to odoo Access Point "
+                      "server. It can occur if you have duplicated your database. \n\n"
+                      "If you are not sure how to fix this, please contact our support."),
+                )
             raise AccountEdiProxyError(error_code, proxy_error['message'] or False)
 
         return response['result']

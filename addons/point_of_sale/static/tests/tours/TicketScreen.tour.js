@@ -248,3 +248,33 @@ registry.category("web_tour.tours").add("FiscalPositionTwoTaxIncluded", {
             ProductScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_draft_order_deletion_with_printer", {
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            Chrome.clickMenuButton(),
+            Chrome.clickTicketButton(),
+            TicketScreen.clickNewTicket(),
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            Chrome.clickMenuButton(),
+            Chrome.clickTicketButton(),
+            TicketScreen.selectFilter("All active order"),
+            TicketScreen.selectOrder("-0001"),
+            {
+                trigger: ".ticket-screen .load-order-button",
+            },
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            Chrome.clickMenuButton(),
+            Chrome.clickTicketButton(),
+            TicketScreen.deleteOrder("-0002"),
+            Chrome.confirmPopup(),
+            Chrome.closeSession(),
+        ].flat(),
+});

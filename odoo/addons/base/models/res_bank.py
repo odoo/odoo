@@ -101,7 +101,7 @@ class ResPartnerBank(models.Model):
         for bank in self:
             bank.acc_type = self.retrieve_acc_type(bank.acc_number)
 
-    @api.depends('partner_id')
+    @api.depends('partner_id.name')
     def _compute_account_holder_name(self):
         for bank in self:
             bank.acc_holder_name = bank.partner_id.name
@@ -116,6 +116,22 @@ class ResPartnerBank(models.Model):
     def _compute_display_name(self):
         for acc in self:
             acc.display_name = f'{acc.acc_number} - {acc.bank_id.name}' if acc.bank_id else acc.acc_number
+
+    def _sanitize_vals(self, vals):
+        if 'sanitized_acc_number' in vals:  # do not allow to write on sanitized directly
+            vals['acc_number'] = vals.pop('sanitized_acc_number')
+        if 'acc_number' in vals:
+            vals['sanitized_acc_number'] = sanitize_account_number(vals['acc_number'])
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            self._sanitize_vals(vals)
+        return super().create(vals_list)
+
+    def write(self, vals):
+        self._sanitize_vals(vals)
+        return super().write(vals)
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):

@@ -816,9 +816,9 @@ class TestCRMLead(TestCrmCommon):
         for team in teams:
             with self.subTest(team=team):
                 if team != team_other_comp:
-                    self.assertIn(f"<a href='mailto:{team.display_name}'>{team.display_name}</a>", self.env['crm.lead'].sudo().get_empty_list_help(""))
+                    self.assertIn(f"<a href='mailto:{team.alias_email}'>{team.alias_email}</a>", self.env['crm.lead'].sudo().get_empty_list_help(""))
                 else:
-                    self.assertNotIn(f"<a href='mailto:{team.display_name}'>{team.display_name}</a>", self.env['crm.lead'].sudo().get_empty_list_help(""))
+                    self.assertNotIn(f"<a href='mailto:{team.alias_email}'>{team.alias_email}</a>", self.env['crm.lead'].sudo().get_empty_list_help(""))
                 team.active = False
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
@@ -985,7 +985,7 @@ class TestLeadFormTools(FormatAddressCase):
         self.assertAddressView('crm.lead')
 
 
-@tagged('lead_internals')
+@tagged('lead_internals', 'is_query_count')
 class TestCrmLeadMailTrackingDuration(MailTrackingDurationMixinCase):
 
     @classmethod

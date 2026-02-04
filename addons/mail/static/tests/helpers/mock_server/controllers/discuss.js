@@ -168,6 +168,9 @@ patch(MockServer.prototype, {
         if (route === "/mail/rtc/channel/leave_call") {
             return this._mockRouteMailRtcChannelLeaveCall(args.channel_id);
         }
+        if (route === "/mail/rtc/session/notify_call_members") {
+            return true;
+        }
         if (route === "/mail/rtc/session/update_and_broadcast") {
             return this._mockRouteMailRtcSessionUpdateAndBroadcast(args.session_id, args.values);
         }

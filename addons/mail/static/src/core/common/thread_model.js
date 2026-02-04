@@ -75,6 +75,8 @@ export class Thread extends Record {
                 "avatarCacheKey",
                 "description",
                 "hasWriteAccess",
+                "hasReadAccess",
+                "canPostOnreadonly",
                 "is_pinned",
                 "isLoaded",
                 "isLoadingAttachments",
@@ -304,6 +306,8 @@ export class Thread extends Record {
     /** @type {SuggestedRecipient[]} */
     suggestedRecipients = [];
     hasLoadingFailed = false;
+    /** @type {Error} */
+    hasLoadingFailedError;
     canPostOnReadonly;
     /** @type {String} */
     last_interest_dt;
@@ -369,6 +373,10 @@ export class Thread extends Record {
             this.typesAllowingCalls.includes(this.type) &&
             !this.correspondent?.eq(this._store.odoobot)
         );
+    }
+
+    get canPostMessage() {
+        return this.hasWriteAccess || (this.hasReadAccess && this.canPostOnReadonly);
     }
 
     get hasMemberList() {

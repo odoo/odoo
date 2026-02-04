@@ -115,6 +115,7 @@ class configmanager(object):
         group.add_option("--without-demo", dest="without_demo",
                           help="disable loading demo data for modules to be installed (comma-separated, use \"all\" for all modules). Requires -d and -i. Default is %default",
                           my_default=False)
+        group.add_option("--skip-auto-install", dest="skip_auto_install", action="store_true", my_default=False, help="skip the automatic installation of modules marked as auto_install")
         group.add_option("-P", "--import-partial", dest="import_partial", my_default='',
                         help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
         group.add_option("--pidfile", dest="pidfile", help="file where the server pid will be stored")
@@ -124,6 +125,9 @@ class configmanager(object):
         group.add_option("--upgrade-path", dest="upgrade_path",
                          help="specify an additional upgrade path.",
                          action="callback", callback=self._check_upgrade_path, nargs=1, type="string")
+        group.add_option("--pre-upgrade-scripts", dest="pre_upgrade_scripts", my_default="",
+                         help="Run specific upgrade scripts before loading any module when -u is provided.",
+                         action="callback", callback=self._check_scripts, nargs=1, type="string")
         group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules.", my_default='base,web')
 
         group.add_option("-D", "--data-dir", dest="data_dir", my_default=_get_default_datadir(),
@@ -174,7 +178,7 @@ class configmanager(object):
                          help="Enable unit tests.")
         group.add_option("--test-tags", dest="test_tags",
                          help="Comma-separated list of specs to filter which tests to execute. Enable unit tests if set. "
-                         "A filter spec has the format: [-][tag][/module][:class][.method] "
+                         "A filter spec has the format: [-][tag][/module][:class][.method][[params]] "
                          "The '-' specifies if we want to include or exclude tests matching this spec. "
                          "The tag will match tags added on a class with a @tagged decorator "
                          "(all Test classes have 'standard' and 'at_install' tags "
@@ -184,6 +188,9 @@ class configmanager(object):
                          "If tag is omitted on exclude mode, its value is '*'. "
                          "The module, class, and method will respectively match the module name, test class name and test method name. "
                          "Example: --test-tags :TestClass.test_func,/test_module,external "
+                         "It is also possible to provide parameters to a test method that supports them"
+                         "Example: --test-tags /web.test_js[mail]"
+                         "If negated, a test-tag with parameter will negate the parameter when passing it to the test"
 
                          "Filtering and executing the tests happens twice: right "
                          "after each module installation/update and at the end "
@@ -455,8 +462,8 @@ class configmanager(object):
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'from_filter',
                 'smtp_ssl_certificate_filename', 'smtp_ssl_private_key_filename',
-                'db_maxconn', 'db_maxconn_gevent', 'import_partial', 'addons_path', 'upgrade_path',
-                'syslog', 'without_demo', 'screencasts', 'screenshots',
+                'db_maxconn', 'db_maxconn_gevent', 'import_partial', 'addons_path', 'upgrade_path', 'pre_upgrade_scripts',
+                'syslog', 'without_demo', 'skip_auto_install', 'screencasts', 'screenshots',
                 'dbfilter', 'log_level', 'log_db',
                 'log_db_level', 'geoip_city_db', 'geoip_country_db', 'dev_mode',
                 'shell_interface', 'limit_time_worker_cron',
@@ -479,7 +486,7 @@ class configmanager(object):
         keys = [
             'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
             'dev_mode', 'shell_interface', 'smtp_ssl', 'load_language',
-            'stop_after_init', 'without_demo', 'http_enable', 'syslog',
+            'stop_after_init', 'without_demo', 'skip_auto_install', 'http_enable', 'syslog',
             'list_db', 'proxy_mode',
             'test_file', 'test_tags',
             'osv_memory_count_limit', 'transient_age_limit', 'max_cron_threads', 'unaccent',
@@ -521,12 +528,21 @@ class configmanager(object):
         else:
             self.options['addons_path'] = ",".join(
                 self._normalize(x)
-                for x in self.options['addons_path'].split(','))
+                for x in self.options['addons_path'].split(',')
+                if x.strip())
 
         self.options["upgrade_path"] = (
             ",".join(self._normalize(x)
-                for x in self.options['upgrade_path'].split(','))
+                for x in self.options['upgrade_path'].split(',')
+                if x.strip())
             if self.options['upgrade_path']
+            else ""
+        )
+        self.options["pre_upgrade_scripts"] = (
+            ",".join(self._normalize(x)
+                for x in self.options['pre_upgrade_scripts'].split(',')
+                if x.strip())
+            if self.options['pre_upgrade_scripts']
             else ""
         )
 
@@ -626,6 +642,18 @@ class configmanager(object):
 
         setattr(parser.values, option.dest, ",".join(ad_paths))
 
+    def _check_scripts(self, option, opt, value, parser):
+        pre_upgrade_scripts = []
+        for path in value.split(','):
+            path = path.strip()
+            res = self._normalize(path)
+            if not os.path.isfile(res):
+                raise optparse.OptionValueError("option %s: no such file: %r" % (opt, path))
+            if res not in pre_upgrade_scripts:
+                pre_upgrade_scripts.append(res)
+        setattr(parser.values, option.dest, ",".join(pre_upgrade_scripts))
+
+
     def _check_upgrade_path(self, option, opt, value, parser):
         upgrade_path = []
         for path in value.split(','):
@@ -692,7 +720,7 @@ class configmanager(object):
         for opt in sorted(self.options):
             if keys is not None and opt not in keys:
                 continue
-            if opt in ('version', 'language', 'translate_out', 'translate_in', 'overwrite_existing_translations', 'init', 'update'):
+            if opt in ('version', 'language', 'translate_out', 'translate_in', 'overwrite_existing_translations', 'init', 'update', 'demo'):
                 continue
             if opt in self.blacklist_for_save:
                 continue

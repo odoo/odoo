@@ -34,6 +34,7 @@ import { uniqueId } from '@web/core/utils/functions';
 // must override the html field in the registry.
 import '@web/views/fields/html/html_field';
 import { Deferred } from "@web/core/utils/concurrency";
+import {getHtmlFieldMetadata, setHtmlFieldMetadata} from '@web_editor/js/common/utils'
 
 let stripHistoryIds;
 
@@ -281,6 +282,7 @@ export class HtmlField extends Component {
             }
         }
     }
+
     async updateValue() {
         const value = this.getEditingValue();
         const lastValue = (this.props.record.data[this.props.name] || "").toString();
@@ -291,7 +293,9 @@ export class HtmlField extends Component {
         ) {
             this.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
             this.currentEditingValue = value;
-            await this.props.record.update({ [this.props.name]: value });
+            const contentMetadata = getHtmlFieldMetadata(lastValue);
+            let restoredData = setHtmlFieldMetadata(value, contentMetadata);
+            await this.props.record.update({ [this.props.name]: restoredData });
         }
     }
     async startWysiwyg(wysiwyg) {
@@ -404,8 +408,8 @@ export class HtmlField extends Component {
                     await this.updateValue();
                 }
                 await savePendingImagesPromise;
-                if (this.state.showCodeView) {
-                    const codeViewEl = this._getCodeViewEl();
+                const codeViewEl = this._getCodeViewEl();
+                if (codeViewEl) {
                     codeViewEl.value = this.wysiwyg.getValue();
                 }
                 if (this.props.isInlineStyle) {
@@ -754,6 +758,9 @@ export const htmlField = {
 	    if ('style-inline' in options) {
 	        wysiwygOptions.inlineStyle = Boolean(options['style-inline']);
 	    }
+        if ('disableTransform' in options) {
+            wysiwygOptions.disableTransform = Boolean(options['disableTransform']);
+        }
         if ('allowCommandImage' in options) {
             // Set the option only if it is explicitly set in the view so a default
             // can be set elsewhere otherwise.

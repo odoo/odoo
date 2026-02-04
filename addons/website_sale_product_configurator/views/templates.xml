@@ -123,7 +123,9 @@
             <tr class="o_total_row">
                 <td colspan="4" class="text-end">
                     <strong>Total:</strong>
-                    <span class="js_price_total fw-bold" style="white-space: nowrap;"
+                    <span class="js_price_total fw-bold decimal_precision"
+                        style="white-space: nowrap;"
+                        t-att-data-precision="combination_info['currency'].decimal_places"
                         t-att-data-product-id="product.id"
                         t-out="combination_info['price'] * (add_qty or 1)"
                         t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>

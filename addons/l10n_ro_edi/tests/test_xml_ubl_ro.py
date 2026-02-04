@@ -4,9 +4,7 @@ from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
-class TestUBLRO(TestUBLCommon):
-
+class TestUBLROCommon(TestUBLCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref="ro"):
         super().setUpClass(chart_template_ref=chart_template_ref)
@@ -51,10 +49,6 @@ class TestUBLRO(TestUBLCommon):
             'country_id': cls.env.ref('base.ro').id,
         })
 
-    ####################################################
-    # Test export - import
-    ####################################################
-
     def create_move(self, move_type, send=True):
         return self._generate_move(
             self.env.company.partner_id,
@@ -75,6 +69,14 @@ class TestUBLRO(TestUBLCommon):
             ],
         )
 
+
+@tagged('post_install_l10n', 'post_install', '-at_install')
+class TestUBLRO(TestUBLROCommon):
+
+    ####################################################
+    # Test export - import
+    ####################################################
+
     def get_attachment(self, move):
         self.assertTrue(move.ubl_cii_xml_id)
         self.assertEqual(move.ubl_cii_xml_id.name[-11:], "cius_ro.xml")
@@ -90,6 +92,40 @@ class TestUBLRO(TestUBLCommon):
         attachment = self.get_attachment(refund)
         self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_refund.xml')
 
+    def test_export_credit_note_with_negative_quantity(self):
+        refund = self._generate_move(
+            self.env.company.partner_id,
+            self.partner_a,
+            send=True,
+            move_type="out_refund",
+            currency_id=self.currency_data['currency'].id,
+            invoice_line_ids=[
+                {
+                    'name': 'Test Product A',
+                    'product_id': self.product_a.id,
+                    'quantity': -1.0,
+                    'price_unit': 500.0,
+                    'tax_ids': [Command.set(self.tax_19.ids)],
+                },
+                {
+                    'name': 'Test Product B',
+                    'product_id': self.product_b.id,
+                    'quantity': -1.0,
+                    'price_unit': 0.0,
+                    'tax_ids': [Command.set(self.tax_19.ids)],
+                },
+                {
+                    'name': 'Test Downpayment',
+                    'product_id': False,
+                    'quantity': 1.0,
+                    'price_unit': 600.0,
+                    'tax_ids': [Command.set(self.tax_19.ids)],
+                }
+            ]
+        )
+        attachment = self.get_attachment(refund)
+        self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_refund_negative_quantity.xml')
+
     def test_export_invoice_different_currency(self):
         self.currency_data['currency'] = self.env.ref('base.USD')
         invoice = self.create_move("out_invoice")
@@ -99,28 +135,26 @@ class TestUBLRO(TestUBLCommon):
 
     def test_export_invoice_without_country_code_prefix_in_vat(self):
         self.company_data['company'].write({'vat': '1234567897'})
-        self.partner_a.write({'vat': '1234567897'})
+        self.partner_a.write({'vat': False})
         invoice = self.create_move("out_invoice")
         attachment = self.get_attachment(invoice)
         self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_no_prefix_vat.xml')
 
     def test_export_no_vat_but_have_company_registry(self):
         self.company_data['company'].write({'vat': False, 'company_registry': 'RO1234567897'})
-        self.partner_a.write({'vat': False, 'company_registry': 'RO1234567897'})
         invoice = self.create_move("out_invoice")
         attachment = self.get_attachment(invoice)
         self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice.xml')
 
     def test_export_no_vat_but_have_company_registry_without_prefix(self):
         self.company_data['company'].write({'vat': False, 'company_registry': '1234567897'})
-        self.partner_a.write({'vat': False, 'company_registry': '1234567897'})
+        self.partner_a.write({'vat': False})
         invoice = self.create_move("out_invoice")
         attachment = self.get_attachment(invoice)
         self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_no_prefix_vat.xml')
 
     def test_export_no_vat_and_no_company_registry_raises_error(self):
         self.company_data['company'].write({'vat': False, 'company_registry': False})
-        self.partner_a.write({'vat': False, 'company_registry': False})
         invoice = self.create_move("out_invoice", send=False)
         with self.assertRaisesRegex(UserError, "doesn't have a VAT nor Company ID"):
             invoice._generate_pdf_and_send_invoice(self.move_template, allow_fallback_pdf=False)

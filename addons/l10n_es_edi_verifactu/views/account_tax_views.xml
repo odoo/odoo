@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_tax_form_inherit_l10n_es_edi_verifactu" model="ir.ui.view">
+            <field name="name">account.tax.form.inherit.l10n_es_edi_verifactu</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <field name="country_id" position="after">
+                    <field name="l10n_es_applicability"
+                           groups="base.group_no_one" invisible="country_code != 'ES'"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

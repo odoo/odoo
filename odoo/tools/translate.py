@@ -157,10 +157,11 @@ TRANSLATED_ELEMENTS = {
 
 # Which attributes must be translated. This is a dict, where the value indicates
 # a condition for a node to have the attribute translatable.
+# ⚠ Note that it implicitly includes their t-attf-* equivalent.
 TRANSLATED_ATTRS = dict.fromkeys({
     'string', 'add-label', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
-    'value_label', 'data-tooltip', 'data-editor-message', 'label',
+    'value_label', 'data-tooltip', 'data-editor-message', 'label', 'cancel-label', 'confirm-label', 'confirm-title',
 }, lambda e: True)
 
 def translate_attrib_value(node):
@@ -178,6 +179,19 @@ TRANSLATED_ATTRS.update(
     text=lambda e: (e.tag == 'field' and e.attrib.get('widget', '') == 'url'),
     **{f't-attf-{attr}': cond for attr, cond in TRANSLATED_ATTRS.items()},
 )
+
+# This should match the list provided to OWL (see translatableAttributes).
+OWL_TRANSLATED_ATTRS = {
+    "alt",
+    "aria-label",
+    "aria-placeholder",
+    "aria-roledescription",
+    "aria-valuetext",
+    "data-tooltip",
+    "label",
+    "placeholder",
+    "title",
+}
 
 avoid_pattern = re.compile(r"\s*<!DOCTYPE", re.IGNORECASE | re.MULTILINE | re.UNICODE)
 space_pattern = re.compile(r"[\s\uFEFF]*")  # web_editor uses \uFEFF as ZWNBSP
@@ -947,7 +961,7 @@ def _extract_translatable_qweb_terms(element, callback):
             # component nodes
             is_component = el.tag[0].isupper() or "t-component" in el.attrib or "t-set-slot" in el.attrib
             for attr in el.attrib:
-                if (not is_component and attr in TRANSLATED_ATTRS) or (is_component and attr.endswith(".translate")):
+                if (not is_component and attr in OWL_TRANSLATED_ATTRS) or (is_component and attr.endswith(".translate")):
                     _push(callback, el.attrib[attr], el.sourceline)
             _extract_translatable_qweb_terms(el, callback)
         _push(callback, el.tail, el.sourceline)
@@ -1495,15 +1509,20 @@ class TranslationImporter:
                                 translations.update({k: v for k, v in translation_dictionary[term_en].items() if v != term_en})
                                 translation_dictionary[term_en] = translations
 
+                        changed_values = {}
                         for lang in langs:
                             # translate and confirm model_terms translations
-                            values[lang] = field.translate(lambda term: translation_dictionary.get(term, {}).get(lang), _value_en)
-                            values.pop(f'_{lang}', None)
-                        params.extend((id_, Json(values)))
+                            new_val = field.translate(lambda term: translation_dictionary.get(term, {}).get(lang), _value_en)
+                            if values.get(lang, None) != new_val:
+                                changed_values[lang] = new_val
+                            if f'_{lang}' in values:
+                                changed_values[f'_{lang}'] = None
+                        if changed_values:
+                            params.extend((id_, Json(changed_values)))
                     if params:
                         env.cr.execute(f"""
                             UPDATE "{model_table}" AS m
-                            SET "{field_name}" =  t.value
+                            SET "{field_name}" = jsonb_strip_nulls("{field_name}" || t.value)
                             FROM (
                                 VALUES {', '.join(['(%s, %s::jsonb)'] * (len(params) // 2))}
                             ) AS t(id, value)
@@ -1620,17 +1639,17 @@ def get_po_paths(module_name: str, lang: str):
 
 
 def get_po_paths_env(module_name: str, lang: str, env: odoo.api.Environment | None = None):
-    lang_base = lang.split('_')[0]
+    lang_base = lang.split('_', 1)[0]
     # Load the base as a fallback in case a translation is missing:
     po_names = [lang_base, lang]
     # Exception for Spanish locales: they have two bases, es and es_419:
     if lang_base == 'es' and lang not in ('es_ES', 'es_419'):
         po_names.insert(1, 'es_419')
-    po_paths = [
+    po_paths = (
         join(module_name, dir_, filename + '.po')
         for filename in po_names
         for dir_ in ('i18n', 'i18n_extra')
-    ]
+    )
     for path in po_paths:
         with suppress(FileNotFoundError):
             yield file_path(path, env=env)
@@ -1742,7 +1761,7 @@ def _get_translation_upgrade_queries(cr, field):
         """
         migrate_queries.append(cr.mogrify(query, [Model._name, translation_name]).decode())
 
-        query = "DELETE FROM _ir_translation WHERE type = 'model' AND name = %s"
+        query = "DELETE FROM _ir_translation WHERE type = 'model' AND state = 'translated' AND name = %s"
         cleanup_queries.append(cr.mogrify(query, [translation_name]).decode())
 
     # upgrade model_terms translation: one update per field per record
@@ -1816,7 +1835,7 @@ def _get_translation_upgrade_queries(cr, field):
             query = f'UPDATE "{Model._table}" SET "{field.name}" = %s WHERE id = %s'
             migrate_queries.append(cr.mogrify(query, [Json(new_values), id_]).decode())
 
-        query = "DELETE FROM _ir_translation WHERE type = 'model_terms' AND name = %s"
+        query = "DELETE FROM _ir_translation WHERE type = 'model_terms' AND state = 'translated' AND name = %s"
         cleanup_queries.append(cr.mogrify(query, [translation_name]).decode())
 
     return migrate_queries, cleanup_queries

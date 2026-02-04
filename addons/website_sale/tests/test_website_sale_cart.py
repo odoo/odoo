@@ -183,6 +183,43 @@ class WebsiteSaleCart(TransactionCaseWithUserPortal):
             sale_order = website.sale_get_order()
             self.assertEqual(len(sale_order._cart_accessories()), 0)
 
+    def test_cart_new_pricelist_from_geoip(self):
+        """Check that, when adding a new partner to a website order, the partner's GeoIP
+        is factored into the pricelist recomputation.
+        """
+        eu_group = self.env.ref('base.europe')
+        not_eu_group = self.env['res.country.group'].create({
+            'name': "Not EU",
+            'country_ids': self.env['res.country'].search([
+                ('id', 'not in', eu_group.country_ids.ids),
+            ]).ids,
+        })
+
+        _pricelist_eu, pricelist_not_eu = self.env['product.pricelist'].create([{
+            'name': "EU",
+            'country_group_ids': eu_group.ids,
+            'website_id': self.website.id,
+            'sequence': 1,
+        }, {
+            'name': "Not EU",
+            'country_group_ids': not_eu_group.ids,
+            'website_id': self.website.id,
+            'sequence': 2,
+        }])
+
+        website = self.website.with_user(self.public_user)
+        with (
+            MockRequest(website.env, website=website, country_code='US'),
+            patch.object(website.__class__, '_get_geoip_country_code', return_value='US'),
+        ):
+            self.WebsiteSaleController.cart_update_json(product_id=self.product.id, add_qty=1)
+            cart = website.sale_get_order()
+            self.assertEqual(cart.pricelist_id, pricelist_not_eu)
+            cart.partner_id = self.env['res.partner'].create({
+                'name': "New Partner",
+            })
+            self.assertEqual(cart.pricelist_id, pricelist_not_eu)
+
     def test_remove_archived_product_line(self):
         """If an order has a line containing an archived product,
         it is removed when opening the order in the cart."""

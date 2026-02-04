@@ -8,7 +8,9 @@ from werkzeug import urls
 from odoo import _, models
 from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_xendit import const
+from odoo.addons.payment_xendit.controllers.main import XenditController
 
 
 _logger = logging.getLogger(__name__)
@@ -49,7 +51,13 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         base_url = self.provider_id.get_base_url()
-        redirect_url = urls.url_join(base_url, '/payment/status')
+        redirect_url = urls.url_join(base_url, XenditController._return_url)
+        access_token = payment_utils.generate_access_token(self.reference, self.amount)
+        success_url_params = urls.url_encode({
+            'tx_ref': self.reference,
+            'access_token': access_token,
+            'success': 'true',
+        })
         payload = {
             'external_id': self.reference,
             'amount': self.amount,
@@ -57,7 +65,7 @@ class PaymentTransaction(models.Model):
             'customer': {
                 'given_names': self.partner_name,
             },
-            'success_redirect_url': redirect_url,
+            'success_redirect_url': f'{redirect_url}?{success_url_params}',
             'failure_redirect_url': redirect_url,
             'payment_methods': [const.PAYMENT_METHODS_MAPPING.get(
                 self.payment_method_code, self.payment_method_code.upper())

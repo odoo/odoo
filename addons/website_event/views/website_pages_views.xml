@@ -47,6 +47,15 @@
             <attribute name="js_class">website_pages_kanban</attribute>
             <attribute name="type">object</attribute>
             <attribute name="action">open_website_url</attribute>
+            <!--
+            TODO a bit bad (why grouping by responsible user?) but we want
+            website views to be reachable by any internal user and those
+            apparently cannot access stage_id... maybe they should be able to?
+            This should be reviewed in master. This was mostly made to avoid
+            runbot "errors".
+            See WEBSITE_RECORDS_VIEWS_ACCESS_RIGHTS.
+            -->
+            <attribute name="default_group_by">user_id</attribute>
         </xpath>
         <xpath expr="//kanban" position="inside">
             <field name="website_url" invisible="1"/>

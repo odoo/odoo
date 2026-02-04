@@ -212,7 +212,7 @@ class IrHttp(models.AbstractModel):
                 if handle_error := rule.endpoint.routing.get('handle_params_access_error'):
                     if response := handle_error(e):
                         werkzeug.exceptions.abort(response)
-                if isinstance(e, odoo.exceptions.MissingError):
+                if request.env.user.is_public or isinstance(e, odoo.exceptions.MissingError):
                     raise werkzeug.exceptions.NotFound() from e
                 raise
 
@@ -254,8 +254,6 @@ class IrHttp(models.AbstractModel):
         _logger.info("Generating routing map for key %s", str(key))
         registry = Registry(threading.current_thread().dbname)
         installed = registry._init_modules.union(odoo.conf.server_wide_modules)
-        if tools.config['test_enable'] and odoo.modules.module.current_test:
-            installed.add(odoo.modules.module.current_test)
         mods = sorted(installed)
         # Note : when routing map is generated, we put it on the class `cls`
         # to make it available for all instance. Since `env` create an new instance
@@ -275,9 +273,7 @@ class IrHttp(models.AbstractModel):
     def _gc_sessions(self):
         if os.getenv("ODOO_SKIP_GC_SESSIONS"):
             return
-        ICP = self.env["ir.config_parameter"]
-        max_lifetime = int(ICP.get_param('sessions.max_inactivity_seconds', http.SESSION_LIFETIME))
-        http.root.session_store.vacuum(max_lifetime=max_lifetime)
+        http.root.session_store.vacuum(max_lifetime=http.get_session_max_inactivity(self.env))
 
     @api.model
     def get_translations_for_webclient(self, modules, lang):
@@ -323,4 +319,8 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _is_allowed_cookie(cls, cookie_type):
+        return True
+
+    @api.model
+    def _verify_request_recaptcha_token(self, action):
         return True

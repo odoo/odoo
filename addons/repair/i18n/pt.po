@@ -1,30 +1,39 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* repair
-# 
+# * repair
+#
 # Translators:
 # Manuela Silva <mmsrs@sky.com>, 2023
 # Wil Odoo, 2024
 # Rita Bastos, 2024
 # Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025
-# 
+# Daniel Reis, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025\n"
-"Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-11-20 17:38+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-17/"
+"repair/pt/>\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: repair
 #: model:ir.actions.report,print_report_name:repair.action_report_repair_order
 msgid "('Repair Order - %s' % (object.name))"
+msgstr ""
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "(<i>Recycle</i>)"
 msgstr ""
 
 #. module: repair
@@ -35,7 +44,8 @@ msgstr "(<i>Remover</i>)"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__state
 msgid ""
-"* The 'New' status is used when a user is encoding a new and unconfirmed repair order.\n"
+"* The 'New' status is used when a user is encoding a new and unconfirmed "
+"repair order.\n"
 "* The 'Confirmed' status is used when a user confirms the repair order.\n"
 "* The 'Under Repair' status is used when the repair is ongoing.\n"
 "* The 'Repaired' status is set when repairing is completed.\n"
@@ -77,7 +87,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_repair_type_kanban
 msgid "<span>Orders</span>"
-msgstr ""
+msgstr "<span>Pedidos</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -87,7 +97,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Customer:</strong>"
-msgstr ""
+msgstr "<strong>Cliente:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -102,12 +112,12 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Responsible:</strong>"
-msgstr ""
+msgstr "<strong>Responsável:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Status:</strong>"
-msgstr ""
+msgstr "<strong>Status:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
@@ -142,7 +152,7 @@ msgstr "Ícone de Tipo de Atividade"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.repair_order_view_activity
 msgid "Activity view"
-msgstr ""
+msgstr "Visualização da atividade"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__stock_move__repair_line_type__add
@@ -172,12 +182,12 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__reserve_visible
 msgid "Allowed to Reserve Production"
-msgstr ""
+msgstr "Tem permissão para reservar produção"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__unreserve_visible
 msgid "Allowed to Unreserve Production"
-msgstr ""
+msgstr "Tem permissão para cancelar a reserva da produção"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_parts_late
@@ -224,8 +234,8 @@ msgid ""
 "Choose partner for whom the order will be invoiced and delivered. You can "
 "find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
-"Escolher o parceiro a quem o pedido será faturado e entregue. Pode pesquisar"
-" um parceiro pelo seu Nome, NIF, E-mail ou Referência Interna."
+"Escolher o parceiro a quem o pedido será faturado e entregue. Pode pesquisar "
+"um parceiro pelo seu Nome, NIF, E-mail ou Referência Interna."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_tags__color
@@ -241,7 +251,7 @@ msgstr "Empresa"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__parts_availability
 msgid "Component Status"
-msgstr ""
+msgstr "Status do componente"
 
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_config
@@ -273,7 +283,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Create Quotation"
-msgstr ""
+msgstr "Criar Orçamento"
 
 #. module: repair
 #. odoo-python
@@ -336,7 +346,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Demand"
-msgstr ""
+msgstr "Demanda"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -387,7 +397,7 @@ msgstr "Garante o rastreamento de um artigo armazenável no teu armazém."
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Exp %s"
-msgstr ""
+msgstr "Prev %s"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__parts_availability_state__expected
@@ -412,7 +422,8 @@ msgstr "ícone do Font awesome ex. fa-tasks"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_warn_uncomplete_move
 msgid ""
-"For some of the parts, there is a difference between the initial demand and the actual quantity that was used.<br/>\n"
+"For some of the parts, there is a difference between the initial demand and "
+"the actual quantity that was used.<br/>\n"
 "                Are you sure you want to confirm ?"
 msgstr ""
 
@@ -489,11 +500,13 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
-"                add or replace and record the time you spent on the different\n"
+"                add or replace and record the time you spent on the "
+"different\n"
 "                operations."
 msgstr ""
 "Numa ordem de reparação, poderá detalhar os componentes a remover,\n"
-"                adicionar ou substituir e registrar o tempo que gastou nas várias\n"
+"                adicionar ou substituir e registrar o tempo que gastou nas "
+"várias\n"
 "                operações."
 
 #. module: repair
@@ -534,7 +547,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "John Doe"
-msgstr ""
+msgstr "João Silva"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -544,7 +557,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Laptop"
-msgstr ""
+msgstr "Notebook"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__write_uid
@@ -659,7 +672,7 @@ msgstr "Normal"
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Not Available"
-msgstr ""
+msgstr "Não disponível"
 
 #. module: repair
 #. odoo-python
@@ -773,7 +786,7 @@ msgstr "Produto"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Product A"
-msgstr ""
+msgstr "Produto A"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -1170,12 +1183,12 @@ msgstr "Etiquetas"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__reserve_visible
 msgid "Technical field to check when we can reserve quantities"
-msgstr ""
+msgstr "Campo técnico para verificar quando é possível reservar quantidades"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__unreserve_visible
 msgid "Technical field to check when we can unreserve"
-msgstr ""
+msgstr "Campo técnico para verificar quando é possível liberar reserva"
 
 #. module: repair
 #. odoo-python
@@ -1285,7 +1298,7 @@ msgstr "Sobre Reparação"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__under_warranty
 msgid "Under Warranty"
-msgstr ""
+msgstr "Na garantia"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__product_uom_name
@@ -1312,7 +1325,7 @@ msgstr "Urgente"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Used"
-msgstr ""
+msgstr "Usado"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_warn_uncomplete_move
@@ -1336,7 +1349,7 @@ msgstr ""
 
 #. module: repair
 #. odoo-python
-#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Warning"
 msgstr "Aviso"
@@ -1370,7 +1383,8 @@ msgstr ""
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
-"You cannot create a quotation for a repair order that is already linked to an existing sale order.\n"
+"You cannot create a quotation for a repair order that is already linked to "
+"an existing sale order.\n"
 "Concerned repair order(s) :\n"
 msgstr ""
 
@@ -1379,7 +1393,8 @@ msgstr ""
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
-"You need to define a customer for a repair order in order to create an associated quotation.\n"
+"You need to define a customer for a repair order in order to create an "
+"associated quotation.\n"
 "Concerned repair order(s) :\n"
 msgstr ""
 

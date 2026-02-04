@@ -522,6 +522,10 @@ class HrExpense(models.Model):
         if any(attachment.res_id or attachment.res_model != 'hr.expense' for attachment in attachments):
             raise UserError(_("Invalid attachments!"))
 
+        employee = self.env.user.employee_id
+        if not employee or employee.company_id != self.env.company:
+            raise ValidationError(_("The current user has no related employee, or the related employee does not belong to this company."))
+
         product = self.env['product.product'].search([('can_be_expensed', '=', True)])
         if product:
             product = product.filtered(lambda p: p.default_code == "EXP_GEN")[:1] or product[0]
@@ -563,7 +567,7 @@ class HrExpense(models.Model):
     def write(self, vals):
         if (
                 'state' in vals
-                and vals['state'] != 'submitted'
+                and vals['state'] not in ('draft', 'submitted')
                 and not self.user_has_groups('hr_expense.group_hr_expense_manager')
                 and any(state == 'draft' for state in self.mapped('state'))
         ):
@@ -624,7 +628,7 @@ class HrExpense(models.Model):
     @api.model
     def _get_empty_list_mail_alias(self):
         use_mailgateway = self.env['ir.config_parameter'].sudo().get_param('hr_expense.use_mailgateway')
-        expense_alias = self.env.ref('hr_expense.mail_alias_expense') if use_mailgateway else False
+        expense_alias = self.env.ref('hr_expense.mail_alias_expense', raise_if_not_found=False) if use_mailgateway else False
         if expense_alias and expense_alias.alias_domain and expense_alias.alias_name:
             # encode, but force %20 encoding for space instead of a + (URL / mailto difference)
             params = werkzeug.urls.url_encode({'subject': _("Lunch with customer $12.32")}).replace('+', '%20')
@@ -818,6 +822,7 @@ class HrExpense(models.Model):
             'tax_tag_ids': to_update['tax_tag_ids'],
             'amount_currency': amount_currency,
             'currency_id': self.currency_id.id,
+            'quantity': self.quantity,
         }
         move_lines.append(base_move_line)
         total_tax_line_balance = 0.0
@@ -860,7 +865,7 @@ class HrExpense(models.Model):
             'line_ids': [Command.create(line) for line in move_lines],
             'attachment_ids': [
                 Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
-                for attachment in self.message_main_attachment_id]
+                for attachment in self.attachment_ids]
         }
 
     def _prepare_move_lines_vals(self):

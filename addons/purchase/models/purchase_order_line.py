@@ -465,9 +465,13 @@ class PurchaseOrderLine(models.Model):
         '''
         if not self.product_id:
             return
-        seller_min_qty = self.product_id.seller_ids\
-            .filtered(lambda r: r.partner_id == self.order_id.partner_id and (not r.product_id or r.product_id == self.product_id))\
-            .sorted(key=lambda r: r.min_qty)
+        seller_min_qty = self.product_id._select_seller(
+            partner_id=self.order_id.partner_id,
+            quantity=None,
+            date=self.order_id.date_order and self.order_id.date_order.date() or fields.Date.context_today(self),
+            ordered_by='min_qty',
+            params=self._get_select_sellers_params(),
+        )
         if seller_min_qty:
             self.product_qty = seller_min_qty[0].min_qty or 1.0
             self.product_uom = seller_min_qty[0].product_uom
@@ -596,9 +600,8 @@ class PurchaseOrderLine(models.Model):
         product_taxes = product_id.supplier_taxes_id.filtered(lambda x: x.company_id in company_id.parent_ids)
         taxes = po.fiscal_position_id.map_tax(product_taxes)
 
-        price_unit = seller.price if seller else product_id.standard_price
         price_unit = self.env['account.tax']._fix_tax_included_price_company(
-            price_unit, product_taxes, taxes, company_id)
+            seller.price, product_taxes, taxes, company_id) if seller else 0
         if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
             price_unit = seller.currency_id._convert(
                 price_unit, po.currency_id, po.company_id, po.date_order or fields.Date.today())

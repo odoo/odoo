@@ -500,7 +500,7 @@ export class SearchBar extends Component {
                 break;
             case "ArrowRight":
                 if (ev.target.selectionStart === this.state.query.length) {
-                    if (focusedItem && focusedItem.isParent) {
+                    if (focusedItem && focusedItem.isParent && !ev.repeat) {
                         ev.preventDefault();
                         if (focusedItem.isExpanded) {
                             focusedIndex = this.state.focusedIndex + 1;

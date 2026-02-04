@@ -18,12 +18,21 @@ class AccountMove(models.Model):
                 data.append((_("Invoice Date"), format_date(self.env, record.invoice_date)))
             if record.invoice_date_due:
                 data.append((_("Due Date"), format_date(self.env, record.invoice_date_due)))
+            if record.invoice_incoterm_id:
+                value = (
+                    f"{record.invoice_incoterm_id.code} - {record.incoterm_location}"
+                    if record.incoterm_location
+                    else record.invoice_incoterm_id.code
+                )
+                data.append((_("Incoterm"), value))
             if record.delivery_date:
                 data.append((_("Delivery Date"), format_date(self.env, record.delivery_date)))
             if record.invoice_origin:
                 data.append((_("Source"), record.invoice_origin))
             if record.ref:
                 data.append((_("Reference"), record.ref))
+            if record.partner_id.commercial_partner_id == record.partner_id and record.partner_id.commercial_partner_id.vat:
+                data.append((_("VAT"), record.partner_id.commercial_partner_id.vat))
 
     def _compute_l10n_din5008_document_title(self):
         for record in self:

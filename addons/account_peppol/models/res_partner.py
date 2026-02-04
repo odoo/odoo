@@ -33,12 +33,12 @@ class ResPartner(models.Model):
     )
     account_peppol_verification_label = fields.Selection(
         selection=[
-            ('not_verified', 'Not verified yet'),
-            ('not_valid', 'Not valid'),  # does not exist on Peppol at all
-            ('not_valid_format', 'Cannot receive this format'),  # registered on Peppol but cannot receive the selected document type
-            ('valid', 'Valid'),
+            ('not_verified', 'Unchecked'),
+            ('not_valid', 'Partner is not on Peppol'),  # does not exist on Peppol at all
+            ('not_valid_format', 'Partner cannot receive format'),  # registered on Peppol but cannot receive the selected document type
+            ('valid', 'Partner is on Peppol'),
         ],
-        string='Peppol endpoint validity',
+        string='Peppol status',
         compute='_compute_account_peppol_verification_label',
         copy=False,
     )  # field to compute the label to show for partner endpoint
@@ -84,6 +84,7 @@ class ResPartner(models.Model):
 
     @api.model
     def _get_participant_info(self, edi_identification):
+        # DEPRECATED: Peppol moved from CNAME to NAPTR DNS records
         hash_participant = md5(edi_identification.lower().encode()).hexdigest()
         endpoint_participant = parse.quote_plus(f"iso6523-actorid-upis::{edi_identification}")
         edi_mode = self.env.company._get_peppol_edi_mode()
@@ -99,18 +100,48 @@ class ResPartner(models.Model):
         return etree.fromstring(response.content)
 
     @api.model
+    def _peppol_lookup_participant(self, edi_identification):
+        """NAPTR DNS peppol participant lookup through Odoo's Peppol proxy"""
+        if (edi_mode := self.env.company._get_peppol_edi_mode()) == 'demo':
+            return
+
+        origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['peppol'][edi_mode]
+        query = parse.urlencode({'peppol_identifier': edi_identification.lower()})
+        endpoint = f'{origin}/api/peppol/1/lookup?{query}'
+
+        try:
+            response = requests.get(endpoint, timeout=TIMEOUT)
+        except requests.exceptions.RequestException as e:
+            _logger.debug("failed to query peppol participant %s: %s", edi_identification, e)
+            return
+
+        try:
+            decoded_response = response.json()
+        except ValueError:
+            _logger.error('invalid JSON response %s when querying peppol participant %s', response.status_code, edi_identification)
+            return
+
+        if error := decoded_response.get('error'):
+            if error.get('code') != 'NOT_FOUND':
+                _logger.error('error when querying peppol participant %s: %s', edi_identification, error.get('message', 'unknown error'))
+            return
+
+        return decoded_response.get('result')
+
+    @api.model
     def _check_peppol_participant_exists(self, edi_identification, check_company=False, ubl_cii_format=False):
-        participant_info = self._get_participant_info(edi_identification)
-        if participant_info is None:
+        if not (participant_info := self._peppol_lookup_participant(edi_identification)):
             return False
 
-        participant_identifier = participant_info.findtext('{*}ParticipantIdentifier')
-        service_metadata = participant_info.find('.//{*}ServiceMetadataReference')
-        service_href = ''
-        if service_metadata is not None:
-            service_href = service_metadata.attrib.get('href', '')
+        if services := participant_info.get('services'):
+            service_href = services[0].get('href', '')
+        else:
+            # participant exists and is registered, but doesn't expose any service
+            service_href = ''
 
-        if edi_identification != participant_identifier or 'hermes-belgium' in service_href:
+        participant_identifier = participant_info.get('identifier', '').lower()
+        # peppol identifier must be case insensitive
+        if edi_identification.lower() != participant_identifier or 'hermes-belgium' in service_href:
             # all Belgian companies are pre-registered on hermes-belgium, so they will
             # technically have an existing SMP url but they are not real Peppol participants
             return False
@@ -131,15 +162,16 @@ class ResPartner(models.Model):
         return self._check_document_type_support(participant_info, ubl_cii_format)
 
     def _check_document_type_support(self, participant_info, ubl_cii_format):
-        service_metadata = participant_info.find('.//{*}ServiceMetadataReferenceCollection')
-        if service_metadata is None:
-            return False
-
-        document_type = self.env['account.edi.xml.ubl_21']._get_customization_ids()[ubl_cii_format]
-        for service in service_metadata.iterfind('{*}ServiceMetadataReference'):
-            if document_type in parse.unquote_plus(service.attrib.get('href', '')):
+        expected_customization_id = self.env['account.edi.xml.ubl_21']._get_customization_ids()[ubl_cii_format]
+        for service in participant_info.get('services', []):
+            service_document_id = service.get('document_id')
+            if service_document_id and expected_customization_id in service_document_id:
                 return True
         return False
+
+    @api.onchange('ubl_cii_format', 'peppol_endpoint', 'peppol_eas')
+    def _onchange_verify_peppol_status(self):
+        self.button_account_peppol_check_partner_endpoint()
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -148,7 +180,7 @@ class ResPartner(models.Model):
     @api.depends('ubl_cii_format')
     def _compute_is_peppol_edi_format(self):
         for partner in self:
-            partner.is_peppol_edi_format = partner.ubl_cii_format not in (False, 'facturx', 'oioubl_201', 'ciusro')
+            partner.is_peppol_edi_format = partner.ubl_cii_format not in (False, 'facturx', 'oioubl_201', 'ciusro', 'ubl_tr')
 
     @api.depends('peppol_eas', 'peppol_endpoint', 'ubl_cii_format')
     def _compute_account_peppol_is_endpoint_valid(self):
@@ -162,7 +194,7 @@ class ResPartner(models.Model):
                 partner.account_peppol_verification_label = 'not_verified'
             elif (
                 partner.is_peppol_edi_format
-                and (participant_info := self._get_participant_info(f'{partner.peppol_eas}:{partner.peppol_endpoint}'.lower())) is not None
+                and (participant_info := self._peppol_lookup_participant(f'{partner.peppol_eas}:{partner.peppol_endpoint}'.lower())) is not None
                 and not partner._check_document_type_support(participant_info, partner.ubl_cii_format)
             ):
                 # the partner might exist on the network, but not be able to receive that specific format
@@ -183,7 +215,8 @@ class ResPartner(models.Model):
         The SML (Service Metadata Locator) assigns a DNS name to each peppol participant.
         This DNS name resolves into the SMP (Service Metadata Publisher) of the participant.
         The DNS address is of the following form:
-        - "http://B-" + hexstring(md5(lowercase(ID-VALUE))) + "." + ID-SCHEME + "." + SML-ZONE-NAME + "/" + url_encoded(ID-SCHEME + "::" + ID-VALUE)
+        strip-trailing(base32(sha256(lowercase(ID-VALUE))),"=") + "." + ID-SCHEME + "." + SML-ZONE-NAME
+        The lookup should be done on NAPTR DNS from 2025-11-01
         (ref:https://peppol.helger.com/public/locale-en_US/menuitem-docs-doc-exchange)
         """
         self.ensure_one()
@@ -192,6 +225,21 @@ class ResPartner(models.Model):
             self.account_peppol_is_endpoint_valid = False
         else:
             edi_identification = f'{self.peppol_eas}:{self.peppol_endpoint}'.lower()
-            self.account_peppol_validity_last_check = fields.Date.context_today(self)
-            self.account_peppol_is_endpoint_valid = bool(self._check_peppol_participant_exists(edi_identification, ubl_cii_format=self.ubl_cii_format))
+            self.write({
+                'account_peppol_validity_last_check': fields.Date.context_today(self),
+                'account_peppol_is_endpoint_valid': bool(self._check_peppol_participant_exists(edi_identification, ubl_cii_format=self.ubl_cii_format)),
+            })
+
+            if (
+                not self.account_peppol_is_endpoint_valid
+                and self.peppol_eas in ('0208', '9925')
+            ):
+                inverse_eas = '9925' if self.peppol_eas == '0208' else '0208'
+                inverse_endpoint = f'BE{self.peppol_endpoint}' if self.peppol_eas == '0208' else self.peppol_endpoint[2:]
+                if self._check_peppol_participant_exists(f'{inverse_eas}:{inverse_endpoint}', ubl_cii_format=self.ubl_cii_format):
+                    self.write({
+                        'peppol_eas': inverse_eas,
+                        'peppol_endpoint': inverse_endpoint,
+                        'account_peppol_is_endpoint_valid': True,
+                    })
         return False

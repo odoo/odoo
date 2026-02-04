@@ -1,26 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_ogone
-# 
+# * payment_ogone
+#
 # Translators:
 # Arnis Putniņš <arnis@allegro.lv>, 2023
 # Martin Trigaux, 2023
-# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
 # Will Sensors, 2025
-# 
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Will Sensors, 2025\n"
-"Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"PO-Revision-Date: 2025-12-20 10:52+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Latvian <https://translate.odoo.com/projects/odoo-17/"
+"payment_ogone/lv/>\n"
+"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lv\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_userid
@@ -73,6 +75,11 @@ msgid "Payment Provider"
 msgstr "Maksājumu sniedzējs"
 
 #. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_token
+msgid "Payment Token"
+msgstr "Maksājuma atslēgkods"
+
+#. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Maksājuma darījums"
@@ -82,7 +89,7 @@ msgstr "Maksājuma darījums"
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
-msgstr ""
+msgstr "Saņemti dati ar nederīgu maksājuma statusu: %s"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_shakey_in
@@ -156,7 +163,7 @@ msgstr "Darījums nav saistīts ar atslēgkodu."
 #: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
 msgid ""
 "This provider is deprecated.\n"
-"                    Consider disabling it and moving to <strong>Stripe</strong>."
+"                    Please install"
 msgstr ""
 
 #. module: payment_ogone
@@ -167,15 +174,28 @@ msgstr "Jūsu maksājums ir autorizēts."
 #. module: payment_ogone
 #: model_terms:payment.provider,cancel_msg:payment_ogone.payment_provider_ogone
 msgid "Your payment has been cancelled."
-msgstr ""
+msgstr "Jūsu maksājums tika atcelts."
 
 #. module: payment_ogone
 #: model_terms:payment.provider,pending_msg:payment_ogone.payment_provider_ogone
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
-msgstr ""
+msgstr "Jūsu maksājums tika veiksmīgi apstrādāts, bet gaida apstiprinājumu."
 
 #. module: payment_ogone
 #: model_terms:payment.provider,done_msg:payment_ogone.payment_provider_ogone
 msgid "Your payment has been successfully processed."
+msgstr "Jūsu maksājums tika veiksmīgi apstrādāts."
+
+#. module: payment_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
+msgid ""
+"as a drop-in replacement. Your data and payment tokens will be "
+"automatically\n"
+"                    migrated from Ogone to Worldline."
+msgstr ""
+
+#. module: payment_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
+msgid "the Worldline provider"
 msgstr ""

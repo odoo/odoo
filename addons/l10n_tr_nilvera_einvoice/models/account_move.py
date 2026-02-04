@@ -83,6 +83,7 @@ class AccountMove(models.Model):
             )
 
             if response.status_code == 200:
+                self.is_move_sent = True
                 self.l10n_tr_nilvera_send_status = 'sent'
             elif response.status_code in {401, 403}:
                 raise UserError(_("Oops, seems like you're unauthorised to do this. Try another API key with more rights or contact Nilvera."))
@@ -95,7 +96,7 @@ class AccountMove(models.Model):
                     return self._l10n_tr_nilvera_submit_document(xml_file, endpoint, post_series=False)
                 raise UserError(error_message)
             elif response.status_code == 500:
-                return UserError(_("Server error from Nilvera, please try again later."))
+                raise UserError(_("Server error from Nilvera, please try again later."))
 
             self.message_post(body=_("The invoice has been successfully sent to Nilvera."))
 
@@ -177,6 +178,7 @@ class AccountMove(models.Model):
                     continue
                 move = self._l10n_tr_nilvera_get_invoice_from_uuid(client, journal, document_uuid)
                 self._l10n_tr_nilvera_add_pdf_to_invoice(client, move, document_uuid)
+                # The purpose of this commit is to ensure that both the move and attachment are saved before the next iteration in case of errors.
                 self._cr.commit()
 
     def _l10n_tr_nilvera_get_invoice_from_uuid(self, client, journal, document_uuid):
@@ -254,6 +256,26 @@ class AccountMove(models.Model):
                 error_codes.append(error.get('Code'))
 
         return msg, error_codes
+
+    def _l10n_tr_nilvera_einvoice_check_invalid_subscription_dates(self):
+        if 'deferred_start_date' not in self.invoice_line_ids._fields:
+            return False
+
+        # Ensure that either no lines have the start and end dates or all lines have the same start and end dates.
+        lines_to_check = self.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
+        if not (subscription_lines := lines_to_check.filtered('deferred_start_date')):
+            return False
+
+        return len(subscription_lines) != len(lines_to_check) or len(set(subscription_lines.mapped(
+            lambda aml: (aml.deferred_start_date, aml.deferred_end_date))
+        )) > 1
+
+    def _l10n_tr_nilvera_einvoice_check_negative_lines(self):
+        return any(
+            line.display_type not in {'line_note', 'line_section'}
+            and (line.quantity < 0 or line.price_unit < 0)
+            for line in self.invoice_line_ids
+        )
 
     # -------------------------------------------------------------------------
     # CRONS

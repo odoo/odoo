@@ -1,7 +1,7 @@
 from odoo import _, models, Command
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_repr, find_xml_value
+from odoo.tools import float_is_zero, float_repr, find_xml_value
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import clean_context, formatLang
 from odoo.tools.zeep import Client
@@ -18,6 +18,7 @@ UOM_TO_UNECE_CODE = {
     'uom.product_uom_gram': 'GRM',
     'uom.product_uom_day': 'DAY',
     'uom.product_uom_hour': 'HUR',
+    'uom.product_uom_minute': 'MIN',
     'uom.product_uom_ton': 'TNE',
     'uom.product_uom_meter': 'MTR',
     'uom.product_uom_km': 'KMT',
@@ -34,6 +35,11 @@ UOM_TO_UNECE_CODE = {
     'uom.product_uom_gal': 'GLL',
     'uom.product_uom_cubic_inch': 'INQ',
     'uom.product_uom_cubic_foot': 'FTQ',
+    'uom.uom_square_meter': 'MTK',
+    'uom.uom_square_foot': 'FTK',
+    'uom.product_uom_yard': 'YRD',
+    'uom.product_uom_millimeter': 'MMT',
+    'uom.product_uom_kwh': 'KWH',
 }
 
 # -------------------------------------------------------------------------
@@ -41,6 +47,7 @@ UOM_TO_UNECE_CODE = {
 # -------------------------------------------------------------------------
 EAS_MAPPING = {
     'AD': {'9922': 'vat'},
+    'AE': {'0235': 'vat'},
     'AL': {'9923': 'vat'},
     'AT': {'9915': 'vat'},
     'AU': {'0151': 'vat'},
@@ -68,7 +75,7 @@ EAS_MAPPING = {
     'LI': {'9936': 'vat'},
     'LT': {'9937': 'vat'},
     'LU': {'9938': 'vat'},
-    'LV': {'9939': 'vat'},
+    'LV': {'0218': 'company_registry', '9939': 'vat'},
     'MC': {'9940': 'vat'},
     'ME': {'9941': 'vat'},
     'MK': {'9942': 'vat'},
@@ -88,6 +95,18 @@ EAS_MAPPING = {
     'SM': {'9951': 'vat'},
     'TR': {'9952': 'vat'},
     'VA': {'9953': 'vat'},
+}
+
+# -------------------------------------------------------------------------
+# SUPPORTED FILE TYPES FOR IMPORT
+# -------------------------------------------------------------------------
+SUPPORTED_FILE_TYPES = {
+    'application/pdf': '.pdf',
+    'application/vnd.oasis.opendocument.spreadsheet': '.ods',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': '.xlsx',
+    'image/jpeg': '.jpeg',
+    'image/png': '.png',
+    'text/csv': '.csv',
 }
 
 
@@ -316,34 +335,35 @@ class AccountEdiCommon(models.AbstractModel):
         with invoice._get_edi_creation() as invoice:
             self._correct_invoice_tax_amount(tree, invoice)
 
-        # === Import the embedded PDF in the xml if some are found ===
-
+        # === Import the embedded documents in the xml if some are found ===
         attachments = self.env['ir.attachment']
         additional_docs = tree.findall('./{*}AdditionalDocumentReference')
         for document in additional_docs:
             attachment_name = document.find('{*}ID')
             attachment_data = document.find('{*}Attachment/{*}EmbeddedDocumentBinaryObject')
-            if attachment_name is not None \
-                    and attachment_data is not None \
-                    and attachment_data.attrib.get('mimeCode') == 'application/pdf':
+            if attachment_name is not None and attachment_data is not None:
+                mimetype = attachment_data.attrib.get('mimeCode')
+                if not (extension := SUPPORTED_FILE_TYPES.get(mimetype)):
+                    continue
                 text = attachment_data.text
                 # Normalize the name of the file : some e-fff emitters put the full path of the file
                 # (Windows or Linux style) and/or the name of the xml instead of the pdf.
-                # Get only the filename with a pdf extension.
-                name = (attachment_name.text or 'invoice').split('\\')[-1].split('/')[-1].split('.')[0] + '.pdf'
+                # Get only the filename with the right extension.
+                name = (attachment_name.text or 'invoice').split('\\')[-1].split('/')[-1].split('.')[0] + extension
                 attachment = self.env['ir.attachment'].create({
                     'name': name,
                     'res_id': invoice.id,
                     'res_model': 'account.move',
                     'datas': text + '=' * (len(text) % 3),  # Fix incorrect padding
                     'type': 'binary',
-                    'mimetype': 'application/pdf',
+                    'mimetype': mimetype,
                 })
                 # Upon receiving an email (containing an xml) with a configured alias to create invoice, the xml is
                 # set as the main_attachment. To be rendered in the form view, the pdf should be the main_attachment.
                 if invoice.message_main_attachment_id and \
                         invoice.message_main_attachment_id.name.endswith('.xml') and \
-                        'pdf' not in invoice.message_main_attachment_id.mimetype:
+                        'pdf' not in invoice.message_main_attachment_id.mimetype and \
+                        mimetype == 'application/pdf':
                     invoice.message_main_attachment_id = attachment
                 attachments |= attachment
         if attachments:
@@ -351,7 +371,7 @@ class AccountEdiCommon(models.AbstractModel):
 
         return True
 
-    def _import_retrieve_and_fill_partner(self, invoice, name, phone, mail, vat, country_code=False, peppol_eas=False, peppol_endpoint=False):
+    def _import_retrieve_and_fill_partner(self, invoice, name, phone, mail, vat, country_code=False, peppol_eas=False, peppol_endpoint=False, street=False, street2=False, city=False, zip_code=False):
         """ Retrieve the partner, if no matching partner is found, create it (only if he has a vat and a name) """
         if peppol_eas and peppol_endpoint:
             domain = [('peppol_eas', '=', peppol_eas), ('peppol_endpoint', '=', peppol_endpoint)]
@@ -361,7 +381,8 @@ class AccountEdiCommon(models.AbstractModel):
             .with_company(invoice.company_id) \
             ._retrieve_partner(name=name, phone=phone, mail=mail, vat=vat, domain=domain)
         if not invoice.partner_id and name and vat:
-            partner_vals = {'name': name, 'email': mail, 'phone': phone}
+            partner_vals = {'name': name, 'email': mail, 'phone': phone, 'street': street, 'street2': street2,
+                            'zip': zip_code, 'city': city, 'is_company': True}
             if peppol_eas and peppol_endpoint:
                 partner_vals.update({'peppol_eas': peppol_eas, 'peppol_endpoint': peppol_endpoint})
             country = self.env.ref(f'base.{country_code.lower()}', raise_if_not_found=False) if country_code else False
@@ -377,7 +398,7 @@ class AccountEdiCommon(models.AbstractModel):
 
         # clear the context, because creation of partner when importing should not depend on the context default values
         ResPartnerBank = self.env['res.partner.bank'].with_env(self.env(context=clean_context(self.env.context)))
-        bank_details = list(map(sanitize_account_number, bank_details))
+        bank_details = list(set(map(sanitize_account_number, bank_details)))
 
         if invoice.move_type in ('out_refund', 'in_invoice'):
             partner = invoice.partner_id
@@ -389,7 +410,7 @@ class AccountEdiCommon(models.AbstractModel):
         banks_to_create = []
         acc_number_partner_bank_dict = {
             bank.sanitized_acc_number: bank
-            for bank in ResPartnerBank.search(
+            for bank in ResPartnerBank.with_context(active_test=False).search(
                 [('company_id', 'in', [False, invoice.company_id.id]), ('acc_number', 'in', bank_details)]
             )
         }
@@ -398,6 +419,8 @@ class AccountEdiCommon(models.AbstractModel):
             partner_bank = acc_number_partner_bank_dict.get(account_number, ResPartnerBank)
 
             if partner_bank.partner_id == partner:
+                if not partner_bank.active:
+                    partner_bank.active = True
                 invoice.partner_bank_id = partner_bank
                 return
             elif not partner_bank and account_number:
@@ -495,6 +518,37 @@ class AccountEdiCommon(models.AbstractModel):
                 _("A payment of %s was detected.", formatted_amount)
             ]
         return []
+
+    def _import_rounding_amount(self, invoice, rounding_node, qty_factor):
+        """
+        Add an invoice line representing the rounding amount given in the document.
+        - The amount is assumed to be in document currency
+        """
+        currency = invoice.currency_id
+        rounding_amount_currency = currency.round(qty_factor * float(rounding_node.text) if rounding_node is not None else 0.0)
+
+        if invoice.currency_id.is_zero(rounding_amount_currency):
+            return []
+
+        inverse_rate = abs(invoice.amount_total_signed) / invoice.amount_total if invoice.amount_total else 0
+        rounding_amount = invoice.company_id.currency_id.round(rounding_amount_currency * inverse_rate)
+
+        invoice.line_ids.create([{
+            'display_type': 'product',
+            'name': _('Rounding'),
+            'quantity': 1,
+            'product_id': False,
+            'price_unit': rounding_amount_currency,
+            'balance': invoice.direction_sign * rounding_amount,
+            'company_id': invoice.company_id.id,
+            'move_id': invoice.id,
+            'tax_ids': False,
+        }])
+
+        formatted_amount = formatLang(self.env, rounding_amount_currency, currency_obj=currency)
+        return [
+            _("A rounding amount of %s was detected.", formatted_amount),
+        ]
 
     def _import_fill_invoice_line_values(self, tree, xpath_dict, invoice_line, qty_factor):
         """
@@ -650,7 +704,9 @@ class AccountEdiCommon(models.AbstractModel):
         discount = 0
         amount_fixed_taxes = sum(d['tax_amount'] * billed_qty for d in fixed_taxes_list)
         if billed_qty * price_unit != 0 and price_subtotal is not None:
-            discount = 100 * (1 - (price_subtotal - amount_fixed_taxes) / (billed_qty * price_unit))
+            currency = invoice_line.currency_id or self.env.company.currency_id
+            inferred_discount = 100 * (1 - (price_subtotal - amount_fixed_taxes) / currency.round(billed_qty * price_unit))
+            discount = inferred_discount if not float_is_zero(inferred_discount, currency.decimal_places) else 0.0
 
         # Sometimes, the xml received is very bad; e.g.:
         #   * unit price = 0, qty = 0, but price_subtotal = -200
@@ -754,7 +810,7 @@ class AccountEdiCommon(models.AbstractModel):
 
         invoice_line.price_unit = inv_line_vals['price_unit']
         invoice_line.discount = inv_line_vals['discount']
-        invoice_line.tax_ids = inv_line_vals['taxes']
+        invoice_line.tax_ids = inv_line_vals['taxes'] or False
         return logs
 
     def _correct_invoice_tax_amount(self, tree, invoice):

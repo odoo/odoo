@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_epson_printer
+# * pos_epson_printer
 #
 # Translators:
 # Martin Trigaux, 2022
 # Sanjaajamts Badamjunai <b.sanjaajamtsfc@gmail.com>, 2022
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022\n"
-"Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-11-09 19:46+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-17/"
+"pos_epson_printer/mn/>\n"
 "Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: pos_epson_printer
 #: model_terms:ir.ui.view,arch_db:pos_epson_printer.pos_iot_config_view_form
@@ -29,22 +31,17 @@ msgstr "Мөнгөний хайрцаг"
 
 #. module: pos_epson_printer
 #. odoo-javascript
-#: code:addons/pos_epson_printer/static/src/js/epson_printer.js:0
+#: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 #, python-format
-msgid "Check on the printer configuration for the 'Device ID' setting. It should be set to: "
+msgid ""
+"Check on the printer configuration for the 'Device ID' setting. It should be "
+"set to: "
 msgstr ""
 
 #. module: pos_epson_printer
 #: model:ir.model,name:pos_epson_printer.model_res_config_settings
 msgid "Config Settings"
 msgstr "Тохиргооны тохируулга"
-
-#. module: pos_epson_printer
-#. odoo-javascript
-#: code:addons/pos_epson_printer/static/src/js/epson_printer.js:0
-#, python-format
-msgid "Connection to the printer failed"
-msgstr "Хэвлэгчтэй холбогдож чадсангүй"
 
 #. module: pos_epson_printer
 #: model:ir.model.fields,field_description:pos_epson_printer.field_pos_config__epson_printer_ip
@@ -71,9 +68,11 @@ msgstr ""
 
 #. module: pos_epson_printer
 #. odoo-javascript
-#: code:addons/pos_epson_printer/static/src/js/epson_printer.js:0
+#: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 #, python-format
-msgid "If you are on a secure server (HTTPS) please make sure you manually accepted the certificate by accessing %s"
+msgid ""
+"If you are on a secure server (HTTPS) please make sure you manually accepted "
+"the certificate by accessing %s. "
 msgstr ""
 
 #. module: pos_epson_printer
@@ -84,25 +83,16 @@ msgstr ""
 
 #. module: pos_epson_printer
 #. odoo-javascript
-#: code:addons/pos_epson_printer/static/src/js/epson_printer.js:0
+#: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 #, python-format
 msgid "No paper was detected by the printer"
 msgstr ""
 
 #. module: pos_epson_printer
 #. odoo-javascript
-#: code:addons/pos_epson_printer/static/src/js/epson_printer.js:0
+#: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 #, python-format
 msgid "Please check if the printer has enough paper and is ready to print."
-msgstr ""
-
-#. module: pos_epson_printer
-#. odoo-javascript
-#: code:addons/pos_epson_printer/static/src/js/epson_printer.js:0
-#, python-format
-msgid ""
-"Please check if the printer is still connected. \n"
-"Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue"
 msgstr ""
 
 #. module: pos_epson_printer
@@ -118,7 +108,7 @@ msgstr ""
 #. module: pos_epson_printer
 #: model:ir.model,name:pos_epson_printer.model_pos_session
 msgid "Point of Sale Session"
-msgstr ""
+msgstr "ПОС сэшн"
 
 #. module: pos_epson_printer
 #: model:ir.model.fields,field_description:pos_epson_printer.field_res_config_settings__pos_epson_printer_ip
@@ -132,34 +122,36 @@ msgstr ""
 
 #. module: pos_epson_printer
 #. odoo-javascript
-#: code:addons/pos_epson_printer/static/src/js/epson_printer.js:0
+#: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 #, python-format
 msgid "Printing failed"
-msgstr ""
+msgstr "Хэвлэлт амжилтгүй"
 
 #. module: pos_epson_printer
 #: model_terms:ir.ui.view,arch_db:pos_epson_printer.pos_iot_config_view_form
 #: model_terms:ir.ui.view,arch_db:pos_epson_printer.res_config_settings_view_form
-msgid "The Epson receipt printer will be used instead of the receipt printer connected to the IoT Box."
+msgid ""
+"The Epson receipt printer will be used instead of the receipt printer "
+"connected to the IoT Box."
 msgstr ""
 
 #. module: pos_epson_printer
 #. odoo-javascript
-#: code:addons/pos_epson_printer/static/src/js/epson_printer.js:0
+#: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 #, python-format
 msgid "The following error code was given by the printer:"
 msgstr ""
 
 #. module: pos_epson_printer
 #. odoo-javascript
-#: code:addons/pos_epson_printer/static/src/js/epson_printer.js:0
+#: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 #, python-format
 msgid "The printer was successfully reached, but it wasn't able to print."
 msgstr ""
 
 #. module: pos_epson_printer
 #. odoo-javascript
-#: code:addons/pos_epson_printer/static/src/js/epson_printer.js:0
+#: code:addons/pos_epson_printer/static/src/app/epson_printer.js:0
 #, python-format
 msgid "To find more details on the error reason, please search online for:"
 msgstr ""
@@ -168,3 +160,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:pos_epson_printer.selection__pos_printer__printer_type__epson_epos
 msgid "Use an Epson printer"
 msgstr ""
+
+#, python-format
+#~ msgid "Connection to the printer failed"
+#~ msgstr "Хэвлэгчтэй холбогдож чадсангүй"

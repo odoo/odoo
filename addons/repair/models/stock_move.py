@@ -108,6 +108,23 @@ class StockMove(models.Model):
         self._clean_repair_sale_order_line()
         return super()._action_cancel()
 
+    def _prepare_repair_so_line_vals(self):
+        self.ensure_one()
+        product_qty = self.product_uom_qty if self.repair_id.state != 'done' else self.quantity
+        vals = {
+            'order_id': self.repair_id.sale_order_id.id,
+            'product_id': self.product_id.id,
+            'product_uom_qty': product_qty,  # When relying only on so_line compute method, the sol quantity is only updated on next sol creation
+            'product_uom': self.product_uom.id,
+            'move_ids': [Command.link(self.id)],
+            'qty_delivered': self.quantity if self.state == 'done' else 0.0,
+        }
+        if self.repair_id.under_warranty:
+            vals['price_unit'] = 0.0
+        elif self.price_unit:
+            vals['price_unit'] = self.price_unit
+        return vals
+
     def _create_repair_sale_order_line(self):
         if not self:
             return
@@ -115,17 +132,7 @@ class StockMove(models.Model):
         for move in self:
             if move.sale_line_id or move.repair_line_type != 'add' or not move.repair_id.sale_order_id:
                 continue
-            product_qty = move.product_uom_qty if move.repair_id.state != 'done' else move.quantity
-            so_line_vals.append({
-                'order_id': move.repair_id.sale_order_id.id,
-                'product_id': move.product_id.id,
-                'product_uom_qty': product_qty, # When relying only on so_line compute method, the sol quantity is only updated on next sol creation
-                'move_ids': [Command.link(move.id)],
-            })
-            if move.repair_id.under_warranty:
-                so_line_vals[-1]['price_unit'] = 0.0
-            elif move.price_unit:
-                so_line_vals[-1]['price_unit'] = move.price_unit
+            so_line_vals.append(move._prepare_repair_so_line_vals())
 
         self.env['sale.order.line'].create(so_line_vals)
 

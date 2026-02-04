@@ -56,7 +56,8 @@
                                     </group>
                                     <group string="Currency" groups="base.group_multi_currency">
                                         <field name="currency_id" invisible="1"/>
-                                        <field name="amount_currency"/>
+                                        <field name="display_type" invisible="1"/>
+                                        <field name="amount_currency" readonly="display_type != 'tax' or parent_state != 'draft'"/>
                                     </group>
                                     <group string="Product" invisible="not product_id">
                                         <field name="product_id" readonly="1"/>
@@ -1298,7 +1299,7 @@
                                         <field name="debit" sum="Total Debit"/>
                                         <field name="credit" sum="Total Credit"/>
                                         <field name="balance" invisible="1"/>
-                                        <field name="tax_ids" string="Taxes Applied" widget="autosave_many2many_tags" options="{'no_create': True}"/>
+                                        <field name="tax_ids" string="Taxes Applied" widget="many2many_tags" options="{'no_create': True}"/>
                                         <field name="date_maturity" required="0" invisible="context.get('view_no_maturity', False)"/>
                                       </group>
                                     </form>
@@ -1459,13 +1460,14 @@
                                 '|', '|' , '|', '|',
                                 ('name', 'ilike', self), ('invoice_origin', 'ilike', self),
                                 ('ref', 'ilike', self), ('payment_reference', 'ilike', self),
-                                ('partner_id', 'child_of', self)]"/>
+                                ('partner_id', 'child_of', self)]"
+                                context="{'active_test': False}"/>
                     <field name="name"/>
                     <field name="ref"/>
                     <field name="payment_reference"/>
                     <field name="journal_id"/>
-                    <field name="partner_id" operator="child_of"/>
-                    <field name="invoice_user_id" string="Salesperson" domain="[('share', '=', False)]"/>
+                    <field name="partner_id" operator="child_of" context="{'active_test': False}" />
+                    <field name="invoice_user_id" string="Salesperson" domain="[('share', '=', False)]" />
                     <field name="date" string="Period"/>
                     <field name="line_ids" string="Invoice Line"/>
                     <filter domain="[('invoice_user_id', '=', uid)]" name="myinvoices" help="My Invoices"/>

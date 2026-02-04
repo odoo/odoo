@@ -52,7 +52,7 @@ class HrLeave(models.Model):
                 period = ['morning'] if self.request_date_from_period == 'am' else ['afternoon']
             else:
                 period = ['morning', 'afternoon']
-            attendance_ids = self.company_id.resource_calendar_id.attendance_ids
+            attendance_ids = self.company_id.resource_calendar_id.attendance_ids | self.resource_calendar_id.attendance_ids
             date_from, date_to = adjust_date_range(date_from, date_to, period, attendance_ids, self.employee_id)
 
         if self.request_unit_half and self.request_date_from_period == 'am':

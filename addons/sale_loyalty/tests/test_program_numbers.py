@@ -577,6 +577,17 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         generated_coupon = order._get_reward_coupons()
         self.assertEqual(len(generated_coupon), 1, "We should still have only 1 coupon as we now benefit again from the program but no need to create a new one (see next assert)")
         self.assertEqual(generated_coupon.points, 0, "The coupon should not have it's points already.")
+        self.assertFalse(order._get_claimable_rewards(), "No rewards should be claimable")
+
+        order.action_confirm()
+        self.assertEqual(
+            generated_coupon.points, 1,
+            "The coupon should have 1 point after confirmation",
+        )
+        self.assertFalse(
+            order._get_claimable_rewards(),
+            "Next-order coupon rewards shouldn't be claimable on current order",
+        )
 
     def test_coupon_rule_minimum_amount(self):
         """ Ensure coupon with minimum amount rule are correctly
@@ -1263,6 +1274,42 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self.assertEqual(len(order.order_line), 2, 'The order must contain 2 order lines: 1x Product F and 1x 5$ discount')
         self.assertEqual(order.amount_total, 190.0, 'The price must be 190.0 since there is now 2x 5$ discount and 2x Product F')
         self.assertEqual(order.order_line.filtered(lambda x: x.is_reward_line).price_unit, -5, 'The discount unit price should still be -5 after the quantity was manually changed')
+
+    def test_program_multi_product_max_discount(self):
+        order = self.empty_order
+        coupon_program = self.env['loyalty.program'].create({
+            'name': "50% off for cheapest product(max $30)",
+            'trigger': 'with_code',
+            'program_type': 'coupons',
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 50,
+                'discount_mode': 'percent',
+                'discount_applicability': 'cheapest',
+                'discount_max_amount': 30,
+            })],
+        })
+
+        # create SOL
+        self.env['sale.order.line'].create({
+            'product_id': self.largeCabinet.id,
+            'product_uom_qty': 2.0,
+            'order_id': order.id,
+        })
+
+        # generate and apply coupon
+        self.env['loyalty.generate.wizard'].with_context(active_id=coupon_program.id).create({
+            'coupon_qty': 1,
+            'points_granted': 1,
+        }).generate_coupons()
+
+        coupon = coupon_program.coupon_ids
+        self._apply_promo_code(order, coupon.code)
+
+        self.assertEqual(len(order.order_line), 2, "The order must contain 2 order lines")
+        self.assertEqual(
+            order.amount_total, 610.0, "The price must be 610.0 since the max discount is 30"
+        )
 
     def test_specific_discount_product_group(self):
         # Tests the following:

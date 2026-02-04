@@ -3,6 +3,8 @@
 import wTourUtils from '@website/js/tours/tour_utils';
 import { browser } from '@web/core/browser/browser';
 
+const oldWriteText = browser.navigator.clipboard.writeText;
+
 wTourUtils.registerWebsitePreviewTour('snippet_editor_panel_options', {
     test: true,
     url: '/',
@@ -52,15 +54,16 @@ wTourUtils.dragNDrop({
     trigger: '#oe_snippets .snippet-option-anchor we-button',
     run() {
         // Patch and ignore write on clipboard in tour as we don't have permissions
-        const oldWriteText = browser.navigator.clipboard.writeText;
         browser.navigator.clipboard.writeText = () => { console.info('Copy in clipboard ignored!') };
         this.$anchor[0].click();
-        browser.navigator.clipboard.writeText = oldWriteText;
     }
 }, {
     content: "Check the copied url from the notification toast",
     trigger: '.o_notification_manager .o_notification_content',
     run() {
+        // Cleanup the patched clipboard method
+        browser.navigator.clipboard.writeText = oldWriteText;
+
         const { textContent } = this.$anchor[0];
         const url = textContent.substring(textContent.indexOf('/'));
 

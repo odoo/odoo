@@ -22,6 +22,7 @@ import { renderToString } from "@web/core/utils/render";
 import { batched } from "@web/core/utils/timing";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { EditListPopup } from "./select_lot_popup/select_lot_popup";
+import { unique } from "@web/core/utils/arrays";
 
 /* Returns an array containing all elements of the given
  * array corresponding to the rule function {agg} and without duplicates
@@ -551,7 +552,7 @@ export class PosStore extends Reactive {
                 delete this.toRefundLines[line.refunded_orderline_id];
             }
         }
-        if (this.isOpenOrderShareable() && removeFromServer) {
+        if ((this.isOpenOrderShareable() || order.server_id) && removeFromServer) {
             if (this.ordersToUpdateSet.has(order)) {
                 this.ordersToUpdateSet.delete(order);
             }
@@ -707,13 +708,7 @@ export class PosStore extends Reactive {
         if (!missingProductIds.size) {
             return;
         }
-        const products = await this.orm.call(
-            "pos.session",
-            "get_pos_ui_product_product_by_params",
-            [odoo.pos_session_id, { domain: [["id", "in", [...missingProductIds]]] }]
-        );
-        await this._loadMissingPricelistItems(products);
-        this._loadProductProduct(products);
+        await this._addProducts([...missingProductIds], false);
     }
     async _loadMissingPricelistItems(products) {
         if (!products.length) {
@@ -964,6 +959,50 @@ export class PosStore extends Reactive {
     sortOrders() {
         this.orders.sort((a, b) => (a.name > b.name ? 1 : -1));
     }
+    /**
+     * This method generates mapping of tax names into corresponding names and amounts,
+     * for a single product according to a fiscal position.
+     * Note: a tax can be removed (mapped to null).
+     * @param {number[]} taxIds - Original tax IDs.
+     * @param {number} priceWithoutTax - Product price without tax.
+     * @param {object} fpos - Fiscal position.
+     * @returns {object} - Mapping ex. {"Tax 15%": { new_name: "Tax 30%", new_amount: 300.00 } }
+     */
+    _getFiscalPositionTaxNameMapping(taxIds, priceWithoutTax, fpos) {
+        if (!fpos) {
+            throw new Error("Fiscal position not passed in the args!")
+        }
+
+        const taxMapping = {};
+        for (const taxId of taxIds) {
+            const tax = this.taxes_by_id[taxId];
+            if (!tax) {
+                continue;
+            }
+            const taxMaps = Object.values(fpos.fiscal_position_taxes_by_id).filter(
+                (fposTax) => fposTax.tax_src_id[0] === tax.id
+            );
+            if (taxMaps.length) {
+                for (const taxMap of taxMaps) {
+                    if (taxMap.tax_dest_id) {
+                        const mappedTax = this.taxes_by_id[taxMap.tax_dest_id[0]];
+                        if (mappedTax) {
+                            const computedTax = this.compute_all([mappedTax],priceWithoutTax,1,this.currency.rounding);
+                            taxMapping[tax.name] = {
+                                new_name: mappedTax.name,
+                                new_amount: computedTax.total_included - computedTax.total_excluded
+                            };
+                        }
+                    } else {
+                        taxMapping[tax.name] = null  // Fiscal position removes this tax
+                    }
+                }
+            }
+        }
+        return taxMapping;
+    }
+
+
     async getProductInfo(product, quantity) {
         const order = this.get_order();
         // check back-end method `get_product_info_pos` to see what it returns
@@ -976,6 +1015,28 @@ export class PosStore extends Reactive {
         ]);
 
         const priceWithoutTax = productInfo["all_prices"]["price_without_tax"];
+
+        // Update price and taxes according to fiscal postions
+        if (order.fiscal_position) {
+            const taxMapping = this._getFiscalPositionTaxNameMapping(
+                product.taxes_id,
+                priceWithoutTax,
+                order.fiscal_position,
+            );
+            productInfo.all_prices.tax_details = productInfo.all_prices.tax_details
+                .filter(tax => taxMapping[tax.name] !== null)
+                .map(tax => {
+                    if (taxMapping[tax.name]) {
+                        return {
+                            name: taxMapping[tax.name].new_name,
+                            amount: taxMapping[tax.name].new_amount
+                        };
+                    }
+                    return tax;
+            });
+            productInfo.all_prices.price_with_tax = product.get_display_price({iface_tax_included:"total"})
+        }
+
         const margin = priceWithoutTax - product.standard_price;
         const orderPriceWithoutTax = order.get_total_without_tax();
         const orderCost = order.get_total_cost();
@@ -1753,7 +1814,8 @@ export class PosStore extends Reactive {
         return this.get_order().paymentlines.find(
             (paymentLine) =>
                 paymentLine.payment_method.use_payment_terminal === terminalName &&
-                !paymentLine.is_done()
+                !paymentLine.is_done() &&
+                paymentLine.get_payment_status() !== "retry"
         );
     }
     /**
@@ -1808,12 +1870,57 @@ export class PosStore extends Reactive {
                 }
             }
         }
-        const product = await this.orm.call("pos.session", "get_pos_ui_product_product_by_params", [
+        const products = await this._loadProductByIds(ids);
+        const missingProductIds = await this._loadMissingPosCombos(products);
+        if (missingProductIds && missingProductIds.length) {
+            products.push(...(await this._loadProductByIds(missingProductIds)));
+        }
+        await this._loadMissingPricelistItems(products);
+        this._loadProductProduct(products);
+    }
+    async getProductById(productId) {
+        let product = this.db.get_product_by_id(productId);
+        if (!product) {
+            await this._addProducts([productId], false);
+            product = this.db.get_product_by_id(productId);
+        }
+        return product;
+    }
+    async _loadProductByIds(productIds) {
+        return await this.orm.call("pos.session", "get_pos_ui_product_product_by_params", [
             odoo.pos_session_id,
-            { domain: [["id", "in", ids]] },
+            { domain: [["id", "in", productIds]] },
         ]);
-        await this._loadMissingPricelistItems(product);
-        this._loadProductProduct(product);
+    }
+    async _loadMissingPosCombos(products) {
+        const missingComboIds = unique(
+            products
+                .flatMap((product) => product.combo_ids)
+                .filter((id) => !this.db.combo_by_id[id]),
+        );
+        if (!missingComboIds.length) {
+            return;
+        }
+        const combos = await this.orm.call("pos.combo", "search_read", [], {
+            fields: ["id", "name", "combo_line_ids", "base_price"],
+            domain: [["id", "in", missingComboIds]],
+        });
+        this.db.add_combos(combos);
+        const comboLines = await this.orm.call("pos.combo.line", "search_read", [], {
+            fields: ["id", "product_id", "combo_price", "combo_id"],
+            domain: [["combo_id", "in", missingComboIds]],
+        });
+        this.db.add_combo_lines(comboLines);
+        const missingProductIds = unique(
+            comboLines
+                .map((comboLine) => comboLine.product_id[0])
+                .filter(
+                    (id) =>
+                        !this.db.get_product_by_id(id) &&
+                        !products.map((product) => product.id).includes(id),
+                ),
+        );
+        return missingProductIds;
     }
     isOpenOrderShareable() {
         return this.config.trusted_config_ids.length > 0;
@@ -1976,6 +2083,9 @@ export class PosStore extends Reactive {
 
         // Add the product after having the extra information.
         await this.addProductFromUi(product, options);
+        if (product.tracking == "serial") {
+            this.selectedOrder?.selected_orderline?.set_quantity_by_lot();
+        }
         this.numberBuffer.reset();
     }
 
@@ -2097,6 +2207,10 @@ export class PosStore extends Reactive {
         this.searchProductWord = "";
         const { start_category, iface_start_categ_id } = this.config;
         this.selectedCategoryId = (start_category && iface_start_categ_id?.[0]) || 0;
+    }
+
+    getPhoneSearchFields() {
+        return ["phone", "mobile"];
     }
 }
 

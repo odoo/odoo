@@ -15,6 +15,7 @@ import zipfile
 __all__ = ['guess_mimetype']
 
 _logger = logging.getLogger(__name__)
+MIMETYPE_HEAD_SIZE = 2048
 
 # We define our own guess_mimetype implementation and if magic is available we
 # use it instead.
@@ -188,7 +189,7 @@ if magic:
         _guesser = ms.buffer
 
     def guess_mimetype(bin_data, default=None):
-        mimetype = _guesser(bin_data[:1024])
+        mimetype = _guesser(bin_data[:MIMETYPE_HEAD_SIZE])
         # upgrade incorrect mimetype to official one, fixed upstream
         # https://github.com/file/file/commit/1a08bb5c235700ba623ffa6f3c95938fe295b262
         if mimetype == 'image/svg':

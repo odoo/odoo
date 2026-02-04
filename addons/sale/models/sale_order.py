@@ -198,7 +198,7 @@ class SaleOrder(models.Model):
         compute='_compute_team_id',
         store=True, readonly=False, precompute=True, ondelete="set null",
         change_default=True, check_company=True,  # Unrequired company
-        tracking=True,
+        tracking=True, index=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
 
     # Lines and line based computes
@@ -212,7 +212,11 @@ class SaleOrder(models.Model):
     amount_tax = fields.Monetary(string="Taxes", store=True, compute='_compute_amounts')
     amount_total = fields.Monetary(string="Total", store=True, compute='_compute_amounts', tracking=4)
     amount_to_invoice = fields.Monetary(string="Amount to invoice", store=True, compute='_compute_amount_to_invoice')
-    amount_invoiced = fields.Monetary(string="Already invoiced", compute='_compute_amount_invoiced')
+    amount_invoiced = fields.Monetary(
+        string="Already invoiced",
+        compute='_compute_amount_invoiced',
+        compute_sudo=True,  # compute `amount_invoiced` in sudo like the stored `amount_*` fields
+    )
 
     invoice_count = fields.Integer(string="Invoice Count", compute='_get_invoiced')
     invoice_ids = fields.Many2many(
@@ -442,7 +446,13 @@ class SaleOrder(models.Model):
     def _compute_team_id(self):
         cached_teams = {}
         for order in self:
-            default_team_id = self.env.context.get('default_team_id', False) or order.partner_id.team_id.id or order.team_id.id
+            domain = order.team_id._check_company_domain(order.company_id or order.env.company)
+            default_team_id = (
+                self.env.context.get('default_team_id')
+                or order.partner_id.team_id.filtered_domain(domain).id
+                or order.team_id.id
+            )
+
             user_id = order.user_id.id
             company_id = order.company_id.id
             key = (default_team_id, user_id, company_id)
@@ -718,8 +728,13 @@ class SaleOrder(models.Model):
 
     def onchange(self, values, field_names, fields_spec):
         self_with_context = self
-        if not field_names: # Some warnings should not be displayed for the first onchange
-            self_with_context = self.with_context(sale_onchange_first_call=True)
+        if not field_names:
+            self_with_context = self.with_context(
+                # Some warnings should not be displayed for the first onchange
+                sale_onchange_first_call=True,
+                # invoice & delivery address with higher `customer_rank` should take priority
+                res_partner_search_mode='customer',
+            )
         return super(SaleOrder, self_with_context).onchange(values, field_names, fields_spec)
 
     @api.onchange('commitment_date', 'expected_date')
@@ -785,7 +800,7 @@ class SaleOrder(models.Model):
 
     @api.onchange('pricelist_id')
     def _onchange_pricelist_id_show_update_prices(self):
-        self.show_update_pricelist = bool(self.order_line)
+        self.show_update_pricelist = bool(self.order_line and self._origin.pricelist_id != self.pricelist_id)
 
     @api.onchange('prepayment_percent')
     def _onchange_prepayment_percent(self):
@@ -954,6 +969,7 @@ class SaleOrder(models.Model):
         # We don't need it and it creates issues in the creation of linked records.
         context = self._context.copy()
         context.pop('default_name', None)
+        context.pop('default_user_id', None)
 
         self.with_context(context)._action_confirm()
 
@@ -1125,7 +1141,7 @@ class SaleOrder(models.Model):
     def action_update_prices(self):
         self.ensure_one()
 
-        self._recompute_prices()
+        self.with_context(pricelist_update=True)._recompute_prices()
 
         if self.pricelist_id:
             message = _("Product prices have been recomputed according to pricelist %s.",
@@ -1219,13 +1235,12 @@ class SaleOrder(models.Model):
                 'default_partner_id': self.partner_id.id,
                 'default_partner_shipping_id': self.partner_shipping_id.id,
                 'default_invoice_payment_term_id': self.payment_term_id.id or self.partner_id.property_payment_term_id.id or self.env['account.move'].default_get(['invoice_payment_term_id']).get('invoice_payment_term_id'),
-                'default_invoice_origin': self.name,
             })
         action['context'] = context
         return action
 
     def _get_invoice_grouping_keys(self):
-        return ['company_id', 'partner_id', 'currency_id']
+        return ['company_id', 'partner_id', 'currency_id', 'fiscal_position_id']
 
     def _nothing_to_invoice_error_message(self):
         return _(
@@ -1397,8 +1412,8 @@ class SaleOrder(models.Model):
         # 4) Some moves might actually be refunds: convert them if the total amount is negative
         # We do this after the moves have been created since we need taxes, etc. to know if the total
         # is actually negative or not
-        if final:
-            if moves_to_switch := moves.sudo().filtered(lambda m: m.amount_total < 0):
+        if final and (moves_to_switch := moves.sudo().filtered(lambda m: m.amount_total < 0)):
+            with self.env.protecting([moves._fields['team_id']], moves_to_switch):
                 moves_to_switch.action_switch_move_type()
                 self.invoice_ids._set_reversed_entry(moves_to_switch)
 
@@ -1520,17 +1535,6 @@ class SaleOrder(models.Model):
                 access_opt['title'] = _("Accept & Pay Quotation")
             elif self.state in ('draft', 'sent'):
                 access_opt['title'] = _("View Quotation")
-
-        # enable followers that have access through portal
-        follower_group = next(group for group in groups if group[0] == 'follower')
-        follower_group[2]['active'] = True
-        follower_group[2]['has_button_access'] = True
-        access_opt = follower_group[2].setdefault('button_access', {})
-        if self.state in ('draft', 'sent'):
-            access_opt['title'] = _("View Quotation")
-        else:
-            access_opt['title'] = _("View Order")
-        access_opt['url'] = self._notify_get_action_link('view', **local_msg_vals)
 
         return groups
 

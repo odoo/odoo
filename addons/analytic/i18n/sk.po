@@ -1,25 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* analytic
-# 
+# * analytic
+#
 # Translators:
 # Wil Odoo, 2023
-# Tomáš Píšek, 2024
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2025
-# 
+# Tomáš Píšek, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2025\n"
-"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
+"POT-Creation-Date: 2026-01-29 18:35+0000\n"
+"PO-Revision-Date: 2026-01-24 08:11+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Slovak <https://translate.odoo.com/projects/odoo-17/analytic/"
+"sk/>\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
+">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: analytic
 #. odoo-python
@@ -58,6 +61,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_ids
 msgid "Accounts"
 msgstr "Účty"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_agrolait
+msgid "Acme Corporation"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
@@ -157,18 +165,18 @@ msgstr "Analytická distribúcia"
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
 #, python-format
 msgid "Analytic Distribution Model"
-msgstr ""
+msgstr "Model analytickej distribúcie"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_distribution_model
 msgid "Analytic Distribution Models"
-msgstr ""
+msgstr "Modely analytických distribúcií"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution_search
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr ""
+msgstr "Vyhľadanie analytickej distribúcie"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
@@ -196,7 +204,7 @@ msgstr "Analytické riadky"
 #. module: analytic
 #: model:ir.model,name:analytic.model_analytic_mixin
 msgid "Analytic Mixin"
-msgstr ""
+msgstr "Analytic Mixin"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__analytic_plan_id
@@ -206,7 +214,7 @@ msgstr "Analytický plán"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr ""
+msgstr "Použiteľnosť analytického plánu"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_plan_action
@@ -214,13 +222,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_tree_view
 msgid "Analytic Plans"
-msgstr ""
+msgstr "Analytické plány"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_precision
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_precision
 msgid "Analytic Precision"
-msgstr ""
+msgstr "Analytická presnosť"
 
 #. module: analytic
 #. odoo-python
@@ -368,8 +376,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Ku konverzii medzi mernými jednotkami môže dôjsť len v prípade, že patria do"
-" rovnakej kategórie. Konverzia bude spravená na základe pomerov."
+"Ku konverzii medzi mernými jednotkami môže dôjsť len v prípade, že patria do "
+"rovnakej kategórie. Konverzia bude spravená na základe pomerov."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -435,11 +443,6 @@ msgid "Debit"
 msgstr "Má dať"
 
 #. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_agrolait
-msgid "Deco Addict"
-msgstr ""
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__default_applicability
 msgid "Default Applicability"
 msgstr ""
@@ -480,6 +483,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__display_name
 msgid "Display Name"
 msgstr "Zobrazovaný názov"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Priradenie analytického účtu"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
@@ -548,7 +557,8 @@ msgstr "Ak označené, potom majú niektoré správy chybu dodania."
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sales orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to analyse\n"
+"                analytic accounts. You can track costs and revenues to "
+"analyse\n"
 "                your margins easily."
 msgstr ""
 "V Odoo sú predajné objednávky a projekty  implementované použitím\n"
@@ -597,7 +607,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__mandatory
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_plan__default_applicability__mandatory
 msgid "Mandatory"
-msgstr ""
+msgstr "Povinné"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error
@@ -679,7 +689,7 @@ msgstr "Počet doručených správ s chybou"
 #: code:addons/analytic/models/analytic_mixin.py:0
 #, python-format
 msgid "One or more lines require a 100% analytic distribution."
-msgstr ""
+msgstr "Jeden alebo viacero riadkov vyžaduje 100 % analytické rozdelenie."
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_internal
@@ -752,7 +762,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__account_id
 msgid "Project Account"
-msgstr ""
+msgstr "Projektový účet"
 
 #. module: analytic
 #: model:account.analytic.plan,name:analytic.analytic_plan_projects
@@ -780,13 +790,17 @@ msgstr "Výskum a vývoj"
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sales orders\n"
-"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                invoices. Customer invoices can be created based on sales "
+"orders\n"
+"                (fixed price invoices), on timesheets (based on the work "
+"done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 "Výnosy sa vytvoria automaticky keď vytvoríte zákaznícke\n"
-"                 faktúry. Zákaznícke faktúry môžu byť vytvorené na základe predajnej objednávky\n"
-"(pevná cena faktúry), na časových rozvrhov (na základe vykonanej práce), alebo\n"
+"                 faktúry. Zákaznícke faktúry môžu byť vytvorené na základe "
+"predajnej objednávky\n"
+"(pevná cena faktúry), na časových rozvrhov (na základe vykonanej práce), "
+"alebo\n"
 "v oblasti výdavkov (napr. preúčtovaní cestovných nákladov)."
 
 #. module: analytic
@@ -815,6 +829,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
 msgstr "Vyhľadávať analytické riadky"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+#, python-format
+msgid "See them"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__company_id
@@ -856,6 +877,20 @@ msgid "Subplans"
 msgstr ""
 
 #. module: analytic
+#: model:ir.model,name:analytic.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "Systémový parameter"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/ir_config_parameter.py:0
+#, python-format
+msgid ""
+"The value for %s must be the ID to a valid analytic plan that is not a "
+"subplan"
+msgstr ""
+
+#. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_absences
 msgid "Time Off"
 msgstr "Voľné dni"
@@ -890,6 +925,15 @@ msgstr "Užívateľ"
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
 msgid "View"
 msgstr "Náhľad"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+#, python-format
+msgid ""
+"Whoa there! Making this change would wipe out your current data. Let's avoid "
+"that, shall we?"
+msgstr ""
 
 #. module: analytic
 #. odoo-python

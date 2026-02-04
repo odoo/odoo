@@ -1,17 +1,4 @@
 
-@each $font-name, $font-config in $o-theme-font-configs {
-    $url: map-get($font-config, 'url');
-    @if $url {
-        @import url("https://fonts.googleapis.com/css?family=#{unquote($url)}&display=swap");
-    } @else {
-        $name: map-get($font-config, 'name');
-        $attachment: map-get($font-config, 'attachment');
-        @if $attachment {
-            @import url("/web/content/#{$attachment}/google-font-#{unquote($name)}");
-        }
-    }
-}
-
 #oe_snippets {
     top: 0;
     .oe-toolbar {
@@ -23,20 +10,20 @@
 
 html[lang] > body.editor_enable [data-oe-translation-state] {
     &, .o_translation_select_option, &[data-oe-field="mega_menu_content"] * {
-        background: rgba($o-we-content-to-translate-color, 0.5) !important;
+        background-color: rgba($o-we-content-to-translate-color, 0.5) !important;
     }
 
     &[data-oe-translation-state="translated"] {
         &, .o_translation_select_option, &[data-oe-field="mega_menu_content"] * {
-            background: rgba($o-we-translated-content-color, 0.5) !important;
+            background-color: rgba($o-we-translated-content-color, 0.5) !important;
         }
     }
 
     &.o_dirty, &.oe_translated, .oe_translated {
-        background: rgba($o-we-translated-content-color, 0.25) !important;
+        background-color: rgba($o-we-translated-content-color, 0.25) !important;
 
         &[data-oe-field="mega_menu_content"] * {
-            background: rgba($o-we-translated-content-color, 0.25) !important;
+            background-color: rgba($o-we-translated-content-color, 0.25) !important;
         }
     }
 }

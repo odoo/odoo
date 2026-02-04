@@ -13,6 +13,7 @@ from requests import RequestException
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import float_round, float_repr
 
 SINVOICE_API_URL = 'https://api-vinvoice.viettel.vn/services/einvoiceapplication/api/'
 SINVOICE_TIMEOUT = 60  # They recommend between 60 and 90 seconds, but 60s is already quite long.
@@ -88,33 +89,42 @@ class AccountMove(models.Model):
         comodel_name='ir.attachment',
         compute=lambda self: self._compute_linked_attachment_id('l10n_vn_edi_sinvoice_file_id', 'l10n_vn_edi_sinvoice_file'),
         depends=['l10n_vn_edi_sinvoice_file'],
+        copy=False,
+        readonly=True,
         export_string_translation=False,
     )
     l10n_vn_edi_sinvoice_file = fields.Binary(
         string='SInvoice json File',
         copy=False,
+        readonly=True,
         export_string_translation=False,
     )
     l10n_vn_edi_sinvoice_xml_file_id = fields.Many2one(
         comodel_name='ir.attachment',
         compute=lambda self: self._compute_linked_attachment_id('l10n_vn_edi_sinvoice_xml_file_id', 'l10n_vn_edi_sinvoice_xml_file'),
         depends=['l10n_vn_edi_sinvoice_xml_file'],
+        copy=False,
+        readonly=True,
         export_string_translation=False,
     )
     l10n_vn_edi_sinvoice_xml_file = fields.Binary(
         string='SInvoice xml File',
         copy=False,
+        readonly=True,
         export_string_translation=False,
     )
     l10n_vn_edi_sinvoice_pdf_file_id = fields.Many2one(
         comodel_name='ir.attachment',
         compute=lambda self: self._compute_linked_attachment_id('l10n_vn_edi_sinvoice_pdf_file_id', 'l10n_vn_edi_sinvoice_pdf_file'),
         depends=['l10n_vn_edi_sinvoice_pdf_file'],
+        copy=False,
+        readonly=True,
         export_string_translation=False,
     )
     l10n_vn_edi_sinvoice_pdf_file = fields.Binary(
         string='SInvoice pdf File',
         copy=False,
+        readonly=True,
         export_string_translation=False,
     )
     # Replacement/Adjustment fields
@@ -237,8 +247,6 @@ class AccountMove(models.Model):
                 'supplierTaxCode': self.company_id.vat,
                 'templateCode': self.l10n_vn_edi_invoice_symbol.invoice_template_id.name,
                 'invoiceNo': self.l10n_vn_edi_invoice_number,
-                'strIssueDate': self._l10n_vn_edi_format_date(self.l10n_vn_edi_issue_date),
-                'transactionUuid': self.l10n_vn_edi_invoice_transaction_id,
                 'fileType': file_format,
             },
             cookies={'access_token': access_token},
@@ -405,8 +413,6 @@ class AccountMove(models.Model):
             errors.append(_("The invoice symbol's template must be provided."))
         if self.move_type == 'out_refund' and (not self.reversed_entry_id or not self.reversed_entry_id._l10n_vn_edi_is_sent()):
             errors.append(_('You can only send a credit note linked to a previously sent invoice.'))
-        if not self.partner_id.street or not self.partner_id.city or not self.partner_id.state_id or not self.partner_id.country_id:
-            errors.append(_('The street, city, state and country of partner %s must be provided.', self.partner_id.display_name))
         if not company.street or not company.state_id or not company.country_id:
             errors.append(_('The street, state and country of company %s must be provided.', company.display_name))
         if self.company_currency_id.name != 'VND':
@@ -577,12 +583,14 @@ class AccountMove(models.Model):
 
         # When invoicing in a foreign currency, we need to provide the rate, or it will default to 1.
         if self.currency_id.name != 'VND':
-            invoice_data['exchangeRate'] = self.env['res.currency']._get_conversion_rate(
+            # Sinvoice only allow upto 2 decimal place for exchange rate
+            exchange_rate = self.env['res.currency']._get_conversion_rate(
                 from_currency=self.currency_id,
                 to_currency=self.env.ref('base.VND'),
                 company=self.company_id,
                 date=self.invoice_date or self.date,
             )
+            invoice_data['exchangeRate'] = float_repr(float_round(exchange_rate, 2), 2)
 
         adjustment_origin_invoice = None
         if self.move_type == 'out_refund':  # Credit note are used to adjust an existing invoice
@@ -611,12 +619,11 @@ class AccountMove(models.Model):
         buyer_information = {
             'buyerName': self.partner_id.name,
             'buyerLegalName': self.commercial_partner_id.name,
-            'buyerTaxCode': self.commercial_partner_id.vat,
+            'buyerTaxCode': self.commercial_partner_id.vat or '',
             'buyerAddressLine': self.partner_id.street,
             'buyerPhoneNumber': commercial_partner_phone or '',
             'buyerEmail': self.commercial_partner_id.email or '',
-            'buyerDistrictName': self.partner_id.state_id.name,
-            'buyerCityName': self.partner_id.city,
+            'buyerCityName': self.partner_id.city or self.partner_id.state_id.name,
             'buyerCountryCode': self.partner_id.country_id.code,
             'buyerNotGetInvoice': 0,  # Set to 1 to no send the invoice to the buyer.
         }
@@ -688,15 +695,15 @@ class AccountMove(models.Model):
                 'unitPrice': line.price_unit * sign,
                 'quantity': line.quantity,
                 # This amount should be without discount applied.
-                'itemTotalAmountWithoutTax': line.currency_id.round(line.price_unit * line.quantity) * sign,
+                'itemTotalAmountWithoutTax': line.currency_id.round(line.price_unit * line.quantity),
                 # In Vietnam a line will always have only one tax.
                 # Values are either: -2 (no tax), -1 (not declaring/paying taxes), 0,5,8,10 (the tax %)
                 # Most use cases will be -2 or a tax percentage, so we limit the support to these.
                 'taxPercentage': line.tax_ids and line.tax_ids[0].amount or -2,
-                'taxAmount': (line.price_total - line.price_subtotal) * sign,
+                'taxAmount': (line.price_total - line.price_subtotal),
                 'discount': line.discount,
-                'itemTotalAmountAfterDiscount': line.price_subtotal * sign,
-                'itemTotalAmountWithTax': line.price_total * sign,
+                'itemTotalAmountAfterDiscount': line.price_subtotal,
+                'itemTotalAmountWithTax': line.price_total,
             }
             if line.display_type in code_map:
                 item_information['selection'] = code_map[line.display_type]
@@ -829,3 +836,8 @@ class AccountMove(models.Model):
         self.ensure_one()
         sent_statuses = {'sent', 'payment_state_to_update', 'canceled', 'adjusted', 'replaced'}
         return self.l10n_vn_edi_invoice_state in sent_statuses
+
+    def _get_mail_thread_data_attachments(self):
+        res = super()._get_mail_thread_data_attachments()
+        # attachments with 'res_field' are excluded, and we want this in the chatter for audit/... purposes.
+        return res | self.l10n_vn_edi_sinvoice_file_id

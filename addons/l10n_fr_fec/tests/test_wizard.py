@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 from datetime import timedelta
 from freezegun import freeze_time
 
@@ -76,8 +75,9 @@ class TestAccountFrFec(AccountTestInvoicingCommon):
         )
 
     def test_generate_fec_sanitize_pieceref(self):
-        self.wizard.generate_fec()
-        content = base64.b64decode(self.wizard.fec_data).decode()
+        data_generator = self.wizard.with_context(fec_test_mode=True)._get_fec_stream()
+        content_bytes = b''.join(list(data_generator))
+        content = content_bytes.decode('utf-8')
         self.assertEqual(self.expected_report, content)
 
     def test_generate_fec_exclude_journals(self):
@@ -100,18 +100,20 @@ class TestAccountFrFec(AccountTestInvoicingCommon):
         }).action_post()
         self.env.flush_all()
 
-        self.wizard.generate_fec()
         expected_content = self.expected_report + (
             "\r\n"
             "MISC|Miscellaneous Operations|MISC/2021/05/0001|20210502|400000|Suppliers and related accounts|||-|20210502|/| 000000000000500,00|0,00|||20210502| 000000000000500,00|EUR\r\n"
             "MISC|Miscellaneous Operations|MISC/2021/05/0001|20210502|411100|Customers - Sales of goods or services|||-|20210502|/|0,00| 000000000000500,00|||20210502|-000000000000500,00|EUR"
         )
-        content = base64.b64decode(self.wizard.fec_data).decode()
+        data_generator = self.wizard.with_context(fec_test_mode=True)._get_fec_stream()
+        content_bytes = b''.join(list(data_generator))
+        content = content_bytes.decode('utf-8')
         self.assertEqual(expected_content, content)
 
         self.wizard.excluded_journal_ids = journal
-        self.wizard.generate_fec()
-        content = base64.b64decode(self.wizard.fec_data).decode()
+        data_generator = self.wizard.with_context(fec_test_mode=True)._get_fec_stream()
+        content_bytes = b''.join(list(data_generator))
+        content = content_bytes.decode('utf-8')
         self.assertEqual(self.expected_report, content)
 
     def test_fec_sub_companies(self):
@@ -155,8 +157,9 @@ class TestAccountFrFec(AccountTestInvoicingCommon):
             f"INV|Customer Invoices|INV/2021/00005|20210502|411100|Customers - Sales of goods or services|{self.partner_a.id}|partner_a|-|20210502|INV/2021/00005| 000000000000400,00|0,00|||20210502| 000000000000400,00|EUR"
         )
 
-        self.wizard.generate_fec()
-        content = base64.b64decode(self.wizard.fec_data).decode()
+        data_generator = self.wizard.with_context(fec_test_mode=True)._get_fec_stream()
+        content_bytes = b''.join(list(data_generator))
+        content = content_bytes.decode('utf-8')
         self.assertEqual(expected_content, content)
 
         # Select only parent company
@@ -171,6 +174,7 @@ class TestAccountFrFec(AccountTestInvoicingCommon):
             f"INV|Customer Invoices|INV/2021/00002|20210502|411100|Customers - Sales of goods or services|{self.partner_a.id}|partner_a|-|20210502|INV/2021/00002| 000000000000100,00|0,00|||20210502| 000000000000100,00|EUR"
         )
 
-        self.wizard.generate_fec()
-        content = base64.b64decode(self.wizard.fec_data).decode()
+        data_generator = self.wizard.with_context(fec_test_mode=True)._get_fec_stream()
+        content_bytes = b''.join(list(data_generator))
+        content = content_bytes.decode('utf-8')
         self.assertEqual(expected_content, content)

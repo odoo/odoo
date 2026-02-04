@@ -1,14 +1,17 @@
 import json
 from base64 import b64encode
 from contextlib import contextmanager
-from freezegun import freeze_time
-from requests import Session, PreparedRequest, Response
+from urllib import parse
 
-from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
+from freezegun import freeze_time
+from requests import PreparedRequest, Response, Session
+
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests.common import tagged
 from odoo.tools.misc import file_open
 
+from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 
 ID_CLIENT = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 FAKE_UUID = ['yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy',
@@ -139,20 +142,55 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
     def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
         response = Response()
         response.status_code = 200
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A0477472701'):
-            response._content = b"""<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0208:0477472701</id:ParticipantIdentifier>'
-            '<smp:ServiceMetadataReferenceCollection><smp:ServiceMetadataReference href="https://iap-services.odoo.com/iso6523-actorid-upis%3A%3A0208%3A0477472701/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1"/>'
-            '</smp:ServiceMetadataReferenceCollection></smp:ServiceGroup>"""
-            return response
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A3141592654'):
-            response.status_code = 404
-            return response
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A2718281828'):
-            response._content = b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0208:2718281828</id:ParticipantIdentifier></smp:ServiceGroup>'
-            return response
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0198%3Adk16356706'):
-            response._content = b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0198:dk16356706</id:ParticipantIdentifier></smp:ServiceGroup>'
-            return response
+
+        if r.path_url.startswith('/api/peppol/1/lookup'):
+            peppol_identifier = parse.parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
+            url_quoted_peppol_identifier = parse.quote_plus(peppol_identifier)
+            if peppol_identifier.endswith('0477472701'):
+                response.status_code = 200
+                response.json = lambda: {
+                    "result": {
+                        'identifier': peppol_identifier,
+                        'smp_base_url': "http://iap-services.odoo.com",
+                        'ttl': 60,
+                        'service_group_url': f'http://iap-services.odoo.com/iso6523-actorid-upis%3A%3A{url_quoted_peppol_identifier}',
+                        'services': [
+                            {
+                                "href": f"http://iap-services.odoo.com/iso6523-actorid-upis%3A%3A{url_quoted_peppol_identifier}/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1",
+                                "document_id": "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1",
+                            },
+                        ],
+                    },
+                }
+                return response
+            if peppol_identifier.endswith('3141592654'):
+                response.status_code = 404
+                response.json = lambda: {"error": {"code": "NOT_FOUND", "message": "no naptr record", "retryable": False}}
+                return response
+            if peppol_identifier.endswith('2718281828'):
+                response.status_code = 200
+                response.json = lambda: {
+                    "result": {
+                        'identifier': peppol_identifier,
+                        'smp_base_url': "http://iap-services.odoo.com",
+                        'ttl': 60,
+                        'service_group_url': f'http://iap-services.odoo.com/iso6523-actorid-upis%3A%3A{url_quoted_peppol_identifier}',
+                        'services': [],
+                    },
+                }
+                return response
+
+            if peppol_identifier == '0198:dk16356706':
+                response.status_code = 200
+                response.json = lambda: {"result": {
+                        'identifier': peppol_identifier,
+                        'smp_base_url': "http://iap-services.odoo.com",
+                        'ttl': 60,
+                        'service_group_url': f'http://iap-services.odoo.com/iso6523-actorid-upis%3A%3A{url_quoted_peppol_identifier}',
+                        'services': [],
+                    },
+                }
+                return response
 
         proxy_documents, responses = cls._get_mock_data(cls.env.context.get('error'))
         url = r.path_url
@@ -368,3 +406,62 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
                 'peppol_eas': '0208',
                 'peppol_endpoint': '0477472701',
             }])
+
+    def test_automatic_invoicing_auto_update_partner_peppol_status(self):
+        self.ensure_installed('sale')
+        tax = self.env['account.tax'].create({
+            'name': "test_automatic_invoicing_auto_update_partner_peppol_status",
+            'amount_type': 'percent',
+            'amount': 21.0,
+        })
+        product = self.env['product.product'].create({
+            'name': "test_automatic_invoicing_auto_update_partner_peppol_status",
+            'lst_price': 100.0,
+            'taxes_id': [Command.set(tax.ids)],
+        })
+        partner = self.env['res.partner'].create({
+            'name': 'partner_be',
+            'street': "Rue des Bourlottes 9",
+            'zip': "1367",
+            'city': "Ramillies",
+            'vat': 'BE0477472701',
+            'company_registry': '0477472701',
+            'company_id': self.env.company.id,
+            'country_id': self.env.ref('base.be').id,
+        })
+        self.env.user.groups_id |= self.env.ref('sales_team.group_sale_salesman')
+
+        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', True)
+        so = self.env['sale.order'].create([{
+            'partner_id': partner.id,
+            'order_line': [Command.create({'product_id': product.id})],
+        }])
+        so.action_confirm()
+
+        payment_method = self.env.ref('payment.payment_method_unknown')
+
+        dummy_provider = self.env['payment.provider'].create({
+            'name': "Dummy Provider",
+            'code': 'none',
+            'state': 'test',
+            'is_published': True,
+            'payment_method_ids': [Command.set(payment_method.ids)],
+            'allow_tokenization': True,
+        })
+        self._create_dummy_payment_method_for_provider(
+            provider=dummy_provider,
+            journal=self.company_data['default_journal_bank'],
+        )
+        transaction = self.env['payment.transaction'].create({
+            'payment_method_id': payment_method.id,
+            'amount': so.amount_total,
+            'state': 'done',
+            'provider_id': dummy_provider.id,
+            'currency_id': so.currency_id.id,
+            'reference': so.name,
+            'partner_id': partner.id,
+            'sale_order_ids': [Command.set(so.ids)],
+        })
+        transaction._invoice_sale_orders()
+
+        self.assertRecordValues(partner, [{'account_peppol_verification_label': 'valid'}])

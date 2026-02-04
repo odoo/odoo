@@ -24,6 +24,7 @@ import {
     nextTick,
     patchWithCleanup,
 } from "../../helpers/utils";
+import { contains } from "@web/../tests/utils";
 import { createWebClient, doAction, getActionManagerServerData, loadState } from "./../helpers";
 
 import { onMounted } from "@odoo/owl";
@@ -1940,11 +1941,7 @@ QUnit.module("ActionManager", (hooks) => {
             await doAction(webClient, 3);
 
             await clickListNew(target);
-            assert.containsOnce(
-                document.body,
-                ".modal.o_technical_modal",
-                "Warning modal should be opened"
-            );
+            await contains(".modal.o_technical_modal");
 
             await click(target.querySelector(".modal.o_technical_modal button.btn-primary"));
             assert.containsNone(
@@ -2332,8 +2329,9 @@ QUnit.module("ActionManager", (hooks) => {
 
         await click(target.querySelector(".o_data_row .o_data_cell"));
         assert.containsOnce(target, ".o_form_view");
+        await click(target.querySelector(".breadcrumb .breadcrumb-item .dropdown-toggle"));
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb-item")), [
-            "",
+            "Partners",
             "First record",
             "Partners",
         ]);
@@ -2347,8 +2345,9 @@ QUnit.module("ActionManager", (hooks) => {
         await click(target.querySelector(".o_dialog .modal-footer .btn-primary"));
 
         assert.containsOnce(target, ".o_form_view");
+        await click(target.querySelector(".breadcrumb .breadcrumb-item .dropdown-toggle"));
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb-item")), [
-            "",
+            "Partners",
             "First record",
             "Partners",
         ]);
@@ -2362,7 +2361,6 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         assert.containsOnce(target, ".o_form_view");
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb-item")), [
-            "",
             "Partners",
             "Partners",
         ]);

@@ -106,7 +106,7 @@ class MaintenanceMixin(models.AbstractModel):
     def _compute_maintenance_request(self):
         for record in self:
             maintenance_requests = record.maintenance_ids.filtered(lambda mr: mr.maintenance_type == 'corrective' and mr.stage_id.done)
-            record.mttr = len(maintenance_requests) and (sum(int((request.close_date - request.request_date).days) for request in maintenance_requests) / len(maintenance_requests)) or 0
+            record.mttr = len(maintenance_requests) and (sum(int((request.close_date - request.request_date).days) if request.close_date and request.request_date else 0 for request in maintenance_requests) / len(maintenance_requests)) or 0
             record.latest_failure_date = max((request.request_date for request in maintenance_requests), default=False)
             record.mtbf = record.latest_failure_date and (record.latest_failure_date - record.effective_date).days / len(maintenance_requests) or 0
             record.estimated_next_failure = record.mtbf and record.latest_failure_date + relativedelta(days=record.mtbf) or False
@@ -425,7 +425,7 @@ class MaintenanceTeam(models.Model):
             )
             team.todo_request_count = sum(count for (_, _, _, count) in data)
             team.todo_request_count_date = sum(count for (schedule_date, _, _, count) in data if schedule_date)
-            team.todo_request_count_high_priority = sum(count for (_, priority, _, count) in data if priority == 3)
+            team.todo_request_count_high_priority = sum(count for (_, priority, _, count) in data if priority == '3')
             team.todo_request_count_block = sum(count for (_, _, kanban_state, count) in data if kanban_state == 'blocked')
             team.todo_request_count_unscheduled = team.todo_request_count - team.todo_request_count_date
 

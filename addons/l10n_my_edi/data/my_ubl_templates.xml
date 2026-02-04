@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="ubl_21_InvoiceType_my" inherit_id="account_edi_ubl_cii.ubl_21_InvoiceType" primary="True">
-        <xpath expr="//*[local-name()='DocumentCurrencyCode']" position="after">
+        <xpath expr="//*[local-name()='BillingReference']" position="after">
             <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
-                <cac:AdditionalDocumentReference t-if="vals.get('invoice_incoterm_code')">
-                    <cbc:ID t-out="vals['invoice_incoterm_code']"/>
-                </cac:AdditionalDocumentReference>
                 <cac:AdditionalDocumentReference t-if="vals.get('custom_form_reference')">
                     <cbc:ID t-out="vals['custom_form_reference']"/>
                     <cbc:DocumentType>CustomsImportForm</cbc:DocumentType>
+                </cac:AdditionalDocumentReference>
+                <cac:AdditionalDocumentReference t-if="vals.get('invoice_incoterm_code')">
+                    <cbc:ID t-out="vals['invoice_incoterm_code']"/>
+                </cac:AdditionalDocumentReference>
+                <cac:AdditionalDocumentReference t-if="vals.get('export_custom_form_reference')">
+                    <cbc:ID t-out="vals['export_custom_form_reference']"/>
+                    <cbc:DocumentType>K2</cbc:DocumentType>
                 </cac:AdditionalDocumentReference>
             </t>
         </xpath>
@@ -36,6 +40,16 @@
         </xpath>
         <!-- MyInvois does not support order references, having one will cause issues -->
         <xpath expr="//*[local-name()='OrderReference']" position="replace"/>
+        <xpath expr="//*[local-name()='PaymentTerms']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cac:PrepaidPayment>
+                    <cbc:PaidAmount
+                        t-att-currencyID="vals['prepaid_payment_vals']['currency'].name"
+                        t-out="format_float(vals['prepaid_payment_vals']['amount'], vals['prepaid_payment_vals']['currency_dp'])"/>
+                </cac:PrepaidPayment>
+            </t>
+        </xpath>
     </template>
 
     <!-- They are not using the same template at all, so we make a new one. They basically want the same data as supplier/customer party -->

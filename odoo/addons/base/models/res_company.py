@@ -111,8 +111,7 @@ class Company(models.Model):
             company.parent_ids = self.browse(int(id) for id in company.parent_path.split('/') if id) if company.parent_path else company
             company.root_id = company.parent_ids[0]
 
-    # TODO @api.depends(): currently now way to formulate the dependency on the
-    # partner's contact address
+    @api.depends(lambda self: [f'partner_id.{fname}' for fname in self._get_company_address_field_names()])
     def _compute_address(self):
         for company in self.filtered(lambda company: company.partner_id):
             address_data = company.partner_id.sudo().address_get(adr_pref=['contact'])
@@ -288,11 +287,18 @@ class Company(models.Model):
         if any(company.child_ids for company in self):
             raise UserError(_("Companies that have associated branches cannot be deleted. Consider archiving them instead."))
 
+    def unlink(self):
+        """
+        Unlink the companies and clear the cache to make sure that
+        _get_company_ids of res.users gets only existing company ids.
+        """
+        res = super().unlink()
+        self.env.registry.clear_cache()
+        return res
+
     def write(self, values):
         invalidation_fields = self.cache_invalidation_fields()
         asset_invalidation_fields = {'font', 'primary_color', 'secondary_color', 'external_report_layout_id'}
-        if not invalidation_fields.isdisjoint(values):
-            self.env.registry.clear_cache()
 
         if not asset_invalidation_fields.isdisjoint(values):
             # this is used in the content of an asset (see asset_styles_company_report)
@@ -308,6 +314,10 @@ class Company(models.Model):
                 currency.write({'active': True})
 
         res = super(Company, self).write(values)
+
+        # Must be done after call to super
+        if not invalidation_fields.isdisjoint(values):
+            self.env.registry.clear_cache()
 
         # Archiving a company should also archive all of its branches
         if values.get('active') is False:
@@ -426,3 +436,19 @@ class Company(models.Model):
             },
             'views': [[False, 'tree'], [False, 'kanban'], [False, 'form']],
         }
+
+    def _get_public_user(self):
+        self.ensure_one()
+        # We need sudo to be able to see public users from others companies too
+        public_users = self.env.ref('base.group_public').sudo().with_context(active_test=False).users
+        public_users_for_company = public_users.filtered(lambda user: user.company_id == self)
+
+        if public_users_for_company:
+            return public_users_for_company[0]
+        else:
+            return self.env.ref('base.public_user').sudo().copy({
+                'name': 'Public user for %s' % self.name,
+                'login': 'public-user@company-%s.com' % self.id,
+                'company_id': self.id,
+                'company_ids': [(6, 0, [self.id])],
+            })

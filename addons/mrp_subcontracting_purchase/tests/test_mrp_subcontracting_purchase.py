@@ -45,6 +45,60 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             })],
         })
 
+    @freeze_time('2024-01-01')
+    def test_bom_overview_availability(self):
+        # Create routes for components and the main product
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': self.finished.product_tmpl_id.id,
+            'partner_id': self.subcontractor_partner1.id,
+            'price': 1.0,
+            'delay': 10
+        })
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': self.comp1.product_tmpl_id.id,
+            'partner_id': self.subcontractor_partner1.id,
+            'price': 648.0,
+            'delay': 5
+        })
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': self.comp2.product_tmpl_id.id,
+            'partner_id': self.subcontractor_partner1.id,
+            'price': 648.0,
+            'delay': 5
+        })
+
+        self.bom.produce_delay = 1
+        self.bom.days_to_prepare_mo = 3
+
+        # Add 4 units of each component to subcontractor's location
+        subcontractor_location = self.env.company.subcontracting_location_id
+        self.env['stock.quant']._update_available_quantity(self.comp1, subcontractor_location, 4)
+        self.env['stock.quant']._update_available_quantity(self.comp2, subcontractor_location, 4)
+
+        # Generate a report for 3 products: all products should be ready for production
+        bom_data = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom.id, 3)
+
+        self.assertTrue(bom_data['lines']['components_available'])
+        for component in bom_data['lines']['components']:
+            self.assertEqual(component['quantity_on_hand'], 4)
+            self.assertEqual(component['availability_state'], 'available')
+        self.assertEqual(bom_data['lines']['earliest_capacity'], 3)
+        self.assertEqual(bom_data['lines']['earliest_date'], '01/11/2024')
+        self.assertTrue('leftover_capacity' not in bom_data['lines']['earliest_date'])
+        self.assertTrue('leftover_date' not in bom_data['lines']['earliest_date'])
+
+        # Generate a report for 5 products: only 4 products should be ready for production
+        bom_data = self.env['report.mrp.report_bom_structure']._get_report_data(self.bom.id, 5)
+
+        self.assertFalse(bom_data['lines']['components_available'])
+        for component in bom_data['lines']['components']:
+            self.assertEqual(component['quantity_on_hand'], 4)
+            self.assertEqual(component['availability_state'], 'estimated')
+        self.assertEqual(bom_data['lines']['earliest_capacity'], 4)
+        self.assertEqual(bom_data['lines']['earliest_date'], '01/11/2024')
+        self.assertEqual(bom_data['lines']['leftover_capacity'], 1)
+        self.assertEqual(bom_data['lines']['leftover_date'], '01/16/2024')
+
     def test_count_smart_buttons(self):
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
         (self.comp1 + self.comp2).write({'route_ids': [Command.link(resupply_sub_on_order_route.id)]})
@@ -430,6 +484,58 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         account_move_credit_line = svl.account_move_id.line_ids.filtered(lambda l: l.credit > 0)
         self.assertEqual(account_move_credit_line.account_id.id, stock_in_acc_id)
         self.assertEqual(account_move_credit_line.credit, 5)
+
+    def test_receipt_consumption_issues_due_to_subcontract_bom_modifications(self):
+        """
+        Buy 10 subcontracted serial and non-serial products. Modify the BOM quantities.
+        Then set move quantities to 2 for both product type and validate the receipt.
+        """
+        self.finished3 = self.env['product.product'].create({
+            'name': 'SuperProduct',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        self.bom_finished3 = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.finished3.product_tmpl_id.id,
+            'type': 'subcontract',
+            'subcontractor_ids': [Command.set(self.subcontractor_partner1.ids)],
+            'bom_line_ids': [Command.create({
+                'product_id': self.comp3.id,
+                'product_qty': 1,
+            })],
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [
+                Command.create({
+                    'name': self.finished2.name,
+                    'product_id': self.finished2.id,
+                    'product_qty': 10,
+                    'product_uom': self.finished2.uom_id.id,
+                    'price_unit': 1,
+                }),
+                Command.create({
+                    'name': self.finished3.name,
+                    'product_id': self.finished3.id,
+                    'product_qty': 10,
+                    'product_uom': self.finished3.uom_id.id,
+                    'price_unit': 1,
+                }),
+            ],
+        })
+        po.button_confirm()
+
+        for p in [self.bom_finished2, self.bom_finished3]:
+            line = p.bom_line_ids[0]
+            line.product_qty = line.product_qty + 1
+
+        receipt = po.picking_ids
+        receipt.move_ids.quantity = 2
+        self.assertRecordValues(receipt.move_ids, [{'quantity': sum(ml.quantity for ml in move.move_line_ids)} for move in receipt.move_ids])
+
+        receipt.button_validate()
+        self.assertRecordValues(receipt.move_ids, [{'quantity': sum(ml.quantity for ml in move.move_line_ids)} for move in receipt.move_ids])
+        self.assertRecordValues(receipt.move_ids, [{'quantity': 2} for _ in receipt.move_ids])
 
     def test_return_and_decrease_pol_qty(self):
         """
@@ -946,7 +1052,8 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
     @freeze_time('2000-05-01')
     def test_mrp_subcontract_modify_date(self):
         """ Ensure consistent results when modifying date fields of a weakly-linked reception and
-        manufacturing order.
+        manufacturing order. Additionally, modifying `date_start` directly on an MO has a
+        well-defined result.
         """
         self.bom_finished2.produce_delay = 35
         po = self.env['purchase.order'].create({
@@ -967,5 +1074,11 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.assertEqual(mo.date_start, datetime(year=2000, month=6, day=1) - timedelta(days=self.bom_finished2.produce_delay))
         with Form(po.picking_ids[0]) as receipt_form:
             receipt_form.scheduled_date = '2000-05-01'
-        new_mo_start_date = mo.date_start
-        self.assertEqual(original_mo_start_date, new_mo_start_date, f'{original_mo_start_date} != {new_mo_start_date}')
+        self.assertEqual(mo.date_start, original_mo_start_date)
+
+        with Form(mo) as production_form:
+            production_form.date_start = '2000-03-20'
+        self.assertEqual(mo.date_start.date(), Date.to_date('2000-03-20'))
+        with Form(mo) as production_form:
+            production_form.date_start = original_mo_start_date
+        self.assertEqual(mo.date_start, original_mo_start_date)

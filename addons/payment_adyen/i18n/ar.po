@@ -1,30 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_adyen
-# 
+#
 # Translators:
 # Wil Odoo, 2023
 # Malaz Abuidris <msea@odoo.com>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
 msgid ""
-"<strong>Warning:</strong> To capture the amount manually, you also need to set\n"
-"                    the Capture Delay to manual on your Adyen account settings."
+"<strong>Warning:</strong> To capture the amount manually, you also need to "
+"set\n"
+"                    the Capture Delay to manual on your Adyen account "
+"settings."
 msgstr ""
 "<strong>تحذير:</strong> لتحصيل المبلغ يدوياً، تحتاج أيضاً تعيين إعدادات تأخير\n"
 "                    التحصيل لتصبح يدوية، في إعدادات حساب Adyen الخاص بك. "
@@ -140,18 +143,9 @@ msgstr "معاملة السداد"
 #. module: payment_adyen
 #. odoo-javascript
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
-#: code:addons/payment_adyen/static/src/js/payment_form.js:0
-#: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #, python-format
 msgid "Payment processing failed"
 msgstr "فشلت معالجة عملية الدفع "
-
-#. module: payment_adyen
-#. odoo-python
-#: code:addons/payment_adyen/utils.py:0
-#, python-format
-msgid "Please complete your address details."
-msgstr "يُرجى إكمال تفاصيل عنوانك. "
 
 #. module: payment_adyen
 #. odoo-python
@@ -222,7 +216,6 @@ msgstr "رابط URL الأساسي للنقاط النهائية للواجهة
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
-#: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "The capture of the transaction with reference %s failed."
 msgstr "فشلت عملية تحصيل المعاملة مع المرجع %s. "
@@ -241,8 +234,8 @@ msgstr ""
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid ""
-"The capture request of %(amount)s for the transaction with reference %(ref)s"
-" has been requested (%(provider_name)s)."
+"The capture request of %(amount)s for the transaction with reference %(ref)s "
+"has been requested (%(provider_name)s)."
 msgstr ""
 "طلب التحصيل بمبلغ %(amount)s للمعاملة ذات المرجع %(ref)s قد تم طلبه "
 "(%(provider_name)s). "
@@ -284,7 +277,6 @@ msgstr "المرجع الفريد للشريك الذي يملك هذا الرم
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
-#: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "The void of the transaction with reference %s failed."
 msgstr "فشلت عملية إبطال المعاملة مع المرجع %s. "
@@ -295,3 +287,7 @@ msgstr "فشلت عملية إبطال المعاملة مع المرجع %s. "
 #, python-format
 msgid "Your payment was refused. Please try again."
 msgstr "لقد تم رفض الدفع. يرجى المحاولة مجدداً. "
+
+#, python-format
+#~ msgid "Please complete your address details."
+#~ msgstr "يُرجى إكمال تفاصيل عنوانك. "

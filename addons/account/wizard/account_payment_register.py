@@ -148,7 +148,7 @@ class AccountPaymentRegister(models.TransientModel):
         :param batch_result:    A batch returned by '_get_batches'.
         :return:                A string representing a communication to be set on payment.
         '''
-        labels = set(line.name or line.move_id.ref or line.move_id.name for line in batch_result['lines'])
+        labels = set(line.move_id.payment_reference or line.name or line.move_id.ref or line.move_id.name for line in batch_result['lines'])
         return ' '.join(sorted(labels))
 
     @api.model
@@ -257,8 +257,8 @@ class AccountPaymentRegister(models.TransientModel):
 
         if len(lines.company_id.root_id) > 1:
             raise UserError(_("You can't create payments for entries belonging to different companies."))
-        if len(lines.company_id.filtered(lambda c: c.root_id not in lines.company_id)) > 1:
-            raise UserError(_("You can't create payments for entries belonging to different branches."))
+        if self._from_sibling_companies(lines) and lines.company_id.root_id not in self.env.user.company_ids:
+            raise UserError(_("You can't create payments for entries belonging to different branches without access to parent company."))
         if not lines:
             raise UserError(_("You can't open the register payment wizard without at least one receivable/payable line."))
 
@@ -319,7 +319,7 @@ class AccountPaymentRegister(models.TransientModel):
         '''
         payment_values = batch_result['payment_values']
         lines = batch_result['lines']
-        company = min(lines.company_id, key=lambda c: len(c.parent_ids))
+        company = min(lines.company_id, key=lambda c: len(c.sudo().parent_ids)) if not self._from_sibling_companies(lines) else lines.company_id.root_id
 
         source_amount = abs(sum(lines.mapped('amount_residual')))
         if payment_values['currency_id'] == company.currency_id.id:
@@ -336,6 +336,10 @@ class AccountPaymentRegister(models.TransientModel):
             'source_amount': source_amount,
             'source_amount_currency': source_amount_currency,
         }
+
+    @api.model
+    def _from_sibling_companies(self, lines):
+        return len(lines.company_id) > 1 and not any(c.root_id in lines.company_id for c in lines.company_id)
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -380,8 +384,10 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.can_group_payments = len(batch_result['lines']) != 1
             else:
                 # == Multiple batches: The wizard is not editable  ==
+                lines = sum((batch_result['lines'] for batch_result in batches), self.env['account.move.line'])
+                company = min(lines.company_id, key=lambda c: len(c.parent_ids)) if not self._from_sibling_companies(lines) else lines.company_id.root_id
                 wizard.update({
-                    'company_id': min(batches, key=lambda batch: len(batch['lines'].company_id.parent_ids))['lines'].company_id.id,
+                    'company_id': company.id,
                     'partner_id': False,
                     'partner_type': False,
                     'payment_type': wizard_values_from_batch['payment_type'],
@@ -499,14 +505,12 @@ class AccountPaymentRegister(models.TransientModel):
         self.ensure_one()
         amount = 0.0
         mode = False
-        moves = batch_result['lines'].mapped('move_id')
-        for move in moves:
+        for move, lines in batch_result['lines'].grouped('move_id').items():
             if early_payment_discount and move._is_eligible_for_early_payment_discount(move.currency_id, self.payment_date):
-                amount -= move.direction_sign * move.invoice_payment_term_id._get_amount_due_after_discount(move.amount_total, move.amount_tax)
                 mode = 'early_payment'
+                amount += sum(aml.discount_amount_currency for aml in lines)
             else:
-                for aml in batch_result['lines'].filtered(lambda l: l.move_id.id == move.id):
-                    amount += aml.amount_residual_currency
+                amount += sum(aml.amount_residual_currency for aml in lines)
         return abs(amount), mode
 
     def _get_total_amount_in_wizard_currency_to_full_reconcile(self, batch_result, early_payment_discount=True):
@@ -788,11 +792,15 @@ class AccountPaymentRegister(models.TransientModel):
             'company_id': self.company_id.id,
             'currency_id': batch_values['source_currency_id'],
             'partner_id': batch_values['partner_id'],
-            'partner_bank_id': partner_bank_id,
             'payment_method_line_id': payment_method_line.id,
             'destination_account_id': batch_result['lines'][0].account_id.id,
             'write_off_line_vals': [],
         }
+
+        # In case it is false, we don't add it to the create vals so that
+        # _compute_partner_bank_id is executed at payment creation
+        if partner_bank_id:
+            payment_vals['partner_bank_id'] = partner_bank_id
 
         total_amount, mode = self._get_total_amount_using_same_currency(batch_result)
         currency = self.env['res.currency'].browse(batch_values['source_currency_id'])
@@ -891,7 +899,7 @@ class AccountPaymentRegister(models.TransientModel):
         payments = self.env['account.payment']
         for vals in to_process:
             payments |= vals['payment']
-        payments.action_post()
+        payments.with_context(skip_sale_auto_invoice_send=True).action_post()
 
     def _reconcile_payments(self, to_process, edit_mode=False):
         """ Reconcile the payments.
@@ -975,10 +983,19 @@ class AccountPaymentRegister(models.TransientModel):
                     'batch': batch_result,
                 })
 
-        payments = self._init_payments(to_process, edit_mode=edit_mode)
-        self._post_payments(to_process, edit_mode=edit_mode)
-        self._reconcile_payments(to_process, edit_mode=edit_mode)
-        return payments
+        lines = sum((batch_result['lines'] for batch_result in batches), self.env['account.move.line'])
+        from_sibling_companies = self._from_sibling_companies(lines)
+        if from_sibling_companies and lines.company_id.root_id not in self.env.companies:
+            # Payment made for sibling companies, we don't want to redirect to the payments
+            # to avoid access error, as it will be created as parent company.
+            self.env.context = {**self.env.context, "dont_redirect_to_payments": True}
+
+        wizard = self.sudo() if from_sibling_companies else self
+
+        payments = wizard._init_payments(to_process, edit_mode=edit_mode)
+        wizard._post_payments(to_process, edit_mode=edit_mode)
+        wizard._reconcile_payments(to_process, edit_mode=edit_mode)
+        return payments.sudo(flag=False)
 
     def action_create_payments(self):
         payments = self._create_payments()

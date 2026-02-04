@@ -1,45 +1,58 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* hr_recruitment_survey
-# 
+# * hr_recruitment_survey
+#
 # Translators:
 # Wil Odoo, 2023
-# 
+# Marta Wacławek, 2025
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
-"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2026-01-10 08:04+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-17/"
+"hr_recruitment_survey/pl/>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_recruitment_survey
 #: model:mail.template,body_html:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'applicant'\">[applicant name]</t><br><br>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'applicant'\">[applicant "
+"name]</t><br><br>\n"
 "        <t>\n"
-"            You've progressed through the recruitment process and we would like you to answer some questions.\n"
+"            You've progressed through the recruitment process and we would "
+"like you to answer some questions.\n"
 "        </t>\n"
 "        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-"
+"color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px; font-size:13px;\">\n"
 "                <t>\n"
 "                    Start the written interview\n"
 "                </t>\n"
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the interview for <t t-out=\"format_date(object.deadline)\">[deadline date]</t>.<br><br>\n"
+"            Please answer the interview for <t t-"
+"out=\"format_date(object.deadline)\">[deadline date]</t>.<br><br>\n"
 "        </t>\n"
 "        <t>\n"
-"            We wish you good luck! Thank you in advance for your participation.\n"
+"            We wish you good luck! Thank you in advance for your "
+"participation.\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -75,14 +88,14 @@ msgstr "Aplikant"
 #. module: hr_recruitment_survey
 #: model:mail.template,name:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid "Applicant: Interview"
-msgstr ""
+msgstr "Aplikant: Rozmowa kwalifikacyjna"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job__survey_id
 msgid ""
-"Choose an interview form for this job position and you will be able to "
-"print/answer this interview from all applicants who apply for this job"
+"Choose an interview form for this job position and you will be able to print/"
+"answer this interview from all applicants who apply for this job"
 msgstr ""
 "Wybierz formularz wywiadu dla tego stanowiska pracy i będziesz miał "
 "możliwość wydrukować/odpowiedzieć na ten wywiad od wszystkich aplikantów, "
@@ -101,7 +114,7 @@ msgstr "Edukacja"
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q2
 msgid "From which university did or will you graduate?"
-msgstr ""
+msgstr "Którą uczelnię ukończyłeś lub zamierzasz ukończyć?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row2
@@ -145,7 +158,7 @@ msgstr "Formularz wywiadu"
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
 #, python-format
 msgid "Interview Form: %s"
-msgstr ""
+msgstr "Formularz rozmowy rekrutacyjnej: %s"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
@@ -185,7 +198,7 @@ msgstr "Miejsce pracy"
 #. module: hr_recruitment_survey
 #: model:mail.template,subject:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid "Participate to {{ object.survey_id.display_name }} interview"
-msgstr ""
+msgstr "Weź udział w rozmowie {{ object.survey_id.display_name }}"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q5
@@ -204,10 +217,12 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
 msgid ""
-"Please fill information about you: who you are, what are your education, experience, and activities.\n"
+"Please fill information about you: who you are, what are your education, "
+"experience, and activities.\n"
 "    It will help us managing your application."
 msgstr ""
-"Prosimy o wypełnienie informacji o sobie: kim jesteś, jakie masz wykształcenie, doświadczenie i działalność.\n"
+"Prosimy o wypełnienie informacji o sobie: kim jesteś, jakie masz "
+"wykształcenie, doświadczenie i działalność.\n"
 "Pomoże nam to w zarządzaniu Twoją aplikacją."
 
 #. module: hr_recruitment_survey
@@ -215,23 +230,21 @@ msgstr ""
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 #, python-format
 msgid "Please provide an applicant name."
-msgstr ""
+msgstr "Proszę podać imię kandydata"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q5
 msgid ""
 "Please summarize your education history: schools, location, diplomas, ..."
-msgstr ""
-"Proszę streścić swoją historię edukacji: szkoły, miejsce, dyplomy, ..."
+msgstr "Proszę streścić swoją historię edukacji: szkoły, miejsce, dyplomy, ..."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
 msgid ""
 "Please tell us a bit more about yourself: what are your main activities, ..."
 msgstr ""
-"Proszę powiedzieć nam nieco więcej o sobie: jakie są Pana główne zajęcia, "
-"..."
+"Proszę powiedzieć nam nieco więcej o sobie: jakie są Pana główne zajęcia, ..."
 
 #. module: hr_recruitment_survey
 #: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form
@@ -241,7 +254,7 @@ msgstr "Formularz rekrutacji"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_ids
 msgid "Responses"
-msgstr ""
+msgstr "Odpowiedzi"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -251,14 +264,14 @@ msgstr "Zobacz raport z wywiadu"
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid "Send Interview"
-msgstr ""
+msgstr "Wyślij rozmowę kwalifikacyjną"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 #, python-format
 msgid "Send an interview"
-msgstr ""
+msgstr "Wyślij rozmowę kwalifikacyjną"
 
 #. module: hr_recruitment_survey
 #. odoo-python
@@ -311,16 +324,17 @@ msgstr "Czy zostałeś skierowany przez pracownika?"
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
 msgid "What are your main knowledge regarding the job you are applying to?"
 msgstr ""
+"Jaka jest Twoja główna wiedza na temat stanowiska, na które aplikujesz?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q8
 msgid "What is important for you?"
-msgstr ""
+msgstr "Co jest dla Ciebie najważniejsze?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q1
 msgid "Which country are you from?"
-msgstr ""
+msgstr "Z jakiego kraju pochodzisz?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row4

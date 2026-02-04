@@ -467,9 +467,11 @@ registry.category("web_tour.tours").add("PosLoyaltyPointsGlobalDiscountProgramNo
             ProductScreen.clickCustomer("AAAA"),
             ProductScreen.addOrderline("product_a", "1"),
             PosLoyalty.hasRewardLine("10% on your order", "-10.00"),
-            PosLoyalty.orderTotalIs("90"),
-            PosLoyalty.pointsAwardedAre("90"),
-            PosLoyalty.finalizeOrder("Cash", "90"),
+            ProductScreen.clickDisplayedProduct("product_a"),
+            PosLoyalty.hasRewardLine("10% on your order", "-20.00"),
+            PosLoyalty.orderTotalIs("180"),
+            PosLoyalty.pointsAwardedAre("180"),
+            PosLoyalty.finalizeOrder("Cash", "180"),
         ].flat(),
 });
 
@@ -547,5 +549,37 @@ registry.category("web_tour.tours").add("PosRewardProductScanGS1", {
             PosLoyalty.hasRewardLine("50% on your order", "-575.00"),
             PosLoyalty.orderTotalIs("575.00"),
             PosLoyalty.finalizeOrder("Cash", "575.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_min_qty_points_awarded", {
+    test: true,
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Test Partner"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            PosLoyalty.clickRewardButton(),
+            SelectionPopup.clickItem("Free Product"),
+            PosLoyalty.pointsTotalIs(90),
+            PosLoyalty.orderTotalIs("0.0"),
+            PosLoyalty.finalizeOrder("Cash", "0.0"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_points_update_after_global_discount", {
+    test: true,
+    steps: () =>
+        [
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAA Partner"),
+            ProductScreen.clickDisplayedProduct("AAA Product"),
+            PosLoyalty.clickDiscountButton(),
+            PosLoyalty.clickConfirmButton(),
+            PosLoyalty.pointsTotalIs(192),
+            PosLoyalty.orderTotalIs("92"),
+            PosLoyalty.finalizeOrder("Bank", "92"),
         ].flat(),
 });

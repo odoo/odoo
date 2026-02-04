@@ -266,6 +266,35 @@ QUnit.module("Components", (hooks) => {
         );
     });
 
+    QUnit.test("creating domain for binary field", async (assert) => {
+        // Add a binary field to the server data
+        serverData.models.partner.fields.image = {
+            string: "Image",
+            type: "binary",
+            searchable: true,
+        }
+
+        await makeDomainSelector({
+            isDebugMode: true,
+        });
+
+        // Add new rule to select field
+        await addNewRule(target);
+        await openModelFieldSelectorPopover(target);
+
+        // Find and select the binary field
+        const binaryFieldItem = [...document.querySelectorAll(".o_model_field_selector_popover_item_name")]
+            .find(el => el.textContent.trim() === "Imageimage (binary)");
+        assert.ok(binaryFieldItem, "binary field should be available in field selector");
+
+        await click(binaryFieldItem);
+
+        // Check that the operator options are limited to 'set' and 'not_set'
+        const operators = getOperatorOptions(target).map(opt => opt?.textContent?.trim?.() ?? opt?.trim?.() ?? "");
+        assert.deepEqual(operators, ["is set", "is not set"], "binary field should only allow set and not_set");
+
+    });
+
     QUnit.test("building a domain with a datetime", async (assert) => {
         assert.expect(4);
         await makeDomainSelector({

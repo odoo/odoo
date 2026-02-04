@@ -51,7 +51,7 @@ class AccountMoveSend(models.TransientModel):
 
     def _l10n_vn_edi_needed(self, invoice):
         """ Return true if the invoice state is ready to send, and there are credentials setup on the company. """
-        return invoice.l10n_vn_edi_invoice_state == 'ready_to_send' and invoice._l10n_vn_edi_get_credentials_company()
+        return bool(invoice.l10n_vn_edi_invoice_state == 'ready_to_send' and invoice._l10n_vn_edi_get_credentials_company())
 
     # -------------------------------------------------------------------------
     # ATTACHMENTS

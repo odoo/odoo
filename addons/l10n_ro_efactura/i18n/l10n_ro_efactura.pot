@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-01 09:28+0000\n"
-"PO-Revision-Date: 2024-07-01 09:28+0000\n"
+"POT-Creation-Date: 2025-12-29 19:03+0000\n"
+"PO-Revision-Date: 2025-12-29 19:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -78,6 +78,13 @@ msgid "Access token is forbidden."
 msgstr ""
 
 #. module: l10n_ro_efactura
+#. odoo-python
+#: code:addons/l10n_ro_efactura/models/ciusro_document.py:0
+#, python-format
+msgid "Access token is unauthorized."
+msgstr ""
+
+#. module: l10n_ro_efactura
 #: model:ir.model,name:l10n_ro_efactura.model_account_move_send
 msgid "Account Move Send"
 msgstr ""
@@ -100,8 +107,7 @@ msgid "CIUS-RO XML attachment not found."
 msgstr ""
 
 #. module: l10n_ro_efactura
-#: model:ir.model.fields,field_description:l10n_ro_efactura.field_res_company__l10n_ro_edi_client_id
-#: model:ir.model.fields,field_description:l10n_ro_efactura.field_res_config_settings__l10n_ro_edi_client_id
+#: model_terms:ir.ui.view,arch_db:l10n_ro_efactura.res_config_settings_form_inherit_l10n_ro_edi
 msgid "Client ID"
 msgstr ""
 
@@ -215,6 +221,13 @@ msgstr ""
 
 #. module: l10n_ro_efactura
 #. odoo-python
+#: code:addons/l10n_ro_efactura/wizard/account_move_send.py:0
+#, python-format
+msgid "Error when building the CIUS-RO E-Factura XML"
+msgstr ""
+
+#. module: l10n_ro_efactura
+#. odoo-python
 #: code:addons/l10n_ro_efactura/controllers/main.py:0
 #: code:addons/l10n_ro_efactura/models/res_company.py:0
 #, python-format
@@ -243,13 +256,6 @@ msgstr ""
 
 #. module: l10n_ro_efactura
 #. odoo-python
-#: code:addons/l10n_ro_efactura/wizard/account_move_send.py:0
-#, python-format
-msgid "Error when rebuilding the CIUS-RO E-Factura XML"
-msgstr ""
-
-#. module: l10n_ro_efactura
-#. odoo-python
 #: code:addons/l10n_ro_efactura/models/res_company.py:0
 #, python-format
 msgid "Error when refreshing the access token: %s"
@@ -266,9 +272,21 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_ro_efactura/models/account_move.py:0
 #, python-format
-msgid ""
-"Error when sending the document to the SPV:\n"
-"%s"
+msgid "Error when trying to download the E-Factura answer from the SPV: %s"
+msgstr ""
+
+#. module: l10n_ro_efactura
+#. odoo-python
+#: code:addons/l10n_ro_efactura/models/account_move.py:0
+#, python-format
+msgid "Error when trying to fetch the E-Factura from the SPV: %s"
+msgstr ""
+
+#. module: l10n_ro_efactura
+#. odoo-python
+#: code:addons/l10n_ro_efactura/models/account_move.py:0
+#, python-format
+msgid "Error when trying to send the E-Factura to the SPV: %s"
 msgstr ""
 
 #. module: l10n_ro_efactura
@@ -337,10 +355,6 @@ msgstr ""
 #. module: l10n_ro_efactura
 #: model:ir.model.fields,field_description:l10n_ro_efactura.field_l10n_ro_edi_document__key_certificate
 msgid "Key Certificate"
-msgstr ""
-
-#. module: l10n_ro_efactura
-msgid "Key Loading"
 msgstr ""
 
 #. module: l10n_ro_efactura
@@ -470,10 +484,6 @@ msgid "Send the CIUS-RO XML to the Romanian Government via the ANAF platform"
 msgstr ""
 
 #. module: l10n_ro_efactura
-msgid "Sending"
-msgstr ""
-
-#. module: l10n_ro_efactura
 #: model_terms:ir.ui.view,arch_db:l10n_ro_efactura.l10n_ro_edi_view_account_invoice_filter
 msgid "Sending E-Factura"
 msgstr ""
@@ -556,6 +566,12 @@ msgstr ""
 #: code:addons/l10n_ro_efactura/models/ciusro_document.py:0
 #, python-format
 msgid "You reached the limit of requests. Please try again later."
+msgstr ""
+
+#. module: l10n_ro_efactura
+#: model:ir.model.fields,field_description:l10n_ro_efactura.field_res_company__l10n_ro_edi_client_id
+#: model:ir.model.fields,field_description:l10n_ro_efactura.field_res_config_settings__l10n_ro_edi_client_id
+msgid "eFactura Client ID"
 msgstr ""
 
 #. module: l10n_ro_efactura

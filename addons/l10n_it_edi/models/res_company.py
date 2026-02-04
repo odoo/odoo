@@ -94,7 +94,8 @@ class ResCompany(models.Model):
             must be both present or not present. """
         for record in self:
             if (record.l10n_it_has_eco_index
-                and bool(record.l10n_it_eco_index_share_capital) ^ bool(record.l10n_it_eco_index_sole_shareholder)):
+                and (bool(record.l10n_it_eco_index_share_capital)
+                    ^ (record.l10n_it_eco_index_sole_shareholder and record.l10n_it_eco_index_sole_shareholder != 'NO'))):
                 raise ValidationError(_("If one of Share Capital or Sole Shareholder is present, "
                                         "then they must be both filled out."))
 

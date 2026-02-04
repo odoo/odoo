@@ -28,9 +28,9 @@ QUnit.module("IM status", {
         registry.category("services").add("im_status", imStatusService);
         const pyEnv = await startServer();
         patchWithCleanup(session, { partner_id: pyEnv.currentPartner.id });
-        registry.category("mock_server").add("res.users/has_group", (route, args) => {
-            return args[0] === "base.group_public";
-        });
+        registry
+            .category("mock_server")
+            .add("res.users/has_group", (route, args) => args[0] === "base.group_public");
         registerCleanup(() => registry.category("mock_server").remove("res.users/has_group"));
     },
 });
@@ -45,6 +45,7 @@ QUnit.test(
         await waitUntilSubscribe();
         await assertSteps(["update_presence"]);
         pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "bus.bus/im_status_updated", {
+            presence_status: "offline",
             im_status: "offline",
             partner_id: pyEnv.currentPartner.id,
         });
@@ -60,6 +61,7 @@ QUnit.test("update presence if IM status changes to away while this device is on
     env.services.bus_service.start();
     await assertSteps(["update_presence"]);
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "bus.bus/im_status_updated", {
+        presence_status: "away",
         im_status: "away",
         partner_id: pyEnv.currentPartner.id,
     });
@@ -78,6 +80,7 @@ QUnit.test(
         env.services.bus_service.start();
         await assertSteps(["update_presence"]);
         pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "bus.bus/im_status_updated", {
+            presence_status: "away",
             im_status: "away",
             partner_id: pyEnv.currentPartner.id,
         });
@@ -94,6 +97,7 @@ QUnit.test("do not update presence if other user's IM status changes to away", a
     env.services.bus_service.start();
     await assertSteps(["update_presence"]);
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "bus.bus/im_status_updated", {
+        presence_status: "away",
         im_status: "away",
         partner_id: pyEnv.publicPartnerId,
     });
@@ -147,4 +151,35 @@ QUnit.test("update presence when user status changes to away", async () => {
     });
     advanceTime(AWAY_DELAY);
     await assertSteps(["update_presence"]);
+});
+
+QUnit.test("new tab update presence when user comes back from away", async () => {
+    // Tabs notify presence with a debounced update, and the status service skips
+    // duplicates. This test ensures a new tab that never sent presence still issues
+    // its first update (important when old tabs close and new ones replace them).
+    browser.localStorage.setItem("presence.lastPresence", Date.now() - AWAY_DELAY);
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].write([pyEnv.currentPartner.id], { im_status: "offline" });
+    const tabEnv_1 = await makeTestEnv({ activateMockServer: true });
+    patchWithCleanup(tabEnv_1.services.bus_service, {
+        send: (type) => {
+            if (type === "update_presence") {
+                step("update_presence");
+            }
+        },
+    });
+    await tabEnv_1.services.bus_service.start();
+    await assertSteps(["update_presence"]);
+    const tabEnv_2 = await makeTestEnv({ activateMockServer: true });
+    patchWithCleanup(tabEnv_2.services.bus_service, {
+        send: (type) => {
+            if (type === "update_presence") {
+                step("update_presence");
+            }
+        },
+    });
+    await tabEnv_2.services.bus_service.start();
+    await assertSteps([]);
+    browser.localStorage.setItem("presence.lastPresence", Date.now()); // Simulate user presence.
+    await assertSteps(["update_presence", "update_presence"]);
 });

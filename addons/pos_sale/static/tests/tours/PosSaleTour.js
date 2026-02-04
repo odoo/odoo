@@ -328,7 +328,17 @@ registry.category("web_tour.tours").add("PosSettleOrderShipLater", {
         [
             ProductScreen.confirmOpeningPopup(),
             ProductScreen.clickQuotationButton(),
-            ProductScreen.selectFirstOrder(),
+            ProductScreen.selectNthOrder(2),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickShipLaterButton(),
+            PaymentScreen.shippingLaterHighlighted(),
+            PaymentScreen.clickPaymentMethod('Bank'),
+            PaymentScreen.remainingIs('0.0'),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.selectNthOrder(1),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickShipLaterButton(),
             PaymentScreen.shippingLaterHighlighted(),
@@ -355,5 +365,40 @@ registry.category("web_tour.tours").add("PoSDownPaymentFixedTax", {
                 quantity: "1.0",
                 price: "22.00",
             }),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_multiple_lots_sale_order", {
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.selectNthOrder(1, { loadSN: true }),
+            {
+                'content': 'Ensure first line has lot 1001',
+                'trigger': '.order-container .orderline:nth-child(1):contains(Product):contains(1001)',
+            },
+            {
+                'content': 'Ensure second line has lot 1002',
+                'trigger': '.order-container .orderline:nth-child(2):contains(Product):contains(1002)',
+            },
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_import_so_to_pos_no_existing_lot", {
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickQuotationButton(),
+            ProductScreen.selectNthOrder(1),
+            {
+                'content': 'Ensure at least one line is imported',
+                'trigger': '.order-container .orderline',
+                run: 'click',
+            },
         ].flat(),
 });

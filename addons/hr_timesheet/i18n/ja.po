@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* hr_timesheet
-# 
+# * hr_timesheet
+#
 # Translators:
 # Wil Odoo, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
-# Junko Augias, 2024
-# 
+# Junko Augias, 2025
+# "Junko Augias (juau)" <juau@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
-"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2026-01-29 08:39+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/"
+"hr_timesheet/ja/>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
@@ -110,8 +112,12 @@ msgstr "<b class=\"tip_title\">ヒント：タイムシートの記録速度を�
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
-msgid "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgid ""
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
+"title=\"Date\"/>"
+msgstr ""
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" "
+"title=\"Date\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -127,11 +133,15 @@ msgstr "<span class=\"o_stat_text\">タイムシート</span>"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid ""
-"<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">Hours Spent on Sub-tasks:</span>\n"
-"                                <span class=\"text-nowrap\" invisible=\"not encode_uom_in_days\">Days Spent on Sub-tasks:</span>"
+"<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">Hours Spent on "
+"Sub-tasks:</span>\n"
+"                                <span class=\"text-nowrap\" invisible=\"not "
+"encode_uom_in_days\">Days Spent on Sub-tasks:</span>"
 msgstr ""
-"<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">サブタスク消費時間:</span>\n"
-"                                <span class=\"text-nowrap\" invisible=\"not encode_uom_in_days\">サブタスク消費日数:</span>"
+"<span class=\"text-nowrap\" invisible=\"encode_uom_in_days\">サブタスク消費時"
+"間:</span>\n"
+"                                <span class=\"text-nowrap\" invisible=\"not "
+"encode_uom_in_days\">サブタスク消費日数:</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
@@ -139,9 +149,11 @@ msgid ""
 "<span invisible=\"not has_timesheet\">\n"
 "                        You cannot delete employees who have timesheets.\n"
 "                        <span invisible=\"not has_active_employee\">\n"
-"                            You can either archive these employees or first delete all of their timesheets.\n"
+"                            You can either archive these employees or first "
+"delete all of their timesheets.\n"
 "                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
 "                            Please first delete all of their timesheets.\n"
 "                        </span>\n"
 "                    </span>\n"
@@ -150,11 +162,14 @@ msgid ""
 "                    </span>"
 msgstr ""
 "<span invisible=\"not has_timesheet\">\n"
-"                        タイムシートのある従業員を削除することはできません。 \n"
+"                        タイムシートのある従業員を削除することはできませ"
+"ん。 \n"
 "                        <span invisible=\"not has_active_employee\">\n"
-"                            これらの従業員をアーカイブするか、最初に全てのタイムシートを削除することができます。\n"
+"                            これらの従業員をアーカイブするか、最初に全てのタ"
+"イムシートを削除することができます。\n"
 "                        </span>\n"
-"                        <span invisible=\"has_active_employee\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                        <span invisible=\"has_active_employee\" "
+"groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
 "                            先に全てタイムシートを削除して下さい。\n"
 "</span>\n"
 "                    </span>\n"
@@ -291,13 +306,19 @@ msgstr "分析行"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__analytic_account_id
 msgid ""
-"Analytic account to which this project, its tasks and its timesheets are linked. \n"
-"Track the costs and revenues of your project by setting this analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
-"This analytic account can be changed on each task individually if necessary.\n"
+"Analytic account to which this project, its tasks and its timesheets are "
+"linked. \n"
+"Track the costs and revenues of your project by setting this analytic "
+"account on your related documents (e.g. sales orders, invoices, purchase "
+"orders, vendor bills, expenses etc.).\n"
+"This analytic account can be changed on each task individually if "
+"necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
 "このプロジェクト、タスク、タイムシートがリンクされている分析アカウント。\n"
-"この分析アカウントを関連ドキュメント(例:販売オーダ、請求書、購買オーダ、仕入先請求書、経費など)に設定することで、プロジェクトの原価と収益を追跡できます。\n"
+"この分析アカウントを関連ドキュメント(例:販売オーダ、請求書、購買オーダ、仕入"
+"先請求書、経費など)に設定することで、プロジェクトの原価と収益を追跡できま"
+"す。\n"
 "この分析アカウントは、必要に応じて各タスクで個別に変更することができます。\n"
 "タイムシートを使用するには、分析アカウントが必要です。"
 
@@ -306,7 +327,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid ""
-"Analyze the projects and tasks on which your employees spend their time.<br>\n"
+"Analyze the projects and tasks on which your employees spend their time."
+"<br>\n"
 "                Evaluate which part is billable and what costs it represents."
 msgstr ""
 "従業員が時間を費やしているプロジェクトやタスクを分析します。<br>\n"
@@ -442,7 +464,7 @@ msgstr "休暇タイプから生成されたタイムシート用のデフォル
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__employee_id
 msgid ""
 "Define an 'hourly cost' on the employee to track the cost of their time."
-msgstr "従業員らの'時間原価'を設定し、 彼らの時間の原価を追跡します。"
+msgstr "従業員の '時間原価' を設定し、 時間の原価を追跡します。"
 
 #. module: hr_timesheet
 #: model:ir.actions.server,name:hr_timesheet.unlink_employee_action
@@ -508,7 +530,6 @@ msgstr "有効時間数"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
-#: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model,name:hr_timesheet.model_hr_employee
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__employee_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__employee_id
@@ -573,8 +594,7 @@ msgstr "追加時間"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
-msgid ""
-"Generate timesheets for validated time off requests and public holidays"
+msgid "Generate timesheets for validated time off requests and public holidays"
 msgstr "検証された休暇申請と祭日用にタイムシートを生成する"
 
 #. module: hr_timesheet
@@ -605,6 +625,11 @@ msgstr "時間"
 #: model:ir.model.fields.selection,name:hr_timesheet.selection__res_config_settings__timesheet_encode_method__hours
 msgid "Hours / Minutes"
 msgstr "時間 / 分"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
+msgid "Hours By Task (Including Subtasks)"
+msgstr "タスクごとの時間 (サブタスク含む)"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__effective_hours
@@ -645,14 +670,12 @@ msgstr "内部プロジェクト"
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
-#: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid "Invalid operator: %s"
 msgstr "無効なオペレータ: %s"
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/models/project_project.py:0
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid "Invalid value: %s"
@@ -788,7 +811,7 @@ msgstr "OK"
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__overtime
 msgid "Overtime"
-msgstr "時間超過"
+msgstr "残業時間"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__parent_task_id
@@ -818,7 +841,6 @@ msgstr "進捗"
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/controllers/portal.py:0
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model,name:hr_timesheet.model_project_project
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__project_id
@@ -868,7 +890,9 @@ msgstr "活動を記録しましょう"
 msgid ""
 "Record your timesheets in an instant by pressing Shift + the corresponding "
 "hotkey to add 15min to your projects."
-msgstr "シフトキー ＋ 対応するホットキーを押すことで、瞬時にタイムシートを記録し、プロジェクトに15分を追加することができます。"
+msgstr ""
+"シフトキー ＋ 対応するホットキーを押すことで、瞬時にタイムシートを記録し、プ"
+"ロジェクトに15分を追加することができます。"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -968,14 +992,18 @@ msgstr "タイムシートエントリを表示"
 msgid ""
 "Send a periodical email reminder to timesheets approvers that still have "
 "timesheets to validate"
-msgstr "まだ検証対象のタイムシートがあるタイムシート承認者に定期的にリマインドメールを送る"
+msgstr ""
+"まだ検証対象のタイムシートがあるタイムシート承認者に定期的にリマインドメール"
+"を送る"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid ""
 "Send a periodical email reminder to timesheets users that still have "
 "timesheets to encode"
-msgstr "まだエンコード対象のタイムシートがあるタイムシートユーザに定期的にリマインドメールを送る"
+msgstr ""
+"まだエンコード対象のタイムシートがあるタイムシートユーザに定期的にリマインド"
+"メールを送る"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
@@ -995,7 +1023,6 @@ msgstr "サブタスクの消費時間"
 
 #. module: hr_timesheet
 #. odoo-python
-#: code:addons/hr_timesheet/controllers/portal.py:0
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #: model:ir.model,name:hr_timesheet.model_project_task
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__task_id
@@ -1034,10 +1061,11 @@ msgstr "タイムシートがありません。"
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid ""
-"These projects have some timesheet entries referencing them. Before removing"
-" these projects, you have to remove these timesheet entries."
+"These projects have some timesheet entries referencing them. Before removing "
+"these projects, you have to remove these timesheet entries."
 msgstr ""
-"プロジェクトにそれらを参照するタイムシートエントリがあります。これらのプロジェクトを削除する前に、そのタイムシートエントリを削除する必要があります。"
+"プロジェクトにそれらを参照するタイムシートエントリがあります。これらのプロ"
+"ジェクトを削除する前に、そのタイムシートエントリを削除する必要があります。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1046,7 +1074,9 @@ msgstr ""
 msgid ""
 "These tasks have some timesheet entries referencing them. Before removing "
 "these tasks, you have to remove these timesheet entries."
-msgstr "タスクにそれらを参照するタイムシートエントリがあります。これらのタスクを削除する前に、そのタイムシートエントリを削除する必要があります。"
+msgstr ""
+"タスクにそれらを参照するタイムシートエントリがあります。これらのタスクを削除"
+"する前に、そのタイムシートエントリを削除する必要があります。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1074,10 +1104,11 @@ msgstr "このオペレータ %sはこの検索方法でサポートされてい
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid ""
-"This project has some timesheet entries referencing it. Before removing this"
-" project, you have to remove these timesheet entries."
+"This project has some timesheet entries referencing it. Before removing this "
+"project, you have to remove these timesheet entries."
 msgstr ""
-"このプロジェクトにはそれを参照するタイムシートエントリがあります。このプロジェクトを削除する前に、そのタイムシートエントリを削除する必要があります。"
+"このプロジェクトにはそれを参照するタイムシートエントリがあります。このプロ"
+"ジェクトを削除する前に、そのタイムシートエントリを削除する必要があります。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1085,7 +1116,8 @@ msgstr ""
 #, python-format
 msgid ""
 "This task cannot be private because there are some timesheets linked to it."
-msgstr "リンクしたタイムシートがいくつかあるため、このタスクは非公開にできません。"
+msgstr ""
+"リンクしたタイムシートがいくつかあるため、このタスクは非公開にできません。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1094,7 +1126,9 @@ msgstr "リンクしたタイムシートがいくつかあるため、このタ
 msgid ""
 "This task has some timesheet entries referencing it. Before removing this "
 "task, you have to remove these timesheet entries."
-msgstr "タスクにそれらを参照するタイムシートエントリがあります。このタスクを削除する前に、そのタイムシートエントリを削除する必要があります。"
+msgstr ""
+"タスクにそれらを参照するタイムシートエントリがあります。このタスクを削除する"
+"前に、そのタイムシートエントリを削除する必要があります。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1108,10 +1142,12 @@ msgstr "今週"
 #: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__project_time_mode_id
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
+"If you use the timesheet linked to projects, don't forget to setup the right "
+"unit of measure in your employees."
 msgstr ""
 "プロジェクトとタスクで使用される計量単位が設定されます。\n"
-"プロジェクトにリンクされたタイムシートを使用する場合は、従業員に適切な計量単位を設定することを忘れないでください。"
+"プロジェクトにリンクされたタイムシートを使用する場合は、従業員に適切な計量単"
+"位を設定することを忘れないでください。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1313,15 +1349,16 @@ msgstr "タイムシートは非公開タスクに作成できません。"
 msgid ""
 "Timesheets must be created on a project or a task with an active analytic "
 "account."
-msgstr "タイムシートは有効分析勘定を持つプロジェクトまたはタスクで作成される必要があります。"
+msgstr ""
+"タイムシートは有効分析勘定を持つプロジェクトまたはタスクで作成される必要があ"
+"ります。"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid ""
-"Timesheets must be created with an active employee in the selected "
-"companies."
+"Timesheets must be created with an active employee in the selected companies."
 msgstr "タイムシートは選択された会社の有効な従業員で作成される必要があります。"
 
 #. module: hr_timesheet
@@ -1370,11 +1407,6 @@ msgid "Total Hours"
 msgstr "合計時間"
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
-msgid "Hours By Task (Including Subtasks)"
-msgstr "タスクごとの時間 (サブタスク含む)"
-
-#. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Total Remaining Hours"
 msgstr "残時間合計"
@@ -1387,8 +1419,8 @@ msgstr "タイムシート時間合計"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__total_timesheet_time
 msgid ""
-"Total number of time (in the proper UoM) recorded in the project, rounded to"
-" the unit."
+"Total number of time (in the proper UoM) recorded in the project, rounded to "
+"the unit."
 msgstr "プロジェクトに (適正な単位で) 記録された合計時間を単位に丸めたもの"
 
 #. module: hr_timesheet
@@ -1401,9 +1433,10 @@ msgstr "合計:"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid ""
-"Track your working hours by projects every day and invoice this time to your"
-" customers."
-msgstr "プロジェクトごとに毎日、作業時間を記録し、その時間を顧客に請求しましょう。"
+"Track your working hours by projects every day and invoice this time to your "
+"customers."
+msgstr ""
+"プロジェクトごとに毎日、作業時間を記録し、その時間を顧客に請求しましょう。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1427,7 +1460,8 @@ msgid ""
 "        @user Assign the task to a user\n"
 "        ! Set the task a high priority\n"
 "\n"
-"        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
+"        Make sure to use the right format and order e.g. Improve the "
+"configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
 "新しいタスクを設定するのにこれらのキーワードを使いましょう:\n"
 "\n"
@@ -1436,7 +1470,8 @@ msgstr ""
 "        @ユーザ タスクをユーザーに割り当てる \n"
 "        ! タスクに高い優先順位を設定\n"
 "\n"
-"        正しいフォーマットと順序を使うようにしましょう。 例: 設定画面の改善 5h #feature #v16 @Mitchell !"
+"        正しいフォーマットと順序を使うようにしましょう。 例: 設定画面の改善 "
+"5h #feature #v16 @Mitchell !"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1485,7 +1520,9 @@ msgid ""
 "analytic account. Please change this account, or reactivate the current one "
 "to timesheet on the project."
 msgstr ""
-"無効な分析勘定にリンクされているためこのプロジェクトでタイムシートを記録することができません。この勘定を変えるか、現在の勘定をプロジェクトのタイムシートに対して再度有効化して下さい。"
+"無効な分析勘定にリンクされているためこのプロジェクトでタイムシートを記録する"
+"ことができません。この勘定を変えるか、現在の勘定をプロジェクトのタイムシート"
+"に対して再度有効化して下さい。"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1530,10 +1567,12 @@ msgstr "時間"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid ""
 "on\n"
-"                            <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
+"                            <span class=\"fw-bold text-dark\"> Sub-tasks</"
+"span>)"
 msgstr ""
 "　\n"
-"                            <span class=\"fw-bold text-dark\"> サブタスク</span>)上"
+"                            <span class=\"fw-bold text-dark\"> サブタスク</"
+"span>)上"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -1542,4 +1581,5 @@ msgid ""
 "                        <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
 msgstr ""
 "　\n"
-"                            <span class=\"fw-bold text-dark\"> サブタスク</span>)上"
+"                            <span class=\"fw-bold text-dark\"> サブタスク</"
+"span>)上"

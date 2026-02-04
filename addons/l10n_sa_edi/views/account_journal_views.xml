@@ -15,7 +15,7 @@
                     <page name="zatca_einvoicing" string="ZATCA" invisible="country_code != 'SA' or type != 'sale'">
                         <group>
                             <group>
-                                <field name="l10n_sa_serial_number"/>
+                                <field name="l10n_sa_serial_number" readonly="1" groups="base.group_no_one"/>
                             </group>
                         </group>
                         <p groups="base.group_system">
@@ -23,11 +23,6 @@
                                 In order to be able to submit Invoices to ZATCA, the following steps need to be completed:
                             </b>
                             <ol class="mt-2 mb-4">
-                                <li>
-                                    Set a Serial Number for your device
-                                    <i class="fa fa-check text-success ms-1"
-                                       invisible="not l10n_sa_serial_number"/>
-                                </li>
                                 <li>
                                     Request a Compliance Certificate (CCSID)
                                     <i class="fa fa-check text-success ms-1" groups="base.group_system"
@@ -58,7 +53,7 @@
                         <div class="alert alert-danger d-flex flex-column align-items-end" role="alert" groups="base.group_system"
                              invisible="not l10n_sa_csr_errors or l10n_sa_compliance_csid_json or l10n_sa_production_csid_json">
                             <div class="w-100">
-                                <h4 role="alert" class="alert-heading">Journal could not be onboarded. Please make sure the Company VAT/Identification Number are correct.</h4>
+                                <h4 role="alert" class="alert-heading">Journal could not be onboarded.</h4>
                                 <field name="l10n_sa_csr_errors" nolabel="1" readonly="1"/>
                                 <hr/>
                             </div>

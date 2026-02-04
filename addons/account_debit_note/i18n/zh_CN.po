@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_debit_note
-# 
+#
 # Translators:
 # Wil Odoo, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2024\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_debit_note
@@ -63,6 +64,9 @@ msgstr "创建日期"
 
 #. module: account_debit_note
 #: model:ir.actions.server,name:account_debit_note.action_move_debit_note
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_invoice_filter_debit
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_move_filter_debit
+#: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_move_line_filter_debit
 msgid "Debit Note"
 msgstr "退款通知"
 
@@ -103,7 +107,9 @@ msgstr "如果为空，则使用要借记的会计凭证的日记帐。"
 msgid ""
 "In case you need to do corrections for every line, it can be in handy to "
 "copy them.  We won't copy them for debit notes from credit notes. "
-msgstr "如果您需要对每行进行更正，复制它们会很方便。 我们不会从退款通知中复制退款通知。"
+msgstr ""
+"如果您需要对每行进行更正，复制它们会很方便。 我们不会从退款通知中复制退款通"
+"知。"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_move
@@ -203,6 +209,6 @@ msgstr "您只能借记已发布的凭证。"
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 #, python-format
 msgid ""
-"You can't make a debit note for an invoice that is already linked to a debit"
-" note."
+"You can't make a debit note for an invoice that is already linked to a debit "
+"note."
 msgstr "不能为已链接至退款通知的发票制作退款通知。"

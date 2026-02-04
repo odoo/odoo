@@ -76,6 +76,14 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
             'country': 'US',
             'state': 'AL',
         }
+        # Ensure demo user address exists and is valid
+        cls.user_demo.write({
+            'street': "215 Vine St",
+            'city': "Scranton",
+            'zip': "18503",
+            'country_id': cls.env.ref('base.us').id,
+            'state_id': cls.env.ref('base.state_us_39').id,
+        })
 
     def setUp(self):
         super().setUp()
@@ -108,6 +116,20 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
             'state': self.user_demo.partner_id.state_id.code,
         }
 
+    def assertPartnerShippingValues(self, partner, shipping_values):
+        for key, expected in shipping_values.items():
+            if key in ('state', 'country'):
+                value = partner[f'{key}_id'].code
+            else:
+                value = partner[key]
+            self.assertEqual(value, expected, "Shipping value should match")
+        if partner.state_id:
+            self.assertEqual(
+                partner.state_id.country_id,
+                partner.country_id,
+                "Partner's state should be within partner's country",
+            )
+
     def test_express_checkout_public_user_shipping_address_change(self):
         """ Test that when using express checkout as a public user and selecting a shipping address,
             a new partner is created if the partner of the SO is the public partner.
@@ -129,15 +151,10 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
             new_partner = self.sale_order.partner_shipping_id
             self.assertNotEqual(new_partner, self.website.user_id.partner_id)
             self.assertTrue(new_partner.name.endswith(self.sale_order.name))
-            for k in self.express_checkout_anonymized_shipping_values:
-                if k in ['state', 'country']:
-                    # State and country are stored as ids in `new_partner` and therefore cannot be
-                    # compared.
-                    continue
-                self.assertEqual(
-                    new_partner[k],
-                    self.express_checkout_anonymized_shipping_values[k]
-                )
+            self.assertPartnerShippingValues(
+                new_partner,
+                self.express_checkout_anonymized_shipping_values,
+            )
 
     def test_express_checkout_public_user_shipping_address_change_twice(self):
         """ Test that when using express checkout as a public user and selecting a shipping address
@@ -167,15 +184,10 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
                 }
             )
             self.assertEqual(new_partner.id, self.sale_order.partner_shipping_id.id)
-            for k in self.express_checkout_anonymized_shipping_values_2:
-                if k in ['state', 'country']:
-                    # State and country are stored as ids in `new_partner` and therefore cannot be
-                    # compared.
-                    continue
-                self.assertEqual(
-                    new_partner[k],
-                    self.express_checkout_anonymized_shipping_values_2[k]
-                )
+            self.assertPartnerShippingValues(
+                new_partner,
+                self.express_checkout_anonymized_shipping_values_2,
+            )
 
     def test_express_checkout_registered_user_exisiting_shipping_address_change(self):
         """ Test that when using express checkout as a registered user and selecting an exisiting
@@ -222,15 +234,10 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
             self.assertEqual(self.sale_order.partner_id.id, self.user_demo.partner_id.id)
             self.assertNotEqual(new_partner.id, self.user_demo.partner_id.id)
             self.assertTrue(new_partner.name.endswith(self.sale_order.name))
-            for k in self.express_checkout_anonymized_shipping_values:
-                if k in ['state', 'country']:
-                    # State and country are stored as ids in `new_partner` and therefore cannot be
-                    # compared.
-                    continue
-                self.assertEqual(
-                    new_partner[k],
-                    self.express_checkout_anonymized_shipping_values[k]
-                )
+            self.assertPartnerShippingValues(
+                new_partner,
+                self.express_checkout_anonymized_shipping_values,
+            )
 
     def test_express_checkout_registered_user_new_shipping_address_change_twice(self):
         """ Test that when using express checkout as a registered user and selecting a new
@@ -261,15 +268,10 @@ class TestWebsiteSaleDeliveryExpressCheckoutFlows(HttpCaseWithUserDemo):
                 }
             )
             self.assertEqual(new_partner.id, self.sale_order.partner_shipping_id.id)
-            for k in self.express_checkout_anonymized_shipping_values_2:
-                if k in ['state', 'country']:
-                    # State and country are stored as ids in `new_partner` and therefore cannot be
-                    # compared.
-                    continue
-                self.assertEqual(
-                    new_partner[k],
-                    self.express_checkout_anonymized_shipping_values_2[k]
-                )
+            self.assertPartnerShippingValues(
+                new_partner,
+                self.express_checkout_anonymized_shipping_values_2
+            )
 
     def test_express_checkout_partial_delivery_address_context_key(self):
         """ Test that when using express checkout with only partial delivery information,

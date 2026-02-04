@@ -27,9 +27,9 @@ except ImportError:
 # might be a good case for exception groups
 error = None
 # keep pypdf2 2.x first so noble uses that rather than pypdf 4.0
-for submod in ['._pypdf2_2', '._pypdf', '._pypdf2_1']:
+for SUBMOD in ['._pypdf2_2', '._pypdf', '._pypdf2_1']:
     try:
-        pypdf = importlib.import_module(submod, __spec__.name)
+        pypdf = importlib.import_module(SUBMOD, __spec__.name)
         break
     except ImportError as e:
         if error is None:
@@ -48,6 +48,10 @@ ArrayObject, BooleanObject, ByteStringObject, DecodedStreamObject, DictionaryObj
 PdfReadError = errors.PdfReadError  # moved in 2.0
 PdfStreamError = errors.PdfStreamError  # moved in 2.0
 createStringObject = create_string_object  # deprecated in 2.0, removed in 5.0
+try:
+    DependencyError = errors.DependencyError
+except AttributeError:
+    DependencyError = NotImplementedError
 
 # ----------------------------------------------------------
 # PyPDF2 hack
@@ -311,24 +315,36 @@ class OdooPdfFileWriter(PdfFileWriter):
         self._reader = None
         self.is_pdfa = False
 
+    def format_subtype(self, subtype):
+        """
+        Apply the correct format to the subtype.
+        It should take the form of "/xxx#2Fxxx". E.g. for "text/xml": "/text#2Fxml"
+        :param subtype: The mime-type of the attachement.
+        """
+        if not subtype:
+            return subtype
+
+        adapted_subtype = subtype
+        if REGEX_SUBTYPE_UNFORMATED.match(subtype):
+            # _pypdf2_2 and _pypdf does the formating when creating a NameObject
+            if SUBMOD in ('._pypdf2_2', '._pypdf'):
+                return '/' + subtype
+            adapted_subtype = '/' + subtype.replace('/', '#2F')
+
+        if not REGEX_SUBTYPE_FORMATED.match(adapted_subtype):
+            # The subtype still does not match the correct format, so we will not add it to the document
+            _logger.warning("Attempt to add an attachment with the incorrect subtype '%s'. The subtype will be ignored.", subtype)
+            adapted_subtype = ''
+        return adapted_subtype
+
     def add_attachment(self, name, data, subtype=None):
         """
         Add an attachment to the pdf. Supports adding multiple attachment, while respecting PDF/A rules.
         :param name: The name of the attachement
         :param data: The data of the attachement
         :param subtype: The mime-type of the attachement. This is required by PDF/A, but not essential otherwise.
-        It should take the form of "/xxx#2Fxxx". E.g. for "text/xml": "/text#2Fxml"
         """
-        adapted_subtype = subtype
-        if subtype:
-            # If we receive the subtype in an 'unformated' (mimetype) format, we'll try to convert it to a pdf-valid one
-            if REGEX_SUBTYPE_UNFORMATED.match(subtype):
-                adapted_subtype = '/' + subtype.replace('/', '#2F')
-
-            if not REGEX_SUBTYPE_FORMATED.match(adapted_subtype):
-                # The subtype still does not match the correct format, so we will not add it to the document
-                _logger.warning("Attempt to add an attachment with the incorrect subtype '%s'. The subtype will be ignored.", subtype)
-                adapted_subtype = ''
+        adapted_subtype = self.format_subtype(subtype)
 
         attachment = self._create_attachment_object({
             'filename': name,
@@ -392,7 +408,7 @@ class OdooPdfFileWriter(PdfFileWriter):
                 # only need this if running on 1.x
                 #
                 # incidentally that means the heuristic above is completely broken
-                if submod == '._pypdf2_1':
+                if SUBMOD == '._pypdf2_1':
                     self._header += second_line
         # clone_reader_document_root clones reader._ID since 3.2 (py-pdf/pypdf#1520)
         if not hasattr(self, '_ID'):
@@ -415,14 +431,18 @@ class OdooPdfFileWriter(PdfFileWriter):
         """
         # Set the PDF version to 1.7 (as PDF/A-3 is based on version 1.7) and make it PDF/A compliant.
         # See https://github.com/veraPDF/veraPDF-validation-profiles/wiki/PDFA-Parts-2-and-3-rules#rule-612-1
+        self._header = b"%PDF-1.7"
 
         # " The file header shall begin at byte zero and shall consist of "%PDF-1.n" followed by a single EOL marker,
         # where 'n' is a single digit number between 0 (30h) and 7 (37h) "
         # " The aforementioned EOL marker shall be immediately followed by a % (25h) character followed by at least four
-        # bytes, each of whose encoded byte values shall have a decimal value greater than 127 "
-        self._header = b"%PDF-1.7\n"
-        if submod == '._pypdf2_1':
-            self._header += b"%\xDE\xAD\xBE\xEF"
+        # bytes, each of whose encoded byte values shall have a decimal value greater than 127 ".
+        # PyPDF2 2.X+ already adds these 4 characters by default (so ._pypdf2_2 and ._pypdf don't need it).
+        # The injected character `\xc3\xa9` is equivalent to the character `é`.
+        # Therefore, on `_pypdf2_1`, the header will look like: `%PDF-1.7\n%éééé`,
+        # while on `_pypdf2_2` and `_pypdf`, it will look like: `%PDF-1.7\n%âãÏÓ`.
+        if SUBMOD == '._pypdf2_1':
+            self._header += b"\n%\xc3\xa9\xc3\xa9\xc3\xa9\xc3\xa9"
 
         # Add a document ID to the trailer. This is only needed when using encryption with regular PDF, but is required
         # when using PDF/A
@@ -493,6 +513,14 @@ class OdooPdfFileWriter(PdfFileWriter):
 
         outlines = self._root_object['/Outlines'].getObject()
         outlines[NameObject('/Count')] = NumberObject(1)
+
+        # [6.7.2.2-1] include a MarkInfo dictionary containing "Marked" with true value
+        mark_info = DictionaryObject({NameObject("/Marked"): BooleanObject(True)})
+        self._root_object[NameObject("/MarkInfo")] = mark_info
+
+        # [6.7.3.3-1] include minimal document structure in the catalog
+        struct_tree_root = DictionaryObject({NameObject("/Type"): NameObject("/StructTreeRoot")})
+        self._root_object[NameObject("/StructTreeRoot")] = struct_tree_root
 
         # Set odoo as producer
         self.addMetadata({

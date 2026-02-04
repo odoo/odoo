@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { freezeOdooData } from "../../src/helpers/model";
+import { freezeOdooData, waitForDataLoaded } from "../../src/helpers/model";
 import { createSpreadsheetWithChart } from "../utils/chart";
 import {
     setCellContent,
@@ -10,6 +10,7 @@ import {
 } from "../utils/commands";
 import { getCell, getEvaluatedCell } from "../utils/getters";
 import { createSpreadsheetWithPivot } from "../utils/pivot";
+import { createSpreadsheetWithList } from "@spreadsheet/../tests/utils/list";
 import { createModelWithDataSource } from "@spreadsheet/../tests/utils/model";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/utils/global_filter";
 import { addGlobalFilter } from "@spreadsheet/../tests/utils/commands";
@@ -17,6 +18,7 @@ import { registry } from "@web/core/registry";
 import { menuService } from "@web/webclient/menus/menu_service";
 import { spreadsheetLinkMenuCellService } from "@spreadsheet/ir_ui_menu/index";
 import { getMenuServerData } from "@spreadsheet/../tests/links/menu_data_utils";
+import { getBasicServerData } from "../utils/data";
 
 QUnit.module("freezing spreadsheet", {}, function () {
     QUnit.test("odoo pivot functions are replaced with their value", async function (assert) {
@@ -183,6 +185,15 @@ QUnit.module("freezing spreadsheet", {}, function () {
         assert.strictEqual(data.globalFilters[0].value, "");
     });
 
+    QUnit.test("Empty ODOO.LIST result is frozen to an empty string", async function (assert) {
+        const { model } = await createSpreadsheetWithList();
+        setCellContent(model, "A1", '=ODOO.LIST(1, 9999,"probability")'); // has no record
+        await waitForDataLoaded(model);
+        assert.strictEqual(getEvaluatedCell(model, "A1").value, "");
+        const frozenData = await freezeOdooData(model);
+        assert.strictEqual(frozenData.sheets[0].cells.A1.content, '=""');
+    })
+
     QUnit.test("odoo links are replaced with their label", async function (assert) {
         const view = {
             name: "an odoo view",
@@ -241,7 +252,7 @@ QUnit.module("freezing spreadsheet", {}, function () {
         const data = await freezeOdooData(model);
         const cells = data.sheets[0].cells;
         assert.strictEqual(cells.A10.content, "(#1) Partner Pivot");
-        assert.strictEqual(cells.A11.content, "");
+        assert.strictEqual(cells.A11.content, '=""');
         assert.strictEqual(cells.A12.content, "Total");
         assert.strictEqual(cells.B10.content, "Total");
         assert.strictEqual(cells.B11.content, "Probability");
@@ -249,4 +260,41 @@ QUnit.module("freezing spreadsheet", {}, function () {
         assert.strictEqual(data.formats[cells.B12.format], "#,##0.00");
         assert.deepEqual(data.styles[cells.B12.style], { bold: true }, "style is preserved");
     });
+
+    QUnit.test("empty values from spilled pivot table is exported as empty string", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot();
+        setCellContent(model, "A10", "=ODOO.PIVOT.TABLE(1)");
+        assert.strictEqual(getEvaluatedCell(model, "B12").value, "");  // empty value
+        const data = await freezeOdooData(model);
+        const cells = data.sheets[0].cells;
+        assert.strictEqual(cells.B12.content, '=""');
+    });
+
+    QUnit.test(
+        "Text values that match a number representation are escaped",
+        async function (assert) {
+            const serverData = getBasicServerData();
+            const names = [/*infinity*/ "23e99999", "23e76", "23e-76", "25z776", "12/12/2021"];
+            serverData.models.partner.records =
+                serverData.models.partner.records.map((record, i) => ({
+                    ...record,
+                    name: names[i],
+                }));
+            serverData.models.partner.records = names.map((name, index) => ({ ...serverData.models.partner.records[0], name, id: index +1 }));
+
+
+            const { model } = await createSpreadsheetWithList({
+                linesNumber: 5,
+                columns: ["name"],
+                serverData,
+            });
+            const data = await freezeOdooData(model);
+            const cells = data.sheets[0].cells;
+            assert.strictEqual(cells.A2.content, '="23e99999"');
+            assert.strictEqual(cells.A3.content, '="23e76"');
+            assert.strictEqual(cells.A4.content, '="23e-76"');
+            assert.strictEqual(cells.A5.content, "25z776");
+            assert.strictEqual(cells.A6.content, '="12/12/2021"');
+        }
+    );
 });

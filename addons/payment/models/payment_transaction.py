@@ -279,12 +279,13 @@ class PaymentTransaction(models.Model):
                     'active_model': 'payment.transaction',
                     # Consider also confirmed transactions to calculate the total authorized amount.
                     'active_ids': self.filtered(lambda tx: tx.state in ['authorized', 'done']).ids,
+                    'payment_backend_action': True,
                 },
             }
         else:
             for tx in self.filtered(lambda tx: tx.state == 'authorized'):
                 # In sudo mode because we need to be able to read on provider fields.
-                tx.sudo()._send_capture_request()
+                tx.with_context(payment_backend_action=True).sudo()._send_capture_request()
 
     def action_void(self):
         """ Check the state of the transaction and request to have them voided. """
@@ -299,7 +300,7 @@ class PaymentTransaction(models.Model):
                 lambda t: t.state == 'done' and t.operation == tx.operation
             ))
             # In sudo mode because we need to be able to read on provider fields.
-            tx.sudo()._send_void_request(amount_to_void=tx.amount - captured_amount)
+            tx.sudo().with_context(payment_backend_action=True)._send_void_request(amount_to_void=tx.amount - captured_amount)
 
     def action_refund(self, amount_to_refund=None):
         """ Check the state of the transactions and request their refund.
@@ -313,7 +314,7 @@ class PaymentTransaction(models.Model):
         payment_utils.check_rights_on_recordset(self)
         for tx in self:
             # In sudo mode because we need to be able to read on provider fields.
-            tx.sudo()._send_refund_request(amount_to_refund=amount_to_refund)
+            tx.sudo().with_context(payment_backend_action=True)._send_refund_request(amount_to_refund=amount_to_refund)
 
     #=== BUSINESS METHODS - PAYMENT FLOW ===#
 
@@ -464,10 +465,12 @@ class PaymentTransaction(models.Model):
 
         # Complete generic processing values with provider-specific values.
         processing_values.update(self._get_specific_processing_values(processing_values))
+        secret_keys = self._get_specific_secret_keys()
+        logged_values = {k: v for k, v in processing_values.items() if k not in secret_keys}
         _logger.info(
             "generic and provider-specific processing values for transaction with reference "
             "%(ref)s:\n%(values)s",
-            {'ref': self.reference, 'values': pprint.pformat(processing_values)},
+            {'ref': self.reference, 'values': pprint.pformat(logged_values)},
         )
 
         # Render the html form for the redirect flow if available.
@@ -513,6 +516,14 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         return dict()
+
+    def _get_specific_secret_keys(self):
+        """ Return dict keys of provider-specific values that should be hidden when logged.
+
+        :return: The provider-specific secret keys
+        :rtype: dict_keys
+        """
+        return dict().keys()
 
     def _get_mandate_values(self):
         """ Return a dict of module-specific values used to create a mandate.

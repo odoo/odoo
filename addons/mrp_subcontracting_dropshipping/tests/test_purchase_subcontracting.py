@@ -466,3 +466,81 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(component_lines[0]['route_name'], 'Buy', 'Outside of the subcontracted context, it should try to resupply stock.')
         self.assertEqual(component_lines[1]['product_id'], compo_rr.id)
         self.assertEqual(component_lines[1]['route_name'], 'Buy')
+
+    def test_partner_id_no_overwrite(self):
+        subcontract_location = self.env.company.subcontracting_location_id
+        p1, p2 = self.env['res.partner'].create([
+            {'name': 'partner 1', 'property_stock_subcontractor': subcontract_location.id},
+            {'name': 'partner 2', 'property_stock_subcontractor': subcontract_location.id},
+        ])
+        route_resupply = self.env['stock.route'].create({
+            'name': 'Resupply Subcontractor',
+            'rule_ids': [(0, False, {
+                'name': 'Stock -> Subcontractor',
+                'location_src_id': self.env.ref('stock.stock_location_stock').id,
+                'location_dest_id': subcontract_location.id,
+                'company_id': self.env.company.id,
+                'action': 'pull',
+                'auto': 'manual',
+                'picking_type_id': self.env.ref('stock.picking_type_out').id,
+                'partner_address_id': p1.id,
+            })],
+        })
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Resupply Subcontractor',
+            'location_id': subcontract_location.id,
+            'route_id': route_resupply.id,
+            'product_id': self.comp1.id,
+            'product_min_qty': 2,
+            'product_max_qty': 2,
+        })
+        self.env['procurement.group'].run_scheduler()
+        delivery = self.env["stock.move"].search([("product_id", "=", self.comp1.id)]).picking_id
+        self.assertEqual(delivery.partner_id, p1)
+
+    def test_mrp_subcontracting_dropshipping_svl(self):
+        """Check that svls created from a subcontracted dropshipped product delivery
+        do not a have a remainging value  and quantity (just like svls created from a
+        dropshipped product delivery would not have a remaining value and quantity)
+        """
+
+        dropship_route = self.env['stock.route'].search([('name', '=', 'Dropship')])
+        self.finished.write({'route_ids': [(4, dropship_route.id)]})
+        self.finished.standard_price = 5
+        self.comp1.type = "consu"
+        self.comp2.type = "consu"
+        warehouse = self.env['stock.warehouse'].create({
+            'name': 'Warehouse For subcontract',
+            'code': 'WFS'
+        })
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': self.finished.product_tmpl_id.id,
+            'partner_id': self.subcontractor_partner1.id
+        })
+        partner = self.env['res.partner'].create({
+            'name': 'Toto'
+        })
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = partner
+        so_form.warehouse_id = warehouse
+        with so_form.order_line.new() as line:
+            line.product_id = self.finished
+            line.product_uom_qty = 1
+        so = so_form.save()
+        so.action_confirm()
+
+        po = self.env['purchase.order'].search([('origin', 'ilike', so.name)])
+        self.assertTrue(po)
+        po.button_approve()
+
+        picking_dropshipped = po.picking_ids
+        picking_dropshipped.button_validate()
+        subcontracted_svl = self.env['mrp.production'].search([('incoming_picking', '=', picking_dropshipped.id)]).move_finished_ids.stock_valuation_layer_ids
+        dropship_svl = picking_dropshipped.move_ids.stock_valuation_layer_ids
+        self.assertRecordValues(dropship_svl, [
+            {'product_id': self.finished.id, 'value': -5.0, 'unit_cost': 5.0, 'quantity': -1.0, 'remaining_qty': 0, 'remaining_value': 0},
+        ])
+        self.assertRecordValues(subcontracted_svl, [
+            {'product_id': self.finished.id, 'value': 5.0, 'unit_cost': 5.0, 'quantity': 1.0, 'remaining_qty': 0, 'remaining_value': 0},
+        ])

@@ -43,6 +43,42 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         dogs = pigs.copy()
         self.assertEqual(len(dogs.tasks), 2, 'project: duplicating a project must duplicate its tasks')
 
+    def test_task_creation_notifies_author(self):
+        """ In the following configuration sending an email to the project should spawn a
+        task for it and put it in the first stage, which should notify task creator (author) by email.
+
+        Client                                  Odoo
+         │        "Task: buy flowers"             │
+         ├──────────────────────────────────────►│
+         │                                        │ Creates a task
+         │                                        │ Task lands in a stage with some mail template set
+         │  "Task: buy flowers" has been created  │
+         │◄──────────────────────────────────────┤
+        """
+        mail_template = self.env['mail.template'].create({
+            'name': 'Test template',
+            'subject': 'Test',
+            'body_html': '<p>Test</p>',
+            'auto_delete': True,
+            'model_id': self.env.ref('project.model_project_task').id,
+            'partner_to': '{{ object.id }}',
+            'use_default_to': True,
+        })
+        self.project_goats.type_ids[0].mail_template_id = mail_template.id
+
+        with self.mock_mail_gateway():
+            task = self.format_and_process(
+                EMAIL_TPL,
+                to=f'project+goats@{self.alias_domain}, valid.lelitre@agrolait.com',
+                cc='valid.other@gmail.com',
+                email_from='%s' % self.user_portal.email,
+                subject='Super Frog',
+                target_model='project.task')
+            self.flush_tracking()
+
+        self.assertIn("<p>Test</p>", str(self._new_mails.body), "Stage tracking email should be sent to authors")
+        self.assertEqual(self._new_mails.partner_ids, self.user_portal.partner_id, "Stage tracking email should be sent to authors")
+
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_task_process_without_stage(self):
         # Do: incoming mail from an unknown partner on an alias creates a new task 'Frogs'
@@ -132,6 +168,31 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
             ),
             'The task description should be the email content.',
         )
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_task_creation_from_mail(self):
+        server = self.env['fetchmail.server'].create({
+            'name': 'Test server',
+            'user': 'test@example.com',
+            'password': '',
+        })
+        task_id = self.env["mail.thread"].with_context(
+            default_fetchmail_server_id=server.id
+        ).message_process(
+            server.object_id.model,
+            EMAIL_TPL.format(
+                cc="",
+                email_from="chell@gladys.portal",
+                to=f"project+pigs@{self.alias_domain}",
+                subject="In a cage",
+                msg_id="<on.antibiotics@example.com>",
+            ),
+            save_original=server.original,
+            strip_attachments=not server.attach,
+        )
+        task = self.env['project.task'].browse(task_id)
+        self.assertEqual(task.name, "In a cage")
+        self.assertEqual(task.project_id, self.project_pigs)
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_auto_create_partner(self):

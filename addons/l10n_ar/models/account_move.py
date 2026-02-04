@@ -2,6 +2,7 @@
 from odoo import models, fields, api, _
 from odoo.osv import expression
 from odoo.exceptions import UserError, RedirectWarning, ValidationError
+from odoo.tools.misc import formatLang
 from dateutil.relativedelta import relativedelta
 import logging
 _logger = logging.getLogger(__name__)
@@ -198,12 +199,12 @@ class AccountMove(models.Model):
             ]
             journal = self.env['account.journal']
             msg = False
-            if res_code in ['9', '10'] and rec.journal_id.l10n_ar_afip_pos_system not in expo_journals:
-                # if partner is foregin and journal is not of expo, we try to change to expo journal
+            if res_code in ['8', '9', '10'] and rec.journal_id.l10n_ar_afip_pos_system not in expo_journals:
+                # if it is a foreign partner and journal is not for expo, we try to change it to an expo journal
                 journal = journal.search(domain + [('l10n_ar_afip_pos_system', 'in', expo_journals)], limit=1)
                 msg = _('You are trying to create an invoice for foreign partner but you don\'t have an exportation journal')
-            elif res_code not in ['9', '10'] and rec.journal_id.l10n_ar_afip_pos_system in expo_journals:
-                # if partner is NOT foregin and journal is for expo, we try to change to local journal
+            elif res_code not in ['8', '9', '10'] and rec.journal_id.l10n_ar_afip_pos_system in expo_journals:
+                # if it is NOT a foreign partner and journal is for expo, we try to change it to a local journal
                 journal = journal.search(domain + [('l10n_ar_afip_pos_system', 'not in', expo_journals)], limit=1)
                 msg = _('You are trying to create an invoice for domestic partner but you don\'t have a domestic market journal')
             if journal:
@@ -212,6 +213,21 @@ class AccountMove(models.Model):
                 # Throw an error to user in order to proper configure the journal for the type of operation
                 action = self.env.ref('account.action_account_journal_form')
                 raise RedirectWarning(msg, action.id, _('Go to Journals'))
+
+    def _compute_l10n_latam_document_type(self):
+        """We correct the default document type in vendor bills in case the partner is foreign (code 8)
+        so that it is always 'Foreign invoices and receipts'.
+        """
+        super()._compute_l10n_latam_document_type()
+        foreign_vendor_bills = self.filtered(lambda x: (
+            x.company_id.account_fiscal_country_id.code == "AR"
+            and x.state == 'draft'
+            and x.move_type in ['in_invoice', 'in_refund']
+            and x.l10n_latam_document_type_id
+            and x.partner_id.l10n_ar_afip_responsibility_type_id.code == '8'))
+        doctype_fa_exterior = self.env.ref('l10n_ar.fa_exterior', raise_if_not_found=False)
+        if doctype_fa_exterior:
+            foreign_vendor_bills.l10n_latam_document_type_id = doctype_fa_exterior
 
     def _post(self, soft=True):
         ar_invoices = self.filtered(lambda x: x.company_id.account_fiscal_country_id.code == "AR" and x.l10n_latam_use_documents)
@@ -372,13 +388,22 @@ class AccountMove(models.Model):
         base_lines = self.line_ids.filtered(lambda x: x.display_type == 'product')
         tax_lines = self.line_ids.filtered(lambda x: x.display_type == 'tax')
 
+        involved_tax_group_ids = []
+        for subtotals in self.tax_totals['groups_by_subtotal'].values():
+            for subtotal in subtotals:
+                involved_tax_group_ids.append(subtotal['tax_group_id'])
+        involved_tax_groups = self.env['account.tax.group'].browse(involved_tax_group_ids)
+        nat_int_tax_groups = involved_tax_groups.filtered(lambda tax_group: tax_group.l10n_ar_tribute_afip_code in ('01', '04'))
+        vat_tax_groups = involved_tax_groups.filtered('l10n_ar_vat_afip_code')
+        both_tax_group_ids = nat_int_tax_groups.ids + vat_tax_groups.ids
+
         # Base lines.
         base_line_vals_list = [x._convert_to_tax_base_line_dict() for x in base_lines]
         if include_vat:
             for vals in base_line_vals_list:
                 vals['taxes'] = vals['taxes']\
                     .flatten_taxes_hierarchy()\
-                    .filtered(lambda tax: not tax.tax_group_id.l10n_ar_vat_afip_code)
+                    .filtered(lambda tax: tax.tax_group_id.id not in both_tax_group_ids)
 
         # Tax lines.
         tax_line_vals_list = [x._convert_to_tax_line_dict() for x in tax_lines]
@@ -386,7 +411,7 @@ class AccountMove(models.Model):
             tax_line_vals_list = [
                 x
                 for x in tax_line_vals_list
-                if not x['tax_repartition_line'].tax_id.tax_group_id.l10n_ar_vat_afip_code
+                if x['tax_repartition_line'].tax_id.tax_group_id.id not in both_tax_group_ids
             ]
 
         tax_totals = self.env['account.tax']._prepare_tax_totals(
@@ -396,10 +421,42 @@ class AccountMove(models.Model):
             is_company_currency_requested=self.currency_id != self.company_id.currency_id,
         )
 
+        temp = self.tax_totals
         if include_vat:
-            temp = self.tax_totals
             tax_totals['amount_total'] = temp['amount_total']
             tax_totals['formatted_amount_total'] = temp['formatted_amount_total']
+
+        # RG 5614/2024: Show ARCA VAT and Other National Internal Taxes
+        if self.l10n_latam_document_type_id.code in ['6', '7', '8']:
+
+            # Prepare the subtotals to show in the report
+            currency_symbol = self.currency_id.symbol
+            detail_info = {
+                'vat_taxes': {'name': _("VAT Content %s", currency_symbol), 'tax_amount': 0.0, 'group': 'vat'},
+                'other_taxes': {'name': _("Other National Ind. Taxes %s", currency_symbol), 'tax_amount': 0.0,
+                                'group': 'other'},
+            }
+
+            for subtotals in temp['groups_by_subtotal'].values():
+                for subtotal in subtotals:
+                    tax_group_id = subtotal['tax_group_id']
+                    if tax_group_id in nat_int_tax_groups.ids:
+                        key = 'other_taxes'
+                    elif tax_group_id in vat_tax_groups.ids:
+                        key = 'vat_taxes'
+                    else:
+                        continue  # If not belongs to the needed groups we ignore them
+
+                    detail_info[key]["tax_amount"] += subtotal['tax_group_amount']
+
+            if detail_info['other_taxes']["tax_amount"] == 0.0:
+                detail_info.pop('other_taxes')
+
+            # Format the amounts to show in the report
+            for _item, values in detail_info.items():
+                values["formatted_amount_tax"] = formatLang(self.env, values["tax_amount"])
+
+            tax_totals["detail_ar_tax"] = list(detail_info.values())
 
         return tax_totals
 

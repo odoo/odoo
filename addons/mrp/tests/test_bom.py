@@ -31,6 +31,35 @@ class TestBoM(TestMrpCommon):
             set([line[0].id for line in lines]),
             set((self.bom_2 | self.bom_3).mapped('bom_line_ids').filtered(lambda line: not line.child_bom_id or line.child_bom_id.type != 'phantom').ids))
 
+    def test_02_explode_rounding(self):
+        fns, cmp1, cmp2 = self.env['product.product'].create([
+            {'name': 'FNS', 'type': 'product'},
+            {'name': 'CMP1', 'type': 'product'},
+            {'name': 'CMP2', 'type': 'product'},
+        ])
+        self.uom_unit.rounding = 0.01
+
+        fns_bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': fns.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({'product_id': cmp1.id, 'product_qty': 10})],
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': cmp1.product_tmpl_id.id,
+            'product_qty': 5000,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({'product_id': cmp2.id, 'product_qty': 50})],
+        })
+
+        # FNS BoM Structure:
+        # 1 Unit of FNS:
+        #  - 10 Units of CMP1:
+        #    - 0.10 Units of CMP2  (50 / 5000 * 10)
+
+        _, lines = fns_bom.explode(fns, 1)
+        self.assertEqual(lines[0][1]['qty'], 0.10)
+
     def test_10_variants(self):
         test_bom = self.env['mrp.bom'].create({
             'product_tmpl_id': self.product_7_template.id,
@@ -1542,7 +1571,11 @@ class TestBoM(TestMrpCommon):
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': finished_product.product_tmpl_id.id,
             'product_qty': 1.0,
-            'bom_line_ids': [Command.create({'product_id': p.id, 'product_qty': 1}) for p in [component_1, component_2]],
+            'bom_line_ids': [Command.create({'product_id': p.id, 'product_qty': 1}) for p in [component_1, component_2, component_3]],
+            'operation_ids': [Command.create({
+                'name': "Operation to delete",
+                'workcenter_id': self.workcenter_1.id,
+            })]
         })
 
         # Creates a MO.
@@ -1557,6 +1590,8 @@ class TestBoM(TestMrpCommon):
         with mo_form.move_raw_ids.edit(0) as raw_move:
             raw_move.product_uom_qty = 123
         mo_1 = mo_form.save()
+        initial_move_raws = mo_1.move_raw_ids
+        inital_workorder_ids = mo_1.workorder_ids
         self.assertEqual(mo_1.move_raw_ids[0].product_uom_qty, 123)
         self.assertEqual(mo_1.is_outdated_bom, False,
             "Making a modification in the MO shouldn't mark the BoM as updated")
@@ -1564,7 +1599,7 @@ class TestBoM(TestMrpCommon):
         # Now, adds an operation and a by-product in the BoM.
         bom.byproduct_ids = [Command.create({'product_id': by_product.id, 'product_qty': 2})]
         bom_byproduct = bom.byproduct_ids
-        bom.operation_ids = [Command.create({
+        bom.operation_ids = [Command.clear(), Command.create({
             'name': "Gently insert the Monster in the Jar",
             'workcenter_id': self.workcenter_1.id,
         })]
@@ -1572,6 +1607,7 @@ class TestBoM(TestMrpCommon):
 
         self.assertEqual(mo_1.is_outdated_bom, True,
             "By-Product and Operation were added to the BoM, it should be marked as updated")
+        bom.bom_line_ids = bom.bom_line_ids[:-1]
         # Call "Update BoM" action, it should reset the MO as defined by the BoM.
         mo_1.action_update_bom()
         self.assertEqual(mo_1.product_qty, 10,
@@ -1580,6 +1616,11 @@ class TestBoM(TestMrpCommon):
             "After 'Update BoM' action, MO's BoM should no longer be marked as updated")
         self.assertEqual(mo_1.workorder_ids.operation_id.id, operation.id)
         self.assertEqual(mo_1.move_byproduct_ids.byproduct_id.id, bom_byproduct.id)
+        # Check that the deleted move_raws were unlinked
+        self.assertTrue(initial_move_raws - mo_1.move_raw_ids)
+        self.assertFalse((initial_move_raws - mo_1.move_raw_ids).exists())
+        self.assertTrue(inital_workorder_ids - mo_1.workorder_ids)
+        self.assertFalse((inital_workorder_ids - mo_1.workorder_ids).exists())
 
         # Now, checks the update works also with confirmed MO.
         mo_1.action_confirm()
@@ -1839,7 +1880,7 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(mo_1.is_outdated_bom, True)
         mo_1.action_update_bom()
         self.assertRecordValues(picking.move_ids, [
-            {'product_id': self.product_2.id, 'product_uom_qty': 2},  # Ideally, this move should have been deleted but this isn't handled for now.
+            {'product_id': self.product_2.id, 'product_uom_qty': 0},  # Ideally, this move should have been deleted but this isn't handled for now (updated to 0 demand instead of removing).
             {'product_id': self.product_1.id, 'product_uom_qty': 4},
             {'product_id': self.product_3.id, 'product_uom_qty': 2},
         ])
@@ -2380,3 +2421,102 @@ class TestBoM(TestMrpCommon):
         self.assertFalse(bom.byproduct_ids[0].operation_id)
         self.assertEqual(bom.bom_line_ids[1].operation_id, ope_2)
         self.assertEqual(bom.byproduct_ids[1].operation_id, ope_2)
+
+    def test_bom_kit_rounding(self):
+        """ Checks that the available quantity is rounded down for kit products to not over-promise availability
+        """
+        integer_unit = self.env['uom.uom'].create({
+            'name': 'unit_int',
+            'category_id': self.env.ref('uom.product_uom_categ_unit').id,
+            'ratio': 1.0,
+            'uom_type': 'bigger',
+            'rounding': 1.0,
+        })
+        prod, comp = self.env["product.product"].create(
+            [{"name": name, "type": "product", 'uom_id': integer_unit.id} for name in ['prod', 'comp']]
+        )
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': prod.product_tmpl_id.id,
+            'product_uom_id': integer_unit.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({
+                'product_id': comp.id,
+                'product_qty': 2.0,
+            })],
+        })
+
+        location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(comp, location, 3.0)
+        # With 3 components on hand, 1.5 products could be created, rounded down to 1.0 due to the integer uom
+        self.assertEqual(prod.qty_available, 1.0)
+
+    def test_copy_bom_with_operations(self):
+        """
+        Check that copying a bom with operations reassign the component and by
+        product lines to the appropirate operations.
+        """
+        bom = self.bom_2
+        bom.bom_line_ids.operation_id = bom.operation_ids
+        bom.byproduct_ids = [Command.create({
+            'product_id': self.product_2.id,
+            'product_qty': 1,
+            'operation_id': bom.operation_ids.id,
+        })]
+        copied_bom = bom.copy()
+        # check that a new operation was created and linked to th copied lines
+        copied_operation = copied_bom.operation_ids
+        self.assertEqual(len(copied_operation), 1)
+        self.assertNotEqual(bom.operation_ids, copied_operation)
+        self.assertEqual(copied_bom.bom_line_ids.operation_id, copied_operation)
+        self.assertEqual(copied_bom.byproduct_ids.operation_id, copied_operation)
+        # Archive the operation of the copied bom and check that the operation linked are removed
+        copied_operation.action_archive()
+        self.assertFalse(copied_bom.bom_line_ids.operation_id | copied_bom.byproduct_ids.operation_id)
+
+    def test_bom_with_operations_for_kit_variant(self):
+        """
+        Create a bom for a product P using a kit product as compnent. Check that the operations
+        defined on the kit bom for specific variant values influence the MO of P.
+        """
+        kit_product_template = self.product_7_template
+        red, blue = kit_product_template.product_variant_ids[:2].product_template_attribute_value_ids
+        blue_sofa = kit_product_template.product_variant_ids.filtered(lambda p: p.product_template_attribute_value_ids == blue)
+        kit_bom, test_bom = self.env['mrp.bom'].create([
+            {
+                'product_tmpl_id': kit_product_template.id,
+                'product_uom_id': kit_product_template.uom_id.id,
+                'product_qty': 1.0,
+                'type': 'phantom',
+                'operation_ids': [
+                    Command.create({
+                        'name': 'Paint it Red',
+                        'workcenter_id': self.workcenter_1.id,
+                        'bom_product_template_attribute_value_ids': [Command.link(red.id)],
+                    }),
+                    Command.create({
+                        'name': 'Paint it Blue',
+                        'workcenter_id': self.workcenter_1.id,
+                        'bom_product_template_attribute_value_ids': [Command.link(blue.id)],
+                    }),
+                ],
+            },
+            {
+                'product_tmpl_id': self.product.product_tmpl_id.id,
+                'product_uom_id': self.product.product_tmpl_id.uom_id.id,
+                'product_qty': 1.0,
+                'type': 'normal',
+                'bom_line_ids': [
+                    Command.create({
+                        'product_id': blue_sofa.id,
+                        'product_qty': 2,
+                    }),
+                ],
+            },
+        ])
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product
+        mo_form.product_qty = 1.0
+        mo_form.bom_id = test_bom
+        mo = mo_form.save()
+        self.assertEqual(mo.workorder_ids.operation_id, kit_bom.operation_ids.filtered(lambda op: op.bom_product_template_attribute_value_ids == blue))

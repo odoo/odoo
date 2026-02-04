@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* fleet
-# 
+#
 # Translators:
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2023
 # ilan kl <ilan@qaroads.co.il>, 2023
@@ -16,25 +16,27 @@
 # Martin Trigaux, 2023
 # Adi Sharashov <Adi@laylinetech.com>, 2023
 # Amit Spilman <amit@laylinetech.com>, 2023
-# hed shefer <hed@laylinetech.com>, 2023
-# Yihya Hugirat <hugirat@gmail.com>, 2023
+# Hed Shefer <hed@laylinetech.com>, 2023
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
 # Ha Ketem <haketem@gmail.com>, 2024
 # yael terner, 2024
-# 
+# or balmas, 2025
+# Yihya Hugirat <hugirat@gmail.com>, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: yael terner, 2024\n"
+"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: he\n"
-"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % "
+"1 == 0) ? 1: 2;\n"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
@@ -136,6 +138,11 @@ msgid "Activity State"
 msgstr "מצב פעילות"
 
 #. module: fleet
+#: model:ir.model,name:fleet.model_mail_activity_type
+msgid "Activity Type"
+msgstr "סוג פעילות"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_type_icon
@@ -184,6 +191,7 @@ msgstr "ארכיון"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Archived"
@@ -397,8 +405,8 @@ msgstr "קטגוריות"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_category_action
 msgid ""
-"Categories will help you manage your fleet more efficiently and arrange your"
-" vehicles."
+"Categories will help you manage your fleet more efficiently and arrange your "
+"vehicles."
 msgstr ""
 
 #. module: fleet
@@ -442,8 +450,7 @@ msgstr "בחר אם החוזה עדיין תקף או לא"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_service_type__category
-msgid ""
-"Choose whether the service refer to contracts, vehicle services or both"
+msgid "Choose whether the service refer to contracts, vehicle services or both"
 msgstr "בחר אם השירות מתייחס לחוזים, שירותי רכב או שניהם"
 
 #. module: fleet
@@ -501,7 +508,7 @@ msgstr "איש קשר"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 msgid "Contains Vehicle"
-msgstr ""
+msgstr "כולל רכב"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_service_type__category__contract
@@ -701,7 +708,7 @@ msgstr "תאריך"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__acquisition_date
 msgid "Date of vehicle registration"
-msgstr ""
+msgstr "תאריך רישום של הרכב"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__date
@@ -717,8 +724,8 @@ msgstr "תאריך תחילת הכיסוי של החוזה"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__expiration_date
 msgid ""
-"Date when the coverage of the contract expirates (by default, one year after"
-" begin date)"
+"Date when the coverage of the contract expirates (by default, one year after "
+"begin date)"
 msgstr ""
 
 #. module: fleet
@@ -739,7 +746,7 @@ msgstr "מחק"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_2
 msgid "Depreciation and Interests"
-msgstr ""
+msgstr "פחת וריביות"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__description
@@ -937,7 +944,7 @@ msgstr "פג תוקף"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__expires_today
 msgid "Expires Today"
-msgstr ""
+msgstr "פג תוקף היום"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__first_contract_date
@@ -1027,7 +1034,7 @@ msgstr "דלק"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_22
 msgid "Fuel Injector Replacement"
-msgstr ""
+msgstr "החלפת מזרק דלק"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_23
@@ -1691,7 +1698,7 @@ msgstr ""
 #: code:addons/fleet/models/fleet_vehicle_model.py:0
 #, python-format
 msgid "Operation not supported."
-msgstr ""
+msgstr "הפעולה אינה נתמכת."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_15
@@ -2188,10 +2195,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
 msgid ""
 "Track all the services done on your vehicle.\n"
-"            Services can be of many types: occasional repair, fixed maintenance, etc."
+"            Services can be of many types: occasional repair, fixed "
+"maintenance, etc."
 msgstr ""
 "עקוב אחר כל השירותים שבוצעו עבור הרכב שלך.\n"
-"            השירותים יכולים להיות מסוגים רבים: תיקון מדי פעם, תחזוקה קבועה וכו'."
+"            השירותים יכולים להיות מסוגים רבים: תיקון מדי פעם, תחזוקה קבועה "
+"וכו'."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__trailer_hook

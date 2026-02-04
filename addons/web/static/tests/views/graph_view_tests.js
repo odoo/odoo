@@ -3370,8 +3370,7 @@ QUnit.module("Views", (hooks) => {
                     views: [[false, "search"]],
                 },
             });
-            checkLabels(assert, graph, ["January 2016", "March 2016", "May 2016", "April 2016"]);
-            // mockReadGroup does not always sort groups -> May 2016 is before April 2016 for that reason.
+            checkLabels(assert, graph, ["January 2016", "March 2016", "April 2016", "May 2016"]);
             checkLegend(assert, graph, ["xphone", "xpad"]);
             checkDatasets(
                 assert,
@@ -4210,11 +4209,11 @@ QUnit.module("Views", (hooks) => {
         checkLabels(assert, graph, [
             "January 2016",
             "March 2016",
+            "April 2016",
             "May 2016",
             "None",
-            "April 2016",
         ]);
-        checkDatasets(assert, graph, "data", { data: [56, 26, 4, 105, 48] });
+        checkDatasets(assert, graph, "data", { data: [56, 26, 48, 4, 105] });
     });
 
     QUnit.test("fill_temporal is true by default", async function (assert) {
@@ -4337,7 +4336,7 @@ QUnit.module("Views", (hooks) => {
                 views: [[false, "search"]],
             },
         });
-        checkLabels(assert, graph, ["January 2016", "March 2016", "May 2016", "April 2016"]);
+        checkLabels(assert, graph, ["January 2016", "March 2016", "April 2016", "May 2016"]);
     });
 
     QUnit.test("graph_groupbys should be also used after first load", async function (assert) {
@@ -4764,5 +4763,26 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(graph.model.data.exceeds, false);
         assert.strictEqual(graph.model.data.datasets.length, 600);
         assert.strictEqual(graph.model.data.labels.length, 600);
+    });
+
+    QUnit.test("graph view reserved word", async function (assert) {
+        // Check that the use of reserved words does not interfere with the view.
+        assert.expect(2);
+
+        serverData.models.product.records.push({ id: 38, display_name: "constructor" });
+        serverData.models.foo.records[7].product_id = 38;
+
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph order="DESC">
+                    <field name="product_id"/>
+                </graph>
+            `,
+        });
+        checkLabels(assert, graph, ["xphone", "xpad", "constructor"]);
+        checkDatasets(assert, graph, ["data", "label"], [{ data: [4, 3, 1], label: "Count" }]);
     });
 });

@@ -212,6 +212,7 @@ class PosConfig(models.Model):
     def _compute_current_session(self):
         """If there is an open session, store it to current_session_id / current_session_State.
         """
+        self.session_ids.fetch(["state"])
         for pos_config in self:
             opened_sessions = pos_config.session_ids.filtered(lambda s: s.state != 'closed')
             rescue_sessions = opened_sessions.filtered('rescue')
@@ -373,6 +374,9 @@ class PosConfig(models.Model):
         if not self.env.is_admin() and {'is_header_or_footer', 'receipt_header', 'receipt_footer'} & values.keys():
             raise AccessError(_('Only administrators can edit receipt headers and footers'))
 
+    def _config_sequence_implementation(self):
+        return 'standard'
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -384,6 +388,7 @@ class PosConfig(models.Model):
                 'prefix': "%s/" % vals['name'],
                 'code': "pos.order",
                 'company_id': vals.get('company_id', False),
+                'implementation': self._config_sequence_implementation(),
             }
             # force sequence_id field to new pos.order sequence
             vals['sequence_id'] = IrSequence.create(val).id
@@ -813,7 +818,7 @@ class PosConfig(models.Model):
         product_ids = self.env.cr.fetchall()
         products = self.env['product.product'].search([('id', 'in', product_ids)])
         product_combo = products.filtered(lambda p: p['detailed_type'] == 'combo')
-        product_in_combo = product_combo.combo_ids.combo_line_ids.product_id
+        product_in_combo = product_combo.combo_ids.combo_line_ids.product_id.filtered(lambda p: p.active)
         products_available = products | product_in_combo
         return products_available.read(fields)
 

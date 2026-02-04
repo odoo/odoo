@@ -169,19 +169,19 @@ class AccountPayment(models.Model):
             # The wizard asks for the number printed on the first pre-printed check
             # so payments are attributed the number of the check the'll be printed on.
             self.env.cr.execute("""
-                  SELECT payment.id
+                  SELECT payment.check_number
                     FROM account_payment payment
-                    JOIN account_move move ON movE.id = payment.move_id
-                   WHERE journal_id = %(journal_id)s
+                    JOIN account_move move ON move.id = payment.move_id
+                   WHERE move.journal_id = %(journal_id)s
                    AND payment.check_number IS NOT NULL
                 ORDER BY payment.check_number::BIGINT DESC
                    LIMIT 1
             """, {
                 'journal_id': self.journal_id.id,
             })
-            last_printed_check = self.browse(self.env.cr.fetchone())
-            number_len = len(last_printed_check.check_number or "")
-            next_check_number = '%0{}d'.format(number_len) % (int(last_printed_check.check_number) + 1)
+            last_check_number = (self.env.cr.fetchone() or (False,))[0]
+            number_len = len(last_check_number or "")
+            next_check_number = f'{int(last_check_number) + 1:0{number_len}}'
 
             return {
                 'name': _('Print Pre-numbered Checks'),
@@ -232,6 +232,7 @@ class AccountPayment(models.Model):
             'date': format_date(self.env, self.date),
             'partner_id': self.partner_id,
             'partner_name': self.partner_id.name,
+            'company': self.company_id.name,
             'currency': self.currency_id,
             'state': self.state,
             'amount': formatLang(self.env, self.amount, currency_obj=self.currency_id) if i == 0 else 'VOID',

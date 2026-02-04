@@ -11,6 +11,7 @@ import odoo.tests
 from odoo import http
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.web_editor.controllers.main import Web_Editor
+from odoo.fields import Command
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
@@ -66,6 +67,49 @@ class TestUiCustomizeTheme(odoo.tests.HttpCase):
 
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestUiHtmlEditor(HttpCaseWithUserDemo):
+
+    def test_html_editor_language(self):
+        Lang = self.env['res.lang']
+        Page = self.env['website.page']
+
+        default_website = self.env.ref('website.default_website')
+        parseltongue = Lang.create({
+            'name': 'Parseltongue',
+            'code': 'pa_GB',
+            'iso_code': 'pa_GB',
+            'url_code': 'pa_GB',
+        })
+        Lang._activate_lang(parseltongue.code)
+        default_website.write({
+            'language_ids': [
+                Command.link(parseltongue.id),
+            ],
+            'default_lang_id': parseltongue.id,
+        })
+
+        page = Page.create({
+            'name': 'Test page',
+            'type': 'qweb',
+            'arch': '''
+                <t t-call="website.layout">
+                    <div>rumbler</div>
+                </t>
+            ''',
+            'key': 'test.generic_view',
+            'website_id': default_website.id,
+            'is_published': True,
+            'url': '/test_page',
+        })
+
+        page.view_id.update_field_translations('arch_db', {
+            parseltongue.code: {
+                'rumbler': 'rommelpot',
+            }
+        })
+        self.env.ref('base.user_admin').lang = parseltongue.code
+        self.start_tour(self.env['website'].get_client_action_url('/test_page'), 'html_editor_language', login='admin')
+        self.assertIn("rumbler", page.view_id.with_context(lang='en_US').arch)
+        self.assertIn("rommelpot", page.view_id.with_context(lang='pa_GB').arch)
 
     def test_html_editor_multiple_templates(self):
         Website = self.env['website']
@@ -238,6 +282,11 @@ class TestUiTranslate(odoo.tests.HttpCase):
 
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
+
+    def fetch_proxy(self, url):
+        if 'vimeo' in url:
+            return self.make_fetch_proxy_response('{}')
+        return super().fetch_proxy(url)
 
     def test_01_admin_tour_homepage(self):
         self.start_tour("/web", 'homepage', login='admin')
@@ -654,3 +703,26 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_media_iframe_video(self):
         self.start_tour("/", "website_media_iframe_video", login="admin")
+
+    def test_media_iframe_video_options(self):
+        self.start_tour("/", "website_media_iframe_video_options", login="admin")
+
+    def test_popup_visibility_option(self):
+        self.start_tour("/", "website_popup_visibility_option", login="admin")
+
+    def test_header_color_and_undo_redo_issues(self):
+        self.start_tour("/", "undo_redo_header_oriented_issue", login="admin")
+
+    def test_website_custom_colors_picking(self):
+        self.start_tour('/', 'website_custom_colors_picking', login='admin')
+
+    def test_adapt_custom_button_on_drop(self):
+        default_website = self.env.ref('website.default_website')
+        self.env['ir.ui.view'].with_context(website_id=default_website.id).save_snippet(
+            name='Custom Button',
+            arch="""<a class="btn btn-primary o_default_snippet_text s_custom_snippet o_snippet_drop_in_only s_custom_button" href="#" data-bs-original-title="" title="">Button</a>""",
+            thumbnail_url='/website/static/src/img/snippets_thumbs/s_button.svg',
+            snippet_key='s_custom_button',
+            template_key='website.snippets'
+        )
+        self.start_tour('/', 'adapt_custom_button_on_drop', login='admin')

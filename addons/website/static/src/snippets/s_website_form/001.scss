@@ -100,6 +100,11 @@
             background-color: darken($o-gray-200, 4.5%);
         }
     }
+    @include media-breakpoint-down(md) {
+        .datetimepicker-input{
+            caret-color: transparent;
+        }
+    }
 }
 
 body:not(.editor_enable) .s_website_form[data-vcss="001"] {

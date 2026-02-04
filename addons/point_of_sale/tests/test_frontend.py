@@ -83,7 +83,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         })
 
         env['res.partner'].create({
-            'name': 'Deco Addict',
+            'name': 'Acme Corporation',
         })
 
         cash_journal = journal_obj.create({
@@ -348,6 +348,11 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
                 'applied_on': '0_product_variant',
                 'min_quantity': 2,
                 'product_id': env.ref('point_of_sale.product_product_consumable').id,
+            }), (0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 1,
+                'min_quantity': 5,
+                'product_tmpl_id': cls.monitor_stand.product_tmpl_id.id,
             })],
         })
 
@@ -586,6 +591,14 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(n_invoiced, 1, 'There should be 1 invoiced order.')
         self.assertEqual(n_paid, 2, 'There should be 2 paid order.')
 
+    def test_03_pos_with_lots(self):
+
+        # open a session, the /pos/ui controller will redirect to it
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+
+        self.monitor_stand.tracking = 'lot'
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_03_pos_with_lots', login="pos_user")
+
     def test_04_product_configurator(self):
         # Making one attribute inactive to verify that it doesn't show
         configurable_product = self.env['product.product'].search([('name', '=', 'Configurable Chair'), ('available_in_pos', '=', 'True')], limit=1)
@@ -818,6 +831,22 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(len(pos_session.statement_line_ids), 1)
         self.assertEqual(pos_session.statement_line_ids[0].amount, -10)
 
+    def test_pos_closing_cash_decimals(self):
+        """
+        Test that the closing cash difference is rounded according to the currency specification
+        and does not have excessive decimal places.
+        """
+        self.main_pos_config.open_ui()
+        current_session = self.main_pos_config.current_session_id
+        current_session.post_closing_cash_details(560.40)
+        current_session.close_session_from_ui()
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CashClosingDecimals', login="pos_user")
+
+        pos_session = self.main_pos_config.current_session_id
+        self.assertEqual(pos_session.message_ids[0].body.striptags(), 'Opening difference: $\xa0-\ufeff1.91')
+
     def test_cash_payments_should_reflect_on_next_opening(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'OrderPaidInCash', login="pos_user")
@@ -909,6 +938,8 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_07_pos_combo(self):
         setup_pos_combo_items(self)
         self.office_combo.write({'lst_price': 50})
+        # Archive a product to test that combo lines with archived products do not appear
+        self.office_combo.combo_ids.combo_line_ids.product_id.filtered(lambda p: p.name == 'Combo Product 1').active = False
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosComboPriceTaxIncludedTour', login="pos_user")
         order = self.env['pos.order'].search([])
@@ -992,7 +1023,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'nomenclature_id': barcodes_gs1_nomenclature.id
         })
 
-        self.env['product.product'].create({
+        product_1 = self.env['product.product'].create({
             'name': 'Product 1',
             'available_in_pos': True,
             'list_price': 10,
@@ -1015,6 +1046,13 @@ class TestUi(TestPointOfSaleHttpCommon):
             'list_price': 10,
             'taxes_id': False,
             'barcode': '3760171283370',
+        })
+
+        self.env['product.packaging'].create({
+            'name': 'Product Packaging 10 Products',
+            'qty': 10,
+            'product_id': product_1.id,
+            'barcode': '08431673020132',
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
@@ -1284,6 +1322,86 @@ class TestUi(TestPointOfSaleHttpCommon):
         with patch.object(PosConfig, 'get_limited_partners_loading', mocked_get_limited_partners_loading):
             self.main_pos_config.open_ui()
             self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'SearchMoreCustomer', login="pos_user")
+
+    def test_add_multiple_serials_at_once(self):
+        self.product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+            'tracking': 'serial',
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'available_in_pos': True,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, "test_add_multiple_serials_at_once", login="pos_user")
+
+    def test_order_and_invoice_amounts(self):
+        payment_term = self.env['account.payment.term'].create({
+            'name': "early_payment_term",
+            'discount_percentage': 10,
+            'discount_days': 10,
+            'early_discount': True,
+            'early_pay_discount_computation': 'mixed',
+            'line_ids': [Command.create({
+                'value': 'percent',
+                'nb_days': 0,
+                'value_amount': 100,
+            })]
+        })
+        self.partner_test_1.property_payment_term_id = payment_term.id
+
+        tax = self.env['account.tax'].create({
+            'name': 'Tax 10%',
+            'amount': 10,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        self.env['product.product'].create({
+            'name': 'Product Test',
+            'available_in_pos': True,
+            'list_price': 1000,
+            'taxes_id': [(6, 0, [tax.id])],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenInvoiceOrder', login="pos_user")
+
+        order = self.env['pos.order'].search([('partner_id', '=', self.partner_test_1.id)], limit=1)
+        self.assertTrue(order)
+
+        self.assertEqual(order.partner_id, self.partner_test_1)
+
+        invoice = self.env['account.move'].search([('invoice_origin', '=', order.name)], limit=1)
+        self.assertTrue(invoice)
+        self.assertFalse(invoice.invoice_payment_term_id)
+
+        self.assertAlmostEqual(order.amount_total, invoice.amount_total, places=2, msg="Order and Invoice amounts do not match.")
+
+
+    def test_combo_with_custom_attribute(self):
+        setup_pos_combo_items(self)
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_combo_with_custom_attribute', login="pos_user")
+
+    def test_combo_disallowLineQuantityChange(self):
+        setup_pos_combo_items(self)
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_combo_disallowLineQuantityChange', login="pos_user")
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_combo_disallowLineQuantityChange_2', login="pos_user")
+
+    def test_draft_order_deletion_with_printer(self):
+        self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+        })
+
+        self.main_pos_config.write({
+            'is_order_printer': True,
+            'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_draft_order_deletion_with_printer', login="pos_user")
 
 
 # This class just runs the same tests as above but with mobile emulation

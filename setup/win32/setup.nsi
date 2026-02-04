@@ -389,6 +389,7 @@ SectionEnd
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 Section "Uninstall"
+    SetRegView 64
     # Check if the server is installed
     !insertmacro IfKeyExists "HKLM" "${UNINSTALL_REGISTRY_KEY_SERVER}" "UninstallString"
     Pop $R0
@@ -406,7 +407,9 @@ Section "Uninstall"
     Rmdir /r "$INSTDIR\python"
     Rmdir /r "$INSTDIR\nssm"
     FindFirst $0 $1 "$INSTDIR\nginx*"
+    StrCmp $1 "" nginx_dir_not_found
     Rmdir /R "$INSTDIR\$1"
+    nginx_dir_not_found:
     FindClose $0
     DeleteRegKey HKLM "${UNINSTALL_REGISTRY_KEY}"
 SectionEnd

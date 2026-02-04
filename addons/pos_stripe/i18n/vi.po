@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_stripe
-# 
+#
 # Translators:
 # Wil Odoo, 2023
-# Thi Huong Nguyen, 2024
-# 
+# Thi Huong Nguyen, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_stripe
@@ -30,8 +30,6 @@ msgstr "Hoàn thành giai đoạn hướng dẫn Stripe cho công ty %s."
 #. module: pos_stripe
 #. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
-#: code:addons/pos_stripe/models/pos_payment_method.py:0
-#: code:addons/pos_stripe/models/pos_payment_method.py:0
 #, python-format
 msgid "Do not have access to fetch token from Stripe"
 msgstr "Không có quyền truy cập để tìm nạp token từ Stripe"
@@ -41,8 +39,8 @@ msgstr "Không có quyền truy cập để tìm nạp token từ Stripe"
 msgid ""
 "Don't forget to complete Stripe connect before using this payment method."
 msgstr ""
-"Đừng quên hoàn thành kết nối Stripe trước khi sử dụng phương thức thanh toán"
-" này."
+"Đừng quên hoàn thành kết nối Stripe trước khi sử dụng phương thức thanh toán "
+"này."
 
 #. module: pos_stripe
 #. odoo-javascript
@@ -53,7 +51,6 @@ msgstr "Không thể phát hiện: %s"
 
 #. module: pos_stripe
 #. odoo-javascript
-#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 #, python-format
 msgid "Failed to load resource: net::ERR_INTERNET_DISCONNECTED."
@@ -76,7 +73,7 @@ msgstr "Thanh toán bị huỷ do không có máy đọc nào được kết n�
 #. module: pos_stripe
 #: model:ir.model,name:pos_stripe.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr "Phương thức thanh toán điểm bán hàng"
+msgstr "Phương thức thanh toán POS"
 
 #. module: pos_stripe
 #: model:ir.model,name:pos_stripe.model_pos_session
@@ -129,14 +126,6 @@ msgstr "Máy đọc Stripe %s không được liệt kê trong tài khoản củ
 #, python-format
 msgid "Terminal %s is already used on payment method %s."
 msgstr "Thiết bị đầu cuối %s đã được sử dụng trong phương thức thanh toán %s."
-
-#. module: pos_stripe
-#. odoo-python
-#: code:addons/pos_stripe/models/pos_payment_method.py:0
-#: code:addons/pos_stripe/models/pos_payment_method.py:0
-#, python-format
-msgid "There are some issues between us and Stripe, try again later."
-msgstr "Đang có một số vấn đề giữa hệ thống và Stripe, vui lòng thử lại sau."
 
 #. module: pos_stripe
 #: model:ir.model.fields,help:pos_stripe.field_pos_payment_method__stripe_serial_number

@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* analytic
-# 
+# * analytic
+#
 # Translators:
-# Wil Odoo, 2024
-# Larissa Manderfeld, 2024
-# 
+# Larissa Manderfeld, 2025
+# Wil Odoo, 2025
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
-"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"POT-Creation-Date: 2026-01-29 18:35+0000\n"
+"PO-Revision-Date: 2026-01-31 17:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-17/analytic/"
+"de/>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: analytic
 #. odoo-python
@@ -59,6 +63,11 @@ msgstr "Kontenfeld"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_ids
 msgid "Accounts"
 msgstr "Konten"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_agrolait
+msgid "Acme Corporation"
+msgstr "Acme Corporation"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
@@ -379,8 +388,8 @@ msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
 msgstr ""
-"Kosten werden automatisch hinterlegt, wenn Sie Lieferantenrechnungen, Spesen"
-" oder Zeiterfassungen registrieren."
+"Kosten werden automatisch hinterlegt, wenn Sie Lieferantenrechnungen, Spesen "
+"oder Zeiterfassungen registrieren."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_uid
@@ -435,11 +444,6 @@ msgid "Debit"
 msgstr "Soll"
 
 #. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_agrolait
-msgid "Deco Addict"
-msgstr "Deco Addict"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__default_applicability
 msgid "Default Applicability"
 msgstr "Standardanwendbarkeit"
@@ -480,6 +484,12 @@ msgstr "Speicherung deaktivieren"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Verteilung der Kostenstellen"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
@@ -541,19 +551,20 @@ msgstr "Falls markiert, erfordern neue Nachrichten Ihre Aufmerksamkeit."
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Falls markiert, weisen einige Nachrichten einen Zustellungsfehler auf."
+msgstr "Falls markiert, weisen einige Nachrichten einen Zustellungsfehler auf."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sales orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to analyse\n"
+"                analytic accounts. You can track costs and revenues to "
+"analyse\n"
 "                your margins easily."
 msgstr ""
 "In Odoo werden Verkaufsaufträge und Projekte mit Hilfe von\n"
-"Kostenstellen gepflegt. Sie können einfach Kosten und Erlöse nachverfolgen, um ihre Margen zu analysieren."
+"Kostenstellen gepflegt. Sie können einfach Kosten und Erlöse nachverfolgen, "
+"um ihre Margen zu analysieren."
 
 #. module: analytic
 #: model:account.analytic.plan,name:analytic.analytic_plan_internal
@@ -781,13 +792,17 @@ msgstr "Forschung & Entwicklung"
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sales orders\n"
-"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                invoices. Customer invoices can be created based on sales "
+"orders\n"
+"                (fixed price invoices), on timesheets (based on the work "
+"done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 "Umsätze werden automatisch erstellt, wenn Sie Kundenrechnungen\n"
-"generieren. Kundenrechnungen können auf der Grundlage von Verkaufsaufträgen erstellt werden\n"
-"(Festpreisrechnungen), auf Zeiterfassungen (basierend auf der geleisteten Arbeit) oder\n"
+"generieren. Kundenrechnungen können auf der Grundlage von Verkaufsaufträgen "
+"erstellt werden\n"
+"(Festpreisrechnungen), auf Zeiterfassungen (basierend auf der geleisteten "
+"Arbeit) oder\n"
 "auf Spesen (z. B. Weiterberechnung von Reisekosten)."
 
 #. module: analytic
@@ -816,6 +831,13 @@ msgstr "Seagate P2"
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
 msgstr "Kostenstellenbuchungen suchen"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+#, python-format
+msgid "See them"
+msgstr "Anzeigen"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__company_id
@@ -869,6 +891,22 @@ msgid "Subplans"
 msgstr "Unterpläne"
 
 #. module: analytic
+#: model:ir.model,name:analytic.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "Systemparameter"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/ir_config_parameter.py:0
+#, python-format
+msgid ""
+"The value for %s must be the ID to a valid analytic plan that is not a "
+"subplan"
+msgstr ""
+"Der Wert für %s muss die ID zu einem gültigen Kostenstellenplan sein, der "
+"kein Unterplan ist"
+
+#. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_absences
 msgid "Time Off"
 msgstr "Abwesenheit"
@@ -909,6 +947,17 @@ msgstr "Ansicht"
 #: code:addons/analytic/models/analytic_account.py:0
 #, python-format
 msgid ""
+"Whoa there! Making this change would wipe out your current data. Let's avoid "
+"that, shall we?"
+msgstr ""
+"Halt! Wenn Sie diese Änderung vornehmen, werden Ihre aktuellen Daten "
+"gelöscht. Wollen wir das wirklich?"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+#, python-format
+msgid ""
 "You can't set a different company on your analytic account since there are "
 "some analytic items linked to it."
 msgstr ""
@@ -939,3 +988,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
 msgstr "z. B. Projekt XYZ"
+
+#~ msgid "Deco Addict"
+#~ msgstr "Deco Addict"

@@ -251,6 +251,8 @@ class AccountChartTemplate(models.AbstractModel):
             if prop.startswith('property_'):
                 template_data.pop(prop)
         data.pop('account.reconcile.model', None)
+        if 'res.company' in data:
+            data['res.company'][company.id].setdefault('anglo_saxon_accounting', company.anglo_saxon_accounting)
 
         for xmlid, journal_data in list(data.get('account.journal', {}).items()):
             if self.ref(xmlid, raise_if_not_found=False):
@@ -303,6 +305,7 @@ class AccountChartTemplate(models.AbstractModel):
                 or len(template_line_ids) not in (0, len(tax.repartition_line_ids))
             )
 
+        existing_current_year_earnings_account = self.env['account.account'].search([('company_id', '=', company.id),('account_type', '=', 'equity_unaffected')], limit=1)
         obsolete_xmlid = set()
         skip_update = set()
         for model_name, records in data.items():
@@ -352,6 +355,9 @@ class AccountChartTemplate(models.AbstractModel):
                                         repartition_line_values.clear()
                                         repartition_line_values['tag_ids'] = tags or [Command.clear()]
                 elif model_name == 'account.account':
+                    if  existing_current_year_earnings_account and values['account_type'] == 'equity_unaffected':
+                        skip_update.add((model_name, xmlid))
+                        continue
                     # Point or create xmlid to existing record to avoid duplicate code
                     account = self.ref(xmlid, raise_if_not_found=False)
                     normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}'
@@ -713,18 +719,10 @@ class AccountChartTemplate(models.AbstractModel):
                                 template_data[model][xmlid].update(record)
         return template_data
 
-    def _setup_utility_bank_accounts(self, template_code, company, template_data):
-        """Define basic bank accounts for the company.
-
-        - Suspense Account
-        - Outstanding Receipts/Payments Accounts
-        - Cash Difference Gain/Loss Accounts
-        - Liquidity Transfer Account
-        """
-        # Create utility bank_accounts
+    def _get_accounts_data_values(self, company, template_data):
         bank_prefix = company.bank_account_code_prefix
         code_digits = int(template_data.get('code_digits', 6))
-        accounts_data = {
+        return {
             'account_journal_suspense_account_id': {
                 'name': _("Bank Suspense Account"),
                 'prefix': bank_prefix,
@@ -778,6 +776,16 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
+    def _setup_utility_bank_accounts(self, template_code, company, template_data):
+        """Define basic bank accounts for the company.
+
+        - Suspense Account
+        - Outstanding Receipts/Payments Accounts
+        - Cash Difference Gain/Loss Accounts
+        - Liquidity Transfer Account
+        """
+        # Create utility bank_accounts
+        accounts_data = self._get_accounts_data_values(company, template_data)
         for fname in list(accounts_data):
             if company[fname]:
                 del accounts_data[fname]
@@ -920,7 +928,7 @@ class AccountChartTemplate(models.AbstractModel):
         # Assign the account based on the map
         for field, account_name in field_and_names:
             for tax_group in tax_group_data.values():
-                tax_group[field] = existing_accounts.get(account_template_xml_id)
+                tax_group[field] = existing_accounts.get(tax_group.get(field))
 
         for tax_template in tax_data.values():
             # This is required because the country isn't provided directly by the template
@@ -1302,11 +1310,12 @@ class AccountChartTemplate(models.AbstractModel):
 
         translation_importer = TranslationImporter(self.env.cr, verbose=False)
 
-        # Gather translations for records that are created from the chart_template data
-        for chart_template, chart_companies in groupby(companies, lambda c: c.chart_template):
-            template_data = template_data or self.env['account.chart.template']._get_chart_template_data(chart_template)
-            template_data.pop('template_data', None)
-            for mname, data in template_data.items():
+        for company in companies:
+            chart_template_data = template_data or self.env['account.chart.template'] \
+                .with_company(company) \
+                ._get_chart_template_data(company.chart_template)
+            chart_template_data.pop('template_data', None)
+            for mname, data in chart_template_data.items():
                 for _xml_id, record in data.items():
                     fnames = {fname.split('@')[0] for fname in record if fname != '__translation_module__'}
                     for lang in langs:
@@ -1316,9 +1325,8 @@ class AccountChartTemplate(models.AbstractModel):
                                 continue
                             field_translation = self._get_field_translation(record, fname, lang)
                             if field_translation:
-                                for company in chart_companies:
-                                    xml_id = _xml_id if '.' in _xml_id else f"account.{company.id}_{_xml_id}"
-                                    translation_importer.model_translations[mname][fname][xml_id][lang] = field_translation
+                                xml_id = _xml_id if '.' in _xml_id else f"account.{company.id}_{_xml_id}"
+                                translation_importer.model_translations[mname][fname][xml_id][lang] = field_translation
 
         # Gather translations for the TEMPLATE_MODELS records that are not created from the chart_template data
         translation_langs = [lang for lang in langs if lang != 'en_US']  # there are no code translations for 'en_US' (original language)

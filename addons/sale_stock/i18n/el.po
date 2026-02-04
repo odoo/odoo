@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_stock
-# 
+# * sale_stock
+#
 # Translators:
 # Alexandros Kapetanios <alexandros@gnugr.org>, 2024
 # Giota Dandidou <giotadandidou@gmail.com>, 2024
@@ -9,21 +9,25 @@
 # Martin Trigaux, 2024
 # Kostas Goutoudis <goutoudis@gmail.com>, 2024
 # George Tarasidis <george_tarasidis@yahoo.com>, 2024
-# Georgios Geitonas, 2025
-# 
+# Georgios Geitonas <g.geitonas@dileanity.com>, 2025
+# Charalampos Loukas, 2025
+# Iasonas Polydoros <j.polydoros@dileanity.com>, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Georgios Geitonas, 2025\n"
-"Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"PO-Revision-Date: 2025-12-13 08:03+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Greek <https://translate.odoo.com/projects/odoo-17/sale_stock/"
+"el/>\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -66,7 +70,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
 "<span class=\"small badge text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Shipped\n"
 "                                    </span>"
 msgstr ""
 
@@ -74,7 +79,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
 msgid ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
+"                    Some deliveries are already done. Returns can be created "
+"from the Delivery Orders.\n"
 "                </span>"
 msgstr ""
 
@@ -92,12 +98,24 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Σύμφωνα με τη ρύθμιση του προϊόντος, η παραδοθείσα ποσότητα μπορεί να "
+"υπολογίζεται αυτόματα μέσω του μηχανισμού:\n"
+"  - Χειροκίνητα: η ποσότητα ορίζεται χειροκίνητα στη γραμμή\n"
+"  - Αναλυτικά από έξοδα: η ποσότητα είναι το άθροισμα ποσοτήτων από "
+"καταχωρημένα έξοδα\n"
+"  - Χρονοχρέωση: η ποσότητα είναι το άθροισμα των ωρών που έχουν καταγραφεί "
+"σε εργασίες συνδεδεμένες με αυτή τη γραμμή πώλησης\n"
+"  - Κινήσεις Αποθέματος: η ποσότητα προέρχεται από επιβεβαιωμένες παραλαβές/"
+"αποστολές\n"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -227,13 +245,13 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr ""
+msgstr "Προέκυψαν εξαιρέσεις στις παραγγελίες πώλησης:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s):"
-msgstr ""
+msgstr "Εξαιρέσεις:"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__expected_date
@@ -262,7 +280,7 @@ msgstr ""
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Forecasted Stock"
-msgstr ""
+msgstr "Προβλεπόμενο Απόθεμα"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
@@ -290,7 +308,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Impacted Transfer(s):"
-msgstr ""
+msgstr "Μεταφορά(ές) που επηρεάζονται:"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
@@ -339,7 +357,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__json_popover
 msgid "JSON data for the popover widget"
-msgstr ""
+msgstr "Δεδομένα JSON για το στοιχείο προβολής (popover)"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move
@@ -369,7 +387,7 @@ msgstr "Παρτίδα/Σειριακός"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Manual actions may be needed."
-msgstr ""
+msgstr "Μπορεί να χρειαστούν χειροκίνητες ενέργειες."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
@@ -378,8 +396,8 @@ msgid ""
 "for delivery that many days earlier than the actual promised date, to cope "
 "with unexpected delays in the supply chain."
 msgstr ""
-"Περιθώριο σφάλματος για ημερομηνίες που συμφωνήθηκαν με πελάτες. Τα προϊόντα"
-" θα προγραμματιστούν για προμήθεια και αποστολή πολλές μέρες πριν την "
+"Περιθώριο σφάλματος για ημερομηνίες που συμφωνήθηκαν με πελάτες. Τα προϊόντα "
+"θα προγραμματιστούν για προμήθεια και αποστολή πολλές μέρες πριν την "
 "πραγματική ημερομηνία που είχε υποσχεθεί, ώστε να αντιμετωπιστούν τυχόν μη "
 "αναμενόμενες καθυστερήσεις στην εφοδιαστική αλυσίδα."
 
@@ -389,12 +407,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
 msgstr ""
 "Περιθώριο σφάλματος για ημερομηνίες που συμφωνήθηκαν με πελάτες. Τα είδη θα "
-"προγραμματιστούν για προμήθεια και αποστολή πολλές μέρες πριν την πραγματική"
-" ημερομηνία που έχει δηλωθεί, ώστε να αντιμετωπιστούν τυχόν μη αναμενόμενες "
+"προγραμματιστούν για προμήθεια και αποστολή πολλές μέρες πριν την πραγματική "
+"ημερομηνία που έχει δηλωθεί, ώστε να αντιμετωπιστούν τυχόν μη αναμενόμενες "
 "καθυστερήσεις στην εφοδιαστική αλυσίδα."
 
 #. module: sale_stock
@@ -502,7 +520,7 @@ msgstr ""
 #: code:addons/sale_stock/models/sale_order_line.py:0
 #, python-format
 msgid "Replenish on Order (MTO)"
-msgstr ""
+msgstr "Αναπλήρωση Κατόπιν Παραγγελίας (MTO)"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -514,7 +532,7 @@ msgstr "Κρατημένη"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "Returns"
-msgstr ""
+msgstr "Επιστροφές"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id
@@ -544,7 +562,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Analysis Report"
-msgstr ""
+msgstr "Αναφορά Ανάλυσης Πωλήσεων"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
@@ -555,7 +573,7 @@ msgstr "Παραγγελία"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_cancel
 msgid "Sales Order Cancel"
-msgstr ""
+msgstr "Ακύρωση Παραγγελίας Πωλήσεων"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
@@ -636,22 +654,27 @@ msgstr "Κινήσεις Αποθέματος"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_forecasted_product_product
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "Αναφορά Ανατροφοδοσίας Αποθέματος"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "Κανόνας Αποθέματος"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rules_report
 msgid "Stock Rules report"
+msgstr "Αναφορά Κανόνων Αποθέματος"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
 msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "Αναφορά Κανόνων Αποθέματος"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -666,8 +689,10 @@ msgstr ""
 #, python-format
 msgid ""
 "The delivery address has been changed on the Sales Order<br/>\n"
-"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
-"                        You should probably update the partner on this document."
+"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</"
+"strong>,\n"
+"                        You should probably update the partner on this "
+"document."
 msgstr ""
 
 #. module: sale_stock
@@ -675,8 +700,8 @@ msgstr ""
 #: code:addons/sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js:0
 #, python-format
 msgid ""
-"The ordered quantity cannot be decreased below the amount already delivered."
-" Instead, create a return in your inventory."
+"The ordered quantity cannot be decreased below the amount already delivered. "
+"Instead, create a return in your inventory."
 msgstr ""
 
 #. module: sale_stock
@@ -749,7 +774,7 @@ msgstr "Πότε να αρχίσει η αποστολή"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "cancelled"
-msgstr ""
+msgstr "ακυρώθηκε"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -760,17 +785,17 @@ msgstr "ημέρες"
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "of"
-msgstr ""
+msgstr "από"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "ordered instead of"
-msgstr ""
+msgstr "παρήγγειλε αντί για"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "processed instead of"
-msgstr ""
+msgstr "επεξεργάστηκε αντί για"
 
 #. module: sale_stock
 #. odoo-javascript

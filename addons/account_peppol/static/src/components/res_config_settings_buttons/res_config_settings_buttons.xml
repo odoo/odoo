@@ -40,7 +40,7 @@
                     <button type="button"
                             class="btn btn-primary"
                             t-on-click="sendCode"
-                            t-if="proxyState === 'not_verified'">
+                            t-if="proxyState === 'not_verified' and useParentCompany === false">
                             Verify mobile number
                     </button>
                 </div>

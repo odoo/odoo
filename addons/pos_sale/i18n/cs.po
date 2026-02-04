@@ -1,27 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_sale
-# 
+# * pos_sale
+#
 # Translators:
 # Ivana Bartonkova, 2023
 # Wil Odoo, 2023
 # Katerina Horylova, 2024
 # Jakub Smolka, 2024
 # Aleš Fiala <f.ales1@seznam.cz>, 2024
-# 
+# Marta Wacławek, 2025
+# "Marta (wacm)" <wacm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
-"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-12-20 08:39+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-17/pos_sale/"
+"cs/>\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: cs\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -54,14 +58,14 @@ msgstr "Nová objednávka byla vytvořena."
 #: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "Apply a down payment (fixed amount)"
-msgstr ""
+msgstr "Zaplatit zálohu (fixní částkou)"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "Apply a down payment (percentage)"
-msgstr ""
+msgstr "Zaplatit zálohu (v procentech)"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -125,7 +129,6 @@ msgstr "Chcete načíst sériová čísla/šarže propojená s prodejní objedn�
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
-#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "Down Payment"
 msgstr "Záloha"
@@ -145,14 +148,14 @@ msgstr "Podrobnosti zálohy"
 #: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_down_payment_product_id
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "Down Payment Product"
-msgstr "Produkt záloha "
+msgstr "Produkt záloha"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "Due balance: %s"
-msgstr ""
+msgstr "Zůstatek k úhradě: %s"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -189,6 +192,8 @@ msgid ""
 "It seems that you didn't configure a down payment product in your point of "
 "sale. You can go to your point of sale configuration to choose one."
 msgstr ""
+"Zdá se, že jste ve svém prodejním místě nenastavili produkt pro zálohu. "
+"Můžete přejít do nastavení prodejního místa a vybrat si jeden."
 
 #. module: pos_sale
 #. odoo-python
@@ -219,14 +224,12 @@ msgstr "Uzamčeno"
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_control_panel/sale_order_management_control_panel.xml:0
-#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_control_panel/sale_order_management_control_panel.xml:0
 #, python-format
 msgid "Next Order List"
 msgstr "Seznam dalších objednávek"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "No"
@@ -266,7 +269,7 @@ msgstr "Položky objednávky přesunuté do prodejního místa"
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
 msgid "POS Order"
-msgstr "Objednávka prod. místa"
+msgstr "Objednávka POS"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
@@ -305,7 +308,6 @@ msgstr "Počet objednávek místa prodeje"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_control_panel/sale_order_management_control_panel.xml:0
 #: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_control_panel/sale_order_management_control_panel.xml:0
 #, python-format
 msgid "Previous Order List"
@@ -353,7 +355,6 @@ msgstr "Načítání sériových čísel/šarží"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/overrides/components/product_screen/product_screen.xml:0
 #: code:addons/pos_sale/static/src/overrides/components/product_screen/product_screen.xml:0
 #, python-format
 msgid "SO"
@@ -438,7 +439,6 @@ msgstr "Spuštěné relace"
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/set_sale_order_button/set_sale_order_button.xml:0
-#: code:addons/pos_sale/static/src/app/set_sale_order_button/set_sale_order_button.xml:0
 #, python-format
 msgid "Set Sale Order"
 msgstr "Nastavit prodejní objednávku"
@@ -504,7 +504,7 @@ msgstr "Během načítání %s zákazníka došlo k problému."
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_crm_team_id
 msgid "This Point of sale's sales will be related to this Sales Team."
 msgstr ""
-"Toto prodejní místo bude přímo souviset s tímto obchodním týmem prodavačů"
+"Toto prodejní místo bude přímo souviset s tímto obchodním týmem prodavačů."
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -562,7 +562,6 @@ msgstr "Co chcete udělat?"
 
 #. module: pos_sale
 #. odoo-javascript
-#: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid "Yes"

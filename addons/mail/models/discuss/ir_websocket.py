@@ -53,6 +53,7 @@ class IrWebsocket(models.AbstractModel):
         elif guest := self.env["mail.guest"]._get_guest_from_context():
             # sudo - mail.guest: guest can access their own channels.
             self_discuss_channels = guest.sudo().channel_ids
+            channels.append((guest, "presence"))
         partner_domain = [
             ("id", "in", [int(p[1]) for p in presences if p[0] == "res.partner"]),
             ("channel_ids", "in", self_discuss_channels.ids),

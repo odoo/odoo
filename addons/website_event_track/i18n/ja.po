@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_event_track
-# 
+# * website_event_track
+#
 # Translators:
 # Wil Odoo, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2024
-# Junko Augias, 2024
-# 
+# Junko Augias, 2025
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
-"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"PO-Revision-Date: 2026-01-24 08:09+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/"
+"website_event_track/ja/>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_event_track
 #. odoo-python
@@ -106,12 +108,19 @@ msgstr "<b>講演紹介</b>:"
 #: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br>\n"
-"    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
+"    Dear <t t-out=\"object.partner_id.name or object.partner_name or "
+"''\">Brandon Freeman</t><br>\n"
+"    We are pleased to inform you that your proposal <t t-out=\"object.name "
+"or ''\">What This Event Is All About</t> has been accepted and confirmed for "
+"the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online "
+"Reveal</t>.\n"
 "    <br>\n"
 "    You will find more details here:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/"
+"{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; "
+"color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; "
+"border: 0px solid #875A7B; border-radius:3px\">\n"
 "            View Talk\n"
 "        </a>\n"
 "    </div>\n"
@@ -124,12 +133,18 @@ msgid ""
 "</div>"
 msgstr ""
 "<div>\n"
-"     <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t>様、<br>\n"
-"    提案<t t-out=\"object.name or ''\">イベントの全て</t>が承認され、  イベント<t t-out=\"object.event_id.name or ''\">OpenWoodコレクションオンライン発表会</t>用に確定しました。\n"
+"     <t t-out=\"object.partner_id.name or object.partner_name or "
+"''\">Brandon Freeman</t>様、<br>\n"
+"    提案<t t-out=\"object.name or ''\">イベントの全て</t>が承認され、  イベン"
+"ト<t t-out=\"object.event_id.name or ''\">OpenWoodコレクションオンライン発表"
+"会</t>用に確定しました。\n"
 "    <br>\n"
 "    詳細は以下よりご確認下さい。:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/"
+"{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; "
+"color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; "
+"border: 0px solid #875A7B; border-radius:3px\">\n"
 "            トークを見る\n"
 "        </a>\n"
 "    </div>\n"
@@ -184,13 +199,17 @@ msgstr "<span class=\"fa fa-plus me-1\"/>セッションを予定 "
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                        <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
-"                                        <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                        <i class=\"fa fa-close mr4\" "
+"role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                        <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                        <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
-"                                        <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                        <i class=\"fa fa-close mr4\" "
+"role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                        <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                    </span>"
 
 #. module: website_event_track
@@ -258,7 +277,8 @@ msgid ""
 " * Red indicates something is preventing the progress of this track\n"
 " * Green indicates the track is ready to be pulled to the next stage"
 msgstr ""
-"セッションのカンバンステータスは、セッションに影響を与える特別な状況を示します。\n"
+"セッションのカンバンステータスは、セッションに影響を与える特別な状況を示しま"
+"す。\n"
 "*灰色はデフォルトの状況です\n"
 "*赤は何かがこのセッションの進行を妨げていることを示します\n"
 "*緑はセッションを次のステージに移行させる準備ができていることを示します"
@@ -291,7 +311,7 @@ msgstr "活動状態"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活動種別アイコン"
+msgstr "活動タイプアイコン"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
@@ -314,7 +334,9 @@ msgstr "タスクパイプラインに新しいステージを追加します"
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
 msgid ""
 "Add tags to your tracks to help your attendees browse your event web pages."
-msgstr "セッションにタグを追加して、参加者がイベントのウェブページを閲覧しやすくしましょう。"
+msgstr ""
+"セッションにタグを追加して、参加者がイベントのウェブページを閲覧しやすくしま"
+"しょう。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
@@ -395,18 +417,24 @@ msgid ""
 "As key track cannot be un-favorited, this field store the partner choice to "
 "remove the reminder for key tracks."
 msgstr ""
-"キーセッションをお気に入りから外すことはできないため、このフィールドには、キーセッションのリマインダを削除するパートナーの選択肢が保存されます。"
+"キーセッションをお気に入りから外すことはできないため、このフィールドには、"
+"キーセッションのリマインダを削除するパートナーの選択肢が保存されます。"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_17
 msgid ""
-"As you may have heard before, making your own furniture is actually not as difficult or as complicated as you think.\n"
-"    In fact, some projects are so easy anyone could successfully complete them. For example, making a cute stool out of\n"
-"    a old tire is a real piece of cake and if you’re in need of a coffee table you can easily put one together using\n"
+"As you may have heard before, making your own furniture is actually not as "
+"difficult or as complicated as you think.\n"
+"    In fact, some projects are so easy anyone could successfully complete "
+"them. For example, making a cute stool out of\n"
+"    a old tire is a real piece of cake and if you’re in need of a coffee "
+"table you can easily put one together using\n"
 "    wood crates."
 msgstr ""
-"聞いたことがあるかもしれませんが、自分で家具を作ることは、実際には思ったほど難しくも複雑でもありません。\n"
-"実際、一部のプロジェクトは非常に簡単で、誰でも正常に完了することができます。\n"
+"聞いたことがあるかもしれませんが、自分で家具を作ることは、実際には思ったほど"
+"難しくも複雑でもありません。\n"
+"実際、一部のプロジェクトは非常に簡単で、誰でも正常に完了することができま"
+"す。\n"
 "たとえば、古いタイヤでかわいいスツールを作るのは本物のケーキです。\n"
 "コーヒーテーブルが必要な場合は、木枠を使って簡単に組み立てることができます。"
 
@@ -448,7 +476,7 @@ msgstr "略歴"
 #: model:event.track.stage,legend_blocked:website_event_track.event_track_stage5
 #, python-format
 msgid "Blocked"
-msgstr "不許可"
+msgstr "ブロック中"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
@@ -575,7 +603,9 @@ msgid ""
 "information about a construction process and final result. Step by step "
 "simple explanation! Interested?"
 msgstr ""
-"木造住宅の建設をお考えですか?建設プロセスと最終結果の詳細については、このビデオをご覧ください。ステップバイステップの簡単なご説明をします!ご興味ありますか？"
+"木造住宅の建設をお考えですか?建設プロセスと最終結果の詳細については、このビデ"
+"オをご覧ください。ステップバイステップの簡単なご説明をします!ご興味あります"
+"か？"
 
 #. module: website_event_track
 #. odoo-python
@@ -687,7 +717,8 @@ msgid ""
 "            You will use these stages in order to track the progress in\n"
 "            solving an event track."
 msgstr ""
-"セッションの作成からセッションの終了まで、イベントで使用されるステップを定義します。\n"
+"セッションの作成からセッションの終了まで、イベントで使用されるステップを定義"
+"します。\n"
 "これらのステージを使用して、イベントセッションの解決の進捗状況を追跡します。"
 
 #. module: website_event_track
@@ -890,7 +921,6 @@ msgstr "イベントPWA"
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
-#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
 #, python-format
 msgid "Favorite On"
@@ -1092,7 +1122,9 @@ msgstr "例外活動を示すアイコン"
 msgid ""
 "If checked, automatically publish tracks so that access links to customers "
 "are provided."
-msgstr "チェックした場合、自動的にセッションを公開し、顧客へのアクセスリンクを提供します。"
+msgstr ""
+"チェックした場合、自動的にセッションを公開し、顧客へのアクセスリンクを提供し"
+"ます。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction
@@ -1115,14 +1147,17 @@ msgstr "チェックすると、関連するセッションがフロントエン
 msgid ""
 "If set an email will be sent to the customer when the track reaches this "
 "step."
-msgstr "設定すると、セッションがこの段階に到達したときにメールが顧客に送信されます。"
+msgstr ""
+"設定すると、セッションがこの段階に到達したときにメールが顧客に送信されます。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__wishlisted_by_default
 msgid ""
-"If set, the talk will be set as favorite for each attendee registered to the"
-" event."
-msgstr "設定された場合、イベントに登録された参加者ごとにトークがお気に入りに設定されます。"
+"If set, the talk will be set as favorite for each attendee registered to the "
+"event."
+msgstr ""
+"設定された場合、イベントに登録された参加者ごとにトークがお気に入りに設定され"
+"ます。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image_url
@@ -1155,7 +1190,8 @@ msgstr "このビデオでは、製材工場で製材がどのように行われ
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "In this video, I covered 6 tips and tricks to help out beginners:"
-msgstr "このビデオでは、初心者を支援するための6つのヒントとコツを取り上げました。"
+msgstr ""
+"このビデオでは、初心者を支援するための6つのヒントとコツを取り上げました。"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -1324,14 +1360,16 @@ msgstr "世界中の家庭での生活:ウィリアムの物語"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Lightning Talks"
-msgstr "フラッシュトーク"
+msgstr "ライトニングトーク"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_19
 msgid ""
 "Link to Q&amp;A here! The time has come to hide those old block walls. Love "
 "simple and transformation type projects like this! :)-"
-msgstr "Q＆Aへのリンクはこちら'それらの古いブロック壁を隠す時が来ました。このようなシンプルで変革型のプロジェクトが大好きです' :)-"
+msgstr ""
+"Q＆Aへのリンクはこちら'それらの古いブロック壁を隠す時が来ました。このようなシ"
+"ンプルで変革型のプロジェクトが大好きです' :)-"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
@@ -1397,7 +1435,8 @@ msgstr "センターマーキングゲージの作成"
 msgid ""
 "Manage from here the places where you organize your tracks (e.g. Rooms, "
 "Channels, ...)."
-msgstr "セッションを開催する会場はここで管理できます (例: 部屋、チャンネル、...)"
+msgstr ""
+"セッションを開催する会場はここで管理できます (例: 部屋、チャンネル、...)"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
@@ -1590,7 +1629,8 @@ msgstr "画像"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
 msgid "Plan your experience by adding your favorites talks to your wishlist"
-msgstr "お気に入りの講演をウィッシュリストに追加して、参加の計画を立てましょう。"
+msgstr ""
+"お気に入りの講演をウィッシュリストに追加して、参加の計画を立てましょう。"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -1632,7 +1672,9 @@ msgid ""
 "Probably one of the most asked questions I've gotten is how I got started "
 "woodworking! In this video I share with you how/why I started building "
 "furniture!"
-msgstr "おそらく私が得た最もよくある質問の1つは、私が木工を始めた方法です'このビデオでは、私が家具を作り始めた方法/理由をあなたと共有します'"
+msgstr ""
+"おそらく私が得た最もよくある質問の1つは、私が木工を始めた方法です'このビデオ"
+"では、私が家具を作り始めた方法/理由をあなたと共有します'"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage0
@@ -1696,7 +1738,7 @@ msgstr "却下済"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Regular Talks"
-msgstr "通常トーク"
+msgstr "通常講演"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__track_start_relative
@@ -1771,7 +1813,8 @@ msgstr "カテゴリを選択"
 msgid ""
 "Sent to speakers whose track proposal is accepted (set the template on the "
 "right stage)"
-msgstr "セッション提案が受理されたスピーカーに送付 (右ステージにテンプレートを設定)"
+msgstr ""
+"セッション提案が受理されたスピーカーに送付 (右ステージにテンプレートを設定)"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__seo_name
@@ -1788,7 +1831,6 @@ msgstr "シーケンス"
 
 #. module: website_event_track
 #. odoo-javascript
-#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
 #, python-format
@@ -1918,7 +1960,7 @@ msgstr "タグ"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Talk Intro"
-msgstr "トークイントロ"
+msgstr "講演イントロ"
 
 #. module: website_event_track
 #. odoo-python
@@ -1970,7 +2012,9 @@ msgstr "タスク進行中。ブロックまたは完了済にするにはクリ
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 msgid "Task is blocked. Click to unblock or set as done."
-msgstr "タスクはブロックされています。ブロック解除または完了済にするにはクリックして下さい。"
+msgstr ""
+"タスクはブロックされています。ブロック解除または完了済にするにはクリックして"
+"下さい。"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -2000,13 +2044,17 @@ msgstr "あなたの作品を宣伝する新しい方法"
 msgid ""
 "There are a lot of ideas worth exploring so start with the 10 DIY furniture "
 "ideas for absolute beginners."
-msgstr "探求する価値のあるアイデアがたくさんあるので、まったくの初心者のための10のDIY家具のアイデアから始めてください。"
+msgstr ""
+"探求する価値のあるアイデアがたくさんあるので、まったくの初心者のための10のDIY"
+"家具のアイデアから始めてください。"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
 msgid ""
-"There are several variants of wood is available in the world but we are talking about most expensive\n"
-"    ones in the world and keeping to the point we have arranged ten most expensive wood."
+"There are several variants of wood is available in the world but we are "
+"talking about most expensive\n"
+"    ones in the world and keeping to the point we have arranged ten most "
+"expensive wood."
 msgstr ""
 "世界にはいくつかの種類の木材がありますが、私たちは\n"
 "世界で最も高価なものにを扱い、最も高価な10の木材を保持しています。"
@@ -2016,18 +2064,19 @@ msgstr ""
 msgid ""
 "These are 30 minutes talks on many different topics. Most topics are "
 "accepted in lightning talks."
-msgstr "様々なトピックに関する30分の講演です。ほとんどのトピックがフラッシュトークで受け入れられます。"
+msgstr ""
+"これらは、さまざまなトピックに関する30分間の講演です。多くのトピックはライト"
+"ニングトークとしても受け付けています。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "These are standard talks with slides, alocated in slots of 60 minutes."
-msgstr "これらはスライドを使った標準的なトークで、60分の枠に割り当てられてます。"
+msgstr "これらはスライドを使った標準的な講演で、60分の枠に割り当てられてます。"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
 msgid ""
-"They will be created automatically once attendees start browsing your "
-"events."
+"They will be created automatically once attendees start browsing your events."
 msgstr "参加者があなたのイベントを閲覧し始めると、自動的に作成されます。"
 
 #. module: website_event_track
@@ -2040,7 +2089,9 @@ msgstr "このイベントは提案を受け付けません。"
 msgid ""
 "This field holds the image used as mobile app icon on the website (PNG "
 "format)."
-msgstr "このフィールドには、ウェブサイトでモバイルアプリアイコンとして使用される画像(PNG形式)が保持されます。"
+msgstr ""
+"このフィールドには、ウェブサイトでモバイルアプリアイコンとして使用される画像"
+"(PNG形式)が保持されます。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_res_config_settings__events_app_name
@@ -2053,19 +2104,25 @@ msgstr "このフィールドは、イベントのプログレッシブWebアプ
 msgid ""
 "This page hasn't been saved for offline reading yet.<br/>Please check your "
 "network connection."
-msgstr "このページはまだオフラインで読むために保存されていません。<br/>ネットワーク接続を確認してください。"
+msgstr ""
+"このページはまだオフラインで読むために保存されていません。<br/>ネットワーク接"
+"続を確認してください。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__fold
 msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
-msgstr "このステージは、そのステージにレコードが表示されていないときに、かんばんのビューで折り込まれます。"
+msgstr ""
+"このステージは、そのステージにレコードが表示されていないときに、かんばんの"
+"ビューで折り込まれます。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 msgid "This step is done. Click to block or set in progress."
-msgstr "このステップは完了です。ブロックまたは進行中に設定するにはクリックして下さい。"
+msgstr ""
+"このステップは完了です。ブロックまたは進行中に設定するにはクリックして下さ"
+"い。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
@@ -2104,10 +2161,13 @@ msgstr "世界で最も高価な木材トップ10"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
 msgid ""
-"Top most expensive wood in the world is quite interesting topic and several people may be surprised\n"
-"    that there are hundreds of wood types exist around the globe following different properties and use."
+"Top most expensive wood in the world is quite interesting topic and several "
+"people may be surprised\n"
+"    that there are hundreds of wood types exist around the globe following "
+"different properties and use."
 msgstr ""
-"世界で最も高価な木材は非常に興味深いトピックであり、さまざまな特性と用途に従って\n"
+"世界で最も高価な木材は非常に興味深いトピックであり、さまざまな特性と用途に"
+"従って\n"
 "世界中に何百もの木材タイプが存在することに驚く人もいるかもしれません。"
 
 #. module: website_event_track
@@ -2219,7 +2279,9 @@ msgstr "セッション訪問者"
 msgid ""
 "Track Visitors store statistics on your events, including how many times "
 "tracks have been wishlisted."
-msgstr "ウィッシュリストに登録されたセッション数など、イベントに関する統計情報をセッション訪問者が保存します。"
+msgstr ""
+"ウィッシュリストに登録されたセッション数など、イベントに関する統計情報をセッ"
+"ション訪問者が保存します。"
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_blocked
@@ -2252,7 +2314,9 @@ msgstr "ウェブサイトで提案を追跡する"
 msgid ""
 "Tracks define your event schedule. They can be talks, workshops or any "
 "similar activity."
-msgstr "セッションはイベントのスケジュールを定義します。講演、ワークショップ、その他類似のアクティビティがあります。"
+msgstr ""
+"セッションはイベントのスケジュールを定義します。講演、ワークショップ、その他"
+"類似のアクティビティがあります。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track
@@ -2278,24 +2342,43 @@ msgid "Unread Messages"
 msgstr "未読メッセージ"
 
 #. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#: code:addons/website_event_track/models/website_visitor.py:0
+#, python-format
+msgid "Unsupported 'Not In' operation on track wishlist visitors"
+msgstr ""
+"セッションのお気に入り訪問者に対する'含まれていない(Not In)' 操作はサポートさ"
+"れていません。"
+
+#. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
 msgid ""
-"Use these simple steps to easily haul LONG lumber in a short box pickup truck.  A dose of carpenter's\n"
-"    ingenuity along with a couple boards, a sturdy strap and a few screws are all I use to easily haul\n"
-"    long boards from the lumberyard to the Next Level Carpentry shop or jobsite."
+"Use these simple steps to easily haul LONG lumber in a short box pickup "
+"truck.  A dose of carpenter's\n"
+"    ingenuity along with a couple boards, a sturdy strap and a few screws "
+"are all I use to easily haul\n"
+"    long boards from the lumberyard to the Next Level Carpentry shop or "
+"jobsite."
 msgstr ""
-"これらの簡単な手順を使用して、短いボックスのピックアップトラックで長い材木を簡単に運搬します。\n"
-"いくつかのボード、頑丈なストラップ、数本のネジに加えて、大工の創意工夫を駆使して、\n"
+"これらの簡単な手順を使用して、短いボックスのピックアップトラックで長い材木を"
+"簡単に運搬します。\n"
+"いくつかのボード、頑丈なストラップ、数本のネジに加えて、大工の創意工夫を駆使"
+"して、\n"
 "長いボードを土場から次のレベルの大工店や現場に簡単に運ぶことができます。"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
 msgid ""
-"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) allows lumber to be\n"
-"    cinched securely WITHOUT the need to tie and untie tricky or complicated knots."
+"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) "
+"allows lumber to be\n"
+"    cinched securely WITHOUT the need to tie and untie tricky or complicated "
+"knots."
 msgstr ""
-"タイダウンストラップ(バンジーコードではありません!!!)に独自の包装方法を使用すると、\n"
-"トリッキーな結び目や複雑な結び目を結び、解く必要なしに、木材をしっかりと締めることができます。"
+"タイダウンストラップ(バンジーコードではありません!!!)に独自の包装方法を使用す"
+"ると、\n"
+"トリッキーな結び目や複雑な結び目を結び、解く必要なしに、木材をしっかりと締め"
+"ることができます。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -2366,8 +2449,10 @@ msgid ""
 "                            audience, it will be considered for\n"
 "                            inclusion in the programme."
 msgstr ""
-"学術的、商業的プロジェクトの報告からチュートリアルやケーススタディまで、幅広いプレゼンテーションを受け付けます。\n"
-"プレゼンテーションの内容が興味深く、聴衆の役に立つ可能性のあるものであれば、プログラムに含まれることがあります。"
+"学術的、商業的プロジェクトの報告からチュートリアルやケーススタディまで、幅広"
+"いプレゼンテーションを受け付けます。\n"
+"プレゼンテーションの内容が興味深く、聴衆の役に立つ可能性のあるものであれば、"
+"プログラムに含まれることがあります。"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -2461,7 +2546,9 @@ msgstr "あなたのトークは何についてですか？"
 msgid ""
 "Who will give this talk? We will show this to attendees to showcase your "
 "talk."
-msgstr "このトークは誰が行うのですか？あなたのトークを紹介するために、参加者にこれをお見せします。"
+msgstr ""
+"この講演を行うのは誰ですか?この情報は、来場者に講演内容を紹介するために表示さ"
+"れます。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_2
@@ -2503,7 +2590,9 @@ msgstr "このページにアクセスできません。"
 msgid ""
 "You have to enable push notifications to get reminders for your favorite "
 "tracks."
-msgstr "お気に入りのセッションのリマインダを受け取るには、プッシュ通知を有効にして下さい。"
+msgstr ""
+"お気に入りのセッションのリマインダを受け取るには、プッシュ通知を有効にして下"
+"さい。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline

@@ -28,7 +28,7 @@ class AccountEdiFormat(models.Model):
             1. base on IRN, IRN is number created when we do E-invoice
             2. direct call, when E-invoice not aplicable or it"s credit not
         """
-        if move.move_type == "out_refund":
+        if move.move_type == "out_refund" or move._get_debit_note_origin():
             return "direct"
         einvoice_in_edi_format = move.journal_id.edi_format_ids.filtered(lambda f: f.code == "in_einvoice_1_03")
         return einvoice_in_edi_format and einvoice_in_edi_format._get_move_applicability(move) and "irn" or "direct"
@@ -134,7 +134,7 @@ class AccountEdiFormat(models.Model):
         cancel_json = {
             "ewbNo": ewaybill_response_json.get("ewayBillNo") or ewaybill_response_json.get("EwbNo"),
             "cancelRsnCode": int(invoices.l10n_in_edi_cancel_reason),
-            "CnlRem": invoices.l10n_in_edi_cancel_remarks,
+            "cancelRmrk": invoices.l10n_in_edi_cancel_remarks,
         }
         response = self._l10n_in_edi_ewaybill_cancel(invoices.company_id, cancel_json)
         if response.get("error"):
@@ -196,8 +196,8 @@ class AccountEdiFormat(models.Model):
 
     def _l10n_in_edi_ewaybill_handle_zero_distance_alert_if_present(self, invoice, response):
         if invoice.l10n_in_distance == 0 and (alert := response.get("data", {}).get('alert')):
-            pattern = r", Distance between these two pincodes is \d+, "
-            if re.fullmatch(pattern, alert) and (distance := int(re.search(r'\d+', alert).group())) > 0:
+            pattern = r"Distance between these two pincodes is (\d+)"
+            if (match := re.search(pattern, alert)) and (distance := int(match.group(1))) > 0:
                 invoice.l10n_in_distance = distance
 
     def _l10n_in_edi_ewaybill_irn_post_invoice_edi(self, invoices):
@@ -290,6 +290,12 @@ class AccountEdiFormat(models.Model):
                 "TransMode": invoice.l10n_in_mode,
                 "VehNo": invoice.l10n_in_vehicle_no,
                 "VehType": invoice.l10n_in_vehicle_type,
+                **{
+                    k: v for k, v in {
+                        "TransId": invoice.l10n_in_transporter_id.vat,
+                        "TransName": invoice.l10n_in_transporter_id.name,
+                    }.items() if v
+                },
             })
         elif invoice.l10n_in_mode in ("2", "3", "4"):
             doc_date = invoice.l10n_in_transportation_doc_date
@@ -416,6 +422,7 @@ class AccountEdiFormat(models.Model):
         tax_details = self._l10n_in_prepare_edi_tax_details(invoices)
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(tax_details.get("tax_details", {}))
         invoice_line_tax_details = tax_details.get("tax_details_per_record")
+        rounding_amount = sum(line.balance for line in invoices.line_ids if line.display_type == 'rounding') * sign
         json_payload = {
             # Note:
             # Customer Invoice, Sales Receipt and Vendor Credit Note are Outgoing
@@ -455,8 +462,8 @@ class AccountEdiFormat(models.Model):
             "igstValue": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
             "cessValue": self._l10n_in_round_value(tax_details_by_code.get("cess_amount", 0.00)),
             "cessNonAdvolValue": self._l10n_in_round_value(tax_details_by_code.get("cess_non_advol_amount", 0.00)),
-            "otherValue": self._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00)),
-            "totInvValue": self._l10n_in_round_value((tax_details.get("base_amount") + tax_details.get("tax_amount"))),
+            "otherValue": self._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00) + rounding_amount),
+            "totInvValue": self._l10n_in_round_value(tax_details.get("base_amount") + tax_details.get("tax_amount") + rounding_amount),
         }
         is_overseas = invoices.l10n_in_gst_treatment in ("overseas", "special_economic_zone")
         if invoices.is_outbound():
@@ -503,6 +510,12 @@ class AccountEdiFormat(models.Model):
                 "transMode": invoices.l10n_in_mode,
                 "vehicleNo": invoices.l10n_in_vehicle_no or "",
                 "vehicleType": invoices.l10n_in_vehicle_type or "",
+                **{
+                    k: v for k, v in {
+                        "transporterId": invoices.l10n_in_transporter_id.vat,
+                        "transporterName": invoices.l10n_in_transporter_id.name,
+                    }.items() if v
+                },
             })
         return json_payload
 
@@ -510,11 +523,11 @@ class AccountEdiFormat(models.Model):
         extract_digits = self._l10n_in_edi_extract_digits
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(line_tax_details.get("tax_details", {}))
         line_details = {
-            "productName": line.product_id.name,
+            "productName": line.product_id.name[:100] if line.product_id else "",
             "hsnCode": extract_digits(line.product_id.l10n_in_hsn_code),
-            "productDesc": line.name,
+            "productDesc": line.name[:100] if line.name else "",
             "quantity": line.quantity,
-            "qtyUnit": line.product_id.uom_id.l10n_in_code and line.product_id.uom_id.l10n_in_code.split("-")[0] or "OTH",
+            "qtyUnit": line.product_uom_id.l10n_in_code and line.product_uom_id.l10n_in_code.split("-")[0] or "OTH",
             "taxableAmount": self._l10n_in_round_value(line.balance * sign),
         }
         gst_types = {'cgst', 'sgst', 'igst'}

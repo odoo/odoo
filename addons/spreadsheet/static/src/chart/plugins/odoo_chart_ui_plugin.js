@@ -47,6 +47,7 @@ export class OdooChartUIPlugin extends UIPlugin {
                         const chart = this.getters.getChart(cmd.id);
                         if (
                             cmd.definition.type !== chart.type ||
+                            chart.cumulative !== cmd.definition.cumulative ||
                             dataSource.getInitialDomainString() !==
                                 new Domain(cmd.definition.searchParams.domain).toString()
                         ) {
@@ -202,6 +203,7 @@ export class OdooChartUIPlugin extends UIPlugin {
         const definition = this.getters.getChart(chartId).getDefinitionForDataSource();
         const dataSourceId = this._getOdooChartDataSourceId(chartId);
         this.dataSources.add(dataSourceId, ChartDataSource, definition);
+        this._addDomain(chartId);
     }
 
     /**

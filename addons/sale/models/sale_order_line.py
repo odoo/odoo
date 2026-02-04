@@ -368,7 +368,7 @@ class SaleOrderLine(models.Model):
         if not self.product_custom_attribute_value_ids and not no_variant_ptavs:
             return ""
 
-        name = "\n"
+        name = ""
 
         custom_ptavs = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
         multi_ptavs = no_variant_ptavs.filtered(lambda ptav: ptav.display_type == 'multi').sorted()
@@ -464,19 +464,22 @@ class SaleOrderLine(models.Model):
         for line in self:
             # check if there is already invoiced amount. if so, the price shouldn't change as it might have been
             # manually edited
-            if line.qty_invoiced > 0 or (line.product_id.expense_policy == 'cost' and line.is_expense):
+            if (
+                line.qty_invoiced > 0 or
+                (line.product_id.expense_policy == 'cost' and line.is_expense) or
+                line._is_discount_line()
+            ):
                 continue
             if not line.product_uom or not line.product_id:
                 line.price_unit = 0.0
             else:
                 line = line.with_company(line.company_id)
                 price = line._get_display_price()
+                product_taxes = line.product_id.taxes_id._filter_taxes_by_company(line.company_id)
                 line.price_unit = line.product_id._get_tax_included_unit_price_from_price(
                     price,
                     line.currency_id or line.order_id.currency_id,
-                    product_taxes=line.product_id.taxes_id.filtered(
-                        lambda tax: tax.company_id == line.env.company
-                    ),
+                    product_taxes=product_taxes,
                     fiscal_position=line.order_id.fiscal_position_id,
                 )
 
@@ -714,6 +717,8 @@ class SaleOrderLine(models.Model):
             return ''
 
         invoice_lines = self._get_invoice_lines()
+        if self.invoice_status == 'invoiced' and not invoice_lines:
+            return ''
         if all(line.parent_state == 'draft' for line in invoice_lines):
             return 'draft'
         if all(line.parent_state == 'cancel' for line in invoice_lines):
@@ -838,6 +843,10 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
         return self.product_id.id != self.company_id.sale_discount_product_id.id
+
+    def _is_discount_line(self):
+        self.ensure_one()
+        return self.product_id in self.company_id.sale_discount_product_id
 
     @api.depends('invoice_lines', 'invoice_lines.price_total', 'invoice_lines.move_id.state', 'invoice_lines.move_id.move_type')
     def _compute_untaxed_amount_invoiced(self):
@@ -1004,6 +1013,13 @@ class SaleOrderLine(models.Model):
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
             raise UserError(_("You cannot change the type of a sale order line. Instead you should delete the current line and create a new line of the proper type."))
+
+        if 'product_id' in values and any(
+            sol.product_id.id != (values.get('product_id') and int(values['product_id']))
+            and not sol.product_updatable
+            for sol in self
+        ):
+            raise UserError(_("You cannot modify the product of this order line."))
 
         if 'product_uom_qty' in values:
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
@@ -1300,7 +1316,7 @@ class SaleOrderLine(models.Model):
         return amount
 
     def has_valued_move_ids(self):
-        return self.move_ids
+        return None  # TODO: remove in master
 
     def _sellable_lines_domain(self):
         discount_products_ids = self.env.companies.sale_discount_product_id.ids

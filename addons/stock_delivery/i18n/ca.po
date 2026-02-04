@@ -1,11 +1,11 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_delivery
-# 
+# * stock_delivery
+#
 # Translators:
 # jabiri7, 2023
 # Albert Parera, 2023
-# Harcogourmet, 2023
+# Xavier, 2023
 # Josep Anton Belchi, 2023
 # Carles Antoli <carlesantoli@hotmail.com>, 2023
 # Jonatan Gk, 2023
@@ -13,23 +13,25 @@
 # Arnau Ros, 2023
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2023
 # Martin Trigaux, 2023
-# marcescu, 2023
 # Ivan Espinola, 2023
-# Quim - eccit <quim@eccit.com>, 2023
-# 
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2023
+# marcescu, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Quim - eccit <quim@eccit.com>, 2023\n"
-"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"PO-Revision-Date: 2025-11-20 17:38+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Catalan <https://translate.odoo.com/projects/odoo-17/"
+"stock_delivery/ca/>\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ca\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: stock_delivery
 #. odoo-python
@@ -115,7 +117,7 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
 msgid "Applicable on Shipping Methods"
-msgstr ""
+msgstr "Aplicable als mètodes d'enviament"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_bulk
@@ -130,8 +132,7 @@ msgstr "Cancel·la"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid ""
-"Cancelling a delivery may not be undoable. Are you sure you want to "
-"continue?"
+"Cancelling a delivery may not be undoable. Are you sure you want to continue?"
 msgstr ""
 "La cancel·lació d'un lliurament pot no ser infable. Segur que voleu "
 "continuar?"
@@ -164,7 +165,7 @@ msgstr "Empresa"
 #: code:addons/stock_delivery/models/stock_picking.py:0
 #, python-format
 msgid "Cost: %(price).2f %(currency)s"
-msgstr ""
+msgstr "Cost: %(price).2f %(currency)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__create_uid
@@ -220,9 +221,29 @@ msgstr "Mostrar enllaços de seguiment"
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
+"Cost estimat: es facturarà al client el cost estimat de l'enviament.\n"
+"Cost real: es facturarà al client el cost real de l'enviament i, un cop "
+"entregat, aquest cost s'actualitzarà en la comanda de venda."
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception occurred with respect to carrier on the transfer"
+msgstr ""
+"S'ha produït un error relacionat amb el transportista durant el trasllat"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception:"
+msgstr "Excepció:"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
@@ -260,6 +281,13 @@ msgstr "Última actualització per"
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__write_date
 msgid "Last Updated on"
 msgstr "Última actualització el"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid "Manual actions might be needed."
+msgstr "Potser és necessari efectuar accions manuals."
 
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
@@ -353,11 +381,15 @@ msgstr "Rutes"
 #: model:ir.model.fields,help:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,help:stock_delivery.field_product_template__country_of_origin
 msgid ""
-"Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
-"As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
+"Rules of origin determine where goods originate, i.e. not where they have "
+"been shipped from, but where they have been produced or manufactured.\n"
+"As such, the ‘origin’ is the 'economic nationality' of goods traded in "
+"commerce."
 msgstr ""
-"Les normes d'origen determinen on s'originen els productes, és a dir, no des d'on s'han enviat, sinó on s'han produït o fabricat.\n"
-"Com a tal, l'«origen» és la «nacionalitat econòmica» dels productes comercialitzats en el comerç."
+"Les normes d'origen determinen on s'originen els productes, és a dir, no des "
+"d'on s'han enviat, sinó on s'han produït o fabricat.\n"
+"Com a tal, l'«origen» és la «nacionalitat econòmica» dels productes "
+"comercialitzats en el comerç."
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__sale_price
@@ -392,6 +424,8 @@ msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
 "%(ref)s"
 msgstr ""
+"Paquet enviat al transportista %(carrier_name)s per efectuar l'enviament amb "
+"número de seguiment %(ref)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_price
@@ -426,11 +460,8 @@ msgstr "Pes de l'enviament "
 #: model:ir.model.fields,help:stock_delivery.field_product_template__hs_code
 msgid ""
 "Standardized code for international shipping and goods declaration. At the "
-"moment, only used for the FedEx shipping provider."
+"moment, only used for FedEx and USPS shipping providers."
 msgstr ""
-"Codi estandarditzat per a la declaració internacional d'enviaments i "
-"mercaderies. En aquest moment, només s'utilitzava per al proveïdor de "
-"transport de FedEx."
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move
@@ -464,7 +495,6 @@ msgstr ""
 
 #. module: stock_delivery
 #. odoo-python
-#: code:addons/stock_delivery/models/delivery_carrier.py:0
 #: code:addons/stock_delivery/models/delivery_carrier.py:0
 #, python-format
 msgid ""
@@ -509,13 +539,12 @@ msgstr "Pes total de tots els productes continguts en el paquet."
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__shipping_weight
 msgid ""
 "Total weight of packages and products not in a package. Packages with no "
-"shipping weight specified will default to their products' total weight. This"
-" is the weight used to compute the cost of the shipping."
+"shipping weight specified will default to their products' total weight. This "
+"is the weight used to compute the cost of the shipping."
 msgstr ""
 "Pes total dels paquets i productes que no estan en un paquet. Els paquets "
-"sense pes d'enviament especificat tindran per defecte el pes total dels seus"
-" productes. Aquest és el pes utilitzat per a calcular el cost de "
-"l'enviament."
+"sense pes d'enviament especificat tindran per defecte el pes total dels seus "
+"productes. Aquest és el pes utilitzat per a calcular el cost de l'enviament."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight_bulk
@@ -557,7 +586,7 @@ msgstr "L'URL de seguiment"
 #: code:addons/stock_delivery/models/stock_picking.py:0
 #, python-format
 msgid "Tracking links for shipment:"
-msgstr ""
+msgstr "Enllaços de seguiment per a l'enviament:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
@@ -605,9 +634,12 @@ msgstr "Pes:"
 #, python-format
 msgid ""
 "You cannot pack products into the same package when they have different "
-"carriers (i.e. check that all of their transfers have a carrier assigned and"
-" are using the same carrier)."
+"carriers (i.e. check that all of their transfers have a carrier assigned and "
+"are using the same carrier)."
 msgstr ""
+"No és possible empaquetar productes en el mateix paquet si tenen "
+"transportistes diferents. Cal comprovar que tots els paquets tenen un "
+"transportista assignat i que utilitzen el mateix."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form

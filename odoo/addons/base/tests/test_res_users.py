@@ -193,6 +193,19 @@ class TestUsers(TransactionCase):
         self.assertTrue(portal_partner_2.exists(), 'Should have kept the partner')
         self.assertEqual(asked_deletion_2.state, 'fail', 'Should have marked the deletion as failed')
 
+    def test_delete_public_user(self):
+        """Test that the public user cannot be deleted."""
+        public_user = self.env.ref('base.public_user')
+        public_partner = public_user.partner_id
+
+        # Attempt to delete the public user
+        with self.assertRaises(UserError, msg="Public user should not be deletable"):
+            public_user.unlink()
+
+        # Ensure the public user still exists and is inactive
+        self.assertTrue(public_user.exists() and not public_user.active, "Public user should still exist and be inactive")
+        self.assertTrue(public_partner.exists() and not public_partner.active, "Public partner should still exist and be inactive")
+
     def test_user_home_action_restriction(self):
         test_user = new_test_user(self.env, 'hello world')
 
@@ -362,6 +375,14 @@ class TestUsers2(TransactionCase):
 
         user_form[group_field_name] = group_public.id
         self.assertTrue(user_form.share, 'The groups_id onchange should have been triggered')
+
+    def test_update_user_groups_view(self):
+        """Test that the user groups view can still be built if all user type groups are share"""
+        self.env['res.groups'].search([
+            ("category_id", "=", self.env.ref("base.module_category_user_type").id)
+        ]).write({'share': True})
+
+        self.env['res.groups']._update_user_groups_view()
 
 
 @tagged('post_install', '-at_install', 'res_groups')

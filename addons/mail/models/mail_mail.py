@@ -396,7 +396,6 @@ class MailMail(models.Model):
                     'Unknown error when evaluating mail headers (received %r): %s',
                     self.headers, e,
                 )
-        headers['X-Odoo-Message-Id'] = self.message_id
         headers.setdefault('Return-Path', self.record_alias_domain_id.bounce_email or self.env.company.bounce_email)
 
         # prepare recipients: use email_to if defined then check recipient_ids
@@ -506,7 +505,7 @@ class MailMail(models.Model):
         Return iterators over
             mail_server_id, email_from, Records<mail.mail>.ids
         """
-        mail_values = self.read(['id', 'email_from', 'mail_server_id', 'record_alias_domain_id'])
+        mail_values = self.with_context(prefetch_fields=False).read(['id', 'email_from', 'mail_server_id', 'record_alias_domain_id'])
 
         # First group the <mail.mail> per mail_server_id, per alias_domain (if no server) and per email_from
         group_per_email_from = defaultdict(list)
@@ -584,7 +583,12 @@ class MailMail(models.Model):
                     len(batch_ids), mail_server_id)
             finally:
                 if smtp_session:
-                    smtp_session.quit()
+                    try:
+                        smtp_session.quit()
+                    except smtplib.SMTPServerDisconnected:
+                        _logger.info(
+                            "Ignoring SMTPServerDisconnected while trying to quit non open session"
+                        )
 
     def _send(self, auto_commit=False, raise_exception=False, smtp_session=None, alias_domain_id=False):
         IrMailServer = self.env['ir.mail_server']
@@ -698,12 +702,17 @@ class MailMail(models.Model):
                 if res:  # mail has been sent at least once, no major exception occurred
                     mail.write({'state': 'sent', 'message_id': res, 'failure_reason': False})
                     _logger.info(
-                        "Mail with ID %r and Message-Id %r from %r to (redacted) %r successfully sent",
+                        "Mail (mail.mail) with ID %r and Message-Id %r from %r to (redacted) %s successfully sent",
                         mail.id,
                         mail.message_id,
-                        tools.email_normalize(msg['from']),
-                        tools.mail.email_anonymize(tools.email_normalize(msg['to']))
+                        tools.email_normalize(msg['from']),  # FROM should not change, so last msg good enough
+                        ', '.join(
+                            repr(tools.mail.email_anonymize(tools.email_normalize(m['email_to'])))
+                            for m in email_list
+                        ),
                     )
+                    _logger.info("Total emails tried by SMTP: %s", len(email_list))
+
                     # /!\ can't use mail.state here, as mail.refresh() will cause an error
                     # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
                 mail._postprocess_sent_message(success_pids=success_pids, failure_type=failure_type)
@@ -764,4 +773,5 @@ class MailMail(models.Model):
 
             if auto_commit is True:
                 self._cr.commit()
+            mail.invalidate_recordset(['body_html'])
         return True

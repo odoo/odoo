@@ -64,10 +64,14 @@ class MailMessageSchedule(models.Model):
         for model, schedules in self._group_by_model().items():
             if model:
                 records = self.env[model].browse(schedules.mapped('mail_message_id.res_id'))
+                existing = records.exists()
             else:
                 records = [self.env['mail.thread']] * len(schedules)
+                existing = records
 
             for record, schedule in zip(records, schedules):
+                if record not in existing:
+                    continue
                 notify_kwargs = dict(default_notify_kwargs or {}, skip_existing=True)
                 try:
                     schedule_notify_kwargs = json.loads(schedule.notification_parameters)

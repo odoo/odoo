@@ -926,9 +926,9 @@ class Lead(models.Model):
         context = dict(self._context)
         context.setdefault('default_type', self.type)
         context.setdefault('default_team_id', self.team_id.id)
-        # Set date_open to today if it is an opp
+        # Set date_open to today if it is an opp and has an active user
         default = default or {}
-        default['date_open'] = self.env.cr.now() if self.type == 'opportunity' else False
+        default['date_open'] = self.env.cr.now() if self.type == 'opportunity' and self.user_id.active else False
         # Do not assign to an archived user
         if not self.user_id.active:
             default['user_id'] = False
@@ -1303,7 +1303,7 @@ class Lead(models.Model):
         alias_record = alias_records[0] if alias_records else None
         if alias_record and alias_record.alias_domain and alias_record.alias_name:
             sub_title = Markup(_('Use the <i>New</i> button, or send an email to %(email_link)s to test the email gateway.')) % {
-                'email_link': Markup("<b><a href='mailto:%s'>%s</a></b>") % (alias_record.display_name, alias_record.display_name),
+                'email_link': Markup("<b><a href='mailto:%s'>%s</a></b>") % (alias_record.alias_email, alias_record.alias_email),
             }
         return super().get_empty_list_help(
             f'<p class="o_view_nocontent_smiling_face">{help_title}</p><p class="oe_view_nocontent_alias">{sub_title}</p>'

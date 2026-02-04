@@ -166,7 +166,7 @@ class Project(models.Model):
     date_start = fields.Date(string='Start Date')
     date = fields.Date(string='Expiration Date', index=True, tracking=True,
         help="Date on which this project ends. The timeframe defined on the project is taken into account when viewing its planning.")
-    allow_task_dependencies = fields.Boolean('Task Dependencies', default=lambda self: self.env.user.has_group('project.group_project_task_dependencies'))
+    allow_task_dependencies = fields.Boolean('Task Dependencies', default=lambda self: self.env.user.has_group('project.group_project_task_dependencies'), inverse='_inverse_allow_task_dependencies')
     allow_milestones = fields.Boolean('Milestones', default=lambda self: self.env.user.has_group('project.group_project_milestone'))
     tag_ids = fields.Many2many('project.tags', relation='project_project_project_tags_rel', string='Tags')
     task_properties_definition = fields.PropertiesDefinition('Task Properties')
@@ -382,6 +382,35 @@ class Project(models.Model):
             else:
                 project.access_instruction_message = ''
 
+    def _inverse_allow_task_dependencies(self):
+        """ Reset state for waiting tasks in the project if the feature is disabled
+            or recompute the tasks with dependencies if the project has the feature enabled again
+        """
+        project_with_task_dependencies_feature = self.filtered('allow_task_dependencies')
+        projects_without_task_dependencies_feature = self - project_with_task_dependencies_feature
+        ProjectTask = self.env['project.task']
+        if (
+            project_with_task_dependencies_feature
+            and (
+                open_tasks_with_dependencies := ProjectTask.search([
+                    ('project_id', 'in', project_with_task_dependencies_feature.ids),
+                    ('depend_on_ids.state', 'in', ProjectTask.OPEN_STATES),
+                    ('state', 'in', ProjectTask.OPEN_STATES),
+                ])
+            )
+        ):
+            open_tasks_with_dependencies.state = '04_waiting_normal'
+        if (
+            projects_without_task_dependencies_feature
+            and (
+                waiting_tasks := ProjectTask.search([
+                    ('project_id', 'in', projects_without_task_dependencies_feature.ids),
+                    ('state', '=', '04_waiting_normal'),
+                ])
+            )
+        ):
+            waiting_tasks.state = '01_in_progress'
+
     # TODO: Remove in master
     @api.onchange('date_start', 'date')
     def _onchange_planned_date(self):
@@ -467,11 +496,15 @@ class Project(models.Model):
                 # The project's company_id must be the same as the stage's company_id
                 if stage.company_id:
                     for vals in vals_list:
+                        if vals.get('stage_id'):
+                            continue
                         vals['company_id'] = stage.company_id.id
             else:
                 companies_ids = [vals.get('company_id', False) for vals in vals_list] + [False]
                 stages = self.env['project.project.stage'].search([('company_id', 'in', companies_ids)])
                 for vals in vals_list:
+                    if vals.get('stage_id'):
+                        continue
                     # Pick the stage with the lowest sequence with no company or project's company
                     stage_domain = [False] if 'company_id' not in vals else [False, vals.get('company_id')]
                     stage = stages.filtered(lambda s: s.company_id.id in stage_domain)[:1]
@@ -803,7 +836,7 @@ class Project(models.Model):
         if self.allow_milestones:
             panel_data['milestones'] = self._get_milestones()
         if show_profitability:
-            profitability_items = self._get_profitability_items()
+            profitability_items = self.with_context(active_test=False)._get_profitability_items()
             if self._get_profitability_sequence_per_invoice_type() and profitability_items and 'revenues' in profitability_items and 'costs' in profitability_items:  # sort the data values
                 profitability_items['revenues']['data'] = sorted(profitability_items['revenues']['data'], key=lambda k: k['sequence'])
                 profitability_items['costs']['data'] = sorted(profitability_items['costs']['data'], key=lambda k: k['sequence'])

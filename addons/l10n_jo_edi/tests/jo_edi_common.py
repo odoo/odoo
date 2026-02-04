@@ -35,7 +35,8 @@ class JoEdiCommon(AccountTestInvoicingCommon):
         cls.jo_general_tax_10 = _get_general_tax(10)
         cls.jo_special_tax_10 = _create_special_tax(10)
         cls.jo_special_tax_5 = _create_special_tax(5)
-        cls.jo_general_tax_16_included = _get_general_tax(16)
+        cls.jo_general_tax_16 = _get_general_tax(16)
+        cls.jo_general_tax_16_included = cls.jo_general_tax_16.copy({'name': 'Tax 16% included'})
         cls.jo_general_tax_16_included.price_include = True
 
         cls.partner_jo = cls.env['res.partner'].create({
@@ -80,8 +81,8 @@ class JoEdiCommon(AccountTestInvoicingCommon):
         move.action_post()
         return move
 
-    def _l10n_jo_create_refund(self, invoice_vals, return_reason, refund_vals):
-        invoice = self._l10n_jo_create_invoice(invoice_vals)
+    def _l10n_jo_create_refund(self, invoice, return_reason, refund_vals):
+        invoice = self._l10n_jo_create_invoice(invoice) if isinstance(invoice, dict) else invoice
         reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice.ids).create({
             'reason': return_reason,
             'journal_id': invoice.journal_id.id,

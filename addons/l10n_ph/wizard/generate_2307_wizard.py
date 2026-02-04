@@ -18,7 +18,8 @@ COLUMN_HEADER_MAP = {
     "firstName": "first_name",
     "middleName": "middle_name",
     "address": "address",
-    "nature": "product_name",
+    "zip_code": "zip",
+    "nature": "tax_description",
     "ATC": "atc",
     "income_payment": "price_subtotal",
     "ewt_rate": "amount",
@@ -43,26 +44,35 @@ class Generate2307Wizard(models.TransientModel):
         worksheet_row = 0
         for move in moves:
             worksheet_row += 1
-            partner = move.partner_id
+            partner = move.commercial_partner_id
             partner_address_info = [partner.street, partner.street2, partner.city, partner.state_id.name, partner.country_id.name]
+            first_name = middle_name = last_name = ''
+            if partner.company_type == 'person':
+                first_name = partner.first_name or ''
+                middle_name = partner.middle_name or ''
+                last_name = partner.last_name or ''
             values = {
                 'invoice_date': format_date(self.env, move.invoice_date, date_format="MM/dd/yyyy"),
                 'vat': re.sub(r'\-', '', partner.vat)[:9] if partner.vat else '',
                 'branch_code': partner.branch_code or '000',
-                'company_name': partner.commercial_partner_id.name,
-                'first_name': partner.first_name or '',
-                'middle_name': partner.middle_name or '',
-                'last_name': partner.last_name or '',
-                'address': ', '.join([val for val in partner_address_info if val])
+                'company_name': partner.name if partner.company_type == 'company' else '',
+                'first_name': first_name,
+                'middle_name': middle_name,
+                'last_name': last_name,
+                'address': ', '.join([val for val in partner_address_info if val]),
+                'zip': partner.zip or '',
             }
-            for invoice_line in move.invoice_line_ids.filtered(lambda l: l.display_type not in ('line_note', 'line_section')):
-                for tax in invoice_line.tax_ids.filtered(lambda x: x.l10n_ph_atc):
-                    product_name = invoice_line.product_id.name or invoice_line.name
-                    values['product_name'] = re.sub(r'[\(\)]', '', product_name) if product_name else ""
+            aggregated_taxes = move._prepare_invoice_aggregated_taxes()
+            for invoice_line, tax_details_for_line in aggregated_taxes['tax_details_per_record'].items():
+                for tax_detail in tax_details_for_line['tax_details'].values():
+                    tax = tax_detail['tax']
+                    if not tax.l10n_ph_atc:
+                        continue
+                    values['tax_description'] = tax.description or ''
                     values['atc'] = tax.l10n_ph_atc
-                    values['price_subtotal'] = invoice_line.price_subtotal
+                    values['price_subtotal'] = tax_detail['base_amount']
                     values['amount'] = tax.amount
-                    values['tax_amount'] = tax._compute_amount(invoice_line.price_subtotal, invoice_line.price_unit)
+                    values['tax_amount'] = tax_detail['tax_amount']
                     self._write_single_row(worksheet, worksheet_row, values)
                     worksheet_row += 1
 

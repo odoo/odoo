@@ -107,14 +107,14 @@ function makeLogger(prefix, title) {
     return { request, response };
 }
 
-export function makeServerError({ code, context, description, message, subType, type } = {}) {
+export function makeServerError({ code, context, description, message, subType, type, args } = {}) {
     return makeErrorFromResponse({
         code: code || 200,
         message: message || "Odoo Server Error",
         data: {
             name: `odoo.exceptions.${type || "UserError"}`,
             debug: "traceback",
-            arguments: [],
+            arguments: args || [],
             context: context || {},
             subType,
             message: description,
@@ -2317,7 +2317,16 @@ export class MockServer {
                     break;
                 }
             }
-            const result = v1 > v2 ? 1 : v1 < v2 ? -1 : 0;
+            let result = 0;
+            if (v1 === undefined && v2 !== undefined) {
+                result = 1;
+            } else if (v1 !== undefined && v2 === undefined) {
+                result = -1;
+            } else if (v1 > v2) {
+                result = 1;
+            } else if (v1 < v2) {
+                result = -1;
+            }
             return order === "DESC" ? -result : result;
         });
 

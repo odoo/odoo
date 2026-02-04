@@ -1,5 +1,5 @@
 # coding: utf-8
-from .common import TestEsEdiCommon
+from .common import TestEsEdiCommon, mocked_l10n_es_edi_call_web_service_sign
 
 import json
 
@@ -7,10 +7,6 @@ from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo.tests import tagged
-
-
-def mocked_l10n_es_edi_call_web_service_sign(edi_format, invoices, info_list):
-    return {inv: {'success': True} for inv in invoices}
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -308,7 +304,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 },
             })
 
-    def test_050_out_invoice_s_iva0_sp_i_s_iva0_ic(self):
+    def test_050_out_invoice_s_iva0_sp_i_s_iva0_g_i(self):
         """An intra-community sale needs to be reported as exempt and intra-community services as no sujeto por reglas de localizacion (no_sujeto_loc)"""
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
@@ -317,7 +313,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 partner_id=self.partner_a.id,
                 invoice_line_ids=[
                     {'price_unit': 100.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_sp_i').ids)]},
-                    {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_ic').ids)]},
+                    {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_g_i').ids)]},
                 ],
             )
             invoice.action_post()
@@ -366,7 +362,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 },
             })
 
-    def test_060_out_refund_s_iva0_sp_i_s_iva0_ic(self):
+    def test_060_out_refund_s_iva0_sp_i_s_iva0_g_i(self):
         """ Intra-community refund of service and good"""
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
@@ -376,7 +372,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 partner_id=self.partner_a.id,
                 invoice_line_ids=[
                     {'price_unit': 100.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_sp_i').ids)]},
-                    {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_ic').ids)]},
+                    {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_g_i').ids)]},
                 ],
             )
             invoice.action_post()
@@ -426,7 +422,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 },
             })
 
-    def test_070_out_invoice_s_iva_e_s_iva0_e(self):
+    def test_070_out_invoice_s_iva_e_s_iva0_g_e(self):
         """ Export of service (no sujeto por reglas de localization) and export of goods (exempt)"""
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
@@ -435,7 +431,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 partner_id=self.partner_a.id,
                 invoice_line_ids=[
                     {'price_unit': 100.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva_e').ids)]},
-                    {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_e').ids)]},
+                    {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_g_e').ids)]},
                 ],
             )
             invoice.action_post()
@@ -484,7 +480,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 },
             })
 
-    def test_080_out_refund_s_iva0_sp_i_s_iva0_ic(self):
+    def test_080_out_refund_s_iva0_sp_i_s_iva0_g_i(self):
         """Customer refund of an intracom good and service"""
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
@@ -494,7 +490,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 partner_id=self.partner_a.id,
                 invoice_line_ids=[
                     {'price_unit': 100.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_sp_i').ids)]},
-                    {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_ic').ids)]},
+                    {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_g_i').ids)]},
                 ],
             )
             invoice.action_post()
@@ -544,7 +540,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 },
             })
 
-    def test_085_out_refund_s_iva0_sp_i_s_iva0_ic_multi_currency(self):
+    def test_085_out_refund_s_iva0_sp_i_s_iva0_g_i_multi_currency(self):
         """ Same as test_080 but in multi-currency"""
         with freeze_time(self.frozen_today), \
              patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
@@ -555,7 +551,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 currency_id=self.currency_data['currency'].id,
                 invoice_line_ids=[
                     {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_sp_i').ids)]},
-                    {'price_unit': 400.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_ic').ids)]},
+                    {'price_unit': 400.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_g_i').ids)]},
                 ],
             )
             invoice.action_post()
@@ -1225,6 +1221,55 @@ class TestEdiXmls(TestEsEdiCommon):
                         }
                     },
                     'CuotaDeducible': -63.0
+                },
+                'PeriodoLiquidacion': {'Periodo': '01', 'Ejercicio': '2019'}
+            })
+
+    def test_200_in_invoice_p_iva12_agr(self):
+        """ For bills with the 12% agricuture tax the Clave Regime Special should be E2
+        """
+        with freeze_time(self.frozen_today), \
+             patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
+                   new=mocked_l10n_es_edi_call_web_service_sign):
+            invoice = self.create_invoice(
+                move_type='in_invoice',
+                ref='sup0001',
+                partner_id=self.partner_a.id,
+                l10n_es_registration_date='2019-01-02',
+                invoice_line_ids=[
+                    {
+                        'price_unit': 200.0,
+                        'tax_ids': [(6, 0, self._get_tax_by_xml_id('p_iva12_agr').ids)],
+                    },
+                ],
+            )
+            invoice.action_post()
+
+            generated_files = self._process_documents_web_services(invoice, {'es_sii'})
+            self.assertTrue(generated_files)
+
+            json_file = json.loads(generated_files[0].decode())[0]
+            self.assertEqual(json_file, {
+                'IDFactura': {
+                    'FechaExpedicionFacturaEmisor': '01-01-2019',
+                    'NumSerieFacturaEmisor': 'sup0001',
+                    'IDEmisorFactura': {'IDOtro': {'IDType': '02', 'ID': 'BE0477472701'}, 'NombreRazon': 'partner_a'}
+                },
+                'FacturaRecibida': {
+                    'TipoFactura': 'F6',
+                    'Contraparte': {'IDOtro': {'IDType': '02', 'ID': 'BE0477472701'}, 'NombreRazon': 'partner_a'},
+                    'DescripcionOperacion': 'manual',
+                    'ClaveRegimenEspecialOTrascendencia': '02',
+                    'ImporteTotal': 224.0,
+                    'FechaRegContable': '02-01-2019',
+                    'DesgloseFactura': {
+                        'DesgloseIVA': {
+                            'DetalleIVA': [
+                                {'BaseImponible': 200.0, 'ImporteCompensacionREAGYP': 24.0, 'PorcentCompensacionREAGYP': 12.0},
+                            ]
+                        }
+                    },
+                    'CuotaDeducible': 0.0
                 },
                 'PeriodoLiquidacion': {'Periodo': '01', 'Ejercicio': '2019'}
             })

@@ -202,6 +202,9 @@ class CustomerPortal(Controller):
                         values[field] = False
                 values.update({'zip': values.pop('zipcode', '')})
                 self.on_account_update(values, partner)
+                # If name is not changed then pop it from the values, as it affects the bank account holder name
+                if values['name'].strip() == partner.name.strip():
+                    values.pop('name')
                 partner.sudo().write(values)
                 if redirect:
                     return request.redirect(redirect)
@@ -377,9 +380,14 @@ class CustomerPortal(Controller):
         error_message = []
 
         request.update_context(portal_form_country_id=data['country_id'])
+        partner = request.env.user.partner_id
+
         # Validation
         for field_name in self._get_mandatory_fields():
             if not data.get(field_name):
+                if field_name == 'country_id' and not partner.can_edit_vat():
+                    # you cannot edit the country ID in that case so we skip the error, see the XML form for details
+                    continue
                 error[field_name] = 'missing'
                 if field_name == 'zipcode':
                     error['zip'] = 'missing'
@@ -390,7 +398,6 @@ class CustomerPortal(Controller):
             error_message.append(_('Invalid Email! Please enter a valid email address.'))
 
         # vat validation
-        partner = request.env.user.partner_id
         if data.get("vat") and partner and partner.vat != data.get("vat"):
             # Check the VAT if it is the public user too.
             if partner_creation or partner.can_edit_vat():
@@ -509,9 +516,9 @@ class CustomerPortal(Controller):
             'Content-Type': 'application/pdf' if report_type == 'pdf' else 'text/html',
             'Content-Length': len(report),
         }
-        if report_type == 'pdf' and download:
+        if report_type == 'pdf':
             filename = "%s.pdf" % (re.sub(r'\W+', '-', model._get_report_base_filename()))
-            headers['Content-Disposition'] = content_disposition(filename)
+            headers['Content-Disposition'] = content_disposition(filename, disposition_type='attachment' if download else 'inline')
         return headers
 
 def get_error(e, path=''):

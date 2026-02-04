@@ -119,7 +119,9 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      */
     async _setMode(modeName) {
         modeName = modeName || 'slideshow'; // FIXME should not be needed
-        this.$target.css('height', '');
+        if (modeName !== "slideshow") {
+            this.$target.css("height", "");
+        }
         this.$target
             .removeClass('o_nomode o_masonry o_grid o_slideshow')
             .addClass('o_' + modeName);
@@ -200,7 +202,6 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
         this.$("img").toArray().forEach((img, index) => {
             $(img).attr({contenteditable: true, 'data-index': index});
         });
-        this.$target.css('height', Math.round(window.innerHeight * 0.7));
 
         // Apply layout animation
         this.$target.off('slide.bs.carousel').off('slid.bs.carousel');
@@ -487,6 +488,13 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
         this._super(...arguments);
         this.$target.off('.gallery');
     },
+    /**
+     * @override
+     */
+    onRemove() {
+        this.isBeingRemoved = true;
+        this._super(...arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -589,7 +597,7 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
      */
     notify(name, data) {
         this._super(...arguments);
-        if (name === 'image_removed') {
+        if (name === 'image_removed' && !this.isBeingRemoved) {
             data.$image.remove(); // Force the removal of the image before reset
             this.trigger_up('snippet_edition_request', {exec: () => {
                 return this._relayout();

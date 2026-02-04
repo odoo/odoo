@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import json
 import socket
 
 from itertools import product
@@ -9,9 +10,9 @@ from unittest.mock import patch
 from werkzeug.urls import url_parse, url_decode
 
 from odoo.addons.mail.models.mail_message import Message
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.test_mail.tests.common import TestRecipients
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.tests import tagged, users, HttpCase
 from odoo.tools import mute_logger
 
@@ -57,6 +58,15 @@ class TestMailMCCommon(MailCommon, TestRecipients):
             'author_id': cls.partner_1.id,
             'message_id': '<123456-openerp-%s-mail.test.gateway@%s>' % (cls.test_record.id, socket.gethostname()),
         })
+
+        cls._create_portal_user()
+        cls.user_portal_c2 = mail_new_test_user(
+            cls.env,
+            groups='base.group_portal',
+            login='portal_user_c2',
+            company_id=cls.company_2.id,
+            name="Portal User C2",
+        )
 
     def setUp(self):
         super().setUp()
@@ -253,60 +263,87 @@ class TestMultiCompanySetup(TestMailMCCommon):
                 subtype_xmlid='mail.mt_comment',
             )
 
-    def test_systray_get_activities(self):
-        self.env["mail.activity"].search([]).unlink()
-        user_admin = self.user_admin.with_user(self.user_admin)
-        test_records = self.env["mail.test.multi.company.with.activity"].create(
-            [
-                {"name": "Test1", "company_id": user_admin.company_id.id},
-                {"name": "Test2", "company_id": self.company_2.id},
-            ]
-        )
-        test_records[0].activity_schedule("test_mail.mail_act_test_todo", user_id=user_admin.id)
-        test_records[1].activity_schedule("test_mail.mail_act_test_todo", user_id=user_admin.id)
-        test_activity = next(
-            a for a in user_admin.systray_get_activities()
-            if a['model'] == 'mail.test.multi.company.with.activity'
-        )
-        self.assertEqual(
-            test_activity,
-            {
-                "icon": "/base/static/description/icon.png",
-                "id": self.env["ir.model"]._get_id("mail.test.multi.company.with.activity"),
-                "model": "mail.test.multi.company.with.activity",
-                "name": "Test Multi Company Mail With Activity",
-                "overdue_count": 0,
-                "planned_count": 0,
-                "today_count": 2,
-                "total_count": 2,
-                "type": "activity",
-                "view_type": "list",
-            }
-        )
 
-        test_activity = next(
-            a for a in user_admin.with_context(allowed_company_ids=[self.company_2.id]).systray_get_activities()
-            if a['model'] == 'mail.test.multi.company.with.activity'
-        )
-        self.assertEqual(
-            test_activity,
-            {
-                "icon": "/base/static/description/icon.png",
-                "id": self.env["ir.model"]._get_id("mail.test.multi.company.with.activity"),
-                "model": "mail.test.multi.company.with.activity",
-                "name": "Test Multi Company Mail With Activity",
-                "overdue_count": 0,
-                "planned_count": 0,
-                "today_count": 1,
-                "total_count": 1,
-                "type": "activity",
-                "view_type": "list",
-            }
-        )
+@tagged('-at_install', 'post_install', 'multi_company', 'mail_controller')
+class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
 
+    @mute_logger('odoo.http')
+    def test_mail_thread_data(self):
+        """ Test returned thread data, in MC environment, to test notably MC
+        access issues on partner, ACL support, ... """
+        customer_c3 = self.env["res.partner"].create({
+            "company_id": self.company_3.id,
+            "name": "C3 Customer",
+        })
+        record = self.env["mail.test.multi.company.read"].with_user(self.user_employee_c2).create({
+            "company_id": self.user_employee_c2.company_id.id,
+            "name": "Multi Company Record",
+        })
+        self.assertEqual(record.company_id, self.company_2)
 
-@tagged('-at_install', 'post_install', 'multi_company')
-class TestMultiCompanyRedirect(MailCommon, HttpCase):
+        record.message_subscribe(partner_ids=customer_c3.ids)
+        with self.assertRaises(UserError):
+            customer_c3.with_user(self.user_employee_c2).check_access_rule("read")
+
+        self.authenticate(self.user_employee_c2.login, self.user_employee_c2.login)
+        response = self.url_open(
+            url="/mail/thread/data",
+            headers={"Content-Type": "application/json"},
+            data=json.dumps(
+                {
+                    "params": {
+                        "thread_id": record.id,
+                        "thread_model": record._name,
+                        "request_list": ["followers"],
+                    }
+                },
+            ),
+        )
+        self.assertEqual(response.status_code, 200)
+        result = json.loads(response.content)["result"]
+        self.assertEqual(len(result["followers"]), 2)
+        self.assertEqual(result["followersCount"], 2)
+        self.assertEqual(result["followers"][1]["partner"]["id"], customer_c3.id)
+        self.assertTrue(result["hasWriteAccess"])
+        self.assertTrue(result["hasReadAccess"])
+        self.assertTrue(result["canPostOnReadonly"])
+
+        # check read / write / post access info
+        for test_user, (has_w, has_r, can_post) in zip(
+            (self.user_portal, self.user_portal_c2, self.user_employee, self.user_admin),
+            (
+                (False, True, True),  # currently not really supported actually, should go through portal controllers
+                (False, True, True),  # currently not really supported actually, should go through portal controllers
+                (False, True, True),
+                (True, True, True),
+            ),
+        ):
+            with self.subTest(user_name=test_user.name):
+                self.authenticate(test_user.login, test_user.login)
+                response = self.url_open(
+                    url="/mail/thread/data",
+                    headers={"Content-Type": "application/json"},
+                    data=json.dumps(
+                        {
+                            "params": {
+                                "thread_id": record.id,
+                                "thread_model": record._name,
+                                "request_list": ["followers"],
+                            }
+                        },
+                    ),
+                )
+                # crash if calling using portal users -> dedicated portal routes currently
+                if test_user in self.user_portal + self.user_portal_c2:
+                    self.assertEqual(response.status_code, 200)  # not a crash, just skipped content
+                    self.assertNotIn("result", json.loads(response.content))
+                else:
+                    response.raise_for_status()
+                    result = json.loads(response.content)["result"]
+                    self.assertEqual(result["followersCount"], 2)
+                    self.assertEqual(result["hasWriteAccess"], has_w)
+                    self.assertEqual(result["hasReadAccess"], has_r)
+                    self.assertEqual(result["canPostOnReadonly"], can_post)
 
     def test_redirect_to_records(self):
         """ Test mail/view redirection in MC environment, notably cids being
@@ -341,8 +378,7 @@ class TestMultiCompanyRedirect(MailCommon, HttpCase):
                     path = url_parse(response.url).path
                     self.assertEqual(path, '/web/login')
                     decoded_fragment = url_decode(url_parse(response.url).fragment)
-                    self.assertTrue("cids" in decoded_fragment)
-                    self.assertEqual(decoded_fragment['cids'], str(mc_record.company_id.id))
+                    self.assertNotIn("cids", decoded_fragment)
                 else:
                     user = self.env['res.users'].browse(self.session.uid)
                     self.assertEqual(user.login, login)
@@ -392,21 +428,15 @@ class TestMultiCompanyRedirect(MailCommon, HttpCase):
                     self.assertTrue("cids" in decoded_fragment)
                     self.assertEqual(decoded_fragment['cids'], str(user_company.id))
 
-        # when being not logged, cids should be added based on
-        # '_get_mail_redirect_suggested_company'
-        self.authenticate(None, None)
+        # when being not logged, cids should not be added as redirection after
+        # logging will be 'mail/view' again
         for test_record in nothreads:
-            with self.subTest(record_name=test_record.name, user_company=user_company):
-                self.user_admin.write({'company_id': user_company.id})
+            with self.subTest(record_name=test_record.name):
+                self.authenticate(None, None)
                 response = self.url_open(
                     f'/mail/view?model={test_record._name}&res_id={test_record.id}',
                     timeout=15
                 )
                 self.assertEqual(response.status_code, 200)
-
                 decoded_fragment = url_decode(url_parse(response.url).fragment)
-                if test_record.company_id:
-                    self.assertIn('cids', decoded_fragment)
-                    self.assertEqual(decoded_fragment['cids'], str(test_record.company_id.id))
-                else:
-                    self.assertNotIn('cids', decoded_fragment)
+                self.assertNotIn('cids', decoded_fragment)

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* mass_mailing_sms
-# 
+# * mass_mailing_sms
+#
 # Translators:
 # Martin Aavastik <martin@avalah.ee>, 2023
 # Martin Trigaux, 2023
@@ -21,20 +21,22 @@
 # Birgit Vijar, 2024
 # Anna, 2024
 # Stevin Lilla, 2024
-# 
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Stevin Lilla, 2024\n"
-"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-12-31 11:47+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-17/"
+"mass_mailing_sms/et/>\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: et\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: mass_mailing_sms
 #. odoo-javascript
@@ -106,8 +108,8 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
-"<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text"
-" Messages are being processed.</span>"
+"<span name=\"process_text_sms\" invisible=\"mailing_type != 'sms'\">SMS Text "
+"Messages are being processed.</span>"
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -138,22 +140,26 @@ msgstr "<span>Kehtivad SMS´i saajad</span>"
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
 "<strong>\n"
-"                            It appears you don't have enough IAP credits. Click here to buy credits.\n"
+"                            It appears you don't have enough IAP credits. "
+"Click here to buy credits.\n"
 "                        </strong>"
 msgstr ""
 "<strong>\n"
-"                            Teil ei ole piisavalt IAP krediiti. Krediidi ostmiseks klikake siia.\n"
+"                            Teil ei ole piisavalt IAP krediiti. Krediidi "
+"ostmiseks klikake siia.\n"
 "                        </strong>"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
 msgid ""
 "<strong>\n"
-"                            It appears your SMS account is not registered. Click here to set up your account.\n"
+"                            It appears your SMS account is not registered. "
+"Click here to set up your account.\n"
 "                        </strong>"
 msgstr ""
 "<strong>\n"
-"                            Teie SMS konto ei ole registreeritud. Konto loomiseks klikake siia.\n"
+"                            Teie SMS konto ei ole registreeritud. Konto "
+"loomiseks klikake siia.\n"
 "                        </strong>"
 
 #. module: mass_mailing_sms
@@ -196,9 +202,21 @@ msgid "Action Needed"
 msgstr "Vajalik toiming"
 
 #. module: mass_mailing_sms
+#. odoo-python
+#: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
+#, python-format
+msgid "An error occurred."
+msgstr "Ilmnes viga"
+
+#. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_attachment_count
 msgid "Attachment Count"
 msgstr "Manuste arv"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_authentication
+msgid "Authentication Error\""
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
@@ -423,6 +441,11 @@ msgstr ""
 "For an SMS, the internal title of the message."
 
 #. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_from_to
+msgid "From / To identic"
+msgstr ""
+
+#. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__has_message
 msgid "Has Message"
 msgstr "On sõnum"
@@ -451,8 +474,8 @@ msgstr "Kui valitud, on mõningate sõnumitel saatmiserror."
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_sanitized_blacklisted
 msgid ""
-"If the sanitized phone number is on the blacklist, the contact won't receive"
-" mass mailing sms anymore, from any list"
+"If the sanitized phone number is on the blacklist, the contact won't receive "
+"mass mailing sms anymore, from any list"
 msgstr ""
 "Kui puhastatud telefoninumber on mustas nimekirjas, ei saa kontakt enam "
 "ühtegi masspostituse SMS´i mitte ühestki kanalist."
@@ -460,8 +483,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_force_send
 msgid ""
-"Immediately send the SMS Mailing instead of queuing up. Use at your own "
-"risk."
+"Immediately send the SMS Mailing instead of queuing up. Use at your own risk."
 msgstr "Saatke SMS sõnumid kohe, mitte järjekorras. Kasutage omal vastutusel."
 
 #. module: mass_mailing_sms
@@ -469,6 +491,11 @@ msgstr "Saatke SMS sõnumid kohe, mitte järjekorras. Kasutage omal vastutusel."
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__mass_sms_allow_unsubscribe
 msgid "Include opt-out link"
 msgstr "Sisaldab loobumislinki"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_callback
+msgid "Incorrect callback URL"
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__mobile_blacklisted
@@ -595,8 +622,7 @@ msgid ""
 "Mailing contacts allow you to separate your marketing audience from your "
 "contact directory."
 msgstr ""
-"E-kirja kontaktid lubavad Teil eraldada turunduse sihtrühma oma "
-"kontaktidest."
+"E-kirja kontaktid lubavad Teil eraldada turunduse sihtrühma oma kontaktidest."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__utm_campaign__ab_testing_sms_winner_selection__manual
@@ -628,6 +654,11 @@ msgstr "Sõnumi saatmise veateade"
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_ids
 msgid "Messages"
 msgstr "Sõnum"
+
+#. module: mass_mailing_sms
+#: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__twilio_from_missing
+msgid "Missing From Number"
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_number_missing
@@ -975,8 +1006,8 @@ msgid ""
 "The UTM medium '%s' cannot be deleted as it is used in some main functional "
 "flows, such as the SMS Marketing."
 msgstr ""
-"UTM-keskkonda \"%s\" ei saa kustutada, kuna seda kasutatakse mõnes põhilises"
-" funktsionaalses töövoos, näiteks SMS-turunduses."
+"UTM-keskkonda \"%s\" ei saa kustutada, kuna seda kasutatakse mõnes põhilises "
+"funktsionaalses töövoos, näiteks SMS-turunduses."
 
 #. module: mass_mailing_sms
 #. odoo-python
@@ -995,13 +1026,12 @@ msgstr "Kui üritasite tellimusest loobuda, tekkis viga"
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
-"See telefoninumber on SMS turunduse jaoks mustas nimekirjas. Klikake, et see"
-" nimekirjast eemaldada."
+"See telefoninumber on SMS turunduse jaoks mustas nimekirjas. Klikake, et see "
+"nimekirjast eemaldada."
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
-msgid ""
-"This will send SMS to all recipients now. Do you still want to proceed?"
+msgid "This will send SMS to all recipients now. Do you still want to proceed?"
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -1093,8 +1123,7 @@ msgstr "Võitja valimine"
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_mailing_action_sms
 msgid ""
-"Write an appealing SMS Text Message, define recipients and track its "
-"results."
+"Write an appealing SMS Text Message, define recipients and track its results."
 msgstr ""
 "Kirjutage atraktiivne SMS tekstisõnum, määrake vastuvõtjad ja jälgige selle "
 "tulemusi."

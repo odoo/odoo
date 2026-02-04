@@ -1,23 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* partner_autocomplete
-# 
+# * partner_autocomplete
+#
 # Translators:
 # Wil Odoo, 2023
-# 
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
-"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-11-12 14:15+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-17/"
+"partner_autocomplete/pl/>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__additional_info
@@ -36,13 +41,6 @@ msgstr "Kup więcej kredytu"
 #: model:ir.model,name:partner_autocomplete.model_res_company
 msgid "Companies"
 msgstr "Firmy"
-
-#. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_company.py:0
-#, python-format
-msgid "Company auto-completed by Odoo Partner Autocomplete Service"
-msgstr "Firma automatycznie uzupełniona przez usługę autouzupełnienia Odoo"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__partner_gid
@@ -153,19 +151,11 @@ msgid "Partner Autocomplete: Sync with remote DB"
 msgstr ""
 
 #. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_partner.py:0
-#, python-format
-msgid "Partner created by Odoo Partner Autocomplete Service"
-msgstr "Partner utworzony przez usługę autouzupełniania partnerów Odoo"
-
-#. module: partner_autocomplete
 #. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
-#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
-msgid "Placeholder"
-msgstr "Miejsce"
+msgid "Search Worldwide 🌎"
+msgstr "Szukaj na całym świecie 🌎"
 
 #. module: partner_autocomplete
 #. odoo-javascript
@@ -188,3 +178,10 @@ msgstr "Ustaw swój token konta"
 #, python-format
 msgid "Test mode"
 msgstr "Tryb testowy"
+
+#. module: partner_autocomplete
+#. odoo-python
+#: code:addons/partner_autocomplete/models/res_partner.py:0
+#, python-format
+msgid "Unable to enrich company (no credit was consumed)."
+msgstr "Nie ma możliwości wzbogacenia firmy (nie wykorzystano kredytów)."

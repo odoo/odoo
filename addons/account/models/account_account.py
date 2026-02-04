@@ -373,7 +373,9 @@ class AccountAccount(models.Model):
     @api.model
     def _search_new_account_code(self, company, digits, prefix, cache=None):
         for num in range(1, 10000):
-            new_code = str(prefix.ljust(digits - 1, '0')) + str(num)
+            num_str = str(num)
+            num_digits = min(len(num_str), digits - len(prefix))
+            new_code = str(prefix.ljust(digits - num_digits, '0')) + num_str
             if new_code in (cache or []):
                 continue
             rec = self.search([('code', '=', new_code), ('company_id', 'child_of', company.root_id.id)], limit=1)
@@ -463,6 +465,8 @@ class AccountAccount(models.Model):
                 account.reconcile = False
             elif account.account_type in ('asset_receivable', 'liability_payable'):
                 account.reconcile = True
+            elif account.account_type in ('asset_cash', 'liability_credit_card', 'off_balance'):
+                account.reconcile = False
             # For other asset/liability accounts, don't do any change to account.reconcile.
 
     def _set_opening_debit(self):
@@ -516,7 +520,7 @@ class AccountAccount(models.Model):
         return super(AccountAccount, contextual_self).default_get(default_fields)
 
     @api.model
-    def _get_most_frequent_accounts_for_partner(self, company_id, partner_id, move_type, filter_never_user_accounts=False, limit=None):
+    def _get_most_frequent_accounts_for_partner(self, company_id, partner_id, move_type, filter_never_user_accounts=False, limit=None, journal_id=None):
         """
         Returns the accounts ordered from most frequent to least frequent for a given partner
         and filtered according to the move type
@@ -525,6 +529,7 @@ class AccountAccount(models.Model):
         :param move_type: the type of the move to know which type of accounts to retrieve
         :param filter_never_user_accounts: True if we should filter out accounts never used for the partner
         :param limit: the maximum number of accounts to retrieve
+        :param journal_id: only return accounts allowed on this journal id
         :returns: List of account ids, ordered by frequency (from most to least frequent)
         """
         domain = [
@@ -533,6 +538,8 @@ class AccountAccount(models.Model):
             ('account_id.deprecated', '=', False),
             ('date', '>=', fields.Date.add(fields.Date.today(), days=-365 * 2)),
         ]
+        if journal_id:
+            domain += ['|', ('account_id.allowed_journal_ids', '=', journal_id), ('account_id.allowed_journal_ids', '=', False)]
         if move_type in self.env['account.move'].get_inbound_types(include_receipts=True):
             domain.append(('account_id.internal_group', '=', 'income'))
         elif move_type in self.env['account.move'].get_outbound_types(include_receipts=True):
@@ -555,8 +562,8 @@ class AccountAccount(models.Model):
         return [r[0] for r in self._cr.fetchall()]
 
     @api.model
-    def _get_most_frequent_account_for_partner(self, company_id, partner_id, move_type=None):
-        most_frequent_account = self._get_most_frequent_accounts_for_partner(company_id, partner_id, move_type, filter_never_user_accounts=True, limit=1)
+    def _get_most_frequent_account_for_partner(self, company_id, partner_id, move_type=None, journal_id=None):
+        most_frequent_account = self._get_most_frequent_accounts_for_partner(company_id, partner_id, move_type, filter_never_user_accounts=True, limit=1, journal_id=journal_id)
         return most_frequent_account[0] if most_frequent_account else False
 
     @api.model
@@ -661,6 +668,7 @@ class AccountAccount(models.Model):
         '''
         if not self.ids:
             return None
+        self.env['account.move.line'].invalidate_model(['amount_residual', 'amount_residual_currency', 'reconciled'])
         query = """
             UPDATE account_move_line SET
                 reconciled = CASE WHEN debit = 0 AND credit = 0 AND amount_currency = 0
@@ -670,7 +678,6 @@ class AccountAccount(models.Model):
             WHERE full_reconcile_id IS NULL and account_id IN %s
         """
         self.env.cr.execute(query, [tuple(self.ids)])
-        self.env['account.move.line'].invalidate_model(['amount_residual', 'amount_residual_currency', 'reconciled'])
 
     def _toggle_reconcile_to_false(self):
         '''Toggle the `reconcile´ boolean from True -> False
@@ -689,6 +696,8 @@ class AccountAccount(models.Model):
         if partial_lines_count > 0:
             raise UserError(_('You cannot switch an account to prevent the reconciliation '
                               'if some partial reconciliations are still pending.'))
+
+        self.env['account.move.line'].invalidate_model(['amount_residual', 'amount_residual_currency'])
         query = """
             UPDATE account_move_line
                 SET amount_residual = 0, amount_residual_currency = 0
@@ -730,6 +739,9 @@ class AccountAccount(models.Model):
             for account in self:
                 if self.env['account.move.line'].search_count([('account_id', '=', account.id), ('currency_id', 'not in', (False, vals['currency_id']))]):
                     raise UserError(_('You cannot set a currency on this account as it already has some journal entries having a different foreign currency.'))
+
+        if vals.get('deprecated') and self.env["account.tax.repartition.line"].search_count([('account_id', 'in', self.ids)], limit=1):
+            raise UserError(_("You cannot deprecate an account that is used in a tax distribution."))
 
         return super(AccountAccount, self).write(vals)
 

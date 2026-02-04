@@ -4,6 +4,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import { _t } from "@web/core/l10n/translation";
 import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
 import { jsonrpc } from "@web/core/network/rpc_service";
+import { session } from "@web/session";
 
 // Catch registration form event, because of JS for attendee details
 var EventRegistrationForm = publicWidget.Widget.extend({
@@ -15,6 +16,11 @@ var EventRegistrationForm = publicWidget.Widget.extend({
         this._super(...arguments);
         this._recaptcha = new ReCaptcha();
         this.notification = this.bindService("notification");
+        // dynamic get rather than import as we don't depend on this module
+        if (session.turnstile_site_key) {
+            const { turnStile } = odoo.loader.modules.get("@website_cf_turnstile/js/turnstile");
+            this._turnstile = turnStile;
+        }
     },
 
     /**
@@ -68,17 +74,9 @@ var EventRegistrationForm = publicWidget.Widget.extend({
         $button.attr('disabled', true);
         const self = this;
         return jsonrpc($form.attr('action'), post).then(async function (modal) {
-            const tokenObj = await self._recaptcha.getToken('website_event_registration');
-            if (tokenObj.error) {
-                self.notification.add(tokenObj.error, {
-                    type: "danger",
-                    title: _t("Error"),
-                    sticky: true,
-                });
-                $button.prop('disabled', false);
-                return false;
-            }
             var $modal = $(modal);
+            const form = $modal[0].querySelector("form#attendee_registration");
+            self._addTurnstile(form);
             $modal.find('.modal-body > div').removeClass('container'); // retrocompatibility - REMOVE ME in master / saas-19
             $modal.appendTo(document.body);
             const modalBS = new Modal($modal[0], {backdrop: 'static', keyboard: false});
@@ -91,14 +89,47 @@ var EventRegistrationForm = publicWidget.Widget.extend({
             $modal.on('click', '.btn-close', function () {
                 $button.prop('disabled', false);
             });
-            $modal.on('submit', 'form', function (ev) {
+            $modal.on('submit', 'form', async function (ev) {
+                if (!self._recaptcha._publicKey) {
+                    return;
+                }
+
+                ev.preventDefault();
+                const tokenObj = await self._recaptcha.getToken('website_event_registration');
+                if (tokenObj.error) {
+                    self.notification.add(tokenObj.error, {
+                        type: "danger",
+                        title: _t("Error"),
+                        sticky: true,
+                    });
+                    $button.prop('disabled', false);
+                    return false;
+                }
                 const tokenInput = document.createElement('input');
                 tokenInput.setAttribute('name', 'recaptcha_token_response');
                 tokenInput.setAttribute('type', 'hidden');
                 tokenInput.setAttribute('value', tokenObj.token);
                 ev.currentTarget.appendChild(tokenInput);
+                ev.currentTarget.submit();
             })
         });
+    },
+
+    _addTurnstile: function (form) {
+        if (!this._turnstile) {
+            return false;
+        }
+
+        const turnstileNodes = this._turnstile.addTurnstile("website_event_registration");
+
+        const modalFooter = form.querySelector("div.modal-footer");
+        const formButton = form.querySelector("button[type=submit]");
+
+        this._turnstile.addSpinnerNoMangle(formButton);
+        turnstileNodes.prependTo(modalFooter);
+        this._turnstile.renderTurnstile(turnstileNodes);
+
+        return true;
     },
 });
 

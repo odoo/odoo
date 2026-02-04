@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_view_form" model="ir.ui.view">
+        <field name="name">res.partner.view.form.inherit.l10n_rs_edi</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="l10n_rs_edi_registration_number" invisible="'RS' not in fiscal_country_codes"/>
+                <field name="l10n_rs_edi_public_funds" invisible="'RS' not in fiscal_country_codes"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -33,14 +33,11 @@ export class Homepage extends Component {
         this.data = useState({});
         this.store.advanced = localStorage.getItem("showAdvanced") === "true";
         this.store.dev = new URLSearchParams(window.location.search).has("debug");
+        this.loadDataDelay = 10000;
 
         onWillStart(async () => {
             await this.loadInitialData();
         });
-
-        setInterval(() => {
-            this.loadInitialData();
-        }, 10000);
     }
 
     async loadInitialData() {
@@ -60,6 +57,10 @@ export class Homepage extends Component {
         } catch {
             console.warn("Error while fetching data");
         }
+        this.loadDataDelay *= 1.25;
+        setTimeout(async () => {
+            await this.loadInitialData();
+        }, Math.min(this.loadDataDelay, 30 * 60 * 1000));
     }
 
     async restartOdooService() {
@@ -95,9 +96,13 @@ export class Homepage extends Component {
             <div class="d-flex mb-4 flex-column align-items-center justify-content-center">
                 <h4 class="text-center m-0">IoT Box - <t t-esc="this.data.hostname" /></h4>
             </div>
-            <div t-if="this.store.advanced" class="alert alert-warning" role="alert">
-                <p class="m-0 fw-bold">HTTPS certificate</p>
-                <small>Error code: <t t-esc="this.data.certificate_details" /></small>
+            <div t-if="this.store.advanced" t-att-class="'alert ' + (this.data.is_certificate_ok === true ? 'alert-info' : 'alert-warning')" role="alert">
+                <p class="m-0 fw-bold">HTTPS Certificate</p>
+                <small>
+                    <t t-if="this.data.is_certificate_ok === true">Status: </t>
+                    <t t-else="">Error Code: </t>
+                    <t t-esc="this.data.certificate_details" />
+                </small>
             </div>
             <SingleData name="'Name'" value="this.data.hostname" icon="'fa-id-card'">
 				<t t-set-slot="button">

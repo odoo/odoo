@@ -131,6 +131,7 @@
     'assets': {
         'web.assets_frontend': [
             ('replace', 'web/static/src/legacy/js/public/public_root_instance.js', 'website/static/src/js/content/website_root_instance.js'),
+            'website/static/src/core/errors/beforeunload_error_handler.js',
             'website/static/src/libs/zoomodoo/zoomodoo.scss',
             'website/static/src/scss/website.scss',
             'website/static/src/scss/website_controller_page.scss',
@@ -165,6 +166,7 @@
             'website/static/src/js/content/auto_hide_menu.js',
             'website/static/src/js/content/redirect.js',
             'website/static/src/js/content/adapt_content.js',
+            'website/static/src/js/content/generate_video_iframe.js',
         ],
         'web.assets_frontend_lazy': [
             # Remove assets_frontend_minimal
@@ -172,6 +174,7 @@
             ('remove', 'website/static/src/js/content/auto_hide_menu.js'),
             ('remove', 'website/static/src/js/content/redirect.js'),
             ('remove', 'website/static/src/js/content/adapt_content.js'),
+            ('remove', 'website/static/src/js/content/generate_video_iframe.js'),
         ],
         'web._assets_primary_variables': [
             'website/static/src/scss/primary_variables.scss',
@@ -241,6 +244,7 @@
             'web_editor/static/src/scss/bootstrap_overridden.scss',
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
+            'website/static/src/scss/website.wysiwyg.fonts.scss',
             'website/static/src/scss/website.wysiwyg.scss',
             'website/static/src/scss/website.edit_mode.scss',
             'website/static/src/js/editor/snippets.editor.js',
@@ -294,6 +298,16 @@
             ('include', 'website.assets_wysiwyg'),
             'website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js',
             'website/static/src/snippets/s_embed_code/options.js',
+        ],
+        # TODO: in master, we should revisit this and probably opt-in what is
+        # to be added in the iframe instead of excluding what should not be.
+        'website.assets_wysiwyg_inside': [
+            ('include', 'website.assets_wysiwyg'),
+            ('remove', 'website/static/src/scss/website.wysiwyg.fonts.scss'),
+        ],
+        'website.assets_all_wysiwyg_inside': [
+            ('include', 'website.assets_all_wysiwyg'),
+            ('remove', 'website/static/src/scss/website.wysiwyg.fonts.scss'),
         ],
         'web_editor.assets_media_dialog': [
             'website/static/src/components/media_dialog/image_selector.js',

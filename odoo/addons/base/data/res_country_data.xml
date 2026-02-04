@@ -142,7 +142,7 @@
         <record id="bg" model="res.country">
             <field name="name">Bulgaria</field>
             <field name="code">bg</field>
-            <field name="currency_id" ref="BGN" />
+            <field name="currency_id" ref="EUR" />
             <field eval="359" name="phone_code" />
             <field name="vat_label">VAT</field>
         </record>
@@ -1015,6 +1015,7 @@
             <field name="code">my</field>
             <field name="currency_id" ref="MYR" />
             <field eval="60" name="phone_code" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'"  name="address_format" />
         </record>
         <record id="mz" model="res.country">
             <field name="name">Mozambique</field>
@@ -1114,6 +1115,7 @@
         <record id="pe" model="res.country">
             <field name="name">Peru</field>
             <field name="code">pe</field>
+            <field name='zip_required'>0</field>
             <field name="currency_id" ref="PEN" />
             <field eval="51" name="phone_code" />
             <field name="vat_label">RUC</field>

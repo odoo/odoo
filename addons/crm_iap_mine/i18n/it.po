@@ -1,24 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* crm_iap_mine
-# 
+# * crm_iap_mine
+#
 # Translators:
 # Wil Odoo, 2023
 # Marianna Ciofani, 2024
-# 
+# Sergio Zanchetta <primes2h@gmail.com>, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Marianna Ciofani, 2024\n"
-"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"POT-Creation-Date: 2026-01-29 18:36+0000\n"
+"PO-Revision-Date: 2026-01-31 17:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-17/"
+"crm_iap_mine/it/>\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: it\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: crm_iap_mine
 #. odoo-python
@@ -38,18 +43,57 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>Dear,</p>\n"
 "    <p>There are no more credits on your IAP Lead Generation account.<br>\n"
-"    You can charge your IAP Lead Generation account in the settings of the CRM app.<br></p>\n"
+"    You can charge your IAP Lead Generation account in the settings of the "
+"CRM app.<br></p>\n"
 "    <p>Best regards,</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>Ciao,</p>\n"
-"    <p>non ci sono più crediti nel tuo conto IAP per la generazione di lead.<br>\n"
-"    Puoi ricaricare il tuo conto IAP dalle impostazioni dell'app CRM.<br></p>\n"
+"    <p>non ci sono più crediti nel tuo conto IAP per la generazione di lead."
+"<br>\n"
+"    Puoi ricaricare il tuo conto IAP dalle impostazioni dell'app CRM.<br></"
+"p>\n"
 "    <p>Cordiali saluti,</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-address-book text-primary\"/>\n"
+"                    <b>Address</b>"
+msgstr ""
+"<i class=\"fa fa-fw me-2 fa-address-book text-primary\"/>\n"
+"                    <b>Indirizzo</b>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-cube text-primary\"/>\n"
+"                    <b>Industries</b>"
+msgstr ""
+"<i class=\"fa fa-fw me-2 fa-cube text-primary\"/>\n"
+"                    <b>Settori</b>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-globe text-primary\"/>\n"
+"                    <b>Website</b>"
+msgstr ""
+"<i class=\"fa fa-fw me-2 fa-globe text-primary\"/>\n"
+"                    <b>Sito web</b>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-solid fa-id-card text-primary\"/>\n"
+"                    <b>Tax ID</b>"
+msgstr ""
+"<i class=\"fa fa-fw me-2 fa-solid fa-id-card text-primary\"/>\n"
+"                    <b>ID imposta</b>"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -99,7 +143,7 @@ msgstr "Acquista crediti"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_1
 msgid "CEO"
-msgstr "CEO"
+msgstr "Amministratore delegato"
 
 #. module: crm_iap_mine
 #: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_industry
@@ -109,7 +153,7 @@ msgstr "CRM IAP Lead Industry"
 #. module: crm_iap_mine
 #: model:ir.model,name:crm_iap_mine.model_crm_iap_lead_mining_request
 msgid "CRM Lead Mining Request"
-msgstr "Richiesta estrazione lead CRM"
+msgstr "Richiesta estrazione lead"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -150,7 +194,7 @@ msgstr "Aziende e loro contatti"
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__company_size_max
 msgid "Company Size Max"
-msgstr "Dimensione max. azienda"
+msgstr "Dimensione massima azienda"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_167
@@ -220,7 +264,7 @@ msgstr "Servizio clienti"
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "Default Tags"
-msgstr "Default Tag"
+msgstr "Etichette predefinite"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__display_lead_label
@@ -245,7 +289,7 @@ msgstr "Servizi finanziari diversificati"
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__done
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_search
 msgid "Done"
-msgstr "Completato"
+msgstr "Completata"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__state__draft
@@ -292,7 +336,7 @@ msgstr "Filtra per"
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__filter_on_size
 msgid "Filter on Size"
-msgstr "Filtro su dimensione"
+msgstr "Filtra per dimensione"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_7
@@ -302,7 +346,7 @@ msgstr "Finanza"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_153_154
 msgid "Food, Beverage & Tobacco"
-msgstr "Cibo, bevande e tabacco"
+msgstr "Alimenti, bevande e tabacco"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_8
@@ -312,7 +356,7 @@ msgstr "Fondatore"
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "From"
-msgstr "Dal"
+msgstr "Da"
 
 #. module: crm_iap_mine
 #. odoo-python
@@ -331,7 +375,8 @@ msgstr "Genera lead"
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "Generate new leads based on their country, industry, size, etc."
-msgstr "Genera nuovi lead in base alla loro nazione, settore, dimensione ecc."
+msgstr ""
+"Genera nuovi lead in base alla loro nazione, settore, dimensione ecc..."
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_ids
@@ -372,7 +417,7 @@ msgstr "Risorse umane"
 #: model:mail.template,name:crm_iap_mine.lead_generation_no_credits
 #: model:mail.template,subject:crm_iap_mine.lead_generation_no_credits
 msgid "IAP Lead Generation Notification"
-msgstr "Notifica generazione lead acquisti in-app"
+msgstr "Notifica generazione lead acquisti integrati"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__id
@@ -411,7 +456,7 @@ msgstr "Informatica"
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__error_type__credits
 msgid "Insufficient Credits"
-msgstr "Credito non sufficiente"
+msgstr "Crediti non sufficienti"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_helpers__write_uid
@@ -483,8 +528,7 @@ msgstr "Legale"
 #. odoo-javascript
 #: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
 #, python-format
-msgid ""
-"Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
+msgid "Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
 msgstr ""
 "Sei alla ricerca di nuove opportunità? <br> Prova lo strumento di "
 "<b>Generazione di lead</b>."
@@ -525,12 +569,9 @@ msgstr "Hai bisogno di aiuto per raggiungere l'obiettivo?"
 #. module: crm_iap_mine
 #. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
-#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
-#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
-#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "New"
-msgstr "Nuovo"
+msgstr "Nuova"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields.selection,name:crm_iap_mine.selection__crm_iap_lead_mining_request__error_type__no_result
@@ -747,7 +788,7 @@ msgstr "Etichette"
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__search_type
 msgid "Target"
-msgstr "Obiettivi"
+msgstr "Obiettivo"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_166
@@ -769,7 +810,7 @@ msgstr "Il totale per questa richiesta é di %d crediti."
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_136
 msgid "Transportation"
-msgstr "Trasporti"
+msgstr "Trasporto"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_type
@@ -798,7 +839,7 @@ msgstr "A quale settore vuoi puntare?"
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "You do not have enough credits to submit this request."
-msgstr "Non hai abbastanza crediti per consegnare questa richiesta."
+msgstr "Crediti non sufficienti per inviare questa richiesta."
 
 #. module: crm_iap_mine
 #. odoo-python
@@ -810,12 +851,12 @@ msgstr "La tua richiesta non può essere eseguita: %s"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.seniority,name:crm_iap_mine.crm_iap_mine_seniority_1
 msgid "director"
-msgstr "direttore"
+msgstr "Direttore"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "employees"
-msgstr "dipendenti"
+msgstr "Dipendenti"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.seniority,name:crm_iap_mine.crm_iap_mine_seniority_2
@@ -830,4 +871,32 @@ msgstr "Supervisore"
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "to"
-msgstr "al"
+msgstr "a"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-fw me-2 fa-building text-primary\"/>\n"
+#~ "                    <b>Company type</b>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw me-2 fa-building text-primary\"/>\n"
+#~ "                    <b>TIpo azienda</b>"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-fw me-2 fa-cube text-primary\"/>\n"
+#~ "                    <b>Sector</b>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw me-2 fa-cube text-primary\"/>\n"
+#~ "                    <b>Settore</b>"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-fw me-2 fa-industry text-primary\"/>\n"
+#~ "                    <b>Industries</b>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw me-2 fa-industry text-primary\"/>\n"
+#~ "                    <b>Settori</b>"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-fw me-2 fa-phone text-primary\"/>\n"
+#~ "                    <b>Phone</b>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw me-2 fa-phone text-primary\"/>\n"
+#~ "                    <b>Telefono</b>"

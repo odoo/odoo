@@ -17,12 +17,14 @@ $-seen-urls: ();
     }
 }
 
+$real-body-bg: $body-bg;
 :root {
     // The color behind the boxed layout is forced by Odoo. The box background
     // color uses the `$body-bg` variable.
     // grep: BOXED_BODY_BG_ODOO
     @if o-website-value('layout') != 'full' {
         $-boxed-layout-body-bg: o-color('body');
+        $real-body-bg: $-boxed-layout-body-bg !global;
         --#{$variable-prefix}body-bg-rgb: #{to-rgb($-boxed-layout-body-bg)};
         --#{$variable-prefix}body-bg: #{$-boxed-layout-body-bg};
     }
@@ -175,6 +177,15 @@ $-seen-urls: ();
         $custom-colors: append($custom-colors, $key);
     }
     @include print-variable('custom-colors', $custom-colors);
+}
+
+body {
+    // Remove the transparency of the background color to prevent the fallback
+    // iframe used for navigation in the backend to be visible once the top
+    // iframe is loaded (see /website/iframefallback). Indeed, if the website
+    // <body> uses a transparent background color, the fallback iframe would be
+    // visible on some // browsers (e.g. Chrome).
+    background-color: mix(change-color($real-body-bg, $alpha: 1), white, percentage(alpha($real-body-bg)));
 }
 
 @mixin body-image-bg-style() {
@@ -1694,6 +1705,7 @@ $ribbon-padding: 100px;
 // Search results
 .o_search_result_item_detail {
     flex: 1;
+    word-break: normal !important;
 }
 
 .o_cookies_bar_toggle {
@@ -2566,19 +2578,4 @@ input[value*="data-oe-translation-initial-sha"] {
 // Disables the offset on dropdown to match relative position in mobile/offcanvas.
 .o_dropdown_without_offset {
     transform: none !important;
-}
-
-// o_facebook_page (Facebook page plugin)
-
-// Since October 2024, the Facebook mobile site (m.facebook.com) uses an
-// 'X-Frame-Options' header set to 'deny', preventing iframe embedding across
-// different domains. This header enforces a security policy restricting
-// cross-origin access to the content.
-// Meta has not provided any communication regarding this change. Until it is
-// resolved, we have no choice but to hide the iframe on mobile to prevent users
-// from seeing a "unavailable content" icon.
-@include media-breakpoint-down(md) {
-    .o_facebook_page {
-        display: none;
-    }
 }

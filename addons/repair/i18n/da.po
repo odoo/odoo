@@ -1,31 +1,39 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* repair
-# 
+# * repair
+#
 # Translators:
 # lhmflexerp <lhm@flexerp.dk>, 2023
 # Mads Søndergaard, 2023
 # Martin Trigaux, 2024
 # Ejner Sønniksen <ejner@vkdata.dk>, 2024
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
-# 
+# Kira Petersen, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
-"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-11-20 17:37+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-17/repair/da/"
+">\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: da\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: repair
 #: model:ir.actions.report,print_report_name:repair.action_report_repair_order
 msgid "('Repair Order - %s' % (object.name))"
+msgstr ""
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+msgid "(<i>Recycle</i>)"
 msgstr ""
 
 #. module: repair
@@ -36,7 +44,8 @@ msgstr "(<i>Fjern</i>)"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__state
 msgid ""
-"* The 'New' status is used when a user is encoding a new and unconfirmed repair order.\n"
+"* The 'New' status is used when a user is encoding a new and unconfirmed "
+"repair order.\n"
 "* The 'Confirmed' status is used when a user confirms the repair order.\n"
 "* The 'Under Repair' status is used when the repair is ongoing.\n"
 "* The 'Repaired' status is set when repairing is completed.\n"
@@ -143,7 +152,7 @@ msgstr "Aktivitetstype ikon"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.repair_order_view_activity
 msgid "Activity view"
-msgstr ""
+msgstr "Aktivitetsvisning"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__stock_move__repair_line_type__add
@@ -242,7 +251,7 @@ msgstr "Virksomhed"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__parts_availability
 msgid "Component Status"
-msgstr ""
+msgstr "Komponentstatus"
 
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_config
@@ -413,14 +422,15 @@ msgstr "Skrifttype awesome icon f.eks. fa-opgaver"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_warn_uncomplete_move
 msgid ""
-"For some of the parts, there is a difference between the initial demand and the actual quantity that was used.<br/>\n"
+"For some of the parts, there is a difference between the initial demand and "
+"the actual quantity that was used.<br/>\n"
 "                Are you sure you want to confirm ?"
 msgstr ""
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Forecast Report"
-msgstr ""
+msgstr "Prognoserapport"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -488,11 +498,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
-"                add or replace and record the time you spent on the different\n"
+"                add or replace and record the time you spent on the "
+"different\n"
 "                operations."
 msgstr ""
-"På en reparationsordrer nedskriver du detaljerne omkring de komponenter, som"
-" skal fjernes, tilføjes eller erstattes, og herefter noterer du den "
+"På en reparationsordrer nedskriver du detaljerne omkring de komponenter, som "
+"skal fjernes, tilføjes eller erstattes, og herefter noterer du den "
 "sammenlagte tid brugt på reparationen."
 
 #. module: repair
@@ -1333,7 +1344,7 @@ msgstr ""
 
 #. module: repair
 #. odoo-python
-#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Warning"
 msgstr "Advarsel"
@@ -1367,7 +1378,8 @@ msgstr ""
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
-"You cannot create a quotation for a repair order that is already linked to an existing sale order.\n"
+"You cannot create a quotation for a repair order that is already linked to "
+"an existing sale order.\n"
 "Concerned repair order(s) :\n"
 msgstr ""
 
@@ -1376,7 +1388,8 @@ msgstr ""
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
-"You need to define a customer for a repair order in order to create an associated quotation.\n"
+"You need to define a customer for a repair order in order to create an "
+"associated quotation.\n"
 "Concerned repair order(s) :\n"
 msgstr ""
 

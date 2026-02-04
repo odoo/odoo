@@ -1,25 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* crm_iap_mine
-# 
+# * crm_iap_mine
+#
 # Translators:
 # Wil Odoo, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # Larissa Manderfeld, 2024
-# 
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
-"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
+"POT-Creation-Date: 2026-01-29 18:36+0000\n"
+"PO-Revision-Date: 2026-01-31 17:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-17/"
+"crm_iap_mine/es/>\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: crm_iap_mine
 #. odoo-python
@@ -39,18 +43,57 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>Dear,</p>\n"
 "    <p>There are no more credits on your IAP Lead Generation account.<br>\n"
-"    You can charge your IAP Lead Generation account in the settings of the CRM app.<br></p>\n"
+"    You can charge your IAP Lead Generation account in the settings of the "
+"CRM app.<br></p>\n"
 "    <p>Best regards,</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p>Estimado/a,</p>\n"
-"    <p>No le quedan mas créditos en su cuenta de compras dentro de la aplicación para generar leads.<br>\n"
-"    Puede cambiar su cuenta de compras dentro de la aplicación para generar leads en la configuración de la aplicación CRM.<br></p>\n"
+"    <p>Hola:</p>\n"
+"    <p>No le quedan mas créditos en su cuenta de compras dentro de la "
+"aplicación para generar leads.<br>\n"
+"    Puede cambiar su cuenta de compras dentro de la aplicación para generar "
+"leads en la configuración de la aplicación CRM.<br></p>\n"
 "    <p>Saludos cordiales,</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-address-book text-primary\"/>\n"
+"                    <b>Address</b>"
+msgstr ""
+"<i class=\"fa fa-fw me-2 fa-address-book text-primary\"/>\n"
+"                    <b>Dirección</b>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-cube text-primary\"/>\n"
+"                    <b>Industries</b>"
+msgstr ""
+"<i class=\"fa fa-fw me-2 fa-cube text-primary\"/>\n"
+"                    <b>Sectores</b>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-globe text-primary\"/>\n"
+"                    <b>Website</b>"
+msgstr ""
+"<i class=\"fa fa-fw me-2 fa-globe text-primary\"/>\n"
+"                    <b>Sitio web</b>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-solid fa-id-card text-primary\"/>\n"
+"                    <b>Tax ID</b>"
+msgstr ""
+"<i class=\"fa fa-fw me-2 fa-solid fa-id-card text-primary\"/>\n"
+"                    <b>Núm. de identificación fiscal</b>"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -235,7 +278,7 @@ msgstr "Mostrar etiqueta del lead"
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__display_name
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_seniority__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre para mostrar"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.industry,name:crm_iap_mine.crm_iap_mine_industry_158_159
@@ -484,11 +527,10 @@ msgstr "Legal"
 #. odoo-javascript
 #: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
 #, python-format
-msgid ""
-"Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
+msgid "Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
 msgstr ""
-"¿En busca de más oportunidades?<br>Pruebe la herramienta de <b>Generación de"
-" Leads</b> "
+"¿En busca de más oportunidades?<br>Pruebe la herramienta de <b>Generación de "
+"Leads</b> "
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_13
@@ -525,9 +567,6 @@ msgstr "¿Necesita ayuda para llegar a su objetivo?"
 
 #. module: crm_iap_mine
 #. odoo-python
-#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
-#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
-#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "New"
@@ -786,8 +825,8 @@ msgid ""
 "Up to %d additional credits will be consumed to identify %d contacts per "
 "company."
 msgstr ""
-"Hasta un máximo de %d créditos adicionales serán consumidos para identificar"
-" %d contactos por empresa."
+"Hasta un máximo de %d créditos adicionales serán consumidos para identificar "
+"%d contactos por empresa."
 
 #. module: crm_iap_mine
 #. odoo-javascript
@@ -832,3 +871,17 @@ msgstr "gerente"
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "to"
 msgstr "a"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-fw me-2 fa-building text-primary\"/>\n"
+#~ "                    <b>Company type</b>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw me-2 fa-building text-primary\"/>\n"
+#~ "                    <b>Tipo de empresa</b>"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-fw me-2 fa-phone text-primary\"/>\n"
+#~ "                    <b>Phone</b>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw me-2 fa-phone text-primary\"/>\n"
+#~ "                    <b>Teléfono</b>"

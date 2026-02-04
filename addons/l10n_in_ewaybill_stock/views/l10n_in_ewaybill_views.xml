@@ -11,15 +11,16 @@
                     <button name="reset_to_pending" string="Reset to Pending" type="object" invisible="not state in ['cancel', 'challan']" data-hotkey="r"/>
                     <button name="action_set_to_challan" string="Use as Challan" type="object" invisible="state != 'pending'" data-hotkey="d"/>
                     <button name="action_export_json" string="Download JSON" class="oe_highlight" type="object" invisible="not error_message" groups="base.group_no_one"/>
+                    <button name="action_print" string="Print" class="oe_highlight" type="object" invisible="not state in ['challan', 'generated']" data-hotkey="f"/>
                     <field name="state" widget="statusbar" statusbar_visible="pending,generated" invisible="state == 'challan'"/>
                 </header>
                 <field name="blocking_level" invisible="1"/>
-                <div class="alert alert-danger" role="alert" style="margin-bottom:0px;" invisible="not error_message or blocking_level == 'error'">
+                <div class="alert alert-danger" role="alert" style="margin-bottom:0px;" invisible="not error_message or blocking_level == 'warning'">
                     <div class="o_row">
                         <field name="error_message"/>
                     </div>
                 </div>
-                <div class="alert alert-warning" role="alert" style="margin-bottom:0px;" invisible="not error_message or blocking_level == 'warning'">
+                <div class="alert alert-warning" role="alert" style="margin-bottom:0px;" invisible="not error_message or blocking_level == 'error'">
                     <div class="o_row">
                         <field name="error_message"/>
                     </div>
@@ -42,7 +43,7 @@
                         <group>
                             <field name="ewaybill_date" invisible="not ewaybill_date"/>
                             <field name="document_number"/>
-                            <field name="document_date" readonly="1"/>
+                            <field name="document_date" invisible="picking_type_code == 'incoming'" readonly="1"/>
                         </group>
                     </group>
                     <group name="partners" string="Address Details">
@@ -84,7 +85,7 @@
                                    readonly="state != 'pending'"/>
                             <field name="vehicle_no"
                                    invisible="mode not in ('1','4')"
-                                   required="mode == '1'"
+                                   required="mode == '1' and not transportation_doc_no"
                                    readonly="state != 'pending'"/>
                             <label for="distance" readonly="state != 'pending'"/>
                             <div class="o_row" name="distance">
@@ -132,6 +133,7 @@
                                     <field name="company_currency_id" column_invisible="1"/>
                                     <field name="company_id" column_invisible="1"/>
                                     <field name="product_id" readonly="1"/>
+                                    <field name="description_picking" string="Description" help="Max 100-character description is allowed" readonly="1"/>
                                     <field name="quantity" string="Quantity" readonly="1"/>
                                     <field name="ewaybill_price_unit" string="Unit Price"/>
                                     <field name="ewaybill_tax_ids" widget="many2many_tags"/>

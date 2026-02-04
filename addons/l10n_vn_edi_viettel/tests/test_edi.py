@@ -37,7 +37,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
         cls.partner_a.write({
             'street': '121 Hang Bac Street',
             'state_id': cls.env.ref('base.state_vn_VN-HN').id,
-            'city': 'Hoan Kiem District',
+            'city': 'Hà Nội',
             'country_id': cls.env.ref('base.vn').id,
             'vat': '0100109106-505',
             'phone': '3825 7670',
@@ -114,8 +114,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
                     'buyerAddressLine': '121 Hang Bac Street',
                     'buyerPhoneNumber': '38257670',
                     'buyerEmail': 'partner_a@gmail.com',
-                    'buyerDistrictName': 'Hà Nội',
-                    'buyerCityName': 'Hoan Kiem District',
+                    'buyerCityName': 'Hà Nội',
                     'buyerCountryCode': 'VN',
                     'buyerNotGetInvoice': 0,
                 },
@@ -197,10 +196,10 @@ class TestVNEDI(AccountTestInvoicingCommon):
         # 2. Check the itemInfo to ensure that the values make sense
         expected = {
             'unitPrice': -100.0,
-            'itemTotalAmountWithoutTax': -100.0,
-            'taxAmount': -10.0,
-            'itemTotalAmountWithTax': -110.0,
-            'adjustmentTaxAmount': -10.0,
+            'itemTotalAmountWithoutTax': 100.0,
+            'taxAmount': 10.0,
+            'itemTotalAmountWithTax': 110.0,
+            'adjustmentTaxAmount': 10.0,
             'isIncreaseItem': False,
         }
         actual = json_data['itemInfo'][0]
@@ -267,7 +266,7 @@ class TestVNEDI(AccountTestInvoicingCommon):
             currency=self.currency_data['currency'],
         )
         json_data = invoice._l10n_vn_edi_generate_invoice_json()
-        self.assertEqual(json_data['generalInvoiceInfo']['exchangeRate'], 0.5)
+        self.assertEqual(json_data['generalInvoiceInfo']['exchangeRate'], "0.50")
 
     @freeze_time('2024-01-01')
     def test_send_and_print(self):

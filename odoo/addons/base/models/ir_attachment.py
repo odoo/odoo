@@ -354,7 +354,10 @@ class IrAttachment(models.Model):
                     nw, nh = map(int, max_resolution.split('x'))
                     if w > nw or h > nh:
                         img = img.resize(nw, nh)
-                        quality = int(ICP('base.image_autoresize_quality', 80))
+                        if _subtype == 'jpeg':  # Do not affect PNGs color palette
+                            quality = int(ICP('base.image_autoresize_quality', 80))
+                        else:
+                            quality = 0
                         image_data = img.image_quality(quality=quality)
                         if is_raw:
                             values['raw'] = image_data
@@ -563,6 +566,12 @@ class IrAttachment(models.Model):
             if public:
                 allowed_ids.add(id_)
                 continue
+
+            if res_field and not self.env.is_system():
+                field = self.env[res_model]._fields[res_field]
+                if field.groups and not self.env.user.user_has_groups(field.groups):
+                    continue
+
             if not res_id and (self.env.is_system() or create_uid == self.env.uid):
                 allowed_ids.add(id_)
                 continue

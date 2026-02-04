@@ -461,6 +461,19 @@ QUnit.module("Views", (hooks) => {
         }
     });
 
+    QUnit.test("button box rendering invisible", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><div name="button_box" invisible="1"><button id="btn1">MyButton</button></div></form>`,
+            resId: 2,
+        });
+        const panelActions = target.querySelector(".o_control_panel .o_control_panel_actions")
+        assert.strictEqual(panelActions.childElementCount, 0);
+        assert.strictEqual(panelActions.textContent, "");
+    });
+
     QUnit.test("form view gets size class on small and big screens", async (assert) => {
         let uiSize = SIZES.MD;
         const bus = new EventBus();
@@ -3781,7 +3794,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(target, ".o_form_view button[data-hotkey=v]");
-        triggerHotkey("alt+v");
+        await triggerHotkey("alt+v");
         await nextTick();
         assert.verifySteps(["validate"]);
     });
@@ -5878,6 +5891,112 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(nbWrite, 1, "one write RPC should have been done");
     });
 
+    QUnit.test("Save record, no changes but dirty (add and remove tag)", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
+            resId: 1,
+            mockRPC(_route, args) {
+                if (args.method === "web_save") {
+                    assert.step("ERROR: web_save should not be called");
+                } else if (args.method === "web_read") {
+                    assert.step("web_read");
+                }
+            },
+        });
+
+        assert.containsNone(target, ".o_field_widget[name=timmy] .o_tag");
+
+        // add a tag
+        await selectDropdownItem(target, "timmy", "gold");
+        assert.containsOnce(target, ".o_field_widget[name=timmy] .o_tag");
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=timmy] input").value,
+            "",
+            "many2many_tags should be empty"
+        );
+
+        // remove tag
+        await click(target.querySelector(".o_field_widget[name=timmy] .o_tag .o_delete"));
+        assert.containsNone(target, ".o_field_widget[name=timmy] .o_tag");
+        assert.verifySteps(["web_read", "web_read"]);
+
+        // click on save
+        await clickSave(target);
+        await nextTick();
+        // The `web_save` RPC should not be called as there are no changes.
+        // The record must be marked as not dirty.
+        assert.containsOnce(target, ".o_form_status_indicator_buttons.invisible");
+        assert.verifySteps([]); // avoid doint an extra web_read
+    });
+
+    QUnit.test(
+        "switching to another record from a dirty record but wo changes (add and remove tag)",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
+                resIds: [1, 2],
+                resId: 1,
+                mockRPC(_route, args) {
+                    if (args.method === "web_save") {
+                        assert.step("ERROR: web_save should not be called");
+                    } else if (args.method === "web_read") {
+                        assert.step("web_read");
+                    }
+                },
+            });
+
+            assert.strictEqual(
+                target.querySelector(".o_pager_value").textContent,
+                "1",
+                "pager value should be 1"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_pager_limit").textContent,
+                "2",
+                "pager limit should be 2"
+            );
+
+            assert.containsNone(target, ".o_field_widget[name=timmy] .o_tag");
+
+            // add a tag
+            await selectDropdownItem(target, "timmy", "gold");
+            assert.containsOnce(target, ".o_field_widget[name=timmy] .o_tag");
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name=timmy] input").value,
+                "",
+                "many2many_tags should be empty"
+            );
+
+            // remove tag
+            await click(target.querySelector(".o_field_widget[name=timmy] .o_tag .o_delete"));
+            assert.containsNone(target, ".o_field_widget[name=timmy] .o_tag");
+            assert.verifySteps(["web_read", "web_read"]);
+
+            // click on the pager to switch to the next record
+            // The `web_save` RPC should not be called as there are no changes.
+            // The next record should be load correctly.
+            await click(target.querySelector(".o_pager_next"));
+            assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
+            assert.strictEqual(
+                target.querySelector(".o_pager_value").textContent,
+                "2",
+                "pager value should be 2"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_last_breadcrumb_item").innerText,
+                "second record"
+            );
+
+            assert.verifySteps(["web_read"]);
+        }
+    );
+
     QUnit.test("do not reload after save when using pager", async function (assert) {
         await makeView({
             type: "form",
@@ -5962,7 +6081,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "1 / 2");
 
         await editInput(target, ".o_field_widget[name=foo] input", "");
-        triggerHotkey("alt+n");
+        await triggerHotkey("alt+n");
         await nextTick();
         assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "first record");
         assert.strictEqual(
@@ -6071,7 +6190,7 @@ QUnit.module("Views", (hooks) => {
         await triggerEvent(input, null, "input");
 
         // trigger the pager hotkey to switch to the next record (will save record)
-        triggerHotkey("alt+n");
+        await triggerHotkey("alt+n");
         await nextTick();
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
         assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "2 / 2");
@@ -6081,7 +6200,7 @@ QUnit.module("Views", (hooks) => {
             "input should contain blip"
         );
 
-        triggerHotkey("alt+p");
+        await triggerHotkey("alt+p");
         await nextTick();
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
         assert.strictEqual(target.querySelector(".o_pager_counter").textContent, "1 / 2");
@@ -9308,10 +9427,14 @@ QUnit.module("Views", (hooks) => {
         await clickSave(target);
         assert.deepEqual(getFooValues(), ["zop", "yop", "xop", "My little Foo Value"]);
 
-        // client-side sort on edit
+        // no client-side sort after edit
         await click(target.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell"));
         await editInput(target, ".modal .o_field_widget[name=foo] input", "zzz");
         await click(target.querySelector(".modal-footer .o_form_button_save"));
+        assert.deepEqual(getFooValues(), ["zop", "zzz", "xop", "My little Foo Value"]);
+
+        // server-side sort post save
+        await clickSave(target);
         assert.deepEqual(getFooValues(), ["zzz", "zop", "xop", "My little Foo Value"]);
     });
 
@@ -12054,7 +12177,7 @@ QUnit.module("Views", (hooks) => {
                 if (obj.display_name === "first line") {
                     if (onChangeCount === 0) {
                         onChangeCount += 1;
-                        assert.step("resequence onChange crash")
+                        assert.step("resequence onChange crash");
                         throw makeErrorFromResponse({
                             code: 200,
                             message: "Odoo Server Error",
@@ -12098,8 +12221,9 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_form_button_save"));
         await nextTick();
 
-        let getNames = () => [...target.querySelectorAll(".o_list_char")].map((el) => el.textContent)
-        assert.deepEqual(getNames(), ["first line", "second line"])
+        const getNames = () =>
+            [...target.querySelectorAll(".o_list_char")].map((el) => el.textContent);
+        assert.deepEqual(getNames(), ["first line", "second line"]);
 
         // drag and drop first line to the second, should crash because of onchange
         await dragAndDrop(
@@ -12107,7 +12231,7 @@ QUnit.module("Views", (hooks) => {
             "tbody.ui-sortable tr:nth-child(2)"
         );
         await nextTick();
-        assert.deepEqual(getNames(), ["first line", "second line"])
+        assert.deepEqual(getNames(), ["first line", "second line"]);
 
         // drag and drop first line to the second, should work
         await dragAndDrop(
@@ -12115,7 +12239,7 @@ QUnit.module("Views", (hooks) => {
             "tbody.ui-sortable tr:nth-child(2)"
         );
         await nextTick();
-        assert.deepEqual(getNames(), ["second line", "first line"])
+        assert.deepEqual(getNames(), ["second line", "first line"]);
 
         assert.verifySteps(["resequence onChange crash", "resequence onChange ok"]);
     });
@@ -12422,7 +12546,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Auto save: error on save when breadcrumb clicked", async function (assert) {
-        assert.expect(3);
+        assert.expect(5);
 
         registry.category("services").add("error", errorService);
 
@@ -12468,7 +12592,164 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["web_save"]);
         await nextTick();
         assert.containsOnce(target, ".o_error_dialog");
+        assert.containsOnce(target, ".o_error_dialog .btn-primary");
+        assert.containsOnce(target, ".o_error_dialog .btn-secondary");
     });
+
+    QUnit.test(
+        "Auto save: redirect warning on save when breadcrumb clicked",
+        async function (assert) {
+            assert.expect(7);
+
+            registry.category("services").add("error", errorService);
+
+            serverData.actions[1] = {
+                id: 1,
+                name: "Partner",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "list"],
+                    [false, "form"],
+                ],
+            };
+
+            serverData.views = {
+                "partner,false,list": `
+                    <tree>
+                        <field name="name"/>
+                    </tree>`,
+                "partner,false,form": `
+                    <form>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </form>`,
+                "partner,false,search": "<search></search>",
+            };
+
+            const webClient = await createWebClient({
+                serverData,
+                mockRPC(route, { method, kwargs }) {
+                    if (method === "web_save") {
+                        assert.step("web_save");
+                        throw makeServerError({
+                            type: `RedirectWarning`,
+                            args: [
+                                "The message",
+                                {
+                                    name: "Sub view",
+                                    res_model: "partner",
+                                    type: "ir.actions.act_window",
+                                    domain: [],
+                                    target: "new",
+                                    views: [[false, "list"]],
+                                    context: { redirected: true },
+                                },
+                                "Button Label",
+                                {},
+                            ],
+                            description: "Beep boop server stuff and technical string",
+                        });
+                    }
+                    if (method === "web_search_read" && kwargs.context.redirected) {
+                        assert.step("redirect_action");
+                    }
+                },
+            });
+            await doAction(webClient, 1);
+            await click(target.querySelector(".o_data_row td.o_data_cell"));
+
+            await editInput(target, ".o_field_widget[name='name'] input", "aaa");
+            await click(target.querySelector(".breadcrumb-item.o_back_button"));
+            assert.verifySteps(["web_save"]);
+            await nextTick();
+            assert.containsOnce(target, ".o_error_dialog");
+            assert.containsOnce(target, ".o_error_dialog .btn-primary");
+            assert.containsN(target, ".o_error_dialog .btn-secondary", 2);
+            await click(target.querySelector(".o_error_dialog .btn-secondary"));
+            await nextTick();
+            assert.verifySteps(["redirect_action"]);
+        }
+    );
+
+    QUnit.test(
+        "Redirect Warning full feature: additional context, action_id, leaving while dirty",
+        async function (assert) {
+            registry.category("services").add("error", errorService);
+
+            serverData.actions[1] = {
+                id: 1,
+                name: "Partner",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+                res_id: 1,
+            };
+            serverData.actions[2] = {
+                id: 2,
+                name: "Partner List",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                domain: "[['id', 'in', [active_id]]]",
+                views: [[false, "list"]],
+            };
+
+            serverData.views = {
+                "partner,false,list": `
+                    <tree>
+                        <field name="name"/>
+                    </tree>`,
+                "partner,false,form": `
+                    <form>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </form>`,
+                "partner,false,search": "<search></search>",
+            };
+
+            const webClient = await createWebClient({
+                serverData,
+                mockRPC(route, { method, kwargs }) {
+                    if (method === "web_save") {
+                        assert.step("web_save");
+                        throw makeServerError({
+                            type: `RedirectWarning`,
+                            args: [
+                                "The message",
+                                2,
+                                "Button Label",
+                                {
+                                    active_id: 4,
+                                },
+                            ],
+                            description: "Beep boop server stuff and technical string",
+                        });
+                    }
+                    if (method === "web_search_read") {
+                        assert.step("web_search_read");
+                        assert.deepEqual(kwargs.domain, [["id", "in", [4]]]);
+                    }
+                },
+            });
+            await doAction(webClient, 1);
+            await editInput(target, ".o_field_widget[name='name'] input", "aaa");
+            await click(target.querySelector(".o_form_button_save"));
+            assert.verifySteps(["web_save"]);
+            await nextTick();
+            assert.containsOnce(target, ".o_error_dialog");
+            assert.containsOnce(target, ".o_error_dialog .btn-primary");
+            assert.containsN(target, ".o_error_dialog .btn-secondary", 2);
+            await click(target.querySelector(".o_error_dialog .btn-secondary"));
+            await nextTick();
+            assert.verifySteps(["web_search_read"]);
+            assert.equal(
+                target.querySelector(".o_breadcrumb").textContent,
+                "first recordPartner List"
+            );
+        }
+    );
 
     QUnit.test("Auto save: save when action changed", async function (assert) {
         assert.expect(6);
@@ -15231,6 +15512,119 @@ QUnit.module("Views", (hooks) => {
             await click(target.querySelector(".btn[name='lovely action']"));
             // the record should have been saved and the action performed.
             assert.verifySteps(["Check/prepare record datas", "web_save", "Perform Action"]);
+        }
+    );
+
+    QUnit.test(
+        "open x2many with non inline form view, delayed get_views, form destroyed",
+        async function (assert) {
+            serverData.models.partner.records[0].product_ids = [37];
+            serverData.views = {
+                "product,false,form": `<form><field name="display_name"/></form>`,
+            };
+
+            let def;
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="product_ids">
+                            <tree>
+                                <field name="display_name"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                resId: 1,
+                async mockRPC(route, { method }) {
+                    if (method === "get_views") {
+                        assert.step("get_views");
+                        await def;
+                    }
+                },
+            });
+
+            // click on an x2many record to open it in dialog (get_views delayed)
+            def = makeDeferred();
+            await click(target, ".o_data_row .o_data_cell");
+            assert.containsNone(target, ".o_dialog");
+
+            // destroy the form view while get_views is pending
+            form.__owl__.destroy();
+            def.resolve();
+            await nextTick();
+
+            // everything should have gone smoothly, nothing should have happened as the view is destroyed
+            assert.verifySteps(["get_views", "get_views"]);
+        }
+    );
+    QUnit.test(
+        "executing new action, closes dialog, and avoid reload previous view",
+        async function (assert) {
+            const mockRPC = async function (route, args) {
+                assert.step(args.method || route);
+                if (route === "/web/action/load" && args.action_id === "someaction") {
+                    return Promise.resolve({
+                        res_id: 1,
+                        type: "ir.actions.act_window",
+                        target: "new",
+                        res_model: "partner",
+                        view_mode: "form",
+                        views: [[false, "form"]],
+                    });
+                }
+            };
+            serverData.views = {
+                "partner,false,form": `
+                    <form>
+                        <sheet>
+                            <div name="button_box" class="oe_button_box test">
+                                <button class="oe_stat_button" type="action" name="someaction">
+                                    Test
+                                </button>
+                            </div>
+                        </sheet>
+                    </form>`,
+                "partner,false,kanban": `
+                    <kanban>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div>
+                                    <field name="foo" />
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>`,
+                "partner,false,search": "<search></search>",
+            };
+
+            const webClient = await createWebClient({ serverData, mockRPC });
+            await doAction(webClient, {
+                res_id: 1,
+                type: "ir.actions.act_window",
+                target: "current",
+                res_model: "partner",
+                view_mode: "form",
+                views: [[false, "form"]],
+            });
+            assert.containsOnce(target, ".o_form_view");
+            assert.verifySteps(["/web/webclient/load_menus", "get_views", "web_read"]);
+
+            await click(target.querySelector(".oe_stat_button"));
+            await nextTick();
+            assert.containsOnce(target, ".o_dialog .o_form_view");
+
+            await doAction(webClient, 1);
+            assert.containsOnce(target, ".o_kanban_view", "should display the kanban view");
+            assert.verifySteps([
+                "/web/action/load",
+                "get_views",
+                "/web/action/load",
+                //"web_read", We shouldn't be doing a web_read for the view that we are leaving.
+                "get_views",
+                "web_search_read",
+            ]);
         }
     );
 });

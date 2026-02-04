@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_delivery
-# 
+# * stock_delivery
+#
 # Translators:
 # Boris Kodelja <boris@hbs.si>, 2023
 # Vida Potočnik <vida.potocnik@mentis.si>, 2023
@@ -15,20 +15,24 @@
 # Grega Vavtar <grega@hbs.si>, 2023
 # Katja Deržič, 2024
 # Gregor Flajs, 2024
-# 
+# Aleš Pipan, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Gregor Flajs, 2024\n"
-"Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"PO-Revision-Date: 2025-12-06 08:05+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-17/"
+"stock_delivery/sl/>\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sl\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock_delivery
 #. odoo-python
@@ -127,8 +131,7 @@ msgstr "Prekliči"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid ""
-"Cancelling a delivery may not be undoable. Are you sure you want to "
-"continue?"
+"Cancelling a delivery may not be undoable. Are you sure you want to continue?"
 msgstr ""
 
 #. module: stock_delivery
@@ -174,12 +177,12 @@ msgstr "Ustvarjeno"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_carrier
 msgid "Delivery Carrier Selection Wizard"
-msgstr ""
+msgstr "Čarovnik za izbiro dostavljalca"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
-msgstr ""
+msgstr "Čarovnik za izbiro paketa dostave"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__delivery_package_type_id
@@ -215,9 +218,29 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
 msgid ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
+"Estimated Cost: the customer will be invoiced the estimated cost of the "
+"shipping.\n"
+"Real Cost: the customer will be invoiced the real cost of the shipping, the "
+"cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
+"Predvideni stroški: stranki bo izstavljen račun za predvidene stroške "
+"pošiljanja.\n"
+"Dejanski stroški: stranki bodo izstavljeni dejanski stroški pošiljanja, "
+"stroški pošiljanja bodo posodobljeni na naročilu po dostavi."
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception occurred with respect to carrier on the transfer"
+msgstr ""
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception:"
+msgstr "Izjema:"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__hs_code
@@ -255,6 +278,13 @@ msgstr "Zadnji posodobil"
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__write_date
 msgid "Last Updated on"
 msgstr "Zadnjič posodobljeno"
+
+#. module: stock_delivery
+#. odoo-python
+#: code:addons/stock_delivery/models/stock_picking.py:0
+#, python-format
+msgid "Manual actions might be needed."
+msgstr ""
 
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
@@ -316,7 +346,7 @@ msgstr "Izdelek"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "Premiki zaloge"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__delivery_type
@@ -326,7 +356,7 @@ msgstr "Ponudnik"
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__delivery_carrier__invoice_policy__real
 msgid "Real cost"
-msgstr ""
+msgstr "Dejanski stroški"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__return_label_ids
@@ -348,8 +378,10 @@ msgstr "Proge"
 #: model:ir.model.fields,help:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,help:stock_delivery.field_product_template__country_of_origin
 msgid ""
-"Rules of origin determine where goods originate, i.e. not where they have been shipped from, but where they have been produced or manufactured.\n"
-"As such, the ‘origin’ is the 'economic nationality' of goods traded in commerce."
+"Rules of origin determine where goods originate, i.e. not where they have "
+"been shipped from, but where they have been produced or manufactured.\n"
+"As such, the ‘origin’ is the 'economic nationality' of goods traded in "
+"commerce."
 msgstr ""
 
 #. module: stock_delivery
@@ -419,7 +451,7 @@ msgstr "Masa pošiljke:"
 #: model:ir.model.fields,help:stock_delivery.field_product_template__hs_code
 msgid ""
 "Standardized code for international shipping and goods declaration. At the "
-"moment, only used for the FedEx shipping provider."
+"moment, only used for FedEx and USPS shipping providers."
 msgstr ""
 
 #. module: stock_delivery
@@ -455,12 +487,13 @@ msgstr ""
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/delivery_carrier.py:0
-#: code:addons/stock_delivery/models/delivery_carrier.py:0
 #, python-format
 msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
 msgstr ""
+"Paketa ni mogoče ustvariti, ker je skupna teža izdelkov v komisioniranju 0,0 "
+"%s"
 
 #. module: stock_delivery
 #. odoo-python
@@ -494,8 +527,8 @@ msgstr ""
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__shipping_weight
 msgid ""
 "Total weight of packages and products not in a package. Packages with no "
-"shipping weight specified will default to their products' total weight. This"
-" is the weight used to compute the cost of the shipping."
+"shipping weight specified will default to their products' total weight. This "
+"is the weight used to compute the cost of the shipping."
 msgstr ""
 
 #. module: stock_delivery
@@ -586,8 +619,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot pack products into the same package when they have different "
-"carriers (i.e. check that all of their transfers have a carrier assigned and"
-" are using the same carrier)."
+"carriers (i.e. check that all of their transfers have a carrier assigned and "
+"are using the same carrier)."
 msgstr ""
 
 #. module: stock_delivery

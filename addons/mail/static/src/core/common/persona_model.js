@@ -50,7 +50,10 @@ export class Persona extends Record {
         compute() {
             if (
                 this.type === "guest" ||
-                (this.type === "partner" && this.im_status !== "im_partner" && !this.is_public)
+                (this.type === "partner" &&
+                    this.im_status !== "im_partner" &&
+                    this.im_status !== "bot" &&
+                    !this.is_public)
             ) {
                 return this._store;
             }

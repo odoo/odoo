@@ -703,6 +703,18 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
              'date': fields.Date.from_string('2020-01-13')},
         ])
 
+        # computing validity of non-consecutive statement shouldn't affect validity
+        line5 = self.create_bank_transaction(-10, '2020-01-13')
+        statement4 = self.env['account.bank.statement'].create({
+            'line_ids': [Command.set(line5.ids)],
+            'balance_start': -15,
+        })
+        (statement1 + statement4).invalidate_recordset(['is_valid'])
+        self.assertRecordValues(statement1 + statement4, [
+            {'is_valid': True},
+            {'is_valid': True},
+        ])
+
         # adding a statement to the first line should make statement1 invalid
         line1.statement_id = statement2
         statement2.flush_model()
@@ -1397,6 +1409,20 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
         self.assertRecordValues(st2, [{
             'balance_start': 10.0,
             'balance_end_real': 165.0,
+            'is_valid': True,
+            'is_complete': True,
+        }])
+
+        # create the third statement using multi edit with canceled line in between
+        lines[2].move_id.button_cancel()
+        context = {
+            'active_ids': [lines[1].id, lines[3].id],
+            'st_line_id': lines[3].id,
+        }
+        st3 = self.env['account.bank.statement'].with_context(context).create({'name': 'Statement 3'})
+        self.assertRecordValues(st3, [{
+            'balance_start': 10.0,
+            'balance_end_real': 55.0,
             'is_valid': True,
             'is_complete': True,
         }])

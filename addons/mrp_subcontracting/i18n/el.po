@@ -1,27 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* mrp_subcontracting
-# 
+#
 # Translators:
 # Stefanos Nikou <stefanos.nikou@gmail.com>, 2024
 # George Tarasidis <george_tarasidis@yahoo.com>, 2024
 # Martin Trigaux, 2024
 # Kostas Goutoudis <goutoudis@gmail.com>, 2024
 # Gerasimos Kanelatos, 2025
-# Georgios Geitonas, 2025
-# 
+# Georgios Geitonas <g.geitonas@dileanity.com>, 2025
+# Agapi Psyllou, 2025
+# Charalampos Loukas, 2025
+# Iasonas Polydoros <j.polydoros@dileanity.com>, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Georgios Geitonas, 2025\n"
+"Last-Translator: Iasonas Polydoros <j.polydoros@dileanity.com>, 2025\n"
 "Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp_subcontracting
@@ -39,7 +42,7 @@ msgstr "Όλα"
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_bom_structure
 msgid "BOM Overview Report"
-msgstr ""
+msgstr "Αναφορά Επισκόπησης Λίστας Πρώτων Υλών"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_bom
@@ -60,7 +63,7 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__bom_product_ids
 msgid "Bom Product"
-msgstr ""
+msgstr "Λίστα Υλικών Είδους"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_product_template_search_view
@@ -70,7 +73,7 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_change_production_qty
 msgid "Change Production Qty"
-msgstr ""
+msgstr "Αλλαγή Ποσότητας Παραγωγής"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_stock_location__is_subcontracting_location
@@ -109,12 +112,12 @@ msgstr "Συνέχεια"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
 msgid "Deadline Date"
-msgstr ""
+msgstr "Ημερομηνία Τελευταίας Προθεσμίας"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Demand"
-msgstr ""
+msgstr "Ζήτηση"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
@@ -202,8 +205,8 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__bom_product_ids
 msgid ""
-"List of Products used in the BoM, used to filter the list of products in the"
-" subcontracting portal view"
+"List of Products used in the BoM, used to filter the list of products in the "
+"subcontracting portal view"
 msgstr ""
 
 #. module: mrp_subcontracting
@@ -280,7 +283,7 @@ msgstr "Λειτουργίες"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__move_line_ids_without_package
 msgid "Operations without package"
-msgstr ""
+msgstr "Ενέργειες χωρίς συσκευασία"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
@@ -304,7 +307,7 @@ msgstr "Κινήσεις Ειδών (Γραμμή Κίνησης Αποθέμα�
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_replenish
 msgid "Product Replenish"
-msgstr ""
+msgstr "Ανατροφοδότηση Προϊόντος"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_product_product
@@ -361,11 +364,10 @@ msgstr ""
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #, python-format
 msgid "Replenish on Order (MTO)"
-msgstr ""
+msgstr "Αναπλήρωση Κατόπιν Παραγγελίας (MTO)"
 
 #. module: mrp_subcontracting
 #. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_route_id
 #, python-format
@@ -374,7 +376,6 @@ msgstr ""
 
 #. module: mrp_subcontracting
 #. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: code:addons/mrp_subcontracting/wizard/product_replenish.py:0
 #: model:stock.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
@@ -440,7 +441,7 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "Κανόνας Αποθέματος"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -473,7 +474,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 #, python-format
 msgid "Subcontracting"
-msgstr ""
+msgstr "Υπεργολαβία"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -533,7 +534,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__is_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_location__subcontractor_ids
 msgid "Subcontractor"
-msgstr ""
+msgstr "Υπεργολάβος"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__property_stock_subcontractor
@@ -575,8 +576,8 @@ msgstr ""
 #: code:addons/mrp_subcontracting/models/stock_picking.py:0
 #, python-format
 msgid ""
-"There shouldn't be multiple productions to record for the same subcontracted"
-" move."
+"There shouldn't be multiple productions to record for the same subcontracted "
+"move."
 msgstr ""
 
 #. module: mrp_subcontracting
@@ -613,6 +614,9 @@ msgid ""
 "Wizard in case of consumption in warning/strict and more component has been "
 "used for a MO (related to the bom)"
 msgstr ""
+"Οδηγός σε περίπτωση ανάλωσης σε προειδοποίηση/αυστηρότητα και χρήσης "
+"περισσότερων συστατικών για μια Εντολή Παραγωγής (σχετικά με τη συνταγή "
+"παραγωγής)"
 
 #. module: mrp_subcontracting
 #. odoo-python

@@ -91,6 +91,7 @@ class TestWebsocketController(HttpCaseWithUserDemo):
         self.assertEqual(message["type"], "bus.bus/im_status_updated")
         self.assertEqual(message["payload"]["partner_id"], self.partner_demo.id)
         self.assertEqual(message["payload"]["im_status"], "offline")
+        self.assertEqual(message["payload"]["presence_status"], "offline")
 
     def test_receive_missed_presences_on_peek_notifications(self):
         session = self.authenticate("demo", "demo")
@@ -126,3 +127,4 @@ class TestWebsocketController(HttpCaseWithUserDemo):
         self.assertEqual(notification["message"]["type"], "bus.bus/im_status_updated")
         self.assertEqual(notification["message"]["payload"]["partner_id"], self.partner_demo.id)
         self.assertEqual(notification["message"]["payload"]["im_status"], "online")
+        self.assertEqual(notification["message"]["payload"]["presence_status"], "online")

@@ -839,3 +839,140 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po.amount_untaxed, 15.0)
         po.company_id = company_a.id
         self.assertEqual(po.amount_untaxed, 10.0)
+
+    def test_action_view_po_when_product_template_archived(self):
+        """
+        Test to ensure that the purchased_product_qty value remains the same
+        after archiving the product template. Also check that the purchased smart
+        button returns the correct purchase order lines.
+        """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'product_qty': 10,
+                    'price_unit': 1,
+                }),
+            ],
+        })
+        po.button_confirm()
+        product_tmpl = self.product_a.product_tmpl_id
+        self.assertEqual(product_tmpl.purchased_product_qty, 10)
+
+        product_tmpl.action_archive()
+        # Need to flush the recordsets to recalculate the purchased_product_qty after archiving
+        product_tmpl.invalidate_recordset()
+
+        self.assertEqual(product_tmpl.purchased_product_qty, 10)
+
+        action = product_tmpl.action_view_po()
+        action_record = self.env[action['res_model']].search(action['domain'])
+        self.assertEqual(action_record, po.order_line)
+
+    def test_purchase_suggest_qty(self):
+        """
+        Checks the suggested qty of POL is correctly set based on valid supplier-info
+        leading to correctly compute the price unit, product_qty and product_desc
+        """
+        self.env['product.supplierinfo'].create([
+            {
+                'partner_id': self.partner_a.id,
+                'product_id': self.product_a.id,
+                'min_qty': 1,
+                'price': 50,
+                'date_start': fields.Date.today() - timedelta(days=5),
+                'date_end': fields.Date.today() - timedelta(days=3),
+                'product_code': 'product_code_1',
+            },
+            {
+                'partner_id': self.partner_a.id,
+                'product_id': self.product_a.id,
+                'min_qty': 10,
+                'price': 100,
+                'date_start': fields.Date.today() - timedelta(days=5),
+                'date_end': fields.Date.today() + timedelta(days=3),
+                'product_code': 'HHH',
+            },
+            {
+                'partner_id': self.partner_a.id,
+                'product_id': self.product_a.id,
+                'min_qty': 20,
+                'price': 80,
+                'date_start': fields.Date.today() - timedelta(days=5),
+                'date_end': fields.Date.today() + timedelta(days=3),
+                'product_code': 'HHH-min_qty_20',
+            },
+        ])
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product_a
+        po = po_form.save()
+        self.assertEqual(po.order_line.product_qty, 10.0)
+        self.assertEqual(po.order_line.name, '[HHH] product_a')
+
+    def test_purchase_order_mail_links_to_correct_website(self):
+        """Check that purchase order emails link to the order's company website."""
+        if 'website_id' not in self.env.company:
+            self.skipTest("The `website` module is required to support multiple company websites.")
+
+        company1 = self.company_data['company']
+        company2 = self.company_data_2['company']
+        companies = company1 + company2
+        companies.website_id = None
+        self.env['website'].create([{
+            'name': f"{company.name}'s Website",
+            'domain': f"http://website{company.id}.example.com",
+            'company_id': company.id,
+        } for company in companies])
+        self.assertEqual(len(companies.website_id), 2)
+
+        rfq = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'company_id': company2.id,
+            'order_line': [Command.create({'product_id': self.product_a.id})],
+        })
+
+        email_ctx = rfq.action_rfq_send().get('context', {})
+        mail_template = self.env['mail.template'].browse(email_ctx.get('default_template_id'))
+        mail_template.auto_delete = False
+
+        message = rfq.with_context(**email_ctx).message_post_with_source(
+            mail_template, subtype_xmlid='mail.mt_comment',
+        )
+        self.assertIn(
+            company2.website_id.domain, message.mail_ids.body_html,
+            "Mail should link to the website of the order's company",
+        )
+        self.assertNotIn(
+            company1.website_id.domain, message.mail_ids.body_html,
+            "Mail shouldn't link to the website of the first company",
+        )
+        self.assertNotIn(
+            self.env['base'].get_base_url(), message.mail_ids.body_html,
+            "Mail shouldn't link to the base URL",
+        )
+
+    def test_product_price_on_purchase_order_view_catalog(self):
+        """
+        Ensure vendor price & discount from supplierinfo are applied
+        properly when using the vendor catalog popup.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'seller_ids': [
+                Command.create({
+                    'partner_id': self.partner_a.id,
+                    'price': 100,
+                    'discount': 10,
+                })
+            ]
+        })
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        purchase_order._update_order_line_info(product.id, 1)
+        self.assertRecordValues(purchase_order.order_line, [
+            {'price_unit': 100, 'discount': 10, 'price_unit_discounted': 90},
+        ])

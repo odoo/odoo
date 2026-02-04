@@ -50,7 +50,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
 
-        if not partner.vat:
+        if not partner.vat or partner.vat == '/':
             return [{
                 'company_id': partner.peppol_endpoint,
                 'tax_scheme_vals': {'id': partner.peppol_eas},
@@ -78,9 +78,13 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         for vals in vals_list:
             vals.pop('registration_address_vals', None)
             if partner.country_code == 'NL':
+                # For NL, VAT can be used as a Peppol endpoint, but KVK/OIN has to be used as PartyLegalEntity/CompanyID
+                # To implement a workaround on stable, company_registry field is used without recording whether
+                # the number is a KVK or OIN, and the length of the number (8 = KVK, 9 = OIN) is used to determine the type
+                nl_id = partner.company_registry if partner.peppol_eas not in ('0106', '0190') else partner.peppol_endpoint
                 vals.update({
-                    'company_id': partner.peppol_endpoint,
-                    'company_id_attrs': {'schemeID': partner.peppol_eas},
+                    'company_id': nl_id,
+                    'company_id_attrs': {'schemeID': '0190' if nl_id and len(nl_id) == 20 else '0106'},
                 })
             if partner.country_id.code == "LU":
                 if 'l10n_lu_peppol_identifier' in partner._fields and partner.l10n_lu_peppol_identifier:
@@ -206,6 +210,13 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 subtotal_vals.pop('percent', None)
                 subtotal_vals['currency_dp'] = 2
 
+        if invoice.currency_id != invoice.company_id.currency_id:
+            vals_list.append({
+                'currency': invoice.company_id.currency_id,
+                'currency_dp': self._get_currency_decimal_places(invoice.company_id.currency_id),
+                'tax_amount': taxes_vals['tax_amount'],
+            })
+
         return vals_list
 
     def _get_invoice_line_item_vals(self, line, taxes_vals):
@@ -254,6 +265,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         vals['vals'].update({
             'customization_id': self._get_customization_ids()['ubl_bis3'],
             'profile_id': 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0',
+            'tax_currency_code': None if invoice.currency_id == invoice.company_id.currency_id else invoice.company_id.currency_id.name,
             'currency_dp': 2,
             'ubl_version_id': None,
         })
@@ -267,6 +279,12 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                     'id': invoice.ref,
                     'issue_date': None,
                 }
+            })
+
+        # For B2G transactions in Germany: set the buyer_reference to the Leitweg-ID (code 0204)
+        if invoice.commercial_partner_id.peppol_eas == '0204':
+            vals['vals'].update({
+                'buyer_reference': invoice.commercial_partner_id.peppol_endpoint,
             })
 
         return vals
@@ -329,7 +347,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 break
 
         for line in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')):
-            if len(line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type != 'fixed')) != 1:
+            if len(line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type not in ('fixed', 'code'))) != 1:
                 # [UBL-SR-48]-Invoice lines shall have one and only one classified tax category.
                 # /!\ exception: possible to have any number of ecotaxes (fixed tax) with a regular percentage tax
                 constraints.update({'cen_en16931_tax_line': _("Each invoice line shall have one and only one tax.")})
@@ -389,9 +407,12 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 # [NL-R-003] For suppliers in the Netherlands, the legal entity identifier MUST be either a
                 # KVK or OIN number (schemeID 0106 or 0190)
                 'nl_r_003': _(
-                    "%s should have a KVK or OIN number: the Peppol e-address (EAS) should be '0106' or '0190'.",
+                    "%s should have a KVK or OIN number set in Company ID field or as Peppol e-address (EAS code 0106 or 0190).",
                     vals['supplier'].display_name
-                ) if vals['supplier'].peppol_eas not in ('0106', '0190') else '',
+                ) if (
+                    not vals['supplier'].peppol_eas in ('0106', '0190') and
+                    (not vals['supplier'].company_registry or len(vals['supplier'].company_registry) not in (8, 9))
+                ) else '',
 
                 # [NL-R-007] For suppliers in the Netherlands, the supplier MUST provide a means of payment
                 # (cac:PaymentMeans) if the payment is from customer to supplier
@@ -410,9 +431,12 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                     # [NL-R-005] For suppliers in the Netherlands, if the customer is in the Netherlands,
                     # the customer’s legal entity identifier MUST be either a KVK or OIN number (schemeID 0106 or 0190)
                     'nl_r_005': _(
-                        "%s should have a KVK or OIN number: the Peppol e-address (EAS) should be '0106' or '0190'.",
+                        "%s should have a KVK or OIN number set in Company ID field or as Peppol e-address (EAS code 0106 or 0190).",
                         vals['customer'].display_name
-                    ) if vals['customer'].commercial_partner_id.peppol_eas not in ('0106', '0190') else '',
+                    ) if (
+                        not vals['customer'].commercial_partner_id.peppol_eas in ('0106', '0190') and
+                        (not vals['customer'].commercial_partner_id.company_registry or len(vals['customer'].commercial_partner_id.company_registry) not in (8, 9))
+                    ) else '',
                 })
 
         if vals['supplier'].country_id.code == 'NO':

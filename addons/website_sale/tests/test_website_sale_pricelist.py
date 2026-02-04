@@ -562,6 +562,31 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
             pls = self.website.get_pricelist_available(show_visible=True)
         self.assertEqual(pls, pls_to_return + current_pl, "Only pricelists for BE, accessible en website and selectable should be returned. It should also return the applied promo pl")
 
+    def test_get_pricelist_available_geoip5(self):
+        """Remove country group from certain pricelists, and check that pricelists
+        with country group get prioritized when geoip is available."""
+        exclude = self.backend_pl + self.generic_pl_code + self.w1_pl_select + self.w1_pl_code
+        exclude.country_group_ids = False
+        self.website1_be_pl -= exclude
+
+        with patch(
+            'odoo.addons.website_sale.models.website.Website._get_geoip_country_code',
+            return_value=self.BE.code,
+        ):
+            pls = self.website.get_pricelist_available()
+
+        for pl in pls:
+            self.assertIn(
+                self.BE,
+                pl.country_group_ids.country_ids,
+                "Pricelists without country groups should get excluded",
+            )
+        self.assertEqual(
+            pls,
+            self.website1_be_pl,
+            "Only pricelists for BE and accessible on website should be returned",
+        )
+
 
 @tagged('post_install', '-at_install')
 class TestWebsitePriceListHttp(HttpCaseWithUserPortal):

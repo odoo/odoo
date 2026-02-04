@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_mercury
-# 
+#
 # Translators:
 # Martin Trigaux, 2023
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_mercury
@@ -29,17 +29,26 @@ msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Køb en kortlæser"
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "<i>Vantiv Configurations</i> define what Vantiv account will be used when\n"
-"                                processing credit card transactions in the Point Of Sale. Setting up a Vantiv\n"
-"                                configuration will enable you to allow payments with various credit cards\n"
-"                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
-"                                configuration you should associate it with a Point Of Sale payment method."
+"                                processing credit card transactions in the "
+"Point Of Sale. Setting up a Vantiv\n"
+"                                configuration will enable you to allow "
+"payments with various credit cards\n"
+"                                (eg. Visa, MasterCard, Discovery, American "
+"Express, ...). After setting up this\n"
+"                                configuration you should associate it with a "
+"Point Of Sale payment method."
 msgstr ""
-"<i>Vantiv Konfigurationer</i> definere hvilken Vantiv konto vil blive brugt under\n"
-"                                  behandling af kreditkort transaktioner ved Point og Sale. Opsætning af en Vantiv\n"
-"                                  konfiguration, vil gøre dig i stand til, at tillade betalinger med diverse kreditkort \n"
-"                                   (f.eks. Visa, MasterCard, Discovery, Dankort, ...).\n"
+"<i>Vantiv Konfigurationer</i> definere hvilken Vantiv konto vil blive brugt "
+"under\n"
+"                                  behandling af kreditkort transaktioner ved "
+"Point og Sale. Opsætning af en Vantiv\n"
+"                                  konfiguration, vil gøre dig i stand til, "
+"at tillade betalinger med diverse kreditkort \n"
+"                                   (f.eks. Visa, MasterCard, Discovery, "
+"Dankort, ...).\n"
 "Efter opsætning af denne \n"
-"                                   konfiguration, burde du kunne associere den med en Point of Sale betalingsmetode."
+"                                   konfiguration, burde du kunne associere "
+"den med en Point of Sale betalingsmetode."
 
 #. module: pos_mercury
 #. odoo-javascript
@@ -133,8 +142,8 @@ msgid ""
 "through the Vantiv backend."
 msgstr ""
 "Kreditkort refunderinger understøttes ikke. Vælg i stedet dit kreditkorts "
-"betalingsmetode, klik 'Bekræft', og refunder den originale træk manuelt, via"
-" Vantiv backend."
+"betalingsmetode, klik 'Bekræft', og refunder den originale træk manuelt, via "
+"Vantiv backend."
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration__display_name
@@ -145,12 +154,15 @@ msgstr "Vis navn"
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"For quickly handling orders: just swiping a credit card when on the payment screen\n"
-"                                (without having pressed anything else) will charge the full amount of the order to\n"
+"For quickly handling orders: just swiping a credit card when on the payment "
+"screen\n"
+"                                (without having pressed anything else) will "
+"charge the full amount of the order to\n"
 "                                the card."
 msgstr ""
 "Til hurtig håndtering af ordre: blot træk kreditkortet ved betalingsskærmen\n"
-"                                    (uden at have trykket på noget andet), den vil trække det fulde ordrebeløb på kortet."
+"                                    (uden at have trykket på noget andet), "
+"den vil trække det fulde ordrebeløb på kortet."
 
 #. module: pos_mercury
 #. odoo-javascript
@@ -180,10 +192,12 @@ msgstr "ID på sælger for at autentificere ham på betalingsudbyderens server"
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"If you don't already have a Vantiv account, contact Vantiv at +1 (800) 846-4472\n"
+"If you don't already have a Vantiv account, contact Vantiv at +1 (800) "
+"846-4472\n"
 "                                to create one."
 msgstr ""
-"Hvis du ikke allerede har en Vantiv konto, kan du kontakte Vantiv på +1 (800) 846-4472\n"
+"Hvis du ikke allerede har en Vantiv konto, kan du kontakte Vantiv på +1 "
+"(800) 846-4472\n"
 "                              for at oprette en."
 
 #. module: pos_mercury
@@ -254,7 +268,6 @@ msgstr "Intet svar fra server (forbundet til netværk?)"
 #. module: pos_mercury
 #. odoo-javascript
 #: code:addons/pos_mercury/static/src/overrides/components/payment_screen/payment_screen.js:0
-#: code:addons/pos_mercury/static/src/overrides/components/payment_screen/payment_screen.js:0
 #, python-format
 msgid "Odoo error while processing transaction."
 msgstr "Odoo fejl under behandling af transaktion."
@@ -285,8 +298,8 @@ msgstr "Delvist godkendt"
 msgid ""
 "Password of the merchant to authenticate him on the payment provider server"
 msgstr ""
-"Kodeord for sælgeren, til autentificering af ham overfor betalingsudbyderens"
-" server"
+"Kodeord for sælgeren, til autentificering af ham overfor betalingsudbyderens "
+"server"
 
 #. module: pos_mercury
 #. odoo-javascript
@@ -405,8 +418,8 @@ msgid ""
 "This can be caused by a badly executed swipe or by not having your keyboard "
 "layout set to US QWERTY (not US International)."
 msgstr ""
-"Dette kan forårsages af et ringe udført gennemtræk, eller af at dit tastatur"
-" ikke anvender US QWERTY tastatur layout (ikke US international)."
+"Dette kan forårsages af et ringe udført gennemtræk, eller af at dit tastatur "
+"ikke anvender US QWERTY tastatur layout (ikke US international)."
 
 #. module: pos_mercury
 #. odoo-javascript
@@ -424,13 +437,18 @@ msgstr "Type"
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "Using the Vantiv integration in the Point Of Sale is easy: just press the\n"
-"                                associated payment method. After that the amount can be adjusted (eg. for cashback)\n"
-"                                just like on any other payment line. Whenever the payment line is set up, a card\n"
+"                                associated payment method. After that the "
+"amount can be adjusted (eg. for cashback)\n"
+"                                just like on any other payment line. "
+"Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
 "Brugen af Vantiv integrationen i Point of Sale er ligetil: Blot tryk på den\n"
-"                                tilhørende betalings metode. Efterfølgende kan mængden justeres (f.eks. ved veksling)\n"
-"                                nøjagtig som enhver anden betalingslinje. Hver gang betalingslinjen opsættes, kan et kort trækkes igennem kortlæser enheden."
+"                                tilhørende betalings metode. Efterfølgende "
+"kan mængden justeres (f.eks. ved veksling)\n"
+"                                nøjagtig som enhver anden betalingslinje. "
+"Hver gang betalingslinjen opsættes, kan et kort trækkes igennem kortlæser "
+"enheden."
 
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
@@ -480,12 +498,14 @@ msgstr "AFVENTER GENNEMTRÆK"
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"We currently support the MagTek Dynamag card reader device. It can be connected\n"
-"                                directly to the Point Of Sale device or it can be connected to the IoTBox."
+"We currently support the MagTek Dynamag card reader device. It can be "
+"connected\n"
+"                                directly to the Point Of Sale device or it "
+"can be connected to the IoTBox."
 msgstr ""
 "Vi understøttet i øjeblikket MagTek Dynamag kortlæser enheder. Det kan "
-"forbindes direkte til Point of Sale enheden, eller den kan forbindes til IoT"
-" Boksen."
+"forbindes direkte til Point of Sale enheden, eller den kan forbindes til IoT "
+"Boksen."
 
 #. module: pos_mercury
 #. odoo-javascript

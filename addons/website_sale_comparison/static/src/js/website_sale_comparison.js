@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { Mutex } from "@web/core/utils/concurrency";
+import { redirect } from '@web/core/utils/urls';
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { cookie } from "@web/core/browser/cookie";;
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
@@ -68,7 +69,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
             self._removeFromComparelist(ev);
             self.guard.exec(function() {
                 const newLink = '/shop/compare?products=' + encodeURIComponent(self.comparelist_product_ids);
-                window.location.href = Object.keys(self.comparelist_product_ids || {}).length === 0 ? '/shop' : newLink;
+                redirect(Object.keys(self.comparelist_product_ids || {}).length === 0 ? '/shop' : newLink);
             });
         });
 
@@ -112,6 +113,13 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
                 if (!productId) {
                     return;
                 }
+                // Made changes based on `_hideBottomFixedElements` logic:
+                // bottom-fixed elements (e.g. compare list button) get
+                // hidden if overlapped by modals. In our case, the cookie
+                // modal was hiding it. To avoid the compare button animating
+                // to the top-left, we now ensure it stays visible when an
+                // item is added to the compare list.
+                self.el.classList.remove("o_bottom_fixed_element_hidden");
                 self._addNewProducts(productId).then(function () {
                     website_sale_utils.animateClone(
                         $('#comparelist .o_product_panel_header'),

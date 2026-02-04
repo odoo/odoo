@@ -129,6 +129,14 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
     get items() {
         return this.currentOrder.orderlines?.reduce((items, line) => items + line.quantity, 0) ?? 0;
     }
+    handleOrderLineQuantityChange(selectedLine, buffer, currentQuantity, lastId) {
+        const parsedInput = (buffer && parseFloat(buffer)) || 0;
+        if (lastId != selectedLine.cid || parsedInput < currentQuantity) {
+            this._showDecreaseQuantityPopup();
+        } else if (currentQuantity < parsedInput) {
+            this._setValue(buffer);
+        }
+    }
     async updateSelectedOrderline({ buffer, key }) {
         const order = this.pos.get_order();
         const selectedLine = order.get_selected_orderline();
@@ -166,14 +174,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                 });
                 return;
             }
-            const parsedInput = (buffer && parseFloat(buffer)) || 0;
-            if (lastId != selectedLine.cid) {
-                this._showDecreaseQuantityPopup();
-            } else if (currentQuantity < parsedInput) {
-                this._setValue(buffer);
-            } else if (parsedInput < currentQuantity) {
-                this._showDecreaseQuantityPopup();
-            }
+            this.handleOrderLineQuantityChange(selectedLine, buffer, currentQuantity, lastId);
             return;
         } else if (
             selectedLine &&
@@ -318,8 +319,23 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
     async _parseElementsFromGS1(parsed_results) {
         const productBarcode = parsed_results.find((element) => element.type === "product");
         const lotBarcode = parsed_results.find((element) => element.type === "lot");
+        const qty = parsed_results.find((element) => element.type === "quantity");
         const product = await this._getProductByBarcode(productBarcode);
-        return { product, lotBarcode, customProductOptions: {} };
+        const customProductOptions = {};
+        if (
+            qty &&
+            product?.uom_id[0] &&
+            qty?.rule?.associated_uom_id &&
+            product.uom_id[0] == qty.rule.associated_uom_id[0]
+        ) {
+            customProductOptions.quantity = qty.value;
+        }
+        if (product?._getPackagingQty(productBarcode)) {
+            customProductOptions.quantity = customProductOptions.quantity
+                ? customProductOptions.quantity * product._getPackagingQty(productBarcode)
+                : product._getPackagingQty(productBarcode);
+        }
+        return { product, lotBarcode, customProductOptions };
     }
     /**
      * Add a product to the current order using the product identifier and lot number from parsed results.
@@ -361,6 +377,9 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             const currentQuantity = selectedLine.get_quantity();
             if (newQuantity >= currentQuantity) {
                 selectedLine.set_quantity(newQuantity);
+                for (const line of selectedLine.comboLines ?? []) {
+                    line.set_quantity(newQuantity, true);
+                }
             } else if (newQuantity >= selectedLine.saved_quantity) {
                 await this.handleDecreaseUnsavedLine(newQuantity);
             } else {
@@ -375,8 +394,14 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         const selectedLine = order.get_selected_orderline();
         const decreaseQuantity = selectedLine.get_quantity() - newQuantity;
         selectedLine.set_quantity(newQuantity);
+        for (const line of selectedLine.comboLines ?? []) {
+            line.set_quantity(newQuantity, true);
+        }
         if (newQuantity == 0) {
             order._unlinkOrderline(selectedLine);
+            for (const line of selectedLine.comboLines ?? []) {
+                order._unlinkOrderline(line);
+            }
         }
         return decreaseQuantity;
     }

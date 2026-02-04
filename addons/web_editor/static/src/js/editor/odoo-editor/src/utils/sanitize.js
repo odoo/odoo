@@ -24,12 +24,15 @@ import {
     getTraversedNodes,
     ZERO_WIDTH_CHARS_REGEX,
     isVisible,
+    cleanZWS,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
 
 // In some cases, we want to prevent merging identical elements.
 export const UNMERGEABLE_SELECTORS = [];
+
+const FORMATTABLE_TAGS = ["SPAN", "FONT", "B", "STRONG", "I", "EM", "U", "S", "SMALL"];
 
 function hasPseudoElementContent (node, pseudoSelector) {
     const content = getComputedStyle(node, pseudoSelector).getPropertyValue('content');
@@ -122,7 +125,11 @@ export function deduceURLfromText(text, link) {
    // Check for telephone url.
    match = label.match(PHONE_REGEX);
    if (match) {
-        return (match[1] ? match[0] : "tel://" + match[0]).replace(/\s+/g, "");
+        if (match[1]) {
+            return match[0].replace(/\s+/g, "");
+        } else if (link?.href.startsWith("tel:")) {
+            return ("tel:" + match[0]).replace(/\s+/g, "");
+        }
    }
    return null;
 }
@@ -146,6 +153,20 @@ function sanitizeNode(node, root) {
     // contenteditable=false to avoid any hiccup.
     if (isArtificialVoidElement(node) && node.getAttribute('contenteditable') !== 'false') {
         node.setAttribute('contenteditable', 'false');
+    }
+
+    // Ensure zws and data-oe-zws-empty-inline flag is removed if content other
+    // than zws is present in the node.
+    if (
+        node.nodeType === Node.ELEMENT_NODE &&
+        node.hasAttribute("data-oe-zws-empty-inline") &&
+        node.textContent !== "\u200B"
+    ) {
+        const restoreCursor =
+            shouldPreserveCursor(node, root) && preserveCursor(root.ownerDocument);
+        cleanZWS(node);
+        delete node.dataset.oeZwsEmptyInline;
+        restoreCursor && restoreCursor();
     }
 
     // Remove empty class/style attributes.
@@ -185,6 +206,14 @@ function sanitizeNode(node, root) {
         const restoreCursor = shouldPreserveCursor(node, root) && preserveCursor(root.ownerDocument);
         moveNodes(...startPos(node), node.previousSibling);
         restoreCursor && restoreCursor();
+    } else if (FORMATTABLE_TAGS.includes(node.nodeName) && isRedundantElement(node)) {
+        getDeepRange(root, { select: true });
+        const restoreCursor =
+            shouldPreserveCursor(node, root) && preserveCursor(root.ownerDocument);
+        const parent = node.parentElement;
+        unwrapContents(node);
+        restoreCursor && restoreCursor();
+        node = parent; // The node has been removed, update the reference.
     } else if (node.nodeType === Node.COMMENT_NODE) {
         // Remove comment nodes to avoid issues with mso comments.
         const parent = node.parentElement;
@@ -226,10 +255,21 @@ function sanitizeNode(node, root) {
         node = parent; // The node has been removed, update the reference.
     } else if (node.nodeName === 'LI' && !node.closest('ul, ol')) {
         // Transform <li> into <p> if they are not in a <ul> / <ol>.
-        const paragraph = document.createElement('p');
-        paragraph.replaceChildren(...node.childNodes);
-        node.replaceWith(paragraph);
-        node = paragraph; // The node has been removed, update the reference.
+        if (node.children.length && [...node.children].every(isBlock)) {
+            // Unwrap <li> if each of its children is a block element.
+            const restoreCursor =
+                shouldPreserveCursor(node, root) && preserveCursor(root.ownerDocument);
+            const nodeToReplace = node.firstElementChild;
+            unwrapContents(node);
+            restoreCursor && restoreCursor(new Map([[node, nodeToReplace]]));
+            node = nodeToReplace;
+        } else {
+            // Otherwise, wrap its content in a new <p> element.
+            const paragraph = document.createElement("p");
+            paragraph.replaceChildren(...node.childNodes);
+            node.replaceWith(paragraph);
+            node = paragraph; // The node has been removed, update the reference.
+        }
     } else if (
         ['UL', 'OL'].includes(node.nodeName) &&
         ['UL', 'OL'].includes(node.parentNode.nodeName)
@@ -252,6 +292,7 @@ function sanitizeNode(node, root) {
         }
         if (isEditorTab(tabPreviousSibling)) {
             node.style.width = '40px';
+            node.style.tabSize = '40px';
         } else {
             const editable = closestElement(node, '.odoo-editor-editable');
             if (editable?.firstElementChild) {
@@ -263,6 +304,7 @@ function sanitizeNode(node, root) {
                 if (nodeRect.width && referenceRect.width) {
                     const width = (nodeRect.left - referenceRect.left) % 40;
                     node.style.width = (40 - width) + 'px';
+                    node.style.tabSize = (40 - width) + 'px';
                 }
             }
         }
@@ -369,4 +411,81 @@ export function sanitize(nodeToSanitize, root = nodeToSanitize) {
         }
     }
     return nodeToSanitize;
+}
+
+/**
+ * Checks if all classes in node are present in node2 (subset check)
+ */
+function hasClassesSubset(node, node2) {
+    const getNodeClasses = (n) => (n || "").trim().split(/\s+/).filter(Boolean);
+    const [nodeClasses, node2Classes] = [node, node2].map(getNodeClasses);
+    return nodeClasses.every((cls) => node2Classes.includes(cls));
+}
+
+/**
+ * Checks if all styles in node are present in node2 (subset check)
+ */
+function hasStylesSubset(node, node2) {
+    const getNodeStyles = (n) =>
+        (n || "")
+            .split(";")
+            .map((s) => s.trim())
+            .filter(Boolean);
+    const [nodeStyles, node2Styles] = [node, node2].map(getNodeStyles);
+    return nodeStyles.every((style) => node2Styles.includes(style));
+}
+
+/**
+ * Checks if a node is redundant based on its closest element with same tag.
+ *
+ * A node is considered redundant if:
+ * - It is an Element node with a parent.
+ * - There is a closest element with the same tag name.
+ * - All of the node's attributes are present in that closest element:
+ *   - All classes exist in the closest element's class list (subset check).
+ *   - All inline styles are present in the closest element's style attribute (subset check).
+ *   - All other attributes must have identical values.
+ *
+ * @param {Node} node - The DOM node to evaluate.
+ * @returns {boolean} True if the node is redundant, false otherwise.
+ */
+export function isRedundantElement(node) {
+    // Check for valid element node and existence of a parent.
+    if (!node || node.nodeType !== Node.ELEMENT_NODE || !node.parentElement) {
+        return false;
+    }
+
+    // Find the closest element with the same tag name.
+    const closestEl = closestElement(node.parentElement, node.tagName);
+    if (!closestEl) {
+        return false;
+    }
+
+    // Check each attribute from node.
+    for (const { name: attrName, value: nodeAttrVal } of node.attributes) {
+        const closestElAttrVal = closestEl.getAttribute(attrName);
+
+        if (!closestElAttrVal) {
+            return false; // Attribute missing in closest element.
+        }
+
+        if (attrName === "class") {
+            // All classes on the node must exist in closest element.
+            if (!hasClassesSubset(nodeAttrVal, closestElAttrVal)) {
+                return false;
+            }
+        } else if (attrName === "style") {
+            // All inline styles on the node must exist in closest element.
+            if (!hasStylesSubset(nodeAttrVal, closestElAttrVal)) {
+                return false;
+            }
+        } else {
+            // For other attributes, values must match exactly.
+            if (nodeAttrVal !== closestElAttrVal) {
+                return false;
+            }
+        }
+    }
+
+    return true;
 }

@@ -276,11 +276,11 @@ class ProductProduct(models.Model):
                         "free_qty": float_round(component.free_qty, precision_rounding=rounding),
                     }
                 )
-                ratios_virtual_available.append(float_round(component_res["virtual_available"] / qty_per_kit, precision_rounding=rounding))
-                ratios_qty_available.append(float_round(component_res["qty_available"] / qty_per_kit, precision_rounding=rounding))
-                ratios_incoming_qty.append(float_round(component_res["incoming_qty"] / qty_per_kit, precision_rounding=rounding))
-                ratios_outgoing_qty.append(float_round(component_res["outgoing_qty"] / qty_per_kit, precision_rounding=rounding))
-                ratios_free_qty.append(float_round(component_res["free_qty"] / qty_per_kit, precision_rounding=rounding))
+                ratios_virtual_available.append(float_round(component_res["virtual_available"] / qty_per_kit, precision_rounding=rounding, rounding_method='DOWN'))
+                ratios_qty_available.append(float_round(component_res["qty_available"] / qty_per_kit, precision_rounding=rounding, rounding_method='DOWN'))
+                ratios_incoming_qty.append(float_round(component_res["incoming_qty"] / qty_per_kit, precision_rounding=rounding, rounding_method='DOWN'))
+                ratios_outgoing_qty.append(float_round(component_res["outgoing_qty"] / qty_per_kit, precision_rounding=rounding, rounding_method='DOWN'))
+                ratios_free_qty.append(float_round(component_res["free_qty"] / qty_per_kit, precision_rounding=rounding, rounding_method='DOWN'))
             if bom_sub_lines and ratios_virtual_available:  # Guard against all cnsumable bom: at least one ratio should be present.
                 res[product.id] = {
                     'virtual_available': float_round(min(ratios_virtual_available) * bom_kits[product].product_qty, precision_rounding=rounding) // 1,
@@ -366,6 +366,8 @@ class ProductProduct(models.Model):
         for product in kit_products:
             if OPERATORS[operator](product.qty_available, value):
                 product_ids.append(product.id)
+            elif product.id in product_ids:
+                product_ids.pop(product_ids.index(product.id))
         return list(set(product_ids))
 
     def action_archive(self):

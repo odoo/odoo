@@ -269,7 +269,7 @@ class HrExpenseSheet(models.Model):
         for sheet in self:
             sheet.payment_method_line_id = sheet.selectable_payment_method_line_ids[:1]
 
-    @api.depends('employee_journal_id', 'payment_method_line_id')
+    @api.depends('employee_journal_id', 'payment_method_line_id', 'payment_mode')
     def _compute_journal_id(self):
         for sheet in self:
             if sheet.payment_mode == 'company_account':
@@ -739,7 +739,7 @@ class HrExpenseSheet(models.Model):
             'line_ids': [Command.create(expense._prepare_move_lines_vals()) for expense in self.expense_line_ids],
             'attachment_ids': [
                 Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
-                for attachment in self.expense_line_ids.message_main_attachment_id
+                for attachment in self.expense_line_ids.attachment_ids
             ],
         }
 

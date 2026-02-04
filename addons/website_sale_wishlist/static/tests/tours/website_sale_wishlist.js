@@ -16,6 +16,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "go to wishlist",
             extra_trigger: 'a[href="/shop/wishlist"] .badge:contains(1)',
             trigger: 'a[href="/shop/wishlist"]',
+            async run(helpers) {
+                await helpers.click();
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+            },
         },
         {
             content: "remove first item in whishlist",
@@ -52,6 +56,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "click on Customizable Desk (TEST)",
             trigger: '.oe_product_cart a:contains("Customizable Desk")',
+            async run(helpers) {
+                await helpers.click();
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+            },
         },
         {
             content: "check the first variant is already in wishlist",
@@ -127,8 +135,8 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Create a product with dynamic attribute and its values.",
             trigger: 'body',
-            run: function () {
-                jsonrpc("/web/dataset/call_kw/product.attribute/create", {
+            run: async function () {
+                await jsonrpc("/web/dataset/call_kw/product.attribute/create", {
                     model: 'product.attribute',
                     method: 'create',
                     args: [{
@@ -166,6 +174,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
                     });
                 }).then(function () {
                     window.location.href = '/web/session/logout?redirect=/shop?search=Bottle';
+                    return new Promise((resolve) => setTimeout(resolve, 1000));
                 });
             },
         },
@@ -183,6 +192,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "Click on product",
             extra_trigger: '.oe_product_cart:contains("Bottle") .o_add_wishlist.disabled',
             trigger: '.oe_product_cart a:contains("Bottle")',
+            async run(helpers) {
+                await helpers.click();
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+            },
         },
         {
             content: "Select Bottle with second variant from /product",
@@ -205,8 +218,9 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Check that wishlist contains 3 items and go to wishlist",
             trigger: '.my_wish_quantity:contains(3)',
-            run: function () {
+            run: async function () {
                 window.location.href = '/shop/wishlist';
+                await new Promise((resolve) => setTimeout(resolve, 1000));
             },
         },
         {
@@ -222,8 +236,9 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Check wishlist contains third variant, then go to login",
             trigger: '#o_comparelist_table tr:contains("black")',
-            run: function () {
+            run: async function () {
                 window.location.href = "/web/login";
+                await new Promise((resolve) => setTimeout(resolve, 1000));
             },
         },
         {
@@ -240,8 +255,8 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Archive the first variant",
             trigger: 'header#top:contains("Mitchell Admin")',
-            run: function () {
-                jsonrpc("/web/dataset/call_kw/product.product/search", {
+            run: async function () {
+                await jsonrpc("/web/dataset/call_kw/product.product/search", {
                     model: 'product.product',
                     method: 'search',
                     args: [[['name', '=', "Bottle"]]],
@@ -257,6 +272,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
                 })
                 .then(function () {
                     window.location.href = '/web/session/logout?redirect=/shop?search=Bottle';
+                    return new Promise((resolve) => setTimeout(resolve, 1000));
                 });
             },
         },
@@ -269,6 +285,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Click on product",
             trigger: '.oe_product_cart a:contains("Bottle")',
+            async run(helpers) {
+                await helpers.click();
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+            },
         },
         {
             content: "Select Bottle with first variant (red) from /product",
@@ -290,8 +310,9 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Check product added to wishlist and go to login",
             trigger: '.my_wish_quantity:contains(1)',
-            run: function () {
+            run: async function () {
                 window.location.href = "/web/login";
+                await new Promise((resolve) => setTimeout(resolve, 1000));
             },
         },
         {
@@ -308,8 +329,8 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Archive all variants",
             trigger: 'header#top:contains("Mitchell Admin")',
-            run: function () {
-                jsonrpc("/web/dataset/call_kw/product.product/search", {
+            run: async function () {
+                await jsonrpc("/web/dataset/call_kw/product.product/search", {
                     model: 'product.product',
                     method: 'search',
                     args: [[['name', '=', "Bottle"]]],
@@ -325,6 +346,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
                 })
                 .then(function () {
                     window.location.href = '/web/session/logout?redirect=/shop?search=Bottle';
+                    return new Promise((resolve) => setTimeout(resolve, 1000));
                 });
             }
         },
@@ -337,6 +359,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Click on product",
             trigger: '.oe_product_cart a:contains("Bottle")',
+            async run(helpers) {
+                await helpers.click();
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+            },
         },
         {
             content: "Check that there is no wishlist button from /product",
@@ -347,8 +373,9 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Go to '/shop?search=Customizable Desk'",
             trigger: 'body',
-            run: function () {
-                window.location.href = '/shop?search=Customizable Desk '
+            run: async function () {
+                window.location.href = '/shop?search=Customizable Desk';
+                await new Promise((resolve) => setTimeout(resolve, 1000));
             },
         },
         {

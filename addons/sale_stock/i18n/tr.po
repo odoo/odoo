@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_stock
-# 
+# * sale_stock
+#
 # Translators:
 # abc Def <hdogan1974@gmail.com>, 2023
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2023
@@ -17,20 +17,22 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
 # Umur Akın <umura@projetgrup.com>, 2024
 # Ediz Duman <neps1192@gmail.com>, 2024
-# 
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2024\n"
-"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"PO-Revision-Date: 2025-11-22 21:21+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-17/"
+"sale_stock/tr/>\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -44,7 +46,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Awaiting arrival"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Varış bekleniyor"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -75,7 +77,8 @@ msgstr "<span class=\"o_stat_text\">Satış</span>"
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
 "<span class=\"small badge text-bg-success orders_label_text_align\">\n"
-"                                        <i class=\"fa fa-fw fa-truck\"/> Shipped\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Shipped\n"
 "                                    </span>"
 msgstr ""
 
@@ -83,11 +86,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
 msgid ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
+"                    Some deliveries are already done. Returns can be created "
+"from the Delivery Orders.\n"
 "                </span>"
 msgstr ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                   Bazı teslimatlar zaten yapıldı. İadeler Teslimat Siparişlerinden oluşturulabilir.\n"
+"                   Bazı teslimatlar zaten yapıldı. İadeler Teslimat "
+"Siparişlerinden oluşturulabilir.\n"
 "                </span>"
 
 #. module: sale_stock
@@ -104,12 +109,23 @@ msgstr "<strong>Teslimat Koşulu:</strong>"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
 msgid ""
-"According to product configuration, the delivered quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the delivered quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
-"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
-"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted "
+"expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to "
+"this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Ürün yapılandırmasına göre teslim edilen miktar şu yöntemlerle otomatik "
+"olarak hesaplanabilir:\n"
+"  - Manuel: miktar satırda elle belirlenir\n"
+"  - Giderlerden Analitik: miktar, muhasebeleştirilmiş giderlerin toplamından "
+"alınır\n"
+"  - Çalışma Çizelgesi: miktar, bu satış satırına bağlı görevlerde kaydedilen "
+"saatlerin toplamıdır\n"
+"  - Stok Hareketleri: miktar, onaylanmış sevkiyatlardan alınır\n"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -212,8 +228,8 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
-"Servis ürünlerinde sipariş hatlarının minimum teslim süresinden hesaplanarak"
-" müşteriye söz verebileceğiniz teslim tarihi. Sevkiyat durumunda, sipariş "
+"Servis ürünlerinde sipariş hatlarının minimum teslim süresinden hesaplanarak "
+"müşteriye söz verebileceğiniz teslim tarihi. Sevkiyat durumunda, sipariş "
 "hatlarının minimum veya maksimum teslim süresini kullanmak için siparişin "
 "gönderim politikası dikkate alınacaktır."
 
@@ -304,8 +320,7 @@ msgid ""
 "shortest."
 msgstr ""
 "Tüm ürünleri bir kerede teslim ederseniz, teslimat siparişi en büyük ürün "
-"teslim süresine göre planlanacaktır. Aksi takdirde, en kısasına "
-"dayanacaktır."
+"teslim süresine göre planlanacaktır. Aksi takdirde, en kısasına dayanacaktır."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -325,12 +340,12 @@ msgstr "Incoterm Konumu"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "Incoterm details"
-msgstr ""
+msgstr "Incoterm ayrıntıları"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "Incoterm:"
-msgstr ""
+msgstr "Incoterm:"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm
@@ -398,9 +413,9 @@ msgid ""
 "for delivery that many days earlier than the actual promised date, to cope "
 "with unexpected delays in the supply chain."
 msgstr ""
-"Müşterilere söz verilen tarihler için hata payı. Ürünler, tedarik zincirinde"
-" beklenmedik gecikmelerle başa çıkmak için gerçek vaat edilen tarihten "
-"önceki günlerden daha uzun bir süre önce teslimat için planlanacaktır."
+"Müşterilere söz verilen tarihler için hata payı. Ürünler, tedarik zincirinde "
+"beklenmedik gecikmelerle başa çıkmak için gerçek vaat edilen tarihten önceki "
+"günlerden daha uzun bir süre önce teslimat için planlanacaktır."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
@@ -408,8 +423,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
 msgstr ""
 "Müşterilere söz verilen tarihlerin hata payı. Tedarik zincirinde umulmadık "
 "gecikmelerle karşılaşmamak için ürünlerin tedarik ve teslimatları için "
@@ -636,7 +651,7 @@ msgstr "Ürün Teslimat Politikası"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__started
 msgid "Started"
-msgstr ""
+msgstr "Başladı"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -665,6 +680,11 @@ msgid "Stock Rules report"
 msgstr "Stok Kuralları raporu"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_valuation_layer
+msgid "Stock Valuation Layer"
+msgstr "Stok Değerleme Katmanı"
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "Stok kuralı raporu"
@@ -682,8 +702,10 @@ msgstr "Teslimat"
 #, python-format
 msgid ""
 "The delivery address has been changed on the Sales Order<br/>\n"
-"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
-"                        You should probably update the partner on this document."
+"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</"
+"strong>,\n"
+"                        You should probably update the partner on this "
+"document."
 msgstr ""
 "Satış Siparişinde \"%s\" olan teslimat adresi \"%s\" olarak değiştirildi, \n"
 "İş ortağını bu belgede güncellemelisiniz."
@@ -693,8 +715,8 @@ msgstr ""
 #: code:addons/sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js:0
 #, python-format
 msgid ""
-"The ordered quantity cannot be decreased below the amount already delivered."
-" Instead, create a return in your inventory."
+"The ordered quantity cannot be decreased below the amount already delivered. "
+"Instead, create a return in your inventory."
 msgstr ""
 "Sipariş edilen miktar, halihazırda teslim edilen miktarın altına "
 "düşürülemez. Bunun yerine, envanterinizde bir iade oluşturun."
@@ -707,6 +729,8 @@ msgid ""
 "The ordered quantity of a sale order line cannot be decreased below the "
 "amount already delivered. Instead, create a return in your inventory."
 msgstr ""
+"Bir satış siparişi satırı, halihazırda teslim edilen miktarın altına "
+"düşürülemez. Bunun yerine, envanterinizde bir iade oluşturun."
 
 #. module: sale_stock
 #. odoo-javascript

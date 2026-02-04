@@ -5,6 +5,8 @@ from freezegun import freeze_time
 from odoo.addons.stock.tests.common import TestStockCommon
 
 from odoo import fields
+from odoo.fields import Command
+from odoo.tests import Form
 
 
 class TestReplenishWizard(TestStockCommon):
@@ -450,7 +452,7 @@ class TestReplenishWizard(TestStockCommon):
         ])[-1]
 
         self.assertEqual(last_po_id.partner_id, vendor)
-        self.assertEqual(last_po_id.order_line.price_unit, 60)
+        self.assertEqual(last_po_id.order_line.price_unit, 0)
 
     def test_correct_supplier(self):
         self.env['stock.warehouse'].search([], limit=1).reception_steps = 'two_steps'
@@ -492,3 +494,42 @@ class TestReplenishWizard(TestStockCommon):
             ('partner_id', '=', partner_b.id)
         ])
         self.assertEqual(po.amount_untaxed, 10, "best price is 10$")
+
+    def test_delete_buy_route_and_replenish(self):
+        """ Test that the replenish wizard does not crash when the 'buy' route is deleted """
+        self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False).unlink()
+        self.product1.product_tmpl_id.seller_ids.unlink()
+        replenish_wizard = self.env['product.replenish'].create({
+            'product_id': self.product1.id,
+            'product_tmpl_id': self.product1.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+        })
+        self.assertTrue(replenish_wizard._get_route_domain(self.product1.product_tmpl_id))
+
+    def test_inter_wh_replenish(self):
+        """ Test that the replenish order has the correct supplier in a replenish between
+        warehouses of the same company.
+        """
+        main_warehouse = self.wh
+        second_warehouse = self.env['stock.warehouse'].create({
+            'name': 'Second Warehouse',
+            'code': 'WH02',
+        })
+        main_warehouse.write({
+            'resupply_wh_ids': [Command.set(second_warehouse.ids)]
+        })
+        interwh_route = self.env['stock.route'].search([('supplied_wh_id', '=', main_warehouse.id), ('supplier_wh_id', '=', second_warehouse.id)])
+
+        self.product1.route_ids = [Command.link(interwh_route.id)]
+
+        wizard_form = Form(self.env['product.replenish'].with_context(default_product_tmpl_id=self.product1.product_tmpl_id.id))
+        wizard_form.route_id = interwh_route
+        wizard = wizard_form.save()
+        generated_picking = wizard.launch_replenishment()
+        links = generated_picking.get("params", {}).get("links")
+        url = links and links[0].get("url", "") or ""
+        stock_picking_id, model_name = self.url_extract_rec_id_and_model(url)
+
+        stock_picking_id = self.env[model_name[0]].browse(int(stock_picking_id[0]))
+
+        self.assertEqual(stock_picking_id.partner_id, second_warehouse.partner_id)

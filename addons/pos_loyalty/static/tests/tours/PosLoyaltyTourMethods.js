@@ -138,12 +138,29 @@ export function customerIs(name) {
         },
     ];
 }
+export function isPointsDisplayed(isDisplayed) {
+    return [
+        {
+            trigger: isDisplayed
+                ? '.loyalty-points-title'
+                : 'body:not(:has(.loyalty-points-title))',
+        },
+    ];
+}
 export function pointsAwardedAre(points_str) {
     return [
         {
             content: 'loyalty points awarded ' + points_str,
             trigger: '.loyalty-points-won .value:contains("' + points_str + '")',
             run: function () {}, // it's a check
+        },
+    ];
+}
+export function pointsTotalIs(points_str) {
+    return [
+        {
+            content: 'loyalty points awarded ' + points_str,
+            trigger: '.loyalty-points-total .value:contains("' + points_str + '")',
         },
     ];
 }

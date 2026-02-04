@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* analytic
-# 
+# * analytic
+#
 # Translators:
 # alenafairy, 2023
 # Андрей Гусев <gaussgss@gmail.com>, 2023
@@ -12,22 +12,26 @@
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
 # Martin Trigaux, 2023
 # Alena Vlasova, 2023
-# Wil Odoo, 2024
-# Ilya Rozhkov, 2024
-# 
+# Wil Odoo, 2025
+# Ilya Rozhkov, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Ilya Rozhkov, 2024\n"
-"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"POT-Creation-Date: 2026-01-29 18:35+0000\n"
+"PO-Revision-Date: 2025-12-31 11:28+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-17/analytic/"
+"ru/>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: analytic
 #. odoo-python
@@ -68,6 +72,11 @@ msgstr "Поле счета"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_ids
 msgid "Accounts"
 msgstr "Аккаунты"
+
+#. module: analytic
+#: model:account.analytic.account,name:analytic.analytic_agrolait
+msgid "Acme Corporation"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
@@ -378,9 +387,9 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Пересчет между единицами измерения может произойти только в том случае, если"
-" они принадлежат к одной и той же категории. Пересчет будет осуществляться "
-"на основе коэффициентов."
+"Пересчет между единицами измерения может произойти только в том случае, если "
+"они принадлежат к одной и той же категории. Пересчет будет осуществляться на "
+"основе коэффициентов."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -445,11 +454,6 @@ msgid "Debit"
 msgstr "Дебет"
 
 #. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_agrolait
-msgid "Deco Addict"
-msgstr "Deco Addict"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__default_applicability
 msgid "Default Applicability"
 msgstr "Применимость по умолчанию"
@@ -490,6 +494,12 @@ msgstr "Отключить сохранение"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__display_name
 msgid "Display Name"
 msgstr "Отображаемое имя"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Аналитический счет распределения"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
@@ -559,11 +569,13 @@ msgstr "Если отмечено, некоторые сообщения име�
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sales orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to analyse\n"
+"                analytic accounts. You can track costs and revenues to "
+"analyse\n"
 "                your margins easily."
 msgstr ""
 "В Odoo заказы на продажу и проекты реализуются с использованием\n"
-"                 аналитических счетов. Вы можете легко отслеживать затраты и доходы для анализа\n"
+"                 аналитических счетов. Вы можете легко отслеживать затраты и "
+"доходы для анализа\n"
 "                 вашей доходности (маржи)."
 
 #. module: analytic
@@ -623,7 +635,7 @@ msgstr "Сообщения"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_millennium_industries
 msgid "Millennium Industries"
-msgstr "Миллениум Индастриз"
+msgstr "Millennium Industries"
 
 #. module: analytic
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__business_domain__general
@@ -791,13 +803,17 @@ msgstr "Отдел НИОКР"
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sales orders\n"
-"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                invoices. Customer invoices can be created based on sales "
+"orders\n"
+"                (fixed price invoices), on timesheets (based on the work "
+"done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 "Доходы будут созданы автоматически при создании счета-фактуры клиента.\n"
-"                 Счета-фактуры клиентов могут создаваться на основе заказов клиента\n"
-"                 (счета-фактуры с фиксированной ценой), на расписаниях (в зависимости от выполненной работы) или\n"
+"                 Счета-фактуры клиентов могут создаваться на основе заказов "
+"клиента\n"
+"                 (счета-фактуры с фиксированной ценой), на расписаниях (в "
+"зависимости от выполненной работы) или\n"
 "                 по расходам (например, пере-выставления стоимости поездки)."
 
 #. module: analytic
@@ -828,6 +844,13 @@ msgid "Search Analytic Lines"
 msgstr "Линии поисковой аналитики"
 
 #. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+#, python-format
+msgid "See them"
+msgstr "Просмотр"
+
+#. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__company_id
 msgid ""
 "Select a company for which the analytic distribution will be used (e.g. "
@@ -846,8 +869,8 @@ msgid ""
 "(e.g. create new customer invoice or Sales order if we select this partner, "
 "it will automatically take this as an analytic account)"
 msgstr ""
-"Выберите категорию партнера, для которого будет использоваться аналитическое"
-" распределение (например, при создании нового счета клиента или заказа на "
+"Выберите категорию партнера, для которого будет использоваться аналитическое "
+"распределение (например, при создании нового счета клиента или заказа на "
 "продажу, если мы выберем этого партнера, он автоматически примет его в "
 "качестве аналитического счета)"
 
@@ -879,6 +902,22 @@ msgid "Subplans"
 msgstr "Подпланы"
 
 #. module: analytic
+#: model:ir.model,name:analytic.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "Системный параметр"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/ir_config_parameter.py:0
+#, python-format
+msgid ""
+"The value for %s must be the ID to a valid analytic plan that is not a "
+"subplan"
+msgstr ""
+"Значение для %s должно быть ID существующего аналитического плана, который "
+"не является подпланом"
+
+#. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_absences
 msgid "Time Off"
 msgstr "Отпуск"
@@ -902,7 +941,7 @@ msgstr "Ед. изм"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
 msgid "UoM Category"
-msgstr "Категория UoM"
+msgstr "Категория ЕИ"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
@@ -913,6 +952,17 @@ msgstr "Пользователь"
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_tree_view
 msgid "View"
 msgstr "Просмотр"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+#, python-format
+msgid ""
+"Whoa there! Making this change would wipe out your current data. Let's avoid "
+"that, shall we?"
+msgstr ""
+"Осторожно! Это изменение приведет к удалению ваших текущих данных. Давайте "
+"попробуем этого избежать."
 
 #. module: analytic
 #. odoo-python
@@ -941,10 +991,13 @@ msgid ""
 "company but a model shared between companies or with a different company"
 msgstr ""
 "Вы определили распределение с аналитическими учетными записями, "
-"принадлежащими определенной компании, но модель разделяется между компаниями"
-" или с другой компанией"
+"принадлежащими определенной компании, но модель разделяется между компаниями "
+"или с другой компанией"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
 msgstr "например, проект XYZ"
+
+#~ msgid "Deco Addict"
+#~ msgstr "Deco Addict"

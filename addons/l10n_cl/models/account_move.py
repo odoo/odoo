@@ -131,7 +131,13 @@ class AccountMove(models.Model):
 
     def _get_name_invoice_report(self):
         self.ensure_one()
-        if self.l10n_latam_use_documents and self.company_id.account_fiscal_country_id.code == 'CL':
+        if (
+            self.l10n_latam_use_documents and self.company_id.account_fiscal_country_id.code == "CL"
+            and (
+                self.move_type in {"out_invoice", "out_refund"}
+                or self.l10n_latam_document_type_id.code == "46"
+            )
+        ):
             return 'l10n_cl.report_invoice_document'
         return super()._get_name_invoice_report()
 
@@ -217,7 +223,7 @@ class AccountMove(models.Model):
                     if export else currency_round_other_currency.round(self.amount_total),
                 'round_currency': currency_round_other_currency.decimal_places,
                 'name': self._l10n_cl_normalize_currency_name(currency_round_other_currency.name),
-                'rate': round(abs(self.amount_total_signed) / self.amount_total, 4),
+                'rate': round(abs(self.amount_total_signed) / self.amount_total, 4) if self.amount_total else 1,
             }
         for line in self.line_ids:
             if line.tax_line_id and line.tax_line_id.l10n_cl_sii_code == 14:

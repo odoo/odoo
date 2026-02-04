@@ -35,5 +35,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': '8065',
                 'account_sale_tax_id': 'btw_21',
                 'account_purchase_tax_id': 'btw_21_buy',
+                'deferred_expense_account_id': '1205',
+                'deferred_revenue_account_id': '1405',
             },
         }

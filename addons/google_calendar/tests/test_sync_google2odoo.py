@@ -263,6 +263,41 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertGoogleAPINotCalled()
 
     @patch_api
+    def test_cancelled_with_portal_attendee(self):
+        """Cancel an event with a portal attendee.
+
+        This test exercises a bug that only happened under these circumstances:
+        - One portal user was invited to more than one event.
+        - At least one of them was going to be notified in the future.
+        - Google cancelled the first of those.
+        """
+        portal_user = new_test_user(self.env, login='portal-user', groups='base.group_portal')
+        notif30min = self.ref("calendar.alarm_notif_2")
+        # Cannot use freezegun because there are direct calls to now() from SQL
+        now = datetime.now()
+        one = self.env['calendar.event'].create({
+            'name': 'test',
+            'start': now + timedelta(hours=1),
+            'stop': now + timedelta(hours=2),
+            'google_id': 'one',
+            'user_id': self.env.user.id,
+            'need_sync': False,
+            'alarm_ids': [(6, 0, [notif30min])],
+            'partner_ids': [(6, 0, (self.env.user | portal_user).partner_id.ids)]
+        })
+        two = one.copy({
+            'google_id': 'two',
+            'start': now + timedelta(hours=2),
+            'stop': now + timedelta(hours=3),
+        })
+        gevent = GoogleEvent([
+            {'id': 'one', 'status': 'cancelled'},
+        ])
+        self.sync(gevent)
+        self.assertFalse(one.exists())
+        self.assertTrue(two.exists())
+
+    @patch_api
     def test_private_extended_properties(self):
         google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
         event = self.env['calendar.event'].create({
@@ -1254,6 +1289,49 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         new_triggers = triggers_after - triggers_before
         self.assertFalse(new_triggers, "The event should not be created with triggers.")
         self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_event_reminder_emails_with_google_id(self):
+        """
+        Odoo shouldn't send email reminders for synced events.
+        Test that events synced to Google (with a `google_id`)
+        are excluded from email alarm notifications.
+        """
+        now = datetime.now()
+        google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
+        start = now - relativedelta(minutes=30)
+        end = now + relativedelta(hours=2)
+        alarm = self.env['calendar.alarm'].create({
+            'name': 'Alarm',
+            'alarm_type': 'email',
+            'interval': 'minutes',
+            'duration': 30,
+        })
+        values = {
+            'id': google_id,
+            "alarm_id": alarm.id,
+            'description': 'Small mini desc',
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'Pricing new update',
+            'visibility': 'public',
+            'attendees': [{
+                'displayName': 'Mitchell Admin',
+                'email': self.public_partner.email,
+                'responseStatus': 'needsAction'
+            }],
+            'start': {
+                'dateTime': pytz.utc.localize(start).isoformat(),
+                'timeZone': 'Europe/Brussels'
+            },
+            'reminders': {'overrides': [{"method": "email", "minutes": 30}], 'useDefault': False},
+            'end': {
+                'dateTime': pytz.utc.localize(end).isoformat(),
+                'timeZone': 'Europe/Brussels'
+            },
+        }
+        self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
+        events_by_alarm = self.env['calendar.alarm_manager']._get_events_by_alarm_to_notify('email')
+        self.assertFalse(events_by_alarm, "Events with google_id should not trigger reminders")
 
     @patch_api
     def test_attendee_state(self):

@@ -176,8 +176,8 @@ def test_uninstall(args):
 
 def test_standalone(args):
     """ Tries to launch standalone scripts tagged with @post_testing """
+    odoo.service.db._check_faketime_mode(args.database)  # noqa: SLF001
     # load the registry once for script discovery
-    threading.current_thread().dbname = args.database
     registry = odoo.registry(args.database)
     for module_name in registry._init_modules:
         # import tests for loaded modules
@@ -201,12 +201,13 @@ def test_standalone(args):
             except Exception:
                 _logger.error("Standalone script %s failed", func.__name__, exc_info=True)
 
-    _logger.info("%d standalone scripts executed in %.2fs" % (len(funcs), time.time() - start_time))
+    _logger.info("%d standalone scripts executed in %.2fs", len(funcs), time.time() - start_time)
 
 
 if __name__ == '__main__':
     args = parse_args()
 
+    config['db_name'] = threading.current_thread().dbname = args.database
     # handle paths option
     if args.addons_path:
         odoo.tools.config['addons_path'] = ','.join([args.addons_path, odoo.tools.config['addons_path']])
@@ -230,5 +231,5 @@ if __name__ == '__main__':
     try:
         args.func(args)
     except Exception:
-        _logger.error("%s tests failed", args.func.__name__[5:])
-        raise
+        _logger.exception("%s tests failed", args.func.__name__[5:])
+        exit(1)

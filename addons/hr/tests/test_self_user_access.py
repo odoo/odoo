@@ -87,7 +87,8 @@ class TestSelfAccessProfile(TestHrCommon):
             'user_id': james.id,
         })
         view = self.env.ref('hr.res_users_view_form_profile')
-        available_actions = james.get_views([(view.id, 'form')], {'toolbar': True})['views']['form']['toolbar']['action']
+        toolbar = james.get_views([(view.id, 'form')], {'toolbar': True})['views']['form']['toolbar']
+        available_actions = toolbar.get('action', [])
         change_password_action = self.env.ref("base.change_password_wizard_action")
 
         self.assertFalse(any(x['id'] == change_password_action.id for x in available_actions))
@@ -138,6 +139,14 @@ class TestSelfAccessRights(TestHrCommon):
     def testReadOtherEmployee(self):
         with self.assertRaises(AccessError):
             self.hubert_emp.with_user(self.richard).read(self.protected_fields_emp.keys())
+        # Check simple user can read all public fields of private employee
+        public_fields = [
+            field_name
+            for field_name in self.env['hr.employee.public']._fields
+            if field_name in self.env['hr.employee']._fields
+        ]
+        res = self.hubert_emp.with_user(self.richard).read(public_fields)
+        self.assertEqual(len(public_fields), len(res[0]))
 
     # Write hr.employee #
     def testWriteSelfEmployee(self):

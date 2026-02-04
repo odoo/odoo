@@ -117,6 +117,9 @@ class ModelPageController(Controller):
             step=self.pager_step,
             scope=5,
         )
+        # if we are after the last page, redirect to last page
+        if search_count <= self.pager_step * (page_number - 1) > 0:
+            return request.redirect(pager['page_last']['url'])
 
         records = Model.search(AND(domains), limit=self.pager_step, offset=self.pager_step * (page_number - 1), order=searches["order"])
 

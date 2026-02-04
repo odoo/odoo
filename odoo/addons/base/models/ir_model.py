@@ -341,6 +341,11 @@ class IrModel(models.Model):
         if crons:
             crons.unlink()
 
+        # delete related ir_model_data
+        model_data = self.env['ir.model.data'].search([('model', 'in', self.mapped('model'))])
+        if model_data:
+            model_data.unlink()
+
         self._drop_table()
         res = super(IrModel, self).unlink()
 
@@ -995,11 +1000,16 @@ class IrModelFields(models.Model):
                 if relation and not IrModel._get_id(relation):
                     raise UserError(_("Model %s does not exist!", vals['relation']))
 
-                if vals.get('ttype') == 'one2many' and not self.search_count([
-                    ('ttype', '=', 'many2one'),
-                    ('model', '=', vals['relation']),
-                    ('name', '=', vals['relation_field']),
-                ]):
+                if (
+                    vals.get('ttype') == 'one2many' and
+                    vals.get("store", True) and
+                    not vals.get("related") and
+                    not self.search_count([
+                        ('ttype', '=', 'many2one'),
+                        ('model', '=', vals['relation']),
+                        ('name', '=', vals['relation_field']),
+                    ])
+                ):
                     raise UserError(_("Many2one %s on model %s does not exist!", vals['relation_field'], vals['relation']))
 
         if any(model in self.pool for model in models):
@@ -2188,7 +2198,7 @@ class IrModelData(models.Model):
     @tools.ormcache('xmlid')
     def _xmlid_lookup(self, xmlid: str) -> tuple:
         """Low level xmlid lookup
-        Return (id, res_model, res_id) or raise ValueError if not found
+        Return (res_model, res_id) or raise ValueError if not found
         """
         module, name = xmlid.split('.', 1)
         query = "SELECT model, res_id FROM ir_model_data WHERE module=%s AND name=%s"
@@ -2407,7 +2417,7 @@ class IrModelData(models.Model):
                     else:
                         # the field is shared across registries; don't modify it
                         Field = type(field)
-                        field_ = Field(_base_fields=[field, Field(prefetch=False)])
+                        field_ = Field(_base_fields=(field, Field(prefetch=False)))
                         self.env[ir_field.model]._add_field(ir_field.name, field_)
                         field_.setup(model)
                         has_shared_field = True
@@ -2464,7 +2474,12 @@ class IrModelData(models.Model):
 
         # remove non-model records first, grouped by batches of the same model
         for model, items in itertools.groupby(unique(records_items), itemgetter(0)):
-            delete(self.env[model].browse(item[1] for item in items))
+            ids = [item[1] for item in items]
+            # we cannot guarantee that the ir.model.data points to an existing model
+            if model in self.env:
+                delete(self.env[model].browse(ids))
+            else:
+                _logger.info("Orphan ir.model.data records %s refer to unavailable model '%s'", ids, model)
 
         # Remove copied views. This must happen after removing all records from
         # the modules to remove, otherwise ondelete='restrict' may prevent the

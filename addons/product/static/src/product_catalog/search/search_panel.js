@@ -32,7 +32,7 @@ export class ProductCatalogSearchPanel extends SearchPanel {
                 let currentAttr = sections.get(name);
                 currentAttr.get('ids').push(id);
                 currentAttr.set('count', currentAttr.get('count') + count);
-            } else {
+            } else if (count > 0) {
                 let newAttr = new Map();
                 newAttr.set('ids', [id]);
                 newAttr.set('count', count);

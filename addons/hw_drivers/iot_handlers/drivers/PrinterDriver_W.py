@@ -6,6 +6,7 @@ import logging
 from base64 import b64decode
 import io
 import win32print
+import pywintypes
 import ghostscript
 
 from odoo.addons.hw_drivers.controllers.proxy import proxy_drivers
@@ -14,6 +15,7 @@ from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers
 from odoo.tools.mimetypes import guess_mimetype
+from odoo.addons.hw_drivers.iot_handlers.interfaces.PrinterInterface_W import win32print_lock
 
 _logger = logging.getLogger(__name__)
 
@@ -100,28 +102,58 @@ class PrinterDriver(Driver):
         event_manager.device_changed(self)
 
     def print_raw(self, data):
-        win32print.StartDocPrinter(self.printer_handle, 1, ('', None, "RAW"))
-        win32print.StartPagePrinter(self.printer_handle)
-        win32print.WritePrinter(self.printer_handle, data)
-        win32print.EndPagePrinter(self.printer_handle)
-        win32print.EndDocPrinter(self.printer_handle)
+        job_id = False
+        page_started = False
+        try:
+            with win32print_lock:
+                job_id = win32print.StartDocPrinter(self.printer_handle, 1, ('', None, "RAW"))
+                win32print.StartPagePrinter(self.printer_handle)
+                page_started = True
+                win32print.WritePrinter(self.printer_handle, data)
+                win32print.EndPagePrinter(self.printer_handle)
+                win32print.EndDocPrinter(self.printer_handle)
+        except pywintypes.error as error:
+            _logger.error("Error while printing raw data to printer %s: %s", self.device_name, error)
+            if job_id or page_started:
+                try:
+                    with win32print_lock:
+                        if page_started:
+                            win32print.EndPagePrinter(self.printer_handle)
+                        if job_id:
+                            win32print.EndDocPrinter(self.printer_handle)
+                except pywintypes.error as err:
+                    _logger.error("Error while finalizing print job to printer %s after failure: %s", self.device_name, err)
 
     def print_report(self, data):
-        helpers.write_file('document.pdf', data, 'wb')
-        file_name = helpers.path_file('document.pdf')
-        printer = self.device_name
+        with win32print_lock:
+            helpers.write_file('document.pdf', data, 'wb')
+            file_name = helpers.path_file('document.pdf')
+            printer = self.device_name
 
-        args = [
-            "-dPrinted", "-dBATCH", "-dNOPAUSE", "-dNOPROMPT", "-dNORANGEPAGESIZE",
-            "-q",
-            "-sDEVICE#mswinpr2",
-            f'-sOutputFile#%printer%{printer}',
-            f'{file_name}'
-        ]
+            args = [
+                "-dPrinted", "-dBATCH", "-dNOPAUSE", "-dNOPROMPT",
+                "-q",
+                "-sDEVICE#mswinpr2",
+                f'-sOutputFile#%printer%{printer}',
+                f'{file_name}'
+            ]
 
-        ghostscript.Ghostscript(*args)
+            _logger.debug("Printing report with ghostscript using %s", args)
+            stderr_buf = io.BytesIO()
+            stdout_buf = io.BytesIO()
+            stdout_log_level = logging.DEBUG
+            try:
+                ghostscript.Ghostscript(*args, stdout=stdout_buf, stderr=stderr_buf)
+            except Exception:
+                _logger.exception("Error while printing report, ghostscript args: %s, error buffer: %s", args, stderr_buf.getvalue())
+                stdout_log_level = logging.ERROR  # some stdout value might contains relevant error information
+                raise
+            finally:
+                _logger.log(stdout_log_level, "Ghostscript stdout: %s", stdout_buf.getvalue())
 
     def print_receipt(self, data):
+        _logger.debug("print_receipt called for printer %s", self.device_name)
+
         receipt = b64decode(data['receipt'])
         im = Image.open(io.BytesIO(receipt))
 
@@ -151,16 +183,22 @@ class PrinterDriver(Driver):
 
     def open_cashbox(self, data):
         """Sends a signal to the current printer to open the connected cashbox."""
+        _logger.debug("open_cashbox called for printer %s", self.device_name)
+        
         commands = RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
         for drawer in commands['drawers']:
             self.print_raw(drawer)
 
     def _action_default(self, data):
+        _logger.debug("_action_default called for printer %s", self.device_name)
+
         document = b64decode(data['document'])
         mimetype = guess_mimetype(document)
         if mimetype == 'application/pdf':
             self.print_report(document)
         else:
             self.print_raw(document)
+        _logger.debug("_action_default finished with mimetype %s for printer %s", mimetype, self.device_name)
+
 
 proxy_drivers['printer'] = PrinterDriver

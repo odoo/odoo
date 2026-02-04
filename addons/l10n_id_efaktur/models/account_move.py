@@ -26,15 +26,15 @@ class AccountMove(models.Model):
     l10n_id_attachment_id = fields.Many2one('ir.attachment', readonly=True, copy=False)
     l10n_id_csv_created = fields.Boolean('CSV Created', compute='_compute_csv_created', copy=False)
     l10n_id_kode_transaksi = fields.Selection([
-            ('01', '01 Kepada Pihak yang Bukan Pemungut PPN (Customer Biasa)'),
-            ('02', '02 Kepada Pemungut Bendaharawan (Dinas Kepemerintahan)'),
-            ('03', '03 Kepada Pemungut Selain Bendaharawan (BUMN)'),
-            ('04', '04 DPP Nilai Lain (PPN 1%)'),
-            ('05', '05 Besaran Tertentu'),
-            ('06', '06 Penyerahan Lainnya (Turis Asing)'),
-            ('07', '07 Penyerahan yang PPN-nya Tidak Dipungut (Kawasan Ekonomi Khusus/ Batam)'),
-            ('08', '08 Penyerahan yang PPN-nya Dibebaskan (Impor Barang Tertentu)'),
-            ('09', '09 Penyerahan Aktiva ( Pasal 16D UU PPN )'),
+            ('01', '01 To the Parties that is not VAT Collector (Regular Customers)'),
+            ('02', '02 To the Treasurer'),
+            ('03', '03 To other VAT Collectors other than the Treasurer'),
+            ('04', '04 Other Value of VAT Imposition Base'),
+            ('05', '05 Specified Amount (Article 9A Paragraph (1) VAT Law)'),
+            ('06', '06 to individuals holding foreign passports'),
+            ('07', '07 Deliveries that the VAT is not Collected'),
+            ('08', '08 Deliveries that the VAT is Exempted'),
+            ('09', '09 Deliveries of Assets (Article 16D of VAT Law)'),
         ], string='Kode Transaksi', help='Dua digit pertama nomor pajak',
         readonly=False, copy=False,
         compute="_compute_kode_transaksi", store=True)
@@ -67,17 +67,6 @@ class AccountMove(models.Model):
                 and move.country_code == 'ID'
                 and move.line_ids.tax_ids
             )
-
-    @api.constrains('l10n_id_kode_transaksi', 'line_ids', 'partner_id')
-    def _constraint_kode_ppn(self):
-        ppn_tag = self.env.ref('l10n_id.ppn_tag')
-        for move in self.filtered(lambda m: m.l10n_id_need_kode_transaksi and m.l10n_id_kode_transaksi != '08'):
-            if any(ppn_tag.id in line.tax_tag_ids.ids for line in move.line_ids if line.display_type == 'product') \
-                    and any(ppn_tag.id not in line.tax_tag_ids.ids for line in move.line_ids if line.display_type == 'product'):
-                raise UserError(_('Cannot mix VAT subject and Non-VAT subject items in the same invoice with this kode transaksi.'))
-        for move in self.filtered(lambda m: m.l10n_id_need_kode_transaksi and m.l10n_id_kode_transaksi == '08'):
-            if any(ppn_tag.id in line.tax_tag_ids.ids for line in move.line_ids if line.display_type == 'product'):
-                raise UserError('Kode transaksi 08 is only for non VAT subject items.')
 
     @api.constrains('l10n_id_tax_number')
     def _constrains_l10n_id_tax_number(self):

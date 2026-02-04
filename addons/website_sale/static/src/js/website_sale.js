@@ -1,10 +1,12 @@
 /** @odoo-module **/
 
+import { redirect } from '@web/core/utils/urls';
 import publicWidget from "@web/legacy/js/public/public_widget";
 import VariantMixin from "@website_sale/js/variant_mixin";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 const cartHandlerMixin = wSaleUtils.cartHandlerMixin;
 import "@website/libs/zoomodoo/zoomodoo";
+import { browser } from "@web/core/browser/browser";
 import {extraMenuUpdateCallbacks} from "@website/js/content/menu";
 import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
 import { jsonrpc } from "@web/core/network/rpc_service";
@@ -236,7 +238,9 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
                 return;
             }
             if (!data.cart_quantity) {
-                return window.location = '/shop/cart';
+                // Ensures last cart removal is recorded
+                browser.sessionStorage.setItem('website_sale_cart_quantity', 0);
+                return redirect('/shop/cart');
             }
             $input.val(data.quantity);
             $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).text(data.quantity);
@@ -632,7 +636,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
                 oldurl += '&noFuzzy=true';
             }
             var search = $this.find('input.search-query');
-            window.location = oldurl + '&' + search.attr('name') + '=' + encodeURIComponent(search.val());
+            redirect(oldurl + '&' + search.attr('name') + '=' + encodeURIComponent(search.val()));
         }
     },
     /**
@@ -814,6 +818,19 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
         'click .js_change_shipping': '_onClickChangeShipping',
         'click .js_edit_address': '_onClickEditAddress',
         'click .js_delete_product': '_onClickDeleteProduct',
+    },
+
+    /**
+     * @override
+     */
+    async start() {
+        document.querySelector('.o_cta_navigation_placeholder')?.classList.remove('d-none')
+        const ctaContainer = document.querySelector('.o_cta_navigation_container');
+        if (ctaContainer) {
+            const placeholder = document.querySelector('.o_cta_navigation_placeholder');
+            placeholder.style.height = `${ctaContainer.offsetHeight}px`;
+            ctaContainer.style.top = `calc(100% - ${ctaContainer.offsetHeight}px)`;
+        }
     },
 
     //--------------------------------------------------------------------------

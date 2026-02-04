@@ -7,7 +7,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { loadJS } from "@web/core/assets";
 import { uniqueId } from "@web/core/utils/functions";
-import { escape } from "@web/core/utils/strings";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import Class from "@web/legacy/js/core/class";
 import dom from "@web/legacy/js/core/dom";
@@ -23,6 +22,7 @@ import {
     switchTextHighlight,
 } from "@website/js/text_processing";
 import { touching } from "@web/core/utils/ui";
+import { generateVideoIframe } from "@website/js/content/generate_video_iframe";
 
 // Initialize fallbacks for the use of requestAnimationFrame,
 // cancelAnimationFrame and performance.now()
@@ -757,6 +757,7 @@ const MobileYoutubeAutoplayMixin = {
 
 registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
     selector: '.media_iframe_video',
+    disabledInEditableMode: false,
 
     /**
      * @override
@@ -768,13 +769,16 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
         const proms = [this._super.apply(this, arguments)];
         let iframeEl = this.el.querySelector(':scope > iframe');
 
-        // The following code is only there to ensure compatibility with
-        // videos added before bug fixes or new Odoo versions where the
-        // <iframe/> element is properly saved.
+        // Generate the video `<iframe/>` element. In some cases (e.g., when
+        // adding a new video block), we don’t need to rebuild the same
+        // iframe when this `publicWidget` starts.
         if (!iframeEl) {
-            iframeEl = this._generateIframe();
+            iframeEl = generateVideoIframe(this.$target[0]);
         }
 
+        if (iframeEl && !iframeEl.getAttribute("aria-label")) {
+            iframeEl.setAttribute("aria-label", _t("Media video"));
+        }
         // We don't want to cause an error that would prevent entering edit mode
         // if there is an iframe that doesn't have a src (this was possible for
         // a while with the media dialog).
@@ -789,50 +793,15 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
             this._triggerAutoplay(iframeEl);
         });
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
     /**
-     * @private
+     * @override
      */
-    _generateIframe: function () {
-        // Bug fix / compatibility: empty the <div/> element as all information
-        // to rebuild the iframe should have been saved on the <div/> element
-        this.$el.empty();
-
-        // Add extra content for size / edition
-        this.$el.append(
-            '<div class="css_editable_mode_display">&nbsp;</div>' +
-            '<div class="media_iframe_video_size">&nbsp;</div>'
-        );
-
-        // Rebuild the iframe. Depending on version / compatibility / instance,
-        // the src is saved in the 'data-src' attribute or the
-        // 'data-oe-expression' one (the latter is used as a workaround in 10.0
-        // system but should obviously be reviewed in master).
-        var src = escape(this.$el.data('oe-expression') || this.$el.data('src'));
-        // Validate the src to only accept supported domains we can trust
-        var m = src.match(/^(?:https?:)?\/\/([^/?#]+)/);
-        if (!m) {
-            // Unsupported protocol or wrong URL format, don't inject iframe
-            return;
+    destroy() {
+        if (this.editableMode) {
+            // Destroy video iframes so they are never saved in the DOM.
+            this.el.replaceChildren();
         }
-        var domain = m[1].replace(/^www\./, '');
-        var supportedDomains = ['youtu.be', 'youtube.com', 'youtube-nocookie.com', 'instagram.com', 'vine.co', 'player.vimeo.com', 'vimeo.com', 'dailymotion.com', 'player.youku.com', 'youku.com'];
-        if (!supportedDomains.includes(domain)) {
-            // Unsupported domain, don't inject iframe
-            return;
-        }
-        const iframeEl = $('<iframe/>', {
-            src: src,
-            frameborder: '0',
-            allowfullscreen: 'allowfullscreen',
-            "aria-label": _t("Media video"),
-        })[0];
-        this.$el.append(iframeEl);
-        return iframeEl;
+        this._super(...arguments);
     },
 });
 
@@ -879,6 +848,12 @@ registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin
                 videoContainerEl.classList.remove('d-none');
             });
         }
+        this.__adjustIframe = debounce(() => this._adjustIframe(), 100);
+        const resizeObserver = new ResizeObserver(this.__adjustIframe.bind(this));
+        // A change in an element padding does not trigger the resizeObserver so
+        // both inner and outer element are observed for any resizing.
+        resizeObserver.observe(this.$target[0].parentElement);
+        resizeObserver.observe(this.$target[0]);
         return Promise.all(proms).then(() => this._appendBgVideo());
     },
     /**
@@ -1102,7 +1077,8 @@ registry.anchorSlide = publicWidget.Widget.extend({
         hash = '#' + $.escapeSelector(hash.substring(1));
         var $anchor = $(hash);
         const scrollValue = $anchor.attr('data-anchor');
-        if (!$anchor.length || !scrollValue) {
+        // No need to scroll when target is _blank as it should open in new tab
+        if (!$anchor.length || !scrollValue || this.el.target === "_blank") {
             return;
         }
 
@@ -1331,7 +1307,7 @@ registry.BottomFixedElement = publicWidget.Widget.extend({
     async start() {
         this.$scrollingElement = $().getScrollingElement();
         this.$scrollingTarget = $().getScrollingTarget(this.$scrollingElement);
-        this.__hideBottomFixedElements = debounce(() => this._hideBottomFixedElements(), 100);
+        this.__hideBottomFixedElements = debounce(() => this._hideBottomFixedElements(), 100, { leading: true, trailing: true });
         this.$scrollingTarget.on('scroll.bottom_fixed_element', this.__hideBottomFixedElements);
         $(window).on('resize.bottom_fixed_element', this.__hideBottomFixedElements);
         return this._super(...arguments);
@@ -1395,7 +1371,7 @@ registry.BottomFixedElement = publicWidget.Widget.extend({
                     x: elRect.x,
                     y: elRect.y,
                 });
-                if (hiddenButtonEl) {
+                if (hiddenButtonEl.length) {
                     if (el.classList.contains('o_bottom_fixed_element_move_up')) {
                         el.style.marginBottom = window.innerHeight - hiddenButtonEl.getBoundingClientRect().top + 5 + 'px';
                     } else {

@@ -34,6 +34,10 @@
                                 <option value="1" t-att-selected="interval === '1'">1</option>
                             </select>
                         </div>
+                        <div class="input-group input-group-sm mt-2">
+                            <div class="input-group-text">Entry Count</div>
+                            <input type="number" class="form-control" t-on-click.stop.prevent="" t-on-change="(ev) => this.changeParam('entry_count_limit', ev)" t-att-value="profiling.state.params.entry_count_limit || '0'" placeholder="None"/>
+                        </div>
                         <span t-if="profiling.isCollectorEnabled('sql') || profiling.isCollectorEnabled('traces_async')" class="o_profiling_switch form-check form-switch mt-2" t-on-click.stop.prevent="(ev) => this.toggleParam('execution_context_qweb', ev)">
                             <input type="checkbox" class="form-check-input" id="profile_execution_context_qweb"
                                 t-att-checked="!!profiling.state.params.execution_context_qweb"/>

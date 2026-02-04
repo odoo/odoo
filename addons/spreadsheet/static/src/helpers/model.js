@@ -1,11 +1,12 @@
 /** @odoo-module */
 import { DataSources } from "@spreadsheet/data_sources/data_sources";
-import { Model, parse, helpers, iterateAstNodes } from "@odoo/o-spreadsheet";
+import { Model, parse, helpers, iterateAstNodes, constants } from "@odoo/o-spreadsheet";
 import { migrate } from "@spreadsheet/o_spreadsheet/migration";
 import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
 
-const { formatValue, isDefined, toCartesian, toXC } = helpers;
+const { formatValue, isDefined, toCartesian, toXC, isNumber, isDateTime } = helpers;
+const { DEFAULT_LOCALE } = constants;
 import {
     isMarkdownViewUrl,
     isMarkdownIrMenuIdUrl,
@@ -70,7 +71,7 @@ export async function freezeOdooData(model) {
             const position = { sheetId, col, row };
             const evaluatedCell = model.getters.getEvaluatedCell(position);
             if (containsOdooFunction(cell.content)) {
-                cell.content = evaluatedCell.value.toString();
+                cell.content = toFrozenContent(evaluatedCell);
                 if (evaluatedCell.format) {
                     cell.format = getItemId(evaluatedCell.format, data.formats);
                 }
@@ -81,7 +82,7 @@ export async function freezeOdooData(model) {
                         const evaluatedCell = model.getters.getEvaluatedCell(spreadPosition);
                         sheet.cells[xc] = {
                             ...sheet.cells[xc],
-                            content: evaluatedCell.value.toString(),
+                            content: toFrozenContent(evaluatedCell),
                         };
                         if (evaluatedCell.format) {
                             sheet.cells[xc].format = getItemId(evaluatedCell.format, data.formats);
@@ -107,6 +108,19 @@ export async function freezeOdooData(model) {
     }
     exportGlobalFiltersToSheet(model, data);
     return data;
+}
+
+function toFrozenContent(evaluatedCell) {
+    const value = evaluatedCell.value;
+    if (
+        evaluatedCell.type === "text" &&
+        (isNumber(value, DEFAULT_LOCALE) || isDateTime(value, DEFAULT_LOCALE))
+    ) {
+        return `="${value}"`;
+    } else if (value === "") {
+        return '=""';
+    }
+    return value.toString();
 }
 
 function exportGlobalFiltersToSheet(model, data) {

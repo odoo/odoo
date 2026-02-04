@@ -374,8 +374,10 @@ export class ExportDataDialog extends Component {
     }
 
     lookup(value) {
+        // Reverse the pattern to match the reversed field.string
+        const reversedPattern = value.split("/").reverse().join("/");
         let lookupResult = fuzzyLookup(
-            value,
+            reversedPattern,
             Object.values(this.knownFields),
             // because fuzzyLookup gives an higher score if the string starts with the pattern,
             // reversing the string makes the search more reliable in this context

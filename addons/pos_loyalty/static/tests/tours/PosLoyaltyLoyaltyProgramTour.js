@@ -302,3 +302,106 @@ registry.category("web_tour.tours").add("PosCheapestProductTaxInclude", {
             PosLoyalty.orderTotalIs("6.00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_not_create_loyalty_card_expired_program", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Test Partner"),
+            ProductScreen.addOrderline("Desk Organizer", "3"),
+            PosLoyalty.finalizeOrder("Cash", "15.3"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosOrderClaimReward", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Test Partner"),
+            ProductScreen.addOrderline("Desk Organizer", "3"),
+            PosLoyalty.isPointsDisplayed(true),
+            PosLoyalty.claimReward("Free Product - Whiteboard Pen"),
+            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1.00"),
+            PosLoyalty.finalizeOrder("Cash", "15.3"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosOrderNoPoints", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Test Partner 2"),
+            ProductScreen.addOrderline("Desk Organizer", "3"),
+            PosLoyalty.isPointsDisplayed(false),
+            PosLoyalty.finalizeOrder("Cash", "15.3"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_combo_product_dont_grant_point", {
+    test: true,
+    url: "/pos/web",
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.isPopupShown(),
+            combo.select("Combo Product 1"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            combo.confirm(),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.isPopupShown(),
+            combo.select("Combo Product 1"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            combo.confirm(),
+            Order.hasLine({ productName: "100% on the cheapest product" }),
+            ProductScreen.totalAmountIs("50.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_buy_x_get_y_reward_qty", {
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.addOrderline("Whiteboard Pen", "10"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1.00"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-6.40", "2.00"),
+            PosLoyalty.finalizeOrder("Cash", "32"),
+            ProductScreen.addOrderline("Whiteboard Pen", "10"),
+            PosLoyalty.claimReward("Free Product - Whiteboard Pen"),
+            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-9.60", "3.00"),
+            PosLoyalty.finalizeOrder("Cash", "32"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_max_usage_partner_with_point", {
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Test Partner 2"),
+            ProductScreen.addOrderline("Desk Organizer", "3"),
+            PosLoyalty.clickRewardButton(),
+            PosLoyalty.claimReward("100% on your order"),
+            PosLoyalty.finalizeOrder("Cash", "0"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Test Partner"),
+            ProductScreen.addOrderline("Desk Organizer", "3"),
+            PosLoyalty.isRewardButtonHighlighted(false),
+        ].flat(),
+});

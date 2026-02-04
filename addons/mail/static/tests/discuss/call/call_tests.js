@@ -250,3 +250,56 @@ QUnit.test("join/leave sounds are only played on main tab", async () => {
     await contains(".o-discuss-Call", { target: tab2.target, count: 0 });
     await assertSteps(["tab1 - play - channel-leave"]);
 });
+
+QUnit.test("should also invite to the call when inviting to the channel", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "TestChanel",
+        channel_member_ids: [Command.create({ partner_id: pyEnv.currentPartnerId })],
+        channel_type: "channel",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await click("[title='Start a Call']");
+    await contains(".o-discuss-Call");
+    await click(".o-mail-Discuss-header button[title='Add Users']");
+    await contains(".o-discuss-ChannelInvitation");
+    await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner" });
+    await click("[title='Invite to Channel']:enabled");
+    await contains(".o-discuss-CallParticipantCard.o-isInvitation");
+});
+
+QUnit.test("should not show context menu on participant card when not in a call", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+    });
+    pyEnv["discuss.channel.rtc.session"].create([
+        {
+            channel_member_id: pyEnv["discuss.channel.member"].create({
+                channel_id: channelId,
+                partner_id: pyEnv["res.partner"].create({ name: "Awesome Partner" }),
+            }),
+            channel_id: channelId,
+        },
+    ]);
+    const { openDiscuss } = await start();
+    openDiscuss(channelId);
+    await contains(".o-discuss-CallParticipantCard[title='Awesome Partner']");
+    await contains(
+        ".o-discuss-CallParticipantCard[title='Awesome Partner'] .o-discuss-CallParticipantCard-contextMenuAnchor",
+        { count: 0 }
+    );
+    await click("[title='Join Call']");
+    await contains(
+        ".o-discuss-CallParticipantCard[title='Awesome Partner'] .o-discuss-CallParticipantCard-contextMenuAnchor"
+    );
+    await triggerEvents(".o-discuss-CallParticipantCard[title='Awesome Partner']", ["contextmenu"]);
+    await contains(".o-discuss-CallContextMenu");
+});

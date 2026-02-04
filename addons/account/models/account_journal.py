@@ -220,9 +220,14 @@ class AccountJournal(models.Model):
     )
     accounting_date = fields.Date(compute='_compute_accounting_date')
 
+    display_alias_fields = fields.Boolean(compute='_compute_display_alias_fields')
+
     _sql_constraints = [
         ('code_company_uniq', 'unique (company_id, code)', 'Journal codes must be unique per company.'),
     ]
+
+    def _compute_display_alias_fields(self):
+        self.display_alias_fields = self.env['mail.alias.domain'].search_count([], limit=1)
 
     @api.depends('type', 'company_id')
     def _compute_code(self):
@@ -708,7 +713,7 @@ class AccountJournal(models.Model):
 
         domain = [('alias_name', '=', alias_name)]
         if alias_domain_name:
-            domain.append(('alias_domain', '=', alias_domain_name))
+            domain.extend(['|', ('alias_domain', '=', alias_domain_name), ('alias_domain_id', '=', False)])
 
         existing_alias = self.env['mail.alias'].search_count(domain, limit=1)
 
@@ -858,11 +863,6 @@ class AccountJournal(models.Model):
             if journal.currency_id and journal.currency_id != journal.company_id.currency_id:
                 name = f"{name} ({journal.currency_id.name})"
             journal.display_name = name
-
-    def action_archive(self):
-        if self.env['account.payment.method.line'].search_count([('journal_id', 'in', self.ids)], limit=1):
-            raise ValidationError(_("This journal is associated with a payment method. You cannot archive it"))
-        return super().action_archive()
 
     def action_configure_bank_journal(self):
         """ This function is called by the "configure" button of bank journals,

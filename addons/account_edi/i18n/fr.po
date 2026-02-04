@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_edi
-# 
+# * account_edi
+#
 # Translators:
 # Wil Odoo, 2024
 # Manon Rondou, 2024
-# 
+#
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
-"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
+"PO-Revision-Date: 2025-10-15 01:41+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-17/"
+"account_edi/fr/>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: account_edi
 #. odoo-python
@@ -66,8 +70,8 @@ msgid ""
 "Are you sure you want to cancel this invoice without waiting for the EDI "
 "document to be canceled?"
 msgstr ""
-"Êtes-vous sûr de vouloir annuler cette facture sans attendre l'annulation du"
-" document EDI ?"
+"Êtes-vous sûr de vouloir annuler cette facture sans attendre l'annulation du "
+"document EDI ?"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_attachment
@@ -83,15 +87,22 @@ msgstr "Niveau de blocage"
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__blocking_level
 msgid ""
-"Blocks the current operation of the document depending on the error severity:\n"
-"  * Info: the document is not blocked and everything is working as it should.\n"
-"  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
-"  * Error: there is an error that blocks the current Electronic Invoicing operation."
+"Blocks the current operation of the document depending on the error "
+"severity:\n"
+"  * Info: the document is not blocked and everything is working as it "
+"should.\n"
+"  * Warning: there is an error that doesn't prevent the current Electronic "
+"Invoicing operation to succeed.\n"
+"  * Error: there is an error that blocks the current Electronic Invoicing "
+"operation."
 msgstr ""
-"Bloque l'opération en cours du document en fonction de la gravité de l'erreur :\n"
+"Bloque l'opération en cours du document en fonction de la gravité de "
+"l'erreur :\n"
 "* Info : le document n'est pas bloqué et tout fonctionne comme il se doit.\n"
-"* Attention : il y a une erreur qui n'empêche pas l'opération de facturation électronique en cours de réussir.\n"
-"* Erreur : il y a une erreur qui bloque l'opération de facturation électronique en cours."
+"* Attention : il y a une erreur qui n'empêche pas l'opération de facturation "
+"électronique en cours de réussir.\n"
+"* Erreur : il y a une erreur qui bloque l'opération de facturation "
+"électronique en cours."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -315,7 +326,7 @@ msgstr "Journal"
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_move
 msgid "Journal Entry"
-msgstr "Pièce comptable"
+msgstr "Écriture comptable"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__write_uid
@@ -420,8 +431,7 @@ msgstr "La facture sera bientôt envoyée à"
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error
 msgid ""
-"The text of the last error that happened during Electronic Invoice "
-"operation."
+"The text of the last error that happened during Electronic Invoice operation."
 msgstr ""
 "Le test de la dernière erreur qui s'est produite lors de l'opération de "
 "facturation électronique."
@@ -443,8 +453,8 @@ msgstr "Ce document est déjà envoyé via un autre processus. "
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid ""
-"This invoice was canceled while the EDIs %s still had a pending cancellation"
-" request."
+"This invoice was canceled while the EDIs %s still had a pending cancellation "
+"request."
 msgstr ""
 "Cette facture a été annulée alors que les EDI %s avaient encore une demande "
 "d'annulation en cours."
@@ -472,11 +482,11 @@ msgstr "Avertissement"
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid ""
-"You can't edit the following journal entry %s because an electronic document"
-" has already been sent. Please use the 'Request EDI Cancellation' button "
+"You can't edit the following journal entry %s because an electronic document "
+"has already been sent. Please use the 'Request EDI Cancellation' button "
 "instead."
 msgstr ""
-"Vous ne pouvez pas modifier la pièce comptable suivante %s car un document "
+"Vous ne pouvez pas modifier l'écriture comptable suivante %s car un document "
 "électronique a déjà été envoyé. Veuillez plutôt utiliser le bouton 'Demande "
 "d'annulation EDI'."
 
@@ -487,8 +497,8 @@ msgstr ""
 msgid ""
 "You can't unlink an attachment being an EDI document sent to the government."
 msgstr ""
-"Vous ne pouvez pas délier une pièce jointe qui est un document EDI envoyé au"
-" gouvernement."
+"Vous ne pouvez pas délier une pièce jointe qui est un document EDI envoyé au "
+"gouvernement."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit

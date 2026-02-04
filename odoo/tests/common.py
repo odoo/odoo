@@ -17,6 +17,7 @@ import os
 import pathlib
 import platform
 import pprint
+import psutil
 import re
 import shutil
 import signal
@@ -37,7 +38,7 @@ from contextlib import contextmanager, ExitStack
 from datetime import datetime
 from functools import lru_cache
 from itertools import zip_longest as izip_longest
-from unittest.mock import patch, _patch
+from unittest.mock import patch, _patch, Mock
 from xmlrpc import client as xmlrpclib
 
 import requests
@@ -50,9 +51,11 @@ import odoo
 from odoo import api
 from odoo.models import BaseModel
 from odoo.exceptions import AccessError
+from odoo.http import BadRequest
+from odoo.modules import module
 from odoo.modules.registry import Registry
 from odoo.service import security
-from odoo.sql_db import BaseCursor, Cursor
+from odoo.sql_db import BaseCursor, Cursor, TestCursor
 from odoo.tools import float_compare, single_email_re, profiler, lower_logging, SQL
 from odoo.tools.misc import find_in_path, mute_logger
 
@@ -104,6 +107,7 @@ ADMIN_USER_ID = odoo.SUPERUSER_ID
 CHECK_BROWSER_SLEEP = 0.1 # seconds
 CHECK_BROWSER_ITERATIONS = 100
 BROWSER_WAIT = CHECK_BROWSER_SLEEP * CHECK_BROWSER_ITERATIONS # seconds
+TEST_CURSOR_COOKIE_NAME = 'test_request_key'
 
 def get_db_name():
     db = odoo.tools.config['db_name']
@@ -263,12 +267,19 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
         super().__init__(methodName)
         self.addTypeEqualityFunc(etree._Element, self.assertTreesEqual)
         self.addTypeEqualityFunc(html.HtmlElement, self.assertTreesEqual)
+        if methodName != 'runTest':
+            self.test_tags = self.test_tags | set(self.get_method_additional_tags(getattr(self, methodName)))
+
 
     @classmethod
     def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
         # allow localhost requests
         # TODO: also check port?
         url = werkzeug.urls.url_parse(r.url)
+        timeout = kw.get('timeout')
+        if timeout and timeout < 10:
+            _logger.getChild('requests').info('request %s with timeout %s increased to 10s during tests', url, timeout)
+            kw['timeout'] = 10
         if url.host in (HOST, 'localhost'):
             return _super_send(s, r, **kw)
         if url.scheme == 'file':
@@ -304,6 +315,15 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
 
     @classmethod
     def setUpClass(cls):
+        def check_remaining_processes():
+            current_process = psutil.Process()
+            children = current_process.children(recursive=False)
+            for child in children:
+                _logger.warning('A child process was found, terminating it: %s', child)
+                child.terminate()
+            psutil.wait_procs(children, timeout=10)  # mainly to avoid a zombie process that would be logged again at the end.
+        cls.addClassCleanup(check_remaining_processes)
+
         def check_remaining_patchers():
             for patcher in _patch._active_patches:
                 _logger.warning("A patcher (targeting %s.%s) was remaining active at the end of %s, disabling it...", patcher.target, patcher.attribute, cls.__name__)
@@ -710,6 +730,67 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
             profile_session=self.profile_session,
             **kwargs)
 
+    def setUp(self):
+        super().setUp()
+        self.http_request_key = self.canonical_tag
+        self.http_request_strict_check = False  # by default, don't be to strict
+
+        def reset_http_key():
+            self.http_request_key = None
+            self.http_request_strict_check = True
+        self.addCleanup(reset_http_key)  # this should avoid to have a request executing during teardown
+
+    def mandatory_request_route(self, route):
+        return route == "/websocket"
+
+    def check_test_cursor(self, operation):
+        if odoo.modules.module.current_test != self:
+            message = f"Trying to open a test cursor for {self.canonical_tag} while already in a test {odoo.modules.module.current_test.canonical_tag}"
+            _logger.runbot(message)
+            raise BadRequest(message)
+        request = odoo.http.request
+        if not request or isinstance(request, Mock):
+            return
+        if not hasattr(self, 'http_request_key') or not self.http_request_key:
+            message = f'Using a test cursor without http_request_key, most likely between two tests on request {request.httprequest.path} in {module.current_test.canonical_tag}'
+            _logger.info(message)
+            raise BadRequest(message)
+        http_request_key = request.httprequest.cookies.get(TEST_CURSOR_COOKIE_NAME)
+        if not http_request_key:
+            if self.http_request_strict_check or self.mandatory_request_route(request.httprequest.path):
+                reason = 'for this path'
+                if self.http_request_strict_check:
+                    reason = 'after a browser_js call'
+                message = f'Using a test cursor without specified test on request {request.httprequest.path} in {module.current_test.canonical_tag} as been ignored since cookie is mandatory {reason}'
+                _logger.info(message)
+                raise BadRequest(message)
+            if operation == '__init__':  # main difference with master, don't fail if no cookie is defined_check
+                message = f'Opening a test cursor without specified test on request {request.httprequest.path} in {module.current_test.canonical_tag}'
+                _logger.info(message)
+            return
+        http_request_required_key = self.http_request_key
+        if http_request_key != http_request_required_key:
+            expected = http_request_required_key
+            _logger.runbot(
+                'Request with path %s has been ignored during test as it '
+                'it does not contain the test_cursor cookie or it is expired.'
+                ' (required "%s", got "%s")',
+                request.httprequest.path, expected, http_request_key
+            )
+            raise BadRequest(
+                'Request ignored during test as it does not contain the required cookie.'
+            )
+
+    def get_method_additional_tags(self, test_method):
+        """Guess if the test_methods is a query_count and adds an `is_query_count` tag on the test
+        """
+        additional_tags = []
+        if odoo.tools.config['test_tags'] and 'is_query_count' in odoo.tools.config['test_tags']:
+            method_source = inspect.getsource(test_method) if test_method else ''
+            if 'self.assertQueryCount' in method_source:
+                additional_tags.append('is_query_count')
+        return additional_tags
+
 
 savepoint_seq = itertools.count()
 
@@ -765,6 +846,14 @@ class TransactionCase(BaseCase):
 
         cls.cr = cls.registry.cursor()
         cls.addClassCleanup(cls.cr.close)
+
+        def check_cursor_stack():
+            for cursor in TestCursor._cursors_stack:
+                _logger.info('One curor was remaining in the TestCursor stack at the end of the test')
+                cursor._close = True
+            TestCursor._cursors_stack = []
+
+        cls.addClassCleanup(check_cursor_stack)
 
         cls.env = api.Environment(cls.cr, odoo.SUPERUSER_ID, {})
 
@@ -887,6 +976,17 @@ def save_test_file(test_name, content, prefix, extension='png', logger=_logger, 
     logger.runbot(f'{document_type} in: {full_path}')
 
 
+if os.name == 'posix' and platform.system() != 'Darwin':
+    # since the introduction of pointer compression in Chrome 80 (v8 v8.0),
+    # the memory reservation algorithm requires more than 8GiB of
+    # virtual mem for alignment this exceeds our default memory limits.
+    def _preexec():
+        import resource  # noqa: PLC0415
+        resource.setrlimit(resource.RLIMIT_AS, (resource.RLIM_INFINITY, resource.RLIM_INFINITY))
+else:
+    _preexec = None
+
+
 class ChromeBrowser:
     """ Helper object to control a Chrome headless process. """
     remote_debugging_port = 0  # 9222, change it in a non-git-tracked file
@@ -929,6 +1029,7 @@ class ChromeBrowser:
         # maps frame ids to callbacks
         self._frames = {}
         self._handlers = {
+            'Fetch.requestPaused': self._handle_request_paused,
             'Runtime.consoleAPICalled': self._handle_console,
             'Runtime.exceptionThrown': self._handle_exception,
             'Page.frameStoppedLoading': self._handle_frame_stopped_loading,
@@ -942,6 +1043,7 @@ class ChromeBrowser:
         self._receiver.start()
         self._logger.info('Enable chrome headless console log notification')
         self._websocket_send('Runtime.enable')
+        self._websocket_request('Fetch.enable')
         self._logger.info('Chrome headless enable page notifications')
         self._websocket_send('Page.enable')
         self._websocket_send('Page.setDownloadBehavior', params={
@@ -970,31 +1072,41 @@ class ChromeBrowser:
 
     def stop(self):
         if hasattr(self, 'ws'):
-            self._websocket_send('Page.stopScreencast')
-            if self.screencasts_dir:
-                screencasts_frames_dir = self.screencasts_frames_dir
-                self.screencasts_dir = None
-                if os.path.isdir(screencasts_frames_dir):
-                    shutil.rmtree(screencasts_frames_dir, ignore_errors=True)
+            try:
+                self._websocket_send('Page.stopScreencast')
+                if self.screencasts_dir:
+                    screencasts_frames_dir = self.screencasts_frames_dir
+                    self.screencasts_dir = None
+                    if os.path.isdir(screencasts_frames_dir):
+                        shutil.rmtree(screencasts_frames_dir, ignore_errors=True)
 
-            self._websocket_request('Page.stopLoading')
-            self._websocket_request('Runtime.evaluate', params={'expression': """
-            ('serviceWorker' in navigator) &&
-                navigator.serviceWorker.getRegistrations().then(
-                    registrations => Promise.all(registrations.map(r => r.unregister()))
-                )
-            """, 'awaitPromise': True})
-            # wait for the screenshot or whatever
-            wait(self._responses.values(), 10)
-            self._result.cancel()
+                self._websocket_request('Page.stopLoading')
+                self._websocket_request('Runtime.evaluate', params={'expression': """
+                ('serviceWorker' in navigator) &&
+                    navigator.serviceWorker.getRegistrations().then(
+                        registrations => Promise.all(registrations.map(r => r.unregister()))
+                    )
+                """, 'awaitPromise': True})
+                # wait for the screenshot or whatever
+                wait(self._responses.values(), 10)
+                self._result.cancel()
 
-            self._logger.info("Closing chrome headless with pid %s", self.chrome.pid)
-            self._websocket_send('Browser.close')
+                self._logger.info("Closing chrome headless with pid %s", self.chrome.pid)
+                self._websocket_request('Browser.close')
+            except ChromeBrowserException as e:
+                _logger.runbot("WS error during browser shutdown: %s", e)
+            except Exception:  # noqa: BLE001
+                _logger.warning("Error during browser shutdown", exc_info=True)
             self._logger.info("Closing websocket connection")
             self.ws.close()
         if self.chrome:
             self._logger.info("Terminating chrome headless with pid %s", self.chrome.pid)
             self.chrome.terminate()
+            try:
+                self.chrome.wait(15)
+            except subprocess.TimeoutExpired:
+                self._logger.warning("Killing chrome headless with pid %s: still alive", self.chrome.pid)
+                self.chrome.kill()
 
         if self.user_data_dir and os.path.isdir(self.user_data_dir) and self.user_data_dir != '/':
             self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
@@ -1006,30 +1118,37 @@ class ChromeBrowser:
 
     @property
     def executable(self):
-        return _find_executable()
-
-    def _chrome_without_limit(self, cmd):
-        if os.name == 'posix' and platform.system() != 'Darwin':
-            # since the introduction of pointer compression in Chrome 80 (v8 v8.0),
-            # the memory reservation algorithm requires more than 8GiB of
-            # virtual mem for alignment this exceeds our default memory limits.
-            def preexec():
-                import resource
-                resource.setrlimit(resource.RLIMIT_AS, (resource.RLIM_INFINITY, resource.RLIM_INFINITY))
-        else:
-            preexec = None
-
-        # pylint: disable=subprocess-popen-preexec-fn
-        return subprocess.Popen(cmd, stderr=subprocess.DEVNULL, preexec_fn=preexec)
+        try:
+            return _find_executable()
+        except Exception:
+            self._logger.warning('Chrome executable not found')
+            raise
 
     def _spawn_chrome(self, cmd):
-        proc = self._chrome_without_limit(cmd)
+        log_path = pathlib.Path(self.user_data_dir, 'err.log')
+        with log_path.open('wb') as log_file:
+            # pylint: disable=subprocess-popen-preexec-fn
+            proc = subprocess.Popen(cmd, stderr=log_file, preexec_fn=_preexec)  # noqa: PLW1509
+
         port_file = pathlib.Path(self.user_data_dir, 'DevToolsActivePort')
         for _ in range(CHECK_BROWSER_ITERATIONS):
             time.sleep(CHECK_BROWSER_SLEEP)
             if port_file.is_file() and port_file.stat().st_size > 5:
                 with port_file.open('r', encoding='utf-8') as f:
                     return proc, int(f.readline())
+
+        if proc.poll() is None:
+            proc.terminate()
+            try:
+                proc.wait(5)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                proc.wait()
+        self._logger.warning('Chrome headless failed to start:\n%s', log_path.read_text(encoding="utf-8"))
+        # since the chrome never started, it's not going to be `stop`-ed so we
+        # need to cleanup the directory here
+        shutil.rmtree(self.user_data_dir, ignore_errors=True)
+
         raise unittest.SkipTest(f'Failed to detect chrome devtools port after {BROWSER_WAIT :.1f}s.')
 
     def _chrome_start(
@@ -1053,6 +1172,8 @@ class ChromeBrowser:
             '--disable-translate': '',
             '--no-sandbox': '',
             '--disable-gpu': '',
+            '--enable-unsafe-swiftshader': '',
+            '--mute-audio': '',
         }
         switches = {
             # required for tours that use Youtube autoplay conditions (namely website_slides' "course_tour")
@@ -1189,7 +1310,16 @@ class ChromeBrowser:
                 self._logger.debug('\n<- %s', msg)
             except websocket.WebSocketTimeoutException:
                 continue
+            except websocket.WebSocketConnectionClosedException as e:
+                if not self._result.done():
+                    del self.ws
+                    self._result.set_exception(e)
+                    for f in self._responses.values():
+                        f.cancel()
+                return
             except Exception as e:
+                if isinstance(e, ConnectionResetError) and self._result.done():
+                    return
                 # if the socket is still connected something bad happened,
                 # otherwise the client was just shut down
                 if self.ws.connected:
@@ -1221,8 +1351,8 @@ class ChromeBrowser:
     def _websocket_request(self, method, *, params=None, timeout=10.0):
         assert threading.get_ident() != self._receiver.ident,\
             "_websocket_request must not be called from the consumer thread"
-        if self.ws is None:
-            return
+        if not hasattr(self, 'ws'):
+            return None
 
         f = self._websocket_send(method, params=params, with_future=True)
         try:
@@ -1235,8 +1365,8 @@ class ChromeBrowser:
 
         If ``with_future`` is set, returns a ``Future`` for the operation.
         """
-        if self.ws is None:
-            return
+        if not hasattr(self, 'ws'):
+            return None
 
         result = None
         request_id = next(self._request_id)
@@ -1248,6 +1378,22 @@ class ChromeBrowser:
         self._logger.debug('\n-> %s', payload)
         self.ws.send(json.dumps(payload))
         return result
+
+    def _handle_request_paused(self, **params):
+        url = params['request']['url']
+        if url.startswith(f'http://{HOST}'):
+            cmd = 'Fetch.continueRequest'
+            response = {}
+        else:
+            cmd = 'Fetch.fulfillRequest'
+            response = module.current_test.fetch_proxy(url)
+        try:
+            self._websocket_send(cmd, params={'requestId': params['requestId'], **response})
+        except websocket.WebSocketConnectionClosedException:
+            pass
+        except (BrokenPipeError, ConnectionResetError, OSError):
+            # this can happen if the browser is closed. Just ignore it.
+            _logger.info("Websocket error while handling request %s", params['request']['url'])
 
     def _handle_console(self, type, args=None, stackTrace=None, **kw): # pylint: disable=redefined-builtin
         # console formatting differs somewhat from Python's, if args[0] has
@@ -1271,6 +1417,8 @@ class ChromeBrowser:
 
         log_type = type
         _logger = self._logger.getChild('browser')
+        if self._result.done() and 'failed to fetch' in message.casefold():
+            log_type = 'dir'
         _logger.log(
             self._TO_LEVEL.get(log_type, logging.INFO),
             "%s%s",
@@ -1344,8 +1492,9 @@ which leads to stray network requests and inconsistencies."""
             message += '\n' + stack
 
         if self._result.done():
-            self._logger.getChild('browser').error(
-                "Exception received after termination: %s", message)
+            if 'failed to fetch' not in message.casefold():
+                self._logger.getChild('browser').error(
+                    "Exception received after termination: %s", message)
             return
 
         self.take_screenshot()
@@ -1388,6 +1537,7 @@ which leads to stray network requests and inconsistencies."""
         'info': logging.INFO,
         'warning': logging.WARNING,
         'error': logging.ERROR,
+        'dir': logging.RUNBOT,
         # TODO: what do with
         # dir, dirxml, table, trace, clear, startGroup, startGroupCollapsed,
         # endGroup, assert, profile, profileEnd, count, timeEnd
@@ -1408,7 +1558,8 @@ which leads to stray network requests and inconsistencies."""
 
         self._logger.info('Asking for screenshot')
         f = self._websocket_send('Page.captureScreenshot', with_future=True)
-        f.add_done_callback(handler)
+        if f:
+            f.add_done_callback(handler)
         return f
 
     def _save_screencast(self, prefix='failed'):
@@ -1448,7 +1599,7 @@ which leads to stray network requests and inconsistencies."""
                     concat_file.write("file '%s'\nduration %s\n" % (frame_file_path, duration))
                 concat_file.write("file '%s'" % frame_file_path)  # needed by the concat plugin
             try:
-                subprocess.run([ffmpeg_path, '-f', 'concat', '-safe', '0', '-i', concat_script_path, '-pix_fmt', 'yuv420p', '-g', '0', outfile], check=True)
+                subprocess.run([ffmpeg_path, '-f', 'concat', '-safe', '0', '-i', concat_script_path, '-vf', 'pad=ceil(iw/2)*2:ceil(ih/2)*2', '-pix_fmt', 'yuv420p', '-g', '0', outfile], check=True)
             except subprocess.CalledProcessError:
                 self._logger.error('Failed to encode screencast.')
                 return
@@ -1678,7 +1829,14 @@ class Transport(xmlrpclib.Transport):
     def request(self, *args, **kwargs):
         self.cr.flush()
         self.cr.clear()
-        return super().request(*args, **kwargs)
+        test = module.current_test
+        if test:
+            check = test.http_request_strict_check
+            test.http_request_strict_check = False
+        res = super().request(*args, **kwargs)
+        if test:
+            test.http_request_strict_check = check
+        return res
 
 
 class JsonRpcException(Exception):
@@ -1719,6 +1877,10 @@ class HttpCase(TransactionCase):
         self.xmlrpc_object = xmlrpclib.ServerProxy(self.xmlrpc_url + 'object', transport=Transport(self.cr))
         # setup an url opener helper
         self.opener = Opener(self.cr)
+        self.opener.cookies[TEST_CURSOR_COOKIE_NAME] = self.canonical_tag
+        # some test like test_webhook_send_and_receive may have a request that timeout, is not waited and causes errors in following tests.
+        # this shouldn't be possible in master thanks to the global lock but lets wait for remaining requests in all cases in stable.
+        self.addCleanup(self._wait_remaining_requests)
 
     def parse_http_location(self, location):
         """ Parse a Location http header typically found in 201/3xx
@@ -1823,23 +1985,65 @@ class HttpCase(TransactionCase):
         # completely) or clear-ing session.cookies.
         self.opener = Opener(self.cr)
         self.opener.cookies['session_id'] = session.sid
+        self.opener.cookies[TEST_CURSOR_COOKIE_NAME] = self.http_request_key
         if browser:
             self._logger.info('Setting session cookie in browser')
             browser.set_cookie('session_id', session.sid, '/', HOST)
+            browser.set_cookie(TEST_CURSOR_COOKIE_NAME, self.http_request_key, '/', HOST)
 
         return session
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, **kw):
-        """ Test js code running in the browser
-        - optionnally log as 'login'
-        - load page given by url_path
-        - wait for ready object to be available
-        - eval(code) inside the page
+    def fetch_proxy(self, url):
+        """
+            This method is called every time a request is made from the chrome browser outside the local network
+            Returns a response that will be sent to the browser to simulate the external request.
+        """
 
-        To signal success test do: console.log('test successful')
-        To signal test failure raise an exception or call console.error with a message.
-        Test will stop when a failure occurs if error_checker is not defined or returns True for this message
+        if 'https://fonts.googleapis.com/css' in url:
+            _logger.info('External chrome request during tests: Return empty file for %s', url)
+            return self.make_fetch_proxy_response('')  # return empty css file, we don't care
 
+        if 'autocomplete.clearbit.com' in url:
+            _logger.info('External chrome request during tests: Return empty suggestions for %s', url)
+            return self.make_fetch_proxy_response('[]')  # return empty css file, we don't care
+
+        _logger.info('External chrome request during tests: returning 404 for %s', url)
+        return {
+                'body': '',
+                'responseCode': 404,
+                'responseHeaders': [],
+            }
+
+    def make_fetch_proxy_response(self, content, code=200):
+        if isinstance(content, str):
+            content = content.encode()
+        return {
+                'body': base64.b64encode(content).decode(),
+                'responseCode': code,
+                'responseHeaders': [
+                    {'name': 'access-control-allow-origin', 'value': '*'},
+                    {'name': 'cache-control', 'value': 'public, max-age=10000'},
+                ],
+            }
+
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, cpu_throttling=None, **kw):
+        """ Test JavaScript code running in the browser.
+
+        To signal success test do: `console.log('test successful')`
+        To signal test failure raise an exception or call `console.error` with a message.
+        Test will stop when a failure occurs if `error_checker` is not defined or returns `True` for this message
+
+        :param string url_path: URL path to load the browser page on
+        :param string code: JavaScript code to be executed
+        :param string ready: JavaScript object to wait for before proceeding with the test
+        :param string login: logged in user which will execute the test. e.g. 'admin', 'demo'
+        :param int timeout: maximum time to wait for the test to complete (in seconds). Default is 60 seconds
+        :param dict cookies: dictionary of cookies to set before loading the page
+        :param error_checker: function to filter failures out. 
+            If provided, the function is called with the error log message, and if it returns `False` the log is ignored and the test continue
+            If not provided, every error log triggers a failure
+        :param bool watch: open a new browser window to watch the test execution
+        :param int cpu_throttling: CPU throttling rate as a slowdown factor (1 is no throttle, 2 is 2x slowdown, etc)
         """
         if not self.env.registry.loaded:
             self._logger.warning('HttpCase test should be in post_install only')
@@ -1853,7 +2057,9 @@ class HttpCase(TransactionCase):
 
         browser = ChromeBrowser(type(self), headless=not watch)
         try:
+            self.http_request_key = self.canonical_tag + '_browser_js'
             self.authenticate(login, login, browser=browser)
+            self.http_request_strict_check = True
             # Flush and clear the current transaction.  This is useful in case
             # we make requests to the server, as these requests are made with
             # test cursors, which uses different caches than this transaction.
@@ -1873,6 +2079,18 @@ class HttpCase(TransactionCase):
             if cookies:
                 for name, value in cookies.items():
                     browser.set_cookie(name, value, '/', HOST)
+
+            cpu_throttling_os = os.environ.get('ODOO_BROWSER_CPU_THROTTLING') # used by dedicated runbot builds
+            cpu_throttling = int(cpu_throttling_os) if cpu_throttling_os else cpu_throttling
+
+            if cpu_throttling:
+                assert 1 <= cpu_throttling <= 50  # arbitrary upper limit
+                timeout *= cpu_throttling  # extend the timeout as test will be slower to execute
+                _logger.log(
+                    logging.INFO if cpu_throttling_os else logging.WARNING,
+                    'CPU throttling mode is only suitable for local testing - ' \
+                    'Throttling browser CPU to %sx slowdown and extending timeout to %s sec', cpu_throttling, timeout)
+                browser._websocket_request('Emulation.setCPUThrottlingRate', params={'rate': cpu_throttling})
 
             browser.navigate_to(url, wait_stop=not bool(ready))
 
@@ -1895,6 +2113,8 @@ class HttpCase(TransactionCase):
         finally:
             browser.stop()
             self._wait_remaining_requests()
+            self.http_request_key = self.canonical_tag
+            self.opener.cookies[TEST_CURSOR_COOKIE_NAME] = self.http_request_key
 
     @classmethod
     def base_url(cls):
@@ -1922,6 +2142,17 @@ class HttpCase(TransactionCase):
         def route_profiler(request):
             return sup.profile(description=request.httprequest.full_path)
         return profiler.Nested(_profiler, patch('odoo.http.Request._get_profiler_context_manager', route_profiler))
+
+    def get_method_additional_tags(self, test_method):
+        """
+        guess if the test_methods is a tour and adds an `is_tour` tag on the test
+        """
+        additional_tags = super().get_method_additional_tags(test_method)
+        if odoo.tools.config['test_tags'] and 'is_tour' in odoo.tools.config['test_tags']:
+            method_source = inspect.getsource(test_method)
+            if 'self.start_tour' in method_source:
+                additional_tags.append('is_tour')
+        return additional_tags
 
     def make_jsonrpc_request(self, route, params=None, headers=None):
         """Make a JSON-RPC request to the server.
@@ -1997,11 +2228,10 @@ def warmup(func, *args, **kwargs):
     self.env.invalidate_all()
     # run once to warm up the caches
     self.warm = False
-    self.cr.execute('SAVEPOINT test_warmup')
-    func(*args, **kwargs)
-    self.env.flush_all()
+    with contextlib.closing(self.cr.savepoint(flush=False)):
+        func(*args, **kwargs)
+        self.env.flush_all()
     # run once for real
-    self.cr.execute('ROLLBACK TO SAVEPOINT test_warmup')
     self.env.invalidate_all()
     self.warm = True
     func(*args, **kwargs)

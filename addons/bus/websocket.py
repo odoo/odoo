@@ -2,7 +2,6 @@ import base64
 import bisect
 import functools
 import hashlib
-import json
 import logging
 import os
 import psycopg2
@@ -13,7 +12,7 @@ import selectors
 import threading
 import time
 from collections import defaultdict, deque
-from contextlib import closing, suppress
+from contextlib import contextmanager, suppress
 from enum import IntEnum
 from psycopg2.pool import PoolError
 from urllib.parse import urlparse
@@ -23,6 +22,7 @@ from werkzeug.local import LocalStack
 from werkzeug.exceptions import BadRequest, HTTPException, ServiceUnavailable
 
 import odoo
+from .tools import orjson
 from odoo import api
 from .models.bus import dispatch
 from odoo.http import root, Request, Response, SessionExpiredException, get_default_session
@@ -36,17 +36,29 @@ _logger = logging.getLogger(__name__)
 
 
 MAX_TRY_ON_POOL_ERROR = 10
-DELAY_ON_POOL_ERROR = 0.03
+DELAY_ON_POOL_ERROR = 0.15
+JITTER_ON_POOL_ERROR = 0.3
 
 
+@contextmanager
 def acquire_cursor(db):
     """ Try to acquire a cursor up to `MAX_TRY_ON_POOL_ERROR` """
-    for tryno in range(1, MAX_TRY_ON_POOL_ERROR + 1):
-        with suppress(PoolError):
-            return odoo.registry(db).cursor()
-        time.sleep(random.uniform(DELAY_ON_POOL_ERROR, DELAY_ON_POOL_ERROR * tryno))
-    raise PoolError('Failed to acquire cursor after %s retries' % MAX_TRY_ON_POOL_ERROR)
-
+    delay = DELAY_ON_POOL_ERROR
+    try:
+        for _ in range(MAX_TRY_ON_POOL_ERROR):
+            # Yield before trying to acquire the cursor to let other
+            # greenlets release their cursor.
+            time.sleep(0)
+            with suppress(PoolError), odoo.registry(db).cursor() as cr:
+                yield cr
+                return
+            time.sleep(delay + random.uniform(0, JITTER_ON_POOL_ERROR))
+            delay *= 1.5
+        raise PoolError('Failed to acquire cursor after %s retries' % MAX_TRY_ON_POOL_ERROR)
+    finally:
+        # Yield after releasing the cursor to let waiting greenlets
+        # immediately pick up the freed connection.
+        time.sleep(0)
 
 # ------------------------------------------------------
 # EXCEPTIONS
@@ -175,7 +187,6 @@ HEARTBEAT_OP = {Opcode.PING, Opcode.PONG}
 VALID_CLOSE_CODES = {
     code for code in CloseCode if code is not CloseCode.ABNORMAL_CLOSURE
 }
-CLEAN_CLOSE_CODES = {CloseCode.CLEAN, CloseCode.GOING_AWAY, CloseCode.RESTART}
 RESERVED_CLOSE_CODES = range(3000, 5000)
 
 _XOR_TABLE = [bytes(a ^ b for a in range(256)) for b in range(256)]
@@ -219,11 +230,6 @@ class Websocket:
     # Maximum size for a message in bytes, whether it is sent as one
     # frame or many fragmented ones.
     MESSAGE_MAX_SIZE = 2 ** 20
-    # Proxies usually close a connection after 1 minute of inactivity.
-    # Therefore, a PING frame have to be sent if no frame is either sent
-    # or received within CONNECTION_TIMEOUT - 15 seconds.
-    CONNECTION_TIMEOUT = 60
-    INACTIVITY_TIMEOUT = CONNECTION_TIMEOUT - 15
     # How much time (in second) the history of last dispatched notifications is
     # kept in memory for each websocket.
     # To avoid duplicate notifications, we fetch them based on their ids.
@@ -298,17 +304,19 @@ class Websocket:
         while self.state is not ConnectionState.CLOSED:
             try:
                 readables = {
-                    selector_key[0].fileobj for selector_key in
-                    self.__selector.select(self.INACTIVITY_TIMEOUT)
+                    selector_key[0].fileobj
+                    for selector_key in self.__selector.select(TimeoutManager.TIMEOUT)
                 }
-                if self._timeout_manager.has_timed_out() and self.state is ConnectionState.OPEN:
-                    self.disconnect(
-                        CloseCode.ABNORMAL_CLOSURE
-                        if self._timeout_manager.timeout_reason is TimeoutReason.NO_RESPONSE
-                        else CloseCode.KEEP_ALIVE_TIMEOUT
-                    )
+                if (
+                    self._timeout_manager.has_keep_alive_timed_out()
+                    and self.state is ConnectionState.OPEN
+                ):
+                    self.disconnect(CloseCode.KEEP_ALIVE_TIMEOUT)
                     continue
-                if not readables:
+                if self._timeout_manager.has_frame_response_timed_out():
+                    self._terminate()
+                    continue
+                if not readables and self._timeout_manager.should_send_ping_frame():
                     self._send_ping_frame()
                     continue
                 if self.__notif_sock_r in readables:
@@ -368,7 +376,9 @@ class Websocket:
         }
         if self.__notif_sock_r not in readables:
             # Send a random bit to mark the socket as readable.
-            self.__notif_sock_w.send(b'x')
+            # Ignore if the socket was closed in the meantime.
+            with suppress(OSError):
+                self.__notif_sock_w.send(b'x')
 
     # ------------------------------------------------------
     # PRIVATE METHODS
@@ -514,7 +524,7 @@ class Websocket:
         if isinstance(frame.payload, str):
             frame.payload = frame.payload.encode('utf-8')
         elif not isinstance(frame.payload, (bytes, bytearray)):
-            frame.payload = json.dumps(frame.payload).encode('utf-8')
+            frame.payload = orjson.dumps(frame.payload)
 
         output = bytearray()
         first_byte = (
@@ -544,8 +554,9 @@ class Websocket:
             return
         self.state = ConnectionState.CLOSING
         self._close_sent = True
-        if frame.code not in CLEAN_CLOSE_CODES or self._close_received:
-            return self._terminate()
+        if frame.code is CloseCode.ABNORMAL_CLOSURE or self._close_received:
+            self._terminate()
+            return
         # After sending a control frame indicating the connection
         # should be closed, a peer does not send any further data.
         self.__selector.unregister(self.__notif_sock_r)
@@ -564,6 +575,9 @@ class Websocket:
 
     def _terminate(self):
         """ Close the underlying TCP socket. """
+        if self.state == ConnectionState.CLOSED:
+            return
+        self.state = ConnectionState.CLOSED
         with suppress(OSError, TimeoutError):
             self.__socket.shutdown(socket.SHUT_WR)
             # Call recv until obtaining a return value of 0 indicating
@@ -576,7 +590,8 @@ class Websocket:
         self.__selector.unregister(self.__socket)
         self.__selector.close()
         self.__socket.close()
-        self.state = ConnectionState.CLOSED
+        self.__notif_sock_r.close()
+        self.__notif_sock_w.close()
         dispatch.unsubscribe(self)
         self._trigger_lifecycle_event(LifecycleEvent.CLOSE)
         with acquire_cursor(self._db) as cr:
@@ -628,7 +643,10 @@ class Websocket:
                 _logger.warning("Bus operation aborted; registry has been reloaded")
             else:
                 _logger.error(exc, exc_info=True)
-        self.disconnect(code, reason)
+        if self.state is ConnectionState.OPEN:
+            self.disconnect(code, reason)
+        else:
+            self._terminate()
 
     def _limit_rate(self):
         """
@@ -653,7 +671,7 @@ class Websocket:
         """
         if not self.__event_callbacks[event_type]:
             return
-        with closing(acquire_cursor(self._db)) as cr:
+        with acquire_cursor(self._db) as cr:
             env = api.Environment(cr, self._session.uid, self._session.context)
             for callback in self.__event_callbacks[event_type]:
                 try:
@@ -711,73 +729,70 @@ class Websocket:
         self._send(notifications)
 
 
-class TimeoutReason(IntEnum):
-    KEEP_ALIVE = 0
-    NO_RESPONSE = 1
-
-
 class TimeoutManager:
     """
-    This class handles the Websocket timeouts. If no response to a
-    PING/CLOSE frame is received after `TIMEOUT` seconds or if the
-    connection is opened for more than `self._keep_alive_timeout` seconds,
-    the connection is considered to have timed out. To determine if the
-    connection has timed out, use the `has_timed_out` method.
+    Track WebSocket activity to determine when a response has timed out,
+    when a ping should be sent, and when the connection has exceeded its
+    keep-alive duration.
     """
     TIMEOUT = 15
     # Timeout specifying how many seconds the connection should be kept
     # alive.
     KEEP_ALIVE_TIMEOUT = int(config['websocket_keep_alive_timeout'])
+    # Proxies and NATs usually close a connection after 1 minute of inactivity.
+    # Therefore, a PING frame should be sent if the connection has been idle for
+    # a while. Since the selector can block for up to `TIMEOUT` seconds, the
+    # worst case delay is 55 seconds (`INACTIVITY_TIMEOUT` + `TIMEOUT`), which
+    # is enough to keep the connection alive.
+    CONNECTION_TIMEOUT = 60
+    INACTIVITY_TIMEOUT = CONNECTION_TIMEOUT - 20
 
     def __init__(self):
         super().__init__()
-        self._awaited_opcode = None
-        # Time in which the connection was opened.
-        self._opened_at = time.time()
+        # Maps an awaited response opcode (i.e. PONG, CLOSE) to the
+        # time by which the response must be received.
+        self._expiration_time_by_opcode = {}
         # Custom keep alive timeout for each TimeoutManager to avoid multiple
         # connections timing out at the same time.
         self._keep_alive_timeout = (
             self.KEEP_ALIVE_TIMEOUT + random.uniform(0, self.KEEP_ALIVE_TIMEOUT / 2)
         )
-        self.timeout_reason = None
-        # Start time recorded when we started awaiting an answer to a
-        # PING/CLOSE frame.
-        self._waiting_start_time = None
+        self._keep_alive_expiration_time = time.time() + self._keep_alive_timeout
+        self._next_ping_time = time.time() + self.INACTIVITY_TIMEOUT
 
     def acknowledge_frame_receipt(self, frame):
-        if self._awaited_opcode is frame.opcode:
-            self._awaited_opcode = None
-            self._waiting_start_time = None
+        self._next_ping_time = time.time() + self.INACTIVITY_TIMEOUT
+        self._expiration_time_by_opcode.pop(frame.opcode, None)
 
     def acknowledge_frame_sent(self, frame):
         """
         Acknowledge a frame was sent. If this frame is a PING/CLOSE
         frame, start waiting for an answer.
         """
-        if self.has_timed_out():
-            return
-        if frame.opcode is Opcode.PING:
-            self._awaited_opcode = Opcode.PONG
-        elif frame.opcode is Opcode.CLOSE:
-            self._awaited_opcode = Opcode.CLOSE
-        if self._awaited_opcode is not None:
-            self._waiting_start_time = time.time()
+        now = time.time()
+        self._next_ping_time = now + self.INACTIVITY_TIMEOUT
+        if frame.opcode in (Opcode.PING, Opcode.CLOSE):
+            self._expiration_time_by_opcode[
+                Opcode.PONG if frame.opcode is Opcode.PING else Opcode.CLOSE
+            ] = now + self.TIMEOUT
 
-    def has_timed_out(self):
+    def has_keep_alive_timed_out(self):
+        return time.time() >= self._keep_alive_expiration_time
+
+    def has_frame_response_timed_out(self):
         """
-        Determine whether the connection has timed out or not. The
-        connection times out when the answer to a CLOSE/PING frame
-        is not received within `TIMEOUT` seconds or if the connection
-        is opened for more than `self._keep_alive_timeout` seconds.
+        Check if any pending PING or CLOSE frame has been waiting for an answer
+        for at least `TIMEOUT` seconds.
         """
         now = time.time()
-        if now - self._opened_at >= self._keep_alive_timeout:
-            self.timeout_reason = TimeoutReason.KEEP_ALIVE
-            return True
-        if self._awaited_opcode and now - self._waiting_start_time >= self.TIMEOUT:
-            self.timeout_reason = TimeoutReason.NO_RESPONSE
-            return True
-        return False
+        return any(now >= expiration for expiration in self._expiration_time_by_opcode.values())
+
+    def should_send_ping_frame(self):
+        return (
+            not self.has_frame_response_timed_out()
+            and not self.has_keep_alive_timed_out()
+            and time.time() >= self._next_ping_time
+        )
 
 
 # ------------------------------------------------------
@@ -804,7 +819,7 @@ class WebsocketRequest:
 
     def serve_websocket_message(self, message):
         try:
-            jsonrequest = json.loads(message)
+            jsonrequest = orjson.loads(message)
             event_name = jsonrequest['event_name']  # mandatory
         except KeyError as exc:
             raise InvalidWebsocketRequest(
@@ -826,7 +841,7 @@ class WebsocketRequest:
         ) as exc:
             raise InvalidDatabaseException() from exc
 
-        with closing(acquire_cursor(self.db)) as cr:
+        with acquire_cursor(self.db) as cr:
             self.env = api.Environment(cr, self.session.uid, self.session.context)
             threading.current_thread().uid = self.env.uid
             service_model.retrying(
@@ -880,7 +895,7 @@ class WebsocketConnectionHandler:
     # Latest version of the websocket worker. This version should be incremented
     # every time `websocket_worker.js` is modified to force the browser to fetch
     # the new worker bundle.
-    _VERSION = "17.0-1"
+    _VERSION = "17.0-3"
 
     @classmethod
     def websocket_allowed(cls, request):
@@ -1010,6 +1025,9 @@ class WebsocketConnectionHandler:
             # worker version.
             websocket.disconnect(CloseCode.CLEAN, "OUTDATED_VERSION")
         for message in websocket.get_messages():
+            if message == b'\x00':
+                # Ignore internal sentinel message used to detect dead/idle connections.
+                continue
             with WebsocketRequest(db, httprequest, websocket) as req:
                 try:
                     req.serve_websocket_message(message)

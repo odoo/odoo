@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { useAutofocus, useService, useBus } from "@web/core/utils/hooks";
 import { Component, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 
@@ -26,6 +26,9 @@ export class SaleOrderManagementControlPanel extends Component {
         this.pos = usePos();
         this.ui = useState(useService("ui"));
         this.saleOrderFetcher = useService("sale_order_fetcher");
+        this.state = useState({
+            paginationString: "",
+        });
         useAutofocus();
 
         const currentPartner = this.pos.get_order().get_partner();
@@ -33,11 +36,15 @@ export class SaleOrderManagementControlPanel extends Component {
             this.pos.orderManagement.searchString = `"${currentPartner.name}"`;
         }
         this.saleOrderFetcher.setSearchDomain(this._computeDomain());
+        useBus(this.saleOrderFetcher, "update", this.updatePagination);
     }
     onInputKeydown(event) {
         if (event.key === "Enter") {
             this.props.onSearch(this._computeDomain());
         }
+    }
+    updatePagination() {
+        this.state.paginationString = `(${this.saleOrderFetcher.currentPage}/${this.saleOrderFetcher.lastPage})`
     }
     get showPageControls() {
         return this.saleOrderFetcher.lastPage > 1;

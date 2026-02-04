@@ -61,6 +61,15 @@
             'data-can-publish': 'can_publish' in main_object.fields_get() and main_object.can_publish,
             'data-editable-in-backend': edit_in_backend or ('website_published' in main_object.fields_get() and main_object._name != 'website.page'),
         })"/>
+        <!--
+        TODO Review in master (this is a stable fix for new databases).
+        See REVIEW_CAN_PUBLISH_UNSUDO.
+        -->
+        <t t-if="html_data and html_data.get('data-can-publish') == True">
+            <t t-set="nothing" t-value="html_data.update({
+                'data-can-publish': 'can_publish' in main_object.fields_get() and main_object.sudo(flag=False).can_publish,
+            })"/>
+        </t>
         <t t-if="editable or translatable" t-set="nothing" t-value="html_data.update({
             'data-editable': '1' if editable else None,
             'data-translatable': '1' if translatable else None,
@@ -1036,8 +1045,8 @@
                 <div class="o_header_hide_on_scroll">
                     <div aria-label="Top" t-if="is_view_active('website.header_text_element') or is_view_active('website.header_social_links') or is_view_active('website.header_language_selector')" class="o_header_sales_two_top py-1">
                         <ul class="navbar-nav container d-grid h-100 px-3 o_grid_header_3_cols">
-                            <!-- Return empty placeholder if the element is not active to keep the right layout -->
-                            <li class="o_header_sales_two_lang_selector_placeholder" t-if="is_view_active('website.header_language_selector') == False"/>
+                            <!-- Return empty placeholder if the element is not active or if there is only one language to keep the right layout -->
+                            <li class="o_header_sales_two_lang_selector_placeholder" t-if="is_view_active('website.header_language_selector') == False or len(languages) == 1"/>
                             <!-- Language Selector -->
                             <t t-call="website.placeholder_header_language_selector">
                                 <t t-set="_div_classes" t-valuef="d-flex align-items-center h-100"/>
@@ -2170,7 +2179,7 @@
 
 <template id="header_language_selector" inherit_id="website.placeholder_header_language_selector" name="Header Language Selector" active="True">
     <xpath expr="." position="inside">
-        <li data-name="Language Selector" t-attf-class="o_header_language_selector #{_item_class}">
+        <li t-if="len(languages) > 1" data-name="Language Selector" t-attf-class="o_header_language_selector #{_item_class}">
             <t id="header_language_selector_call" t-call="portal.language_selector">
                 <t t-set="_div_classes" t-value="(_div_classes or '') + ' dropdown'"/>
             </t>
@@ -2302,21 +2311,17 @@
 </template>
 
 <!-- Effect options -->
-<record id="website.ripple_effect_scss" model="ir.asset">
+<asset id="website.ripple_effect_scss" name="Ripple effect SCSS" active="False">
     <field name="key">website.ripple_effect_scss</field>
-    <field name="name">Ripple effect SCSS</field>
-    <field name="bundle">web.assets_frontend</field>
-    <field name="path">/website/static/src/scss/options/ripple_effect.scss</field>
-    <field name="active" eval="False"/>
-</record>
+    <bundle>web.assets_frontend</bundle>
+    <path>/website/static/src/scss/options/ripple_effect.scss</path>
+</asset>
 
-<record id="website.ripple_effect_js" model="ir.asset">
+<asset id="website.ripple_effect_js" name="Ripple effect JS" active="False">
     <field name="key">website.ripple_effect_js</field>
-    <field name="name">Ripple effect JS</field>
-    <field name="bundle">web.assets_frontend</field>
-    <field name="path">/website/static/src/js/content/ripple_effect.js</field>
-    <field name="active" eval="False"/>
-</record>
+    <bundle>web.assets_frontend</bundle>
+    <path>/website/static/src/js/content/ripple_effect.js</path>
+</asset>
 
 <!-- Error and special pages -->
 <template id="website_info" name="Odoo Information">
@@ -2715,7 +2720,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <template id="one_hybrid" name="Single any Search Results">
     <a t-att-href="result.get('website_url')" class="dropdown-item p-2 text-wrap">
-        <div class="d-flex align-items-center o_search_result_item">
+        <div class="d-flex align-items-center flex-wrap o_search_result_item">
             <img t-if="result.get('image_url')" t-att-src="result.get('image_url')" class="flex-shrink-0 o_image_64_contain"/>
             <i t-else="" t-att-class="'o_image_64_contain text-center pt16 fa %s' % result.get('_fa')" style="font-size: 34px;"/>
             <div class="o_search_result_item_detail px-3 text-break">
@@ -2728,7 +2733,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     t-attf-onclick="location.href='#{result.get('extra_link_url')}';return false;"/>
                 <t t-if="extra_link_html" t-out="extra_link_html"/>
             </div>
-            <div class="flex-shrink-0">
+            <div class="flex-shrink-0 ms-auto">
                 <t t-if="result.get('detail_strike')">
                     <span class="text-danger text-nowrap" style="text-decoration: line-through;">
                         <t t-out="result.get('detail_strike')"/>
@@ -2764,7 +2769,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     <xpath expr="//div[@role='search']" position="replace">
         <form t-attf-class="o_searchbar_form o_wait_lazy_js s_searchbar_input #{_form_classes}" t-att-action="action" method="get" t-attf-data-snippet="s_searchbar_input">
             <t>$0</t>
-            <input name="order" type="hidden" class="o_search_order_by" t-att-value="order_by if order_by else 'name asc'"/>
+            <input name="order" type="hidden" class="o_search_order_by oe_unremovable" t-att-value="order_by if order_by else 'name asc'"/>
             <t t-out="0"/>
         </form>
     </xpath>

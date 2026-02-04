@@ -3,6 +3,7 @@
 
 import odoo.tests
 from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
+from datetime import datetime
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -65,3 +66,40 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.headers.get('Content-Type'), 'image/png')
         self.assertRegex(response.headers.get('Content-Disposition', ''), r'mail_message-\d+-author_avatar\.png')
+
+    def test_sidebar_with_date_and_tag(self):
+        Blog = self.env['blog.blog']
+        Post = self.env['blog.post']
+
+        Blog1 = Blog.create({'name': 'Nature'})
+        Blog2 = Blog.create({'name': 'Space'})
+
+        # Create first blog post (Feb 2025)
+        blog_post_1 = Post.create({
+            'name': 'First Blog Post',
+            'blog_id': Blog1.id,
+            'author_id': self.env.user.id,
+            'is_published': True,
+            'published_date': datetime(2025, 2, 10, 12, 0, 0),
+        })
+
+        # Create second blog post (Jan 2025)
+        blog_post_2 = Post.create({
+            'name': 'Second Blog Post',
+            'blog_id': Blog2.id,
+            'author_id': self.env.user.id,
+            'is_published': True,
+            'published_date': datetime(2025, 1, 15, 14, 30, 0),
+        })
+
+        self.env.ref("website_blog.opt_blog_sidebar_show").active = True
+        self.env.ref("website_blog.opt_blog_post_sidebar").active = True
+        self.start_tour("/blog", "blog_sidebar_with_date_and_tag", login="admin")
+
+        blog_tag = self.env.ref('website_blog.blog_tag_5', raise_if_not_found=False)
+        if not blog_tag:
+            blog_tag = self.env['blog.tag'].create({'name': "discovery"})
+        blog_post_1.write({'tag_ids': [(4, blog_tag.id)]})
+        blog_post_2.write({'tag_ids': [(4, blog_tag.id)]})
+
+        self.start_tour("/blog", "blog_tags_with_date", login="admin")

@@ -1,33 +1,38 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_adyen
-# 
+#
 # Translators:
 # ILMIR <karamov@it-projects.info>, 2023
 # Martin Trigaux, 2023
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
 msgid ""
-"<strong>Warning:</strong> To capture the amount manually, you also need to set\n"
-"                    the Capture Delay to manual on your Adyen account settings."
+"<strong>Warning:</strong> To capture the amount manually, you also need to "
+"set\n"
+"                    the Capture Delay to manual on your Adyen account "
+"settings."
 msgstr ""
-"<strong>Внимание:</strong> Чтобы зафиксировать сумму вручную, вам также необходимо установить\n"
+"<strong>Внимание:</strong> Чтобы зафиксировать сумму вручную, вам также "
+"необходимо установить\n"
 "                    задержку захвата вручную в настройках аккаунта Adyen."
 
 #. module: payment_adyen
@@ -143,8 +148,6 @@ msgstr "платеж"
 #. module: payment_adyen
 #. odoo-javascript
 #: code:addons/payment_adyen/static/src/js/payment_form.js:0
-#: code:addons/payment_adyen/static/src/js/payment_form.js:0
-#: code:addons/payment_adyen/static/src/js/payment_form.js:0
 #, python-format
 msgid "Payment processing failed"
 msgstr "Обработка платежа не удалась"
@@ -220,7 +223,6 @@ msgstr "Базовый URL для конечных точек API"
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
-#: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "The capture of the transaction with reference %s failed."
 msgstr "Захват транзакции со ссылкой %s не удался."
@@ -239,8 +241,8 @@ msgstr ""
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid ""
-"The capture request of %(amount)s for the transaction with reference %(ref)s"
-" has been requested (%(provider_name)s)."
+"The capture request of %(amount)s for the transaction with reference %(ref)s "
+"has been requested (%(provider_name)s)."
 msgstr ""
 "Запрос на захват %(amount)s для транзакции с ссылкой %(ref)s был запрошен "
 "(%(provider_name)s)."
@@ -281,7 +283,6 @@ msgstr "Уникальная ссылка на партнера, владеющ�
 
 #. module: payment_adyen
 #. odoo-python
-#: code:addons/payment_adyen/models/payment_transaction.py:0
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "The void of the transaction with reference %s failed."

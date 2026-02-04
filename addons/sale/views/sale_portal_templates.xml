@@ -227,7 +227,7 @@
                                     </p>
                                     <t t-call="portal.signature_form">
                                         <t t-set="call_url" t-value="sale_order.get_portal_url(suffix='/accept')"/>
-                                        <t t-set="default_name" t-value="sale_order.partner_id.name"/>
+                                        <t t-set="default_name" t-value="sale_order.partner_id.name or sale_order.partner_id.commercial_partner_id.name"/>
                                     </t>
                                 </main>
                             </form>
@@ -669,7 +669,13 @@
     <template id="sale_order_portal_content_totals_table">
         <table class="table table-sm">
             <t t-set="tax_totals" t-value="sale_order.tax_totals"/>
-            <t t-call="#{sale_order._get_name_tax_totals_view()}"/>
+            <t t-call="#{sale_order._get_name_tax_totals_view()}">
+                <!--
+                NOTE: This variable should not be used in templates before version 19.1, as it might
+                not be available in earlier versions if customer does not upgrade the `sale` module.
+                -->
+                <t t-set="doc" t-value="sale_order"/>
+            </t>
         </table>
     </template>
 </odoo>

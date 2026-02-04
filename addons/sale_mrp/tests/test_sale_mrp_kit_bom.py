@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.tests.common import TransactionCase, Form, tagged
 
 
@@ -141,6 +142,76 @@ class TestSaleMrpKitBom(TransactionCase):
         line = so.order_line
         purchase_price = line.product_id.with_company(line.company_id)._compute_average_price(0, line.product_uom_qty, line.move_ids)
         self.assertEqual(purchase_price, 92, "The purchase price must be the total cost of the components multiplied by their unit of measure")
+
+    def test_sale_mrp_kit_sale_price(self):
+        """Check the total sale price of a KIT:
+            # BoM of Kit A:
+                # - BoM Type: Kit
+                # - Quantity: 1
+                # - Components:
+                # * 1 x Component A (Price: $ 8, QTY: 10, UOM: Meter)
+                # * 1 x Component B (Price: $ 5, QTY: 2, UOM: Dozen)
+            # sale price of Kit A = (8 * 10) + (5 * 2 * 12) = $ 200
+        """
+        if "sale_price" not in self.env["stock.move.line"]._fields:
+            self.skipTest("This test only runs with both sale_mrp and stock_delivery installed")
+
+        self.customer = self.env['res.partner'].create({
+            'name': 'customer',
+        })
+        self.warehouse = self.env["stock.warehouse"].create({
+            'name': 'Warehouse #2',
+            'code': 'WH02',
+        })
+
+        self.kit_product = self._create_product('Kit Product', 'product', 1.00)
+        # Creating components
+        self.component_a = self._create_product('Component A', 'product', 1.00)
+        self.component_a.uom_id = self.env.ref('uom.product_uom_meter').id
+        self.component_a.product_tmpl_id.list_price = 8
+        self.component_b = self._create_product('Component B', 'product', 1.00)
+        self.component_b.product_tmpl_id.list_price = 5
+
+        location_id = self.warehouse.lot_stock_id.id
+        self.env["stock.quant"].with_context(inventory_mode=True).create([
+            {"product_id": self.component_a.id, "inventory_quantity": 10, "location_id": location_id},
+            {"product_id": self.component_b.id, "inventory_quantity": 24, "location_id": location_id},
+        ]).action_apply_inventory()
+
+        self.bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.kit_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': self.component_a.id,
+                    'product_qty': 10.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_meter').id,
+                }),
+                Command.create({
+                    'product_id': self.component_b.id,
+                    'product_qty': 2.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
+                }),
+            ]
+        })
+
+        # Create a SO with one unit of the kit product
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.kit_product.name,
+                    'product_id': self.kit_product.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': self.kit_product.uom_id.id,
+                })],
+            'warehouse_id': self.warehouse.id,
+        })
+        so.action_confirm()
+        so.picking_ids._action_done()
+        move_lines = so.picking_ids.move_ids.move_line_ids
+        self.assertEqual(move_lines.mapped("sale_price"), [80, 120], 'wrong shipping value')
 
     def test_qty_delivered_with_bom(self):
         """Check the quantity delivered, when a bom line has a non integer quantity"""
@@ -638,3 +709,137 @@ class TestSaleMrpKitBom(TransactionCase):
         sol.with_user(user_admin).write({'product_uom_qty': 5})
 
         self.assertEqual(sum(sol.move_ids.mapped('product_uom_qty')), 5)
+
+    def test_SO_kit_delivery_change_to_comp_packaging(self):
+        """
+        Test that when selling a kit, and changing the packaging on the stock move
+        to the packaging of the comp, the correct quantity is computed when printing
+        before and after validating
+        """
+        grp_pack = self.env.ref('product.group_stock_packaging')
+        self.env.user.write({'groups_id': [(4, grp_pack.id, 0)]})
+        kit_product = self._create_product('Kit', 'product', 1)
+        comp_product = self._create_product('Component', 'product', 1)
+        comp_product.uom_id = self.env.ref('uom.product_uom_gram').id
+        packaging_final_prod = self.env['product.packaging'].create({
+            'name': "packs of 9",
+            'product_id': kit_product.id,
+            'qty': 9.0,
+        })
+        packaging_comp = self.env['product.packaging'].create({
+            'name': "pack of 0.45 g",
+            'product_id': comp_product.id,
+            'product_uom_id': self.env.ref('uom.product_uom_gram').id,
+            'qty': 0.45,
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': comp_product.id,
+                    'product_qty': 0.1,
+                    'product_uom_id': self.env.ref('uom.product_uom_gram').id
+                }),
+            ]
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [
+                Command.create({
+                    'name': kit_product.name,
+                    'product_id': kit_product.id,
+                    'product_uom_qty': 9,
+                    'product_packaging_id': packaging_final_prod.id
+                }),
+                Command.create({
+                    'name': kit_product.name,
+                    'product_id': kit_product.id,
+                    'product_uom_qty': 1,
+                }),
+            ],
+        })
+        so.action_confirm()
+        # check that before validating, the product packaging quantity is good, both if we keep the final product packages
+        # and if we change to a packages of the component
+        so.picking_ids.move_ids[0].write({'quantity': 0.9})
+        so.picking_ids.move_ids[1].write({'quantity': 0.1})
+        self.assertEqual(so.picking_ids.move_ids.move_line_ids[0].product_packaging_qty, 1)
+        self.assertEqual(so.picking_ids.move_ids.move_line_ids[1].product_packaging_qty, 0)  # there is no packaging on that line
+        so.picking_ids.move_ids[0].product_packaging_id = packaging_comp
+        self.assertEqual(so.picking_ids.move_ids.move_line_ids[0].product_packaging_qty, 2)
+        # check that after validating, if the packages was changed to a package of the component the quantity is good
+        so.picking_ids.button_validate()
+        aggr_prod_qty = so.picking_ids.move_ids.move_line_ids[0]._get_aggregated_product_quantities(kit_name='Kit')
+        key = f"{comp_product.id}_{comp_product.display_name}__{comp_product.uom_id.id}_{packaging_comp}_{kit_product.bom_ids.id}"
+        self.assertEqual(aggr_prod_qty[key]['packaging_quantity'], 2)
+
+    def test_kit_product_packaging_qty_rounding(self):
+        """
+        Test that when selling a kit and the componenet product is delivered using multiple lots
+        that the product packaging quantity is rounded correctly.
+        """
+        self.env.user.write({'groups_id': [Command.link(self.ref('product.group_stock_packaging'))]})
+
+        kit_product = self._create_product('Kit', 'product', 1)
+        product_packaging = self.env['product.packaging'].create({
+            'name': "pack of 9",
+            'product_id': kit_product.id,
+            'qty': 9.0,
+        })
+
+        comp_product = self._create_product('Component', 'product', 1)
+        comp_product.tracking = 'lot'
+
+        lot1 = self.env['stock.lot'].create({
+            'name': 'lot1',
+            'product_id': comp_product.id,
+            'company_id': self.env.company.id,
+        })
+        lot2 = self.env['stock.lot'].create({
+            'name': 'lot2',
+            'product_id': comp_product.id,
+            'company_id': self.env.company.id,
+        })
+
+        warehouse = self.env["stock.warehouse"].create({
+            'name': 'WH',
+            'code': 'WH Test',
+        })
+        stock_location = warehouse.lot_stock_id
+
+        self.env['stock.quant']._update_available_quantity(comp_product, stock_location, 9.0, lot_id=lot1)
+        self.env['stock.quant']._update_available_quantity(comp_product, stock_location, 12.6, lot_id=lot2)
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': comp_product.id,
+                    'product_qty': 0.1,
+                }),
+            ]
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [
+                Command.create({
+                    'name': kit_product.name,
+                    'product_id': kit_product.id,
+                    'product_uom_qty': 216,
+                    'product_packaging_id': product_packaging.id
+                }),
+            ],
+            'warehouse_id': warehouse.id,
+        })
+        so.action_confirm()
+
+        so.picking_ids.button_validate()
+
+        self.assertEqual(len(so.picking_ids.move_ids.move_line_ids), 2)
+        self.assertEqual(so.picking_ids.move_ids.move_line_ids[0].product_packaging_qty, 10)
+        self.assertEqual(so.picking_ids.move_ids.move_line_ids[1].product_packaging_qty, 14)

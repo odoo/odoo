@@ -24,6 +24,11 @@ Publish your customers as business references on your website to attract new pot
         'security/ir_rule.xml',
         'views/snippets.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'website_customer/static/src/scss/website_preview.scss',
+        ],
+    },
     'installable': True,
     'license': 'LGPL-3',
 }

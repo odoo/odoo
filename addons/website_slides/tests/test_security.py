@@ -3,6 +3,7 @@
 import base64
 
 from odoo import http
+from odoo.addons.base.tests.test_mimetypes import PNG
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.website_slides.tests import common
 from odoo.exceptions import AccessError
@@ -315,6 +316,112 @@ class TestAccess(common.SlidesCase):
         self.slide.flush_recordset(['is_published'])
         with self.assertRaises(AccessError):
             self.slide.with_user(self.user_portal).read(['name'])
+
+
+class TestAccessHttp(common.SlidesCase, HttpCase):
+    @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule', 'odoo.http')
+    def test_access_slide_attachment(self):
+        """Check the document of slides, pdf or images, stored in a binary field, so as `ir.attachment`,
+        are accessible to a user according to his access to the slide itself"""
+        image_placeholder = self.env['ir.binary']._placeholder()
+
+        slides = self.env['slide.slide'].create([
+            {
+                'name': 'Foo',
+                'channel_id': self.channel.id,
+                'slide_category': 'infographic',
+                'is_published': True,
+                'binary_content': PNG,
+                'is_preview': True,
+            },
+            {
+                'name': 'Bar',
+                'channel_id': self.channel.id,
+                'slide_category': 'document',
+                'is_published': True,
+                'binary_content': base64.b64encode(b'bar'),
+                'is_preview': True,
+            },
+        ])
+        slide_image, slide_pdf = slides
+
+        def can_read_slides_content(user, can_read):
+            self.authenticate(user.login, user.login)
+
+            # Image slide
+            for url in [
+                f'/slides/slide/{slide_image.id}/get_image?field=image_1024',
+                f'/web/image/slide.slide/{slide_image.id}/image_1024',
+                f'/web/content/slide.slide/{slide_image.id}/binary_content',
+                f'/web/content/slide.slide/{slide_image.id}/image_binary_content',
+            ]:
+                response = self.url_open(url)
+                if can_read:
+                    self.assertEqual(
+                        base64.b64encode(response.content),
+                        PNG,
+                        f'{user.login} must be able to see the slide image',
+                    )
+                else:
+                    self.assertTrue(
+                        response.status_code == 404 or response.content in (image_placeholder, b''),
+                        f'{user.login} must not be able to see the slide image',
+                    )
+
+            # PDF Slide
+            for url in [
+                f'/slides/slide/{slide_pdf.id}/pdf_content',
+                f'/web/content/slide.slide/{slide_pdf.id}/binary_content',
+                f'/web/content/slide.slide/{slide_pdf.id}/document_binary_content',
+            ]:
+                response = self.url_open(url)
+                if can_read:
+                    self.assertEqual(
+                        response.content,
+                        b'bar',
+                        f'{user.login} must be able to see the slide pdf',
+                    )
+                else:
+                    self.assertTrue(
+                        response.status_code == 404 or response.url.endswith('/slides?invite_error=no_rights'),
+                        f'{user.login} must not be able to see the slide pdf',
+                    )
+
+        for user, expected in [
+            (self.user_public, True),
+            (self.user_portal, True),
+            (self.user_emp, True),
+            (self.user_manager, True),
+            (self.user_officer, True),
+        ]:
+            can_read_slides_content(user, expected)
+
+        slides.is_preview = False
+
+        for user, expected in [
+            (self.user_public, False),
+            (self.user_portal, False),
+            (self.user_emp, False),
+            (self.user_manager, True),
+            (self.user_officer, True),
+        ]:
+            can_read_slides_content(user, expected)
+
+        membership = self.env['slide.channel.partner'].create({
+            'channel_id': self.channel.id,
+            'partner_id': self.user_emp.partner_id.id,
+        })
+        can_read_slides_content(self.user_emp, True)
+        membership.unlink()
+        can_read_slides_content(self.user_emp, False)
+
+        membership = self.env['slide.channel.partner'].create({
+            'channel_id': self.channel.id,
+            'partner_id': self.user_portal.partner_id.id,
+        })
+        can_read_slides_content(self.user_portal, True)
+        membership.unlink()
+        can_read_slides_content(self.user_portal, False)
 
 
 @tagged('functional', 'security')

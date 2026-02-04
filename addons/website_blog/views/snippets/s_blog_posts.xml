@@ -18,7 +18,7 @@
                 <t t-set="_record" t-value="record"/>
                 <t t-set="_resize_height" t-value="256"/>
                 <t t-set="_resize_width" t-value="256"/>
-                <t t-set="additionnal_classes" t-value="'w-100 h-100 bg-200 position-absolute'"/>
+                <t t-set="additionnal_classes" t-value="'w-100 h-100 bg-200 position-absolute o_snippet_not_selectable'"/>
             </t>
         </a>
         <div class="ps-2">
@@ -69,7 +69,7 @@
                 <t t-set="_record" t-value="record"/>
                 <t t-set="_resize_height" t-value="512"/>
                 <t t-set="_resize_width" t-value="512"/>
-                <t t-set="additionnal_classes" t-value="'thumb'"/>
+                <t t-set="additionnal_classes" t-value="'thumb o_snippet_not_selectable'"/>
             </t>
         </a>
     </figure>
@@ -84,7 +84,7 @@
                     <t t-set="_record" t-value="record"/>
                     <t t-set="_resize_height" t-value="512"/>
                     <t t-set="_resize_width" t-value="512"/>
-                    <t t-set="additionnal_classes" t-value="'thumb'"/>
+                    <t t-set="additionnal_classes" t-value="'thumb o_snippet_not_selectable'"/>
                 </t>
             </a>
             <div class="card-body">
@@ -134,16 +134,14 @@
 </template>
 
 <!-- Assets -->
-<record id="website_blog.s_blog_posts_000_scss" model="ir.asset">
-    <field name="name">Blog posts 000 SCSS</field>
-    <field name="bundle">web.assets_frontend</field>
-    <field name="path">website_blog/static/src/snippets/s_blog_posts/000.scss</field>
-</record>
+<asset id="website_blog.s_blog_posts_000_scss" name="Blog posts 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website_blog/static/src/snippets/s_blog_posts/000.scss</path>
+</asset>
 
-<record id="website_blog.s_blog_posts_000_js" model="ir.asset">
-    <field name="name">Blog posts 000 JS</field>
-    <field name="bundle">web.assets_frontend</field>
-    <field name="path">website_blog/static/src/snippets/s_blog_posts/000.js</field>
-</record>
+<asset id="website_blog.s_blog_posts_000_js" name="Blog posts 000 JS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website_blog/static/src/snippets/s_blog_posts/000.js</path>
+</asset>
 
 </odoo>

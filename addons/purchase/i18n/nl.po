@@ -1,45 +1,43 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* purchase
-# 
+# * purchase
+#
 # Translators:
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2024
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Larissa Manderfeld, 2024
-# Wil Odoo, 2024
-# Manon Rondou, 2024
-# 
+# Manon Rondou, 2025
+# Wil Odoo, 2025
+# Bren Driesen <brdri@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
-"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"POT-Creation-Date: 2025-12-29 18:36+0000\n"
+"PO-Revision-Date: 2026-01-17 08:18+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-17/purchase/"
+"nl/>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
 msgid ""
 "\n"
-"                (object.state in ('draft', 'sent') and 'Request for Quotation - %s' % (object.name) or\n"
+"                (object.state in ('draft', 'sent') and 'Request for "
+"Quotation - %s' % (object.name) or\n"
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
 "\n"
-"                    (object.state in ('draft', 'sent') and 'Offerteaanvraag - %s'% (object.name) or\n"
+"                    (object.state in ('draft', 'sent') and 'Offerteaanvraag "
+"- %s'% (object.name) or\n"
 "                    'Inkooporder - %s'% (object.name))"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_partner__supplier_invoice_count
-#: model:ir.model.fields,field_description:purchase.field_res_users__supplier_invoice_count
-msgid "# Vendor Bills"
-msgstr "# Leveranciersfacturen"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__nbr_lines
@@ -55,7 +53,6 @@ msgstr "%(amount)s verschuldigd %(date)s"
 
 #. module: purchase
 #. odoo-python
-#: code:addons/purchase/models/purchase_order.py:0
 #: code:addons/purchase/models/purchase_order.py:0
 #, python-format
 msgid "%(product)s from %(original_receipt_date)s to %(new_receipt_date)s"
@@ -109,16 +106,20 @@ msgid ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Here is a reminder that the delivery of the purchase order <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        Here is a reminder that the delivery of the purchase order <span "
+"style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref or ''\">REF_XXX</t>)</span>\n"
+"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref "
+"or ''\">REF_XXX</t>)</span>\n"
 "        </t>\n"
 "        is expected for \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">undefined</span>.\n"
@@ -126,7 +127,8 @@ msgid ""
 "        Could you please confirm it will be delivered on time?\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell "
+"Admin</t>\n"
 "        </t>\n"
 "        <br><br>\n"
 "    </p>\n"
@@ -136,16 +138,20 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Beste <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Hier is een herinnering dat de levering van inkooporder <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        Hier is een herinnering dat de levering van inkooporder <span "
+"style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref or ''\">REF_XXX</t>)</span>\n"
+"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref "
+"or ''\">REF_XXX</t>)</span>\n"
 "        </t>\n"
 "        voorzien is op \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">onbepaald</span>.\n"
@@ -153,7 +159,8 @@ msgstr ""
 "        Kan je bevestigen dat de levering tijdig zal gebeuren?\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell "
+"Admin</t>\n"
 "        </t>\n"
 "        <br><br>\n"
 "    </p>\n"
@@ -166,24 +173,31 @@ msgid ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Here is in attachment a purchase order <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        Here is in attachment a purchase order <span style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>\n"
 "        </t>\n"
-"        amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
+"        amounting in <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span>\n"
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
 "        <br><br>\n"
 "        <t t-if=\"object.date_planned\">\n"
-"            The receipt is expected for <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            The receipt is expected for <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
 "            <br><br>\n"
 "            Could you please acknowledge the receipt of this order?\n"
 "        </t>\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell "
+"Admin</t>\n"
 "        </t>\n"
 "        <br><br>\n"
 "    </p>\n"
@@ -193,24 +207,31 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Beste <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Als bijlage kan je een inkooporder <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span> vinden\n"
+"        Als bijlage kan je een inkooporder <span style=\"font-weight:bold;\" "
+"t-out=\"object.name or ''\">P00015</span> vinden\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            met referentie: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"            met referentie: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>\n"
 "        </t>\n"
-"        voor het bedrag van <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
+"        voor het bedrag van <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span>\n"
 "        van <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
 "        <br><br>\n"
 "        <t t-if=\"object.date_planned\">\n"
-"            De ontvangst wordt verwacht op <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            De ontvangst wordt verwacht op <span style=\"font-weight:bold;\" "
+"t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
 "            <br><br>\n"
 "            Kan je de ontvangst van deze bestelling bevestigen?\n"
 "        </t>\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell "
+"Admin</t>\n"
 "        </t>\n"
 "        <br><br>\n"
 "    </p>\n"
@@ -223,12 +244,15 @@ msgid ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Here is in attachment a request for quotation <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        Here is in attachment a request for quotation <span style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>\n"
 "        </t>\n"
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br><br>\n"
@@ -237,7 +261,8 @@ msgid ""
 "        Best regards,\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell "
+"Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>"
@@ -246,12 +271,15 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Beste <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
 "        </t>\n"
 "        <br><br>\n"
-"        Als bijlage kan je een offerteaanvraag <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span> vinden\n"
+"        Als bijlage kan je een offerteaanvraag <span style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">P00015</span> vinden\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            met referentie: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"            met referentie: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>\n"
 "        </t>\n"
 "        van <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br><br>\n"
@@ -260,7 +288,8 @@ msgstr ""
 "        Vriendelijke groeten,\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell "
+"Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>"
@@ -332,10 +361,12 @@ msgstr "<small class=\"text-muted\">Inkoopvertegenwoordiger</small>"
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 msgid ""
 "<span class=\"d-none d-md-inline\">Confirmation Date</span>\n"
-"                          <span class=\"d-block d-md-none\">Confirmation</span>"
+"                          <span class=\"d-block d-md-none\">Confirmation</"
+"span>"
 msgstr ""
 "<span class=\"d-none d-md-inline\">Bevestigingsdatum</span>\n"
-"                          <span class=\"d-block d-md-none\">Bevestiging</span>"
+"                          <span class=\"d-block d-md-none\">Bevestiging</"
+"span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -358,12 +389,14 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">Request for Quotation </span>\n"
-"                        <span class=\"o_form_label\" invisible=\"state in ('draft', 'sent')\">Purchase Order </span>"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
+"\">Request for Quotation </span>\n"
+"                        <span class=\"o_form_label\" invisible=\"state in "
+"('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', "
-"'sent')\">Offerteaanvraag</span> <span class=\"o_form_label\" "
-"invisible=\"state in ('draft', 'sent')\">Inkooporder</span>"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
+"\">Offerteaanvraag</span> <span class=\"o_form_label\" invisible=\"state in "
+"('draft', 'sent')\">Inkooporder</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -452,6 +485,11 @@ msgid "<strong>Description</strong>"
 msgstr "<strong>Omschrijving</strong>"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "<strong>Disc.</strong>"
+msgstr "<strong>Kort.</strong>"
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Expected Date</strong>"
 msgstr "<strong>Verwachte datum</strong>"
@@ -529,19 +567,21 @@ msgstr "Er is een voorbeeld-e-mail verzonden naar %s."
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_type
 msgid ""
-"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A storable product is a product for which you manage stock. The Inventory "
+"app has to be installed.\n"
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Een voorraadproduct is een product waarvan je de voorraad beheerd. De voorraad app moet geïnstalleerd zijn.\n"
-"Een verbruiksproduct, is een product waarvoor geen voorraad wordt bijgehouden.\n"
+"Een voorraadproduct is een product waarvan je de voorraad beheerd. De "
+"voorraad app moet geïnstalleerd zijn.\n"
+"Een verbruiksproduct, is een product waarvoor geen voorraad wordt "
+"bijgehouden.\n"
 "Een dienst is een immaterieel product dat je verkoopt."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
 msgid "A warning can be set on a product or a customer (Purchase)"
-msgstr ""
-"Een waarschuwing kan worden ingesteld op een product of klant (inkoop)"
+msgstr "Een waarschuwing kan worden ingesteld op een product of klant (inkoop)"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -568,13 +608,16 @@ msgstr "Toegang waarschuwing"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the received quantity can be automatically computed by mechanism:\n"
+"According to product configuration, the received quantity can be "
+"automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Afhankelijk van de productconfiguratie kan de ontvangen hoeveelheid automatisch berekend worden door een mechanisme:\n"
+"Afhankelijk van de productconfiguratie kan de ontvangen hoeveelheid "
+"automatisch berekend worden door een mechanisme:\n"
 "  - Handmatig: het aantal wordt handmatig op de regel ingesteld\n"
-"  - Voorraadbewegingen: het aantal is berekend op basis van de bevestigde pickings\n"
+"  - Voorraadbewegingen: het aantal is berekend op basis van de bevestigde "
+"pickings\n"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_accrued_expense_entry
@@ -677,8 +720,8 @@ msgstr "Alle wachtende offerteaanvragen"
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
 msgid "Allow automatically send email to remind your vendor the receipt date"
 msgstr ""
-"Laat automatisch een e-mail verzenden om je leverancier de ontvangstdatum te"
-" herinneren"
+"Laat automatisch een e-mail verzenden om je leverancier de ontvangstdatum te "
+"herinneren"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
@@ -879,8 +922,8 @@ msgstr "Kalenderoverzicht"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid ""
-"Calls for tenders are when you want to generate requests for quotations with"
-" several vendors for a given set of products to compare offers."
+"Calls for tenders are when you want to generate requests for quotations with "
+"several vendors for a given set of products to compare offers."
 msgstr ""
 "Bij aanbestedingen wil je offertes aanvragen bij verschillende leveranciers "
 "voor een bepaalde set producten om aanbiedingen te vergelijken."
@@ -952,7 +995,6 @@ msgstr "Bedrijfsvaluta"
 
 #. module: purchase
 #. odoo-python
-#: code:addons/purchase/models/purchase_order.py:0
 #: code:addons/purchase/models/purchase_order.py:0
 #, python-format
 msgid "Compose Email"
@@ -1105,7 +1147,6 @@ msgstr "Datum kalenderstart"
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
-#: code:addons/purchase/models/purchase_order.py:0
 #, python-format
 msgid "Date Updated"
 msgstr "Datum bijgewerkt"
@@ -1204,6 +1245,11 @@ msgstr "Schermnaam"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__display_type
 msgid "Display Type"
 msgstr "Soort weergave"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Distributie analytisch rekening"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__business_domain
@@ -1317,7 +1363,7 @@ msgstr "Toekomstige activiteiten"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__two_step
 msgid "Get 2 levels of approvals to confirm a purchase order"
-msgstr "Krijg 2 niveau's van goedkeuring om een inkooporder te bevestigen"
+msgstr "Krijg 2 niveaus van goedkeuring om een inkooporder te bevestigen"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1508,11 +1554,10 @@ msgstr "Laten we je eerste offerteaanvraag maken."
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
-#: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid ""
-"Let's try the Purchase app to manage the flow from purchase to reception and"
-" invoice control."
+"Let's try the Purchase app to manage the flow from purchase to reception and "
+"invoice control."
 msgstr ""
 "Laten we de inkoop-app proberen om de stroom van aankoop tot ontvangst en "
 "factuurcontrole te beheren."
@@ -1520,12 +1565,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation
 msgid "Levels of Approvals"
-msgstr "Goedkeuringsniveau's"
+msgstr "Goedkeuringsniveaus"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation
 msgid "Levels of Approvals *"
-msgstr "Goedkeuringsniveau's *"
+msgstr "Goedkeuringsniveaus *"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1550,7 +1595,7 @@ msgstr "Geblokkeerd"
 msgid ""
 "Make sure you only pay bills for which you received the goods you ordered"
 msgstr ""
-"Zorg ervoor dat je enkel facturen betaald waarvan je de goederen reeds "
+"Zorg ervoor dat je enkel facturen betaalt waarvan je de goederen reeds "
 "ontvangen hebt"
 
 #. module: purchase
@@ -1578,20 +1623,20 @@ msgstr "Handmatig ontvangen hoeveelheid"
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_lead
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for procuring products, they will be scheduled that many days earlier"
-" to cope with unexpected vendor delays."
+"Orders for procuring products, they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
 msgstr ""
 "Foutmarge op een leverancier aflevertijd. Wanneer het systeem inkooporders "
-"aanmaakt voor het verwerven van producten, dan zullen de inkooporders zoveel"
-" dagen eerder worden aangemaakt, rekening houdende met onverwachte "
+"aanmaakt voor het verwerven van producten, dan zullen de inkooporders zoveel "
+"dagen eerder worden aangemaakt, rekening houdende met onverwachte "
 "vertragingen."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__use_po_lead
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
-"Orders for reordering products,they will be scheduled that many days earlier"
-" to cope with unexpected vendor delays."
+"Orders for reordering products,they will be scheduled that many days earlier "
+"to cope with unexpected vendor delays."
 msgstr ""
 "Foutmarge op een leverancier aflevertijd. Wanneer het systeem inkooporders "
 "aanmaakt voor het opnieuw rangschikken van producten, dan zullen de "
@@ -1785,8 +1830,7 @@ msgstr "Aantal acties"
 #: model:ir.model.fields,help:purchase.field_res_users__reminder_date_before_receipt
 msgid "Number of days to send reminder email before the promised receipt date"
 msgstr ""
-"Aantal dagen om herinneringsmail te verzenden vóór de beloofde "
-"ontvangstdatum"
+"Aantal dagen om herinneringsmail te verzenden vóór de beloofde ontvangstdatum"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error_counter
@@ -1815,8 +1859,10 @@ msgid ""
 "On ordered quantities: Control bills based on ordered quantities.\n"
 "On received quantities: Control bills based on received quantities."
 msgstr ""
-"Op bestelde hoeveelheden: controleer leveranciersfacturen gebaseerd op bestelde hoeveelheden.\n"
-"Op ontvangen hoeveelheden: controleer leveranciersfacturen gebaseerd op de ontvangen hoeveelheden."
+"Op bestelde hoeveelheden: controleer leveranciersfacturen gebaseerd op "
+"bestelde hoeveelheden.\n"
+"Op ontvangen hoeveelheden: controleer leveranciersfacturen gebaseerd op de "
+"ontvangen hoeveelheden."
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_method__receive
@@ -1942,8 +1988,7 @@ msgstr "Portaaltoegang URL"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Preview the reminder email by sending it to yourself."
 msgstr ""
-"Bekijk een voorbeeld van de herinneringsmail door deze naar jezelf te "
-"sturen."
+"Bekijk een voorbeeld van de herinneringsmail door deze naar jezelf te sturen."
 
 #. module: purchase
 #. odoo-javascript
@@ -2076,7 +2121,6 @@ msgstr "Inkoophistorie"
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/product.py:0
-#: code:addons/purchase/models/product.py:0
 #: code:addons/purchase/models/purchase_order_line.py:0
 #, python-format
 msgid "Purchase History for %s"
@@ -2091,7 +2135,6 @@ msgstr "Extra dagen levertijd inkoop"
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/controllers/portal.py:0
-#: code:addons/purchase/models/purchase_order.py:0
 #: code:addons/purchase/models/purchase_order.py:0
 #: model:ir.actions.report,name:purchase.action_report_purchase_order
 #: model:ir.model,name:purchase.model_purchase_order
@@ -2173,8 +2216,8 @@ msgid ""
 "Purchase Order Modification used when you want to purchase order editable "
 "after confirm"
 msgstr ""
-"Inkooporder wijziging: Wordt gebruikt wanneer de inkooporder aanpasbaar moet"
-" zijn na bevestigen"
+"Inkooporder wijziging: Wordt gebruikt wanneer de inkooporder aanpasbaar moet "
+"zijn na bevestigen"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_warn
@@ -2457,11 +2500,11 @@ msgstr "Maateenheidreferentie"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__origin
 msgid ""
-"Reference of the document that generated this purchase order request (e.g. a"
-" sales order)"
+"Reference of the document that generated this purchase order request (e.g. a "
+"sales order)"
 msgstr ""
-"Referentie van het document dat deze inkoopaanvraag heeft gegenereerd (bijv."
-" een verkooporder)"
+"Referentie van het document dat deze inkoopaanvraag heeft gegenereerd (bijv. "
+"een verkooporder)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_ref
@@ -2470,8 +2513,8 @@ msgid ""
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
 msgstr ""
-"Referentie van de verkooporder of bieding van je leverancier. Het is bedoeld"
-" om de koppeling te doen tussen ontvangen producten omdat deze referentie "
+"Referentie van de verkooporder of bieding van je leverancier. Het is bedoeld "
+"om de koppeling te doen tussen ontvangen producten omdat deze referentie "
 "meestal geschreven is op de pakbon verzonden door je leverancier."
 
 #. module: purchase
@@ -2522,11 +2565,16 @@ msgstr "Offerteaanvraag"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
 msgid ""
-"Requests for quotation are documents that will be sent to your suppliers to request prices for different products you consider buying.\n"
-"                Once an agreement has been found with the supplier, they will be confirmed and turned into purchase orders."
+"Requests for quotation are documents that will be sent to your suppliers to "
+"request prices for different products you consider buying.\n"
+"                Once an agreement has been found with the supplier, they "
+"will be confirmed and turned into purchase orders."
 msgstr ""
-"Offerteaanvragen zijn documenten die naar je leveranciers worden gestuurd om prijzen op te vragen voor verschillende producten die je overweegt te kopen.\n"
-"                Zodra er overeenstemming is bereikt met de leverancier, worden deze bevestigd en omgezet in inkooporders."
+"Offerteaanvragen zijn documenten die naar je leveranciers worden gestuurd om "
+"prijzen op te vragen voor verschillende producten die je overweegt te "
+"kopen.\n"
+"                Zodra er overeenstemming is bereikt met de leverancier, "
+"worden deze bevestigd en omgezet in inkooporders."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
@@ -2641,7 +2689,6 @@ msgstr "Verzend bericht"
 
 #. module: purchase
 #. odoo-javascript
-#: code:addons/purchase/static/src/js/tours/purchase.js:0
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Send the request for quotation to your vendor."
@@ -2868,11 +2915,13 @@ msgstr "De orderontvangst is bevestigd door %s."
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid ""
 "The request for quotation is the first step of the purchases flow. Once\n"
-"                    converted into a purchase order, you will be able to control the receipt\n"
+"                    converted into a purchase order, you will be able to "
+"control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
 "De offerteaanvraag is de eerste stap in de inkoop flow. Eenmaal\n"
-"geconverteerd in een inkooporder kun je de ontvangen producten beheren en de leveranciersfactuur."
+"geconverteerd in een inkooporder kun je de ontvangen producten beheren en de "
+"leveranciersfactuur."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -2899,11 +2948,15 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
 msgid ""
-"This analysis allows you to easily check and analyse your company purchase history and performance.\n"
-"                You can track your negotiation performance, the delivery performance of your vendors, etc"
+"This analysis allows you to easily check and analyse your company purchase "
+"history and performance.\n"
+"                You can track your negotiation performance, the delivery "
+"performance of your vendors, etc"
 msgstr ""
-"Met deze analyse kun je eenvoudig de inkoopgeschiedenis en prestaties van het bedrijf controleren en analyseren.\n"
-"Je kunt je onderhandelingsprestaties, de leveringsprestaties van je leveranciers, enz. volgen"
+"Met deze analyse kun je eenvoudig de inkoopgeschiedenis en prestaties van "
+"het bedrijf controleren en analyseren.\n"
+"Je kunt je onderhandelingsprestaties, de leveringsprestaties van je "
+"leveranciers, enz. volgen"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner__property_purchase_currency_id
@@ -3173,7 +3226,6 @@ msgstr "Leveranciersfactuur"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-#: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Vendor Bills"
 msgstr "Leveranciersfacturen"
@@ -3206,7 +3258,8 @@ msgid ""
 "                    you receive from your vendor according to the draft\n"
 "                    document in Odoo."
 msgstr ""
-"Leveranciersfacturen kunnen op voorhand gegenereerd worden gebaseerd op inkooporders\n"
+"Leveranciersfacturen kunnen op voorhand gegenereerd worden gebaseerd op "
+"inkooporders\n"
 "of ontvangsten. Dit staat je toe de facturen te beheren\n"
 "die je ontvangt van leveranciers aan de hand van het concept\n"
 "document in Odoo."
@@ -3296,16 +3349,16 @@ msgid ""
 "When creating a purchase order, have a look at the vendor's <i>On Time "
 "Delivery</i> rate: the percentage of products shipped on time. If it is too "
 "low, activate the <i>automated reminders</i>. A few days before the due "
-"shipment, Odoo will send the vendor an email to ask confirmation of shipment"
-" dates and keep you informed in case of any delays. To get the vendor's "
+"shipment, Odoo will send the vendor an email to ask confirmation of shipment "
+"dates and keep you informed in case of any delays. To get the vendor's "
 "performance statistics, click on the OTD rate."
 msgstr ""
 "Bekijk bij het aanmaken van een inkooporder het percentage <i>tijdige "
 "levering</i> van de leverancier: het percentage producten dat op tijd is "
 "verzonden. Activeer de <i>automatische herinneringen</i> als deze te laag "
-"is. Een paar dagen voor de geplande verzending zal Odoo de verkoper een "
-"e-mail sturen om bevestiging van de verzenddatums te vragen en je op de "
-"hoogte houden in geval van vertragingen. Om de prestatiestatistieken van de "
+"is. Een paar dagen voor de geplande verzending zal Odoo de verkoper een e-"
+"mail sturen om bevestiging van de verzenddatums te vragen en je op de hoogte "
+"houden in geval van vertragingen. Om de prestatiestatistieken van de "
 "leverancier te krijgen, klik je op het OTD-tarief."
 
 #. module: purchase
@@ -3317,9 +3370,9 @@ msgid ""
 "order. Use filters to track orders that have not been acknowledged."
 msgstr ""
 "Bij het verzenden van een order per e-mail, vraagt Odoo de verkoper om de "
-"ontvangst van de order te bevestigen. Wanneer de verkoper de order bevestigt"
-" door op een knop in de e-mail te klikken, wordt de informatie toegevoegd "
-"aan de order. Gebruik filters om orders te volgen die niet zijn bevestigd."
+"ontvangst van de order te bevestigen. Wanneer de verkoper de order bevestigt "
+"door op een knop in de e-mail te klikken, wordt de informatie toegevoegd aan "
+"de order. Gebruik filters om orders te volgen die niet zijn bevestigd."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
@@ -3363,12 +3416,14 @@ msgstr ""
 #: code:addons/purchase/models/purchase_order.py:0
 #, python-format
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
+"Your quotation contains products from company %(product_company)s whereas "
+"your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from "
+"other companies (%(bad_products)s)."
 msgstr ""
 "Jouw offerte bevat producten van het bedrijf %(product_company)s terwijl je "
-"offerte bij het bedrijf %(quote_company)s behoort. Wijzig het bedrijf van je"
-" offerte of verwijder de producten van andere bedrijven (%(bad_products)s)."
+"offerte bij het bedrijf %(quote_company)s behoort. Wijzig het bedrijf van je "
+"offerte of verwijder de producten van andere bedrijven (%(bad_products)s)."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -3385,5 +3440,4 @@ msgstr "dag(en) voor"
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 #: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
 msgid "{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})"
-msgstr ""
-"{{ object.company_id.name }} Inkooporder (Ref {{ object.name or 'nvt' }})"
+msgstr "{{ object.company_id.name }} Order (Ref {{ object.name or 'n.v.t' }})"

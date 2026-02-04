@@ -2,60 +2,65 @@ import csv
 
 from odoo import Command
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged, common
-from odoo.addons.l10n_id_efaktur.models.account_move import FK_HEAD_LIST, LT_HEAD_LIST, OF_HEAD_LIST, _csv_row
+from odoo.tests import tagged
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.l10n_id_efaktur.models.account_move import FK_HEAD_LIST, LT_HEAD_LIST, OF_HEAD_LIST, _csv_row, AccountMove
 from odoo.exceptions import RedirectWarning
-
+from unittest.mock import patch
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
-class TestIndonesianEfaktur(common.TransactionCase):
-    def setUp(self):
+class TestIndonesianEfaktur(AccountTestInvoicingCommon):
+
+    @classmethod
+    def setUpClass(cls, chart_template_ref='id'):
+        super().setUpClass(chart_template_ref=chart_template_ref)
         """
         1) contact with l10n_id_pkp=True, l10n_id_kode_transaksi="01"
         2) tax: amount=10, type_tax_use=sale, price_include=True
         3) invoice with partner_id=contact, journal=customer invoices,
         """
-        super().setUp()
-
-        self.maxDiff = 1500
-        # change company info for csv detai later
-        self.env.company.country_id = self.env.ref('base.id')
-        self.env.company.account_fiscal_country_id = self.env.company.country_id
-        self.env.company.street = "test"
-        self.env.company.phone = "12345"
-
-        self.partner_id = self.env['res.partner'].create({"name": "l10ntest", "l10n_id_pkp": True, "l10n_id_kode_transaksi": "01", "l10n_id_nik": "12345", "vat": "000000000000000"})
-        self.env['account.tax.group'].create({
-            'name': 'tax_group',
-            'country_id': self.env.ref('base.id').id,
+        cls.company_data['company'].write({
+            'street': 'test',
+            'phone': '12345',
+            'vat': '1234567890123456',
         })
-        self.partner_id_vat = self.env['res.partner'].create({"name": "l10ntest3", "l10n_id_pkp": True, "l10n_id_kode_transaksi": "01", "l10n_id_nik": "67890", "vat": "010000000000000"})
-        self.tax_id = self.env['account.tax'].create({"name": "test tax", "type_tax_use": "sale", "amount": 10.0, "price_include": True})
 
-        self.efaktur = self.env['l10n_id_efaktur.efaktur.range'].create({'min': '0000000000001', 'max': '0000000000010'})
-        self.out_invoice_1 = self.env['account.move'].create({
+        # For the sake of unit test of this module, we want to retain the the compute method for field
+        # l10n_id_need_kode_transaksi of this module. In the coretax module, l10n_id_need_kode_transaksi
+        # is always set to False to prevent the flows of old module to be triggered
+        patch_kode_transaksi = patch('odoo.addons.l10n_id_efaktur_coretax.models.account_move.AccountMove._compute_need_kode_transaksi',
+                                AccountMove._compute_need_kode_transaksi)
+        cls.startClassPatcher(patch_kode_transaksi)
+
+        indonesia = cls.env.ref('base.id')
+        cls.partner_id = cls.env['res.partner'].create({"name": "l10ntest", "l10n_id_pkp": True, "l10n_id_kode_transaksi": "01", "l10n_id_nik": "12345", "vat": "000000000000000", "country_id": indonesia.id})
+        cls.partner_id_vat = cls.env['res.partner'].create({"name": "l10ntest3", "l10n_id_pkp": True, "l10n_id_kode_transaksi": "01", "l10n_id_nik": "67890", "vat": "010000000000000"})
+        cls.tax_id = cls.env['account.tax'].create({"name": "test tax", "type_tax_use": "sale", "amount": 10.0, "price_include": True})
+
+        cls.efaktur = cls.env['l10n_id_efaktur.efaktur.range'].create({'min': '0000000000001', 'max': '0000000000010'})
+        cls.out_invoice_1 = cls.env['account.move'].create({
             'move_type': 'out_invoice',
-            'partner_id': self.partner_id.id,
+            'partner_id': cls.partner_id.id,
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'name': 'line1', 'price_unit': 110.0, 'tax_ids': self.tax_id.ids}),
+                (0, 0, {'name': 'line1', 'price_unit': 110.0, 'tax_ids': cls.tax_id.ids}),
             ],
             'l10n_id_kode_transaksi': "01",
         })
-        self.out_invoice_1.action_post()
+        cls.out_invoice_1.action_post()
 
-        self.out_invoice_2 = self.env['account.move'].create({
+        cls.out_invoice_2 = cls.env['account.move'].create({
             'move_type': 'out_invoice',
-            'partner_id': self.partner_id.id,
+            'partner_id': cls.partner_id.id,
             'invoice_date': '2019-05-01',
             'date': '2019-05-01',
             'invoice_line_ids': [
-                (0, 0, {'name': 'line1', 'price_unit': 110.11, 'quantity': 400, 'tax_ids': self.tax_id.ids})
+                (0, 0, {'name': 'line1', 'price_unit': 110.11, 'quantity': 400, 'tax_ids': cls.tax_id.ids})
             ],
             'l10n_id_kode_transaksi': '01'
         })
-        self.out_invoice_2.action_post()
+        cls.out_invoice_2.action_post()
 
     def test_efaktur_csv_output_1(self):
         """
@@ -71,7 +76,7 @@ class TestIndonesianEfaktur(common.TransactionCase):
             _csv_row(OF_HEAD_LIST, ','),
         )
         # remaining lines
-        line_4 = '"FK","01","0","0000000000001","5","2019","1/5/2019","000000000000000","12345#NIK#NAMA#l10ntest","","100","10","0","","0","0","0","0","INV/2019/00001","0"\n'
+        line_4 = '"FK","01","0","0000000000001","5","2019","1/5/2019","000000000000000","12345#NIK#NAMA#l10ntest","Indonesia","100","10","0","","0","0","0","0","INV/2019/00001","0"\n'
         line_5 = '"OF","","","100.00","1.0","100.00","0","100.00","10.00","0","0"\n'
 
         efaktur_csv_expected = output_head + line_4 + line_5
@@ -94,7 +99,7 @@ class TestIndonesianEfaktur(common.TransactionCase):
             _csv_row(LT_HEAD_LIST, ','),
             _csv_row(OF_HEAD_LIST, ','),
         )
-        line_4 = '"FK","01","0","0000000000002","5","2019","1/5/2019","000000000000000","12345#NIK#NAMA#l10ntest","","40040","4004","0","","0","0","0","0","INV/2019/00002","0"\n'
+        line_4 = '"FK","01","0","0000000000002","5","2019","1/5/2019","000000000000000","12345#NIK#NAMA#l10ntest","Indonesia","40040","4004","0","","0","0","0","0","INV/2019/00002","0"\n'
         line_5 = '"OF","","","100.10","400.0","40040.00","0","40040.00","4004.00","0","0"\n'
 
         efaktur_csv_expected = output_head + line_4 + line_5
@@ -267,7 +272,7 @@ class TestIndonesianEfaktur(common.TransactionCase):
     def test_efaktur_consume_code(self):
         """ Ensure that an invoice with taxes will consume a code. """
         available_code = self.efaktur.available
-        out_invoice_no_taxes = self.env["account.move"].create({
+        out_invoice_taxes = self.env["account.move"].create({
             "move_type": "out_invoice",
             "partner_id": self.partner_id.id,
             "invoice_date": "2019-05-01",
@@ -277,10 +282,10 @@ class TestIndonesianEfaktur(common.TransactionCase):
             ],
             "l10n_id_kode_transaksi": "01",
         })
-        out_invoice_no_taxes.action_post()
+        out_invoice_taxes.action_post()
         # The tax number is set.
-        self.assertEqual(out_invoice_no_taxes.l10n_id_tax_number, '0100000000000003')
+        self.assertEqual(out_invoice_taxes.l10n_id_tax_number, '0100000000000003')
         # A code has been consumed.
         self.assertEqual(self.efaktur.available, available_code - 1)
         # No error is raised when downloading.
-        out_invoice_no_taxes.download_efaktur()
+        out_invoice_taxes.download_efaktur()

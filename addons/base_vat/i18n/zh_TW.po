@@ -1,39 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_vat
-# 
+#
 # Translators:
-# Tony Ng, 2024
-# Wil Odoo, 2024
-# 
+# Wil Odoo, 2023
+# Tony Ng, 2025
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-23 21:07+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Last-Translator: Tony Ng, 2025\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
-msgid "'219999830019' (should be 12 digits)"
-msgstr "'219999830019'（應為 12 位數字）"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-#, python-format
-msgid ""
-"10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
-msgstr "10XXXXXXXXY 或 20XXXXXXXXY 或 15XXXXXXXXY 或 16XXXXXXXXY 或 17XXXXXXXXY"
+msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
+msgstr ""
+"10XXXXXXXXY 或 20XXXXXXXXY 或 15XXXXXXXXY 或 16XXXXXXXXY 或 17XXXXXXXXY"
 
 #. module: base_vat
 #. odoo-python
@@ -141,7 +135,7 @@ msgstr "VIES 數據庫會自動檢查歐洲增值稅號。"
 #, python-format
 msgid ""
 "Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
-msgstr ""
+msgstr "例：219999830019（格式：12 位，全部數字，核對位數須有效）"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
@@ -173,7 +167,7 @@ msgstr "如果勾選，則適用的默認財務狀況將取決於歐洲 VIES 服
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_valid
 msgid "Intra-Community Valid"
-msgstr "社群內有效"
+msgstr "共同體內部有效"
 
 #. module: base_vat
 #. odoo-python
@@ -209,7 +203,8 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
+"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem "
+"to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
 "%(vat_label)s 數字 [%(wrong_vat)s] 用於 %(record_label)s 似乎無效。\n"
@@ -229,24 +224,28 @@ msgstr "VIES 伺服器無法解析增值稅號%s。"
 msgid ""
 "The country detected for this foreign VAT number does not match any of the "
 "countries composing the country group set on this fiscal position."
-msgstr "為此外國增值稅號碼偵測到的國家/地區，與此財務規則所設定的國家/地區組別內的任何國家/地區，都不相符。"
+msgstr ""
+"為此外國增值稅號碼偵測到的國家/地區，與此財務規則所設定的國家/地區組別內的任"
+"何國家/地區，都不相符。"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a"
-" country to the fiscal position or set a country group"
-msgstr "未能偵測該外國增值稅號碼所在的國家/地區。請為相關財務規則設定一個國家/地區，或國家/地區組別。"
+"The country of the foreign VAT number could not be detected. Please assign a "
+"country to the fiscal position or set a country group"
+msgstr ""
+"未能偵測該外國增值稅號碼所在的國家/地區。請為相關財務規則設定一個國家/地區，"
+"或國家/地區組別。"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
-"The request for VAT validation was not processed. VIES service has responded"
-" with the following error: %s"
+"The request for VAT validation was not processed. VIES service has responded "
+"with the following error: %s"
 msgstr "增值稅驗證請求未獲處理。VIES 服務回覆以下錯誤：%s"
 
 #. module: base_vat
@@ -260,7 +259,7 @@ msgstr "增值稅"
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr "驗證統一編號"
+msgstr "驗證增值稅/統一編號"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form

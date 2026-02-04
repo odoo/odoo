@@ -1,26 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account
-# 
+# * account
+#
 # Translators:
 # Jumshud Sultanov <cumshud@gmail.com>, 2024
 # Nurlan Farajov, 2024
-# Nurlan Farajov <coolinuxoid@gmail.com>, 2024
+# Nurlan Farajov <coolinuxoid@gmail.com>, 2025
 # erpgo translator <jumshud@erpgo.az>, 2025
-# 
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# ERPGo Odoo <erpgo.odoo@gmail.com>, 2026.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-06 12:08+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: erpgo translator <jumshud@erpgo.az>, 2025\n"
-"Language-Team: Azerbaijani (https://app.transifex.com/odoo/teams/41243/az/)\n"
+"POT-Creation-Date: 2026-01-15 18:36+0000\n"
+"PO-Revision-Date: 2026-01-17 08:20+0000\n"
+"Last-Translator: ERPGo Odoo <erpgo.odoo@gmail.com>\n"
+"Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-17/"
+"account/az/>\n"
+"Language: az\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: az\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account
 #. odoo-python
@@ -31,7 +34,8 @@ msgid ""
 "\n"
 "The move (%s) is not balanced.\n"
 "The total of debits equals %s and the total of credits equals %s.\n"
-"You might want to specify a default account on journal \"%s\" to automatically balance each move."
+"You might want to specify a default account on journal \"%s\" to "
+"automatically balance each move."
 msgstr ""
 
 #. module: account
@@ -43,7 +47,8 @@ msgid ""
 "    - Percentage of Price: The tax amount is a % of the price:\n"
 "        e.g 100 * (1 + 10%) = 110 (not price included)\n"
 "        e.g 110 / (1 + 10%) = 100 (price included)\n"
-"    - Percentage of Price Tax Included: The tax amount is a division of the price:\n"
+"    - Percentage of Price Tax Included: The tax amount is a division of the "
+"price:\n"
 "        e.g 180 / (1 - 10%) = 200 (not price included)\n"
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
@@ -63,6 +68,12 @@ msgstr "# Uzlaşdırılmış Qaimələr"
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
 msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
+#: model:ir.model.fields,field_description:account.field_res_users__supplier_invoice_count
+msgid "# Vendor Bills"
+msgstr "# Podratçının Fakturaları"
 
 #. module: account
 #. odoo-python
@@ -109,7 +120,7 @@ msgstr "%d addımlar"
 #: code:addons/account/models/account_account_tag.py:0
 #, python-format
 msgid "%s (%s)"
-msgstr ""
+msgstr "%s (%s)"
 
 #. module: account
 #. odoo-python
@@ -121,11 +132,8 @@ msgstr "%s (Surət)"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-#: code:addons/account/models/account_account.py:0
-#: code:addons/account/models/account_account.py:0
-#: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_journal.py:0
-#: code:addons/account/models/account_reconcile_model.py:0
+#: code:addons/account/models/account_payment_term.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "%s (copy)"
@@ -193,7 +201,8 @@ msgstr "%s yaddaşda saxlanılan xana deyil"
 #, python-format
 msgid ""
 "%s reached an invalid state regarding its related statement line.\n"
-"To be consistent, the journal entry must always have exactly one suspense line."
+"To be consistent, the journal entry must always have exactly one suspense "
+"line."
 msgstr ""
 
 #. module: account
@@ -212,7 +221,6 @@ msgstr "(Endirim)"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_report.py:0
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid "(copy)"
@@ -425,9 +433,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "27.00"
-msgstr ""
+msgstr "27.00"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -459,7 +466,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "31.05"
-msgstr ""
+msgstr "31.05"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
@@ -513,7 +520,8 @@ msgid ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> "
+"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
@@ -521,21 +529,26 @@ msgid ""
 "        <br><br>\n"
 "        Here is your\n"
 "        <t t-if=\"object.name\">\n"
-"            credit note <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"            credit note <span style=\"font-weight:bold;\" t-"
+"out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            credit note\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (with reference: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"            (with reference: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "        </t>\n"
-"        amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        amounting in <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br><br>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--"
+"<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -549,7 +562,8 @@ msgid ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> "
+"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
@@ -557,15 +571,19 @@ msgid ""
 "        <br><br>\n"
 "        Here is your\n"
 "        <t t-if=\"object.name\">\n"
-"            invoice <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"            invoice <span style=\"font-weight:bold;\" t-out=\"object.name or "
+"''\">INV/2021/05/0005</span>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            invoice\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (with reference: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"            (with reference: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "        </t>\n"
-"        amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        amounting in <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            This invoice is already paid.\n"
@@ -574,22 +592,28 @@ msgid ""
 "            Please remit payment at your earliest convenience.\n"
 "            <t t-if=\"object.payment_reference\">\n"
 "                <br><br>\n"
-"                Please use the following communication for your payment: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"                Please use the following communication for your payment: "
+"<strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
 "                <t t-if=\"object.partner_bank_id\">\n"
-"                    on the account <strong t-out=\"object.partner_bank_id.acc_number\"></strong>\n"
+"                    on the account <strong t-"
+"out=\"object.partner_bank_id.acc_number\"></strong>\n"
 "                </t>\n"
 "                .\n"
 "            </t>\n"
 "        </t>\n"
-"        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and "
+"object.timesheet_count\">\n"
 "            <br><br>\n"
-"            PS: you can review your timesheets <a t-att-href=\"'my/timesheets?search_in=invoice&amp;search=%s' % object.name\">from the portal.</a>\n"
+"            PS: you can review your timesheets <a t-att-href=\"'my/"
+"timesheets?search_in=invoice&amp;search=%s' % object.name\">from the portal."
+"</a>\n"
 "        </t>\n"
 "        <br><br>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
 "            <br><br>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--"
+"<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -601,10 +625,15 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br><br>\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
+"t><br><br>\n"
 "        Thank you for your payment.\n"
-"        Here is your payment receipt <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> amounting\n"
-"        to <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        Here is your payment receipt <span style=\"font-weight:bold;\" t-"
+"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
+"amounting\n"
+"        to <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
+"span> from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br><br>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
 "        <br><br>\n"
@@ -625,13 +654,19 @@ msgstr "<em>Qaralama Qaimə</em>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_kanban
-msgid "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Tarix\" role=\"img\" title=\"Tarix\"/>"
+msgid ""
+"<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
+msgstr ""
+"<i class=\"fa fa-clock-o\" aria-label=\"Tarix\" role=\"img\" title=\"Tarix\"/"
+">"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_kanban
-msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Tarix\" title=\"Tarix\"/>"
+msgid ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr ""
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Tarix\" title=\"Tarix\"/"
+">"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -641,22 +676,30 @@ msgstr "<i class=\"fa fa-download\"/> Endirin"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Paid\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> Paid</span>"
+"<i class=\"fa fa-fw fa-check\" aria-label=\"Paid\" title=\"Paid\" "
+"role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"Paid</span>"
+msgstr ""
+"<i class=\"fa fa-fw fa-check\" aria-label=\"Ödənişli\" title=\"Ödənişli\" "
+"role=\"img\"/><span class=\"d-none d-md-inline\">Ödənişli</span></i>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
+msgid ""
+"<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Reversed\" "
+"role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"Reversed</span>"
 msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid ""
-"<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Reversed\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> Reversed</span>"
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
-msgid ""
-"<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> Waiting for Payment</span>"
+"<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" "
+"role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"Waiting for Payment</span>"
 msgstr ""
 
 #. module: account
@@ -696,8 +739,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid ""
 "<span class=\"badge rounded-pill text-bg-warning\">\n"
-"                                    <i class=\"fa fa-fw fa-remove\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> Cancelled</span>\n"
+"                                    <i class=\"fa fa-fw fa-remove\" aria-"
+"label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/>\n"
+"                                    <span class=\"d-none d-md-inline\"> "
+"Cancelled</span>\n"
 "                                </span>"
 msgstr ""
 
@@ -705,8 +750,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid ""
 "<span class=\"d-flex gap-2 w-100\">\n"
-"                            <span invisible=\"allow_out_payment\" class=\"text-muted\">Untrusted</span>\n"
-"                            <span invisible=\"not allow_out_payment\" class=\"text-success\">Trusted</span>\n"
+"                            <span invisible=\"allow_out_payment\" "
+"class=\"text-muted\">Untrusted</span>\n"
+"                            <span invisible=\"not allow_out_payment\" "
+"class=\"text-success\">Trusted</span>\n"
 "                        </span>"
 msgstr ""
 
@@ -743,8 +790,8 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid ""
-"<span class=\"o_form_label\" invisible=\"match_amount != "
-"'between'\">and</span>"
+"<span class=\"o_form_label\" invisible=\"match_amount != 'between'\">and</"
+"span>"
 msgstr ""
 
 #. module: account
@@ -830,36 +877,37 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid ""
 "<span class=\"text-muted\" colspan=\"2\">\n"
-"                                    Leave empty to create a new journal for this bank account, or select a journal to link it with the bank account.\n"
+"                                    Leave empty to create a new journal for "
+"this bank account, or select a journal to link it with the bank account.\n"
 "                                </span>"
 msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid ""
-"<span class=\"text-nowrap\">$ <span "
-"class=\"oe_currency_value\">11,750.00</span></span>"
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">11,750.00</"
+"span></span>"
 msgstr ""
-"<span class=\"text-nowrap\">$ <span "
-"class=\"oe_currency_value\">11,750.00</span></span>"
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">11,750.00</"
+"span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid ""
-"<span class=\"text-nowrap\">$ <span "
-"class=\"oe_currency_value\">19,250.00</span></span>"
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">19,250.00</"
+"span></span>"
 msgstr ""
-"<span class=\"text-nowrap\">$ <span "
-"class=\"oe_currency_value\">19,250.00</span></span>"
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">19,250.00</"
+"span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid ""
-"<span class=\"text-nowrap\">$ <span "
-"class=\"oe_currency_value\">7,500.00</span></span>"
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">7,500.00</"
+"span></span>"
 msgstr ""
-"<span class=\"text-nowrap\">$ <span "
-"class=\"oe_currency_value\">7,500.00</span></span>"
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">7,500.00</"
+"span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -889,8 +937,10 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid ""
-"<span invisible=\"paired_internal_transfer_payment_id or not is_internal_transfer or state != 'draft'\" class=\"fst-italic\">\n"
-"                                        A second payment will be created in the destination journal.\n"
+"<span invisible=\"paired_internal_transfer_payment_id or not "
+"is_internal_transfer or state != 'draft'\" class=\"fst-italic\">\n"
+"                                        A second payment will be created in "
+"the destination journal.\n"
 "                                    </span>"
 msgstr ""
 
@@ -898,8 +948,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid ""
 "<span invisible=\"reconciled_invoices_type != 'invoice'\"> Invoice</span>\n"
-"                                        <span invisible=\"reconciled_invoices_type == 'invoice'\"> Credit Note</span>"
+"                                        <span "
+"invisible=\"reconciled_invoices_type == 'invoice'\"> Credit Note</span>"
 msgstr ""
+"<span invisible=\"reconciled_invoices_type != 'invoice'\"> Hesab-Faktura</"
+"span>\n"
+"                                        <span "
+"invisible=\"reconciled_invoices_type == 'invoice'\"> Kredit-Nota</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -967,7 +1022,6 @@ msgstr "<span> üçün son tarix </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
-#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "<span> on </span>"
 msgstr "<span> da/də </span>"
 
@@ -1188,8 +1242,11 @@ msgstr "<strong>Yekun</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
 msgid ""
-"<strong>This currency has already been used to generate accounting entries.</strong> <br/>\n"
-"                        Changing its rounding factor now will not change the rounding made on previous entries; possibly causing an inconsistency with the new ones."
+"<strong>This currency has already been used to generate accounting entries.</"
+"strong> <br/>\n"
+"                        Changing its rounding factor now will not change the "
+"rounding made on previous entries; possibly causing an inconsistency with "
+"the new ones."
 msgstr ""
 
 #. module: account
@@ -1215,7 +1272,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:account.action_view_bank_statement_tree
 msgid ""
 "A Cash Register allows you to manage cash entries in your cash\n"
-"                journals. This feature provides an easy way to follow up cash\n"
+"                journals. This feature provides an easy way to follow up "
+"cash\n"
 "                payments on a daily basis."
 msgstr ""
 
@@ -1239,7 +1297,8 @@ msgstr "Bir bank hesabı yalnız bir jurnala aid ola bilər."
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
 msgid ""
 "A bank statement is a summary of all financial transactions\n"
-"                occurring over a given period of time on a bank account. You\n"
+"                occurring over a given period of time on a bank account. "
+"You\n"
 "                should receive this periodically from your bank."
 msgstr ""
 
@@ -1256,7 +1315,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Jurnal girişi, hər biri ya debet, ya da kredit əməliyyatı olan bir neçə jurnal \n"
+"Jurnal girişi, hər biri ya debet, ya da kredit əməliyyatı olan bir neçə "
+"jurnal \n"
 "                vasitəsindən ibarətdir."
 
 #. module: account
@@ -1270,7 +1330,8 @@ msgid ""
 "A journal is used to record transactions of all accounting data\n"
 "                related to the day-to-day business."
 msgstr ""
-"Jurnal, gündəlik işlə əlaqəli mühasibatlıq üzrə bütün data əməliyyatlarını qeyd etmək üçün\n"
+"Jurnal, gündəlik işlə əlaqəli mühasibatlıq üzrə bütün data əməliyyatlarını "
+"qeyd etmək üçün\n"
 "                istifadə olunur."
 
 #. module: account
@@ -1312,8 +1373,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
-msgid ""
-"A payment tolerance defined as an amount should always be higher than 0"
+msgid "A payment tolerance defined as an amount should always be higher than 0"
 msgstr ""
 
 #. module: account
@@ -1464,7 +1524,7 @@ msgstr "Hesab Valyutası"
 #. module: account
 #: model:onboarding.onboarding,name:account.onboarding_onboarding_account_dashboard
 msgid "Account Dashboard Onboarding"
-msgstr ""
+msgstr "Hesabın İdarə paneli Girişi"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_view_activity
@@ -1633,8 +1693,8 @@ msgstr "Hesabın Tipi"
 #: model:ir.model.fields,help:account.field_account_move_line__account_type
 msgid ""
 "Account Type is used for information purpose, to generate country-specific "
-"legal reports, and set the rules to close a fiscal year and generate opening"
-" entries."
+"legal reports, and set the rules to close a fiscal year and generate opening "
+"entries."
 msgstr ""
 "Hesab növü məlumatlandırma məqsədilə, ölkə üçün nəzərdə tutulan hüquqi "
 "hesabatların və maliyyə ilinin bağlanması və açılış qeydlərinin yaradılması "
@@ -1658,8 +1718,7 @@ msgstr "Hesab kodlarının ilk 2 rəqəmi"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
 msgid ""
-"Account for the difference amount after the expense discount has been "
-"granted"
+"Account for the difference amount after the expense discount has been granted"
 msgstr ""
 
 #. module: account
@@ -1760,8 +1819,8 @@ msgid ""
 "put on the regular tax account."
 msgstr ""
 "Kassa üsulu vergiləri üzrə vergi məbləğinin keçməsi üçün istifadə olunan "
-"hesab. Vergi məbləği ora, orijinal qaimə tutuşdurulana qədər, daxil olacaq ;"
-" tutuşdurma zamanı bu məbləğ bu hesaba silinəcək və adi vergi hesabına "
+"hesab. Vergi məbləği ora, orijinal qaimə tutuşdurulana qədər, daxil olacaq ; "
+"tutuşdurma zamanı bu məbləğ bu hesaba silinəcək və adi vergi hesabına "
 "yerləşdiriləcək."
 
 #. module: account
@@ -1772,13 +1831,8 @@ msgstr "Qeydlərlə hesab"
 #. module: account
 #: model:ir.actions.server,name:account.ir_cron_auto_post_draft_entry_ir_actions_server
 msgid ""
-"Account: Post draft entries with auto_post enabled and accounting date up to"
-" today"
-msgstr ""
-
-#. module: account
-#: model:res.groups,name:account.group_account_manager
-msgid "Accountant"
+"Account: Post draft entries with auto_post enabled and accounting date up to "
+"today"
 msgstr ""
 
 #. module: account
@@ -1901,8 +1955,8 @@ msgstr ""
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid ""
-"Accrual entry created on %(date)s: %(accrual_entry)s.                    And"
-" its reverse entry: %(reverse_entry)s."
+"Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
+"reverse entry: %(reverse_entry)s."
 msgstr ""
 
 #. module: account
@@ -2063,8 +2117,8 @@ msgstr "Yeni qeyd əlavə edin"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
-"Add a QR-code to your invoices so that your customers can pay instantly with"
-" their mobile banking application."
+"Add a QR-code to your invoices so that your customers can pay instantly with "
+"their mobile banking application."
 msgstr ""
 
 #. module: account
@@ -2136,9 +2190,10 @@ msgstr "Bildiriş üçün kontaktlar əlavə edin ..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid ""
-"Add your terms & conditions at the bottom of invoices/orders/quotations"
+msgid "Add your terms & conditions at the bottom of invoices/orders/quotations"
 msgstr ""
+"Qayda və şərtlərinizi fakturaların/sifarişlərin/kotirovkaların altına əlavə "
+"edin"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -2170,8 +2225,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
-msgid ""
-"Adjusting Entry {link} {percent}%% of {amount} recognized on {new_date}"
+msgid "Adjusting Entry {link} {percent}%% of {amount} recognized on {new_date}"
 msgstr ""
 
 #. module: account
@@ -2483,16 +2537,20 @@ msgstr ""
 msgid ""
 "An account is part of a ledger allowing your company\n"
 "                to register all kinds of debit and credit transactions.\n"
-"                Companies present their annual accounts in two main parts: the\n"
+"                Companies present their annual accounts in two main parts: "
+"the\n"
 "                balance sheet and the income statement (profit and loss\n"
-"                account). The annual accounts of a company are required by law\n"
+"                account). The annual accounts of a company are required by "
+"law\n"
 "                to disclose a certain amount of information."
 msgstr ""
 "\"Hesabat şirkətinizə bütün debet və kredit əməliyyatları növlərini\n"
 "                qeydə almağa icazə verən uçot kitabının bir hissəsidir.\n"
-"                Şirkətlər özlərinin illik hesabatlarını iki əsas hissədə təqdim edir:\n"
+"                Şirkətlər özlərinin illik hesabatlarını iki əsas hissədə "
+"təqdim edir:\n"
 "                balans hesabatı və gəlir hesabatı (mənfəət və itkilər\n"
-"                hesabatı). Qanunla şirkətin illik hesabatlarında konkret məlumat\n"
+"                hesabatı). Qanunla şirkətin illik hesabatlarında konkret "
+"məlumat\n"
 "                miqdarının açıqlanması tələb olunur.\""
 
 #. module: account
@@ -2624,8 +2682,7 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
-"Any journal item on a receivable account must have a due date and vice "
-"versa."
+"Any journal item on a receivable account must have a due date and vice versa."
 msgstr ""
 
 #. module: account
@@ -2717,10 +2774,9 @@ msgstr "Müddətin əvvəlində"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/mail_attachments/mail_attachments.xml:0
-#: code:addons/account/static/src/components/mail_attachments/mail_attachments.xml:0
 #, python-format
 msgid "Attach"
-msgstr ""
+msgstr "əlavə edin"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
@@ -2758,6 +2814,11 @@ msgstr "Qoşma Sayı"
 #, python-format
 msgid "Attachments"
 msgstr "Qoşmalar"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_send__attachments_not_supported
+msgid "Attachments Not Supported"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__auditable
@@ -2814,7 +2875,6 @@ msgstr "Avtomatik Təsdiq"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#: code:addons/account/models/company.py:0
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Automatic Balancing Line"
@@ -2890,7 +2950,7 @@ msgstr "FAKTURA"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Bacon Burger"
-msgstr ""
+msgstr "Bekon Burger"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__trust__bad
@@ -3080,7 +3140,8 @@ msgstr "Bank Əməliyyatları Şərtləri "
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_suspense_account_id
 msgid ""
-"Bank Transactions are posted immediately after import or synchronization. Their counterparty is the bank suspense account.\n"
+"Bank Transactions are posted immediately after import or synchronization. "
+"Their counterparty is the bank suspense account.\n"
 "Reconciliation replaces the latter by the definitive account(s)."
 msgstr ""
 
@@ -3171,7 +3232,8 @@ msgstr "Hesab-fakturaya Əsasən"
 #: model:ir.model.fields,help:account.field_account_tax__tax_exigibility
 msgid ""
 "Based on Invoice: the tax is due as soon as the invoice is validated.\n"
-"Based on Payment: the tax is due as soon as the payment of the invoice is received."
+"Based on Payment: the tax is due as soon as the payment of the invoice is "
+"received."
 msgstr ""
 "Fakturaya Əsasən: vergi faktura təsdiqlənən kimi ödənilir.\n"
 "Ödənişə Əsasən: vergi faktura ödənişi alınan kimi ödənilir."
@@ -3232,6 +3294,7 @@ msgid "Billing"
 msgstr "Fakturanın Göndərilməsi"
 
 #. module: account
+#: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
 msgstr "Faktura Administratoru"
 
@@ -3282,11 +3345,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
 msgid "Blocking Message"
 msgstr "Bloklanmış Mesaj"
-
-#. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Bookkeeper"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -3465,7 +3523,8 @@ msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
 "Please go to Account Configuration."
 msgstr ""
-"Bu şirkət üçün bir hesablar planı tapılmadı, onu konfiqurasiya etməlisiniz. \n"
+"Bu şirkət üçün bir hesablar planı tapılmadı, onu konfiqurasiya "
+"etməlisiniz. \n"
 "Zəhmət olmasa Hesab Konfiqurasiyasına daxil olun."
 
 #. module: account
@@ -3663,7 +3722,6 @@ msgstr "Nəğd bazada yuvarlaqlıq fərqi"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
-#: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash basis transition account"
 msgstr "Kassa üsulu ilə keçid hesabı"
@@ -3724,8 +3782,8 @@ msgstr ""
 #: code:addons/account/controllers/portal.py:0
 #, python-format
 msgid ""
-"Changing your company name is not allowed once invoices have been issued for"
-" your account. Please contact us directly for this operation."
+"Changing your company name is not allowed once invoices have been issued for "
+"your account. Please contact us directly for this operation."
 msgstr ""
 "Hesabınız üçün hesab-fakturalar dərc edildikdən sonra şirkət adının "
 "dəyişdirilməsinə icazə verilmir. Bu əməliyyat üzrə birbaşa olaraq bizimlə "
@@ -3800,8 +3858,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence
 msgid ""
-"Check this box if you don't want to share the same sequence for invoices and"
-" credit notes made from this journal"
+"Check this box if you don't want to share the same sequence for invoices and "
+"credit notes made from this journal"
 msgstr ""
 "Bu jurnal əsasında hazırlanmış fakturalar və kredit-notalar üzrə eyni "
 "ardıcıllığı bölüşmək istəmirsinizsə, bu xananı işarələyin"
@@ -3819,8 +3877,8 @@ msgid ""
 "Check this box to negate the absolute value of the balance of the lines "
 "associated with this tag in tax report computation."
 msgstr ""
-"Vergi hesabatı üzrə hesablamada bu etiketlə əlaqəli sətirlərdə mütləq balans"
-" dəyərini inkar etmək üçün bu xananı işarələyin."
+"Vergi hesabatı üzrə hesablamada bu etiketlə əlaqəli sətirlərdə mütləq balans "
+"dəyərini inkar etmək üçün bu xananı işarələyin."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__price_include
@@ -3957,7 +4015,7 @@ msgstr "Kommunikasiyanın Tipi"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Communication history"
-msgstr ""
+msgstr "Kommunikasiya tarixçəsi"
 
 #. module: account
 #: model:ir.model,name:account.model_res_company
@@ -4654,7 +4712,6 @@ msgstr "Kredit Hərəkəti"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_payment__reconciled_invoices_type__credit_note
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4673,12 +4730,12 @@ msgstr "Kredit-nota Yaradıldı"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_out_credit_note_tree
 msgid "Credit Note Currency"
-msgstr ""
+msgstr "Kredit-Nota Valyutası"
 
 #. module: account
 #: model:mail.template,name:account.email_template_edi_credit_note
 msgid "Credit Note: Sending"
-msgstr ""
+msgstr "Kredit-Nota: Göndərilir"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_out_refund_type
@@ -4770,7 +4827,6 @@ msgstr "Valyuta Məzənnəsi"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move_line.py:0
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Currency exchange rate difference"
@@ -4894,7 +4950,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__out_and_in_invoices
 msgid "Customer Invoices and Vendor Bills"
-msgstr ""
+msgstr "Müştəri Hesab-Fakturası və Təchizatçı Qaiməsi"
 
 #. module: account
 #. odoo-python
@@ -5064,7 +5120,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_date_range
 msgid "Date Range"
-msgstr ""
+msgstr "Tarix Aralığı"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__date_scope
@@ -5126,7 +5182,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__delay_type__days_after
 msgid "Days after invoice date"
-msgstr ""
+msgstr "Hesab-Faktura tarixindən sonrakı günlər"
 
 #. module: account
 #. odoo-python
@@ -5212,7 +5268,7 @@ msgstr "Varsayılan Gəlir Hesabı"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default Incoterm"
-msgstr ""
+msgstr "Defolt İnkoterm"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5331,8 +5387,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move__invoice_cash_rounding_id
 #: model:ir.model.fields,help:account.field_account_payment__invoice_cash_rounding_id
 msgid ""
-"Defines the smallest coinage of the currency that can be used to pay by "
-"cash."
+"Defines the smallest coinage of the currency that can be used to pay by cash."
 msgstr ""
 "Nağd pulla ödəmək üçün istifadə olunan valyutanın ən kiçik pul vahidlərini "
 "müəyyənləşdirir"
@@ -5366,7 +5421,7 @@ msgstr "Çatdırılma Ünvanı"
 #: model:ir.model.fields,field_description:account.field_account_move__delivery_date
 #: model:ir.model.fields,field_description:account.field_account_payment__delivery_date
 msgid "Delivery Date"
-msgstr ""
+msgstr "Çatdırılma tarixi"
 
 #. module: account
 #: model:account.account.tag,name:account.demo_ceo_wages_account
@@ -5500,7 +5555,6 @@ msgstr "Ləğv edin"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-#: code:addons/account/models/account_move_line.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__discount
 #, python-format
 msgid "Discount"
@@ -5509,7 +5563,7 @@ msgstr "Endirim"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__discount_percentage
 msgid "Discount %"
-msgstr ""
+msgstr "Endirim %"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount
@@ -5536,7 +5590,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Discount Amount"
-msgstr ""
+msgstr "Endirim məbləği"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount_balance
@@ -5563,13 +5617,37 @@ msgid "Discount amount in Currency"
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Discount of %(amount)s if paid today"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Discount of %(amount)s if paid within %(days)s days"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__display_account_prefix
 msgid "Display Account Prefix"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__display_alias_fields
+msgid "Display Alias Fields"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__display_amount
 msgid "Display Amount"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_send__display_attachments_widget
+msgid "Display Attachments Widget"
 msgstr ""
 
 #. module: account
@@ -5675,6 +5753,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax__repartition_line_ids
 msgid "Distribution"
 msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "Dağıtım Analitik Hesabı"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
@@ -5804,6 +5888,7 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Draft Entry"
 msgstr "Qaralama Giriş"
@@ -5935,7 +6020,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__epd
 #, python-format
 msgid "Early Payment Discount"
@@ -5944,7 +6028,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#: code:addons/account/models/account_move_line.py:0
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Early Payment Discount (%s)"
@@ -6367,7 +6450,7 @@ msgstr ""
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "False"
-msgstr ""
+msgstr "False"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_aml_ir_filters
@@ -6568,8 +6651,8 @@ msgid ""
 "customer."
 msgstr ""
 "Maliyyə vəziyyəti müəyyən müştərilər və ya satış sifarişləri/ fakturaları "
-"üçün vergi və hesabları uyğunlaşdırmaqda istifadə olunur. Susmaya görə dəyər"
-" müştəridən qaynaqlanır."
+"üçün vergi və hesabları uyğunlaşdırmaqda istifadə olunur. Susmaya görə dəyər "
+"müştəridən qaynaqlanır."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -6721,7 +6804,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat
 msgid "Foreign Tax ID"
-msgstr ""
+msgstr "Xarici VÖEN"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
@@ -6772,15 +6855,6 @@ msgid ""
 "Formula in the form line_code.expression_label. This allows setting the "
 "target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line."
-msgstr ""
-
-#. module: account
-msgid ""
-"Formula in the form line_code.expression_label. This allows setting the "
-"target of the carryover for this expression (on a _carryover_*-labeled "
-"expression), in case it is different from the parent line. 'custom' is also "
-"allowed as value in case the carryover destination requires more complex "
-"logic."
 msgstr ""
 
 #. module: account
@@ -6847,10 +6921,10 @@ msgid ""
 "customers. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"Bu hesabatdan müştərilərinizə hesab-fakturada göndərilən məbləğ barədə ümumi"
-" məlumat əldə edə bilərsiniz. Axtarış aləti faktura hesabatlarınızı "
-"fərdiləşdirmək və beləliklə də, bu təhlili tələblərinizə uyğunlaşdırmaq üçün"
-" istifadə edilə bilər."
+"Bu hesabatdan müştərilərinizə hesab-fakturada göndərilən məbləğ barədə ümumi "
+"məlumat əldə edə bilərsiniz. Axtarış aləti faktura hesabatlarınızı "
+"fərdiləşdirmək və beləliklə də, bu təhlili tələblərinizə uyğunlaşdırmaq üçün "
+"istifadə edilə bilər."
 
 #. module: account
 #: model:ir.model,name:account.model_account_full_reconcile
@@ -7007,8 +7081,8 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
-"Groupby feature isn't supported by aggregation engine. Please remove the "
-"groupby value on '%s'"
+"Groupby feature isn't supported by '%(engine)s' engine. Please remove the "
+"groupby value on '%(report_line)s'"
 msgstr ""
 
 #. module: account
@@ -7031,7 +7105,7 @@ msgstr "Mühasibat uçotu qeydləri var"
 #: model:ir.model.fields,field_description:account.field_account_move__show_update_fpos
 #: model:ir.model.fields,field_description:account.field_account_payment__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr ""
+msgstr "Fiskal Mövqeyi Dəyişdi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_iban_warning
@@ -7130,6 +7204,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "How total tax amount is computed in orders and invoices"
 msgstr "Sifarişlərdə və fakturalarda ümumi vergi məbləği necə hesablanır?"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "ICE:"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
@@ -7302,8 +7381,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__is_base_affected
 msgid ""
-"If set, taxes with a lower sequence might affect this one, provided they try"
-" to do it."
+"If set, taxes with a lower sequence might affect this one, provided they try "
+"to do it."
 msgstr ""
 
 #. module: account
@@ -7323,8 +7402,10 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__non_trade
 msgid ""
-"If set, this account will belong to Non Trade Receivable/Payable in reports and filters.\n"
-"If not, this account will belong to Trade Receivable/Payable in reports and filters."
+"If set, this account will belong to Non Trade Receivable/Payable in reports "
+"and filters.\n"
+"If not, this account will belong to Trade Receivable/Payable in reports and "
+"filters."
 msgstr ""
 
 #. module: account
@@ -7383,8 +7464,8 @@ msgstr ""
 msgid ""
 "If you check this box, you will be able to register your payment using SEPA."
 msgstr ""
-"Bu işarəni qoyduğunuz halda, siz SEPA-dan istifadə edərək, ödənişinizi qeydə"
-" ala biləcəksiniz."
+"Bu işarəni qoyduğunuz halda, siz SEPA-dan istifadə edərək, ödənişinizi qeydə "
+"ala biləcəksiniz."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -7582,8 +7663,10 @@ msgstr "Gələn Ödənişlər"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_payment_debit_account_id
 msgid ""
-"Incoming payments are posted on an Outstanding Receipts Account. In the bank reconciliation widget, they appear as blue lines.\n"
-"Bank transactions are then reconciled on the Outstanding Receipts Accounts rather than the Receivable Account."
+"Incoming payments are posted on an Outstanding Receipts Account. In the bank "
+"reconciliation widget, they appear as blue lines.\n"
+"Bank transactions are then reconciled on the Outstanding Receipts Accounts "
+"rather than the Receivable Account."
 msgstr ""
 
 #. module: account
@@ -7591,8 +7674,7 @@ msgstr ""
 #: code:addons/account/wizard/setup_wizards.py:0
 #, python-format
 msgid ""
-"Incorrect fiscal year date: day is out of range for month. Month: %s; Day: "
-"%s"
+"Incorrect fiscal year date: day is out of range for month. Month: %s; Day: %s"
 msgstr ""
 "Yanlış fiskal  ili tarixi: gün ay üçün olan həddi aşır. Ay: %s; Gün: %s"
 
@@ -7608,7 +7690,7 @@ msgstr "İncoterm"
 #: model:ir.model.fields,field_description:account.field_account_move__incoterm_location
 #: model:ir.model.fields,field_description:account.field_account_payment__incoterm_location
 msgid "Incoterm Location"
-msgstr ""
+msgstr "İnkoterm Məkanı"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_incoterms__code
@@ -7629,8 +7711,8 @@ msgstr "İncotermlər"
 #: model:ir.model.fields,help:account.field_account_incoterms__name
 msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
-"costs and responsibilities between buyer and seller and reflect state-of-"
-"the-art transportation practices."
+"costs and responsibilities between buyer and seller and reflect state-of-the-"
+"art transportation practices."
 msgstr ""
 "Incoterms satış terminləri seriyasıdı. Onlar alıcı ilə satıcı arasında "
 "xərclərin və vəzifələrin bölüşdürülməsi və ən yeni nəqletmə təcrübələrinin "
@@ -7704,7 +7786,7 @@ msgstr "Daxili Qeydlər"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__internal_index
 msgid "Internal Reference"
-msgstr ""
+msgstr "Daxili Referans"
 
 #. module: account
 #. odoo-python
@@ -7741,8 +7823,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__domain_formula
-msgid ""
-"Internal field to shorten expression_ids creation for the domain engine"
+msgid "Internal field to shorten expression_ids creation for the domain engine"
 msgstr ""
 
 #. module: account
@@ -7785,8 +7866,8 @@ msgstr "Yalnış"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""
-"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
-" for the zip range and \"To\" should be greater than \"From\"."
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values "
+"for the zip range and \"To\" should be greater than \"From\"."
 msgstr ""
 
 #. module: account
@@ -7806,12 +7887,12 @@ msgstr "Keçən gün etibarsız maliyyə ili"
 #. module: account
 #: model:account.journal,name:account.1_inventory_valuation
 msgid "Inventory Valuation"
-msgstr ""
+msgstr "İntentarın Qiymətləndirilməsi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
 msgid "Inventory Value"
-msgstr ""
+msgstr "İnventar dəyəri"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
@@ -7866,7 +7947,7 @@ msgstr "Hesab-faktura Yaradıldı"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_out_invoice_tree
 msgid "Invoice Currency"
-msgstr ""
+msgstr "Hesab-Fakturanın Valyutası"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__invoice_date
@@ -7886,7 +7967,7 @@ msgstr "Hesab-faktura Tarixi"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
 msgid "Invoice Due Date"
-msgstr ""
+msgstr "Hesab-Faktura Son Ödəniş Tarixi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_filter_type_domain
@@ -7920,7 +8001,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_report_view_tree
 msgid "Invoice Number"
-msgstr ""
+msgstr "Hesab-Faktura nömrəsi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_payment
@@ -7968,7 +8049,7 @@ msgstr "Hesab-fakturanın Statusu"
 #: model:ir.model.fields,field_description:account.field_account_move__tax_totals
 #: model:ir.model.fields,field_description:account.field_account_payment__tax_totals
 msgid "Invoice Totals"
-msgstr ""
+msgstr "Hesab-Faktura cəmi"
 
 #. module: account
 #. odoo-python
@@ -7978,8 +8059,8 @@ msgid ""
 "Invoice and credit note distribution should each contain exactly one line "
 "for the base."
 msgstr ""
-"Faktura və Kredit-notalarının paylanması hər biri baza üçün tam bir sətirdən"
-" ibarət olmalıdır."
+"Faktura və Kredit-notalarının paylanması hər biri baza üçün tam bir sətirdən "
+"ibarət olmalıdır."
 
 #. module: account
 #. odoo-python
@@ -7997,17 +8078,19 @@ msgid ""
 "Invoice and credit note distribution should match (same percentages, in the "
 "same order)."
 msgstr ""
-"Faktura və kredit-notalarının paylanması uyğun olmalıdır (eyni faizlər, eyni"
-" qaydada)."
+"Faktura və kredit-notalarının paylanması uyğun olmalıdır (eyni faizlər, eyni "
+"qaydada)."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid ""
-"Invoice and credit note repartition should have at least one tax repartition"
-" line."
+"Invoice and credit note repartition should have at least one tax repartition "
+"line."
 msgstr ""
+"Hesab-Faktura və Kredit-Nota üzrə paylanmada ən azı bir vergi paylanma sətri "
+"olmalıdır."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_line_ids
@@ -8037,7 +8120,7 @@ msgstr "Qaimə/ Qəbz tarixi"
 #. module: account
 #: model:mail.template,name:account.email_template_edi_invoice
 msgid "Invoice: Sending"
-msgstr ""
+msgstr "Hesab-Faktura: Göndərilir"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -8091,7 +8174,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Invoices in error"
@@ -8181,6 +8263,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__between
 msgid "Is Between"
 msgstr "Arasındadır"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
+#: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
+msgid "Is Coa Installed"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
@@ -8279,6 +8367,13 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "It was previously '%(previous)s' and it is now '%(current)s'."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Items With Missing Analytic Distribution"
 msgstr ""
 
 #. module: account
@@ -8530,8 +8625,7 @@ msgstr "Giriş müddətini dəyişdirmək üçün susmaya görə jurnal"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_journal_id
 msgid ""
-"Journal where the opening entry of this company's accounting has been "
-"posted."
+"Journal where the opening entry of this company's accounting has been posted."
 msgstr "Bu şirkətin mühasibat uçotunun ilkin qeydinin paylaşıldığı jurnal."
 
 #. module: account
@@ -8581,6 +8675,11 @@ msgid "June"
 msgstr "İyun"
 
 #. module: account
+#: model:ir.model,name:account.model_kpi_provider
+msgid "KPI Provider"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
 msgid "Kanban Dashboard"
 msgstr "Kanban Nəzarət Paneli"
@@ -8618,8 +8717,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_product_product__property_account_expense_id
 #: model:ir.model.fields,help:account.field_product_template__property_account_expense_id
 msgid ""
-"Keep this field empty to use the default value from the product category. If"
-" anglo-saxon accounting with automated valuation method is configured, the "
+"Keep this field empty to use the default value from the product category. If "
+"anglo-saxon accounting with automated valuation method is configured, the "
 "expense account on the product category will be used."
 msgstr ""
 "Məhsul kateqoriyasındakı cari dəyəri istifadə etmək üçün bu sahəni boş "
@@ -8795,8 +8894,8 @@ msgstr "Son İl"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__discount_date
 msgid ""
-"Last date at which the discounted amount must be paid in order for the Early"
-" Payment Discount to be granted"
+"Last date at which the discounted amount must be paid in order for the Early "
+"Payment Discount to be granted"
 msgstr ""
 
 #. module: account
@@ -8808,8 +8907,8 @@ msgid ""
 "unreconciled credit or if you click the \"Done\" button."
 msgstr ""
 "Bu ortaq üçün hesab-fakturaların və ödəniş uyğunluğunun həyata keçirildiyi "
-"ən son vaxt Ən azı üzləşdirilməmiş debet və üzləşdirilməmiş kredit olmadıqda"
-" və ya \"Hazırdır\" düyməsini kliklədiyiniz təqdirdə təyin olunur."
+"ən son vaxt Ən azı üzləşdirilməmiş debet və üzləşdirilməmiş kredit olmadıqda "
+"və ya \"Hazırdır\" düyməsini kliklədiyiniz təqdirdə təyin olunur."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -9078,9 +9177,14 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_journal__inbound_payment_method_line_ids
 msgid ""
 "Manual: Get paid by any method outside of Odoo.\n"
-"Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
-"Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
-"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
+"Payment Providers: Each payment provider has its own Payment Method. Request "
+"a transaction on/to a card thanks to a payment token saved by the partner "
+"when buying or subscribing online.\n"
+"Batch Deposit: Collect several customer checks at once generating and "
+"submitting a batch deposit to your bank. Module account_batch_payment is "
+"necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your "
+"partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 
 #. module: account
@@ -9088,7 +9192,8 @@ msgstr ""
 msgid ""
 "Manual: Pay by any method outside of Odoo.\n"
 "Check: Pay bills by check and print it from Odoo.\n"
-"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit "
+"Transfer file to your bank. Module account_sepa is necessary.\n"
 msgstr ""
 
 #. module: account
@@ -9096,15 +9201,20 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment_register__payment_method_line_id
 msgid ""
 "Manual: Pay or Get paid by any method outside of Odoo.\n"
-"Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
+"Payment Providers: Each payment provider has its own Payment Method. Request "
+"a transaction on/to a card thanks to a payment token saved by the partner "
+"when buying or subscribing online.\n"
 "Check: Pay bills by check and print it from Odoo.\n"
-"Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
-"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
-"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
+"Batch Deposit: Collect several customer checks at once generating and "
+"submitting a batch deposit to your bank. Module account_batch_payment is "
+"necessary.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit "
+"Transfer file to your bank. Module account_sepa is necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your "
+"partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Marc Demo"
 msgstr ""
@@ -9154,7 +9264,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_text_location_reference
 msgid "Match Text Location Reference"
-msgstr ""
+msgstr "Mətn Məkan İstinadını uyğunlaşdırın"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__matched_credit_ids
@@ -9205,8 +9315,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matching_number
 msgid ""
-"Matching number for this line, 'P' if it is only partially reconcile, or the"
-" name of the full reconcile if it exists."
+"Matching number for this line, 'P' if it is only partially reconcile, or the "
+"name of the full reconcile if it exists."
 msgstr ""
 "Bu sətir üçün uyğun nömrə, yalnız qismən barışdırıldığı təqdirdə 'P' və ya "
 "varsa tam uzlaşmanın adı."
@@ -9344,7 +9454,7 @@ msgstr "Rejim"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__model_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__model_id
 msgid "Model"
-msgstr ""
+msgstr "Model"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -9639,7 +9749,7 @@ msgstr ""
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "No attachment was provided"
-msgstr ""
+msgstr "Heç bir əlavə təmin edilmədi"
 
 #. module: account
 #. odoo-python
@@ -9688,8 +9798,8 @@ msgid ""
 "No users, including Advisers, can edit accounts prior to and inclusive of "
 "this date. Use it for fiscal year locking for example."
 msgstr ""
-"Məsləhətçilər daxil olmaqla heç bir istifadəçi bu tarixdən əvvəl və bu tarix"
-" daxil olmaqla hesablara düzəliş edə bilməz. Məsələn, fiskal ili kilidləmək "
+"Məsləhətçilər daxil olmaqla heç bir istifadəçi bu tarixdən əvvəl və bu tarix "
+"daxil olmaqla hesablara düzəliş edə bilməz. Məsələn, fiskal ili kilidləmək "
 "üçün bunu istifadə edin."
 
 #. module: account
@@ -9725,7 +9835,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_tax.py:0
 #: code:addons/account/models/account_tax.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_tax__type_tax_use__none
 #, python-format
@@ -9785,6 +9894,8 @@ msgid ""
 "Note that the easiest way to create a vendor credit note is to do it "
 "directly from the vendor bill."
 msgstr ""
+"Təchizatçı kredit-notası yaratmağın ən asan yolu onu birbaşa təchizatçı "
+"qaiməsindən yaratmaqdır."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
@@ -9907,7 +10018,7 @@ msgstr "Oktyabr"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_model__odoo
 msgid "Odoo"
-msgstr ""
+msgstr "Odoo"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__domain
@@ -9934,8 +10045,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier
 msgid "Odoo helps you easily track all activities related to a supplier."
 msgstr ""
-"Odoo təchizatçı ilə əlaqəli bütün fəaliyyətləri asanlıqla izləməyinizə kömək"
-" edir."
+"Odoo təchizatçı ilə əlaqəli bütün fəaliyyətləri asanlıqla izləməyinizə kömək "
+"edir."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__off_balance
@@ -10062,9 +10173,16 @@ msgid "One or more invoices couldn't be processed."
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "One or more lines require a 100% analytic distribution."
+msgstr "Bir və ya bir neçə sıra 100% analitik paylanma tələb edir."
+
+#. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
 msgid "Online Payments"
-msgstr ""
+msgstr "Onlayn ödənişlər"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__only_tax_exigible
@@ -10334,8 +10452,10 @@ msgstr "Gedən Ödənişlər"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_payment_credit_account_id
 msgid ""
-"Outgoing Payments are posted on an Outstanding Payments Account. In the bank reconciliation widget, they appear as blue lines.\n"
-"Bank transactions are then reconciled on the Outstanding Payments Account rather the Payable Account."
+"Outgoing Payments are posted on an Outstanding Payments Account. In the bank "
+"reconciliation widget, they appear as blue lines.\n"
+"Bank transactions are then reconciled on the Outstanding Payments Account "
+"rather the Payable Account."
 msgstr ""
 
 #. module: account
@@ -10567,7 +10687,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__partner_credit_warning
 #: model:ir.model.fields,field_description:account.field_account_payment__partner_credit_warning
 msgid "Partner Credit Warning"
-msgstr ""
+msgstr "Partnyor Kredit Xəbərdarlığı"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_ledger_partner
@@ -10780,11 +10900,6 @@ msgstr "Ödəniş Qəbzi"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Payment Receipt:"
 msgstr "Ödəniş Qəbzi:"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Payment Ref"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
@@ -11070,8 +11185,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
-msgid ""
-"Please set at least one of the match texts to create a partner mapping."
+msgid "Please set at least one of the match texts to create a partner mapping."
 msgstr ""
 
 #. module: account
@@ -11260,7 +11374,7 @@ msgstr "Satıcılarına ödəniş üçün qəbzləri çap et"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__problem_description
 msgid "Problem Description"
-msgstr ""
+msgstr "Problemin Təsviri"
 
 #. module: account
 #: model:ir.model,name:account.model_product_template
@@ -11457,14 +11571,9 @@ msgid "Re-Sequence"
 msgstr ""
 
 #. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Read-only"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
 msgid "Reason displayed on Credit Note"
-msgstr ""
+msgstr "Kredit-Notada göstərilən səbəb"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_in_invoice_receipt_tree
@@ -11578,6 +11687,11 @@ msgid "Reconciliation Parts"
 msgstr "Üzləşdirmə Hissələri"
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid "Record a new vendor bill"
+msgstr "Yeni satıcı fakturasını qeyd edin"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
@@ -11610,8 +11724,8 @@ msgstr "Rəy"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__payment_reference
 msgid ""
-"Reference of the document used to issue this payment. Eg. check number, file"
-" name, etc."
+"Reference of the document used to issue this payment. Eg. check number, file "
+"name, etc."
 msgstr ""
 "Bu ödənişin verilməsi üçün istifadə olunan sənədə istinad. Məsələn: nömrə, "
 "fayl adını və s.yoxlayın"
@@ -11690,13 +11804,13 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Reload"
-msgstr ""
+msgstr "Yenilə"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
-"Reload accounting data (taxes, accounts, ...) if you notice inconsistencies."
-" This action is irreversible."
+"Reload accounting data (taxes, accounts, ...) if you notice inconsistencies. "
+"This action is irreversible."
 msgstr ""
 
 #. module: account
@@ -12164,13 +12278,7 @@ msgid "Sample Memo"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
-msgid "Sample Ref"
-msgstr ""
-
-#. module: account
 #. odoo-python
-#: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Sample data"
@@ -12194,7 +12302,6 @@ msgstr "Bu səhifəni yadda saxla və parametri quraşdırmaq üçün geri qayı
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
-#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "Scan me with your banking app."
 msgstr ""
@@ -12263,20 +12370,23 @@ msgstr "Vergiləri Axtarın"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_label
-msgid ""
-"Search in the Statement's Label to find the Invoice/Payment's reference"
+msgid "Search in the Statement's Label to find the Invoice/Payment's reference"
 msgstr ""
+"Hesab-fakturanın/Ödənişin istinadını tapmaq üçün Bəyanatın Etiketində axtarın"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_note
 msgid "Search in the Statement's Note to find the Invoice/Payment's reference"
 msgstr ""
+"Hesab-fakturanın/Ödənişin istinadını tapmaq üçün Bəyanatın Qeydində axtarın"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_reference
 msgid ""
 "Search in the Statement's Reference to find the Invoice/Payment's reference"
 msgstr ""
+"Hesab-fakturanın/Ödənişin istinadını tapmaq üçün Bəyanatın İstinadında "
+"axtarın"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__line_section
@@ -12322,16 +12432,25 @@ msgid "See all activities"
 msgstr "Bütün fəaliyyətlərə bax"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "See items"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
 msgid ""
 "Select 'Sale' for customer invoices journals.\n"
 "Select 'Purchase' for vendor bills journals.\n"
-"Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
+"Select 'Cash' or 'Bank' for journals that are used in customer or vendor "
+"payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
 "Müştərinin faktura jurnalları üzrə \"Satış\"ı seçin.\n"
 "Podratçının faktura jurnalları üzrə \"Satınalma\"nı seçin.\n"
-"Müştəri və ya podratçı ödənişlərində istifadə olunan jurnallar üzrə 'Nağd pul' və ya 'Bank' seçin.\n"
+"Müştəri və ya podratçı ödənişlərində istifadə olunan jurnallar üzrə 'Nağd "
+"pul' və ya 'Bank' seçin.\n"
 "Müxtəlif əməliyyat jurnalları üzrə 'Ümumi' seçin."
 
 #. module: account
@@ -12486,7 +12605,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Send message"
-msgstr ""
+msgstr "Mesaj göndər"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_id
@@ -12567,7 +12686,7 @@ msgstr ""
 #. module: account
 #: model:mail.template,description:account.email_template_edi_credit_note
 msgid "Sent to customers with the credit note in attachment"
-msgstr ""
+msgstr "Kredit bildirişi qoşmada müştərilərə göndərilir"
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_invoice
@@ -12660,6 +12779,12 @@ msgid "Set a price"
 msgstr "Qiymət qoyun"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
+msgid "Set a value greater than 0.0 to activate a credit limit check"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
 msgstr ""
@@ -12713,8 +12838,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__action_id
 msgid ""
-"Setting this field will turn the line into a link, executing the action when"
-" clicked."
+"Setting this field will turn the line into a link, executing the action when "
+"clicked."
 msgstr ""
 
 #. module: account
@@ -12737,13 +12862,14 @@ msgstr "Qısa Kod"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
 msgid ""
-"Shorter name used for display. The journal entries of this journal will also"
-" be named using this prefix by default."
+"Shorter name used for display. The journal entries of this journal will also "
+"be named using this prefix by default."
 msgstr ""
 "Ekran üçün istifadə olunan daha qısa ad. Bu jurnalın jurnal qeydləri də bu "
 "önəkdən istifadə edərək adlanacaqdır."
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
 msgstr ""
 
@@ -12778,6 +12904,7 @@ msgid "Show Force Tax Included"
 msgstr "Vergi Daxil Quvvəti göstər"
 
 #. module: account
+#: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
 msgstr ""
 
@@ -12918,8 +13045,8 @@ msgstr "Mənbə Email"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_accrued_orders_wizard__amount
 msgid ""
-"Specify an arbitrary value that will be accrued on a         default account"
-" for the entire order, regardless of the products on the different lines."
+"Specify an arbitrary value that will be accrued on a         default account "
+"for the entire order, regardless of the products on the different lines."
 msgstr ""
 
 #. module: account
@@ -12937,8 +13064,8 @@ msgid ""
 "Specify which way will be used to round the invoice amount to the rounding "
 "precision"
 msgstr ""
-"Hesab-faktura məbləğini yuvarlaqlaşdırma dəqiqliyinə qədər yuvarlaqlaşdırmaq"
-" üçün hansı üsuldan istifadə ediləcəyini göstərin"
+"Hesab-faktura məbləğini yuvarlaqlaşdırma dəqiqliyinə qədər yuvarlaqlaşdırmaq "
+"üçün hansı üsuldan istifadə ediləcəyini göstərin"
 
 #. module: account
 #. odoo-javascript
@@ -13148,7 +13275,7 @@ msgstr "Asma Hesab"
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_move_type
 msgid "Switch into invoice/credit note"
-msgstr ""
+msgstr "Hesab-Faktura/Kredit-Nota-a dəyişin"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
@@ -13166,8 +13293,8 @@ msgstr "Etiketlər"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_tag_ids
 msgid ""
-"Tags assigned to this line by the tax creating it, if any. It determines its"
-" impact on financial reports."
+"Tags assigned to this line by the tax creating it, if any. It determines its "
+"impact on financial reports."
 msgstr ""
 "Əgər varsa, vergini yaratmaqla bu xəttə təyin edilmiş teqlər Onun maliyyə "
 "hesabatlarına təsirini müəyyənləşdirir."
@@ -13216,7 +13343,7 @@ msgstr "Vergi"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
 msgid "Tax 15%"
-msgstr ""
+msgstr "Vergi 15%"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__advance_tax_payment_account_id
@@ -13309,7 +13436,7 @@ msgstr "Vergi İD-si"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__force_tax_included
 msgid "Tax Included in Price"
-msgstr "Qiymətə  daxil olan Vergi"
+msgstr "Qiymətə daxil olan Vergi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_key
@@ -13509,8 +13636,8 @@ msgstr "Tətbiq olunan Vergilər"
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
-"Taxes exigible on payment and on invoice cannot be mixed on the same journal"
-" item if they share some tag."
+"Taxes exigible on payment and on invoice cannot be mixed on the same journal "
+"item if they share some tag."
 msgstr ""
 
 #. module: account
@@ -13528,8 +13655,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_enabled_tax_country_ids
 msgid ""
-"Technical field containing the countries for which this company is using "
-"tax-related features(hence the ones for which l10n modules need to show tax-"
+"Technical field containing the countries for which this company is using tax-"
+"related features(hence the ones for which l10n modules need to show tax-"
 "related fields)."
 msgstr ""
 
@@ -13559,10 +13686,14 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence_override_regex
 msgid ""
-"Technical field used to enforce complex sequence composition that the system would normally misunderstand.\n"
-"This is a regex that can include all the following capture groups: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"
-"The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"
-"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"Technical field used to enforce complex sequence composition that the system "
+"would normally misunderstand.\n"
+"This is a regex that can include all the following capture groups: prefix1, "
+"year, prefix2, month, prefix3, seq, suffix.\n"
+"The prefix* groups are the separators between the year, month and the actual "
+"increasing sequence number (seq).\n"
+"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
+"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 msgstr ""
 
 #. module: account
@@ -13588,20 +13719,20 @@ msgstr "Şərtlər və Qaydalar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_terms_html
 msgid "Terms & Conditions as a Web page"
-msgstr ""
+msgstr "Qaydalar və Şərtlər Veb səhifə kimi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__terms_type
 #: model:ir.model.fields,field_description:account.field_res_config_settings__terms_type
 msgid "Terms & Conditions format"
-msgstr ""
+msgstr "Qaydalar və Şərtlər formatı"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Terms & Conditions: %s"
-msgstr ""
+msgstr "Qaydalar və Şərtlər: %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__narration
@@ -13633,9 +13764,20 @@ msgstr ""
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid ""
-"The %(date_field)s (%(date)s) doesn't match the sequence number of the related %(model)s (%(sequence)s)\n"
+"The %(date_field)s (%(date)s) doesn't match the sequence number of the "
+"related %(model)s (%(sequence)s)\n"
 "You will need to clear the %(model)s's %(sequence_field)s to proceed.\n"
-"In doing so, you might want to resequence your entries in order to maintain a continuous date-based sequence."
+"In doing so, you might want to resequence your entries in order to maintain "
+"a continuous date-based sequence."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"The %s chart template shouldn't be selected directly. Instead, you should "
+"directly select the chart template related to your country."
 msgstr ""
 
 #. module: account
@@ -13666,8 +13808,8 @@ msgstr ""
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid ""
-"The Early Payment Discount functionality can only be used with payment terms"
-" using a single 100% line. "
+"The Early Payment Discount functionality can only be used with payment terms "
+"using a single 100% line. "
 msgstr ""
 
 #. module: account
@@ -13712,15 +13854,6 @@ msgstr ""
 msgid ""
 "The Payment Term must have at least one percent line and the sum of the "
 "percent must be 100%."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/chart_template.py:0
-#, python-format
-msgid ""
-"The %s chart template shouldn't be selected directly. Instead, you should "
-"directly select the chart template related to your country."
 msgstr ""
 
 #. module: account
@@ -13783,8 +13916,8 @@ msgstr "Avtomatik məzənnə fərqlərinin qeyd ediləcəyi mühasibat uçotu ju
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__amount_currency
 #: model:ir.model.fields,help:account.field_account_move_line__amount_currency
 msgid ""
-"The amount expressed in an optional other currency if it is a multi-currency"
-" entry."
+"The amount expressed in an optional other currency if it is a multi-currency "
+"entry."
 msgstr ""
 "Çox valyutalı giriş olduqda istəyə bağlı digər valyuta ilə ifadə olunan "
 "məbləğ."
@@ -13792,8 +13925,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_amount_currency_balance_sign
 msgid ""
-"The amount expressed in the secondary currency must be positive when account"
-" is debited and negative when account is credited. If the currency is the "
+"The amount expressed in the secondary currency must be positive when account "
+"is debited and negative when account is credited. If the currency is the "
 "same as the one from the company, this amount must strictly be equal to the "
 "balance."
 msgstr ""
@@ -13887,8 +14020,8 @@ msgstr ""
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""
-"The country code of the foreign VAT number does not match any country in the"
-" group."
+"The country code of the foreign VAT number does not match any country in the "
+"group."
 msgstr ""
 
 #. module: account
@@ -13906,8 +14039,8 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 #, python-format
 msgid ""
-"The country set on the foreign VAT fiscal position must match the one set on"
-" the report."
+"The country set on the foreign VAT fiscal position must match the one set on "
+"the report."
 msgstr ""
 
 #. module: account
@@ -14076,10 +14209,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid ""
 "The hash chain is compliant: it is not possible to alter the\n"
-"                                            data without breaking the hash chain for subsequent parts."
+"                                            data without breaking the hash "
+"chain for subsequent parts."
 msgstr ""
 "Həş zənciri uyğundur: sonrakı hissələr üçün\n"
-"                                            həş zəncirini pozmadan məlumatları dəyişdirmək mümkün deyil."
+"                                            həş zəncirini pozmadan "
+"məlumatları dəyişdirmək mümkün deyil."
 
 #. module: account
 #. odoo-python
@@ -14108,8 +14243,10 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement_line.py:0
 #, python-format
 msgid ""
-"The journal entry %s reached an invalid state regarding its related statement line.\n"
-"To be consistent, the journal entry must always have exactly one journal item involving the bank/cash account."
+"The journal entry %s reached an invalid state regarding its related "
+"statement line.\n"
+"To be consistent, the journal entry must always have exactly one journal "
+"item involving the bank/cash account."
 msgstr ""
 
 #. module: account
@@ -14147,8 +14284,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_month
-msgid ""
-"The last day of the month will be used if the chosen day doesn't exist."
+msgid "The last day of the month will be used if the chosen day doesn't exist."
 msgstr "Seçilmiş gün olmadıqda ayın son günü istifadə olunacaq."
 
 #. module: account
@@ -14160,7 +14296,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model__partner_mapping_line_ids
 msgid ""
 "The mapping uses regular expressions.\n"
-"- To Match the text at the beginning of the line (in label or notes), simply fill in your text.\n"
+"- To Match the text at the beginning of the line (in label or notes), simply "
+"fill in your text.\n"
 "- To Match the text anywhere (in label or notes), put your text between .*\n"
 "  e.g: .*N°48748 abc123.*"
 msgstr ""
@@ -14187,8 +14324,8 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
-"The operation is refused as it would impact an already issued tax statement."
-" Please change the journal entry date or the tax lock date set in the "
+"The operation is refused as it would impact an already issued tax statement. "
+"Please change the journal entry date or the tax lock date set in the "
 "settings (%s) to proceed."
 msgstr ""
 "Əməliyyatda imtina edilmişdir, çünki o artıq verilmiş çıxarışlara təsir "
@@ -14213,9 +14350,9 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__sequence
 msgid ""
-"The order in which distribution lines are displayed and matched. For refunds"
-" to work properly, invoice distribution lines should be arranged in the same"
-" order as the credit note distribution lines they correspond to."
+"The order in which distribution lines are displayed and matched. For refunds "
+"to work properly, invoice distribution lines should be arranged in the same "
+"order as the credit note distribution lines they correspond to."
 msgstr ""
 
 #. module: account
@@ -14278,8 +14415,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
 msgid ""
-"The reconciliation model will only be applied to the selected "
-"customer/vendor categories."
+"The reconciliation model will only be applied to the selected customer/"
+"vendor categories."
 msgstr ""
 "Üzləşdirmə modeli yalnız müştərilərin/podratçıların seçilmiş "
 "kateqoriyalarına tətbiq olunacaq."
@@ -14287,15 +14424,16 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_ids
 msgid ""
-"The reconciliation model will only be applied to the selected "
-"customers/vendors."
+"The reconciliation model will only be applied to the selected customers/"
+"vendors."
 msgstr ""
 "Üzləşdirmə modeli yalnız seçilmiş müştərilərə/podratçılara tətbiq olunacaq."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_nature
 msgid ""
-"The reconciliation model will only be applied to the selected transaction type:\n"
+"The reconciliation model will only be applied to the selected transaction "
+"type:\n"
 "        * Amount Received: Only applied when receiving an amount.\n"
 "        * Amount Paid: Only applied when paying an amount.\n"
 "        * Amount Paid/Received: Applied in both cases."
@@ -14325,40 +14463,51 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
 msgid ""
 "The reconciliation model will only be applied when the label:\n"
-"        * Contains: The proposition label must contains this string (case insensitive).\n"
+"        * Contains: The proposition label must contains this string (case "
+"insensitive).\n"
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"Üzləşdirmə modeli yalnız etiket aşağıdakılardan ibarət olduqda tətbiq oluna bilər:\n"
-"        * Ehtiva edir: təklif etiketi bu sətir üzrə olmalıdır (Böyük-kiçik hərflər nəzərə alınmadan)\n"
+"Üzləşdirmə modeli yalnız etiket aşağıdakılardan ibarət olduqda tətbiq oluna "
+"bilər:\n"
+"        * Ehtiva edir: təklif etiketi bu sətir üzrə olmalıdır (Böyük-kiçik "
+"hərflər nəzərə alınmadan)\n"
 "        * Ehtiva etmir: \"Ehtiva edilənlər\"in inkarı\n"
-"        * Rasional ifadələrin uyğunluğu: öz müntəzəm ifadənizi müəyyənləşdirin."
+"        * Rasional ifadələrin uyğunluğu: öz müntəzəm ifadənizi "
+"müəyyənləşdirin."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_note
 msgid ""
 "The reconciliation model will only be applied when the note:\n"
-"        * Contains: The proposition note must contains this string (case insensitive).\n"
+"        * Contains: The proposition note must contains this string (case "
+"insensitive).\n"
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
 "Üzləşdirmə modeli yalnız qeyd edildiyi halda tətbiq olunacaq:\n"
-"        * Ehtiva edir: təklif qeydləri (böyük- kiçik hərfləri nəzərə almadan) bu sətir üzrə olmalıdır.\n"
+"        * Ehtiva edir: təklif qeydləri (böyük- kiçik hərfləri nəzərə "
+"almadan) bu sətir üzrə olmalıdır.\n"
 "        * Ehtiva etmir: \"Ehtiva edilənlər\"in inkarı\n"
-"        * Rasional ifadələrin uyğunluğu: öz müntəzəm ifadənizi müəyyənləşdirin."
+"        * Rasional ifadələrin uyğunluğu: öz müntəzəm ifadənizi "
+"müəyyənləşdirin."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_transaction_type
 msgid ""
 "The reconciliation model will only be applied when the transaction type:\n"
-"        * Contains: The proposition transaction type must contains this string (case insensitive).\n"
+"        * Contains: The proposition transaction type must contains this "
+"string (case insensitive).\n"
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"Üzləşdirmə modeli yalnız əməliyyat növü aşağıdakılardan ibarət olduqda tətbiq ediləcəkdir:\n"
-"        * Ehtiva edir: Təklif əməliyyat tipi bu sətir üzrə (böyük- kiçik hərfləri nəzərə almadan) olmalıdır.\n"
+"Üzləşdirmə modeli yalnız əməliyyat növü aşağıdakılardan ibarət olduqda "
+"tətbiq ediləcəkdir:\n"
+"        * Ehtiva edir: Təklif əməliyyat tipi bu sətir üzrə (böyük- kiçik "
+"hərfləri nəzərə almadan) olmalıdır.\n"
 "        * Ehtiva etmir: \"Ehtiva edilənlər\"in inkarı\n"
-"        * Rasional ifadələrin uyğunluğu: öz müntəzəm ifadənizi müəyyənləşdirin."
+"        * Rasional ifadələrin uyğunluğu: öz müntəzəm ifadənizi "
+"müəyyənləşdirin."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_journal_ids
@@ -14432,7 +14581,8 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid ""
-"The selected destination account is set to use a specific currency. Every entry transferred to it will be converted into this currency, causing\n"
+"The selected destination account is set to use a specific currency. Every "
+"entry transferred to it will be converted into this currency, causing\n"
 "                        the loss of any pre-existing foreign currency amount."
 msgstr ""
 
@@ -14441,8 +14591,8 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid ""
-"The selected payment method is not available for this payment, please select"
-" the payment method again."
+"The selected payment method is not available for this payment, please select "
+"the payment method again."
 msgstr ""
 
 #. module: account
@@ -14471,7 +14621,8 @@ msgstr ""
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid ""
-"The sequence regex should at least contain the seq grouping keys. For instance:\n"
+"The sequence regex should at least contain the seq grouping keys. For "
+"instance:\n"
 "^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
 msgstr ""
 
@@ -14520,8 +14671,8 @@ msgstr ""
 #: code:addons/account/wizard/account_resequence.py:0
 #, python-format
 msgid ""
-"The sequences of this journal are different for Invoices and Refunds but you"
-" selected some of both types."
+"The sequences of this journal are different for Invoices and Refunds but you "
+"selected some of both types."
 msgstr ""
 
 #. module: account
@@ -14618,8 +14769,8 @@ msgid ""
 "There are still unposted entries in the period you want to lock. You should "
 "either post or delete them."
 msgstr ""
-"Bağlamaq istədiyiniz dövrdə hələ də paylaşılmamış qeydlər var. Siz onları ya"
-" paylaşmalı, ya da silməlisiniz."
+"Bağlamaq istədiyiniz dövrdə hələ də paylaşılmamış qeydlər var. Siz onları ya "
+"paylaşmalı, ya da silməlisiniz."
 
 #. module: account
 #. odoo-python
@@ -14753,9 +14904,9 @@ msgstr "Bu hərəkət bu sənəd üçün uyğun deyil."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
-"This allows accountants to manage analytic and crossovered budgets. Once the"
-" master budgets and the budgets are defined, the project managers can set "
-"the planned amount on each analytic account."
+"This allows accountants to manage analytic and crossovered budgets. Once the "
+"master budgets and the budgets are defined, the project managers can set the "
+"planned amount on each analytic account."
 msgstr ""
 "Bu, mühasiblərin analitik və çarpaz büdcələri idarə etməsinə imkan verir. "
 "Əsas büdcələr və büdcələr müəyyən edildikdən sonra, layihə menecerləri hər "
@@ -14764,10 +14915,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__module_account_batch_payment
 msgid ""
-"This allows you grouping payments into a single batch and eases the reconciliation process.\n"
+"This allows you grouping payments into a single batch and eases the "
+"reconciliation process.\n"
 "-This installs the account_batch_payment module."
 msgstr ""
-"Bu, ödənişləri bir paketə qruplaşdırmağa imkan verir və yoxlama prosesini asanlaşdırır.\n"
+"Bu, ödənişləri bir paketə qruplaşdırmağa imkan verir və yoxlama prosesini "
+"asanlaşdırır.\n"
 "- Account_batch_payment modulu quraşdırılır."
 
 #. module: account
@@ -14798,8 +14951,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"This entry contains one or more taxes that are incompatible with your fiscal"
-" country. Check company fiscal country in the settings and tax country in "
+"This entry contains one or more taxes that are incompatible with your fiscal "
+"country. Check company fiscal country in the settings and tax country in "
 "taxes configuration."
 msgstr ""
 
@@ -14808,8 +14961,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"This entry contains taxes that are not compatible with your fiscal position."
-" Check the country set in fiscal position and in your tax configuration."
+"This entry contains taxes that are not compatible with your fiscal position. "
+"Check the country set in fiscal position and in your tax configuration."
 msgstr ""
 
 #. module: account
@@ -14846,8 +14999,8 @@ msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
 msgstr ""
-"Bu sahədən ödənilə bilən və qəbul edilə bilən jurnal girişləri üçün istifadə"
-" edilir. Bu sətrin ödənişi üçün son tarix əlavə edə bilərsiniz."
+"Bu sahədən ödənilə bilən və qəbul edilə bilən jurnal girişləri üçün istifadə "
+"edilir. Bu sətrin ödənişi üçün son tarix əlavə edə bilərsiniz."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14864,14 +15017,6 @@ msgstr "Bu mühasibat monitorinqi panelidir"
 msgid ""
 "This is the default credit limit that will be used on partners that do not "
 "have a specific limit on them."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal.py:0
-#, python-format
-msgid ""
-"This journal is associated with a payment method. You cannot archive it"
 msgstr ""
 
 #. module: account
@@ -14948,8 +15093,8 @@ msgid ""
 "This payment term will be used instead of the default one for sales orders "
 "and customer invoices"
 msgstr ""
-"Bu ödəniş müddəti satış sifarişləri və müştəri fakturaları üçün susmaya görə"
-" istifadə olunacaq."
+"Bu ödəniş müddəti satış sifarişləri və müştəri fakturaları üçün susmaya görə "
+"istifadə olunacaq."
 
 #. module: account
 #. odoo-python
@@ -14957,7 +15102,8 @@ msgstr ""
 #, python-format
 msgid ""
 "This product is already being used in posted Journal Entries.\n"
-"If you want to change its Unit of Measure, please archive this product and create a new one."
+"If you want to change its Unit of Measure, please archive this product and "
+"create a new one."
 msgstr ""
 
 #. module: account
@@ -14982,6 +15128,13 @@ msgid "This recurring move will be posted up to and including this date."
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "This specific error occurred during the import:"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "This will update all taxes and accounts based on the currently selected "
@@ -14991,8 +15144,8 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
 msgid ""
-"This wizard will validate all journal entries selected. Once journal entries"
-" are validated, you can not update them anymore."
+"This wizard will validate all journal entries selected. Once journal entries "
+"are validated, you can not update them anymore."
 msgstr ""
 "Bu sehrbaz seçilmiş bütün  jurnal giriş qeydlərini yoxlayacaq. Jurnal "
 "girişləri təsdiqləndikdən sonra onları güncəlləyə bilməzsiniz."
@@ -15047,8 +15200,7 @@ msgstr "Hesab-fakturaya"
 #, python-format
 msgid ""
 "To record payments with %s, the recipient bank account must be manually "
-"validated. You should go on the partner bank account in order to validate "
-"it."
+"validated. You should go on the partner bank account in order to validate it."
 msgstr ""
 
 #. module: account
@@ -15163,8 +15315,7 @@ msgstr "Ümumi İmzalanmış"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"Total amount due (including sales orders and this document): "
-"%(total_credit)s"
+"Total amount due (including sales orders and this document): %(total_credit)s"
 msgstr ""
 
 #. module: account
@@ -15301,7 +15452,9 @@ msgstr "%s-ə köçürmə"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit."
+"Total Receivable amount exceeding a "
+"limit.                                      Set a value greater than 0.0 to "
+"activate a credit limit check"
 msgstr ""
 
 #. module: account
@@ -15309,7 +15462,7 @@ msgstr ""
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "True"
-msgstr ""
+msgstr "Doğru"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -15498,7 +15651,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
-#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_tax.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_untaxed
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed
@@ -15506,29 +15658,29 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 #, python-format
 msgid "Untaxed Amount"
-msgstr "Vergiləndirilməmiş Məbləğ"
+msgstr "ƏDV'siz Məbləğ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_untaxed_signed
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_untaxed_signed
 msgid "Untaxed Amount Signed"
-msgstr "İmzalanan Vergiləndirilməmiş Məbləğ"
+msgstr "İmzalanan ƏDV'siz Məbləğ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_subtotal
 msgid "Untaxed Total"
-msgstr "Vergiləndirilməmiş Cəmi Məbləğ"
+msgstr "ƏDV'siz Cəmi Məbləğ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_company_currency_template
 msgid "Untaxed amount"
-msgstr "Vergiləndirilməmiş Məbləğ"
+msgstr "ƏDV'siz Məbləğ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Untrusted"
-msgstr ""
+msgstr "Etibarsız"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__untrusted_bank_ids
@@ -15565,7 +15717,7 @@ msgstr ""
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid "Update Terms & Conditions"
-msgstr ""
+msgstr "Qaydalar və Şərtləri yeniləyin"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15597,7 +15749,7 @@ msgstr ""
 #: code:addons/account/static/src/components/mail_attachments/mail_attachments.js:0
 #, python-format
 msgid "Uploading error"
-msgstr ""
+msgstr "Yükləmə xətası"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_exigibility
@@ -15622,7 +15774,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_multi_company__tax_units
 msgid "Use Tax Units"
-msgstr ""
+msgstr "Vergi vahidlərindən istifadə edin"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__anglo_saxon_accounting
@@ -15656,8 +15808,8 @@ msgstr "Şablonu istifadə et"
 #. module: account
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_0
 msgid ""
-"Use the “<i>Send by Post</i>” option to post invoices automatically. For the"
-" cost of a local stamp, we do all the manual work: your invoice will be "
+"Use the “<i>Send by Post</i>” option to post invoices automatically. For the "
+"cost of a local stamp, we do all the manual work: your invoice will be "
 "printed in the right country, put in an envelop and sent by snail mail. Use "
 "this feature from the list view to post hundreds of invoices in bulk."
 msgstr ""
@@ -15668,7 +15820,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment__quick_edit_total_amount
 msgid ""
 "Use this field to encode the total amount of the invoice.\n"
-"Odoo will automatically create one invoice line with default values to match it."
+"Odoo will automatically create one invoice line with default values to match "
+"it."
 msgstr ""
 
 #. module: account
@@ -15685,8 +15838,8 @@ msgid ""
 "should not have this option set."
 msgstr ""
 "Yalnız maliyyə ilindən deyil, vaxtın başlanğıcından jurnal sətirlərini "
-"nəzərdən keçirmək lazım olub-olmadığını öyrənmək üçün hesabatlardan istifadə"
-" olunur. Hər bir yeni maliyyə ilində (məsələn, xərclər, gəlirlər) "
+"nəzərdən keçirmək lazım olub-olmadığını öyrənmək üçün hesabatlardan istifadə "
+"olunur. Hər bir yeni maliyyə ilində (məsələn, xərclər, gəlirlər) "
 "sıfırlanmalı olan hesab növləri   bu seçimə sahib olmamalıdır."
 
 #. module: account
@@ -15706,8 +15859,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__profit_account_id
 msgid ""
-"Used to register a profit when the ending balance of a cash register differs"
-" from what the system computes"
+"Used to register a profit when the ending balance of a cash register differs "
+"from what the system computes"
 msgstr ""
 "Kassa qeydinin bağlanış balansı sistemin hesabladığından fərqli olduqda "
 "mənfəətin qeydiyyatı üçün istifadə olundu"
@@ -15781,8 +15934,10 @@ msgstr "Dəyər"
 msgid ""
 "Value for the amount of the writeoff line\n"
 "    * Percentage: Percentage of the balance, between 0 and 100.\n"
-"    * Fixed: The fixed value of the writeoff. The amount will count as a debit if it is negative, as a credit if it is positive.\n"
-"    * From Label: There is no need for regex delimiter, only the regex is needed. For instance if you want to extract the amount from\n"
+"    * Fixed: The fixed value of the writeoff. The amount will count as a "
+"debit if it is negative, as a credit if it is positive.\n"
+"    * From Label: There is no need for regex delimiter, only the regex is "
+"needed. For instance if you want to extract the amount from\n"
 "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
 "You could enter\n"
 "BRT: ([\\d,]+)"
@@ -15806,7 +15961,7 @@ msgstr "Podratçı"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Vendor Bank Account"
-msgstr ""
+msgstr "Təchizatçı Bank Hesabı"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_vendor_bill_id
@@ -15823,7 +15978,7 @@ msgstr "Podratçının Fakturası"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_account__vendor_bill_count
 msgid "Vendor Bill Count"
-msgstr ""
+msgstr "Təchizatçı Qaiməsi Sayı"
 
 #. module: account
 #. odoo-python
@@ -15837,8 +15992,10 @@ msgstr "Podratçının Fakturası Tərtib olundu"
 #: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model:account.journal,name:account.1_purchase
+#: model:ir.actions.act_window,name:account.res_partner_action_supplier_bills
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__in_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 #, python-format
@@ -15848,7 +16005,7 @@ msgstr "Podratçının Fakturaları"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_discount_income_allocation_id
 msgid "Vendor Bills Discounts Account"
-msgstr ""
+msgstr "Təchizatçı Qaimələri Endirimlər Hesabı"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__in_refund
@@ -15894,7 +16051,7 @@ msgstr "Podratçının Vergiləri"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Vendor:"
-msgstr ""
+msgstr "Təchizatçı:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.res_partner_action_supplier
@@ -15904,6 +16061,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Vendors"
 msgstr "Podratçılar"
+
+#. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid ""
+"Vendors bills can be pre-generated based on purchase\n"
+"                orders or receipts. This allows you to control bills\n"
+"                you receive from your vendor according to the draft\n"
+"                document in Odoo."
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -15972,11 +16138,14 @@ msgstr ""
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
-"We cannot find a chart of accounts for this company, you should configure it. \n"
-"Please go to Account Configuration and select or install a fiscal localization."
+"We cannot find a chart of accounts for this company, you should configure "
+"it. \n"
+"Please go to Account Configuration and select or install a fiscal "
+"localization."
 msgstr ""
 "Bu şirkət üçün bir  hesablar planı tapılmadı, onu tənzimləməlisiniz. \n"
-"Xahiş edirik, Hesabın tənzimləmələrinə keçin və maliyyə məkanını seçin və ya quraşdırın."
+"Xahiş edirik, Hesabın tənzimləmələrinə keçin və maliyyə məkanını seçin və ya "
+"quraşdırın."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
@@ -16022,12 +16191,13 @@ msgid ""
 "When an internal transfer is posted, a paired payment is created. They are "
 "cross referenced through this field"
 msgstr ""
+"Daxili köçürmə göndərildikdə, cütləşdirilmiş ödəniş yaradılır. Onlar bu sahə "
+"vasitəsilə bir-birinə istinad edirlər"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__print_on_new_page
 msgid ""
-"When checked this line and everything after it will be printed on a new "
-"page."
+"When checked this line and everything after it will be printed on a new page."
 msgstr ""
 "Bu sətir yoxlandıqda və ondan sonra hər şey yeni bir səhifədə çap olunacaq."
 
@@ -16039,8 +16209,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_expression__blank_if_zero
 msgid ""
-"When checked, 0 values will not show when displaying this expression's "
-"value."
+"When checked, 0 values will not show when displaying this expression's value."
 msgstr ""
 
 #. module: account
@@ -16058,7 +16227,8 @@ msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
 "                vendor payment related to this purchase receipt."
 msgstr ""
-"Satınalma qəbzi təsdiq olunduqda, bu satınalma qəbzi ilə bağlı podratçının ödənişini qeyd edə bilərsiniz\n"
+"Satınalma qəbzi təsdiq olunduqda, bu satınalma qəbzi ilə bağlı podratçının "
+"ödənişini qeyd edə bilərsiniz\n"
 "                ."
 
 #. module: account
@@ -16067,7 +16237,8 @@ msgid ""
 "When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt."
 msgstr ""
-"Satış qəbzi təsdiq olunduqda, bu satış qəbzi ilə bağlı müştərinin ödənişini \n"
+"Satış qəbzi təsdiq olunduqda, bu satış qəbzi ilə bağlı müştərinin "
+"ödənişini \n"
 "                qeyd edə bilərsiniz."
 
 #. module: account
@@ -16137,8 +16308,8 @@ msgid ""
 "You can check this box to mark this journal item as a litigation with the "
 "associated partner"
 msgstr ""
-"Bu jurnal sətirlərini əlaqədar tərəfdaşla məhkəməyə müraciət kimi qeyd etmək"
-" üçün bu xananı işarələyə bilərsiniz"
+"Bu jurnal sətirlərini əlaqədar tərəfdaşla məhkəməyə müraciət kimi qeyd etmək "
+"üçün bu xananı işarələyə bilərsiniz"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_model
@@ -16186,8 +16357,7 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid ""
-"You can only change the period/account for items that are not yet "
-"reconciled."
+"You can only change the period/account for items that are not yet reconciled."
 msgstr ""
 
 #. module: account
@@ -16215,8 +16385,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
-msgid ""
-"You can only request a cancellation for invoice sent to the government."
+msgid "You can only request a cancellation for invoice sent to the government."
 msgstr ""
 
 #. module: account
@@ -16298,8 +16467,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You can't create a new payment without an outstanding payments/receipts "
-"account set either on the company or the %s payment method in the %s "
-"journal."
+"account set either on the company or the %s payment method in the %s journal."
 msgstr ""
 
 #. module: account
@@ -16315,16 +16483,16 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
-msgid "You can't create payments for entries belonging to different branches."
+msgid ""
+"You can't create payments for entries belonging to different branches "
+"without access to parent company."
 msgstr ""
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
-#: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
-msgid ""
-"You can't create payments for entries belonging to different companies."
+msgid "You can't create payments for entries belonging to different companies."
 msgstr ""
 
 #. module: account
@@ -16350,7 +16518,8 @@ msgstr ""
 msgid ""
 "You can't delete the account %s, as it is used on a contact.\n"
 "\n"
-"Think of it as safeguarding your customer's receivables; your CFO would appreciate it :)"
+"Think of it as safeguarding your customer's receivables; your CFO would "
+"appreciate it :)"
 msgstr ""
 
 #. module: account
@@ -16367,8 +16536,8 @@ msgstr ""
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid ""
-"You can't open the register payment wizard without at least one "
-"receivable/payable line."
+"You can't open the register payment wizard without at least one receivable/"
+"payable line."
 msgstr ""
 
 #. module: account
@@ -16376,8 +16545,8 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement_line.py:0
 #, python-format
 msgid ""
-"You can't provide a foreign currency without specifying an amount in 'Amount"
-" in Currency' field."
+"You can't provide a foreign currency without specifying an amount in 'Amount "
+"in Currency' field."
 msgstr ""
 
 #. module: account
@@ -16385,8 +16554,8 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement_line.py:0
 #, python-format
 msgid ""
-"You can't provide an amount in foreign currency without specifying a foreign"
-" currency."
+"You can't provide an amount in foreign currency without specifying a foreign "
+"currency."
 msgstr ""
 
 #. module: account
@@ -16423,8 +16592,8 @@ msgstr ""
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s."
 msgstr ""
-"Siz %s bloketmə tarixinə qədər (həmin tarix də daxil olmaqla), qeydlər əlavə"
-" edə/ onlarda dəyişiklik edə bilməzsiniz."
+"Siz %s bloketmə tarixinə qədər (həmin tarix də daxil olmaqla), qeydlər əlavə "
+"edə/ onlarda dəyişiklik edə bilməzsiniz."
 
 #. module: account
 #. odoo-python
@@ -16434,9 +16603,9 @@ msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
 "Check the company settings or ask someone with the 'Adviser' role"
 msgstr ""
-"Siz %s bloketmə tarixinə qədər (həmin tarix də daxil olmaqla), qeydlər əlavə"
-" edə/ onlarda dəyişiklik edə bilməzsiniz. Şirkətin tənzimləmələrini yoxlayın"
-" və ya \"Məsləhətçi\" vəzifəli bir nəfərdən bunu xahiş edin"
+"Siz %s bloketmə tarixinə qədər (həmin tarix də daxil olmaqla), qeydlər əlavə "
+"edə/ onlarda dəyişiklik edə bilməzsiniz. Şirkətin tənzimləmələrini yoxlayın "
+"və ya \"Məsləhətçi\" vəzifəli bir nəfərdən bunu xahiş edin"
 
 #. module: account
 #. odoo-python
@@ -16454,8 +16623,8 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
-"You cannot change the type of an account set as Bank Account on a journal to"
-" Receivable or Payable."
+"You cannot change the type of an account set as Bank Account on a journal to "
+"Receivable or Payable."
 msgstr ""
 
 #. module: account
@@ -16474,24 +16643,6 @@ msgstr ""
 msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country without assigning it a state."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, python-format
-msgid ""
-"You cannot create a fiscal position with a foreign VAT within your fiscal "
-"country."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-#, python-format
-msgid ""
-"You cannot create a fiscal position within your fiscal country with the same"
-" VAT number as the main one set on your company."
 msgstr ""
 
 #. module: account
@@ -16557,6 +16708,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot deprecate an account that is used in a tax distribution."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -16572,10 +16730,13 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
-"You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
+"You cannot do this modification on a reconciled journal entry. You can just "
+"change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %s (%s)"
 msgstr ""
-"Siz tutuşdurulmuş jurnal qeydi üzrə bu dəyişikliyi edə bilməzsiniz. Siz sadəcə hüquqa aid olmayan bəzi sahələri dəyişdirə bilərsiniz, yaxud, əvvəlcə, tutuşdurmadan imtina etməlisiniz.\n"
+"Siz tutuşdurulmuş jurnal qeydi üzrə bu dəyişikliyi edə bilməzsiniz. Siz "
+"sadəcə hüquqa aid olmayan bəzi sahələri dəyişdirə bilərsiniz, yaxud, "
+"əvvəlcə, tutuşdurmadan imtina etməlisiniz.\n"
 "Jurnal qeydi (id): %s (%s)"
 
 #. module: account
@@ -16583,11 +16744,11 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"You cannot edit the following fields due to restrict mode being activated on"
-" the journal: %s."
+"You cannot edit the following fields due to restrict mode being activated on "
+"the journal: %s."
 msgstr ""
-"Jurnalda ciddi rejim aktiv edildiyinə görə, siz aşağıdakı sahələri dəyişdirə"
-" bilməzsiniz: %s."
+"Jurnalda ciddi rejim aktiv edildiyinə görə, siz aşağıdakı sahələri dəyişdirə "
+"bilməzsiniz: %s."
 
 #. module: account
 #. odoo-python
@@ -16721,6 +16882,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You cannot post an entry with an archived analytic account: %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_currency.py:0
 #, python-format
 msgid ""
@@ -16786,7 +16954,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
-msgid "You cannot switch the type of a posted document."
+msgid "You cannot switch the type of a document which has been posted once."
 msgstr ""
 
 #. module: account
@@ -16802,8 +16970,7 @@ msgstr "Köhnə hesablardan istifadə edə bilməzsiniz."
 #, python-format
 msgid "You cannot use taxes on lines with an Off-Balance account"
 msgstr ""
-"Balansdankənar hesabı olan sətirlər üzrə vergilərdən istifadə edə "
-"bilməzsiniz"
+"Balansdankənar hesabı olan sətirlər üzrə vergilərdən istifadə edə bilməzsiniz"
 
 #. module: account
 #. odoo-python
@@ -16828,8 +16995,8 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
-"You cannot use this account (%s) in this journal, check the section "
-"'Control-Access' under tab 'Advanced Settings' on the related journal."
+"You cannot use this account (%s) in this journal, check the section 'Control-"
+"Access' under tab 'Advanced Settings' on the related journal."
 msgstr ""
 
 #. module: account
@@ -16857,8 +17024,8 @@ msgid ""
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
 msgstr ""
-"Siz mənfi ümumi məbləği ilə fakturanı təsdiq edə  bilməzsiniz. Bunun əvəzinə"
-" bir kredit-nota yaratmalısınız. Kredit-notaya və ya geri ödəməyə  keçmək "
+"Siz mənfi ümumi məbləği ilə fakturanı təsdiq edə  bilməzsiniz. Bunun əvəzinə "
+"bir kredit-nota yaratmalısınız. Kredit-notaya və ya geri ödəməyə  keçmək "
 "üçün fəaliyyət menyusundan istifadə edin."
 
 #. module: account
@@ -16978,7 +17145,6 @@ msgstr "[FURN_8999] Üç nəfərlik divan"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"
 msgstr "[Not set]"
@@ -17030,8 +17196,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid ""
 "cannot under any circumstances, be required by the client to appear as a "
-"third party in the context of any claim for damages filed against the client"
-" by an end consumer."
+"third party in the context of any claim for damages filed against the client "
+"by an end consumer."
 msgstr ""
 
 #. module: account
@@ -17177,7 +17343,8 @@ msgstr "Hesab-fakturalar"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid ""
 "is a money transfer service and not a bank.\n"
-"                            Double check if the account can be trusted by calling the vendor.<br/>"
+"                            Double check if the account can be trusted by "
+"calling the vendor.<br/>"
 msgstr ""
 
 #. module: account
@@ -17198,8 +17365,8 @@ msgstr "qanun."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid ""
-"must be notified of any claim by means of a letter sent by recorded delivery"
-" to its registered office within 8 days of the delivery of the goods or the "
+"must be notified of any claim by means of a letter sent by recorded delivery "
+"to its registered office within 8 days of the delivery of the goods or the "
 "provision of the services."
 msgstr ""
 
@@ -17248,7 +17415,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_tax.py:0
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "repartition line"
@@ -17396,7 +17562,6 @@ msgstr "{label}:  {new_date} tarixində olan düzəliş"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent}% recognized on {new_date}"
 msgstr ""
@@ -17405,8 +17570,7 @@ msgstr ""
 #: model:mail.template,subject:account.email_template_edi_credit_note
 msgid ""
 "{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
-msgstr ""
-"{{ object.company_id.name }} Qaytarma (Ref {{ object.name or 'n/a' }})"
+msgstr "{{ object.company_id.name }} Qaytarma (Ref {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
@@ -17416,7 +17580,6 @@ msgstr "{{ object.company_id.name }} Qaimə (Ref {{ object.name or 'n/a' }})"
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
 msgid ""
-"{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' "
-"}})"
+"{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Ödəniş Qəbzi (Ref {{ object.name or 'n/a' }})"

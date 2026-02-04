@@ -1,54 +1,59 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* mrp
-# 
+# * mrp
+#
 # Translators:
-# Wil Odoo, 2024
+# Wil Odoo, 2025
+# Duy BQ <duybq86@gmail.com>, 2025
 # Thi Huong Nguyen, 2025
-# 
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2025\n"
-"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"POT-Creation-Date: 2025-12-29 18:36+0000\n"
+"PO-Revision-Date: 2025-11-14 09:20+0000\n"
+"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-17/mrp/"
+"vi/>\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_state
 msgid ""
 " * Draft: The MO is not confirmed yet.\n"
-" * Confirmed: The MO is confirmed, the stock rules and the reordering of the components are trigerred.\n"
+" * Confirmed: The MO is confirmed, the stock rules and the reordering of the "
+"components are trigerred.\n"
 " * In Progress: The production has started (on the MO or on the WO).\n"
 " * To Close: The production is done, the MO has to be closed.\n"
 " * Done: The MO is closed, the stock moves are posted. \n"
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
-" * Nháp: LSX chưa được xác nhận.\n"
-" * Đã xác nhận: LSX đã được xác nhận. Quy tắc tồn kho và tái đặt hàng nguyên liệu được kích hoạt.\n"
-" * Đang tiến hành: Quá trình sản xuất đã bắt đầu (trên LSX hoặc công đoạn).\n"
-" * Cần đóng: Sản xuất đã hoàn thành, cần phải đóng LSX.\n"
-" * Xong: LSX đã đóng, dịch chuyển tồn kho đã được vào sổ. \n"
-" * Hủy: LSX đã bị hủy, không thể xác nhận được nữa. "
+" * Nháp: MO chưa được xác nhận.\n"
+" * Đã xác nhận: MO đã được xác nhận. Quy tắc tồn kho và tái đặt hàng thành "
+"phần được kích hoạt.\n"
+" * Đang tiến hành: Quá trình sản xuất đã bắt đầu (trên MO hoặc công đoạn).\n"
+" * Cần đóng: Sản xuất đã hoàn thành, cần phải đóng MO.\n"
+" * Xong: MO đã đóng, dịch chuyển tồn kho đã được vào sổ. \n"
+" * Hủy: MO đã bị hủy, không thể xác nhận được nữa. "
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid " <br/><br/> The components will be taken from <b>%s</b>."
-msgstr " <br/><br/> Các nguyên liệu được lấy từ <b>%s</b>."
+msgstr " <br/><br/> Các thành phần được lấy từ <b>%s</b>."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
 msgid " When all components are available"
-msgstr "Khi có đủ tất cả nguyên liệu"
+msgstr "Khi có đủ tất cả thành phần"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__bom_count
@@ -59,7 +64,7 @@ msgstr "# Danh mục vật tư"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__used_in_bom_count
 msgid "# BoM Where Used"
-msgstr "# DMVT được sử dụng"
+msgstr "# BoM được sử dụng"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_ready_count
@@ -75,7 +80,7 @@ msgstr "# công đoạn"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_template__used_in_bom_count
 msgid "# of BoM Where is Used"
-msgstr "# DMVT được sử dụng"
+msgstr "# BoM được sử dụng"
 
 #. module: mrp
 #. odoo-python
@@ -110,7 +115,7 @@ msgstr "%s (mới) %s"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "%s Child MO's"
-msgstr "%s LSX phụ"
+msgstr "%s MO phụ"
 
 #. module: mrp
 #. odoo-python
@@ -122,7 +127,7 @@ msgstr "%s không thể xoá. Hãy thử huỷ nó trước."
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_bom_structure
 msgid "'Bom Overview - %s' % object.display_name"
-msgstr "'Tổng quan DMVT - %s' % object.display_name"
+msgstr "'Tổng quan BoM - %s' % object.display_name"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_finished_product
@@ -132,7 +137,7 @@ msgstr "'Thành phẩm - %s' % object.name"
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_mrp_mo_overview
 msgid "'MO Overview - %s' % object.display_name"
-msgstr "'Tổng quan ĐMNL - %s' % object.display_name"
+msgstr "'Tổng quan MO - %s' % object.display_name"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_production_order
@@ -147,7 +152,6 @@ msgstr "'Công đoạn - %s' % object.name"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
-#: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "(in"
@@ -155,8 +159,6 @@ msgstr "(theo"
 
 #. module: mrp
 #. odoo-python
-#: code:addons/mrp/models/stock_rule.py:0
-#: code:addons/mrp/models/stock_rule.py:0
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -236,18 +238,24 @@ msgstr ": Không đủ số lượng để tháo gỡ"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
-msgid "<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Pause\"/>"
-msgstr "<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Tạm ngừng\"/>"
+msgid ""
+"<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Pause\"/>"
+msgstr ""
+"<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Tạm "
+"ngừng\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "<i class=\"fa fa-play\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
-msgstr "<i class=\"fa fa-play\" role=\"img\" aria-label=\"Run\" title=\"Chạy\"/>"
+msgstr ""
+"<i class=\"fa fa-play\" role=\"img\" aria-label=\"Run\" title=\"Chạy\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
-msgid "<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
-msgstr "<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Ngừng\"/>"
+msgid ""
+"<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
+msgstr ""
+"<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Ngừng\"/>"
 
 #. module: mrp
 #. odoo-python
@@ -257,24 +265,26 @@ msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                        Upload files to your product\n"
 "                    </p><p>\n"
-"                        Use this feature to store any files, like drawings or specifications.\n"
+"                        Use this feature to store any files, like drawings "
+"or specifications.\n"
 "                    </p>"
 msgstr ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                        Tải lên tập tin cho sản phẩm của bạn\n"
 "                    </p><p>\n"
-"                        Dùng tính năng này để lưu các tập tin như bản vẽ hoặc thông số kĩ thuật.\n"
+"                        Dùng tính năng này để lưu các tập tin như bản vẽ "
+"hoặc thông số kĩ thuật.\n"
 "                    </p>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "<span class=\"fw-bold\">To Produce</span>"
-msgstr "<span class=\"fw-bold\">Cần sản xuất</span>"
+msgid "<span class=\"fw-bold text-nowrap\">To Produce</span>"
+msgstr "<span class=\"fw-bold text-nowrap\">Cần sản xuất</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"ms-2\">Generate BOM</span>"
-msgstr "<span class=\"ms-2\">Tạo DMVT</span>"
+msgstr "<span class=\"ms-2\">Tạo BoM</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -284,17 +294,17 @@ msgstr "<span class=\"o_stat_text\">Đơn hàng tách kiện</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "<span class=\"o_stat_text\">BoM Overview</span>"
-msgstr "<span class=\"o_stat_text\">Tổng quan DMVT</span>"
+msgstr "<span class=\"o_stat_text\">Tổng quan BoM</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Child MO</span>"
-msgstr "<span class=\"o_stat_text\">LSX phụ</span>"
+msgstr "<span class=\"o_stat_text\">MO phụ</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Load</span>"
-msgstr "<span class=\"o_stat_text\">Tải lượng</span>"
+msgstr "<span class=\"o_stat_text\">Độ tải</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -342,12 +352,12 @@ msgstr "<span class=\"o_stat_text\">Dịch chuyển sản phẩm</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<span class=\"o_stat_text\">Scraps</span>"
-msgstr "<span class=\"o_stat_text\">Phế phẩm</span>"
+msgstr "<span class=\"o_stat_text\">Loại bỏ</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Source MO</span>"
-msgstr "<span class=\"o_stat_text\">LSX nguồn</span>"
+msgstr "<span class=\"o_stat_text\">MO nguồn</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -363,11 +373,11 @@ msgstr "<span class=\"o_stat_text\">Tháo gỡ</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
 msgid ""
 "<span class=\"text-muted\">Modifying the quantity to produce will also "
-"modify the quantities of components to consume for this manufacturing "
-"order.</span>"
+"modify the quantities of components to consume for this manufacturing order."
+"</span>"
 msgstr ""
 "<span class=\"text-muted\">Việc sửa đổi số lượng cần sản xuất cũng sẽ sửa "
-"đổi số lượng nguyên liệu cần sử dụng cho lệnh sản xuất này.</span>"
+"đổi số lượng thành phần cần sử dụng cho lệnh sản xuất này.</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -377,7 +387,7 @@ msgid ""
 "        </span>"
 msgstr ""
 "<span>\n"
-"            Nguyên liệu\n"
+"            Thành phần\n"
 "        </span>"
 
 #. module: mrp
@@ -443,7 +453,7 @@ msgstr "<strong>Mã vạch</strong>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Deadline:</strong><br/>"
-msgstr "<strong>Hạn chót:</strong><br/>"
+msgstr "<strong>Thời hạn:</strong><br/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -549,10 +559,12 @@ msgstr "? Điều này có thể dẫn đến thiếu nhất quán trong tồn k
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid ""
 "A BoM of type Kit is not produced with a manufacturing order.<br/>\n"
-"                                Instead, it is used to decompose a BoM into its components when:"
+"                                Instead, it is used to decompose a BoM into "
+"its components when:"
 msgstr ""
-"DMVT loại bộ kit không được sản xuất trong một lệnh sản xuất.<br/>\n"
-"                                Thay vào đó, nó được sử dụng để phân tách DMVT thành các thành phần của định mức này khi:"
+"BoM loại bộ kit không được sản xuất trong một lệnh sản xuất.<br/>\n"
+"                                Thay vào đó, nó được sử dụng để phân tách "
+"BoM thành các thành phần của định mức này khi:"
 
 #. module: mrp
 #. odoo-python
@@ -683,11 +695,12 @@ msgstr "Tất cả tệp đã được tải lên"
 msgid ""
 "All product quantities must be greater or equal to 0.\n"
 "Lines with 0 quantities can be used as optional lines. \n"
-"You should install the mrp_byproduct module if you want to manage extra products on BoMs!"
+"You should install the mrp_byproduct module if you want to manage extra "
+"products on BoMs!"
 msgstr ""
 "Tất cả số lượng sản phẩm phải lớn hơn hoặc bằng 0.\n"
 "Các dòng có số lượng bằng 0 sẽ được sử dụng như là các dòng tuỳ chọn.\n"
-"Bạn nên cài phân hệ mrp_byproduct nếu bạn muốn quản lý phụ phẩm trong DMVT!"
+"Bạn nên cài phân hệ mrp_byproduct nếu bạn muốn quản lý phụ phẩm trong BoM!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -719,7 +732,7 @@ msgstr "Cho phép hạng mục phụ thuộc của công đoạn"
 #: model:ir.model.fields,help:mrp.field_mrp_production__use_auto_consume_components_lots
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__use_auto_consume_components_lots
 msgid "Allow automatic consumption of tracked components that are reserved"
-msgstr "Cho phép tự động sử dụng các nguyên liệu được theo dõi đã dự trữ"
+msgstr "Cho phép tự động sử dụng các thành phần được theo dõi đặt trước"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -727,14 +740,14 @@ msgid ""
 "Allow manufacturing users to modify quantities to consume, without the need "
 "for prior approval"
 msgstr ""
-"Cho phép người dùng điều chỉnh số lượng cần tiêu thụ mà không cần phê duyệt "
-"trước"
+"Cho phép người sử dụng điều chỉnh số lượng cần sử dụng mà không cần phê "
+"duyệt trước"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__use_create_components_lots
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__use_create_components_lots
 msgid "Allow to create new lot/serial numbers for the components"
-msgstr "Cho phép tạo số sê-ri/lô mới cho các nguyên liệu"
+msgstr "Cho phép tạo số sê-ri/lô mới cho các thành phần"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__consumption__flexible
@@ -771,15 +784,14 @@ msgid ""
 "Alternative workcenters that can be substituted to this one in order to "
 "dispatch production"
 msgstr ""
-"Khu vực sản xuất dự trù có thể thay thế cho khu vực này để điều động sản "
-"xuất"
+"Khu vực sản xuất dự trù có thể thay thế cho khu vực này để điều động sản xuất"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid ""
 "An unbuild order is used to break down a finished product into its "
 "components."
-msgstr "Lệnh tháo gỡ được dùng để tháo thành phẩm thành các nguyên liệu."
+msgstr "Lệnh tháo gỡ được dùng để tháo thành phẩm thành các thành phần."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
@@ -947,13 +959,13 @@ msgstr "Ảnh đại diện"
 msgid ""
 "Average lead time in days to manufacture this product. In the case of multi-"
 "level BOM, the manufacturing lead times of the components will be added. In "
-"case the product is subcontracted, this can be used to determine the date at"
-" which components should be sent to the subcontractor."
+"case the product is subcontracted, this can be used to determine the date at "
+"which components should be sent to the subcontractor."
 msgstr ""
 "Thời gian hoàn thành trung bình tính bằng ngày để sản xuất sản phẩm này. "
-"Trong trường hợp DMVT đa cấp, sẽ cộng thêm thời gian hoàn thành các nguyên "
-"liệu. Trong trường hợp sản phẩm được ký gia công, thời gian này có thể được "
-"sử dụng để xác định ngày mà các nguyên liệu sẽ được gửi cho đơn vị gia công."
+"Trong trường hợp BoM đa cấp, sẽ cộng thêm thời gian hoàn thành các thành "
+"phần. Trong trường hợp sản phẩm được ký gia công, thời gian này có thể được "
+"sử dụng để xác định ngày mà các thành phần sẽ được gửi cho đơn vị gia công."
 
 #. module: mrp
 #. odoo-javascript
@@ -961,7 +973,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Avg Cost of Components per Unit"
-msgstr "Chi phí nguyên liệu trung bình cho mỗi đơn vị"
+msgstr "Chi phí thành phần trung bình cho mỗi đơn vị"
 
 #. module: mrp
 #. odoo-javascript
@@ -982,29 +994,29 @@ msgstr "Tổng chi phí trung bình cho mỗi đơn vị"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Awaiting Components"
-msgstr "Đang chờ nguyên liệu"
+msgstr "Đang chờ thành phần"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
 msgid "BOM Overview Report"
-msgstr "Báo cáo tổng quan DMVT"
+msgstr "Báo cáo tổng quan BoM"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__variant_bom_ids
 msgid "BOM Product Variants"
-msgstr "Biến thể sản phẩm DMVT"
+msgstr "Biến thể sản phẩm BoM"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_byproduct__bom_product_template_attribute_value_ids
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__bom_product_template_attribute_value_ids
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__bom_product_template_attribute_value_ids
 msgid "BOM Product Variants needed to apply this line."
-msgstr "Biến thể sản phẩm DMVT cần được áp dụng cho dòng này."
+msgstr "Biến thể sản phẩm BoM cần được áp dụng cho dòng này."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_line_ids
 msgid "BOM lines of the referred bom"
-msgstr "Chi tiết DMVT của DMVT được đề cập"
+msgstr "Chi tiết BoM của BoM được đề cập"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder_line
@@ -1021,14 +1033,14 @@ msgstr "Chi tiết xác nhận đơn hàng tách kiện"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO"
-msgstr "LSX đơn hàng tách kiện"
+msgstr "MO đơn hàng tách kiện"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO's"
-msgstr "LSX đơn hàng tách kiện"
+msgstr "MO đơn hàng tách kiện"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__backorder_sequence
@@ -1037,11 +1049,10 @@ msgstr "Trình tự đơn hàng tách kiện"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__backorder_sequence
-msgid ""
-"Backorder sequence, if equals to 0 means there is not related backorder"
+msgid "Backorder sequence, if equals to 0 means there is not related backorder"
 msgstr ""
-"Trình tự đơn hàng tách kiện, nếu bằng 0 nghĩa là không có đơn hàng tách kiện"
-" liên quan. "
+"Trình tự đơn hàng tách kiện, nếu bằng 0 nghĩa là không có đơn hàng tách kiện "
+"liên quan. "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__barcode
@@ -1104,21 +1115,23 @@ msgstr "Danh mục vật tư"
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__mo_bom_id
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_bom_id
 msgid ""
-"Bills of Materials, also called recipes, are used to autocomplete components"
-" and work order instructions."
+"Bills of Materials, also called recipes, are used to autocomplete components "
+"and work order instructions."
 msgstr ""
 "Danh mục vật tư, còn được gọi là công thức, được sử dụng để tự động hoàn "
-"thiện các nguyên liệu và hướng dẫn cho công đoạn sản xuất."
+"thiện các thành phần và hướng dẫn cho công đoạn sản xuất."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid ""
 "Bills of materials allow you to define the list of required raw\n"
-"                materials used to make a finished product; through a manufacturing\n"
+"                materials used to make a finished product; through a "
+"manufacturing\n"
 "                order or a pack of products."
 msgstr ""
 "Danh mục vật tư cho phép bạn xác định danh sách các nguyên liệu thô\n"
-"                cần thiết để sản xuất một thành phẩm; thông qua lệnh sản xuất\n"
+"                cần thiết để sản xuất một thành phẩm; thông qua lệnh sản "
+"xuất\n"
 "                hoặc gói sản phẩm."
 
 #. module: mrp
@@ -1147,7 +1160,7 @@ msgstr "Đã bị chặn"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__blocked_by_workorder_ids
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Blocked By"
-msgstr "Đã chặn bởi"
+msgstr "Bị chặn bởi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__blocked_time
@@ -1173,7 +1186,7 @@ msgstr "Chặn"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__bom_id
 msgid "BoM"
-msgstr "DMVT"
+msgstr "BoM"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__bom_line_ids
@@ -1181,7 +1194,7 @@ msgstr "DMVT"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_product_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_template_search_view
 msgid "BoM Components"
-msgstr "Nguyên liệu DMVT"
+msgstr "Thành phần BoM"
 
 #. module: mrp
 #. odoo-javascript
@@ -1189,30 +1202,30 @@ msgstr "Nguyên liệu DMVT"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "BoM Cost"
-msgstr "Chi phí DMVT"
+msgstr "Chi phí BoM"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__bom_line_id
 msgid "BoM Line"
-msgstr "Dòng DMVT"
+msgstr "Dòng BoM"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__bom_line_ids
 msgid "BoM Lines"
-msgstr "Chi tiết DMVT"
+msgstr "Chi tiết BoM"
 
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_report_mrp_bom
 #: model:ir.actions.report,name:mrp.action_report_bom_structure
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "BoM Overview"
-msgstr "Tổng quan DMVT"
+msgstr "Tổng quan BoM"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__type
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "BoM Type"
-msgstr "Loại DMVT"
+msgstr "Loại BoM"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
@@ -1240,7 +1253,7 @@ msgstr "Phụ phẩm"
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "By-product %s should not be the same as BoM product."
-msgstr "Phụ phẩm %s không được giống với sản phẩm của DMVT. "
+msgstr "Phụ phẩm %s không được giống với sản phẩm của BoM. "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__byproduct_id
@@ -1280,7 +1293,7 @@ msgstr "Phụ phẩm"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Can't find any production location."
-msgstr "Không tìm thấy bất kì địa điểm sản xuất nào."
+msgstr "Không tìm thấy bất kì vị trí sản xuất nào."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1306,7 +1319,7 @@ msgid ""
 "component or for the final product."
 msgstr ""
 "Không thể tính toán số ngày để chuẩn bị do thiếu thông tin quy trình của ít "
-"nhất 1 nguyên liệu hoặc của sản phẩm cuối cùng."
+"nhất 1 thành phần hoặc của sản phẩm cuối cùng."
 
 #. module: mrp
 #. odoo-python
@@ -1444,19 +1457,19 @@ msgstr "Công ty"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Component"
-msgstr "Nguyên liệu"
+msgstr "Thành phần"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__components_availability
 msgid "Component Status"
-msgstr "Trạng thái nguyên liệu"
+msgstr "Trạng thái thành phần"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Component of Draft MO"
-msgstr "Nguyên liệu của LSX nháp"
+msgstr "Thành phần của MO nháp"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_raw_ids
@@ -1464,24 +1477,24 @@ msgstr "Nguyên liệu của LSX nháp"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Components"
-msgstr "Nguyên liệu"
+msgstr "Thành phần"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__components_availability_state
 msgid "Components Availability State"
-msgstr "Tình trạng còn hàng của nguyên liệu"
+msgstr "Tình trạng còn hàng của thành phần"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_src_id
 msgid "Components Location"
-msgstr "Vị trí nguyên liệu"
+msgstr "Vị trí thành phần"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__priority
 msgid ""
 "Components will be reserved first for the MO with the highest priorities."
 msgstr ""
-"Nguyên liệu sẽ được dự trữ cho các LSX có mức độ ưu tiên cao nhất trước. "
+"Thành phần sẽ được đặt trước cho các MO có mức độ ưu tiên cao nhất trước."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1497,13 +1510,13 @@ msgstr "Tính theo thời gian đã theo dõi"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid ""
 "Compute the days required to resupply all components from BoM, by either "
-"buying or manufacturing the components and/or subassemblies."
-"                                                       Also note that "
-"purchase security lead times will be added when appropriate."
+"buying or manufacturing the components and/or "
+"subassemblies.                                                       Also "
+"note that purchase security lead times will be added when appropriate."
 msgstr ""
-"Tính số ngày cần thiết để tái cung ứng tất cả thành phần từ DMVT, bằng cách "
-"mua hoặc sản xuất các thành phần và/hoặc cụm phụ kiện. Ngoài ra, lưu ý rằng "
-"thời gian hoàn thành an toàn sẽ được thêm vào nếu cần."
+"Tính số ngày cần thiết để tái cung ứng tất cả thành phần từ BoM, bằng cách "
+"mua hoặc sản xuất các thành phần và/hoặc cụm lắp ráp. Ngoài ra, lưu ý rằng "
+"thời gian dự phòng mua hàng sẽ được thêm vào nếu cần."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1542,7 +1555,7 @@ msgstr "Đã xác nhận"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__use_auto_consume_components_lots
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__use_auto_consume_components_lots
 msgid "Consume Reserved Lots/Serial Numbers automatically"
-msgstr "Tự động sử dụng số lô/sê-ri đã dự trữ"
+msgstr "Tự động sử dụng số lô/sê-ri đặt trước"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__product_consumed_qty_uom
@@ -1624,8 +1637,8 @@ msgstr "Tỷ lệ chi phí (%)"
 #, python-format
 msgid "Cost based on related replenishments. Otherwise cost from product form"
 msgstr ""
-"Chi phí dựa trên các đơn bổ sung liên quan. Nếu không thì là chi phí từ biểu"
-" mẫu sản phẩm"
+"Chi phí dựa trên các đơn bổ sung liên quan. Nếu không thì là chi phí từ biểu "
+"mẫu sản phẩm"
 
 #. module: mrp
 #. odoo-javascript
@@ -1640,7 +1653,7 @@ msgstr "Chi phí từ biểu mẫu sản phẩm"
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Cost of Components per unit"
-msgstr "Chi phí nguyên liệu cho mỗi đơn vị"
+msgstr "Chi phí thành phần cho mỗi đơn vị"
 
 #. module: mrp
 #. odoo-javascript
@@ -1669,13 +1682,6 @@ msgid "Costs"
 msgstr "Chi phí"
 
 #. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
-#, python-format
-msgid "Could not display the selected spreadsheet"
-msgstr "Không thể hiển thị bảng tính đã chọn"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_backorder_count
 msgid "Count of linked backorder"
 msgstr "Số đơn hàng tách kiện liên kết"
@@ -1689,7 +1695,7 @@ msgstr "Tạo đơn hàng tách kiện"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__use_create_components_lots
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__use_create_components_lots
 msgid "Create New Lots/Serial Numbers for Components"
-msgstr "Tạo số lô/sê-ri mới cho các nguyên liệu"
+msgstr "Tạo số lô/sê-ri mới cho các thành phần"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -1699,8 +1705,8 @@ msgstr "Tạo một đơn hàng tách kiện"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid ""
-"Create a backorder if you expect to process the remaining products later. Do"
-" not create a backorder if you will not process the remaining products."
+"Create a backorder if you expect to process the remaining products later. Do "
+"not create a backorder if you will not process the remaining products."
 msgstr ""
 "Tạo đơn hàng tách kiện nếu bạn dự kiến sẽ xử lý sản phẩm còn lại sau. Không "
 "tạo đơn hàng tách kiện nếu bạn sẽ không xử lý sản phẩm còn lại. "
@@ -1725,11 +1731,13 @@ msgstr "Tạo hiệu suất công đoạn mới"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__days_to_prepare_mo
 msgid ""
-"Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
+"Create and confirm Manufacturing Orders this many days in advance, to have "
+"enough time to replenish components or manufacture semi-finished products.\n"
 "Note that security lead times will also be considered when appropriate."
 msgstr ""
-"Tạo và xác nhận lệnh sản xuất trước những ngày này để có đủ thời gian bổ sung nguyên liệu hoặc sản xuất bán thành phẩm.\n"
-"Lưu ý rằng thời gian hoàn thành an toàn sẽ được thêm vào nếu cần."
+"Tạo và xác nhận lệnh sản xuất trước những ngày này để có đủ thời gian bổ "
+"sung thành phần hoặc sản xuất bán thành phẩm.\n"
+"Lưu ý rằng thời gian dự phòng sẽ được thêm vào nếu cần."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -1751,8 +1759,8 @@ msgid ""
 "started simultaneously."
 msgstr ""
 "Tạo các hạng mục phụ thuộc ở cấp độ hoạt động sẽ ảnh hưởng đến cả việc lập "
-"kế hoạch và trạng thái của các công đoạn khi xác nhận LSX. Nếu tính năng này"
-" được chọn và không có gì được chỉ định, thì Odoo sẽ cho rằng mọi hoạt động "
+"kế hoạch và trạng thái của các công đoạn khi xác nhận MO. Nếu tính năng này "
+"được chọn và không có gì được chỉ định, thì Odoo sẽ cho rằng mọi hoạt động "
 "đều có thể được bắt đầu cùng lúc."
 
 #. module: mrp
@@ -1833,16 +1841,24 @@ msgstr "Tiền tệ"
 #: model:ir.model.fields,help:mrp.field_stock_move__product_qty_available
 msgid ""
 "Current quantity of products.\n"
-"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods stored at "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"stored in the Stock Location of the Warehouse of this Shop, or any of its "
+"children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
 msgstr ""
 "Số lượng hiện tại của sản phẩm.\n"
-"Trong ngữ cảnh với một Địa điểm tồn kho, số lượng này bao gồm hàng hoá được lưu trữ tại địa điểm này, hoặc bất kỳ địa điểm phụ nào.\n"
-"Trong ngữ cảnh với một Kho hàng, số lượng này bao gồm hàng hoá được lưu trữ trong Địa điểm tồn kho của Kho hàng này, hoặc bất kỳ địa điểm phụ nào\n"
-"được lưu trữ tại Địa điểm tồn kho trong Kho hàng của Xưởng này, hoặc bất kỳ địa điểm phụ nào.\n"
-"Nếu không, số lượng này bao gồm hàng hoá được lưu trữ trong bất kỳ Địa điểm tồn kho nào có loại 'nội bộ'. "
+"Trong ngữ cảnh với một Vị trí tồn kho, số lượng này bao gồm hàng hoá được "
+"lưu trữ tại vị trí này, hoặc bất kỳ vị trí phụ nào.\n"
+"Trong ngữ cảnh với một Kho hàng, số lượng này bao gồm hàng hoá được lưu trữ "
+"trong Vị trí tồn kho của Kho hàng này, hoặc bất kỳ vị trí phụ nào\n"
+"được lưu trữ tại Vị trí tồn kho trong Kho hàng của Xưởng này, hoặc bất kỳ vị "
+"trí phụ nào.\n"
+"Nếu không, số lượng này bao gồm hàng hoá được lưu trữ trong bất kỳ Vị trí "
+"tồn kho nào có loại 'nội bộ'. "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_producing
@@ -1876,8 +1892,8 @@ msgstr "Ngày trong tháng"
 msgid ""
 "Date you expect to finish production or actual date you finished production."
 msgstr ""
-"Ngày bạn dự kiến hoàn thành sản xuất hoặc ngày thực tế bạn đã hoàn thành sản"
-" xuất."
+"Ngày bạn dự kiến hoàn thành sản xuất hoặc ngày thực tế bạn đã hoàn thành sản "
+"xuất."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_start
@@ -1906,7 +1922,7 @@ msgstr "Ngày"
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid "Days to Supply Components"
-msgstr "Ngày để cung ứng nguyên liệu"
+msgstr "Ngày để cung ứng thành phần"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__days_to_prepare_mo
@@ -1916,7 +1932,7 @@ msgstr "Ngày để chuẩn bị Lệnh sản xuất"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_deadline
 msgid "Deadline"
-msgstr "Hạn chót"
+msgstr "Thời hạn"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -1933,13 +1949,13 @@ msgstr "Thời gian hoàn thành mặc định"
 msgid ""
 "Default number of pieces (in product UoM) that can be produced in parallel "
 "(at the same time) at this work center. For example: the capacity is 5 and "
-"you need to produce 10 units, then the operation time listed on the BOM will"
-" be multiplied by two. However, note that both time before and after "
+"you need to produce 10 units, then the operation time listed on the BOM will "
+"be multiplied by two. However, note that both time before and after "
 "production will only be counted once."
 msgstr ""
 "Số lượng sản phẩm mặc định (theo đơn vị tính sản phẩm) có thể được sản xuất "
-"đồng thời (cùng lúc) tại khu vực làm việc này. Ví dụ: công suất là 5 và bạn "
-"cần sản xuất 10 thì thời gian vận hành ghi trên DMVT sẽ được nhân 2. Tuy "
+"đồng thời (cùng lúc) tại khu vực sản xuất này. Ví dụ: công suất là 5 và bạn "
+"cần sản xuất 10 thì thời gian vận hành ghi trên BoM sẽ được nhân 2. Tuy "
 "nhiên, lưu ý rằng cả thời gian trước và sau khi sản xuất sẽ chỉ được tính "
 "một lần."
 
@@ -1955,23 +1971,33 @@ msgid ""
 "Define the components and finished products you wish to use in\n"
 "                bill of materials and manufacturing orders."
 msgstr ""
-"Xác định nguyên liệu và thành phẩm bạn muốn dùng trong\n"
+"Xác định thành phần và thành phẩm bạn muốn dùng trong\n"
 "                danh mục vật tư và lệnh sản xuất."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__consumption
 msgid ""
-"Defines if you can consume more or less components than the quantity defined on the BoM:\n"
+"Defines if you can consume more or less components than the quantity defined "
+"on the BoM:\n"
 "  * Allowed: allowed for all manufacturing users.\n"
-"  * Allowed with warning: allowed for all manufacturing users with summary of consumption differences when closing the manufacturing order.\n"
-"  Note that in the case of component Manual Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
-"  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
+"  * Allowed with warning: allowed for all manufacturing users with summary "
+"of consumption differences when closing the manufacturing order.\n"
+"  Note that in the case of component Manual Consumption, where consumption "
+"is registered manually exclusively, consumption warnings will still be "
+"issued when appropriate also.\n"
+"  * Blocked: only a manager can close a manufacturing order when the BoM "
+"consumption is not respected."
 msgstr ""
-"Xác định liệu người dùng có thể sử dụng nhiều hay ít nguyên liệu hơn so với số lượng được xác định trong DMVT:\n"
-"  * Được phép: Cho phép tất cả người dùng thực hiện sản xuất.\n"
-"  * Được phép kèm cảnh báo: cho phép tất cả người dùng thực hiện sản xuất kèm theo tóm tắt chênh lệch lượng sử dụng khi đóng lệnh sản xuất.\n"
-"  Lưu ý rằng trong trường hợp Lượng sử dụng thủ công, khi lượng sử dụng được ghi nhận riêng theo cách thủ công, các cảnh báo lượng sử dụng cũng sẽ được đưa ra khi thích hợp.\n"
-"  * Đã chặn: chỉ quản lý mới có thể đóng lệnh sản xuất khi lượng sử dụng DMVT khác với kế hoạch. "
+"Xác định liệu người sử dụng có thể sử dụng nhiều hay ít thành phần hơn so "
+"với số lượng được xác định trong BoM:\n"
+"  * Được phép: Cho phép tất cả người sử dụng thực hiện sản xuất.\n"
+"  * Được phép kèm cảnh báo: cho phép tất cả người sử dụng thực hiện sản xuất "
+"kèm theo tóm tắt chênh lệch lượng sử dụng khi đóng lệnh sản xuất.\n"
+"  Lưu ý rằng trong trường hợp Lượng sử dụng thủ công, khi lượng sử dụng được "
+"ghi nhận riêng theo cách thủ công, các cảnh báo lượng sử dụng cũng sẽ được "
+"đưa ra khi thích hợp.\n"
+"  * Đã chặn: chỉ quản lý mới có thể đóng lệnh sản xuất khi lượng sử dụng BoM "
+"khác với kế hoạch. "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert_date
@@ -1991,7 +2017,7 @@ msgstr "Xoá"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delivery_count
 msgid "Delivery Orders"
-msgstr "Phiếu xuất kho"
+msgstr "Lệnh giao hàng"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__description
@@ -2404,14 +2430,21 @@ msgstr "Báo cáo dự báo"
 #: model:ir.model.fields,help:mrp.field_stock_move__product_virtual_available
 msgid ""
 "Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
-"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods stored in "
+"this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
 msgstr ""
-"Số lượng dự kiến (được tính bằng Số lượng hiện có - Số lượng sắp xuất + Số lượng sắp nhập)\n"
-"Đối với một Địa điểm tồn kho, số lượng này bao gồm số lượng được lưu trữ trong địa điểm này, hoặc các địa điểm phụ của nó.\n"
-"Đối với một Kho hàng, số lượng này bao gồm số lượng được lưu trữ trong Địa điểm tồn kho của Kho hàng này, hoặc các địa điểm phụ của nó.\n"
-"Nếu không, số lượng này bao gồm số lượng được lữu trữ trong bất kỳ Địa điểm tồn kho nào có loại là 'nội bộ'."
+"Số lượng dự kiến (được tính bằng Số lượng hiện có - Số lượng sắp xuất + Số "
+"lượng sắp nhập)\n"
+"Đối với một Vị trí tồn kho, số lượng này bao gồm số lượng được lưu trữ trong "
+"vị trí này, hoặc các vị trí phụ của nó.\n"
+"Đối với một Kho hàng, số lượng này bao gồm số lượng được lưu trữ trong Vị "
+"trí tồn kho của Kho hàng này, hoặc các vị trí phụ của nó.\n"
+"Nếu không, số lượng này bao gồm số lượng được lữu trữ trong bất kỳ Vị trí "
+"tồn kho nào có loại là 'nội bộ'."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -2480,7 +2513,7 @@ msgstr "Tạo số sê-ri"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Generate a new BoM from this Manufacturing Order"
-msgstr "Tạo một DMVT mới từ Lệnh sản xuất này"
+msgstr "Tạo một BoM mới từ Lệnh sản xuất này"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__generated_mrp_lot_label_to_print
@@ -2520,13 +2553,6 @@ msgstr "Google Slide"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Google Slide Link"
 msgstr "Liên kết Google Slide"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
-#, python-format
-msgid "Google Slides Viewer"
-msgstr "Google Slides Viewer"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -2573,6 +2599,11 @@ msgstr "Có tin nhắn"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__has_routing_lines
 msgid "Has Routing Lines"
 msgstr "Có chi tiết quy trình"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__has_worksheet
+msgid "Has Worksheet"
+msgstr "Đã có bảng tính"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_document__priority__2
@@ -2641,7 +2672,7 @@ msgstr "Biểu tượng cho thấy một hoạt động ngoại lệ."
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
 msgstr ""
-"Nếu một biến thể sản phẩm được xác định, DMVT này chỉ khả dụng cho sản phẩm "
+"Nếu một biến thể sản phẩm được xác định, BoM này chỉ khả dụng cho sản phẩm "
 "này."
 
 #. module: mrp
@@ -2678,8 +2709,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Nếu trường hoạt động được đặt là Sai, bạn sẽ được phép ẩn dữ liệu tài nguyên"
-" mà không cần xóa bỏ. "
+"Nếu trường hoạt động được đặt là Sai, bạn sẽ được phép ẩn dữ liệu tài nguyên "
+"mà không cần xóa bỏ. "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_mrp_reception_report_labels
@@ -2687,7 +2718,7 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report labels of a MO when it is done."
 msgstr ""
-"Nếu đánh dấu ô này, Odoo sẽ tự động in nhãn báo cáo phân bổ của LSX khi nó "
+"Nếu đánh dấu ô này, Odoo sẽ tự động in nhãn báo cáo phân bổ của MO khi nó "
 "hoàn tất."
 
 #. module: mrp
@@ -2696,7 +2727,7 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report of a MO when it is done and has assigned moves."
 msgstr ""
-"Nếu đánh dấu ô này, Odoo sẽ tự động in báo cáo phân bổ của LSX khi nó hoàn "
+"Nếu đánh dấu ô này, Odoo sẽ tự động in báo cáo phân bổ của MO khi nó hoàn "
 "tất và có dịch chuyển đã chỉ định."
 
 #. module: mrp
@@ -2705,17 +2736,16 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN label "
 "of a MO when it is done."
 msgstr ""
-"Nếu đánh dấu ô này, Odoo sẽ tự động in nhãn số lô/sê-ri của LSX khi nó hoàn "
+"Nếu đánh dấu ô này, Odoo sẽ tự động in nhãn số lô/sê-ri của MO khi nó hoàn "
 "tất."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_product_labels
 msgid ""
-"If this checkbox is ticked, Odoo will automatically print the product labels"
-" of a MO when it is done."
+"If this checkbox is ticked, Odoo will automatically print the product labels "
+"of a MO when it is done."
 msgstr ""
-"Nếu đánh dấu ô này, Odoo sẽ tự động in nhãn sản phẩm của LSX khi nó hoàn "
-"tất."
+"Nếu đánh dấu ô này, Odoo sẽ tự động in nhãn sản phẩm của MO khi nó hoàn tất."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_production_order
@@ -2723,8 +2753,7 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the production "
 "order of a MO when it is done."
 msgstr ""
-"Nếu đánh dấu ô này, Odoo sẽ tự động in lệnh sản xuất của LSX khi nó hoàn "
-"tất."
+"Nếu đánh dấu ô này, Odoo sẽ tự động in lệnh sản xuất của MO khi nó hoàn tất."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_height
@@ -2763,11 +2792,10 @@ msgstr "Nhập mẫu danh mục vật tư"
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
-"Impossible to plan the workorder. Please check the workcenter "
-"availabilities."
+"Impossible to plan the workorder. Please check the workcenter availabilities."
 msgstr ""
 "Không thể lập kế hoạch công đoạn. Vui lòng kiểm tra lại tính khả dụng của "
-"khu vực làm việc. "
+"khu vực sản xuất. "
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__progress
@@ -2809,8 +2837,7 @@ msgstr "Dịch chuyển tồn kho"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__move_line_ids
-msgid ""
-"Inventory moves for which you must scan a lot number at this work order"
+msgid "Inventory moves for which you must scan a lot number at this work order"
 msgstr "Dịch chuyển tồn kho mà bạn phải quét số lô tại công đoạn này"
 
 #. module: mrp
@@ -2861,7 +2888,6 @@ msgstr "Đã được bỏ chặn. "
 
 #. module: mrp
 #. odoo-python
-#: code:addons/mrp/models/mrp_workorder.py:0
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
@@ -2999,12 +3025,12 @@ msgstr "Hoạt động chậm trễ"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Late Components"
-msgstr "Nguyên liệu chậm trễ"
+msgstr "Thành phần chậm trễ"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Late MO or Late delivery of components"
-msgstr "LSX chậm trễ hoặc giao nguyên liệu chậm trễ"
+msgstr "MO chậm trễ hoặc giao thành phần chậm trễ"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__components_availability
@@ -3012,8 +3038,8 @@ msgid ""
 "Latest component availability status for this MO. If green, then the MO's "
 "readiness status is ready, as per BOM configuration."
 msgstr ""
-"Tình trạng còn hàng mới nhất của nguyên liệu cho LSX này. Theo như cấu hình "
-"của DMVT, màu xanh nghĩa là LSX ở trạng thái sẵn sàng. "
+"Tình trạng còn hàng mới nhất của thành phần cho MO này. Theo như cấu hình "
+"của BoM, màu xanh nghĩa là MO ở trạng thái sẵn sàng. "
 
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_wood_ply_product_template
@@ -3048,7 +3074,7 @@ msgstr "Dòng vấn đề lượng sử dụng "
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
-msgstr "Địa điểm"
+msgstr "Vị trí"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_id
@@ -3058,7 +3084,7 @@ msgstr "Vị trí bạn muốn tháo gỡ sản phẩm là."
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__location_src_id
 msgid "Location where the system will look for components."
-msgstr "Vị trí hệ thống sẽ tìm kiếm các nguyên liệu."
+msgstr "Vị trí hệ thống sẽ tìm kiếm các thành phần."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__location_dest_id
@@ -3070,7 +3096,7 @@ msgstr "Vị trí hệ thống sẽ lưu kho thành phẩm."
 msgid ""
 "Location where you want to send the components resulting from the unbuild "
 "order."
-msgstr "Vị trí bạn muốn chuyển nguyên liệu có được từ lệnh tháo gỡ."
+msgstr "Vị trí bạn muốn chuyển thành phần có được từ lệnh tháo gỡ."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3080,8 +3106,8 @@ msgstr "Khoá"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid ""
-"Lock the manufacturing order to prevent changes to what has been consumed or"
-" produced."
+"Lock the manufacturing order to prevent changes to what has been consumed or "
+"produced."
 msgstr ""
 "Khóa lệnh sản xuất để chặn thay đổi những gì đã sử dụng hoặc đã sản xuất. "
 
@@ -3137,7 +3163,7 @@ msgstr "Thấp"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__mrp_production_backorder_id
 msgid "MO Backorder"
-msgstr "LSX Đơn hàng tách kiện"
+msgstr "MO Đơn hàng tách kiện"
 
 #. module: mrp
 #. odoo-javascript
@@ -3145,47 +3171,47 @@ msgstr "LSX Đơn hàng tách kiện"
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "MO Cost"
-msgstr "Chi phí LSX"
+msgstr "Chi phí MO"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
 #, python-format
 msgid "MO Costs"
-msgstr "Chi phí LSX"
+msgstr "Chi phí MO"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "MO Generated by %s"
-msgstr "LSX được tạo ra bởi %s"
+msgstr "MO được tạo ra bởi %s"
 
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_report_mo_overview
 #: model:ir.actions.report,name:mrp.action_report_mrp_mo_overview
 msgid "MO Overview"
-msgstr "Tổng quan LSX"
+msgstr "Tổng quan MO"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_mo_overview
 msgid "MO Overview Report"
-msgstr "Báo cáo tổng quan ĐMNL"
+msgstr "Báo cáo tổng quan MO"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reservation_state
 msgid "MO Readiness"
-msgstr "Tính sẵn sàng của LSX"
+msgstr "Tính sẵn sàng của MO"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "MO Ready"
-msgstr "LSX sẵn sàng"
+msgstr "MO sẵn sàng"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "MO Reference"
-msgstr "Mã LSX"
+msgstr "Mã MO"
 
 #. module: mrp
 #: model:ir.actions.client,name:mrp.mrp_reception_action
@@ -3215,8 +3241,8 @@ msgid ""
 "Make sure enough quantities of these components are reserved to do the "
 "production:\n"
 msgstr ""
-"Bảo đảm số lượng của các nguyên liệu này đã được dự trữ đủ để tiến hành sản "
-"xuất:\n"
+"Bảo đảm số lượng của các thành phần này đã được đặt trước đủ để tiến hành "
+"sản xuất:\n"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
@@ -3246,7 +3272,6 @@ msgstr "Thời gian hoàn thành"
 
 #. module: mrp
 #. odoo-python
-#: code:addons/mrp/models/stock_warehouse.py:0
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_steps
 #: model:ir.model.fields.selection,name:mrp.selection__stock_rule__action__manufacture
@@ -3279,7 +3304,7 @@ msgstr "Quy tắc sản xuất"
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid "Manufacture Security Lead Time"
-msgstr "Thời gian hoàn thành an toàn"
+msgstr "Thời gian dự phòng sản xuất"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__normal
@@ -3323,7 +3348,6 @@ msgstr "Sản xuất"
 
 #. module: mrp
 #. odoo-javascript
-#: code:addons/mrp/static/src/mrp_forecasted/forecasted_buttons.xml:0
 #: code:addons/mrp/static/src/mrp_forecasted/forecasted_buttons.xml:0
 #, python-format
 msgid "Manufacturing Forecast"
@@ -3385,7 +3409,7 @@ msgstr "Lệnh sản xuất ở trạng thái đã xác nhận. "
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__ready_to_produce
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Manufacturing Readiness"
-msgstr "Tính sẵn sàng sản xuất"
+msgstr "Trạng thái sẵn sàng sản xuất"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3395,26 +3419,34 @@ msgstr "Tham chiếu sản xuất"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__manufacturing_visibility_days
 msgid "Manufacturing Visibility Days"
-msgstr "Ngày khả năng hiển thị sản xuất"
+msgstr "Ngày dự báo nhu cầu sản xuất"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_action
 msgid ""
-"Manufacturing operations are processed at Work Centers. A Work Center can be composed of\n"
-"                workers and/or machines, they are used for costing, scheduling, capacity planning, etc."
+"Manufacturing operations are processed at Work Centers. A Work Center can be "
+"composed of\n"
+"                workers and/or machines, they are used for costing, "
+"scheduling, capacity planning, etc."
 msgstr ""
-"Các hoạt động sản xuất được xử lý tại khu vực sản xuất. Một khu vực sản xuất có thể bao gồm\n"
-"                công nhân và/hoặc máy móc, được sử dụng để tính chi phí, lập lịch trình, lập kế hoạch công suất,..."
+"Các hoạt động sản xuất được xử lý tại khu vực sản xuất. Một khu vực sản xuất "
+"có thể bao gồm\n"
+"                công nhân và/hoặc máy móc, được sử dụng để tính chi phí, lập "
+"lịch trình, lập kế hoạch công suất,..."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
 msgid ""
-"Manufacturing operations are processed at Work Centers. A Work Center can be composed of\n"
-"                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
+"Manufacturing operations are processed at Work Centers. A Work Center can be "
+"composed of\n"
+"                workers and/or machines, they are used for costing, "
+"scheduling, capacity planning, etc.\n"
 "                They can be defined via the configuration menu."
 msgstr ""
-"Hoạt động sản xuất được xử lý tại Khu vực sản xuất. Một khu vực sản xuất có thể bao gồm\n"
-"                công nhân và/hoặc máy móc, được sử dụng để tính chi phí, lập lịch trình, lập kế hoạch công suất,...\n"
+"Hoạt động sản xuất được xử lý tại Khu vực sản xuất. Một khu vực sản xuất có "
+"thể bao gồm\n"
+"                công nhân và/hoặc máy móc, được sử dụng để tính chi phí, lập "
+"lịch trình, lập kế hoạch công suất,...\n"
 "                Có thể xác định các yếu tố này trong menu cấu hình."
 
 #. module: mrp
@@ -3423,9 +3455,10 @@ msgstr ""
 msgid ""
 "Manufacturing readiness for this MO, as per bill of material configuration:\n"
 "            * Ready: The material is available to start the production.\n"
-"            * Waiting: The material is not available to start the production.\n"
+"            * Waiting: The material is not available to start the "
+"production.\n"
 msgstr ""
-"Tính sẵn sàng sản xuất của LSX này, theo cấu hình danh mục vật tư:\n"
+"Trạng thái sẵn sàng sản xuất của MO này, theo cấu hình danh mục vật tư:\n"
 "            * Sẵn sàng: Vật liệu đã có sẵn để bắt đầu sản xuất.\n"
 "            * Đang chờ: Vật liệu chưa có sẵn để bắt đầu sản xuất.\n"
 
@@ -3542,13 +3575,13 @@ msgstr "Số sản lượng Sản xuất"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__multiple_lot_components_names
 msgid "Multiple Lot Components Names"
-msgstr "Tên nguyên liệu nhiều lô"
+msgstr "Tên thành phần nhiều lô"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__my_activity_date_deadline
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Hạn chót hoạt động của tôi"
+msgstr "Thời hạn hoạt động của tôi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__name
@@ -3558,10 +3591,6 @@ msgstr "Tên"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#: code:addons/mrp/models/mrp_production.py:0
-#: code:addons/mrp/models/mrp_production.py:0
-#: code:addons/mrp/models/mrp_unbuild.py:0
-#: code:addons/mrp/models/mrp_unbuild.py:0
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
@@ -3573,7 +3602,7 @@ msgstr "Mới"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "New BoM from %(mo_name)s"
-msgstr "DMVT mới từ %(mo_name)s"
+msgstr "BoM mới từ %(mo_name)s"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -3590,7 +3619,7 @@ msgstr "Sự kiện theo lịch cho hoạt động tiếp theo"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_date_deadline
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Hạn chót cho hoạt động tiếp theo"
+msgstr "Thời hạn cho hoạt động tiếp theo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_summary
@@ -3663,8 +3692,7 @@ msgstr "Không có công đoạn nào cần thực hiện!"
 msgid ""
 "No workorder currently in progress. Click to mark work center as blocked."
 msgstr ""
-"Không có công đoạn nào đang được thực hiện. Bấm để chặn khu vực sản xuất "
-"này."
+"Không có công đoạn nào đang được thực hiện. Bấm để chặn khu vực sản xuất này."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_document__priority__0
@@ -3681,11 +3709,10 @@ msgstr "Bình thường"
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__components_availability_state__unavailable
 #, python-format
 msgid "Not Available"
-msgstr "Không có hàng"
+msgstr "Không có"
 
 #. module: mrp
 #. odoo-python
-#: code:addons/mrp/report/mrp_report_mo_overview.py:0
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
 #, python-format
 msgid "Not Ready"
@@ -3694,7 +3721,7 @@ msgstr "Chưa sẵn sàng"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Note that another version of this BOM is available."
-msgstr "Lưu ý rằng hiện có phiên bản khác của DMVT này."
+msgstr "Lưu ý rằng hiện có phiên bản khác của BoM này."
 
 #. module: mrp
 #. odoo-python
@@ -3712,11 +3739,11 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid "Note that components"
-msgstr "Lưu ý rằng các nguyên liệu"
+msgstr "Lưu ý rằng các thành phần"
 
 #. module: mrp
 #. odoo-python
-#: code:addons/mrp/models/product.py:0 code:addons/mrp/models/product.py:0
+#: code:addons/mrp/models/product.py:0
 #, python-format
 msgid ""
 "Note that product(s): '%s' is/are still linked to active Bill of Materials, "
@@ -3762,7 +3789,7 @@ msgstr "Số lượng lỗi"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_child_count
 msgid "Number of generated MO"
-msgstr "Số lượng LSX đã tạo"
+msgstr "Số lượng MO đã tạo"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction_counter
@@ -3786,7 +3813,7 @@ msgstr "Số lượng có thể được sản xuất đồng thời cho sản p
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
 msgid "Number of source MO"
-msgstr "Số lượng LSX nguồn"
+msgstr "Số lượng MO nguồn"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -3802,12 +3829,16 @@ msgstr "Mục tiêu OEE"
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid ""
 "Odoo opens a PDF preview by default. If you want to print instantly,\n"
-"                                install the IoT App on a computer that is on the same local network as the\n"
-"                                barcode operator and configure the routing of the reports."
+"                                install the IoT App on a computer that is on "
+"the same local network as the\n"
+"                                barcode operator and configure the routing "
+"of the reports."
 msgstr ""
 "Odoo mở bản xem trước PDF theo mặc định. Nếu bạn muốn in ngay lập tức,\n"
-"                                         hãy cài đặt Ứng dụng IoT trên một máy tính nằm trong cùng mạng cục bộ với\n"
-"                                         thiết bị mã vạch, và cấu hình định tuyến báo cáo."
+"                                         hãy cài đặt Ứng dụng IoT trên một "
+"máy tính nằm trong cùng mạng cục bộ với\n"
+"                                         thiết bị mã vạch, và cấu hình định "
+"tuyến báo cáo."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee
@@ -3858,7 +3889,7 @@ msgstr "Hạng mục phụ thuộc của hoạt động"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__operation_id
 msgid "Operation To Consume"
-msgstr "Hoạt động cần dùng"
+msgstr "Hoạt động cần sử dụng"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__picking_type_id
@@ -3870,10 +3901,12 @@ msgstr "Loại hoạt động"
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
 msgid ""
 "Operation define that need to be done to realize a Work Order.\n"
-"                Each operation is done at a specific Work Center and has a specific duration."
+"                Each operation is done at a specific Work Center and has a "
+"specific duration."
 msgstr ""
 "Hoạt động xác định những việc cần làm để hoàn thành một công đoạn.\n"
-"                Mỗi hoạt động được thực hiện tại một khu vực sản xuất nhất định và có thời lượng cụ thể. "
+"                Mỗi hoạt động được thực hiện tại một khu vực sản xuất nhất "
+"định và có thời lượng cụ thể. "
 
 #. module: mrp
 #. odoo-python
@@ -3937,13 +3970,6 @@ msgid "Operations that need to be completed before this operation can start."
 msgstr "Các hoạt động cần hoàn tất trước khi hoạt động này có thể bắt đầu."
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_production.py:0
-#, python-format
-msgid "Operator not supported without a value."
-msgstr "Toán tử không được hỗ trợ nếu không có giá trị."
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__orderpoint_id
 msgid "Orderpoint"
 msgstr "Điểm đặt hàng"
@@ -3966,7 +3992,7 @@ msgstr "Số lượng sản xuất ban đầu"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_outdated_bom
 msgid "Outdated BoM"
-msgstr "DMVT quá cũ"
+msgstr "BoM quá cũ"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__oee_target
@@ -4008,7 +4034,7 @@ msgstr "Mã vạch kiện hàng"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
 msgid "Parent BoM"
-msgstr "DMVT chính"
+msgstr "BoM chính"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__parent_product_tmpl_id
@@ -4063,19 +4089,19 @@ msgstr "Hiệu suất của tháng trước"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Pick Components"
-msgstr "Lấy nguyên liệu"
+msgstr "Lấy thành phần"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Pick components and then manufacture"
-msgstr "Lấy nguyên liệu và sản xuất "
+msgstr "Lấy thành phần và sản xuất "
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__pbm
 msgid "Pick components and then manufacture (2 steps)"
-msgstr "Lấy nguyên liệu và sản xuất (2 bước)"
+msgstr "Lấy thành phần và sản xuất (2 bước)"
 
 #. module: mrp
 #. odoo-python
@@ -4083,7 +4109,7 @@ msgstr "Lấy nguyên liệu và sản xuất (2 bước)"
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__pbm_sam
 #, python-format
 msgid "Pick components, manufacture and then store products (3 steps)"
-msgstr "Lấy nguyên liệu, sản xuất và lưu trữ sản phẩm (3 bước)"
+msgstr "Lấy thành phần, sản xuất và lưu trữ sản phẩm (3 bước)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_mto_pull_id
@@ -4108,12 +4134,12 @@ msgstr "Kiểu lấy hàng"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__picking_ids
 msgid "Picking associated to this manufacturing order"
-msgstr "Phiếu lấy hàng có liên quan tới lệnh sản xuất này"
+msgstr "Phiếu xuất kho có liên quan tới lệnh sản xuất này"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_loc_id
 msgid "Picking before Manufacturing Location"
-msgstr "Địa điểm lấy hàng trước khi sản xuất "
+msgstr "Vị trí lấy hàng trước khi sản xuất "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -4134,7 +4160,7 @@ msgstr "Lập lệnh sản xuất"
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_plan_with_components_availability
 msgid "Plan based on Components Availability"
-msgstr "Kế hoạch dựa trên tình trạng còn hàng của nguyên liệu"
+msgstr "Kế hoạch dựa trên tình trạng còn hàng của thành phần"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -4277,7 +4303,7 @@ msgstr "Xử lý lệnh sản xuất từ ứng dụng mã vạch"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Process operations at specific work centers"
-msgstr "Xử lý hoạt động ở khu vực làm việc cụ thể"
+msgstr "Xử lý hoạt động ở khu vực sản xuất cụ thể"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__produce_line_ids
@@ -4314,11 +4340,15 @@ msgstr "Sản xuất sản phẩm dư thừa (A + B -> C + D)"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse__manufacture_steps
 msgid ""
-"Produce: Move the components to the production location        directly and start the manufacturing process.\n"
-"Pick / Produce: Unload        the components from the Stock to Input location first, and then        transfer it to the Production location."
+"Produce: Move the components to the production location        directly and "
+"start the manufacturing process.\n"
+"Pick / Produce: Unload        the components from the Stock to Input "
+"location first, and then        transfer it to the Production location."
 msgstr ""
-"Sản xuất : Chuyển các nguyên liệu đến thẳng địa điểm sản xuất và bắt đầu quy trình sản xuất.\n"
-"Lấy hàng/Sản xuất: Đầu tiên đưa các nguyên liệu từ tồn kho đến địa điểm đầu vào, sau đó chuyển nó đến địa điểm sản xuất."
+"Sản xuất : Chuyển các thành phần đến thẳng vị trí sản xuất và bắt đầu quy "
+"trình sản xuất.\n"
+"Lấy hàng/Sản xuất: Đầu tiên đưa các thành phần từ tồn kho đến vị trí đầu "
+"vào, sau đó chuyển nó đến vị trí sản xuất."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4494,7 +4524,7 @@ msgstr "Thông tin sản xuất"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__production_location_id
 msgid "Production Location"
-msgstr "Địa điểm sản xuất"
+msgstr "Vị trí sản xuất"
 
 #. module: mrp
 #: model:ir.actions.report,name:mrp.action_report_production_order
@@ -4507,7 +4537,7 @@ msgstr "Lệnh sản xuất"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__raw_material_production_id
 msgid "Production Order for components"
-msgstr "Lệnh sản xuất nguyên liệu"
+msgstr "Lệnh sản xuất thành phần"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__production_id
@@ -4529,7 +4559,7 @@ msgstr "Khu vực sản xuất"
 #: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Production of Draft MO"
-msgstr "Hoạt động sản xuất của LSX nháp"
+msgstr "Hoạt động sản xuất của MO nháp"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -4576,7 +4606,7 @@ msgstr "Sản phẩm"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__progress
 msgid "Progress Done (%)"
-msgstr "Tiến trình hoàn tất (%)"
+msgstr "Tiến độ hoàn tất (%)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__propagate_cancel
@@ -4607,8 +4637,6 @@ msgstr "Quant"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
-#: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
-#: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_qty
@@ -4623,7 +4651,6 @@ msgstr "Quant"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "Quantity"
@@ -4631,6 +4658,7 @@ msgstr "Số lượng"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__qty_produced
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_graph
 msgid "Quantity Produced"
 msgstr "Số lượng đã sản xuất"
@@ -4639,6 +4667,11 @@ msgstr "Số lượng đã sản xuất"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__qty_producing
 msgid "Quantity Producing"
 msgstr "Số lượng đang sản xuất"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
+msgid "Quantity Remaining"
+msgstr "Số lượng còn lại"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_remaining
@@ -4662,7 +4695,7 @@ msgstr "Số lượng cần sản xuất"
 #: model:ir.model.fields,help:mrp.field_mrp_production__production_capacity
 #: model:ir.model.fields,help:mrp.field_mrp_production_split__production_capacity
 msgid "Quantity that can be produced with the current stock of components"
-msgstr "Số lượng có thể sản xuất ra từ tồn kho nguyên liệu hiện tại"
+msgstr "Số lượng có thể sản xuất ra từ tồn kho thành phần hiện tại"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_quant
@@ -4772,8 +4805,7 @@ msgstr "Mã tham chiếu cho mỗi công ty phải là duy nhất!"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__origin
-msgid ""
-"Reference of the document that generated this production order request."
+msgid "Reference of the document that generated this production order request."
 msgstr "Mã tham chiếu của tài liệu tạo ra yêu cầu sản xuất này."
 
 #. module: mrp
@@ -4807,7 +4839,6 @@ msgstr "Bổ sung hàng"
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 #: code:addons/mrp/models/stock_warehouse.py:0
-#: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Replenish on Order (MTO)"
 msgstr "Bổ sung theo đơn đặt hàng (MTO)"
@@ -4830,32 +4861,32 @@ msgstr "Báo cáo"
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Reserved"
-msgstr "Đã dự trữ"
+msgstr "Đặt trước"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_id
 msgid "Resource"
-msgstr "Nguồn lực"
+msgstr "Tài nguyên"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__res_field
 msgid "Resource Field"
-msgstr "Trường nguồn lực"
+msgstr "Trường tài nguyên"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__res_id
 msgid "Resource ID"
-msgstr "ID nguồn lực"
+msgstr "ID tài nguyên"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__res_model
 msgid "Resource Model"
-msgstr "Mô hình nguồn lực"
+msgstr "Mô hình tài nguyên"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__res_name
 msgid "Resource Name"
-msgstr "Tên nguồn lực"
+msgstr "Tên tài nguyên"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__user_id
@@ -4933,7 +4964,7 @@ msgstr "Lên lịch lệnh sản xuất sớm hơn để tránh chậm trễ"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Scheduled Date"
-msgstr "Ngày theo kế hoạch"
+msgstr "Ngày đã lên lịch"
 
 #. module: mrp
 #. odoo-python
@@ -4958,7 +4989,7 @@ msgstr "Thông tin lên lịch"
 #: model:ir.ui.menu,name:mrp.menu_mrp_scrap
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Scrap"
-msgstr "Phế phẩm"
+msgstr "Loại bỏ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__scrap_count
@@ -4977,7 +5008,7 @@ msgstr "Phế phẩm"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__scrap_ids
 msgid "Scraps"
-msgstr "Phế phẩm"
+msgstr "Loại bỏ"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_computer_desk_screw_product_template
@@ -5012,7 +5043,7 @@ msgstr "Tìm kiếm khu vực sản xuất"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Security Lead Time"
-msgstr "Thời gian hoàn thành an toàn"
+msgstr "Thời gian dự phòng"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_res_company__manufacturing_lead
@@ -5092,7 +5123,7 @@ msgid ""
 "within each BoM's Miscellaneous tab"
 msgstr ""
 "Đặt trình tự mà các công đoạn sẽ được xử lý. Kích hoạt tính năng này trong "
-"mỗi tab Thông tin khác của DMVT"
+"mỗi tab Thông tin khác của BoM"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -5134,7 +5165,7 @@ msgstr "Hiện thị đơn hàng tách kiện"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__show_bom
 msgid "Show BoM column"
-msgstr "Hiển thị cột DMVT"
+msgstr "Hiển thị cột BoM"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_final_lots
@@ -5173,13 +5204,6 @@ msgid "Show backorder lines"
 msgstr "Hiển thị chi tiết đơn hàng tách kiện"
 
 #. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/fields/google_slides_viewer.xml:0
-#, python-format
-msgid "Slides viewer"
-msgstr "Slides viewer"
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
 msgid "Slot into workcenter calendar once planned"
 msgstr "Thêm vào lịch khu vực sản xuất khi đã lên kế hoạch"
@@ -5213,19 +5237,21 @@ msgid ""
 "Some of your components are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct components."
 msgstr ""
-"Một số nguyên liệu được theo dõi, bạn phải chỉ rõ lệnh sản xuất để thu về "
-"đúng nguyên liệu. "
+"Một số thành phần được theo dõi, bạn phải chỉ rõ lệnh sản xuất để thu về "
+"đúng thành phần. "
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
-"Some work orders are already done, so you cannot unplan this manufacturing order.\n"
+"Some work orders are already done, so you cannot unplan this manufacturing "
+"order.\n"
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
-"Một số công đoạn đã hoàn tất, nên bạn không thể hủy kế hoạch lệnh sản xuất này.\n"
+"Một số công đoạn đã hoàn tất, nên bạn không thể hủy kế hoạch lệnh sản xuất "
+"này.\n"
 "\n"
 "Thật đáng tiếc nếu bỏ dở chặng đường đang đi phải không?"
 
@@ -5234,11 +5260,13 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
-"Some work orders have already started, so you cannot unplan this manufacturing order.\n"
+"Some work orders have already started, so you cannot unplan this "
+"manufacturing order.\n"
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
-"Một số công đoạn đã bắt đầu, nên bạn không thể hủy kế hoạch lệnh sản xuất này.\n"
+"Một số công đoạn đã bắt đầu, nên bạn không thể hủy kế hoạch lệnh sản xuất "
+"này.\n"
 "\n"
 "Thật đáng tiếc nếu bỏ dở chặng đường đang đi phải không?"
 
@@ -5259,8 +5287,7 @@ msgstr "Công suất cụ thể"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity_ids
-msgid ""
-"Specific number of pieces that can be produced in parallel per product."
+msgid "Specific number of pieces that can be produced in parallel per product."
 msgstr "Số lượng cụ thể có thể được sản xuất đồng thời cho mỗi sản phẩm."
 
 #. module: mrp
@@ -5421,7 +5448,7 @@ msgstr "Quy tắc tồn kho"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_loc_id
 msgid "Stock after Manufacturing Location"
-msgstr "Địa điểm tồn kho sau sản xuất"
+msgstr "Vị trí tồn kho sau sản xuất"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_stock_rule
@@ -5443,7 +5470,7 @@ msgstr "Tên tệp được lưu trữ"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_bom_id
 msgid "Sub BoM"
-msgstr "DMVT thứ cấp"
+msgstr "BoM thứ cấp"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -5478,7 +5505,7 @@ msgstr "Mặt bàn"
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_table_kit_product_template
 msgid "Table kit"
-msgstr "Bộ kít bàn"
+msgstr "Kit bàn"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tag_ids
@@ -5508,14 +5535,12 @@ msgstr "Trường kỹ thuật dành cho các chế độ xem khu vực sản xu
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce_all
 msgid "Technical field to check if produce all button can be shown"
 msgstr ""
-"Trường kỹ thuật để kiểm tra xem nút sản xuất tất cả có thể hiển thị hay "
-"không"
+"Trường kỹ thuật để kiểm tra xem nút sản xuất tất cả có thể hiển thị hay không"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce
 msgid "Technical field to check if produce button can be shown"
-msgstr ""
-"Trường kỹ thuật để kiểm tra xem nút sản xuất có thể hiển thị hay không"
+msgstr "Trường kỹ thuật để kiểm tra xem nút sản xuất có thể hiển thị hay không"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reserve_visible
@@ -5535,11 +5560,11 @@ msgstr "Văn bản"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__is_outdated_bom
 msgid "The BoM has been updated since creation of the MO"
-msgstr "DMVT đã được cập nhật kể từ khi tạo LSX"
+msgstr "BoM đã được cập nhật kể từ khi tạo MO"
 
 #. module: mrp
 #. odoo-python
-#: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
+#: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -5563,8 +5588,8 @@ msgid ""
 "The attribute value %(attribute)s set on product %(product)s does not match "
 "the BoM product %(bom_product)s."
 msgstr ""
-"Giá trị thuộc tính %(attribute)s đã thiết lập cho sản phẩm %(product)s không"
-" tương thích với sản phẩm DMVT %(bom_product)s."
+"Giá trị thuộc tính %(attribute)s đã thiết lập cho sản phẩm %(product)s không "
+"tương thích với sản phẩm BoM %(bom_product)s."
 
 #. module: mrp
 #. odoo-python
@@ -5578,7 +5603,7 @@ msgstr "Công suất phải là một số lớn hơn 0."
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "The component %s should not be the same as the product to produce."
-msgstr "Nguyên liệu %s không được giống với sản phẩm cần sản xuất."
+msgstr "Thành phần %s không được giống với sản phẩm cần sản xuất."
 
 #. module: mrp
 #. odoo-python
@@ -5596,7 +5621,7 @@ msgstr ""
 #: code:addons/mrp/models/stock_orderpoint.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
-msgstr "Đơn đặt hàng bổ sung sau đây đã được tạo"
+msgstr "Đơn bổ sung hàng sau đây đã được tạo"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_produced
@@ -5609,7 +5634,7 @@ msgid ""
 "The operation where the components are consumed, or the finished products "
 "created."
 msgstr ""
-"Hoạt động mà các nguyên liệu được tiêu thụ, hoặc các thành phẩm được tạo ra."
+"Hoạt động mà các thành phần được sử dụng, hoặc các thành phẩm được tạo ra."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_byproduct__cost_share
@@ -5681,8 +5706,8 @@ msgstr "Số lượng cần tháo gỡ phải lớn hơn 0!"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid ""
-"The serial number %(number)s used for byproduct %(product_name)s has already"
-" been produced"
+"The serial number %(number)s used for byproduct %(product_name)s has already "
+"been produced"
 msgstr ""
 "Số sê-ri %(number)s được sử dụng cho phụ phẩm %(product_name)s đã được sản "
 "xuất"
@@ -5695,7 +5720,7 @@ msgid ""
 "The serial number %(number)s used for component %(component)s has already "
 "been consumed"
 msgstr ""
-"Số seri %(number)s dùng cho nguyên liệu  %(component)s đã được tiêu thụ"
+"Số seri %(number)s sử dụng cho thành phần  %(component)s đã được sử dụng"
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_tag_tag_name_unique
@@ -5707,7 +5732,7 @@ msgstr "Tên thẻ phải là duy nhất. "
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "The total cost share for a BoM's by-products cannot exceed 100."
-msgstr "Tổng tỷ lệ chi phí cho các phụ phẩm của DMVT không thể vượt quá 100. "
+msgstr "Tổng tỷ lệ chi phí cho các phụ phẩm của BoM không thể vượt quá 100. "
 
 #. module: mrp
 #. odoo-python
@@ -5717,8 +5742,8 @@ msgid ""
 "The total cost share for a manufacturing order's by-products cannot exceed "
 "100."
 msgstr ""
-"Tổng tỷ lệ chi phí cho các phụ phẩm của một lệnh sản xuất không thể vượt quá"
-" 100. "
+"Tổng tỷ lệ chi phí cho các phụ phẩm của một lệnh sản xuất không thể vượt quá "
+"100. "
 
 #. module: mrp
 #. odoo-python
@@ -5730,7 +5755,7 @@ msgstr "Công đoạn lẽ ra đã được xử lý."
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__theme_template_id
 msgid "Theme Template"
-msgstr "Mẫu chủ đề"
+msgstr "Mẫu giao diện"
 
 #. module: mrp
 #. odoo-python
@@ -5743,7 +5768,7 @@ msgstr "Có nhiều số sê-ri hơn số lượng cần sản xuất"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid ""
 "There are no components to consume. Are you still sure you want to continue?"
-msgstr "Không có nguyên liệu để sử dụng. Bạn có chắc muốn tiếp tục không? "
+msgstr "Không có thành phần để sử dụng. Bạn có chắc muốn tiếp tục không? "
 
 #. module: mrp
 #. odoo-python
@@ -5773,18 +5798,17 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
-"Trường này được sử dụng để tính toán thời gian dự kiến của một công đoạn tại"
-" khu vực làm việc này. Ví dụ, nếu một công đoạn mất một giờ và hệ số hiệu "
-"quả là 100%, thì thời lượng dự kiến sẽ là một giờ. Tuy nhiên, nếu hệ số hiệu"
-" quả là 200% thì thời lượng dự kiến sẽ là 30 phút. "
+"Trường này được sử dụng để tính toán thời gian dự kiến của một công đoạn tại "
+"khu vực sản xuất này. Ví dụ, nếu một công đoạn mất một giờ và hệ số hiệu quả "
+"là 100%, thì thời lượng dự kiến sẽ là một giờ. Tuy nhiên, nếu hệ số hiệu quả "
+"là 200% thì thời lượng dự kiến sẽ là 30 phút. "
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
-#: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
 #, python-format
 msgid "This is a BoM of type Kit!"
-msgstr "Đây là DMVT kiểu bộ kit!"
+msgstr "Đây là BoM kiểu bộ kit!"
 
 #. module: mrp
 #. odoo-javascript
@@ -5794,8 +5818,8 @@ msgid ""
 "This is the cost based on the BoM of the product. It is computed by summing "
 "the costs of the components and operations needed to build the product."
 msgstr ""
-"Đây là chi phí dựa trên DMVT của sản phẩm. Nó được tính toán dựa trên tổng "
-"chi phí của các nguyên liệu và hoạt động cần thiết để tạo ra sản phẩm."
+"Đây là chi phí dựa trên BoM của sản phẩm. Nó được tính toán dựa trên tổng "
+"chi phí của các thành phần và hoạt động cần thiết để tạo ra sản phẩm."
 
 #. module: mrp
 #. odoo-javascript
@@ -5807,11 +5831,15 @@ msgstr "Đây là chi phí được xác định trên sản phẩm"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
 msgid ""
-"This menu gives you the full traceability of inventory operations on a specific product.\n"
-"                You can filter on the product to see all the past movements for the product."
+"This menu gives you the full traceability of inventory operations on a "
+"specific product.\n"
+"                You can filter on the product to see all the past movements "
+"for the product."
 msgstr ""
-"Menu này cung cấp cho bạn khả năng truy xuất đầy đủ các hoạt động tồn kho theo một sản phẩm cụ thể. \n"
-"                 Bạn có thể lọc theo sản phẩm để xem tất cả các dịch chuyển trong quá khứ của sản phẩm."
+"Menu này cung cấp cho bạn khả năng truy xuất đầy đủ các hoạt động tồn kho "
+"theo một sản phẩm cụ thể. \n"
+"                 Bạn có thể lọc theo sản phẩm để xem tất cả các dịch chuyển "
+"trong quá khứ của sản phẩm."
 
 #. module: mrp
 #. odoo-python
@@ -5841,9 +5869,8 @@ msgid ""
 "If the BOM contains operations, make sure the work center capacity is "
 "accurate."
 msgstr ""
-"Đây phải là số lượng nhỏ nhất mà sản phẩm này có thể được sản xuất. Nếu DMVT"
-" chứa các hoạt động, hãy đảm bảo công suất của khu vực làm việc là chính "
-"xác."
+"Đây phải là số lượng nhỏ nhất mà sản phẩm này có thể được sản xuất. Nếu BoM "
+"chứa các hoạt động, hãy đảm bảo công suất của khu vực sản xuất là chính xác."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__time_ids
@@ -5853,7 +5880,7 @@ msgstr "Thời gian"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_efficiency
 msgid "Time Efficiency"
-msgstr "Hiệu quả về thời gian"
+msgstr "Hiệu suất thời gian"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_ids
@@ -5924,7 +5951,7 @@ msgstr "Cần đóng"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "To Consume"
-msgstr "Cần dùng"
+msgstr "Cần sử dụng"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -5938,7 +5965,6 @@ msgstr "Cần bắt đầu "
 
 #. module: mrp
 #. odoo-python
-#: code:addons/mrp/report/mrp_report_mo_overview.py:0
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
 #, python-format
 msgid "To Order"
@@ -5972,7 +5998,7 @@ msgstr "Lớp trên cùng của một tấm gỗ."
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Total Cost of Components"
-msgstr "Tổng chi phí nguyên liệu"
+msgstr "Tổng chi phí thành phần"
 
 #. module: mrp
 #. odoo-javascript
@@ -6163,8 +6189,6 @@ msgstr "Đơn vị"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
-#: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
-#: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
@@ -6228,8 +6252,8 @@ msgid ""
 "Unlock to adjust component demand during production, or consumed quantities "
 "once the manufacturing order is done."
 msgstr ""
-"Mở khóa để điều chỉnh nhu cầu nguyên liệu trong quá trình sản xuất hoặc số "
-"lượng đã dùng sau khi lệnh sản xuất hoàn tất."
+"Mở khóa để điều chỉnh nhu cầu thành phần trong quá trình sản xuất hoặc số "
+"lượng đã sử dụng sau khi lệnh sản xuất hoàn tất."
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_unlocked_by_default
@@ -6239,7 +6263,7 @@ msgstr "Được mở khóa theo mặc định"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Unplan"
-msgstr "Bỏ kế hoạch"
+msgstr "Huỷ kế hoạch"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.mrp_production_action_unreserve_tree
@@ -6256,7 +6280,7 @@ msgstr "ĐVT"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Update BoM"
-msgstr "Cập nhật DMVT"
+msgstr "Cập nhật BoM"
 
 #. module: mrp
 #. odoo-javascript
@@ -6286,8 +6310,8 @@ msgid ""
 "Use Manufacturing Orders (MO) to build finished products while consuming "
 "components: i.e. 1 Table = 4 Table Legs + 1 Table Top"
 msgstr ""
-"Sử dụng lệnh sản xuất (MO) để tạo ra thành phẩm bằng việc sử dụng các nguyên"
-" liệu. VD: 1 Bàn = 4 Chân bàn + 1 Mặt bàn"
+"Sử dụng lệnh sản xuất (MO) để tạo ra thành phẩm bằng việc sử dụng các thành "
+"phần. VD: 1 Bàn = 4 Chân bàn + 1 Mặt bàn"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_workorder_dependencies
@@ -6343,10 +6367,13 @@ msgstr "Xác thực toàn bộ sản lượng sau khi tách"
 #: code:addons/mrp/wizard/mrp_consumption_warning.py:0
 #, python-format
 msgid ""
-"Values cannot be set and validated because a Lot/Serial Number needs to be specified for a tracked product that is having its consumed amount increased:\n"
+"Values cannot be set and validated because a Lot/Serial Number needs to be "
+"specified for a tracked product that is having its consumed amount "
+"increased:\n"
 "- "
 msgstr ""
-"Không thể thiết lập và xác thực giá trị vì cần phải chỉ định Số lô/sê-ri cho sản phẩm được theo dõi có lượng tiêu thụ đang gia tăng:\n"
+"Không thể thiết lập và xác thực giá trị vì cần phải chỉ định Số lô/sê-ri cho "
+"sản phẩm được theo dõi có lượng sử dụng đang gia tăng:\n"
 "-"
 
 #. module: mrp
@@ -6379,7 +6406,7 @@ msgstr "Xem và phân bổ số lượng đã sản xuất"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse_orderpoint__manufacturing_visibility_days
 msgid "Visibility Days applied on the manufacturing routes."
-msgstr "Ngày khả năng hiển thị áp dụng cho quy trình sản xuất."
+msgstr "Ngày dự báo nhu cầu áp dụng cho quy trình sản xuất."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__voice_ids
@@ -6412,7 +6439,7 @@ msgstr "Đang chờ công đoạn khác"
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__waiting
 msgid "Waiting for components"
-msgstr "Đang chờ nguyên liệu"
+msgstr "Đang chờ thành phần"
 
 #. module: mrp
 #. odoo-python
@@ -6438,9 +6465,7 @@ msgstr "Cảnh báo không đủ số lượng tháo gỡ"
 
 #. module: mrp
 #. odoo-python
-#: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/models/mrp_bom.py:0
-#: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/models/stock_scrap.py:0
 #, python-format
@@ -6480,29 +6505,34 @@ msgstr "Lịch sử trao đổi qua trang web"
 #: model:ir.model.fields,help:mrp.field_mrp_bom__picking_type_id
 msgid ""
 "When a procurement has a ‘produce’ route with a operation type set, it will "
-"try to create a Manufacturing Order for that product using a BoM of the same"
-" operation type. That allows to define stock rules which trigger different "
+"try to create a Manufacturing Order for that product using a BoM of the same "
+"operation type. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
-"Khi một đơn thu mua được thiết lập quy trình 'sản xuất' có loại hoạt động, "
-"Lệnh sản xuất cho sản phẩm đó sẽ cố gắng được tạo ra bằng cách sử dụng một "
-"DMVT với cùng loại hoạt động. Điều đó cho phép xác định quy tắc tồn kho kích"
-" hoạt các lệnh sản xuất khác nhau với các DMVT khác nhau"
+"Khi một đơn mua sắm được thiết lập tuyến 'sản xuất' có loại hoạt động, Lệnh "
+"sản xuất cho sản phẩm đó sẽ được tạo ra bằng cách sử dụng một BoM với cùng "
+"loại hoạt động. Điều đó cho phép xác định quy tắc tồn kho kích hoạt các lệnh "
+"sản xuất khác nhau với các BoM khác nhau."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__manual_consumption
 #: model:ir.model.fields,help:mrp.field_stock_move__manual_consumption
 msgid ""
-"When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
-"If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also."
+"When activated, then the registration of consumption for that component is "
+"recorded manually exclusively.\n"
+"If not activated, and any of the components consumption is edited manually "
+"on the manufacturing order, Odoo assumes manual consumption also."
 msgstr ""
-"Khi được kích hoạt, thì việc ghi nhận lượng sử dụng cho nguyên liệu đó được ghi lại riêng theo cách thủ công.\n"
-"Nếu không được kích hoạt và bất kỳ lượng sử dụng nguyên liệu nào được chỉnh sửa thủ công trên lệnh sản xuất, thì Odoo cũng coi là lượng tiêu thụ thủ công."
+"Khi được kích hoạt, thì việc ghi nhận lượng sử dụng cho thành phần đó được "
+"ghi lại riêng theo cách thủ công.\n"
+"Nếu không được kích hoạt nhưng có bất kỳ lượng sử dụng thành phần nào được "
+"chỉnh sửa thủ công trên lệnh sản xuất, thì Odoo cũng coi đó là lượng sử dụng "
+"thủ công."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__asap
 msgid "When components for 1st operation are available"
-msgstr "Khi nguyên liệu của hoạt động đầu tiên sẵn sàng"
+msgstr "Khi thành phần của hoạt động đầu tiên sẵn sàng"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse__manufacture_to_resupply
@@ -6530,10 +6560,10 @@ msgid ""
 "perfectly integrated into the process. Workers can trigger feedback loops, "
 "maintenance alerts, scrap products, etc."
 msgstr ""
-"Với bảng điều khiển khu vực làm việc của Odoo, công nhân có thể bắt đầu công"
-" đoạn tại xưởng và làm theo hướng dẫn của bảng công tác. Kiểm tra chất lượng"
-" được tích hợp hoàn hảo vào quá trình này. Công nhân có thể kích hoạt vòng "
-"lặp phản hồi, cảnh báo bảo trì, loại bỏ sản phẩm,... "
+"Với bảng điều khiển khu vực sản xuất của Odoo, công nhân có thể bắt đầu công "
+"đoạn tại xưởng và làm theo hướng dẫn của bảng công tác. Kiểm tra chất lượng "
+"được tích hợp hoàn hảo vào quá trình này. Công nhân có thể kích hoạt vòng "
+"lặp phản hồi, cảnh báo bảo dưỡng, loại bỏ sản phẩm,... "
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning
@@ -6541,8 +6571,8 @@ msgid ""
 "Wizard in case of consumption in warning/strict and more component has been "
 "used for a MO (related to the bom)"
 msgstr ""
-"Công cụ dùng trong trường hợp lượng tiêu thụ trong trạng thái cảnh báo/tuyệt"
-" đối và nhiều nguyên liệu đã được sử dụng cho LSX hơn (liên quan đến DMVT)"
+"Công cụ sử dụng trong trường hợp lượng sử dụng trong trạng thái cảnh báo/"
+"tuyệt đối và nhiều thành phần đã được sử dụng cho MO hơn (liên quan đến BoM)"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_multi
@@ -6587,13 +6617,13 @@ msgstr "Công suất khu vực sản xuất"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workcenter_load
 msgid "Work Center Load"
-msgstr "Tải lượng khu vực sản xuất"
+msgstr "Độ tải của khu vực sản xuất"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workcenter_load_report_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_workcenter_load_pivot
 msgid "Work Center Loads"
-msgstr "Tải lượng khu vực sản xuất"
+msgstr "Độ tải của khu vực sản xuất"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -6608,7 +6638,7 @@ msgstr "Sử dụng khu vực sản xuất"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_work_center_load_graph
 msgid "Work Center load"
-msgstr "Tải lượng khu vực sản xuất"
+msgstr "Độ tải của khu vực sản xuất"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
@@ -6625,7 +6655,7 @@ msgstr "Tổng quan khu vực sản xuất"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Work Instruction"
-msgstr "Chỉ dẫn công việc"
+msgstr "Hướng dẫn công việc"
 
 #. module: mrp
 #: model:ir.actions.report,name:mrp.action_report_workorder
@@ -6653,7 +6683,7 @@ msgid ""
 msgstr ""
 "Hoạt động công đoạn cho phép bạn tạo và quản lý hoạt động sản xuất mà khu "
 "vực sản xuất cần thực hiện theo để sản xuất sản phẩm. Hoạt động được đính "
-"kèm với danh mục vật tư chỉ ra những nguyên liệu cần cho sản xuất. "
+"kèm với danh mục vật tư chỉ ra những thành phần cần cho sản xuất. "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__workorder_id
@@ -6685,7 +6715,7 @@ msgstr "Hiệu suất công đoạn"
 #: model:ir.actions.act_window,name:mrp.action_mrp_workorder_production
 #: model:ir.actions.act_window,name:mrp.action_mrp_workorder_workcenter
 msgid "Work Orders Planning"
-msgstr "Hoạch định công đoạn"
+msgstr "Lập kế hoạch công đoạn"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -6701,10 +6731,12 @@ msgstr "Khu vực sản xuất "
 #: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
-"                    Operations are defined in the bill of materials or added in the manufacturing order directly."
+"                    Operations are defined in the bill of materials or added "
+"in the manufacturing order directly."
 msgstr ""
 "Công đoạn là các hoạt động thành phần của một lệnh sản xuất. \n"
-"                    Các hoạt động được nêu rõ trong danh mục vật tư hoặc thêm trực tiếp vào lệnh sản xuất. "
+"                    Các hoạt động được nêu rõ trong danh mục vật tư hoặc "
+"thêm trực tiếp vào lệnh sản xuất. "
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -6713,10 +6745,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
-"            Operations are defined in the bill of materials or added in the manufacturing order directly."
+"            Operations are defined in the bill of materials or added in the "
+"manufacturing order directly."
 msgstr ""
 "Công đoạn là các hoạt động thành phần của một lệnh sản xuất. \n"
-"                    Các hoạt động được nêu rõ trong danh mục vật tư hoặc thêm trực tiếp vào lệnh sản xuất. "
+"                    Các hoạt động được nêu rõ trong danh mục vật tư hoặc "
+"thêm trực tiếp vào lệnh sản xuất. "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -6810,9 +6844,9 @@ msgid ""
 "the operation type and tick the box \"Create New Lots/Serial Numbers for "
 "Components\"."
 msgstr ""
-"Bạn không được phép tạo hoặc chỉnh sửa số lô hoặc số sê-ri của các nguyên "
-"liệu với loại hoạt động là \"Sản xuất\". Để thay đổi điều này, hãy đi đến "
-"loại hoạt động và đánh dấu vào ô \"Tạo số lô/số sê-ri mới cho nguyên liệu\"."
+"Bạn không được phép tạo hoặc chỉnh sửa số lô hoặc số sê-ri của các thành "
+"phần với loại hoạt động là \"Sản xuất\". Để thay đổi điều này, hãy đi đến "
+"loại hoạt động và đánh dấu vào ô \"Tạo số lô/số sê-ri mới cho thành phần\"."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__type
@@ -6852,8 +6886,8 @@ msgstr ""
 msgid ""
 "You can only merge manufacturing orders of identical products with same BoM."
 msgstr ""
-"Bạn chỉ có thể gộp các lệnh sản xuất của những sản phẩm giống hệt nhau và có"
-" cùng một DMVT."
+"Bạn chỉ có thể gộp các lệnh sản xuất của những sản phẩm giống hệt nhau và có "
+"cùng một BoM."
 
 #. module: mrp
 #. odoo-python
@@ -6863,8 +6897,7 @@ msgid ""
 "You can only merge manufacturing orders with no additional components or by-"
 "products."
 msgstr ""
-"Bạn chỉ có thể gộp các lệnh sản xuất không có thêm nguyên liệu hoặc phụ "
-"phẩm."
+"Bạn chỉ có thể gộp các lệnh sản xuất không có thêm thành phần hoặc phụ phẩm."
 
 #. module: mrp
 #. odoo-python
@@ -6885,8 +6918,7 @@ msgstr "Bạn chỉ có thể gộp các lệnh sản xuất có cùng trạng t
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
-"You cannot change the workcenter of a work order that is in progress or "
-"done."
+"You cannot change the workcenter of a work order that is in progress or done."
 msgstr ""
 "Bạn không thể thay đổi khu vực sản xuất của một công đoạn đang được xử lý "
 "hoặc đã hoàn tất"
@@ -6965,8 +6997,8 @@ msgid ""
 "You cannot use the 'Apply on Variant' functionality and simultaneously "
 "create a BoM for a specific variant."
 msgstr ""
-"Bạn không thể sử dụng chức năng 'Áp dụng vào biến thể' và đồng thời tạo DMVT"
-" cho một biến thể cụ thể. "
+"Bạn không thể sử dụng chức năng 'Áp dụng vào biến thể' và đồng thời tạo BoM "
+"cho một biến thể cụ thể. "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
@@ -6976,9 +7008,12 @@ msgid ""
 "                            Please confirm it has been done on purpose.\n"
 "                        </b>\n"
 "                        <b invisible=\"consumption != 'strict'\">\n"
-"                            Please review your component consumption or ask a manager to validate\n"
-"                            <span invisible=\"mrp_production_count != 1\">this manufacturing order</span>\n"
-"                            <span invisible=\"mrp_production_count == 1\">these manufacturing orders</span>.\n"
+"                            Please review your component consumption or ask "
+"a manager to validate\n"
+"                            <span invisible=\"mrp_production_count != "
+"1\">this manufacturing order</span>\n"
+"                            <span invisible=\"mrp_production_count == "
+"1\">these manufacturing orders</span>.\n"
 "                        </b>"
 msgstr ""
 "Bạn đã sử dụng số lượng khác với dự kiến cho các sản phẩm sau.\n"
@@ -6986,21 +7021,28 @@ msgstr ""
 "                            Vui lòng xác nhận việc này là có chủ đích.\n"
 "                        </b>\n"
 "                        <b invisible=\"consumption != 'strict'\">\n"
-"                            Hãy xem lại lượng sử dụng nguyên liệu hoặc yêu cầu quản lý xác nhận\n"
-"                            <span invisible=\"mrp_production_count != 1\">lệnh sản xuất này</span>\n"
-"                            <span invisible=\"mrp_production_count == 1\">các lệnh sản xuất này</span>.\n"
+"                            Hãy xem lại lượng sử dụng thành phần hoặc yêu "
+"cầu quản lý xác nhận\n"
+"                            <span invisible=\"mrp_production_count != "
+"1\">lệnh sản xuất này</span>\n"
+"                            <span invisible=\"mrp_production_count == "
+"1\">các lệnh sản xuất này</span>.\n"
 "                        </b>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid ""
 "You have entered less serial numbers than the quantity to produce.<br/>\n"
-"                        Create a backorder if you expect to process the remaining quantities later.<br/>\n"
-"                        Do not create a backorder if you will not process the remaining products."
+"                        Create a backorder if you expect to process the "
+"remaining quantities later.<br/>\n"
+"                        Do not create a backorder if you will not process "
+"the remaining products."
 msgstr ""
 "Số lượng số sê-ri bạn đã nhập ít hơn số lượng cần sản xuất.<br/>\n"
-"                        Tạo đơn hàng tách kiện nếu bạn dự kiến sản xuất số lượng còn lại sau.<br/>\n"
-"                        Không tạo đơn hàng tách kiện nếu bạn không xử lý những sản phẩm còn lại. "
+"                        Tạo đơn hàng tách kiện nếu bạn dự kiến sản xuất số "
+"lượng còn lại sau.<br/>\n"
+"                        Không tạo đơn hàng tách kiện nếu bạn không xử lý "
+"những sản phẩm còn lại. "
 
 #. module: mrp
 #. odoo-python
@@ -7027,8 +7069,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
-"'Productivity'. Create one from the Manufacturing app, menu: Configuration /"
-" Productivity Losses."
+"'Productivity'. Create one from the Manufacturing app, menu: Configuration / "
+"Productivity Losses."
 msgstr ""
 "Bạn cần xác định ít nhất một hao hụt năng suất trong danh mục 'Năng suất'. "
 "Tạo trong ứng dụng Sản xuất: Cấu hình/Hao hụt năng suất. "
@@ -7057,7 +7099,7 @@ msgstr "Bạn cần cung cấp số lô cho thành phẩm. "
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You need to supply Lot/Serial Number for products and 'consume' them:"
-msgstr "Bạn cần cung cấp số lô/sê-ri cho sản phẩm và 'tiêu thụ' chúng:"
+msgstr "Bạn cần cung cấp số lô/sê-ri cho sản phẩm và 'sử dụng' chúng:"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
@@ -7079,8 +7121,8 @@ msgid ""
 "You should update the components quantity instead of directly updating the "
 "quantity of the kit product."
 msgstr ""
-"Bạn nên cập nhật số lượng nguyên liệu thay vì trực tiếp cập nhật số lượng "
-"sản phẩm theo bộ kit."
+"Bạn nên cập nhật số lượng thành phần thay vì trực tiếp cập nhật số lượng sản "
+"phẩm theo bộ kit."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__zpl
@@ -7114,7 +7156,7 @@ msgstr "thời lượng dự kiến"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
 msgid "from location"
-msgstr "từ địa điểm"
+msgstr "từ vị trí"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
@@ -7128,7 +7170,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "it is added as a component in a manufacturing order"
-msgstr "nó được thêm vào làm nguyên liệu trong một lệnh sản xuất."
+msgstr "nó được thêm vào làm thành phần trong một lệnh sản xuất."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -7137,7 +7179,7 @@ msgid ""
 "instance."
 msgstr ""
 "nó được chuyển đi thông qua một lệnh chuyển hàng, ví dụ như một phiếu nhập "
-"kho hoặc phiếu xuất kho."
+"kho hoặc lệnh giao hàng."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -7160,7 +7202,6 @@ msgstr "đã hợp nhất"
 
 #. module: mrp
 #. odoo-python
-#: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -7186,7 +7227,7 @@ msgstr "đã đặt thay vì"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "per workcenter"
-msgstr "theo mỗi khu vực sản xuất"
+msgstr "mỗi khu vực sản xuất"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.production_message
@@ -7209,31 +7250,3 @@ msgstr "tách"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "work orders"
 msgstr "công đoạn"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/mo_overview_line/mrp_mo_overview_line.xml:0
-#: code:addons/mrp/static/src/components/mo_overview_line/mrp_mo_overview_line.xml:0
-#, python-format
-msgid "{{ foldButtonTitle }}"
-msgstr "{{ foldButtonTitle }}"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
-#: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
-#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
-#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
-#, python-format
-msgid "{{ props.isFolded ? 'Unfold' : 'Fold' }}"
-msgstr "{{ props.isFolded ? 'Mở' : 'Thu gọn' }}"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/mo_overview_byproducts_block/mrp_mo_overview_byproducts_block.xml:0
-#: code:addons/mrp/static/src/components/mo_overview_byproducts_block/mrp_mo_overview_byproducts_block.xml:0
-#: code:addons/mrp/static/src/components/mo_overview_operations_block/mrp_mo_overview_operations_block.xml:0
-#: code:addons/mrp/static/src/components/mo_overview_operations_block/mrp_mo_overview_operations_block.xml:0
-#, python-format
-msgid "{{ state.isFolded ? 'Unfold' : 'Fold' }}"
-msgstr "{{ state.isFolded ? 'Mở' : 'Thu gọn' }}"

@@ -39,7 +39,7 @@ export class AttachmentView extends Component {
         );
         this.threadService.setMainAttachmentFromIndex(
             this.state.thread,
-            index === this.state.thread.attachmentsInWebClientView.length - 1 ? 0 : index + 1
+            index >= this.state.thread.attachmentsInWebClientView.length - 1 ? 0 : index + 1
         );
     }
 
@@ -49,7 +49,7 @@ export class AttachmentView extends Component {
         );
         this.threadService.setMainAttachmentFromIndex(
             this.state.thread,
-            index === 0 ? this.state.thread.attachmentsInWebClientView.length - 1 : index - 1
+            index <= 0 ? this.state.thread.attachmentsInWebClientView.length - 1 : index - 1
         );
     }
 

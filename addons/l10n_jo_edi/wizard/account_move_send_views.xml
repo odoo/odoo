@@ -6,7 +6,8 @@
         <field name="inherit_id" ref="account.account_move_send_form"/>
         <field name="arch" type="xml">
             <div name="warnings" position="inside">
-                <div class="alert alert-warning" role="alert"
+                <div id="l10n_jo_edi_warnings"
+                    class="alert alert-warning" role="alert"
                     invisible="not l10n_jo_edi_is_visible or not l10n_jo_edi_is_enabled">
                     Jordanian e-invoicing (JoFotara) was enabled
                 </div>

@@ -319,7 +319,7 @@ export class SelfOrder extends Reactive {
             const orderlines = this._getKioskPrintingCategoriesChanges(
                 Object.values(printer.config.product_categories_ids)
             );
-            if (orderlines) {
+            if (orderlines.length > 0) {
                 const printingChanges = {
                     new: orderlines,
                     tracker: this.currentOrder.table_stand_number,
@@ -648,6 +648,16 @@ export class SelfOrder extends Reactive {
         }
 
         return result;
+    }
+
+    verifyPriceLoading() {
+        if (this.priceLoading) {
+            this.notification.add(_t("Please wait until the price is loaded"), {
+                type: "danger",
+            });
+            return false;
+        }
+        return true;
     }
 
     getProductDisplayPrice(product) {

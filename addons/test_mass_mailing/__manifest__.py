@@ -12,6 +12,7 @@ test_mail. """,
     'depends': [
         'mass_mailing',
         'mass_mailing_sms',
+        'sms_twilio',
         'test_mail',
         'test_mail_sms',
     ],

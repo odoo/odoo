@@ -18,8 +18,12 @@ class IrActionsReport(models.Model):
             collected_streams
             and res_ids
             and len(res_ids) == 1
-            and (self._is_invoice_report(report_ref) or self._get_report(report_ref).report_name in custom_templates)
-            and not self.env.context.get('from_account_move_send')  # only triggered from the 'print' action report
+            and (
+                # only triggered from the "Print" action for default template
+                self._is_invoice_report(report_ref) and not self.env.context.get('from_account_move_send')
+                # triggered from "Print" and "Send & Print" actions for custom templates
+                or self._get_report(report_ref).report_name in custom_templates
+            )
         ):
             # Generate and embed Factur-X
             invoice = self.env['account.move'].browse(res_ids)

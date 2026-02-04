@@ -103,7 +103,7 @@ class AccountMoveSend(models.TransientModel):
             'demo': _('Demo'),
         }
         for wizard in self:
-            edi_user = wizard.company_id.account_edi_proxy_client_ids.filtered(
+            edi_user = wizard.company_id.sudo().account_edi_proxy_client_ids.filtered(
                 lambda usr: usr.proxy_type == 'peppol'
             )
             mode = mode_strings.get(edi_user.edi_mode)
@@ -137,7 +137,7 @@ class AccountMoveSend(models.TransientModel):
         if self.checkbox_send_peppol and self.enable_peppol:
             for move in self.move_ids:
                 if not move.peppol_move_state or move.peppol_move_state == 'ready':
-                    move.peppol_move_state = 'to_send'
+                    move.sudo().peppol_move_state = 'to_send'
 
         return super().action_send_and_print(force_synchronous=force_synchronous, allow_fallback_pdf=allow_fallback_pdf, **kwargs)
 
@@ -184,6 +184,9 @@ class AccountMoveSend(models.TransientModel):
                     invoice_data['error'] = _('Please verify partner configuration in partner settings.')
                     continue
 
+                if len(xml_file) > 64000000:
+                    invoice_data['error'] = _("Invoice %s is too big to send via peppol (64MB limit)", invoice.name)
+
                 receiver_identification = f"{partner.peppol_eas}:{partner.peppol_endpoint}"
                 params['documents'].append({
                     'filename': filename,
@@ -216,13 +219,39 @@ class AccountMoveSend(models.TransientModel):
             else:
                 # the response only contains message uuids,
                 # so we have to rely on the order to connect peppol messages to account.move
-                invoices = self.env['account.move']
+                attachments_linked_message = _("The invoice has been sent to the Peppol Access Point. The following attachments were sent with the XML:")
+                attachments_not_linked_message = _("Some attachments could not be sent with the XML:")
                 for message, (invoice, invoice_data) in zip(response['messages'], invoices_data_peppol.items()):
                     invoice.peppol_message_uuid = message['message_uuid']
                     invoice.peppol_move_state = 'processing'
-                    invoices |= invoice
-                log_message = _('The document has been sent to the Peppol Access Point for processing')
-                invoices._message_log_batch(bodies=dict((invoice.id, log_message) for invoice in invoices))
+                    attachments_linked, attachments_not_linked = self._get_ubl_available_attachments(
+                        invoice_data.get('mail_attachments_widget', []),
+                        invoice.partner_id.commercial_partner_id.ubl_cii_format,
+                    )
+                    if attachments_not_linked:
+                        invoice._message_log(body=attachments_not_linked_message, attachment_ids=attachments_not_linked.mapped('id'))
+
+                    base_attachments = [
+                        (invoice_data[key]['name'], invoice_data[key]['raw'])
+                        for key in ['pdf_attachment_values', 'ubl_cii_xml_attachment_values']
+                        if invoice_data.get(key)
+                    ]
+                    attachments_embedded = [
+                        (attachment.name, attachment.raw)
+                        for attachment in attachments_linked
+                    ] + base_attachments
+
+                    new_message = invoice.with_context(no_new_invoice=True).message_post(
+                        body=attachments_linked_message,
+                        attachments=attachments_embedded,
+                    )
+
+                    if new_message.attachment_ids.ids:
+                        self.env.cr.execute("UPDATE ir_attachment SET res_id = NULL WHERE id IN %s", [tuple(new_message.attachment_ids.ids)])
+                    new_message.attachment_ids.write({
+                        'res_model': new_message._name,
+                        'res_id': new_message.id,
+                    })
 
         if self._can_commit():
             self._cr.commit()

@@ -141,6 +141,13 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             self.term_line_vals_1,
         ], self.move_vals)
 
+    def test_basic_tax_lock(self):
+        tax_tag = self.env['account.account.tag'].create({'name': 'HiddenFromIRS', 'applicability': 'taxes'})
+        inv = self.init_invoice('out_invoice', amounts=[10], post=True)
+        inv.company_id.tax_lock_date = inv.date
+        with self.assertRaisesRegex(UserError, 'lock date'):
+            inv.line_ids.tax_tag_ids = tax_tag.ids
+
     @freeze_time('2020-01-15')
     def test_out_invoice_onchange_invoice_date(self):
         for tax_date, invoice_date, accounting_date in [
@@ -1789,6 +1796,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         }])
 
     def test_out_invoice_create_refund(self):
+        self.invoice.write({'invoice_origin': 'S00001'})
         self.invoice.action_post()
 
         bank1 = self.env['res.partner.bank'].create({
@@ -1857,6 +1865,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
             'payment_state': 'not_paid',
             'partner_bank_id': bank1.id,
+            'invoice_origin': 'S00001'
         })
 
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
@@ -2629,6 +2638,31 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total' : self.move_vals['amount_total'],
             'amount_untaxed' : self.move_vals['amount_untaxed'],
         })
+
+    def test_out_invoice_switch_out_refund_3(self):
+        # Test to check that when switching from out_invoice to out_refund the fiscal position is kept
+        move = self.init_invoice('out_invoice')
+        move.fiscal_position_id = self.fiscal_pos_a.id
+
+        move.action_switch_move_type()
+
+        self.assertEqual(move.fiscal_position_id, self.fiscal_pos_a)
+
+    def test_out_invoice_switch_out_refund_4(self):
+        # Test to check that when switching from out_invoice to out_refund the bank partner is changed accordingly
+        bank = self.env["res.partner.bank"].create({
+            "bank_name": "FAKE",
+            "acc_number": "1234567890",
+            "partner_id": self.partner_a.id,
+        })
+
+        move = self.env["account.move"].with_context(default_move_type="out_invoice").new({
+            "partner_id": self.partner_a.id,
+        })
+        move.action_switch_move_type()
+
+        self.assertEqual(move.bank_partner_id, self.partner_a)
+        self.assertEqual(move.partner_bank_id, bank)
 
     def test_out_invoice_reverse_move_tags(self):
         country = self.env.ref('base.us')
@@ -3669,6 +3703,48 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ]
         self.assertRecordValues(caba_move.line_ids, expected_values)
 
+    def test_out_invoice_caba_on_payment(self):
+        self.env.company.tax_exigibility = True
+        tax_waiting_account = self.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'account_type': 'liability_current',
+            'reconcile': True,
+            'company_id': self.company_data['company'].id,
+        })
+        caba_tax = self.env['account.tax'].create({
+            'name': 'cash basis 10%',
+            'type_tax_use': 'sale',
+            'amount': 10,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': tax_waiting_account.id,
+        })
+        caba_tax.invoice_repartition_line_ids.account_id.reconcile = True
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'price_unit': 1000.0,
+                    'tax_ids': [Command.set(caba_tax.ids)],
+                })
+            ],
+        })
+        invoice.invoice_line_ids.tax_ids = caba_tax
+        invoice.action_post()
+        credit_note = invoice._reverse_moves()
+        credit_note.action_post()
+        receivable_lines = (invoice + credit_note).line_ids.filtered(lambda l: l.account_id == self.partner_a.property_account_receivable_id)
+        invoice_receivable_matching, refund_receivable_matching = receivable_lines.mapped('matching_number')
+        self.assertEqual(invoice_receivable_matching, refund_receivable_matching)
+        # The tax account should be reconciled with the CABA entries if they exist
+        # But ideally, they shouldn't exist since no cash was involved.
+        tax_lines = (invoice + credit_note).line_ids.filtered(lambda l: l.account_id == tax_waiting_account)
+        invoice_tax_matching, refund_tax_matching = tax_lines.mapped('matching_number')
+        self.assertNotEqual(invoice_tax_matching, refund_tax_matching)
+        self.assertTrue(all([invoice_tax_matching, refund_tax_matching, invoice_receivable_matching, refund_receivable_matching]))
+
+
     def test_tax_grid_remove_tax(self):
         # Add a tag to tax_sale_a
         tax_line_tag = self.env['account.account.tag'].create({
@@ -3895,6 +3971,32 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(move.currency_id, self.company_data['currency'])
         move.journal_id = second_journal
         self.assertEqual(move.currency_id, self.currency_data['currency'])
+
+    def test_invoice_currency_mismatch_account_currency(self):
+        """
+        Test that an invoice cannot be posted if the invoice currency does not match the currency on the receivable/payable account.
+        """
+        # Create a receivable account with a specific currency (EUR)
+        receivable_account = self.company_data['default_account_receivable'].copy()
+        receivable_account.currency_id = self.currency_data['currency']  # Gold
+
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,  # EUR
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1.0,
+                    'account_id': receivable_account.id,
+                    'tax_ids': [],
+                })
+            ]
+        })
+
+        # Try to change the currency to one that conflicts with account's fixed currency
+        with self.assertRaisesRegex(UserError, "The account selected on your journal entry forces to provide a secondary currency"):
+            move.currency_id = self.company_data['currency']
 
     @freeze_time('2019-01-01')
     def test_date_reversal_exchange_move(self):
@@ -4255,6 +4357,30 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         for line in move.line_ids:
             self.assertEqual(line.date, move.date)
 
+    def test_before_initial_rate(self):
+        def invoice():
+            return self.init_invoice(
+                move_type='out_invoice',
+                invoice_date='1900-01-01',
+                partner=self.partner_a,
+                amounts=[1000.0],
+                taxes=[],
+                currency=currency,
+            )
+
+        currency = self.currency_data['currency']
+        self.assertRecordValues(invoice(), [{
+            'amount_total': 1000.0,
+            'amount_total_signed': 1000.0,
+        }])
+        currency.rate_ids[-1].unlink()  # the setup creates a rate of 1 far in the past
+        self.assertRecordValues(invoice(), [{
+            'amount_total': 1000.0,
+            'amount_total_signed': 333.33,
+        }])
+
+
+
     def test_on_quick_encoding_non_accounting_lines(self):
         """ Ensure that quick encoding values are only applied to accounting lines) """
 
@@ -4437,3 +4563,166 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             })],
         })
         self.assertEqual(move.line_ids.partner_id, self.partner_a)
+
+    def test_out_invoice_bank_partner(self):
+        """ Check the bank partner is recomputed on invoice company change on new invoice """
+        company_1 = self.company_data['company']
+        company_2 = self.company_data_2['company']
+        bank = self.env["res.partner.bank"].create({
+            "bank_name": "FAKE",
+            "acc_number": "1234567890",
+            "partner_id": company_1.partner_id.id,
+        })
+        bank_2 = self.env["res.partner.bank"].create({
+            "bank_name": "FAKE 2",
+            "acc_number": "1234567890",
+            "partner_id": company_2.partner_id.id,
+        })
+        invoice_new = self.env["account.move"].with_context(default_move_type="out_invoice").new({
+            "company_id": company_1.id,
+            "partner_id": self.partner_a.id,
+        })
+        self.assertEqual(
+            company_1.partner_id,
+            invoice_new.bank_partner_id
+        )
+        self.assertEqual(
+            bank,
+            invoice_new.partner_bank_id
+        )
+        invoice_new.company_id = company_2
+        self.assertEqual(
+            company_2.partner_id,
+            invoice_new.bank_partner_id
+        )
+        self.assertEqual(
+            bank_2,
+            invoice_new.partner_bank_id
+        )
+
+    def test_narration_preserved_when_use_invoice_terms_disabled(self):
+        """ Ensure narration is preserved when partner changes and invoice terms are disabled. """
+        self.env['ir.config_parameter'].sudo().set_param('account.use_invoice_terms', False)
+        invoice = self.invoice.copy({
+            'narration': 'Manually written terms by user',
+        })
+        invoice.write({
+            'partner_id': self.partner_b.id,
+        })
+        self.assertEqual(
+            invoice.narration,
+            "<p>Manually written terms by user</p>",
+            "Narration should be preserved after partner change when invoice terms are disabled"
+        )
+
+    def test_invoice_with_no_lines(self):
+        """
+        Test that previewing an invoice with no lines doesn't crash.
+        """
+        # Create invoice with no lines
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.today(),
+            'currency_id': self.currency_data['currency'].id,
+        })
+        values = invoice._get_invoice_portal_extra_values()
+        self.assertIn('payment_state', values)
+
+    def test_invoice_epd_cash_rounding_amount(self):
+        """
+        This test checks the correct calculation of early payment discount on an
+        invoice having also cash discount applied
+        """
+        tax = self.env['account.tax'].create({
+            'name': '8.1%',
+            'type_tax_use': 'sale',
+            'amount': 8.1,
+        })
+        self.cash_rounding_a.rounding_method = 'HALF-UP'
+        payment_terms = self.env['account.payment.term'].create({
+            'name': "2/7 Net 30",
+            'company_id': self.company_data['company'].id,
+            'discount_percentage': 2,
+            'discount_days': 7,
+            'early_discount': True,
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_payment_term_id': payment_terms.id,
+            'invoice_cash_rounding_id': self.cash_rounding_a.id,
+            'invoice_line_ids': [Command.create({
+                'name': 'test line',
+                'price_unit': 50.00,
+                'tax_ids': [Command.set(tax.ids)],
+            })],
+        })
+        invoice.action_post()
+        invoice = invoice.with_context(active_model='account.move', active_id=invoice.id)
+        discounted_amount = invoice.invoice_payment_term_id._get_amount_due_after_discount(
+            total_amount=invoice.amount_total,
+            untaxed_amount=invoice.amount_tax,
+        )
+        self.assertEqual(discounted_amount, 52.95)
+
+    def test_out_invoice_fiscal_position_preserves_manual_price(self):
+        """Manually adjusted prices should be preserved when changing fiscal position"""
+        self.invoice.invoice_line_ids[0].price_unit = 1500.0
+        self.invoice.fiscal_position_id = self.fiscal_pos_a
+        self.invoice.action_update_fpos_values()
+        self.assertEqual(self.invoice.invoice_line_ids[0].price_unit, 1500.0)
+
+    def test_out_invoice_fiscal_position_recomputes_price_include_taxes(self):
+        """Price should be recomputed when tax inclusion changes via fiscal position"""
+        # Create price-included taxes
+        tax_10_incl = self.env['account.tax'].create({
+            'name': '10% incl',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 10,
+            'price_include': True,
+        })
+        tax_5_incl = self.env['account.tax'].create({
+            'name': '5% incl',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 5,
+            'price_include': True,
+        })
+
+        # Create fiscal position mapping 10% -> 5%
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'Test FP 10->5',
+            'tax_ids': [Command.create({
+                'tax_src_id': tax_10_incl.id,
+                'tax_dest_id': tax_5_incl.id,
+            })],
+        })
+
+        # Configure product with 10% tax
+        self.product_a.taxes_id = [Command.set(tax_10_incl.ids)]
+
+        # Create invoice - product will auto-apply price_unit from product with tax
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'quantity': 1.0,
+            })],
+        })
+
+        # Manually set price to 1100 to simulate user override
+        invoice.invoice_line_ids[0].price_unit = 1100.0
+
+        # Apply fiscal position - price should convert: 1100 / 1.10 * 1.05 = 1050
+        invoice.fiscal_position_id = fiscal_position
+        invoice.action_update_fpos_values()
+
+        self.assertEqual(
+            invoice.invoice_line_ids[0].price_unit,
+            1050.0,
+            msg="Price should be recomputed when tax inclusion rate changes (10% -> 5%)"
+        )

@@ -30,7 +30,7 @@ ALLOWED_DEBUG_MODES = ['', '1', 'assets', 'tests', 'disable-t-cache']
 class Http(models.AbstractModel):
     _inherit = 'ir.http'
 
-    bots = ["bot", "crawl", "slurp", "spider", "curl", "wget", "facebookexternalhit", "whatsapp", "trendsmapresolver", "pinterest", "instagram"]
+    bots = ["bot", "crawl", "slurp", "spider", "curl", "wget", "facebookexternalhit", "whatsapp", "trendsmapresolver", "pinterest", "instagram", "google-pagerenderer", "preview"]
 
     @classmethod
     def is_a_bot(cls):
@@ -145,7 +145,7 @@ class Http(models.AbstractModel):
                             'id': comp.id,
                             'name': comp.name,
                             'sequence': comp.sequence,
-                            'child_ids': (comp.child_ids & user.company_ids).ids,
+                            'child_ids': (comp.child_ids & all_companies_in_hierarchy_sudo).ids,
                             'parent_id': comp.parent_id.id,
                         } for comp in user.company_ids
                     },

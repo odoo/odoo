@@ -117,7 +117,11 @@ class BusPresence(models.Model):
                     (
                         target,
                         "bus.bus/im_status_updated",
-                        {"im_status": im_status or presence.status, **identity_data},
+                        {
+                            "presence_status": im_status or presence.status,
+                            "im_status": presence._get_bus_target().im_status,
+                            **identity_data
+                        },
                     )
                 )
         self.env["bus.bus"]._sendmany(notifications)

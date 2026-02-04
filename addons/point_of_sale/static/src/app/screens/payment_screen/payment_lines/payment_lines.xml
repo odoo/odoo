@@ -58,8 +58,13 @@
                                     <div class="electronic_status">
                                         Waiting for card
                                     </div>
-                                    <div class="button send_payment_cancel" title="Cancel Payment Request" t-on-click="() => this.props.sendPaymentCancel(line)">
-                                        Cancel
+                                    <div>
+                                        <div class="button send_force_done" title="Force Done" t-on-click="() => this.props.sendForceDone(line)">
+                                            Force done
+                                        </div>
+                                        <div class="button send_payment_cancel" title="Cancel Payment Request" t-on-click="() => this.props.sendPaymentCancel(line)">
+                                            Cancel
+                                        </div>
                                     </div>
                                 </t>
                                 <t t-elif="['waiting', 'waitingCancel', 'waitingCapture'].includes(line.payment_status)">
@@ -68,6 +73,9 @@
                                     </div>
                                     <div>
                                         <i class="fa fa-circle-o-notch fa-spin" role="img" />
+                                        <div t-if="line.payment_status == 'waiting'" class="button send_force_done" title="Force Done" t-on-click="() => this.props.sendForceDone(line)">
+                                            Force done
+                                        </div>
                                     </div>
                                 </t>
                                 <t t-elif="line.payment_status == 'reversing'">

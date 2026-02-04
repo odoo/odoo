@@ -17,6 +17,8 @@ const strikeThrough = async editor => {
 };
 const setFontSize = size => editor => editor.execCommand('setFontSize', size);
 
+const setFontSizeClassName = className => editor => editor.execCommand('setFontSizeClassName', className);
+
 const switchDirection = editor => editor.execCommand('switchDirection');
 
 describe('Format', () => {
@@ -233,6 +235,14 @@ describe('Format', () => {
                 contentBefore: '<p>[a</p><p contenteditable="false">b</p><p>c]</p>',
                 stepFunction: bold,
                 contentAfter: `<p>${strong('[a')}</p><p contenteditable="false">b</p><p>${strong('c]')}</p>`,
+            });
+        });
+        it("should remove bold format when having newline character nodes in selection", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore:
+                    "<p><strong>[abc</strong></p>\n<p><strong>def</strong></p>\n<p><strong>ghi]</strong></p>",
+                stepFunction: bold,
+                contentAfter: "<p>[abc</p>\n<p>def</p>\n<p>ghi]</p>",
             });
         });
 
@@ -847,7 +857,7 @@ describe('Format', () => {
                     await editor.execCommand('underline');
                     await editor.execCommand('insert', 'C');
                 },
-                contentAfterEdit: `<p>ab${u(s(`cd`))}${s(`A${u(`B`, 'first')}C[]\u200B`, 'first')}${u(s(`ef`))}</p>`,
+                contentAfterEdit: `<p>ab${u(s(`cd`))}${s(`A${u("B")}C[]`)}${u(s(`ef`))}</p>`,
             });
         });
         it('should remove only underline decoration on a span', async () => {
@@ -1092,6 +1102,42 @@ describe('Format', () => {
                 contentAfter: `<h1><span t="unbreakable">some <span style="font-size: 18px;">[text]</span></span></h1>`,
             });
         });
+        it('should apply font size on top of `u` and `s` tags', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>a<u>[b]</u>c</p>`,
+                stepFunction: setFontSize('18px'),
+                contentAfter: `<p>a<span style="font-size: 18px;"><u>[b]</u></span>c</p>`,
+            });
+        });
+        it('should apply font size on topmost `u` or `s` tags if multiple applied', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>a<s><u>[b]</u></s>c</p>`,
+                stepFunction: setFontSize('18px'),
+                contentAfter: `<p>a<span style="font-size: 18px;"><s><u>[b]</u></s></span>c</p>`,
+            });
+        });
+        it("should apply font size on top of `font` tag", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></p>`,
+                stepFunction: setFontSize("80px"),
+                contentAfter: `<p><span style="font-size: 80px;"><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></span></p>`,
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: `<p><font class="bg-o-color-1 text-black">[abcdefg]</font></p>`,
+                stepFunction: setFontSize("72px"),
+                contentAfter: `<p><span style="font-size: 72px;"><font class="bg-o-color-1 text-black">[abcdefg]</font></span></p>`,
+            });
+        });
+    });
+
+    describe('setFontSizeClassName', () => {
+        it('should be able to change font-size class', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>a<span class="h1-fs">[bcd]</span>e</p>`,
+                stepFunction: setFontSizeClassName("h2-fs"),
+                contentAfter: `<p>a<span class="h2-fs">[bcd]</span>e</p>`,
+            });
+        });
     });
 
     it('should add style to a span parent of an inline', async () => {
@@ -1195,6 +1241,35 @@ describe('Format', () => {
 
             });
         });
+        it("should remove font size classes and gradient color styles", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p><span class="display-1-fs"><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></span></p>`,
+                stepFunction: (editor) => editor.execCommand("removeFormat"),
+                contentAfter: `<p>[abcdefg]</p>`,
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: `<p><span class="display-2-fs"><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></span></p>`,
+                stepFunction: (editor) => editor.execCommand("removeFormat"),
+                contentAfter: `<p>[abcdefg]</p>`,
+            });
+        });
+        it('should remove font-size classes when clearing the format' , async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>123<span class="h1-fs">[abc]</span>456</p>`,
+                stepFunction: editor => editor.execCommand('removeFormat'),
+                contentAfter: `<p>123[abc]456</p>`
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>[a<span class="h1-fs">bc</span>d<span class="h2-fs">ef</span>g]</p>`,
+                stepFunction: editor => editor.execCommand('removeFormat'),
+                contentAfter: `<p>[abcdefg]</p>`
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>[a<span class="h1-fs">bc</span>d</p><p>e<span class="o_small-fs">fg</span>h]</p>`,
+                stepFunction: editor => editor.execCommand('removeFormat'),
+                contentAfter: `<p>[abcd</p><p>efgh]</p>`
+            });
+        });
     });
     describe('zws', () => {
         it('should insert a span zws when toggling a formatting command twice', () => {
@@ -1208,6 +1283,57 @@ describe('Format', () => {
                 // the P could have the "/" hint but that behavior might be
                 // complex with the current implementation.
                 contentAfterEdit: `<p>${span(`[]\u200B`, 'first')}</p>`,
+            });
+        });
+    });
+
+    describe("formatting normalization", () => {
+        it("should unwrap nested identical bold tags", async () => {
+            await repeatWithBoldTags(async (tag) => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<p>a${tag(`b${tag(`c${tag(`d`)}`)}e`)}f</p>`,
+                    contentAfter: `<p>a${tag("bcde")}f</p>`,
+                });
+            });
+        });
+
+        it("should merge nested strong inside formatting tags", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <p>
+                        <strong>
+                            <em>
+                                <u>
+                                    <s>
+                                        text1
+                                        <strong>text2</strong>
+                                        text3
+                                    </s>
+                                </u>
+                            </em>
+                        </strong>
+                    </p>
+                `),
+                contentAfter: unformat(`
+                    <p>
+                        <strong>
+                            <em>
+                                <u>
+                                    <s>
+                                        text1text2text3
+                                    </s>
+                                </u>
+                            </em>
+                        </strong>
+                    </p>
+                `),
+            });
+        });
+
+        it("should merge nested small inside formatting tags", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p><small><small>text</small></small></p>`,
+                contentAfter: `<p><small>text</small></p>`,
             });
         });
     });

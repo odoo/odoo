@@ -56,15 +56,17 @@ def on_message(ws, messages):
                 for device in payload['iotDevice']['identifiers']:
                     device_identifier = device['identifier']
                     if device_identifier in main.iot_devices:
+                        if main.iot_devices[device_identifier]._check_idempotency(**payload):
+                            return
                         start_operation_time = time.perf_counter()
                         _logger.debug("device '%s' action started with: %s", device_identifier, pprint.pformat(payload))
-                        main.iot_devices[device_identifier]._action_default(payload)
+                        main.iot_devices[device_identifier].action(payload)
                         _logger.info("device '%s' action finished - %.*f", device_identifier, 3, time.perf_counter() - start_operation_time)
                         send_to_controller(payload['print_id'], device_identifier)
             else:
                 # likely intended as IoT share the same channel
                 _logger.debug("message ignored due to different iot mac: %s", iot_mac)
-        elif message_type != 'print_confirmation':  # intended to be ignored
+        elif message_type not in ['print_confirmation', 'bundle_changed']:  # intended to be ignored
             _logger.warning("message type not supported: %s", message_type)
 
 

@@ -17,6 +17,7 @@ import { companyService } from "@web/webclient/company_service";
 let serverData;
 
 const serviceRegistry = registry.category("services");
+const userMenuRegistry = registry.category("user_menuitems");
 
 QUnit.module("Burger Menu", {
     beforeEach() {
@@ -139,4 +140,28 @@ QUnit.test("Burger menu closes when click on menu item", async (assert) => {
     await click(document.body, ".o_burger_menu nav.o_burger_menu_content li");
     await nextTick();
     assert.containsNone(document.body, ".o_burger_menu");
+});
+
+QUnit.test("Burger menu closes when click on user menu item", async (assert) => {
+    userMenuRegistry.add("ring_item", function () {
+        return {
+            type: "item",
+            id: "ring",
+            description: "Ring",
+            callback: () => {
+                assert.step("callback ring_item");
+            },
+            sequence: 5,
+        };
+    });
+    await createWebClient({ serverData });
+
+    assert.containsNone(document.body, ".o_burger_menu");
+
+    await click(document.body, ".o_mobile_menu_toggle");
+    assert.containsOnce(document.body, ".o_burger_menu");
+
+    await click(document.body, ".o_burger_menu .o_user_menu_mobile a");
+    assert.containsNone(document.body, ".o_burger_menu");
+    assert.verifySteps(["callback ring_item"]);
 });

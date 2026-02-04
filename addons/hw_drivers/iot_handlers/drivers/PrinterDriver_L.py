@@ -104,19 +104,23 @@ class PrinterDriver(Driver):
                 if model and model in PPDs[ppd]['ppd-product']:
                     ppd_file = ppd
                     break
-            with cups_lock:
-                if ppd_file:
-                    conn.addPrinter(name=device['identifier'], ppdname=ppd_file, device=device['url'])
-                else:
-                    conn.addPrinter(name=device['identifier'], device=device['url'])
+            with cups_lock, helpers.writable():
+                try:
+                    if ppd_file:
+                        conn.addPrinter(name=device['identifier'], ppdname=ppd_file, device=device['url'])
+                    else:
+                        conn.addPrinter(name=device['identifier'], device=device['url'])
 
-                conn.setPrinterInfo(device['identifier'], device['device-make-and-model'])
-                conn.enablePrinter(device['identifier'])
-                conn.acceptJobs(device['identifier'])
-                conn.setPrinterUsersAllowed(device['identifier'], ['all'])
-                conn.addPrinterOptionDefault(device['identifier'], "usb-no-reattach", "true")
-                conn.addPrinterOptionDefault(device['identifier'], "usb-unidir", "true")
-            return True
+                    conn.setPrinterInfo(device['identifier'], device['device-make-and-model'])
+                    conn.enablePrinter(device['identifier'])
+                    conn.acceptJobs(device['identifier'])
+                    conn.setPrinterUsersAllowed(device['identifier'], ['all'])
+                    conn.addPrinterOptionDefault(device['identifier'], "usb-no-reattach", "true")
+                    conn.addPrinterOptionDefault(device['identifier'], "usb-unidir", "true")
+                    return True
+                except IPPError:
+                    _logger.exception("Failed to add printer '%s'", device['identifier'])
+                    return False
         return False
 
     @classmethod
@@ -192,6 +196,8 @@ class PrinterDriver(Driver):
                           self.device_identifier)
 
     def print_receipt(self, data):
+        _logger.debug("print_receipt called for printer %s", self.device_name)
+
         receipt = b64decode(data['receipt'])
         im = Image.open(io.BytesIO(receipt))
 
@@ -382,11 +388,14 @@ class PrinterDriver(Driver):
 
     def open_cashbox(self, data):
         """Sends a signal to the current printer to open the connected cashbox."""
+        _logger.debug("open_cashbox called for printer %s", self.device_name)
+
         commands = RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
         for drawer in commands['drawers']:
             self.print_raw(drawer)
 
     def _action_default(self, data):
+        _logger.debug("_action_default called for printer %s", self.device_name)
         self.print_raw(b64decode(data['document']))
 
 

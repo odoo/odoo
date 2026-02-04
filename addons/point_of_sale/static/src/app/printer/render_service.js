@@ -1,30 +1,37 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { Component, onRendered, reactive, useRef, xml } from "@odoo/owl";
+import { Component, onMounted, reactive, useRef, xml } from "@odoo/owl";
 import { toCanvas } from "@point_of_sale/app/utils/html-to-image";
+
+class ComponentRenderer extends Component {
+    static props = ["comp", "onMounted"];
+    static template = xml`
+        <div t-ref="ref">
+            <t t-component="props.comp.component" t-props="props.comp.props"/>
+        </div>
+    `;
+    setup() {
+        this.ref = useRef("ref");
+        onMounted(() => {
+            this.props.onMounted(this.ref?.el?.firstElementChild);
+        });
+    }
+}
 
 export class RenderContainer extends Component {
     static props = ["comp", "onRendered"];
+    static components = { ComponentRenderer };
     // the `.render-container` is used by other functions that need a
     // place where to momentarily render some html code
     // we should only intact with that div through the `whenMounted` function
     static template = xml`
         <div style="left: -1000px; position: fixed;">
-            <div t-ref="ref">
-                <t t-if="props.comp.component" t-component="props.comp.component" t-props="props.comp.props"/>
-            </div>
+            <t t-if="props.comp.component">
+                <ComponentRenderer comp="props.comp" onMounted="props.onRendered" />
+            </t>
             <div class="render-container" />
         </div>`;
-    setup() {
-        this.ref = useRef("ref");
-        onRendered(async () => {
-            // this timeout is needed in order to wait for the
-            // component to arrive in it's final state
-            await new Promise((r) => setTimeout(r, 100));
-            this.props.onRendered(this.ref?.el?.firstChild);
-        });
-    }
 }
 /**
  * This service does for components what renderToElement does for templates.
@@ -90,6 +97,16 @@ const applyWhenMounted = async ({ el, container, callback }) => {
     return res;
 };
 
+const sanitizeNodeText = (element) => {
+    if (element.nodeType === Node.TEXT_NODE) {
+        element.textContent = element.textContent.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, "");
+        return;
+    }
+    for (let child of element.childNodes) {
+        sanitizeNodeText(child);
+    }
+}
+
 /**
  * This function assumes that the `renderer` service is available.
  */
@@ -99,6 +116,7 @@ export const htmlToCanvas = async (el, options) => {
     {
         $('.pos-receipt-print').css({ 'padding': '15px', 'padding-bottom': '30px'})
     }
+    sanitizeNodeText(el);
     return await applyWhenMounted({
         el,
         container: document.querySelector(".render-container"),

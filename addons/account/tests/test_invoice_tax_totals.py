@@ -923,6 +923,44 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         for move in moves_rounding:
             self.assertEqual(sum(move.line_ids.filtered(lambda line: line.display_type == 'rounding').mapped('balance')), moves_rounding[move])
 
+    def test_recompute_cash_rounding_lines_multi_company(self):
+        """
+        Ensure that when a move is created with cash rounding that will add an invoice line, the cash rounding accounts
+        will be that of the move's company and not the user's company.
+        """
+        cash_rounding_tbl = self.env['account.cash.rounding'].with_company(self.company_data["company"])
+        cash_rounding_add_invoice_line = cash_rounding_tbl.create({
+            'name': 'Add invoice line Rounding UP',
+            'rounding': 1,
+            'rounding_method': 'UP',
+            'strategy': 'add_invoice_line',
+            'profit_account_id': self.company_data['default_account_revenue'].id,
+            'loss_account_id': self.company_data['default_account_expense'].id,
+        })
+
+        cash_rounding_add_invoice_line.with_company(self.company_data_2["company"]).write({
+            'profit_account_id': self.company_data_2['default_account_revenue'].id,
+            'loss_account_id': self.company_data_2['default_account_expense'].id,
+        })
+
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'company_id': self.company_data_2['company'].id,
+            'invoice_cash_rounding_id': cash_rounding_add_invoice_line.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line',
+                    'display_type': 'product',
+                    'price_unit': 99.5,
+                })
+            ],
+        })
+
+        rounding_line_account = move.line_ids.filtered(lambda line: line.display_type == 'rounding').mapped('account_id')
+        self.assertEqual(rounding_line_account, self.company_data_2['default_account_revenue'])
+
     def test_cash_rounding_amount_total_rounded_foreign_currency(self):
         tax_15 = self.env['account.tax'].create({
             'name': "tax_15",
@@ -958,3 +996,27 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             })
             move.invoice_cash_rounding_id = cash_rounding
             self.assertEqual(move.tax_totals['amount_total'], 120)
+
+    def test_multiple_onchange_product_and_price(self):
+        """
+        This test checks that the totals are computed correctly when an onchange is executed
+        with "price_unit" before "product_id" in the values.
+        This test covers a UI issue where the totals were not updated when the price was changed,
+        then the product and finally the price again.
+        The issue was only occuring between the change of value and the next save.
+        That's why the test is using the onchange method directly instead of using a Form.
+        """
+        invoice = self.init_invoice('out_invoice', products=self.product_a)
+        self.assertEqual(invoice.tax_totals['amount_untaxed'], 1000.0)
+        self.assertEqual(invoice.tax_totals['amount_total'], 1150.0)
+        # The onchange is executed directly to simulate the following flow:
+        # 1) unit price is changed to any value
+        # 2) product is changed to "Product B"
+        # 3) unit price is changed to 2000.0
+        results = invoice.onchange(
+            {'invoice_line_ids': [Command.update(invoice.invoice_line_ids[0].id, {'price_unit': 2000.0, 'product_id': self.product_b.id})]},
+            ['invoice_line_ids'],
+            {"invoice_line_ids": {}, 'tax_totals': {}}
+        )
+        self.assertEqual(results['value']['tax_totals']['amount_untaxed'], 2000.0)
+        self.assertEqual(results['value']['tax_totals']['amount_total'], 2600.0)

@@ -52,3 +52,12 @@ class PosSession(models.Model):
             )
             > 0
         )
+
+    @api.autovacuum
+    def _gc_session_sequences(self):
+        sequences = self.env['ir.sequence'].search([('code', 'ilike', 'pos.order_')])
+        session_ids = [int(seq.code.split('_')[-1]) for seq in sequences if seq.code.split('_')[-1].isdigit()]
+        session_ids = self.env['pos.session'].search([('id', 'in', session_ids), ('state', '=', 'closed')]).ids
+        sequence_to_unlink_ids = sequences.filtered(lambda seq: seq.code in [f'pos.order_{session}' for session in session_ids])
+        if sequence_to_unlink_ids:
+            sequence_to_unlink_ids.sudo().unlink()

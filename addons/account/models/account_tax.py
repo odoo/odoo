@@ -830,6 +830,7 @@ class AccountTax(models.Model):
             'division_taxes': [],
             'fixed_amount': 0.0,
         }
+        custom_fixed_amount_after = 0.0
         # Store the tax amounts we compute while searching for the total_excluded
         cached_base_amounts = {}
         cached_tax_amounts = {}
@@ -860,14 +861,18 @@ class AccountTax(models.Model):
                         incl_tax_amounts['fixed_amount'] += tax_amount
                         # Avoid unecessary re-computation
                         cached_tax_amounts[i] = tax_amount
+                        custom_fixed_amount_after += tax_amount
                     # In case of a zero tax, do not store the base amount since the tax amount will
                     # be zero anyway. Group and Python taxes have an amount of zero, so do not take
                     # them into account.
-                    if store_included_tax_total and (
-                        tax.amount or tax.amount_type not in ("percent", "division", "fixed")
+                    if (
+                        store_included_tax_total
+                        and (tax.amount or tax.amount_type not in ("percent", "division", "fixed"))
+                        and i not in cached_tax_amounts
                     ):
-                        total_included_checkpoints[i] = base
+                        total_included_checkpoints[i] = base - custom_fixed_amount_after
                         store_included_tax_total = False
+                        custom_fixed_amount_after = 0.0
                 i -= 1
                 is_base_affected = tax.is_base_affected
 
@@ -891,6 +896,7 @@ class AccountTax(models.Model):
         taxes_vals = []
         i = 0
         cumulated_tax_included_amount = 0
+        fname = 'invoice_label' if self._context.get('is_invoice', False) else 'name'
         for tax in taxes:
             price_include = self._context.get('force_price_include', tax.price_include)
 
@@ -919,7 +925,7 @@ class AccountTax(models.Model):
             tax_amount = float_round(tax_amount, precision_rounding=prec)
             factorized_tax_amount = float_round(tax_amount * sum_repartition_factor, precision_rounding=prec)
 
-            if price_include and total_included_checkpoints.get(i) is None:
+            if price_include and total_included_checkpoints.get(i) is None and not tax.include_base_amount:
                 cumulated_tax_included_amount += factorized_tax_amount
 
             # If the tax affects the base of subsequent taxes, its tax move lines must
@@ -963,7 +969,7 @@ class AccountTax(models.Model):
 
                 taxes_vals.append({
                     'id': tax.id,
-                    'name': partner and tax.with_context(lang=partner.lang).name or tax.name,
+                    'name': partner and tax.with_context(lang=partner.lang)[fname] or tax.name,
                     'amount': sign * line_amount,
                     'base': float_round(sign * tax_base_amount, precision_rounding=prec),
                     'sequence': tax.sequence,

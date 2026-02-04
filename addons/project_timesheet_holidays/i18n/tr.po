@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* project_timesheet_holidays
-# 
+# * project_timesheet_holidays
+#
 # Translators:
 # abc Def <hdogan1974@gmail.com>, 2023
 # Umur Akın <umura@projetgrup.com>, 2023
@@ -9,20 +9,23 @@
 # Ediz Duman <neps1192@gmail.com>, 2023
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
-# 
+# Deniz Guvener_Odoo <degu@odoo.com>, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2023\n"
-"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"PO-Revision-Date: 2025-11-22 21:21+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-17/"
+"project_timesheet_holidays/tr/>\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_account_analytic_line
@@ -71,7 +74,7 @@ msgstr "Çalışma Çizelgeleri Oluştur"
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
 msgid "Generate timesheets when validating time off requests of this type"
-msgstr ""
+msgstr "Bu tür izin talepleri onaylandığında çalışma çizelgeleri oluştur"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__global_leave_id
@@ -89,7 +92,6 @@ msgstr ""
 
 #. module: project_timesheet_holidays
 #. odoo-python
-#: code:addons/project_timesheet_holidays/__init__.py:0
 #: code:addons/project_timesheet_holidays/__init__.py:0
 #, python-format
 msgid "Internal"
@@ -189,7 +191,7 @@ msgstr "İzin Türü"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
 msgid "Time Off Types Count"
-msgstr ""
+msgstr "İzin Türleri Sayısı"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
@@ -201,7 +203,7 @@ msgstr "Çalışma Çizelgeleri"
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 #, python-format
 msgid "View Time Off"
-msgstr ""
+msgstr "İzin Sürelerini Görüntüle"
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -219,11 +221,18 @@ msgstr ""
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:0
 #, python-format
 msgid ""
-"You cannot delete timesheets linked to time off. Please, cancel the time off"
-" instead."
+"You cannot delete timesheets linked to time off. Please, cancel the time off "
+"instead."
 msgstr ""
 "İzin ile bağlantılı çalışma çizelgelerini silemezsiniz. Lütfen bunun yerine "
 "izin süresini iptal edin."
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+#, python-format
+msgid "You cannot delete timesheets that are linked to global time off."
+msgstr "Genel izinle bağlantılı Çalışma Çizelgelerini silemezsiniz."
 
 #. module: project_timesheet_holidays
 #. odoo-python
@@ -244,5 +253,5 @@ msgid ""
 "You cannot modify timesheets that are linked to time off requests. Please "
 "use the Time Off application to modify your time off requests instead."
 msgstr ""
-"İzin isteklerine bağlı çalışma çizelgelerini değiştiremezsiniz. Bunun yerine"
-" izin taleplerinizi değiştirmek için lütfen İzin uygulamasını kullanın."
+"İzin isteklerine bağlı çalışma çizelgelerini değiştiremezsiniz. Bunun yerine "
+"izin taleplerinizi değiştirmek için lütfen İzin uygulamasını kullanın."

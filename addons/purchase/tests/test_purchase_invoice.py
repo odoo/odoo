@@ -771,6 +771,35 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         for line in po.order_line:
             self.assertTrue(line in invoice_lines.purchase_line_id)
 
+    def test_subset_match_from_edi_partial_po_within_precision(self):
+        """A line of the invoice totally matches a 1-line purchase order despite
+        a slight unit price difference due to decimal precision issues
+        """
+        po = self.init_purchase(confirm=True, products=[self.product_order])
+        invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order, self.service_order])
+
+        # Simulate a slight difference in unit_price due to decimal precision issues
+        # for example when when receiving an invoice in XML or OCR
+        po_line = po.order_line[0]
+        invoice_line = invoice.line_ids[0]
+        precision_error = 0.0000001
+        query_string = f"""
+            UPDATE account_move_line
+            SET price_unit = {po_line.price_unit + precision_error}
+            WHERE id = {invoice_line.id}
+        """
+        invoice_line.env.cr.execute(query_string)
+        invoice_line.invalidate_model(['price_unit'], flush=False)
+
+        invoice._find_and_set_purchase_orders(
+            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
+
+        self.assertTrue(invoice.id in po.invoice_ids.ids)
+        invoice_lines = invoice.line_ids.filtered(lambda l: l.price_unit)
+        self.assertEqual(len(invoice_lines), 2)
+        for line in po.order_line:
+            self.assertTrue(line in invoice_lines.purchase_line_id)
+
     def test_subset_match_from_edi_partial_inv(self):
         """An invoice totally matches some purchase order line
         """
@@ -819,6 +848,28 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
             else:
                 self.assertFalse(line.purchase_line_id in po.order_line)
 
+    def test_subset_not_match_non_invoice_lines(self):
+        """Test that a purchase line with a line of 0 as unit price won't match
+        with a non-invoice-lines (not an invoice_line_ids)
+        """
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        product_order_zero_price = self.env['product.product'].create({
+            'name': "A zero price product",
+            'standard_price': 0.0,
+            'list_price': 0.0,
+            'type': 'consu',
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+            'purchase_method': 'purchase',
+            'default_code': 'PROD_ORDER',
+            'taxes_id': False,
+        })
+        po = self.init_purchase(confirm=True, products=[product_order_zero_price])
+        invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
+        invoice._find_and_set_purchase_orders(
+            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
+
+        self.assertFalse(invoice.id in po.invoice_ids.ids)
 
     def test_po_match_from_ocr(self):
         po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
@@ -987,7 +1038,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
                         move_form.ref = '111' if w_bill_ref == 'w_bill_ref' else ''
                         move_form.payment_reference = '222' if w_payment_reference == 'w_payment_reference' else ''
                         move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-purchase_order.id).exists()
-                        payment_reference = move_form._values['payment_reference']
+                        payment_reference = move_form._values['payment_reference'] or ''
                         self.assertEqual(payment_reference, expected_value, "The payment reference should be %s" % expected_value)
 
     def test_invoice_user_id_on_bill(self):
@@ -1029,3 +1080,19 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po2.id)
         invoice2 = move_form.save()
         self.assertFalse(invoice2.invoice_user_id)
+
+    def test_link_bill_origin_to_purchase_orders(self):
+        """
+        Test if the corresponding purchase orders are linked if the bill when there is multiple origin purchase orders
+        """
+        po = self.init_purchase(confirm=True, products=[self.product_order])
+        po_2 = self.init_purchase(confirm=True, products=[self.service_order])
+
+        bill = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order, self.service_order])
+        bill.invoice_origin = po.name + ', ' + po_2.name
+
+        bill._link_bill_origin_to_purchase_orders()
+
+        self.assertTrue(bill.id in po.invoice_ids.ids)
+        self.assertTrue(bill.id in po_2.invoice_ids.ids)
+        self.assertEqual(bill.amount_total, po.amount_total + po_2.amount_total)

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sales_team
-# 
+#
 # Translators:
 # Zvika Rap <zvikara@gmail.com>, 2023
 # Adi Sharashov <Adi@laylinetech.com>, 2023
@@ -19,26 +19,33 @@
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
 # Ha Ketem <haketem@gmail.com>, 2024
 # yael terner, 2024
-# 
+# or balmas, 2025
+# Yoram Lavi, 2025
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: yael terner, 2024\n"
+"Last-Translator: Yoram Lavi, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: he\n"
-"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % "
+"1 == 0) ? 1: 2;\n"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
-msgid "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
+msgid ""
+"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
+"title=\"Email\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
+"title=\"Email\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
@@ -80,12 +87,11 @@ msgstr "סוגי פעילויות"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
 msgid "Add a Team Member"
-msgstr ""
+msgstr "הוסף איש צוות "
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__crm_team_member_ids
-msgid ""
-"Add members to automatically assign their documents to this sales team."
+msgid "Add members to automatically assign their documents to this sales team."
 msgstr "הוסף חברים כדי להקצות אוטומטית את המסמכים שלהם לצוות המכירות הזה."
 
 #. module: sales_team
@@ -93,8 +99,8 @@ msgstr "הוסף חברים כדי להקצות אוטומטית את המסמכ
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid ""
-"Adding %(user_name)s in this team would remove him/her from its current team"
-" %(team_name)s."
+"Adding %(user_name)s in this team would remove him/her from its current team "
+"%(team_name)s."
 msgstr ""
 "הוספת %(user_name)s לצוות זה יגרום להסרתו/ה מהצוות הנוכחי %(team_name)s."
 
@@ -266,8 +272,7 @@ msgstr "חברי צוות מועדפים"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
-msgid ""
-"Favorite teams to display them in the dashboard and access them easily."
+msgid "Favorite teams to display them in the dashboard and access them easily."
 msgstr "צוותים מועדפים להצגה בלוח הבקרה וגישה קלה אליהם."
 
 #. module: sales_team
@@ -360,7 +365,7 @@ msgstr "תמונה"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_128
 msgid "Image (128)"
-msgstr ""
+msgstr "תמונה 128"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor4
@@ -393,6 +398,8 @@ msgid ""
 "Main user sales team. Used notably for pipeline, or to set sales team in "
 "invoicing or subscription."
 msgstr ""
+"מנהל משתמשים בצוות המכירות . משמש בעיקר לצבר הלידים, או להגדרת צוות מכירות "
+"בחשבונית או לרישום."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
@@ -649,6 +656,8 @@ msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Prepare meeting\")."
 msgstr ""
+"אלה מייצגים את הקטגוריות השונות של דברים שעליך לעשות (למשל \"התקשר\" או "
+"\"שלח אימייל\")."
 
 #. module: sales_team
 #. odoo-python
@@ -669,16 +678,17 @@ msgstr "הדרכה"
 msgid ""
 "UX: Give users not to add in the currently chosen team to avoid duplicates"
 msgstr ""
+"UX:אל תאפשר למשתמשים להוסיף גורמים שכבר קיימים בצוות הנבחר, כדי למנוע "
+"כפילויות."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_company_ids
 msgid "UX: Limit to team company or all if no company"
-msgstr ""
+msgstr "UX: הגבל לצוות החברה או לכולם אם אין חברה"
 
 #. module: sales_team
 #. odoo-python
-#: code:addons/sales_team/models/crm_team.py:0
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Undefined graph model for Sales Team: %s"
@@ -686,9 +696,8 @@ msgstr "מודל גרף לא מוגדר עבור צוות המכירות: %s"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
-msgid ""
-"Use Sales Teams to organize your sales departments and draw up reports."
-msgstr ""
+msgid "Use Sales Teams to organize your sales departments and draw up reports."
+msgstr "הגדר צוותי מכירות כדי לארגן את מחלקות המכירות שלך ולערוך דוחות."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
@@ -697,6 +706,8 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                Each team will work with a separate pipeline."
 msgstr ""
+"הגדר צוותי מכירות כדי לארגן את מחלקות המכירות שלך.\n"
+"               כל קבוצה תעבוד ל צבר הזמנות נפרד."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
@@ -724,7 +735,7 @@ msgstr "משתמשים בצוות"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
 msgid "User Sales Team"
-msgstr ""
+msgstr "משתמש קבוצת מכירות"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
@@ -785,6 +796,6 @@ msgstr "למשתמש תהיה גישה לנתונים שלו ביישום המכ
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager
 msgid ""
-"the user will have an access to the sales configuration as well as statistic"
-" reports."
+"the user will have an access to the sales configuration as well as statistic "
+"reports."
 msgstr "למשתמש תהיה גישה לתצורת המכירות כמו גם לדוחות סטטיסטיים."

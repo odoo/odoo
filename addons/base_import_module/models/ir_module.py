@@ -338,7 +338,7 @@ class IrModule(models.Model):
     def web_read(self, specification):
         fields = list(specification.keys())
         module_type = self.env.context.get('module_type', 'official')
-        if module_type != 'official':
+        if module_type == 'industries':
             modules_list = self._get_modules_from_apps(fields, module_type, self.env.context.get('module_name'))
             return modules_list
         else:

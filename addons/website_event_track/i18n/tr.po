@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_event_track
-# 
+# * website_event_track
+#
 # Translators:
 # Melih Melik Sonmez, 2023
 # İlknur Püskül <ilknurpuskull@gmail.com>, 2023
@@ -23,20 +23,23 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2023
 # Martin Trigaux, 2023
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2023
-# 
+# Deniz Guvener_Odoo <degu@odoo.com>, 2025
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2023\n"
-"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"POT-Creation-Date: 2025-12-29 18:38+0000\n"
+"PO-Revision-Date: 2025-11-22 21:21+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-17/"
+"website_event_track/tr/>\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: website_event_track
 #. odoo-python
@@ -123,12 +126,19 @@ msgstr "<b>Konuşma Giriş</b>:"
 #: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br>\n"
-"    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
+"    Dear <t t-out=\"object.partner_id.name or object.partner_name or "
+"''\">Brandon Freeman</t><br>\n"
+"    We are pleased to inform you that your proposal <t t-out=\"object.name "
+"or ''\">What This Event Is All About</t> has been accepted and confirmed for "
+"the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online "
+"Reveal</t>.\n"
 "    <br>\n"
 "    You will find more details here:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/"
+"{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; "
+"color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; "
+"border: 0px solid #875A7B; border-radius:3px\">\n"
 "            View Talk\n"
 "        </a>\n"
 "    </div>\n"
@@ -149,7 +159,7 @@ msgstr "<i class=\"fa fa-ban me-2\"/>Yayımlanmamış"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
 msgid "<i class=\"fa fa-bell mx-2 text-muted\"/> Favorite Talks"
-msgstr ""
+msgstr "<i class=\"fa fa-bell mx-2 text-muted\"/> Favori Konuşmalar"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
@@ -161,7 +171,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
 msgid "<span class=\"d-none d-md-block\">&amp;bull;</span>"
-msgstr ""
+msgstr "<span class=\"d-none d-md-block\">&amp;bull;</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
@@ -176,19 +186,23 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
 msgid "<span class=\"fa fa-plus me-1\"/> Schedule Tracks"
-msgstr ""
+msgstr "<span class=\"fa fa-plus me-1\"/> Program Takipleri"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                        <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
-"                                        <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                        <i class=\"fa fa-close mr4\" "
+"role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                        <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                    </span>"
 msgstr ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                        <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
-"                                        <span class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                        <i class=\"fa fa-close mr4\" "
+"role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                        <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                    </span>"
 
 #. module: website_event_track
@@ -323,7 +337,7 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
 msgid "Advanced lead management: tips and tricks from the fields"
-msgstr ""
+msgstr "Gelişmiş müşteri adayı yönetimi: sahadan ipuçları ve püf noktaları"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track13
@@ -341,7 +355,7 @@ msgstr "Gündem"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__color
 msgid "Agenda Color"
-msgstr ""
+msgstr "Ajanda Rengi"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
@@ -366,6 +380,8 @@ msgid ""
 "Allow video and audio recording of their\n"
 "                            presentation, for publishing on our website."
 msgstr ""
+"Web sitemizde yayınlanmak üzere\n"
+"                            sunumlarının video ve ses kaydına izin vermek."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlisted_by_default
@@ -403,14 +419,20 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_17
 msgid ""
-"As you may have heard before, making your own furniture is actually not as difficult or as complicated as you think.\n"
-"    In fact, some projects are so easy anyone could successfully complete them. For example, making a cute stool out of\n"
-"    a old tire is a real piece of cake and if you’re in need of a coffee table you can easily put one together using\n"
+"As you may have heard before, making your own furniture is actually not as "
+"difficult or as complicated as you think.\n"
+"    In fact, some projects are so easy anyone could successfully complete "
+"them. For example, making a cute stool out of\n"
+"    a old tire is a real piece of cake and if you’re in need of a coffee "
+"table you can easily put one together using\n"
 "    wood crates."
 msgstr ""
-"Daha önce duymuş olabileceğiniz gibi, kendi mobilyalarınızı yapmak aslında düşündüğünüz kadar zor veya karmaşık değildir.\n"
-"    Aslında, bazı projeler herkesin başarıyla tamamlayabileceği kadar kolaydır. Örneğin, sevimli bir tabure yapmak\n"
-"    Eski bir lastik gerçek bir kek parçasıdır ve bir sehpaya ihtiyacınız varsa, ahşap kasalar kullanarak kolayca bir araya\n"
+"Daha önce duymuş olabileceğiniz gibi, kendi mobilyalarınızı yapmak aslında "
+"düşündüğünüz kadar zor veya karmaşık değildir.\n"
+"    Aslında, bazı projeler herkesin başarıyla tamamlayabileceği kadar "
+"kolaydır. Örneğin, sevimli bir tabure yapmak\n"
+"    Eski bir lastik gerçek bir kek parçasıdır ve bir sehpaya ihtiyacınız "
+"varsa, ahşap kasalar kullanarak kolayca bir araya\n"
 "     getirebilirsiniz."
 
 #. module: website_event_track
@@ -899,7 +921,6 @@ msgstr "Etkinlikler İleri web uygulaması"
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
-#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
 #, python-format
 msgid "Favorite On"
@@ -1135,8 +1156,8 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__wishlisted_by_default
 msgid ""
-"If set, the talk will be set as favorite for each attendee registered to the"
-" event."
+"If set, the talk will be set as favorite for each attendee registered to the "
+"event."
 msgstr ""
 "Ayarlanırsa, konuşma etkinliğe kayıtlı her katılımcı için favori olarak "
 "ayarlanır."
@@ -1344,7 +1365,7 @@ msgstr "Dünya Çapında Evde Yaşam: William'ın Hikayesi"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Lightning Talks"
-msgstr ""
+msgstr "Hızlı Sunumlar"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_19
@@ -1587,7 +1608,7 @@ msgstr "Eski Yenidir"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_20
 msgid "Our Last Day Together!"
-msgstr ""
+msgstr "Birlikte Son Günümüz!"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__partner_id
@@ -1726,7 +1747,7 @@ msgstr "Reddedildi"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Regular Talks"
-msgstr ""
+msgstr "Standart Sunumlar"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__track_start_relative
@@ -1821,7 +1842,6 @@ msgstr "Sıralama"
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
-#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
 #, python-format
 msgid "Set Favorite"
@@ -1830,7 +1850,7 @@ msgstr "Sık Kullanılan Ayarla"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_delay
 msgid "Show Button"
-msgstr ""
+msgstr "Düğmeyi Göster"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -1867,7 +1887,7 @@ msgstr "Hoparlör Fotoğrafı"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Speaker Profile"
-msgstr ""
+msgstr "Konuşmacı Profili"
 
 #. module: website_event_track
 #. odoo-python
@@ -1950,7 +1970,7 @@ msgstr "Etiketler"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Talk Intro"
-msgstr ""
+msgstr "Sunum Tanıtımı"
 
 #. module: website_event_track
 #. odoo-python
@@ -2036,17 +2056,21 @@ msgid ""
 "There are a lot of ideas worth exploring so start with the 10 DIY furniture "
 "ideas for absolute beginners."
 msgstr ""
-"Keşfetmeye değer birçok fikir var, bu yüzden mutlak yeni başlayanlar için 10"
-" Kendin yap mobilya fikri ile başlayın."
+"Keşfetmeye değer birçok fikir var, bu yüzden mutlak yeni başlayanlar için 10 "
+"Kendin yap mobilya fikri ile başlayın."
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
 msgid ""
-"There are several variants of wood is available in the world but we are talking about most expensive\n"
-"    ones in the world and keeping to the point we have arranged ten most expensive wood."
+"There are several variants of wood is available in the world but we are "
+"talking about most expensive\n"
+"    ones in the world and keeping to the point we have arranged ten most "
+"expensive wood."
 msgstr ""
-"Dünyada ahşabın çeşitli çeşitleri mevcuttur, ancak en pahalısından bahsediyoruz.\n"
-"    Dünyadaki ve en pahalı on ahşabı düzenlediğimiz noktaya kadar devam ediyoruz."
+"Dünyada ahşabın çeşitli çeşitleri mevcuttur, ancak en pahalısından "
+"bahsediyoruz.\n"
+"    Dünyadaki ve en pahalı on ahşabı düzenlediğimiz noktaya kadar devam "
+"ediyoruz."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -2054,17 +2078,20 @@ msgid ""
 "These are 30 minutes talks on many different topics. Most topics are "
 "accepted in lightning talks."
 msgstr ""
+"Bunlar, birçok farklı konuda 30 dakikalık konuşmalardır. Çoğu konu, kısa "
+"sunumlar (lightning talks) kapsamında kabul edilir."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "These are standard talks with slides, alocated in slots of 60 minutes."
 msgstr ""
+"Bunlar, 60 dakikalık dilimler halinde ayrılmış, slaytlı standart "
+"konuşmalardır."
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
 msgid ""
-"They will be created automatically once attendees start browsing your "
-"events."
+"They will be created automatically once attendees start browsing your events."
 msgstr ""
 "Katılımcılar etkinliklerinize göz atmaya başladığında otomatik olarak "
 "oluşturulurlar."
@@ -2123,6 +2150,8 @@ msgid ""
 "Timely release of presentation material (slides),\n"
 "                            for publishing on our website."
 msgstr ""
+"Web sitemizde yayınlanmak üzere sunum materyallerinin (slaytların) zamanında "
+"paylaşılması"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__name
@@ -2147,11 +2176,15 @@ msgstr "Dünyanın En Pahalı 10 Ahşabı"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
 msgid ""
-"Top most expensive wood in the world is quite interesting topic and several people may be surprised\n"
-"    that there are hundreds of wood types exist around the globe following different properties and use."
+"Top most expensive wood in the world is quite interesting topic and several "
+"people may be surprised\n"
+"    that there are hundreds of wood types exist around the globe following "
+"different properties and use."
 msgstr ""
-"Dünyanın en pahalı ahşabı oldukça ilginç bir konudur ve birkaç kişi şaşırabilir.\n"
-"    farklı özellikleri ve kullanımı takip eden dünya çapında yüzlerce ahşap türü vardır."
+"Dünyanın en pahalı ahşabı oldukça ilginç bir konudur ve birkaç kişi "
+"şaşırabilir.\n"
+"    farklı özellikleri ve kullanımı takip eden dünya çapında yüzlerce ahşap "
+"türü vardır."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__track_id
@@ -2325,24 +2358,42 @@ msgid "Unread Messages"
 msgstr "Okunmamış Mesajlar"
 
 #. module: website_event_track
-#: model_terms:event.track,description:website_event_track.event_7_track_6
-msgid ""
-"Use these simple steps to easily haul LONG lumber in a short box pickup truck.  A dose of carpenter's\n"
-"    ingenuity along with a couple boards, a sturdy strap and a few screws are all I use to easily haul\n"
-"    long boards from the lumberyard to the Next Level Carpentry shop or jobsite."
-msgstr ""
-"UZUN keresteleri kısa kutulu bir kamyonette kolayca taşımak için bu basit adımları kullanın.  Bir doz marangoz\n"
-"    birkaç tahta, sağlam bir kayış ve birkaç vida ile birlikte yaratıcılık, kolayca taşımak için kullandığım tek şey.\n"
-"    kerestecilikten Sonraki Seviye Marangozluk dükkanına veya şantiyeye kadar uzun tahtalar."
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#: code:addons/website_event_track/models/website_visitor.py:0
+#, python-format
+msgid "Unsupported 'Not In' operation on track wishlist visitors"
+msgstr "Parça istek listesi ziyaretçilerinde desteklenmeyen 'Not In' işlemi"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
 msgid ""
-"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) allows lumber to be\n"
-"    cinched securely WITHOUT the need to tie and untie tricky or complicated knots."
+"Use these simple steps to easily haul LONG lumber in a short box pickup "
+"truck.  A dose of carpenter's\n"
+"    ingenuity along with a couple boards, a sturdy strap and a few screws "
+"are all I use to easily haul\n"
+"    long boards from the lumberyard to the Next Level Carpentry shop or "
+"jobsite."
 msgstr ""
-"Bir bağlama kayışı için benzersiz bir sarma yöntemi kullanmak (Bungee kabloları!!! DEĞİL) kereste\n"
-"    Zor veya karmaşık düğümleri bağlamaya ve çözmeye gerek kalmadan güvenli bir şekilde kıstırılır."
+"UZUN keresteleri kısa kutulu bir kamyonette kolayca taşımak için bu basit "
+"adımları kullanın.  Bir doz marangoz\n"
+"    birkaç tahta, sağlam bir kayış ve birkaç vida ile birlikte yaratıcılık, "
+"kolayca taşımak için kullandığım tek şey.\n"
+"    kerestecilikten Sonraki Seviye Marangozluk dükkanına veya şantiyeye "
+"kadar uzun tahtalar."
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_6
+msgid ""
+"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) "
+"allows lumber to be\n"
+"    cinched securely WITHOUT the need to tie and untie tricky or complicated "
+"knots."
+msgstr ""
+"Bir bağlama kayışı için benzersiz bir sarma yöntemi kullanmak (Bungee "
+"kabloları!!! DEĞİL) kereste\n"
+"    Zor veya karmaşık düğümleri bağlamaya ve çözmeye gerek kalmadan güvenli "
+"bir şekilde kıstırılır."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -2389,13 +2440,13 @@ msgstr "Ziyaretçilerin bu bölümü favoriler listesine eklemesini bekleyin"
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
 msgid "We could not find any track at this moment."
-msgstr ""
+msgstr "Şu anda herhangi bir oturum bulamadık."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
 msgid "We could not find any track matching your search for:"
-msgstr ""
+msgstr "Aramanızla eşleşen bir oturum bulamadık:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -2520,7 +2571,7 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_2
 msgid "Who's OpenWood anyway?"
-msgstr ""
+msgstr "OpenWood kim bu arada?"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
@@ -2584,7 +2635,7 @@ msgstr "örneğin, \"John Doe doğdu...\""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_tree
 msgid "e.g. \"Main Conference Room\""
-msgstr ""
+msgstr "örneğin \"Ana Konferans Odası\""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
@@ -2595,7 +2646,7 @@ msgstr "örneğin, \"Bu konuşma hakkında olacak...\""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. Get Yours Now!"
-msgstr ""
+msgstr "Örn. Şimdi Seninkini Al!"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_view_form_quick_create
@@ -2618,12 +2669,12 @@ msgstr "saat"
 #: code:addons/website_event_track/static/src/js/event_track_timer.js:0
 #, python-format
 msgid "in %s"
-msgstr ""
+msgstr "içinde %s"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "minutes after Track start"
-msgstr ""
+msgstr "Oturum başlangıcından dakikalar sonra"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete

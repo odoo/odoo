@@ -1,26 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_totp_mail
-# 
+#
 # Translators:
 # Hongu Cosmin <cosmin513@gmail.com>, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2024
 # Claudia Baisan, 2024
 # Simonel Criste <info@erpsystems.solutions>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"POT-Creation-Date: 2025-12-29 18:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Simonel Criste <info@erpsystems.solutions>, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: auth_totp_mail
 #: model:mail.template,body_html:auth_totp_mail.mail_template_totp_invite
@@ -28,13 +29,19 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
-"        <t t-out=\"user.name  or ''\"></t> requested you activate two-factor authentication to protect your account.<br><br>\n"
-"        Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
-"        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
-"        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.\n"
+"        <t t-out=\"user.name  or ''\"></t> requested you activate two-factor "
+"authentication to protect your account.<br><br>\n"
+"        Two-factor Authentication (\"2FA\") is a system of double "
+"authentication.\n"
+"        The first one is done with your password and the second one with a "
+"code you get from a dedicated mobile app.\n"
+"        Popular ones include Authy, Google Authenticator or the Microsoft "
+"Authenticator.\n"
 "\n"
 "        <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" "
+"style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px;\">\n"
 "                Activate my two-factor Authentication\n"
 "            </a>\n"
 "        </p>\n"
@@ -45,13 +52,19 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dragă <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
-"        <t t-out=\"user.name  or ''\"></t> v-am solicitat să activați autentificarea cu doi factori pentru a vă proteja contul.<br><br>\n"
-"        Autentificarea cu doi factori (\"2FA\") este un sistem de dublă autentificare.\n"
-"        Prima se face cu parola, iar a doua cu un cod pe care îl obțineți de la o aplicație mobilă dedicată.\n"
-"        Printre cele mai populare se numără Authy, Google Authenticator sau Microsoft Authenticator.\n"
+"        <t t-out=\"user.name  or ''\"></t> v-am solicitat să activați "
+"autentificarea cu doi factori pentru a vă proteja contul.<br><br>\n"
+"        Autentificarea cu doi factori (\"2FA\") este un sistem de dublă "
+"autentificare.\n"
+"        Prima se face cu parola, iar a doua cu un cod pe care îl obțineți de "
+"la o aplicație mobilă dedicată.\n"
+"        Printre cele mai populare se numără Authy, Google Authenticator sau "
+"Microsoft Authenticator.\n"
 "\n"
 "        <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" "
+"style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px;\">\n"
 "                Îmi activez autentificarea cu doi factori\n"
 "            </a>\n"
 "        </p>\n"

@@ -101,7 +101,7 @@ class AccountReport(models.Model):
     filter_hide_0_lines = fields.Selection(
         string="Hide lines at 0",
         selection=[('by_default', "Enabled by Default"), ('optional', "Optional"), ('never', "Never")],
-        compute=lambda x: x._compute_report_option_filter('filter_hide_0_lines', 'optional'), readonly=False, store=True, depends=['root_report_id'],
+        compute=lambda x: x._compute_report_option_filter('filter_hide_0_lines', 'optional'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_period_comparison = fields.Boolean(
         string="Period Comparison",
@@ -127,7 +127,7 @@ class AccountReport(models.Model):
     filter_account_type = fields.Selection(
         string="Account Types",
         selection=[('both', "Payable and receivable"), ('payable', "Payable"), ('receivable', "Receivable"), ('disabled', 'Disabled')],
-        compute=lambda x: x._compute_report_option_filter('filter_account_type', 'disabled'), readonly=False, store=True, depends=['root_report_id'],
+        compute=lambda x: x._compute_report_option_filter('filter_account_type', 'disabled'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_partner = fields.Boolean(
         string="Partners",
@@ -253,6 +253,12 @@ class AccountReport(models.Model):
                 for old_code, new_code in code_mapping.items():
                     copied_formula = re.sub(f"(?<=\\W){old_code}(?=\\W)", new_code, copied_formula)
                 expression.formula = copied_formula.strip() # Remove the spaces introduced for lookahead/lookbehind
+                # Repeat the same logic for the subformula, if it is set.
+                if expression.subformula:
+                    copied_subformula = f" {expression.subformula} "
+                    for old_code, new_code in code_mapping.items():
+                        copied_subformula = re.sub(f"(?<=\\W){old_code}(?=\\W)", new_code, copied_subformula)
+                    expression.subformula = copied_subformula.strip()
 
         for column in self.column_ids:
             column.copy({'report_id': copied_report.id})
@@ -594,11 +600,13 @@ class AccountReportExpression(models.Model):
     @api.constrains('engine', 'report_line_id')
     def _validate_engine(self):
         for expression in self:
-            if expression.engine == 'aggregation' and (expression.report_line_id.groupby or expression.report_line_id.user_groupby):
+            if expression.engine in ('aggregation', 'external') and (expression.report_line_id.groupby or expression.report_line_id.user_groupby):
+                engine_description = dict(expression._fields['engine']._description_selection(self.env))
                 raise ValidationError(_(
-                    "Groupby feature isn't supported by aggregation engine. Please remove the groupby value on '%s'",
-                    expression.report_line_id.display_name,
-                ))
+                    "Groupby feature isn't supported by '%(engine)s' engine. Please remove the groupby value on '%(report_line)s'",
+                        engine=engine_description[expression.engine],
+                        report_line=expression.report_line_id.display_name
+                    ))
 
     def _get_auditable_engines(self):
         return {'tax_tags', 'domain', 'account_codes', 'external', 'aggregation'}
@@ -635,17 +643,26 @@ class AccountReportExpression(models.Model):
 
         self._strip_formula(vals)
 
+        tax_tags_expressions = self.filtered(lambda x: x.engine == 'tax_tags')
+
         if vals.get('engine') == 'tax_tags':
-            tag_name = vals.get('formula') or self.formula
-            country = self.report_line_id.report_id.country_id
-            self._create_tax_tags(tag_name, country)
-            return super().write(vals)
+            # We already generate the tags for the expressions receiving a new engine
+            tags_create_vals = []
+            for expression_with_new_engine in self - tax_tags_expressions:
+                tag_name = vals.get('formula') or expression_with_new_engine.formula
+                country = expression_with_new_engine.report_line_id.report_id.country_id
+                if not self.env['account.account.tag']._get_tax_tags(tag_name, country.id):
+                    tags_create_vals += self.env['account.report.expression']._get_tags_create_vals(
+                        tag_name,
+                        country.id,
+                    )
+
+            self.env['account.account.tag'].create(tags_create_vals)
 
         # In case the engine is changed we don't propagate any change to the tags themselves
         if 'formula' not in vals or (vals.get('engine') and vals['engine'] != 'tax_tags'):
             return super().write(vals)
 
-        tax_tags_expressions = self.filtered(lambda x: x.engine == 'tax_tags')
         former_formulas_by_country = defaultdict(lambda: [])
         for expr in tax_tags_expressions:
             former_formulas_by_country[expr.report_line_id.report_id.country_id].append(expr.formula)

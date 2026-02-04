@@ -21,7 +21,7 @@ class TestWebsiteSaleMail(HttpCase):
             'website_published': True,
         })
         self.env['res.partner'].create({
-            'name': 'Azure Interior',
+            'name': 'Azure Interior (Test)',
             'email': 'azure.Interior24@example.com',
         })
 
@@ -46,4 +46,4 @@ class TestWebsiteSaleMail(HttpCase):
                                                     order='create_date DESC', limit=1)
             self.assertTrue(new_mail)
             self.assertIn('Your', new_mail.body_html)
-            self.assertIn('Order', new_mail.body_html)
+            self.assertIn('order', new_mail.body_html)

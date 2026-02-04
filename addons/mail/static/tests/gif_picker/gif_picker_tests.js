@@ -250,3 +250,19 @@ QUnit.test(
         await contains(".o-discuss-Gif", { count: 8 });
     }
 );
+
+QUnit.test("Show help when no favorite GIF", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    const { openDiscuss } = await start({
+        mockRPC(route) {
+            if (route === "/discuss/gif/categories") {
+                return rpc.categories;
+            }
+        }
+    });
+    openDiscuss(channelId);
+    await click("button[aria-label='GIFs']");
+    await click(".o-discuss-GifPicker div[aria-label='list-item']", { text: "Favorites" });
+    await contains("span", { text: "So uhh... maybe go favorite some GIFs?" });
+});

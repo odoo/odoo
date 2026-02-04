@@ -53,7 +53,9 @@ class HolidaysAllocation(models.Model):
         res = super().write(vals)
         if 'number_of_days' not in vals:
             return res
-        for allocation in self.filtered('overtime_id'):
+        if not self.env.user.has_group("hr_holidays.group_hr_holidays_user") and any(allocation.state not in ('draft', 'confirm') for allocation in self):
+            raise ValidationError(_('Only an Officer or Administrator is allowed to edit the allocation duration in this status.'))
+        for allocation in self.sudo().filtered('overtime_id'):
             employee = allocation.employee_id
             duration = allocation.number_of_hours_display
             overtime_duration = allocation.overtime_id.sudo().duration
@@ -75,10 +77,16 @@ class HolidaysAllocation(models.Model):
         datetime_min_time = datetime.min.time()
         start_dt = datetime.combine(start_date, datetime_min_time)
         end_dt = datetime.combine(end_date, datetime_min_time)
+
+        # Search for any attendance overlapping the window
         attendances = self.env['hr.attendance'].sudo().search([
             ('employee_id', '=', self.employee_id.id),
-            ('check_in', '>=', start_dt),
-            ('check_out', '<=', end_dt),
+            ('check_in', '<', end_dt),
+            ('check_out', '>', start_dt),
         ])
-        work_entry_prorata = sum(attendances.mapped('worked_hours'))
-        return work_entry_prorata
+
+        total_worked_hours = 0.0
+        for attendance in attendances:
+            total_worked_hours += attendance._get_worked_hours_in_range(start_dt, end_dt)
+
+        return total_worked_hours

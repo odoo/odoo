@@ -1,25 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* crm_iap_mine
-# 
+# * crm_iap_mine
+#
 # Translators:
 # Wil Odoo, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
-# Fernanda Alvarez, 2024
-# 
+# Fernanda Alvarez, 2025
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
-"Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
+"POT-Creation-Date: 2026-01-29 18:36+0000\n"
+"PO-Revision-Date: 2026-01-31 17:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
+"odoo-17/crm_iap_mine/es_419/>\n"
+"Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_419\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: crm_iap_mine
 #. odoo-python
@@ -39,18 +43,56 @@ msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>Dear,</p>\n"
 "    <p>There are no more credits on your IAP Lead Generation account.<br>\n"
-"    You can charge your IAP Lead Generation account in the settings of the CRM app.<br></p>\n"
+"    You can charge your IAP Lead Generation account in the settings of the "
+"CRM app.<br></p>\n"
 "    <p>Best regards,</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p>Apreciable,</p>\n"
-"    <p>No le quedan mas créditos en su cuenta de compras dentro de la aplicación para generar leads.<br>\n"
-"    Puede cambiar su cuenta de compras dentro de la aplicación para generar leads en la configuración de la aplicación CRM.<br></p>\n"
-"    <p>Saludos cordiales,</p>\n"
+"    <p>Hola,</p>\n"
+"    <p>Tu cuenta de compras dentro de la aplicación no tiene créditos para "
+"generar leads.<br>\n"
+"    Puedes recargarla en los ajustes de la aplicación CRM.<br></p>\n"
+"    <p>Saludos,</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-address-book text-primary\"/>\n"
+"                    <b>Address</b>"
+msgstr ""
+"<i class=\"fa fa-fw me-2 fa-address-book text-primary\"/>\n"
+"                    <b>Dirección</b>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-cube text-primary\"/>\n"
+"                    <b>Industries</b>"
+msgstr ""
+"<i class=\"fa fa-fw me-2 fa-cube text-primary\"/>\n"
+"                    <b>Industrias</b>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-globe text-primary\"/>\n"
+"                    <b>Website</b>"
+msgstr ""
+"<i class=\"fa fa-fw me-2 fa-globe text-primary\"/>\n"
+"                    <b>Sitio web</b>"
+
+#. module: crm_iap_mine
+#: model_terms:ir.ui.view,arch_db:crm_iap_mine.enrich_company
+msgid ""
+"<i class=\"fa fa-fw me-2 fa-solid fa-id-card text-primary\"/>\n"
+"                    <b>Tax ID</b>"
+msgstr ""
+"<i class=\"fa fa-fw me-2 fa-solid fa-id-card text-primary\"/>\n"
+"                    <b>ID fiscal</b>"
 
 #. module: crm_iap_mine
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -366,7 +408,7 @@ msgstr "¿Cuántos leads necesita?"
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_10
 msgid "Human Resources"
-msgstr "Recursos Humanos"
+msgstr "Recursos humanos"
 
 #. module: crm_iap_mine
 #: model:mail.template,name:crm_iap_mine.lead_generation_no_credits
@@ -391,17 +433,17 @@ msgstr "Productores independientes de energía y electricidad renovable"
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__industry_ids
 msgid "Industries"
-msgstr "Sectores"
+msgstr "Industrias"
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_industry__name
 msgid "Industry"
-msgstr "Sector"
+msgstr "Industria"
 
 #. module: crm_iap_mine
 #: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_industry_name_uniq
 msgid "Industry name already exists!"
-msgstr "¡El nombre del sector ya existe!"
+msgstr "¡El nombre de la industria ya existe!"
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_11
@@ -483,11 +525,10 @@ msgstr "Legal"
 #. odoo-javascript
 #: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
 #, python-format
-msgid ""
-"Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
+msgid "Looking for more opportunities?<br>Try the <b>Lead Generation</b> tool."
 msgstr ""
-"¿En busca de más oportunidades?<br>Pruebe la herramienta de <b>Generación de"
-" Leads</b> "
+"¿En busca de más oportunidades?<br>Pruebe la herramienta de <b>Generación de "
+"Leads</b> "
 
 #. module: crm_iap_mine
 #: model:crm.iap.lead.role,name:crm_iap_mine.crm_iap_mine_role_13
@@ -524,9 +565,6 @@ msgstr "¿Necesita ayuda para llegar a su objetivo?"
 
 #. module: crm_iap_mine
 #. odoo-python
-#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
-#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
-#: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "New"
@@ -785,8 +823,8 @@ msgid ""
 "Up to %d additional credits will be consumed to identify %d contacts per "
 "company."
 msgstr ""
-"Hasta un máximo de %d créditos adicionales se consumirán para identificar %d"
-" contactos por empresa."
+"Hasta un máximo de %d créditos adicionales se consumirán para identificar %d "
+"contactos por empresa."
 
 #. module: crm_iap_mine
 #. odoo-javascript
@@ -831,3 +869,31 @@ msgstr "gerente"
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
 msgid "to"
 msgstr "para"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-fw me-2 fa-building text-primary\"/>\n"
+#~ "                    <b>Company type</b>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw me-2 fa-building text-primary\"/>\n"
+#~ "                    <b>Tipo de empresa</b>"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-fw me-2 fa-cube text-primary\"/>\n"
+#~ "                    <b>Sector</b>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw me-2 fa-cube text-primary\"/>\n"
+#~ "                    <b>Industria</b>"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-fw me-2 fa-industry text-primary\"/>\n"
+#~ "                    <b>Industries</b>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw me-2 fa-industry text-primary\"/>\n"
+#~ "                    <b>Industrias</b>"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-fw me-2 fa-phone text-primary\"/>\n"
+#~ "                    <b>Phone</b>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw me-2 fa-phone text-primary\"/>\n"
+#~ "                    <b>Teléfono</b>"

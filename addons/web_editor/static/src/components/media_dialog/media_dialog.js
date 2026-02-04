@@ -251,6 +251,11 @@ export class MediaDialog extends Component {
     }
 
     selectMedia(media, tabId, multiSelect) {
+        if (media && !Object.keys(media).length) {
+            // Clear media selection when an empty object is passed
+            this.selectedMedia[tabId] = [];
+            return;
+        }
         if (multiSelect) {
             const isMediaSelected = this.selectedMedia[tabId].map(({ id }) => id).includes(media.id);
             if (!isMediaSelected) {
@@ -279,9 +284,9 @@ export class MediaDialog extends Component {
         if (saveSelectedMedia) {
             const elements = await this.renderMedia(selectedMedia);
             if (this.props.multiImages) {
-                this.props.save(elements);
+                await this.props.save(elements);
             } else {
-                this.props.save(elements[0]);
+                await this.props.save(elements[0]);
             }
         }
         this.props.close();

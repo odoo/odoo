@@ -121,23 +121,16 @@ class StockWarehouseOrderpoint(models.Model):
     @api.depends('route_id', 'product_id', 'location_id', 'company_id', 'warehouse_id', 'product_id.route_ids')
     def _compute_rules(self):
         orderpoints_to_compute = self.filtered(lambda orderpoint: orderpoint.product_id and orderpoint.location_id)
-        # Products without routes have no impact on _get_rules_from_location.
-        product_ids_with_routes = set(orderpoints_to_compute.product_id.filter_has_routes().ids)
-        # Small cache mapping (location_id, route_id) -> stock.rule.
-        # This reduces calls to _get_rules_from_location for products without routes.
+        # Small cache mapping (location_id, route_id, product_id.route_ids | product_id.categ_id.total_route_ids) -> stock.rule.
+        # This reduces calls to _get_rules_from_location for products without routes and products with the same routes.
         rules_cache = {}
         for orderpoint in orderpoints_to_compute:
-            if orderpoint.product_id.id not in product_ids_with_routes:
-                cache_key = (orderpoint.location_id, orderpoint.route_id)
-                rule_ids = rules_cache.get(cache_key) or orderpoint.product_id._get_rules_from_location(
-                    orderpoint.location_id, route_ids=orderpoint.route_id
-                )
-                orderpoint.rule_ids = rule_ids
-                rules_cache[cache_key] = rule_ids
-            else:
-                orderpoint.rule_ids = orderpoint.product_id._get_rules_from_location(
-                    orderpoint.location_id, route_ids=orderpoint.route_id
-                )
+            cache_key = (orderpoint.location_id, orderpoint.route_id, orderpoint.product_id.route_ids | orderpoint.product_id.categ_id.total_route_ids)
+            rule_ids = rules_cache.get(cache_key) or orderpoint.product_id._get_rules_from_location(
+                orderpoint.location_id, route_ids=orderpoint.route_id
+            )
+            orderpoint.rule_ids = rule_ids
+            rules_cache[cache_key] = rule_ids
         (self - orderpoints_to_compute).rule_ids = False
 
     @api.depends('route_id', 'product_id')
@@ -272,7 +265,7 @@ class StockWarehouseOrderpoint(models.Model):
         return self.action_replenish()
 
     @api.depends('product_id', 'location_id', 'product_id.stock_move_ids', 'product_id.stock_move_ids.state',
-                 'product_id.stock_move_ids.date', 'product_id.stock_move_ids.product_uom_qty')
+                 'product_id.stock_move_ids.date', 'product_id.stock_move_ids.product_uom_qty', 'product_id.seller_ids.delay')
     def _compute_qty(self):
         orderpoints_contexts = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
         for orderpoint in self:
@@ -292,7 +285,8 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.qty_on_hand = products_qty[orderpoint.product_id.id]['qty_available']
                 orderpoint.qty_forecast = products_qty[orderpoint.product_id.id]['virtual_available'] + products_qty_in_progress[orderpoint.id]
 
-    @api.depends('qty_multiple', 'product_min_qty', 'product_max_qty', 'visibility_days', 'product_id', 'location_id')
+    @api.depends('qty_multiple', 'product_min_qty', 'product_max_qty', 'visibility_days', 'product_id', 'location_id',
+                 'product_id.seller_ids.delay')
     def _compute_qty_to_order(self):
         for orderpoint in self:
             if not orderpoint.product_id or not orderpoint.location_id:
@@ -325,13 +319,14 @@ class StockWarehouseOrderpoint(models.Model):
         """
         self = self.filtered(lambda o: not o.route_id)
         rules_groups = self.env['stock.rule']._read_group([
-            ('route_id.product_selectable', '!=', False),
+            '|', ('route_id.product_selectable', '!=', False),
+            ('route_id.product_categ_selectable', '!=', False),
             ('location_dest_id', 'in', self.location_id.ids),
             ('action', 'in', ['pull_push', 'pull']),
             ('route_id.active', '!=', False)
         ], ['location_dest_id', 'route_id'])
         for location_dest, route in rules_groups:
-            orderpoints = self.filtered(lambda o: o.location_id.id == location_dest.id)
+            orderpoints = self.filtered(lambda o: not o.route_id and route in (o.product_id.route_ids | o.product_id.categ_id.route_ids) and o.location_id.id == location_dest.id)
             orderpoints.route_id = route
 
     def _get_lead_days_values(self):
@@ -413,8 +408,10 @@ class StockWarehouseOrderpoint(models.Model):
 
         # recompute virtual_available with lead days
         today = fields.datetime.now().replace(hour=23, minute=59, second=59)
-        for (days, loc), product_ids in ploc_per_day.items():
-            products = self.env['product.product'].browse(product_ids)
+        product_ids = set()
+        location_ids = set()
+        for (days, loc), prod_ids in ploc_per_day.items():
+            products = self.env['product.product'].browse(prod_ids)
             qties = products.with_context(
                 location=loc.id,
                 to_date=today + relativedelta.relativedelta(days=days)
@@ -422,17 +419,20 @@ class StockWarehouseOrderpoint(models.Model):
             for (product, qty) in zip(products, qties):
                 if float_compare(qty['virtual_available'], 0, precision_rounding=product.uom_id.rounding) < 0:
                     to_refill[(qty['id'], loc.id)] = qty['virtual_available']
+                    product_ids.add(qty['id'])
+                    location_ids.add(loc.id)
             products.invalidate_recordset()
         if not to_refill:
             return action
 
         # Remove incoming quantity from other origin than moves (e.g RFQ)
-        product_ids, location_ids = zip(*to_refill)
-        qty_by_product_loc, dummy = self.env['product.product'].browse(product_ids)._get_quantity_in_progress(location_ids=location_ids)
+        product_ids = list(product_ids)
+        location_ids = list(location_ids)
+        qty_by_product_loc = self.env['product.product'].browse(product_ids)._get_quantity_in_progress(location_ids=location_ids)[0]
         rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         # Group orderpoint by product-location
         orderpoint_by_product_location = self.env['stock.warehouse.orderpoint']._read_group(
-            [('id', 'in', orderpoints.ids)],
+            [('id', 'in', orderpoints.ids), ('product_id', 'in', product_ids)],
             ['product_id', 'location_id'],
             ['qty_to_order:sum'])
         orderpoint_by_product_location = {
@@ -451,7 +451,7 @@ class StockWarehouseOrderpoint(models.Model):
 
         # With archived ones to avoid `product_location_check` SQL constraints
         orderpoint_by_product_location = self.env['stock.warehouse.orderpoint'].with_context(active_test=False)._read_group(
-            [('id', 'in', orderpoints.ids)],
+            [('id', 'in', orderpoints.ids), ('product_id', 'in', product_ids)],
             ['product_id', 'location_id'],
             ['id:recordset'])
         orderpoint_by_product_location = {

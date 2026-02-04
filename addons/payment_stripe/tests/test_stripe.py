@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import sys
+import unittest
 from unittest.mock import patch
 
 from werkzeug.urls import url_encode, url_join
@@ -9,6 +9,7 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
+from odoo.addons.payment_stripe import const
 from odoo.addons.payment_stripe.controllers.main import StripeController
 from odoo.addons.payment_stripe.tests.common import StripeCommon
 
@@ -123,6 +124,11 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
 
     def test_onboarding_action_redirect_to_url(self):
         """ Test that the action generate and return an URL when the provider is disabled. """
+        if country := self.env['res.country'].search([('code', 'in', list(const.SUPPORTED_COUNTRIES))], limit=1):
+            self.env.company.country_id = country
+        else:
+            raise unittest.SkipTest("Unable to find a country supported by both odoo and stripe")
+
         with patch.object(
             type(self.env['payment.provider']), '_stripe_fetch_or_create_connected_account',
             return_value={'id': 'dummy'},
@@ -132,6 +138,25 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         ):
             onboarding_url = self.stripe.action_stripe_connect_account()
         self.assertEqual(onboarding_url['url'], 'https://dummy.url')
+
+    def test_country_mapping_stripe_connect(self):
+        """ Test that La Réunion (and other french territories) is supported by Stripe Connect. """
+        mapped_country_company = self.env['res.company'].create({
+            'name': 'Mapped Company',
+        })
+        with patch.object(
+            self.env.registry['payment.provider'], '_stripe_make_proxy_request',
+            return_value={'url': 'https://dummy.url'},
+        ) as mock, patch.object(
+            self.env.registry['payment.provider'], '_stripe_fetch_or_create_connected_account',
+            return_value={'id': 'dummy'},
+        ):
+            for country_code in const.COUNTRY_MAPPING:
+                country = self.env['res.country'].search([('code', '=', country_code)], limit=1)
+                mapped_country_company.country_id = country
+                self.env.company = mapped_country_company
+                self.stripe.action_stripe_connect_account('dummy')
+            self.assertEqual(mock.call_count, len(const.COUNTRY_MAPPING))
 
     def test_only_create_webhook_if_not_already_done(self):
         """ Test that a webhook is created only if the webhook secret is not already set. """
@@ -155,8 +180,6 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         ) as mock:
             self.stripe._stripe_create_account_link('dummy', 'dummy')
             mock.assert_called_once()
-            if sys.version_info >= (3, 8):
-                # call_args.kwargs is only available in python 3.8+
-                call_args = mock.call_args.kwargs['payload'].keys()
-                for payload_param in ('account', 'return_url', 'refresh_url', 'type'):
-                    self.assertIn(payload_param, call_args)
+            call_args = mock.call_args.kwargs['payload'].keys()
+            for payload_param in ('account', 'return_url', 'refresh_url', 'type'):
+                self.assertIn(payload_param, call_args)

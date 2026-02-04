@@ -1,44 +1,51 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_peppol
-# 
+# * account_peppol
+#
 # Translators:
 # Wil Odoo, 2024
 # Abe Manyo, 2025
-# 
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-15 15:33+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Abe Manyo, 2025\n"
-"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"POT-Creation-Date: 2026-01-22 18:36+0000\n"
+"PO-Revision-Date: 2026-01-17 17:00+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-17/"
+"account_peppol/id/>\n"
+"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid ""
 "<br/>\n"
-"                            If you need a Peppol compliant software, we recommend"
+"                                In Belgium, electronic invoicing is "
+"<u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
 "<br/>\n"
-"                            Bila Anda membutuhkan software yang menjalankan Peppol, kami menyarankan"
+"                                Di Belgia, faktur elektronik <u>wajib "
+"setelah Januari 2026</u> - jangan menunggu untuk mendaftar."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
 msgid ""
 "<span class=\"mx-1\" invisible=\"not peppol_is_demo_uuid\"> (Demo)</span>\n"
-"                    <span class=\"text-muted mx-3\" invisible=\"peppol_move_state != 'to_send'\">\n"
+"                    <span class=\"text-muted mx-3\" "
+"invisible=\"peppol_move_state != 'to_send'\">\n"
 "                        The invoice will be sent automatically to PEPPOL\n"
 "                    </span>"
 msgstr ""
 "<span class=\"mx-1\" invisible=\"not peppol_is_demo_uuid\"> (Demo)</span>\n"
-"                    <span class=\"text-muted mx-3\" invisible=\"peppol_move_state != 'to_send'\">\n"
+"                    <span class=\"text-muted mx-3\" "
+"invisible=\"peppol_move_state != 'to_send'\">\n"
 "                        Faktur akan dikirim secara otomatis ke PEPPOL\n"
 "                    </span>"
 
@@ -48,31 +55,39 @@ msgid ""
 "<span class=\"o_form_label\">\n"
 "                                    Peppol Details\n"
 "                                </span>\n"
-"                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\"/>"
+"                                <span class=\"fa fa-lg fa-building-o\" "
+"title=\"Values set here are company-specific.\"/>"
 msgstr ""
 "<span class=\"o_form_label\">\n"
 "                                    Detail Peppol\n"
 "                                </span>\n"
-"                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\"/>"
+"                                <span class=\"fa fa-lg fa-building-o\" "
+"title=\"Values set here are company-specific.\"/>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
-"<span class=\"text-info\" invisible=\"not account_peppol_edi_mode == 'demo'\"> (Demo)</span>\n"
-"                                        <span class=\"text-info\" invisible=\"not account_peppol_edi_mode == 'test'\"> (Test)</span>"
+"<span class=\"text-info\" invisible=\"not account_peppol_edi_mode == "
+"'demo'\"> (Demo)</span>\n"
+"                                        <span class=\"text-info\" "
+"invisible=\"not account_peppol_edi_mode == 'test'\"> (Test)</span>"
 msgstr ""
-"<span class=\"text-info\" invisible=\"not account_peppol_edi_mode == 'demo'\"> (Demo)</span>\n"
-"                                        <span class=\"text-info\" invisible=\"not account_peppol_edi_mode == 'test'\"> (Test)</span>"
+"<span class=\"text-info\" invisible=\"not account_peppol_edi_mode == "
+"'demo'\"> (Demo)</span>\n"
+"                                        <span class=\"text-info\" "
+"invisible=\"not account_peppol_edi_mode == 'test'\"> (Test)</span>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "<span>\n"
-"                                    I want to migrate my Peppol connection to Odoo (optional):\n"
+"                                    I want to migrate my Peppol connection "
+"to Odoo (optional):\n"
 "                                </span>"
 msgstr ""
 "<span>\n"
-"                                    Saya ingin memigrasi koneksi PEPPOL saya ke Odoo (opsional):\n"
+"                                    Saya ingin memigrasi koneksi PEPPOL saya "
+"ke Odoo (opsional):\n"
 "                                </span>"
 
 #. module: account_peppol
@@ -80,14 +95,12 @@ msgstr ""
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid ""
-"A participant with these details has already been registered on the network."
-" If you have previously registered to an alternative Peppol service, please "
-"deregister from that service, or request a migration key before trying "
-"again. "
+"A participant with these details has already been registered on the network. "
+"If you have previously registered to a Peppol service, please deregister."
 msgstr ""
-"Partisipan dengan detail ini sudah terdaftar di jaringan kami. Jika Anda "
-"sebelumnya mendaftar ke layanan Peppol alternatif, mohon hapus pendaftaran "
-"dari layanan tersebut, atau minta migration key sebelum mencoba lagi."
+"Peserta dengan detail ini sudah terdaftar di jaringan kami. Jika Anda "
+"sebelumnya sudah mendaftar ke layanan Peppol alternatif, mohon hapus "
+"pendaftaran tersebut."
 
 #. module: account_peppol
 #. odoo-python
@@ -141,8 +154,8 @@ msgstr "Status lamaran:"
 msgid ""
 "By clicking the button below I accept that Odoo may process my e-invoices."
 msgstr ""
-"Dengan mengeklik tombol di bawah saya setuju bahwa Odoo dapat memproses "
-"e-faktur saya."
+"Dengan mengeklik tombol di bawah saya setuju bahwa Odoo dapat memproses e-"
+"faktur saya."
 
 #. module: account_peppol
 #. odoo-python
@@ -152,22 +165,8 @@ msgid ""
 "Can't cancel an active registration. Please request a migration or "
 "deregister instead."
 msgstr ""
-"Tidak dapat membatalkan pendaftaran aktif. Mohon minta migrasi atau hapuskan"
-" pendaftaran."
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
-msgid "Can't cancel registration with this status: %s"
-msgstr "Tidak dapat membatalkan pendaftaran dengan status ini: %s"
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
-msgid "Can't deregister with this status: %s"
-msgstr "Tidak dapat membatalkan pendaftaran dengan status berikut: %s"
+"Tidak dapat membatalkan pendaftaran aktif. Mohon minta migrasi atau hapuskan "
+"pendaftaran."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -193,11 +192,6 @@ msgid "Cannot cancel an entry that has already been sent to PEPPOL"
 msgstr "Tidak dapat membatalkan entri yang sudah dikirim ke PEPPOL"
 
 #. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid_format
-msgid "Cannot receive this format"
-msgstr "Tidak dapat menerima format ini"
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
@@ -215,10 +209,13 @@ msgstr "Diperiksa pada"
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_eas
 msgid ""
 "Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.\n"
-"             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
+"             List available at https://docs.peppol.eu/poacc/billing/3.0/"
+"codelist/eas/"
 msgstr ""
-"Kode yang digunakan untuk mengidentifikasi Endpoint untuk BIS Billing 3.0 dan derivatif-nya.\n"
-"             Daftar tersedia pada https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
+"Kode yang digunakan untuk mengidentifikasi Endpoint untuk BIS Billing 3.0 "
+"dan derivatif-nya.\n"
+"             Daftar tersedia pada https://docs.peppol.eu/poacc/billing/3.0/"
+"codelist/eas/"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_company
@@ -315,14 +312,6 @@ msgid "Fetch from Peppol"
 msgstr "Ambil dari PEPPOL"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid ""
-"In Belgium, electronic invoicing will be <u>mandatory as of January "
-"2026</u>."
-msgstr ""
-"Di Belgia, faktur elektronik akan <u>wajib mulai dari Januari 2026</u>."
-
-#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "In demo mode sending and receiving invoices is simulated. There will be no "
@@ -335,6 +324,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Incoming Invoices Journal"
 msgstr "Jurnal Faktur yang Akan Masuk"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/account_move_send.py:0
+#, python-format
+msgid "Invoice %s is too big to send via peppol (64MB limit)"
+msgstr "Faktur %s terlalub esar untuk dikirim melalui peppol (batas 64MB)"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__is_peppol_edi_format
@@ -365,13 +361,6 @@ msgid "Live"
 msgstr "Live"
 
 #. module: account_peppol
-#. odoo-javascript
-#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
-#, python-format
-msgid "Migrate registration to another service"
-msgstr "Migrasi pendaftaran ke layanan lain"
-
-#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_migration_key
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_migration_key
 msgid "Migration Key"
@@ -399,19 +388,9 @@ msgid "Not registered"
 msgstr "Tidak terdaftar"
 
 #. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid
-msgid "Not valid"
-msgstr "Tidak valid"
-
-#. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_verified
 msgid "Not verified"
 msgstr "Tidak diverifikasi"
-
-#. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_verified
-msgid "Not verified yet"
-msgstr "Belum diverifikasi"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -473,22 +452,19 @@ msgid "PEPPOL: update participant status"
 msgstr "PEPPOL: update status peserta"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid ""
-"PS: <b style=\"color: $o-enterprise-action-color;\">We did not send your "
-"invoice on Peppol.</b>"
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid_format
+msgid "Partner cannot receive format"
 msgstr ""
-"PS: <b style=\"color: $o-enterprise-action-color;\">Kami tidak mengirimkan "
-"faktur Anda pada Peppol.</b>"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid ""
-"PS: This invoice has also been <b style=\"color: $o-enterprise-action-"
-"color\">sent on Peppol</b>."
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid
+msgid "Partner is not on Peppol"
 msgstr ""
-"PS: Faktur ini juga <b style=\"color: $o-enterprise-action-color\">dikirim "
-"di Peppol</b>."
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__valid
+msgid "Partner is on Peppol"
+msgstr "Partner ada di Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__pending
@@ -534,6 +510,11 @@ msgid "Peppol Ready invoices"
 msgstr "PEPPOL Siap faktur"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_use_parent_company
+msgid "Peppol Use Parent Company"
+msgstr "Peppol Menggunakan Induk Perusahaan"
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_view_tree
 msgid "Peppol Validity"
 msgstr "Validitas PEPPOL"
@@ -546,27 +527,13 @@ msgid "Peppol document has been received successfully"
 msgstr "Dokumen PEPPOL sukses diterima"
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
-#, python-format
-msgid "Peppol document has been received successfully. Sender endpoint: %s"
-msgstr "Dokumen PEPPOL berhasil diterima. Endpoint pengirim: %s"
-
-#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_eas
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_eas
 msgid "Peppol e-address (EAS)"
 msgstr "Peppol e-address (EAS)"
 
 #. module: account_peppol
-#: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_verification_label
-#: model:ir.model.fields,field_description:account_peppol.field_res_users__account_peppol_verification_label
-msgid "Peppol endpoint validity"
-msgstr "Validitas endpoint PEPPOL"
-
-#. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #, python-format
 msgid "Peppol error: %s"
@@ -578,6 +545,8 @@ msgid "Peppol ready invoices"
 msgstr "PEPPOL siap faktur"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_verification_label
+#: model:ir.model.fields,field_description:account_peppol.field_res_users__account_peppol_verification_label
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
 msgid "Peppol status"
 msgstr "Status PEPPOL"
@@ -592,8 +561,7 @@ msgstr "Update status Peppol: %s"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
-"Please do not hesitate to contact our support if you need further "
-"assistance."
+"Please do not hesitate to contact our support if you need further assistance."
 msgstr ""
 "Jangan ragu untuk menghubungi bantuan kami bila Anda membutuhkan bantuan "
 "lebih lanjut."
@@ -713,6 +681,13 @@ msgid "Skipped"
 msgstr "Sebuah pertanyaan tidak bisa terjawab dan melewatkan"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/account_move_send.py:0
+#, python-format
+msgid "Some attachments could not be sent with the XML:"
+msgstr "Beberapa lampiran tidak dapat dikirim dengan XML:"
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "Start sending and receiving documents via Peppol as soon as your "
@@ -741,10 +716,12 @@ msgstr "Test"
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid ""
 "Test mode allows registration of the user on the test Peppol network.\n"
-"                                        By clicking the button below I accept that Odoo may process my e-invoices."
+"                                        By clicking the button below I "
+"accept that Odoo may process my e-invoices."
 msgstr ""
 "Mode test memungkinkan pendaftaran user pada jaringan test Peppol.\n"
-"                                        Dengan mengeklik tombol di bawah saya menyetujui bahwa Odoo dapat memproses e-faktur saya."
+"                                        Dengan mengeklik tombol di bawah "
+"saya menyetujui bahwa Odoo dapat memproses e-faktur saya."
 
 #. module: account_peppol
 #. odoo-python
@@ -759,13 +736,6 @@ msgstr "Nomor identifikasi endpoint Peppol tidak benar."
 #, python-format
 msgid "The Peppol service that is used is likely to be %s."
 msgstr "Layanan Peppol yang digunakan mungkin adalah %s."
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/wizard/account_move_send.py:0
-#, python-format
-msgid "The document has been sent to the Peppol Access Point for processing"
-msgstr "Dokumen telah dikirim ke Poin Akses PEPPOL untuk diproses"
 
 #. module: account_peppol
 #. odoo-python
@@ -795,6 +765,17 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
+msgid ""
+"The invoice has been sent to the Peppol Access Point. The following "
+"attachments were sent with the XML:"
+msgstr ""
+"Faktur telah dikirim ke Access Point Peppol. Lampiran berikut dikirim dengan "
+"XML:"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/account_move_send.py:0
+#, python-format
 msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
 msgstr "Mitra ini kekurangan PEPPOL EAS dan/atau pengidentifikasi Endpoint."
 
@@ -813,16 +794,6 @@ msgid ""
 "to Live."
 msgstr ""
 "Status peppol dokumen telah di-reset saat berganti dari Demo menjadi Live."
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
-msgid ""
-"The recommended EAS code for Belgium is 0208. The Endpoint should be the "
-"Company Registry number."
-msgstr ""
-"Kode EAS yang disarankan untuk Belgia adalah 0208. Endpoint harus merupakan "
-"nomor Registri Perusahaan."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -853,8 +824,23 @@ msgstr "Kode verifikasi harusnya memiliki enam angka."
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid ""
-"This feature is deprecated. Contact odoo support if you need a migration "
-"key."
+"This feature is deprecated. Contact odoo support if you need a migration key."
+msgstr ""
+"Fitur ini sudah di deprecated. Hubungi bantuan Odoo bila Anda membutuhkan "
+"migration key."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "This invoice has also been"
+msgstr "Faktur ini juga telah"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"This peppol identification is already used by %(parent_name)s. Please use "
+"something else."
 msgstr ""
 
 #. module: account_peppol
@@ -880,14 +866,19 @@ msgid "Too many attempts to request an SMS code. Please try again later."
 msgstr "Terlalu banyak permintaan kode SMS. Silakan coba lagi nanti."
 
 #. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_verified
+msgid "Unchecked"
+msgstr "Tidak dicentang"
+
+#. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_endpoint
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_endpoint
 msgid ""
 "Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
 "known as 'Endpoint ID'."
 msgstr ""
-"Pengidentifikasi Unik yang digunakan oleh BIS Billing 3.0 dan derivatif-nya,"
-" dikenal juga sebagai 'Endpoint ID'."
+"Pengidentifikasi Unik yang digunakan oleh BIS Billing 3.0 dan derivatif-nya, "
+"dikenal juga sebagai 'Endpoint ID'."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -911,13 +902,7 @@ msgstr ""
 "dipilih dari UI"
 
 #. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__valid
-msgid "Valid"
-msgstr "Valid"
-
-#. module: account_peppol
 #. odoo-javascript
-#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 #, python-format
 msgid "Validate registration"
@@ -983,8 +968,8 @@ msgid ""
 "You will not be able to send or receive Peppol documents in Odoo anymore. "
 "Are you sure you want to proceed?"
 msgstr ""
-"Anda tidak akan dapat mengirimkan atau menerima dokumen Peppol di Odoo lagi."
-" Apakah Anda yakin ingin melanjutkan?"
+"Anda tidak akan dapat mengirimkan atau menerima dokumen Peppol di Odoo lagi. "
+"Apakah Anda yakin ingin melanjutkan?"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
@@ -993,16 +978,16 @@ msgid "You will receive a verification code to this mobile number"
 msgstr "Anda akan menerima kode verifikasi ke nomor telepon ini"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid "Your Peppol identification is:"
-msgstr "Identifikasi Peppol Anda adalah:"
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
-msgid "Your confirmation code is"
-msgstr "Kode konfirmasi Anda adalah"
+msgid "Your Peppol activation code in Odoo is"
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid "Your Peppol identification is:"
+msgstr "Identifikasi Peppol Anda adalah:"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1013,3 +998,61 @@ msgstr "Migration key Anda adalah:"
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your registration should be activated within a day."
 msgstr "Pendaftaran Anda harusnya diaktifkan dalam waktu satu hari."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "could not be sent via Peppol"
+msgstr "tidak dapat dikirim melalui Peppo"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "sent via Peppol"
+msgstr "dikirim melalui Peppol"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "to send invoices, but this one"
+msgstr "untuk mengirim faktur, tapi yang ini"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "uses"
+msgstr "user-user"
+
+#, python-format
+#~ msgid "Can't cancel registration with this status: %s"
+#~ msgstr "Tidak dapat membatalkan pendaftaran dengan status ini: %s"
+
+#, python-format
+#~ msgid "Can't deregister with this status: %s"
+#~ msgstr "Tidak dapat membatalkan pendaftaran dengan status berikut: %s"
+
+#~ msgid "Cannot receive this format"
+#~ msgstr "Tidak dapat menerima format ini"
+
+#~ msgid "Not valid"
+#~ msgstr "Tidak valid"
+
+#~ msgid "Not verified yet"
+#~ msgstr "Belum diverifikasi"
+
+#~ msgid "Peppol endpoint validity"
+#~ msgstr "Validitas endpoint PEPPOL"
+
+#~ msgid "Valid"
+#~ msgstr "Valid"
+
+#, python-format
+#~ msgid "The document has been sent to the Peppol Access Point for processing"
+#~ msgstr "Dokumen telah dikirim ke Poin Akses PEPPOL untuk diproses"
+
+#, python-format
+#~ msgid "Your confirmation code is"
+#~ msgstr "Kode konfirmasi Anda adalah"
+
+#~ msgid ""
+#~ "The recommended EAS code for Belgium is 0208. The Endpoint should be the "
+#~ "Company Registry number."
+#~ msgstr ""
+#~ "Kode EAS yang disarankan untuk Belgia adalah 0208. Endpoint harus "
+#~ "merupakan nomor Registri Perusahaan."

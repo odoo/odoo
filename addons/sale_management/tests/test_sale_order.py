@@ -448,3 +448,71 @@ class TestSaleOrder(SaleManagementCommon):
         except AssertionError:
             pass
         self.assertEqual(len(log_catcher.output), 0, "Form creation shouldn't trigger a warning")
+
+    def test_updating_price_upon_changing_pricelist(self):
+        optional_product = self.env['product.product'].create({'name': 'Optional Product'})
+        pricelist_1 = self.env['product.pricelist'].create({
+            'name': 'pricelist 1',
+            'currency_id': self.env.ref('base.USD').id,
+            'item_ids': [Command.create({
+                'name': 'Item 1',
+                'compute_price': 'fixed',
+                'base': 'list_price',
+                'fixed_price': 10,
+                'applied_on': '1_product',
+                'product_tmpl_id': optional_product.product_tmpl_id.id,
+            })],
+        })
+
+        pricelist_2 = self.env['product.pricelist'].create({
+            'name': 'pricelist 2',
+            'currency_id': self.env.ref('base.USD').id,
+            'item_ids': [Command.create({
+                'name': 'Item 1',
+                'compute_price': 'fixed',
+                'base': 'list_price',
+                'fixed_price': 20,
+                'applied_on': '1_product',
+                'product_tmpl_id': optional_product.product_tmpl_id.id,
+            })],
+        })
+
+        product = self.env['product.product'].create({'name': 'Product'})
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'pricelist_id': pricelist_1.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 1,
+            })],
+            'sale_order_option_ids': [Command.create({
+                'product_id': optional_product.id,
+            })],
+        })
+
+        sale_order.sale_order_option_ids.add_option_to_order()
+        sale_order.write({
+            'pricelist_id': pricelist_2.id,
+        })
+        sale_order.action_update_prices()
+
+        self.assertEqual(sale_order.order_line[1].price_unit, pricelist_2.item_ids.fixed_price)
+
+    def test_show_update_pricelist_false_on_sale_order_open(self):
+        """Ensure the update pricelist button is disabled when opening a sale order
+        with a default quotation template applied.
+        """
+        quotation_template = self.env['sale.order.template'].create({
+            'name': 'Test Quotation Template',
+            'sale_order_template_line_ids': [
+                Command.create({
+                    'product_id': self.product.id,
+                }),
+            ],
+        })
+        self.env['ir.default'].set('sale.order', 'sale_order_template_id', quotation_template.id)
+        with Form(self.env['sale.order']) as sale_order_form:
+            self.assertTrue(sale_order_form.sale_order_template_id)
+            self.assertTrue(sale_order_form.order_line)
+            self.assertFalse(sale_order_form.show_update_pricelist)
+            sale_order_form.partner_id = self.partner

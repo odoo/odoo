@@ -76,6 +76,11 @@ export function deleteText(charSize, offset, direction, alreadyMoved) {
         }
         return;
     }
+    // Intentionally very specific hack to remove empty CODE elements.
+    if (parentElement.tagName === "CODE" && !parentElement.textContent.length) {
+        parentElement.remove();
+        return;
+    }
     fillEmpty(parentElement);
     setSelection(parentElement, firstSplitOffset);
 }
@@ -146,12 +151,14 @@ HTMLElement.prototype.oDeleteForward = function (offset) {
     if (firstLeafNode && (isFontAwesome(firstLeafNode) || isNotEditableNode(firstLeafNode))) {
         const nextSibling = firstLeafNode.nextSibling;
         const nextSiblingText = nextSibling ? nextSibling.textContent : '';
+        const parentEl = firstLeafNode.parentElement;
         firstLeafNode.remove();
         if (isEditorTab(firstLeafNode) && nextSiblingText[0] === '\u200B') {
             // When deleting an editor tab, we need to ensure it's related ZWS
             // il deleted as well.
             nextSibling.textContent = nextSiblingText.replace('\u200B', '');
         }
+        fillEmpty(parentEl);
         return;
     }
     if (
