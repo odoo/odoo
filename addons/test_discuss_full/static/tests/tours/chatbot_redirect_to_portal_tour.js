@@ -8,6 +8,9 @@ registry.category("web_tour.tours").add("chatbot_redirect_to_portal", {
             run: "click",
         },
         {
+            trigger: ".o-livechat-root:shadow .o-mail-ChatWindow-header:contains(Redirection Bot)",
+        },
+        {
             trigger:
                 ".o-livechat-root:shadow .o-mail-Message:contains(Hello, were do you want to go?)",
             run: "click",
