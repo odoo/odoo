@@ -4,6 +4,7 @@
 import datetime
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged, Form
@@ -222,3 +223,36 @@ class TestStockMoveLine(TestStockCommon):
             })
             # 36 units > 24 units
             self.assertTrue(ml.date > update_date_3, "Quantity change check for date should take into account UoM conversion")
+
+    def test_lot_creation_from_move_line_with_generic_stock(self):
+        """
+        Test that if the product already have quantities and after that tracking is set to serial,
+        we can create a lot and assign it to the move.
+        """
+        self.productA.tracking = "none"
+
+        self.env["stock.quant"]._update_available_quantity(self.productA, self.stock_location, 100)
+
+        self.productA.tracking = "serial"
+
+        serial_lot = self.env["stock.lot"].create(
+            {
+                "name": "SN001",
+                "product_id": self.productA.id,
+                "company_id": self.env.company.id,
+            }
+        )
+
+        move = self.env["stock.move"].create(
+            {
+                "product_id": self.productA.id,
+                "product_uom": self.productA.uom_id.id,
+                "product_uom_qty": 1.0,
+                "location_id": self.stock_location.id,
+                "location_dest_id": self.customer_location.id,
+                "lot_ids": [Command.link(serial_lot.id)],
+            }
+        )
+
+        line = move.move_line_ids[0]
+        self.assertEqual(line.lot_id, serial_lot)
