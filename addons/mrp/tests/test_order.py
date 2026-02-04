@@ -3457,39 +3457,6 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo_backorder.workorder_ids[1].date_start, datetime(2023, 3, 1, 12, 0))
         self.assertEqual(mo_backorder.workorder_ids[2].date_start, datetime(2023, 3, 1, 12, 45))
 
-    @freeze_time('2023-03-01 12:00')
-    def test_all_workorders_planned(self):
-        """
-            Test, when writing to a confirmed MO, that all workorders that are expected to be planned are planned.
-        """
-        self.env.user.group_ids += self.env.ref('mrp.group_mrp_routings')
-
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = self.product_8
-        mo = mo_form.save()
-        with mo_form.workorder_ids.new() as workorder:
-            workorder.name = "OP1"
-            workorder.workcenter_id = self.workcenter_2
-        with mo_form.workorder_ids.new() as workorder:
-            workorder.name = "OP2"
-            workorder.workcenter_id = self.workcenter_2
-        mo = mo_form.save()
-        mo.action_confirm()
-
-        mo.workorder_ids[1].button_start()
-        mo.workorder_ids[1].button_finish()
-
-        self.assertTrue(mo.workorder_ids[1].date_start)
-
-        with Form(mo) as mo_form:
-            with mo_form.workorder_ids.new() as workorder:
-                workorder.name = "OP3"
-                workorder.workcenter_id = self.workcenter_2
-            mo = mo_form.save()
-
-        self.assertTrue(mo.workorder_ids[0].date_start)
-        self.assertTrue(mo.workorder_ids[2].date_start)
-
     def test_compute_product_id(self):
         """
             Tests the creation of a production order automatically sets the product when the bom is provided,

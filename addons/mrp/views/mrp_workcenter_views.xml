@@ -128,6 +128,20 @@
         </record>
 
         <!-- Workcenter Kanban view-->
+
+        <record id="mrp_workcenter_workorders_kanban" model="ir.actions.act_window">
+            <field name="name">Work Orders</field>
+            <field name="res_model">mrp.workorder</field>
+            <field name="domain">[('state', 'not in', ('draft', 'done', 'cancel'))]</field>
+            <field name="views" eval="[(False, 'list')]"/>
+            <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
+            <field name="context">{'search_default_workcenter_id': active_id
+                                   'search_default_ready': True,
+                                   'search_default_blocked': True,
+                                   'search_default_filter_to_plan': True,
+                                   'workcenter_to_plan_on': active_id}</field>
+        </record>
+
         <record model="ir.ui.view" id="mrp_workcenter_kanban">
             <field name="name">mrp.workcenter.kanban</field>
             <field name="model">mrp.workcenter</field>
@@ -145,7 +159,10 @@
                                             <span>Actions</span>
                                         </h5>
                                         <div role="menuitem" name="plan_order">
-                                            <a name="action_work_order" type="object">Plan Orders</a>
+                                            <a name="%(mrp_workcenter_workorders_kanban)d" type="action">Plan Orders</a>
+                                        </div>
+                                        <div role="menuitem" name="planning">
+                                            <a name="action_work_order" type="object" context="{'search_default_ready': 1, 'search_default_progress': 1, 'search_default_blocked': 1, 'desktop_list_view': 1, 'search_default_workcenter_id': id, 'view_mode':'gantt'}">Planning</a>
                                         </div>
                                     </div>
                                     <div class="col-6">
