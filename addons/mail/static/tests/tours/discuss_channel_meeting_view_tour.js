@@ -28,7 +28,7 @@ function getMeetingViewTourSteps({ inWelcomePage = false } = {}) {
         },
         {
             trigger:
-                ".o-mail-Meeting .o-mail-ActionPanel .o-mail-Thread:contains('john (base.group_user), bob (base.group_user), and Guest')",
+                ".o-mail-Meeting .o-mail-ActionPanel .o-mail-Thread:contains('Meeting - Jan 1, 2026')",
         },
         {
             trigger: ".o-mail-Message[data-persistent]:contains('Hello everyone!')",

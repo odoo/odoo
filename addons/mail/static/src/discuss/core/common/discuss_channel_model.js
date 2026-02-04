@@ -2,6 +2,7 @@ import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { fields, Record } from "@mail/model/export";
 
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
 import {
@@ -202,6 +203,15 @@ export class DiscussChannel extends Record {
         return this.channel_member_ids.filter(({ persona }) => persona?.notEq(this.store.self));
     }
     get displayName() {
+        if (this.default_display_mode === "video_full_screen" && this.create_date && !this.name) {
+            const localizedDatetime = this.store.self?.tz
+                ? this.create_date.setZone(this.store.self?.tz)
+                : this.create_date.toLocal();
+            const formatDate = localizedDatetime.toLocaleString(luxon.DateTime.DATE_MED, {
+                locale: user.lang,
+            });
+            return _t("Meeting - %(date)s", { date: formatDate });
+        }
         if (this.channel_type === "chat" && this.correspondent) {
             return this.correspondent.name;
         }
@@ -218,6 +228,7 @@ export class DiscussChannel extends Record {
         }
         return this.name;
     }
+    create_date = fields.Datetime();
     /** @type {"not_fetched"|"pending"|"fetched"} */
     fetchMembersState = "not_fetched";
     /** @type {"not_fetched"|"fetching"|"fetched"} */
