@@ -8,6 +8,7 @@ from unittest.mock import patch
 from odoo import Command
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged, RecordCapturer
+from odoo.tools import file_open
 from odoo.tools.misc import mute_logger
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -976,3 +977,44 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
             move_id = self.journal.create_document_from_attachment(attachment.ids).get('res_id')
 
         self.assertEqual(self.env['account.move'].browse(move_id).attachment_ids, attachment)
+
+    def test_import_xml_with_embedded_pdf(self):
+        with file_open("account/tests/test_files/xml_with_embedded_pdf.xml", 'rb') as file:
+            xml_vals = {'name': 'invoice.xml', 'raw': file.read(), 'mimetype': 'application/xml'}
+
+        self.assert_attachment_import(
+            origin='journal',
+            attachments_vals=[xml_vals],
+            expected_invoices={
+                1: {
+                    'invoice.xml': {
+                        'on_invoice': True,
+                        'on_message': True,
+                        'is_decoded': True,
+                        'is_new': True,
+                    },
+                    'test_pdf.pdf': {
+                        'on_invoice': True,
+                        'on_message': True,
+                    },
+                },
+            },
+        )
+
+        self.assert_attachment_import(
+            origin='mail_alias',
+            attachments_vals=[xml_vals],
+            expected_invoices={
+                1: {
+                    'invoice.xml': {
+                        'on_message': True,
+                        'is_decoded': True,
+                        'is_new': True,
+                    },
+                    'test_pdf.pdf': {
+                        'on_invoice': True,
+                        'on_message': True,
+                    },
+                },
+            },
+        )
