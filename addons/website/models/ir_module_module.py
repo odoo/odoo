@@ -34,7 +34,7 @@ class IrModuleModule(models.Model):
     }
 
     image_ids = fields.One2many('ir.attachment', 'res_id',
-                                domain=[('res_model', '=', 'ir.module.module'), ('mimetype', '=like', 'image/%')],
+                                domain=[('mimetype', '=like', 'image/%')],
                                 string='Screenshots', readonly=True)
     # for kanban view
     is_installed_on_current_website = fields.Boolean(compute='_compute_is_installed_on_current_website')

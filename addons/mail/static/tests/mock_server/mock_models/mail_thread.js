@@ -658,6 +658,7 @@ export class MailThread extends models.ServerModel {
                 IrAttachment._filter([
                     ["res_id", "=", thread.id],
                     ["res_model", "=", this._name],
+                    ["res_field", "=", false],
                 ]).sort((a1, a2) => a1.id - a2.id)
             );
             res["areAttachmentsLoaded"] = true;

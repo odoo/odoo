@@ -580,7 +580,7 @@ class ProjectTask(models.Model):
 
     def _get_attachments_search_domain(self):
         self.ensure_one()
-        return [('res_id', '=', self.id), ('res_model', '=', 'project.task')]
+        return [('res_id', '=', self.id), ('res_model', '=', 'project.task'), ('res_field', '=', False)]
 
     def _compute_attachment_ids(self):
         for task in self:

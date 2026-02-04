@@ -123,7 +123,7 @@ class HrApplicant(models.Model):
     delay_close = fields.Float(compute="_compute_delay", string='Delay to Close', readonly=True, aggregator="avg", help="Number of days to close", store=True)
     recruiter_email = fields.Char(related='recruiter_id.work_email', string="Recruiter Work Email", readonly=True)
     attachment_number = fields.Integer(compute='_get_attachment_number', string="Number of Attachments")
-    attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.applicant')], string='Attachments')
+    attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_field', '=', False)], string='Attachments')
     kanban_state = fields.Selection([
         ('normal', 'In Progress'),
         ('done', 'Ready'),
@@ -1030,7 +1030,7 @@ class HrApplicant(models.Model):
         action = self.env['ir.actions.act_window']._for_xml_id('hr.open_view_employee_list')
         employee = self.env['hr.employee'].with_context(clean_context(self.env.context)).create(self._get_employee_create_vals())
         action['res_id'] = employee.id
-        employee_attachments = self.env['ir.attachment'].search([('res_model', '=','hr.employee'), ('res_id', '=', employee.id)])
+        employee_attachments = self.env['ir.attachment'].search([('res_model', '=', 'hr.employee'), ('res_id', '=', employee.id), ('res_field', '=', False)])
         unique_attachments = self.attachment_ids.filtered(
             lambda attachment: attachment.checksum not in employee_attachments.mapped('checksum')
         )

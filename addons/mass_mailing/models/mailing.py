@@ -1392,6 +1392,7 @@ class MailingMailing(models.Model):
         existing_attachments = dict(IrAttachment.search([
             ('res_model', '=', 'mailing.mailing'),
             ('res_id', '=', self.id),
+            ('res_field', '=', False),
         ]).mapped(lambda record: (record.checksum, record)))
 
         attachments, vals_for_attachs, checksums = [], [], []

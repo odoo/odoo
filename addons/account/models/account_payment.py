@@ -200,7 +200,7 @@ class AccountPayment(models.Model):
         currency_field='company_currency_id', compute='_compute_amount_company_currency_signed', store=True)
     # used to get and display duplicate move warning if partner, amount and date match existing payments
     duplicate_payment_ids = fields.Many2many(comodel_name='account.payment', compute='_compute_duplicate_payment_ids')
-    attachment_ids = fields.One2many('ir.attachment', 'res_id', string='Attachments')
+    attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_field', '=', False)], string='Attachments')
 
     _check_amount_not_negative = models.Constraint(
         'CHECK(amount >= 0.0)',

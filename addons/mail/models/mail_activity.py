@@ -512,6 +512,7 @@ class MailActivity(models.Model):
         activity_attachments = self.env['ir.attachment'].sudo().search_fetch([
             ('res_model', '=', self._name),
             ('res_id', 'in', self.ids),
+            ('res_field', '=', False),
         ], ['res_id']).grouped('res_id')
         attachments_to_remove = self.env['ir.attachment']
         activities_to_remove = self.browse()

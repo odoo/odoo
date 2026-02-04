@@ -197,6 +197,7 @@ class ChannelController(http.Controller):
         domain = [
             ["res_id", "=", channel_id],
             ["res_model", "=", "discuss.channel"],
+            ["res_field", "=", False],
         ]
         if before:
             domain.append(["id", "<", before])
