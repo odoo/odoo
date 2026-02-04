@@ -478,6 +478,8 @@ def stringify_annotation(annotation) -> str | None:
         return None
     if isinstance(annotation, str):
         return annotation
+    if hasattr(annotation, '__origin__'):
+        return str(annotation)
     if isinstance(annotation, type):
         return annotation.__name__
     return str(annotation)
