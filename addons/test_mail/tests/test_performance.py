@@ -344,7 +344,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             # voip module read activity_type during create leading to one less query in enterprise on action_feedback
             _category = activity.activity_type_id.category
 
-        with self.assertQueryCount(admin=10, employee=10):  # tm: 7 / 7
+        with self.assertQueryCount(admin=10, employee=9):  # tm: 7 / 7
             activity.action_feedback(feedback='Zizisse Done !')
 
     @warmup
@@ -379,7 +379,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(admin=13, employee=13):  # tm: 10 / 10
+        with self.assertQueryCount(admin=13, employee=12):  # tm: 10 / 10
             record.action_close('Dupe feedback')
 
         self.assertEqual(record.activity_ids, self.env['mail.activity'])
@@ -405,7 +405,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(admin=15, employee=15):  # tm: 12 / 12
+        with self.assertQueryCount(admin=15, employee=14):  # tm: 12 / 12
             record.action_close('Dupe feedback', attachment_ids=attachments.ids)
 
         # notifications
@@ -1363,7 +1363,7 @@ class TestMailAccessPerformance(BaseMailPerformance):
         # activities employee cannot read due to specific rules (other user on non open custo)
         # TDE FIXME: should be only for Custo.3
         cls.activities_emp_nope = cls.activities.filtered(
-            lambda a: a.res_model == 'mail.test.access.custo' and a.res_id != cls.records_access_custo[0].id and a.user_id == cls.user_admin
+            lambda a: a.res_model == 'mail.test.access.custo' and a.res_id == cls.records_access_custo[2].id and a.user_id == cls.user_admin
         )
 
     @users('employee')
@@ -1372,12 +1372,11 @@ class TestMailAccessPerformance(BaseMailPerformance):
         # queries
         # fetch activities: 1
         # filter records: 3 (1 / model)
-        # exists: 3 (1 / model)
         # '_fetch_query': 1
         self.env.invalidate_all()
         self.env.transaction.clear_access_cache()
         profile = self.profile() if self.warm else nullcontext()
-        with self.assertQueryCount(employee=8), profile:
+        with self.assertQueryCount(employee=5), profile:
             content = (self.activities - self.activities_emp_nope).with_env(self.env).read(['summary'])
         self.assertEqual(len(content), len(self.activities - self.activities_emp_nope))
 
@@ -1387,11 +1386,10 @@ class TestMailAccessPerformance(BaseMailPerformance):
         # queries
         # select mail.activity: 1
         # filter records: 3 (1 / model)
-        # exists: 3 (1 / model)
         self.env.invalidate_all()
         self.env.transaction.clear_access_cache()
         profile = self.profile() if self.warm else nullcontext()
-        with self.assertQueryCount(employee=7), profile:
+        with self.assertQueryCount(employee=4), profile:
             found = self.activities.with_env(self.env).search([('summary', 'ilike', 'TestActivity')])
         self.assertEqual(found, self.activities - self.activities_emp_nope)
 
@@ -1420,7 +1418,7 @@ class TestMailAccessPerformance(BaseMailPerformance):
         # filter records: 1 / model (access rules done in batch)
         # _get_mail_message_access: 3 on custom implementation, no prefetching
         profile = self.profile() if self.warm else nullcontext()
-        with self.assertQueryCount(employee=5), profile:
+        with self.assertQueryCount(employee=4), profile:
             found = self.messages.with_env(self.env).search([('body', 'ilike', 'Posting on ')])
         self.assertEqual(found, self.messages - self.messages_emp_nope)
 
