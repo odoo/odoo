@@ -29,7 +29,6 @@ class TestGenericIN(TestGenericLocalization):
         })
 
     def test_generic_localization(self):
-        self.main_pos_config.l10n_gcc_dual_language_receipt = True
         _, html = super().test_generic_localization()
         self.assertTrue("HSN Code" in html)
         self.assertTrue("Tax Invoice" in html)
