@@ -975,11 +975,15 @@ export function isSetOperator(operator) {
     return SET_OPERATORS_BEHAVIORS.operators.includes(operator);
 }
 
+export function getDefaultOperator(type) {
+    return FILTERS_BEHAVIORS[type][0].operators[0];
+}
+
 export function getDefaultValue(type) {
     if (type === "date" || type === "boolean") {
         return undefined;
     }
-    const defaultOperator = FILTERS_BEHAVIORS[type][0].operators[0];
+    const defaultOperator = getDefaultOperator(type);
     return {
         operator: defaultOperator,
         ...getEmptyFilterValue({ type }, defaultOperator),
