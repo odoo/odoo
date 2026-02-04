@@ -590,7 +590,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                         mls_without_lots -= move_line
                     else:  # No line without serial number, creates a new one.
                         reserved_quants = self.env['stock.quant'].with_context(packaging_uom_id=move.packaging_uom_id)._get_reserve_quantity(move.product_id, move.location_id, 1.0, lot_id=lot)
-                        if reserved_quants:
+                        if reserved_quants and reserved_quants[0][0].lot_id:
                             move_line_vals = self._prepare_move_line_vals(quantity=0, reserved_quant=reserved_quants[0][0])
                         else:
                             move_line_vals = self._prepare_move_line_vals(quantity=0)
