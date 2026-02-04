@@ -15,6 +15,7 @@
 </template>
 
 <template id="contact">
+    <!-- No need of microdata here? we are gonna cover it in JSON ld -->
     <address t-ignore="true" class="o_portal_address mb-0">
         <div t-if="not (('name' in fields) or (address and 'address' in fields) or (city and 'city' in fields) or (mobile and 'mobile' in fields) or (website and 'website' in fields) or (email and 'email' in fields))" class="css_non_editable_mode_hidden">
             --<span class="text-muted" t-out="name"/>--

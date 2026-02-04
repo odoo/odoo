@@ -664,49 +664,28 @@ class EventEvent(models.Model):
             data['tag_ids'] = event.tag_ids.read(['name'])
         return results_data
 
-    def _to_structured_data(self, website=None):
+    def _to_structured_data(self, website):
         """ Generate structured data for the event. """
         self.ensure_one()
-        website = website or self.env['website'].get_current_website()
         base_url = website.get_base_url()
-        event_url = self.website_url or ''
-        if event_url:
-            event_url = f'{base_url}{event_url}'
-        else:
-            event_url = f'{base_url}/event/{self.id}'
 
+        event_url = f"{base_url}{self.website_url}" if self.website_url else f"{base_url}/event/{self.id}"
         image_url = website.image_url(self, 'image_1920')
-        if image_url:
-            image_url = f'{base_url}{image_url}'
+        image_url = f"{base_url}{image_url}" if image_url else None
 
-        name = self.name
-        # location = SchemaBuilder("Place")
-        # address = None
+        location = None
+        if self.address_id:
+            address = website.postal_address_structured_data(self.address_id.sudo())
+            location = SchemaBuilder("Place", name=self.address_name).add_nested(address=address)
 
-        # if self.address_id:
-        #     # address_id is a many2one to res.partner, so we can use
-        #     # website's postal_address_structured_data method which accepts
-        #     # company or partner id, as res.partner has the same address fields
-        #     address_id_sudo = self.address_id.sudo()
-        #     address = website.postal_address_structured_data(address_id_sudo)
-        #     location.set(name=self.address_name)
-        #     location.add_nested(address=address)
-
-        start_date = SchemaBuilder.datetime(self.date_begin)
-        end_date = SchemaBuilder.datetime(self.date_end)
-        description = self.subtitle or ''
-
+        description = self.subtitle
         if not description and self.description:
-            # fallback on description if no subtitle
-            description = text_from_html(self.description, True)
-            description = truncate_text(description, 300)
+            description = truncate_text(text_from_html(self.description, True), 300)
 
         organizer = None
         if self.organizer_id:
-            organizer = SchemaBuilder("Organization")
-            # Avoid below initialization here, and do it in event exhibitor?
             organizer_sudo = self.organizer_id.sudo()
-            organizer.set(name=organizer_sudo.name or None)
+            organizer = SchemaBuilder("Organization", name=organizer_sudo.name)
             if organizer_sudo.website:
                 organizer.set(url=organizer_sudo.website)
 
@@ -717,40 +696,36 @@ class EventEvent(models.Model):
             event_status = "EventCancelled"
 
         tickets = []
+        currency = self.company_id.currency_id.name
         for ticket in self.event_ticket_ids:
-            ticket_schema = SchemaBuilder("Offer")
-            name = ticket.name
-            price = ticket.total_price_reduce
-            currency = self.company_id.currency_id.name
-            ticket_schema.set(price=price, price_currency=currency)
-            if name:
-                ticket_schema.set(name=name)
+            availability = "https://schema.org/SoldOut" if ticket.is_sold_out else "https://schema.org/InStock"
+            offer = SchemaBuilder("Offer",
+                name=ticket.name,
+                price=ticket.total_price_reduce,
+                price_currency=currency,
+                availability=availability,
+            )
             if not ticket.is_sold_out:
-                ticket_schema.set(url=f"{event_url}/register")
-                ticket_schema.set(availability="https://schema.org/InStock")
-            else:
-                ticket_schema.set(availability="https://schema.org/SoldOut")
-            valid_from = ticket.start_sale_datetime
-            if valid_from:
-                ticket_schema.set(valid_from=SchemaBuilder.datetime(valid_from))
-            valid_through = ticket.end_sale_datetime
-            if valid_through:
-                ticket_schema.set(valid_through=SchemaBuilder.datetime(valid_through))
-            ticket_schema.set(name=ticket.name or None)
+                offer.set(url=f"{event_url}/register")
 
-            tickets.append(ticket_schema)
-        # We have to take care of elements active in sidebar (website) remove them
-        # If view if inactive. TODO
-        return SchemaBuilder("Event").set(
-            name=name,
-            start_date=start_date,
-            end_date=end_date,
+            if ticket.start_sale_datetime:
+                offer.set(valid_from=SchemaBuilder.datetime(ticket.start_sale_datetime))
+            if ticket.end_sale_datetime:
+                offer.set(valid_through=SchemaBuilder.datetime(ticket.end_sale_datetime))
+
+            tickets.append(offer)
+
+        # Build and return event schema
+        return SchemaBuilder("Event",
+            name=self.name,
             url=event_url,
-            image=image_url or None,
-            description=description or None,
+            start_date=SchemaBuilder.datetime(self.date_begin),
+            end_date=SchemaBuilder.datetime(self.date_end),
+            image=image_url,
+            description=description,
             event_status=f"https://schema.org/{event_status}",
         ).add_nested(
-            # location=location,
+            location=location,
             organizer=organizer,
             offers=tickets,
         )
