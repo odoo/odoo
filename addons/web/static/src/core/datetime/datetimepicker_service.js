@@ -74,6 +74,7 @@ export const datetimePickerService = {
                             restoreTargetMargin();
                             restoreTargetMargin = null;
                         }
+                        hookParams?.onClose();
                     },
                 });
                 // Hook methods
@@ -90,6 +91,7 @@ export const datetimePickerService = {
 
                     inputsChanged = ensureArray(pickerProps.value).map(() => false);
 
+                    debugger;
                     await hookParams.onApply?.(pickerProps.value);
                     lastInitialProps.value = valueCopy;
                 };

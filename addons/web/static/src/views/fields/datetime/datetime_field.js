@@ -1,4 +1,4 @@
-import { Component, onWillRender, useState } from "@odoo/owl";
+import { Component, onWillRender, useState, useRef, useEffect } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_hook";
 import { areDatesEqual, deserializeDate, deserializeDateTime, today } from "@web/core/l10n/dates";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
@@ -132,6 +132,9 @@ export class DateTimeField extends Component {
             onChange: () => {
                 this.state.range = this.isRange(this.state.value);
             },
+            onClose: () => {
+                this.picker.activeInput = "";
+            },
             onApply: async () => {
                 const toUpdate = {};
                 if (Array.isArray(this.state.value)) {
@@ -155,7 +158,11 @@ export class DateTimeField extends Component {
         });
         // Subscribes to changes made on the picker state
         this.state = useState(dateTimePicker.state);
+        this.picker = useState({ activeInput: "" });
         this.openPicker = dateTimePicker.open;
+
+        this.startDate = useRef("start-date");
+        this.endDate = useRef("end-date");
 
         onWillRender(() => this.triggerIsDirty());
     }
@@ -280,6 +287,18 @@ export class DateTimeField extends Component {
 
     onInput() {
         this.triggerIsDirty(true);
+    }
+
+    onFocus(field, isStart) {
+        this.picker.activeInput = field;
+        if(isStart) {
+            this.startDate.el?.focus();
+            this.openPicker(0);
+        }
+        else {
+            this.endDate.el?.focus();
+            this.openPicker(0);
+        }
     }
 }
 

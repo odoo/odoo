@@ -552,6 +552,8 @@ test("edit a datetime field in form view with show_seconds option", async () => 
     });
 });
 
+//Test if manage to make it work
+
 test("datetime field (with widget) in kanban with show_time option", async () => {
     mockTimeZone(+2);
 

@@ -17,16 +17,29 @@
                 </button>
             </t>
             <t t-elif="props.required or props.alwaysRange or !isEmpty(startDateField) or startDateField === props.name">
-                <input
-                    t-ref="start-date"
-                    type="text"
-                    t-att-id="showSeparator ? props.endDateField and props.id : props.id"
-                    class="o_input cursor-pointer"
-                    autocomplete="off"
-                    t-att-placeholder="props.placeholder"
-                    t-att-data-field="startDateField"
-                    t-on-input="onInput"
-                />
+                <t t-if="picker.activeInput !== startDateField and values[0]">
+                    <button 
+                        
+                        t-att-id="showSeparator ? props.endDateField and props.id : props.id"
+                        t-on-focus="() => this.onFocus(startDateField, true)"
+                        t-att-data-field="startDateField"
+                        class="o_input cursor-pointer w-100 text-start">
+                        <t t-esc="getFormattedValue(0)" />
+                    </button>
+                </t>
+                <t t-else="">
+                    <input
+                        t-ref="start-date"
+                        type="text"
+                        t-att-id="showSeparator ? props.endDateField and props.id : props.id"
+                        class="o_input cursor-pointer"
+                        autocomplete="off"
+                        t-att-placeholder="props.placeholder"
+                        t-att-data-field="startDateField"
+                        t-on-input="onInput"
+                        t-on-focus="() => this.onFocus(startDateField, true)"
+                    />
+                </t>
                 <span
                     t-if="props.warnFuture and isDateInTheFuture(0)"
                     class="fa fa-exclamation-triangle text-danger"
@@ -54,16 +67,28 @@
                     </button>
                 </t>
                 <t t-elif="props.required or props.alwaysRange or !isEmpty(endDateField) or endDateField === props.name">
-                    <input
-                        t-ref="end-date"
-                        type="text"
-                        t-att-id="props.startDateField and props.id"
-                        class="o_input cursor-pointer"
-                        autocomplete="off"
-                        t-att-placeholder="props.placeholder"
-                        t-att-data-field="endDateField"
-                        t-on-input="onInput"
-                    />
+                    <t t-if="picker.activeInput !== endDateField and values[1]">
+                        <button 
+                            t-on-focus="() => this.onFocus(endDateField, true)"
+                            t-att-id="props.startDateField and props.id"
+                            t-att-data-field="endDateField"
+                            class="o_input cursor-pointer w-100 text-start">
+                            <t t-esc="getFormattedValue(1)" />
+                        </button>
+                    </t>
+                    <t t-else="">
+                        <input
+                            t-ref="end-date"
+                            type="text"
+                            t-att-id="props.startDateField and props.id"
+                            class="o_input cursor-pointer"
+                            autocomplete="off"
+                            t-att-placeholder="props.placeholder"
+                            t-att-data-field="endDateField"
+                            t-on-input="onInput"
+                            t-on-focus="() => this.onFocus(endDateField, true)"
+                        />
+                    </t>
                     <span
                         t-if="props.warnFuture and isDateInTheFuture(1)"
                         class="fa fa-exclamation-triangle text-danger"
