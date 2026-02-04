@@ -74,6 +74,7 @@ import {
     validateKanbanRecord,
     validateSearch,
     webModels,
+    editSearch,
 } from "@web/../tests/web_test_helpers";
 import { addNewRule } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 
@@ -9875,7 +9876,7 @@ test(`[Offline] use offline searchbar`, async () => {
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
 
-    // Visit filters to put feed the cache
+    // Visit filters to feed the cache
     await toggleSearchBarMenu();
     await toggleMenuItem("GroupBy Blip");
     expect(".o_kanban_group").toHaveCount(3);
@@ -9923,5 +9924,156 @@ test(`[Offline] use offline searchbar`, async () => {
     expect.verifyErrors([
         "/web/dataset/call_kw/partner/web_search_read",
         "/web/dataset/call_kw/partner/web_read_group",
+    ]);
+});
+
+test.tags("desktop");
+test(`[Offline] keep facets name when coming back online`, async () => {
+    expect.errors(2);
+    Partner._records.push({ foo: "boo" });
+    const setOffline = mockOffline();
+    await mountView({
+        resModel: "partner",
+        type: "kanban",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        searchViewArch: `
+            <search>
+                <field name="foo" string="Foo" filter_domain="[['foo', 'ilike', self]]"/>
+                <filter string="Filter Blip" name="blip" domain="[['foo', '=', 'blip']]"/>
+                <filter string="GroupBy Blip" name="groupby_blip" context="{'group_by': 'foo'}"/>
+            </search>`,
+        config: { actionId: 234 },
+    });
+
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
+
+    // Visit filters to feed the cache
+    await editSearch("boo");
+    await keyDown("Enter");
+    await animationFrame();
+    await editSearch("blip");
+    await keyDown("Enter");
+    await animationFrame();
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(3);
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Filter Blip");
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
+    await toggleMenuItem("GroupBy Blip");
+    expect(".o_kanban_group").toHaveCount(1);
+
+    // Switch offline and visit available filters
+    await setOffline(true);
+    await toggleSearchBarMenu();
+    await contains(".o_search_bar_menu_offline .o-dropdown-item:eq(1)").click();
+    expect(".o_kanban_group").toHaveCount(0);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
+    await toggleSearchBarMenu();
+    await contains(".o_search_bar_menu_offline .o-dropdown-item:eq(0)").click();
+    expect(".o_kanban_group").toHaveCount(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
+
+    // Switch back online
+    await setOffline(false);
+    expect(queryAllTexts(".o_searchview .o_facet_values")).toEqual([
+        "Foo boo or blip",
+        "Filter Blip",
+        "GroupBy Blip",
+    ]);
+
+    await removeFacet("GroupBy Blip");
+    expect(".o_kanban_group").toHaveCount(0);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
+
+    // Switch offline again and check the name of available filters
+    await setOffline(true);
+    await toggleSearchBarMenu();
+    expect(queryAllTexts(".o_search_bar_menu_offline .o-dropdown-item")).toEqual([
+        "Foo\nboo\nor\nblip\nFilter Blip",
+        "Foo\nboo\nor\nblip\nFilter Blip\nGroupBy Blip",
+        "Foo\nboo\nor\nblip",
+        "Foo\nboo",
+    ]);
+
+    expect.verifyErrors([
+        "/web/dataset/call_kw/partner/web_search_read",
+        "/web/dataset/call_kw/partner/web_read_group",
+    ]);
+});
+
+test.tags("desktop");
+test(`[Offline] keep facets name when coming back online (favorite filter)`, async () => {
+    expect.errors(2);
+    const setOffline = mockOffline();
+    await mountView({
+        resModel: "partner",
+        type: "kanban",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        config: { actionId: 234 },
+        searchViewArch: `
+            <search>
+                <filter string="GroupBy Blip" name="groupby_blip" context="{'group_by': 'foo'}"/>
+            </search>`,
+        irFilters: [
+            {
+                context: "{}",
+                domain: "[('foo', 'ilike', 'blip')]",
+                id: 1,
+                name: "My favorite",
+                sort: "[]",
+                user_ids: [2],
+            },
+        ],
+    });
+
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
+
+    // Visit filters to feed the cache
+    await toggleSearchBarMenu();
+    await toggleMenuItem("My favorite");
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
+
+    // Switch offline and visit available filters
+    await setOffline(true);
+    await contains(".o_searchview_facet .oi-close").click();
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
+    await toggleSearchBarMenu();
+    await contains(".o_search_bar_menu_offline .o-dropdown-item:eq(0)").click();
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
+
+    // Switch back online
+    await setOffline(false);
+    expect(queryAllTexts(".o_searchview .o_facet_values")).toEqual(["My favorite"]);
+    expect(".o_searchview_facet .fa-star").toHaveCount(1);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("GroupBy Blip");
+    expect(".o_kanban_group").toHaveCount(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(2);
+
+    // Switch offline again and check the name of available filters
+    await setOffline(true);
+    await toggleSearchBarMenu();
+    expect(queryAllTexts(".o_search_bar_menu_offline .o-dropdown-item")).toEqual([
+        "My favorite\nGroupBy Blip",
+        "My favorite",
+    ]);
+
+    expect.verifyErrors([
+        "/web/dataset/call_kw/partner/web_search_read",
+        "/web/dataset/call_kw/partner/web_search_read",
     ]);
 });

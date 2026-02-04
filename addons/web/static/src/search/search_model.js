@@ -530,10 +530,30 @@ export class SearchModel extends EventBus {
         this._appliedSearch = search;
         const { domain, groupBys } = search;
         if (domain !== "[]") {
-            const description = _t("Custom filter");
-            this.createNewFilters([
-                { description, domain, name: "custom filter", invisible: "True" },
-            ]);
+            search.facets.forEach((facet) => {
+                if (!["field", "filter", "favorite"].includes(facet.type)) {
+                    return;
+                }
+                let description = facet.values.join(` ${facet.separator} `);
+                if (facet.type === "field") {
+                    description = `${facet.title} ${description}`;
+                }
+                this.searchItems[this.nextId] = {
+                    id: this.nextId,
+                    groupId: this.nextGroupId,
+                    groupNumber: this.nextGroupNumber,
+                    type: facet.type === "favorite" ? "favorite" : "filter",
+                    description,
+                    domain: facet.domain,
+                    orderBy: [],
+                    name: `offline filter ${this.nextId}`,
+                    invisible: "True",
+                };
+                this.query.push({ searchItemId: this.nextId });
+                this.nextId++;
+                this.nextGroupId++;
+                this.nextGroupNumber++;
+            });
         }
         this._toggleGroupBys(groupBys);
         this._notify();
