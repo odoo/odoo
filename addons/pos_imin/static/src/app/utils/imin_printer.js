@@ -16,10 +16,18 @@ export class IminPrinterAdapter extends BasePrinter {
         this.isConnected = await this.iminPrinter.connect();
     }
 
-    async isAvailable() {
+    async isAvailable(timeoutMs = 3000) {
         return new Promise((resolve) => {
+            let ws;
+            const timer = setTimeout(() => {
+                if (ws) {
+                    ws.close();
+                }
+                resolve(false);
+            }, timeoutMs);
+
             try {
-                const ws = new window.WebSocket(
+                ws = new window.WebSocket(
                     this.iminPrinter.protocol +
                         this.iminPrinter.address +
                         ":" +
@@ -27,20 +35,16 @@ export class IminPrinterAdapter extends BasePrinter {
                         this.iminPrinter.prefix
                 );
                 ws.onopen = function () {
+                    clearTimeout(timer);
                     ws.close();
                     resolve(true);
                 };
                 ws.onerror = function () {
+                    clearTimeout(timer);
                     resolve(false);
                 };
-            } catch (error) {
-                logPosMessage(
-                    "IminPrinterAdapter",
-                    "isAvailable",
-                    "Error checking printer availability: " + error.message,
-                    CONSOLE_COLOR,
-                    [error]
-                );
+            } catch {
+                clearTimeout(timer);
                 resolve(false);
             }
         });
