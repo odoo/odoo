@@ -833,7 +833,7 @@
                         <t t-call="website.placeholder_header_call_to_action"/>
                     </ul>
                 </div>
-                <t t-call="website.navbar_nav_wrapper" _wrapper_class.f="justify-content-start">
+                <t t-call="website.navbar_nav_wrapper" _wrapper_class.f="justify-content-center">
                     <!-- Navbar -->
                     <t t-call="website.navbar_nav"
                         _nav_class.f="pb-0">
@@ -1180,7 +1180,7 @@
                                 _dropdown_menu_class.f="dropdown-menu-end"/>
                         </ul>
                         <!-- Navbar -->
-                        <t t-call="website.navbar_nav" _nav_class.f="justify-content-start">
+                        <t t-call="website.navbar_nav" _nav_class.f="justify-content-end">
                             <!-- Menu -->
                             <t t-foreach="website.menu_id.child_id" t-as="submenu">
                                 <t t-call="website.submenu"
