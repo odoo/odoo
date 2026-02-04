@@ -1113,9 +1113,9 @@ class AccountMove(models.Model):
         if elements := element.xpath('.//ScontoMaggiorazione'):
             # Special case of only 1 percentage discount
             if len(elements) == 1:
-                element = elements[0]
-                if discount_percentage := get_float(element, './/Percentuale'):
-                    discount_type = get_text(element, './/Tipo')
+                discount_element = elements[0]
+                if discount_percentage := get_float(discount_element, './/Percentuale'):
+                    discount_type = get_text(discount_element, './/Tipo')
                     discount_sign = -1 if discount_type == 'MG' else 1
                     move_line.discount = discount_sign * discount_percentage
             # Discounts in cascade summarized in 1 percentage
@@ -1124,7 +1124,39 @@ class AccountMove(models.Model):
                 discount = 100 - (100 * total) / (move_line.quantity * move_line.price_unit)
                 move_line.discount = discount
 
+        # Ensure the line total matches the XML (even without explicit discounts)
+        self._l10n_it_edi_adjust_line_total(element, move_line, message_to_log)
+
         return message_to_log
+
+    def _l10n_it_edi_adjust_line_total(self, element, move_line, message_to_log):
+        """Adjust the line unit price so that the untaxed total matches PrezzoTotale from XML."""
+        expected_total = get_float(element, './/PrezzoTotale')
+        if not expected_total or not move_line.quantity:
+            return
+
+        discount_factor = 1 - (move_line.discount or 0) / 100
+        if not discount_factor:
+            return
+
+        currency = move_line.currency_id
+        line_base = move_line.price_unit * move_line.quantity * discount_factor
+        line_total = currency.round(line_base)
+        difference = currency.round(expected_total - line_total)
+        if currency.is_zero(difference):
+            return
+
+        if message_to_log is not None:
+            message = Markup("<br/>").join((
+                _("Rounding difference detected: computed %(calc)s vs XML %(exp)s for '%(name)s'. Using XML value.",
+                calc=line_total,
+                exp=currency.round(expected_total),
+                name=move_line.name),
+                self._compose_info_message(element, '.'),
+            ))
+            message_to_log.append(message)
+
+        move_line.price_unit += difference / (move_line.quantity * discount_factor)
 
     def _l10n_it_edi_format_errors(self, header, errors):
         return Markup('{}<ul class="mb-0">{}</ul>').format(
