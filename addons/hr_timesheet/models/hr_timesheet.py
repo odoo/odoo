@@ -38,7 +38,7 @@ class AccountAnalyticLine(models.Model):
         result = super().default_get(fields)
         if not self.env.context.get('default_employee_id') and 'employee_id' in fields and result.get('user_id'):
             result['employee_id'] = self.env['hr.employee'].search([('user_id', '=', result['user_id']), ('company_id', '=', result.get('company_id', self.env.company.id))], limit=1).id
-        if not self.env.context.get('default_project_id') and self.env.context.get('is_timesheet'):
+        if not self.env.context.get('default_project_id') and self.env.context.get('is_timesheet') and 'project_id' in fields:
             employee_id = result.get('employee_id', self.env.context.get('default_employee_id', False))
             favorite_project_id = self._get_favorite_project_id(employee_id)
             if favorite_project_id:
