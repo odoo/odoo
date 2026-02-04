@@ -1,6 +1,15 @@
 # -*- coding: utf-8 -*-
+<<<<<<< 8792c2d38eb0aadac8d778d83fd76f270404ecd5
 from datetime import timedelta
 from odoo import http, fields, _
+||||||| 5b39cdceb84758f767b83b741be927c1a7cfac7a
+import re
+from datetime import timedelta
+from odoo import http, fields, _
+=======
+import re
+from odoo import Command, http, fields, _
+>>>>>>> 99c2cc55025148922b8a2f42c14c0e47bbbd29a1
 from odoo.http import request
 from odoo.tools import float_round
 from odoo.osv import expression
@@ -41,6 +50,7 @@ class PosSelfOrderController(http.Controller):
         order['fiscal_position_id'] = preset_id.fiscal_position_id.id if preset_id else pos_config.default_fiscal_position_id.id
         order['pricelist_id'] = preset_id.pricelist_id.id if preset_id else pos_config.pricelist_id.id
 
+        self._check_records(pos_config, order)
         results = pos_config.env['pos.order'].sudo().with_company(pos_config.company_id.id).sync_from_ui([order])
         line_ids = pos_config.env['pos.order.line'].browse([line['id'] for line in results['pos.order.line']])
         order_ids = pos_config.env['pos.order'].browse([order['id'] for order in results['pos.order']])
@@ -261,3 +271,49 @@ class PosSelfOrderController(http.Controller):
         user = pos_config.self_ordering_default_user_id
         table = table_sudo.sudo(False).with_company(company).with_user(user).with_context(allowed_company_ids=company.ids)
         return pos_config, table
+
+    def _check_records(self, pos_config, order):
+        dynamic_models = pos_config._get_dynamic_models()
+        pos_order_model = pos_config.env['pos.order']
+
+        def check_vals_dict(vals, parent_model):
+            """Recursively check a values dictionary for whitelisted models."""
+            for field_name, value in vals.items():
+                # Skip if not a list or empty
+                if not isinstance(value, list) or not value:
+                    continue
+
+                # Check if first item is a command tuple
+                if not isinstance(value[0], (list, tuple)):
+                    continue
+
+                # Skip if field doesn't exist
+                field = parent_model._fields.get(field_name)
+                if not field or not field.relational:
+                    continue
+
+                # Get comodel_name
+                comodel_name = field.comodel_name
+                for command in value:
+                    if not isinstance(command, (list, tuple)) or not command:
+                        continue
+
+                    cmd_type = command[0]
+
+                    # Only validate create (0), update (1), and delete (2) commands
+                    # Link (4), unlink (3), unlink all (5), and replace (6) are allowed for any model
+                    if cmd_type in (Command.CREATE, Command.UPDATE, Command.DELETE) and comodel_name not in dynamic_models:
+                        raise Unauthorized(_(
+                            "You are not authorized to create, update, or delete records of type '%(model)s'. "
+                            "Only the following models are allowed: %(allowed)s",
+                            model=comodel_name,
+                            allowed=', '.join(dynamic_models),
+                        ))
+
+                    # For create (0) and update (1), recursively check nested values
+                    if cmd_type in (Command.CREATE, Command.UPDATE) and len(command) >= 3 and isinstance(command[2], dict):
+                        nested_model = pos_config.env[comodel_name] if comodel_name else parent_model
+                        check_vals_dict(command[2], nested_model)
+
+        # Start validation from the order dict
+        check_vals_dict(order, pos_order_model)
