@@ -13,6 +13,15 @@ export class LivechatChannelMemberHistory extends Record {
             return false;
         },
     });
+    channelAsBotHistory = fields.One("discuss.channel", {
+        inverse: "livechat_bot_history_ids",
+        compute() {
+            if (this.livechat_member_type === "bot") {
+                return this.channel_id;
+            }
+            return false;
+        },
+    });
     channelAsCustomerHistory = fields.One("discuss.channel", {
         inverse: "livechat_customer_history_ids",
         compute() {
