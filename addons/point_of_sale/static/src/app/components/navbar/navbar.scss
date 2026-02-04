@@ -1,6 +1,32 @@
+.pos .navbar-separator {
+    height: 1.5rem;
+    width: 1px;
+    background-color: $border-color;
+}
+
+// Reset btn-group gap to default Bootstrap behavior (overlapping borders).
+// The backend adds a positive gap via bootstrap_review_backend.scss which
+// is not desired in POS for the Table/Register/Orders button group.
+.pos .navbar-menu.btn-group {
+    > :not(.btn-check:first-child) + .btn,
+    > .btn-group:not(:first-child) {
+        margin-left: calc(-1 * #{$btn-border-width});
+    }
+
+    > .btn.active {
+        z-index: 2;
+    }
+}
+
 .pos .status-buttons {
     .avatar {
-        height: 24px;
+        height: $pos-avatar-size;
+        width: $pos-avatar-size;
+    }
+
+    > .btn {
+        --btn-border-color: transparent;
+        --btn-active-border-color: transparent;
     }
 }
 
@@ -28,13 +54,4 @@
 
 .pos .o-dropdown--menu .dropdown-item.focus {
     background-color: $o-gray-200;
-}
-
-@include media-breakpoint-up(lg) {
-    .pos-leftheader, .pos-rightheader {
-        max-width: 40%;
-    }
-    .pos .navbar-menu > button {
-        min-width: 96px;
-    }
 }

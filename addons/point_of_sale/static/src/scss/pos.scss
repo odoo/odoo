@@ -13,18 +13,11 @@ select > option {
     background: $light;
 }
 
-.navbar-menu {
-    :not(.btn-check) + .btn:active, .btn:first-child:active{
-        --btn-active-border-color: transparent;
-    }
-}
-
 .btn-light {
-    --btn-hover-bg: #{$o-gray-100};
-    --btn-hover-border-color: transparent;
+    --btn-border-color: #cccccc;
     --btn-active-bg: #{$o-gray-300};
     --btn-color: #{$o-gray-900};
-    --btn-active-border-color: transparent;
+    --btn-active-border-color: var(--btn-border-color);
 }
 
 .btn-secondary {
