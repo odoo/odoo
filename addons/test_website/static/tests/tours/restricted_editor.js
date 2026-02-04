@@ -117,71 +117,62 @@ registerWebsitePreviewTour(
     ]
 );
 
-registerWebsitePreviewTour(
-    "test_restricted_editor_test_admin",
+registerWebsitePreviewTour("test_restricted_editor_test_admin", {}, () => [
+    // Home
+    checkNoTranslate,
+    ...clickOnEditAndWaitEditMode(),
     {
-        // Remove this key to get warning should not have any "characterData", "remove"
-        // or "add" mutations in current step when you update the selection
-        undeterministicTour_doNotCopy: true,
-        url: "/",
+        content: "Check icons cannot be dragged",
+        trigger: "#snippet_groups .o_snippet[name='Intro'].o_disabled",
     },
-    () => [
-        // Home
-        checkNoTranslate,
-        ...clickOnEditAndWaitEditMode(),
-        {
-            content: "Check icons cannot be dragged",
-            trigger: "#snippet_groups .o_snippet[name='Intro'].o_disabled",
-        },
-        ...clickOnSave(),
-        ...switchTo("fr"),
-        ...translate,
-        ...closeErrorDialog,
-        ...switchTo("en"),
-        // Model item
-        ...goToMenuItem,
-        checkNoTranslate,
-        ...clickOnEditAndWaitEditMode(),
-        {
-            content: "Check icons can be dragged",
-            trigger: "#snippet_groups .o_snippet[name='Intro']:not(.o_disabled)",
-        },
-        ...insertSnippet({ id: "s_banner", name: "Banner", groupName: "Intro" }),
-        {
-            content: "Change name",
-            trigger: ":iframe [data-oe-expression='record.name']",
-            run: "editor New value",
-        },
-        ...clickOnSave(),
-        ...switchTo("fr"),
-        ...translate,
-        {
-            content: "Close the dialog",
-            trigger: ".modal .modal-footer .btn-primary",
-            run: "click",
-        },
-        {
-            content: "Assure the modal is well closed",
-            trigger: "body:not(:has(.modal))",
-        },
-        {
-            content: "Check that html fields are not content editable when translating",
-            trigger:
-                ":iframe [data-oe-expression='record.website_description']:not([contenteditable='true'])",
-        },
-        {
-            content: "Translate name",
-            trigger: ":iframe [data-oe-expression='record.name']",
-            run: "editor Nouvelle valeur",
-        },
-        {
-            content: "Translate some banner text",
-            trigger: ":iframe [data-oe-expression='record.website_description'] strong",
-            run: "editor potentiel.",
-        },
-        ...clickOnSave(),
-    ]
-);
+    ...clickOnSave(),
+    ...switchTo("fr"),
+    ...translate,
+    ...closeErrorDialog,
+    ...switchTo("en"),
+    // Model item
+    ...goToMenuItem,
+    checkNoTranslate,
+    ...clickOnEditAndWaitEditMode(),
+    {
+        content: "Check icons can be dragged",
+        trigger: "#snippet_groups .o_snippet[name='Intro']:not(.o_disabled)",
+    },
+    ...insertSnippet({ id: "s_banner", name: "Banner", groupName: "Intro" }),
+    {
+        content: "Change name",
+        trigger: ":iframe [data-oe-expression='record.name']",
+        run: "editor New value",
+    },
+    ...clickOnSave(),
+    ...switchTo("fr"),
+    ...translate,
+    {
+        content: "Close the dialog",
+        trigger: ".modal .modal-footer .btn-primary",
+        run: "click",
+    },
+    {
+        content: "Assure the modal is well closed",
+        trigger: "body:not(:has(.modal))",
+    },
+    {
+        content: "Check that html fields are not content editable when translating",
+        trigger:
+            ":iframe [data-oe-expression='record.website_description']:not([contenteditable='true'])",
+    },
+    {
+        content: "Translate name",
+        trigger: ":iframe [data-oe-expression='record.name']",
+        run: "editor Nouvelle valeur",
+    },
+    {
+        content: "Translate some banner text",
+        trigger: ":iframe [data-oe-expression='record.website_description'] strong",
+        run: "editor potentiel.",
+    },
+    ...clickOnSave(),
+]);
 
 registerWebsitePreviewTour(
     "test_restricted_editor_tester",

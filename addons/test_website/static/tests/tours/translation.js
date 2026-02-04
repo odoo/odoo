@@ -188,38 +188,23 @@ const ensureEnSite = {
     trigger: ":iframe .o_main_nav:contains(Home)",
 };
 
-registerWebsitePreviewTour(
-    "translation_single_language_fr_user_fr_site",
-    {
-        // Remove this key to get warning should not have any "characterData", "remove"
-        // or "add" mutations in current step when you update the selection
-        undeterministicTour_doNotCopy: true,
-        url: "/",
-    },
-    () => [ensureFrUser, ensureFrSite, ...singleLanguage()]
-);
+registerWebsitePreviewTour("translation_single_language_fr_user_fr_site", {}, () => [
+    ensureFrUser,
+    ensureFrSite,
+    ...singleLanguage(),
+]);
 
-registerWebsitePreviewTour(
-    "translation_single_language_en_user_fr_site",
-    {
-        // Remove this key to get warning should not have any "characterData", "remove"
-        // or "add" mutations in current step when you update the selection
-        undeterministicTour_doNotCopy: true,
-        url: "/",
-    },
-    () => [ensureEnUser, ensureFrSite, ...singleLanguage()]
-);
+registerWebsitePreviewTour("translation_single_language_en_user_fr_site", {}, () => [
+    ensureEnUser,
+    ensureFrSite,
+    ...singleLanguage(),
+]);
 
-registerWebsitePreviewTour(
-    "translation_single_language_fr_user_en_site",
-    {
-        // Remove this key to get warning should not have any "characterData", "remove"
-        // or "add" mutations in current step when you update the selection
-        undeterministicTour_doNotCopy: true,
-        url: "/",
-    },
-    () => [ensureFrUser, ensureEnSite, ...singleLanguage()]
-);
+registerWebsitePreviewTour("translation_single_language_fr_user_en_site", {}, () => [
+    ensureFrUser,
+    ensureEnSite,
+    ...singleLanguage(),
+]);
 
 function switchLanguage(lang, timeout = 50000) {
     return [

@@ -55,11 +55,7 @@ function checkEyesIconAfterSave(footerIsHidden = true) {
 registerWebsitePreviewTour(
     "conditional_visibility_1",
     {
-        // Remove this key to get warning should not have any "characterData", "remove"
-        // or "add" mutations in current step when you update the selection
-        undeterministicTour_doNotCopy: true,
         edition: true,
-        url: "/",
     },
     () => [
         ...insertSnippet(snippets[0]),
@@ -118,11 +114,7 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "conditional_visibility_3",
     {
-        // Remove this key to get warning should not have any "characterData", "remove"
-        // or "add" mutations in current step when you update the selection
-        undeterministicTour_doNotCopy: true,
         edition: true,
-        url: "/",
     },
     () => [
         checkEyeIcon("Text - Image", true),
@@ -181,11 +173,7 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "conditional_visibility_4",
     {
-        // Remove this key to get warning should not have any "characterData", "remove"
-        // or "add" mutations in current step when you update the selection
-        undeterministicTour_doNotCopy: true,
         edition: true,
-        url: "/",
     },
     () => [
         // Click on the "Text-Image" snippet.
