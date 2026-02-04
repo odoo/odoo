@@ -12,7 +12,7 @@ from odoo.tools.safe_eval import safe_eval, time
 from odoo.tools.misc import find_in_path
 from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version, split_every
 from odoo.http import request, root
-from odoo.tools.pdf import PdfFileWriter, PdfFileReader, PdfReadError
+from odoo.tools.pdf import PdfFileWriter, PdfFileReader, PdfReadError, DependencyError
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
 
 import io
@@ -788,8 +788,8 @@ class IrActionsReport(models.Model):
         streams.append(result_stream)
         try:
             writer.write(result_stream)
-        except PdfReadError:
-            raise UserError(_("Odoo is unable to merge the generated PDFs."))
+        except (DependencyError, PdfReadError):
+            raise UserError(_("Odoo is unable to merge the generated PDFs. Please try them individually."))
         return result_stream
 
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
