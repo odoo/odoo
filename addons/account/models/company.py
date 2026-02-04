@@ -1157,6 +1157,7 @@ class ResCompany(models.Model):
 
             company.company_vat_placeholder = placeholder
 
+    # Deprecated, removed in master.
     def _check_tax_return_configuration(self):
         """
         To override in localizations to check if the company is properly configured for tax returns.
