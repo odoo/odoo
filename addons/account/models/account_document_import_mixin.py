@@ -379,6 +379,10 @@ class AccountDocumentImportMixin(models.AbstractModel):
     # Helpers to consistently attach/unattach attachments to records
     # --------------------------------------------------------------
 
+    def _attachment_fields_to_clear(self):
+        """ Return a list of fields that should be cleared when an attachment is unattached from the record. """
+        return []
+
     def _fix_attachments_on_record(self, attachments):
         """ Ensure that only attachments of certain types appear in `self`'s attachments.
 
@@ -396,6 +400,8 @@ class AccountDocumentImportMixin(models.AbstractModel):
             })
         attachments_to_unattach = (attachments - attachments_to_attach).filtered(lambda a: a.res_model == self._name and not a.res_field)
         if attachments_to_unattach:
+            for fname in self._attachment_fields_to_clear():
+                self[fname] -= attachments_to_unattach
             attachments_to_unattach.write({
                 'res_model': False,
                 'res_id': 0,
