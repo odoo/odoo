@@ -36,4 +36,7 @@ class AccountPayment(models.Model):
             sepa_ct = self.env.ref('account_sepa.account_payment_method_sepa_ct', raise_if_not_found=False)
             if sepa_ct and 'pos_payment' in self.env.context and sepa_ct.code not in res:
                 res.append(sepa_ct.code)
+            sepa_sdd = self.env.ref('account_sepa_direct_debit.payment_method_sdd', raise_if_not_found=False)
+            if sepa_sdd and 'pos_payment' in self.env.context and sepa_sdd.code not in res:
+                res.append(sepa_sdd.code)
         return res

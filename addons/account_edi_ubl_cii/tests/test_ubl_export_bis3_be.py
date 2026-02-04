@@ -306,6 +306,21 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_early_pay_discount_with_recycling_contribution_tax')
 
+    def test_credit_note_early_pay_discount(self):
+        tax_21 = self.percent_tax(21.0)
+        product = self._create_product(lst_price=99.0, taxes_id=tax_21)
+        mixed_early_payment_term = self._create_mixed_early_payment_term()
+        credit_note = self._create_invoice_one_line(
+            product_id=product,
+            partner_id=self.partner_be,
+            invoice_payment_term_id=mixed_early_payment_term.id,
+            post=True,
+            move_type='out_refund',
+        )
+
+        self._generate_invoice_ubl_file(credit_note)
+        self._assert_invoice_ubl_file(credit_note, 'test_credit_note_early_pay_discount')
+
     def test_invoice_early_pay_discount_with_discount_on_lines(self):
         tax_21 = self.percent_tax(21.0)
         mixed_early_payment_term = self._create_mixed_early_payment_term()

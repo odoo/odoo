@@ -2,7 +2,7 @@
 {
     'name': 'Italy - Accounting',
     'countries': ['it'],
-    'version': '0.8',
+    'version': '0.9',
     'depends': [
         'account',
         'base_iban',
