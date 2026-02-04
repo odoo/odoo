@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.EditOrderNamePopup" t-inherit="point_of_sale.TextInputPopup" t-inherit-mode="primary">
         <xpath expr="//textarea" position="replace">
-            <div class="d-flex flex-column-reverse align-content-center">
+            <div class="d-flex flex-column-reverse align-content-center gap-2">
                 <ListContainer
                     t-if="items"
                     items="items"
@@ -13,7 +13,7 @@
                     <t t-set="order" t-value="scope.item" />
                     <div class="position-relative">
                         <button t-esc="order.getName()"
-                            class="btn btn-lg btn-secondary text-truncate me-1"
+                            class="btn btn-lg btn-secondary me-1 px-3 lh-lg text-truncate"
                             style="min-width: 4rem;"
                             t-on-click="() => this.transferOrder(order)"
                         />

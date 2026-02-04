@@ -29,7 +29,7 @@
         <t t-else="">
             <div class="payment-screen screen d-flex flex-column h-100 ">
                 <div class="main-content d-flex gap-2 h-100 bg-100 overflow-auto">
-                    <div class="left-content d-flex flex-column col-md-4 p-1 h-100 overflow-hidden gap-1">
+                    <div class="left-content d-flex flex-column col-md-4 p-2 h-100 overflow-hidden gap-1">
                         <div class="flex-grow-1 overflow-auto">
                             <t t-call="point_of_sale.PaymentScreenMethods" />
                         </div>
@@ -116,7 +116,7 @@
     <t t-name="point_of_sale.PaymentScreenButtons">
         <div class="payment-buttons d-flex flex-column gap-1">
         <!-- To make Customer and Invoice button align on a single row -->
-            <div class="d-flex gap-1 w-100">
+            <div class="d-flex gap-2 w-100">
                 <t t-set="hasOptionalButtons" t-value="pos.config.iface_tipproduct and pos.config.tip_product_id or pos.config.iface_cashdrawer or pos.config.ship_later" />
                 <button class="button partner-button btn btn-lg w-100 w-md-50 lh-lg text-truncate"
                     t-att-class="{ 'highlight text-action': currentOrder.getPartner() }"

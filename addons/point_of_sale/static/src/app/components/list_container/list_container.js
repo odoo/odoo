@@ -37,17 +37,22 @@ export class ListContainer extends Component {
         class: "",
     };
     static template = xml`
-        <div class="d-flex flex-grow-1" t-attf-class="{{props.class}}" t-att-class="{'overflow-hidden': !isUiSmall}">
-            <button t-if="props.onClickPlus" class="list-plus-btn btn btn-secondary btn-lg me-1 my-2" t-on-click="props.onClickPlus">
+        <div class="d-flex gap-1 align-items-center flex-grow-1" t-attf-class="{{props.class}}" t-att-class="{'overflow-hidden': !isUiSmall}">
+            <button t-if="props.onClickPlus" class="list-plus-btn btn btn-secondary btn-lg flex-shrink-0 lh-lg" t-on-click="props.onClickPlus">
                 <i class="fa fa-fw fa-plus-circle" aria-hidden="true"/>
             </button>
-            <button t-if="this.sizing.isLarger or props.forceSmall" t-on-click="toggle"
-                class="btn btn-secondary mx-1 fa fa-caret-down my-2" />
-            <div class="overflow-hidden w-100 position-relative py-2">
-                <div t-ref="container" class="list-container-items d-flex w-100">
-                    <div t-if="!props.forceSmall" t-foreach="props.items" t-as="item" t-key="item_index" t-att-class="{'invisible': shouldBeInvisible(item_index)}">
+            <span t-if="props.onClickPlus" class="navbar-separator mx-1"/>
+            <div class="overflow-hidden flex-grow-1">
+                <div t-ref="container" class="list-container-items d-flex align-items-center gap-1">
+                    <div t-if="!props.forceSmall" t-foreach="props.items" t-as="item" t-key="item_index" t-att-class="{'invisible order-2': shouldBeInvisible(item_index)}">
                         <t t-slot="default" item="item"/>
                     </div>
+                    <button t-if="this.sizing.isLarger or props.forceSmall" t-on-click="toggle"
+                        class="btn btn-lg btn-secondary order-1 flex-shrink-0 fw-bolder lh-lg"
+                        t-att-class="props.forceSmall ? '' : 'px-3 fw-bold'">
+                        <i t-if="props.forceSmall" class="fa fa-fw fa-caret-down"/>
+                        <t t-else="">+<t t-esc="hiddenCount"/></t>
+                    </button>
                 </div>
             </div>
         </div>
@@ -67,6 +72,9 @@ export class ListContainer extends Component {
     }
     shouldBeInvisible(itemIndex) {
         return itemIndex >= this.sizing.maxItems;
+    }
+    get hiddenCount() {
+        return this.props.items.length - this.sizing.maxItems;
     }
     toggle() {
         this.dialog.add(ListContainerDialog, {

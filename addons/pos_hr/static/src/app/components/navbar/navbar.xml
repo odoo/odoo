@@ -11,7 +11,7 @@
             </attribute>
         </xpath>
         <xpath expr="//CashierName" position="after">
-            <button t-if="pos.config.module_pos_hr and !ui.isSmall" class="lock-screen btn btn-light btn-lg" title="Lock" t-on-click="() => this.pos.showLoginScreen()">
+            <button t-if="pos.config.module_pos_hr and !ui.isSmall" class="lock-screen btn btn-light btn-lg lh-lg" title="Lock" t-on-click="() => this.pos.showLoginScreen()">
                 <i class="fa fa-fw fa-unlock"/>
             </button>
         </xpath>

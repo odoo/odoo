@@ -3,21 +3,20 @@
 
     <t t-name="point_of_sale.Navbar">
         <div class="pos-topheader position-relative d-flex align-items-center justify-content-between gap-1 p-2 m-0 bg-view border-bottom">
-            <div class="pos-leftheader d-flex align-items-center flex-grow-1 overflow-auto" t-att-class="{'d-none': ui.isSmall and state.searchBarOpen, 'mw-100': this.pos.getOrder()}">
-                <div class="d-flex flex-shrink-0 align-items-center gap-1 position-relative pe-2" t-att-class="{ 'w-100': !ui.isSmall }">
-                    <div class="navbar-menu d-flex">
-                        <button class="register-label btn btn-lg btn-light lh-lg" t-att-class="{'active': mainButton === 'register'}" t-on-click="() => this.onClickRegister()">
+            <div class="pos-leftheader d-flex align-items-center flex-grow-1 overflow-auto min-w-0" t-att-class="{'d-none': ui.isSmall and state.searchBarOpen, 'mw-100': this.pos.getOrder()}">
+                <div class="d-flex flex-shrink-0 align-items-center gap-2 gap-lg-3 position-relative pe-2 min-w-0" t-att-class="{ 'w-100': !ui.isSmall }">
+                    <div class="navbar-menu btn-group" role="group" aria-label="Navigation Menu">
+                        <button class="register-label btn btn-outline-secondary btn-lg lh-lg" t-att-class="{'active': mainButton === 'register'}" t-on-click="() => this.onClickRegister()">
                             <span t-if="!ui.isSmall">Register</span>
                             <i t-else="" class="fa fa-fw fa-pencil" t-att-class="{'fa-lg' : !ui.isSmall}"/>
                         </button>
-                        <button class="orders-button btn btn-lg btn-light lh-lg" t-att-class="{'active': mainButton === 'order'}" t-on-click="() => this.onTicketButtonClick()">
+                        <button class="orders-button btn btn-outline-secondary btn-lg lh-lg" t-att-class="{'active': mainButton === 'order'}" t-on-click="() => this.onTicketButtonClick()">
                             <t t-if="!ui.isSmall">
                                 <span>Orders</span>
                             </t>
                             <i t-else="" class="fa fa-fw fa-book" t-att-class="{'fa-lg' : !ui.isSmall}"/>
                         </button>
                     </div>
-                    <div t-if="!ui.isSmall" class="navbar-separator"/>
                     <OrderTabs orders="getOrderTabs()" class="'h-50'"/>
                     <button class="btn btn-secondary d-flex align-items-center gap-1 h-100 ms-2 p-2 preset-time-btn" t-on-click="openPresetTiming" t-if="shouldDisplayPresetTime">
                         <i class="fa fa-clock-o" aria-hidden="true"/>
@@ -28,9 +27,9 @@
             <div t-if="!this.pos.getOrder()" class="pos-centerheader d-none d-xl-flex justify-content-center overflow-hidden">
                 <div class="pos-logo mw-100" />
             </div>
-            <div class="pos-rightheader flex-grow-1">
-                <div class="status-buttons d-flex flex-grow-1 align-items-center justify-content-end gap-1">
-                    <div t-if="this.pos.data.network.offline or this.pos.data.network.loading" class="oe_status btn btn-light btn-lg lh-lg h-100 pe-none">
+            <div class="pos-rightheader flex-shrink-0">
+                <div class="status-buttons d-flex align-items-center justify-content-end gap-1">
+                    <div t-if="this.pos.data.network.offline or this.pos.data.network.loading" class="oe_status px-3">
                         <span t-if="this.pos.data.network.unsyncData.length > 0" t-esc="this.pos.data.network.unsyncData.length" />
                         <div t-if="this.pos.data.network.offline" class="fa fa-fw fa-chain-broken text-danger"/>
                         <div t-else="" class="fa fa-fw fa-spin fa-circle-o-notch text-warning"/>
