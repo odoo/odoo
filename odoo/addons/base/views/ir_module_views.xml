@@ -67,8 +67,8 @@
                             <field name="to_buy" invisible="1"/>
                             <field name="has_iap" invisible="1"/>
                             <button name="button_immediate_install" string="Activate" invisible="to_buy or state != 'uninstalled'" type="object" class="btn btn-primary me-1" groups="base.group_system"/>
-                            <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module#hosting=on_premise" target="_blank" class="btn btn-primary me-1"
-                               invisible="not to_buy or state not in ('uninstalled', 'uninstallable')" role="button">Upgrade</a>
+                            <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module#hosting=on_premise" target="_blank" class="btn btn-info me-1"
+                               invisible="not to_buy or state not in ('uninstalled', 'uninstallable')" role="button">Upgrade To Enterprise</a>
                             <button name="button_immediate_upgrade" invisible="state != 'installed'" string="Upgrade" type="object" class="btn btn-primary me-1" groups="base.group_system"/>
                             <button name="button_uninstall_wizard" invisible="state != 'installed'" string="Uninstall" type="object"  class="btn btn-secondary me-1" groups="base.group_system"/>
                             <button name="button_uninstall_cancel" invisible="state != 'to remove'" string="Cancel Uninstall" type="object" class="btn btn-secondary me-1" groups="base.group_system"/>
