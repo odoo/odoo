@@ -13,6 +13,7 @@ export class Composer extends Record {
     clear() {
         this.attachments.length = 0;
         this.replyToMessage = undefined;
+        this.restoredFromFullComposer = false;
         this.composerHtml = markup("<div class='o-paragraph'><br></div>");
         Object.assign(this.selection, {
             start: 0,
@@ -116,6 +117,8 @@ export class Composer extends Record {
         },
     });
     autofocus = 0;
+    /** When set, this means the composer content was restored from local storage, and content was saved from full composer */
+    restoredFromFullComposer = false;
     replyToMessage = fields.One("mail.message", { inverse: "composerAsReplyToMessage" });
     /** @type {"text" | "html" | undefined} */
     updateFrom = undefined;
