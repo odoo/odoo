@@ -363,8 +363,16 @@ class IrModel(models.Model):
 
         # Get files attached solely to the models being deleted (and none other)
         fname_rows = self.env.execute_query(SQL(
-            "SELECT DISTINCT store_fname FROM ir_attachment WHERE res_model IN %s",
-            models,
+            """
+            SELECT DISTINCT store_fname
+            FROM ir_attachment
+            WHERE res_model IN %s AND store_fname IS NOT NULL
+            EXCEPT
+            SELECT store_fname
+            FROM ir_attachment
+            WHERE res_model NOT IN %s
+            """,
+            models, models,
         ))
 
         self.env.execute_query(SQL(
