@@ -45,7 +45,7 @@ class AccountMove(models.Model):
         # EXTENDS 'account'
         super()._compute_show_reset_to_draft_button()
         for move in self:
-            if move.l10n_ro_edi_state in ('invoice_sent', 'invoice_validated'):
+            if move.move_type in ('out_invoice', 'out_refund') and move.l10n_ro_edi_state in ('invoice_sent', 'invoice_validated'):
                 move.show_reset_to_draft_button = False
 
     ################################################################################
