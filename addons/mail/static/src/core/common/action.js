@@ -7,6 +7,7 @@ import { Reactive } from "@web/core/utils/reactive";
 export const ACTION_TAGS = Object.freeze({
     DANGER: "DANGER",
     SUCCESS: "SUCCESS",
+    PRIMARY: "PRIMARY",
     IMPORTANT_BADGE: "IMPORTANT_BADGE",
     WARNING_BADGE: "WARNING_BADGE",
     CALL_LAYOUT: "CALL_LAYOUT",
@@ -36,6 +37,7 @@ export const ACTION_TAGS = Object.freeze({
  * @property {DropdownState|(action: Action) => DropdownState} [dropdownState]
  * @property {string|(action: Action) => string} [dropdownTemplate]
  * @property {Object|(action: Action) => Object} [dropdownTemplateParams]
+ * @property {boolean|(action: Action) => boolean} [hasBtnBg]
  * @property {string|(action: Action) => string} [hotkey]
  * @property {string|(action: Action) => string} [icon]
  * @property {boolean|(action: Action) => boolean} [inlineName=false]
@@ -280,6 +282,17 @@ export class Action {
             (typeof this.definition.dropdownTemplateParams === "function"
                 ? this.definition.dropdownTemplateParams.call(this, this.params)
                 : this.definition.dropdownTemplateParams)
+        );
+    }
+
+    /** @param {Action} action @returns {boolean|undefined} */
+    _hasBtnBg(action) {}
+    get hasBtnBg() {
+        return (
+            this._hasBtnBg(this.params) ??
+            (typeof this.definition.hasBtnBg === "function"
+                ? this.definition.hasBtnBg.call(this, this.params)
+                : this.definition.hasBtnBg)
         );
     }
 

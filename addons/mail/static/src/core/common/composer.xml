@@ -70,6 +70,7 @@
                             'o-mail-Composer-inputStyle form-control border-0 o-rounded-bubble': true,
                             'o-mobile': isMobileOS,
                             'ps-2': partitionedActions.other.length === 0,
+                            'text-muted': props.composer.restoredFromFullComposer,
                         }"/>
                         <Wysiwyg t-if="composerService.htmlEnabled" class="'w-100 text-break overflow-auto'" config="this.wysiwygConfig" onLoad.bind="onLoadWysiwyg"/>
                         <t t-else="">
@@ -84,7 +85,8 @@
                                 t-model="props.composer.composerText"
                                 t-on-input="(ev) => this.onInput(ev)"
                                 t-att-placeholder="placeholder"
-                                t-att-readOnly="!state.active"
+                                t-att-readOnly="!state.active or props.composer.restoredFromFullComposer"
+                                t-att-disabled="props.composer.restoredFromFullComposer"
                                 tabindex="0"
                             />
                             <!--
@@ -120,7 +122,7 @@
                 <div t-else="" class="d-flex align-items-center gap-1 w-100 pe-2">
                     <div class="pt-1" t-att-class="{ 'mt-2': !props.composer.message }">
                         <span t-if="props.composer.message and !ui.isSmall" class="text-muted px-1 small" t-out="CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="onClickCancelOrSaveEditText" />
-                        <t t-elif="!props.composer.message">
+                        <t t-elif="!props.composer.message and !props.composer.restoredFromFullComposer">
                             <t t-call="mail.Composer.sendButton"/>
                             <span t-if="!isSendButtonDisabled and !isMobileOS" class="text-muted small ms-1" t-out="OR_PRESS_SEND_KEYBIND"/>
                         </t>
@@ -250,4 +252,19 @@
             <t t-esc="option.emoji.shortcodes.join(' ')"/>
         </em>
     </t>
+
+
+    <t t-name="mail.FullComposerRecoveryPopover">
+        <div class="px-2">
+            <div>
+                <p class="mb-0 fs-5 fw-bold">Continue with Full Composer?</p>
+                <p class="mb-0 small text-muted">Formatting can only be restored in Full Composer.</p>
+            </div>
+            <div class="d-flex align-items-center justify-content-center gap-1 mt-2">
+                <button class="btn btn-primary" t-on-click="onClickFullRecover"><i class="fa fa-check me-2 opacity-75"/>Yes <span class="small text-muted">(Keep formatting)</span></button>
+                <button class="btn btn-secondary" t-on-click="onClickTextRecover"><i class="oi oi-close me-2 opacity-75"/>No <span class="small text-muted">(Remove formatting)</span></button>
+            </div>
+        </div>
+    </t>
+
 </templates>
