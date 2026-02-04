@@ -497,7 +497,10 @@ export class AutoComplete extends Component {
             return;
         }
         if (isScrollableY(this.listRef.el)) {
-            scrollTo(this.listRef.el.querySelector(`#${this.activeSourceOptionId}`));
+            const element = this.listRef.el.querySelector(`#${this.activeSourceOptionId}`);
+            if (element) {
+                scrollTo(element);
+            }
         }
     }
 }
