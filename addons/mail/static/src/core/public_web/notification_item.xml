@@ -38,7 +38,7 @@
                     <div class="flex-grow-1"/>
                     <div class="d-flex align-items-start position-relative">
                         <span class="position-absolute" t-if="props.hasMarkAsReadButton">
-                            <span t-if="rootHover.isHover" class="ms-1 bg-view">
+                            <span t-if="rootHover.isHover" class="bg-view" t-att-class="{ 'ms-1': !props.muted }">
                                 <span class="o-mail-NotificationItem-badge o-discuss-badgeShape d-flex align-items-center justify-content-center mx-1 my-0 rounded fw-bold o-mail-NotificationItem-markAsRead text-600 cursor-pointer shadow-sm position-absolute top-0 end-0 z-1" title="Mark As Read" t-ref="markAsRead"><i class="fa fa-check text-success"/></span>
                             </span>
                         </span>
