@@ -39,6 +39,10 @@ class PosPrinter(models.Model):
             ('epson_epos', 'IP address'),
         ]
     )
+    printer_type_count = fields.Integer(
+        string="Printer Type Count",
+        compute="_compute_printer_type_count",
+    )
     use_type = fields.Selection(selection=[
         ('preparation', "Preparation"),
         ('receipt', "Receipt"),
@@ -61,6 +65,9 @@ class PosPrinter(models.Model):
             for printer, vals in zip(self, vals_list):
                 vals['name'] = _("%s (copy)", printer.name)
         return vals_list
+
+    def _compute_printer_type_count(self):
+        self.printer_type_count = len(self._fields['printer_type'].selection)
 
     @api.model
     def _load_pos_data_domain(self, data, config):

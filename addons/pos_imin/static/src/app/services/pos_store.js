@@ -6,33 +6,28 @@ import { IminPrinterAdapter } from "@pos_imin/app/utils/imin_printer";
 const CONSOLE_COLOR = "#28ffeb";
 
 patch(PosStore.prototype, {
-    async afterProcessServerData() {
-        const result = await super.afterProcessServerData(...arguments);
-        if (this.config.other_devices) {
-            // Check if the Imin printer is available; if not, fallback to the existing printer
-            this.detectIminPrinter();
-        }
-        return result;
-    },
-    async detectIminPrinter() {
-        try {
-            const iminPrinterAdapter = new IminPrinterAdapter({
-                fallbackPrinter: this.printer.device,
-            });
-            const isAvailable = await iminPrinterAdapter.isAvailable();
-            if (isAvailable) {
-                this.iminPrinterAdapter = iminPrinterAdapter; // Store the adapter for later use
-                this.printer.device = this.iminPrinterAdapter;
-                await this.iminPrinterAdapter.connect();
+    createPrinter(config) {
+        if (config.printer_type === "imin") {
+            try {
+                const adapter = new IminPrinterAdapter({ printer: config });
+                if (!adapter.isAvailable()) {
+                    console.error("Imin printer is not available");
+                    return false;
+                }
+                adapter.connect();
+                return adapter;
+            } catch (error) {
+                logPosMessage(
+                    "Store",
+                    "createPrinter",
+                    "Unable to create Imin printer: " + error.message,
+                    CONSOLE_COLOR,
+                    [error]
+                );
+                return false;
             }
-        } catch (error) {
-            logPosMessage(
-                "Store",
-                "detectIminPrinter",
-                "Unable to detect Imin printer: " + error.message,
-                CONSOLE_COLOR,
-                [error]
-            );
+        } else {
+            return super.createPrinter(...arguments);
         }
     },
 });

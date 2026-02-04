@@ -6,21 +6,31 @@ const CONSOLE_COLOR = "#28ffeb";
 
 /* global IminPrinter */
 export class IminPrinterAdapter extends BasePrinter {
-    setup({ fallbackPrinter } = {}) {
+    setup({ printer }) {
         super.setup(...arguments);
-        this.fallbackPrinter = fallbackPrinter;
+
         this.iminPrinter = new IminPrinter();
         this.isConnected = false;
+        this.id = printer.id;
+        this.name = printer.name;
     }
 
     async connect() {
         this.isConnected = await this.iminPrinter.connect();
     }
 
-    async isAvailable() {
+    async isAvailable(timeoutMs = 3000) {
         return new Promise((resolve) => {
+            let ws;
+            const timer = setTimeout(() => {
+                if (ws) {
+                    ws.close();
+                }
+                resolve(false);
+            }, timeoutMs);
+
             try {
-                const ws = new window.WebSocket(
+                ws = new window.WebSocket(
                     this.iminPrinter.protocol +
                         this.iminPrinter.address +
                         ":" +
@@ -28,20 +38,16 @@ export class IminPrinterAdapter extends BasePrinter {
                         this.iminPrinter.prefix
                 );
                 ws.onopen = function () {
+                    clearTimeout(timer);
                     ws.close();
                     resolve(true);
                 };
                 ws.onerror = function () {
+                    clearTimeout(timer);
                     resolve(false);
                 };
-            } catch (error) {
-                logPosMessage(
-                    "IminPrinterAdapter",
-                    "isAvailable",
-                    "Error checking printer availability: " + error.message,
-                    CONSOLE_COLOR,
-                    [error]
-                );
+            } catch {
+                clearTimeout(timer);
                 resolve(false);
             }
         });
@@ -76,10 +82,18 @@ export class IminPrinterAdapter extends BasePrinter {
      * @override
      */
     async printReceipt(receipt) {
-        const status = await this.printerStatus();
         // We only use the fallback printer if the printer is not connected or not powered on
-        if ([-1, 1].includes(status.value) && this.fallbackPrinter) {
-            return await this.fallbackPrinter.printReceipt(receipt);
+        if ([-1, 1].includes((await this.printerStatus()).value)) {
+            return {
+                successful: false,
+                canRetry: true,
+                message: {
+                    title: _t("Connection to the iMin printer failed"),
+                    body: _t(
+                        "Cannot find the iMin printer, please ensure it is connected and powered on before retrying."
+                    ),
+                },
+            };
         }
         return await super.printReceipt(receipt);
     }
