@@ -175,8 +175,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         window.addEventListener("pos-network-online", () => {
-            // Sync should be done before websocket connection when going online
-            this.syncAllOrdersDebounced();
+            this.posBackOnline();
         });
 
         this.lnaState = {
@@ -186,6 +185,11 @@ export class PosStore extends WithLazyGetterTrap {
         initLNA(this.notification, (type, message) => {
             this.lnaState = { type, message };
         });
+    }
+
+    async posBackOnline() {
+        // Sync should be done before websocket connection when going online
+        this.syncAllOrdersDebounced();
     }
 
     navigate(routeName, routeParams = {}) {
