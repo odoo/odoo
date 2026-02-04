@@ -339,7 +339,7 @@ class StockQuant(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Inventory Adjustments'),
+            'label': _('Template for Inventory Adjustments'),
             'template': '/stock/static/xlsx/stock_quant.xlsx'
         }]
 

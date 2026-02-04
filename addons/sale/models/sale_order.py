@@ -2435,7 +2435,7 @@ class SaleOrder(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Quotations'),
+            'label': _('Template for Quotations'),
             'template': '/sale/static/xls/quotations_import_template.xlsx',
         }]
 

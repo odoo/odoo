@@ -1175,7 +1175,7 @@ class AccountAccount(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Chart of Accounts'),
+            'label': _('Template for Chart of Accounts'),
             'template': '/account/static/xls/coa_import_template.xlsx'
         }]
 

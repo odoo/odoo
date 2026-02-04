@@ -39,13 +39,7 @@ class TestError(common.HttpCase):
 
         e = ctx.exception
         self.assertIn("The operation cannot be completed:", e.faultString)
-        self.assertIn("create/update: a mandatory field is not set", e.faultString)
-        self.assertIn(
-            "delete: another model requires the record being deleted",
-            e.faultString,
-        )
-        self.assertIn("Model: 'Model B' (test_rpc.model_b)", e.faultString)
-        self.assertIn("field 'Name' (name)", e.faultString)
+        self.assertIn("Missing required field 'Name' (name) for model 'Model B' (test_rpc.model_b)", e.faultString)
 
     def test_02_delete(self):
         """ Delete: NOT NULL and ON DELETE RESTRICT constraints """

@@ -388,7 +388,7 @@ class ProductPricelist(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Pricelists'),
+            'label': _('Template for Pricelists'),
             'template': '/product/static/xls/product_pricelist.xls'
         }]
 

@@ -2187,6 +2187,6 @@ class ProjectTask(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Tasks'),
+            'label': _('Template for Tasks'),
             'template': '/project/static/xls/tasks_import_template.xlsx',
         }]

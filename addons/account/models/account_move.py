@@ -7434,27 +7434,27 @@ class AccountMove(models.Model):
         match move_type:
             case 'entry':
                 return [{
-                    'label': _('Import Template for Misc. Operations'),
+                    'label': _('Template for Misc. Operations'),
                     'template': '/account/static/xls/misc_operations_import_template.xlsx',
                 }]
             case 'out_invoice':
                 return [{
-                    'label': _('Import Template for Invoices'),
+                    'label': _('Template for Invoices'),
                     'template': '/account/static/xls/customer_invoices_credit_notes_import_template.xlsx',
                 }]
             case 'out_refund':
                 return [{
-                    'label': _('Import Template for Credit Notes'),
+                    'label': _('Template for Credit Notes'),
                     'template': '/account/static/xls/customer_invoices_credit_notes_import_template.xlsx',
                 }]
             case 'in_invoice':
                 return [{
-                    'label': _('Import Template for Bills'),
+                    'label': _('Template for Bills'),
                     'template': '/account/static/xls/vendor_bills_refunds_import_template.xlsx',
                 }]
             case 'in_refund':
                 return [{
-                    'label': _('Import Template for Refunds'),
+                    'label': _('Template for Refunds'),
                     'template': '/account/static/xls/vendor_bills_refunds_import_template.xlsx',
                 }]
             case _:

@@ -1133,7 +1133,7 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
     });
     expect(`.o_control_panel_actions > *`).toHaveCount(0);
     await contains(".o_control_panel_breadcrumbs .o_cp_action_menus .fa-cog").click();
-    expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export All"]);
+    expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export"]);
     await clickRecordSelector();
     await contains(".o_control_panel_breadcrumbs .o_cp_action_menus .fa-cog").click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
@@ -1144,7 +1144,7 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
     ]);
     await clickRecordSelector();
     await contains(".o_control_panel_breadcrumbs .o_cp_action_menus .fa-cog").click();
-    expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export All"]);
+    expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export"]);
 });
 
 test.tags("desktop");

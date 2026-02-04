@@ -1193,7 +1193,7 @@ class ResPartner(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Contacts'),
+            'label': _('Template for Contacts'),
             'template': '/base/static/xls/contacts_import_template.xlsx',
         }]
 
