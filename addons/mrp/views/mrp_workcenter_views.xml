@@ -133,7 +133,7 @@
             <field name="model">mrp.workcenter</field>
             <field name="arch" type="xml">
                 <kanban highlight_color="color" class="o_workcenter_kanban" create="0" can_open="0" sample="0">
-                    <field name="workorder_count"/>
+                    <field name="workorder_blocked_count"/>
                     <field name="working_state"/>
                     <field name="oee_target"/>
                     <templates>
@@ -160,9 +160,6 @@
                                                 Performance
                                             </a>
                                         </div>
-                                        <div role="menuitem">
-                                            <a name="action_work_order" type="object" context="{'search_default_waiting': 1}">Waiting Availability</a>
-                                        </div>
                                     </div>
                                 </div>
 
@@ -171,7 +168,7 @@
                                         <field name="color" widget="kanban_color_picker"/>
                                     </div>
                                     <div role="menuitem" class="col-4">
-                                        <a type="open">Settings</a>
+                                        <a type="open">Configuration</a>
                                     </div>
                                 </div>
                             </div>
@@ -197,11 +194,11 @@
                             <div class="row mt-3 pb-3">
                                 <div class="col-6">
                                     <div class="btn-group p-1" name="o_wo">
-                                        <button t-if="record.workorder_count.raw_value &gt; 0" class="btn btn-primary" name="action_work_order" type="object" context="{'search_default_ready': 1, 'search_default_progress': 1, 'desktop_list_view': 1, 'search_default_workcenter_id': id}">
+                                        <button t-if="record.workorder_ready_count.raw_value + record.workorder_progress_count.raw_value + record.workorder_blocked_count.raw_value == 0" class="btn btn-secondary" name="action_work_order" type="object" context="{'search_default_ready': 1, 'search_default_progress': 1, 'search_default_blocked': 1, 'desktop_list_view': 1, 'search_default_workcenter_id': id}">
                                             <span>WORK ORDERS</span>
                                         </button>
-                                        <button t-if="record.workorder_count.raw_value &lt;= 0" class="btn btn-warning" name="action_work_order_alternatives" type="object">
-                                            <span>PLAN ORDERS</span>
+                                        <button t-else="" class="btn btn-primary" name="action_work_order" type="object" context="{'search_default_ready': 1, 'search_default_progress': 1, 'search_default_blocked': 1, 'desktop_list_view': 1, 'search_default_workcenter_id': id}">
+                                            <span>WORK ORDERS</span>
                                         </button>
                                     </div>
                                 </div>

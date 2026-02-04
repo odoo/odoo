@@ -646,6 +646,7 @@
                     <filter string="Cancelled" name="filter_cancel" domain="[('state', '=', 'cancel')]"/>
                     <separator/>
                     <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
+                    <filter string="To Plan" name="filter_to_plan" domain="[('state', '=', 'confirmed'), ('is_planned', '=', False)]"/>
                     <separator/>
                     <filter string="Draft" name="filter_draft" domain="[('state', '=', 'draft')]"/>
                     <filter string="Confirmed" name="filter_confirmed" domain="[('state', '=', 'confirmed')]"/>

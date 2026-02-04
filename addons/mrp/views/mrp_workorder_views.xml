@@ -269,11 +269,15 @@
                 <field name="product_id"/>
                 <field name="product_variant_attributes"/>
                 <field name="move_raw_ids" string="Component" filter_domain="[('move_raw_ids.product_id', 'ilike', self)]"/>
-                <filter string="In Progress" name="progress" domain="[('state', '=', 'progress')]"/>
                 <filter string="To Do" name="ready" domain="[('state', '=', 'ready')]"/>
                 <filter string="Blocked" name="blocked" domain="[('state', '=', 'blocked')]"/>
-                <filter string="Finished" name="finish" domain="[('state', '=', 'done')]"/>
+                <filter string="In Progress" name="progress" domain="[('state', '=', 'progress')]"/>
+                <filter string="Done" name="finish" domain="[('state', '=', 'done')]"/>
                 <filter string="Cancelled" name="cancel" domain="[('state', '=', 'cancel')]"/>
+                <separator/>
+                <filter string="Planned" name="filter_planned" domain="[('production_state', 'not in', ('done', 'cancel')), ('date_start', '!=', False)]"/>
+                <filter string="To Plan" name="filter_to_plan" domain="[('production_state', '=', 'confirmed'), ('date_start', '=', False)]"/>
+                <separator/>
                 <separator/>
                 <filter string="Late" name="late" domain="['&amp;', ('date_start', '&lt;', 'now'), ('state', '=', 'ready')]"
                     help="Production started late"/>

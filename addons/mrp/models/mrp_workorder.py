@@ -212,12 +212,14 @@ class MrpWorkorder(models.Model):
                         'color': 'text-danger',
                         'msg': _("Scheduled before the previous work order, planned from %(start)s to %(end)s",
                             start=format_datetime(self.env, prev_start, dt_format=False),
-                            end=format_datetime(self.env, prev_finished, dt_format=False))
+                            end=format_datetime(self.env, prev_finished, dt_format=False)),
+                        'reason': 'misplanned',
                     })
                 if conflicted_dict.get(wo.id):
                     infos.append({
                         'color': 'text-danger',
-                        'msg': _("Planned at the same time as other workorder(s) at %s", wo.workcenter_id.display_name)
+                        'msg': _("Planned at the same time as other workorder(s) at %s", wo.workcenter_id.display_name),
+                        'reason': 'conflict',
                     })
             color_icon = infos and infos[-1]['color'] or False
             wo.show_json_popover = bool(color_icon)
@@ -270,6 +272,10 @@ class MrpWorkorder(models.Model):
     def _set_dates(self):
         for wo in self.sudo():
             if wo.leave_id:
+                # gantt unschedule write False on date_start and date_finished
+                if not wo.date_start and not wo.date_finished:
+                    wo.leave_id.unlink()
+                    continue
                 if (not wo.date_start or not wo.date_finished):
                     raise UserError(_("It is not possible to unplan one single Work Order. "
                               "You should unplan the Manufacturing Order instead in order to unplan all the linked operations."))
