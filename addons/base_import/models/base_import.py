@@ -184,7 +184,7 @@ class Base_ImportImport(models.TransientModel):
     FUZZY_MATCH_DISTANCE = 0.2
 
     res_model = fields.Char('Model')
-    file = fields.Binary('File', help="File to check and/or import, raw binary (not base64)", attachment=False)
+    file = fields.Binary('File', help="File to check and/or import", attachment=False)
     file_name = fields.Char('File Name')
     file_type = fields.Char('File Type')
 
@@ -379,7 +379,7 @@ class Base_ImportImport(models.TransientModel):
         self.ensure_one()
 
         # guess mimetype from file content
-        mimetype = guess_mimetype(self.file or b'')
+        mimetype = guess_mimetype(base64.b64decode(self.file or b''))
         extensions_to_try = [
             (MIMETYPE_TO_READER.get(mimetype), f"guessed using mimetype {mimetype!r}"),
             (MIMETYPE_TO_READER.get(self.file_type), f"decided from user-provided mimetype {self.file_type!r}"),
@@ -421,7 +421,7 @@ class Base_ImportImport(models.TransientModel):
 
     def _read_xls(self, options):
         import xlrd  # noqa: PLC0415
-        book = xlrd.open_workbook(file_contents=self.file or b'')
+        book = xlrd.open_workbook(file_contents=base64.b64decode(self.file or b''))
         sheets = options['sheets'] = book.sheet_names()
         sheet = options['sheet'] = options.get('sheet') or sheets[0]
         return self._read_xls_book(book, sheet)
@@ -480,7 +480,7 @@ class Base_ImportImport(models.TransientModel):
         import openpyxl  # noqa: PLC0415
         import openpyxl.cell.cell as types  # noqa: PLC0415
         import openpyxl.styles.numbers as styles  # noqa: PLC0415
-        book = openpyxl.load_workbook(io.BytesIO(self.file or b''), data_only=True)
+        book = openpyxl.load_workbook(io.BytesIO(base64.b64decode(self.file or b'')), data_only=True)
         sheets = options['sheets'] = book.sheetnames
         sheet_name = options['sheet'] = options.get('sheet') or sheets[0]
         sheet = book[sheet_name]
@@ -519,7 +519,7 @@ class Base_ImportImport(models.TransientModel):
 
     def _read_ods(self, options):
         from . import odf_ods_reader  # noqa: PLC0415
-        doc = odf_ods_reader.ODSReader(file=io.BytesIO(self.file or b''))
+        doc = odf_ods_reader.ODSReader(file=io.BytesIO(base64.b64decode(self.file or b'')))
         sheets = options['sheets'] = list(doc.SHEETS.keys())
         sheet = options['sheet'] = options.get('sheet') or sheets[0]
 
@@ -537,7 +537,7 @@ class Base_ImportImport(models.TransientModel):
 
         :raises csv.Error: if an error is detected during CSV parsing
         """
-        csv_data = self.file or b''
+        csv_data = base64.b64decode(self.file or b'')
         if not csv_data:
             return ()
 
@@ -1112,8 +1112,9 @@ class Base_ImportImport(models.TransientModel):
             # preview to a list in the return.
             _logger.debug("Error during parsing preview", exc_info=True)
             preview = None
-            if self.file_type == 'text/csv' and self.file:
-                preview = self.file[:ERROR_PREVIEW_BYTES].decode('iso-8859-1')
+            if self.file_type == 'text/csv':
+                preview_bytes = base64.b64decode(self.file or b'')
+                preview = preview_bytes[:ERROR_PREVIEW_BYTES].decode('iso-8859-1')
             return {
                 'error': str(error),
                 # iso-8859-1 ensures decoding will always succeed,
