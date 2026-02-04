@@ -464,9 +464,7 @@ class PosConfig(models.Model):
         }
 
     def get_pos_qr_order_data(self):
-
         url_form = "https://www.odoo.com/app/point-of-sale-restaurant-qr-code"
-
         table_data = []
         if self.self_ordering_mode not in ['mobile', 'consultation']:
             return {
@@ -484,23 +482,22 @@ class PosConfig(models.Model):
                 table_data.append({
                     'url': url,
                     'name': f"{table.floor_id.name} - {table.table_number}",
-                    'images': self._generate_single_qr_code__(unquote(url)),
                 })
         else:
             url = self._get_self_order_url()
             table_data.append({
                 'url': url,
                 'name': "generic",
-                'images': self._generate_single_qr_code__(unquote(url)),
             })
 
         zip_buffer = BytesIO()
         with zipfile.ZipFile(zip_buffer, "w", 0) as zip_file:
-            for index, qr_data in enumerate(table_data):
-                with zip_file.open(f"{qr_data['name']} ({index + 1}).png", "w") as buf:
-                    qr_data['images']['png'].save(buf, format="PNG")
-                with zip_file.open(f"{qr_data['name']} ({index + 1}).svg", "w") as buf:
-                    buf.write(qr_data['images']['svg'].to_string())
+            for index, qr_data in enumerate(table_data, start=1):
+                images = self._generate_single_qr_code__(unquote(qr_data['url']))
+                with zip_file.open(f"{qr_data['name']} ({index}).png", "w") as buf:
+                    images['png'].save(buf, format="PNG")
+                with zip_file.open(f"{qr_data['name']} ({index}).svg", "w") as buf:
+                    buf.write(images['svg'].to_string())
         zip_buffer.seek(0)
 
         return {
