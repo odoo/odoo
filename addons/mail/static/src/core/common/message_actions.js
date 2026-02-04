@@ -95,6 +95,7 @@ registerMessageAction("reply-to", {
             }
         }
         owner.env.inChatter?.toggleComposer("note", { force: true });
+        composer.restoredFromFullComposer = false;
         if (!composer.isFocused) {
             composer.autofocus++;
         }
