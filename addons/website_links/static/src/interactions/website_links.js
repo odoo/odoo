@@ -9,6 +9,9 @@ import { WebsiteLinksTagsWrapper } from "@website_links/components/website_links
 class WebsiteLinks extends Interaction {
     static selector = ".o_website_links_create_tracked_url";
     dynamicContent = {
+        "#recent_links_reload": {
+            "t-on-click": this.debounced(() => this.getRecentLinks(this.filter), 200),
+        },
         "#recent_links_sort_by a": {
             "t-on-click": this.onRecentLinksFilterChange,
         },
@@ -59,6 +62,7 @@ class WebsiteLinks extends Interaction {
             ".o_website_links_recent_links_notification"
         );
         this.listContainerEl = this.el.querySelector("#o_website_links_recent_links");
+        this.filter = "newest";
         this.getRecentLinks("newest");
     }
 
@@ -75,7 +79,8 @@ class WebsiteLinks extends Interaction {
     }
 
     onRecentLinksFilterChange(event) {
-        this.getRecentLinks(event.currentTarget.dataset.filter);
+        this.filter = event.currentTarget.dataset.filter;
+        this.getRecentLinks(this.filter);
     }
 
     onCreateNewLinkTrackerClick() {

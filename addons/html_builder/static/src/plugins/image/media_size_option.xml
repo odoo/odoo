@@ -3,16 +3,17 @@
 
 <t t-name="html_builder.MediaSizeOption">
     <BuilderRow label.translate="Size">
-        <div style="width: 45%;">
+        <div>
             <BuilderRange
                 action="'mediaSizeSlider'"
                 min="5"
                 max="100"
                 step="1"
                 unit="'%'"
+                className="'flex-grow-1'"
             />
         </div>
-        <div style="width: 40%;">
+        <div style="width: 45%;">
             <BuilderNumberInput
                 action="'mediaSizeText'"
                 placeholder.translate="auto"
@@ -23,9 +24,12 @@
             />
         </div>
         <BuilderButton
-            title.translate="Auto"
-            action="'setMediaSizeAuto'">
-            <i class="fa fa-fw fa-expand" />
+            title.translate="Reset to Automatic"
+            preview="false"
+            action="'resetMediaSize'"
+            className="'flex-grow-0'"
+            >
+            <i class="oi oi-close" />
         </BuilderButton>
     </BuilderRow>
 </t>

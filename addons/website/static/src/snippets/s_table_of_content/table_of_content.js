@@ -37,6 +37,9 @@ const prev = (element, selector) => {
 
 export class TableOfContent extends Interaction {
     static selector = "section .s_table_of_content_navbar_sticky";
+    dynamicSelectors = {
+        _scrollTarget: () => this.scrollTarget,
+    };
     dynamicContent = {
         _root: {
             "t-att-style": () => ({
@@ -49,13 +52,15 @@ export class TableOfContent extends Interaction {
                 maxHeight: this.isHorizontal ? undefined : `calc(100vh - ${this.position + 40}px)`,
             }),
         },
+        _scrollTarget: {
+            "t-on-scroll": this.process,
+        },
     };
 
     setup() {
         this.position = 20;
         this.isHorizontal = this.el.classList.contains("s_table_of_content_horizontal_navbar");
 
-        this.scrollBound = this.process.bind(this);
         this.offsets = [];
         this.targets = [];
         this.activeTarget = null;
@@ -79,8 +84,6 @@ export class TableOfContent extends Interaction {
                 this.updateTableOfContentNavbarPosition.bind(this)
             )
         );
-
-        this.addListener(this.scrollTarget, "scroll", this.scrollBound);
     }
 
     //--------------------------------------------------------------------------

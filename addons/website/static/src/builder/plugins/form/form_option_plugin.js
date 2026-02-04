@@ -5,6 +5,9 @@ import { reactive } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { redirect } from "@web/core/utils/urls";
 import { FormFieldOptionRedraw } from "./form_field_option_redraw";
+import { FormFieldVisibilityOption } from "./form_field_option";
+import { withSequence } from "@html_editor/utils/resource";
+import { CONDITIONAL_VISIBILITY } from "@website/builder/option_sequence";
 import { FormOptionAddFieldButton } from "./form_option_add_field_button";
 import {
     deleteConditionalVisibility,
@@ -146,7 +149,12 @@ export class FormOptionPlugin extends Plugin {
                 reasons.push(_t("You can't remove the submit button of the form"));
             }
         },
-        builder_options: [FormOption, FormFieldOptionRedraw, WebsiteFormSubmitOption],
+        builder_options: [
+            FormOption,
+            FormFieldOptionRedraw,
+            WebsiteFormSubmitOption,
+            withSequence(CONDITIONAL_VISIBILITY, FormFieldVisibilityOption),
+        ],
         builder_actions: {
             // Form actions
             // Components that use this action MUST await fetchModels before they start.

@@ -11,6 +11,13 @@
         z-index: 2000; // TODO use $o-we-overlay-zindex instead
     }
 
+    &:not(:is(#wrap > .oe_drop_zone)) {
+        background: $o-we-dropzone-bg-color-alt;
+        &.oe_insert {
+            outline-color: $o-we-dropzone-accent-color-alt;
+        }
+    }
+
     &.o_dropzone_highlighted {
         filter: brightness(1.5);
         transition: 200ms;
