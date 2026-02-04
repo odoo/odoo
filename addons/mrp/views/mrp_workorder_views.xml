@@ -409,6 +409,23 @@
         </field>
     </record>
 
+    <record model="ir.actions.act_window" id="action_mrp_workorder_employee">
+        <field name="name">Work Orders Planning</field>
+        <field name="res_model">mrp.workorder</field>
+        <field name="path">employee-planning</field>
+        <field name="view_mode">list,form,calendar,pivot,graph</field>
+        <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
+        <field name="context">{'search_default_ready': True, 'search_default_blocked': True, 'search_default_progress': True}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            No work orders to do!
+          </p><p>
+            Work orders are operations to do as part of a manufacturing order.
+            Operations are defined in the bill of materials or added in the manufacturing order directly.
+          </p>
+        </field>
+    </record>
+
     <record model="ir.actions.act_window" id="mrp_workorder_mrp_production_form">
         <field name="name">Work Orders</field>
         <field name="res_model">mrp.workorder</field>
