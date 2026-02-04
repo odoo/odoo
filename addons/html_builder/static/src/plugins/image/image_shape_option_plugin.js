@@ -7,7 +7,6 @@ import {
     createDataURL,
     cropperDataFields,
     loadImage,
-    loadImageInfo,
     isGif,
 } from "@html_editor/utils/image_processing";
 import { getValueFromVar } from "@html_builder/utils/utils";
@@ -69,11 +68,13 @@ export class ImageShapeOptionPlugin extends Plugin {
     static dependencies = ["history", "userCommand", "imagePostProcess", "imageToolOption"];
     static shared = [
         "getImageShapeGroups",
+        "getShapeCategory",
+        "getShapeLabel",
+        "isAnimableShape",
+        "isImageSupportedForShapes",
         "isTransformableShape",
         "isTechnicalShape",
-        "isAnimableShape",
         "isTogglableRatioShape",
-        "getShapeLabel",
         "loadShape",
     ];
     /** @type {import("plugins").BuilderResources} */
@@ -88,7 +89,6 @@ export class ImageShapeOptionPlugin extends Plugin {
         },
         process_image_warmup_handlers: this.processImageWarmup.bind(this),
         process_image_post_handlers: this.processImagePost.bind(this),
-        hover_effect_allowed_predicates: (el) => this.canHaveHoverEffect(el),
         image_shape_groups_providers: withSequence(0, () => deepCopy(imageShapeDefinitions)),
     };
     setup() {
@@ -100,22 +100,12 @@ export class ImageShapeOptionPlugin extends Plugin {
             this.imageShapes[oldShapeId] = this.imageShapes[shapeId];
         }
     }
-    async canHaveHoverEffect(imgEl) {
-        const dataset = Object.assign({}, imgEl.dataset, await loadImageInfo(imgEl));
-        return (
-            imgEl.tagName === "IMG" &&
-            !this.isDeviceShape(imgEl) &&
-            !this.isAnimableShape(dataset.shape) &&
-            this.isImageSupportedForShapes(imgEl, dataset)
-        );
-    }
-    isDeviceShape(img) {
-        const shapeName = img.dataset.shape;
-        if (!shapeName) {
-            return false;
-        }
-        const shapeCategory = shapeName.split("/")[1];
-        return shapeCategory === "devices";
+    /**
+     * @param {HTMLImageElement} img - The img element containing the shape data
+     * @returns {string|undefined} shape category or undefined if no shape
+     */
+    getShapeCategory(img) {
+        return img.dataset.shape?.split("/")[1];
     }
     isImageSupportedForShapes(img, dataset = img.dataset) {
         // todo: The hover effect and shape code should probably be define somewhere else.
