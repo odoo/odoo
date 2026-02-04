@@ -221,3 +221,32 @@ class MigrationCollector:
     def get_final_logs(self) -> str:
         """Returns all collected reports as a single string."""
         return "\n".join(self.reports)
+
+
+def upgrade_useeffect(file_manager, log_info, log_error):
+    """Sub-task: Migrate useEffect to useLayoutEffect, ignoring comments."""
+    js_files = [
+        f for f in file_manager
+        if '/static/src/' in f.path._str
+        and f.path.suffix == '.js'
+    ]
+
+    for fileno, file in enumerate(js_files, start=1):
+        try:
+            if not JSTooling.has_active_usage(file.content, 'useEffect'):
+                continue
+            file.content = JSTooling.remove_import(file.content, 'useEffect', '@odoo/owl')
+            file.content = JSTooling.replace_usage(file.content, 'useEffect', 'useLayoutEffect')
+            file.content = JSTooling.add_import(file.content, 'useLayoutEffect', '@web/owl2/utils')
+        except Exception as e:
+            log_error(file.path, e)
+        file_manager.print_progress(fileno, len(js_files))
+
+
+def upgrade(file_manager) -> str:
+    """Main entry point called by Odoo."""
+    collector = MigrationCollector()
+
+    collector.run_sub("Migrating useEffect", upgrade_useeffect, file_manager)
+
+    return collector.get_final_logs()
