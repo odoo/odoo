@@ -422,6 +422,8 @@ class FleetVehicle(models.Model):
                 ('note', 'ilike', _('Review driver change')),
                 ('user_id', 'in', self.manager_id.ids or [self.env.user.id])
             ]).action_cancel()
+
+            cleanup = set()
             for vehicle in self:
                 vehicle.activity_schedule(
                     'mail.mail_activity_data_todo',
@@ -429,6 +431,19 @@ class FleetVehicle(models.Model):
                     note=_('Review driver change of %s and specify End date', vehicle.display_name),
                     user_id=vehicle.manager_id.id or self.env.user.id,
                 )
+                driver_id = vals.get('driver_id', vehicle.driver_id.id)
+                future_driver_id = vals.get('future_driver_id', vehicle.future_driver_id.id)
+                if driver_id and driver_id == future_driver_id:
+                    cleanup.add((driver_id, vehicle.vehicle_type))
+                    vals['future_driver_id'] = False
+                    vals['plan_to_change_vehicle'] = False
+            if cleanup:
+                cleanup_domain = ['|'] * (len(cleanup) - 1)
+                for future_driver_id, vehicle_type in cleanup:
+                    cleanup_domain += ['&', ('future_driver_id', '=', future_driver_id), ('vehicle_type', '=', vehicle_type)]
+                cleanup_domain = [('id', 'not in', self.ids)] + cleanup_domain
+                vehicles_to_update = self.search(cleanup_domain)
+                vehicles_to_update.write({'future_driver_id': False})
 
         if 'active' in vals and not vals['active']:
             self.env['fleet.vehicle.log.contract'].search([('vehicle_id', 'in', self.ids)]).active = False
