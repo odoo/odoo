@@ -52,6 +52,48 @@ function checkEyesIconAfterSave(footerIsHidden = true) {
     }
     return eyeIconChecks;
 }
+
+function checkInvisiblePanelOrder(expectedNames) {
+    const firstExpected = expectedNames[0];
+    return {
+        content: "Check the order in the Invisible Elements panel",
+        trigger: `.o_we_invisible_el_panel .o_we_invisible_entry:contains("${firstExpected}")`,
+        run: () => {
+            const directPanelEntries = [
+                ...document.querySelectorAll(
+                    ".o_we_invisible_el_panel > .o_we_invisible_entry .o_title"
+                ),
+            ].map((entry) => entry.textContent.trim());
+
+            const missing = [];
+            let lastIndex = -1;
+
+            for (const expectedName of expectedNames) {
+                const index = directPanelEntries.indexOf(expectedName);
+                if (index < 0) {
+                    missing.push(expectedName);
+                    continue;
+                }
+                if (index <= lastIndex) {
+                    console.error(
+                        `error Unexpected Invisible Elements order. Expected: ${expectedNames.join(
+                            " < "
+                        )}`
+                    );
+                    return;
+                }
+                lastIndex = index;
+            }
+
+            if (missing.length) {
+                console.error(
+                    `error Missing entries in Invisible Elements panel: ${missing.join(", ")}`
+                );
+            }
+        },
+    };
+}
+
 registerWebsitePreviewTour(
     "conditional_visibility_1",
     {
@@ -196,10 +238,9 @@ registerWebsitePreviewTour(
             run: "click",
         },
         ...checkEyesIconAfterSave(),
-        {
-            content: "Check the order on the 'Invisible Elements' panel",
-            trigger: ".o_we_invisible_el_panel div:nth-child(3):contains('Banner')",
-        },
+        // Popups are relocated to the beginning of the page savable, so they
+        // appear before other snippets in the panel.
+        checkInvisiblePanelOrder(["Popup", "Banner", "Text - Image"]),
         {
             content: "Toggle the visibility of the Footer",
             trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Footer')",
@@ -217,10 +258,7 @@ registerWebsitePreviewTour(
             run: "drag_and_drop :iframe #wrapwrap footer",
         },
         ...checkEyesIconAfterSave(false),
-        {
-            content: "Check the order on the 'Invisible Elements' panel",
-            trigger: ".o_we_invisible_el_panel div:nth-child(3):contains('Text - Image')",
-        },
+        checkInvisiblePanelOrder(["Popup", "Text - Image", "Banner"]),
     ]
 );
 

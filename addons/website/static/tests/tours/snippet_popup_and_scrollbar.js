@@ -102,13 +102,13 @@ registerWebsitePreviewTour(
         toggleBackdrop("Popup"), // show Popup backdrop
         {
             content: "Close the Popup that has now backdrop.",
-            trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:first",
+            trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup')",
             run: "click",
         },
         checkScrollbar(true),
         {
             content: "Open the Cookies Bar.",
-            trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:last",
+            trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Cookies Bar')",
             run: "click",
         },
         checkScrollbar(true),
@@ -117,7 +117,7 @@ registerWebsitePreviewTour(
         checkScrollbar(true),
         {
             content: "Open the Popup that has backdrop.",
-            trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:first",
+            trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup')",
             run: "click",
         },
         goBackToBlocks(),
@@ -142,13 +142,13 @@ registerWebsitePreviewTour(
         },
         {
             content: "Remove the s_popup snippet",
-            trigger: ".overlay .o_overlay_options .oe_snippet_remove",
+            trigger: ".o_customize_tab [data-container-title='Popup'] button.oe_snippet_remove",
             run: "click",
         },
         checkScrollbar(true),
         {
             content: "Open the Cookie Bar.",
-            trigger: ".o_we_invisible_el_panel .o_we_invisible_entry",
+            trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Cookies Bar')",
             run: "click",
         },
         goBackToBlocks(),
