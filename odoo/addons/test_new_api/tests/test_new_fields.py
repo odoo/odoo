@@ -4542,7 +4542,7 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
         # necessary cleanup for resetting changes in the registry
         for model_name in (self.MODEL_BASE, self.MODEL_REQUIRED):
             Model = self.registry[model_name]
-            self.addCleanup(setattr, Model, '_base_classes__', Model._base_classes__)
+            self.patch(Model, '_base_classes__', Model._base_classes__)
 
     def test_ondelete_unexisting_policy(self):
         from odoo.orm.model_classes import add_to_registry
