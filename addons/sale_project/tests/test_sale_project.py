@@ -1344,3 +1344,40 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         })
         so.action_confirm()
         self.assertEqual(sol.task_id.allocated_hours, 10, "The allocated hours should be 10.")
+
+    def test_sale_order_line_change_with_partner_id(self):
+        SaleOrder = self.env['sale.order'].with_context(tracking_disable=True)
+        SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
+        partner_2 = self.env["res.partner"].create({"name": "Will Smith"})
+        sale_order_1 = SaleOrder.create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+        })
+        sale_order_2 = SaleOrder.create({
+            'partner_id': partner_2.id,
+            'partner_invoice_id': partner_2.id,
+            'partner_shipping_id': partner_2.id,
+        })
+        so_line_order_no_task = SaleOrderLine.create({
+            'product_id': self.product_order_service1.id,
+            'product_uom_qty': 10,
+            'order_id': sale_order_1.id,
+        })
+        so_line_order_task_in_global = SaleOrderLine.create({
+            'product_id': self.product_order_service2.id,
+            'product_uom_qty': 10,
+            'order_id': sale_order_2.id,
+        })
+        (sale_order_1 + sale_order_2).action_confirm()
+
+        task = so_line_order_task_in_global.task_id
+
+        # Remove partner from the task, sol is unset
+        self.assertEqual(task.partner_id, partner_2)
+        task.partner_id = False
+        self.assertFalse(task.sale_line_id)
+
+        # Change partner from the task, sol is changed
+        task.partner_id = self.partner
+        self.assertEqual(task.sale_line_id, so_line_order_no_task)
