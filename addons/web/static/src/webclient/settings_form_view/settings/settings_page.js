@@ -1,6 +1,7 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 
-import { Component, useState, useRef, useEffect } from "@odoo/owl";
+import { Component, useState, useRef } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 
 export class SettingsPage extends Component {
@@ -39,7 +40,7 @@ export class SettingsPage extends Component {
         this.settingsRef = useRef("settings");
         this.settingsTabRef = useRef("settings_tab");
         this.scrollMap = Object.create(null);
-        useEffect(
+        useLayoutEffect(
             (settingsEl, currentTab) => {
                 if (!settingsEl) {
                     return;

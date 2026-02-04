@@ -61,6 +61,7 @@
             'web/static/src/libs/luxon.js',
             'web/static/lib/owl/owl.js',
             'web/static/lib/owl/odoo_module.js',
+            'web/static/src/owl2/utils.js',
             'web/static/lib/jquery/jquery.js',
             'web/static/lib/popper/popper.js',
             'web/static/lib/bootstrap/js/dist/util/index.js',

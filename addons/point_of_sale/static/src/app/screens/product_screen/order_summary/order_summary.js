@@ -1,5 +1,6 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, useEffect, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { useService } from "@web/core/utils/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -34,7 +35,7 @@ export class OrderSummary extends Component {
 
         this.updatePotentialCombos();
 
-        useEffect(
+        useLayoutEffect(
             () => {
                 // We update the potential combos when the order changes
                 // or the quantity of the items changes.

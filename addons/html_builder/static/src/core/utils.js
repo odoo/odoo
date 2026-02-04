@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { isElement, isTextNode } from "@html_editor/utils/dom_info";
 import {
     Component,
@@ -8,7 +9,6 @@ import {
     reactive,
     toRaw,
     useComponent,
-    useEffect,
     useEnv,
     useRef,
     useState,
@@ -914,7 +914,7 @@ export function useVisibilityObserver(contentName, callback) {
     };
 
     const observer = new MutationObserver(applyVisibility);
-    useEffect(
+    useLayoutEffect(
         (contentEl) => {
             if (!contentEl) {
                 return;

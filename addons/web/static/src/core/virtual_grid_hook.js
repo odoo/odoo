@@ -1,4 +1,5 @@
-import { useComponent, useEffect, useExternalListener } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { useComponent, useExternalListener } from "@odoo/owl";
 import { pick, shallowEqual } from "@web/core/utils/objects";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 
@@ -149,7 +150,7 @@ export function useVirtualGrid({ scrollableRef, initialScroll, onChange, bufferC
         current.scroll.top = ev.target.scrollTop;
         throttledCompute();
     };
-    useEffect(
+    useLayoutEffect(
         (el) => {
             el?.addEventListener("scroll", scrollListener);
             return () => el?.removeEventListener("scroll", scrollListener);

@@ -1,4 +1,5 @@
-import { Component, onMounted, onWillStart, useEffect, useRef, useState, status } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, onMounted, onWillStart, useRef, useState, status } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 
 export class CodeEditor extends Component {
@@ -54,7 +55,7 @@ export class CodeEditor extends Component {
         // to notify the parent of changes done by the user, in the UI, so we
         // use this flag to filter out noisy "change" events.
         let ignoredAceChange = false;
-        useEffect(
+        useLayoutEffect(
             (el) => {
                 if (!el) {
                     return;
@@ -102,12 +103,12 @@ export class CodeEditor extends Component {
             () => [this.editorRef.el]
         );
 
-        useEffect(
+        useLayoutEffect(
             (theme) => this.aceEditor.setTheme(theme ? `ace/theme/${theme}` : ""),
             () => [this.props.theme]
         );
 
-        useEffect(
+        useLayoutEffect(
             (readonly, showLineNumbers) => {
                 this.aceEditor.setOptions({
                     readOnly: readonly,
@@ -127,7 +128,7 @@ export class CodeEditor extends Component {
             () => [this.props.readonly, this.props.showLineNumbers]
         );
 
-        useEffect(
+        useLayoutEffect(
             (sessionId, mode, value) => {
                 let session = sessions[sessionId];
                 if (session) {

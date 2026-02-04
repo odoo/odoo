@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
 import { user } from "@web/core/user";
@@ -31,7 +32,6 @@ import {
     onWillPatch,
     onWillRender,
     onWillStart,
-    useEffect,
     useRef,
     useState,
     useSubEnv,
@@ -137,7 +137,7 @@ export class ListController extends Component {
             getOrderBy: () => this.model.root.orderBy,
         });
 
-        useEffect(
+        useLayoutEffect(
             (isReady) => {
                 if (isReady) {
                     if (this.env.isSmall) {
@@ -180,7 +180,7 @@ export class ListController extends Component {
             };
         });
 
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.onSelectionChanged();
             },

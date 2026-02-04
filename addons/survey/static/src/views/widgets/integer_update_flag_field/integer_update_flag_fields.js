@@ -1,8 +1,9 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { integerField, IntegerField } from "@web/views/fields/integer/integer_field";
 
-import { useEffect, useRef } from "@odoo/owl";
+import { useRef } from "@odoo/owl";
 
 
 /**
@@ -34,7 +35,7 @@ export class IntegerUpdateFlagField extends IntegerField {
                 [this.props.flagFieldName]: parseInt(this.formattedValue) !== this.props.referenceValue}
             );
         }
-        useEffect(
+        useLayoutEffect(
             (inputEl) => {
                 if (inputEl) {
                     inputEl.addEventListener("change", onChange);

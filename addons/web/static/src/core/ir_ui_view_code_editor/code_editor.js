@@ -1,5 +1,6 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 /** @odoo-module **/
-import { useEffect, onMounted } from "@odoo/owl";
+import { onMounted } from "@odoo/owl";
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { escapeRegExp } from "@web/core/utils/strings";
 
@@ -20,7 +21,7 @@ export class IrUiViewCodeEditor extends CodeEditor {
             });
         });
 
-        useEffect(
+        useLayoutEffect(
             (arch, invalid_locators) => {
                 if (arch && invalid_locators) {
                     this.highlightInvalidLocators(arch, invalid_locators);

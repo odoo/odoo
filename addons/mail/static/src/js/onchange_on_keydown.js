@@ -1,4 +1,4 @@
-import { useEffect } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { patch } from "@web/core/utils/patch";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { useDebounced } from "@web/core/utils/timing";
@@ -22,7 +22,7 @@ const onchangeOnKeydownMixin = () => ({
                 this.triggerOnChange,
                 this.props.keydownDebounceDelay
             );
-            useEffect(() => {
+            useLayoutEffect(() => {
                 if (input.el) {
                     input.el.addEventListener("keydown", triggerOnChange);
                     return () => {
