@@ -2034,6 +2034,48 @@ class TestPackagePropagation(TestPackingCommon):
         self.assertFalse((pallet | container).package_dest_id)
         self.assertFalse((pallet | container).picking_ids)
 
+    def test_package_shipping_weight(self):
+        """
+        Create a 10 kg package containing:
+         - five products weighing 2 kg each
+         - a 5 kg box containing three product weighing 2 kg each.
+        Create a 10 kg package containing:
+         - a 5 kg box containing one product weighing 2 kg.
+        Check that the packages total shipping weight is 31 kg and 17kg respectively.
+        """
+        self.productA.weight = 2
+        self.pack_type_box.base_weight = 5
+        self.pack_type_pallet.base_weight = 10
+        box, box2, pallet, pallet2 = self.env['stock.package'].create([{
+            'package_type_id': pack_type.id,
+        } for pack_type in [self.pack_type_box, self.pack_type_box, self.pack_type_pallet, self.pack_type_pallet]])
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 5, package_id=pallet)
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 3, package_id=box)
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1, package_id=box2)
+        box.parent_package_id = pallet
+        box2.parent_package_id = pallet2
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        delivery2 = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        delivery.action_add_entire_packs(pallet.id)
+        delivery.action_confirm()
+        delivery2.action_add_entire_packs(pallet2.id)
+        delivery2.action_confirm()
+
+        self.assertEqual(delivery.move_line_ids.result_package_id, pallet | box)
+        self.assertEqual(delivery2.move_line_ids.result_package_id, box2)
+        self.assertEqual(delivery.move_line_ids.outermost_result_package_id, pallet)
+        self.assertEqual(delivery2.move_line_ids.outermost_result_package_id, pallet2)
+        self.assertEqual(delivery.shipping_weight, 31)
+        self.assertEqual(delivery2.shipping_weight, 17)
+
     def test_package_removal(self):
         """ Checks that the button 'Remove' in the package view in pickings behaves as expected:
             - Only removes related move/move lines from the picking if it was only added through an entire pack
