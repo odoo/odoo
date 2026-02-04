@@ -1,18 +1,19 @@
 """
 Tests for various autodetection magics for CSV imports
 """
+import base64
 import codecs
 
 from odoo.tests import tagged, common
 
 
 class ImportCase(common.TransactionCase):
-    def _make_import(self, contents):
+    def _make_import(self, contents: bytes):
         return self.env['base_import.import'].create({
             'res_model': 'import.complex',
             'file_name': 'f',
             'file_type': 'text/csv',
-            'file': contents,
+            'file': base64.b64encode(contents),
         })
 
 
@@ -76,7 +77,7 @@ class TestFileSeparator(ImportCase):
     def setUp(self):
         super().setUp()
         self.imp = self._make_import(
-"""c|f
+b"""c|f
 a|1
 b|2
 c|3
@@ -122,7 +123,7 @@ d|4
         """ If the guesser has no idea what the separator is, it defaults to
         "," but should not set that value
         """
-        imp = self._make_import('c\na\nb\nc\nd')
+        imp = self._make_import(b'c\na\nb\nc\nd')
         r = imp.parse_preview({
             'separator': '',
             'has_headers': True,

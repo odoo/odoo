@@ -1,22 +1,20 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import json
 
 from odoo import http
 from odoo.http import request
-from odoo.tools import misc
 
 
 class ImportController(http.Controller):
 
     @http.route('/base_import/set_file', methods=['POST'])
     # pylint: disable=redefined-builtin
-    def set_file(self, id):
-        file = request.httprequest.files.getlist('ufile')[0]
-
+    def set_file(self, id, ufile, model=None):
+        file = ufile
         written = request.env['base_import.import'].browse(int(id)).write({
-            'file': file.read(),
+            'file': base64.b64encode(file.read()),
             'file_name': file.filename,
             'file_type': file.content_type,
         })
