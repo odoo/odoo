@@ -24,8 +24,8 @@ the methods over HTTP, with examples in various programming languages.
             # Core
             'web/static/src/module_loader.js',
             'web/static/lib/owl/owl.js',
-            'web/static/lib/owl/odoo_module.js',
             'web/static/src/owl2/utils.js',
+            'web/static/lib/owl/odoo_module.js',
 
             # Utils
             'web/static/src/core/utils/functions.js',
