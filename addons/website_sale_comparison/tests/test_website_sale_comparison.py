@@ -52,6 +52,11 @@ class TestWebsiteSaleComparison(TransactionCase):
         # because it would commit the test transaction)
         website_sale_comparison = self.env['ir.module.module'].search([('name', '=', 'website_sale_comparison')])
         website_sale_comparison.module_uninstall()
+        # module_uninstall triggers the injection of a bunch of temporary dupe of fields added by the module into
+        # the leaf model to "unshare" them, but because the uninstall is not committed the dupes remain set
+        del self.registry['product.attribute'].category_id
+        for attr in ('create_uid', 'write_uid', 'create_date', 'write_date', 'name', 'sequence'):
+            delattr(self.registry['product.attribute.category'], attr)
 
         # Check that the generic view is correctly removed
         self.assertFalse(Website0.viewref('website_sale_comparison.product_attributes_body', raise_if_not_found=False))
