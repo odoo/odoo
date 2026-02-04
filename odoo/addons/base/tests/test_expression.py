@@ -1283,8 +1283,8 @@ class TestQueries(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_partner_title"."id"
             FROM "res_partner_title"
-            WHERE (COALESCE("res_partner_title"."name"->>%s, "res_partner_title"."name"->>%s) like %s)
-            ORDER BY COALESCE("res_partner_title"."name"->>%s, "res_partner_title"."name"->>%s)
+            WHERE (COALESCE(("res_partner_title"."name"->>%s), ("res_partner_title"."name"->>%s)) like %s)
+            ORDER BY COALESCE(("res_partner_title"."name"->>%s), ("res_partner_title"."name"->>%s))
         ''']):
             Model.search([('name', 'like', 'foo')])
 
@@ -1328,10 +1328,10 @@ class TestQueries(TransactionCase):
         self.assertEqual(Model._rec_names_search, ['name', 'model'])
 
         with self.assertQueries(['''
-            SELECT "ir_model"."id", "ir_model"."name"->>%s
+            SELECT "ir_model"."id", ("ir_model"."name"->>%s)
             FROM "ir_model"
             WHERE (
-                ("ir_model"."name"->>%s ILIKE %s)
+                (("ir_model"."name"->>%s) ILIKE %s)
                 OR ("ir_model"."model"::text ILIKE %s)
             )
             ORDER BY "ir_model"."model"
@@ -1340,10 +1340,10 @@ class TestQueries(TransactionCase):
             Model.name_search('foo')
 
         with self.assertQueries(['''
-            SELECT "ir_model"."id", "ir_model"."name"->>%s
+            SELECT "ir_model"."id", ("ir_model"."name"->>%s)
             FROM "ir_model"
             WHERE (
-                ("ir_model"."name" is NULL OR "ir_model"."name"->>%s not ilike %s)
+                ("ir_model"."name" is NULL OR ("ir_model"."name"->>%s) not ilike %s)
                 AND (("ir_model"."model"::text NOT ILIKE %s) OR "ir_model"."model" IS NULL)
             )
             ORDER BY "ir_model"."model"
