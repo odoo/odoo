@@ -46,12 +46,7 @@ export class FeedbackScreen extends Component {
                             await this.props.waitFor;
                         }
                     } finally {
-                        this.state.loading = false;
-                        if (this.isAutoSkip && !this.ignoreTimeout) {
-                            this.state.timeout = setTimeout(() => {
-                                this.pos.orderDone(this.currentOrder);
-                            }, this.pos.feedbackScreenAutoSkipDelay);
-                        }
+                        await this._afterWaitFinished();
                     }
                 };
 
@@ -63,6 +58,16 @@ export class FeedbackScreen extends Component {
         onWillUnmount(() => {
             clearTimeout(this.state.timeout);
         });
+    }
+
+    async _afterWaitFinished() {
+        this.state.loading = false;
+
+        if (this.isAutoSkip && !this.ignoreTimeout) {
+            this.state.timeout = setTimeout(() => {
+                this.pos.orderDone(this.currentOrder);
+            }, this.pos.feedbackScreenAutoSkipDelay);
+        }
     }
 
     get isAutoSkip() {
