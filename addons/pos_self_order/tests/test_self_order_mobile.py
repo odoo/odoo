@@ -183,6 +183,11 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
             'self_ordering_service_mode': 'table',
             'use_presets': False,
         })
+        self.env['restaurant.table'].create({
+            'table_number': 303,
+            'floor_id': self.pos_main_floor.id,
+            'shape': 'square'
+        })
 
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
