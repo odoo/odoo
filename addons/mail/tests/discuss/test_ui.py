@@ -2,6 +2,7 @@
 
 from odoo import Command
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, new_test_user
+from odoo.addons.mail.tests.common import freeze_all_time
 
 
 class TestUi(HttpCaseWithUserDemo):
@@ -27,13 +28,14 @@ class TestUi(HttpCaseWithUserDemo):
         bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
         john = new_test_user(self.env, "john", groups="base.group_user", email="john@test.com")
         guest = self.env["mail.guest"].create({"name": "Guest"})
-        group_chat = (
-            self.env["discuss.channel"]
-            .with_user(bob)
-            ._create_group(
-                partners_to=john.partner_id.ids, default_display_mode="video_full_screen"
+        with freeze_all_time("2026-01-01"):
+            group_chat = (
+                self.env["discuss.channel"]
+                .with_user(bob)
+                ._create_group(
+                    partners_to=john.partner_id.ids, default_display_mode="video_full_screen"
+                )
             )
-        )
         group_chat._add_members(guests=guest)
         self.authenticate("bob", "bob")
         self.make_jsonrpc_request("/mail/rtc/channel/join_call", {"channel_id": group_chat.id})

@@ -1227,6 +1227,7 @@ class DiscussChannel(models.Model):
         res.one("discuss_category_id", "_store_category_fields", sudo=True)
         res.attr("channel_type")
         res.attr("create_uid")
+        res.attr("create_date", predicate=lambda channel: channel.default_display_mode == "video_full_screen")
         res.many(
             "channel_member_ids",
             "_store_member_fields",

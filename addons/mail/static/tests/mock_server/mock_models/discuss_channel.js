@@ -258,6 +258,7 @@ export class DiscussChannel extends models.ServerModel {
         return [
             "avatar_cache_key",
             "channel_type",
+            "create_date",
             "create_uid",
             "default_display_mode",
             "description",
