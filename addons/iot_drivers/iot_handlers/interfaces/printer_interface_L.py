@@ -43,7 +43,7 @@ class PrinterInterface(Interface):
         for name, printer in self.conn.getDevices().items():
             identifier, printer = self.process_device(name, printer)
 
-            url_is_supported = bool(re.match(r'^(dnssd|lpd|socket).+', printer["url"]))
+            url_is_supported = bool(re.match(r"^(dnssd|lpd|socket|ipp).+", printer["url"]))
             model_is_valid = printer["device-make-and-model"] != "Unknown"
 
             if (url_is_supported and model_is_valid) or printer.get("is_usb"):
@@ -140,7 +140,9 @@ class PrinterInterface(Interface):
 
     def deduplicate_printers(self, discovered_printers):
         result = []
-        sorted_printers = sorted(discovered_printers.values(), key=lambda printer: str(printer.get('ip')))
+        sorted_printers = sorted(
+            discovered_printers.values(), key=lambda printer: (str(printer.get('ip')), printer["identifier"])
+        )
 
         for ip, printers_with_same_ip in groupby(sorted_printers, lambda printer: printer.get('ip')):
             already_registered_identifier = next((
@@ -148,30 +150,29 @@ class PrinterInterface(Interface):
                 if device.device_type == 'printer' and ip and ip == device.ip
             ), None)
             if already_registered_identifier:
-                result.append({
-                    'identifier': already_registered_identifier,
-                    'disconnect_counter': 0,
-                    'already-configured': True,
-                })
+                result += next(
+                    ([p] for p in printers_with_same_ip if p['identifier'] == already_registered_identifier), []
+                )
                 continue
 
-            printers_with_same_ip = sorted(printers_with_same_ip, key=lambda printer: printer['identifier'])
+            printers_with_same_ip = list(printers_with_same_ip)
+            is_ipp_ready = any(p['identifier'].startswith("ipp") for p in printers_with_same_ip)
             if ip is None or len(printers_with_same_ip) == 1:
+                printers_with_same_ip[0]["is_ipp_ready"] = is_ipp_ready
                 result += printers_with_same_ip
                 continue
 
             chosen_printer = next((
                 printer for printer in printers_with_same_ip
                 if 'CMD:' in printer['device-id'] or 'ZPL' in printer['device-id']
-            ), None)
-            if not chosen_printer:
-                chosen_printer = printers_with_same_ip[0]
+            ), printers_with_same_ip[0])
+            chosen_printer["ipp_ready"] = is_ipp_ready
             result.append(chosen_printer)
 
         return {
             printer["identifier"]: printer
             for printer in result
-            if not printer.get("already-configured") and self.set_up_printer_in_cups(printer)
+            if self.set_up_printer_in_cups(printer)
         }
 
     def monitor_for_printers(self):
@@ -230,6 +231,8 @@ class PrinterInterface(Interface):
         :param dict device: printer device to configure in cups (detected but not added)
         :return: True if printer is configured in cups, False otherwise
         """
+        if device.get("already-configured"):
+            return True
         fallback_model = device.get('device-make-and-model', "")
         model = next((
             device_id.split(":")[1] for device_id in device.get('device-id', "").split(";")
@@ -237,7 +240,10 @@ class PrinterInterface(Interface):
         ), fallback_model)
         model = re.sub(r"[\(].*?[\)]", "", model).strip()
 
-        ppdname_argument = next(({"ppdname": ppd} for ppd in self.PPDs if model and model in self.PPDs[ppd]['ppd-product']), {})
+        ppdname_argument = next(
+            ({"ppdname": ppd} for ppd in self.PPDs if model and model in self.PPDs[ppd]['ppd-product']),
+            {"ppdname": "everywhere"} if device.get("ipp_ready") else {}
+        )
 
         try:
             self.conn.addPrinter(name=device['identifier'], device=device['url'], **ppdname_argument)
