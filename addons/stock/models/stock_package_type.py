@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class StockPackageType(models.Model):
@@ -85,6 +86,12 @@ class StockPackageType(models.Model):
     def _compute_weight_uom_name(self):
         for package_type in self:
             package_type.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
+
+    @api.constrains('barcode')
+    def _check_barcode_uniqueness(self):
+        domain = [('barcode', 'in', [b for b in self.mapped('barcode') if b])]
+        if self.env['product.product'].search_count(domain, limit=1) or self.env['product.uom'].search_count(domain, limit=1):
+            raise ValidationError(self.env._("The barcode is already assigned to a product or a packaging."))
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)

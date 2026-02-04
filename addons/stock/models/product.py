@@ -7,7 +7,7 @@ from collections.abc import Iterable
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL
 from odoo.tools.barcode import check_barcode_encoding
@@ -499,6 +499,13 @@ class ProductProduct(models.Model):
             product.nbr_reordering_rules = count
             product.reordering_min_qty = product_min_qty_sum
             product.reordering_max_qty = product_max_qty_sum
+
+    @api.constrains('barcode')
+    def _check_barcode_uniqueness(self):
+        super()._check_barcode_uniqueness()
+        domain = [('barcode', 'in', [b for b in self.mapped('barcode') if b])]
+        if self.env['stock.package.type'].search_count(domain, limit=1):
+            raise ValidationError(self.env._("The barcode is already assigned to a package type."))
 
     @api.onchange('tracking')
     def _onchange_tracking(self):
@@ -1273,3 +1280,14 @@ class UomUom(models.Model):
         else:
             computed_qty = self._compute_quantity(qty, procurement_uom, rounding_method='HALF-UP')
         return (computed_qty, procurement_uom)
+
+
+class ProductUom(models.Model):
+    _inherit = 'product.uom'
+
+    @api.constrains('barcode')
+    def _check_barcode_uniqueness(self):
+        super()._check_barcode_uniqueness()
+        domain = [('barcode', 'in', self.mapped('barcode'))]
+        if self.env['stock.package.type'].search_count(domain, limit=1):
+            raise ValidationError(self.env._("The barcode is already assigned to a package type."))
