@@ -204,7 +204,7 @@
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <div class="position-relative">
                             <field name="favorite" class="fs-2 position-absolute" style="right: 0; top:0; line-height:0;"
-                                widget="boolean_favorite" nolabel="1" invisible="is_body_empty"/>
+                                widget="boolean_favorite" nolabel="1" invisible="is_body_empty" readonly="is_template"/>
                         </div>
                         <group class="o_mass_mailing_mailing_group">
                             <field name="active" invisible="1"/>
@@ -451,7 +451,7 @@
             <field name="path">email-marketing</field>
             <field name="res_model">mailing.mailing</field>
             <field name="view_mode">list,kanban,form,calendar</field>
-            <field name="domain">[('mailing_type', '=', 'mail')]</field>
+            <field name="domain">[('mailing_type', '=', 'mail'), ('is_template', '=', False)]</field>
             <field name="context">{
                     'search_default_assigned_to_me': 1,
                     'default_user_id': uid,
@@ -493,7 +493,7 @@
                 'default_user_id': uid,
             }
             </field>
-            <field name="domain">[('mailing_type', '=', 'mail')]</field>
+            <field name="domain">[('mailing_type', '=', 'mail'), ('is_template', '=', False)]</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new mailing

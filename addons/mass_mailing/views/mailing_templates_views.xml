@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Templates -->
+
+    <record id="mailing_templates_view_kanban" model="ir.ui.view">
+        <field name="name">mailing.templates.kanban</field>
+        <field name="model">mailing.mailing</field>
+        <field name="arch" type="xml">
+            <kanban highlight_color="color" quick_create="false" sample="1">
+                <field name='active'/>
+                <templates>
+                    <t t-name="menu" t-if="!selection_mode">
+                        <field name="color" widget="kanban_color_picker"/>
+                        <t t-if="widget.deletable">
+                            <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                        </t>
+                        <a role="menuitem" type="object" name="action_archive" class="dropdown-item o_kanban_mailing_active" t-if="record.active.raw_value">Archive</a>
+                        <a role="menuitem" type="object" name="action_unarchive" class="dropdown-item o_kanban_mailing_active" t-if="!record.active.raw_value">Restore</a>
+                    </t>
+                    <t t-name="card">
+                        <div class="d-flex flex-column o_kanban_attachment h-100">
+                            <div class="o_request_image flex-grow-0">
+                                <div class="o_kanban_image_wrapper d-flex justify-content-center bg-white" 
+                                    style="height: 350px; overflow: hidden; position: relative;">
+                                    <div style="width: 800px; position: absolute; top: 0; transform: scale(0.35); transform-origin: top center; pointer-events: none;">
+                                        <field name="body_arch" widget="mass_mailing_html"
+                                            options="{'inline_field': 'body_html', 'dynamic_placeholder': true, 'filterTemplates': true}" 
+                                            readonly="1"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex-grow-1 p-2">
+                                <div class="my-1 text-truncate fs-3 fw-bold" style="min-width: 0;">
+                                    <field name="subject"/>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between gap-2">
+                                    <div>
+                                        <i class="fa fa-bullseye me-2" role="img" aria-label="Lead/Opportunity"/> Leads
+                                        <field name='mailing_model_id' invisible="mailing_on_mailing_list"/>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <field name="user_id" widget="many2one_avatar_user"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mailing_templates_view_search">
+        <field name="name">mailing.templates.search</field>
+        <field name="model">mailing.mailing</field>
+        <field name="arch" type="xml">
+            <search string="Templates">
+                <separator/>
+                <filter string="My Templates" name="assigned_to_me"
+                            domain="[('user_id', '=', uid)]"
+                            help="Templates (or favorite mailings) that are assigned to me"/>
+                <group>
+                    <separator/>
+                    <filter string="Created On" name="group_by_create_date" domain="[]" context="{'group_by': 'create_date'}"/>
+                    <filter string="User" name="group_by_user_id" context="{'group_by': 'user_id'}"/>
+                    <filter string="Target Model" name="group_by_mailing_model_id" context="{'group_by': 'mailing_model_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mailing_templates_view_list">
+        <field name="name">mailing.templates.list</field>
+        <field name="model">mailing.mailing</field>
+        <field name="arch" type="xml">
+            <list string="Mailing List Contacts" sample="1" multi_edit="1">
+                <field name="name" optional="show" readonly="1"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mailing_templates_view_form">
+        <field name="name">mailing.mailing.form</field>
+        <field name="model">mailing.mailing</field>
+        <field name="arch" type="xml">
+            <form string="Mailing" class="o_mass_mailing_mailing_form">
+                <header>
+                    <button name="action_use_template" type="object" class="oe_highlight" string="Use this"
+                        confirm="Create a mailing using this template?"
+                        confirm-title="Use this template?" confirm-label="Use template"/>
+                    <button name="action_duplicate" type="object" class="btn-secondary" string="Duplicate"
+                        data-hotkey="d"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="position-relative">
+                        <field name="favorite" class="fs-2 position-absolute" style="right: 0; top:0; line-height:0;"
+                            widget="boolean_favorite" nolabel="1" invisible="is_body_empty" readonly="is_template"/>
+                    </div>
+                    <group class="o_mass_mailing_mailing_group">
+                        <field name="active" invisible="1"/>
+                        <field class="text-break w-75" name="subject"
+                            options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'mailing_model_real'}"
+                            widget="char_emojis" placeholder="e.g. New Sale on all T-shirts"/>
+                        <div name="mailing_model_id_container">
+                            <div class="row">
+                                <div class="col-md-auto flex-grow-1 pt-1" invisible="mailing_on_mailing_list or not mailing_model_id">
+                                    <field name="mailing_domain" widget="mass_mailing_domain"
+                                        options="{'model': 'mailing_model_real', 'foldable': True}"/>
+                                    <field name="use_exclusion_list" invisible="1"/> <!-- Used by `mass_mailing_domain` -->
+                                </div>
+                                <field name="mailing_filter_count" invisible="1"/>
+                            </div>
+                            <field name="mailing_model_name" invisible="1"/>
+                        </div>
+                    </group>
+                    <notebook>
+                        <page string="Mail Body" name="mail_body">
+                            <div class="position-relative">
+                                <field name="body_arch" class="o_mail_body_mailing" widget="mass_mailing_html"
+                                    options="{
+                                        'inline_field': 'body_html',
+                                        'dynamic_placeholder': true,
+                                        'dynamic_placeholder_model_reference_field': 'mailing_model_real',
+                                        'filterTemplates': true,
+                                    }"/>
+                                <field name="is_body_empty" invisible="1"/>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="mailing_templates_action" model="ir.actions.act_window">
+        <field name="name">Templates</field>
+        <field name="res_model">mailing.mailing</field>  
+        <field name="view_mode">kanban,list,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('mailing_templates_view_kanban')}),
+                (0, 0, {'view_mode': 'list', 'view_id': ref('mailing_templates_view_list')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('mailing_templates_view_form')})]"/>
+        <field name="search_view_id" ref="mailing_templates_view_search"/>
+        <field name="domain">[('favorite', '=', True)]</field>
+        <field name="context">{
+                    'search_default_assigned_to_me': 1,
+                    'default_favorite': 1,
+                    'default_is_template': 1
+                    'default_mailing_type': 'mail',
+                    'default_user_id': uid,
+                    'default_use_in_marketing_automation': 0,
+            }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            No Templates yet
+            </p><p>
+            Click on the ⭐ button to save the mailings you like for later.
+            </p>
+        </field>
+    </record>
+</odoo>
