@@ -203,9 +203,9 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         },
         {
             content: "Check full composer text is kept",
-            trigger: ".o-mail-Composer-input",
-            run() {
-                if (this.anchor.value !== "keep the content") {
+            trigger: ".o-mail-Composer button[title='Open Full Composer'].active",
+            run({ queryFirst }) {
+                if (queryFirst(".o-mail-Composer-input").value !== "keep the content") {
                     console.error(
                         "Composer in chatter should contain full composer text after discarding."
                     );
@@ -241,6 +241,12 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Click on Send Message",
             trigger: "button:contains(Send message)",
+            run: "click",
+        },
+        {
+            content: "Continue Message Composition with Small Composer",
+            trigger:
+                ".o_popover:contains('Continue with Full Composer?') button:contains('No (Remove formatting)')",
             run: "click",
         },
         {
