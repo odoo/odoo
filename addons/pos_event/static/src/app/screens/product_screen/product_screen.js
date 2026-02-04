@@ -250,35 +250,38 @@ patch(ProductScreen.prototype, {
                     event_slot_id: slotSelected,
                     pos_order_line_id: line,
                     partner_id: this.pos.getOrder().partner_id,
-                    registration_answer_ids: Object.entries({
-                        ...textAnswer,
-                        ...globalTextAnswer,
-                    }).map(([questionId, answer]) => [
-                        "create",
-                        {
-                            question_id: this.pos.models["event.question"].get(
-                                parseInt(questionId)
-                            ),
-                            value_text_box: answer,
-                        },
-                    ]),
-                    registration_answer_choice_ids: Object.entries({
-                        ...simpleChoice,
-                        ...globalSimpleChoice,
-                    }).map(([questionId, answer]) => [
-                        "create",
-                        {
-                            question_id: this.pos.models["event.question"].get(
-                                parseInt(questionId)
-                            ),
-                            value_answer_id: this.pos.models["event.question.answer"].get(
-                                parseInt(answer)
-                            ),
-                        },
-                    ]),
+                    registration_answer_choice_ids: this.createRegistrationAnswer(
+                        Object.entries({ ...textAnswer, ...globalTextAnswer }),
+                        Object.entries({ ...simpleChoice, ...globalSimpleChoice })
+                    ),
                 });
             }
         }
+    },
+    createRegistrationAnswer(textAnswers, choiceAnswers) {
+        const answers = [];
+
+        const pushAnswer = (questionId, values) => {
+            answers.push([
+                "create",
+                {
+                    question_id: this.pos.models["event.question"].get(parseInt(questionId)),
+                    ...values,
+                },
+            ]);
+        };
+
+        for (const [questionId, answer] of textAnswers) {
+            pushAnswer(questionId, { value_text_box: answer });
+        }
+
+        for (const [questionId, answerId] of choiceAnswers) {
+            pushAnswer(questionId, {
+                value_answer_id: this.pos.models["event.question.answer"].get(answerId),
+            });
+        }
+
+        return answers;
     },
     getSlotTicketAvailability(slotId, ticketId, slotTickets, slotTicketAvailabilities) {
         const idx = slotTickets.findIndex((st) => st[0] === slotId && st[1] === ticketId);
