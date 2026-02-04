@@ -49,7 +49,7 @@ export class ChannelMemberList extends Component {
                 channel: this.props.channel,
                 close: () => this.store.env.services.dialog.closeAll(),
             },
-            title: "",
+            title: this.props.channel.displayName,
         });
     }
 }

@@ -96,7 +96,7 @@ registerThreadAction("notification-settings", {
     actionPanelOpen({ channel, owner, store }) {
         if (owner.isDiscussSidebarChannelActions || owner.env.inMeetingView) {
             store.env.services.dialog?.add(ChannelActionDialog, {
-                title: channel.name,
+                title: channel.displayName,
                 contentComponent: NotificationSettings,
                 contentProps: { channel },
             });
