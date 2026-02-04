@@ -196,6 +196,7 @@ class OfflineManager extends Reactive {
             } else {
                 value = (await this._idb.read(this._idbTable, key)) || {};
                 let count = value[search.key]?.count || 0;
+                search = value[search.key]?.search || search; // keep original search (no "Custom Filter")
                 delete value[search.key]; // delete and re-add to mark it as "last visited"
                 value[search.key] = { count: ++count, search };
             }
