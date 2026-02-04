@@ -23,9 +23,9 @@ class HrAttendanceOvertimeLine(models.Model):
         compute='_compute_status',
         required=True, store=True, readonly=False, precompute=True,
     )
-    duration = fields.Float(string='Extra Hours', default=0.0, required=True)
+    duration = fields.Float(string='Eligible Overtime', default=0.0, required=True)
     manual_duration = fields.Float(  # TODO -> real_duration for easier upgrade
-        string='Extra Hours (encoded)',
+        string='Overtime (manual)',
         compute='_compute_manual_duration',
         store=True, readonly=False,
     )
@@ -87,6 +87,9 @@ class HrAttendanceOvertimeLine(models.Model):
 
     def action_refuse(self):
         self.write({'status': 'refused'})
+
+    def action_reset(self):
+        self.write({'status': 'to_approve'})
 
     def _linked_attendances(self):
         return self.env['hr.attendance'].search([

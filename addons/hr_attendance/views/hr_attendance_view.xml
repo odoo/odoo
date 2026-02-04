@@ -21,8 +21,8 @@
                 <field name="check_in"/>
                 <field name="check_out" options="{}"/>
                 <field name="worked_hours" string="Worked Hours" widget="float_time"/>
-                <field name="overtime_hours" string="Worked Extra Hours" optional="show" widget="float_time"/>
-                <field name="validated_overtime_hours" string="Extra Hours" optional="show" widget="float_time"/>
+                <field name="overtime_hours" string="Overtime to Approve" optional="show" widget="float_time"/>
+                <field name="validated_overtime_hours" string="Approved Overtime" optional="show" widget="float_time"/>
                 <field name="overtime_status" optional="hidden" widget="badge" decoration-warning="overtime_status == 'to_approve'" decoration-success="overtime_status == 'approved'" decoration-danger="overtime_status == 'refused'"/>
                 <field name="in_mode" string="Input Mode (In)" optional="hidden"/>
                 <field name="out_mode" string="Input Mode (Out)" optional="hidden"/>
@@ -71,13 +71,25 @@
                         name="overtime_status"
                         widget="statusbar"
                         readonly="1"
-                        options="{'clickable': '1'}"
-                        invisible="not overtime_status"/>
+                        statusbar_visible="to_approve,approved,refused"
+                        invisible="not overtime_status or overtime_status!='to_approve'"/>
+                    <field
+                        name="overtime_status"
+                        widget="statusbar"
+                        readonly="1"
+                        statusbar_visible="to_approve,approved"
+                        invisible="not overtime_status or overtime_status in ['to_approve', 'refused']"/>
+                    <field
+                        name="overtime_status"
+                        widget="statusbar"
+                        readonly="1"
+                        statusbar_visible="to_approve,refused"
+                        invisible="not overtime_status or overtime_status in ['to_approve', 'approved']"/>
                 </header>
                 <sheet>
                     <group>
-                        <group colspan="2">
-                            <group col="1" name="group_employee">
+                        <group>
+                            <group colspan="2" name="group_employee">
                                 <field
                                     id="employee_no_officer"
                                     name="employee_id"
@@ -101,12 +113,47 @@
                                         ('company_id', 'in', allowed_company_ids),
                                     ]"
                                     groups="hr_attendance.group_hr_attendance_user"/>
-                                <field name="check_in" options="{'rounding': 0}" readonly="not can_edit"/>
-                                <field name="check_out" options="{'rounding': 0}" placeholder="Currently Working" readonly="not can_edit"/>
                             </group>
-                            <group col="2" name="group_worked_hours">
-                                <field name="worked_hours" string="Worked Time" widget="float_time"/>
-                                <field name="overtime_hours" widget="float_time" string="Worked Extra Hours" invisible="overtime_hours == validated_overtime_hours"/>
+                            <group colspan="2">
+                                <div class="o_row">
+                                    <label for="check_in" string="Check In"/>
+                                    <field name="check_in" options="{'rounding': 0}" readonly="not can_edit"/>
+                                    <label for="check_out" string="Check Out"/>
+                                    <field name="check_out" options="{'rounding': 0}" placeholder="Currently Working" readonly="not can_edit"/>
+                                </div>
+                            </group>
+                            <group colspan="2" name="group_worked_hours">
+                                <div class="o_row">
+                                    <label for="worked_hours" string="Worked Time"/>
+                                    <field name="worked_hours" string="Worked Time" widget="float_time"/>
+                                    <label for="expected_hours" string="Expected Time"/>
+                                    <field name="expected_hours" string="Expected Time" widget="float_time"/>
+                                </div>
+                            </group>
+                            <group colspan="2">
+                                <label for="overtime_hours"/>
+                                <div>
+                                    <field
+                                        name="overtime_hours"
+                                        style="width:5ch"
+                                        widget="float_time"/>
+                                    <button
+                                        class="btn btn-outline-success text-success ms-2"
+                                        string="Approve"
+                                        help="Approve all overtimes for the same employee and date"
+                                        invisible="not is_manager or overtime_status in ['approved','refused'] or not overtime_status"
+                                        name="action_approve_overtime"
+                                        type="object"
+                                        groups="hr_attendance.group_hr_attendance_officer"/>
+                                    <button
+                                        class="btn btn-outline-danger text-danger ms-2"
+                                        string="Refuse"
+                                        help="Refuse all overtimes for the same employee and date"
+                                        invisible="not is_manager or overtime_status in ['approved','refused'] or not overtime_status"
+                                        name="action_refuse_overtime"
+                                        type="object"
+                                        groups="hr_attendance.group_hr_attendance_officer"/>
+                                </div>
                                 <label for="validated_overtime_hours"/>
                                 <div>
                                     <field
@@ -116,21 +163,11 @@
                                         readonly="1"/>
                                     <!-- TODO algin icons baseline with text -->
                                     <button
-                                        class="oe_stat_button flex-shrink-0"
-                                        string=" "
-                                        help="Approve all overtimes for the same employee and date"
-                                        invisible="not is_manager or overtime_status not in ['to_approve', 'refused'] or not overtime_status"
-                                        name="action_approve_overtime"
-                                        icon="fa-check"
-                                        type="object"
-                                        groups="hr_attendance.group_hr_attendance_officer"/>
-                                    <button
-                                        class="oe_stat_button flex-shrink-0"
-                                        string=" "
-                                        help="Refuse all overtimes for the same employee and date"
-                                        invisible="not is_manager or overtime_status not in ['to_approve', 'approved'] or not overtime_status"
-                                        name="action_refuse_overtime"
-                                        icon="fa-times"
+                                        class="btn btn-secondary ms-2"
+                                        string="Reset"
+                                        help="Reset all overtimes for the same employee and date"
+                                        invisible="not is_manager or overtime_status in ['to_approve'] or not overtime_status"
+                                        name="action_reset_overtime"
                                         type="object"
                                         groups="hr_attendance.group_hr_attendance_officer"/>
                                 </div>
@@ -402,8 +439,9 @@
                 <field name="check_in" readonly="1"/>
                 <field name="check_out" readonly="1"/>
                 <field name="worked_hours" readonly="1" string="Worked Time" widget="float_time"/>
-                <field name="overtime_hours" string="Worked Extra Hours" widget="float_time"/>
-                <field name="validated_overtime_hours" readonly="overtime_status == 'refused'" string="Extra Hours" widget="float_time"/>
+                <field name="expected_hours" readonly="1" string="Expected Time" widget="float_time"/>
+                <field name="overtime_hours" string="Overtime to Approve" widget="float_time"/>
+                <field name="validated_overtime_hours" readonly="overtime_status == 'refused'" string="Approved Overtime" widget="float_time"/>
                 <button
                     class="oe_stat_button"
                     string="Approve"
