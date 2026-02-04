@@ -1171,8 +1171,6 @@ class Session(collections.abc.MutableMapping):
         self['pre_login'] = credential['login']
         self['pre_uid'] = pre_uid
 
-        env = env(user=pre_uid)
-
         # if 2FA is disabled we finalize immediately
         user = env['res.users'].browse(pre_uid)
         if auth_info.get('mfa') == 'skip' or not user._mfa_url():
