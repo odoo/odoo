@@ -49,6 +49,54 @@
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
+    <record id="purchase_order_user_rule" model="ir.rule" forcecreate="1">
+        <field name="name">Purchase User Purchase Orders</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="groups" eval="[(4, ref('purchase.group_purchase_user'))]"/>
+    </record>
+    <record id="purchase_order_invoicing_rule" model="ir.rule" forcecreate="1">
+        <field name="name">Invoicing User Purchase Orders</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="purchase_order_invoicing_readonly_rule" model="ir.rule" forcecreate="1">
+        <field name="name">Invoicing Readonly User Purchase Orders</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="groups" eval="[(4, ref('account.group_account_readonly'))]"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record id="purchase_order_line_user_rule" model="ir.rule" forcecreate="1">
+        <field name="name">Purchase User Purchase Order Lines</field>
+        <field name="model_id" ref="purchase.model_purchase_order_line"/>
+        <field name="groups" eval="[(4, ref('purchase.group_purchase_user'))]"/>
+    </record>
+    <record id="purchase_order_line_invoicing_rule" model="ir.rule" forcecreate="1">
+        <field name="name">Invoicing User Purchase Order Lines</field>
+        <field name="model_id" ref="purchase.model_purchase_order_line"/>
+        <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record id="purchase_order_line_invoicing_readonly_rule" model="ir.rule" forcecreate="1">
+        <field name="name">Invoicing Readonly User Purchase Order Lines</field>
+        <field name="model_id" ref="purchase.model_purchase_order_line"/>
+        <field name="groups" eval="[(4, ref('account.group_account_readonly'))]"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
     <record id="portal_purchase_order_user_rule" model="ir.rule">
         <field name="name">Portal Purchase Orders</field>
         <field name="model_id" ref="purchase.model_purchase_order"/>
