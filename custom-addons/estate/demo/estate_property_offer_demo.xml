@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Demo data for Estate Property Offers -->
+        
+        <!-- Offers for Big Villa -->
+        <!-- Using relative dates: create_date will be set to current date/time -->
+        <!-- Note: Offers must be at least 90% of expected price (1,600,000 * 0.9 = 1,440,000) -->
+        <record id="estate_property_offer_1" model="estate.property.offer">
+            <field name="price">1400000</field>
+            <field name="validity">14</field>
+            <field name="partner_id" ref="base.res_partner_12"/>  <!-- Azure Interior -->
+            <field name="property_id" ref="estate_property_big_villa"/>
+            <field name="create_date" eval="(datetime.now() - timedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        
+        <record id="estate_property_offer_2" model="estate.property.offer">
+            <field name="price">1500000</field>
+            <field name="validity">14</field>
+            <field name="partner_id" ref="base.res_partner_12"/>  <!-- Azure Interior -->
+            <field name="property_id" ref="estate_property_big_villa"/>
+            <field name="create_date" eval="(datetime.now() - timedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        
+        <record id="estate_property_offer_3" model="estate.property.offer">
+            <field name="price">1550000</field>
+            <field name="validity">14</field>
+            <field name="partner_id" ref="base.res_partner_3"/>  <!-- Gemini Furniture -->
+            <field name="property_id" ref="estate_property_big_villa"/>
+            <field name="create_date" eval="(datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        
+        <!-- Offers for Trailer home -->
+        <!-- Note: Offers must be at least 90% of expected price (100,000 * 0.9 = 90,000) -->
+        <record id="estate_property_offer_4" model="estate.property.offer">
+            <field name="price">80000</field>
+            <field name="validity">7</field>
+            <field name="partner_id" ref="base.res_partner_18"/>  <!-- Lumber Inc -->
+            <field name="property_id" ref="estate_property_trailer_home"/>
+            <field name="create_date" eval="(datetime.now() - timedelta(days=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        
+        <record id="estate_property_offer_5" model="estate.property.offer">
+            <field name="price">95000</field>
+            <field name="validity">10</field>
+            <field name="partner_id" ref="base.res_partner_3"/>  <!-- Gemini Furniture -->
+            <field name="property_id" ref="estate_property_trailer_home"/>
+            <field name="create_date" eval="(datetime.now() - timedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        
+        <!-- Accept the best offer for Big Villa (Gemini Furniture - 1,550,000) -->
+        <function model="estate.property.offer" name="action_accept">
+            <value eval="[ref('estate_property_offer_3')]"/>
+        </function>
+        
+        <!-- Refuse the other offers for Big Villa -->
+        <function model="estate.property.offer" name="action_refuse">
+            <value eval="[ref('estate_property_offer_1'), ref('estate_property_offer_2')]"/>
+        </function>
+        
+        <!-- Accept the best offer for Trailer home (Gemini Furniture - 95,000) -->
+        <function model="estate.property.offer" name="action_accept">
+            <value eval="[ref('estate_property_offer_5')]"/>
+        </function>
+        
+        <!-- Refuse the other offer for Trailer home -->
+        <function model="estate.property.offer" name="action_refuse">
+            <value eval="[ref('estate_property_offer_4')]"/>
+        </function>
+    </data>
+</odoo>

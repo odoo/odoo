@@ -129,35 +129,47 @@ class EstatePropertyOffer(models.Model):
             if float_compare(record.price, 0.0, precision_digits=2) <= 0:
                 raise ValidationError("Offer price must be strictly positive.")
     
-    @api.model
-    def create(self, vals):
-        """Override create method to set property state and validate price"""
-        # Получаем объект свойства
-        if 'property_id' in vals:
-            property_obj = self.env['estate.property'].browse(vals['property_id'])
-            
-            # Проверяем, что цена не ниже существующих предложений
-            if 'price' in vals:
-                existing_offers = self.env['estate.property.offer'].search([
-                    ('property_id', '=', vals['property_id'])
-                ])
-                
-                if existing_offers:
-                    # Находим максимальную цену из существующих предложений
-                    max_existing_price = max(existing_offers.mapped('price'))
-                    if float_compare(vals['price'], max_existing_price, precision_digits=2) < 0:
-                        raise ValidationError(
-                            f"Cannot create offer with price {vals['price']:.2f}. "
-                            f"It is lower than the highest existing offer price of {max_existing_price:.2f}."
-                        )
-            
-            # Создаем предложение через super()
-            offer = super().create(vals)
-            
-            # Обновляем состояние свойства на 'offer_received'
-            if property_obj.state == 'new':
-                property_obj.state = 'offer_received'
-            
-            return offer
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Override create method to set property state and validate price
         
-        return super().create(vals)
+        Validates that:
+        - Property is not sold
+        - Offer price is not lower than existing offers
+        """
+        # Обрабатываем каждое значение в списке
+        for vals in vals_list:
+            # Получаем объект свойства
+            if 'property_id' in vals:
+                property_obj = self.env['estate.property'].browse(vals['property_id'])
+                
+                # Проверяем, что объект не продан
+                if property_obj.state == 'sold':
+                    raise UserError(
+                        f"Cannot create an offer for a sold property ({property_obj.name})."
+                    )
+                
+                # Проверяем, что цена не ниже существующих предложений
+                if 'price' in vals:
+                    existing_offers = self.env['estate.property.offer'].search([
+                        ('property_id', '=', vals['property_id'])
+                    ])
+                    
+                    if existing_offers:
+                        # Находим максимальную цену из существующих предложений
+                        max_existing_price = max(existing_offers.mapped('price'))
+                        if float_compare(vals['price'], max_existing_price, precision_digits=2) < 0:
+                            raise ValidationError(
+                                f"Cannot create offer with price {vals['price']:.2f}. "
+                                f"It is lower than the highest existing offer price of {max_existing_price:.2f}."
+                            )
+        
+        # Создаем предложения через super()
+        offers = super().create(vals_list)
+        
+        # Обновляем состояние свойств на 'offer_received'
+        for offer in offers:
+            if offer.property_id.state == 'new':
+                offer.property_id.state = 'offer_received'
+        
+        return offers

@@ -6,7 +6,7 @@
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
             <list string="Properties" 
-                  decoration-success="state in ['sold', 'offer_received']"
+                  decoration-success="state in ['sold']"
                   decoration-danger="state == 'cancelled'">
 
                   <button name="%(action_report_estate_property)d"
@@ -160,6 +160,7 @@
                             <group string="Sales Information">
                                 <field name="salesperson_id"/>
                                 <field name="buyer_id"/>
+                                <field name="company_id" options="{'no_create': True}"/>
                             </group>
                             <group string="Status Information">
                                 <field name="active"/>

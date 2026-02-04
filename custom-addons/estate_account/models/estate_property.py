@@ -1,100 +1,88 @@
-from odoo import models, fields, api, Command
-from odoo.exceptions import UserError
+from odoo import models, fields, Command
 import logging
 
 _logger = logging.getLogger(__name__)
 
-class EstatePropertyInherit(models.Model):
-    """Inherit estate.property to add invoicing functionality"""
+
+class EstateProperty(models.Model):
     _inherit = 'estate.property'
     
-    invoice_id = fields.Many2one(
-        'account.move',
-        string='Invoice',
-        readonly=True,
-        copy=False,
-        tracking=True
-    )
+    invoice_id = fields.Many2one('account.move', string='Invoice', readonly=True, copy=False)
     
     def action_sold(self):
-        """Override sold action to create invoice with lines"""
+        """Override action_sold to create invoice when property is sold"""
         _logger.info("=== ESTATE ACCOUNT: Starting action_sold with invoice lines ===")
         
-       
+        # CRITICAL SECURITY CHECK: Verify user has permission to update this property
+        # This check happens BEFORE we use sudo() to create the invoice
+        # Without this check, any user could trigger invoice creation by calling this method
+        try:
+            self.check_access('write')
+            _logger.info(f"Security check passed for user {self.env.user.name} on property {self.name}")
+        except Exception as e:
+            _logger.error(f"Security check failed for user {self.env.user.name} on property {self.name}: {e}")
+            raise
+        
+        # Call parent method to set state to 'sold'
         result = super().action_sold()
         
-        for property in self:
-            if not property.buyer_id:
-                raise UserError(f"Cannot create invoice: No buyer for property {property.name}")
-            
-            if property.selling_price <= 0:
-                raise UserError(f"Cannot create invoice: Selling price must be positive for {property.name}")
-            
-            
-            company = self.env.company
-            
-            
-            journal = self.env['account.journal'].search([
-                ('type', '=', 'sale'),
-                ('company_id', '=', company.id)
-            ], limit=1)
-            
-            if not journal:
-                
-                journal = self.env['account.journal'].search([
-                    ('company_id', '=', company.id)
-                ], limit=1)
-                
-            if not journal:
-                raise UserError("No journal found. Please configure Accounting settings.")
-            
-            
-            commission_amount = property.selling_price * 0.06  
-            admin_fee = 100.00 
-            
-            
-            invoice = self.env['account.move'].create({
-                'partner_id': property.buyer_id.id,
-                'move_type': 'out_invoice',
-                'journal_id': journal.id,
-                'invoice_date': fields.Date.today(),
-                'invoice_origin': f"Property Sale: {property.name}",
-                'ref': f"RE-{property.name}",
-                
-                'invoice_line_ids': [
-                   
-                    Command.create({
-                        'name': f"Sales commission for property: {property.name}",
-                        'quantity': 1,
-                        'price_unit': commission_amount,
-                    }),
-                    
-                    Command.create({
-                        'name': "Administrative fees",
-                        'quantity': 1,
-                        'price_unit': admin_fee,
-                    }),
-                ]
-            })
-            
-           
-            property.invoice_id = invoice.id
-            
-            _logger.info(f"Created invoice: {invoice.name}")
-            _logger.info(f"Commission (6%): {commission_amount}")
-            _logger.info(f"Admin fee: {admin_fee}")
-            _logger.info(f"Total: {commission_amount + admin_fee}")
+        # Create invoice for the buyer
+        # We use sudo() here because agents don't have full accounting permissions
+        # but we've already verified they have permission to sell this property above
+        
+        _logger.info("=" * 100)
+        _logger.info(" " * 29 + "REACHED: About to create invoice with sudo()")
+        _logger.info("=" * 100)
+        
+        # SECURITY: Input validation before sudo()
+        # Validate that we have a buyer and selling price
+        if not self.buyer_id:
+            raise ValueError("Cannot create invoice without a buyer")
+        if not self.selling_price or self.selling_price <= 0:
+            raise ValueError("Cannot create invoice with invalid selling price")
+        
+        # Find the journal for invoices (using sudo because agents may not have journal access)
+        journal = self.env['account.journal'].sudo().search([
+            ('type', '=', 'sale'),
+            ('company_id', '=', self.env.company.id)
+        ], limit=1)
+        
+        if not journal:
+            raise ValueError("No sales journal found for invoice creation")
+        
+        # Calculate invoice amounts
+        # 6% commission on selling price
+        commission = self.selling_price * 0.06
+        # Administrative fee
+        admin_fee = 100.0
+        
+        # Create invoice (using sudo to bypass accounting permissions)
+        invoice = self.env['account.move'].sudo().create({
+            'partner_id': self.buyer_id.id,
+            'move_type': 'out_invoice',
+            'journal_id': journal.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': f'Commission for property: {self.name}',
+                    'quantity': 1,
+                    'price_unit': commission,
+                }),
+                Command.create({
+                    'name': 'Administrative fees',
+                    'quantity': 1,
+                    'price_unit': admin_fee,
+                }),
+            ],
+        })
+        
+        # Link invoice to property (also using sudo)
+        self.sudo().write({
+            'invoice_id': invoice.id,
+        })
+        
+        _logger.info(f"Created invoice: {invoice.name} (using sudo for security bypass)")
+        _logger.info(f"Commission (6%%): {commission}")
+        _logger.info(f"Admin fee: {admin_fee}")
+        _logger.info(f"Total: {commission + admin_fee}")
         
         return result
-    
-    def action_view_invoice(self):
-        """Open the invoice"""
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Invoice',
-            'res_model': 'account.move',
-            'res_id': self.invoice_id.id,
-            'view_mode': 'form',
-            'target': 'current',
-        }

@@ -13,10 +13,11 @@
     'license': 'LGPL-3',
     'depends': ['estate', 'account'],
     'data': [
-        'report/estate_reports.xml'
+        'views/estate_property_views.xml',
+        'report/estate_reports.xml',
     ],
     'demo': [],
-    # 'installable': True,
-    # 'application': False,
+    'installable': True,
+    'application': False,
     'auto_install': True,
 }

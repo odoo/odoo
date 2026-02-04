@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Real Estate Agent Group -->
+        <record id="estate_group_user" model="res.groups">
+            <field name="name">Agent</field>
+            <field name="category_id" ref="base.module_category_real_estate_brokerage"/>
+            <field name="comment">Real estate agents can manage properties under their care, or properties which are not specifically under the care of any agent.</field>
+        </record>
+
+        <!-- Real Estate Manager Group -->
+        <record id="estate_group_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="base.module_category_real_estate_brokerage"/>
+            <field name="implied_ids" eval="[(4, ref('estate_group_user'))]"/>
+            <field name="comment">Real estate managers can configure the system (manage available types and tags) as well as oversee every property in the pipeline.</field>
+        </record>
+
+        <!-- Record Rules -->
+        
+        <!-- Multi-company Rule: Global rule to restrict access by company -->
+        <!-- This rule is global (no groups specified) to ensure it applies to everyone -->
+        <!-- Users can only see properties belonging to companies they have access to -->
+        <record id="estate_property_rule_multi_company" model="ir.rule">
+            <field name="name">Multi-company: properties of user's companies</field>
+            <field name="model_id" ref="model_estate_property"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        
+        <!-- Rule: Agent can only see/modify properties without salesperson or where they are the salesperson -->
+        <record id="estate_property_rule_agent" model="ir.rule">
+            <field name="name">Agent: own properties or unassigned</field>
+            <field name="model_id" ref="model_estate_property"/>
+            <field name="groups" eval="[(4, ref('estate_group_user'))]"/>
+            <field name="domain_force">['|', ('salesperson_id', '=', user.id), ('salesperson_id', '=', False)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- Rule: Manager can see all properties -->
+        <!-- Manager implies Agent, so both rules apply with OR logic -->
+        <!-- This rule allows access to all properties (domain always true) -->
+        <record id="estate_property_rule_manager" model="ir.rule">
+            <field name="name">Manager: all properties</field>
+            <field name="model_id" ref="model_estate_property"/>
+            <field name="groups" eval="[(4, ref('estate_group_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+    </data>
+</odoo>

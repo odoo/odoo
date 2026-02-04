@@ -113,6 +113,16 @@ class EstateProperty(models.Model):
         default=lambda self: self.env.user
     )
     
+    # Multi-company field
+    company_id = fields.Many2one(
+        'res.company',
+        string='Company',
+        required=True,
+        default=lambda self: self.env.company,
+        index=True,
+        help="Company that owns this property"
+    )
+    
     # Many2many field for tags
     tag_ids = fields.Many2many(
         "estate.property.tag",
@@ -153,10 +163,21 @@ class EstateProperty(models.Model):
     
     # Action methods
     def action_sold(self):
-        """Mark property as sold"""
+        """Mark property as sold
+        
+        Validates that:
+        - Property is not cancelled
+        - Property has at least one accepted offer
+        """
         for record in self:
             if record.state == 'cancelled':
                 raise UserError("Cancelled properties cannot be sold.")
+            
+            # Check if there is at least one accepted offer
+            accepted_offers = record.offer_ids.filtered(lambda o: o.status == 'accepted')
+            if not accepted_offers:
+                raise UserError("Cannot sell a property without an accepted offer.")
+            
             record.state = 'sold'
         return True
     

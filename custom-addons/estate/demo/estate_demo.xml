@@ -1,25 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Property Types -->
-    <!-- Эти записи теперь будут в CSV, поэтому комментируем или удаляем -->
-    <!--
-    <record id="property_residential" model="estate.property.type">
-        <field name="name">Residential</field>
-    </record>
-
-    <record id="property_commercial" model="estate.property.type">
-        <field name="name">Commercial</field>
-    </record>
-
-    <record id="property_industrial" model="estate.property.type">
-        <field name="name">Industrial</field>
-    </record>
-
-    <record id="property_land" model="estate.property.type">
-        <field name="name">Land</field>
-    </record>
-    -->
-
     <!-- Properties -->
     <record id="villa" model="estate.property">
         <field name="name">Big Villa</field>
@@ -35,7 +15,7 @@
         <field name="garden">True</field>
         <field name="garden_area">100000</field>
         <field name="garden_orientation">south</field>
-        <field name="property_type_id" ref="estate_property_type_residential"/>
+        <field name="property_type_id" ref="estate_property_type_industrial"/>
         <field name="salesperson_id" ref="base.user_admin"/>
     </record>
 

@@ -1,7 +1,7 @@
 {
     'name': "Real Estate",
     'version': '1.0',
-    'category': 'Sales',
+    'category': 'Real Estate/Brokerage',
     'summary': 'Manage real estate properties',
     'description': """
         Real Estate Advertisement Module
@@ -9,8 +9,9 @@
     'license': 'LGPL-3',
     'depends': ['base'],
     'data': [
+        'security/estate_security.xml',
         'security/ir.model.access.csv',
-        'data/estate.property.type.csv',
+        'data/estate_property_type_data.xml',
         'views/estate_actions.xml',
         'views/estate_views.xml',
         'views/estate_search.xml',
@@ -26,6 +27,7 @@
     'demo': [
         'demo/estate_demo.xml',
         'demo/demo_data.xml',
+        'demo/estate_property_offer_demo.xml',
     ],
     'installable': True,
     'application': True,

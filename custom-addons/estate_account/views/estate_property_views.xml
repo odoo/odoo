@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit estate property form view to add invoice button -->
+    <record id="estate_property_view_form_inherit_account" model="ir.ui.view">
+        <field name="name">estate.property.form.inherit.account</field>
+        <field name="model">estate.property</field>
+        <field name="inherit_id" ref="estate.view_estate_property_form"/>
+        <field name="arch" type="xml">
+            <!-- Add invoice_id field in the header, visible only when invoice exists -->
+            <xpath expr="//header" position="inside">
+                <field name="invoice_id" invisible="1"/>
+            </xpath>
+            
+            <!-- Add invoice_id field in a new group at the end of the form -->
+            <xpath expr="//sheet" position="inside">
+                <group string="Accounting" invisible="not invoice_id">
+                    <field name="invoice_id" readonly="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

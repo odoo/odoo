@@ -30,7 +30,6 @@
         <field name="name">Property Offers</field>
         <field name="res_model">estate.property.offer</field>
         <field name="view_mode">list,form</field>
-        <field name="search_view_id" ref="view_estate_property_offer_list"/>
     </record>
     
     <!-- Property Offer Action filtered by Property Type -->
@@ -38,7 +37,6 @@
         <field name="name">Offers</field>
         <field name="res_model">estate.property.offer</field>
         <field name="view_mode">list,form</field>
-        <field name="search_view_id" ref="view_estate_property_offer_list"/>
         <field name="domain">[('property_type_id', '=', active_id)]</field>
     </record>
     

@@ -16,11 +16,12 @@
               action="action_estate_property" 
               sequence="10"/>
     
-    <!-- Settings Menu -->
+    <!-- Settings Menu (visible only to managers) -->
     <menuitem id="menu_estate_settings" 
               name="Settings" 
               parent="menu_estate_root" 
-              sequence="20"/>
+              sequence="20"
+              groups="estate_group_manager"/>
     
     <!-- Property Types under Settings -->
     <menuitem id="menu_estate_type" 

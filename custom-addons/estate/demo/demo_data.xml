@@ -41,5 +41,45 @@
             <!-- Убедитесь, что это тот же ID что в CSV -->
             <field name="property_type_id" ref="estate_property_type_residential"/>
         </record>
+        
+        <!-- Modern Apartment with inline offers using Command -->
+        <record id="estate_property_modern_apartment" model="estate.property">
+            <field name="name">Modern Apartment</field>
+            <field name="state">new</field>
+            <field name="description">A beautiful modern apartment in the city center with stunning views</field>
+            <field name="postcode">90210</field>
+            <field name="date_availability" eval="(datetime.now() + timedelta(days=30)).strftime('%Y-%m-%d')"/>
+            <field name="expected_price">500000</field>
+            <field name="bedrooms">3</field>
+            <field name="living_area">120</field>
+            <field name="facades">2</field>
+            <field name="garage">True</field>
+            <field name="garden">False</field>
+            <field name="garden_area">0</field>
+            <field name="garden_orientation">north</field>
+            <field name="property_type_id" ref="estate_property_type_residential"/>
+            
+            <!-- Create offers directly using Command.create -->
+            <field name="offer_ids" eval="[
+                Command.create({
+                    'price': 450000,
+                    'validity': 7,
+                    'partner_id': ref('base.res_partner_1'),
+                    'create_date': (datetime.now() - timedelta(days=6)).strftime('%Y-%m-%d %H:%M:%S'),
+                }),
+                Command.create({
+                    'price': 480000,
+                    'validity': 10,
+                    'partner_id': ref('base.res_partner_2'),
+                    'create_date': (datetime.now() - timedelta(days=4)).strftime('%Y-%m-%d %H:%M:%S'),
+                }),
+                Command.create({
+                    'price': 490000,
+                    'validity': 14,
+                    'partner_id': ref('base.res_partner_10'),
+                    'create_date': (datetime.now() - timedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S'),
+                }),
+            ]"/>
+        </record>
     </data>
 </odoo>
