@@ -1405,6 +1405,7 @@ class TestPointOfSaleFlow(CommonPosTest):
                 'name': fields.Datetime.now(),
                 'payment_method_id': self.cash_payment_method.id
             }]],
+            'is_refund': True,
         }]
         self.env['pos.order'].sync_from_ui(refund_values)
         refunded_order_line = self.env['pos.order.line'].search([('product_id', '=', product.id), ('qty', '=', -2)])
