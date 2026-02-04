@@ -511,7 +511,7 @@ env['res.partner'].create({'name': partner_name})
             <field name="name">Server Actions</field>
             <field name="model">ir.actions.server</field>
             <field name="arch" type="xml">
-                <kanban>
+                <kanban default_order="sequence, name, id">
                     <control>
                         <create string="Add an action" />
                     </control>
