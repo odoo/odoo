@@ -1214,7 +1214,7 @@ export class MockXMLHttpRequest extends MockEventTarget {
             this._setReadyState(XMLHttpRequest.LOADING);
             if (!this._responseMimeType) {
                 if (this._response.url.startsWith("blob:")) {
-                    this._responseMimeType = "blob";
+                    this._responseMimeType = MIME_TYPE.blob;
                 } else {
                     this._responseMimeType = this._response.headers.get(HEADER.contentType);
                 }

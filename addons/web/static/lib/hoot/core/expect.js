@@ -179,7 +179,7 @@ function detailsFromValues(...args) {
  * @param {...unknown} args
  */
 function detailsFromValuesWithDiff(...args) {
-    return detailsFromValues(...args).concat(Markup.diff(...args));
+    return detailsFromValues(...args).concat([Markup.diff(...args)]);
 }
 
 /**
