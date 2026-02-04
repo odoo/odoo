@@ -601,10 +601,17 @@ class CalendarRecurrence(models.Model):
             rrule_params['byweekday'] = weekdays
             rrule_params['wkst'] = self._get_lang_week_start()
 
+        # Limit the number of years to avoid creating recurrent events for up to hundreds of years
+        limit_years = self.env['ir.config_parameter'].sudo().get_int('calendar.max_recurrence_years', 15)
         if self.end_type == 'count':  # e.g. stop after X occurence
             rrule_params['count'] = min(self.count, MAX_RECURRENT_EVENT)
         elif self.end_type == 'forever':
-            rrule_params['count'] = MAX_RECURRENT_EVENT
+            if freq == 'yearly':
+                rrule_params['count'] = min(limit_years, MAX_RECURRENT_EVENT)
+            elif freq == 'monthly':
+                rrule_params['count'] = min(limit_years * 12, MAX_RECURRENT_EVENT)
+            else:
+                rrule_params['count'] = MAX_RECURRENT_EVENT
         elif self.end_type == 'end_date':  # e.g. stop after 12/10/2020
             rrule_params['until'] = datetime.combine(self.until, time.max)
         return rrule.rrule(
