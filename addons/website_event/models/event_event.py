@@ -740,7 +740,7 @@ class EventEvent(models.Model):
 
             tickets.append(ticket_schema)
         # We have to take care of elements active in sidebar (website) remove them
-        # If view if inactive.
+        # If view if inactive. TODO
         return SchemaBuilder("Event").set(
             name=name,
             start_date=start_date,
