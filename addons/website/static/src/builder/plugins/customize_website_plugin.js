@@ -69,7 +69,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             TemplatePreviewableWebsiteConfigAction,
             SelectTemplateAction,
         },
-        color_combination_getters: withSequence(5, (el, actionParam) => {
+        color_combination_providers: withSequence(5, (el, actionParam) => {
             const combination = actionParam.combinationColor;
             if (combination) {
                 const style = getHtmlStyle(this.document);
@@ -320,7 +320,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 this.services.ui.block({ delay: 2500 });
                 return applyFn({ ...arg, value: v })
                     .then(() => {
-                        this.dispatchTo("trigger_dom_updated");
+                        this.dispatchTo("trigger_dom_updated_handlers");
                     })
                     .finally(() => this.services.ui.unblock());
             };
@@ -529,7 +529,7 @@ export class CustomizeBodyBgTypeAction extends BuilderAction {
                 getAction("customizeBodyBgType")
                     .load({ editingElement, params, value, historyImageSrc: imageSrc })
                     .then(() => {
-                        this.dispatchTo("trigger_dom_updated");
+                        this.dispatchTo("trigger_dom_updated_handlers");
                     })
                     .finally(() => this.services.ui.unblock());
             },
@@ -543,7 +543,7 @@ export class CustomizeBodyBgTypeAction extends BuilderAction {
                         historyImageSrc: oldImageSrc,
                     })
                     .then(() => {
-                        this.dispatchTo("trigger_dom_updated");
+                        this.dispatchTo("trigger_dom_updated_handlers");
                     })
                     .finally(() => this.services.ui.unblock());
             },

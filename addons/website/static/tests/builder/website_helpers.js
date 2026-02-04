@@ -407,7 +407,7 @@ export function addDropZoneSelector(selector) {
     class P extends Plugin {
         static id = pluginId;
         resources = {
-            dropzone_selector: [selector],
+            dropzone_selectors: [selector],
         };
     }
     addPlugin(P);

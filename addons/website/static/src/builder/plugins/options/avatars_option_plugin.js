@@ -48,7 +48,7 @@ class AvatarsOptionPlugin extends Plugin {
         builder_actions: {
             AvatarsChangeOrderAction,
         },
-        so_content_addition_selector: [".s_avatars"],
+        so_content_addition_selectors: [".s_avatars"],
     };
 
     addAvatar(editingElement) {

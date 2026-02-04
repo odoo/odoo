@@ -35,11 +35,11 @@ class ProductCatalogOptionPlugin extends Plugin {
             withSequence(BEGIN, AddProductCatalogSectionOption),
             withSequence(SNIPPET_SPECIFIC_END, ProductCatalogDescriptionOption),
         ],
-        dropzone_selector: {
+        dropzone_selectors: {
             selector: ".s_product_catalog_dish",
             dropNear: ".s_product_catalog_dish",
         },
-        is_movable_selector: { selector: ".s_product_catalog_dish", direction: "vertical" },
+        is_movable_selectors: { selector: ".s_product_catalog_dish", direction: "vertical" },
         // Protect pricelist item, price, and description blocks from being
         // split/merged by the delete plugin.
         unsplittable_node_predicates: (node) =>

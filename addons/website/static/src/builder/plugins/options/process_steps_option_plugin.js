@@ -39,7 +39,7 @@ class ProcessStepsOptionPlugin extends Plugin {
             applyFunDependOnSelectorAndExclude(reloadConnectors, rootEl, {
                 selector: ProcessStepsOption.selector,
             }),
-        dropzone_selector: {
+        dropzone_selectors: {
             selector: ".s_process_step",
             dropLockWithin: ".s_process_steps",
         },

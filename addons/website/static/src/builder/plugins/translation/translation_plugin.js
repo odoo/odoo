@@ -7,7 +7,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { makeContentsInline, unwrapContents } from "@html_editor/utils/dom";
 
 /**
- * @typedef {((editableEls: HTMLElement[]) => void)[]} mark_translatable_nodes
+ * @typedef {((editableEls: HTMLElement[]) => void)[]} mark_translatable_nodes_handlers
  */
 
 const TRANSLATED_ATTRS = ["placeholder", "title", "alt", "value"];
@@ -53,7 +53,7 @@ export class TranslationPlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
-        get_dirty_els: this.getDirtyTranslations.bind(this),
+        dirty_els_providers: this.getDirtyTranslations.bind(this),
         after_setup_editor_handlers: () => {
             const translationSavableEls = getTranslationAttributeEls(
                 this.services.website.pageDocument
@@ -301,7 +301,7 @@ export class TranslationPlugin extends Plugin {
                 });
             });
         }
-        this.dispatchTo("mark_translatable_nodes", this.editableEls);
+        this.dispatchTo("mark_translatable_nodes_handlers", this.editableEls);
     }
 
     updateTranslationMap(translateEl, translation, attrName) {

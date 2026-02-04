@@ -51,7 +51,7 @@ class EcommCategoriesShowcaseOptionPlugin extends Plugin {
             BlockCountAction,
             SpacingToggleAction,
         },
-        dropzone_selector: {
+        dropzone_selectors: {
             selector: ".s_ecomm_categories_showcase_block",
             dropNear: ".s_ecomm_categories_showcase_block",
         },

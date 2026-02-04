@@ -20,7 +20,7 @@ import { isHtmlContentSupported } from "./selection_plugin";
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
  *
- * @typedef {(() => boolean)[]} bypass_paste_image_files
+ * @typedef {(() => boolean)[]} bypass_paste_image_files_predicates
  */
 
 const CLIPBOARD_BLACKLISTS = {
@@ -250,7 +250,7 @@ export class ClipboardPlugin extends Plugin {
      * @param {DataTransfer} clipboardData
      */
     handlePasteHtml(selection, clipboardData) {
-        const files = this.delegateTo("bypass_paste_image_files")
+        const files = this.delegateTo("bypass_paste_image_files_predicates")
             ? []
             : getImageFiles(clipboardData);
         const clipboardHtml = clipboardData.getData("text/html");
@@ -366,7 +366,7 @@ export class ClipboardPlugin extends Plugin {
         for (const tableElement of container.querySelectorAll("table")) {
             tableElement.classList.add("table", "table-bordered", "o_table");
         }
-        if (this.delegateTo("bypass_paste_image_files")) {
+        if (this.delegateTo("bypass_paste_image_files_predicates")) {
             for (const imgElement of container.querySelectorAll("img")) {
                 imgElement.remove();
             }

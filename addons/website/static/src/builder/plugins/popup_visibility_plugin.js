@@ -15,8 +15,8 @@ export class PopupVisibilityPlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        target_show: this.onTargetShow.bind(this),
-        target_hide: this.onTargetHide.bind(this),
+        target_show_handlers: this.onTargetShow.bind(this),
+        target_hide_handlers: this.onTargetHide.bind(this),
         clean_for_save_handlers: this.cleanForSave.bind(this),
         on_restore_containers_handlers: this.hidePopupsWithoutTarget.bind(this),
         on_reveal_target_handlers: this.hidePopupsWithoutTarget.bind(this),

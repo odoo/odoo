@@ -12,8 +12,8 @@ import { withSequence } from "@html_editor/utils/resource";
  */
 
 /**
- * @typedef {((targetEl: HTMLElement) => void)[]} target_hide
- * @typedef {((targetEl: HTMLElement) => void)[]} target_show
+ * @typedef {((targetEl: HTMLElement) => void)[]} target_hide_handlers
+ * @typedef {((targetEl: HTMLElement) => void)[]} target_show_handlers
  */
 
 const invisibleElementsSelector =
@@ -32,7 +32,10 @@ export class VisibilityPlugin extends Plugin {
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        on_mobile_preview_clicked: withSequence(10, this.onMobilePreviewClicked.bind(this)),
+        on_mobile_preview_clicked_handlers: withSequence(
+            10,
+            this.onMobilePreviewClicked.bind(this)
+        ),
         system_attributes: ["data-invisible"],
         system_classes: ["o_snippet_override_invisible"],
         clean_for_save_handlers: this.cleanForSaveVisibility.bind(this),
@@ -144,7 +147,7 @@ export class VisibilityPlugin extends Plugin {
      */
     toggleTargetVisibility(editingEl, show, considerDeviceVisibility, isCleaning = false) {
         show = this.toggleVisibilityStatus(editingEl, show, considerDeviceVisibility);
-        const resourceName = show ? "target_show" : "target_hide";
+        const resourceName = show ? "target_show_handlers" : "target_hide_handlers";
         this.dispatchTo(resourceName, editingEl);
         return show;
     }

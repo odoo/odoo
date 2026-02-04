@@ -43,11 +43,11 @@ class PriceListCafePlugin extends Plugin {
             withSequence(BEGIN, AddProductPricelistCafeRowOption),
             withSequence(SNIPPET_SPECIFIC_END, PriceListCafeDescriptionOption),
         ],
-        dropzone_selector: {
+        dropzone_selectors: {
             selector: ".s_pricelist_cafe_item",
             dropNear: ".s_pricelist_cafe_item",
         },
-        is_movable_selector: { selector: ".s_pricelist_cafe_item", direction: "vertical" },
+        is_movable_selectors: { selector: ".s_pricelist_cafe_item", direction: "vertical" },
         // Protect pricelist item, price, and description blocks from being
         // split/merged by the delete plugin.
         unsplittable_node_predicates: (node) =>

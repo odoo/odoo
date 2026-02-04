@@ -47,7 +47,7 @@ import { deepCopy, deepMerge } from "@web/core/utils/objects";
  *         shapeAnimationSpeed: number,
  *         shapeColors: string,
  *     }
- * ) => Promise<void>)[]} post_compute_shape_listeners
+ * ) => Promise<void>)[]} post_compute_shape_handlers
  */
 
 // Regex definitions to apply speed modification in SVG files
@@ -298,7 +298,7 @@ export class ImageShapeOptionPlugin extends Plugin {
             );
         }
 
-        for (const cb of this.getResource("post_compute_shape_listeners")) {
+        for (const cb of this.getResource("post_compute_shape_handlers")) {
             await cb(svg, params);
         }
 

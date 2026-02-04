@@ -9,8 +9,8 @@ export class WebsiteVisibilityPlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         system_classes: ["o_conditional_hidden"],
-        target_show: this.onTargetShow.bind(this),
-        target_hide: this.onTargetHide.bind(this),
+        target_show_handlers: this.onTargetShow.bind(this),
+        target_hide_handlers: this.onTargetHide.bind(this),
     };
 
     onTargetHide(editingEl) {

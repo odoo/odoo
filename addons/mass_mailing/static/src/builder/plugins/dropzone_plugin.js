@@ -6,7 +6,7 @@ class DropzonePlugin extends Plugin {
     static id = "mass_mailing.DropzonePlugin";
 
     resources = {
-        dropzone_selector: [
+        dropzone_selectors: [
             {
                 selector:
                     ".s_mail_blockquote, .s_mail_alert, .s_rating, .s_hr, .s_mail_text_highlight",

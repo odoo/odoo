@@ -2,8 +2,8 @@ import { Plugin } from "@html_editor/plugin";
 
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
 /**
- * @typedef {CSSSelector[]} so_content_addition_selector
- * @typedef {CSSSelector[]} so_snippet_addition_selector
+ * @typedef {CSSSelector[]} so_content_addition_selectors
+ * @typedef {CSSSelector[]} so_snippet_addition_selectors
  */
 
 const card_parent_handlers =
@@ -16,10 +16,10 @@ const so_snippet_addition_drop_in =
 // TODO need to split by addons
 
 export class DropZoneSelectorPlugin extends Plugin {
-    static id = "dropzone_selector";
+    static id = "dropzone_selectors";
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        dropzone_selector: [
+        dropzone_selectors: [
             {
                 selector: ".accordion > .accordion-item",
                 dropIn: ".accordion:has(> .accordion-item)",
@@ -27,7 +27,7 @@ export class DropZoneSelectorPlugin extends Plugin {
             {
                 plugin: this,
                 get selector() {
-                    return this.plugin.getResource("so_snippet_addition_selector").join(", ");
+                    return this.plugin.getResource("so_snippet_addition_selectors").join(", ");
                 },
                 dropIn: so_snippet_addition_drop_in,
             },
@@ -35,7 +35,7 @@ export class DropZoneSelectorPlugin extends Plugin {
                 plugin: this,
                 get selector() {
                     return [
-                        ...this.plugin.getResource("so_content_addition_selector"),
+                        ...this.plugin.getResource("so_content_addition_selectors"),
                         ".s_card",
                     ].join(", ");
                 },
@@ -43,7 +43,7 @@ export class DropZoneSelectorPlugin extends Plugin {
                 dropIn: "nav, .row.o_grid_mode",
                 get dropNear() {
                     return `p, h1, h2, h3, ul, ol, div:not(.o_grid_item_image) > img, div:not(.o_grid_item_image) > a, .btn, ${this.plugin
-                        .getResource("so_content_addition_selector")
+                        .getResource("so_content_addition_selectors")
                         .join(", ")}, .s_card:not(${special_cards_selector})`;
                 },
                 excludeNearParent: so_snippet_addition_drop_in,
@@ -59,8 +59,8 @@ export class DropZoneSelectorPlugin extends Plugin {
                 dropNear: ".row.o_grid_mode > div",
             },
         ],
-        so_snippet_addition_selector: ["section", ".parallax", ".s_hr"],
-        so_content_addition_selector: [
+        so_snippet_addition_selectors: ["section", ".parallax", ".s_hr"],
+        so_content_addition_selectors: [
             "blockquote",
             ".s_text_highlight",
             ".s_donation", // TODO: move to plugin

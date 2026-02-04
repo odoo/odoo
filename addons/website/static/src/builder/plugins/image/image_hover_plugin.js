@@ -25,7 +25,7 @@ export class ImageHoverPlugin extends Plugin {
         system_attributes: ["data-original-src-before-hover"],
         default_shape_handlers: (dataset) =>
             dataset.hoverEffect && "html_builder/geometric/geo_square",
-        post_compute_shape_listeners: async (svg, params) => {
+        post_compute_shape_handlers: async (svg, params) => {
             let rgba = null;
             let rbg = null;
             let opacity = null;

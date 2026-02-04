@@ -58,10 +58,10 @@ import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
  */
 
 /**
- * @typedef {((containers: BuilderOptionContainer[]) => void)[]} change_current_options_containers_listeners
+ * @typedef {((containers: BuilderOptionContainer[]) => void)[]} change_current_options_containers_handlers
  * @typedef {((newTargetEl: HTMLElement) => void)[]} on_restore_containers_handlers
  *
- * @typedef {((el: HTMLElement) => [] | BuilderButtonDescriptor[])[]} get_options_container_top_buttons
+ * @typedef {((el: HTMLElement) => [] | BuilderButtonDescriptor[])[]} options_container_top_buttons_providers
  *
  * @typedef {{
  *     Component: Component;
@@ -85,7 +85,7 @@ import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
  *      editableOnly?: boolean;
  * }[]} has_overlay_options
  * @typedef {CSSSelector[]} no_parent_containers
- * @typedef {((el: HTMLElement) => boolean)[]} keep_overlay_options
+ * @typedef {((el: HTMLElement) => boolean)[]} keep_overlay_options_predicates
  */
 /**
  * @typedef {((arg: { el: HTMLElement, reasons: [] }) => void)[]} clone_disabled_reason_providers
@@ -292,7 +292,7 @@ export class BuilderOptionsPlugin extends Plugin {
         }
 
         this.lastContainers = newContainers;
-        this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
+        this.dispatchTo("change_current_options_containers_handlers", this.lastContainers);
     }
 
     getTarget() {
@@ -302,7 +302,7 @@ export class BuilderOptionsPlugin extends Plugin {
     deactivateContainers() {
         this.target = null;
         this.lastContainers = [];
-        this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
+        this.dispatchTo("change_current_options_containers_handlers", this.lastContainers);
     }
 
     computeContainers(target) {
@@ -387,7 +387,7 @@ export class BuilderOptionsPlugin extends Plugin {
         const parentEl = el.parentElement;
         const isAloneInColumn = parentEl?.children.length === 1 && parentEl.matches(".row > div");
         const isInnerSnippet = this.config.snippetModel.isInnerContent(el);
-        const keepOptions = this.delegateTo("keep_overlay_options", el);
+        const keepOptions = this.delegateTo("keep_overlay_options_predicates", el);
         if (isInnerSnippet && isAloneInColumn && !keepOptions) {
             return false;
         }
@@ -402,7 +402,9 @@ export class BuilderOptionsPlugin extends Plugin {
 
     getOptionsContainerTopButtons(el) {
         const buttons = [];
-        for (const getContainerButtons of this.getResource("get_options_container_top_buttons")) {
+        for (const getContainerButtons of this.getResource(
+            "options_container_top_buttons_providers"
+        )) {
             buttons.push(...getContainerButtons(el));
             for (const button of buttons) {
                 const handler = button.handler;

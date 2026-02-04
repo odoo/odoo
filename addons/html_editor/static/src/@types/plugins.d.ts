@@ -4,13 +4,13 @@ declare module "plugins" {
     import { ResourceWithSequence } from "@html_editor/utils/resource";
 
     import { BaseContainerShared, invalid_for_base_container_predicates } from "@html_editor/core/base_container_plugin";
-    import { added_image_handlers, after_paste_handlers, before_paste_handlers, bypass_paste_image_files, clipboard_content_processors, clipboard_text_processors, ClipboardShared, paste_text_overrides } from "@html_editor/core/clipboard_plugin";
+    import { added_image_handlers, after_paste_handlers, before_paste_handlers, bypass_paste_image_files_predicates, clipboard_content_processors, clipboard_text_processors, ClipboardShared, paste_text_overrides } from "@html_editor/core/clipboard_plugin";
     import { content_editable_providers, content_not_editable_providers, contenteditable_to_remove_selector, valid_contenteditable_predicates } from "@html_editor/core/content_editable_plugin";
     import { before_delete_handlers, delete_backward_line_overrides, delete_backward_overrides, delete_backward_word_overrides, delete_forward_line_overrides, delete_forward_overrides, delete_forward_word_overrides, delete_handlers, delete_range_overrides, DeleteShared, functional_empty_node_predicates, is_empty_predicates, removable_descendants_providers, system_node_selectors, unremovable_node_predicates } from "@html_editor/core/delete_plugin";
     import { DialogShared } from "@html_editor/core/dialog_plugin";
     import { after_insert_handlers, before_insert_processors, before_set_tag_handlers, DomShared, node_to_insert_processors, system_attributes, system_classes, system_style_properties } from "@html_editor/core/dom_plugin";
     import { format_class_predicates, format_selection_handlers, FormatShared, has_format_predicates, remove_all_formats_handlers } from "@html_editor/core/format_plugin";
-    import { attribute_change_handlers, attribute_change_processors, before_add_step_handlers, before_filter_mutation_record_handlers, content_updated_handlers, external_step_added_handlers, handleNewRecords, history_cleaned_handlers, history_reset_from_steps_handlers, history_reset_handlers, history_step_processors, HistoryShared, post_redo_handlers, post_undo_handlers, restore_savepoint_handlers, savable_mutation_record_predicates, serializable_descendants_processors, set_attribute_overrides, step_added_handlers, unreversible_step_predicates } from "@html_editor/core/history_plugin";
+    import { attribute_change_handlers, attribute_change_processors, before_add_step_handlers, before_filter_mutation_record_handlers, content_updated_handlers, external_step_added_handlers, new_records_handlers, history_cleaned_handlers, history_reset_from_steps_handlers, history_reset_handlers, history_step_processors, HistoryShared, post_redo_handlers, post_undo_handlers, restore_savepoint_handlers, savable_mutation_record_predicates, serializable_descendants_processors, set_attribute_overrides, step_added_handlers, unreversible_step_predicates } from "@html_editor/core/history_plugin";
     import { beforeinput_handlers, input_handlers } from "@html_editor/core/input_plugin";
     import { before_line_break_handlers, insert_line_break_element_overrides, LineBreakShared } from "@html_editor/core/line_break_plugin";
     import { OverlayShared } from "@html_editor/core/overlay_plugin";
@@ -25,7 +25,7 @@ declare module "plugins" {
     import { BannerShared } from "@html_editor/main/banner_plugin";
     import { EmojiShared } from "@html_editor/main/emoji_plugin";
     import { feff_providers, FeffShared, legit_feff_predicates, selectors_for_feff_providers } from "@html_editor/main/feff_plugin";
-    import { apply_background_color_processors, apply_color_style_overrides, color_apply_overrides, color_combination_getters, ColorShared, get_background_color_processors } from "@html_editor/main/font/color_plugin";
+    import { apply_background_color_processors, apply_color_style_overrides, color_apply_overrides, color_combination_providers, ColorShared, get_background_color_processors } from "@html_editor/main/font/color_plugin";
     import { ColorUIShared } from "@html_editor/main/font/color_ui_plugin";
     import { before_insert_within_pre_processors, font_items } from "@html_editor/main/font/font_plugin";
     import { hint_targets_providers, hints } from "@html_editor/main/hint_plugin";
@@ -46,7 +46,7 @@ declare module "plugins" {
     import { powerbox_blacklist_selectors, powerbox_categories, powerbox_items, PowerboxShared } from "@html_editor/main/powerbox/powerbox_plugin";
     import { deselect_custom_selected_nodes_handlers, TableShared } from "@html_editor/main/table/table_plugin";
     import { shift_tab_overrides, tab_overrides, TabulationShared } from "@html_editor/main/tabulation_plugin";
-    import { can_display_toolbar, collapsed_selection_toolbar_predicate, toolbar_groups, toolbar_items, toolbar_namespaces, ToolbarShared } from "@html_editor/main/toolbar/toolbar_plugin";
+    import { toolbar_groups, toolbar_items, toolbar_namespaces, ToolbarShared } from "@html_editor/main/toolbar/toolbar_plugin";
 
     import { CollaborationOdooShared } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
     import { CollaborationShared, external_history_step_handlers } from "@html_editor/others/collaboration/collaboration_plugin";
@@ -146,7 +146,7 @@ declare module "plugins" {
         external_history_step_handlers: external_history_step_handlers;
         external_step_added_handlers: external_step_added_handlers;
         format_selection_handlers: format_selection_handlers;
-        handleNewRecords: handleNewRecords;
+        new_records_handlers: new_records_handlers;
         history_cleaned_handlers: history_cleaned_handlers;
         history_reset_handlers: history_reset_handlers;
         history_reset_from_steps_handlers: history_reset_from_steps_handlers;
@@ -196,9 +196,7 @@ declare module "plugins" {
         tab_overrides: tab_overrides;
 
         // Predicates
-        bypass_paste_image_files: bypass_paste_image_files;
-        can_display_toolbar: can_display_toolbar;
-        collapsed_selection_toolbar_predicate: collapsed_selection_toolbar_predicate;
+        bypass_paste_image_files_predicates: bypass_paste_image_files_predicates;
         format_class_predicates: format_class_predicates;
         fully_selected_node_predicates: fully_selected_node_predicates;
         functional_empty_node_predicates: functional_empty_node_predicates;
@@ -237,7 +235,7 @@ declare module "plugins" {
 
         // Providers
         closest_savable_providers: closest_savable_providers;
-        color_combination_getters: color_combination_getters;
+        color_combination_providers: color_combination_providers;
         content_editable_providers: content_editable_providers;
         content_not_editable_providers: content_not_editable_providers;
         feff_providers: feff_providers;

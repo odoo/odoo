@@ -22,7 +22,7 @@ class CountdownOptionPlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(before(SNIPPET_SPECIFIC_END), CountdownOption)],
-        so_content_addition_selector: [".s_countdown"],
+        so_content_addition_selectors: [".s_countdown"],
         builder_actions: {
             SetEndActionAction,
             PreviewEndMessageAction,

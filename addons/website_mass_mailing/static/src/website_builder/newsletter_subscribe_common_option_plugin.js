@@ -22,7 +22,7 @@ class NewsletterSubscribeCommonOptionPlugin extends Plugin {
             withSequence(NEWSLETTER_SELECT, NewsletterSubscribeCommonPopupOption),
             withSequence(SNIPPET_SPECIFIC, MailingListSubscribeFormOption),
         ],
-        dropzone_selector: [
+        dropzone_selectors: [
             {
                 selector: ".js_subscribe",
                 dropNear: "p, h1, h2, h3, blockquote, .card",

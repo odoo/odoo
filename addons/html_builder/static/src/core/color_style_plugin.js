@@ -16,7 +16,7 @@ class ColorStylePlugin extends Plugin {
             applyNeededCss(element, cssProp, color);
             return true;
         }),
-        apply_custom_css_style: withSequence(20, this.applyColorStyle.bind(this)),
+        apply_custom_css_style_overrides: withSequence(20, this.applyColorStyle.bind(this)),
     };
     applyColorStyle({ editingElement, params: { mainParam: styleName = "" }, value }) {
         if (styleName === "background-color") {

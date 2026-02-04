@@ -39,7 +39,7 @@ class TimelineOptionPlugin extends Plugin {
             withSequence(DOT_LINES_COLOR, DotLinesColorOption),
             withSequence(DOT_COLOR, DotColorOption),
         ],
-        dropzone_selector: {
+        dropzone_selectors: {
             selector: ".s_timeline_row",
             dropNear: ".s_timeline_row",
         },
@@ -47,7 +47,7 @@ class TimelineOptionPlugin extends Plugin {
         get_overlay_buttons: withSequence(0, {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
-        is_movable_selector: { selector: ".s_timeline_row", direction: "vertical" },
+        is_movable_selectors: { selector: ".s_timeline_row", direction: "vertical" },
     };
 
     setup() {

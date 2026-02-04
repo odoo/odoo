@@ -16,12 +16,12 @@ class SupportedPaymentMethodsOptionPlugin extends Plugin {
     static id = 'supportedPaymentMethodsOption';
     static dependencies = ['edit_interaction'];
     resources = {
-        so_content_addition_selector: ['.s_supported_payment_methods'],
+        so_content_addition_selectors: ['.s_supported_payment_methods'],
         builder_options: [
             withSequence(SNIPPET_SPECIFIC, SupportedPaymentMethodsOption),
         ],
         builder_actions: { SupportedPaymentMethodsLimit, SupportedPaymentMethodsHeight },
-        get_options_container_top_buttons: withSequence(0, this.getOptionButtons.bind(this)),
+        options_container_top_buttons_providers: withSequence(0, this.getOptionButtons.bind(this)),
         get_overlay_buttons: withSequence(0, { getButtons: this.getOptionButtons.bind(this) }),
     };
 

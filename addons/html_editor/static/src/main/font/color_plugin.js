@@ -39,7 +39,7 @@ const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`)
  * @typedef {((color: string, mode: "color" | "backgroundColor") => string)[]} apply_background_color_processors
  * @typedef {((color: string) => string)[]} get_background_color_processors
  *
- * @typedef {((el: HTMLElement, actionParam: string) => string)[]} color_combination_getters
+ * @typedef {((el: HTMLElement, actionParam: string) => string)[]} color_combination_providers
  */
 
 export class ColorPlugin extends Plugin {
@@ -66,7 +66,7 @@ export class ColorPlugin extends Plugin {
         ],
         /** Handlers */
         remove_all_formats_handlers: this.removeAllColor.bind(this),
-        color_combination_getters: getColorCombinationFromClass,
+        color_combination_providers: getColorCombinationFromClass,
 
         /** Predicates */
         has_format_predicates: [
@@ -471,7 +471,7 @@ export class ColorPlugin extends Plugin {
     }
 
     getColorCombination(el, actionParam) {
-        for (const handler of this.getResource("color_combination_getters")) {
+        for (const handler of this.getResource("color_combination_providers")) {
             const value = handler(el, actionParam);
             if (value) {
                 return value;
