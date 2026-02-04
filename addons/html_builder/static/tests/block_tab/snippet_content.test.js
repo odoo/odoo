@@ -127,7 +127,7 @@ test("A snippet should appear disabled if there is nowhere to drop it", async ()
         dropzoneSelectors,
     });
     expect(contentEl).toHaveInnerHTML("");
-    expect(".o_block_tab .o_snippet.o_disabled").toHaveCount(2);
+    expect(".o_block_tab .o_snippet.o_block_disabled").toHaveCount(2);
 });
 
 test.tags("desktop");

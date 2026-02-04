@@ -4,14 +4,15 @@
 <t t-name="html_builder.CustomInnerSnippet">
     <t t-set="disabledTooltip">This block cannot be dropped anywhere on this page.</t>
     <div class="o_snippet"
-        t-att-class="{'o_disabled': snippet.isDisabled, 'o_draggable': !snippet.isDisabled and !state.isRenaming}"
+        t-att-class="{'o_block_disabled': snippet.isDisabled, 'o_draggable': !snippet.isDisabled and !state.isRenaming}"
         t-att-name="snippet.title"
         t-att-data-id="snippet.id"
         t-att-data-tooltip="snippet.isDisabled and props.disabledTooltip">
         <div class="o_snippet_thumbnail" t-att-data-snippet="snippet.name">
             <button t-if="!snippet.isInstallable" class="o_snippet_thumbnail_area" t-on-click="props.onClickHandler" title="Insert snippet"/>
             <Image t-if="snippet.isDisabled" src="'/html_builder/static/img/snippet_disabled.svg'" class="'o_snippet_undroppable'"/>
-            <div class="o_snippet_thumbnail_img" t-attf-style="background-image: url({{snippet.thumbnailSrc}});"/>
+            <!-- <div class="o_snippet_thumbnail_img" t-attf-style="background-image: url({{snippet.thumbnailSrc}});"/> -->
+            <img class="o_snippet_thumbnail_img" t-attf-src="{{snippet.thumbnailSrc}}"/>
             <t t-if="state.isRenaming">
                 <div class="rename-input w-100 mx-1 z-1">
                     <input t-ref="rename-input" type="text" autocomplete="chrome-off" t-att-value="snippet.title" class="text-start" t-on-pointerdown.stop=""/>
