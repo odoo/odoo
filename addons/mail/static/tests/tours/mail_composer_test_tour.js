@@ -164,6 +164,10 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             run: "click",
         },
         {
+            content: "Check incite for click 'full composer' button (to restore formatting)",
+            trigger: ".o-mail-Composer button[title='Open Full Composer'].active",
+        },
+        {
             content: "Check full composer text is kept",
             trigger: ".o-mail-Composer-input:value(keep the content)",
         },
@@ -188,6 +192,12 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Click on Send Message",
             trigger: "button:contains(Send message)",
+            run: "click",
+        },
+        {
+            content: "Continue Message Composition with Small Composer",
+            trigger:
+                ".o_popover:contains('Continue with Full Composer?') button:contains('No (Remove formatting)')",
             run: "click",
         },
         {
