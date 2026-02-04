@@ -34,12 +34,10 @@ export class PortalChatterService {
             twoColumns: chatterEl.getAttribute("data-two_columns") === "true" ? true : false,
             displayRating: chatterEl.getAttribute("data-display_rating") === "True" ? true : false,
         };
-        const root = document.createElement("div");
-        root.setAttribute("id", "chatterRoot");
+        const root = chatterEl.querySelector("#chatterRoot");
         if (props.twoColumns) {
             root.classList.add("p-0");
         }
-        chatterEl.appendChild(root);
         this.createShadow(root).then((shadow) => {
             new App(PortalChatter, {
                 env,
