@@ -15,8 +15,8 @@ import {
 
 import { mockBrowserFactory } from "./mock_browser.hoot";
 import { mockCurrencyFactory } from "./mock_currency.hoot";
-import { mockIndexedDB } from "./mock_indexed_db.hoot";
 import { mockFunctionsFactory } from "./mock_functions.hoot";
+import { mockIndexedDB } from "./mock_indexed_db.hoot";
 import { mockSessionFactory } from "./mock_session.hoot";
 import { makeTemplateFactory } from "./mock_templates.hoot";
 import { mockUserFactory } from "./mock_user.hoot";
