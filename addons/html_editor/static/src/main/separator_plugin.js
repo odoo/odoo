@@ -32,7 +32,6 @@ export class SeparatorPlugin extends Plugin {
         normalize_handlers: this.normalize.bind(this),
         selectionchange_handlers: this.handleSelectionInHr.bind(this),
         deselect_custom_selected_nodes_handlers: this.deselectHR.bind(this),
-        clean_handlers: this.deselectHR.bind(this),
         clean_for_save_handlers: ({ root }) => {
             for (const el of root.querySelectorAll("hr[contenteditable]")) {
                 el.removeAttribute("contenteditable");
