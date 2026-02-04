@@ -90,6 +90,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
                 (4, cls.env.ref('base.group_user').id),
                 (4, cls.env.ref('point_of_sale.group_pos_user').id),
                 (4, cls.env.ref('stock.group_stock_user').id),
+                (4, cls.env.ref('base.group_partner_manager').id),
             ],
             'tz': 'America/New_York',
         })
@@ -3988,6 +3989,10 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_pos_open_ui_button(self):
         """ Test the Open Register button click behavior in the dashboard. """
         self.start_tour("/odoo/point-of-sale", 'test_pos_open_ui_button', login="pos_user")
+
+    def test_customer_search_prefilled_on_create(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_customer_search_prefilled_on_create')
 
 
 # This class just runs the same tests as above but with mobile emulation
