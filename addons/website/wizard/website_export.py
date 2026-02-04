@@ -8,6 +8,8 @@ from odoo import Command, api, fields, models, release
 
 from .website_transfer_utils import (
     ATTACHMENT_PAYLOAD_FIELDS,
+    ASSET_PAYLOAD_FIELDS,
+    CONTROLLER_PAGE_PAYLOAD_FIELDS,
     MENU_PAYLOAD_FIELDS,
     PAGE_PAYLOAD_FIELDS,
     VIEW_PAYLOAD_FIELDS,
@@ -60,6 +62,23 @@ class WebsiteExportWizard(models.TransientModel):
             return self.env["website.page"].search(self._get_page_domain())
         return self.page_ids
 
+    def _get_controller_page_domain(self):
+        website_id = self.website_id.id if self.website_id else False
+        return [("website_id", "in", [website_id, False])]
+
+    def _get_controller_pages_to_export(self):
+        return self.env["website.controller.page"].search(self._get_controller_page_domain())
+
+    def _get_website_settings_fields(self):
+        return []
+
+    def _get_extra_views_to_export(self, views):
+        extra_views = self.env["ir.ui.view"].search([
+            ("website_id", "=", self.website_id.id),
+            ("type", "=", "qweb"),
+        ])
+        return extra_views - views
+
     def _collect_pages(self, pages):
         data = []
         for page in pages:
@@ -73,6 +92,43 @@ class WebsiteExportWizard(models.TransientModel):
             values["inherit_key"] = view.inherit_id.key
             data.append(values)
         return data
+
+    def _collect_controller_pages(self, controller_pages):
+        data = []
+        for controller_page in controller_pages:
+            data.append(serialize_record(controller_page, CONTROLLER_PAGE_PAYLOAD_FIELDS))
+        return data
+
+    def _collect_assets(self):
+        assets = self.env["ir.asset"].with_context(active_test=False).search([
+            ("website_id", "=", self.website_id.id),
+        ])
+        data = []
+        for asset in assets:
+            data.append(serialize_record(asset, ASSET_PAYLOAD_FIELDS))
+        return data
+
+    def _collect_asset_attachments(self, assets):
+        attachment_ids = set()
+        for asset in assets:
+            path = asset.get("path") if isinstance(asset, dict) else asset.path
+            if path and path.startswith("/_custom/"):
+                attachment = self.env["ir.attachment"].search([("url", "=", path)], limit=1)
+                if attachment:
+                    attachment_ids.add(attachment.id)
+        if not attachment_ids:
+            return []
+        data = []
+        for attachment in self.env["ir.attachment"].browse(sorted(attachment_ids)):
+            data.append(serialize_record(attachment, ATTACHMENT_PAYLOAD_FIELDS))
+        return data
+
+    def _collect_website_settings(self):
+        settings = {}
+        for field_name in self._get_website_settings_fields():
+            if field_name in self.website_id._fields:
+                settings[field_name] = self.website_id[field_name]
+        return settings
 
     def _collect_menus(self, pages):
         menus = self.env["website.menu"].search([
@@ -142,17 +198,32 @@ class WebsiteExportWizard(models.TransientModel):
     def _collect_export_data(self):
         self.ensure_one()
         pages = self._get_pages_to_export()
-        views = pages.mapped("view_id")
+        controller_pages = self._get_controller_pages_to_export()
+        views = (
+            pages.mapped("view_id")
+            | controller_pages.mapped("view_id")
+            | controller_pages.mapped("record_view_id")
+        )
+        views |= self._get_extra_views_to_export(views)
+        assets = self._collect_assets()
         menus = self._collect_menus(pages)
         attachments = self._collect_attachments(views, menus) if self.include_assets else []
+        if self.include_assets and assets:
+            asset_attachments = self._collect_asset_attachments(assets)
+            if asset_attachments:
+                existing_ids = {item.get("id") for item in attachments}
+                attachments.extend([item for item in asset_attachments if item.get("id") not in existing_ids])
         return {
             "website": {
                 "id": self.website_id.id,
                 "name": self.website_id.name,
                 "homepage_url": self.website_id.homepage_url,
             },
+            "website_settings": self._collect_website_settings(),
             "pages": self._collect_pages(pages),
+            "controller_pages": self._collect_controller_pages(controller_pages),
             "views": self._collect_views(views),
+            "assets": assets,
             "menus": menus,
             "attachments": attachments,
         }
@@ -192,8 +263,11 @@ class WebsiteExportWizard(models.TransientModel):
                         item["file_path"] = file_path
 
                 payload_files = {
+                    "website_settings.json": payload["website_settings"],
                     "pages.json": payload["pages"],
+                    "controller_pages.json": payload["controller_pages"],
                     "views.json": payload["views"],
+                    "assets.json": payload["assets"],
                     "menus.json": payload["menus"],
                     "attachments.json": attachments,
                 }
