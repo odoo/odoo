@@ -1137,6 +1137,7 @@ class ResCompany(models.Model):
             self.env['ir.default'].set('product.category', 'property_account_expense_categ_id', company.expense_account_id.id, company_id=company.id)
             self.env['ir.default'].set('product.category', 'property_account_income_categ_id', company.income_account_id.id, company_id=company.id)
 
+    # Deprecated, removed in master.
     def _check_tax_return_configuration(self):
         """
         To override in localizations to check if the company is properly configured for tax returns.

@@ -1,8 +1,4 @@
-import pytz
-from stdnum.in_ import pan, gstin
-
 from odoo import Command, _, api, fields, models
-from odoo.exceptions import RedirectWarning
 
 
 class ResCompany(models.Model):
@@ -172,18 +168,3 @@ class ResCompany(models.Model):
     def action_update_state_as_per_gstin(self):
         self.ensure_one()
         self.partner_id.action_update_state_as_per_gstin()
-
-    def _check_tax_return_configuration(self):
-        """
-        Check if the company is properly configured for tax returns.
-        :raises RedirectWarning: if something is wrong configured.
-        """
-
-        if self.country_code != 'IN':
-            return super()._check_tax_return_configuration()
-
-        is_l10n_in_reports_installed = 'l10n_in_reports' in self.env['ir.module.module']._installed()
-        if not is_l10n_in_reports_installed:
-            msg = _("First enable GST e-Filing feature from configuration for company %s.", (self.name))
-            action = self.env.ref("account.action_account_config")
-            raise RedirectWarning(msg, action.id, _('Go to configuration'))
