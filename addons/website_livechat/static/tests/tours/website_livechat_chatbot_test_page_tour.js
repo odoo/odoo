@@ -31,6 +31,12 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_test_page_tour
         {
             trigger: messagesContain("Can you give us your email please?"),
             run() {
+                const url = new URL(location.href);
+                if (url.hash !== "#chatbot-redirect") {
+                    throw new Error(
+                        "Chatbot should have redirected to the #chatbot-redirect anchor."
+                    );
+                }
                 window.location.reload();
             },
             expectUnloadPage: true,

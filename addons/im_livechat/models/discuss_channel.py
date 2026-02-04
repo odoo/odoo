@@ -985,3 +985,7 @@ class DiscussChannel(models.Model):
                     "operatorFound": True,
                 },
             ).bus_send()
+
+    def _broadcast_on_create(self):
+        channels = self.filtered(lambda c: not is_livechat_channel(c))
+        super(DiscussChannel, channels)._broadcast_on_create()
