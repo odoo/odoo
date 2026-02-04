@@ -24,12 +24,25 @@ PAGE_PAYLOAD_FIELDS = (
     "breadcrumb_text_color",
 )
 
+CONTROLLER_PAGE_PAYLOAD_FIELDS = (
+    "view_id",
+    "record_view_id",
+    "record_domain",
+    "default_layout",
+    "name_slugified",
+    "is_published",
+    "publish_on",
+)
+
 VIEW_PAYLOAD_FIELDS = (
     "key",
     "name",
     "type",
+    "model",
     "arch_db",
     "inherit_id",
+    "mode",
+    "priority",
     "website_id",
     "active",
     "track",
@@ -46,6 +59,7 @@ MENU_PAYLOAD_FIELDS = (
     "name",
     "url",
     "page_id",
+    "controller_page_id",
     "parent_id",
     "website_id",
     "sequence",
@@ -65,6 +79,18 @@ ATTACHMENT_PAYLOAD_FIELDS = (
     "res_model",
     "res_id",
     "website_id",
+)
+
+ASSET_PAYLOAD_FIELDS = (
+    "name",
+    "bundle",
+    "directive",
+    "path",
+    "target",
+    "active",
+    "sequence",
+    "website_id",
+    "key",
 )
 
 

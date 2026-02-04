@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import controllers, models, report
+from . import controllers, models, report, wizard
 
 
 def _post_init_hook(env):  # noqa: RUF067

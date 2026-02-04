@@ -10,6 +10,8 @@ from odoo.tools.urls import urljoin as url_join
 
 from .website_transfer_utils import (
     ATTACHMENT_PAYLOAD_FIELDS,
+    ASSET_PAYLOAD_FIELDS,
+    CONTROLLER_PAGE_PAYLOAD_FIELDS,
     MENU_PAYLOAD_FIELDS,
     PAGE_PAYLOAD_FIELDS,
     VIEW_PAYLOAD_FIELDS,
@@ -20,6 +22,20 @@ from .website_transfer_utils import (
 MAX_IMPORT_FILE_SIZE = 100 * 1024 * 1024
 MAX_IMPORT_TOTAL_SIZE = 200 * 1024 * 1024
 MAX_IMPORT_FILES = 2000
+
+HEADER_TEMPLATE_KEYS = (
+    "website.template_header_default",
+    "website.template_header_hamburger",
+    "website.template_header_boxed",
+    "website.template_header_stretch",
+    "website.template_header_vertical",
+    "website.template_header_search",
+    "website.template_header_sales_one",
+    "website.template_header_sales_two",
+    "website.template_header_sales_three",
+    "website.template_header_sales_four",
+    "website.template_header_sidebar",
+)
 
 
 class WebsiteImportWizard(models.TransientModel):
@@ -85,6 +101,38 @@ class WebsiteImportWizard(models.TransientModel):
         except json.JSONDecodeError as e:
             raise UserError(_("Invalid JSON in %s", filename)) from e
 
+    def _read_optional_archive_json(self, archive, archive_files, filename, default):
+        if filename in archive_files:
+            return self._read_archive_json(archive, filename)
+        return default
+
+    def _build_payload_files(
+        self,
+        archive_files,
+        pages,
+        views,
+        menus,
+        attachments,
+        website_settings=None,
+        controller_pages=None,
+        assets=None,
+    ):
+        payload_files = {
+            "pages.json": pages,
+            "views.json": views,
+            "menus.json": menus,
+            "attachments.json": attachments,
+        }
+        optional_files = {
+            "website_settings.json": website_settings,
+            "controller_pages.json": controller_pages,
+            "assets.json": assets,
+        }
+        for filename, payload in optional_files.items():
+            if filename in archive_files:
+                payload_files[filename] = payload
+        return payload_files
+
     def _validate_manifest(self, manifest):
         version = manifest.get("odoo_version")
         if version != release.version:
@@ -93,7 +141,7 @@ class WebsiteImportWizard(models.TransientModel):
                 odoo_version=release.version,
                 archive_version=version,
             ))
-            #TODO DUAU: do we add a dialog: "Do you want to continue? You may experience some errors etc" 
+            # TODO DUAU: do we add a dialog: "Do you want to continue? You may experience some errors etc"
 
         modules = manifest.get("modules", [])
 
@@ -135,6 +183,55 @@ class WebsiteImportWizard(models.TransientModel):
         self.env["website.page"].search([
             ("website_id", "=", website.id),
         ]).unlink()
+
+    def _get_website_settings_fields(self):
+        return []
+
+    # TODO DUAU: this prevent header template corruption, there may be a better way
+    def _apply_header_template_selection(self, website, views_payload):
+        active_keys = {
+            view.get("key")
+            for view in views_payload
+            if view.get("active") and view.get("key") in HEADER_TEMPLATE_KEYS
+        }
+        if not active_keys:
+            return
+        view_model = self.env["ir.ui.view"].with_context(active_test=False)
+        for key in HEADER_TEMPLATE_KEYS:
+            website_view = view_model.search([
+                ("key", "=", key),
+                ("website_id", "=", website.id),
+            ], limit=1)
+            if key in active_keys:
+                if website_view:
+                    if not website_view.active:
+                        website_view.write({"active": True})
+                    continue
+                generic_view = view_model.search([
+                    ("key", "=", key),
+                    ("website_id", "=", False),
+                ], limit=1)
+                if generic_view:
+                    generic_view.copy({
+                        "website_id": website.id,
+                        "key": key,
+                        "active": True,
+                    })
+                continue
+            if website_view:
+                if website_view.active:
+                    website_view.write({"active": False})
+                continue
+            generic_view = view_model.search([
+                ("key", "=", key),
+                ("website_id", "=", False),
+            ], limit=1)
+            if generic_view:
+                generic_view.copy({
+                    "website_id": website.id,
+                    "key": key,
+                    "active": False,
+                })
 
     def _import_views(self, views, website):
         view_model = self.env["ir.ui.view"]
@@ -184,7 +281,7 @@ class WebsiteImportWizard(models.TransientModel):
             if not existing:
                 pages_by_url[url] = page
                 continue
-            if page.get("website_id") == source_website_id and not existing.get("website_id") == source_website_id:
+            if page.get("website_id") == source_website_id and existing.get("website_id") != source_website_id:
                 pages_by_url[url] = page
         return pages_by_url
 
@@ -214,6 +311,32 @@ class WebsiteImportWizard(models.TransientModel):
                     page_model.browse(created_by_url.get(page.get("url"))).parent_id = new_parent
         return page_map
 
+    def _import_controller_pages(self, controller_pages, view_map):
+        controller_page_model = self.env["website.controller.page"]
+        controller_page_map = {}
+        for controller_page in controller_pages:
+            new_view_id = view_map.get(controller_page.get("view_id"))
+            if not new_view_id:
+                raise UserError(_("Missing view mapping for controller page %s.", controller_page.get("name_slugified")))
+            record_view_id = controller_page.get("record_view_id")
+            new_record_view_id = False
+            if record_view_id:
+                new_record_view_id = view_map.get(record_view_id)
+                if not new_record_view_id:
+                    raise UserError(_("Missing record view mapping for controller page %s.", controller_page.get("name_slugified")))
+            values = extract_payload_values(
+                controller_page,
+                CONTROLLER_PAGE_PAYLOAD_FIELDS,
+                skip=("view_id", "record_view_id"),
+            )
+            values.update({
+                "view_id": new_view_id,
+                "record_view_id": new_record_view_id,
+            })
+            new_controller_page = controller_page_model.create(values)
+            controller_page_map[controller_page["id"]] = new_controller_page.id
+        return controller_page_map
+
     def _select_menus(self, menus, source_website_id):
         preferred = [menu for menu in menus if menu.get("website_id") == source_website_id]
         if preferred:
@@ -221,7 +344,7 @@ class WebsiteImportWizard(models.TransientModel):
         fallback = [menu for menu in menus if not menu.get("website_id")]
         return fallback or menus
 
-    def _import_menus(self, menus, website, page_map, source_website_id):
+    def _import_menus(self, menus, website, page_map, controller_page_map, source_website_id):
         menu_model = self.env["website.menu"]
         menus = self._select_menus(menus, source_website_id)
         menu_map = {}
@@ -239,6 +362,7 @@ class WebsiteImportWizard(models.TransientModel):
                 )
                 values.update({
                     "page_id": page_map.get(menu.get("page_id"), False),
+                    "controller_page_id": controller_page_map.get(menu.get("controller_page_id"), False),
                     "parent_id": menu_map.get(parent_id, False),
                     "website_id": website.id,
                 })
@@ -280,7 +404,7 @@ class WebsiteImportWizard(models.TransientModel):
         )
         return arch
 
-    def _import_attachments(self, archive, attachments, website, view_map, page_map, menu_map):
+    def _import_attachments(self, archive, attachments, website, view_map, page_map, controller_page_map, menu_map):
         attachment_model = self.env["ir.attachment"]
         attachment_map = {}
         dedupe_map = {}
@@ -300,12 +424,15 @@ class WebsiteImportWizard(models.TransientModel):
                     continue
             res_model = item.get("res_model")
             res_id = item.get("res_id")
-            if res_model == "ir.ui.view":
-                res_id = view_map.get(res_id)
-            elif res_model == "website.page":
-                res_id = page_map.get(res_id)
-            elif res_model == "website.menu":
-                res_id = menu_map.get(res_id)
+            match res_model:
+                case "ir.ui.view":
+                    res_id = view_map.get(res_id)
+                case "website.page":
+                    res_id = page_map.get(res_id)
+                case "website.controller.page":
+                    res_id = controller_page_map.get(res_id)
+                case "website.menu":
+                    res_id = menu_map.get(res_id)
             values = extract_payload_values(
                 item,
                 ATTACHMENT_PAYLOAD_FIELDS,
@@ -334,6 +461,19 @@ class WebsiteImportWizard(models.TransientModel):
                     menu.mega_menu_content = new_content
         return attachment_map
 
+    def _import_assets(self, assets, website):
+        if not assets:
+            return
+        asset_model = self.env["ir.asset"].with_context(active_test=False)
+        for asset in assets:
+            values = extract_payload_values(
+                asset,
+                ASSET_PAYLOAD_FIELDS,
+                skip=("website_id",),
+            )
+            values["website_id"] = website.id
+            asset_model.create(values)
+
     def _finalize_import(self):
         self.env.registry.clear_cache('templates')
         self.env.registry.clear_cache('routing')
@@ -352,17 +492,41 @@ class WebsiteImportWizard(models.TransientModel):
         self.ensure_one()
         with self._open_import_archive() as archive:
             manifest = self._read_archive_json(archive, "manifest.json")
+            archive_files = set(archive.namelist())
+            website_settings_payload = self._read_optional_archive_json(
+                archive,
+                archive_files,
+                "website_settings.json",
+                {},
+            )
             pages_payload = self._read_archive_json(archive, "pages.json")
+            controller_pages_payload = self._read_optional_archive_json(
+                archive,
+                archive_files,
+                "controller_pages.json",
+                [],
+            )
             views_payload = self._read_archive_json(archive, "views.json")
+            assets_payload = self._read_optional_archive_json(
+                archive,
+                archive_files,
+                "assets.json",
+                [],
+            )
             menus_payload = self._read_archive_json(archive, "menus.json")
             attachments = self._read_archive_json(archive, "attachments.json")
             self._validate_manifest(manifest)
-            self._validate_payload_checksum(manifest, {
-                "pages.json": pages_payload,
-                "views.json": views_payload,
-                "menus.json": menus_payload,
-                "attachments.json": attachments,
-            })
+            payload_files = self._build_payload_files(
+                archive_files,
+                pages_payload,
+                views_payload,
+                menus_payload,
+                attachments,
+                website_settings=website_settings_payload,
+                controller_pages=controller_pages_payload,
+                assets=assets_payload,
+            )
+            self._validate_payload_checksum(manifest, payload_files)
             self._validate_attachments(archive, attachments)
 
             manifest_website = manifest.get("website", {})
@@ -379,11 +543,36 @@ class WebsiteImportWizard(models.TransientModel):
             if "homepage_url" in manifest_website:
                 website_values["homepage_url"] = manifest_website.get("homepage_url", False)
             website = self.env["website"].create(website_values)
+            if website_settings_payload:
+                settings = {
+                    field_name: website_settings_payload.get(field_name)
+                    for field_name in self._get_website_settings_fields()
+                    if field_name in website._fields and field_name in website_settings_payload
+                }
+                if settings:
+                    website.write(settings)
             self._prepare_target_website(website)
             view_map = self._import_views(views_payload, website)
+            self._apply_header_template_selection(website, views_payload)
             page_map = self._import_pages(pages_payload, view_map, manifest_website.get("id"))
-            menu_map = self._import_menus(menus_payload, website, page_map, manifest_website.get("id"))
-            attachment_map = self._import_attachments(archive, attachments, website, view_map, page_map, menu_map)
+            controller_page_map = self._import_controller_pages(controller_pages_payload, view_map)
+            menu_map = self._import_menus(
+                menus_payload,
+                website,
+                page_map,
+                controller_page_map,
+                manifest_website.get("id"),
+            )
+            attachment_map = self._import_attachments(
+                archive,
+                attachments,
+                website,
+                view_map,
+                page_map,
+                controller_page_map,
+                menu_map,
+            )
+            self._import_assets(assets_payload, website)
             self._finalize_import()
             summary = self._build_import_summary(website, view_map, page_map, menu_map, attachment_map)
             summary_wizard = self.env["website.import.summary.wizard"].create({
