@@ -412,24 +412,26 @@ patch(PosStore.prototype, {
         const orderChanges = this.getOrderChanges(order);
         const linesChanges = orderChanges.orderlines;
 
-        const categories = Object.values(linesChanges).reduce((acc, curr) => {
-            const categories =
-                this.models["product.product"].get(curr.product_id)?.product_tmpl_id
-                    ?.pos_categ_ids || [];
+        const categories = Object.values(linesChanges)
+            .filter((l) => !l.isCombo)
+            .reduce((acc, curr) => {
+                const categories =
+                    this.models["product.product"].get(curr.product_id)?.product_tmpl_id
+                        ?.pos_categ_ids || [];
 
-            for (const category of categories.slice(0, 1)) {
-                if (!acc[category.id]) {
-                    acc[category.id] = {
-                        count: curr.quantity,
-                        name: category.name,
-                    };
-                } else {
-                    acc[category.id].count += curr.quantity;
+                for (const category of categories.slice(0, 1)) {
+                    if (!acc[category.id]) {
+                        acc[category.id] = {
+                            count: curr.quantity,
+                            name: category.name,
+                        };
+                    } else {
+                        acc[category.id].count += curr.quantity;
+                    }
                 }
-            }
 
-            return acc;
-        }, {});
+                return acc;
+            }, {});
         const noteCount = ["general_customer_note", "internal_note"].reduce(
             (count, note) => count + (note in orderChanges ? 1 : 0),
             0

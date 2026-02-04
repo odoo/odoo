@@ -552,6 +552,22 @@ registry.category("web_tour.tours").add("test_combo_preparation_receipt", {
             combo.select("Combo Product 5"),
             combo.select("Combo Product 8"),
             Dialog.confirm(),
+            {
+                content: "Check action pad category counts",
+                trigger:
+                    ".submit-order .product-category-label:contains('Category 1') + label:contains('2')",
+            },
+            {
+                trigger:
+                    ".submit-order .product-category-label:contains('Category 2') + label:contains('2')",
+            },
+            {
+                trigger:
+                    ".submit-order .product-category-label:contains('Category 3') + label:contains('2')",
+            },
+            Chrome.clickPlanButton(),
+            FloorScreen.orderCountSyncedInTableIs("5", "6"),
+            FloorScreen.clickTable("5"),
             checkPreparationTicketData([
                 { name: "Office Combo", qty: 1 },
                 { name: "Combo Product 2", qty: 1 },
