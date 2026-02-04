@@ -24,6 +24,7 @@ export class ImportDataContent extends Component {
     getGroups(column) {
         const groups = [
             { choices: this.makeChoices(column.fields.basic) },
+            { choices: this.makeChoices(column.fields.required), label: _t("Required Fields") },
             { choices: this.makeChoices(column.fields.suggested), label: _t("Suggested Fields") },
             {
                 choices: this.makeChoices(column.fields.additional),
@@ -82,6 +83,7 @@ export class ImportDataContent extends Component {
     onFieldChanged(column, fieldPath) {
         const fields = [
             ...column.fields.basic,
+            ...column.fields.required,
             ...column.fields.suggested,
             ...column.fields.additional,
             ...column.fields.relational,

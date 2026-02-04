@@ -23,10 +23,9 @@
                         resModel="this.resModel"
                         route="this.uploadFilesRoute"
                     >
-                        <button t-if="isPreviewing" type="button" class="btn btn-secondary">Load Data File</button>
-                        <button t-else="" type="button" class="btn btn-primary o_import_file">Upload Data File</button>
+                        <button t-if="isPreviewing" type="button" class="btn btn-secondary">Re-Upload</button>
+                        <button t-else="" type="button" class="btn btn-primary o_import_file">Upload</button>
                     </FileInput>
-                    <button t-on-click="cancel" type="button" class="btn btn-secondary">Discard</button>
                 </t>
                 <t t-if="isPreviewing">
                     <ImportDataSidepanel
@@ -36,7 +35,6 @@
                         importTemplates="importTemplates"
                         isBatched="isBatched"
                         onOptionChanged.bind="onOptionChanged"
-                        onReload.bind="reload"
                         hasBinaryFields="hasBinaryFields"
                         binaryFilesParams="model.binaryFilesParams"
                         onBinaryFilesParamsChanged.bind="(name, value) => model.onBinaryFilesParamsChanged(name, value)"
@@ -54,20 +52,24 @@
                 <div t-else="" class="o_view_nocontent">
                     <div class="o_nocontent_help">
                         <p class="o_view_nocontent_smiling_face">
-                            Drop or upload a file to import
+                            <FileInput
+                                acceptedFileExtensions="'.csv, .xls, .xlsx, .xlsm, .ods'"
+                                onUpload.bind="(data, files) => this.handleFilesUpload(files)"
+                                resId="model.id"
+                                resModel="this.resModel"
+                                route="this.uploadFilesRoute"
+                            >
+                                <button type="button" class="btn btn-primary o_import_file">Upload</button>
+                            </FileInput>
+                            <span class="text-muted fw-normal"> or drag a file</span>
                         </p>
-                        <p>
-                            Excel files are recommended as formatting is automatic.<br/>
-                            But, you can also use .csv files
-                        </p>
-                        <div class="mt16 mb4">
-                            Need Help? <DocumentationLink path="'/applications/general/export_import_data.html'" label.translate="Import FAQ"/>
-                        </div>
-                        <div t-foreach="importTemplates" t-as="template" t-key="template.template">
-                            <a class="btn btn-outline-primary my8" t-att-href="template.template" aria-label="Download" data-tooltip="Download">
-                                <i class="fa fa-download"/> <span><t t-esc="template.label"/></span>
+                        <div class="mb-2" t-foreach="importTemplates" t-as="template" t-key="template.template">
+                            <a t-att-href="template.template" aria-label="Download" data-tooltip="Download">
+                                <i class="fa fa-download pe-1"/>
+                                <span><t t-esc="template.label"/></span>
                             </a>
                         </div>
+                        <DocumentationLink path="'/applications/general/export_import_data.html'" label.translate="Documentation" icon="'fa-question-circle'"/>
                     </div>
                 </div>
             </Layout>

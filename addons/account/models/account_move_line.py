@@ -3551,7 +3551,7 @@ class AccountMoveLine(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Journal Items'),
+            'label': _('Template for Journal Items'),
             'template': '/account/static/xls/aml_import_template.xlsx'
         }]
 

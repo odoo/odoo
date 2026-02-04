@@ -1565,7 +1565,7 @@ class ProductTemplate(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Products'),
+            'label': _('Template for Products'),
             'template': '/product/static/xls/products_import_template.xlsx'
         }]
 

@@ -13,7 +13,6 @@ export class ImportDataSidepanel extends Component {
         importTemplates: { type: Array, optional: true },
         isBatched: { type: Boolean, optional: true },
         onOptionChanged: { type: Function },
-        onReload: { type: Function },
         hasBinaryFields: { type: Boolean },
         binaryFilesParams: { type: Object },
         onBinaryFilesParamsChanged: { type: Function },
@@ -25,6 +24,28 @@ export class ImportDataSidepanel extends Component {
 
     get fileExtension() {
         return "." + this.props.filename.split(".").pop();
+    }
+
+    get attachmentsTooltip() {
+        return _t(
+            "Upload attachments such as images or files that can be mapped with imported data"
+        );
+    }
+
+    get batchLimitTooltip() {
+        return _t(
+            "Defines the number of records that will be imported in one transaction. Reduce the batch size in case of heavy imports"
+        );
+    }
+
+    get headersTooltip() {
+        return _t("If checked, the first row of the sheet will not be imported");
+    }
+
+    get trackingTooltip() {
+        return _t(
+            "If checked, the changes are tracked in the chatter and notifications can be sent to followers, which could slow down the import"
+        );
     }
 
     getOptionValue(name) {

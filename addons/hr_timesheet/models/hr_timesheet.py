@@ -546,7 +546,7 @@ class AccountAnalyticLine(models.Model):
     def get_import_templates(self):
         if self.env.context.get('is_timesheet'):
             return [{
-                'label': _('Import Template for Timesheets'),
+                'label': _('Template for Timesheets'),
                 'template': '/hr_timesheet/static/xls/timesheets_import_template.xlsx',
             }]
         return []

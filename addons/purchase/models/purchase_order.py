@@ -1423,7 +1423,7 @@ class PurchaseOrder(models.Model):
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Import Template for Requests for Quotation'),
+            'label': _('Template for Requests for Quotation'),
             'template': '/purchase/static/xls/requests_for_quotation_import_template.xlsx',
         }]
 

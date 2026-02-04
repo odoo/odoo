@@ -480,7 +480,7 @@ class test_required_string_field(ImporterCase):
         result = self.import_(['value'], [[]])
         self.assertEqual(len(result['messages']), 1)
         result_message = result['messages'][0]
-        expected_message = message("Missing required value for the field 'Value' (value)")
+        expected_message = message("Missing required field 'Value' (value)")
         self.assertIn(expected_message.pop('message'), result_message.pop('message'))
         self.assertEqual(result_message, expected_message)
         self.assertIs(result['ids'], False)
@@ -490,7 +490,7 @@ class test_required_string_field(ImporterCase):
         result = self.import_(['const'], [['12']])
         self.assertEqual(len(result['messages']), 1)
         result_message = result['messages'][0]
-        expected_message = message("Missing required value for the field 'Value' (value)")
+        expected_message = message("Missing required field 'Value' (value)")
         self.assertIn(expected_message.pop('message'), result_message.pop('message'))
         self.assertEqual(result_message, expected_message)
         self.assertIs(result['ids'], False)
@@ -502,7 +502,7 @@ class test_required_string_field(ImporterCase):
         self.assertEqual(len(result['messages']), 11)
         for m in result['messages'][:-1]:
             self.assertEqual(m['type'], 'error')
-            self.assertIn("Missing required value for the field 'Value' (value)", m['message'])
+            self.assertIn("Missing required field 'Value' (value)", m['message'])
         last = result['messages'][-1]
         self.assertEqual(last['type'], 'warning')
         self.assertEqual(
