@@ -634,7 +634,8 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(production.reserve_visible, True)
         backorder = produce_one(production)
         self.assertEqual(backorder.state, 'confirmed')
-        self.assertEqual(backorder.reserve_visible, True)
+        # The backorder is re reserved as the date_start is now 'now'
+        self.assertEqual(backorder.reserve_visible, False)
 
         # within scheduled date + reservation days before => auto-assign
         production = create_mo()

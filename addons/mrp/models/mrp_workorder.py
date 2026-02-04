@@ -576,8 +576,12 @@ class MrpWorkorder(models.Model):
         # Plan only suitable workorders
         if not replan:
             return
+        self._internal_plan_workorder(date_start, self.workcenter_id | self.workcenter_id.alternative_workcenter_ids)
+
+    def _internal_plan_workorder(self, date_start, workcenters):
+        self.ensure_one()
         # Consider workcenter and alternatives
-        workcenters = self.workcenter_id | self.workcenter_id.alternative_workcenter_ids
+        # workcenters = self.workcenter_id | self.workcenter_id.alternative_workcenter_ids
         best_date_finished = datetime.max
         vals = {}
         for workcenter in workcenters:
@@ -887,6 +891,31 @@ class MrpWorkorder(models.Model):
             if wo.duration == 0.0:
                 wo.duration = wo.duration_expected
                 wo.duration_percent = 100
+
+    def action_plan(self):
+        for workorder in self:
+            if workorder.state in ['done', 'cancel']:
+                continue
+            workorder.leave_id.unlink()
+            date_to_plan_on = max((wo.leave_id.date_to for wo in workorder.blocked_by_workorder_ids if wo.leave_id), default=datetime.now())
+            if self.env.context.get('date_to_plan_on'):
+                date_to_plan_on = fields.Datetime.from_string(self.env.context.get('date_to_plan_on'))
+            workcenter_to_plan_on = workorder.workcenter_id
+            if self.env.context.get('workcenter_to_plan_on'):
+                workcenter_to_plan_on = self.env['mrp.workcenter'].browse(self.env.context.get('workcenter_to_plan_on'))
+            workorder._internal_plan_workorder(date_to_plan_on, workcenter_to_plan_on)
+            if not workorder.blocked_by_workorder_ids:
+                initial_workorders = workorder.production_id.workorder_ids.filtered(lambda wo: not wo.blocked_by_workorder_ids)
+                workorder.production_id.with_context(force_date=True).write({
+                    'date_start': min((wo.leave_id.date_from for wo in initial_workorders if wo.leave_id), default=None),
+                })
+
+    def action_unplan(self):
+        self.leave_id.unlink()
+        self.write({
+            'date_start': False,
+            'date_finished': False,
+        })
 
     def _compute_expected_operation_cost(self, without_employee_cost=False):
         return (self.duration_expected / 60.0) * (self.costs_hour or self.workcenter_id.costs_hour)

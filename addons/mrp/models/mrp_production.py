@@ -491,7 +491,7 @@ class MrpProduction(models.Model):
     def _compute_is_planned(self):
         for production in self:
             if production.workorder_ids:
-                production.is_planned = any(wo.date_start and wo.date_finished for wo in production.workorder_ids)
+                production.is_planned = all(wo.date_start and wo.date_finished for wo in production.workorder_ids if wo.state != 'cancel')
             else:
                 production.is_planned = False
 
@@ -931,6 +931,8 @@ class MrpProduction(models.Model):
     def _change_producing(self):
         if self.state in ['draft', 'cancel'] or (self.state == 'done' and self.is_locked):
             return False
+        if self.state not in ('progress', 'done'):
+            self.state = 'progress'
         if self.product_tracking == 'serial' and self.lot_producing_ids:
             self.qty_producing = len(self.lot_producing_ids)
         productions_bypass_qty_producting = self.filtered(lambda p: p.lot_producing_ids and p.product_tracking == 'lot' and p._origin and p._origin.qty_producing == p.qty_producing)
@@ -948,6 +950,11 @@ class MrpProduction(models.Model):
             res = self._can_produce_serial_numbers()
             if res is not True:
                 return res
+
+    @api.onchange('state')
+    def _onchange_date_start(self):
+        if self.state == 'progress' and self._origin.state == 'confirmed':
+            self.date_start = fields.Datetime.now()
 
     def _can_produce_serial_numbers(self, sns=None):
         self.ensure_one()
@@ -1021,6 +1028,9 @@ class MrpProduction(models.Model):
                 if picking_type != production.picking_type_id:
                     production.name = picking_type.sequence_id.next_by_id()
                     moves_to_reassign |= production.move_raw_ids
+
+        if vals.get('state') == 'progress' and 'date_start' not in vals:
+            vals['date_start'] = fields.Datetime.now()
 
         res = super(MrpProduction, self).write(vals)
 
@@ -1704,7 +1714,7 @@ class MrpProduction(models.Model):
         for workorder in final_workorders:
             workorder._plan_workorder(replan)
 
-        workorders = self.workorder_ids.filtered(lambda w: w.state not in ['done', 'cancel'])
+        workorders = self.workorder_ids.filtered(lambda w: w.state not in ['cancel'])
         if not workorders:
             return
 
@@ -1734,12 +1744,7 @@ class MrpProduction(models.Model):
         elif any(wo.state == 'progress' for wo in self.workorder_ids):
             raise UserError(_("Some work orders have already started, so you cannot unplan this manufacturing order.\n\n"
                 "It’d be a shame to waste all that progress, right?"))
-
-        self.workorder_ids.leave_id.unlink()
-        self.workorder_ids.write({
-            'date_start': False,
-            'date_finished': False,
-        })
+        self.workorder_ids.action_unplan()
         self.is_planned = False
 
     def _get_consumption_issues(self):
