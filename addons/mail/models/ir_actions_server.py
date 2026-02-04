@@ -391,7 +391,4 @@ class IrActionsServer(models.Model):
         key set to False in the context. This way all notification emails linked
         to the currently executed action will be set in the queue instead of
         sent directly. This will avoid possible break in transactions. """
-        eval_context = super()._get_eval_context(action=action)
-        env = eval_context['env']
-        eval_context['env'] = env(context={**env.context, 'mail_notify_force_send': False})
-        return eval_context
+        return super(IrActionsServer, self.with_context(mail_notify_force_send=False))._get_eval_context(action=action)
