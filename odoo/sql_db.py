@@ -646,12 +646,6 @@ class ConnectionPool:
 
         for i, cnx in enumerate(self._connections):
             if not cnx._pool_in_use and self._dsn_equals(cnx.dsn, connection_info):
-                try:
-                    cnx.reset()
-                except psycopg2.OperationalError:
-                    self._debug('Cannot reset connection at index %d: %r', i, cnx.dsn)
-                    cnx.close()
-                    continue
                 cnx._pool_in_use = True
                 self._debug('Borrow existing connection to %r at index %d', cnx.dsn, i)
 
@@ -693,15 +687,20 @@ class ConnectionPool:
         except ValueError:
             raise PoolError('This connection does not belong to the pool')
 
-        if keep_in_pool:
+        if keep_in_pool and not connection.closed:
             # Release the connection and record the last time used
-            connection._pool_in_use = False
-            connection._pool_last_used = time.time()
             self._debug('Put connection to %r in pool', connection.dsn)
-        else:
-            cnx = self._connections.pop(index)
-            self._debug('Forgot connection to %r', cnx.dsn)
-            cnx.close()
+            try:
+                connection.reset()
+            except psycopg2.OperationalError as e:
+                self._debug('Cannot reset connection: %r (%s)', connection.dsn, e)
+            else:
+                connection._pool_in_use = False
+                connection._pool_last_used = time.time()
+                return
+        self._connections.pop(index)
+        self._debug('Forget connection to %r', connection.dsn)
+        connection.close()
 
     @locked
     def close_all(self, dsn: dict | str | None = None):
