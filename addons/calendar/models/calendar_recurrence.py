@@ -520,15 +520,28 @@ class CalendarRecurrence(models.Model):
         """
         self.ensure_one()
         dtstart = self._get_start_of_period(dtstart)
+
+        limit_date = None
+        if self.end_type == 'forever':
+            # Limit the number of years to avoid creating recurrent events for up to hundreds of years
+            limit_years = int(self.env['ir.config_parameter'].sudo().get_param('calendar.max_recurrence_years', 15))
+            limit_date = dtstart + relativedelta(years=limit_years)
+
         if self._is_allday():
-            return self._get_rrule(dtstart=dtstart)
+            rule = self._get_rrule(dtstart=dtstart)
+            return rule.between(dtstart, limit_date, inc=True) if limit_date else rule
 
         timezone = self._get_timezone()
         # Localize the starting datetime to avoid missing the first occurrence
         dtstart = pytz.utc.localize(dtstart).astimezone(timezone)
         # dtstart is given as a naive datetime, but it actually represents a timezoned datetime
         # (rrule package expects a naive datetime)
-        occurences = self._get_rrule(dtstart=dtstart.replace(tzinfo=None))
+        rule = self._get_rrule(dtstart=dtstart.replace(tzinfo=None))
+        if limit_date:
+            limit_date = limit_date.astimezone(timezone)
+            occurences = rule.between(dtstart.replace(tzinfo=None), limit_date.replace(tzinfo=None), inc=True)
+        else:
+            occurences = rule
 
         # Special timezoning is needed to handle DST (Daylight Saving Time) changes.
         # Given the following recurrence:
