@@ -35,25 +35,6 @@ class JSTooling:
         return False
 
     @staticmethod
-    def replace_usage(content: str, old_name: str, new_name: str) -> str:
-        """Replaces usage ONLY if the line is not a comment.
-
-        Args:
-            content: The file content.
-            old_name: Original variable name.
-            new_name: New variable name.
-
-        Returns:
-            The updated content.
-        """
-        def replacer(match):
-            if JSTooling.is_commented(content, match.start()):
-                return match.group(0)  # Return unchanged
-            return new_name
-
-        return re.sub(rf'\b{old_name}\b', replacer, content)
-
-    @staticmethod
     def add_import(content: str, name: str, source: str) -> str:
         """Adds a named import to a specific source.
 
@@ -174,38 +155,32 @@ class JSTooling:
         Returns:
             Cleaned content.
         """
-        # Delete spaces on lines that only contain spaces
         content = re.sub(r'^[ \t]+$', '', content, flags=re.MULTILINE)
-        # Delete trailing whitespace at the end of lines
         content = re.sub(r'[ \t]+$', '', content, flags=re.MULTILINE)
         return content
 
 
 class MigrationCollector:
-    """Collects logs from multiple sub-functions within a single upgrade script."""
+    """Collects logs from multiple sub-functions and pushes them to FileManager."""
 
-    def __init__(self):
+    def __init__(self, file_manager):
+        self.file_manager = file_manager
         self.reports = []
 
-    def run_sub(self, name: str, func, file_manager) -> None:
-        """Executes a sub-upgrade function and stores its result.
-
-        Args:
-            name: The display name of the task.
-            func: The function to execute.
-            file_manager: The Odoo file manager instance.
-        """
-        modified_before = sum(1 for f in file_manager if f.dirty)
+    def run_sub(self, name: str, func) -> None:
+        modified_before = sum(1 for f in self.file_manager if f.dirty)
         errors = []
         infos = []
 
-        # Internal loggers for the sub-function
-        def log_info(msg): infos.append(msg)
-        def log_error(path, err): errors.append(f"  ❌ {path}: {err}")
+        def log_info(msg):
+            infos.append(msg)
 
-        func(file_manager, log_info, log_error)
+        def log_error(path, err):
+            errors.append(f"  ❌ {path}: {err}")
 
-        modified_after = sum(1 for f in file_manager if f.dirty)
+        func(self.file_manager, log_info, log_error)
+
+        modified_after = sum(1 for f in self.file_manager if f.dirty)
         count = modified_after - modified_before
 
         report = [f"\n🚀 TASK: {name}", "-" * 40]
@@ -214,10 +189,45 @@ class MigrationCollector:
         if errors:
             report.append("  ⚠️  ERRORS:")
             report.extend(errors)
-        report.append(f"  ✅ Files modified in this task: {count}")
+        report.append(f"  ✅ Files modified: {count}")
 
         self.reports.append("\n".join(report))
 
-    def get_final_logs(self) -> str:
-        """Returns all collected reports as a single string."""
-        return "\n".join(self.reports)
+    def finalize(self) -> None:
+        if self.reports:
+            self.file_manager.add_to_summary("\n".join(self.reports))
+
+
+EXCLUDED_FILES = (
+    'o_spreadsheet.js',
+)
+
+
+def upgrade_useeffect(file_manager, log_info, log_error):
+    """Sub-task: Migrate useEffect to useLayoutEffect, ignoring comments."""
+    js_files = [
+        file for file in file_manager
+        if '/static/src/' in file.path._str
+        and file.path.suffix == '.js'
+        and file.path.name not in EXCLUDED_FILES
+    ]
+
+    for fileno, file in enumerate(js_files, start=1):
+        try:
+            if not JSTooling.has_active_usage(file.content, 'useEffect'):
+                continue
+            file.content = JSTooling.remove_import(file.content, 'useEffect', '@odoo/owl')
+            file.content = JSTooling.replace_usage(file.content, 'useEffect', 'useLayoutEffect')
+            file.content = JSTooling.add_import(file.content, 'useLayoutEffect', '@web/owl2/utils')
+        except Exception as e:
+            log_error(file.path, e)
+        file_manager.print_progress(fileno, len(js_files))
+
+
+def upgrade(file_manager) -> str:
+    """Main upgrade_code entry point."""
+    collector = MigrationCollector(file_manager)
+
+    collector.run_sub("Migrating useEffect", upgrade_useeffect)
+
+    collector.finalize()
