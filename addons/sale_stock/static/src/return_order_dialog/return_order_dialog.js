@@ -1,4 +1,4 @@
-import { Component, onWillStart, useState, markup } from '@odoo/owl';
+import { Component, onWillStart, useState } from '@odoo/owl';
 import { Dialog } from '@web/core/dialog/dialog';
 import { WarningDialog } from '@web/core/errors/error_dialogs';
 import { useService } from '@web/core/utils/hooks';
@@ -6,6 +6,7 @@ import {
     AlertDialog, ConfirmationDialog
 } from '@web/core/confirmation_dialog/confirmation_dialog';
 import { formatCurrency } from '@web/core/currency';
+import { renderToMarkup } from '@web/core/utils/render';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import { QuantityButtons } from '@sale/js/quantity_buttons/quantity_buttons';
@@ -85,11 +86,11 @@ export class ReturnOrderDialog extends Component {
         }
         const selectedlines = this.state.returnableLines.filter(line => line.quantity);
         this.dialog.add(ConfirmationDialog, {
-            title: 'Print the return request label.',
-            body: markup(
-                _t("Download, print and add this label in your package and send it to this address:<br/><br/>") +
-                `<div class='card border'><div class='card-body'><b class="d-block mb-2">${this.content.company_name}</b><span class='text-muted'>${this.content.warehouse_address.replace('\n\n', ' ').replace('\n', ' ')}</span></div></div>`
-            ),
+            title: _t("Print the return request label."),
+            body: renderToMarkup('sale_stock.ReturnLabelBody', {
+                company_name: this.content.company_name,
+                warehouse_address: this.content.warehouse_address,
+            }),
             confirmLabel: _t("Download Label"),
             confirm: async () => {
                 const params = {
