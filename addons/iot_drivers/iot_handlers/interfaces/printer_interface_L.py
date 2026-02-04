@@ -54,15 +54,12 @@ class PrinterInterface(Interface):
         for path, device in devices.items():
             identifier, device = self.process_device(path, device)
 
-            url_is_supported = any(protocol in device["url"] for protocol in ['dnssd', 'lpd', 'socket'])
+            url_is_supported = any(protocol in device["url"] for protocol in ['dnssd', 'lpd', 'socket', 'ipp'])
             model_is_valid = device["device-make-and-model"] != "Unknown"
             printer_is_usb = "direct" in device["device-class"]
 
             if (url_is_supported and model_is_valid) or printer_is_usb:
                 discovered_devices.update({identifier: device})
-
-                if not device.get("already-configured"):
-                    self.set_up_printer_in_cups(device)
 
         # Let get_devices be called again every 20 seconds (get_devices of PrinterInterface
         # takes between 4 and 15 seconds) but increase the delay to 2 minutes if it has been
@@ -162,10 +159,11 @@ class PrinterInterface(Interface):
         else:
             return {}
 
-    @staticmethod
-    def deduplicate_printers(discovered_printers):
+    def deduplicate_printers(self, discovered_printers):
         result = []
-        sorted_printers = sorted(discovered_printers.values(), key=lambda printer: str(printer.get('ip')))
+        sorted_printers = sorted(
+            discovered_printers.values(), key=lambda printer: (str(printer.get('ip')), printer["identifier"])
+        )
 
         for ip, printers_with_same_ip in groupby(sorted_printers, lambda printer: printer.get('ip')):
             already_registered_identifier = next((
@@ -173,23 +171,31 @@ class PrinterInterface(Interface):
                 if device.device_type == 'printer' and ip and ip == device.ip
             ), None)
             if already_registered_identifier:
-                result.append({'identifier': already_registered_identifier, 'disconnect_counter': 0})
+                result += next(
+                    ([p] for p in printers_with_same_ip if p['identifier'] == already_registered_identifier), []
+                )
                 continue
 
-            printers_with_same_ip = sorted(printers_with_same_ip, key=lambda printer: printer['identifier'])
+            printers_with_same_ip = list(printers_with_same_ip)
+            is_ipp_ready = any(p['identifier'].startswith("ipp") for p in printers_with_same_ip)
             if ip is None or len(printers_with_same_ip) == 1:
+                printers_with_same_ip[0]["is_ipp_ready"] = is_ipp_ready
                 result += printers_with_same_ip
                 continue
 
             chosen_printer = next((
                 printer for printer in printers_with_same_ip
                 if 'CMD:' in printer['device-id'] or 'ZPL' in printer['device-id']
-            ), None)
-            if not chosen_printer:
-                chosen_printer = printers_with_same_ip[0]
+            ), printers_with_same_ip[0])
+
+            chosen_printer["ipp_ready"] = is_ipp_ready
             result.append(chosen_printer)
 
-        return {printer['identifier']: printer for printer in result}
+        return {
+            printer['identifier']: printer
+            for printer in result
+            if self.set_up_printer_in_cups(printer)
+        }
 
     def monitor_for_printers(self):
         context = pyudev.Context()
@@ -241,11 +247,13 @@ class PrinterInterface(Interface):
         zeroconf = Zeroconf(ip_version=IPVersion.V4Only)
         self.zeroconf_browser = ServiceBrowser(zeroconf, service_types, handlers=[on_service_change])
 
-    def set_up_printer_in_cups(self, device):
+    def set_up_printer_in_cups(self, device: dict) -> bool:
         """Configure detected printer in cups: ppd files, name, info, groups, ...
 
         :param dict device: printer device to configure in cups (detected but not added)
         """
+        if device.get("already-configured"):
+            return True
         fallback_model = device.get('device-make-and-model', "")
         model = next((
             device_id.split(":")[1] for device_id in device.get('device-id', "").split(";")
@@ -253,7 +261,10 @@ class PrinterInterface(Interface):
         ), fallback_model)
         model = re.sub(r"[\(].*?[\)]", "", model).strip()
 
-        ppdname_argument = next(({"ppdname": ppd} for ppd in self.PPDs if model and model in self.PPDs[ppd]['ppd-product']), {})
+        ppdname_argument = next(
+            ({"ppdname": ppd} for ppd in self.PPDs if model and model in self.PPDs[ppd]['ppd-product']),
+            {"ppdname": "everywhere"} if device.get("ipp_ready") else {}
+        )
 
         try:
             self.conn.addPrinter(name=device['identifier'], device=device['url'], **ppdname_argument)
@@ -263,8 +274,10 @@ class PrinterInterface(Interface):
             self.conn.setPrinterUsersAllowed(device['identifier'], ['all'])
             self.conn.addPrinterOptionDefault(device['identifier'], "usb-no-reattach", "true")
             self.conn.addPrinterOptionDefault(device['identifier'], "usb-unidir", "true")
+            return True
         except IPPError:
             _logger.exception("Failed to add printer '%s'", device['identifier'])
+            return False
 
     def start(self):
         super().start()
