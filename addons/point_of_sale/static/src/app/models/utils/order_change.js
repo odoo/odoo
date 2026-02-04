@@ -162,7 +162,9 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                 // if note update with qty add
                 changes[lineKey] = lineDetails;
                 changesCount += quantityDiff;
-                changeAbsCount += Math.abs(quantityDiff);
+                if (!lineDetails.isCombo) {
+                    changeAbsCount += Math.abs(quantityDiff);
+                }
                 if (noteChange) {
                     lineDetails.quantity = oldChanges[relatedKey].quantity || 0;
                     noteUpdate[lineKey] = lineDetails;
@@ -208,7 +210,9 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                     group: lineResume["group"],
                     quantity: -quantity,
                 };
-                changeAbsCount += Math.abs(quantity);
+                if (!lineResume["isCombo"]) {
+                    changeAbsCount += Math.abs(quantity);
+                }
                 changesCount += quantity;
             } else {
                 changes[lineKey]["quantity"] -= quantity;
