@@ -395,9 +395,7 @@ class PosConfig(models.Model):
         return qr.make_image(fill_color="black", back_color="transparent")
 
     def get_pos_qr_order_data(self):
-
         url_form = "https://www.odoo.com/app/point-of-sale-restaurant-qr-code"
-
         table_data = []
         if self.self_ordering_mode not in ['mobile', 'consultation']:
             return {
@@ -415,21 +413,20 @@ class PosConfig(models.Model):
                 table_data.append({
                     'url': url,
                     'name': f"{table.floor_id.name} - {table.table_number}",
-                    'image': self.__generate_single_qr_code(url_unquote(url)),
                 })
         else:
             url = self._get_self_order_url()
             table_data.append({
                 'url': url,
                 'name': "generic",
-                'image': self.__generate_single_qr_code(url_unquote(url)),
             })
 
         zip_buffer = BytesIO()
         with zipfile.ZipFile(zip_buffer, "w", 0) as zip_file:
-            for index, qr_data in enumerate(table_data):
-                with zip_file.open(f"{qr_data['name']} ({index + 1}).png", "w") as buf:
-                    qr_data['image'].save(buf, format="PNG")
+            for index, qr_data in enumerate(table_data, start=1):
+                images = self.__generate_single_qr_code(url_unquote(qr_data['url']))
+                with zip_file.open(f"{qr_data['name']} ({index}).png", "w") as buf:
+                    images.save(buf, format="PNG")
         zip_buffer.seek(0)
 
         return {
