@@ -1,8 +1,9 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { rpc } from "@web/core/network/rpc";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
-import { EventBus, Component, markup, useEffect, useState } from "@odoo/owl";
+import { EventBus, Component, markup, useState } from "@odoo/owl";
 
 export class WebsiteLoader extends Component {
     static props = {
@@ -53,7 +54,7 @@ export class WebsiteLoader extends Component {
         this.currentWaitingMessage = useState({ ...defaultMessages[0] });
         this.featuresInstallInfo = { nbInstalled: 0, total: undefined };
 
-        useEffect(
+        useLayoutEffect(
             (selectedFeatures) => {
                 if (this.state.showWaitingMessages) {
                     const messagesToDisplay = [...defaultMessages]; // Start with defaultMessages
@@ -82,7 +83,7 @@ export class WebsiteLoader extends Component {
         );
 
         // Cycle through the waitingMessages every 6s
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (this.state.showWaitingMessages) {
                     let msgIndex = 0;
@@ -102,7 +103,7 @@ export class WebsiteLoader extends Component {
         );
 
         // Prevent user from closing/refreshing the window
-        useEffect(
+        useLayoutEffect(
             (isVisible) => {
                 if (isVisible) {
                     window.addEventListener("beforeunload", this.showRefreshConfirmation);

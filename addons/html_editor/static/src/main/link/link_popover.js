@@ -1,6 +1,7 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
-import { Component, useState, useRef, useEffect, useExternalListener } from "@odoo/owl";
+import { Component, useState, useRef, useExternalListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { cleanZWChars, deduceURLfromText } from "./utils";
 import { useColorPicker } from "@web/core/color_picker/color_picker";
@@ -229,7 +230,7 @@ export class LinkPopover extends Component {
         this.inputRef = useRef(
             this.state.isImage || (this.state.label && !this.state.url) ? "url" : "label"
         );
-        useEffect(
+        useLayoutEffect(
             (el) => {
                 if (el) {
                     el.focus();

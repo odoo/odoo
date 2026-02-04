@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
@@ -7,7 +8,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { useDebounced } from "@web/core/utils/timing";
 import { SearchMedia } from "./search_media";
 
-import { Component, xml, useState, useRef, onWillStart, useEffect } from "@odoo/owl";
+import { Component, xml, useState, useRef, onWillStart } from "@odoo/owl";
 
 export const IMAGE_MIMETYPES = [
     "image/jpg",
@@ -116,7 +117,7 @@ export class FileSelectorControlPanel extends Component {
         this.fileInput = useRef("file-input");
         const urlInputRef = useRef("urlInput");
 
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (this.state.showUrlInput) {
                     urlInputRef.el.focus();
@@ -207,7 +208,7 @@ export class FileSelector extends Component {
         this.debouncedOnScroll = useDebounced(this.updateScroll, 15);
         this.debouncedScrollUpdate = useDebounced(this.updateScroll, 500);
 
-        useEffect(
+        useLayoutEffect(
             (modalEl) => {
                 if (modalEl) {
                     modalEl.addEventListener("scroll", this.debouncedOnScroll);
@@ -219,7 +220,7 @@ export class FileSelector extends Component {
             () => [this.props.modalRef.el?.querySelector("main.modal-body")]
         );
 
-        useEffect(
+        useLayoutEffect(
             () => {
                 // Updating the scroll button each time the attachments change.
                 // Hiding the "Load more" button to prevent it from flickering.

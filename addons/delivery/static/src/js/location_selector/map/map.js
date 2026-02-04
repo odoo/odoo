@@ -1,6 +1,7 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 /*global L*/
 
-import { Component, useEffect, useRef } from '@odoo/owl';
+import { Component, useRef } from '@odoo/owl';
 import { renderToString } from '@web/core/utils/render';
 
 export class Map extends Component {
@@ -42,7 +43,7 @@ export class Map extends Component {
         this.mapRef = useRef('map');
 
         // Create the map.
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.leafletMap = L.map(this.mapRef.el, {
                     zoom: 13,
@@ -62,7 +63,7 @@ export class Map extends Component {
         );
 
         // Update the size of the map.
-        useEffect(
+        useLayoutEffect(
             (locations) => {
                 this.leafletMap.invalidateSize();
             },
@@ -70,7 +71,7 @@ export class Map extends Component {
         );
 
         // Update the markers and center the map on the selected location.
-        useEffect(
+        useLayoutEffect(
             (locations, selectedLocationId) => {
                 this.addMarkers(locations);
                 const selectedLocation = locations.find(

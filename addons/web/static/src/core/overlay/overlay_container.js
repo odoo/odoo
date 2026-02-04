@@ -1,4 +1,5 @@
-import { Component, onWillDestroy, useChildSubEnv, useEffect, useRef, useState } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, onWillDestroy, useChildSubEnv, useRef, useState } from "@odoo/owl";
 import { sortBy } from "@web/core/utils/arrays";
 import { ErrorHandler } from "@web/core/utils/components";
 
@@ -54,7 +55,7 @@ export class OverlayContainer extends Component {
     setup() {
         this.root = useRef("root");
         this.state = useState({ rootEl: null });
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.state.rootEl = this.root.el;
             },

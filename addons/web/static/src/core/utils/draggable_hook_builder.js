@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { clamp } from "@web/core/utils/numbers";
 import { omit } from "@web/core/utils/objects";
 import { closestScrollableX, closestScrollableY } from "@web/core/utils/scrolling";
@@ -19,7 +20,7 @@ import { hasTouch, isBrowserFirefox, isIOS } from "../browser/feature_detection"
  * Setup hooks
  * @property {{
  *  addListener: typeof import("@odoo/owl")["useExternalListener"];
- *  setup: typeof import("@odoo/owl")["useEffect"];
+ *  setup: typeof import("@odoo/owl")["useLayoutEffect"];
  *  teardown: typeof import("@odoo/owl")["onWillUnmount"];
  *  throttle: typeof import("./timing")["useThrottleForAnimation"];
  *  wrapState: typeof import("@odoo/owl")["reactive"];

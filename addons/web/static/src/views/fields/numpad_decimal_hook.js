@@ -1,7 +1,8 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { localization } from "@web/core/l10n/localization";
 import { isIOS } from "@web/core/browser/feature_detection";
 
-import { useRef, useEffect } from "@odoo/owl";
+import { useRef } from "@odoo/owl";
 
 function onKeydown(ev) {
     const decimalPoint = localization.decimalPoint;
@@ -38,7 +39,7 @@ function onFocus(ev) {
 export function useNumpadDecimal() {
     const ref = useRef("numpadDecimal");
     const isIOSDevice = isIOS();
-    useEffect(() => {
+    useLayoutEffect(() => {
         let inputs = [];
         const el = ref.el;
         if (el) {

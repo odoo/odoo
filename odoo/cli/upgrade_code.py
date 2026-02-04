@@ -157,9 +157,12 @@ def migrate(
         modules = get_upgrade_code_scripts(from_version, to_version)
 
     file_manager = FileManager(addons_path, glob)
+    logs = []
     for (name, module) in modules:
         file_manager.print_progress(0)  # 0%
-        module.upgrade(file_manager)
+        res = module.upgrade(file_manager)
+        if type(res) is str:
+            logs.append(res)
         file_manager.print_progress(len(file_manager))  # 100%
 
     for file in file_manager:
@@ -168,7 +171,7 @@ def migrate(
             if not dry_run:
                 with file.path.open("w") as f:
                     f.write(file.content)
-
+    print("\n".join(logs))
     return any(file.dirty for file in file_manager)
 
 

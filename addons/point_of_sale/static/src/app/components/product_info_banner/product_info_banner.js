@@ -1,4 +1,5 @@
-import { Component, useEffect, useState, onWillUnmount } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, useState, onWillUnmount } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { useService } from "@web/core/utils/hooks";
@@ -50,7 +51,7 @@ export class ProductInfoBanner extends Component {
             }
         }, 500);
 
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (this.props.productTemplate) {
                     debouncedFetchStocks(this.props.product, this.props.productTemplate);

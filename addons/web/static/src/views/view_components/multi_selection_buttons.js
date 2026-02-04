@@ -1,4 +1,5 @@
-import { Component, onWillRender, toRaw, useEffect, useRef, useState } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, onWillRender, toRaw, useRef, useState } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -70,7 +71,7 @@ export class MultiSelectionButtons extends Component {
         this.addButtonRef = useRef("addButton");
 
         const rootRef = useRef("root");
-        useEffect(
+        useLayoutEffect(
             (el) => {
                 if (!el) {
                     return;

@@ -1,9 +1,9 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import {
     Component,
     useState,
     onMounted,
     onWillUnmount,
-    useEffect,
     useRef,
     status,
 } from "@odoo/owl";
@@ -68,7 +68,7 @@ export class VoicePlayer extends Component {
             repeat: false,
             visualTime: "-- : --",
         });
-        useEffect(
+        useLayoutEffect(
             (playing) => {
                 if (playing) {
                     this.addOnAudioProcess();
@@ -76,7 +76,7 @@ export class VoicePlayer extends Component {
             },
             () => [this.state.playing]
         );
-        useEffect(
+        useLayoutEffect(
             (uploading) => {
                 if (uploading) {
                     return;

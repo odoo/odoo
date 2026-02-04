@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import {
     Component,
@@ -7,7 +8,6 @@ import {
     onWillUnmount,
     status,
     useComponent,
-    useEffect,
     useRef,
     useState,
     useSubEnv,
@@ -181,7 +181,7 @@ export class WebsiteBuilderClientAction extends Component {
             },
             [this.state]
         );
-        useEffect(
+        useLayoutEffect(
             (isEditing) => {
                 document.querySelector("body").classList.toggle("o_builder_open", isEditing);
                 if (isEditing) {

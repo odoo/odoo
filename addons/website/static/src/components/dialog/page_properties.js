@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { _t } from "@web/core/l10n/translation";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
@@ -7,7 +8,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { formView } from "@web/views/form/form_view";
 import { renderToFragment } from "@web/core/utils/render";
-import { Component, onWillDestroy, useEffect, useRef, useState, xml } from "@odoo/owl";
+import { Component, onWillDestroy, useRef, useState, xml } from "@odoo/owl";
 import { FormController } from "@web/views/form/form_controller";
 import { registry } from "@web/core/registry";
 
@@ -33,7 +34,7 @@ export class PageDependencies extends Component {
         this.action = useRef("action");
         this.sprintf = sprintf;
 
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.fetchDependencies();
             },

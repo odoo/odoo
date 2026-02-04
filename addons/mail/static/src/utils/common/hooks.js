@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import {
     Component,
     onMounted,
@@ -6,7 +7,6 @@ import {
     reactive,
     toRaw,
     useComponent,
-    useEffect,
     useRef,
     useState,
     useSubEnv,
@@ -226,7 +226,7 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
     }
 
     if (stateObserver) {
-        useEffect((open) => {
+        useLayoutEffect((open) => {
             // Note: stateObserver is essentially used with useDropdownState()?.isOpen.
             // While isOpen can become false, the ref.el can still be there for a short period of time.
             // Relying on isOpen becoming false forces good syncing of isHover state on dropdown close.
@@ -302,7 +302,7 @@ export function useScrollState(refName) {
             state.canScrollAfter = false;
         }
     }
-    useEffect(
+    useLayoutEffect(
         (el) => {
             if (!el) {
                 return;
@@ -361,7 +361,7 @@ export function useVisible(refName, cb, { ready = true } = {}) {
     const observer = new IntersectionObserver((entries) => {
         setValue(entries.at(-1).isIntersecting);
     });
-    useEffect(
+    useLayoutEffect(
         (el, ready) => {
             if (el && ready) {
                 observer.observe(el);
@@ -755,9 +755,9 @@ export class UseForwardRefsToParent {
     constructor(propName, getRefIdFn, ref) {
         const component = useComponent();
         this.ref = ref;
-        // Note: The `useChildRefs()` Map is shared with all children, using useEffect/willUnmount to ensure proper on/off life cycle hook calls for given child.
+        // Note: The `useChildRefs()` Map is shared with all children, using useLayoutEffect/willUnmount to ensure proper on/off life cycle hook calls for given child.
         // If we use setup/willDestroy we can have 2 fiber nodes of same child component with one finalizing with willDestroy from cancelling duplicated fiber node.
-        useEffect(
+        useLayoutEffect(
             (map, key) => {
                 this.registerRef(map, key);
                 return () => this.removeRef(map, key);

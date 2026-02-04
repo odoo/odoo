@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { browser } from "./browser/browser";
 
 import {
@@ -5,7 +6,6 @@ import {
     onWillUpdateProps,
     status,
     useComponent,
-    useEffect,
     useState,
     xml,
 } from "@odoo/owl";
@@ -70,7 +70,7 @@ export function useTransition({
     // onNextPatch allows us to activate the class that we want the next time
     // the component is patched.
     let onNextPatch = null;
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (onNextPatch) {
             onNextPatch();
             onNextPatch = null;
