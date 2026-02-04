@@ -6897,6 +6897,9 @@ class AccountMove(models.Model):
 
         return move
 
+    def _attachment_fields_to_clear(self):
+        return super()._attachment_fields_to_clear() + ['message_main_attachment_id']
+
     def _message_post_after_hook(self, new_message, message_values):
         """ This method processes the attachments of a new mail.message. It handles the 3 following situations:
             (1) receiving an e-mail from a mail alias. In that case, we potentially want to split the attachments into several invoices.
