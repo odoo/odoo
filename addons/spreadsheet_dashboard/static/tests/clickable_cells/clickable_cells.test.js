@@ -97,7 +97,7 @@ test("list sorting clickable cell", async () => {
     };
     const { model } = await createDashboardActionWithData(data);
     expect(getCellIcons(model, "A1")).toHaveLength(0);
-    expect(".o-dashboard-clickable-cell .fa-sort").toHaveCount(1);
+    expect(".o-dashboard-clickable-cell .sorting-icon .o-icon").toHaveCount(1);
 
     await click(queryFirst(".o-dashboard-clickable-cell .sorting-icon"));
     expect(model.getters.getListDefinition(1).orderBy).toEqual([{ name: "foo", asc: true }]);
@@ -192,17 +192,17 @@ test("Clickable ignores spill and empty cells for list sorting", async () => {
     };
     const { model } = await createDashboardActionWithData(data);
     expect(getCellIcons(model, "A2")).toHaveLength(0);
-    expect(".o-dashboard-clickable-cell .fa-sort").toHaveCount(0);
+    expect(".o-dashboard-clickable-cell .sorting-icon .o-icon").toHaveCount(0);
 
     expect(getCellIcons(model, "B2")).toHaveLength(0);
-    expect(".o-dashboard-clickable-cell .fa-sort").toHaveCount(0);
+    expect(".o-dashboard-clickable-cell .sorting-icon .o-icon").toHaveCount(0);
 
     expect(getCellIcons(model, "A3")).toHaveLength(0);
-    expect(".o-dashboard-clickable-cell .fa-sort").toHaveCount(0);
+    expect(".o-dashboard-clickable-cell .sorting-icon .o-icon").toHaveCount(0);
 
     expect(getCellIcons(model, "A4")).toHaveLength(0);
-    expect(".o-dashboard-clickable-cell .fa-sort").toHaveCount(0);
+    expect(".o-dashboard-clickable-cell .sorting-icon .o-icon").toHaveCount(0);
 
     expect(getCellIcons(model, "C10")).toHaveLength(0); // unrelated empty cell
-    expect(".o-dashboard-clickable-cell .fa-sort").toHaveCount(0);
+    expect(".o-dashboard-clickable-cell .sorting-icon .o-icon").toHaveCount(0);
 });
