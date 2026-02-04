@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { markEventHandled } from "@web/core/utils/misc";
 
 import {
@@ -10,7 +11,6 @@ import {
     onWillUnmount,
     reactive,
     useComponent,
-    useEffect,
     useExternalListener,
     useRef,
     useState,
@@ -171,11 +171,11 @@ export class EmojiPicker extends Component {
                 }
             }
         });
-        useEffect(
+        useLayoutEffect(
             () => this.updateEmojiPickerRepr(),
             () => [this.state.categoryId, this.state.searchTerm]
         );
-        useEffect(
+        useLayoutEffect(
             (el) => {
                 const gridEl = this.gridRef.el;
                 const activeEl = gridEl?.querySelector(".o-Emoji.o-active");
@@ -190,7 +190,7 @@ export class EmojiPicker extends Component {
             },
             () => [this.state.activeEmojiIndex, this.gridRef.el]
         );
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (!this.gridRef.el) {
                     return;

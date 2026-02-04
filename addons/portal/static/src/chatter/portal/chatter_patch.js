@@ -1,7 +1,8 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 
 import { patch } from "@web/core/utils/patch";
-import { useRef, onWillPatch, useEffect } from "@odoo/owl";
+import { useRef, onWillPatch } from "@odoo/owl";
 
 patch(Chatter.prototype, {
     setup() {
@@ -23,7 +24,7 @@ patch(Chatter.prototype, {
                 );
             }
         });
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (this.topRef.el) {
                     this.observer?.observe(this.topRef.el);

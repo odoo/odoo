@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
@@ -14,7 +15,6 @@ import {
     reactive,
     toRaw,
     useChildSubEnv,
-    useEffect,
     useRef,
     useState,
 } from "@odoo/owl";
@@ -90,7 +90,7 @@ export class Thread extends Component {
             ? useState(this.env.messageHighlight)
             : null;
         this.scrollingToHighlight = false;
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.scrollToHighlighted();
             },
@@ -144,7 +144,7 @@ export class Thread extends Component {
             this.updateShowJumpPresent()
         );
         this.setupScroll();
-        useEffect(
+        useLayoutEffect(
             (focus) => {
                 if (focus && this.state.mountedAndLoaded) {
                     this.root.el.focus();
@@ -152,17 +152,17 @@ export class Thread extends Component {
             },
             () => [this.props.autofocus + this.props.thread.autofocus, this.state.mountedAndLoaded]
         );
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.computeJumpPresentPosition();
             },
             () => [this.jumpPresentRef.el, this.viewportEl]
         );
-        useEffect(
+        useLayoutEffect(
             () => this.updateShowJumpPresent(),
             () => [this.props.thread.loadNewer]
         );
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (this.props.jumpPresent !== this.lastJumpPresent) {
                     this.jumpToPresent({ immediate: true });
@@ -170,7 +170,7 @@ export class Thread extends Component {
             },
             () => [this.props.jumpPresent]
         );
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (this.props.thread.highlightMessage && this.state.mountedAndLoaded) {
                     this.messageHighlight?.highlightMessage(
@@ -182,7 +182,7 @@ export class Thread extends Component {
             },
             () => [this.props.thread.highlightMessage, this.state.mountedAndLoaded]
         );
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (!this.state.mountedAndLoaded) {
                     return;
@@ -204,18 +204,18 @@ export class Thread extends Component {
                 this.props.thread.isFocusedCounter--;
             }
         });
-        useEffect(
+        useLayoutEffect(
             (isLoaded) => {
                 this.state.mountedAndLoaded = isLoaded;
             },
             /**
              * Observe `mountedAndLoaded` as well because it might change from
-             * other parts of the code without `useEffect` detecting any change
+             * other parts of the code without `useLayoutEffect` detecting any change
              * for `isLoaded`, and it should still be reset when patching.
              */
             () => [this.props.thread.isLoaded, this.state.mountedAndLoaded]
         );
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (!this.props.jumpToNewMessage) {
                     return;
@@ -367,7 +367,7 @@ export class Thread extends Component {
                 scrollTop: this.scrollableRef.el.scrollTop,
             };
         });
-        useEffect(this.applyScroll);
+        useLayoutEffect(this.applyScroll);
         useChildSubEnv({
             getCurrentThread: () => this.props.thread,
             onImageLoaded: this.applyScroll,
@@ -376,7 +376,7 @@ export class Thread extends Component {
             this.computeJumpPresentPosition();
             this.applyScroll();
         });
-        useEffect(
+        useLayoutEffect(
             (el, mountedAndLoaded) => {
                 if (el && mountedAndLoaded) {
                     el.addEventListener("scroll", this.onScroll);

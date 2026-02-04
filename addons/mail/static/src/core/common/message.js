@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
@@ -18,7 +19,6 @@ import {
     onMounted,
     toRaw,
     useChildSubEnv,
-    useEffect,
     useRef,
     useState,
     useSubEnv,
@@ -187,7 +187,7 @@ export class Message extends Component {
                 this.shadowRoot.appendChild(ellipsisStyle);
             }
         });
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (this.shadowBody.el) {
                     const bodyEl = createElementWithContent(
@@ -212,7 +212,7 @@ export class Message extends Component {
                 this.isEditing,
             ]
         );
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (!this.isEditing) {
                     this.prepareMessageBody(this.messageBody.el);

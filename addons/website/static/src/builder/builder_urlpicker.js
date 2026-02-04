@@ -1,4 +1,4 @@
-import { useEffect } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
 import wUtils from "@website/js/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
@@ -8,7 +8,7 @@ export class WebsiteUrlPicker extends BuilderUrlPicker {
     setup() {
         super.setup();
 
-        useEffect(
+        useLayoutEffect(
             (inputEl) => {
                 if (!inputEl) {
                     return;

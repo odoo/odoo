@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { deduceURLfromText } from "@html_editor/main/link/utils";
 import { pyToJsLocale, jsToPyLocale } from "@web/core/l10n/utils";
@@ -14,7 +15,6 @@ import {
     onMounted,
     onWillStart,
     reactive,
-    useEffect,
     useState,
     useRef,
 } from "@odoo/owl";
@@ -578,7 +578,7 @@ export class TitleDescription extends Component {
         );
 
         // Update the title when its input value changes
-        useEffect(
+        useLayoutEffect(
             () => {
                 document.title = this.title;
             },
@@ -586,7 +586,7 @@ export class TitleDescription extends Component {
         );
 
         // Restore the original title when unmounting the component
-        useEffect(
+        useLayoutEffect(
             () => {
                 const initialTitle = document.title;
                 return () => (document.title = initialTitle);
@@ -685,7 +685,7 @@ export class BrokenLink extends Component {
             checkingLink: false,
         });
 
-        useEffect(
+        useLayoutEffect(
             (input) => {
                 if (!input) {
                     return;

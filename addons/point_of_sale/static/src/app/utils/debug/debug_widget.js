@@ -1,6 +1,7 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { useRef, useState, Component, onMounted, onWillDestroy, useEffect } from "@odoo/owl";
+import { useRef, useState, Component, onMounted, onWillDestroy } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -44,7 +45,7 @@ export class DebugWidget extends Component {
             }
         });
 
-        useEffect(
+        useLayoutEffect(
             (isOpen) => {
                 if (!isOpen) {
                     return;

@@ -1,5 +1,6 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { Component, useEffect, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 
 import { NavigableList } from "@mail/core/common/navigable_list";
@@ -30,7 +31,7 @@ export class MentionList extends Component {
         this.sequential = useSequential();
         this.ref = useAutofocus({ mobile: true });
 
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (!this.state.searchTerm) {
                     this.state.options = [];

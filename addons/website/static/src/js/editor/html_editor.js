@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { LinkPopover } from "@html_editor/main/link/link_popover";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
@@ -5,7 +6,6 @@ import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { patch } from "@web/core/utils/patch";
 import { useChildRef } from "@web/core/utils/hooks";
 import wUtils from "@website/js/utils";
-import { useEffect } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { session } from "@web/session";
 import { CSS_SHORTHANDS } from "@html_builder/utils/utils_css";
@@ -64,7 +64,7 @@ patch(LinkPopover.prototype, {
     setup() {
         super.setup();
         this.urlRef = useChildRef();
-        useEffect(
+        useLayoutEffect(
             (el) => {
                 if (el && (this.state.isImage || (!this.state.url && this.state.label))) {
                     el.focus();

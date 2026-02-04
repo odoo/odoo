@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Notebook } from "@web/core/notebook/notebook";
 import { Setting } from "./setting/setting";
@@ -19,7 +20,6 @@ import {
     Component,
     onMounted,
     onWillUnmount,
-    useEffect,
     useSubEnv,
     useRef,
     useState,
@@ -75,7 +75,7 @@ export class FormRenderer extends Component {
         const { autofocusFieldIds } = archInfo;
         const rootRef = useRef("compiled_view_root");
         if (this.shouldAutoFocus) {
-            useEffect(
+            useLayoutEffect(
                 (record, rootEl) => {
                     if (!rootEl) {
                         return;

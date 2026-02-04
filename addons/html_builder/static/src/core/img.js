@@ -1,8 +1,8 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import {
     Component,
     onWillStart,
     onWillUpdateProps,
-    useEffect,
     useRef,
     useState,
     xml,
@@ -72,7 +72,7 @@ export class Image extends Component {
                 await this.handleImgLoad(nextProps.src);
             }
         });
-        useEffect(
+        useLayoutEffect(
             (imgLoaded) => {
                 if (imgLoaded && this.isSvg(this.props.src) && this.svg.children.length) {
                     // We can't use t-out with markup because it is parsed as HTML,

@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import {
     Component,
     markup,
@@ -5,7 +6,6 @@ import {
     onWillStart,
     onWillUnmount,
     onWillUpdateProps,
-    useEffect,
     useRef,
     useState,
 } from "@odoo/owl";
@@ -65,7 +65,7 @@ export class HtmlViewer extends Component {
             });
         } else {
             this.readonlyElementRef = useRef("readonlyContent");
-            useEffect(
+            useLayoutEffect(
                 () => {
                     this.processReadonlyContent(this.readonlyElementRef.el);
                 },
@@ -88,7 +88,7 @@ export class HtmlViewer extends Component {
                 }
                 return result;
             });
-            useEffect(
+            useLayoutEffect(
                 () => {
                     if (this.readonlyElementRef?.el) {
                         this.mountComponents();
