@@ -151,7 +151,7 @@ export class WifiDialog extends Component {
                 </div>
                 <div class="mt-3">
                     <div class="mb-3">
-                        <select name="essid" class="form-control" id="wifi-ssid" t-model="this.form.essid">
+                        <select name="essid" class="form-control" id="wifi-ssid" t-custom-model="this.form.essid">
                             <option>Select Network...</option>
                             <option t-foreach="this.state.availableWiFi.filter((wifi) => wifi)" t-as="wifi" t-key="wifi" t-att-value="wifi">
                                 <t t-esc="wifi"/>
@@ -160,7 +160,7 @@ export class WifiDialog extends Component {
                     </div>
 
                     <div class="mb-3 d-flex gap-1">
-                        <input name="password" t-att-type="state.isPasswordVisible ? '' : 'password'" class="form-control" aria-label="Username" aria-describedby="basic-addon1" t-model="this.form.password" placeholder="Wi-Fi password"/>
+                        <input name="password" t-att-type="state.isPasswordVisible ? '' : 'password'" class="form-control" aria-label="Username" aria-describedby="basic-addon1" t-custom-model="this.form.password" placeholder="Wi-Fi password"/>
                         <button class="btn btn-secondary" type="button" t-on-click="togglePasswordVisibility">
                             <i t-att-class="'fa fa-eye' + (state.isPasswordVisible ? '-slash' : '')"></i>
                         </button>

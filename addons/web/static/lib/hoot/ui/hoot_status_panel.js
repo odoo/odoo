@@ -223,7 +223,7 @@ export class HootStatusPanel extends Component {
                 </t>
             </div>
         </div>
-        <canvas t-ref="progress-canvas" class="flex h-1 w-full" />
+        <canvas t-custom-ref="progress-canvas" class="flex h-1 w-full" />
     `;
 
     currentTestStart;

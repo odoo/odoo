@@ -67,8 +67,8 @@ export class CredentialsDialog extends Component {
                     Set the Database UUID and your Contract Number you want to use to validate your subscription.
                 </div>
                 <div class="d-flex flex-column gap-2 mt-3">
-                    <input type="text" class="form-control" placeholder="Database UUID" t-model="form.db_uuid"/>
-                    <input type="text" class="form-control" placeholder="Odoo contract number" t-model="form.enterprise_code"/>
+                    <input type="text" class="form-control" placeholder="Database UUID" t-custom-model="form.db_uuid"/>
+                    <input type="text" class="form-control" placeholder="Odoo contract number" t-custom-model="form.enterprise_code"/>
                 </div>
             </t>
             <t t-set-slot="footer">

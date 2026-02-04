@@ -64,7 +64,7 @@ export class HootSideBarSuite extends Component {
                 }"
             />
         </t>
-        <span t-ref="root" t-att-class="getClassName()" t-esc="props.name" />
+        <span t-custom-ref="root" t-att-class="getClassName()" t-esc="props.name" />
         <t t-if="props.multi">
             <strong class="text-amber whitespace-nowrap me-1">
                 x<t t-esc="props.multi" />
@@ -155,8 +155,8 @@ export class HootSideBar extends Component {
                         class="w-full rounded px-2 py-1 outline-none"
                         type="search"
                         placeholder="Search suites"
-                        t-ref="search-input"
-                        t-model="state.filter"
+                        t-custom-ref="search-input"
+                        t-custom-model="state.filter"
                         t-on-keydown="onSearchInputKeydown"
                     />
                 </div>
@@ -180,7 +180,7 @@ export class HootSideBar extends Component {
                     <i t-attf-class="fa fa-{{ expanded ? 'compress' : 'expand' }}" />
                 </button>
             </form>
-            <ul class="overflow-x-hidden overflow-y-auto" t-ref="suites-list">
+            <ul class="overflow-x-hidden overflow-y-auto" t-custom-ref="suites-list">
                 <t t-foreach="filteredSuites" t-as="suite" t-key="suite.id">
                     <li class="flex items-center h-7 animate-slide-down">
                         <button

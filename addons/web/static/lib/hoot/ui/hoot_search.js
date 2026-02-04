@@ -316,7 +316,7 @@ export class HootSearch extends Component {
     static template = xml`
         <t t-set="hasIncludeValue" t-value="getHasIncludeValue()" />
         <t t-set="isRunning" t-value="runnerState.status === 'running'" />
-        <search class="${HootSearch.name} flex-1" t-ref="root" t-on-keydown="onKeyDown">
+        <search class="${HootSearch.name} flex-1" t-custom-ref="root" t-on-keydown="onKeyDown">
             <form class="relative" t-on-submit.prevent="refresh">
                 <div class="hoot-search-bar flex border rounded items-center bg-base px-1 gap-1 w-full transition-colors">
                     <t t-foreach="getCategoryCounts()" t-as="count" t-key="count.category">
@@ -341,7 +341,7 @@ export class HootSearch extends Component {
                         class="w-full rounded p-1 outline-none"
                         t-att-autofocus="!config.manual"
                         placeholder="Filter suites, tests or tags"
-                        t-ref="search-input"
+                        t-custom-ref="search-input"
                         t-att-class="{ 'text-gray': !config.filter }"
                         t-att-disabled="isRunning"
                         t-att-value="state.query"

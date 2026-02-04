@@ -8,7 +8,7 @@
                 <span t-attf-class="card-text #{this.props.value ? '' : 'text-muted'}">
                     <textarea
                         t-custom-ref="customFieldCardTextArea"
-                        t-model.lazy="this.props.value"
+                        t-custom-model.lazy="this.props.value"
                         t-on-change="(ev) => { this.props.onChange(this.props.value) }"
                         t-att-placeholder="!props.readonly &amp;&amp; this.placeholder"
                         t-att-readonly="props.readonly"

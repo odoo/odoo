@@ -33,7 +33,7 @@ describe("useAutofocus", () => {
             static props = ["*"];
             static template = xml`
                 <span>
-                    <input type="text" t-ref="autofocus" t-att-value="state.text" />
+                    <input type="text" t-custom-ref="autofocus" t-att-value="state.text" />
                 </span>
             `;
             setup() {
@@ -61,7 +61,7 @@ describe("useAutofocus", () => {
             static props = ["*"];
             static template = xml`
                 <span>
-                    <input type="number" t-ref="autofocus" t-att-value="state.counter" />
+                    <input type="number" t-custom-ref="autofocus" t-att-value="state.counter" />
                 </span>
             `;
             setup() {
@@ -89,7 +89,7 @@ describe("useAutofocus", () => {
             static props = ["*"];
             static template = xml`
                 <span>
-                    <input t-if="state.showInput" type="text" t-ref="autofocus" />
+                    <input t-if="state.showInput" type="text" t-custom-ref="autofocus" />
                 </span>
             `;
             setup() {
@@ -122,7 +122,7 @@ describe("useAutofocus", () => {
         class MyComponent extends Component {
             static template = xml`
                 <span>
-                    <input type="text" t-ref="autofocus" />
+                    <input type="text" t-custom-ref="autofocus" />
                 </span>
             `;
             static props = ["*"];
@@ -143,7 +143,7 @@ describe("useAutofocus", () => {
             static props = ["*"];
             static template = xml`
                 <span>
-                    <input type="text" t-ref="autofocus" />
+                    <input type="text" t-custom-ref="autofocus" />
                 </span>
             `;
             setup() {
@@ -173,8 +173,8 @@ describe("useAutofocus", () => {
             static props = ["*"];
             static template = xml`
                 <span>
-                    <input type="text" t-ref="first" />
-                    <input t-if="state.showSecond" type="text" t-ref="second" />
+                    <input type="text" t-custom-ref="first" />
+                    <input t-if="state.showSecond" type="text" t-custom-ref="second" />
                 </span>
             `;
             setup() {
@@ -208,7 +208,7 @@ describe("useAutofocus", () => {
             static props = ["*"];
             static template = xml`
                 <span>
-                    <input type="text" value="input content" t-ref="autofocus" />
+                    <input type="text" value="input content" t-custom-ref="autofocus" />
                 </span>
             `;
             setup() {
@@ -234,7 +234,7 @@ describe("useAutofocus", () => {
             static props = ["*"];
             static template = xml`
                     <div>
-                        <input type="text" t-ref="autofocus" t-att-value="state.text" />
+                        <input type="text" t-custom-ref="autofocus" t-att-value="state.text" />
                     </div>
                 `;
             setup() {
@@ -431,7 +431,7 @@ describe("useSpellCheck", () => {
         // To understand correctly the test, refer to the MDN documentation of spellcheck.
         class MyComponent extends Component {
             static props = ["*"];
-            static template = xml`<div><textarea t-ref="spellcheck" class="textArea"/></div>`;
+            static template = xml`<div><textarea t-custom-ref="spellcheck" class="textArea"/></div>`;
             setup() {
                 useSpellCheck();
             }
@@ -462,7 +462,7 @@ describe("useSpellCheck", () => {
     test("use a different refName", async () => {
         class MyComponent extends Component {
             static props = ["*"];
-            static template = xml`<div><textarea t-ref="myreference" class="textArea"/></div>`;
+            static template = xml`<div><textarea t-custom-ref="myreference" class="textArea"/></div>`;
             setup() {
                 useSpellCheck({ refName: "myreference" });
             }
@@ -489,7 +489,7 @@ describe("useSpellCheck", () => {
         class MyComponent extends Component {
             static props = ["*"];
             static template = xml`
-                <div t-ref="spellcheck">
+                <div t-custom-ref="spellcheck">
                     <textarea class="textArea"/>
                     <div contenteditable="true" class="editableDiv"/>
                 </div>`;
@@ -542,7 +542,7 @@ describe("useSpellCheck", () => {
         class MyComponent extends Component {
             static props = ["*"];
             static template = xml`
-                <div t-ref="spellcheck">
+                <div t-custom-ref="spellcheck">
                     <textarea class="textArea"/>
                     <div contenteditable="true" spellcheck="false" class="editableDiv"/>
                 </div>`;
@@ -595,7 +595,7 @@ describe("useSpellCheck", () => {
         class MyComponent extends Component {
             static props = ["*"];
             static template = xml`
-                <div t-ref="spellcheck"  contenteditable="true" class="editableDiv" />`;
+                <div t-custom-ref="spellcheck"  contenteditable="true" class="editableDiv" />`;
             setup() {
                 useSpellCheck();
             }
@@ -618,7 +618,7 @@ describe("useChildRef and useForwardRefToParent", () => {
 
         class Child extends Component {
             static props = ["*"];
-            static template = xml`<span t-ref="someRef" class="my_span">Hello</span>`;
+            static template = xml`<span t-custom-ref="someRef" class="my_span">Hello</span>`;
             setup() {
                 childRef = useForwardRefToParent("someRef");
             }
@@ -642,7 +642,7 @@ describe("useChildRef and useForwardRefToParent", () => {
     test("in a conditional child", async () => {
         class Child extends Component {
             static props = ["*"];
-            static template = xml`<span t-ref="someRef" class="my_span">Hello</span>`;
+            static template = xml`<span t-custom-ref="someRef" class="my_span">Hello</span>`;
             setup() {
                 useForwardRefToParent("someRef");
             }

@@ -60,7 +60,7 @@ function getTestComponent(virtualGridParams) {
         static props = [];
         static components = { Item };
         static template = xml`
-            <div class="scrollable" t-ref="scrollable" style="${CONTAINER_STYLE}" dir="${localization.direction}">
+            <div class="scrollable" t-custom-ref="scrollable" style="${CONTAINER_STYLE}" dir="${localization.direction}">
                 <div class="inner" t-att-style="innerStyle">
                     <t t-foreach="virtualRows" t-as="row" t-key="row.id">
                         <t t-foreach="virtualColumns" t-as="col" t-key="col.id">
@@ -159,7 +159,7 @@ test("initialScroll: bottom right", async () => {
 
 test("required params only", async () => {
     class C extends Component {
-        static template = xml`<div t-ref="pseudoScrollable"/>`;
+        static template = xml`<div t-custom-ref="pseudoScrollable"/>`;
         static props = [];
         setup() {
             const scrollableRef = useRef("pseudoScrollable");
@@ -174,7 +174,7 @@ test("required params only", async () => {
 test("with empty rows and columns", async () => {
     class C extends Component {
         static template = xml`
-            <div t-ref="pseudoScrollable"/>
+            <div t-custom-ref="pseudoScrollable"/>
         `;
         static props = [];
         setup() {
@@ -192,7 +192,7 @@ test("with empty rows and columns", async () => {
 test("with 1 row and 1 column", async () => {
     class C extends Component {
         static template = xml`
-            <div t-ref="pseudoScrollable"/>
+            <div t-custom-ref="pseudoScrollable"/>
         `;
         static props = [];
         setup() {
@@ -210,7 +210,7 @@ test("with 1 row and 1 column", async () => {
 test("with columns only", async () => {
     class C extends Component {
         static template = xml`
-            <div t-ref="pseudoScrollable"/>
+            <div t-custom-ref="pseudoScrollable"/>
         `;
         static props = [];
         setup() {
@@ -227,7 +227,7 @@ test("with columns only", async () => {
 test("with rows only", async () => {
     class C extends Component {
         static template = xml`
-            <div t-ref="pseudoScrollable"/>
+            <div t-custom-ref="pseudoScrollable"/>
         `;
         static props = [];
         setup() {

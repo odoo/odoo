@@ -4,7 +4,6 @@ import { Interaction } from "./interaction";
 import { getTemplate } from "@web/core/templates";
 import { PairSet } from "./utils";
 import { Colibri } from "./colibri";
-import { customDirectives } from "@web/env";
 
 /**
  * Website Core
@@ -69,7 +68,6 @@ class InteractionService {
                 translateFn: appTranslateFn,
                 warnIfNoStaticProps: this.env.debug,
                 translatableAttributes: ["data-tooltip"],
-                // customDirectives,
             };
             this.owlApp = new App(null, appConfig);
         }

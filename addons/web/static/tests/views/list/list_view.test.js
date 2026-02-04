@@ -12047,7 +12047,7 @@ test(`discard has to wait for changes in each field in multi edit`, async () => 
     const def = new Deferred();
 
     class CustomField extends Component {
-        static template = xml`<input t-ref="input" t-att-value="value" t-on-blur="onBlur" t-on-input="onInput"/>`;
+        static template = xml`<input t-custom-ref="input" t-att-value="value" t-on-blur="onBlur" t-on-input="onInput"/>`;
         static props = {
             ...standardFieldProps,
         };

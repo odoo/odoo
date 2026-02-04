@@ -666,7 +666,7 @@ class PickerMobileInDialog extends PickerMobile {
     static props = [...PICKER_PROPS, "onClose?"];
     static template = xml`
         <Dialog size="'lg'" header="false" footer="false" contentClass="'o-discuss-mobileContextMenu d-flex position-absolute bottom-0 rounded-0 h-50 bg-100'" bodyClass="'p-1'">
-            <div class="h-100" t-ref="root">
+            <div class="h-100" t-custom-ref="root">
                 <t t-component="props.PickerComponent" t-props="pickerProps"/>
             </div>
         </Dialog>

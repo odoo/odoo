@@ -152,7 +152,7 @@
                         <input type="text"
                             t-custom-ref="newActionNameRef"
                             class="o_input mb-2"
-                            t-model.trim="state.embeddedInfos.newActionName"
+                            t-custom-model.trim="state.embeddedInfos.newActionName"
                         />
                         <CheckBox value="state.embeddedInfos.newActionIsShared" onChange.bind="_onShareCheckboxChange">
                             <span data-tooltip="Make this embedded action available to other users">Shared</span>

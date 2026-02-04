@@ -188,7 +188,7 @@ test("close on outside click in shadow dom", async () => {
     class ShadowDom extends Component {
         static components = { Dropdown, DropdownItem };
         static props = [];
-        static template = xml`<div class="shadow-root" t-ref="shadow-root-ref" />`;
+        static template = xml`<div class="shadow-root" t-custom-ref="shadow-root-ref" />`;
         setup() {
             const shadowRootRef = useRef("shadow-root-ref");
             onMounted(() => {

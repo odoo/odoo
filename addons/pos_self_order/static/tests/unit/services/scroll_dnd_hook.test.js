@@ -10,7 +10,7 @@ definePosSelfModels();
 const setupComponent = async () => {
     await setupSelfPosEnv();
     class TestComponent extends Component {
-        static template = xml`<div style="width: 200px; overflow-x: auto;" t-ref="scroll">
+        static template = xml`<div style="width: 200px; overflow-x: auto;" t-custom-ref="scroll">
             <div style="width: 1000px; height: 20px;">Scrollable Content</div>
         </div>`;
         static props = [];

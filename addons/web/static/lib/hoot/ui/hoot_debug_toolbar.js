@@ -158,14 +158,14 @@ export class HootDebugToolBar extends Component {
         <div
             class="${HootDebugToolBar.name} absolute start-0 bottom-0 max-w-full max-h-full flex p-4 z-4"
             t-att-class="{ 'w-full': state.open }"
-            t-ref="root"
+            t-custom-ref="root"
         >
             <div class="flex flex-col w-full overflow-hidden rounded shadow bg-gray-200 dark:bg-gray-800">
                 <div class="flex items-center gap-2 px-2">
                     <i
                         class="fa fa-bug text-cyan p-2"
                         t-att-class="{ 'cursor-move': !state.open }"
-                        t-ref="handle"
+                        t-custom-ref="handle"
                     />
                     <div class="flex gap-px rounded my-1 overflow-hidden min-w-fit">
                         <button

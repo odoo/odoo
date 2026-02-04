@@ -108,7 +108,7 @@ export class DebuggingToolsDialog extends Component {
                     The owner of the Tailscale authentication key can access both the IoT Box and your local network.
                 </div>
                 <div class="d-flex flex-row gap-2 mb-4">
-                    <input t-model="this.state.remoteDebugToken" placeholder="Authentication key" class="form-control" t-att-disabled="state.remoteDebug"/>
+                    <input t-custom-model="this.state.remoteDebugToken" placeholder="Authentication key" class="form-control" t-att-disabled="state.remoteDebug"/>
                     <button
                         type="submit"
                         class="btn btn-sm"

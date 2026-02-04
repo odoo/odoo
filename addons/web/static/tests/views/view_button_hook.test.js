@@ -28,7 +28,7 @@ test("action can be prevented", async () => {
     let executeInHandler;
 
     class MyComponent extends Component {
-        static template = xml`<div t-ref="root" t-on-click="onClick" class="myComponent">Some text</div>`;
+        static template = xml`<div t-custom-ref="root" t-on-click="onClick" class="myComponent">Some text</div>`;
         static props = ["*"];
         setup() {
             const rootRef = useRef("root");
@@ -89,7 +89,7 @@ test("ViewButton clicked in Dropdown close the Dropdown", async () => {
     class MyComponent extends Component {
         static components = { Dropdown, DropdownItem, ViewButton };
         static template = xml`
-            <div t-ref="root" class="myComponent">
+            <div t-custom-ref="root" class="myComponent">
                 <Dropdown>
                     <button>dropdown</button>
                     <DropdownItem>
@@ -122,7 +122,7 @@ test("execute action in new window", async () => {
     });
 
     class MyComponent extends Component {
-        static template = xml`<div t-ref="root" t-on-click="onClick" class="myComponent">Some text</div>`;
+        static template = xml`<div t-custom-ref="root" t-on-click="onClick" class="myComponent">Some text</div>`;
         static props = ["*"];
         setup() {
             const rootRef = useRef("root");
@@ -154,7 +154,7 @@ test("execute action in new window - 2", async () => {
     class MyComponent extends Component {
         static components = { ViewButton };
         static template = xml`
-                <div t-ref="root" class="myComponent">
+                <div t-custom-ref="root" class="myComponent">
                     <ViewButton tag="'a'" clickParams="{ type:'action' }" string="'coucou'" record="{ resId: 1 }" />
                 </div>`;
         static props = ["*"];
@@ -173,7 +173,7 @@ test("default label for button special cancel", async () => {
     class MyComponent extends Component {
         static components = { ViewButton };
         static template = xml`
-                <div t-ref="root" class="myComponent">
+                <div t-custom-ref="root" class="myComponent">
                     <ViewButton tag="'button'" clickParams="{ special:'cancel' }"/>
                 </div>`;
         static props = ["*"];

@@ -69,7 +69,7 @@ export class DatabaseDialog extends Component {
                 </div>
                 <div class="mt-3">
                     <div class="input-group-sm mb-3" t-if="!store.base.server_status">
-                        <input type="text" class="form-control" t-model="form.token" placeholder="Server token"/>
+                        <input type="text" class="form-control" t-custom-model="form.token" placeholder="Server token"/>
                     </div>
                     <div class="small" t-else="">
                         <p class="m-0">

@@ -98,10 +98,10 @@ export function getSnippetStructure({
 
 class BuilderContainer extends Component {
     static template = xml`
-        <div class="d-flex h-100 w-100" t-ref="container">
-            <div class="o_website_preview flex-grow-1" t-ref="website_preview">
+        <div class="d-flex h-100 w-100" t-custom-ref="container">
+            <div class="o_website_preview flex-grow-1" t-custom-ref="website_preview">
                 <div class="o_iframe_container">
-                    <iframe class="h-100 w-100" t-ref="iframe" t-on-load="onLoad"/>
+                    <iframe class="h-100 w-100" t-custom-ref="iframe" t-on-load="onLoad"/>
                     <div t-if="this.state.isMobile" class="o_mobile_preview_layout">
                         <img alt="phone" src="/html_builder/static/img/phone.svg"/>
                     </div>

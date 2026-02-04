@@ -250,7 +250,7 @@ test("useNumpadDecimal should synchronize handlers on input elements", async () 
 
     class MyComponent extends Component {
         static template = xml`
-            <main t-ref="numpadDecimal">
+            <main t-custom-ref="numpadDecimal">
                 <input type="text" placeholder="input 1" />
                 <input t-if="state.showOtherInput" type="text" placeholder="input 2" />
             </main>

@@ -311,7 +311,7 @@ describe("Mount and Destroy embedded components", () => {
             static template = xml`
                 <div>
                     <div t-on-click="increment" t-att-class="'click count-' + props.index">Count:<t t-esc="state.value"/></div>
-                    <div t-ref="innerEditable" t-att-class="'innerEditable-' + props.index"/>
+                    <div t-custom-ref="innerEditable" t-att-class="'innerEditable-' + props.index"/>
                 </div>
             `;
             static props = {
@@ -775,8 +775,8 @@ describe("Mount processing", () => {
         const delayedWillStart = new Deferred();
         class LabeledCounter extends Counter {
             static template = xml`
-                <span t-ref="root" class="counter" t-on-click="increment">
-                    <span t-ref="label"/>:<t t-esc="state.value"/>
+                <span t-custom-ref="root" class="counter" t-on-click="increment">
+                    <span t-custom-ref="label"/>:<t t-esc="state.value"/>
                 </span>
             `;
             static props = {

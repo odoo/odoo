@@ -21,7 +21,7 @@ test("Parameters error handling", async () => {
         class NestedSortable extends Component {
             static props = ["*"];
             static template = xml`
-                    <div t-ref="root">
+                    <div t-custom-ref="root">
                         <ul class="sortable_list">
                             <li t-foreach="[1,2,3]" t-as="i" t-key="i" class="item">
                                 <span t-out="i"/>
@@ -90,7 +90,7 @@ test("Sorting in a single group without nesting", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-ref="root">
+                <div t-custom-ref="root">
                     <ul class="sortable_list">
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" class="item" t-att-id="i">
                             <span t-out="i"/>
@@ -170,7 +170,7 @@ test("Sorting in groups without nesting", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-ref="root">
+                <div t-custom-ref="root">
                     <section t-foreach="[1,2,3]" t-as="l" t-key="l" t-att-id="l" class="pb-1">
                         <ul class="sortable_list">
                             <li t-foreach="[1,2]" t-as="i" t-key="i" t-attf-class="item #{l}.#{i}" t-attf-id="#{l}.#{i}">
@@ -261,7 +261,7 @@ test("Sorting with nesting - move right", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-ref="root">
+                <div t-custom-ref="root">
                     <ul class="sortable_list">
                         <li t-foreach="[1,2,3]" t-as="i" t-key="i" class="item" t-att-id="i">
                             <span t-out="i"/>
@@ -359,7 +359,7 @@ test("Sorting with nesting - move left", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-ref="root">
+                <div t-custom-ref="root">
                     <ul class="sortable_list">
                         <li class="item" id="parent">
                             <span>parent</span>
@@ -452,7 +452,7 @@ test("Sorting with nesting - move root down", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-ref="root">
+                <div t-custom-ref="root">
                     <ul class="sortable_list">
                         <li class="item" id="dragged">
                             <span>dragged</span>
@@ -539,7 +539,7 @@ test("Sorting with nesting - move child down", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-ref="root">
+                <div t-custom-ref="root">
                     <ul class="sortable_list">
                         <li class="item" id="parent">
                             <span>parent</span>
@@ -623,7 +623,7 @@ test("Sorting with nesting - move root up", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-ref="root">
+                <div t-custom-ref="root">
                     <ul class="sortable_list">
                         <li class="item" id="parent">
                             <span>parent</span>
@@ -708,7 +708,7 @@ test("Sorting with nesting - move child up", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-ref="root">
+                <div t-custom-ref="root">
                     <ul class="sortable_list">
                         <li class="item" id="parent">
                             <span>parent</span>
@@ -791,7 +791,7 @@ test("Dynamically disable NestedSortable feature", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-ref="root" class="root">
+                <div t-custom-ref="root" class="root">
                     <ul class="list">
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
                     </ul>
@@ -834,7 +834,7 @@ test("Drag has a default tolerance of 10 pixels before initiating the dragging",
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-                    <div t-ref="root" class="root">
+                    <div t-custom-ref="root" class="root">
                         <ul class="list">
                             <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
                         </ul>
@@ -881,7 +881,7 @@ test("shouldn't drag above max level", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-            <div t-ref="root" class="root">
+            <div t-custom-ref="root" class="root">
                 <ul class="list">
                     <li class="item" id="parent">
                         <span>parent</span>
@@ -937,7 +937,7 @@ test("shouldn't drag outside a nest level", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-            <div t-ref="root" class="root">
+            <div t-custom-ref="root" class="root">
                 <ul class="list">
                     <li class="item" id="A">
                         <span>A</span>
@@ -1030,7 +1030,7 @@ test("shouldn't drag when not allowed", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-            <div t-ref="root" class="root">
+            <div t-custom-ref="root" class="root">
                 <ul class="list">
                     <li class="item" id="target">
                         <span>item</span>
@@ -1088,7 +1088,7 @@ test("placeholder and drag element have same size", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-            <div t-ref="root" class="root">
+            <div t-custom-ref="root" class="root">
                 <ul class="list">
                     <li class="item target" id="target">
                         <span>parent</span>
@@ -1130,7 +1130,7 @@ test("Ignore specified elements", async () => {
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`
-            <div t-ref="root" class="root">
+            <div t-custom-ref="root" class="root">
                 <ul class="list">
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" class="item">
                         <span class="ignored" t-esc="i" />

@@ -12,7 +12,7 @@ export class DocErrorDialog extends Component {
                 <div t-if="state.showTraceback" class="overflow-auto position-relative" style="max-height: 500px;">
                     <button
                         class="btn bg-100 position-absolute top-0 end-0"
-                        t-ref="copyButton"
+                        t-custom-ref="copyButton"
                         t-on-click="onClickClipboard"
                     >
                         <span class="fa fa-clipboard"/>

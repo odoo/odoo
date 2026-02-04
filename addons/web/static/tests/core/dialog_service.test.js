@@ -99,7 +99,7 @@ test("multiple dialogs can become the UI active element", async () => {
 
 test("a popover with an autofocus child can become the UI active element", async () => {
     class TestPopover extends Component {
-        static template = xml`<input type="text" t-ref="autofocus" />`;
+        static template = xml`<input type="text" t-custom-ref="autofocus" />`;
         static props = ["*"];
         setup() {
             useAutofocus();

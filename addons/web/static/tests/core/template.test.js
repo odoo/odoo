@@ -58,7 +58,7 @@ function registerTemplates(...templates) {
 async function mountTestComponentWithTemplate(name) {
     class TestComponent extends Component {
         static props = ["*"];
-        static template = xml`<div t-ref="root"><t t-call="${name}"/></div>`;
+        static template = xml`<div t-custom-ref="root"><t t-call="${name}"/></div>`;
         setup() {
             this.rootRef = useRef("root");
         }

@@ -13,7 +13,7 @@ test("Parameters error handling", async () => {
         class List extends Component {
             static props = ["*"];
             static template = xml`
-                    <div t-ref="root" class="root">
+                    <div t-custom-ref="root" class="root">
                         <ul class="list">
                             <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
                         </ul>
@@ -76,7 +76,7 @@ test("Simple sorting in single group", async () => {
     class List extends Component {
         static props = ["*"];
         static template = xml`
-            <div t-ref="root" class="root">
+            <div t-custom-ref="root" class="root">
                 <ul class="list">
                     <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
                 </ul>
@@ -133,7 +133,7 @@ test("Simple sorting in multiple groups", async () => {
     class List extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-ref="root" class="root">
+                <div t-custom-ref="root" class="root">
                     <ul t-foreach="[1, 2, 3]" t-as="l" t-key="l" t-attf-class="list p-3 list{{ l }}">
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="l + ' ' + i" class="item" />
                     </ul>
@@ -211,7 +211,7 @@ test("Sorting in groups with distinct per-axis scrolling", async () => {
                 <div class="scroll_parent_y" style="max-width: 150px; max-height: 200px; overflow-y: scroll; overflow-x: hidden;">
                     <div class="spacer_before" style="min-height: 50px;"></div>
                     <div class="spacer_horizontal" style="min-height: 50px;"></div>
-                    <div t-ref="root" class="root d-flex align-items-end" style="overflow-x: scroll;">
+                    <div t-custom-ref="root" class="root d-flex align-items-end" style="overflow-x: scroll;">
                         <div class="d-flex">
                             <div style="padding-left: 20px;"
                                 t-foreach="[1, 2, 3]" t-as="c" t-key="c" t-attf-class="list m-0 list{{ c }}">
@@ -334,7 +334,7 @@ test("draggable area contains overflowing visible elements", async () => {
         static template = xml`
                 <div class="controller" style="max-width: 900px; min-width: 900px;">
                     <div class="content" style="max-width: 600px;">
-                        <div t-ref="renderer" class="renderer d-flex" style="overflow: visible;">
+                        <div t-custom-ref="renderer" class="renderer d-flex" style="overflow: visible;">
                             <div t-foreach="[1, 2, 3]" t-as="c" t-key="c" t-attf-class="list m-0 list{{ c }}">
                                 <div style="min-width: 300px; min-height: 50px;"
                                     t-foreach="[1, 2, 3]" t-as="l" t-key="l" t-esc="'item' + l + '' + c" t-attf-class="item item{{ l + '' + c }}"/>
@@ -394,7 +394,7 @@ test("Dynamically disable sortable feature", async () => {
     class List extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-ref="root" class="root">
+                <div t-custom-ref="root" class="root">
                     <ul class="list">
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
                     </ul>
@@ -438,7 +438,7 @@ test("Drag has a default tolerance of 10 pixels before initiating the dragging",
     class List extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-ref="root" class="root">
+                <div t-custom-ref="root" class="root">
                     <ul class="list">
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
                     </ul>
@@ -486,7 +486,7 @@ test("Ignore specified elements", async () => {
     class List extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-ref="root" class="root">
+                <div t-custom-ref="root" class="root">
                     <ul class="list">
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" class="item">
                             <span class="ignored" t-esc="i" />
@@ -534,7 +534,7 @@ test("the classes parameters (placeholderElement, helpElement)", async () => {
     class List extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-ref="root" class="root">
+                <div t-custom-ref="root" class="root">
                     <ul class="list">
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
                     </ul>
@@ -573,7 +573,7 @@ test("applyChangeOnDrop option", async () => {
     class List extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-ref="root" class="root">
+                <div t-custom-ref="root" class="root">
                     <ul class="list">
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
                     </ul>
@@ -605,7 +605,7 @@ test("clone option", async () => {
     class List extends Component {
         static props = ["*"];
         static template = xml`
-                <div t-ref="root" class="root">
+                <div t-custom-ref="root" class="root">
                     <ul class="list">
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
                     </ul>
@@ -633,7 +633,7 @@ test("dragged element is removed from the DOM while being dragged", async () => 
     class List extends Component {
         static props = ["*"];
         static template = xml`
-            <div t-ref="root" class="root">
+            <div t-custom-ref="root" class="root">
                 <ul class="list">
                     <li t-foreach="state.items" t-as="i" t-key="i" t-esc="i" class="item" />
                 </ul>

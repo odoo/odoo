@@ -18,7 +18,7 @@ const mountInput = async (setup) => {
 
 class Root extends Component {
     static components = { DateTimeInput };
-    static template = xml`<input type="text" class="datetime_hook_input" t-ref="start-date"/>`;
+    static template = xml`<input type="text" class="datetime_hook_input" t-custom-ref="start-date"/>`;
     static props = ["*"];
 
     setup() {
@@ -151,7 +151,7 @@ test("close popover when owner component is unmounted", async() => {
         static props = [];
         static template = xml`
             <div>
-                <input type="text" class="datetime_hook_input" t-ref="start-date"/>
+                <input type="text" class="datetime_hook_input" t-custom-ref="start-date"/>
             </div>
         `;
 

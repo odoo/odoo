@@ -36,8 +36,8 @@
                 </div>
                 <div t-if="!store.discuss.isSidebarCompact" class="o-mail-DiscussSidebarChannel-itemName overflow-hidden mx-2 text-start flex-grow-1" t-att-class="itemNameAttClass">
                     <div class="d-flex align-items-baseline o-min-width-0 gap-2">
-                        <span class="text-truncate" t-esc="channel.displayName" t-ref="displayName"/>
-                        <div class="d-flex gap-2 ms-auto" t-ref="displayNameAdditionalContent"/>
+                        <span class="text-truncate" t-esc="channel.displayName" t-custom-ref="displayName"/>
+                        <div class="d-flex gap-2 ms-auto" t-custom-ref="displayNameAdditionalContent"/>
                     </div>
                 </div>
             </div>

@@ -44,7 +44,7 @@ export class ListContainer extends Component {
             <button t-if="this.sizing.isLarger or props.forceSmall" t-on-click="toggle"
                 class="btn btn-secondary mx-1 fa fa-caret-down my-2" />
             <div class="overflow-hidden w-100 position-relative py-2">
-                <div t-ref="container" class="list-container-items d-flex w-100">
+                <div t-custom-ref="container" class="list-container-items d-flex w-100">
                     <div t-if="!props.forceSmall" t-foreach="props.items" t-as="item" t-key="item_index" t-att-class="{'invisible': shouldBeInvisible(item_index)}">
                         <t t-slot="default" item="item"/>
                     </div>

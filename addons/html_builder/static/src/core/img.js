@@ -43,7 +43,7 @@ export class Image extends Component {
     };
     static template = xml`
         <t t-if="state.loaded">
-            <svg t-if="isSvg(props.src)" t-ref="svg"
+            <svg t-if="isSvg(props.src)" t-custom-ref="svg"
                 xmlns="http://www.w3.org/2000/svg"
                 t-att-width="svg.width"
                 t-att-viewBox="svg.viewBox"

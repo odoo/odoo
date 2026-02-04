@@ -117,7 +117,7 @@ test("[accesskey] attrs replaced by [data-hotkey]", async () => {
 
 test("[accesskey] attrs replaced by [data-hotkey], part 2", async () => {
     class UIOwnershipTakerComponent extends Component {
-        static template = xml`<p class="owner" t-ref="bouh"><button>a</button></p>`;
+        static template = xml`<p class="owner" t-custom-ref="bouh"><button>a</button></p>`;
         static props = ["*"];
         setup() {
             useActiveElement("bouh");
@@ -589,7 +589,7 @@ test("registrations and elements belong to the correct UI owner", async () => {
     }
 
     class MyComponent2 extends Component {
-        static template = xml`<div t-ref="active"><button data-hotkey="b" t-on-click="onClick">b</button></div>`;
+        static template = xml`<div t-custom-ref="active"><button data-hotkey="b" t-on-click="onClick">b</button></div>`;
         static props = ["*"];
         setup() {
             useHotkey("a", () => expect.step("MyComponent2 subscription"));
@@ -811,7 +811,7 @@ test("operating area can be restricted", async () => {
     class A extends Component {
         static template = xml`
             <div class="one" tabindex="0">one</div>
-            <div class="two" tabindex="0" t-ref="area">two</div>
+            <div class="two" tabindex="0" t-custom-ref="area">two</div>
         `;
         static props = ["*"];
         setup() {
@@ -841,7 +841,7 @@ test("operating area can be restricted", async () => {
 test("operating area and UI active element", async () => {
     expect.assertions(5);
     class UIOwnershipTakerComponent extends Component {
-        static template = xml`<p class="owner" t-ref="bouh"><button>a</button></p>`;
+        static template = xml`<p class="owner" t-custom-ref="bouh"><button>a</button></p>`;
         static props = ["*"];
         setup() {
             useActiveElement("bouh");
@@ -853,7 +853,7 @@ test("operating area and UI active element", async () => {
             <main>
                 <UIOwnershipTakerComponent t-if="state.foo" />
                 <div class="one" tabindex="0">one</div>
-                <div class="two" tabindex="0" t-ref="area">two</div>
+                <div class="two" tabindex="0" t-custom-ref="area">two</div>
             </main>
         `;
         static props = ["*"];
@@ -936,7 +936,7 @@ test("operation area with validating option", async () => {
     class A extends Component {
         static template = xml`
             <div class="one" tabindex="0">one</div>
-            <div class="two" tabindex="0" t-ref="area">two</div>
+            <div class="two" tabindex="0" t-custom-ref="area">two</div>
         `;
         static props = ["*"];
         setup() {
@@ -977,7 +977,7 @@ test("operation area with validating option", async () => {
 
 test("mixing hotkeys with and without operation area", async () => {
     class A extends Component {
-        static template = xml`<div class="root" tabindex="0" t-ref="area">root</div>`;
+        static template = xml`<div class="root" tabindex="0" t-custom-ref="area">root</div>`;
         static props = ["*"];
         setup() {
             const areaRef = useRef("area");

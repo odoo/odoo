@@ -7,7 +7,7 @@
                 <input type="text"
                     class="o_input my-1"
                     t-custom-ref="description"
-                    t-model.trim="state.description"
+                    t-custom-model.trim="state.description"
                     t-on-keydown="onInputKeydown"
                     />
                 <CheckBox value="state.isDefault" onChange.bind="(checked) => this.state.isDefault = checked">

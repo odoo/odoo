@@ -16,8 +16,8 @@ import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpe
 class BasicHookParent extends Component {
     static props = [];
     static template = xml`
-        <button class="outside" t-ref="outsideRef">outside target</button>
-        <div class="container" t-ref="containerRef">
+        <button class="outside" t-custom-ref="outsideRef">outside target</button>
+        <div class="container" t-custom-ref="containerRef">
             <button class="o-navigable one" t-on-click="() => this.onClick(1)">target one</button>
             <div class="o-navigable two" tabindex="0" t-on-click="() => this.onClick(2)">target two</div>
             <input class="o-navigable three" t-on-click="() => this.onClick(3)"/><br/>
@@ -220,7 +220,7 @@ test("insert item before current", async () => {
     class TestComp extends Component {
         static props = [];
         static template = xml`
-            <div class="container" t-ref="containerRef">
+            <div class="container" t-custom-ref="containerRef">
                 <t t-foreach="state.items" t-as="item" t-key="item">
                     <div class="o-navigable" t-attf-class="item-{{item}}" tabindex="0" t-esc="item"/>
                 </t>
@@ -285,8 +285,8 @@ test("non-navigable dom update does NOT cause re-focus", async () => {
     class Parent extends Component {
         static props = [];
         static template = xml`
-            <button class="outside" t-ref="outsideRef">outside target</button>
-            <div class="container" t-ref="containerRef">
+            <button class="outside" t-custom-ref="outsideRef">outside target</button>
+            <div class="container" t-custom-ref="containerRef">
                 <button class="o-navigable one" t-on-click="() => this.onClick(1)">target one</button>
                 <div class="test-non-navigable" t-if="state.show">
                 </div>
@@ -317,7 +317,7 @@ test("mousehover only set active if navigation is availible", async () => {
     class Parent extends Component {
         static props = [];
         static template = xml`
-            <div class="container" t-ref="containerRef">
+            <div class="container" t-custom-ref="containerRef">
                 <button class="o-navigable one">target one</button>
                 <button class="o-navigable two">target two</button>
             </div>
@@ -355,7 +355,7 @@ test("active item is unset when focusing out", async () => {
         static props = [];
         static template = xml`
             <button class="outside">outside</button>
-            <div class="container" t-ref="containerRef">
+            <div class="container" t-custom-ref="containerRef">
                 <button class="o-navigable one">target one</button>
                 <button class="o-navigable two">target two</button>
             </div>
@@ -382,8 +382,8 @@ test("set focused element as active item", async () => {
     class Parent extends Component {
         static props = [];
         static template = xml`
-            <div class="container" t-ref="containerRef">
-                <input class="o-navigable one" id="input" t-ref="autofocus"/>
+            <div class="container" t-custom-ref="containerRef">
+                <input class="o-navigable one" id="input" t-custom-ref="autofocus"/>
                 <button class="o-navigable two">target two</button>
                 <button class="o-navigable three">target three</button>
             </div>

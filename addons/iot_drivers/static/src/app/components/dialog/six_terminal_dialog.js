@@ -68,7 +68,7 @@ export class SixTerminalDialog extends Component {
                 </div>
                 <div class="mt-3">
                     <div class="input-group-sm mb-3">
-                        <input type="text" class="form-control" placeholder="Six Terminal ID (digits only)" t-model="this.form.terminal_id" />
+                        <input type="text" class="form-control" placeholder="Six Terminal ID (digits only)" t-custom-model="this.form.terminal_id" />
                     </div>
                 </div>
             </t>

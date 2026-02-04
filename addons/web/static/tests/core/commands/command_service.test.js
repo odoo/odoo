@@ -111,7 +111,7 @@ test("useCommand hook when the activeElement change", async () => {
     }
 
     class OtherComponent extends Component {
-        static template = xml`<div t-ref="active"><div tabindex="1">visible</div></div>`;
+        static template = xml`<div t-custom-ref="active"><div tabindex="1">visible</div></div>`;
         static props = ["*"];
         setup() {
             useActiveElement("active");
@@ -188,7 +188,7 @@ test("global command with hotkey", async () => {
     expect.verifySteps([hotkey]);
 
     class MyComponent extends Component {
-        static template = xml`<div t-ref="active"><button>visible</button></div>`;
+        static template = xml`<div t-custom-ref="active"><button>visible</button></div>`;
         static props = ["*"];
         setup() {
             useActiveElement("active");

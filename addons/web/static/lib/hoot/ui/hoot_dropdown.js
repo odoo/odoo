@@ -18,9 +18,9 @@ import { useAutofocus, useHootKey, useWindowListener } from "../hoot_utils";
 /** @extends {Component<HootDropdownProps, import("../hoot").Environment>} */
 export class HootDropdown extends Component {
     static template = xml`
-        <div class="${HootDropdown.name} relative" t-att-class="props.className" t-ref="root">
+        <div class="${HootDropdown.name} relative" t-att-class="props.className" t-custom-ref="root">
             <button
-                t-ref="toggler"
+                t-custom-ref="toggler"
                 class="flex rounded p-2 transition-colors"
                 t-att-class="props.buttonClassName"
             >

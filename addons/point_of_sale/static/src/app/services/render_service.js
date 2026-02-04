@@ -6,7 +6,7 @@ import { waitImages } from "@point_of_sale/utils";
 class ComponentRenderer extends Component {
     static props = ["comp", "onMounted"];
     static template = xml`
-        <div t-ref="ref">
+        <div t-custom-ref="ref">
             <t t-component="props.comp.component" t-props="props.comp.props"/>
         </div>
     `;
