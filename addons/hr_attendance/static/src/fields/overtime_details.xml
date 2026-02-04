@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_attendance.OvertimeDetails">
+        <div t-ref="this.widget">
+            <button type="button"
+                    class="btn btn-link"
+                    t-on-click="this.onClickDetails">
+                <t t-out="this.formattedTotal"/>
+            </button>
+        </div>
+    </t>
+
+    <t t-name="hr_attendance.OvertimeDetailsPopover">
+        <div class="popover" style="min-width: 520px; --popover-max-width: 720px;">
+            <div class="popover-header d-flex justify-content-between align-items-center">
+                Overtime Details
+                <button type="button"
+                        class="btn btn-sm"
+                        t-on-click="this.props.close">
+                    <span class="fa fa-close"/>
+                </button>
+            </div>
+            <div class="popover-body" style="max-height: 60vh;">
+                <ListRenderer t-props="this.rendererProps"/>
+            </div>
+        </div>
+    </t>
+</templates>

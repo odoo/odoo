@@ -48,11 +48,12 @@ class HrAttendance(models.Model):
     date = fields.Date(string="Date", compute='_compute_date', store=True, index=True, precompute=True, required=True)
     worked_hours = fields.Float(string='Worked Hours', compute='_compute_worked_hours', store=True, readonly=True)
     color = fields.Integer(compute='_compute_color')
-    overtime_hours = fields.Float(string="Over Time", compute='_compute_overtime_hours', store=True)
+    overtime_hours = fields.Float(string="Overtime", compute='_compute_overtime_hours', store=True, tracking=True,
+        help="Overtime hours are calculated based on the applicable rules for this attendance. Click to view the rule breakdown.")
     overtime_status = fields.Selection(selection=[('to_approve', "To Approve"),
                                                   ('approved', "Approved"),
                                                   ('refused', "Refused")], compute="_compute_overtime_status", store=True, tracking=True, readonly=False)
-    validated_overtime_hours = fields.Float(string="Extra Hours", compute='_compute_validated_overtime_hours', tracking=True, store=True, readonly=True)
+    validated_overtime_hours = fields.Float(string="Extra Hours", compute='_compute_validated_overtime_hours', store=True)
     in_latitude = fields.Float(string="Latitude", digits=(10, 7), readonly=True, aggregator=None)
     in_longitude = fields.Float(string="Longitude", digits=(10, 7), readonly=True, aggregator=None)
     in_location = fields.Char(help="Based on GPS-Coordinates if available or on IP Address")
@@ -577,6 +578,9 @@ class HrAttendance(models.Model):
 
     def action_refuse_overtime(self):
         self.linked_overtime_ids.action_refuse()
+
+    def action_reset_overtime(self):
+        self.linked_overtime_ids.action_reset()
 
     def _cron_auto_check_out(self):
         self._cron_auto_check_out_tolerance()
