@@ -6,6 +6,7 @@ from odoo.tests import HttpCase, new_test_user, tagged, users
 
 @tagged("mail_message")
 class TestMailMessage(common.MailCommon, HttpCase):
+
     @users("employee")
     def test_can_star_message_without_write_access(self):
         self.authenticate(self.env.user.login, self.env.user.login)
@@ -25,7 +26,7 @@ class TestMailMessage(common.MailCommon, HttpCase):
         self.make_jsonrpc_request("/mail/action", {"fetch_params": ["remove_all_bookmarks"]})
         self.assertNotIn(self.env.user.partner_id, message.bookmarked_partner_ids)
 
-    def test_mail_message_inexisting_access(self):
+    def test_mail_message_read_inexisting(self):
         user = new_test_user(self.env, login="Bob", email="bob@test.com")
         inexisting_message = self.env['mail.message'].with_user(user).browse(-434264)
         self.assertFalse(inexisting_message.exists())
