@@ -229,7 +229,7 @@ registry.category("web_tour.tours").add("website_form_contactus_submit", {
         // the email
         {
             isActive: ["body:has(.o-livechat-root)"],
-            trigger: ":shadow span:contains(select an option above)",
+            trigger: ":shadow textarea[placeholder='Say something...']",
         },
         {
             content: "Fill in the subject",
