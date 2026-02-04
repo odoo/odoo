@@ -8,6 +8,9 @@ from odoo.tests import Form, tagged
 
 @tagged('post_install', '-at_install')
 class TestAutomation(TransactionCaseWithUserDemo):
+    def tearDown(self):
+        self.env['base.automation']._unregister_hook()
+        super().tearDown()
 
     def test_01_on_create_or_write(self):
         """ Simple on_create with admin user """
