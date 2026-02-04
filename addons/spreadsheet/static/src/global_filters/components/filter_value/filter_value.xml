@@ -27,18 +27,18 @@
                  t-att-class="filterValue?.operator === 'between' ? 'justify-content-between' : ''">
                 <t t-if="filterValue?.operator === 'between'">
                     <NumericFilterValue
-                        value="filterValue.minimumValue"
+                        value="filterValue?.minimumValue"
                         onValueChanged="(value) => this.onMinimumValueNumericInput(filter.id, value)"
                     />
                     <i class="fa fa-long-arrow-right mx-2"/>
                     <NumericFilterValue
-                        value="filterValue.maximumValue"
+                        value="filterValue?.maximumValue"
                         onValueChanged="(value) => this.onMaximumValueNumericInput(filter.id, value)"
                     />
                 </t>
                 <t t-else="">
                     <NumericFilterValue
-                        value="filterValue.targetValue"
+                        value="filterValue?.targetValue"
                         onValueChanged="(value) => this.onTargetValueNumericInput(filter.id, value)"
                     />
                 </t>

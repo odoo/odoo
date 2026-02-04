@@ -38,6 +38,7 @@ export class FilterValue extends Component {
         globalFilterValue: { optional: true },
         showTitle: { type: Boolean, optional: true },
         showClear: { type: Boolean, optional: true },
+        rangesOfAllowedValues: { type: Array, optional: true },
     };
 
     setup() {
@@ -79,6 +80,9 @@ export class FilterValue extends Component {
     }
 
     get textAllowedValues() {
+        if (this.props.rangesOfAllowedValues) {
+            return this.getters.getTextFilterOptionsFromRanges(this.props.rangesOfAllowedValues);
+        }
         return this.getters.getTextFilterOptions(this.filter.id);
     }
 
