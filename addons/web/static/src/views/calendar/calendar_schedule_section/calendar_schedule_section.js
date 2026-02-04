@@ -1,4 +1,5 @@
-import { Component, useEffect, useRef } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, useRef } from "@odoo/owl";
 
 export class CalendarScheduleSection extends Component {
     static template = "web.CalendarScheduleSection";
@@ -8,7 +9,7 @@ export class CalendarScheduleSection extends Component {
     };
     setup() {
         this.rootRef = useRef("eventsToSchedule");
-        useEffect(
+        useLayoutEffect(
             (el) => {
                 new FullCalendar.Interaction.Draggable(el, {
                     itemSelector: ".o_event_to_schedule_draggable",

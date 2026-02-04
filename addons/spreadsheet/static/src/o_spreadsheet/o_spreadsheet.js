@@ -11,7 +11,7 @@ odoo.define('@spreadsheet/o_spreadsheet/o_spreadsheet', ['@odoo/owl'], function 
 'use strict';
 let __exports = {};
 
-const { useEnv, useSubEnv, onWillUnmount, useComponent, status, Component, useRef, onMounted, useEffect, App, blockDom, useState, onPatched, useExternalListener, onWillUpdateProps, onWillStart, onWillPatch, xml, useChildSubEnv, markRaw, toRaw } = require('@odoo/owl');
+const { useEnv, useSubEnv, onWillUnmount, useComponent, status, Component, useEffect, useRef, onMounted, useLayoutEffect, App, blockDom, useState, onPatched, useExternalListener, onWillUpdateProps, onWillStart, onWillPatch, xml, useChildSubEnv, markRaw, toRaw } = require('@odoo/owl');
 
 const CANVAS_SHIFT = 0.5;
 // Colors

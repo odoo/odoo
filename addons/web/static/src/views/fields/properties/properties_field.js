@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -14,7 +15,7 @@ import { standardFieldProps } from "../standard_field_props";
 import { PropertyDefinition } from "./property_definition";
 import { PropertyValue } from "./property_value";
 
-import { Component, onWillStart, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, useRef, useState } from "@odoo/owl";
 
 export class PropertiesField extends Component {
     static template = "web.PropertiesField";
@@ -109,7 +110,7 @@ export class PropertiesField extends Component {
             });
         });
 
-        useEffect(
+        useLayoutEffect(
             () => {
                 // when the field has a new definition record:
                 if (this.props.readonly || (!this.state.isInEditMode && !this.props.editMode)) {
@@ -146,7 +147,7 @@ export class PropertiesField extends Component {
             }
         });
 
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (this.openPropertyDefinition) {
                     const propertyName = this.openPropertyDefinition;
@@ -161,7 +162,7 @@ export class PropertiesField extends Component {
             () => [this.openPropertyDefinition]
         );
 
-        useEffect(() => this._movePopoverIfNeeded());
+        useLayoutEffect(() => this._movePopoverIfNeeded());
 
         // sort properties
         useSortable({
@@ -774,7 +775,7 @@ export class PropertiesField extends Component {
      * Move the popover to the given property id.
      * Used when we change the position of the properties.
      *
-     * We change the popover position after the DOM has been updated (see @useEffect)
+     * We change the popover position after the DOM has been updated (see @useLayoutEffect)
      * because if we update it after changing the component properties,
      */
     _movePopoverIfNeeded() {

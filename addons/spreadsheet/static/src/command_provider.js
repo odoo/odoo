@@ -1,5 +1,6 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { registries } from "@odoo/o-spreadsheet";
-import { useEffect, useEnv } from "@odoo/owl";
+import { useEnv } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { DefaultCommandItem } from "@web/core/commands/command_palette";
 import { HotkeyCommandItem } from "@web/core/commands/default_providers";
@@ -13,7 +14,7 @@ const commandCategoryRegistry = registry.category("command_categories");
  */
 export function useSpreadsheetCommandPalette() {
     const env = useEnv();
-    useEffect(
+    useLayoutEffect(
         () => {
             setupSpreadsheetCategories(env);
             setupSpreadsheetCommandProvider(env);

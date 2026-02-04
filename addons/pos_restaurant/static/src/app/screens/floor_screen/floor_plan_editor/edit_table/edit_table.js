@@ -1,4 +1,5 @@
-import { Component, useEffect } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { Handles } from "@pos_restaurant/app/screens/floor_screen/floor_plan_editor/handles/handles";
 import { getColors } from "@pos_restaurant/app/services/floor_plan/utils/colors";
 import { useService } from "@web/core/utils/hooks";
@@ -16,7 +17,7 @@ export class EditTableProperties extends Component {
     setup() {
         this.dialog = useService("dialog");
 
-        useEffect(
+        useLayoutEffect(
             (table) => {
                 this.roundedCornerInitialValue = table.roundedCorner || 0;
             },

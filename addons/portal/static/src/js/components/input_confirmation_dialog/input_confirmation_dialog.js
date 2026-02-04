@@ -1,4 +1,4 @@
-import { useEffect } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 export class InputConfirmationDialog extends ConfirmationDialog {
@@ -22,7 +22,7 @@ export class InputConfirmationDialog extends ConfirmationDialog {
                 this._confirm();
             }
         };
-        useEffect(
+        useLayoutEffect(
             (inputEl) => {
                 this.inputEl = inputEl;
                 if (this.inputEl) {

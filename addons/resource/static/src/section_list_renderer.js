@@ -1,5 +1,5 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { ListRenderer } from "@web/views/list/list_renderer";
-import { useEffect } from "@odoo/owl";
 
 export class SectionListRenderer extends ListRenderer {
     setup() {
@@ -8,7 +8,7 @@ export class SectionListRenderer extends ListRenderer {
         this.displayType = "line_section";
         this.titleField = "title";
 
-        useEffect(
+        useLayoutEffect(
             (table) => {
                 if (table) {
                     table.classList.add("o_section_list_view");

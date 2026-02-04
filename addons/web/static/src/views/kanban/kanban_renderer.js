@@ -1,4 +1,5 @@
-import { Component, onPatched, onWillDestroy, useEffect, useRef, useState } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, onPatched, onWillDestroy, useRef, useState } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -241,7 +242,7 @@ export class KanbanRenderer extends Component {
         const handleAltKeyUp = () => {
             this.state.selectionAvailable = false;
         };
-        useEffect(
+        useLayoutEffect(
             () => {
                 window.addEventListener("keydown", handleAltKeyDown);
                 window.addEventListener("keyup", handleAltKeyUp);

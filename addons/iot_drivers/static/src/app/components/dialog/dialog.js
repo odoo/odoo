@@ -1,6 +1,7 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 /* global owl */
 
-const { Component, xml, useEffect, useRef } = owl;
+const { Component, xml, useLayoutEffect, useRef } = owl;
 
 export class Dialog extends Component {
     static props = {
@@ -16,7 +17,7 @@ export class Dialog extends Component {
     setup() {
         this.dialog = useRef("dialog");
 
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (!this.dialog || !this.dialog.el) {
                     return;

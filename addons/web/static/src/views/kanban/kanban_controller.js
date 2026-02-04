@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
@@ -28,7 +29,6 @@ import {
     Component,
     onMounted,
     onWillStart,
-    useEffect,
     useRef,
     useState,
     useSubEnv,
@@ -168,7 +168,7 @@ export class KanbanController extends Component {
                 return state;
             },
         });
-        useEffect(
+        useLayoutEffect(
             (isReady) => {
                 if (isReady) {
                     if (this.env.isSmall && this.model.root.isGrouped) {
@@ -216,7 +216,7 @@ export class KanbanController extends Component {
         onMounted(() => {
             this.firstLoad = false;
         });
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.onSelectionChanged();
             },
