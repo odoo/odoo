@@ -397,10 +397,17 @@ class FleetVehicle(models.Model):
         if 'odometer' in vals and any(vehicle.odometer > vals['odometer'] for vehicle in self):
             raise UserError(_('The odometer value cannot be lower than the previous one.'))
 
-        if 'driver_id' in vals and vals['driver_id']:
-            driver_id = vals['driver_id']
-            for vehicle in self.filtered(lambda v: v.driver_id.id != driver_id):
-                vehicle.create_driver_history(vals)
+        if 'driver_id' in vals:
+            new_driver_id = vals['driver_id']
+            vehicles_to_update = self.filtered(lambda v: v.driver_id.id != new_driver_id)
+            if vehicles_to_update:
+                self.env['fleet.vehicle.assignation.log'].search([
+                    ('vehicle_id', 'in', vehicles_to_update.ids),
+                    ('date_end', '=', False)
+                ]).write({'date_end': fields.Date.today()})
+                if new_driver_id:
+                    for vehicle in vehicles_to_update:
+                        vehicle.create_driver_history(vals)
 
         if 'future_driver_id' in vals and vals['future_driver_id']:
             future_driver = vals['future_driver_id']
@@ -442,7 +449,7 @@ class FleetVehicle(models.Model):
         return {
             'vehicle_id': self.id,
             'driver_id': vals['driver_id'],
-            'date_start': fields.Date.today(),
+            'date_start': fields.Date.today()
         }
 
     def create_driver_history(self, vals):

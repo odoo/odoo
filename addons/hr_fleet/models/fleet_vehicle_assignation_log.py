@@ -8,8 +8,10 @@ class FleetVehicleAssignationLog(models.Model):
 
     driver_employee_id = fields.Many2one('hr.employee', string='Driver (Employee)', compute='_compute_driver_employee_id', store=True, readonly=False)
     attachment_number = fields.Integer('Number of Attachments', compute='_compute_attachment_number')
+    driver_employee_date_start = fields.Date(string="Drier Employee Start Date", compute='_compute_driver_employee_id', store=True)
+    driver_employee_date_end = fields.Date(string="Driver Employee End Date", compute='_compute_driver_employee_id', store=True)
 
-    @api.depends('driver_id')
+    @api.depends('driver_id', 'date_start', 'date_end')
     def _compute_driver_employee_id(self):
         employees_by_partner_id_and_company_id = self.env['hr.employee']._read_group(
             domain=[('work_contact_id', 'in', self.driver_id.ids)],
@@ -22,6 +24,8 @@ class FleetVehicleAssignationLog(models.Model):
         for log in self:
             employees = employees_by_partner_id_and_company_id.get((log.driver_id, log.vehicle_id.company_id))
             log.driver_employee_id = employees[0] if employees else False
+            log.driver_employee_date_start = log.date_start
+            log.driver_employee_date_end = log.date_end
 
     def _compute_attachment_number(self):
         attachment_data = self.env['ir.attachment']._read_group([
