@@ -25,6 +25,14 @@ import { getHtmlStyle } from "@html_editor/utils/formatting";
 import { isVisible } from "@html_builder/utils/utils";
 import { localization } from "@web/core/l10n/localization";
 
+// These elements should only have inline content (even if they have a `block`
+// display style, for example if they are in a flex)
+// NOTE: h1, h2, ..., p, pre already prevents wrapping their children into block
+const ONLY_ALLOW_INLINE_TAGS = new Set([
+    ...["a", "em", "strong", "small", "s", "cite", "q", "abbr", "data", "time", "code"],
+    ...["samp", "sub", "sup", "i", "b", "u", "mark", "bdi", "span", "label", "button"],
+]);
+
 /**
  * @typedef {(() => void)[]} on_mobile_preview_clicked_handlers
  * @typedef {(() => void)[]} on_dom_updated_handlers
@@ -182,6 +190,8 @@ export class Builder extends Component {
                             return false;
                         }
                     },
+                    are_inlines_allowed_at_root_predicates: (el) =>
+                        ONLY_ALLOW_INLINE_TAGS.has(el.tagName.toLowerCase()) || undefined,
                 },
                 localOverlayContainers: {
                     key: this.env.localOverlayContainerKey,

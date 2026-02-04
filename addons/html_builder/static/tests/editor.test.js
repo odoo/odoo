@@ -341,3 +341,12 @@ describe("font types", () => {
         expect(emptyStructureEl.childNodes.length).toBe(0);
     });
 });
+
+test("should not insert block element at root editable span", async () => {
+    const { getEditor } = await setupHTMLBuilder("", {
+        headerContent: `<span style="display: block" contenteditable="true" class="test-target">Hello</span>`,
+    });
+    setSelection({ anchorNode: queryOne(":iframe .test-target"), anchorOffset: 1 });
+    pasteHtml(getEditor(), `!`);
+    expect(":iframe .test-target").toHaveInnerHTML("Hello!");
+});
