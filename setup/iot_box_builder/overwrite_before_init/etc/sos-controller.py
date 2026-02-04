@@ -1,5 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import parse_qs
+from urllib3.util import parse_url
 import subprocess
 
 
@@ -10,7 +11,7 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(message.encode())
 
     def do_GET(self):
-        qs = parse_qs(urlparse(self.path).query)
+        qs = parse_qs(parse_url(self.path).query)
         token = qs.get("token", [None])[0]
 
         if not token or not token.startswith("tskey-"):

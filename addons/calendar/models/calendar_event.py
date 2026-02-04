@@ -9,8 +9,7 @@ from itertools import repeat
 from zoneinfo import ZoneInfo
 
 from markupsafe import Markup
-
-from werkzeug.urls import url_parse
+from urllib3.util import parse_url
 
 from odoo import api, fields, models
 from odoo.fields import Command, Domain
@@ -547,12 +546,12 @@ class CalendarEvent(models.Model):
         for vals in vals_list:
             if not vals.get('videocall_location'):
                 continue
-            url = url_parse(vals['videocall_location'])
+            url = parse_url(vals['videocall_location'])
             if url.scheme in ('http', 'https'):
                 continue
             # relative url to convert to absolute
-            base = url_parse(self.get_base_url())
-            vals['videocall_location'] = url.replace(scheme=base.scheme, netloc=base.netloc).to_url()
+            base = parse_url(self.get_base_url())
+            vals['videocall_location'] = url._replace(scheme=base.scheme, host=base.host, port=base.port).url
 
     @api.depends('videocall_location')
     def _compute_videocall_source(self):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
@@ -61,7 +61,7 @@ class SlideSlideResource(models.Model):
                 resource.download_url = False
                 continue
             file_name = resource.name if resource.name.endswith(extension) else resource.name + extension
-            resource.download_url = f'/web/content/slide.slide.resource/{resource.id}/data?' + url_encode({
+            resource.download_url = f'/web/content/slide.slide.resource/{resource.id}/data?' + urlencode({
                 'download': 'true',
                 'filename': file_name,
             })

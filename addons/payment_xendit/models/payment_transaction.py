@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from werkzeug import urls
+from urllib.parse import urlencode
 
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
@@ -71,7 +70,7 @@ class PaymentTransaction(models.Model):
         base_url = self.provider_id.get_base_url()
         redirect_url = urljoin(base_url, XenditController._return_url)
         access_token = payment_utils.generate_access_token(self.reference, self.amount)
-        success_url_params = urls.url_encode({
+        success_url_params = urlencode({
             'tx_ref': self.reference,
             'access_token': access_token,
             'success': 'true',

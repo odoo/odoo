@@ -2,9 +2,9 @@
 
 import hashlib
 import uuid
+from urllib.parse import urlencode
 
 from datetime import datetime
-from werkzeug import urls
 from odoo import api, fields, models
 from odoo.tools.translate import LazyTranslate
 
@@ -51,7 +51,7 @@ class ResUsers(models.Model):
                 'email': self.email
             }
             params.update(kwargs)
-            token_url = self.get_base_url() + '/profile/validate_email?%s' % urls.url_encode(params)
+            token_url = self.get_base_url() + '/profile/validate_email?%s' % urlencode(params)
             # At this point, user access on template should not restrict template rendering
             activation_template.sudo().with_context(
                 email_notification_force_header=True,

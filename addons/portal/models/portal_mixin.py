@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import uuid
 from ast import literal_eval
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 from odoo import api, exceptions, fields, models, _
 
 
@@ -64,7 +64,7 @@ class PortalMixin(models.AbstractModel):
         if signup_partner and hasattr(self, 'partner_id') and self.partner_id:
             params.update(self.partner_id.signup_get_auth_param()[self.partner_id.id])
 
-        return '%s?%s' % ('/mail/view' if redirect else self.access_url, url_encode(params))
+        return '%s?%s' % ('/mail/view' if redirect else self.access_url, urlencode(params))
 
     def _get_access_action(self, access_uid=None, force_website=False):
         """ Instead of the classic form view, redirect to the online document for

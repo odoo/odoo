@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo import api, fields, models, modules, tools, _
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
@@ -215,7 +215,7 @@ class DigestDigest(models.Model):
             },
         )
         # create a mail_mail based on values, without attachments
-        unsub_params = url_encode({
+        unsub_params = urlencode({
             "token": unsubscribe_token,
             "user_id": user.id,
         })

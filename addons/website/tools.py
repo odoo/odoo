@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
 
-import werkzeug.urls
 from lxml import etree
+from urllib3.util import parse_url
 
 from odoo.tools.misc import hmac
 
@@ -106,7 +106,7 @@ def get_base_domain(url, strip_www=False):
     if not url:
         return ''
 
-    url = werkzeug.urls.url_parse(url).netloc
+    url = parse_url(url).netloc
     if strip_www and url.startswith('www.'):
         url = url[4:]
     return url

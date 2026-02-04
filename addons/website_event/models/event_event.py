@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from ast import literal_eval
 import json
+import urllib.parse
+from ast import literal_eval
 from datetime import UTC
 from zoneinfo import ZoneInfo
 
-import werkzeug.urls
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
@@ -100,7 +100,7 @@ class EventEvent(models.Model):
         """Fall back on the website_url to share the event."""
         for event in self:
             event.event_share_url = event.event_url or tools.urls.urljoin(event.get_base_url(), event.website_url)
- 
+
     @api.depends('registration_ids')
     @api.depends_context('uid')
     def _compute_is_participating(self):
@@ -499,11 +499,11 @@ class EventEvent(models.Model):
         }
         if self.address_id:
             params.update(location=self.address_inline)
-        encoded_params = werkzeug.urls.url_encode(params)
+        encoded_params = urllib.parse.urlencode(params)
         google_url = GOOGLE_CALENDAR_URL + encoded_params
         iCal_url = f'/event/{self.id:d}/ics'
         if slot:
-            iCal_url += '?' + werkzeug.urls.url_encode({'slot_id': slot.id})
+            iCal_url += '?' + urllib.parse.urlencode({'slot_id': slot.id})
         return {'google_url': google_url, 'iCal_url': iCal_url}
 
     def _default_website_meta(self):

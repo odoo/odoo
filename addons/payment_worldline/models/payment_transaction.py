@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
@@ -95,7 +95,7 @@ class PaymentTransaction(models.Model):
 
         base_url = self.provider_id.get_base_url()
         return_route = WorldlineController._return_url
-        return_url_params = url_encode({'provider_id': str(self.provider_id.id)})
+        return_url_params = urlencode({'provider_id': str(self.provider_id.id)})
         return_url = f'{urls.urljoin(base_url, return_route)}?{return_url_params}'
         first_name, last_name = payment_utils.split_partner_name(self.partner_name)
         payload = {

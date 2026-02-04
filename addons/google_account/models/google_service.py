@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-import logging
-
 import json
+import logging
+from datetime import datetime
+from urllib.parse import urlencode
+from urllib3.util import parse_url
+
 import requests
-from werkzeug import urls
 
 from odoo import api, fields, models, _
 
@@ -64,8 +65,7 @@ class GoogleService(models.AbstractModel):
         if access_type:
             params['access_type'] = access_type
 
-
-        encoded_params = urls.url_encode(params)
+        encoded_params = urlencode(params)
         return "%s?%s" % (GOOGLE_AUTH_ENDPOINT, encoded_params)
 
     @api.model
@@ -118,8 +118,8 @@ class GoogleService(models.AbstractModel):
         if headers is None:
             headers = {}
 
-        assert urls.url_parse(preuri + uri).host in [
-            urls.url_parse(url).host for url in (GOOGLE_TOKEN_ENDPOINT, GOOGLE_API_BASE_URL)
+        assert parse_url(preuri + uri).host in [
+            parse_url(url).host for url in (GOOGLE_TOKEN_ENDPOINT, GOOGLE_API_BASE_URL)
         ]
 
         # Remove client_secret key from logs

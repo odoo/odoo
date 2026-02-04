@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import os
+import urllib.parse
 from glob import glob
 from logging import getLogger
-from werkzeug import urls
 
 from odoo import api, fields, models, tools
 from odoo.modules import Manifest
@@ -33,7 +33,9 @@ def fs2web(path):
 
 
 def can_aggregate(url):
-    parsed = urls.url_parse(url)
+    # urllib3 parses best-effort parsing of the netloc when the scheme is missing:
+    # parse_url('web/path/to/file').netloc == 'web'
+    parsed = urllib.parse.urlparse(url)
     return not parsed.scheme and not parsed.netloc and not url.startswith('/web/content')
 
 

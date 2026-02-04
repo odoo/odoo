@@ -3,6 +3,7 @@ import requests
 from hashlib import md5
 from markupsafe import Markup
 from urllib import parse
+from urllib3.util import parse_url
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -232,7 +233,7 @@ class ResPartner(models.Model):
         edi_mode = nemhandel_user and nemhandel_user.edi_mode or self.env['ir.config_parameter'].sudo().get_str('l10n_dk.edi.mode')
         smp_nemhandel_url = 'smp-demo.nemhandel.dk' if edi_mode == 'test' else 'smp.nemhandel.dk'
 
-        return edi_identification.lower() == participant_identifier.lower() and parse.urlsplit(service_href).netloc == smp_nemhandel_url
+        return edi_identification.lower() == participant_identifier.lower() and parse_url(service_href).netloc == smp_nemhandel_url
 
     def _update_nemhandel_state_per_company(self, vals=None):
         partners = self.env['res.partner']

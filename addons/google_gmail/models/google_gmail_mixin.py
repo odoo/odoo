@@ -6,7 +6,7 @@ import logging
 import time
 import requests
 
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo import _, fields, models, tools, release
 from odoo.exceptions import AccessError, UserError
@@ -50,7 +50,7 @@ class GoogleGmailMixin(models.AbstractModel):
             self.google_gmail_uri = False
         else:
             for record in self:
-                google_gmail_uri = 'https://accounts.google.com/o/oauth2/v2/auth?%s' % url_encode({
+                google_gmail_uri = 'https://accounts.google.com/o/oauth2/v2/auth?%s' % urlencode({
                     'client_id': google_gmail_client_id,
                     'redirect_uri': url_join(base_url, '/google_gmail/confirm'),
                     'response_type': 'code',
@@ -98,7 +98,7 @@ class GoogleGmailMixin(models.AbstractModel):
             db_uuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
 
             # final callback URL that will receive the token from IAP
-            callback_params = url_encode({
+            callback_params = urlencode({
                 'model': self._name,
                 'rec_id': self.id,
                 'csrf_token': self._get_gmail_csrf_token(),

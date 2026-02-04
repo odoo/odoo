@@ -15,7 +15,7 @@ from contextlib import contextmanager, suppress
 from enum import IntEnum
 from itertools import count
 from queue import PriorityQueue
-from urllib.parse import urlparse
+from urllib3.util import parse_url
 from weakref import WeakSet
 
 import psycopg2
@@ -1051,7 +1051,7 @@ class WebsocketConnectionHandler:
         if not os.getenv('ODOO_BUS_PUBLIC_SAMESITE_WS'):
             return
         headers = request.httprequest.headers
-        origin_url = urlparse(headers.get('origin'))
+        origin_url = parse_url(headers.get('origin'))
         if origin_url.netloc != headers.get('host') or origin_url.scheme != request.httprequest.scheme:
             _logger.warning(
                 'Downgrading websocket session. Host=%(host)s, Origin=%(origin)s, Scheme=%(scheme)s.',

@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from urllib.parse import urlsplit
+from urllib3.util import parse_url
 import werkzeug
 import werkzeug.exceptions
-import werkzeug.urls
 import werkzeug.wrappers
 import math
 
@@ -101,7 +100,7 @@ class WebsiteProfile(http.Controller):
         url_from = request.httprequest.headers.get('Referer')
         url_current = request.httprequest.url
         void_from_url = {'url_from_label': None, 'url_from': None}
-        if url_from and ((url_from_parsed := urlsplit(url_from)).netloc == urlsplit(url_current).netloc):
+        if url_from and ((url_from_parsed := parse_url(url_from)).netloc == parse_url(url_current).netloc):
             path = url_from_parsed.path
             return next(
                 (

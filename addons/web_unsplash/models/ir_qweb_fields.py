@@ -1,4 +1,4 @@
-from werkzeug import urls
+from urllib3.util import parse_url
 
 from odoo import models, api
 
@@ -11,7 +11,7 @@ class IrQwebFieldImage(models.AbstractModel):
         if element.find('.//img') is None:
             return False
         url = element.find('.//img').get('src')
-        url_object = urls.url_parse(url)
+        url_object = parse_url(url)
 
         if url_object.path.startswith('/unsplash/'):
             res_id = element.get('data-oe-id')

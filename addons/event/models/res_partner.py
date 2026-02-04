@@ -6,7 +6,7 @@ import binascii
 import hmac
 
 import requests
-import werkzeug.urls
+import urllib.parse
 
 from odoo import api, fields, models
 
@@ -76,7 +76,7 @@ class ResPartner(models.Model):
             'sensor': "false",
             'key': GOOGLE_MAPS_STATIC_API_KEY,
         }
-        unsigned_path = '/maps/api/staticmap?' + werkzeug.urls.url_encode(params)
+        unsigned_path = '/maps/api/staticmap?' + urllib.parse.urlencode(params)
         try:
             api_secret_bytes = base64.urlsafe_b64decode(GOOGLE_MAPS_STATIC_API_SECRET + "====")
         except binascii.Error:
@@ -84,4 +84,4 @@ class ResPartner(models.Model):
         url_signature_bytes = hmac.digest(api_secret_bytes, unsigned_path.encode(), 'sha1')
         params['signature'] = base64.urlsafe_b64encode(url_signature_bytes)
 
-        return 'https://maps.googleapis.com/maps/api/staticmap?' + werkzeug.urls.url_encode(params)
+        return 'https://maps.googleapis.com/maps/api/staticmap?' + urllib.parse.urlencode(params)

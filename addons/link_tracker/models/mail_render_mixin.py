@@ -3,10 +3,10 @@
 
 import re
 from html import unescape
+from urllib3.util import parse_url
 
 import lxml
 import markupsafe
-from werkzeug import urls
 
 from odoo import api, models, tools
 from odoo.addons.link_tracker.tools.html import find_links_with_urls_and_labels
@@ -78,7 +78,7 @@ class MailRenderMixin(models.AbstractModel):
             if original_url.startswith(shortened_schema) or original_url.startswith(unsubscribe_schema):
                 continue
             # support blacklist items in path, like /u/
-            parsed = urls.url_parse(original_url, scheme='http')
+            parsed = parse_url(original_url)
             if blacklist and any(re.search(item + r'([#?/]|$)', parsed.path) for item in blacklist):
                 continue
 

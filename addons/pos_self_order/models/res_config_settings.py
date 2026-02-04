@@ -5,7 +5,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.tools.misc import split_every
-from werkzeug.urls import url_unquote
+from urllib.parse import unquote as url_unquote
 
 
 class ResConfigSettings(models.TransientModel):

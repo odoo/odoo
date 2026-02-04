@@ -83,3 +83,4 @@ from . import test_num2words_ar
 from . import test_cli
 from . import test_signature
 from . import test_import_files
+from . import test_urllib

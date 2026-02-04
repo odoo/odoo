@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import werkzeug
+import urllib.parse
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError, AccessError
@@ -108,7 +108,7 @@ class PosPaymentMethod(models.Model):
         """
         self._stripe_check_access()
 
-        endpoint = ('payment_intents/%s/capture') % (werkzeug.urls.url_quote(paymentIntentId))
+        endpoint = ('payment_intents/%s/capture') % (urllib.parse.quote(paymentIntentId))
 
         data = None
         if amount is not None:

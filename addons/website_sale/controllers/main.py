@@ -4,11 +4,10 @@ import base64
 import itertools
 import json
 from datetime import datetime
-from urllib.parse import parse_qs, urlencode, urlparse
+from urllib.parse import parse_qs, urlencode
+from urllib3.util import parse_url
 
-from werkzeug import urls
 from werkzeug.exceptions import Forbidden, NotFound
-from werkzeug.urls import url_decode, url_encode, url_parse
 
 from odoo import fields
 from odoo.exceptions import ValidationError
@@ -906,8 +905,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             and prev_pricelist != pricelist
         ):
             # Convert prices to the new priceslist currency in the query params of the referrer
-            decoded_url = url_parse(redirect_url)
-            args = url_decode(decoded_url.query)
+            decoded_url = parse_url(redirect_url)
+            args = parse_qs(decoded_url.query)
             min_price = args.get('min_price')
             max_price = args.get('max_price')
             if min_price or max_price:
@@ -933,7 +932,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     ))
                 except (ValueError, TypeError):
                     pass
-            redirect_url = decoded_url.replace(query=url_encode(args)).to_url()
+            redirect_url = decoded_url._replace(query=urlencode(args, doseq=True)).url
 
         return request.redirect(redirect_url or self._get_shop_path())
 
@@ -1680,7 +1679,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             and request.website.is_public_user()
         ):
             order.partner_id.signup_prepare()
-            signup_url = urlparse(
+            signup_url = parse_url(
                 order.partner_id.with_context(relative_url=True)._get_signup_url()
             )
 
@@ -1689,7 +1688,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     dict(parse_qs(signup_url.query), redirect='/shop/unarchive_user_addresses'),
                     doseq=True,
                 )
-            ).geturl()
+            ).url
 
         return rendering_values
 
@@ -1993,10 +1992,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: The filtered query string.
         :rtype: str
         """
-        query = urls.url_parse(f'?{query_string}').decode_query()
+        query = parse_qs(query_string)
         for key in keys_to_remove:
             query.pop(key, False)
-        return urls.url_encode(query)
+        return urlencode(query, doseq=True)
 
     @staticmethod
     def _get_attribute_value_dict(attribute_values):

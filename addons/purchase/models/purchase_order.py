@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
 from markupsafe import escape, Markup
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo import api, fields, models, _
 from odoo.fields import Command, Domain
@@ -1277,7 +1277,7 @@ class PurchaseOrder(models.Model):
     def get_update_url(self):
         """Create portal url for user to update the scheduled date on purchase
         order lines."""
-        update_param = url_encode({'update': 'True'})
+        update_param = urlencode({'update': 'True'})
         return self.get_portal_url(query_string='&%s' % update_param)
 
     def _approval_allowed(self):

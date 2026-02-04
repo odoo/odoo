@@ -6,7 +6,7 @@ import functools
 import io
 import qrcode
 import re
-import werkzeug.urls
+import urllib.parse
 
 from odoo import _, api, fields, models
 from odoo.addons.base.models.res_users import check_identity
@@ -37,10 +37,10 @@ class Auth_TotpWizard(models.TransientModel):
         global_issuer = request and request.httprequest.host.split(':', 1)[0]
         for w in self:
             issuer = global_issuer or w.user_id.company_id.display_name
-            w.url = url = werkzeug.urls.url_unparse((
+            w.url = url = urllib.parse.urlunsplit((
                 'otpauth', 'totp',
-                werkzeug.urls.url_quote(f'{issuer}:{w.user_id.login}', safe=':'),
-                werkzeug.urls.url_encode({
+                urllib.parse.quote(f'{issuer}:{w.user_id.login}', safe=':'),
+                urllib.parse.urlencode({
                     'secret': compress(w.secret),
                     'issuer': issuer,
                     # apparently a lowercase hash name is anathema to google

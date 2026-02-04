@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from urllib.parse import urlparse
+from urllib3.util import parse_url
 import odoo.tests
 import lxml
 
@@ -45,11 +45,11 @@ class TestIsMultiLang(odoo.tests.HttpCase):
 
         r = self.url_open(f'/test_lang_url/{country1.id}')
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(urlparse(r.url).path, f'/test_lang_url/my-super-country-{country1.id}')
+        self.assertEqual(parse_url(r.url).path, f'/test_lang_url/my-super-country-{country1.id}')
 
         r = self.url_open(f'/{it.url_code}/test_lang_url/{country1.id}')
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(urlparse(r.url).path, f'/{it.url_code}/test_lang_url/my-super-country-italia-{country1.id}')
+        self.assertEqual(parse_url(r.url).path, f'/{it.url_code}/test_lang_url/my-super-country-italia-{country1.id}')
 
         body = lxml.html.fromstring(r.content)
         # Note: this test is indirectly testing the `ref=canonical` tag is correctly set,
@@ -58,9 +58,9 @@ class TestIsMultiLang(odoo.tests.HttpCase):
         fr_href = body.find('./head/link[@rel="alternate"][@hreflang="fr"]').get('href')
         en_href = body.find('./head/link[@rel="alternate"][@hreflang="en"]').get('href')
 
-        self.assertEqual(urlparse(it_href).path, f'/{it.url_code}/test_lang_url/my-super-country-italia-{country1.id}')
-        self.assertEqual(urlparse(fr_href).path, f'/{be.url_code}/test_lang_url/my-super-country-belgium-{country1.id}')
-        self.assertEqual(urlparse(en_href).path, f'/test_lang_url/my-super-country-{country1.id}')
+        self.assertEqual(parse_url(it_href).path, f'/{it.url_code}/test_lang_url/my-super-country-italia-{country1.id}')
+        self.assertEqual(parse_url(fr_href).path, f'/{be.url_code}/test_lang_url/my-super-country-belgium-{country1.id}')
+        self.assertEqual(parse_url(en_href).path, f'/test_lang_url/my-super-country-{country1.id}')
 
     def test_03_head_alternate_href(self):
         website = self.env['website'].search([], limit=1)

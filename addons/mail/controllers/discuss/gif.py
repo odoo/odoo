@@ -3,7 +3,7 @@
 import logging
 import requests
 import urllib3
-import werkzeug.urls
+import urllib.parse
 from werkzeug.exceptions import BadRequest
 
 from odoo.http import request, route, Controller
@@ -35,7 +35,7 @@ class DiscussGifController(Controller):
         ir_config = request.env["ir.config_parameter"].sudo()
         if not ir_config.get_bool("discuss.use_tenor_api"):
             return
-        query_string = werkzeug.urls.url_encode(
+        query_string = urllib.parse.urlencode(
             {
                 "q": search_term,
                 "key": ir_config.get_str("discuss.tenor_api_key"),
@@ -58,7 +58,7 @@ class DiscussGifController(Controller):
         ir_config = request.env["ir.config_parameter"].sudo()
         if not ir_config.get_bool("discuss.use_tenor_api"):
             return
-        query_string = werkzeug.urls.url_encode(
+        query_string = urllib.parse.urlencode(
             {
                 "key": ir_config.get_str("discuss.tenor_api_key"),
                 "client_key": request.env.cr.dbname,
@@ -83,7 +83,7 @@ class DiscussGifController(Controller):
     def _gif_posts(self, ids):
         # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
-        query_string = werkzeug.urls.url_encode(
+        query_string = urllib.parse.urlencode(
             {
                 "ids": ",".join(ids),
                 "key": ir_config.get_str("discuss.tenor_api_key"),

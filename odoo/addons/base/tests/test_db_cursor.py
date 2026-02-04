@@ -10,7 +10,7 @@ from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
 
 from odoo import api
 from odoo.modules.registry import Registry
-from odoo.sql_db import db_connect
+from odoo.sql_db import db_connect, connection_info_for
 from odoo.tests import tagged, common
 from odoo.tests.common import BaseCase, HttpCase
 from odoo.tests.test_cursor import TestCursor
@@ -65,6 +65,66 @@ class TestRealCursor(BaseCase):
             cr.execute('SHOW transaction_read_only')
             self.assertEqual(cr.fetchone(), ('on',))
             self.assertTrue(cr._cnx.readonly)
+
+    def test_connection_info_for(self):
+        config = {
+            "db_app_name": "odoo",
+            "db_host": "/var/run/postgresql/",
+            "db_port": "",
+            "db_user": "",
+            "db_password": "",
+            "db_sslmode": "",
+        }
+        with patch("odoo.tools.config", config):
+            info = connection_info_for("openerp")
+            self.assertEqual(info[0], "openerp")
+            self.assertEqual(
+                info[1],
+                {"database": "openerp", "application_name": "odoo", "host": "/var/run/postgresql/"},
+            )
+
+            # In dsn mode, the db name is taken from the path, then the user,
+            # and then, falls back to the host
+            self.assertEqual(connection_info_for("postgresql://user:pass@host:6789/openerp")[0], "openerp")
+            self.assertEqual(connection_info_for("postgresql://openerp:pass@host:6789/")[0], "openerp")
+            self.assertEqual(connection_info_for("postgresql://openerp:pass@host:6789")[0], "openerp")
+            self.assertEqual(connection_info_for("postgresql://openerp@host:6789")[0], "openerp")
+            self.assertEqual(connection_info_for("postgresql://openerp:6789")[0], "openerp")
+            self.assertEqual(connection_info_for("postgresql://openerp")[0], "openerp")
+            # check the connection params
+            info = connection_info_for("postgres://openerp")
+            self.assertEqual(info[0], "openerp")
+            self.assertEqual(
+                info[1],
+                {"dsn": "postgres://openerp", "application_name": "odoo"},
+            )
+
+        with (
+            patch("odoo.tools.config", {**config, "db_app_name": "openerp-{pid}"}),
+            patch("os.getpid", return_value=123),
+        ):
+            # check we correctly apply string interpolation
+            self.assertEqual(connection_info_for("openerp")[1]["application_name"], "openerp-123")
+
+        with patch("odoo.tools.config", {**config, "db_app_name": "a" * 64}):
+            # check NAMEDATALEN
+            self.assertEqual(connection_info_for("openerp")[1]["application_name"], "a" * 63)
+
+        with patch(
+            "odoo.tools.config",
+            {**config, "db_host": "localhost", "db_port": "6789", "db_user": "jean", "db_password": "hunter3"},
+        ):
+            self.assertEqual(
+                connection_info_for("openerp")[1],
+                {
+                    "database": "openerp",
+                    "application_name": "odoo",
+                    "host": "localhost",
+                    "port": "6789",
+                    "user": "jean",
+                    "password": "hunter3",
+                },
+            )
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

@@ -2,7 +2,8 @@
 import html
 from http import HTTPStatus
 from base64 import b64encode
-from urllib.parse import parse_qs, urlsplit
+from urllib.parse import parse_qs
+from urllib3.util import parse_url
 
 from datetime import date
 
@@ -266,7 +267,7 @@ class TestHttpWebJson_1(TestHttpBase):
         )
         self.assertEqual(len(res.history), 1, "should had been redirected")
         self.assertEqual(res.history[0].status_code, HTTPStatus.TEMPORARY_REDIRECT)
-        self.assertEqual(parse_qs(urlsplit(res.url).query), {
+        self.assertEqual(parse_qs(parse_url(res.url).query), {
             'domain': ["[('name', 'ilike', 'earth')]"],
             'offset': ['0'],
             'limit': ['80'],

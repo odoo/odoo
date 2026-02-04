@@ -1,5 +1,5 @@
 import babel.dates
-import werkzeug
+import urllib.parse
 
 from ast import literal_eval
 from collections import Counter
@@ -504,7 +504,7 @@ class WebsiteEventController(http.Controller):
             return request.redirect('/event/%s/register?registration_error_code=insufficient_seats' % event.id)
         attendees_sudo = self._create_attendees_from_registration_post(event, registrations_data)
 
-        return request.redirect(('/event/%s/registration/success?' % event.id) + werkzeug.urls.url_encode({'registration_ids': ",".join([str(id) for id in attendees_sudo.ids])}))
+        return request.redirect(('/event/%s/registration/success?' % event.id) + urllib.parse.urlencode({'registration_ids': ",".join([str(id) for id in attendees_sudo.ids])}))
 
     @http.route(['/event/<model("event.event"):event>/registration/success'], type='http', auth="public", methods=['GET'], website=True, sitemap=False)
     def event_registration_success(self, event, registration_ids):

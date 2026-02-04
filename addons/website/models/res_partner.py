@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug.urls
+import urllib.parse
 
 from odoo import models, fields, api
 
@@ -22,14 +22,14 @@ class ResPartner(models.Model):
             'sensor': 'false',
             'key': google_maps_api_key,
         }
-        return '//maps.googleapis.com/maps/api/staticmap?' + werkzeug.urls.url_encode(params)
+        return '//maps.googleapis.com/maps/api/staticmap?' + urllib.parse.urlencode(params)
 
     def google_map_link(self, zoom=10):
         params = {
             'q': '%s, %s %s, %s' % (self.street or '', self.city or '', self.zip or '', self.country_id and self.country_id.display_name or ''),
             'z': zoom,
         }
-        return 'https://maps.google.com/maps?' + werkzeug.urls.url_encode(params)
+        return 'https://maps.google.com/maps?' + urllib.parse.urlencode(params)
 
     @api.depends('website_id')
     @api.depends_context('display_website')

@@ -3,7 +3,7 @@
 
 import re
 from unittest.mock import patch
-from urllib.parse import urlparse
+from urllib3.util import parse_url
 
 from markupsafe import Markup
 
@@ -943,7 +943,7 @@ class UnfollowLinkTest(MailCommon, HttpCase):
                     response = self.url_open(unfollow_url)
                     self.assertEqual(response.status_code, 200)
                     self.assertNotIn(partner, record.message_partner_ids)
-                    self.assertEqual(urlparse(response.url).path, '/mail/unfollow')
+                    self.assertEqual(parse_url(response.url).path, '/mail/unfollow')
                     self.assertIn("You are no longer following the document", response.text)
                     self.assertIn('o_access_record_link', response.text)
                 finally:

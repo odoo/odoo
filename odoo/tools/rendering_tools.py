@@ -4,9 +4,9 @@
 import dateutil.relativedelta as relativedelta
 import functools
 import re
+import urllib.parse
 
 from markupsafe import Markup
-from werkzeug import urls
 
 from odoo.tools import safe_eval
 
@@ -20,8 +20,8 @@ def relativedelta_proxy(*args, **kwargs):
 
 template_env_globals = {
     'str': str,
-    'quote': urls.url_quote,
-    'urlencode': urls.url_encode,
+    'quote': urllib.parse.quote,
+    'urlencode': urllib.parse.urlencode,
     'datetime': safe_eval.datetime,
     'len': len,
     'abs': abs,

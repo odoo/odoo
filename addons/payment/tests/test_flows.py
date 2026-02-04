@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs
+from urllib3.util import parse_url
 
 from freezegun import freeze_time
 
@@ -230,7 +231,7 @@ class TestFlows(PaymentHttpCommon):
 
         # Pay without a partner specified --> redirection to login page
         response = self._portal_pay(**route_values)
-        url = urlparse(response.url)
+        url = parse_url(response.url)
         self.assertEqual(url.path, '/web/login')
         self.assertIn('redirect', parse_qs(url.query))
 
@@ -246,7 +247,7 @@ class TestFlows(PaymentHttpCommon):
 
         # Pay without a partner specified --> redirection to login page
         response = self._portal_pay(**route_values)
-        url = urlparse(response.url)
+        url = parse_url(response.url)
         self.assertEqual(url.path, '/web/login')
         self.assertIn('redirect', parse_qs(url.query))
 

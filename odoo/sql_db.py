@@ -19,6 +19,7 @@ import warnings
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 from inspect import currentframe
+from urllib3.util import parse_url
 
 import psycopg2
 import psycopg2.errorcodes
@@ -28,7 +29,6 @@ import psycopg2.extras
 from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
 from psycopg2.sql import Composable
-from werkzeug import urls
 
 import odoo
 
@@ -774,16 +774,16 @@ def connection_info_for(db_or_uri: str, readonly=False) -> tuple[str, dict]:
         the default configuration from ``db_`` or ``db_replica_``.
     :rtype: (str, dict)
     """
-    app_name = config['db_app_name']
+    app_name = tools.config['db_app_name']
     # Using manual string interpolation for security reason and trimming at default NAMEDATALEN=63
     app_name = app_name.replace('{pid}', str(os.getpid()))[:63]
     if db_or_uri.startswith(('postgresql://', 'postgres://')):
         # extract db from uri
-        us = urls.url_parse(db_or_uri)  # type: ignore
-        if len(us.path) > 1:
+        us = parse_url(db_or_uri)  # type: ignore
+        if us.path and len(us.path) > 1:
             db_name = us.path[1:]
-        elif us.username:
-            db_name = us.username
+        elif us.auth:
+            db_name = us.auth.split(':')[0]
         else:
             db_name = us.hostname
         return db_name, {'dsn': db_or_uri, 'application_name': app_name}

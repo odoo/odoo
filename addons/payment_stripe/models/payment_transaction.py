@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -37,7 +37,7 @@ class PaymentTransaction(models.Model):
             'client_secret': intent['client_secret'] if intent else '',
             'return_url': url_join(
                 base_url,
-                f'{StripeController._return_url}?{url_encode({"reference": self.reference})}',
+                f'{StripeController._return_url}?{urlencode({"reference": self.reference})}',
             ),
         }
 

@@ -4,7 +4,7 @@ import hashlib
 import logging
 import secrets
 import uuid
-import werkzeug.urls
+import urllib.parse
 
 from odoo import api, fields, models, _
 from odoo.addons.iap.tools import iap_tools
@@ -287,7 +287,7 @@ class IapAccount(models.Model):
             'account_token': hashed_account_token,
             'hashed': 1,
         }
-        return '%s?%s' % (base_url, werkzeug.urls.url_encode(d))
+        return '%s?%s' % (base_url, urllib.parse.urlencode(d))
 
     @api.model
     def _hash_iap_token(self, key):
@@ -318,7 +318,7 @@ class IapAccount(models.Model):
     def action_manage_payment_method(self):
         return {
             "type": "ir.actions.act_url",
-            "url": self.env['ir.config_parameter'].sudo().get_str("iap.endpoint", DEFAULT_ENDPOINT) + "/iap/1/update-auto-refill-payment-methods?%s" % werkzeug.urls.url_encode({
+            "url": self.env['ir.config_parameter'].sudo().get_str("iap.endpoint", DEFAULT_ENDPOINT) + "/iap/1/update-auto-refill-payment-methods?%s" % urllib.parse.urlencode({
                 "account_token": self.sudo().account_token,
                 "dbuuid": self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
                 "client_iap_account_id": self.id,

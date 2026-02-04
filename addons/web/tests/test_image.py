@@ -6,7 +6,7 @@ import base64
 from datetime import datetime, timedelta
 from freezegun import freeze_time
 from PIL import Image
-from werkzeug.urls import url_unquote_plus
+from urllib.parse import unquote_plus as url_unquote_plus
 
 from odoo.addons.base.tests.files import GIF_RAW
 from odoo.tests.common import HttpCase, new_test_user, tagged

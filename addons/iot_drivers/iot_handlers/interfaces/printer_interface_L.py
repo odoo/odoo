@@ -2,7 +2,8 @@
 
 from cups import Connection as CupsConnection, IPPError
 from itertools import groupby
-from urllib.parse import urlsplit, parse_qs, unquote
+from urllib.parse import parse_qs, unquote
+from urllib3.util import parse_url
 from zeroconf import (
     IPVersion,
     ServiceBrowser,
@@ -127,7 +128,7 @@ class PrinterInterface(Interface):
         return re.sub(r'[:\/\.\\ ]|(uuid=)|(serial=)', '', path)[:127]
 
     def get_ip(self, device_path):
-        hostname = urlsplit(device_path).hostname
+        hostname = parse_url(device_path).hostname
 
         if hostname and hostname.endswith(".local"):
             zeroconf_name = unquote(hostname.lower()) + "."
@@ -147,7 +148,7 @@ class PrinterInterface(Interface):
 
     @staticmethod
     def get_usb_info(device_path):
-        parsed_url = urlsplit(device_path)
+        parsed_url = parse_url(device_path)
         parsed_query = parse_qs(parsed_url.query)
         manufacturer = parsed_url.hostname
         product = parsed_url.path.removeprefix("/")

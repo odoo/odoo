@@ -1,4 +1,5 @@
-from werkzeug import urls
+from urllib.parse import urlencode, parse_qsl
+from urllib3.util import parse_url
 
 from odoo import http
 from odoo.exceptions import AccessError
@@ -48,10 +49,10 @@ class MailController(mail.MailController):
                         hash = kwargs.get('hash')
                         url = record_action['url']
                         if pid and hash:
-                            url = urls.url_parse(url)
-                            url_params = url.decode_query()
-                            url_params.update([("pid", pid), ("hash", hash)])
-                            url = url.replace(query=urls.url_encode(url_params, sort=True)).to_url()
+                            url = parse_url(url)
+                            url_params = parse_qsl(url.query)
+                            url_params.extend([("pid", pid), ("hash", hash)])
+                            url = url._replace(query=urlencode(sorted(url_params))).url
                         return request.redirect(url)
         return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token, **kwargs)
 

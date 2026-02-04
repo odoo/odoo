@@ -8,7 +8,7 @@ from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
 from markupsafe import escape
-from urllib.parse import urlparse
+from urllib3.util import parse_url
 
 from odoo import _, api, Command, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
@@ -613,7 +613,7 @@ class EventEvent(models.Model):
     @api.constrains('event_url')
     def _check_event_url(self):
         for event in self.filtered('event_url'):
-            url = urlparse(event.event_url)
+            url = parse_url(event.event_url)
             if not (url.scheme and url.netloc):
                 raise ValidationError(_('Please enter a valid event URL.'))
 
@@ -621,7 +621,7 @@ class EventEvent(models.Model):
     def _onchange_event_url(self):
         """Correct the url by adding scheme if it is missing."""
         for event in self.filtered('event_url'):
-            parsed_url = urlparse(event.event_url)
+            parsed_url = parse_url(event.event_url)
             if parsed_url.scheme not in ('http', 'https'):
                 event.event_url = 'https://' + event.event_url
 

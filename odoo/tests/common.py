@@ -42,7 +42,8 @@ from textwrap import shorten
 from typing import TYPE_CHECKING
 from unittest import TestResult
 from unittest.mock import Mock, _patch, patch
-from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
+from urllib.parse import parse_qsl, urlencode, urljoin
+from urllib3.util import parse_url
 from uuid import uuid4
 from xmlrpc import client as xmlrpclib
 
@@ -354,7 +355,7 @@ class BaseCase(case.TestCase):
     def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
         # allow localhost requests
         # TODO: also check port?
-        url = urlsplit(r.url)
+        url = parse_url(r.url)
         timeout = kw.get('timeout')
         if timeout and timeout < 10:
             _logger.getChild('requests').info('request %s with timeout %s increased to 10s during tests', url, timeout)
@@ -2316,8 +2317,8 @@ class HttpCase(TransactionCase):
         header.
         """
         if not location:
-            return urlsplit('')
-        s = urlsplit(urljoin(self.base_url(), location))
+            return parse_url('')
+        s = parse_url(urljoin(self.base_url(), location))
         # normalise query parameters
         return s._replace(query=urlencode(parse_qsl(s.query)))
 
@@ -2523,12 +2524,12 @@ class HttpCase(TransactionCase):
             self.cr.clear()
             url = urljoin(self.base_url(), url_path)
             if watch:
-                parsed = urlsplit(url)
+                parsed = parse_url(url)
                 qs = dict(parse_qsl(parsed.query))
                 qs['watch'] = '1'
                 if debug is not False:
                     qs['debug'] = "assets"
-                url = urlunsplit(parsed._replace(query=urlencode(qs)))
+                url = str(parsed._replace(query=urlencode(qs)))
             self._logger.info('Open "%s" in browser', url)
 
             browser.screencaster.start()

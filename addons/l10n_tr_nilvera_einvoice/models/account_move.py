@@ -1,7 +1,8 @@
 import base64
 import uuid
 from markupsafe import Markup
-from urllib.parse import quote, urlencode, urlparse
+from urllib.parse import quote, urlencode
+from urllib3.util import parse_url
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -231,7 +232,7 @@ class AccountMove(models.Model):
 
     def _l10n_tr_nilvera_post_series(self, endpoint, client):
         """Post the series to Nilvera based on the endpoint."""
-        path = urlparse(endpoint).path  # Remove query params from te endpoint.
+        path = parse_url(endpoint).path  # Remove query params from te endpoint.
         if path == "/einvoice/Send/Xml":
             series_endpoint = "/einvoice/Series"
         elif path == "/earchive/Send/Xml":

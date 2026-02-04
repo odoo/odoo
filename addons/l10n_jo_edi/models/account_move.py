@@ -1,7 +1,7 @@
 import base64
 import requests
 import uuid
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -122,7 +122,7 @@ class AccountMove(models.Model):
     def download_l10n_jo_edi_computed_xml(self):
         if error_message := self._l10n_jo_validate_config() or self._l10n_jo_validate_fields():
             raise ValidationError(_("The following errors have to be fixed in order to create an XML:\n") + error_message)
-        params = url_encode({
+        params = urlencode({
             'model': self._name,
             'id': self.id,
             'field': 'l10n_jo_edi_computed_xml',
@@ -134,7 +134,7 @@ class AccountMove(models.Model):
 
     def _l10n_jo_qr_code_src(self):
         self.ensure_one()
-        encoded_params = url_encode({
+        encoded_params = urlencode({
             'barcode_type': 'QR',
             'quiet': 0,
             'value': self.l10n_jo_edi_qr,

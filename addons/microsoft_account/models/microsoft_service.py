@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 import json
 import logging
+from datetime import datetime
+from urllib.parse import urlencode
+from urllib3.util import parse_url
 
 import requests
-from werkzeug import urls
 
 from odoo import api, fields, models, _
 
@@ -94,7 +95,7 @@ class MicrosoftService(models.AbstractModel):
             'u': self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
         }
 
-        encoded_params = urls.url_encode({
+        encoded_params = urlencode({
             'response_type': 'code',
             'client_id': self._get_microsoft_client_id(service),
             'state': json.dumps(state),
@@ -145,8 +146,8 @@ class MicrosoftService(models.AbstractModel):
         if headers is None:
             headers = {}
 
-        assert urls.url_parse(preuri + uri).host in [
-            urls.url_parse(url).host for url in (DEFAULT_MICROSOFT_TOKEN_ENDPOINT, DEFAULT_MICROSOFT_GRAPH_ENDPOINT)
+        assert parse_url(preuri + uri).hostname in [
+            parse_url(url).hostname for url in (DEFAULT_MICROSOFT_TOKEN_ENDPOINT, DEFAULT_MICROSOFT_GRAPH_ENDPOINT)
         ]
 
         _logger.debug("Uri: %s - Type : %s - Headers: %s - Params : %s !" % (uri, method, headers, params))

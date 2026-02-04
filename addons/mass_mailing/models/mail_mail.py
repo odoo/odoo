@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-import werkzeug.urls
-
 from datetime import datetime
+
 from dateutil.relativedelta import relativedelta
+from urllib3.util import parse_url
 
 from odoo import api, fields, models, tools
 
@@ -41,9 +41,9 @@ class MailMail(models.Model):
                 href = match[0]
                 url = match[1]
 
-                parsed = werkzeug.urls.url_parse(url, scheme='http')
+                parsed = parse_url(url)
 
-                if parsed.scheme.startswith('http') and parsed.path.startswith('/r/'):
+                if (not parsed.scheme or parsed.scheme.startswith('http')) and parsed.path.startswith('/r/'):
                     new_href = href.replace(url, f"{url}/m/{self.mailing_trace_ids[0].id}")
                     body = body.replace(Wrapper(href), Wrapper(new_href))
 

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from werkzeug import urls
+from urllib.parse import parse_qs, urlencode
+from urllib3.util import parse_url
 
 from odoo import models
 from odoo.exceptions import ValidationError
@@ -44,8 +44,8 @@ class PaymentTransaction(models.Model):
 
         # Extract the payment link URL and params and embed them in the redirect form.
         api_url = payment_link_data['paymentPageUrl']
-        parsed_url = urls.url_parse(api_url)
-        url_params = urls.url_decode(parsed_url.query)
+        parsed_url = parse_url(api_url)
+        url_params = {k: v[0] for k, v in parse_qs(parsed_url.query).items()}
 
         return {
             'api_url': api_url,
@@ -60,7 +60,7 @@ class PaymentTransaction(models.Model):
         """
         base_url = self.provider_id.get_base_url()
         first_name, last_name = payment_utils.split_partner_name(self.partner_name)
-        query_string_params = urls.url_encode({'tx_ref': self.reference})
+        query_string_params = urlencode({'tx_ref': self.reference})
         return_url = f'{urljoin(base_url, const.PAYMENT_RETURN_ROUTE)}?{query_string_params}'
         return {
             # Dummy basket item as it is required in Iyzico.

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug.urls
+import urllib.parse
 
 from werkzeug.exceptions import NotFound
 
@@ -350,7 +350,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
             'partners': partners,
             'pager': pager,
             'searches': post,
-            'search_path': "%s" % werkzeug.urls.url_encode(post),
+            'search_path': "%s" % urllib.parse.urlencode(post),
             'search': search,
             'google_maps_api_key': google_maps_api_key,
             'fallback_all_countries': fallback_all_countries,

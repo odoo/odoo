@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from psycopg2 import IntegrityError
-from werkzeug.urls import url_unquote_plus
+from urllib.parse import unquote_plus as url_unquote_plus
 
 from odoo.addons.base.tests.files import PNG_B64
 from odoo.addons.website_slides.tests import common

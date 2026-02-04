@@ -2,7 +2,7 @@
 
 import json
 import lxml.html
-from urllib.parse import urlparse
+from urllib3.util import parse_url
 
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.tests import HttpCase, tagged
@@ -146,8 +146,8 @@ class TestControllerRedirect(TestLangUrlCommon):
 
             r = self.url_open(url, method='HEAD', allow_redirects=False)
             self.assertEqual(r.status_code, code)
-            parsed_location = urlparse(r.headers.get('Location', ''))
-            parsed_expected_url = urlparse(expected_url)
+            parsed_location = parse_url(r.headers.get('Location', ''))
+            parsed_expected_url = parse_url(expected_url)
             self.assertEqual(parsed_location.path, parsed_expected_url.path, msg)
             self.assertEqual(parsed_location.query, parsed_expected_url.query, msg)
 

@@ -6,7 +6,7 @@ from http import HTTPStatus
 from os.path import basename
 from os.path import join as opj
 from unittest.mock import patch
-from urllib.parse import urlsplit
+from urllib3.util import parse_url
 
 from freezegun import freeze_time
 
@@ -339,7 +339,7 @@ class TestHttpStatic(TestHttpStaticCommon):
         })
 
         res = self.url_open(bad_path, allow_redirects=False)
-        location = urlsplit(res.headers.get('Location', ''))
+        location = parse_url(res.headers.get('Location', ''))
         self.assertNotEqual(location.path, bad_path, "loop detected")
         self.assertEqual(res.status_code, 404)
 

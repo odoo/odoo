@@ -3,11 +3,11 @@ import json
 import logging
 import math
 from datetime import datetime, timedelta
+from urllib.parse import quote_plus as url_quote_plus, urlencode
 from zoneinfo import ZoneInfo
 
 import requests.exceptions
 from psycopg2 import OperationalError
-from werkzeug.urls import url_quote_plus, url_encode
 
 from odoo import _, api, fields, models
 from odoo.addons.certificate.tools import CertificateAdapter
@@ -301,7 +301,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         # servicio de cotejo o remisión de información por parte del receptor de la factura"
         # https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/VERI-FACTU/DetalleEspecificacTecnCodigoQRfactura.pdf
         endpoint_url = self.company_id._l10n_es_edi_verifactu_get_endpoints()['QR']
-        url_params = url_encode({
+        url_params = urlencode({
             'nif': record_identifier['IDEmisorFactura'],
             'numserie': record_identifier['NumSerieFactura'],
             'fecha': record_identifier['FechaExpedicionFactura'],

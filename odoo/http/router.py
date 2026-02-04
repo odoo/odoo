@@ -3,11 +3,11 @@ import logging
 import re
 import threading
 from os.path import join as opj
-from urllib.parse import urlparse
+from urllib3.util import parse_url
+from urllib.parse import urlencode
 
 import werkzeug
 from psycopg2 import OperationalError
-from werkzeug.urls import url_encode  # TODO: use urllib
 
 # TODO: drop the fallback
 try:
@@ -148,13 +148,14 @@ class Application:
         the given ``host``.
         """
 
-        netloc, path = urlparse(url)[1:3]  # TODO: use urllib3
+        parsed_url = parse_url(url)
+        authority, path = parsed_url.authority, parsed_url.path
         try:
             path_netloc, module, static, resource = path.split('/', 3)
         except ValueError:
             return None
 
-        if ((netloc and netloc != host) or (path_netloc and path_netloc != host)):
+        if ((authority and authority != host) or (path_netloc and path_netloc != host)):
             return None
 
         if not (static == 'static' and resource):
@@ -262,7 +263,7 @@ class Application:
                             # ensure_db() protected routes, remove ?db= from the query string
                             args_nodb = request.httprequest.args.copy()
                             args_nodb.pop('db', None)
-                            request.reroute(httprequest.path, url_encode(args_nodb))
+                            request.reroute(httprequest.path, urlencode(args_nodb))
                         response = request._serve_nodb()
                 else:
                     response = request._serve_nodb()

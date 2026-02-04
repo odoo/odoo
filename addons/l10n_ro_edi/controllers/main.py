@@ -1,7 +1,7 @@
 import binascii
 import requests
 
-from werkzeug.urls import url_encode
+from urllib.parse import urlencode
 
 from odoo import _, http
 from odoo.exceptions import UserError, ValidationError
@@ -22,7 +22,7 @@ class L10nRoEdiController(http.Controller):
         if not company.l10n_ro_edi_client_id or not company.l10n_ro_edi_client_secret:
             raise UserError(_("Client ID and Client Secret field must be filled."))
 
-        auth_url_params = url_encode({
+        auth_url_params = urlencode({
             'response_type': 'code',
             'client_id': company.l10n_ro_edi_client_id,
             'redirect_uri': company.l10n_ro_edi_callback_url,

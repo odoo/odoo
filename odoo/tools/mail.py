@@ -11,7 +11,7 @@ import socket
 import time
 import email.utils
 from email.utils import getaddresses as orig_getaddresses
-from urllib.parse import urlparse
+from urllib3.util import parse_url
 from typing import Literal
 import html as htmllib
 
@@ -28,7 +28,6 @@ from lxml.html import (
     document_fromstring,
     html_parser,
 )
-from werkzeug import urls
 
 from odoo.tools import misc
 
@@ -485,7 +484,7 @@ HTML_NEWLINES_REGEX = re.compile('<(div|p|br|tr)[^>]*>|\n')
 
 
 def validate_url(url):
-    if urls.url_parse(url).scheme not in ('http', 'https', 'ftp', 'ftps'):
+    if parse_url(url).scheme not in ('http', 'https', 'ftp', 'ftps'):
         return 'http://' + url
 
     return url
@@ -948,7 +947,7 @@ def url_domain_extract(url):
 
     - www.info.proximus.be -> proximus.be
     """
-    parser_results = urlparse(url)
+    parser_results = parse_url(url)
     company_hostname = parser_results.hostname
     if company_hostname and '.' in company_hostname:
         return '.'.join(company_hostname.split('.')[-2:])  # remove subdomains

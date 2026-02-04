@@ -3,8 +3,8 @@
 import logging
 import random
 import string
-
-from werkzeug import urls
+from urllib.parse import urlencode, parse_qs, quote_plus
+from urllib3.util import parse_url
 
 from odoo import tools, models, fields, api, _
 from odoo.addons.mail.tools import link_preview
@@ -54,11 +54,11 @@ class LinkTracker(models.Model):
     @api.depends("url")
     def _compute_absolute_url(self):
         for tracker in self:
-            url = urls.url_parse(tracker.url)
+            url = parse_url(tracker.url)
             if url.scheme:
                 tracker.absolute_url = tracker.url
             else:
-                tracker.absolute_url = tools.urls.urljoin(tracker.get_base_url(), url.to_url())
+                tracker.absolute_url = tools.urls.urljoin(tracker.get_base_url(), str(url))
 
     @api.depends('link_click_ids.link_id')
     def _compute_count(self):
@@ -107,13 +107,13 @@ class LinkTracker(models.Model):
         no_external_tracking = self.env['ir.config_parameter'].sudo().get_bool('link_tracker.no_external_tracking')
 
         for tracker in self:
-            base_domain = urls.url_parse(tracker.get_base_url()).netloc
-            parsed = urls.url_parse(tracker.url)
+            base_domain = parse_url(tracker.get_base_url()).netloc
+            parsed = parse_url(tracker.url)
             if no_external_tracking and parsed.netloc and parsed.netloc != base_domain:
-                tracker.redirected_url = parsed.to_url()
+                tracker.redirected_url = parsed.url
                 continue
 
-            query = parsed.decode_query()
+            query = parse_qs(parsed.query)
             for key, field_name, _cook in self.env['utm.mixin'].tracking_fields():
                 field = self._fields[field_name]
                 attr = tracker[field_name]
@@ -122,11 +122,11 @@ class LinkTracker(models.Model):
                 if attr:
                     query[key] = attr
 
-            query = urls.url_encode(query)
+            query = urlencode(query, doseq=True)
             # '...' is detected as malicious by some nginx
             # configuration, encoding it solve the issue
             query = query.replace('...', '%2E%2E%2E')
-            tracker.redirected_url = parsed.replace(query=query).to_url()
+            tracker.redirected_url = parsed._replace(query=query).url
 
     @api.model
     @api.depends('url')
@@ -265,7 +265,7 @@ class LinkTracker(models.Model):
 
     def action_download_qrcode(self):
         self.ensure_one()
-        url = urls.url_quote_plus(self.short_url)
+        url = quote_plus(self.short_url)
 
         return {
             "type": "ir.actions.act_url",

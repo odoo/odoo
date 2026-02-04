@@ -2,7 +2,7 @@
 import re
 
 from collections import OrderedDict
-from urllib.parse import urlsplit
+from urllib3.util import parse_url
 
 from odoo import models
 from odoo.http import request
@@ -157,7 +157,7 @@ class IrQweb(models.AbstractModel):
             }
             remove_src = False
             if tagName in ('iframe', 'script'):
-                src_host = urlsplit((atts.get('src') or '').lower()).hostname
+                src_host = parse_url((atts.get('src') or '').lower()).hostname
                 if src_host:
                     remove_src = any(
                         # "www.example.com" and "example.com" should block both.

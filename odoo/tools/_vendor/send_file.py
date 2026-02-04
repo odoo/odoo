@@ -22,7 +22,7 @@ from zlib import adler32
 
 from werkzeug.datastructures import Headers
 from werkzeug.exceptions import RequestedRangeNotSatisfiable
-from werkzeug.urls import url_quote
+from urllib.parse import quote as url_quote
 from werkzeug.wrappers import Response
 from werkzeug.wsgi import wrap_file
 

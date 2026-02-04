@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug.urls
+import urllib.parse
 from configparser import ConfigParser
 from os import pardir
 from os.path import isfile, join as opj
@@ -80,6 +80,6 @@ class TransifexTranslation(models.AbstractModel):
 
             # e.g. https://www.transifex.com/odoo/odoo-16/translate/#fr_FR/sale/42?q=text:'Sale+Order'
             # 42 is an arbitrary number to satisfy the transifex URL format
-            source = werkzeug.urls.url_quote_plus(translation['source'][:50].replace("\n", "").replace("'", "\\'"))
+            source = urllib.parse.quote_plus(translation['source'][:50].replace("\n", "").replace("'", "\\'"))
             source = f"'{source}'" if "+" in source else source
             translation['transifex_url'] = f"{base_url}/{project}/translate/#{lang_iso}/{translation['module']}/42?q=text%3A{source}"

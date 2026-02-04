@@ -1,15 +1,16 @@
 import contextlib
 import re
+import urllib.parse
 import uuid
 from base64 import b64decode, b64encode
 from datetime import datetime
 from os.path import join as opj
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urljoin
 
 import requests
 import werkzeug.exceptions
-import werkzeug.urls
 from lxml import etree, html
+from urllib3.util import parse_url
 
 from odoo import SUPERUSER_ID, _, tools
 from odoo.exceptions import AccessError, MissingError, UserError
@@ -356,7 +357,7 @@ class HTML_Editor(Controller):
         # transformed into an absolute url in order to correctly handle relative
         # url that does not begin with a '/' and protocol relative url.
         absolute_url = urljoin(href_base, src)
-        path = urlparse(absolute_url).path
+        path = parse_url(absolute_url).path
 
         # Probably most common case: the standard '/web/image' route.
         # Note that as this controller receive *potentially* an absolute URL,
@@ -606,7 +607,7 @@ class HTML_Editor(Controller):
             if not attachment:
                 attachment = IrAttachment.with_user(SUPERUSER_ID).create(attachment_data)
             if media[id]['is_dynamic_svg']:
-                colorParams = werkzeug.urls.url_encode(media[id]['dynamic_colors'])
+                colorParams = urllib.parse.urlencode(media[id]['dynamic_colors'])
                 attachment['url'] = '/html_editor/shape/illustration/%s?%s' % (slug(attachment), colorParams)
             attachments.append(attachment._get_media_info())
 
@@ -753,7 +754,7 @@ class HTML_Editor(Controller):
         try:
             Actions = request.env['ir.actions.actions']
             context = dict(request.env.context)
-            parsed_preview_url = urlparse(preview_url)
+            parsed_preview_url = parse_url(preview_url)
             words = parsed_preview_url.path.strip('/').split('/')
             last_segment = words[-1]
 
