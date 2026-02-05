@@ -17,7 +17,7 @@ class L10n_LatamDocumentType(models.Model):
         'res.country', required=True, index=True, help='Country in which this type of document is valid')
     name = fields.Char(required=True, help='The document name', translate=True)
     doc_code_prefix = fields.Char(
-        'Document Code Prefix', help="Prefix for Documents Codes on Invoices and Account Moves. For eg. 'FA ' will"
+        'Document Code Prefix', help="Prefix for Documents Codes on Invoices and Journal Entries. For eg. 'FA ' will"
         " build 'FA 0001-0000001' Document Number")
     code = fields.Char(help='Code used by different localizations')
     report_name = fields.Char('Name on Reports', help='Name that will be printed in reports, for example "CREDIT NOTE"', translate=True)

@@ -24,7 +24,7 @@ class FleetVehicleLogServices(models.Model):
 
     def _inverse_amount(self):
         if any(service.account_move_line_id for service in self):
-            raise UserError(_("You cannot modify amount of services linked to an account move line. Do it on the related accounting entry instead."))
+            raise UserError(_("You cannot modify the amount of services linked to a journal item. Do it on the related accounting entry instead."))
 
     @api.depends('account_move_line_id.price_subtotal')
     def _compute_amount(self):

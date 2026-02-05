@@ -8,7 +8,7 @@ class AccountMoveSendBatchWizard(models.TransientModel):
     """Wizard that handles the sending of multiple invoices."""
     _name = 'account.move.send.batch.wizard'
     _inherit = ['account.move.send']
-    _description = "Account Move Send Batch Wizard"
+    _description = "Send Invoice Batch Wizard"
 
     move_ids = fields.Many2many(comodel_name='account.move', required=True)
     summary_data = fields.Json(compute='_compute_summary_data')

@@ -144,7 +144,7 @@ class ResCompany(models.Model):
         if not self.l10n_es_tbai_chain_sequence_id:
             self_sudo = self.sudo()
             self_sudo.l10n_es_tbai_chain_sequence_id = self_sudo.env['ir.sequence'].create({
-                'name': f'TicketBAI account move sequence for {self.name} (id: {self.id})',
+                'name': f'TicketBAI journal entry sequence for {self.name} (id: {self.id})',
                 'code': f'l10n_es.edi.tbai.account.move.{self.id}',
                 'implementation': 'no_gap',
                 'company_id': self.id,

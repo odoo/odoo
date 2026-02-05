@@ -16,7 +16,7 @@ class AccountMoveSend(models.AbstractModel):
     and 'account.move.send.wizard' for single invoice sending wizard (sync).
     """
     _name = 'account.move.send'
-    _description = "Account Move Send"
+    _description = "Shared Send Invoice Wizard Functions"
 
     # -------------------------------------------------------------------------
     # DEFAULTS

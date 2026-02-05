@@ -8,7 +8,7 @@ from odoo.exceptions import UserError
 
 class MrpAccountWipAccountingLine(models.TransientModel):
     _name = 'mrp.account.wip.accounting.line'
-    _description = 'Account move line to be created when posting WIP account move'
+    _description = 'Journal item to be created when posting WIP journal entry'
 
     account_id = fields.Many2one('account.account', "Account")
     label = fields.Char("Label")
@@ -37,7 +37,7 @@ class MrpAccountWipAccountingLine(models.TransientModel):
 
 class MrpAccountWipAccounting(models.TransientModel):
     _name = 'mrp.account.wip.accounting'
-    _description = 'Wizard to post Manufacturing WIP account move'
+    _description = 'Wizard to post Manufacturing WIP journal entry'
 
     @api.model
     def default_get(self, fields):

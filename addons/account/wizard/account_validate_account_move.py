@@ -4,7 +4,7 @@ from odoo.exceptions import UserError
 
 class ValidateAccountMove(models.TransientModel):
     _name = 'validate.account.move'
-    _description = "Validate Account Move"
+    _description = "Validate Journal Entry"
 
     move_ids = fields.Many2many('account.move')
     force_post = fields.Boolean(string="Force", help="Entries in the future are set to be auto-posted by default. Check this checkbox to post them now.")

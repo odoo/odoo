@@ -383,7 +383,7 @@ class AccountJournal(models.Model):
     def _l10n_sa_edi_create_new_chain(self):
         self.ensure_one()
         return self.env['ir.sequence'].create({
-            'name': f'ZATCA account move sequence for Journal {self.name} (id: {self.id})',
+            'name': f'ZATCA journal entry sequence for Journal {self.name} (id: {self.id})',
             'code': f'l10n_sa_edi.account.move.{self.id}',
             'implementation': 'no_gap',
             'company_id': self.company_id.id,

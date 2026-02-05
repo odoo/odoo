@@ -52,14 +52,14 @@
         </record>
 
         <record id="hr_expense_team_approver_account_move_rule" model="ir.rule">
-            <field name="name">Expense Team Approver Account Move</field>
+            <field name="name">Expense Team Approver Journal Entry</field>
             <field name="model_id" ref="account.model_account_move"/>
             <field name="domain_force">[('expense_ids', '!=', False)]</field>
             <field name="groups" eval="[(4, ref('hr_expense.group_hr_expense_team_approver'))]"/>
         </record>
 
         <record id="hr_expense_team_approver_account_move_line_rule" model="ir.rule">
-            <field name="name">Expense Team Approver Account Move Line</field>
+            <field name="name">Expense Team Approver Journal Item</field>
             <field name="model_id" ref="account.model_account_move_line"/>
             <field name="domain_force">[('expense_id', '!=', False)]</field>
             <field name="groups" eval="[(4, ref('hr_expense.group_hr_expense_team_approver'))]"/>
