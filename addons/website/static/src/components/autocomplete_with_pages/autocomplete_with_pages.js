@@ -1,5 +1,5 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
-import { useEffect } from "@odoo/owl";
 
 export class AutoCompleteWithPages extends AutoComplete {
     static props = {
@@ -10,7 +10,7 @@ export class AutoCompleteWithPages extends AutoComplete {
 
     setup() {
         super.setup();
-        useEffect(
+        useLayoutEffect(
             (input, inputRef) => {
                 if (inputRef) {
                     inputRef.value = input.value;

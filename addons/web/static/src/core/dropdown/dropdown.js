@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import {
     Component,
     onMounted,
@@ -5,7 +6,6 @@ import {
     onWillUpdateProps,
     reactive,
     status,
-    useEffect,
     xml,
 } from "@odoo/owl";
 import { useDropdownGroup } from "@web/core/dropdown/_behaviours/dropdown_group_hook";
@@ -184,7 +184,7 @@ export class Dropdown extends Component {
         onMounted(() => this.onStateChanged(this.state));
         effect((state) => this.onStateChanged(state), [this.state]);
 
-        useEffect(
+        useLayoutEffect(
             (target) => this.setTargetElement(target),
             () => [this.target]
         );

@@ -1,7 +1,7 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
 import { onExternalClick } from "@mail/utils/common/hooks";
-import { useEffect } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -21,7 +21,7 @@ patch(MessagingMenu.prototype, {
         });
 
         onExternalClick("selector", () => Object.assign(this.state, { adding: false }));
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (
                     this.store.discuss.searchTerm &&
@@ -37,7 +37,7 @@ patch(MessagingMenu.prototype, {
             },
             () => [this.store.discuss.searchTerm]
         );
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (!this.dropdown.isOpen) {
                     this.state.activeIndex = null;

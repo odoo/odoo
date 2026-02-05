@@ -1,4 +1,5 @@
-import { Component, useEffect, useState } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, useState } from "@odoo/owl";
 import {
     CustomFieldCard
 } from "@sale_pdf_quote_builder/js/custom_content_kanban_like_widget/custom_field_card/custom_field_card";
@@ -23,12 +24,12 @@ export class CustomContentKanbanLikeWidget extends Component {
         });
 
         // Initialize the state and update available documents when updating the quotation template.
-        useEffect((saleOrderTemplate) => {
+        useLayoutEffect((saleOrderTemplate) => {
             this.updateState();
         }, () => [this.props.record.data.sale_order_template_id]);
 
         // Make quotation tab readonly on confirmation
-        useEffect((saleOrderState) => {
+        useLayoutEffect((saleOrderState) => {
             if (saleOrderState === 'sale') {
                 this.props.readonly = true;
                 this.props.record.save(); // trigger refresh to update form

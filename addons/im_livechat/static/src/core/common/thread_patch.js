@@ -1,5 +1,5 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { Thread } from "@mail/core/common/thread";
-import { useEffect } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { patch } from "@web/core/utils/patch";
@@ -11,7 +11,7 @@ patch(Thread.prototype, {
         super.setup(...arguments);
         this.IM_STATUS_DELAY = 1500;
         Object.assign(this.state, { isVisitorOffline: false }); // starting online avoids flickering
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (!this.props.thread.livechatVisitorMember?.im_status) {
                     return;

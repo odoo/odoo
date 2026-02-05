@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 /* global SignaturePad */
 
 import { loadJS } from "@web/core/assets";
@@ -9,7 +10,7 @@ import { useAutofocus } from "@web/core/utils/hooks";
 import { renderToString } from "@web/core/utils/render";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 
-import { Component, useState, onWillStart, useRef, useEffect } from "@odoo/owl";
+import { Component, useState, onWillStart, useRef } from "@odoo/owl";
 
 let htmlId = 0;
 export class NameAndSignature extends Component {
@@ -50,7 +51,7 @@ export class NameAndSignature extends Component {
         this.signNameInputRef = useRef("signNameInput");
         this.signInputLoad = useRef("signInputLoad");
         useAutofocus({ refName: "signNameInput" });
-        useEffect(
+        useLayoutEffect(
             (el) => {
                 if (el) {
                     el.click();
@@ -68,7 +69,7 @@ export class NameAndSignature extends Component {
         });
 
         this.signatureRef = useRef("signature");
-        useEffect(
+        useLayoutEffect(
             (el) => {
                 if (el) {
                     this.signaturePad = new SignaturePad(el, {
@@ -128,8 +129,8 @@ export class NameAndSignature extends Component {
     }
 
     /**
-    * Loads a signature image from a base64 dataURL and updates the empty state.
-    */
+     * Loads a signature image from a base64 dataURL and updates the empty state.
+     */
     async fromDataURL() {
         await this.signaturePad.fromDataURL(...arguments);
         this.props.signature.isSignatureEmpty = this.isSignatureEmpty;
@@ -145,6 +146,7 @@ export class NameAndSignature extends Component {
      */
     getCleanedName() {
         // This replaces non-breaking spaces with breaking spaces
+        // eslint-disable-next-line no-irregular-whitespace
         const text = this.props.signature.name.replace(/ /g, " ");
         if (this.props.signatureType === "initial" && text) {
             return (
@@ -263,13 +265,16 @@ export class NameAndSignature extends Component {
         const img = new Image();
         img.onload = () => {
             const ctx = c.getContext("2d");
-            var ratio = ((img.width / img.height) > (c.width / c.height)) ? c.width / img.width : c.height / img.height;
-            ctx.drawImage( 
+            var ratio =
+                img.width / img.height > c.width / c.height
+                    ? c.width / img.width
+                    : c.height / img.height;
+            ctx.drawImage(
                 img,
-                (c.width / 2) - (img.width * ratio / 2),
-                (c.height / 2) - (img.height * ratio / 2)
-                , img.width * ratio
-                , img.height * ratio
+                c.width / 2 - (img.width * ratio) / 2,
+                c.height / 2 - (img.height * ratio) / 2,
+                img.width * ratio,
+                img.height * ratio
             );
             this.props.signature.isSignatureEmpty = this.isSignatureEmpty;
             this.props.onSignatureChange(this.state.signMode);

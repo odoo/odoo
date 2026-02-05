@@ -1,4 +1,4 @@
-import { useEffect } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
 
 import { Discuss } from "@mail/core/public_web/discuss_app/discuss_app";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
@@ -13,7 +13,7 @@ patch(Discuss.prototype, {
     setup() {
         super.setup();
         this.prevInboxCounter = this.store.inbox.counter;
-        useEffect(
+        useLayoutEffect(
             (threadName) => {
                 if (threadName) {
                     this.env.config?.setDisplayName(threadName);
@@ -21,7 +21,7 @@ patch(Discuss.prototype, {
             },
             () => [this.thread?.displayName]
         );
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (
                     this.thread?.id === "inbox" &&

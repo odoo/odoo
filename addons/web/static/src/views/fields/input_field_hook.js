@@ -1,7 +1,8 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useBus } from "@web/core/utils/hooks";
 
-import { useComponent, useEffect, useRef } from "@odoo/owl";
+import { useComponent, useRef } from "@odoo/owl";
 
 /**
  * This hook is meant to be used by field components that use an input or
@@ -82,7 +83,10 @@ export function useInputField(params) {
                 if (val !== component.props.record.data[fieldName]) {
                     lastSetValue = inputRef.el.value;
                     pendingUpdate = true;
-                    await component.props.record.update({ [fieldName]: val }, { save: shouldSave() });
+                    await component.props.record.update(
+                        { [fieldName]: val },
+                        { save: shouldSave() }
+                    );
                     pendingUpdate = false;
                     component.props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
                 } else {
@@ -105,7 +109,7 @@ export function useInputField(params) {
         }
     }
 
-    useEffect(
+    useLayoutEffect(
         (inputEl) => {
             if (inputEl) {
                 inputEl.addEventListener("input", onInput);
@@ -127,16 +131,12 @@ export function useInputField(params) {
      * we need to do nothing.
      * If it is not such a case, we update the field with the new value.
      */
-    useEffect(() => {
+    useLayoutEffect(() => {
         // We need to call getValue before the condition to always observe
         // the corresponding value in the record. Otherwise, in some cases,
-        // if the value in the record change the useEffect isn't triggered.
+        // if the value in the record change the useLayoutEffect isn't triggered.
         const value = params.getValue();
-        if (
-            inputRef.el &&
-            !isDirty &&
-            !component.props.record.isFieldInvalid(fieldName)
-        ) {
+        if (inputRef.el && !isDirty && !component.props.record.isFieldInvalid(fieldName)) {
             inputRef.el.value = value;
             lastSetValue = inputRef.el.value;
         }

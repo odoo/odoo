@@ -1,4 +1,5 @@
-import { Component, useEffect, useRef, useState } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, useRef, useState } from "@odoo/owl";
 
 export class Dropzone extends Component {
     static props = {
@@ -15,7 +16,7 @@ export class Dropzone extends Component {
         this.state = useState({
             isDraggingInside: false,
         });
-        useEffect(() => {
+        useLayoutEffect(() => {
             const { top, left, width, height } = this.props.ref.el.getBoundingClientRect();
             this.root.el.style = `top:${top}px;left:${left}px;width:${width}px;height:${height}px;`;
         });

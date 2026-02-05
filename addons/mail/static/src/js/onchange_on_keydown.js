@@ -1,4 +1,4 @@
-import { useEffect } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { patch } from "@web/core/utils/patch";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { useDebounced } from "@web/core/utils/timing";
@@ -22,7 +22,7 @@ const onchangeOnKeydownMixin = () => ({
                 this.triggerOnChange,
                 this.props.keydownDebounceDelay
             );
-            useEffect(() => {
+            useLayoutEffect(() => {
                 if (input.el) {
                     input.el.addEventListener("keydown", triggerOnChange);
                     return () => {
@@ -55,21 +55,19 @@ TextField.props = {
 };
 
 const charExtractProps = charField.extractProps;
-charField.extractProps = (fieldInfo) => {
-    return Object.assign(charExtractProps(fieldInfo), {
+charField.extractProps = (fieldInfo) =>
+    Object.assign(charExtractProps(fieldInfo), {
         onchangeOnKeydown: exprToBoolean(fieldInfo.attrs.onchange_on_keydown),
         keydownDebounceDelay: fieldInfo.attrs.keydown_debounce_delay
             ? Number(fieldInfo.attrs.keydown_debounce_delay)
             : 2000,
     });
-};
 
 const textExtractProps = textField.extractProps;
-textField.extractProps = (fieldInfo) => {
-    return Object.assign(textExtractProps(fieldInfo), {
+textField.extractProps = (fieldInfo) =>
+    Object.assign(textExtractProps(fieldInfo), {
         onchangeOnKeydown: exprToBoolean(fieldInfo.attrs.onchange_on_keydown),
         keydownDebounceDelay: fieldInfo.attrs.keydown_debounce_delay
             ? Number(fieldInfo.attrs.keydown_debounce_delay)
             : 2000,
     });
-};

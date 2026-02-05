@@ -1,5 +1,6 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
-import { useComponent, useEffect } from "@odoo/owl";
+import { useComponent } from "@odoo/owl";
 
 export function useBarcodeReader(callbackMap, exclusive = false) {
     const current = useComponent();
@@ -8,7 +9,7 @@ export function useBarcodeReader(callbackMap, exclusive = false) {
         for (const [key, callback] of Object.entries(callbackMap)) {
             callbackMap[key] = callback.bind(current);
         }
-        useEffect(
+        useLayoutEffect(
             () => barcodeReader.register(callbackMap, exclusive),
             () => []
         );

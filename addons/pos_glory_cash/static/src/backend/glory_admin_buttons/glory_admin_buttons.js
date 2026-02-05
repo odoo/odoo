@@ -1,4 +1,5 @@
-import { Component, useEffect, useState } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { _t } from "@web/core/l10n/translation";
@@ -22,7 +23,7 @@ export class GloryAdminButtons extends Component {
         this.gloryService = new GloryService((newStatus) => (this.state.status = newStatus));
         this.state = useState({ status: "DISCONNECTED", resetInProgress: false });
 
-        useEffect(
+        useLayoutEffect(
             () => {
                 const { glory_websocket_address, glory_username, glory_password } =
                     this.props.record.data;

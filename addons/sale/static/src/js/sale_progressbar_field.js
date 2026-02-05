@@ -1,4 +1,4 @@
-import { useEffect } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import {
@@ -23,7 +23,7 @@ export class SaleProgressBarField extends KanbanProgressBarField {
         this.actionService = useService("action");
         this.orm = useService("orm");
 
-        useEffect(() => {
+        useLayoutEffect(() => {
             this.state.isInvoicingTargetDefined = this.props.record.data[this.props.maxValueField];
         });
     }

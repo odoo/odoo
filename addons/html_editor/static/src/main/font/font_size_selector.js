@@ -1,4 +1,5 @@
-import { Component, onMounted, useEffect, useRef, useState } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, onMounted, useRef, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
@@ -97,7 +98,7 @@ export class FontSizeSelector extends Component {
                 );
             }
         });
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (this.fontSizeInput) {
                     // Update `fontSizeInputValue` whenever the font size changes.
@@ -106,7 +107,7 @@ export class FontSizeSelector extends Component {
             },
             () => [this.state.displayName]
         );
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (this.fontSizeInput) {
                     // Focus input on dropdown open, blur on close.

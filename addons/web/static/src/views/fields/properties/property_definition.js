@@ -1,4 +1,5 @@
-import { Component, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, onWillUpdateProps, useRef, useState } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Domain } from "@web/core/domain";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
@@ -78,7 +79,9 @@ export const PROPERTIES_INFO = {
     },
 };
 export const PROPERTY_TYPES = Object.keys(PROPERTIES_INFO);
-const PROPERTY_PARAMETERS = new Set(Object.values(PROPERTIES_INFO).flatMap((info) => info.parameters));
+const PROPERTY_PARAMETERS = new Set(
+    Object.values(PROPERTIES_INFO).flatMap((info) => info.parameters)
+);
 
 export class PropertyDefinition extends Component {
     static template = "web.PropertyDefinition";
@@ -143,7 +146,7 @@ export class PropertyDefinition extends Component {
         // update the state and fetch needed information
         onWillUpdateProps((newProps) => this._syncStateWithProps(newProps.value));
 
-        useEffect((event) => {
+        useLayoutEffect((event) => {
             // focus the property label, when we open the property definition
             if (this.labelFocused) {
                 // focus it only once
@@ -177,16 +180,20 @@ export class PropertyDefinition extends Component {
             return {
                 enabled: isEnabled,
                 label,
-                tooltip: isEnabled ? "" : _t("Not possible to create monetary field because there is no currency on current model."),
+                tooltip: isEnabled
+                    ? ""
+                    : _t(
+                          "Not possible to create monetary field because there is no currency on current model."
+                      ),
                 value,
             };
         });
     }
 
     get currencyFields() {
-        return Object
-            .values(this.props.record.fields)
-            .filter((fieldDef) => fieldDef.type === "many2one" && fieldDef.relation === "res.currency");
+        return Object.values(this.props.record.fields).filter(
+            (fieldDef) => fieldDef.type === "many2one" && fieldDef.relation === "res.currency"
+        );
     }
 
     get defaultCurrencyField() {

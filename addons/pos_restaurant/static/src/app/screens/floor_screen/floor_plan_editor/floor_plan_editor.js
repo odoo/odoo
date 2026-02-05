@@ -1,4 +1,5 @@
-import { onMounted, onWillUnmount, useEffect, useRef, useExternalListener } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { onMounted, onWillUnmount, useRef, useExternalListener } from "@odoo/owl";
 import { EditDecorProperties } from "./edit_decor/edit_decor";
 import { EditTableProperties } from "./edit_table/edit_table";
 import { EditFloorProperties } from "./edit_floor/edit_floor";
@@ -93,7 +94,7 @@ export class FloorPlanEditor extends FloorPlanBase {
             }
         });
 
-        useEffect(
+        useLayoutEffect(
             (selectedFloor) => {
                 this.selectedDOMElement = null;
                 this.updateActionMenu();
@@ -108,7 +109,7 @@ export class FloorPlanEditor extends FloorPlanBase {
             () => [this.floorPlanStore.selectedFloor]
         );
 
-        useEffect(
+        useLayoutEffect(
             (selectedFloorEl) => {
                 this.textEditHandler?.endEdit();
                 this.selectedDOMElement = this.getDOMFloorElement(selectedFloorEl?.uuid);
@@ -118,7 +119,7 @@ export class FloorPlanEditor extends FloorPlanBase {
             () => [this.floorPlanStore.getSelectedElement()]
         ); //This use effect need to be declared before the action menu setup, so that selectedDOMElement is set before action menu uses it
 
-        useEffect(
+        useLayoutEffect(
             (isEditMode) => {
                 this.updatedCanvasTranslateX();
                 if (isEditMode) {

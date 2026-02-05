@@ -1,5 +1,5 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { useEffect } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
@@ -8,7 +8,7 @@ import { FeedbackScreen } from "@point_of_sale/app/screens/feedback_screen/feedb
 patch(FeedbackScreen.prototype, {
     setup() {
         super.setup();
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (this.state.loading === false) {
                     const error = this.currentOrder.l10n_jo_edi_pos_error;

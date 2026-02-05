@@ -1,8 +1,9 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
 
-import { Component, useEffect, useExternalListener, useRef, useState } from "@odoo/owl";
+import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
 
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
@@ -49,13 +50,13 @@ export class NavigableList extends Component {
         });
         // position and size
         usePosition("root", () => this.props.anchorRef, { position: this.props.position });
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.open();
             },
             () => [this.props]
         );
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (!this.props.isLoading) {
                     clearTimeout(this.loadingTimeoutId);

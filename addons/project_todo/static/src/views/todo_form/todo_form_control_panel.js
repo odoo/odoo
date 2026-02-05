@@ -1,4 +1,5 @@
-import { onMounted, useEffect } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { onMounted } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
@@ -8,7 +9,7 @@ export class TodoFormControlPanel extends ControlPanel {
 
     setup() {
         super.setup();
-        useEffect(
+        useLayoutEffect(
             (isSmall) => {
                 if (isSmall && !this.state.displayChatter) {
                     this.toggleChatter();

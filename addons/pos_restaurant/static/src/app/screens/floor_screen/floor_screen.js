@@ -1,4 +1,5 @@
-import { Component, useEffect, onMounted } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, onMounted } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
@@ -19,7 +20,7 @@ export class FloorScreen extends Component {
         this.floorPlanStore = useFloorPlanStore();
         this.ui = useService("ui");
 
-        useEffect(
+        useLayoutEffect(
             (isEditMode) => {
                 if (isEditMode) {
                     document.body.classList.add("o_fp_edit_mode");

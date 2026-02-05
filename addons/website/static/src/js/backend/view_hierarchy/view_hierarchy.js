@@ -1,8 +1,9 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { HierarchyNavbar } from "./hierarchy_navbar";
 import { Layout } from "@web/search/layout";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { Component, onWillStart, useEffect, useState } from "@odoo/owl";
+import { Component, onWillStart, useState } from "@odoo/owl";
 import { router } from "@web/core/browser/router";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
@@ -27,7 +28,7 @@ export class ViewHierarchy extends Component {
             this.linkViewsToParent();
         });
 
-        useEffect(
+        useLayoutEffect(
             (searchFoundElem) => {
                 if (searchFoundElem) {
                     searchFoundElem.scrollIntoView({ behavior: "smooth", block: "center" });

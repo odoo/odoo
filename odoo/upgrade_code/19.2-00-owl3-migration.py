@@ -217,12 +217,7 @@ class MigrationCollector:
 
 def upgrade_useeffect(file_manager, log_info, log_error):
     """Sub-task: Migrate useEffect to useLayoutEffect, ignoring comments."""
-    js_files = [
-        file for file in file_manager
-        if '/static/src/' in file.path._str
-        and file.path.suffix == '.js'
-        and file.path.name not in EXCLUDED_FILES
-    ]
+    js_files = JSTooling.get_js_files(file_manager)
 
     for fileno, file in enumerate(js_files, start=1):
         try:

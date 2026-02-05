@@ -1,4 +1,5 @@
-import { Component, onWillRender, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, onWillRender, onWillUpdateProps, useRef, useState } from "@odoo/owl";
 
 /**
  * A notebook component that will render only the current page and allow
@@ -73,7 +74,7 @@ export class Notebook extends Component {
         this.invalidPages = new Set();
         this.state = useState({ currentPage: null });
         this.state.currentPage = this.computeActivePage(this.props.defaultPage, true);
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.props.onPageUpdate(this.state.currentPage);
                 this.activePane.el?.classList.add("show");

@@ -1,4 +1,5 @@
-import { onWillUnmount, useEffect, useExternalListener, useRef } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { onWillUnmount, useExternalListener, useRef } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
 import { scrollTo } from "@web/core/utils/scrolling";
@@ -239,7 +240,9 @@ export class Navigator {
                 oldActiveItem && oldActiveItem.el.isConnected
                     ? this.items.findIndex((item) => item.el === oldActiveItem.el)
                     : -1;
-            const focusedElementIndex = this.items.findIndex((item) => item.el === document.activeElement);
+            const focusedElementIndex = this.items.findIndex(
+                (item) => item.el === document.activeElement
+            );
             if (activeItemIndex > -1) {
                 this._updateActiveItemIndex(activeItemIndex);
             } else if (this.activeItemIndex >= 0) {
@@ -434,7 +437,7 @@ export function useNavigation(containerRef, options = {}) {
     const navigator = new Navigator(newOptions, hotkeyService);
     const observer = new MutationObserver(() => navigator.update());
 
-    useEffect(
+    useLayoutEffect(
         (containerEl) => {
             if (containerEl) {
                 navigator.update();

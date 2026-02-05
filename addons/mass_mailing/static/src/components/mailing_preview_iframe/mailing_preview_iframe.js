@@ -1,10 +1,11 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { renderToFragment } from "@web/core/utils/render";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { Component, onMounted, status, useState, useEffect, useRef } from "@odoo/owl";
+import { Component, onMounted, status, useState, useRef } from "@odoo/owl";
 
 export class MailingPreviewIframe extends Component {
     static template = "mass_mailing.MailingPreviewIframe";
@@ -28,7 +29,7 @@ export class MailingPreviewIframe extends Component {
             }
         });
 
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.iframeLoaded.promise.then(() => {
                     this.iframeRef.el?.contentDocument.body.replaceChildren(
@@ -39,7 +40,7 @@ export class MailingPreviewIframe extends Component {
             () => [this.props.record.data.preview_record_ref]
         );
 
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.iframeLoaded.promise.then(() => {
                     this.throttledResize();
