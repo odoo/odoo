@@ -79,6 +79,8 @@ class AccountMove(models.Model):
             try:
                 dpl.price_unit = dpl._get_downpayment_line_price_unit(real_invoices)
                 dpl.tax_id = dpl.invoice_lines.tax_ids
+                if self.currency_id != dpl.currency_id:
+                    dpl.price_unit = self.currency_id._convert(dpl.price_unit, dpl.currency_id, self.company_id, self.invoice_date or fields.Date.today())
             except UserError:
                 # a UserError here means the SO was locked, which prevents changing the taxes
                 # just ignore the error - this is a nice to have feature and should not be blocking
