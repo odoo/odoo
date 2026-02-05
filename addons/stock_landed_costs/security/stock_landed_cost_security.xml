@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
+    <record model="ir.rule" id="stock_manager_account_move_stock_landed_costs">
+        <field name="name">Stock Manager Bills with Landed Costs</field>
+        <field name="model_id" ref="stock_landed_costs.model_account_move"/>
+        <field name="domain_force">['&amp;', ('move_type', '=', 'in_invoice'), ('landed_costs_ids', '!=', False)]</field>
+        <field name="groups" eval="[Command.link(ref('stock.group_stock_manager'))]"/>
+        <field name="perm_read"   eval="True"/>
+        <field name="perm_write"  eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
 
     <record model="ir.rule" id="stock_landed_cost_rule">
         <field name="name">stock_landed_cost multi-company</field>
