@@ -87,6 +87,10 @@ class WebsiteSaleCommon(DeliveryCommon):
             "phone": "+1 555-555-5555",
             "email": "admin@yourcompany.example.com",
         }
+        cls.bank_account = cls.env["res.partner.bank"].create({
+            "account_number": "BANK123456789",
+            "partner_id": cls.env.company.partner_id.id,
+        })
 
     @classmethod
     def _create_pricelist(cls, **create_vals):

@@ -28,6 +28,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
         cls.env.ref('payment.payment_provider_transfer').write({
             'state': 'enabled',
             'is_published': True,
+            'bank_account_id': cls.bank_account.id,
         })
 
         cls.env['event.event.ticket'].create({
@@ -87,7 +88,6 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
             'state': 'enabled',
             'is_published': True,
         })
-        transfer_provider._transfer_ensure_pending_msg_is_set()
 
         self.start_tour("/event", 'event_buy_tickets', login="admin")
 
@@ -98,7 +98,6 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
             'state': 'enabled',
             'is_published': True,
         })
-        transfer_provider._transfer_ensure_pending_msg_is_set()
 
         #  Ensure the use of USD (company currency)
         self.env['product.pricelist'].create({'name': "Public Pricelist"})
@@ -111,7 +110,6 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
             'state': 'enabled',
             'is_published': True,
         })
-        transfer_provider._transfer_ensure_pending_msg_is_set()
 
         self.start_tour("/event", 'event_buy_last_ticket')
 

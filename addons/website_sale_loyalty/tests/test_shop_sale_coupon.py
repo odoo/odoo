@@ -38,13 +38,16 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
         if self.env["ir.module.module"]._get("payment_custom").state != "installed":
             self.skipTest("Transfer provider is not installed")
 
+        self.env["res.partner.bank"].create({
+            "account_number": "BANK123456789",
+            "partner_id": self.env.company.partner_id.id,
+        })
         transfer_provider = self.env.ref("payment.payment_provider_transfer")
         transfer_provider.sudo().write({
             "state": "enabled",
             "is_published": True,
             "company_id": self.env.company.id,
         })
-        transfer_provider._transfer_ensure_pending_msg_is_set()
 
         large_cabinet = self.env["product.product"].create({
             "name": "Small Cabinet",

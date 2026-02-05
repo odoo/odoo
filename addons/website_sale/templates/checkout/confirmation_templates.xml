@@ -129,9 +129,11 @@
             >
                 <t t-out="tx_sudo._get_status_message(order=order)"/>
                 <t t-if="tx_sudo.provider_code == 'custom'">
-                    <div id="order_reference" t-if="order.reference" class="mt-2 mb-3">
-                        <b>Communication: </b><span t-out='order.reference'/>
+                    <div id="o_custom_payment_details" class="mt-2 mb-3">
+                        <t t-call="payment_custom.custom_payment_transfer_details" tx="tx_sudo"/>
                     </div>
+                    <div t-if="tx_sudo.provider_id.sudo().qr_code">
+                        <t t-set="qr_code" t-value="tx_sudo.company_id.partner_id.bank_ids[:1].build_qr_code_base64(order.amount_total,tx_sudo.reference, None, tx_sudo.currency_id, tx_sudo.partner_id)"/>
                     <div t-if="tx_sudo.provider_id.sudo().qr_code">
                         <t t-set="qr_code" t-value="tx_sudo.company_id.partner_id.bank_ids[:1].build_qr_code_base64(order.amount_total,tx_sudo.reference, None, tx_sudo.currency_id, tx_sudo.partner_id)"/>
                         <div class="mt-2" t-if="qr_code">

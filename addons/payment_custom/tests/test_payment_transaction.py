@@ -16,8 +16,15 @@ class TestPaymentTransaction(PaymentCustomCommon):
         if "product.product" not in cls.env:
             msg = "requires product"
             raise unittest.SkipTest(msg)
-
-        cls.provider = cls._prepare_provider(code="custom", custom_mode="wire_transfer")
+        cls.bank_account = cls.env["res.partner.bank"].create({
+            "account_number": "BANK123456789",
+            "partner_id": cls.company.partner_id.id,
+        })
+        cls.provider = cls._prepare_provider(
+            code="custom",
+            custom_mode="wire_transfer",
+            update_values={"bank_account_id": cls.bank_account.id},
+        )
         cls.product = cls.env["product.product"].create({
             "name": "test product",
             "list_price": cls.amount,

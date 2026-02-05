@@ -26,19 +26,15 @@
             <group name="payment_followup" position="attributes">
                 <attribute name="invisible">code == 'custom'</attribute>
             </group>
+            <group name="payment_followup_bank_details" position="attributes">
+                <attribute
+                    name="invisible"
+                    separator="and"
+                    add="not (code == 'custom' and custom_mode == 'wire_transfer')"
+                />
+            </group>
             <field name="pre_msg" position="attributes">
                 <attribute name="invisible" separator="or" add="code == 'custom'"/>
-            </field>
-            <field name="pending_msg" position="after">
-                <div class="o_row" colspan="2"
-                     invisible="custom_mode != 'wire_transfer'">
-                    <button string=" Reload Pending Message"
-                            type="object"
-                            name="action_recompute_pending_msg"
-                            class="oe_link ms-0 ps-0"
-                            icon="fa-refresh"
-                            />
-              </div>
             </field>
             <field name="done_msg" position="attributes">
                 <attribute name="invisible" separator="or" add="code == 'custom'"/>

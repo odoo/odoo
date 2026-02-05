@@ -28,20 +28,24 @@ class PaymentTransaction(models.Model):
         return tx
 
     def _get_status_message(self, *, order=None, **kwargs):
-        """Override of `payment` to add a custom message when the cart amount is different after
-        payment in `website_sale`.
+        """Override of `payment` to add custom messages for website orders.
 
         :param sale.order order: The current cart linked to the transaction.
         """
-        if (
-            order
-            and order.website_id
-            and self.state == "done"
-            and order.amount_total != self.amount
-        ):
+        is_website_order = order and order.website_id
+        if is_website_order and self.state == "done" and order.amount_total != self.amount:
             return Markup("<p>%s</p>") % self.env._(
                 "Unfortunately your order can not be confirmed as the amount of your payment"
                 " does not match the amount of your cart. Please contact the responsible of"
                 " the shop for more information."
             )
+        if is_website_order and self.state == "pending":
+            provider_sudo = self.provider_id.sudo()
+            if (
+                provider_sudo.code == "custom"
+                and provider_sudo.custom_mode in provider_sudo._get_custom_bank_related_modes()
+            ):
+                return Markup("<p>%s</p>") % self.env._(
+                    "Your order will be confirmed after payment is received."
+                )
         return super()._get_status_message(order=order, **kwargs)
