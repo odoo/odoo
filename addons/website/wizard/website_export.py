@@ -103,12 +103,20 @@ class WebsiteExportWizard(models.TransientModel):
 
     def _collect_asset_attachments(self, assets):
         attachment_ids = set()
+        paths = []
         for asset in assets:
-            path = asset.get("path") if isinstance(asset, dict) else asset.path
+            path = asset.get("path")
             if path and path.startswith("/_custom/"):
-                attachment = self.env["ir.attachment"].search([("url", "=", path)], limit=1)
-                if attachment:
-                    attachment_ids.add(attachment.id)
+                paths.append(path)
+        if paths:
+            attachments = self.env["ir.attachment"].search([("url", "in", paths)])
+            url_to_id = {}
+            for attachment in attachments:
+                url_to_id.setdefault(attachment.url, attachment.id)
+            for path in paths:
+                attachment_id = url_to_id.get(path)
+                if attachment_id:
+                    attachment_ids.add(attachment_id)
         if not attachment_ids:
             return []
         attachments = self.env["ir.attachment"].browse(sorted(attachment_ids))
@@ -117,8 +125,7 @@ class WebsiteExportWizard(models.TransientModel):
     def _collect_website_settings(self):
         settings = {}
         for field_name in self._get_website_settings_fields():
-            if field_name in self.website_id._fields:
-                settings[field_name] = self.website_id[field_name]
+            settings[field_name] = self.website_id[field_name]
         return settings
 
     def _collect_menus(self, pages):
@@ -154,13 +161,12 @@ class WebsiteExportWizard(models.TransientModel):
             ids.add(int(match))
         return ids
 
-    def _collect_attachments(self, views, menus=None):
+    def _collect_attachments(self, views, menus):
         attachment_ids = set()
         for view in views:
             attachment_ids |= self._extract_attachment_ids(view.arch_db)
-        if menus:
-            for menu in menus:
-                attachment_ids |= self._extract_attachment_ids(menu.get("mega_menu_content"))
+        for menu in menus:
+            attachment_ids |= self._extract_attachment_ids(menu.get("mega_menu_content"))
 
         if not attachment_ids:
             return []
