@@ -123,13 +123,13 @@ export class PosOrderlineAccounting extends Base {
     }
 
     get comboTotalPrice() {
-        const allLines = this.getAllLinesInCombo();
-        return allLines.reduce((total, line) => total + line.displayPrice, 0);
+        const childLines = this.getAllLinesInCombo().filter((line) => !line.combo_line_ids.length);
+        return childLines.reduce((total, line) => total + line.displayPrice, 0);
     }
 
     get comboTotalPriceWithoutTax() {
-        const allLines = this.getAllLinesInCombo();
-        return allLines.reduce((total, line) => total + line.displayPriceUnitExcl, 0);
+        const childLines = this.getAllLinesInCombo().filter((line) => !line.combo_line_ids.length);
+        return childLines.reduce((total, line) => total + line.displayPriceUnitExcl, 0);
     }
 
     get taxGroupLabels() {
