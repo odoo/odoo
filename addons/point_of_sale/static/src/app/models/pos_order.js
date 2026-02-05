@@ -5,7 +5,7 @@ import { formatDate, formatDateTime, serializeDateTime } from "@web/core/l10n/da
 import { omit } from "@web/core/utils/objects";
 import { parseUTCString, qrCodeSrc, random5Chars, uuidv4, gte, lt } from "@point_of_sale/utils";
 import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
-import { roundCurrency } from "@point_of_sale/app/models/utils/currency";
+import { roundCurrency, roundOwnerCurrency } from "@point_of_sale/app/models/utils/currency";
 import { computeComboItems } from "./utils/compute_combo_items";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { toRaw } from "@odoo/owl";
@@ -720,14 +720,17 @@ export class PosOrder extends Base {
     }
 
     get_total_with_tax() {
-        return this.taxTotals.order_sign * this.taxTotals.order_total;
+        const sumIncl = (this.get_orderlines() || []).reduce(
+            (sum, line) => sum + line.get_all_prices().priceWithTax,
+            0
+        );
+        return roundOwnerCurrency(sumIncl, this);
     }
 
     get_total_without_tax() {
-        const base_amount =
-            this.taxTotals.base_amount_currency +
-            (this.taxTotals.cash_rounding_base_amount_currency || 0.0);
-        return this.taxTotals.order_sign * base_amount;
+        const sign = (this.taxTotals && this.taxTotals.order_sign) || 1;
+        const base = (this.taxTotals && this.taxTotals.base_amount_currency) || 0;
+        return roundOwnerCurrency(sign * base, this);
     }
 
     _get_ignored_product_ids_total_discount() {
@@ -771,7 +774,8 @@ export class PosOrder extends Base {
     }
 
     get_total_tax() {
-        return this.taxTotals.order_sign * this.taxTotals.tax_amount_currency;
+        const taxes = this.get_total_with_tax() - this.get_total_without_tax();
+        return roundOwnerCurrency(taxes, this);
     }
 
     // TODO: This won't work with round globally. Remove the usage of this because it's the wrong way to do that.
