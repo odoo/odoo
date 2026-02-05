@@ -498,9 +498,13 @@ class PurchaseOrder(models.Model):
 
     def message_post(self, **kwargs):
         if self.env.context.get('mark_rfq_as_sent'):
-            self.filtered(lambda o: o.state == 'draft').write({'state': 'sent'})
+            self._mark_rfqs_as_sent()
             kwargs['notify_author_mention'] = kwargs.get('notify_author_mention', True)
         return super().message_post(**kwargs)
+
+    def _message_mail_after_hook(self, mails):
+        self._mark_rfqs_as_sent()
+        return super()._message_mail_after_hook(mails)
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
         # Tweak 'view document' button for portal customers, calling directly routes for confirm specific to PO model.
@@ -642,8 +646,11 @@ class PurchaseOrder(models.Model):
                 line.qty_received = line.product_uom_qty
 
     def print_quotation(self):
-        self.filtered(lambda po: po.state == 'draft').write({'state': "sent"})
+        self._mark_rfqs_as_sent()
         return self.env.ref('purchase.report_purchase_quotation').report_action(self)
+
+    def _mark_rfqs_as_sent(self):
+        self.filtered(lambda po: po.state == 'draft').state = 'sent'
 
     def button_approve(self, force=False):
         self = self.filtered(lambda order: order._approval_allowed())
