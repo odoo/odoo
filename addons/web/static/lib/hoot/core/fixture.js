@@ -24,7 +24,8 @@ import { getViewPortHeight, getViewPortWidth } from "../mock/window";
 // Global
 //-----------------------------------------------------------------------------
 
-const { customElements, document, getSelection, HTMLElement, Promise, WeakSet } = globalThis;
+const { customElements, document, getSelection, HTMLElement, MutationObserver, Promise, WeakSet } =
+    globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal

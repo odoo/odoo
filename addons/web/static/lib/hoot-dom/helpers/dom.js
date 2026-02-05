@@ -120,11 +120,9 @@ const {
     innerWidth,
     innerHeight,
     Map,
-    MutationObserver,
     Number: { isInteger: $isInteger, isNaN: $isNaN, parseInt: $parseInt, parseFloat: $parseFloat },
     Object: { entries: $entries, keys: $keys, values: $values },
     RegExp,
-    Set,
     String: { raw: $raw },
     window,
 } = globalThis;
@@ -1850,51 +1848,6 @@ export function isVisible(target) {
  */
 export function matches(target, selector) {
     return elementsMatch(_guardedQueryAll(target), selector);
-}
-
-/**
- * Listens for DOM mutations on a given target.
- *
- * This helper has 2 main advantages over directly calling the native MutationObserver:
- * - it ensures a single observer is created for a given target, even if multiple
- *  callbacks are registered;
- * - it keeps track of these observers, which allows to check whether an observer
- *  is still running while it should not, and to disconnect all running observers
- *  at once.
- *
- * @param {HTMLElement} target
- * @param {MutationCallback} callback
- */
-export function observe(target, callback) {
-    if (observers.has(target)) {
-        observers.get(target).callbacks.add(callback);
-    } else {
-        const callbacks = new Set([callback]);
-        const observer = new MutationObserver((mutations, observer) => {
-            for (const callback of callbacks) {
-                callback(mutations, observer);
-            }
-        });
-        observer.observe(target, {
-            attributes: true,
-            characterData: true,
-            childList: true,
-            subtree: true,
-        });
-        observers.set(target, { callbacks, observer });
-    }
-
-    return function disconnect() {
-        if (!observers.has(target)) {
-            return;
-        }
-        const { callbacks, observer } = observers.get(target);
-        callbacks.delete(callback);
-        if (!callbacks.size) {
-            observer.disconnect();
-            observers.delete(target);
-        }
-    };
 }
 
 /**
