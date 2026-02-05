@@ -86,6 +86,7 @@
             'data-edit_translations': '1' if edit_translations else None,
             'data-main-object': repr(main_object) if main_object else None,
             'data-seo-object': repr(seo_object) if seo_object else None,
+            'data-tracking-enabled': website._is_tracking_enabled(main_object) if main_object else None,
         }"/>
         <t t-if="not env.user._is_public()" t-set="nothing" t-value="html_data.update({
             'data-is-published': 'website_published' in main_object._fields and main_object.sudo().website_published,

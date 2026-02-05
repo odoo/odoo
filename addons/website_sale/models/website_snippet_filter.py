@@ -256,7 +256,7 @@ class WebsiteSnippetFilter(models.Model):
                     ],
                     ["product_id"],
                     limit=limit,
-                    order="visit_datetime:max DESC",
+                    order="visit_datetime:max DESC, id:max DESC",
                 )
             )
             if self.env.context.get("hide_variants"):

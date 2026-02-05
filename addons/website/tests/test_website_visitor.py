@@ -1,8 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import random
+import re
 from contextlib import contextmanager
 from datetime import datetime, timedelta
+from lxml import html
 from unittest.mock import patch
 
 from odoo.tests import HttpCase, common, tagged
@@ -41,6 +44,7 @@ class WebsiteVisitorTestsCommon(MockVisitor, HttpCaseWithUserDemo):
             'arch': '''<t name="Homepage" t-name="test.untracked_page">
                         <t t-call="website.layout">
                             I am a generic page²
+                            <a id="tracked_link" href="/tracked_view">Link to tracked page</a>
                         </t>
                     </t>''',
             'key': 'test.untracked_page',
@@ -206,14 +210,51 @@ class WebsiteVisitorTests(WebsiteVisitorTestsCommon):
         super().setUpClass()
         cls.set_registry_readonly_mode(False)
 
+    def _url_open_with_tracking(self, url):
+        """ Simulate the js tracking request"""
+        res = self.url_open(url)
+        self.assertEqual(res.status_code, 200)
+        tree = html.fromstring(res.content)
+        html_content = tree.xpath("//html")[0]
+        main_object_attr = html_content.attrib.get('data-main-object')
+        tracking_enabled_attr = html_content.attrib.get('data-tracking-enabled')
+
+        match = re.search(r'^([^(]+)\((\d+)', main_object_attr)
+        res_model = match.group(1)
+        res_id = match.group(2)
+
+        if tracking_enabled_attr:
+            tracking_url = "/website/odoo_track"
+            payload = {
+                "params": {
+                    "res_model": res_model,
+                    "res_id": int(res_id),
+                }
+            }
+            track_res = self.url_open(
+                tracking_url,
+                data=json.dumps(payload),
+                headers={'Content-Type': 'application/json', 'referer': url},
+            )
+            self.assertEqual(track_res.status_code, 200)
+        return res
+
+    def test_tracking_interaction(self):
+        existing_visitors = self.env['website.visitor'].search([])
+        existing_tracks = self.env['website.track'].search([])
+        self.start_tour(self.untracked_page.url, "visitor_tracking")
+        self.assertEqual(self.env['website.visitor'].search_count([]), len(existing_visitors) + 1)
+        new_tracks = self.env['website.track'].search([('id', 'not in', existing_tracks.ids)])
+        self.assertIn(self.tracked_page.url, new_tracks.url, "1 tracked page expected")
+
     def test_visitor_creation_on_tracked_page(self):
         """ Test various flows involving visitor creation and update. """
 
         existing_visitors = self.env['website.visitor'].search([])
         existing_tracks = self.env['website.track'].search([])
-        self.url_open(self.untracked_page.url)
-        self.url_open(self.tracked_page.url)
-        self.url_open(self.tracked_page.url)
+        self._url_open_with_tracking(self.untracked_page.url)
+        self._url_open_with_tracking(self.tracked_page.url)
+        self._url_open_with_tracking(self.tracked_page.url)
 
         new_visitor = self.env['website.visitor'].search([('id', 'not in', existing_visitors.ids)])
         new_track = self.env['website.track'].search([('id', 'not in', existing_tracks.ids)])
@@ -231,7 +272,7 @@ class WebsiteVisitorTests(WebsiteVisitorTestsCommon):
 
         visitor_admin = new_visitor
         # visit a page
-        self.url_open(self.tracked_page_2.url)
+        self._url_open_with_tracking(self.tracked_page_2.url)
 
         # check tracking and visitor / user sync
         new_visitors = self.env['website.visitor'].search([('id', 'not in', existing_visitors.ids)])
@@ -258,9 +299,9 @@ class WebsiteVisitorTests(WebsiteVisitorTestsCommon):
             "No extra visitor should be created")
 
         # visit a page
-        self.url_open(self.tracked_page.url)
-        self.url_open(self.untracked_page.url)
-        self.url_open(self.tracked_page_2.url)
+        self._url_open_with_tracking(self.tracked_page.url)
+        self._url_open_with_tracking(self.untracked_page.url)
+        self._url_open_with_tracking(self.tracked_page_2.url)
 
         # new visitor is created
         new_visitors = self.env['website.visitor'].search([('id', 'not in', existing_visitors.ids)])
@@ -284,9 +325,9 @@ class WebsiteVisitorTests(WebsiteVisitorTestsCommon):
         )
 
         # visit some pages
-        self.url_open(self.tracked_page.url)
-        self.url_open(self.untracked_page.url)
-        self.url_open(self.tracked_page_2.url)
+        self._url_open_with_tracking(self.tracked_page.url)
+        self._url_open_with_tracking(self.untracked_page.url)
+        self._url_open_with_tracking(self.tracked_page_2.url)
 
         # new visitor is created
         new_visitors = self.env['website.visitor'].search([('id', 'not in', existing_visitors.ids)])
@@ -324,9 +365,9 @@ class WebsiteVisitorTests(WebsiteVisitorTestsCommon):
         )
 
         # visit some pages
-        self.url_open(self.tracked_page.url)
-        self.url_open(self.untracked_page.url)
-        self.url_open(self.tracked_page_2.url)
+        self._url_open_with_tracking(self.tracked_page.url)
+        self._url_open_with_tracking(self.untracked_page.url)
+        self._url_open_with_tracking(self.tracked_page_2.url)
 
         # new visitor created
         new_visitors = self.env['website.visitor'].search([('id', 'not in', existing_visitors.ids)])
@@ -354,14 +395,14 @@ class WebsiteVisitorTests(WebsiteVisitorTestsCommon):
             track.write({'visit_datetime': track.visit_datetime - timedelta(minutes=30)})
 
         # visit a page
-        self.url_open(self.tracked_page.url)
+        self._url_open_with_tracking(self.tracked_page.url)
         visitor_portal.invalidate_model(['website_track_ids'])
         # tracks are created
         self.assertEqual(len(visitor_portal.website_track_ids), 5, "There should be 5 tracked page for the portal user")
 
         # simulate the portal user comes back 8hours later
         visitor_portal.write({'last_connection_datetime': visitor_portal.last_connection_datetime - timedelta(hours=9)})
-        self.url_open(self.tracked_page.url)
+        self._url_open_with_tracking(self.tracked_page.url)
         visitor_portal.invalidate_model(['visit_count'])
         # check number of visits
         self.assertEqual(visitor_portal.visit_count, 2, "There should be 2 visits for the portal user")

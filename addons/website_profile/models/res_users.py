@@ -71,3 +71,6 @@ class ResUsers(models.Model):
         if token == validation_token and self.karma == 0:
             return self.write({'karma': VALIDATION_KARMA_GAIN})
         return False
+
+    def _get_extra_tracking_values(self, **kwargs):
+        return {}

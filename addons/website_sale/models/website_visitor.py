@@ -48,11 +48,3 @@ class WebsiteVisitor(models.Model):
             visitor.product_ids = [(6, 0, visitor_info["product_ids"])]
             visitor.visitor_product_count = visitor_info["product_count"]
             visitor.product_count = len(visitor_info["product_ids"])
-
-    def _add_viewed_product(self, product_id):
-        """Add a website_track with a page marked as viewed."""
-        self.ensure_one()
-        if product_id and self.env["product.product"].browse(product_id)._is_variant_possible():
-            domain = [("product_id", "=", product_id)]
-            website_track_values = {"product_id": product_id}
-            self._add_tracking(domain, website_track_values)

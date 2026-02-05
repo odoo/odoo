@@ -263,12 +263,6 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                 }
                 expected_query_count = 2 if cache else 7
                 insert_tables_perf = {}
-                if not readonly_enabled:
-                    insert_tables_perf = {
-                        'website_visitor': 1,
-                        # Visitor upsert
-                    }
-                    expected_query_count += 1
                 self.page.track = True
 
                 self.menu.unlink()  # page being or not in menu shouldn't add queries
@@ -285,12 +279,6 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                 }
                 expected_query_count = 1
                 insert_tables_perf = {}
-                if not readonly_enabled:
-                    insert_tables_perf = {
-                        'website_visitor': 1,
-                        # Visitor upsert
-                    }
-                    expected_query_count += 1
                 self._check_url_hot_query('/', expected_query_count, select_tables_perf, insert_tables_perf)
                 self.assertEqual(self._get_url_hot_query('/'), expected_query_count)
 
@@ -307,12 +295,6 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                 }
                 expected_query_count = 6
                 insert_tables_perf = {}
-                if not readonly_enabled:
-                    insert_tables_perf = {
-                        'website_visitor': 1,
-                        # Visitor upsert
-                    }
-                    expected_query_count += 1
                 self._check_url_hot_query('/', expected_query_count, select_tables_perf, insert_tables_perf, nocache=True)
                 self.assertEqual(self._get_url_hot_query('/', nocache=True), expected_query_count)
 

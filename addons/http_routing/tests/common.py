@@ -15,7 +15,7 @@ from odoo.tools.urls import urljoin as url_join
 def MockRequest(
     env, *, path='/mockrequest', routing=True, multilang=True,
     context=frozendict(), cookies=frozendict(), country_code=None, city_name=None,
-    website=None, remote_addr=HOST, environ_base=None, url_root=None,
+    website=None, remote_addr=HOST, environ_base=None, url_root=None, referrer=None,
 ):
     """Mock of the ``http.request``.
 
@@ -45,7 +45,7 @@ def MockRequest(
                 REMOTE_ADDR=remote_addr,
             ),
             cookies=cookies,
-            referrer='',
+            referrer=referrer or '',
             remote_addr=remote_addr,
             url_root=url_root,
             args=[],

@@ -16,7 +16,7 @@ from odoo.http import request
 class WebsiteTrack(models.Model):
     _name = 'website.track'
     _description = 'Visited Page'
-    _order = 'visit_datetime DESC'
+    _order = 'visit_datetime DESC, id DESC'
     _log_access = False
 
     visitor_id = fields.Many2one('website.visitor', ondelete="cascade", index=True, required=True, readonly=True)
@@ -190,32 +190,35 @@ class WebsiteVisitor(models.Model):
             'context': compose_ctx,
         }
 
-    def _upsert_visitor(self, access_token, force_track_values=None):
+    def _upsert_visitor(self, token_or_partner_id, website_id, lang_id=None, country_code=None, timezone=None, url=None, **kwargs):
         """ Based on the given `access_token`, either create or return the
         related visitor if exists, through a single raw SQL UPSERT Query.
 
         It will also create a tracking record if requested, in the same query.
 
-        :param access_token: token to be used to upsert the visitor
-        :param force_track_values: an optional dict to create a track at the
-            same time.
+        :param token_or_partner_id: token (or partner id) to be used to identify the visitor
+        :param website_id: every visit is typically for a particular website
+        :param lang_id: visitors language id
+        :param country_code: visitors country code
+        :param timezone: visitors time zone
+        :param url: optional url to create a track record at the same time
+        :param kwargs: additional values to include in the track record, including
+            page_id: the id of the page visited
         :return: a tuple containing the visitor id and the upsert result (either
             `inserted` or `updated).
         """
         create_values = {
-            'access_token': access_token,
-            'lang_id': request.lang.id,
-            # Note that it's possible for the GEOIP database to return a country
-            # code which is unknown in Odoo
-            'country_code': request.geoip.country_code,
-            'website_id': request.website.id,
-            'timezone': self._get_visitor_timezone() or None,
+            'access_token': token_or_partner_id,
+            'lang_id': lang_id,
+            'country_code': country_code,
+            'website_id': website_id,
+            'timezone': timezone,
             'write_uid': self.env.uid,
             'create_uid': self.env.uid,
             # If the access_token is not a 32 length hexa string, it means that the
             # visitor is linked to a logged in user, in which case its partner_id is
             # used instead as the token.
-            'partner_id': None if len(str(access_token)) == 32 else access_token,
+            'partner_id': None if len(str(token_or_partner_id)) == 32 else token_or_partner_id,
         }
         query = SQL("""
             INSERT INTO website_visitor (
@@ -231,30 +234,42 @@ class WebsiteVisitor(models.Model):
             ON CONFLICT (access_token)
             DO UPDATE SET
                 last_connection_datetime=excluded.last_connection_datetime,
+                write_date = excluded.write_date,
                 visit_count = CASE WHEN website_visitor.last_connection_datetime < NOW() AT TIME ZONE 'UTC' - INTERVAL '8 hours'
                                     THEN website_visitor.visit_count + 1
                                     ELSE website_visitor.visit_count
                                 END
-            RETURNING id, CASE WHEN create_date = now() at time zone 'UTC' THEN 'inserted' ELSE 'updated' END AS upsert
+            RETURNING id, CASE WHEN create_date = write_date THEN 'inserted' ELSE 'updated' END AS upsert
         """, **create_values)
 
-        if force_track_values:
+        if url:
+            cols_extra, vals_extra = self._get_additional_track_query_parts(**kwargs)
             query = SQL("""
                 WITH visitor AS (
-                    %(query)s, %(url)s AS url, %(page_id)s AS page_id
+                    %(query)s
                 ), track AS (
-                    INSERT INTO website_track (visitor_id, url, page_id, visit_datetime)
-                    SELECT id, url, page_id::integer, now() at time zone 'UTC' FROM visitor
+                    INSERT INTO website_track (visitor_id, url, visit_datetime %(cols_extra)s)
+                    SELECT id, %(url)s, now() at time zone 'UTC' %(vals_extra)s FROM visitor
                 )
                 SELECT id, upsert from visitor;
                 """,
                 query=query,
-                url=force_track_values['url'],
-                page_id=force_track_values.get('page_id'),
+                url=url,
+                cols_extra=cols_extra,
+                vals_extra=vals_extra,
             )
 
         [result] = self.env.execute_query(query)
         return result
+
+    def _get_additional_track_query_parts(self, **kwargs):
+        TrackModel = self.env['website.track']
+        cols, vals = [], []
+        for fname, val in kwargs.items():
+            if fname in TrackModel._fields and val:
+                cols.append(SQL(", %s", SQL.identifier(fname)))
+                vals.append(SQL(", %s", val))
+        return SQL().join(cols), SQL().join(vals)
 
     def _get_visitor_from_request(self, force_create=False, force_track_values=None):
         """ Return the visitor as sudo from the request.
@@ -275,7 +290,15 @@ class WebsiteVisitor(models.Model):
         access_token = self._get_access_token()
 
         if force_create:
-            visitor_id, _ = self._upsert_visitor(access_token, force_track_values)
+            force_track_values = force_track_values or {}
+            visitor_id, _ = self._upsert_visitor(
+                token_or_partner_id=access_token,
+                website_id=request.website.id,
+                lang_id=request.lang.id,
+                country_code=request.geoip.country_code,  # GEOIP might return a country code unknown to odoo
+                timezone=self._get_visitor_timezone(),
+                **force_track_values
+            )
             return self.env['website.visitor'].sudo().browse(visitor_id)
 
         visitor = self.env['website.visitor'].sudo().search_fetch([('access_token', '=', access_token)])
@@ -286,29 +309,6 @@ class WebsiteVisitor(models.Model):
                 visitor._update_visitor_timezone(tz)
 
         return visitor
-
-    def _handle_webpage_dispatch(self, website_page):
-        """ Create a website.visitor if the http request object is a tracked
-        website.page or a tracked ir.ui.view.
-        Since this method is only called on tracked elements, the
-        last_connection_datetime might not be accurate as the visitor could have
-        been visiting only untracked page during his last visit."""
-
-        url = request.httprequest.url
-        website_track_values = {'url': url}
-        if website_page:
-            website_track_values['page_id'] = website_page.id
-
-        self._get_visitor_from_request(force_create=True, force_track_values=website_track_values)
-
-    def _add_tracking(self, domain, website_track_values):
-        """ Add the track and update the visitor"""
-        domain = Domain.AND([domain, Domain('visitor_id', '=', self.id)])
-        last_view = self.env['website.track'].sudo().search(domain, limit=1)
-        if not last_view or last_view.visit_datetime < datetime.now() - timedelta(minutes=30):
-            website_track_values['visitor_id'] = self.id
-            self.env['website.track'].create(website_track_values)
-        self._update_visitor_last_visit()
 
     def _merge_visitor(self, target):
         """ Merge an anonymous visitor data to a partner visitor then unlink

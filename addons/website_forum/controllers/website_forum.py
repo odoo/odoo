@@ -335,8 +335,6 @@ class WebsiteForum(WebsiteProfile):
             redirect_url = f"/forum/{slug(forum)}/{slug(question.parent_id)}#answer-{question.id}"
             return request.redirect(redirect_url, 301)
         values = self._prepare_question_template_vals(forum, post, question)
-        # increment view counter
-        question.sudo()._set_viewed()
 
         return request.render("website_forum.post_description_full", values)
 

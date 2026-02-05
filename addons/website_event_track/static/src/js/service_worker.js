@@ -243,18 +243,13 @@ const matchCache = async (request) => {
  *
  * @param {Request} request
  * @param {object} [options]
- * @param {Boolean} [options.disableTracking] whether adding a header preventing the server to track the request
  * @returns {Promise<Response>}
  */
 const processFetchRequest = async (request, options) => {
     const requestCopy = request.clone();
     let response;
     try {
-        if (options && options.disableTracking) {
-            response = await fetch(request, { headers: { 'X-Disable-Tracking': '1' } });
-        } else {
-            response = await fetch(request);
-        }
+        response = await fetch(request);
         await cacheRequest(request, response);
     } catch (requestError) {
         if (isCachableRequest(requestCopy)) {
@@ -319,7 +314,7 @@ const prefetchUrls = async (urls = []) => {
             continue;
         }
         try {
-            await processFetchRequest(new Request(url), { disableTracking: true });
+            await processFetchRequest(new Request(url));
         } catch (error) {
             console.error(`fail to prefetch ${url} : ${error}`);
         }

@@ -2075,13 +2075,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
     # --------------------------------------------------------------------------
     # Products Recently Viewed
     # --------------------------------------------------------------------------
-    @route("/shop/products/recently_viewed_update", type="jsonrpc", auth="public", website=True)
-    def products_recently_viewed_update(self, product_id, **_kwargs):
-        res = {}
-        visitor_sudo = request.env["website.visitor"]._get_visitor_from_request(force_create=True)
-        visitor_sudo._add_viewed_product(product_id)
-        return res
-
     @route("/shop/products/recently_viewed_delete", type="jsonrpc", auth="public", website=True)
     def products_recently_viewed_delete(self, product_id=None, product_template_id=None, **_kwargs):
         if not (product_id or product_template_id):

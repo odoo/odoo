@@ -1269,6 +1269,11 @@ class Website(models.CachedModel):
             page_temp = page_url + (inc and "-%s" % inc or "")
         return page_temp
 
+    def _is_tracking_enabled(self, main_object):
+        if main_object._name in ['ir.ui.view', 'website.page']:
+            return main_object.track
+        return True
+
     def _get_plausible_script_url(self):
         return self.env['ir.config_parameter'].sudo().get_str(
             'website.plausible_script') or 'https://plausible.io/js/plausible.js'

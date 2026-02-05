@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
-from freezegun import freeze_time
 from lxml import html
 from odoo import Command, fields
 from odoo.tests import HttpCase, tagged
@@ -229,7 +228,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         viewed_products = self.black_case_M + self.pink_case_L + self.computer.product_variant_id
         dyn_filter = self.env.ref("website_sale.dynamic_filter_latest_viewed_products")
         with self.mock_request(user=self.env.user):
-            visitor = self.env["website.visitor"]._upsert_visitor(self.env.user.partner_id.id)
+            visitor = self.env["website.visitor"]._upsert_visitor(self.env.user.partner_id.id, website_id=self.website.id)
             self.env["website.track"].create([
                 {"visitor_id": visitor[0], "product_id": product_id}
                 for product_id in viewed_products.ids
@@ -252,12 +251,19 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 'When hiding variants, "Latest viewed" filter should return 1 variant per template',
             )
 
-        now = datetime.now()
         for i, product in enumerate(viewed_products):
-            with freeze_time(now - timedelta(seconds=i)):
-                self.url_open("/shop/products/recently_viewed_update", json={"params": {"product_id": product.id}})
+            self.url_open(
+                "/website/odoo_track",
+                headers={'referer': product.website_url},
+                json={
+                    "params": {
+                        "res_model": "product.product",
+                        "res_id": product.id,
+                    }
+                },
+            )
 
-        self.assert_snippet_filters_route_public_access(dyn_filter, viewed_products)
+        self.assert_snippet_filters_route_public_access(dyn_filter, self.env['product.product'].browse(reversed(viewed_products.ids)))
 
     def test_recently_sold_with_filter(self):
         """Check the recently-sold-with filter after selling 1 computer, 1 monitor & 1 case.

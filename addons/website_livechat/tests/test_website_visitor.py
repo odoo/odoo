@@ -67,7 +67,13 @@ class WebsiteVisitorTestsLivechat(WebsiteVisitorTestsCommon):
         self.env["mail.presence"]._update_presence(operator)
 
         # Anonymous user
-        self.url_open(self.tracked_page.url)  # visitor created
+        self.make_jsonrpc_request(
+            route='/website/odoo_track',
+            params={
+                'res_model': self.tracked_page._name,
+                'res_id': self.tracked_page.id,
+            },
+        )  # visitor created
         res_1 = self.make_jsonrpc_request(
             "/im_livechat/get_session",
             {
@@ -101,7 +107,13 @@ class WebsiteVisitorTestsLivechat(WebsiteVisitorTestsCommon):
                 "csrf_token": self.csrf_token(),
             },
         )
-        self.url_open(self.tracked_page.url)
+        self.make_jsonrpc_request(
+            route='/website/odoo_track',
+            params={
+                'res_model': self.tracked_page._name,
+                'res_id': self.tracked_page.id,
+            },
+        )
         visitor_3 = self._get_last_visitor()
         self.assertEqual(channel_1.livechat_visitor_id, visitor_3)
         self.assertNotEqual(visitor_3, visitor_2)
