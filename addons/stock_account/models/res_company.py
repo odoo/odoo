@@ -237,7 +237,7 @@ class ResCompany(models.Model):
         for account in accounts:
             account_variation = account.account_stock_variation_id
             if not account_variation:
-                account_variation = self.env.company.expense_account_id
+                account_variation = self.expense_account_id
             if not account_variation:
                 continue
             balance = inventory_data.get(account, 0) - accounting_data.get(account, 0)
