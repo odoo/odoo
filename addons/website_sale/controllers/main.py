@@ -366,12 +366,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if search:
             post['search'] = search
 
-        if not (category or search):
-            post['extra_domain'] = Domain.OR([
-                Domain('public_categ_ids', '=', False),
-                Domain('public_categ_ids.not_in_shop', '=', False),
-            ])
-
         options = self._get_search_options(
             category=category,
             attribute_value_dict=attribute_value_dict,
@@ -379,7 +373,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
             max_price=max_price,
             conversion_rate=conversion_rate,
             display_currency=website.currency_id,
-            **post
+            extra_domain=Domain.OR([
+                Domain('public_categ_ids', '=', False),
+                Domain('public_categ_ids.not_in_shop', '=', False),
+            ])
+            if not (category or search)
+            else None,
+            **post,
         )
         fuzzy_search_term, product_count, search_product = self._shop_lookup_products(
             options, post, search, website
