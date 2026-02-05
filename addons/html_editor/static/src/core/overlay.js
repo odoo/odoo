@@ -1,7 +1,7 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import {
     Component,
     onWillDestroy,
-    useEffect,
     useExternalListener,
     useRef,
     useState,
@@ -69,7 +69,7 @@ export class EditorOverlay extends Component {
             const resizeObserver = new ResizeObserver(() => {
                 position.unlock();
             });
-            useEffect(
+            useLayoutEffect(
                 (root) => {
                     resizeObserver.observe(root);
                     return () => {

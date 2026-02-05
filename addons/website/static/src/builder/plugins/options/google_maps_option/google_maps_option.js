@@ -1,4 +1,5 @@
-import { useRef, onMounted, useState, useEffect, onWillDestroy } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { useRef, onMounted, useState, onWillDestroy } from "@odoo/owl";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
 /** @import { Coordinates, Place } from './google_maps_option_plugin.js' */
@@ -22,7 +23,7 @@ export class GoogleMapsOption extends BaseOptionComponent {
         this.state = useState({
             formattedAddress: this.env.getEditingElement().dataset.pinAddress || "",
         });
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.env.getEditingElement().dataset.pinAddress = this.state.formattedAddress;
             },

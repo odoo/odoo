@@ -1,4 +1,5 @@
-import { Component, useEffect } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
@@ -95,7 +96,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         this.priceColumns = [...this.props.aggregatedFields, "price_unit"];
         // invisible fields to force copy when duplicating a section
         this.copyFields = ["display_type", "collapse_composition", "collapse_prices"];
-        useEffect(
+        useLayoutEffect(
             (editedRecord) => this.focusToName(editedRecord),
             () => [this.editedRecord]
         );

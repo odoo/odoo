@@ -1,10 +1,11 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { formatFloat } from "@web/views/fields/formatters";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import { Component, onWillStart, useEffect, useRef } from "@odoo/owl";
+import { Component, onWillStart, useRef } from "@odoo/owl";
 
 export class GaugeField extends Component {
     static template = "web.GaugeField";
@@ -24,7 +25,7 @@ export class GaugeField extends Component {
 
         onWillStart(async () => await loadBundle("web.chartjs_lib"));
 
-        useEffect(() => {
+        useLayoutEffect(() => {
             this.renderChart();
             return () => {
                 if (this.chart) {
@@ -47,7 +48,9 @@ export class GaugeField extends Component {
 
     renderChart() {
         const gaugeValue = this.props.record.data[this.props.name];
-        let maxValue = this.props.maxValueField ? this.props.record.data[this.props.maxValueField] : this.props.maxValue;
+        let maxValue = this.props.maxValueField
+            ? this.props.record.data[this.props.maxValueField]
+            : this.props.maxValue;
         maxValue = Math.max(gaugeValue, maxValue);
         let maxLabel = maxValue;
         if (gaugeValue === 0 && maxValue === 0) {

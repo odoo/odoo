@@ -1,6 +1,7 @@
 /** @ts-check */
 
-import { Component, onWillStart, onWillUpdateProps, useEffect } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
@@ -24,7 +25,7 @@ export class SelectionFilterValue extends Component {
 
     setup() {
         this.inputRef = useChildRef();
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (this.inputRef.el) {
                     // Prevent the user from typing free-text by setting the maxlength to 0

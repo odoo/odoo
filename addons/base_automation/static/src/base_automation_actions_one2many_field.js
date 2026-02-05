@@ -1,4 +1,5 @@
-import { Component, useExternalListener, useEffect, useRef } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, useExternalListener, useRef } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
@@ -10,7 +11,7 @@ class ActionsOne2ManyField extends Component {
         this.root = useRef("root");
 
         let adaptCounter = 0;
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.adapt();
             },

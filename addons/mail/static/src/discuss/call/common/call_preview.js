@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { Action, ACTION_TAGS } from "@mail/core/common/action";
 import { ActionList } from "@mail/core/common/action_list";
 import {
@@ -11,7 +12,7 @@ import { CallSettingsDialog } from "@mail/discuss/call/common/call_settings";
 import { DeviceSelect } from "@mail/discuss/call/common/device_select";
 import { closeStream, onChange } from "@mail/utils/common/misc";
 
-import { Component, onWillDestroy, status, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onWillDestroy, status, useRef, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -41,7 +42,7 @@ export class CallPreview extends Component {
         this.state = useState({ audioStream: null, blurManager: null, videoStream: null });
         this.audioRef = useRef("audio");
         this.videoRef = useRef("video");
-        useEffect(
+        useLayoutEffect(
             (videoEl, audioEl, audioStream, videoStream, blurStream) => {
                 if (audioEl && !audioEl.srcObject && audioStream) {
                     audioEl.srcObject = audioStream;
@@ -102,7 +103,7 @@ export class CallPreview extends Component {
                 closeStream(this.state.audioStream);
                 closeStream(this.state.videoStream);
             });
-            useEffect(
+            useLayoutEffect(
                 (activateCamera) => {
                     if (activateCamera > 0 && !this.state.videoStream) {
                         this.enableCamera();
@@ -110,7 +111,7 @@ export class CallPreview extends Component {
                 },
                 () => [this.props.activateCamera]
             );
-            useEffect(
+            useLayoutEffect(
                 (activateMicrophone) => {
                     if (activateMicrophone > 0 && !this.state.audioStream) {
                         this.enableMicrophone();

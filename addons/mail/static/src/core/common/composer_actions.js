@@ -1,6 +1,7 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { CreatePollDialog } from "@mail/core/common/create_poll_dialog";
 
-import { toRaw, useComponent, useEffect, useRef, useState } from "@odoo/owl";
+import { toRaw, useComponent, useRef, useState } from "@odoo/owl";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 
 import { _t } from "@web/core/l10n/translation";
@@ -80,7 +81,7 @@ registerComposerAction("send-message", {
     onSelected: ({ owner }) => owner.sendMessage(),
     setup: ({ owner }) => {
         owner.sendMessageState = useState({ active: false });
-        useEffect(
+        useLayoutEffect(
             () => {
                 owner.sendMessageState.active = !owner.isSendButtonDisabled;
             },
