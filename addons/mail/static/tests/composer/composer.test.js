@@ -1470,6 +1470,7 @@ test("composer reply-to message is restored on thread change", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:contains('Reply')");
     await contains(".o-mail-Composer:contains('Replying to')");
+    await insertText(".o-mail-Composer-input", "Hello World!");
     await click(".o-mail-DiscussSidebar-item:contains('Inbox')");
     await contains(".o-mail-Message", { count: 0 });
     await click(".o-mail-DiscussSidebar-item:contains('General')");
@@ -1481,8 +1482,25 @@ test("composer reply-to message is restored on thread change", async () => {
             store.Thread.get({ model: "discuss.channel", id: channelId }).composer.localId
         )
     ).toBe(
-        '{"emailAddSignature":true,"replyToMessageId":1,"composerHtml":["markup","<div class=\'o-paragraph\'><br></div>"]}'
+        '{"emailAddSignature":true,"replyToMessageId":1,"composerHtml":["markup","Hello World!"]}'
     );
+    // check local storage emptied on message post
+    await click(".o-mail-Composer button:enabled[aria-label='Send']");
+    await click(".o-mail-Message[data-persistent]:contains(Hello World!)");
+    expect(
+        browser.localStorage.getItem(
+            store.Thread.get({ model: "discuss.channel", id: channelId }).composer.localId
+        )
+    ).toBe(null);
+    // check local storage empty, change thread to force save in local storage if needed (debounced otherwise)
+    await click(".o-mail-DiscussSidebar-item:contains('Inbox')");
+    await contains(".o-mail-Message", { count: 0 });
+    await click(".o-mail-DiscussSidebar-item:contains('General')");
+    expect(
+        browser.localStorage.getItem(
+            store.Thread.get({ model: "discuss.channel", id: channelId }).composer.localId
+        )
+    ).toBe(null);
 });
 
 test("composer reply-to message is restored page reload", async () => {
@@ -1518,7 +1536,7 @@ test("composer reply-to message is restored page reload", async () => {
     // not taking last message as to not fetch last message data prematurely
     browser.localStorage.setItem(
         `Composer,(Thread,discuss.channel AND ${channelId}) OR (undefined)`,
-        `{"replyToMessageId":${messageId_1},"text":""}`
+        `{"replyToMessageId":${messageId_1},"text":"some text"}`
     );
     await start();
     await openDiscuss(channelId);
@@ -1782,7 +1800,9 @@ test("mentions can be correctly cut with ctrl+A and ctrl+X", async () => {
     await click(".o-mail-NavigableList-item:text('Mitchell Admin')");
     await contains(".o-mail-Composer-html.odoo-editor-editable:text('Hello @Mitchell Admin')");
     await htmlInsertText(editor, "nice to meet you!");
-    await contains(".o-mail-Composer-html.odoo-editor-editable:text('Hello @Mitchell Admin nice to meet you!')");
+    await contains(
+        ".o-mail-Composer-html.odoo-editor-editable:text('Hello @Mitchell Admin nice to meet you!')"
+    );
     await focus(editor.editable);
     await press("Control+a");
     cut(editor);
@@ -1794,7 +1814,9 @@ test("mentions can be correctly cut with ctrl+A and ctrl+X", async () => {
     await contains(".o-mail-Composer-html.odoo-editor-editable:text('Hello General')");
     await contains(editor.editable.querySelector("i.fa-hashtag"));
     await htmlInsertText(editor, "nice to meet you!");
-    await contains(".o-mail-Composer-html.odoo-editor-editable:text('Hello General nice to meet you!')");
+    await contains(
+        ".o-mail-Composer-html.odoo-editor-editable:text('Hello General nice to meet you!')"
+    );
     await focus(editor.editable);
     await press("Control+a");
     cut(editor);

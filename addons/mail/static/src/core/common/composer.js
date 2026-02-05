@@ -918,14 +918,20 @@ export class Composer extends Component {
             emailAddSignature,
             replyToMessageId,
         }) => {
-            browser.localStorage.setItem(
-                composer.localId,
-                JSON.stringify({
-                    emailAddSignature,
-                    replyToMessageId,
-                    composerHtml: isMarkup(composerHtml) ? ["markup", composerHtml] : composerHtml,
-                })
-            );
+            if (isHtmlEmpty(composerHtml)) {
+                browser.localStorage.removeItem(composer.localId);
+            } else {
+                browser.localStorage.setItem(
+                    composer.localId,
+                    JSON.stringify({
+                        emailAddSignature,
+                        replyToMessageId,
+                        composerHtml: isMarkup(composerHtml)
+                            ? ["markup", composerHtml]
+                            : composerHtml,
+                    })
+                );
+            }
         };
         if (this.state.isFullComposerOpen) {
             this.fullComposerBus.trigger("SAVE_CONTENT", {
