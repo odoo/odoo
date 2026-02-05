@@ -68,9 +68,10 @@ class AccountPayment(models.Model):
         for rec in self:
             rec.l10n_latam_check_number = rec.check_number
 
+    @api.onchange('l10n_latam_check_number')
     def _inverse_l10n_latam_check_number(self):
         for rec in self:
-            rec.check_number = rec.l10n_latam_check_number
+            rec.check_number = '%08d' % int(rec.l10n_latam_check_number) if rec.l10n_latam_check_number and rec.journal_id.company_id.country_id.code == "AR" and rec.l10n_latam_check_number.isdecimal() else rec.l10n_latam_check_number
 
     def _compute_check_number(self):
         """ Override from account_check_printing.
@@ -91,7 +92,7 @@ class AccountPayment(models.Model):
     def _compute_l10n_latam_check_bank_id(self):
         new_third_party_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_party_checks')
         for rec in new_third_party_checks:
-            rec.l10n_latam_check_bank_id = rec.partner_id.bank_ids[:1].bank_id
+            rec.l10n_latam_check_bank_id = rec.partner_id.bank_ids[:1].bank_id or rec.l10n_latam_check_bank_id
         (self - new_third_party_checks).l10n_latam_check_bank_id = False
 
     @api.depends('payment_method_line_id.code', 'partner_id')
