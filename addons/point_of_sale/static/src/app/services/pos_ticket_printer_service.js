@@ -105,7 +105,7 @@ export class PosTicketPrinterService {
     }
 
     async print({ printer, iframe, image = null }) {
-        const finalImage = image || (await this.generateImage(iframe));
+        const finalImage = image || (await this.generateImage(iframe, printer));
         let status;
         try {
             status = await printer._instance.print(finalImage);
@@ -248,7 +248,7 @@ export class PosTicketPrinterService {
                 }
 
                 const iframe = await this.generateIframe(template, ticket);
-                const image = await this.generateImage(iframe);
+                const image = await this.generateImage(iframe, printer);
                 const result = await this.print({ printer, image });
                 if (result.successful) {
                     isPrinted = true;
@@ -330,9 +330,42 @@ export class PosTicketPrinterService {
         return iframe;
     }
 
-    async generateImage(iframe) {
+    createReceiptStyle({ iframeEl, printer }) {
+        const iframeHead = iframeEl.querySelector("head");
+        iframeHead.querySelector("#printer-receipt-style")?.remove();
+        const { maxWidth, fontSize } = printer._instance.getStyle();
+
+        const style = document.createElement("style");
+        style.id = "printer-receipt-style";
+
+        const LINE_HEIGHT_RATIO = 1.4;
+
+        const getFontRules = (multiplier) => {
+            const size = fontSize * multiplier;
+            const height = size * LINE_HEIGHT_RATIO;
+            return `
+                font-size: ${size}px !important;
+                line-height: ${height}px !important;
+            `;
+        };
+
+        const cssRules = `
+            #pos-receipt { width: ${maxWidth}px !important; font-size: ${fontSize}px !important; }
+            /** Text classes **/
+            #pos-receipt .text-small { ${getFontRules(0.8)} }
+            #pos-receipt .text-normal { ${getFontRules(1.0)} }
+            #pos-receipt .text-large { ${getFontRules(1.2)} }
+            #pos-receipt .text-insane { ${getFontRules(2.2)} }
+        `;
+
+        style.textContent = cssRules;
+        iframeHead.appendChild(style);
+    }
+
+    async generateImage(iframe, printer) {
         const doc = iframe.contentDocument || iframe.contentWindow.document;
         const iframeEl = doc.getElementById("pos-receipt");
+        this.createReceiptStyle({ iframeEl, printer });
         const sizes = iframeEl.getBoundingClientRect();
         const image = await toCanvas(iframeEl, {
             backgroundColor: "#ffffff",

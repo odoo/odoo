@@ -125,7 +125,73 @@ export class EpsonPrinter extends BasePrinter {
 
     get address() {
         const protocol = this.use_lna ? "http:" : "https:";
-        return `${protocol}//${this.printer_ip}/cgi-bin/epos/service.cgi?devid=local_printer&timeout=3000`;
+        return `${protocol}//${this.printer_ip}/cgi-bin/epos/service.cgi?devid=local_printer&timeout=${this.timeout}`;
+    }
+
+    get STYLE_MAPPING() {
+        const base = super.STYLE_MAPPING;
+
+        const models_80mm = [
+            "tm_t88_80",
+            "tm_t70_80",
+            "tm_t90_80",
+            "tm_t90_kp",
+            "tm_l100_80",
+            "tm_p80_48",
+            "tm_p80_42",
+            "tm_p80ii_80_48",
+            "tm_p80ii_80_42",
+            "tm_t20_80",
+            "tm_m30_80",
+            "tm_m50_80",
+            "tm_m55_80",
+            "tm_t82_80",
+            "tm_t83_80",
+            "tm_l90_re",
+            "tm_l90_la",
+            "tm_h60_re",
+        ];
+
+        const models_58mm = [
+            "tm_t88_58",
+            "tm_t70_58",
+            "tm_t90_58",
+            "tm_l100_58",
+            "tm_p60_58",
+            "tm_p60_la",
+            "tm_p80ii_58",
+            "tm_p20_58",
+            "tm_t20_58",
+            "tm_m10_58",
+            "tm_m30_58",
+            "tm_m50_58",
+            "tm_m55_58",
+            "tm_t82_58",
+            "tm_t83_58",
+            "tm_u33_58",
+        ];
+
+        const mapToStyle = (keys, style) =>
+            keys.reduce((acc, key) => ({ ...acc, [key]: style }), {});
+
+        return {
+            ...base,
+
+            ...mapToStyle(models_80mm, base[80]),
+            ...mapToStyle(models_58mm, base[58]),
+
+            // ============================================
+            // CUSTOM OVERRIDES (Impact / Special Sizes)
+            // ============================================
+
+            tm_u22_76: { maxWidth: 200, fontSize: 12 },
+            tm_u22_70: { maxWidth: 180, fontSize: 12 },
+            tm_u22_58: { maxWidth: 150, fontSize: 12 },
+            tm_u33_76: { ...base[80], maxWidth: 400 },
+            tm_u33_70: { ...base[80], maxWidth: 380 },
+            tm_p60_60: { ...base[58], maxWidth: 375 },
+            tm_l100_40: { maxWidth: 240, fontSize: 14 },
+        };
     }
 
     openCashbox() {
@@ -148,7 +214,7 @@ export class EpsonPrinter extends BasePrinter {
         const params = {
             method: "POST",
             body: processed,
-            signal: AbortSignal.timeout(3000),
+            signal: AbortSignal.timeout(this.timeout),
         };
 
         if (this.use_lna) {
