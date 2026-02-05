@@ -8,6 +8,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.tools.misc import clean_context
+from odoo.addons.mail.tools.discuss import Store
 
 
 def field_employee(field_type: type[fields.Field], name: str, *, field_name='', user_writeable=False, **kw):
@@ -322,3 +323,9 @@ class ResUsers(models.Model):
             res['views'] = [(self.env.ref('base.view_users_form').id, 'form')]
 
         return res
+
+    def _store_im_status_fields(self, res: Store.FieldList):
+        super()._store_im_status_fields(res)
+        if res.is_for_internal_users():
+            # sudo: res.users - internal users can access employee information for the IM status
+            res.many("employee_ids", "_store_im_status_fields", sudo=True)

@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons.mail.tools.discuss import Store
 
 from .hr_homeworking import DAYS
 
@@ -76,3 +77,7 @@ class HrEmployee(models.Model):
         for employee in self:
             current_location = employee.exceptional_location_id or employee[dayfield]
             employee.work_location_type = current_location.location_type
+
+    def _store_im_status_fields(self, res: Store.FieldList):
+        super()._store_im_status_fields(res)
+        res.attr("work_location_type")

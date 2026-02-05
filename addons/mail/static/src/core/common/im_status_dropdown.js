@@ -23,17 +23,13 @@ export class ImStatusDropdown extends Component {
     }
 
     setManualImStatus(status) {
+        this.store.self.updateImStatus(status);
         rpc("/mail/set_manual_im_status", { status });
     }
 
     get readableImStatus() {
         const imStatus = this.store.self.im_status || "offline";
-        for (const status in this.readableImStatusByCode) {
-            if (imStatus.includes(status)) {
-                return this.readableImStatusByCode[status];
-            }
-        }
-        return _t("Unknown Status");
+        return this.readableImStatusByCode[imStatus];
     }
 }
 

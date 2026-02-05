@@ -11,35 +11,6 @@ class ResUsers(models.Model):
 
     leave_date_to = field_employee(fields.Date, 'leave_date_to')
 
-    def _compute_im_status(self):
-        super()._compute_im_status()
-        on_leave_user_ids = self._get_on_leave_ids()
-        for user in self:
-            if user.id in on_leave_user_ids:
-                if user.im_status == 'online':
-                    user.im_status = 'leave_online'
-                elif user.im_status == 'away':
-                    user.im_status = 'leave_away'
-                elif user.im_status == 'busy':
-                    user.im_status = 'leave_busy'
-                elif user.im_status == 'offline':
-                    user.im_status = 'leave_offline'
-
-    @api.model
-    def _get_on_leave_ids(self, partner=False):
-        now = fields.Datetime.now()
-        field = 'partner_id' if partner else 'id'
-        self.flush_model(['active'])
-        self.env['hr.leave'].flush_model(['user_id', 'state', 'date_from', 'date_to'])
-        self.env.cr.execute('''SELECT res_users.%s FROM res_users
-                            JOIN hr_leave ON hr_leave.user_id = res_users.id
-                            AND hr_leave.state = 'validate'
-                            AND res_users.active IS TRUE
-                            AND hr_leave.date_from <= %%s AND hr_leave.date_to >= %%s
-                            RIGHT JOIN hr_leave_type ON hr_leave.holiday_status_id = hr_leave_type.id
-                            AND hr_leave_type.time_type = 'leave';''' % field, (now, now))
-        return [r[0] for r in self.env.cr.fetchall()]
-
     def _clean_leave_responsible_users(self):
         # self = old bunch of leave responsibles
         # This method compares the current leave managers

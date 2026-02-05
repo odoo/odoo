@@ -245,7 +245,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             del channel_data_join["res.partner"][1]
             channel_data_join["res.partner"].insert(
                 0,
-                {
+                self._filter_partners_fields({
                     "active": False,
                     "avatar_128_access_token": self.chatbot_script.operator_partner_id._get_avatar_128_access_token(),
                     "country_id": False,
@@ -253,13 +253,14 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     "im_status": "im_partner",
                     "im_status_access_token": self.chatbot_script.operator_partner_id._get_im_status_access_token(),
                     "is_public": False,
+                    "main_user_id": False,
                     "mention_token": self.chatbot_script.operator_partner_id._get_mention_token(),
                     "name": "Testing Bot",
                     "user_livechat_username": False,
                     "write_date": fields.Datetime.to_string(
                         self.chatbot_script.operator_partner_id.write_date
                     ),
-                },
+                })[0],
             )
             store_1 = Store().add(discuss_channel, "_store_channel_fields")
             channel_data = store_1.get_result()

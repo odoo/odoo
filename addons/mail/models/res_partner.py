@@ -261,6 +261,7 @@ class ResPartner(models.Model):
     def _store_im_status_fields(self, res: Store.FieldList):
         res.attr("im_status")
         res.attr("im_status_access_token", lambda p: p._get_im_status_access_token())
+        res.one("main_user_id", "_store_im_status_fields")
 
     def _store_mention_fields(self, res: Store.FieldList):
         res.attr("mention_token", lambda p: p._get_mention_token())
