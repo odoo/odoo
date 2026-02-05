@@ -109,7 +109,7 @@ class ImageToolOptionPlugin extends Plugin {
         this.htmlStyle = getHtmlStyle(this.document);
     }
     async canHaveHoverEffect(imgEl) {
-        return imgEl.tagName === "IMG" && !(await isImageCorsProtected(imgEl));
+        return !(imgEl.tagName === "IMG") || !(await isImageCorsProtected(imgEl));
     }
     migrateImages(rootEl) {
         for (const el of selectElements(
