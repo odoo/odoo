@@ -8,6 +8,7 @@ import {
     registerWebsitePreviewTour,
     changeOptionInPopover,
     clickOnEditAndWaitEditMode,
+    assertCssVariable,
 } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour(
@@ -158,6 +159,18 @@ registerWebsitePreviewTour(
             trigger:
                 ".o_customize_tab [data-container-title='Image'] [data-label='Filter'] .o-dropdown:contains('Blur')",
         },
+        {
+            content: "Change the height of the snippet",
+            trigger: `.o_customize_tab [data-container-title="Image Gallery"] [data-label="Height"] input`,
+            run: "edit 400",
+        },
+        changeOption("Image", "[data-label='Re-order'] button[data-action-value='next']"),
+        {
+            content: "Click on the moved image",
+            trigger: ":iframe .s_image_gallery .carousel-item.active img[data-index='2']",
+            run: "click",
+        },
+        assertCssVariable("height", "400px", ":iframe .s_image_gallery"),
     ]
 );
 
