@@ -2684,6 +2684,9 @@ class TestComposerResultsMass(TestMailComposer):
                                   default_template_id=self.template.id)
         ))
         composer = composer_form.save()
+        composer.attachment_ids = self.env['ir.attachment'].sudo().create(
+            self._generate_attachments_data(1, res_model=composer._name, res_id=composer.id)
+        )
         self.assertFalse(composer.reply_to_force_new, 'Mail: thread-enabled models should use auto thread by default')
         with self.mock_mail_gateway(mail_unlink_sent=True):
             composer._action_send_mail()
@@ -2708,6 +2711,11 @@ class TestComposerResultsMass(TestMailComposer):
             self.assertEqual(message.subject, 'TemplateSubject %s' % record.name)
             self.assertEqual(message.body, '<p>TemplateBody %s</p>' % record.name)
             self.assertEqual(message.author_id, self.user_employee.partner_id)
+            self.assertEqual(len(message.attachment_ids), 1)
+            self.assertEqual(message.attachment_ids.res_model, record._name)
+            self.assertEqual(message.attachment_ids.res_id, record.id)
+            self.assertEqual(composer.attachment_ids.name, message.attachment_ids.name)
+            self.assertEqual(composer.attachment_ids.datas, message.attachment_ids.datas)
             # post-related fields are void
             self.assertFalse(message.subtype_id)
             self.assertFalse(message.partner_ids)
