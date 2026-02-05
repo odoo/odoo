@@ -12,7 +12,6 @@ class TestUi(HttpCase):
 
         transfer_provider = self.env.ref("payment.payment_provider_transfer")
         transfer_provider.is_published = True
-        transfer_provider._transfer_ensure_pending_msg_is_set()
 
         if "enforce_cities" in self.env["res.country"]._fields:
             self.env.company.country_id.enforce_cities = False

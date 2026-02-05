@@ -33,22 +33,27 @@
             <group name="provider_config_others" position="attributes">
                 <attribute name="invisible" separator="or" add="code == 'custom'"/>
             </group>
+            <group name="provider_config_others" position="after">
+                <group
+                    string="Others"
+                    name="provider_config_bank"
+                    invisible="not (code == 'custom' and custom_mode == 'wire_transfer')"
+                >
+                    <field
+                        name="partner_bank_id"
+                        required="custom_mode == 'wire_transfer'"
+                        context="{
+                            'default_company_id': company_id,
+                            'default_partner_id': company_partner_id,
+                        }"
+                    />
+                </group>
+            </group>
             <page name="messages" position="attributes">
                 <attribute name="invisible" separator="or" add="custom_mode == 'pay_on_invoice'"/>
             </page>
             <field name="pre_msg" position="attributes">
                 <attribute name="invisible" separator="or" add="code == 'custom'"/>
-            </field>
-            <field name="pending_msg" position="after">
-                <div class="o_row" colspan="2"
-                     invisible="custom_mode != 'wire_transfer'">
-                    <button string=" Reload Pending Message"
-                            type="object"
-                            name="action_recompute_pending_msg"
-                            class="oe_link ms-0 ps-0"
-                            icon="refresh"
-                            />
-                </div>
             </field>
             <field name="done_msg" position="attributes">
                 <attribute name="invisible" separator="or" add="code == 'custom'"/>

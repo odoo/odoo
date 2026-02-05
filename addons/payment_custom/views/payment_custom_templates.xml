@@ -14,27 +14,6 @@
     </template>
 
     <template id="custom_state_header" inherit_id="payment.state_header">
-        <xpath expr="//div[@name='o_payment_status_alert']" position="inside">
-            <t t-set="qr_code"
-               t-value="tx.provider_id.sudo().qr_code and tx.company_id.sudo().partner_id.bank_ids[:1].build_qr_code_base64(tx.amount, tx._get_communication(), None, tx.currency_id, tx.partner_id)"
-            />
-            <t t-if="tx._requires_payment_instructions() and qr_code">
-                <div class="position-relative order-2 d-flex flex-md-column justify-content-center align-items-center align-items-md-stretch w-100 w-md-auto">
-                    <hr class="d-inline d-md-none w-100"/>
-                    <div class="vr d-none d-md-block h-100 mx-auto"/>
-                    <h6 class="my-1 my-md-3 px-3 px-md-0 text-muted">OR</h6>
-                    <hr class="d-inline d-md-none w-100"/>
-                    <div class="vr d-none d-md-block h-100 mx-auto"/>
-                </div>
-                <div class="o_qr_code_card card order-1 order-md-3 bg-info flex-shrink-0">
-                    <div class="card-body d-flex flex-column align-items-center justify-content-center pb-3">
-                        <img class="mb-2 border border-dark rounded" t-att-src="qr_code"/>
-                        <small class="text-center text-wrap lh-sm">Scan me in your banking app</small>
-                    </div>
-                </div>
-            </t>
-        </xpath>
-
         <xpath expr="//t[@t-set='o_payment_status_alert_class']" position="replace">
             <t t-if="tx._requires_payment_instructions()">
                <t t-set="o_payment_status_alert_class"
@@ -49,22 +28,67 @@
         </xpath>
 
         <xpath expr="//div[@id='o_payment_status_message']" position="replace">
-            <div t-if="tx._requires_payment_instructions()"
-                 id="o_payment_status_message"
-                 class="order-3 order-md-1 flex-grow-1"
+            <div
+                t-if="tx._requires_payment_instructions()"
+                id="o_payment_status_message"
+                class="w-100"
             >
-                <div class="card flex-grow-1">
-                    <div id="o_payment_status_message_details" class="card-body">
-                        <t>$0</t>
-                        <hr class="w-100"/>
-                        <strong class="mt-auto">Communication: </strong>
-                        <span t-out="tx._get_communication()"/>
-                    </div>
-                </div>
+                <t t-call="payment_custom.custom_payment_transfer_details" tx_sudo="tx"/>
             </div>
             <t t-else="">$0</t>
         </xpath>
 
+    </template>
+
+    <template id="custom_payment_transfer_details">
+        <t
+            t-set="bank_account"
+            t-value="tx_sudo.provider_id._get_custom_bank_account()"
+        />
+        <t t-set="communication" t-value="tx_sudo._get_communication()"/>
+        <t t-set="qr_code" t-value="tx_sudo._get_custom_qr_code()"/>
+        <div
+            t-attf-class="d-flex flex-column align-items-stretch gap-2 pt-1 #{'flex-md-row gap-md-3' if qr_code else ''}"
+        >
+            <div class="card flex-grow-1 order-3 order-md-1 bg-info">
+                <div class="card-body d-flex flex-column gap-1">
+                    <t t-if="status_message" t-out="status_message"/>
+                    <t t-if="bank_account">
+                        <div class="d-flex align-items-center gap-2">
+                            <b>Beneficiary:</b>
+                            <pre t-out="bank_account.holder_name" class="user-select-all mb-0"/>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <b>Bank Account:</b>
+                            <pre t-out="bank_account.display_name" class="user-select-all mb-0"/>
+                        </div>
+                    </t>
+                    <div class="d-flex align-items-center gap-2">
+                        <b>Amount:</b>
+                        <pre class="user-select-all mb-0" t-field="tx_sudo.amount"/>
+                    </div>
+                    <t t-if="communication">
+                        <div class="d-flex align-items-center gap-2">
+                            <b>Communication:</b>
+                            <pre t-out="communication" class="user-select-all mb-0"/>
+                        </div>
+                    </t>
+                </div>
+            </div>
+            <t t-if="qr_code">
+                <div class="position-relative order-2 d-flex flex-md-column justify-content-center align-items-center align-items-md-stretch w-100 w-md-auto">
+                    <h6 class="my-1 my-md-3 px-3 px-md-0 text-muted">OR</h6>
+                </div>
+                <div class="o_qr_code_card card order-1 order-md-3 flex-shrink-0">
+                    <div class="card-body d-flex flex-column align-items-center justify-content-center pb-3">
+                        <img class="mb-2 border border-dark rounded" t-att-src="qr_code"/>
+                        <small class="text-center text-wrap lh-sm">
+                            Scan me in your banking app
+                        </small>
+                    </div>
+                </div>
+            </t>
+        </div>
     </template>
 
 </odoo>
