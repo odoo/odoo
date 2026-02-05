@@ -30,7 +30,7 @@ class KsefApiService:
     def _get_api_url(self):
         """Gets the correct KSeF API URL from the company's settings."""
         if self.mode == 'prod':
-            return 'https://ksef.mf.gov.pl/api/v2'
+            return 'https://api.ksef.mf.gov.pl/v2'
         return 'https://api-test.ksef.mf.gov.pl/v2'
 
     def _make_headers(self, token):
