@@ -52,10 +52,26 @@ const testEditorWithHighlightedContent = async (config) =>
     await testEditor({
         ...config,
         compareFunction: compareHighlightedContent,
-        config: configWithEmbeddings,
+        config: {
+            ...configWithEmbeddings,
+            // Reduce the syntax highlighting limit for tests.
+            // Real limit (e.g. 1 million characters) is too large to use
+            // in unit test, so use smaller value to reliably test behavior.
+            syntaxHighlightingTextLimit: 50,
+        },
     });
 
 beforeEach(patchPrism);
+
+test("should not syntax-highlight when content exceeds the highlighting limit", async () => {
+    await testEditorWithHighlightedContent({
+        contentBefore: "<p>[]Lorem ipsum dolor sit amet consectetur adipiscing elit</p>", // exceeds limit
+        stepFunction: async (editor) => {
+            await insertPre(editor);
+        },
+        contentAfter: "<pre>[]Lorem ipsum dolor sit amet consectetur adipiscing elit</pre>",
+    });
+});
 
 test("starting edition with a pre activates syntax highlighting", async () => {
     await testEditorWithHighlightedContent({

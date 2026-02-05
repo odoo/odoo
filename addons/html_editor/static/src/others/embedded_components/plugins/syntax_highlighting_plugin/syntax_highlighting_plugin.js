@@ -23,6 +23,9 @@ export class SyntaxHighlightingPlugin extends Plugin {
         "protectedNode",
         "embeddedComponents",
     ];
+    static defaultConfig = {
+        syntaxHighlightingTextLimit: 1_000_000,
+    };
     /** @type {import("plugins").EditorResources} */
     resources = {
         // Ensure focus can be preserved within the textarea:
@@ -127,6 +130,12 @@ export class SyntaxHighlightingPlugin extends Plugin {
             (pre) => !pre.closest(CODE_BLOCK_SELECTOR)
         );
         for (const pre of nonEmbeddedPres) {
+            // Do not convert large <pre> elements into syntax-highlighted
+            // components. If the content exceeds the defined limit, original
+            // <pre> is preserved to avoid performance issues.
+            if (pre.textContent.length > this.config.syntaxHighlightingTextLimit) {
+                continue;
+            }
             const isPreInSelection = !targetedNodes.some((node) => !pre.contains(node));
             const embeddedProps = JSON.stringify(
                 Object.assign(
