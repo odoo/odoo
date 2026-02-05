@@ -3,6 +3,7 @@
 
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
+from odoo import Command
 
 
 class TestMultistepManufacturing(TestMrpCommon):
@@ -206,3 +207,39 @@ class TestMultistepManufacturing(TestMrpCommon):
         self.assertFalse(self.sale_order.picking_ids.move_ids.move_orig_ids)
         self.sale_order.picking_ids.action_assign()
         self.assertEqual(self.sale_order.picking_ids.move_ids.quantity, 1.0)
+
+    def test_mto_child_mo_creation(self):
+        """
+        Ensure that when selling two different products sharing the same
+        sub-component BOM, each generates its own child MO instead of
+        merging them into a single child MO.
+        """
+        route_ids = [self.warehouse.manufacture_pull_id.route_id.id, self.warehouse.mto_pull_id.route_id.id]
+        wooden_rod, wooden_arrow = self.env["product.product"].create(
+            [
+                {"name": "Wooden Rod", "route_ids": [Command.set(route_ids)]},
+                {"name": "Wooden Arrow", "route_ids": [Command.set(route_ids)]},
+            ],
+        )
+
+        arrow_bom = self.make_bom(wooden_arrow, self.product_manu)
+        rod_bom = self.make_bom(wooden_rod, self.product_manu)
+        (arrow_bom | rod_bom).type = 'normal'
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': wooden_rod.id,
+                    'product_uom_qty': 1,
+                }),
+                Command.create({
+                    'product_id': wooden_arrow.id,
+                    'product_uom_qty': 1,
+                }),
+            ],
+        })
+        so.action_confirm()
+        self.assertEqual(so.mrp_production_count, 2)
+        self.assertEqual(so.mrp_production_ids[0].mrp_production_child_count, 1)
+        self.assertEqual(so.mrp_production_ids[1].mrp_production_child_count, 1)
