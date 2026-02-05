@@ -22,6 +22,13 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             // Click on Configurable Chair product
             ProductScreen.clickDisplayedProduct("Configurable Chair"),
 
+            [
+                {
+                    content: "Check that metal, leather chair variant is disabled",
+                    trigger: `.modal footer button.disabled`,
+                },
+            ],
+
             // Pick Color
             ProductConfigurator.pickColor("Red"),
 

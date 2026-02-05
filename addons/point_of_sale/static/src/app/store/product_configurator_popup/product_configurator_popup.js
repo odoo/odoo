@@ -220,15 +220,16 @@ export class ProductConfiguratorPopup extends Component {
         if (variantAttributeValueIds.length === 0) {
             return false;
         }
-        return this.props.product._isArchivedCombination(variantAttributeValueIds);
+        return this.props.product._isArchivedCombination(
+            variantAttributeValueIds,
+            this.pos.productAttributesExclusion
+        );
     }
     getVariantAttributeValueIds() {
         const attribute_value_ids = [];
         this.state.payload.forEach((att_component) => {
             const { valueIds } = att_component.getValue();
-            if (att_component.attributeLine.attribute_id.create_variant === "always") {
-                attribute_value_ids.push(valueIds);
-            }
+            attribute_value_ids.push(valueIds);
         });
         return attribute_value_ids.flat();
     }

@@ -27,7 +27,7 @@ test("apply 'Signature' command", async () => {
     await press("enter");
     await tick();
     expect(getContent(el)).toBe(
-        `<p>ab</p><div class="o-signature-container"><h1>Hello[]</h1></div><p>cd</p>`
+        `<p>ab</p><div class="o-signature-container" data-o-mail-quote="1"><h1>Hello[]</h1></div><p>cd</p>`
     );
 });
 
@@ -38,7 +38,7 @@ test("undo a 'Signature' command", async () => {
     await press("enter");
     await tick();
     expect(getContent(el)).toBe(
-        `<p>abtest</p><div class="o-signature-container"><h1>Hello[]</h1></div><p>cd</p>`
+        `<p>abtest</p><div class="o-signature-container" data-o-mail-quote="1"><h1>Hello[]</h1></div><p>cd</p>`
     );
 
     undo(editor);

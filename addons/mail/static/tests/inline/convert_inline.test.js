@@ -9,6 +9,7 @@ import {
     listGroupToTable,
     normalizeColors,
     normalizeRem,
+    splitSelectors,
 } from "@mail/views/web/fields/html_mail_field/convert_inline";
 import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
 import { enableTransitions } from "@odoo/hoot-mock";
@@ -1491,5 +1492,21 @@ describe("Properly add MSO conditions", () => {
         ).toEqual(`[if mso]><div>efgh</div><![endif]`, {
             message: "Should remove nested mso hide condition",
         });
+    });
+});
+
+describe("splitSelectors method", () => {
+    test("no parentheses", async () => {
+        expect(splitSelectors("abc, def, ghi")).toEqual(["abc", "def", "ghi"]);
+    });
+    test("one depth parentheses", async () => {
+        expect(splitSelectors("abc:has(xyz), def, ghi")).toEqual(["abc:has(xyz)", "def", "ghi"]);
+    });
+    test("two depth parentheses", async () => {
+        expect(splitSelectors("abc:has(xyz:not(.ooo)), def, ghi")).toEqual([
+            "abc:has(xyz:not(.ooo))",
+            "def",
+            "ghi",
+        ]);
     });
 });

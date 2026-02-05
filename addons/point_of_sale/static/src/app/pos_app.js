@@ -95,6 +95,7 @@ export class Chrome extends Component {
                         data: customerDisplayData,
                     },
                 }),
+                targetAddressSpace: odoo.use_lna ? "local" : undefined,
             }).catch(() => {
                 console.log("Failed to send data to customer display");
             });

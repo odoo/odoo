@@ -1176,5 +1176,16 @@ QUnit.module('convert_inline', {}, function () {
         $styleSheet.remove();
     });
 });
+QUnit.module('splitSelectors', {}, function () {
+    QUnit.test('no parentheses', async function (assert) {
+        assert.deepEqual(convertInline.splitSelectors("abc, def, ghi"), ["abc", "def", "ghi"]);
+    });
+    QUnit.test('one depth parentheses', async function (assert) {
+        assert.deepEqual(convertInline.splitSelectors("abc:has(xyz), def, ghi"), ["abc:has(xyz)", "def", "ghi"]);
+    });
+    QUnit.test('two depth parentheses', async function (assert) {
+        assert.deepEqual(convertInline.splitSelectors("abc:has(xyz:not(.ooo)), def, ghi"), ["abc:has(xyz:not(.ooo))", "def", "ghi"]);
+    });
+});
 
 });

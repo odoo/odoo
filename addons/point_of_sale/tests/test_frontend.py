@@ -658,6 +658,14 @@ class TestUi(TestPointOfSaleHttpCommon):
         configurable_product = self.env['product.product'].search([('name', '=', 'Configurable Chair'), ('available_in_pos', '=', 'True')], limit=1)
         fabrics_line = configurable_product.attribute_line_ids[2]
         fabrics_line.product_template_value_ids[1].ptav_active = False
+        leather_ptav = fabrics_line.product_template_value_ids[0]
+        metal_ptav = configurable_product.attribute_line_ids[1].product_template_value_ids[0]
+
+        # Create an attribute exclusion for metal, leather chair
+        leather_ptav.exclude_for = [Command.create({
+            'product_tmpl_id': configurable_product.product_tmpl_id.id,
+            'value_ids': [Command.set([metal_ptav.id])],
+        })]
         self.pos_user.write({
             'groups_id': [
                 (4, self.env.ref('stock.group_stock_manager').id),
