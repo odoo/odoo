@@ -4707,7 +4707,10 @@ class BaseModel(metaclass=MetaModel):
         # add order and limits
         if order:
             query.order = self._order_to_sql(query.table, order)
-        if limit is not None:
+
+        # In RPC, None is not available; False is used instead to mean "no limit"
+        # Note: True is kept for backward-compatibility (treated as 1)
+        if limit is not None and limit is not False:
             query.limit = limit
         if offset is not None:
             query.offset = offset
