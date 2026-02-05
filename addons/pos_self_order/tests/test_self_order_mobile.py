@@ -7,6 +7,7 @@ from urllib.parse import urlparse
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 from unittest.mock import patch
 from datetime import datetime
+from odoo import Command
 
 
 @odoo.tests.tagged("post_install", "-at_install")
@@ -243,7 +244,16 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         self.start_tour(self_route, "test_sub_categories_products_displayed")
 
     def test_mobile_self_order_preparation_changes(self):
+        printer = self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+        })
+
         self.pos_config.write({
+            'is_order_printer': True,
+            'printer_ids': [Command.set([printer.id])],
             'self_ordering_mode': 'mobile',
             'self_ordering_pay_after': 'each',
             'self_ordering_service_mode': 'table',
@@ -260,7 +270,8 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         self.assertEqual(len(order.lines), 2)
 
         # Check self-order in pos-terminal are not prompted for Send-for-Preparation
-        self.start_tour('/pos/ui?config_id=%d' % self.pos_config.id, 'test_pos_self_order_preparation_changes', login='pos_user')
+        self.start_tour('/pos/ui?config_id=%d' % self.pos_config.id, 'test_pos_self_order_preparation_changes_from_ticket_screen', login='pos_user')
+        self.start_tour('/pos/ui?config_id=%d' % self.pos_config.id, 'test_pos_self_order_preparation_changes_from_register_screen', login='pos_user')
 
     def test_self_order_table_sharing(self):
         """
