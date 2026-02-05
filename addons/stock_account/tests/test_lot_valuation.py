@@ -792,3 +792,44 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertRecordValues(delivery.move_ids, [
             {'quantity': 5.0, 'state': 'done', 'lot_ids': self.lot1.ids}
         ])
+
+    def test_in_move_lot_valuated_standard_price(self):
+        """Check that when the standard price is used to value a move
+        with a single lot, the standard price of the lot is used instead of the
+        standard price of the product
+        """
+        lot_product = self.product_avco_auto
+        lot_product.write({
+            'lot_valuated': True,
+            'tracking': 'lot',
+        })
+        lot1, lot2 = self.env['stock.lot'].create([
+            {'name': 'lot1', 'product_id': lot_product.id},
+            {'name': 'lot2', 'product_id': lot_product.id},
+        ])
+        self._make_in_move(lot_product, 1, 10, lot_ids=[lot1])
+        self._make_in_move(lot_product, 1, 16, lot_ids=[lot2])
+        self.assertEqual(lot_product.standard_price, 13)
+        self.assertEqual(lot1.standard_price, 10)
+        self.assertEqual(lot2.standard_price, 16)
+
+        # not using _make_in_move to not a create a product.value linked to this move
+        move = self.env['stock.move'].create({
+            'product_id': lot_product.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_uom': self.uom.id,
+            'product_uom_qty': 1,
+            'picking_type_id': self.picking_type_in.id,
+            'move_line_ids': [Command.create({
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'quantity': 1,
+                'product_id': lot_product.id,
+                'lot_id': lot1.id,
+            })]
+        })
+        move.picked = True
+        move._action_done()
+        self.assertEqual(lot1.standard_price, 10)
+        self.assertEqual(lot_product.standard_price, 12)
