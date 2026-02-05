@@ -47,6 +47,11 @@ registry.category("web_tour.tours").add("version_timeline_auto_save_tour", {
             run: "click",
         },
         {
+            content: "Wait the form is dirty and click on save button",
+            trigger: "body:has(.o_form_dirty) .o_form_button_save",
+            run: "click",
+        },
+        {
             content: "Wait until the form is saved",
             trigger: "body .o_form_saved",
         },

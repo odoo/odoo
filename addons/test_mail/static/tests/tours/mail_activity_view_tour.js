@@ -33,8 +33,7 @@ const checkRows = (values) => ({
     },
 });
 
-registry.category("web_tour.tours").add("mail_activity_view", {
-    undeterministicTour_doNotCopy: true,
+registry.category("web_tour.tours").add("mail_activity_view_tour", {
     steps: () => [
         {
             content: "Open the debug menu",

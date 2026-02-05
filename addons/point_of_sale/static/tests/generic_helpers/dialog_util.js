@@ -20,10 +20,12 @@ export function cancel({ title } = {}) {
         run: "click",
     };
 }
-export function discard() {
+export function discard({ title } = {}) {
     return {
         content: "discard dialog",
-        trigger: `.modal .modal-footer button:contains("Discard")`,
+        trigger: `.modal${
+            title ? `:has(.modal-title:contains(${title}))` : ``
+        } .modal-footer button:contains("Discard")`,
         run: "click",
     };
 }

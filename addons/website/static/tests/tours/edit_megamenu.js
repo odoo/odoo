@@ -375,8 +375,6 @@ const openMenu = () => ({
 registerWebsitePreviewTour(
     "edit_megamenu_visibility",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        url: "/",
         edition: true,
     },
     () => [

@@ -1,8 +1,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("test_website_page_manager", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    url: "/odoo/action-test_website.action_test_model_multi_website",
     steps: () => [
         // Part 1: check that the website filter is working
         {

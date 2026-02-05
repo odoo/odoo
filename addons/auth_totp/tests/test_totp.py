@@ -119,7 +119,7 @@ class TestTOTP(TestTOTPMixin, HttpCase):
         self.assertEqual(r['login'], 'test_user')
 
     def test_totp_administration(self):
-        self.start_tour('/web', 'totp_tour_setup', login='test_user')
+        self.start_tour('/odoo', 'totp_tour_setup', login='test_user')
         # If not enabled (like in demo data), landing on res.config will try
         # to disable module_sale_quotation_builder and raise an issue
         group_order_template = self.env.ref('sale_management.group_sale_order_template', raise_if_not_found=False)

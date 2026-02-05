@@ -15,8 +15,6 @@ const snippet = {
 registerWebsitePreviewTour(
     "website_replace_grid_image",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        url: "/",
         edition: true,
     },
     () => [
