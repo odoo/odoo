@@ -2078,9 +2078,8 @@ class MailCommon(MailCase):
         """ Remove store user data dependant on other modules if they are not not installed.
         Not written in a modular way to avoid complex override for a simple test tool.
         """
-        for data in users_data:
-            if "hr.leave" not in self.env:
-                data.pop("leave_date_to", None)
+        if "hr.employee" not in self.env:
+            for data in users_data:
                 data.pop("employee_ids", None)
         return list(users_data)
 

@@ -39,7 +39,7 @@ class TestLivechatHrHolidays(HttpCase, MailCommon):
         livechat_channel = self.env["im_livechat.channel"].create(
             {"name": "support", "user_ids": [Command.link(self.user_employee.id)]}
         )
-        self.assertEqual(self.user_employee.im_status, "leave_online")
+        self.assertTrue(self.user_employee.leave_date_to)
         self.assertEqual(livechat_channel.available_operator_ids, self.user_employee)
 
     def test_operator_limit_on_leave(self):
@@ -53,5 +53,5 @@ class TestLivechatHrHolidays(HttpCase, MailCommon):
             }
         )
         self.make_jsonrpc_request("/im_livechat/get_session", {"channel_id": livechat_channel.id})
-        self.assertEqual(self.user_employee.im_status, "leave_online")
+        self.assertTrue(self.user_employee.leave_date_to)
         self.assertFalse(livechat_channel.available_operator_ids)

@@ -13,9 +13,15 @@ test("on leave members are categorised correctly in online/offline", async () =>
         { name: "On Leave Online", im_status: "online" },
         { name: "On Leave Idle", im_status: "away" },
     ]);
-    pyEnv["res.users"].write([serverState.userId], { leave_date_to: "2023-01-02" });
-    pyEnv["res.users"].create({ partner_id: partnerId2, leave_date_to: "2023-01-03" });
-    pyEnv["res.users"].create({ partner_id: partnerId3, leave_date_to: "2023-01-04" });
+    const [userId2, userId3] = pyEnv["res.users"].create([
+        { partner_id: partnerId2 },
+        { partner_id: partnerId3 },
+    ]);
+    pyEnv["hr.employee"].create([
+        { user_id: serverState.userId, leave_date_to: "2023-01-02" },
+        { user_id: userId2, leave_date_to: "2023-01-03" },
+        { user_id: userId3, leave_date_to: "2023-01-04" },
+    ]);
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChanel",
         channel_member_ids: [

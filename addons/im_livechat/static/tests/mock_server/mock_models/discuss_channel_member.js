@@ -60,9 +60,9 @@ export class DiscussChannelMember extends mailModels.DiscussChannelMember {
                     "active",
                     "avatar_128",
                     "country_id",
-                    "im_status",
                     "is_public",
                     "user_livechat_username",
+                    ...this.env["res.partner"]._get_store_im_status_fields(),
                 ];
                 if (member.livechat_member_type == "visitor") {
                     fields.push("offline_since", "email");

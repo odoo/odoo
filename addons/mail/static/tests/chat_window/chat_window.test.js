@@ -494,7 +494,7 @@ test("chat window should open when receiving a new DM", async () => {
     );
     await contains(".o-mail-ChatBubble");
     await contains(".o-mail-ChatBubble-counter:text('1')");
-    await contains(".o-mail-ChatBubble .o-mail-ImStatus[title='Online']");
+    await contains(".o-mail-ChatBubble .o-mail-ImStatus[title='User is online']");
     await assertChatBubbleAndWindowImStatus("DemoUser", 1);
 });
 

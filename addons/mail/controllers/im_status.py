@@ -14,7 +14,6 @@ class ImStatusController(http.Controller):
         user._bus_send(
             "bus.bus/im_status_updated",
             {
-                "debounce": False,
                 "im_status": user.partner_id.im_status,
                 "partner_id": user.partner_id.id,
             },

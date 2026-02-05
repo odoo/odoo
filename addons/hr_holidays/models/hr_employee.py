@@ -644,6 +644,10 @@ class HrEmployee(models.Model):
         super()._store_avatar_card_fields(res)
         res.attr("leave_date_to")
 
+    def _store_im_status_fields(self, res: Store.FieldList):
+        super()._store_im_status_fields(res)
+        res.attr("leave_date_to")
+
     def _get_hours_for_date(self, target_date, day_period=None):
         """
         An instance method on a calendar to get the start and end float hours for a given date.

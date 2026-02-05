@@ -8,8 +8,9 @@ defineHrHolidaysModels();
 
 test("thread icon of a chat when correspondent is on leave & online", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ im_status: "online", name: "Demo" });
-    pyEnv["res.users"].create({ partner_id: partnerId, leave_date_to: "2023-01-01" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "online" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    pyEnv["hr.employee"].create({ leave_date_to: "2023-01-01", user_id: userId });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
@@ -20,15 +21,16 @@ test("thread icon of a chat when correspondent is on leave & online", async () =
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", {
-        contains: [".o-mail-ThreadIcon.fa-plane[title='On Leave (Online)']"],
+        contains: [".o-mail-ThreadIcon.fa-plane[title='User is on leave and online']"],
         text: "Demo",
     });
 });
 
 test("thread icon of a chat when correspondent is on leave & away", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ im_status: "away", name: "Demo" });
-    pyEnv["res.users"].create({ partner_id: partnerId, leave_date_to: "2023-01-01" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "away" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    pyEnv["hr.employee"].create({ leave_date_to: "2023-01-01", user_id: userId });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
@@ -39,15 +41,16 @@ test("thread icon of a chat when correspondent is on leave & away", async () => 
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", {
-        contains: [".o-mail-ThreadIcon.fa-plane[title='On Leave (Idle)']"],
+        contains: [".o-mail-ThreadIcon.fa-plane[title='User is on leave and idle']"],
         text: "Demo",
     });
 });
 
 test("thread icon of a chat when correspondent is on leave & offline", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ im_status: "offline", name: "Demo" });
-    pyEnv["res.users"].create({ partner_id: partnerId, leave_date_to: "2023-01-01" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "offline" });
+    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+    pyEnv["hr.employee"].create({ leave_date_to: "2023-01-01", user_id: userId });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
@@ -58,7 +61,7 @@ test("thread icon of a chat when correspondent is on leave & offline", async () 
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", {
-        contains: [".o-mail-ThreadIcon.fa-plane[title='On Leave']"],
+        contains: [".o-mail-ThreadIcon.fa-plane[title='User is on leave']"],
         text: "Demo",
     });
 });

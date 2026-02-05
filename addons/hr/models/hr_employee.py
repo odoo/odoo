@@ -2052,6 +2052,9 @@ class HrEmployee(models.Model):
         res.extend(["company_id", "hr_icon_display", "job_title", "name", "show_hr_icon_display"])
         res.extend(["work_email", "work_phone"])
 
+    def _store_im_status_fields(self, res: Store.FieldList):
+        pass
+
     @api.depends('bank_account_ids')
     def _compute_primary_bank_account_id(self):
         for employee in self:

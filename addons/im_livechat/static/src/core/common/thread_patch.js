@@ -17,7 +17,7 @@ patch(Thread.prototype, {
                     return;
                 }
                 clearTimeout(this.imStatusTimeoutId);
-                if (this.props.thread.livechatVisitorMember.im_status.includes("offline")) {
+                if (this.props.thread.livechatVisitorMember.im_status === "offline") {
                     this.imStatusTimeoutId = setTimeout(
                         () => (this.state.isVisitorOffline = true),
                         this.IM_STATUS_DELAY

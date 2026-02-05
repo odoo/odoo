@@ -12,34 +12,36 @@ defineHrHolidaysModels();
 test("change icon on change partner im_status for leave variants", async () => {
     const pyEnv = await startServer();
     pyEnv["res.partner"].write([serverState.partnerId], { im_status: "online" });
-    pyEnv["res.users"].write([serverState.userId], { leave_date_to: "2023-01-01" });
+    pyEnv["hr.employee"].create({ user_id: serverState.userId, leave_date_to: "2023-01-01" });
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     patchWithCleanup(Store, { IM_STATUS_DEBOUNCE_DELAY: 0 });
     await start();
     await openDiscuss(channelId);
     await contains(
-        ".o-mail-DiscussContent-header .o-mail-ImStatus.fa-plane[title='On Leave (Online)']"
+        ".o-mail-DiscussContent-header .o-mail-ImStatus.fa-plane[title='User is on leave and online']"
     );
     pyEnv["bus.bus"]._sendone("broadcast", "bus.bus/im_status_updated", {
         partner_id: serverState.partnerId,
-        im_status: "leave_offline",
+        im_status: "offline",
         presence_status: "offline",
     });
-    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus.fa-plane[title='On Leave']");
+    await contains(
+        ".o-mail-DiscussContent-header .o-mail-ImStatus.fa-plane[title='User is on leave']"
+    );
     pyEnv["bus.bus"]._sendone("broadcast", "bus.bus/im_status_updated", {
         partner_id: serverState.partnerId,
-        im_status: "leave_away",
+        im_status: "away",
         presence_status: "away",
     });
     await contains(
-        ".o-mail-DiscussContent-header .o-mail-ImStatus.fa-plane[title='On Leave (Idle)']"
+        ".o-mail-DiscussContent-header .o-mail-ImStatus.fa-plane[title='User is on leave and idle']"
     );
     pyEnv["bus.bus"]._sendone("broadcast", "bus.bus/im_status_updated", {
         partner_id: serverState.partnerId,
-        im_status: "leave_online",
+        im_status: "online",
         presence_status: "online",
     });
     await contains(
-        ".o-mail-DiscussContent-header .o-mail-ImStatus.fa-plane[title='On Leave (Online)']"
+        ".o-mail-DiscussContent-header .o-mail-ImStatus.fa-plane[title='User is on leave and online']"
     );
 });

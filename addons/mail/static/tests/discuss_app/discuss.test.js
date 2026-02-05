@@ -349,13 +349,13 @@ test("sidebar: chat im_status rendering", async () => {
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel .o-mail-ThreadIcon", { count: 3 });
     await contains(".o-mail-DiscussSidebarChannel:has(:text('Partner1'))", {
-        contains: [".o-mail-ThreadIcon[title='Offline']"],
+        contains: [".o-mail-ThreadIcon[title='User is offline']"],
     });
     await contains(".o-mail-DiscussSidebarChannel:has(:text('Partner2'))", {
         contains: [".fa-circle.text-success"],
     });
     await contains(".o-mail-DiscussSidebarChannel:has(:text('Partner3'))", {
-        contains: [".o-mail-ThreadIcon[title='Idle']"],
+        contains: [".o-mail-ThreadIcon[title='User is idle']"],
     });
 });
 
@@ -1818,17 +1818,17 @@ test("Partner IM status is displayed as thread icon in top bar of channels of ty
     await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel-itemName:text('Michel Online')");
-    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='Online']");
+    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is online']");
     await click(".o-mail-DiscussSidebarChannel-itemName:text('Jacqueline Offline')");
-    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='Offline']");
+    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is offline']");
     await click(".o-mail-DiscussSidebarChannel-itemName:text('Nabuchodonosor Idle')");
-    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='Idle']");
+    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is idle']");
     await click(".o-mail-DiscussSidebarChannel-itemName:text('Robert Fired')");
     await contains(
         ".o-mail-DiscussContent-header .o-mail-ImStatus[title='No IM status available']"
     );
     await click(".o-mail-DiscussSidebarChannel-itemName:text('OdooBot')");
-    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='Bot']");
+    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is a bot']");
 });
 
 test("Thread avatar image is displayed in top bar of channels of type 'group'", async () => {

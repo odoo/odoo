@@ -17,14 +17,3 @@ class ResUsers(models.Model):
 
     def _get_employee_fields_to_sync(self):
         return super()._get_employee_fields_to_sync() + DAYS
-
-    def _compute_im_status(self):
-        super()._compute_im_status()
-        dayfield = self.env['hr.employee']._get_current_day_location_field()
-        for user in self:
-            location_type = user[dayfield].location_type
-            if not location_type:
-                continue
-            im_status = user.im_status
-            if im_status in ["online", "away", "busy", "offline"]:
-                user.im_status = "presence_" + location_type + "_" + im_status

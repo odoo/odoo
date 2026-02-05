@@ -106,7 +106,7 @@ export class DiscussChannelRtcSession extends models.ServerModel {
                         fields: ["channel"].concat(
                             this.env["discuss.channel.member"]._to_store_persona([
                                 "name",
-                                "im_status",
+                                ...this.env["res.partner"]._get_store_im_status_fields(),
                             ])
                         ),
                     })

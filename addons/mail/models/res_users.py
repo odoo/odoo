@@ -404,6 +404,9 @@ class ResUsers(models.Model):
     def _store_main_user_fields(self, res: Store.FieldList):
         res.attr("share")
 
+    def _store_im_status_fields(self, res: Store.FieldList):
+        res.attr("id")
+
     @api.model
     def _get_activity_groups(self):
         search_limit = self.env['ir.config_parameter'].sudo().get_int('mail.activity.systray.limit') or 1000
