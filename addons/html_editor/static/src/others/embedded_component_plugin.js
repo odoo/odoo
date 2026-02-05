@@ -31,7 +31,7 @@ export class EmbeddedComponentPlugin extends Plugin {
         restore_savepoint_handlers: () => this.handleComponents(this.editable),
         history_reset_handlers: () => this.handleComponents(this.editable),
         history_reset_from_steps_handlers: () => this.handleComponents(this.editable),
-        step_added_handlers: ({ stepCommonAncestor }) => this.handleComponents(stepCommonAncestor),
+        step_added_handlers: () => this.handleComponents(this.editable),
         external_step_added_handlers: () => this.handleComponents(this.editable),
 
         serializable_descendants_processors: this.processDescendantsToSerialize.bind(this),
