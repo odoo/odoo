@@ -1931,6 +1931,7 @@ class HrEmployee(models.Model):
                 datetime.combine(fields.Date.from_string(tmp_date_from), time.min, tzinfo=UTC),
                 datetime.combine(fields.Date.from_string(tmp_date_to), time.max, tzinfo=UTC),
                 self.company_id,
+                self.resource_id,
             ))
         return unusual_days
 
