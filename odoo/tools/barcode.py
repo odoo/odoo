@@ -3,6 +3,70 @@
 
 import re
 
+try:
+    from reportlab.graphics.barcode.ecc200datamatrix import ECC200DataMatrix
+except ImportError:
+    ECC200DataMatrix = None
+
+
+def datamatrix_encode_ascii(value):
+    """Encode ASCII data in a list of integer of ASCII value + 1.
+    Digit pairs are encoded as 130 + numeric value.
+    https://en.wikipedia.org/wiki/Data_Matrix#Encoding
+    https://www.icao.int/publications/Documents/9303_p13_cons_en.pdf
+
+    :param str value: the value to encode
+    :yield int: encoded codeword
+    """
+    i = 0
+    while i < len(value):
+        c = value[i]
+        if c.isdigit() and i + 1 < len(value) and value[i + 1].isdigit():
+            yield 130 + int(value[i : i + 2])
+            i += 2
+        else:
+            yield ord(c) + 1
+            i += 1
+
+
+def _encode_c40(self, value):
+    encoded = []
+    for c in value:
+        c40_char = self._encode_c40_char(c)
+        encoded.extend(c40_char)
+
+    # First codeword is to Switch to C40 encodation
+    codewords = [230]
+
+    # C40 encode chunks of 3 alphanumeric characters into 2 bytes.
+    # When the last chunk is not 3 bytes wide, it must be encoded in ASCII mode.
+    length, remaining = divmod(len(encoded), 3)
+    for i in range(length):
+        total = encoded[i * 3] * 1600 + encoded[i * 3 + 1] * 40 + encoded[i * 3 + 2] + 1
+        codewords.extend(divmod(total, 256))
+
+    codewords.append(254)  # Switch to ASCII encodation
+    if remaining:
+        index = 1 if remaining == len(c40_char) == 2 else remaining
+        # encode remaining data in ASCII mode
+        codewords.extend(datamatrix_encode_ascii(value[-index:]))
+
+    if len(codewords) > self.cw_data:
+        raise Exception("Too much data to fit into a data matrix of this size")
+
+    if len(codewords) < self.cw_data:
+        codewords.append(129)  # End of data
+        # Add padding to fill the datamatrix entirely
+        while len(codewords) < self.cw_data:
+            r = ((149 * (len(codewords) + 1)) % 253) + 1
+            codewords.append((129 + r) % 254)
+
+    return codewords
+
+
+if ECC200DataMatrix is not None:
+    ECC200DataMatrix._encode_c40 = _encode_c40
+
 
 def get_barcode_check_digit(numeric_barcode):
     """ Computes and returns the barcode check digit. The used algorithm
