@@ -1,3 +1,8 @@
+import {
+    loadingEffectEventTypes,
+    registerInteractionDeferred,
+} from "@web/public/buffer_interaction_events";
+
 /**
  * This is a mini framework designed to make it easy to describe the dynamic
  * content of a "interaction".
@@ -25,6 +30,9 @@ export class Colibri {
         this.core = core;
         this.interaction = new I(el, core.env, this);
         this.setupInteraction();
+
+        this.interactionDeferred = Promise.withResolvers();
+        registerInteractionDeferred(this.interactionDeferred);
     }
 
     setupInteraction() {
@@ -40,10 +48,13 @@ export class Colibri {
     }
 
     startInteraction(content) {
+        let toReplay = [];
         if (content) {
-            this.processContent(content);
+            toReplay = this.processContent(content);
             this.updateContent();
         }
+        this.interactionDeferred.bufferedEvents = toReplay;
+        this.interactionDeferred.resolve();
         this.interaction.start();
         this.hasStarted = true;
     }
@@ -267,6 +278,7 @@ export class Colibri {
     }
 
     processContent(content) {
+        const toReplay = [];
         for (const sel in content) {
             if (sel.startsWith("t-")) {
                 throw new Error(
@@ -286,6 +298,9 @@ export class Colibri {
                 if (directive.startsWith("t-on-")) {
                     const ev = directive.slice(5);
                     const [event, handler, options] = this.addListener(nodes, ev, value);
+                    if (ev in loadingEffectEventTypes) {
+                        toReplay.push([sel, ev]);
+                    }
                     this.mapSelectorToListeners(sel, event, handler, options);
                 } else if (directive.startsWith("t-att-")) {
                     const attr = directive.slice(6);
@@ -314,6 +329,7 @@ export class Colibri {
                 }
             }
         }
+        return toReplay;
     }
 
     updateContent() {
