@@ -8,7 +8,8 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <field name="datas" widget="image" nolabel="True"/>
+                    <field name="datas" widget="image" nolabel="True"
+                           options='{"accepted_file_extensions": "application/pdf,image/png,image/tiff,image/svg+xml,image/jpeg"}'/>
                 </sheet>
             </form>
         </field>

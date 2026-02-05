@@ -21,7 +21,7 @@ class ProductDocument(models.Model):
             raise UserError(_("Print images must be set on products before they can be ordered."))
 
         query_string = f'access_token={self.ir_attachment_id.generate_access_token()[0]}'
-        url = f'{self.get_base_url()}{self.ir_attachment_id.image_src}?{query_string}'
+        url = f'{self.get_base_url()}/web/content/{self.ir_attachment_id.id}?{query_string}'
         return {
             'type': self.name.lower(),  # Gelato requires lowercase types.
             'url': url,
