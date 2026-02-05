@@ -24,6 +24,7 @@ class RepairOrder(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin', 'product.catalog.mixin']
     _order = 'priority desc, create_date desc'
     _check_company_auto = True
+    _priority_field = 'priority'
 
     @api.model
     def _default_picking_type_id(self):

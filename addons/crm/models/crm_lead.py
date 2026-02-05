@@ -96,6 +96,7 @@ class CrmLead(models.Model):
     _primary_email = 'email_from'
     _check_company_auto = True
     _track_duration_field = 'stage_id'
+    _priority_field = 'priority'
 
     # Description
     name = fields.Char(

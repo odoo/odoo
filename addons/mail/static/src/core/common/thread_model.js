@@ -170,6 +170,10 @@ export class Thread extends Record {
      * when fetching newer messages.
      */
     pendingNewMessages = fields.Many("mail.message");
+    /** @type {'0'|'1'|'2'|'3'} */
+    priority;
+    /** @type {Array<[string,string]>} */
+    priority_definition;
     needactionMessages = fields.Many("mail.message", {
         inverse: "threadAsNeedaction",
         sort: (message1, message2) => message1.id - message2.id,

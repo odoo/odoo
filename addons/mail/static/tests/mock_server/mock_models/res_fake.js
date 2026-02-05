@@ -26,6 +26,15 @@ export class ResFake extends models.Model {
     partner_ids = fields.One2many({ relation: "res.partner", string: "Related partners" });
     phone = fields.Char({ string: "Phone number" });
     partner_id = fields.Many2one({ relation: "res.partner", string: "contact partner" });
+    priority = fields.Selection({
+        selection: [
+            ["0", "Low priority"],
+            ["1", "Medium priority"],
+            ["2", "High priority"],
+            ["3", "Urgent"],
+        ],
+        default: "0",
+    });
 
     _mail_get_partner_fields() {
         return ["partner_id"];
