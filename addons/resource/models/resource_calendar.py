@@ -366,6 +366,67 @@ class ResourceCalendar(models.Model):
         resources_per_tz = resource._get_resources_per_tz()
         return self._leave_intervals_batch(start_dt, end_dt, resources_per_tz=resources_per_tz, domain=domain)[resource.id]
 
+    def _public_leave_intervals_batch(self, start_dt, end_dt, resources_per_tz=None, domain=None):
+        """ Return only the global/public leave intervals in the given datetime range.
+            These are leaves where resource_id is False.
+        """
+        assert start_dt.tzinfo and end_dt.tzinfo
+
+        # Force the domain to only look for global leaves (resource_id = False)
+        if domain is None:
+            domain = [('time_type', '=', 'leave')]
+
+        domain = domain + [('resource_id', '=', False)]
+
+        if self:
+            domain = domain + [('calendar_id', 'in', [False] + self.ids)]
+
+        # 2. Identify all resources to be processed
+        all_resources = set()
+        if not resources_per_tz or self:
+            all_resources.add(self.env['resource.resource'])
+            resources_per_tz = resources_per_tz or {start_dt.tzinfo: self.env['resource.resource']}
+
+        if resources_per_tz:
+            for _, resources in resources_per_tz.items():
+                all_resources |= set(resources)
+
+        domain = domain + [
+            ('date_from', '<=', end_dt.astimezone(UTC).replace(tzinfo=None)),
+            ('date_to', '>=', start_dt.astimezone(UTC).replace(tzinfo=None)),
+            ('company_id', 'in',
+             [False] + ([r.company_id.id for r in all_resources if r.company_id] or [self.company_id.id])),
+        ]
+
+        result = defaultdict(list)
+        tz_dates = {}
+        all_leaves = self.env['resource.calendar.leaves'].search(domain)
+
+        for leave in all_leaves:
+            leave_company = leave.company_id
+            leave_date_from = leave.date_from
+            leave_date_to = leave.date_to
+
+            for tz, resources in resources_per_tz.items():
+                # Standardize the boundary dates for this timezone
+                if (tz, start_dt) not in tz_dates:
+                    tz_dates[tz, start_dt] = start_dt.astimezone(tz)
+                if (tz, end_dt) not in tz_dates:
+                    tz_dates[tz, end_dt] = end_dt.astimezone(tz)
+
+                start = tz_dates[tz, start_dt]
+                end = tz_dates[tz, end_dt]
+
+                dt0 = leave_date_from.astimezone(tz)
+                dt1 = leave_date_to.astimezone(tz)
+
+                for resource in resources:
+                    # Only apply if the company matches (or leave has no company)
+                    if not leave_company or (resource.company_id == leave_company):
+                        result[resource.id].append((max(start, dt0), min(end, dt1), leave))
+
+        return {r.id: Intervals(result[r.id]) for r in all_resources}
+
     def _leave_intervals_batch(self, start_dt, end_dt, resources_per_tz=None, domain=None):
         """ Return the leave intervals in the given datetime range.
             The returned intervals are expressed in specified tz or in the calendar's timezone.
