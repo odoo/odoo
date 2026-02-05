@@ -4,7 +4,7 @@ import urllib.parse
 __all__ = ['urljoin']
 
 
-def _contains_dot_segments(path: str) -> str:
+def _contains_dot_segments(path: str | bytes) -> bool:
     # most servers decode url before doing dot segment resolutions
     decoded_path = urllib.parse.unquote(path, errors='strict')
     return any(seg in ('.', '..') for seg in decoded_path.split('/'))
