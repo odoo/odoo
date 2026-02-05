@@ -13,6 +13,19 @@ export class BasePrinter {
         this.product_categories_ids = printer.product_categories_ids;
         this.pos_config_ids = printer.pos_config_ids;
         this.use_lna = printer.use_lna;
+        this.paperSize = printer.paper_size || 80;
+        this.timeout = printer.timeout || 3000;
+    }
+
+    get STYLE_MAPPING() {
+        return {
+            58: { fontSize: 22, maxWidth: 360 },
+            80: { fontSize: 22, maxWidth: 512 },
+        };
+    }
+
+    getStyle() {
+        return this.STYLE_MAPPING[this.paperSize];
     }
 
     async print(image) {

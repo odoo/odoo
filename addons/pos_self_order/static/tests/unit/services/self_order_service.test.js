@@ -419,6 +419,9 @@ describe("printOrderChanges", () => {
                 printedData.push(data.changes.data.map((line) => line.name));
                 return document.createElement("iframe");
             },
+            setIframeSizeFromPrinter(iframe, printer) {
+                return;
+            },
             async generateImage() {
                 return "fake_image_data";
             },

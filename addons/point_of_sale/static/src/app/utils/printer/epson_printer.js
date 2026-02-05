@@ -129,7 +129,21 @@ export class EpsonPrinter extends BasePrinter {
 
     get address() {
         const protocol = this.use_lna ? "http:" : "https:";
-        return `${protocol}//${this.printer_ip}/cgi-bin/epos/service.cgi?devid=local_printer&timeout=3000`;
+        return `${protocol}//${this.printer_ip}/cgi-bin/epos/service.cgi?devid=local_printer&timeout=${this.timeout}`;
+    }
+
+    get STYLE_MAPPING() {
+        const base = super.STYLE_MAPPING;
+        return {
+            ...base,
+            tm_u22_76: { maxWidth: 200, fontSize: 12 },
+            tm_u22_70: { maxWidth: 180, fontSize: 12 },
+            tm_u22_58: { maxWidth: 150, fontSize: 12 },
+            tm_u33_76: { maxWidth: 400, fontSize: 22 },
+            tm_u33_70: { maxWidth: 380, fontSize: 22 },
+            tm_p60_60: { maxWidth: 375, fontSize: 22 },
+            tm_l100_40: { maxWidth: 240, fontSize: 14 },
+        };
     }
 
     openCashbox() {
@@ -152,7 +166,7 @@ export class EpsonPrinter extends BasePrinter {
         const params = {
             method: "POST",
             body: processed,
-            signal: AbortSignal.timeout(3000),
+            signal: AbortSignal.timeout(this.timeout),
         };
 
         if (this.use_lna) {
