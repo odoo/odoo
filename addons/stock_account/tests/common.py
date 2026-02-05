@@ -347,7 +347,6 @@ class TestStockValuationCommon(BaseCommon):
             'property_valuation': 'real_time',
         })
 
-        # Clean context to avoid magic behavior later (e.g. copy with create_product_product to false)
         product_common_vals = {
             "standard_price": 10.0,
             "list_price": 20.0,

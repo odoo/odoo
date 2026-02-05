@@ -171,7 +171,7 @@ class ProductProduct(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         products = super().create(vals_list)
-        products._change_standard_price({product: 0 for product in products if product.standard_price})
+        products.with_context(valuation_date=datetime.min)._change_standard_price({product: 0 for product in products if product.standard_price})
         return products
 
     def write(self, vals):
@@ -192,6 +192,7 @@ class ProductProduct(models.Model):
 
     def _change_standard_price(self, old_price):
         product_values = []
+        date = self.env.context.get('valuation_date') or fields.Datetime.now()
         for product in self:
             if product.cost_method == 'fifo' or product.standard_price == old_price.get(product):
                 continue
@@ -199,7 +200,7 @@ class ProductProduct(models.Model):
                 'product_id': product.id,
                 'value': product.standard_price,
                 'company_id': product.company_id.id or self.env.company.id,
-                'date': fields.Datetime.now(),
+                'date': date,
                 'description': _('Price update from %(old_price)s to %(new_price)s by %(user)s',
                     old_price=old_price.get(product), new_price=product.standard_price, user=self.env.user.name)
             })
