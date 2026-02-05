@@ -354,11 +354,9 @@ let isBuilderOptionPatched = false;
 
 export function addBuilderOption(option) {
     if (!isBuilderOptionPatched) {
-        const getBuilderOptionsFromTemplate =
-            BuilderOptionsPlugin.prototype.getBuilderOptionsFromTemplate;
         patchWithCleanup(BuilderOptionsPlugin.prototype, {
-            getBuilderOptionsFromTemplate() {
-                const options = getBuilderOptionsFromTemplate.call(this);
+            computeBuilderOptionsFromTemplate() {
+                const options = super.computeBuilderOptionsFromTemplate();
                 return [...options, ...testBuilderOptions];
             },
         });

@@ -35,9 +35,7 @@
             t-att-exclude="replaceMediaOptionExclude"/>
     </xpath>
     <xpath expr="//replace_media_option" position="attributes">
-        <attribute name="t-attf-exclude">
-            {{replaceMediaOptionExclude}}, .o_wsale_product_images :is({{replaceMediaOptionSelector}})
-        </attribute>
+        <attribute name="t-attf-exclude" add=".o_wsale_product_images :is({{replaceMediaOptionSelector}})" separator=", "/>
     </xpath>
 </t>
 

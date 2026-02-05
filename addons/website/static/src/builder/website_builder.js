@@ -208,7 +208,7 @@ export class WebsiteBuilder extends Component {
         builderProps.config.builderOptionsTemplate = this.props.translation
             ? "website.TranslationBuilderOptions"
             : "website.BuilderOptions";
-        builderProps.config.builderOptionsRegistry = "website-options";
+        builderProps.config.builderOptionsRegistry = registry.category("website-options");
         return builderProps;
     }
 }

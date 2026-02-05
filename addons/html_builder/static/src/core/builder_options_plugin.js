@@ -13,6 +13,7 @@ import { BorderConfigurator } from "@html_builder/plugins/border_configurator_op
 import { ShadowOption } from "@html_builder/plugins/shadow_option";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
+import { omit } from "@web/core/utils/objects";
 
 /** @typedef {import("@html_builder/core/utils").BaseOptionComponent} BaseOptionComponent */
 /** @typedef {import("@odoo/owl").Component} Component */
@@ -166,14 +167,11 @@ export class BuilderOptionsPlugin extends Plugin {
     };
 
     setup() {
-        this.builderOptions = this.getBuilderOptionsFromTemplate();
+        this.builderOptions = this.computeBuilderOptionsFromTemplate();
         this.builderOptionsContext = new Map();
         this.builderOptionsDependencies = new Map();
         const options = this.builderOptions.concat([OptionsContainer]);
-        // TODO DUAU: better way to do this?
-        const defaultComponents = { BorderConfigurator, ShadowOption };
         for (const Option of options) {
-            Option.components = { ...defaultComponents, ...(Option.components || {}) };
             this.getBuilderDependencies(Option);
             this.getBuilderOptionContext(Option);
         }
@@ -582,107 +580,119 @@ export class BuilderOptionsPlugin extends Plugin {
         return { option: requestedOption, targetEl };
     }
 
-    getBuilderOptionsFromTemplate() {
-        const template = renderToElement(
-            this.config.builderOptionsTemplate,
-            this.getBuilderOptionsRenderContext()
-        );
-        return Array.from(template.children, (node) => this.createOptionClassFromNode(node));
+    /**
+     * Computes and returns the builder options from the options template.
+     *
+     * @returns {Array<Class>}
+     */
+    computeBuilderOptionsFromTemplate() {
+        const baseOptionsRegistry = registry.category("builder-options");
+        this.optionsRegistry = {
+            ...baseOptionsRegistry.content,
+            ...(this.config.builderOptionsRegistry?.content || {}),
+        };
+
+        const optionsRenderContext = this.getResource("builder_options_render_context");
+        const renderContext = Object.assign({}, ...optionsRenderContext);
+        const template = renderToElement(this.config.builderOptionsTemplate, renderContext);
+        return Array.from(template.children, (node) => this.createOptionClassFromXML(node));
     }
 
     getBuilderOptions() {
         return [...this.builderOptions];
     }
 
-    createOptionClassFromNode(node) {
-        const optionId = node.tagName.toLowerCase();
-        const {
-            template,
-            selector,
-            exclude,
-            applyTo,
-            title,
-            editableOnly,
-            reloadTarget,
-            groups,
-            props,
-        } = this.getOptionAttributes(node);
-        if (!selector) {
-            throw new Error(`Missing selector name in builder option ${optionId}`);
+    /**
+     * Creates the option class with the properties given in the XML definition.
+     *
+     * @param {Node} optionNode the option XML definition
+     * @returns {Class}
+     */
+    createOptionClassFromXML(optionNode) {
+        const optionId = optionNode.tagName.toLowerCase();
+        const { props, ...optionAttributes } = this.getOptionAttributes(optionNode);
+        const OptionClass = this.optionsRegistry[optionId]?.[1];
+        this.validateOptionDeclaration(optionId, optionAttributes, OptionClass);
+
+        // If there is no option class/component for the option, create one on
+        // the fly.
+        if (!OptionClass) {
+            return this.createOptionClass(optionId, optionAttributes);
         }
 
-        const optionRegistry = this.getOptionRegistry(optionId);
-        if (!optionRegistry) {
-            if (!template) {
-                throw new Error(`Missing template name in builder option ${optionId}`);
-            }
-            return this.createOptionClass(optionId, {
-                template,
-                selector,
-                exclude,
-                applyTo,
-                title,
-                editableOnly,
-                reloadTarget,
-                groups,
-                props,
-            });
-        }
-        if (template) {
-            throw new Error(
-                `If a BaseOptionComponent class exists, template should be in the class: ${optionId}`
-            );
-        }
-        const ComplexOptionClass = optionRegistry.get(optionId);
-        if (!ComplexOptionClass.template) {
-            throw new Error(`Missing template name in builder option ${optionId}`);
-        }
-        // TODO DUAU: REMOVE THE ERROR, JUST TO CHECK THAT NOTHING WAS FORGOTTEN
-        if (
-            ComplexOptionClass.selector ||
-            ComplexOptionClass.exclude ||
-            ComplexOptionClass.applyTo ||
-            ComplexOptionClass.title ||
-            !ComplexOptionClass.editableOnly ||
-            ComplexOptionClass.reloadTarget ||
-            ComplexOptionClass.groups
-        ) {
-            throw new Error(
-                `Can't have selector, exclude, applyTo, title, editableOnly, groups in BaseOptionComponent: ${optionId}`
-            );
-        }
-        const OptionClass = { [optionId]: class extends ComplexOptionClass {} }[optionId];
-        return Object.assign(OptionClass, {
-            selector,
-            exclude,
-            applyTo,
-            title,
-            editableOnly,
-            reloadTarget,
-            groups,
-            propsValue: props,
+        // Create a new option class/component to extend the existing one with
+        // the new properties.
+        return this.createOptionClass(
+            optionId,
+            // Avoid overriding the props static definition.
+            { ...omit(optionAttributes, "template"), propsValue: props },
+            OptionClass
+        );
+    }
+
+    /**
+     * Creates an option class with the given name and properties, extending
+     * the given option class (`BaseOptionComponent` by default).
+     *
+     * @param {String} name the class name
+     * @param {Object} optionAttributes the option static properties
+     * @param {Class} [extendedClass=BaseOptionComponent] the class to extend
+     * @returns {Class}
+     */
+    createOptionClass(name, optionAttributes, extendedClass = BaseOptionComponent) {
+        const OptionClass = { [name]: class extends extendedClass {} }[name];
+        const defaultComponents = { BorderConfigurator, ShadowOption };
+        return Object.assign(OptionClass, optionAttributes, {
+            components: { ...defaultComponents, ...(OptionClass.components || {}) },
         });
     }
 
-    createOptionClass(
-        name,
-        { template, selector, exclude, applyTo, title, editableOnly, reloadTarget, groups }
-    ) {
-        const OptionClass = {
-            [name]: class extends BaseOptionComponent {
-                static template = template;
-                static selector = selector;
-                static exclude = exclude;
-                static applyTo = applyTo;
-                static title = title;
-                static editableOnly = editableOnly;
-                static reloadTarget = reloadTarget;
-                static groups = groups;
-            },
-        }[name];
-        return OptionClass;
+    /**
+     * Checks if the given option was correctly declared. It allows to stay
+     * consistent with what should be in the XML, and what should be in the
+     * option class when there is one. The rules are:
+     * - a selector must always be provided,
+     * - if there is no option class, the template should be given in the XML,
+     * - if there is an option class, the template should be declared in it,
+     * - all the other attributes should be declared in the XML.
+     *
+     * @param {String} optionId
+     * @param {Object} optionAttributes
+     * @param {Class} OptionClass
+     */
+    validateOptionDeclaration(optionId, optionAttributes, OptionClass) {
+        if (!optionAttributes.selector) {
+            throw new Error(`Missing 'selector' in the option XML definition: ${optionId}`);
+        }
+        if (!OptionClass) {
+            if (!optionAttributes.template) {
+                throw new Error(`Missing 'template' in the option XML definition: ${optionId}`);
+            }
+            return;
+        }
+        if (optionAttributes.template || !OptionClass.template) {
+            throw new Error(
+                `'template' should be defined in the option component class: ${optionId}`
+            );
+        }
+        const ignoredAttributes = ["template", "editableOnly"];
+        const toCheckAttributes = omit(optionAttributes, ...ignoredAttributes);
+        if (
+            Object.keys(toCheckAttributes).some((attr) => attr in OptionClass) ||
+            !OptionClass.editableOnly
+        ) {
+            throw new Error(
+                `'selector', 'exclude', 'applyTo', 'title', 'editableOnly' and 'groups' should be defined in the option XML definition: ${optionId}`
+            );
+        }
     }
 
+    /**
+     * Extracts and parses the option attributes.
+     *
+     * @param {Node} node the option XML definition
+     * @returns {Object}
+     */
     getOptionAttributes(node) {
         const jsonProps = node.getAttribute("props");
         const jsonGroups = node.getAttribute("groups");
@@ -697,22 +707,6 @@ export class BuilderOptionsPlugin extends Plugin {
             groups: jsonGroups ? JSON.parse(jsonGroups) : [],
             props: jsonProps ? JSON.parse(jsonProps) : {},
         };
-    }
-
-    getOptionRegistry(optionId) {
-        if (!this.baseOptionRegistry) {
-            this.baseOptionRegistry = registry.category("builder-options");
-            this.specificOptionRegistry = this.config.builderOptionsRegistry
-                ? registry.category(this.config.builderOptionsRegistry)
-                : null;
-        }
-        if (this.specificOptionRegistry?.contains(optionId)) {
-            return this.specificOptionRegistry;
-        }
-        if (this.baseOptionRegistry.contains(optionId)) {
-            return this.baseOptionRegistry;
-        }
-        return null;
     }
 
     /**
@@ -743,15 +737,6 @@ export class BuilderOptionsPlugin extends Plugin {
             return context;
         }
         return context;
-    }
-
-    getBuilderOptionsRenderContext() {
-        if (!this.builderOptionsRenderContext) {
-            const resourceResult = this.getResource("builder_options_render_context");
-            const context = Object.assign({}, ...resourceResult);
-            this.builderOptionsRenderContext = Object.freeze(context);
-        }
-        return this.builderOptionsRenderContext;
     }
 }
 
