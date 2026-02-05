@@ -1,6 +1,6 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { makeContext } from "@web/core/context";
 import { ListRenderer } from "@web/views/list/list_renderer";
-import { useEffect } from "@odoo/owl";
 
 export class QuestionPageListRenderer extends ListRenderer {
     setup() {
@@ -10,7 +10,7 @@ export class QuestionPageListRenderer extends ListRenderer {
         this.fieldsToShow = ["random_questions_count"];
         this.titleField = "title";
 
-        useEffect(
+        useLayoutEffect(
             (table) => {
                 if (table) {
                     table.classList.add("o_section_list_view");

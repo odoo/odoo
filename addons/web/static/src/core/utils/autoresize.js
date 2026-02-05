@@ -1,4 +1,4 @@
-import { useEffect } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { browser } from "../browser/browser";
 
 /**
@@ -14,7 +14,7 @@ import { browser } from "../browser/browser";
 export function useAutoresize(ref, options = {}) {
     let wasProgrammaticallyResized = false;
     let resize = null;
-    useEffect(
+    useLayoutEffect(
         (el) => {
             if (el) {
                 resize = (programmaticResize = false) => {
@@ -49,7 +49,7 @@ export function useAutoresize(ref, options = {}) {
         },
         () => [ref.el]
     );
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (resize) {
             resize(true);
         }

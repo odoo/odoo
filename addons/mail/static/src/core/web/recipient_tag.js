@@ -1,15 +1,28 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { useBus, useChildRef, useService } from "@web/core/utils/hooks";
 import { RecipientsInputTagsListPopover } from "./recipients_input_tags_list_popover";
 import { RecipientsPopover } from "./recipients_popover";
 
-import { Component, EventBus, useEffect } from "@odoo/owl";
+import { Component, EventBus } from "@odoo/owl";
 
 export class RecipientTag extends Component {
     static template = "mail.RecipientTag";
     static components = { BadgeTag };
-    static props = ["bus", "color?", "email", "id", "name", "onClick?", "onDelete", "resId?", "text", "tooltip", "updateRecipient"];
+    static props = [
+        "bus",
+        "color?",
+        "email",
+        "id",
+        "name",
+        "onClick?",
+        "onDelete",
+        "resId?",
+        "text",
+        "tooltip",
+        "updateRecipient",
+    ];
 
     setup() {
         this.ref = useChildRef();
@@ -61,7 +74,7 @@ export class RecipientTag extends Component {
 
 export function useRecipientChecker(getTags) {
     const bus = new EventBus();
-    useEffect(
+    useLayoutEffect(
         (invalidTag) => {
             if (invalidTag) {
                 bus.trigger("open", {

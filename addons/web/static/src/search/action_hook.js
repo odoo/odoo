@@ -1,4 +1,5 @@
-import { onMounted, useComponent, useEffect, useExternalListener } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { onMounted, useComponent, useExternalListener } from "@odoo/owl";
 
 export const scrollSymbol = Symbol("scroll");
 
@@ -39,7 +40,7 @@ export class CallbackRecorder {
  */
 export function useCallbackRecorder(callbackRecorder, callback) {
     const component = useComponent();
-    useEffect(
+    useLayoutEffect(
         () => {
             callbackRecorder.add(component, callback);
             return () => callbackRecorder.remove(component);

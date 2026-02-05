@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
 import { rightPos } from "@html_editor/utils/position";
 import {
@@ -6,7 +7,7 @@ import {
     generateSpecialMentionElement,
     generateChannelMentionElement,
 } from "@mail/utils/common/format";
-import { status, useComponent, useEffect, useState } from "@odoo/owl";
+import { status, useComponent, useState } from "@odoo/owl";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
@@ -18,7 +19,7 @@ export class UseSuggestion {
     constructor(comp) {
         this.comp = comp;
         this.fetchSuggestions = useDebounced(this.fetchSuggestions.bind(this), DELAY_FETCH);
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.update();
                 if (this.search.position === undefined || !this.search.delimiter) {
@@ -37,7 +38,7 @@ export class UseSuggestion {
             },
             () => [this.search.delimiter, this.search.position, this.search.term]
         );
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.detect();
             },

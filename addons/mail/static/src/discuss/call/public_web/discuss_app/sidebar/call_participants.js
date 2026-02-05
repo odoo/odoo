@@ -1,4 +1,5 @@
-import { Component, useEffect, useState } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { CALL_ICON_DEAFEN, CALL_ICON_MUTED } from "@mail/discuss/call/common/call_actions";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
@@ -30,7 +31,7 @@ export class DiscussSidebarCallParticipants extends Component {
         this.floating = useDropdownState();
         this.CALL_ICON_DEAFEN = CALL_ICON_DEAFEN;
         this.CALL_ICON_MUTED = CALL_ICON_MUTED;
-        useEffect(
+        useLayoutEffect(
             (selfSession, compact) => {
                 if (selfSession?.in(this.sessions) && !compact) {
                     this.state.expanded = true;

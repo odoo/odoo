@@ -190,6 +190,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/owl/owl.js',
             'web/static/src/owl2/utils.js',
             'web/static/lib/owl/odoo_module.js',
+            'web/static/src/owl2/utils.js',
             'web/static/lib/jquery/jquery.js',
             'web/static/lib/popper/popper.js',
             'web/static/lib/bootstrap/js/dist/util/index.js',
@@ -363,6 +364,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/owl2/utils.js',
             'web/static/src/owl2/utils.js',
             'web/static/lib/owl/odoo_module.js',
+            'web/static/src/owl2/utils.js',
             # core
             'web/static/src/env.js',
             'web/static/src/session.js',
@@ -437,6 +439,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/owl/owl.js',
             'web/static/src/owl2/utils.js',
             'web/static/lib/owl/odoo_module.js',
+            'web/static/src/owl2/utils.js',
 
             'web/static/lib/hoot/**/*',
             'web/static/lib/hoot-dom/**/*',
@@ -477,6 +480,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/owl/owl.js',
             'web/static/src/owl2/utils.js',
             'web/static/lib/owl/odoo_module.js',
+            'web/static/src/owl2/utils.js',
             'web/static/lib/luxon/luxon.js',
             'web/static/src/libs/luxon.js',
 

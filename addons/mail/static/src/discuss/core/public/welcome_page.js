@@ -1,6 +1,7 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { CallPreview } from "@mail/discuss/call/common/call_preview";
 
-import { Component, useEffect, useState, useSubEnv } from "@odoo/owl";
+import { Component, useState, useSubEnv } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
@@ -26,7 +27,7 @@ export class WelcomePage extends Component {
             hasMicrophone: undefined,
             hasCamera: undefined,
         });
-        useEffect(
+        useLayoutEffect(
             (showCallPreview, cameraPermission, microphonePermission) => {
                 if (!showCallPreview) {
                     return;

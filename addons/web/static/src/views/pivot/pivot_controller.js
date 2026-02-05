@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { Layout } from "@web/search/layout";
 import { useModelWithSampleData } from "@web/model/model";
 import { standardViewProps } from "@web/views/standard_view_props";
@@ -8,7 +9,7 @@ import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { Widget } from "@web/views/widgets/widget";
 import { ActionHelper } from "@web/views/action_helper";
 
-import { Component, useEffect, useRef } from "@odoo/owl";
+import { Component, useRef } from "@odoo/owl";
 
 export class PivotController extends Component {
     static template = "web.PivotView";
@@ -36,7 +37,7 @@ export class PivotController extends Component {
             },
             getContext: () => this.getContext(),
         });
-        useEffect(
+        useLayoutEffect(
             (isReady) => {
                 if (isReady) {
                     setScrollFromState();

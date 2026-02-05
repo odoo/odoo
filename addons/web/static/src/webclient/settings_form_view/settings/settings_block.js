@@ -1,7 +1,8 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { HighlightText } from "../highlight_text/highlight_text";
 import { escapeRegExp } from "@web/core/utils/strings";
 
-import { Component, useState, useRef, useEffect, onWillRender, useChildSubEnv } from "@odoo/owl";
+import { Component, useState, useRef, onWillRender, useChildSubEnv } from "@odoo/owl";
 
 export class SettingsBlock extends Component {
     static template = "web.SettingsBlock";
@@ -27,7 +28,7 @@ export class SettingsBlock extends Component {
         this.settingsContainerRef = useRef("settingsContainer");
         this.settingsContainerTitleRef = useRef("settingsContainerTitle");
         this.settingsContainerTipRef = useRef("settingsContainerTip");
-        useEffect(
+        useLayoutEffect(
             () => {
                 const regexp = new RegExp(escapeRegExp(this.state.search.value), "i");
                 const force =

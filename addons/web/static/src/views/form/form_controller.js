@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -39,7 +40,6 @@ import {
     onWillUnmount,
     status,
     useComponent,
-    useEffect,
     useRef,
     useState,
     useSubEnv,
@@ -320,7 +320,7 @@ export class FormController extends Component {
 
         const { disableAutofocus } = this.archInfo;
         if (!disableAutofocus) {
-            useEffect(
+            useLayoutEffect(
                 (isInEdition) => {
                     if (
                         !isInEdition &&

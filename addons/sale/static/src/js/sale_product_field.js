@@ -1,8 +1,8 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import {
     ProductLabelSectionAndNoteField,
     productLabelSectionAndNoteField,
 } from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field";
-import { useEffect } from "@odoo/owl";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -70,7 +70,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         this.isInternalUpdate = false;
         this.wasCombo = false;
         let isMounted = false;
-        useEffect(value => {
+        useLayoutEffect(value => {
             if (!isMounted) {
                 isMounted = true;
             } else if (value && this.isInternalUpdate) {

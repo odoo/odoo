@@ -1,4 +1,5 @@
-import { Component, useEffect, useRef, xml } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, useRef, xml } from "@odoo/owl";
 import { useIsChildLarger } from "@point_of_sale/app/hooks/hooks";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -63,7 +64,7 @@ export class ListContainer extends Component {
         this.ui = useService("ui");
         this.dialog = useService("dialog");
 
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.sizing.reload();
             },

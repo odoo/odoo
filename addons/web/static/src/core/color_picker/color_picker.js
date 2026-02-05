@@ -1,4 +1,5 @@
-import { Component, useEffect, useRef, useState, useExternalListener } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, useRef, useState, useExternalListener } from "@odoo/owl";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { isCSSColor, isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
@@ -98,7 +99,7 @@ export class ColorPicker extends Component {
             currentColorPreview: undefined,
         });
         this.usedCustomColors = this.props.getUsedCustomColors();
-        useEffect(
+        useLayoutEffect(
             () => {
                 // Recompute the positioning of the popover if any.
                 this.env[POSITION_BUS]?.trigger("update");
@@ -370,7 +371,7 @@ export function useColorPicker(refName, props, options = {}) {
         colorPicker.isOpen ? colorPicker.close() : colorPicker.open(root.el, props);
     }
 
-    useEffect(
+    useLayoutEffect(
         (el) => {
             if (!el) {
                 return;

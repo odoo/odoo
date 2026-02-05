@@ -1,8 +1,9 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { SubChannelPreview } from "@mail/discuss/core/public_web/sub_channel_preview";
 import { useSequential, useVisible } from "@mail/utils/common/hooks";
-import { Component, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, useRef, useState } from "@odoo/owl";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
 
@@ -36,7 +37,7 @@ export class SubChannelList extends Component {
                 });
             }
         });
-        useEffect(
+        useLayoutEffect(
             (searchTerm) => {
                 if (!searchTerm) {
                     this.clearSearch();

@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
@@ -11,7 +12,6 @@ import {
     Component,
     onWillDestroy,
     useExternalListener,
-    useEffect,
     useRef,
     useState,
     onWillUnmount,
@@ -66,7 +66,7 @@ export class NavBar extends Component {
 
         // We don't want to adapt every time we are patched
         // rather, we adapt only when menus or systrays have changed.
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.adapt();
             },

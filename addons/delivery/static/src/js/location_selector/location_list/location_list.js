@@ -1,5 +1,6 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { Location } from '@delivery/js/location_selector/location/location';
-import { Component, onMounted, useEffect } from '@odoo/owl';
+import { Component, onMounted } from '@odoo/owl';
 
 export class LocationList extends Component {
     static components = { Location };
@@ -42,7 +43,7 @@ export class LocationList extends Component {
         });
 
         // Focus on the location on the list when clicking on the map marker.
-        useEffect(
+        useLayoutEffect(
             (locations, selectedLocationId) => {
                 const selectedLocation = locations.find(
                     l => String(l.id) === selectedLocationId

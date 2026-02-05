@@ -1,4 +1,5 @@
-import { Component, useEffect, useRef } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, useRef } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -33,7 +34,7 @@ export class ImageDescriptionPopover extends Component {
             tooltip: this.props.tooltip,
         };
         this.inputRef = useRef("description");
-        useEffect(
+        useLayoutEffect(
             (el) => el?.focus(),
             () => [this.inputRef.el]
         );

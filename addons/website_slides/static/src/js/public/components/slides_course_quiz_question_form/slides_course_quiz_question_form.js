@@ -1,4 +1,5 @@
-import { Component, useEffect, useState, useRef } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, useState, useRef } from "@odoo/owl";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
@@ -44,7 +45,7 @@ export class WebsiteSlidesCourseQuizQuestionForm extends Component {
         this.formRef = useRef("form");
         this.sequenceRef = useRef("sequence");
 
-        useEffect(
+        useLayoutEffect(
             (update) => {
                 if (!update) {
                     return;

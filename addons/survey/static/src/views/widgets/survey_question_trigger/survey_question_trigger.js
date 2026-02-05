@@ -1,7 +1,8 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
-import { Component, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, useRef, useState } from "@odoo/owl";
 
 export class SurveyQuestionTriggerWidget extends Component {
     static template = "survey.surveyQuestionTrigger";
@@ -16,7 +17,7 @@ export class SurveyQuestionTriggerWidget extends Component {
             surveyIconWarning: false,
             triggerTooltip: "",
         });
-        useEffect(() => {
+        useLayoutEffect(() => {
             if (this.button?.el && this.props.record.data.triggering_question_ids.records?.length !== 0) {
                 const { triggerError, misplacedTriggerQuestionRecords } = this.surveyQuestionTriggerError;
                 if (triggerError === "MISPLACED_TRIGGER_WARNING") {

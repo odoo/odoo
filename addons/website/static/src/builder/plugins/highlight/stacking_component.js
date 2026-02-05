@@ -1,4 +1,5 @@
-import { xml, Component, reactive, useState, useEffect } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { xml, Component, reactive, useState } from "@odoo/owl";
 import { POSITION_BUS } from "@web/core/position/position_hook";
 
 export function useStackingComponentState() {
@@ -32,7 +33,7 @@ export class StackingComponent extends Component {
     };
     setup() {
         this.stack = useState(this.props.stackState.stack);
-        useEffect(
+        useLayoutEffect(
             () => {
                 // Recompute the positioning of the popover if any.
                 this.env[POSITION_BUS]?.trigger("update");

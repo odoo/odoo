@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import {
     Component,
     onMounted,
@@ -6,7 +7,6 @@ import {
     onWillUpdateProps,
     status,
     useComponent,
-    useEffect,
     useRef,
     useState,
     useSubEnv,
@@ -194,7 +194,7 @@ export class MassMailingIframe extends Component {
             iframeResize();
             sidebarResize();
         });
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.iframeLoaded.then(() => {
                     if (status(this) === "destroyed") {
@@ -209,7 +209,7 @@ export class MassMailingIframe extends Component {
             },
             () => [this.state.showFullscreen]
         );
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.iframeLoaded.then(() => {
                     if (status(this) === "destroyed") {

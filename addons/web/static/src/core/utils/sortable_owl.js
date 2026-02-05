@@ -1,4 +1,5 @@
-import { onWillUnmount, reactive, useEffect, useExternalListener } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { onWillUnmount, reactive, useExternalListener } from "@odoo/owl";
 import { useThrottleForAnimation } from "./timing";
 import { useSortable as nativeUseSortable } from "@web/core/utils/sortable";
 
@@ -15,7 +16,7 @@ export function useSortable(params) {
         ...params,
         setupHooks: {
             addListener: useExternalListener,
-            setup: useEffect,
+            setup: useLayoutEffect,
             teardown: onWillUnmount,
             throttle: useThrottleForAnimation,
             wrapState: reactive,

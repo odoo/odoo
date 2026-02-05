@@ -1,10 +1,11 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import {
     getEditableDescendants,
     getEmbeddedProps,
     useEditableDescendants,
 } from "@html_editor/others/embedded_component_utils";
 import { browser } from "@web/core/browser/browser";
-import { Component, useEffect, useExternalListener, useState } from "@odoo/owl";
+import { Component, useExternalListener, useState } from "@odoo/owl";
 
 const sessionStorage = browser.sessionStorage;
 export class EmbeddedToggleBlockComponent extends Component {
@@ -22,7 +23,7 @@ export class EmbeddedToggleBlockComponent extends Component {
         this.neutralRestoreSelection = () => {};
         this.restoreSelection = this.neutralRestoreSelection;
         useExternalListener(this.props.host, "forceToggle", this.onToggle);
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.restoreSelection();
                 this.restoreSelection = this.neutralRestoreSelection;

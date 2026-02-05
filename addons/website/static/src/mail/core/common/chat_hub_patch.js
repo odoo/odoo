@@ -1,11 +1,11 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { ChatHub } from "@mail/core/common/chat_hub";
-import { useEffect } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 
 patch(ChatHub.prototype, {
     setup() {
         super.setup(...arguments);
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.chatHub.recomputeBubbleStart++;
                 if (!this.position.isDragging) {

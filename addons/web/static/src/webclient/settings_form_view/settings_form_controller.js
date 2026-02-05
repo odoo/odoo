@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
@@ -5,7 +6,7 @@ import { formView } from "@web/views/form/form_view";
 import { SettingsConfirmationDialog } from "./settings_confirmation_dialog";
 import { SettingsFormRenderer } from "./settings_form_renderer";
 
-import { useSubEnv, useState, useRef, useEffect } from "@odoo/owl";
+import { useSubEnv, useState, useRef } from "@odoo/owl";
 
 export class SettingsFormController extends formView.Controller {
     static template = "web.SettingsFormView";
@@ -22,7 +23,7 @@ export class SettingsFormController extends formView.Controller {
         this.rootRef = useRef("root");
         this.canCreate = false;
         useSubEnv({ searchState: this.searchState });
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (this.searchState.value) {
                     if (
@@ -41,7 +42,7 @@ export class SettingsFormController extends formView.Controller {
             },
             () => [this.searchState.value]
         );
-        useEffect(() => {
+        useLayoutEffect(() => {
             if (this.env.__getLocalState__) {
                 this.env.__getLocalState__.remove(this);
             }

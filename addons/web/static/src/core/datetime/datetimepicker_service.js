@@ -1,4 +1,5 @@
-import { markRaw, onPatched, onWillRender, reactive, useEffect, useRef } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { markRaw, onPatched, onWillRender, reactive, useRef } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { areDatesEqual, formatDate, formatDateTime, parseDate, parseDateTime } from "../l10n/dates";
 import { makePopover } from "../popover/popover_hook";
@@ -528,9 +529,9 @@ export const datetimePickerService = {
                         }
                     });
 
-                    useEffect(enable, getInputs);
+                    useLayoutEffect(enable, getInputs);
 
-                    // Note: this `onPatched` callback must be called after the `useEffect` since
+                    // Note: this `onPatched` callback must be called after the `useLayoutEffect` since
                     // the effect may change input values that will be selected by the patch callback.
                     onPatched(function focusIfNeeded() {
                         if (isOpen() && shouldFocus) {

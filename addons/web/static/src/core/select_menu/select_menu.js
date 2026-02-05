@@ -1,4 +1,5 @@
-import { Component, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, onWillUpdateProps, useRef, useState } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -158,7 +159,7 @@ export class SelectMenu extends Component {
                 this.selectedChoice = this.getSelectedChoice(nextProps);
             }
         });
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (this.dropdownState.isOpen) {
                     const groups = [{ choices: this.props.choices }, ...this.props.groups];

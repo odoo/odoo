@@ -1,4 +1,5 @@
-import { Component, useState, useEffect, onPatched, markup } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, useState, onPatched, markup } from "@odoo/owl";
 import { DocTable, TABLE_TYPES } from "@api_doc/components/doc_table";
 import { getCrudMethodsExamples } from "@api_doc/utils/doc_model_utils";
 import { DocMethod } from "@api_doc/components/doc_method";
@@ -70,7 +71,7 @@ export class DocModel extends Component {
         this.modelStore = useState(this.env.modelStore);
         this.update();
 
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.update();
             },

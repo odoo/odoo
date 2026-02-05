@@ -1,9 +1,10 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import {
     getEmbeddedProps,
     StateChangeManager,
     useEmbeddedState,
 } from "@html_editor/others/embedded_component_utils";
-import { Component, onMounted, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillStart, useRef, useState } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { cookie } from "@web/core/browser/cookie";
 import {
@@ -42,7 +43,7 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
             this.highlight();
         });
 
-        useEffect(this.highlight.bind(this), () => [
+        useLayoutEffect(this.highlight.bind(this), () => [
             this.embeddedState.value,
             this.embeddedState.languageId,
         ]);

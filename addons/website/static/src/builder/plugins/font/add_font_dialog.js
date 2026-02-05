@@ -1,5 +1,6 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { rpc } from "@web/core/network/rpc";
-import { Component, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, useRef, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
@@ -11,7 +12,7 @@ class GoogleFontAutoComplete extends AutoComplete {
         super.setup();
         this.inputRef = useRef("input");
         this.sourcesListRef = useRef("sourcesList");
-        useEffect(
+        useLayoutEffect(
             (el) => {
                 el.setAttribute("id", "google_font");
             },

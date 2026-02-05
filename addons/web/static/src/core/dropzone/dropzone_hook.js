@@ -1,5 +1,6 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { Dropzone } from "@web/core/dropzone/dropzone";
-import { useEffect, useExternalListener } from "@odoo/owl";
+import { useExternalListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -8,7 +9,12 @@ import { useService } from "@web/core/utils/hooks";
  * @param {Object} dropzoneComponentProps - Props given to the instantiated dropzone component.
  * @param {function} isDropzoneEnabled - Function that determines whether the dropzone should be enabled.
  */
-export function useCustomDropzone(targetRef, dropzoneComponent, dropzoneComponentProps, isDropzoneEnabled = () => true) {
+export function useCustomDropzone(
+    targetRef,
+    dropzoneComponent,
+    dropzoneComponentProps,
+    isDropzoneEnabled = () => true
+) {
     const overlayService = useService("overlay");
     const uiService = useService("ui");
 
@@ -41,12 +47,13 @@ export function useCustomDropzone(targetRef, dropzoneComponent, dropzoneComponen
     function updateDropzone() {
         const hasDropzone = !!removeDropzone;
         const isTargetInActiveElement = uiService.activeElement.contains(targetRef.el);
-        const shouldDisplayDropzone = dragCount && hasTarget && isTargetInActiveElement && isDropzoneEnabled();
+        const shouldDisplayDropzone =
+            dragCount && hasTarget && isTargetInActiveElement && isDropzoneEnabled();
 
         if (shouldDisplayDropzone && !hasDropzone) {
             removeDropzone = overlayService.add(dropzoneComponent, {
                 ref: targetRef,
-                ...dropzoneComponentProps
+                ...dropzoneComponentProps,
             });
         }
         if (!shouldDisplayDropzone && hasDropzone) {
@@ -69,7 +76,7 @@ export function useCustomDropzone(targetRef, dropzoneComponent, dropzoneComponen
         }
     }
 
-    useEffect(
+    useLayoutEffect(
         (el) => {
             hasTarget = !!el;
             updateDropzone();
