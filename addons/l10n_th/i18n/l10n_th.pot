@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.1a1+e\n"
+"Project-Id-Version: Odoo Server 19.2a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 19:06+0000\n"
-"PO-Revision-Date: 2025-12-16 19:06+0000\n"
+"POT-Creation-Date: 2026-02-04 19:23+0000\n"
+"PO-Revision-Date: 2026-02-04 19:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,6 +23,18 @@ msgstr ""
 #. module: l10n_th
 #: model:ir.model,name:l10n_th.model_res_partner_bank
 msgid "Bank Account"
+msgstr ""
+
+#. module: l10n_th
+#. odoo-python
+#: code:addons/l10n_th/models/res_partner.py:0
+msgid "Branch %(code)s"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.view_company_form_inherit_l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.view_partner_form_inherit_l10n_th
+msgid "Branch Code"
 msgstr ""
 
 #. module: l10n_th
@@ -56,8 +68,19 @@ msgid "Display Name"
 msgstr ""
 
 #. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.view_partner_form_inherit_l10n_th
+msgid "Empty for Head Office"
+msgstr ""
+
+#. module: l10n_th
 #: model:ir.model.fields.selection,name:l10n_th.selection__res_partner_bank__proxy_type__ewallet_id
 msgid "Ewallet ID"
+msgstr ""
+
+#. module: l10n_th
+#. odoo-python
+#: code:addons/l10n_th/models/res_partner.py:0
+msgid "Headquarter"
 msgstr ""
 
 #. module: l10n_th
@@ -113,6 +136,12 @@ msgid "Tax Invoice"
 msgstr ""
 
 #. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.view_company_form_inherit_l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.view_partner_form_inherit_l10n_th
+msgid "The 5-digit branch code as registered with the Revenue Department."
+msgstr ""
+
+#. module: l10n_th
 #. odoo-python
 #: code:addons/l10n_th/models/res_bank.py:0
 msgid ""
@@ -141,4 +170,10 @@ msgstr ""
 msgid ""
 "The QR Code Type must be either Ewallet ID, Merchant Tax ID or Mobile Number"
 " to generate a Thailand Bank QR code for account number %s."
+msgstr ""
+
+#. module: l10n_th
+#. odoo-python
+#: code:addons/l10n_th/models/res_partner.py:0
+msgid "The branch Code must be exactly 5 digits."
 msgstr ""

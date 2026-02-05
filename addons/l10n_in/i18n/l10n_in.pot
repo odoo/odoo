@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.1a1+e\n"
+"Project-Id-Version: Odoo Server 19.2a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 19:04+0000\n"
-"PO-Revision-Date: 2025-12-16 19:04+0000\n"
+"POT-Creation-Date: 2026-02-04 19:21+0000\n"
+"PO-Revision-Date: 2026-02-04 19:21+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -223,14 +223,6 @@ msgid "As the Partner's PAN missing/invalid apply TCS at the higher rate."
 msgstr ""
 
 #. module: l10n_in
-#. odoo-python
-#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
-msgid ""
-"As the Partner's PAN missing/invalid, it's advisable to apply TDS at the "
-"higher rate."
-msgstr ""
-
-#. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__l10n_in_pan_entity__type__a
 msgid "Association of Persons"
 msgstr ""
@@ -260,11 +252,6 @@ msgstr ""
 #. module: l10n_in
 #: model:ir.model.fields.selection,name:l10n_in.selection__account_move_line__l10n_in_gstr_section__purchase_b2c_rcm
 msgid "B2C RCM"
-msgstr ""
-
-#. module: l10n_in
-#: model:ir.model.fields.selection,name:l10n_in.selection__account_move_line__l10n_in_gstr_section__purchase_b2c_regular
-msgid "B2C Regular"
 msgstr ""
 
 #. module: l10n_in
@@ -368,13 +355,13 @@ msgid "CDNR(SEZ-WP)"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields.selection,name:l10n_in.selection__account_move_line__l10n_in_gstr_section__purchase_cdnur_rcm
-msgid "CDNUR RCM"
+#: model:ir.model.fields.selection,name:l10n_in.selection__account_move_line__l10n_in_gstr_section__purchase_cdnur_overseas
+msgid "CDNUR Overseas"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields.selection,name:l10n_in.selection__account_move_line__l10n_in_gstr_section__purchase_cdnur_regular
-msgid "CDNUR Regular"
+#: model:ir.model.fields.selection,name:l10n_in.selection__account_move_line__l10n_in_gstr_section__purchase_cdnur_rcm
+msgid "CDNUR RCM"
 msgstr ""
 
 #. module: l10n_in
@@ -543,11 +530,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_in.selection__account_move_line__l10n_in_gstr_section__sale_deemed_export
 #: model:ir.model.fields.selection,name:l10n_in.selection__res_partner__l10n_in_gst_treatment__deemed_export
 msgid "Deemed Export"
-msgstr ""
-
-#. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.tds_entry_view_form
-msgid "Discard"
 msgstr ""
 
 #. module: l10n_in
@@ -1137,11 +1119,6 @@ msgid "Invalid sequence as per GST rule 46(b)"
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
-msgid "Invoice"
-msgstr ""
-
-#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_withhold_wizard__related_move_id
 msgid "Invoice/Bill"
 msgstr ""
@@ -1192,11 +1169,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_in.field_account_bank_statement_line__l10n_in_journal_type
 #: model:ir.model.fields,field_description:l10n_in.field_account_move__l10n_in_journal_type
 msgid "Journal Type"
-msgstr ""
-
-#. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.view_move_line_list_l10n_in_withholding
-msgid "Journal items"
 msgstr ""
 
 #. module: l10n_in
@@ -1579,6 +1551,14 @@ msgstr ""
 
 #. module: l10n_in
 #. odoo-python
+#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
+msgid ""
+"Please deduct TDS at higher rate if PAN is missing. Ignore if already "
+"applied."
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
 #: code:addons/l10n_in/models/res_config_settings.py:0
 msgid ""
 "Please ensure that at least one Indian service and production environment is"
@@ -1648,12 +1628,7 @@ msgstr ""
 
 #. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
-msgid "Proforma Invoice"
-msgstr ""
-
-#. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
-msgid "Proforma Tax Invoice"
+msgid "Proforma"
 msgstr ""
 
 #. module: l10n_in
@@ -2128,11 +2103,6 @@ msgid ""
 msgstr ""
 
 #. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.view_move_line_list_l10n_in_withholding
-msgid "Suggested Section"
-msgstr ""
-
-#. module: l10n_in
 #: model:ir.model.fields,field_description:l10n_in.field_res_company__l10n_in_tan
 #: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__l10n_in_tan
 #: model:ir.model.fields,field_description:l10n_in.field_res_partner__l10n_in_tan
@@ -2294,11 +2264,6 @@ msgstr ""
 #. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.invoice_form_inherit_l10n_in
 msgid "Tax"
-msgstr ""
-
-#. module: l10n_in
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
-msgid "Tax Invoice"
 msgstr ""
 
 #. module: l10n_in

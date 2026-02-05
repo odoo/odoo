@@ -4,16 +4,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.1a1+e\n"
+"Project-Id-Version: Odoo Server 19.2a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 19:04+0000\n"
-"PO-Revision-Date: 2025-12-16 19:04+0000\n"
+"POT-Creation-Date: 2026-02-04 19:21+0000\n"
+"PO-Revision-Date: 2026-02-04 19:21+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: l10n_in_pos
+#: model_terms:ir.ui.view,arch_db:l10n_in_pos.pos_orderline_receipt_information
+msgid "<span>HSN Code: </span>"
+msgstr ""
 
 #. module: l10n_in_pos
 #: model_terms:ir.ui.view,arch_db:l10n_in_pos.res_config_settings_view_form_l10n_in_pos_inherit
@@ -28,14 +33,12 @@ msgid "Bank Account"
 msgstr ""
 
 #. module: l10n_in_pos
-#. odoo-javascript
-#: code:addons/l10n_in_pos/static/src/app/components/receipt/pos_receipt.xml:0
+#: model_terms:ir.ui.view,arch_db:l10n_in_pos.pos_order_receipt
 msgid "CESS"
 msgstr ""
 
 #. module: l10n_in_pos
-#. odoo-javascript
-#: code:addons/l10n_in_pos/static/src/app/components/receipt/pos_receipt.xml:0
+#: model_terms:ir.ui.view,arch_db:l10n_in_pos.pos_order_receipt
 msgid "CGST"
 msgstr ""
 
@@ -58,6 +61,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_in_pos.field_pos_config__display_name
 #: model:ir.model.fields,field_description:l10n_in_pos.field_pos_order__display_name
 #: model:ir.model.fields,field_description:l10n_in_pos.field_pos_order_line__display_name
+#: model:ir.model.fields,field_description:l10n_in_pos.field_pos_order_receipt__display_name
 #: model:ir.model.fields,field_description:l10n_in_pos.field_pos_payment_method__display_name
 #: model:ir.model.fields,field_description:l10n_in_pos.field_pos_session__display_name
 #: model:ir.model.fields,field_description:l10n_in_pos.field_product_template__display_name
@@ -77,20 +81,12 @@ msgid "Go to company configuration"
 msgstr ""
 
 #. module: l10n_in_pos
-#. odoo-javascript
-#: code:addons/l10n_in_pos/static/src/app/components/receipt/pos_receipt.xml:0
+#: model_terms:ir.ui.view,arch_db:l10n_in_pos.pos_order_receipt
 msgid "HSN Code"
 msgstr ""
 
 #. module: l10n_in_pos
-#. odoo-javascript
-#: code:addons/l10n_in_pos/static/src/app/components/receipt/pos_receipt.xml:0
-msgid "HSN Code:"
-msgstr ""
-
-#. module: l10n_in_pos
-#. odoo-javascript
-#: code:addons/l10n_in_pos/static/src/app/components/receipt/pos_receipt.xml:0
+#: model_terms:ir.ui.view,arch_db:l10n_in_pos.pos_order_receipt
 msgid "HSN Summary"
 msgstr ""
 
@@ -107,6 +103,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_in_pos.field_pos_config__id
 #: model:ir.model.fields,field_description:l10n_in_pos.field_pos_order__id
 #: model:ir.model.fields,field_description:l10n_in_pos.field_pos_order_line__id
+#: model:ir.model.fields,field_description:l10n_in_pos.field_pos_order_receipt__id
 #: model:ir.model.fields,field_description:l10n_in_pos.field_pos_payment_method__id
 #: model:ir.model.fields,field_description:l10n_in_pos.field_pos_session__id
 #: model:ir.model.fields,field_description:l10n_in_pos.field_product_template__id
@@ -115,14 +112,12 @@ msgid "ID"
 msgstr ""
 
 #. module: l10n_in_pos
-#. odoo-javascript
-#: code:addons/l10n_in_pos/static/src/app/components/receipt/pos_receipt.xml:0
+#: model_terms:ir.ui.view,arch_db:l10n_in_pos.pos_order_receipt
 msgid "IGST"
 msgstr ""
 
 #. module: l10n_in_pos
-#. odoo-javascript
-#: code:addons/l10n_in_pos/static/src/app/components/receipt/pos_receipt.xml:0
+#: model_terms:ir.ui.view,arch_db:l10n_in_pos.pos_order_receipt_header
 msgid "INVOICE"
 msgstr ""
 
@@ -161,12 +156,6 @@ msgid "Payment Method with this UPI ID already exist."
 msgstr ""
 
 #. module: l10n_in_pos
-#. odoo-javascript
-#: code:addons/l10n_in_pos/static/src/app/components/receipt/pos_receipt.xml:0
-msgid "Phone:"
-msgstr ""
-
-#. module: l10n_in_pos
 #. odoo-python
 #: code:addons/l10n_in_pos/models/pos_payment_method.py:0
 msgid "Please set a UPI ID for the payment method '%s'."
@@ -185,6 +174,11 @@ msgstr ""
 #. module: l10n_in_pos
 #: model:ir.model,name:l10n_in_pos.model_pos_order_line
 msgid "Point of Sale Order Line"
+msgstr ""
+
+#. module: l10n_in_pos
+#: model:ir.model,name:l10n_in_pos.model_pos_order_receipt
+msgid "Point of Sale Order Receipt Generator"
 msgstr ""
 
 #. module: l10n_in_pos
@@ -209,14 +203,12 @@ msgid "QR Payment Icons"
 msgstr ""
 
 #. module: l10n_in_pos
-#. odoo-javascript
-#: code:addons/l10n_in_pos/static/src/app/components/receipt/pos_receipt.xml:0
+#: model_terms:ir.ui.view,arch_db:l10n_in_pos.pos_order_receipt
 msgid "Rate%"
 msgstr ""
 
 #. module: l10n_in_pos
-#. odoo-javascript
-#: code:addons/l10n_in_pos/static/src/app/components/receipt/pos_receipt.xml:0
+#: model_terms:ir.ui.view,arch_db:l10n_in_pos.pos_order_receipt
 msgid "SGST"
 msgstr ""
 
@@ -227,8 +219,7 @@ msgid "Set the address of your company (Don't forget the State field)"
 msgstr ""
 
 #. module: l10n_in_pos
-#. odoo-javascript
-#: code:addons/l10n_in_pos/static/src/app/components/receipt/pos_receipt.xml:0
+#: model_terms:ir.ui.view,arch_db:l10n_in_pos.pos_order_receipt_header
 msgid "Tax Invoice"
 msgstr ""
 

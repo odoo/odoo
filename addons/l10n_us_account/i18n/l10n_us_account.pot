@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.1a1+e\n"
+"Project-Id-Version: Odoo Server 19.2a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 19:06+0000\n"
-"PO-Revision-Date: 2025-12-16 19:06+0000\n"
+"POT-Creation-Date: 2026-02-04 19:23+0000\n"
+"PO-Revision-Date: 2026-02-04 19:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,26 +16,21 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_us_account
-#. odoo-python
-#: code:addons/l10n_us_account/models/res_bank.py:0
-msgid "A bank cannot be its own intermediary bank."
-msgstr ""
-
-#. module: l10n_us_account
 #: model:ir.model,name:l10n_us_account.model_account_chart_template
 msgid "Account Chart Template"
 msgstr ""
 
 #. module: l10n_us_account
-#: model:ir.model.fields,help:l10n_us_account.field_res_bank__intermediary_bank_id
+#: model:ir.model.fields,help:l10n_us_account.field_account_setup_bank_manual_config__intermediary_bank_bic
+#: model:ir.model.fields,help:l10n_us_account.field_res_partner_bank__intermediary_bank_bic
 msgid ""
 "An intermediary bank facilitates international wire transfers between your "
-"bank and the beneficiary's bank when they don’t have a direct relationship."
+"bank and the beneficiary's bank when they don't have a direct relationship."
 msgstr ""
 
 #. module: l10n_us_account
-#: model:ir.model,name:l10n_us_account.model_res_bank
-msgid "Bank"
+#: model:ir.model,name:l10n_us_account.model_res_partner_bank
+msgid "Bank Account"
 msgstr ""
 
 #. module: l10n_us_account
@@ -45,8 +40,8 @@ msgstr ""
 
 #. module: l10n_us_account
 #: model:ir.model.fields,field_description:l10n_us_account.field_account_chart_template__display_name
-#: model:ir.model.fields,field_description:l10n_us_account.field_res_bank__display_name
 #: model:ir.model.fields,field_description:l10n_us_account.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:l10n_us_account.field_res_partner_bank__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -58,8 +53,8 @@ msgstr ""
 
 #. module: l10n_us_account
 #: model:ir.model.fields,field_description:l10n_us_account.field_account_chart_template__id
-#: model:ir.model.fields,field_description:l10n_us_account.field_res_bank__id
 #: model:ir.model.fields,field_description:l10n_us_account.field_res_config_settings__id
+#: model:ir.model.fields,field_description:l10n_us_account.field_res_partner_bank__id
 msgid "ID"
 msgstr ""
 
@@ -69,8 +64,9 @@ msgid "Initiate payments in one-click using a Wise Business account"
 msgstr ""
 
 #. module: l10n_us_account
-#: model:ir.model.fields,field_description:l10n_us_account.field_res_bank__intermediary_bank_id
-msgid "Intermediary Bank"
+#: model:ir.model.fields,field_description:l10n_us_account.field_account_setup_bank_manual_config__intermediary_bank_bic
+#: model:ir.model.fields,field_description:l10n_us_account.field_res_partner_bank__intermediary_bank_bic
+msgid "Intermediary SWIFT"
 msgstr ""
 
 #. module: l10n_us_account
