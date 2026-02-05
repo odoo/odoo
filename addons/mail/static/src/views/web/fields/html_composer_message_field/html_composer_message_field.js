@@ -40,7 +40,7 @@ export class HtmlComposerMessageField extends HtmlMailField {
 
     getConfig() {
         const config = super.getConfig(...arguments);
-        config.Plugins = config.Plugins.concat([
+        config.Plugins = config.Plugins.filter((plugin) => plugin.id !== "video").concat([
             DisableBannerCommandsPlugin,
             MailFullComposerSuggestionPlugin,
         ]);
