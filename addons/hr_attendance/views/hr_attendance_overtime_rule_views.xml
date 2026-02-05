@@ -49,7 +49,7 @@
                                     <label for="expected_hours_from_contract" string="and"/>
                                     <field nolabel="1" name="timing_stop" widget="float_time" style="width:10ch"/>
                                 </span>
-                                <field name="resource_calendar_id" string="Schedule" invisible="base_off != 'timing' or timing_type != 'schedule'"/>
+                                <field name="resource_calendar_id" string="Schedule" invisible="base_off != 'timing' or timing_type != 'schedule'" domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]"/>
                             </group>
                             <group 
                                 name="action_section"
