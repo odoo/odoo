@@ -46,20 +46,40 @@ class PaymentProvider(models.Model):
         """ Recompute the pending message to include the existing bank accounts. """
         account_payment_module = self.env['ir.module.module']._get('account_payment')
         if account_payment_module.state == 'installed':
-            for provider in self.filtered(lambda p: p.custom_mode == 'wire_transfer'):
-                company_id = provider.company_id.id
-                accounts = self.env['account.journal'].search([
-                    *self.env['account.journal']._check_company_domain(company_id),
+            for provider in self:
+                accounts = provider._get_pending_msg_accounts()
+                if not accounts:
+                    provider.pending_msg = (
+                        f'<div>'
+                        f'<p>{self.env._("Contact the website administrator to get payment details. ")}'
+                        f'{self.env._("Your order will be confirmed after payment is received.")}</p>'
+                        f'</div>'
+                    )
+                else:
+                    account_names = "".join(
+                        f"<li><pre>{account.display_name}</pre></li>" for account in accounts
+                    )
+                    provider.pending_msg = (
+                        f'<div>'
+                        f'<h5>{self.env._("Please use the following transfer details")}</h5>'
+                        f'<p><br></p>'
+                        f'<h6>{self.env._("Bank Account") if len(accounts) == 1 else self.env._("Bank Accounts")}</h6>'
+                        f'<ul>{account_names}</ul>'
+                        f'<p><br></p>'
+                        f'</div>'
+                    )
+
+    # === BUSINESS METHODS === #
+
+    def _get_pending_msg_accounts(self):
+        if self.custom_mode == 'wire_transfer':
+            return (
+                self.env['account.journal'].search([
+                    *self.env['account.journal']._check_company_domain(self.company_id.id),
                     ('type', '=', 'bank'),
                 ]).bank_account_id
-                account_names = "".join(f"<li><pre>{account.display_name}</pre></li>" for account in accounts)
-                provider.pending_msg = f'<div>' \
-                    f'<h5>{_("Please use the following transfer details")}</h5>' \
-                    f'<p><br></p>' \
-                    f'<h6>{_("Bank Account") if len(accounts) == 1 else _("Bank Accounts")}</h6>' \
-                    f'<ul>{account_names}</ul>'\
-                    f'<p><br></p>' \
-                    f'</div>'
+            )
+        return self.env['res.partner.bank']
 
     # === SETUP METHODS === #
 
