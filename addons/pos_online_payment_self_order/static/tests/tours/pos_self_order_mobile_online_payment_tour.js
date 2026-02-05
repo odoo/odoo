@@ -76,6 +76,15 @@ registry.category("web_tour.tours").add("test_online_payment_self_multi_company"
     ],
 });
 
+registry.category("web_tour.tours").add("create_self_order", {
+    steps: () => [
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Checkout"),
+        Utils.clickBtn("Pay"),
+    ],
+});
+
 registry
     .category("web_tour.tours")
     .add("test_online_payment_mobile_self_order_preparation_changes", {

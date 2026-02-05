@@ -4,3 +4,4 @@ from . import test_self_order_frontend
 from . import test_self_order_mobile
 from . import test_self_order_payment_method
 from . import test_self_order_fake_payment
+from . import test_self_order_refund

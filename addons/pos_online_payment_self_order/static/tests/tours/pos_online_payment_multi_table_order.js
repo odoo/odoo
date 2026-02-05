@@ -3,10 +3,14 @@ import * as ChromeRestaurant from "@pos_restaurant/../tests/tours/utils/chrome";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
+import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as ProductScreenPos from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
+import { inLeftSide, waitForLoading } from "@point_of_sale/../tests/pos/tours/utils/common";
 import * as ProductScreenResto from "@pos_restaurant/../tests/tours/utils/product_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import { registry } from "@web/core/registry";
+import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
+import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 
 const Chrome = { ...ChromePos, ...ChromeRestaurant };
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
@@ -26,6 +30,27 @@ registry.category("web_tour.tours").add("OnlinePaymentWithMultiTables", {
             ProductScreen.clickPayButton(),
             PaymentScreen.validateButtonIsHighlighted(true),
             PaymentScreen.clickValidate(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_pos_self_order_refund_through_online_payment", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Chrome.clickOrders(),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.selectOrder("001"),
+            inLeftSide([
+                ...Order.hasLine({ productName: "Coca-Cola", withClass: ".selected" }),
+                Numpad.click("1"),
+            ]),
+            TicketScreen.confirmRefund(),
+            PaymentScreen.isShown(),
+            PaymentScreen.clickPaymentMethod("Online payment"),
+            PaymentScreen.selectedPaymentlineHas("Online payment", "-2.20"),
+            PaymentScreen.clickValidate(),
+            waitForLoading(),
+            FeedbackScreen.isShown(),
         ].flat(),
 });
 
