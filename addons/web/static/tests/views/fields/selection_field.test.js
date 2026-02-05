@@ -436,3 +436,75 @@ test("SelectionField search is disabled in BottomSheet", async function (assert)
     await contains(".o_field_widget[name='color'] input").click();
     expect(".o_bottom_sheet input").toHaveCount(0);
 });
+
+test("SelectionField fallback to value when option not found", async () => {
+    // Test that when a selection value is not in the options list,
+    // it falls back to displaying the raw value instead of crashing
+    Partner._fields.color = fields.Selection({
+        selection: [
+            ["red", "Red"],
+            ["black", "Black"],
+        ],
+        string: "Color",
+    });
+    Partner._records[0].color = "unknown_value"; // Value not in selection list
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ '<form><field name="color" widget="selection" /></form>',
+    });
+
+    // Should display the raw value "unknown_value" instead of crashing
+    expect(".o_field_widget[name='color'] input").toHaveValue("unknown_value", {
+        message: "should fallback to raw value when option not found",
+    });
+});
+
+test("SelectionField fallback to value in readonly mode", async () => {
+    // Test that fallback also works in readonly mode
+    Partner._fields.color = fields.Selection({
+        selection: [
+            ["red", "Red"],
+            ["black", "Black"],
+        ],
+        string: "Color",
+    });
+    Partner._records[0].color = "deprecated_option";
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ '<form edit="0"><field name="color" widget="selection" /></form>',
+    });
+
+    // In readonly mode, should display the raw value as text
+    expect(".o_field_widget[name='color']").toHaveText("deprecated_option", {
+        message: "should display raw value in readonly mode when option not found",
+    });
+});
+
+test("SelectionField fallback in list view", async () => {
+    // Test that fallback works in list view using formatSelection
+    Partner._fields.color = fields.Selection({
+        selection: [
+            ["red", "Red"],
+            ["black", "Black"],
+        ],
+        string: "Color",
+    });
+    Partner._records[0].color = "unknown_status";
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: /* xml */ '<list><field name="color"/></list>',
+    });
+
+    // Check that unknown values fallback to raw value
+    expect(".o_data_row:eq(0) .o_data_cell").toHaveText("unknown_status", {
+        message: "unknown value should fallback to raw value in list view",
+    });
+});

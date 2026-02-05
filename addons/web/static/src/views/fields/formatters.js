@@ -411,6 +411,7 @@ export function formatMany2oneReference(value) {
 
 /**
  * Returns a string of the value of the selection.
+ * If the value is not found in the selection options, falls back to the raw value.
  *
  * @param {Object} [options={}]
  * @param {[string, string][]} [options.selection]
@@ -420,7 +421,7 @@ export function formatMany2oneReference(value) {
 export function formatSelection(value, options = {}) {
     const selection = options.selection || (options.field && options.field.selection) || [];
     const option = selection.find((option) => option[0] === value);
-    return option ? option[1] : "";
+    return option ? option[1] : value || "";
 }
 
 /**
