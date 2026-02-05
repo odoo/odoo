@@ -150,6 +150,8 @@ class AccountInvoiceSend(models.TransientModel):
 
         documents = []
         for invoice, invoice_data in invoices_data.items():
+            if invoice.peppol_move_state in ('processing', 'done'):
+                continue
             partner = invoice.partner_id.commercial_partner_id
             if not partner.peppol_eas or not partner.peppol_endpoint:
                 invoice.peppol_move_state = 'error'
