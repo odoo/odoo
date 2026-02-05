@@ -2807,6 +2807,56 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ]
         )
 
+    def test_residual_at_date_manual_exchange_diff_entry(self):
+        company_currency = self.company_data['currency']
+        foreign_currency = self.other_currency
+
+        line_1 = self.create_line_for_reconciliation(92.11, 99.34, foreign_currency, '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(-92.11, -92.11, company_currency, '2016-02-01')
+        line_3 = self.create_line_for_reconciliation(-0, 0.76, foreign_currency, '2016-02-01')
+        all_lines = line_1 | line_2 | line_3
+
+        # Create the partials as it should be created in previous version.
+        self.env['account.partial.reconcile'].create([
+            {
+                'amount': 92.11,
+                'debit_move_id': line_1.id,
+                'debit_amount_currency': 100.1,
+                'debit_currency_id': foreign_currency.id,
+                'credit_move_id': line_2.id,
+                'credit_amount_currency': 92.11,
+                'credit_currency_id': company_currency.id,
+            },
+            {
+                'amount': 0.0,
+                'debit_move_id': line_3.id,
+                'debit_amount_currency': 0.76,
+                'debit_currency_id': foreign_currency.id,
+                'credit_move_id': line_1.id,
+                'credit_amount_currency': 0.76,
+                'credit_currency_id': foreign_currency.id,
+            },
+        ])
+        self.assertTrue(all(line.reconcile for line in all_lines))
+
+        # "line_1" both have matching credits and debits, ensure we correctly
+        # compute residual at date
+        self.assertRecordValues(all_lines, [
+            {'amount_residual': 0.0, 'residual_at_date': 0.0},
+            {'amount_residual': 0.0, 'residual_at_date': 0.0},
+            {'amount_residual': 0.0, 'residual_at_date': 0.0},
+        ])
+        self.assertRecordValues(all_lines.with_context(recon_limit='2016-01-01'), [
+            {'amount_residual': 0.0, 'residual_at_date':  92.11},
+            {'amount_residual': 0.0, 'residual_at_date': -92.11},
+            {'amount_residual': 0.0, 'residual_at_date':    0.0},
+        ])
+        self.assertRecordValues(all_lines.with_context(recon_limit='2016-03-01'), [
+            {'amount_residual': 0.0, 'residual_at_date': 0.0},
+            {'amount_residual': 0.0, 'residual_at_date': 0.0},
+            {'amount_residual': 0.0, 'residual_at_date': 0.0},
+        ])
+
     def test_migration_to_new_reconciliation_multiple_currencies_fix_residual_with_writeoff(self):
         comp_curr = self.company_data['currency']
         foreign_curr1 = self.other_currency

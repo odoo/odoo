@@ -801,20 +801,24 @@ class AccountMoveLine(models.Model):
             kind='LEFT JOIN LATERAL',
             alias=partial_summary_alias,
             table=SQL("""(
-                SELECT COALESCE(-SUM(partial.amount), 0) as amount_to_date,
-                       COALESCE(ROUND(-SUM(partial.credit_amount_currency), curr.decimal_places), 0) AS amount_currency_to_date
-                  FROM account_partial_reconcile partial
-                  JOIN res_currency curr ON curr.id = partial.debit_currency_id
-                 WHERE partial.debit_move_id = %(base_line_id)s
-                   AND partial.max_date <= %(recon_limit)s
-              GROUP BY curr.id
-             UNION ALL
-                SELECT COALESCE(SUM(partial.amount), 0) as amount_to_date,
-                       COALESCE(ROUND(SUM(partial.debit_amount_currency), curr.decimal_places), 0) AS amount_currency_to_date
-                  FROM account_partial_reconcile partial
-                  JOIN res_currency curr ON curr.id = partial.credit_currency_id
-                 WHERE partial.credit_move_id = %(base_line_id)s
-                   AND partial.max_date <= %(recon_limit)s
+                SELECT COALESCE(SUM(partial_lines.amount_to_date), 0) AS amount_to_date,
+                       COALESCE(ROUND(SUM(partial_lines.amount_currency_to_date), curr.decimal_places), 0) AS amount_currency_to_date
+                  FROM (
+                        SELECT -partial.amount as amount_to_date,
+                               -partial.credit_amount_currency AS amount_currency_to_date,
+                               partial.debit_currency_id AS currency_id
+                          FROM account_partial_reconcile partial
+                         WHERE partial.debit_move_id = %(base_line_id)s
+                           AND partial.max_date <= %(recon_limit)s
+                     UNION ALL
+                        SELECT partial.amount as amount_to_date,
+                               partial.debit_amount_currency AS amount_currency_to_date,
+                               partial.credit_currency_id AS currency_id
+                          FROM account_partial_reconcile partial
+                         WHERE partial.credit_move_id = %(base_line_id)s
+                           AND partial.max_date <= %(recon_limit)s
+                   ) AS partial_lines
+                  JOIN res_currency curr ON curr.id = partial_lines.currency_id
               GROUP BY curr.id
                 )""",
                 recon_limit=recon_limit,
