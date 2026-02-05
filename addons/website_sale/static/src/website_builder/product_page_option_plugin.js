@@ -48,6 +48,8 @@ class ProductPageOptionPlugin extends Plugin {
                 }
             });
         },
+        are_inlines_allowed_at_root_predicates: (node) =>
+            node.matches("div[data-oe-field='description_ecommerce']") ? true : undefined,
     };
     setup() {
         const mainEl = this.document.querySelector(ProductPageOption.selector);
