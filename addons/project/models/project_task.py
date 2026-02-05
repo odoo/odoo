@@ -106,6 +106,7 @@ class ProjectTask(models.Model):
     _primary_email = 'email_from'
     _systray_view = 'list'
     _track_duration_field = 'stage_id'
+    _priority_field = 'priority'
 
     def _get_versioned_fields(self):
         return [ProjectTask.description.name]

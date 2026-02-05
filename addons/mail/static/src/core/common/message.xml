@@ -52,7 +52,9 @@
                                     (from <a t-att-href="message.resUrl"><t t-esc="message.thread.prefix"/><t t-esc="message.channel_id.displayName or message.default_subject"/></a>)
                                 </t>
                                 <t t-else="">
-                                    on <a t-if="message.thread.displayName" t-att-href="message.resUrl" t-esc="message.thread.displayName"/><em class="pe-1 text-decoration-line-through" t-else="">Deleted document</em>
+                                    on
+                                    <Priority t-if="message.thread.priority" thread="message.thread"/>
+                                    <t t-out="nbsp"/><a t-if="message.thread.displayName" t-att-href="message.resUrl" t-esc="message.thread.displayName"/><em class="pe-1 text-decoration-line-through" t-else="">Deleted document</em>
                                 </t>
                             </small>
                             <div t-if="props.message.scheduledDatetime" t-att-class="{ 'ms-2': (env.inChatWindow and isAlignedRight) or (isPersistentMessageFromAnotherThread) }" t-att-title="props.message.scheduledDateSimple">

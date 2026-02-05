@@ -187,6 +187,7 @@ class MaintenanceRequest(models.Model):
     _description = 'Maintenance Request'
     _order = "id desc"
     _check_company_auto = True
+    _priority_field = 'priority'
 
     def _default_stage(self):
         return self.env['maintenance.stage'].search([], limit=1)

@@ -527,6 +527,7 @@ class StockPicking(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Transfer"
     _order = "priority desc, scheduled_date asc, id desc"
+    _priority_field = 'priority'
 
     def _default_picking_type_id(self):
         picking_type_code = self.env.context.get('restricted_picking_type_code')

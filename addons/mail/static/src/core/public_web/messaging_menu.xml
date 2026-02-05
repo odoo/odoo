@@ -56,7 +56,7 @@
                             <i class="oi oi-chevron-right o-xsmaller mx-1"/>
                             <span class="text-truncate min-w-0" t-esc="thread.channel.displayName"/>
                         </div>
-                        <t t-else="" t-esc="thread.displayName"/>
+                        <t t-else=""><Priority t-if="thread.priority" thread="thread"/> <t t-esc="thread.displayName"/></t>
                     </t>
                     <t t-set-slot="body">
                         <t t-if="message?.hasOnlyAttachments">

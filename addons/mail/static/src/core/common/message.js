@@ -12,6 +12,7 @@ import { RelativeTime } from "@mail/core/common/relative_time";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { renderToElement } from "@web/core/utils/render";
+import { nbsp } from "@web/core/utils/strings";
 
 import {
     Component,
@@ -39,7 +40,8 @@ import { NotificationMessage } from "./notification_message";
 import { useForwardRefsToParent, useLongPress } from "@mail/utils/common/hooks";
 import { ActionList } from "@mail/core/common/action_list";
 import { loadCssFromBundle } from "@mail/utils/common/misc";
-import { MessageContextMenu } from "./message_context_menu";
+import { MessageContextMenu } from "@mail/core/common/message_context_menu";
+import { Priority } from "@mail/core/common/priority";
 
 /**
  * @typedef {Object} Props
@@ -75,6 +77,7 @@ export class Message extends Component {
         PollResult,
         RelativeTime,
         NotificationMessage,
+        Priority,
     };
     static defaultProps = {
         hasActions: true,
@@ -100,6 +103,7 @@ export class Message extends Component {
 
     setup() {
         super.setup();
+        this.nbsp = nbsp;
         this.store = useService("mail.store");
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.state = useState({

@@ -12,10 +12,11 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { Deferred } from "@odoo/hoot-mock";
-import { mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { fields, mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 import { range } from "@web/core/utils/numbers";
+import { ResFake } from "@mail/../tests/mock_server/mock_models/res_fake";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -765,4 +766,81 @@ test("can mark message as unread from history", async () => {
     await contains(".o-mail-Message-body:text(lorem ipsum)");
     await click(".o-mail-MessagingMenu-counter:text(1)");
     await contains(".o-mail-NotificationItem-text:text(John Doe: lorem ipsum)");
+});
+
+test("show thread priority in Inbox", async () => {
+    const pyEnv = await startServer();
+    const fakeId = pyEnv["res.fake"].create({
+        name: "Some record",
+        priority: "2",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "res.fake",
+        res_id: fakeId,
+        needaction: true,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    await start();
+    await openDiscuss("mail.box_inbox");
+    await contains(".o-mail-Message-header .fa-star", { count: 2 });
+    await contains(".o-mail-Message-header .fa-star-o");
+});
+
+test("show thread priority with only 1 or 0 star", async () => {
+    ResFake._fields.priority = fields.Selection({
+        selection: [
+            ["0", "Low priority"],
+            ["1", "Urgent"],
+        ],
+        default: "0",
+    });
+    const pyEnv = await startServer();
+    const [fakeId1, fakeId2] = pyEnv["res.fake"].create([
+        {
+            name: "Some record",
+            priority: "1",
+        },
+        {
+            name: "Some record",
+            priority: "0",
+        },
+    ]);
+    const [messageId1, messageId2] = pyEnv["mail.message"].create([
+        {
+            body: "not empty",
+            model: "res.fake",
+            res_id: fakeId1,
+            needaction: true,
+        },
+        {
+            body: "not empty",
+            model: "res.fake",
+            res_id: fakeId2,
+            needaction: true,
+        },
+    ]);
+    pyEnv["mail.notification"].create([
+        {
+            mail_message_id: messageId1,
+            notification_status: "sent",
+            notification_type: "inbox",
+            res_partner_id: serverState.partnerId,
+        },
+        {
+            mail_message_id: messageId2,
+            notification_status: "sent",
+            notification_type: "inbox",
+            res_partner_id: serverState.partnerId,
+        },
+    ]);
+    await start();
+    await openDiscuss("mail.box_inbox");
+    await contains(".o-mail-Message-header .fa-star");
+    await contains(".o-mail-Message-header .fa-star-o");
 });

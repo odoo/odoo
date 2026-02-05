@@ -102,6 +102,12 @@ export class MailMessage extends models.ServerModel {
                     display_name: thread.name ?? thread.display_name,
                     module_icon: "/base/static/description/icon.png",
                 };
+                if (thread.priority) {
+                    thread_data.priority = thread.priority;
+                    thread_data.priority_definition = this.env[message.model].fields_get([
+                        "priority",
+                    ])["priority"]["selection"];
+                }
                 if (for_current_user && add_followers) {
                     thread_data.selfFollower = mailDataHelpers.Store.one(
                         MailFollowers.browse(

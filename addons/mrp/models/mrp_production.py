@@ -42,6 +42,7 @@ class MrpProduction(models.Model):
     _date_name = 'date_start'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'product.catalog.mixin']
     _order = 'priority desc, date_start asc,id'
+    _priority_field = 'priority'
 
     @api.model
     def default_get(self, fields):
