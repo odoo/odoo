@@ -1042,7 +1042,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.test_move.button_draft()  # move has posted_before == True
         self.assertEqual(self.test_move.journal_id, self.company_data['default_journal_misc'])
         self.assertEqual(self.test_move.name, 'MISC/2016/01/0001')
-        with self.assertRaisesRegex(UserError, 'You cannot edit the journal of an account move if it has been posted once, unless the name is removed or set to "/". This might create a gap in the sequence.'):
+        with self.assertRaisesRegex(UserError, 'You cannot edit the journal of a journal entry if it has been posted once, unless the name is removed or set to "/". This might create a gap in the sequence.'):
             self.test_move.write({'journal_id': False})
         # Once move name in draft is changed to '/', changing the journal is allowed
         self.test_move.name = '/'
@@ -1065,7 +1065,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         test_move_2 = self.test_move.copy({'name': 'TEST/2016/01/0002', 'date': '2016-01-01'})
         self.assertEqual(test_move_2.sequence_number, 2)
         self.assertEqual(test_move_2.journal_id, self.company_data['default_journal_misc'])
-        with self.assertRaisesRegex(UserError, 'You cannot edit the journal of an account move with a sequence number assigned, unless the name is removed or set to "/". This might create a gap in the sequence.'):
+        with self.assertRaisesRegex(UserError, 'You cannot edit the journal of a journal entry with a sequence number assigned, unless the name is removed or set to "/". This might create a gap in the sequence.'):
             test_move_2.write({'journal_id': False})
         # Once move name in draft is changed to '/', changing the journal is allowed
         test_move_2.write({'name': False, 'journal_id': journal.id})

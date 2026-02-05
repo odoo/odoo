@@ -384,8 +384,8 @@ class PosOrder(models.Model):
     reversed_move_ids = fields.One2many(
         'account.move',
         'reversed_pos_order_id',
-        string="Reversal Account Moves",
-        help="List of account moves created when this POS order was reversed and invoiced after session close."
+        string="Reversal Journal Entries",
+        help="List of journal entries created when this POS order was reversed and invoiced after session close."
     )
     source = fields.Selection(string="Origin", selection=[('pos', 'Point of Sale')], default='pos')
 

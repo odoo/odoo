@@ -9,7 +9,7 @@ class AccountMoveSendWizard(models.TransientModel):
     """Wizard that handles the sending a single invoice."""
     _name = 'account.move.send.wizard'
     _inherit = ['account.move.send', 'mail.composer.mixin']
-    _description = "Account Move Send Wizard"
+    _description = "Send Invoice Wizard"
 
     move_id = fields.Many2one(comodel_name='account.move', required=True)
     company_id = fields.Many2one(comodel_name='res.company', related='move_id.company_id')

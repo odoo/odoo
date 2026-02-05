@@ -76,7 +76,7 @@ class AccountMoveLine extends models.Model {
         relation:"product",
     });
     move_id = fields.Many2one({
-        string: "Account Move",
+        string: "Journal Entry",
         relation: "account.move",
     })
 }

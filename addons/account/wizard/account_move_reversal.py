@@ -9,7 +9,7 @@ class AccountMoveReversal(models.TransientModel):
     Account move reversal wizard, it cancel an account move by reversing it.
     """
     _name = 'account.move.reversal'
-    _description = 'Account Move Reversal'
+    _description = 'Journal Entry Reversal'
     _check_company_auto = True
 
     move_ids = fields.Many2many('account.move', 'account_move_reversal_move', 'reversal_id', 'move_id', domain=[('state', '=', 'posted')])

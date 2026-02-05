@@ -94,7 +94,7 @@ class Aml extends models.Model {
     label = fields.Char({ string: "Label" });
     amount = fields.Float({ string: "Amount" });
     analytic_distribution = fields.Json({ string: "Analytic" });
-    move_id = fields.Many2one({ string: "Account Move", relation: "move" });
+    move_id = fields.Many2one({ string: "Journal Entry", relation: "move" });
     analytic_precision = fields.Integer({ string: "Analytic Precision" });
     company_id = fields.Many2one({ relation: "res.company" });
 

@@ -3873,7 +3873,7 @@ class AccountMove(models.Model):
                     and 'journal_id' in vals and move.journal_id.id != vals['journal_id']
                     and not (move.name == '/' or not move.name or ('name' in vals and (vals['name'] == '/' or not vals['name'])))
             ):
-                raise UserError(_('You cannot edit the journal of an account move if it has been posted once, unless the name is removed or set to "/". This might create a gap in the sequence.'))
+                raise UserError(_('You cannot edit the journal of a journal entry if it has been posted once, unless the name is removed or set to "/". This might create a gap in the sequence.'))
             if (
                     move.name and move.name != '/'
                     and move.sequence_number not in (0, 1)
@@ -3881,7 +3881,7 @@ class AccountMove(models.Model):
                     and not move.quick_edit_mode
                     and not ('name' in vals and (vals['name'] == '/' or not vals['name']))
             ):
-                raise UserError(_('You cannot edit the journal of an account move with a sequence number assigned, unless the name is removed or set to "/". This might create a gap in the sequence.'))
+                raise UserError(_('You cannot edit the journal of a journal entry with a sequence number assigned, unless the name is removed or set to "/". This might create a gap in the sequence.'))
 
             # You can't change the date or name of a move being inside a locked period.
             if move.state == "posted" and (
