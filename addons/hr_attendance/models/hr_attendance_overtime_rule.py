@@ -708,10 +708,11 @@ class HrAttendanceOvertimeRule(models.Model):
         for employee, intervals_by_attendance in undertimes.items():
             tz = timezone(employee._get_tz())
             for attendance, intervals in intervals_by_attendance.items():
+                date = attendance.check_in.astimezone(tz).date()
                 duration_by_day_by_rules = defaultdict(lambda: defaultdict(float))
-                for duration, rules in intervals:
-                    date = attendance.check_in.astimezone(tz).date()
-                    duration_by_day_by_rules[date][rules] += duration
+                min_duration_tuple = max(intervals, key=lambda x: x[0])
+                duration, rules = min_duration_tuple
+                duration_by_day_by_rules[date][rules] += duration
                 _add_overtime_val(attendance, duration_by_day_by_rules)
         return vals
 
