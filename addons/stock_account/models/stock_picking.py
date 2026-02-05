@@ -16,7 +16,7 @@ class StockPicking(models.Model):
             return
         for picking in self:
             if picking._is_date_in_lock_period():
-                raise ValidationError(self.env._("You cannot modify the scheduled date of this operation because it falls within a locked fiscal period."))
+                raise ValidationError(self.env._("You cannot modify the scheduled date of operation %s because it falls within a locked fiscal period.", picking.display_name))
 
     def _compute_is_date_editable(self):
         super()._compute_is_date_editable()
@@ -26,7 +26,9 @@ class StockPicking(models.Model):
 
     def _is_date_in_lock_period(self):
         self.ensure_one()
-        lock = self.company_id._get_lock_date_violations(self.scheduled_date.date(), fiscalyear=True, sale=False, purchase=False, tax=False, hard=True)
+        lock = []
+        if self.state == "done":
+            lock += self.company_id._get_lock_date_violations(self.scheduled_date.date(), fiscalyear=True, sale=False, purchase=False, tax=False, hard=True)
         if self.date_done:
             lock += self.company_id._get_lock_date_violations(self.date_done.date(), fiscalyear=True, sale=False, purchase=False, tax=False, hard=True)
         return bool(lock)
