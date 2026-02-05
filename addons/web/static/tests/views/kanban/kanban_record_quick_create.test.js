@@ -3067,7 +3067,7 @@ test("Quick created record is rendered after load", async () => {
                 <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
                 <templates>
                     <t t-name="card">
-                        <span t-esc="record.category_ids.raw_value.length" />
+                        <span t-out="record.category_ids.raw_value.length" />
                     </t>
                 </templates>
             </kanban>`,

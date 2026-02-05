@@ -151,6 +151,30 @@ class JSTooling:
         return pattern.sub(replacer, content)
 
     @staticmethod
+    def transform_js_string_literals(content: str, transform_func: callable) -> str:
+        """Finds JS string literals ('...', "...", `...`) and applies a transformation function.
+
+        Args:
+            content: The JS file content.
+            transform_func: Function to apply to the inner string.
+
+        Returns:
+            The JS content with transformed string literals.
+        """
+        pattern = re.compile(
+            r"'(?:\\.|[^'\\])*'|\"(?:\\.|[^\"\\])*\"|`(?:\\.|[^`\\])*`",
+            re.DOTALL,
+        )
+
+        def replacer(match: re.Match) -> str:
+            literal = match.group(0)
+            delimiter = literal[0]
+            inner = literal[1:-1]
+            return delimiter + transform_func(inner) + delimiter
+
+        return pattern.sub(replacer, content)
+
+    @staticmethod
     def clean_whitespace(content: str) -> str:
         """Removes trailing whitespace and lines containing only spaces.
 
@@ -266,7 +290,9 @@ def upgrade_t_esc(file_manager, log_info, log_error):
             continue
 
         try:
-            if file.path.suffix == ".js":
+            if file.path.name.endswith(".test.js"):
+                content = JSTooling.transform_js_string_literals(content, replace_t_esc)
+            elif file.path.suffix == ".js":
                 content = JSTooling.transform_xml_literals(content, replace_t_esc)
             else:  # .xml
                 content = replace_t_esc(content)
