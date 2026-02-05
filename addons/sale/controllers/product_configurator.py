@@ -44,30 +44,35 @@ class SaleProductConfiguratorController(Controller):
             request.update_context(allowed_company_ids=[company_id])
         product_template = self._get_product_template(product_template_id)
 
-        combination = self.env["product.template.attribute.value"]
-        if ptav_ids:
-            combination = (
-                self
-                .env["product.template.attribute.value"]
-                .browse(ptav_ids)
-                .filtered(lambda ptav: ptav.product_tmpl_id.id == product_template_id)
-            )
-            # Set missing attributes (unsaved no_variant attributes, or new attribute on existing
-            # product)
-            unconfigured_ptals = (
-                product_template.attribute_line_ids - combination.attribute_line_id
-            ).filtered(lambda ptal: ptal.attribute_id.display_type != "multi")
-            combination += unconfigured_ptals.mapped(
-                lambda ptal: ptal.product_template_value_ids._only_active()[:1]
-            )
-        if not combination:
-            combination = product_template._get_first_possible_combination()
-        currency = self.env["res.currency"].browse(currency_id)
-        pricelist = self.env["product.pricelist"].browse(pricelist_id)
-        so_date = datetime.fromisoformat(so_date)
+        res = (
+            request.env["product.template"].browse(product_template_id).get_single_product_variant()
+        )
 
-        return {
-            "products": [
+        is_template_configurable = not res.get("product_id") or res.get("has_optional_products")
+        if is_template_configurable:
+            combination = request.env["product.template.attribute.value"]
+            if ptav_ids:
+                combination = (
+                    request
+                    .env["product.template.attribute.value"]
+                    .browse(ptav_ids)
+                    .filtered(lambda ptav: ptav.product_tmpl_id.id == product_template_id)
+                )
+                # Set missing attributes (unsaved no_variant attributes, or new attribute on
+                # existing product)
+                unconfigured_ptals = (
+                    product_template.attribute_line_ids - combination.attribute_line_id
+                ).filtered(lambda ptal: ptal.attribute_id.display_type != "multi")
+                combination += unconfigured_ptals.mapped(
+                    lambda ptal: ptal.product_template_value_ids._only_active()[:1]
+                )
+            if not combination:
+                combination = product_template._get_first_possible_combination()
+            currency = request.env["res.currency"].browse(currency_id)
+            pricelist = request.env["product.pricelist"].browse(pricelist_id)
+            so_date = datetime.fromisoformat(so_date)
+
+            res["products"] = [
                 dict(
                     **self._get_product_information(
                         product_template,
@@ -80,26 +85,31 @@ class SaleProductConfiguratorController(Controller):
                         **kwargs,
                     )
                 )
-            ],
-            "optional_products": [
-                dict(
-                    **self._get_product_information(
-                        optional_product_template,
-                        optional_product_template._get_first_possible_combination(),
-                        currency,
-                        pricelist,
-                        so_date,
-                        **kwargs,
-                    ),
-                    parent_product_tmpl_id=product_template.id,
-                )
-                for optional_product_template in product_template.optional_product_ids
-                if self._should_show_product(optional_product_template)
             ]
-            if not only_main_product
-            else [],
-            "currency_id": currency_id,
-        }
+
+            res["optional_products"] = (
+                [
+                    dict(
+                        **self._get_product_information(
+                            optional_product_template,
+                            optional_product_template._get_first_possible_combination(),
+                            currency,
+                            pricelist,
+                            so_date,
+                            **kwargs,
+                        ),
+                        parent_product_tmpl_id=product_template.id,
+                    )
+                    for optional_product_template in product_template.optional_product_ids
+                    if self._should_show_product(optional_product_template)
+                ]
+                if not only_main_product
+                else []
+            )
+
+            res["currency_id"] = currency_id
+
+        return res
 
     @route(
         route="/sale/product_configurator/create_product",
