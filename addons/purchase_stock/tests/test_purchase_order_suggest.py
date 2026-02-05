@@ -610,6 +610,72 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         po_2 = self.env['purchase.order'].create({'partner_id': partner_2.id})
         self.assertEstimatedPrice(po_2, 20, based_on='one_week', days=7)  # No pricelist --> should use standard price
 
+    def test_monthly_demand_in_multi_step_delivery(self):
+        """Ensure that monthly demand does not increase after validating
+        the intermediate internal transfer in multi-step delivery routes.
+
+        The demand should remain constant when validating the internal transfer:
+            - With warehouse in context
+            - Without warehouse in context
+        """
+        warehouse = self.warehouse
+        warehouse.delivery_steps = 'pick_ship'
+
+        product = self.product_1
+        self.env['stock.quant']._update_available_quantity(product, warehouse.lot_stock_id, 20)
+
+        # Create the two-step delivery flow (Pick → Ship) through procurement.
+        # Freeze time slightly in the past to ensure move.date < limit_date in the monthly demand move domain.
+        with freeze_time('2021-01-14 09:00:00'):
+            self.env['stock.rule'].run([
+                self.env['stock.rule'].Procurement(
+                    product,
+                    10.0,
+                    self.uom,
+                    self.customer_location,
+                    product.name,
+                    'Test Monthly Demand',
+                    warehouse.company_id,
+                    {
+                        'warehouse_id': warehouse,
+                    },
+                ),
+            ])
+
+        pick_picking = self.env['stock.picking'].search([('origin', '=', 'Test Monthly Demand')])
+        # Compute monthly demand before validating the pick_picking.
+        demand_before_with_wh = product.with_context(warehouse_id=warehouse.id).monthly_demand
+        demand_before_without_wh = product.monthly_demand
+        self.assertEqual(
+            demand_before_with_wh,
+            10.0,
+            "Monthly demand with warehouse should be 10.0 before validating the internal transfer."
+        )
+        self.assertEqual(
+            demand_before_without_wh,
+            10.0,
+            "Monthly demand without warehouse should be 10.0 before validating the internal transfer."
+        )
+
+        with freeze_time('2021-01-14 09:00:00'):
+            pick_picking.button_validate()
+        self.assertTrue(pick_picking._get_next_transfers(), "Ship picking should be created.")
+
+        # Recompute monthly demand after validating internal transfer.
+        product.invalidate_recordset(['monthly_demand'])
+        demand_after_with_wh = product.with_context(warehouse_id=warehouse.id).monthly_demand
+        demand_after_without_wh = product.monthly_demand
+        self.assertEqual(
+            demand_after_with_wh,
+            10.0,
+            "Monthly demand with warehouse should remain 10.0 after validating the internal transfer."
+        )
+        self.assertEqual(
+            demand_after_without_wh,
+            10.0,
+            "Monthly demand without warehouse should remain 10.0 after validating the internal transfer."
+        )
+
     def test_purchase_order_suggest_search_panel_ux(self):
         """ Tests the purchase catalog suggest component, in particular:
         - Suggest component: Hidding, Estimated price, Add all, Changing warehouse, Saving defaults

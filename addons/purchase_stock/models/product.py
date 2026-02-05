@@ -144,14 +144,20 @@ class ProductProduct(models.Model):
         if not warehouse_id:
             return Domain.OR([
                 [('location_dest_usage', 'in', ['customer', 'production'])],
-                [('location_final_id.usage', 'in', ['customer', 'production'])],
+                Domain.AND([
+                    [('location_final_id.usage', 'in', ['customer', 'production'])],
+                    [('move_dest_ids', '=', False)],
+                ]),
             ])
         else:
             return Domain.AND([
                 [('location_id.warehouse_id', '=', warehouse_id)],
                 Domain.OR([
                     [('location_dest_id.warehouse_id', '!=', warehouse_id)],
-                    [('location_final_id.warehouse_id', '!=', warehouse_id)]
+                    Domain.AND([
+                        [('location_final_id.warehouse_id', '!=', warehouse_id)],
+                        [('move_dest_ids', '=', False)],
+                    ]),
                 ]),  # includes moves going to customer or production
                 [('location_dest_id.usage', '!=', 'inventory')]  # exclude scrap
             ])
