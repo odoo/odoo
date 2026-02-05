@@ -10,9 +10,11 @@ import {
     models,
     mountView,
     onRpc,
+    patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
 import { saleModels } from "./sale_test_helpers";
+import { SaleOrderLineProductField } from "@sale/js/sale_product_field/sale_product_field";
 
 class SaleOrderLine extends saleModels.SaleOrderLine {
     product_template_attribute_value_ids = fields.Many2many({
@@ -63,6 +65,16 @@ test("pressing tab with incomplete text will create a product", async () => {
                 </form>`,
     });
 
+    patchWithCleanup(SaleOrderLineProductField.prototype, {
+        async _getProductConfiguratorData() {
+            expect.step("_getProductConfiguratorData");
+            return {
+                product_id: { id: 42, display_name: "Test Product" },
+                product_name: "Test Product",
+            };
+        },
+    });
+
     // add a line and enter new product name
     await contains(".o_field_x2many_list .o_field_x2many_list_row_add button").click();
     await contains("[name='product_template_id'] input").edit("new product");
@@ -74,7 +86,7 @@ test("pressing tab with incomplete text will create a product", async () => {
         "onchange",
         "web_name_search",
         "name_create",
-        "get_single_product_variant",
+        "_getProductConfiguratorData",
     ]);
 });
 

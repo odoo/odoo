@@ -1,5 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { Component, onMounted, onWillStart, onWillUnmount, props, proxy, t } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, props, proxy, t } from "@odoo/owl";
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -11,20 +11,18 @@ export const productConfiguratorDialogOptionsShape = {
     canChangeVariant: t.boolean().optional(),
     showQuantity: t.boolean().optional(),
     showPrice: t.boolean().optional(),
-    showPackaging: t.boolean().optional(),
 };
 
 export const productConfiguratorDialogProps = {
     productTemplateId: t.number(),
-    ptavIds: t.array(t.number()),
+    products: t.array(),
+    optionalProducts: t.array(),
     customPtavs: t.array(
         t.object({
             id: t.number(),
             value: t.string(),
         })
     ),
-    quantity: t.number(),
-    productUOMId: t.number().optional(),
     companyId: t.number().optional(),
     pricelistId: t.number().optional(),
     currencyId: t.number().optional(),
@@ -57,10 +55,6 @@ export class ProductConfiguratorDialog extends Component {
             products: [],
             optionalProducts: [],
         });
-        // Nest the currency id in an object so that it stays up to date in the `env`, even if we
-        // modify it in `onWillStart` afterwards.
-        this.currency = { id: this.props.currencyId };
-        this.getValuesUrl = '/sale/product_configurator/get_values';
         this.createProductUrl = '/sale/product_configurator/create_product';
         this.updateCombinationUrl = '/sale/product_configurator/update_combination';
         this.getOptionalProductsUrl = '/sale/product_configurator/get_optional_products';
@@ -69,10 +63,9 @@ export class ProductConfiguratorDialog extends Component {
 
         useSubEnv({
             mainProductTmplId: this.props.productTemplateId,
-            currency: this.currency,
+            currencyId: this.props.currency_id,
             canChangeVariant: this.props.options?.canChangeVariant ?? true,
             showQuantity: this.props.options?.showQuantity ?? true,
-            showPackaging: this.props.options?.showPackaging ?? true,
             showPrice: this.props.options?.showPrice ?? true,
             addProduct: this._addProduct.bind(this),
             removeProduct: this._removeProduct.bind(this),
@@ -83,32 +76,23 @@ export class ProductConfiguratorDialog extends Component {
             isPossibleCombination: this._isPossibleCombination,
         });
 
-        onWillStart(async () => {
-            const {
-                products,
-                optional_products,
-                currency_id,
-            } = await this._loadData(this.props.edit);
+        // If the product configurator is opened after the combo configurator (which happens if
+        // a combo product has optional products), props.products will contain a single product
+        // (i.e. the combo product), which should be linked to the previously selected combo
+        // items.
 
-            // If the product configurator is opened after the combo configurator (which happens if
-            // a combo product has optional products), `_loadData` will return a single product
-            // (i.e. the combo product), which should be linked to the previously selected combo
-            // items.
-            products[0].selectedComboItems = this.props.selectedComboItems || [];
+        this.props.products[0].selectedComboItems = this.props.selectedComboItems || [];
 
-            this.state.products = products;
-            this.state.optionalProducts = optional_products;
-            for (const customPtav of this.props.customPtavs) {
-                this._updatePTAVCustomValue(
-                    this.env.mainProductTmplId,
-                    customPtav.id,
-                    customPtav.value
-                );
-            }
-            this._checkExclusions(this.state.products[0]);
-            // Use the currency id retrieved from the server if none was provided in the props.
-            this.currency.id ??= currency_id;
-        });
+        this.state.products = this.props.products;
+        this.state.optionalProducts = this.props.optionalProducts;
+        for (const customPtav of this.props.customPtavs) {
+            this._updatePTAVCustomValue(
+                this.env.mainProductTmplId,
+                customPtav.id,
+                customPtav.value
+            );
+        }
+        this._checkExclusions(this.state.products[0]);
 
         onMounted(() => this.env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:ADD"));
         onWillUnmount(() => this.env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:REMOVE"));
@@ -128,28 +112,12 @@ export class ProductConfiguratorDialog extends Component {
             (sum, product) => sum + product.price * product.quantity,
             0
         );
-        return formatCurrency(total, this.currency.id);
+        return formatCurrency(total, this.props.currency_id);
     }
 
     //--------------------------------------------------------------------------
     // Data Exchanges
     //--------------------------------------------------------------------------
-
-    async _loadData(onlyMainProduct) {
-        return rpc(this.getValuesUrl, {
-            product_template_id: this.props.productTemplateId,
-            quantity: this.props.quantity,
-            currency_id: this.currency.id,
-            so_date: this.props.soDate,
-            product_uom_id: this.props.productUOMId,
-            company_id: this.props.companyId,
-            pricelist_id: this.props.pricelistId,
-            ptav_ids: this.props.ptavIds,
-            only_main_product: onlyMainProduct,
-            show_packaging: this.env.showPackaging,
-            ...this._getAdditionalRpcParams(),
-        });
-    }
 
     async _createProduct(product) {
         return rpc(this.createProductUrl, {
@@ -162,7 +130,7 @@ export class ProductConfiguratorDialog extends Component {
         return rpc(this.updateCombinationUrl, {
             product_template_id: product.product_tmpl_id,
             ptav_ids: this._getCombination(product),
-            currency_id: this.currency.id,
+            currency_id: this.props.currencyId,
             so_date: this.props.soDate,
             quantity: quantity,
             product_uom_id: uomId,
@@ -175,7 +143,7 @@ export class ProductConfiguratorDialog extends Component {
     async _getOptionalProducts(product) {
         return rpc(this.getOptionalProductsUrl, {
             product_template_id: product.product_tmpl_id,
-            currency_id: this.currency.id,
+            currency_id: this.props.currencyId,
             so_date: this.props.soDate,
             company_id: this.props.companyId,
             pricelist_id: this.props.pricelistId,

@@ -116,7 +116,7 @@ export class ProductTemplateAttributeLine extends Component {
     getPTAVSelectName(ptav) {
         if (ptav.price_extra) {
             const sign = ptav.price_extra > 0 ? '+' : '-';
-            const price = formatCurrency(Math.abs(ptav.price_extra), this.env.currency.id);
+            const price = formatCurrency(Math.abs(ptav.price_extra), this.env.currencyId);
             return ptav.name +" ("+ sign + " " + price + ")";
         } else {
             return ptav.name;
