@@ -60,6 +60,11 @@ export function processModelDefs(modelDefs) {
                 let inverseField = Object.values(relationModel).find(
                     (f) => f.relation === model && f.name === field.inverse_name
                 );
+                if (inverseMap.has(inverseField)) {
+                    throw new Error(
+                        `Invalid relational field definition: many2one '${field.relation}.${field.inverse_name}' has multiple one2many inverses. Only one inverse one2many field is allowed.`
+                    );
+                }
                 if (!inverseField) {
                     const backRefName = getBackRef(model, field.name);
                     inverseField = {

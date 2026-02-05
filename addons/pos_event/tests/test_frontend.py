@@ -106,6 +106,20 @@ class TestUi(TestPointOfSaleHttpCommon):
             "iface_available_categ_ids": [(6, 0, [self.event_category.id])],
         })
         self.test_event.write({
+            'seats_max': 4,
+            'event_ticket_ids': [(1, self.test_event.event_ticket_ids[1].id, {'seats_max': 3})],
+            'question_ids': [
+                Command.create({'title': 'Text Box 1', 'question_type': 'text_box', 'once_per_order': True}),
+                Command.create({'title': 'Text Box 2', 'question_type': 'text_box'}),
+            ],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('SellingEventInPosWithTextAnswers')
+        order = self.main_pos_config.session_ids.order_ids[:1]
+        event_registration = order.lines[0].event_registration_ids
+        self.assertEqual(len(event_registration.registration_answer_ids), 4)
+        self.assertEqual(event_registration.registration_answer_ids.mapped("value_text_box"), ['TB1-Answer', 'T2-TB2-Answer', 'TB1-Answer', 'T1-TB2-Answer'])
+        self.test_event.write({
             'question_ids': [Command.create({
                 'title': 'Question3',
                 'question_type': 'simple_choice',
@@ -118,7 +132,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             })]
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'SellingEventInPos', login="pos_user")
+        self.start_pos_tour('SellingEventInPosWithChoiceAnswers')
 
         order = self.env['pos.order'].search([], order='id desc', limit=1)
         event_registration = order.lines[0].event_registration_ids
