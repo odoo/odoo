@@ -4,7 +4,7 @@ from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged
 from odoo.tools import mute_logger, float_round
-from odoo import fields
+from odoo import Command, fields
 
 
 class TestStockFlow(TestStockCommon):
@@ -2598,6 +2598,58 @@ class TestStockFlow(TestStockCommon):
         backorder_wizard.process()
         bo = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
         self.assertEqual(bo.state, 'assigned')
+
+    def test_multiple_moves_with_different_destinations_putaway_strategy(self):
+        '''
+        Ensure that, when assigning a batch of moves with different destinations,
+        putaway strategy correctly defaults to child locations.
+        '''
+        view_a, view_b = self.env['stock.location'].create([{
+            'name': 'View A',
+            'usage': 'view',
+            'location_id': self.stock_location,
+        }, {
+            'name': 'View B',
+            'usage': 'view',
+            'location_id': self.stock_location,
+        }])
+        child_a, child_b = self.env['stock.location'].create([{
+            'name': 'Child A',
+            'usage': 'internal',
+            'location_id': view_a.id,
+        }, {
+            'name': 'Child B',
+            'usage': 'internal',
+            'location_id': view_b.id,
+        }])
+        picking_1, picking_2 = self.env['stock.picking'].create([{
+            'location_id': self.supplier_location,
+            'location_dest_id': view_a.id,
+            'picking_type_id': self.picking_type_in,
+            'move_ids': [Command.create({
+                'name': 'SML should end up in Child A',
+                'location_id': self.supplier_location,
+                'location_dest_id': view_a.id,
+                'product_id': self.productA.id,
+                'product_uom_qty': 1.0,
+            })],
+        }, {
+            'location_id': self.supplier_location,
+            'location_dest_id': view_b.id,
+            'picking_type_id': self.picking_type_in,
+            'state': 'draft',
+            'move_ids': [Command.create({
+                'name': 'SML should end up in Child B',
+                'location_id': self.supplier_location,
+                'location_dest_id': view_b.id,
+                'product_id': self.productB.id,
+                'product_uom_qty': 1.0,
+            })],
+        }])
+        (picking_1 | picking_2).action_confirm()
+        self.assertEqual(picking_1.move_ids.move_line_ids.location_dest_id, child_a)
+        self.assertEqual(picking_2.move_ids.move_line_ids.location_dest_id, child_b)
+
 
 @tagged('-at_install', 'post_install')
 class TestStockFlowPostInstall(TestStockCommon):
