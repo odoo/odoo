@@ -108,13 +108,7 @@ registerThreadAction("notification-settings", {
     actionPanelComponent: NotificationSettings,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
     actionPanelOpen({ channel, owner, store }) {
-        if (owner.isDiscussSidebarChannelActions || owner.env.inMeetingView) {
-            store.env.services.dialog?.add(ChannelActionDialog, {
-                title: channel.displayName,
-                contentComponent: NotificationSettings,
-                contentProps: { channel },
-            });
-        } else {
+        if (owner.isDiscussContent) {
             this.popover?.open(owner.root.el.querySelector(`[name="${this.id}"]`), {
                 hasSizeConstraints: true,
                 channel,
@@ -122,6 +116,9 @@ registerThreadAction("notification-settings", {
         }
     },
     actionPanelOuterClass: "bg-100 border border-secondary",
+    dropdown: ({ owner }) => !owner.isDiscussContent,
+    dropdownComponent: NotificationSettings,
+    dropdownComponentProps: ({ channel }) => ({ channel }),
     condition: ({ channel, owner, store }) =>
         channel && store.self_user && (!owner.props.chatWindow || owner.props.chatWindow.isOpen),
     setup({ owner }) {
@@ -135,10 +132,11 @@ registerThreadAction("notification-settings", {
         }
     },
     icon: ({ channel }) =>
-        channel.self_member_id?.mute_until_dt
+        channel?.self_member_id?.mute_until_dt
             ? "fa fa-fw text-danger fa-bell-slash"
             : "fa fa-fw fa-bell",
-    name: _t("Notification Settings"),
+    name: ({ channel }) =>
+        channel.channel_type == "channel" ? _t("Notification Settings") : _t("Mute Conversation"),
     sequence: 10,
     sequenceGroup: 30,
 });
