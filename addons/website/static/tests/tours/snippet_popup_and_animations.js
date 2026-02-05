@@ -140,6 +140,10 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
         content: "Check that the popup has been closed",
         trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup') i.fa-eye-slash",
     },
+    {
+        trigger: ":iframe .s_three_columns .row",
+        run: (helpers) => helpers.anchor.scrollIntoView(),
+    },
     clickOnElement("Last image of the 'Columns' snippet", ":iframe .s_three_columns .o_animate_on_scroll img"),
     ...changeOptionInPopover("Image", "Animation", "On Hover"),
     {
@@ -148,19 +152,23 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
     },
     ...clickOnSave(),
     ...clickOnEditAndWaitEditMode(),
-    clickOnElement("Image of the 'Columns' snippet with the overlay effect", ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='overlay']:not(:visible)"),
+    {
+        trigger: ":iframe .s_three_columns .row",
+        run: (helpers) => helpers.anchor.scrollIntoView(),
+    },
+    clickOnElement("Image of the 'Columns' snippet with the overlay effect", ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='overlay']"),
     ...changeOptionInPopover("Image", "Effect", "Outline"),
     {
         trigger: ".o_customize_tab .options-container[data-container-title='Image'] [data-label='Effect'] button:contains('Outline')",
     },
     {
         content: "Check that the outline effect has been applied on the image",
-        trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']:not(:visible)",
+        trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']",
     },
     ...clickOnSave(),
     {
         content: "Check that the image src is not the raw data",
-        trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']:not(:visible)",
+        trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']",
         run() {
             const imgEl = document.querySelector("iframe").contentDocument.querySelector(".s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']");
             const src = imgEl.getAttribute("src");
@@ -171,7 +179,7 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
     },
     ...clickOnEditAndWaitEditMode(),
     {
-        trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']:not(:visible)",
+        trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']",
         run() {
             this.anchor.scrollIntoView();
             this.anchor.click();
