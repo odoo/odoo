@@ -374,9 +374,7 @@ class ProductProduct(models.Model):
             if location:
                 location_ids = _search_ids('stock.location', location)
             else:
-                location_ids = set(Warehouse.search(
-                    [('company_id', 'in', self.env.companies.ids)]
-                ).mapped('view_location_id').ids)
+                return self._get_domain_locations_company()
 
         return self._get_domain_locations_new(location_ids)
 
@@ -426,6 +424,32 @@ class ProductProduct(models.Model):
             ])
 
         # returns: (domain_quant_loc, domain_move_in_loc, domain_move_out_loc)
+        return (
+            loc_domain,
+            dest_loc_domain & ~loc_domain,
+            loc_domain & dest_loc_domain_out,
+        )
+
+    def _get_domain_locations_company(self):
+        companies = self.env.companies
+        loc_domain = Domain([('location_id.warehouse_id.company_id', 'in', companies.ids), ('location_id.warehouse_id.active', '=', True)])
+        dest_loc_domain_done = Domain([('location_dest_id.warehouse_id.company_id', 'in', companies.ids), ('location_dest_id.warehouse_id.active', '=', True)])
+        dest_loc_domain_in_progress = Domain([
+            '|',
+                '&', ('location_final_id', '!=', False), '&', ('location_final_id.warehouse_id.company_id', 'in', companies.ids), ('location_final_id.warehouse_id.active', '=', True),
+                '&', ('location_final_id', '=', False), '&', ('location_dest_id.warehouse_id.company_id', 'in', companies.ids), ('location_dest_id.warehouse_id.active', '=', True)
+        ])
+        dest_loc_domain = Domain([
+            '|',
+                '&', ('state', '=', 'done'), dest_loc_domain_done,
+                '&', ('state', '!=', 'done'), dest_loc_domain_in_progress,
+        ])
+        dest_loc_domain_out = Domain([
+            '|',
+                '&', ('state', '=', 'done'), ~dest_loc_domain_done,
+                '&', ('state', '!=', 'done'), ~dest_loc_domain_in_progress,
+        ])
+
         return (
             loc_domain,
             dest_loc_domain & ~loc_domain,
