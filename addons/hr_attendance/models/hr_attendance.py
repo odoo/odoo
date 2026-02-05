@@ -472,3 +472,28 @@ class HrAttendance(models.Model):
             'url': get_google_maps_url(self.out_latitude, self.out_longitude),
             'target': 'new'
         }
+
+    def export_data(self, fields_to_export):
+        result = super().export_data(fields_to_export)
+        time_fields = ['worked_hours', 'overtime_hours', 'validated_overtime_hours']
+        indices = [i for i, f in enumerate(fields_to_export) if f in time_fields]
+
+        if not indices:
+            return result
+
+        formatted_data = []
+        for row in result['datas']:
+            new_row = list(row)
+            for index in indices:
+                val = new_row[index]
+                hours = int(abs(val))
+                minutes = round((abs(val) - hours) * 60)
+                if minutes == 60:
+                    hours += 1
+                    minutes = 0
+                sign = '-' if val < 0 else ''
+                new_row[index] = f"{sign}{hours:02d}:{minutes:02d}"
+            formatted_data.append(new_row)
+
+        result['datas'] = formatted_data
+        return result

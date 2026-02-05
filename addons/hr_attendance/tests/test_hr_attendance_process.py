@@ -62,3 +62,26 @@ class TestHrAttendance(TransactionCase):
         # now = 2019/3/2 14:00 in the employee's timezone
         with patch.object(fields.Datetime, 'now', lambda: tz_datetime(2019, 3, 2, 14, 0).astimezone(pytz.utc).replace(tzinfo=None)):
             self.assertEqual(employee.hours_today, 5, "It should have counted 5 hours")
+
+    def test_export_data_formatting(self):
+        """ Test that worked_hours is converted from float to HH:MM string on export """
+        att = self.env['hr.attendance'].create({
+            'employee_id': self.test_employee.id,
+            'check_in': datetime(2024, 1, 2, 9, 0),
+            'check_out': datetime(2024, 1, 2, 18, 0),
+        })
+
+        export_result = att.export_data(['worked_hours'])
+        exported_value = export_result['datas'][0][0]
+        self.assertEqual(exported_value, "08:00")
+
+    def test_export_data_zero_attendance(self):
+        """ Test 0 Attendance """
+        zero_attendance = self.env['hr.attendance'].create({
+            'employee_id': self.test_employee.id,
+            'check_in': fields.Datetime.to_datetime('2024-01-01 08:00:00'),
+            'check_out': fields.Datetime.to_datetime('2024-01-01 08:00:00'),
+        })
+
+        export_result = zero_attendance.export_data(['worked_hours'])
+        self.assertEqual(export_result['datas'][0][0], "00:00")
