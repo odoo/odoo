@@ -40,7 +40,7 @@ registerThreadAction("notification-settings", {
     open({ owner, store, thread }) {
         if (owner.isDiscussSidebarChannelActions || owner.env.inMeetingView) {
             store.env.services.dialog?.add(ChannelActionDialog, {
-                title: thread.name,
+                title: thread.displayName,
                 contentComponent: NotificationSettings,
                 contentProps: { thread },
             });
