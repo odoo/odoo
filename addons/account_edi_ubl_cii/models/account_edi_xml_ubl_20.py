@@ -838,7 +838,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # ==== partner_bank_id ====
         bank_detail_nodes = tree.findall('.//{*}PaymentMeans')
         bank_details = [bank_detail_node.findtext('{*}PayeeFinancialAccount/{*}ID') for bank_detail_node in bank_detail_nodes]
-        if bank_details:
+        if bank_details and invoice.is_purchase_document():
             self._import_partner_bank(invoice, bank_details)
 
         # ==== ref, invoice_origin, narration, payment_reference ====

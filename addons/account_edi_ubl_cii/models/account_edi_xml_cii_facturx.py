@@ -296,7 +296,7 @@ class AccountEdiXmlCII(models.AbstractModel):
             or bank_detail_node.findtext('{*}PayeePartyCreditorFinancialAccount/{*}ProprietaryID')
             for bank_detail_node in bank_detail_nodes
         ]
-        if bank_details:
+        if bank_details and invoice.is_purchase_document():
             self._import_partner_bank(invoice, bank_details=bank_details)
 
         # ==== ref, invoice_origin, narration, payment_reference ====
