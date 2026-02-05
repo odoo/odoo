@@ -688,6 +688,15 @@ class Website(models.Model):
     def get_available_countries(self):
         return self.env['res.country'].search([])
 
+    def get_available_currencies(self):
+        country = self._get_and_cache_current_country()
+        country_group, _ = self._get_country_group_and_pricelist(country.code)
+        ResCurrency = self.env['res.currency']
+        if country_group:
+            return ResCurrency.browse(country_group.mapped('pricelist_ids.currency_id.id'))
+        else:
+            return ResCurrency
+
     def _get_geoip_country_code(self):
         return request and request.geoip.country_code or False
 
@@ -697,7 +706,7 @@ class Website(models.Model):
         """
         languages = self.language_ids
         if country_group:
-            languages = (country_group.language_ids and languages) or languages
+            languages = (country_group.language_ids & languages) or languages
         return self.env['res.lang'].browse(languages.ids)
 
     def sale_product_domain(self):

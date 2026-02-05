@@ -19,4 +19,4 @@ class ResCountryGroup(models.Model):
         default='tax_excluded',
     )
     # TODO-PDA: upgrade script default languages on existing groups
-    language_ids = fields.Many2many('res.lang', default=_default_language_ids, required=True)
+    language_ids = fields.Many2many('res.lang', default=_default_language_ids)

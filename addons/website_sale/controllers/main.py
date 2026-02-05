@@ -947,24 +947,25 @@ class WebsiteSale(payment_portal.PaymentPortal):
     )
     def country_change(self, country, **post):
         website = request.env['website'].get_current_website()
-        redirect_url = request.httprequest.referrer
+        redirect_url = request.httprequest.referrer or self._get_shop_path()
         if country not in website.get_available_countries():
-            return request.redirect(redirect_url or self._get_shop_path())
+            return request.redirect(redirect_url)
 
         request.session[COUNTRY_SESSION_CACHE_KEY] = country.id
         country_group, pricelist = website._get_country_group_and_pricelist(country.code)
 
         self._apply_pricelist(pricelist=pricelist)
 
-        # TODO-PDA adapt languages when changing the country
-        lang = website._get_available_languages(country_group)[0]
-        # redirect url with the previous lang removed if any and the new one set
-        lang_code = request.env['res.lang']._get_data(url_code=lang.url_code).code or lang
+        lang = website._get_available_languages(country_group)[0].url_code
         previous_lang = request.env['res.lang'].search([('code','=',request.env.lang)]).url_code
-        if redirect_url.endswith(f'/{previous_lang}'):
-            redirect_url = redirect_url.replace(f'/{previous_lang}', f'/{lang.url_code}')
+        parsed_url_path = urlparse(redirect_url).path
+        if parsed_url_path.startswith(f'/{previous_lang}'):
+            redirect_url = parsed_url_path.replace(f'/{previous_lang}', f'/{lang}')
+        else:
+            # Default language is not present in the URL path
+            redirect_url = f'/{lang}{parsed_url_path}'
         return request.redirect(
-            f'/website/lang/{lang.url_code}?{url_encode({"r": redirect_url})}'
+            f'/website/lang/{lang}?{url_encode({"r": redirect_url})}'
         )
         # TODO-PDA restrictions based on delivery address. If I first update the address, then the pricelist, NOK.
 

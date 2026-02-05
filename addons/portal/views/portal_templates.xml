@@ -64,10 +64,10 @@
         </xpath>
     </template>
 
-    <template id="footer_pricelist_selector" inherit_id="portal.frontend_layout" name="Footer Pricelist Selector">
+    <template id="footer_currency_selector" inherit_id="portal.frontend_layout" name="Footer Currency Selector">
         <xpath expr="//*[hasclass('o_footer_copyright_name')]" position="inside">
-            <t id="pricelist_selector_call"
-                t-call="portal.pricelist_selector"
+            <t id="currency_selector_call"
+                t-call="portal.currency_selector"
                 _div_classes="(_div_classes or '') + ' dropup'"/>
         </xpath>
     </template>
@@ -105,25 +105,25 @@
         </div>
     </template>
 
-    <template id="pricelist_selector" name="Pricelist Selector">
-        <t t-set="pricelists" t-value="website.get_pricelist_available(show_visible=True)"/>
-        <t t-set="pricelist_selector_visible" t-value="len(pricelists) &gt; 1"/>
-        <div t-attf-class="#{_div_classes} d-print-none" t-if="pricelist_selector_visible">
-            <t t-set="active_pricelist" t-value="request.pricelist"/>
+    <template id="currency_selector" name="Currency Selector">
+        <t t-set="currencies" t-value="website.get_available_currencies()"/>
+        <t t-set="currency_selector_visible" t-value="len(currencies) &gt; 1"/>
+        <div t-attf-class="#{_div_classes} d-print-none" t-if="currency_selector_visible">
+            <t t-set="active_currency" t-value="request.pricelist.currency_id"/>
             <button t-attf-class="border-0 dropdown-toggle #{_btn_class or 'btn btn-sm btn-outline-secondary'}"
                     type="button"
                     data-bs-toggle="dropdown"
                     aria-haspopup="true"
                     aria-expanded="true">
-                <span t-attf-class="#{_txt_class}" t-out="active_pricelist.name"/>
+                <span t-attf-class="#{_txt_class}" t-out="active_currency.name"/>
             </button>
             <div t-attf-class="dropdown-menu #{_dropdown_menu_class}" role="menu">
-                <t t-foreach="pricelists" t-as="pl">
+                <t t-foreach="currencies" t-as="cu">
                     <a t-attf-class="dropdown-item"
-                       t-att-aria-current="request.pricelist"
-                       t-att-href="'/shop/change_pricelist/%s' % pl.id"
+                       t-att-aria-current="request.pricelist.currency_id"
+                       t-att-href="'/shop/change_currency/%s' % cu.id"
                        role="menuitem">
-                        <span t-out="pl.name" t-attf-class="#{_txt_class}"/>
+                        <span t-out="cu.name" t-attf-class="#{_txt_class}"/>
                     </a>
                 </t>
             </div>
