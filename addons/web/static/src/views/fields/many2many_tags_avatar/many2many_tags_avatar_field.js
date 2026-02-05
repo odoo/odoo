@@ -132,6 +132,10 @@ export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
         return super.tags.reverse();
     }
 
+    get placeholder() {
+        return _t("Search users...");
+    }
+
     openPopover(ev) {
         this.popover.open(ev.currentTarget.parentElement, {
             ...this.popoverProps,
@@ -139,7 +143,7 @@ export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
             canCreate: false,
             canCreateEdit: false,
             canQuickCreate: false,
-            placeholder: _t("Search users..."),
+            placeholder: this.placeholder,
         });
     }
 }
