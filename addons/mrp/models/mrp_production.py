@@ -1220,10 +1220,14 @@ class MrpProduction(models.Model):
             # covers at least 2 cases: backorders generation (follow default logic for moves copying)
             # and copying a done MO via the form (i.e. copy only the non-cancelled moves since no backorder = cancelled finished moves)
             if not default or 'move_finished_ids' not in default:
-                move_finished_ids = production.move_finished_ids
-                if production.state != 'cancel':
-                    move_finished_ids = production.move_finished_ids.filtered(lambda m: m.state != 'cancel' and m.product_qty != 0.0)
-                vals['move_finished_ids'] = [(0, 0, move_vals) for move_vals in move_finished_ids.copy_data()]
+                move_finished_ids = []
+                for move in production.move_finished_ids:
+                    if (production.state != 'cancel' and (move.state == 'cancel' or move.uom_id.is_zero(move.product_qty))) or move.has_source_move():
+                        continue
+                    unit_factor, _ = move._get_production_move_qty_values(production.product_uom_qty or 1)
+                    new_qty = move.uom_id.round(production.product_uom_qty * unit_factor)
+                    move_finished_ids.append((0, 0, move.copy_data({'product_uom_qty': new_qty})[0]))
+                vals['move_finished_ids'] = move_finished_ids
             if not default or 'move_raw_ids' not in default:
                 vals['move_raw_ids'] = [(0, 0, move_vals) for move_vals in production.move_raw_ids.filtered(lambda m: m.product_qty != 0.0).copy_data()]
         return vals_list
@@ -1513,7 +1517,8 @@ class MrpProduction(models.Model):
             if move.picked or move.sudo()._should_bypass_set_qty_producing():
                 continue
 
-            new_qty = move.uom_id.round((self.qty_producing - self.qty_produced) * move.unit_factor)
+            unit_factor, additional_qty = move._get_production_move_qty_values((self.product_qty - self.qty_produced) or 1)
+            new_qty = move.uom_id.round((self.qty_producing - self.qty_produced) * unit_factor - additional_qty)
             if move.has_tracking in ['lot', 'serial']:
                 relevant_orig_ids = set()
                 qty_available = 0
@@ -2061,6 +2066,21 @@ class MrpProduction(models.Model):
         self.ensure_one()
         return True
 
+    def _set_lots_to_finished_moves(self):
+        finish_moves = self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id and m.state not in ('done', 'cancel'))
+        # the finish move can already be completed by the workorder.
+        for move in finish_moves:
+            if move.product_id.tracking in ['lot', 'serial'] and (
+                self.lot_producing_ids - move.lot_ids
+                or any(not ml.lot_id for ml in move.move_line_ids)
+            ):
+                move.lot_ids = self.lot_producing_ids.ids
+                if move.product_id.tracking == 'lot' and self.lot_producing_ids:
+                    lines_without_lot = move.move_line_ids.filtered(lambda ml: not ml.lot_id)
+                    lines_without_lot.lot_id = self.lot_producing_ids[:1]
+            # Distribute the produced qty across the finished moves (there can be several, exemple: after a split/merge)
+            move.quantity = self.uom_id.round((self.qty_producing - self.qty_produced) * move.unit_factor, rounding_method='HALF-UP')
+
     def _post_inventory(self, cancel_backorder=False):
         moves_to_do, moves_not_to_do, moves_to_cancel = OrderedSet(), OrderedSet(), OrderedSet()
         for move in self.move_raw_ids:
@@ -2080,22 +2100,7 @@ class MrpProduction(models.Model):
             for key, values in tools_groupby(moves_to_do, key=lambda m: m.raw_material_production_id.id)
         ])
         for order in self:
-            finish_moves = order.move_finished_ids.filtered(lambda m: m.product_id == order.product_id and m.state not in ('done', 'cancel'))
-            # the finish move can already be completed by the workorder.
-            for move in finish_moves:
-                if move.product_id.tracking in ['lot', 'serial'] and (
-                    order.lot_producing_ids - move.lot_ids
-                    or any(not ml.lot_id for ml in move.move_line_ids)
-                ):
-                    move.lot_ids = order.lot_producing_ids.ids
-                    if move.product_id.tracking == 'lot' and order.lot_producing_ids:
-                        lines_without_lot = move.move_line_ids.filtered(lambda ml: not ml.lot_id)
-                        lines_without_lot.lot_id = order.lot_producing_ids[:1]
-                # Distribute the produced qty across the finished moves (there can be several, exemple: after a split/merge)
-                move.quantity = order.uom_id.round((order.qty_producing - order.qty_produced) * move.unit_factor, rounding_method='HALF-UP')
-                extra_vals = order._prepare_finished_extra_vals()
-                if extra_vals:
-                    move.move_line_ids.write(extra_vals)
+            order._set_lots_to_finished_moves()
             # workorder duration need to be set to calculate the price of the product
             for workorder in order.workorder_ids:
                 if workorder.state not in ('done', 'cancel'):
@@ -2219,12 +2224,12 @@ class MrpProduction(models.Model):
         (self.move_raw_ids | self.move_finished_ids).filtered(lambda m: m.picked and not m.additional).move_line_ids.filtered(lambda ml: not ml.picked).unlink()
         for production in self:
             for move in production.move_raw_ids | production.move_finished_ids:
-                if move.additional:
+                if move.additional or move.has_source_move():
                     continue
                 move_to_backorder_moves[move] = self.env['stock.move']
-                unit_factor = move.product_uom_qty / initial_qty_by_production[production]
+                unit_factor, additional_qty = move._get_production_move_qty_values(initial_qty_by_production[production])
                 initial_move_vals = move.copy_data(move._get_backorder_move_vals())[0]
-                move.with_context(do_not_unreserve=True, no_procurement=True).product_uom_qty = production.product_qty * unit_factor
+                move.with_context(do_not_unreserve=True, no_procurement=True).product_uom_qty = production.product_qty * unit_factor - additional_qty
 
                 for backorder in production_to_backorders[production]:
                     move_vals = dict(
@@ -3213,10 +3218,6 @@ class MrpProduction(models.Model):
             custom_quantity=copies,
         )
         return clean_action(action, self.env)
-
-    def _prepare_finished_extra_vals(self):
-        self.ensure_one()
-        return {}
 
     def action_open_label_layout(self):
         return self.move_finished_ids.action_open_label_layout()
