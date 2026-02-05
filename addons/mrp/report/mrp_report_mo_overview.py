@@ -174,7 +174,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             'uom_name': production.uom_id.display_name,
             'uom_precision': self._get_uom_precision(),
             'receipt': self._check_planned_start(production.date_deadline, self._get_replenishment_receipt(production, components)),
-            'unit_cost': self._get_unit_cost(production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id)),
+            'unit_cost': self._get_unit_cost(production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id)[:1]),
             'mo_cost': currency.round(mo_cost),
             'currency_id': currency.id,
             'currency': currency,
