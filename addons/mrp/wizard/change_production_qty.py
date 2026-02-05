@@ -35,9 +35,10 @@ class ChangeProductionQty(models.TransientModel):
         modification = {}
         push_moves = self.env['stock.move']
         for move in production.move_finished_ids:
-            if move.state in ('done', 'cancel'):
+            if move.state in ('done', 'cancel') or move.has_source_move():
                 continue
-            qty = (new_qty - old_qty) * move.unit_factor
+            unit_factor, additional_qty = move._get_production_move_qty_data((production.product_qty - production.qty_produced) or 1)
+            qty = (new_qty - old_qty) * unit_factor - additional_qty
             modification[move] = (move.product_uom_qty + qty, move.product_uom_qty)
             if self._need_quantity_propagation(move, qty):
                 push_moves |= move.copy({'product_uom_qty': qty})
