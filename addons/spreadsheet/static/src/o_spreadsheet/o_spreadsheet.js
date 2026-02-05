@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 // @odoo-module ignore
 // Transpiled AOT with https://github.com/rrahir/spreadsheet-tools
 /**
@@ -12,7 +11,7 @@ odoo.define('@spreadsheet/o_spreadsheet/o_spreadsheet', ['@odoo/owl'], function 
 'use strict';
 let __exports = {};
 
-const { useEnv, useSubEnv, onWillUnmount, useComponent, status, Component, useRef, onMounted, useLayoutEffect, App, blockDom, useState, onPatched, useExternalListener, onWillUpdateProps, onWillStart, onWillPatch, xml, useChildSubEnv, markRaw, toRaw } = require('@odoo/owl');
+const { useEnv, useSubEnv, onWillUnmount, useComponent, status, Component, useRef, onMounted, useEffect, App, blockDom, useState, onPatched, useExternalListener, onWillUpdateProps, onWillStart, onWillPatch, xml, useChildSubEnv, markRaw, toRaw } = require('@odoo/owl');
 
 const CANVAS_SHIFT = 0.5;
 // Colors
@@ -65806,7 +65805,7 @@ class ChartJsComponent extends Component {
             this.createChart(deepCopy(runtime));
         });
         onWillUnmount(this.unmount.bind(this));
-        useLayoutEffect(() => {
+        useEffect(() => {
             const runtime = this.chartRuntime;
             if (runtime !== this.currentRuntime) {
                 if (runtime.chartJsConfig.type !== this.currentRuntime.chartJsConfig.type) {
@@ -66217,7 +66216,7 @@ class ScorecardChart extends Component {
         return title ? this.env.model.getters.dynamicTranslate(title) : "";
     }
     setup() {
-        useLayoutEffect(this.createChart.bind(this), () => {
+        useEffect(this.createChart.bind(this), () => {
             const canvas = this.canvas.el;
             const rect = canvas.getBoundingClientRect();
             return [rect.width, rect.height, this.runtime, this.canvas.el, window.devicePixelRatio];
@@ -70131,7 +70130,7 @@ class GaugeChartComponent extends Component {
         }
         let animation = null;
         let lastRuntime = undefined;
-        useLayoutEffect(() => {
+        useEffect(() => {
             if (this.env.isDashboard() &&
                 lastRuntime === undefined && // first render
                 this.animationStore?.animationPlayed[this.animationChartId] !== "gauge") {
@@ -70272,7 +70271,7 @@ function useInterval(callback, delay) {
             throw e;
         }
     };
-    useLayoutEffect(() => {
+    useEffect(() => {
         intervalId = setInterval(safeCallback, delay);
         return () => clearInterval(intervalId);
     }, () => [delay]);
@@ -70535,9 +70534,9 @@ class Popover extends Component {
         onWillUnmount(() => {
             resizeObserver.disconnect();
         });
-        // useLayoutEffect occurs after the DOM is created and the element width/height are computed, but before
+        // useEffect occurs after the DOM is created and the element width/height are computed, but before
         // the element in rendered, so we can still set its position
-        useLayoutEffect(this.computePopoverPosition.bind(this));
+        useEffect(this.computePopoverPosition.bind(this));
     }
     computePopoverPosition() {
         if (!this.containerRect) {
@@ -70992,7 +70991,7 @@ class CarouselFigure extends Component {
     setup() {
         this.animationStore = useStore(ChartAnimationStore);
         this.fullScreenFigureStore = useStore(FullScreenFigureStore);
-        useLayoutEffect(() => {
+        useEffect(() => {
             if (this.selectedCarouselItem?.type === "carouselDataView") {
                 this.props.editFigureStyle?.({ "pointer-events": "none" });
             }
@@ -71267,7 +71266,7 @@ class FigureComponent extends Component {
     setup() {
         const borderWidth = figureRegistry.get(this.props.figureUI.tag).borderWidth;
         this.borderWidth = borderWidth !== undefined ? borderWidth : BORDER_WIDTH;
-        useLayoutEffect((selectedFigureId, thisFigureId, el) => {
+        useEffect((selectedFigureId, thisFigureId, el) => {
             if (selectedFigureId === thisFigureId) {
                 /** Scrolling on a newly inserted figure that overflows outside the viewport
                  * will break the whole layout.
@@ -71791,7 +71790,7 @@ class Select extends Component {
     state = useState({ isPopoverOpen: false, hoveredValue: undefined });
     setup() {
         useExternalListener(window, "pointerdown", this.onExternalClick, { capture: true });
-        useLayoutEffect(() => {
+        useEffect(() => {
             if (this.dropdownRef.el) {
                 this.dropdownRef.el.style.width = `${this.selectRef.el?.offsetWidth}px`;
             }
@@ -72034,7 +72033,7 @@ class TextValueProvider extends Component {
     };
     autoCompleteListRef = useRef("autoCompleteList");
     setup() {
-        useLayoutEffect(() => {
+        useEffect(() => {
             const selectedIndex = this.props.selectedIndex;
             if (selectedIndex === undefined) {
                 return;
@@ -72426,7 +72425,7 @@ class SpeechBubble extends Component {
     spreadsheetRect = useSpreadsheetRect();
     bubbleRef = useRef("bubble");
     setup() {
-        useLayoutEffect(() => {
+        useEffect(() => {
             const el = this.bubbleRef.el;
             if (!el) {
                 return;
@@ -72585,7 +72584,7 @@ class Composer extends Component {
         onWillUnmount(() => {
             this.debouncedHover.stopDebounce();
         });
-        useLayoutEffect(() => {
+        useEffect(() => {
             this.processContent();
             if (document.activeElement === this.contentHelper.el &&
                 this.props.composerStore.editionMode === "inactive" &&
@@ -72593,10 +72592,10 @@ class Composer extends Component {
                 this.DOMFocusableElementStore.focus();
             }
         });
-        useLayoutEffect(() => {
+        useEffect(() => {
             this.processTokenAtCursor();
         }, () => [this.props.composerStore.editionMode !== "inactive"]);
-        useLayoutEffect(() => {
+        useEffect(() => {
             this.contentHelper.scrollSelectionIntoView();
         }, () => [
             this.props.composerStore.composerSelection.start,
@@ -74497,7 +74496,7 @@ class CriterionInput extends Component {
     static components = { StandaloneComposer: StandaloneComposer };
     inputRef = useRef("input");
     setup() {
-        useLayoutEffect(() => {
+        useEffect(() => {
             if (this.props.focused && this.inputRef.el) {
                 this.inputRef.el.focus();
             }
@@ -75651,8 +75650,8 @@ class SelectionInput extends Component {
         return this.store.disabledRanges.some(Boolean);
     }
     setup() {
-        useLayoutEffect(() => this.focusedInput.el?.focus(), () => [this.focusedInput.el]);
-        useLayoutEffect(() => {
+        useEffect(() => this.focusedInput.el?.focus(), () => [this.focusedInput.el]);
+        useEffect(() => {
             // Check the offsetParent to know if the input or an ancestor is `display: none` (eg. when changing side panel tab)
             if (this.store.hasFocus && this.selectionRef.el?.offsetParent === null) {
                 this.reset();
@@ -78009,7 +78008,7 @@ function getColumnsNumber(env) {
 
 function useAutofocus({ refName }) {
     const ref = useRef(refName);
-    useLayoutEffect((el) => {
+    useEffect((el) => {
         el?.focus();
     }, () => [ref.el]);
 }
@@ -81090,7 +81089,7 @@ class ChartPanel extends Component {
     setup() {
         this.store = useLocalStore(MainChartPanelStore);
         this.panelContentRef = useRef("panelContent");
-        useLayoutEffect(() => {
+        useEffect(() => {
             const el = this.panelContentRef.el;
             const activePanel = this.store.panel;
             if (el) {
@@ -81488,7 +81487,7 @@ class ConditionalFormattingEditor extends Component {
     setup() {
         this.activeSheetId = this.env.model.getters.getActiveSheetId();
         this.store = useLocalStore(ConditionalFormattingEditorStore, deepCopy(this.props.cf), this.props.isNewCf);
-        useLayoutEffect((sheetId, isCfRemoved) => {
+        useEffect((sheetId, isCfRemoved) => {
             if (this.activeSheetId !== sheetId || isCfRemoved) {
                 this.env.replaceSidePanel("ConditionalFormatting", `ConditionalFormattingEditor_${this.props.cf.id}`);
             }
@@ -81644,7 +81643,7 @@ class ConditionalFormattingEditor extends Component {
  * Adapted from Odoo Community - See https://github.com/odoo/odoo/blob/saas-16.2/addons/web/static/src/core/utils/hooks.js
  */
 function useRefListener(ref, ...listener) {
-    useLayoutEffect((el) => {
+    useEffect((el) => {
         el?.addEventListener(...listener);
         return () => el?.removeEventListener(...listener);
     }, () => [ref.el]);
@@ -81671,7 +81670,7 @@ function useHighlights(highlightProvider) {
         store.register(highlightProvider);
     });
     let currentHighlights = highlightProvider.highlights;
-    useLayoutEffect((highlights) => {
+    useEffect((highlights) => {
         if (!deepEquals(highlights, currentHighlights)) {
             currentHighlights = highlights;
             stores.trigger("store-updated");
@@ -84671,7 +84670,7 @@ class TableStylePreview extends Component {
         const resizeObserver = new ResizeObserver(() => {
             this.drawTable(this.props);
         });
-        useLayoutEffect(() => {
+        useEffect(() => {
             resizeObserver.observe(this.canvasRef.el);
             return () => {
                 resizeObserver.disconnect();
@@ -85107,7 +85106,7 @@ class SplitIntoColumnsPanel extends Component {
         const composerFocusStore = useStore(ComposerFocusStore);
         // The feature makes no sense if we are editing a cell, because then the selection isn't active
         // Stop the edition when the panel is mounted, and close the panel if the user start editing a cell
-        useLayoutEffect((editionMode) => {
+        useEffect((editionMode) => {
             if (editionMode !== "inactive") {
                 this.props.onCloseSidePanel();
             }
@@ -87686,7 +87685,7 @@ function useDragAndDropBeyondTheViewport(env) {
     onWillUnmount(() => {
         cleanUp();
     });
-    useLayoutEffect(() => {
+    useEffect(() => {
         cleanUp();
     }, () => [getters.getActiveSheetId()]);
     return { start: startFn };
@@ -90869,7 +90868,7 @@ class GridRenderer extends SpreadsheetStore {
 
 function useGridDrawing(refName, model, canvasSize) {
     const canvasRef = useRef(refName);
-    useLayoutEffect(drawGrid);
+    useEffect(drawGrid);
     const rendererStore = useStore(RendererStore);
     useStore(GridRenderer);
     function drawGrid() {
@@ -91274,8 +91273,8 @@ class ScrollBar extends Component {
         onMounted(() => {
             this.scrollbar.el = this.scrollbarRef.el;
         });
-        // TODO improve useLayoutEffect dependencies typing in owl
-        useLayoutEffect(() => {
+        // TODO improve useEffect dependencies typing in owl
+        useEffect(() => {
             if (this.scrollbar.scroll !== this.props.offset) {
                 this.scrollbar.scroll = this.props.offset;
             }
@@ -91542,7 +91541,7 @@ class Grid extends Component {
             this.hoveredCell.clear();
         });
         this.cellPopovers = useStore(CellPopoverStore);
-        useLayoutEffect((isMainPanelOpen, isSecondaryPanelOpen) => {
+        useEffect((isMainPanelOpen, isSecondaryPanelOpen) => {
             if (!isMainPanelOpen && !isSecondaryPanelOpen) {
                 this.DOMFocusableElementStore.focus();
             }
@@ -92312,7 +92311,7 @@ class FullScreenFigure extends Component {
             }
             lastFigureId = this.figureUI?.id;
         });
-        useLayoutEffect((el) => el?.focus(), () => [this.ref.el]);
+        useEffect((el) => el?.focus(), () => [this.ref.el]);
     }
     get figureUI() {
         return this.fullScreenFigureStore.fullScreenFigure;
@@ -94779,7 +94778,7 @@ class BottomBarSheet extends Component {
         });
         this.DOMFocusableElementStore = useStore(DOMFocusableElementStore);
         useExternalListener(window, "click", () => (this.state.pickerOpened = false));
-        useLayoutEffect((sheetId) => {
+        useEffect((sheetId) => {
             if (this.props.sheetId === sheetId) {
                 this.scrollToSheet();
             }
@@ -95768,7 +95767,7 @@ class SidePanels extends Component {
     spreadsheetRect = useSpreadsheetRect();
     setup() {
         this.sidePanelStore = useStore(SidePanelStore);
-        useLayoutEffect(() => {
+        useEffect(() => {
             if (this.sidePanelStore.mainPanel && !this.sidePanelStore.isMainPanelOpen) {
                 this.sidePanelStore.closeMainPanel();
             }
@@ -95952,7 +95951,7 @@ class SmallBottomBar extends Component {
             setCurrentContent: this.composerStore.setCurrentContent,
             stopEdition: this.composerStore.stopEdition,
         };
-        useLayoutEffect(() => {
+        useEffect(() => {
             if (
             // we hide the grid composer on mobile so we need to autofocus this composer
             this.env.isMobile() &&
@@ -96825,7 +96824,7 @@ class TopBar extends Component {
         useExternalListener(window, "click", this.onExternalClick);
         onWillStart(() => this.updateCellState());
         onWillUpdateProps(() => this.updateCellState());
-        useLayoutEffect(() => {
+        useEffect(() => {
             this.state.toolsPopoverState.isOpen = false;
             this.setVisibilityToolsGroups();
         }, () => [this.spreadsheetRect.width]);
@@ -97142,7 +97141,7 @@ class Spreadsheet extends Component {
             isMobile: isMobileOS,
         });
         this.notificationStore.updateNotificationCallbacks({ ...this.props });
-        useLayoutEffect(() => {
+        useEffect(() => {
             /**
              * Only refocus the grid if the active element is not a child of the spreadsheet
              * (i.e. activeElement is outside of the spreadsheetRef component)
