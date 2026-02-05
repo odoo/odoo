@@ -19,6 +19,7 @@ class WebsiteSelectionRestrictionPlugin extends Plugin {
             const isMainBodyEmpty = anchorNode.isContentEditable === false && selection.isCollapsed;
             return isFigure || isMainBodyEmpty;
         },
+        uncrossable_element_selector: [".s_cta_badge"],
     };
 }
 

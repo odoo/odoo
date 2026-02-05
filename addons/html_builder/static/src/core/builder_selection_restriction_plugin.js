@@ -283,6 +283,7 @@ export class BuilderSelectionRestrictionPlugin extends Plugin {
                         focusNode: newfocusNode,
                         focusOffset: newfocusOffset,
                     });
+                    break;
                 } else {
                     // the node is the first selected node and it's uncrossable,
                     // we need to move the focusNode to the end/start of the
