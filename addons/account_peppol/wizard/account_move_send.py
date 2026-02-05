@@ -162,11 +162,11 @@ class AccountMoveSend(models.TransientModel):
         params = {'documents': []}
         invoices_data_peppol = {}
         for invoice, invoice_data in invoices_data.items():
-            if invoice_data.get('send_peppol'):
+            if invoice_data.get('send_peppol') and invoice.peppol_move_state not in ('processing', 'done'):
                 if invoice_data.get('ubl_cii_xml_attachment_values'):
                     xml_file = invoice_data['ubl_cii_xml_attachment_values']['raw']
                     filename = invoice_data['ubl_cii_xml_attachment_values']['name']
-                elif invoice.ubl_cii_xml_id and invoice.peppol_move_state not in ('processing', 'canceled', 'done'):
+                elif invoice.ubl_cii_xml_id and invoice.peppol_move_state != 'canceled':
                     xml_file = invoice.ubl_cii_xml_id.raw
                     filename = invoice.ubl_cii_xml_id.name
                 else:
