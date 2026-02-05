@@ -2574,7 +2574,8 @@
                  data-bs-backdrop="false"
                  data-bs-keyboard="false"
                  tabindex="-1"
-                 role="dialog">
+                 role="dialog"
+                 aria-label="Cookie bar">
                 <div class="modal-dialog d-flex s_popup_size_full">
                     <div class="modal-content oe_structure">
                         <!-- Keep this section equivalent to the rendering of the `website.cookies_bar.discrete` client template -->
@@ -2998,7 +2999,7 @@
         </t>
     </xpath>
     <xpath expr="//div[@id='wrapwrap']" position="before">
-        <div t-if="view" role="dialog" id="reset_template_confirmation" class="modal" tabindex="-1" t-ignore="true">
+        <div t-if="view" role="dialog" id="reset_template_confirmation" class="modal" tabindex="-1" t-ignore="true" aria-label="Reset template confirmation">
             <div class="modal-dialog">
                 <form role="form">
                     <div class="modal-content">
