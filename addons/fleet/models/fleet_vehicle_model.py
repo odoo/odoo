@@ -30,6 +30,7 @@ class FleetVehicleModel(models.Model):
         return [(str(i), i) for i in range(1970, current_year + 1)]
 
     name = fields.Char('Model name', required=True, tracking=True)
+    company_id = fields.Many2one('res.company', string='Company')
     brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Manufacturer', required=True, tracking=True, index='btree_not_null')
     category_id = fields.Many2one('fleet.vehicle.model.category', 'Category', tracking=True)
     vendors = fields.Many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors')
