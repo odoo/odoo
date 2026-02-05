@@ -1,10 +1,11 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { loadJS } from "@web/core/assets";
 
 // temporary for OnNoResultReturned bug
 import { ThirdPartyScriptError } from "@web/core/errors/error_service";
 const errorHandlerRegistry = registry.category("error_handlers");
-import { Component, onWillRender, useEffect, useRef, useState, xml } from "@odoo/owl";
+import { Component, onWillRender, useRef, useState, xml } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 const MONDIALRELAY_SCRIPT_URL = "https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js"
@@ -31,7 +32,7 @@ export class MondialRelayField extends Component {
             loadJS(MONDIALRELAY_SCRIPT_URL).then(() => {this.state.libLoaded = true});
         });
 
-        useEffect(
+        useLayoutEffect(
             (el) => {
                 if (!el) {
                     return;

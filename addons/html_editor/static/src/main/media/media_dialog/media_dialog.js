@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useService, useChildRef } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -5,7 +6,7 @@ import { Notebook } from "@web/core/notebook/notebook";
 import { ImageSelector } from "./image_selector";
 import { IconSelector } from "./icon_selector";
 
-import { Component, useState, useRef, useEffect } from "@odoo/owl";
+import { Component, useState, useRef } from "@odoo/owl";
 import { iconClasses } from "@html_editor/utils/dom_info";
 
 export const TABS = {
@@ -70,7 +71,7 @@ export class MediaDialog extends Component {
             isSaving: false,
         });
 
-        useEffect(
+        useLayoutEffect(
             (nbSelectedAttachments) => {
                 // Disable/enable the add button depending on whether some media
                 // are selected or not.

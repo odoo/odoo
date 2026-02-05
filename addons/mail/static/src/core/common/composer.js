@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
@@ -21,7 +22,6 @@ import {
     onMounted,
     onWillUnmount,
     useChildSubEnv,
-    useEffect,
     useRef,
     useState,
     useExternalListener,
@@ -190,7 +190,7 @@ export class Composer extends Component {
             );
         }
         useChildSubEnv({ inComposer: true });
-        useEffect(
+        useLayoutEffect(
             (focus) => {
                 if (focus && this.ref.el) {
                     this.selection.restore();
@@ -202,7 +202,7 @@ export class Composer extends Component {
             },
             () => [this.props.autofocus + this.props.composer.autofocus, this.props.placeholder]
         );
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (this.props.composer.replyToMessage) {
                     this.props.composer.autofocus++;
@@ -210,7 +210,7 @@ export class Composer extends Component {
             },
             () => [this.props.composer.replyToMessage]
         );
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (this.fakeTextarea.el?.scrollHeight) {
                     let wasEmpty = false;
@@ -227,7 +227,7 @@ export class Composer extends Component {
             },
             () => [this.props.composer.composerText, this.ref.el]
         );
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (!this.props.composer.forceCursorMove) {
                     return;

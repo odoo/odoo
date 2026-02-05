@@ -1,4 +1,5 @@
-import { onWillStart, useEffect } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { onWillStart } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { FormControllerWithHTMLExpander } from '@resource/views/form_with_html_expander/form_controller_with_html_expander'
 import { ProjectTemplateDropdown } from "../components/project_template_dropdown";
@@ -32,7 +33,7 @@ export class ProjectProjectFormController extends FormControllerWithHTMLExpander
         });
 
         if (this.props.focusTitle) {
-            useEffect(
+            useLayoutEffect(
                 (el) => {
                     if (el) {
                         const title = this.rootRef.el.querySelector("#name_0");

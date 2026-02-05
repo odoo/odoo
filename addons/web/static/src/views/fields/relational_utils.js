@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -41,7 +42,6 @@ import {
     onWillUpdateProps,
     status,
     useComponent,
-    useEffect,
     useEnv,
     useState,
     useSubEnv,
@@ -729,7 +729,7 @@ export class X2ManyFieldDialog extends Component {
         const { autofocusFieldIds, disableAutofocus } = this.archInfo;
         if (!disableAutofocus) {
             // to simplify
-            useEffect(
+            useLayoutEffect(
                 (isInEdition) => {
                     let elementToFocus;
                     if (isInEdition) {

@@ -1,5 +1,6 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { useChildRefs, useForwardRefsToParent, useScrollState } from "@mail/utils/common/hooks";
-import { Component, useChildSubEnv, useEffect, useRef, useState, xml } from "@odoo/owl";
+import { Component, useChildSubEnv, useRef, useState, xml } from "@odoo/owl";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 
 /**
@@ -34,7 +35,7 @@ export class Tabs extends Component {
                 setActiveTab: (id) => (this.state.activeHeaderId = id),
             },
         });
-        useEffect(
+        useLayoutEffect(
             (refs, headerEls, activeHeaderId) => {
                 if (!refs.has(activeHeaderId) && headerEls?.length) {
                     this.state.activeHeaderId = headerEls[0].dataset.headerId;
@@ -103,7 +104,7 @@ export class TabPanel extends Component {
 
     setup() {
         super.setup(...arguments);
-        useEffect(
+        useLayoutEffect(
             (active) => {
                 if (active) {
                     this.props.onBecameVisible?.();

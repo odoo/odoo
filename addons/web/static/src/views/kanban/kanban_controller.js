@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
@@ -24,15 +25,7 @@ import { KanbanRenderer } from "./kanban_renderer";
 import { useProgressBar } from "./progress_bar_hook";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 
-import {
-    Component,
-    onMounted,
-    onWillStart,
-    useEffect,
-    useRef,
-    useState,
-    useSubEnv,
-} from "@odoo/owl";
+import { Component, onMounted, onWillStart, useRef, useState, useSubEnv } from "@odoo/owl";
 import { QuickCreateState } from "./kanban_record_quick_create";
 import { effect } from "@web/core/utils/reactive";
 
@@ -168,7 +161,7 @@ export class KanbanController extends Component {
                 return state;
             },
         });
-        useEffect(
+        useLayoutEffect(
             (isReady) => {
                 if (isReady) {
                     if (this.env.isSmall && this.model.root.isGrouped) {
@@ -216,7 +209,7 @@ export class KanbanController extends Component {
         onMounted(() => {
             this.firstLoad = false;
         });
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.onSelectionChanged();
             },

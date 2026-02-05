@@ -1,6 +1,5 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
-
-import { useEffect } from "@odoo/owl";
 
 /**
  * This hook will register/unregister the given registration
@@ -12,7 +11,7 @@ import { useEffect } from "@odoo/owl";
  */
 export function useHotkey(hotkey, callback, options = {}) {
     const hotkeyService = useService("hotkey");
-    useEffect(
+    useLayoutEffect(
         () => hotkeyService.add(hotkey, callback, options),
         () => []
     );
