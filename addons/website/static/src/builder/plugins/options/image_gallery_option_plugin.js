@@ -291,7 +291,6 @@ class ImageGalleryOption extends Plugin {
             img.setAttribute("data-index", index);
         });
         if (images.length) {
-            imageGalleryElement.style.height = window.innerHeight * 0.7 + "px";
             slideshowEl
                 .querySelector(".carousel .o_carousel_controllers")
                 ?.classList.remove("d-none");
