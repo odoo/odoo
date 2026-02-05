@@ -40,6 +40,8 @@ export class Composer extends Record {
     }
 
     attachments = fields.Many("ir.attachment");
+    /** @type {boolean|undefined} */
+    shouldAddEmailSignature;
     /** @type {boolean} */
     emailAddSignature = true;
     message = fields.One("mail.message");
