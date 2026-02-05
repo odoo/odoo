@@ -473,29 +473,24 @@ class WebsiteSale(payment_portal.PaymentPortal):
         variants.fetch()
         product_variants = dict(zip(products, variants))
 
-        attributes = request.env['product.attribute']
+        ProductAttribute = request.env['product.attribute']
         pavs_per_attribute = defaultdict(list)
         if products:
-            used_pavs_query = f'''
-                SELECT product_attribute_value_id
-                FROM product_attribute_value_product_template_attribute_line_rel
-                WHERE product_template_attribute_line_id IN ({
-                ",".join(str(i) for i in search_product.attribute_line_ids.ids)
-                })
-            '''
-            request.env.cr.execute(SQL(used_pavs_query))
-            used_pavs_ids = [pav for pav, in self.env.cr.fetchall()]
             grouped_pavs = request.env['product.attribute.value']._read_group(
-                domain=[('id', 'in', used_pavs_ids), ('attribute_id.visibility', '=', 'visible')],
+                domain=[
+                    ('pav_attribute_line_ids.product_tmpl_id.id', 'in', search_product.ids),
+                    ('attribute_id.visibility', '=', 'visible'),
+                ],
                 groupby=['attribute_id'],
                 order='attribute_id',
                 aggregates=['id:recordset'],
             )
             for attribute, pavs in grouped_pavs:
                 pavs_per_attribute[attribute] = pavs
-                attributes |= attribute
+            attributes = pavs_per_attribute.keys()
+
         else:
-            attributes = attributes.browse(attribute_ids).sorted()
+            attributes = ProductAttribute.browse(attribute_ids).sorted()
         products_prices = products._get_sales_prices(website)
         product_query_params = self._get_product_query_params(**post)
 
