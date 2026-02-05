@@ -787,6 +787,10 @@ class TestStockValuation(TestStockValuationCommon):
         move1.value_manual = 8.0
         self.assertEqual(product.qty_available, 8.0)
         self.assertEqual(product.total_value, 8.0)
+        move1.date = Date.today() - timedelta(days=7)
+        # Just to retrigger the total_value computation without influenting it
+        future_date = Date.today() + timedelta(days=1)
+        self.assertEqual(product.with_context(to_date=future_date).total_value, 8.0)
 
     def test_average_perpetual_1(self):
         # http://accountingexplained.com/financial/inventories/avco-method
