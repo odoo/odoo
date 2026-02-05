@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import {
     Many2ManyTagsAvatarUserField,
@@ -44,6 +45,10 @@ export class KanbanMany2ManyTagsAvatarEmployeeField extends EmployeeFieldRelatio
             (!this.env.isSmall && ["hr.employee", "hr.employee.public"].includes(this.relation)) ||
             super.displayAvatarCard(record)
         );
+    }
+
+    get placeholder() {
+        return _t("Search employee...");
     }
 }
 
