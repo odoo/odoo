@@ -5,6 +5,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService } from "@web/core/utils/hooks";
 import { DiscussNotificationSettingsClientAction } from "./discuss_notification_settings_client_action";
 import { Dialog } from "@web/core/dialog/dialog";
+import { DROPDOWN_NESTING } from "@web/core/dropdown/_behaviours/dropdown_nesting";
 
 class NotificationDialog extends Component {
     static props = ["close?"];
@@ -25,6 +26,7 @@ export class NotificationSettings extends Component {
         this.store = useService("mail.store");
         this.dialog = useService("dialog");
         this.ui = useService("ui");
+        this.DROPDOWN_NESTING = DROPDOWN_NESTING;
     }
 
     setMute(minutes) {
