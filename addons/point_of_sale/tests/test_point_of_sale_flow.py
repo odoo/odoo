@@ -3,7 +3,7 @@
 
 import time
 from freezegun import freeze_time
-from datetime import datetime
+from datetime import datetime, timedelta
 from unittest.mock import patch
 
 import odoo
@@ -1268,6 +1268,51 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertEqual(len(picking_mls_no_stock), 0)
         self.assertEqual(len(picking_mls_stock), 1)
         self.assertEqual(len(pickings.picking_type_id), 1)
+
+    def test_pos_order_invoice_payment_term(self):
+        """ Test that when invoicing a POS order paid with customer account, the partner's payment term is then applied to the invoice. """
+        self.customer_account_payment_method = self.env['pos.payment.method'].create({
+            'name': 'Customer Account',
+            'split_transactions': True,
+        })
+        payment_methods = self.pos_config.payment_method_ids | self.customer_account_payment_method
+        self.pos_config.write({'payment_method_ids': [Command.set(payment_methods.ids)]})
+
+        pay_term_30 = self.env.ref('account.account_payment_term_30days')
+        partner_a = self.env["res.partner"].create({
+            'name': 'APartner',
+            'property_payment_term_id': pay_term_30.id,
+        })
+
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': partner_a.id,
+            'lines': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 10,
+                'discount': 0,
+                'qty': 1,
+                'price_subtotal': 10,
+                'price_subtotal_incl': 10,
+            })],
+            'amount_paid': 10.0,
+            'amount_total': 10.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': True,
+            'last_order_preparation_change': '{}'
+        })
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': 10.0,
+            'payment_method_id': self.customer_account_payment_method.id
+        })
+        order_payment.with_context(**payment_context).check()
+
+        self.assertEqual(order.account_move.invoice_date_due, (datetime.now() + timedelta(days=30)).date())
 
     def test_order_refund_picking(self):
         self.pos_config.open_ui()
