@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.4\n"
+"Project-Id-Version: Odoo Server 19.2a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
-"PO-Revision-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2026-02-04 18:35+0000\n"
+"PO-Revision-Date: 2026-02-04 18:35+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -49,18 +49,20 @@ msgid "ID"
 msgstr ""
 
 #. module: hr_work_entry_holidays
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry__is_public_holiday
+msgid "Is Public Holiday"
+msgstr ""
+
+#. module: hr_work_entry_holidays
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_holidays.work_entry_type_leave_form_inherit
 msgid "Payroll"
 msgstr ""
 
 #. module: hr_work_entry_holidays
-#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry__leave_state
-msgid "Status"
-msgstr ""
-
-#. module: hr_work_entry_holidays
+#. odoo-python
+#: code:addons/hr_work_entry_holidays/models/hr_work_entry.py:0
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_leave
-#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry__leave_id
+#: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry__leave_ids
 msgid "Time Off"
 msgstr ""
 
@@ -78,4 +80,10 @@ msgstr ""
 #. module: hr_work_entry_holidays
 #: model:ir.model.fields,help:hr_work_entry_holidays.field_hr_work_entry_type__leave_type_ids
 msgid "Work entry used in the payslip."
+msgstr ""
+
+#. module: hr_work_entry_holidays
+#. odoo-python
+#: code:addons/hr_work_entry_holidays/models/hr_work_entry.py:0
+msgid "id"
 msgstr ""
