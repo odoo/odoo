@@ -310,7 +310,6 @@ class ImageGalleryOption extends Plugin {
             }
         });
         if (images.length) {
-            imageGalleryElement.style.height = window.innerHeight * 0.7 + "px";
             slideshowEl
                 .querySelector(".carousel .o_carousel_controllers")
                 ?.classList.remove("d-none");
