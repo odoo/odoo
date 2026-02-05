@@ -192,6 +192,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             'get_single_product_variant',
             [this.props.record.data.product_template_id.id],
             {
+                quantity: this.props.record.data.product_uom_qty,
                 context: this.props.context,
             }
         );
@@ -203,7 +204,9 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                     });
                     this._openComboConfigurator(false, result.has_optional_products);
                 } else if (result.has_optional_products) {
-                    this._openProductConfigurator();
+                    this._openProductConfigurator({
+                        preloadedData: result.preloaded_config_data
+                    });
                 } else {
                     await this.props.record.update({
                         product_id: { id: result.product_id, display_name: result.product_name },
@@ -212,7 +215,9 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                 }
             }
         } else if (!result.mode || result.mode === 'configurator') {
-            this._openProductConfigurator();
+            this._openProductConfigurator({
+                preloadedData: result.preloaded_config_data
+            });
         } else {
             // only triggered when sale_product_matrix is installed.
             this._openGridConfigurator();
@@ -231,7 +236,11 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         }
     }
 
-    async _openProductConfigurator(edit = false, selectedComboItems = []) {
+    async _openProductConfigurator({
+        edit = false,
+        selectedComboItems = [],
+        preloadedData = null,
+    } = {}) {
         const saleOrderRecord = this.props.record.model.root;
         const saleOrderLine = this.props.record.data;
         const ptavIds = this._getVariantPtavIds(saleOrderLine);
@@ -249,6 +258,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         this.dialog.add(ProductConfiguratorDialog, {
             productTemplateId: saleOrderLine.product_template_id.id,
             ptavIds: ptavIds,
+            preloadedData: preloadedData,
             customPtavs: customPtavs,
             quantity: saleOrderLine.product_uom_qty,
             productUOMId: saleOrderLine.product_uom_id.id,

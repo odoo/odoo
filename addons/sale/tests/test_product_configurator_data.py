@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import fields
+
 from odoo.fields import Command
 from odoo.tests import tagged
 
@@ -12,24 +14,17 @@ from odoo.addons.sale.tests.common import SaleCommon
 class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, SaleCommon):
 
     def request_get_values(self, product_template, ptav_ids=None):
-        base_url = product_template.get_base_url()
-        response = self.url_open(
-            url=base_url + '/sale/product_configurator/get_values',
-            json={
-                'params': {
-                    'product_template_id': product_template.id,
-                    'quantity': 1.0,
-                    'currency_id': 1,
-                    'so_date': str(self.env.cr.now()),
-                    'product_uom_id': None,
-                    'company_id': None,
-                    'pricelist_id': None,
-                    'ptav_ids': ptav_ids,
-                    'only_main_product': False,
-                },
-            }
+        return product_template.sale_product_configurator_get_values(
+            product_template_id=product_template.id,
+            quantity=1.0,
+            currency_id=self.env.company.currency_id.id,
+            so_date=fields.Datetime.now().isoformat(),
+            product_uom_id=None,
+            company_id=None,
+            pricelist_id=None,
+            ptav_ids=ptav_ids,
+            only_main_product=False,
         )
-        return response.json()['result']
 
     def create_product_template_with_2_attributes(self):
         return self.env['product.template'].create({

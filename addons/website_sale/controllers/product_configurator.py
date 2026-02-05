@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.http import request, route
-from odoo.tools import float_is_zero
 
 from odoo.addons.sale.controllers.product_configurator import SaleProductConfiguratorController
 from odoo.addons.website_sale.controllers.main import WebsiteSale
@@ -17,7 +16,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         readonly=True,
     )
     def website_sale_should_show_product_configurator(
-        self, product_template_id, ptav_ids, is_product_configured
+        self, product_template_id, ptav_ids, is_product_configured, quantity
     ):
         """ Return whether the product configurator dialog should be shown.
 
@@ -29,14 +28,17 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         :return: Whether the product configurator dialog should be shown.
         """
         product_template = request.env['product.template'].browse(product_template_id)
-        single_product_variant = product_template.get_single_product_variant()
+        result = product_template.get_single_product_variant(quantity)
         has_optional_products = bool(
             product_template.optional_product_ids.filtered(self._should_show_product)
         )
-        return (
+        if (
             has_optional_products
-            or not (single_product_variant.get('product_id') or is_product_configured)
-        )
+            or not (result.get('product_id') or is_product_configured)
+        ):
+            return result
+        else:
+            return False
 
     def _get_product_template(self, product_template_id):
         if request.is_frontend:
@@ -59,7 +61,13 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
     )
     def website_sale_product_configurator_get_values(self, *args, **kwargs):
         self._populate_currency_and_pricelist(kwargs)
-        return super().sale_product_configurator_get_values(*args, **kwargs)
+        product_template = request.env['product.template'].browse(
+        kwargs.get('product_template_id')
+        )
+
+        return product_template.sale_product_configurator_get_values(
+            **kwargs
+        )
 
     @route(
         route='/website_sale/product_configurator/create_product',

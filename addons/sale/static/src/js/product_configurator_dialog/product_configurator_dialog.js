@@ -11,6 +11,7 @@ export class ProductConfiguratorDialog extends Component {
     static props = {
         productTemplateId: Number,
         ptavIds: { type: Array, element: Number },
+        preloadedData: Object,
         customPtavs: {
             type: Array,
             element: Object,
@@ -67,7 +68,6 @@ export class ProductConfiguratorDialog extends Component {
         // Nest the currency id in an object so that it stays up to date in the `env`, even if we
         // modify it in `onWillStart` afterwards.
         this.currency = { id: this.props.currencyId };
-        this.getValuesUrl = '/sale/product_configurator/get_values';
         this.createProductUrl = '/sale/product_configurator/create_product';
         this.updateCombinationUrl = '/sale/product_configurator/update_combination';
         this.getOptionalProductsUrl = '/sale/product_configurator/get_optional_products';
@@ -93,7 +93,7 @@ export class ProductConfiguratorDialog extends Component {
                 products,
                 optional_products,
                 currency_id,
-            } = await this._loadData(this.props.edit);
+            } = this.props.preloadedData;
 
             // If the product configurator is opened after the combo configurator (which happens if
             // a combo product has optional products), `_loadData` will return a single product
@@ -136,22 +136,6 @@ export class ProductConfiguratorDialog extends Component {
     //--------------------------------------------------------------------------
     // Data Exchanges
     //--------------------------------------------------------------------------
-
-    async _loadData(onlyMainProduct) {
-        return rpc(this.getValuesUrl, {
-            product_template_id: this.props.productTemplateId,
-            quantity: this.props.quantity,
-            currency_id: this.currency.id,
-            so_date: this.props.soDate,
-            product_uom_id: this.props.productUOMId,
-            company_id: this.props.companyId,
-            pricelist_id: this.props.pricelistId,
-            ptav_ids: this.props.ptavIds,
-            only_main_product: onlyMainProduct,
-            show_packaging: this.env.showPackaging,
-            ...this._getAdditionalRpcParams(),
-        });
-    }
 
     async _createProduct(product) {
         return rpc(this.createProductUrl, {
