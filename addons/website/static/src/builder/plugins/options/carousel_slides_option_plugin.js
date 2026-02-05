@@ -22,6 +22,7 @@ export class CarouselSlidesOptionPlugin extends Plugin {
         },
         clean_for_save_handlers: this.cleanForSave.bind(this),
         legit_empty_link_predicates: (linkEl) => linkEl.matches(".carousel-item a.slide-link"),
+        show_overlay_buttons_of_ancestor_predicates: (el) => el.matches("div.carousel-item"),
     };
 
     /**
