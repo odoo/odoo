@@ -62,6 +62,12 @@ class ImageGalleryOption extends Plugin {
         on_image_saved_handlers: ({ imageEl }) => this.updateCarouselThumbnail(imageEl),
         on_snippet_dropped_handlers: ({ snippetEl }) => {
             const carousels = snippetEl.querySelectorAll(".s_image_gallery .carousel");
+            for (const carousel of carousels) {
+                // TODO: Remove in master. This should be replaced with a simple
+                // `style="margin: 0 12px;"` in the snippet template, similar to
+                // the one used for building carousel items.
+                carousel.style.margin = "0 12px";
+            }
             this.addCarouselListener(carousels);
             this.addUniqueIds(carousels);
         },
