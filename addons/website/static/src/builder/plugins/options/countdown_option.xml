@@ -2,6 +2,13 @@
 <templates xml:space="preserve">
 
 <t t-name="website.CountdownOption">
+    <BuilderRow label.translate="Title Position">
+        <BuilderSelect action="'updateCountdownTitlePosition'">
+            <BuilderSelectItem actionParam="{ position: 'top' }">Top</BuilderSelectItem>
+            <BuilderSelectItem actionParam="{ position: 'left' }">Left</BuilderSelectItem>
+            <BuilderSelectItem actionParam="{}">None</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
     <BuilderRow label.translate="Due Date">
         <BuilderDateTimePicker dataAttributeAction="'endTime'" acceptEmptyDate="false"/>
     </BuilderRow>
@@ -198,6 +205,12 @@
                 </div>
             </section>
         </div>
+    </div>
+</t>
+
+<t t-name="website.s_countdown.title">
+    <div class="s_countdown_title d-flex justify-content-center align-items-center" style="color: var(--o-color-1);">
+        <h2>Sales Begins in :</h2>
     </div>
 </t>
 
