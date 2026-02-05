@@ -67,5 +67,11 @@
             <field name="global" eval="True"/>
             <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
         </record>
+        <record id="ir_rule_fleet_vehicle_model" model="ir.rule">
+            <field name="name">Fleet vehicle model: Multi Company</field>
+            <field name="model_id" ref="model_fleet_vehicle_model"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        </record>
     </data>
 </odoo>
