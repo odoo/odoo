@@ -108,3 +108,17 @@ class PaymentTransaction(models.Model):
         elif hasattr(self, "sale_order_ids") and self.sale_order_ids:
             communication = self.sale_order_ids[0].reference
         return communication or self.reference
+
+    def _get_custom_qr_code(self):
+        """Return the QR code to scan to pay the custom provider's bank account, if any.
+
+        :return: The base64 QR code.
+        :rtype: str
+        """
+        self.ensure_one()
+        provider = self.provider_id
+        if provider.qr_code and (bank_account := provider._get_custom_bank_account()):
+            return bank_account.build_qr_code_base64(
+                self.amount, self._get_communication(), None, self.currency_id, self.partner_id
+            )
+        return ""
