@@ -7,6 +7,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tools.float_utils import float_compare
+from odoo.tools.misc import clean_context
 from dateutil.relativedelta import relativedelta
 
 
@@ -170,7 +171,8 @@ class StockPicking(models.Model):
         for company, group in group_by_company.items():
             vals_list, moves = group
             grouped_mo = self.env['mrp.production'].with_company(company).create(vals_list)
-            grouped_mo.with_context(self._get_subcontract_mo_confirmation_ctx()).action_confirm()
+            ctx = {**clean_context(self.env.context), **self._get_subcontract_mo_confirmation_ctx()}
+            grouped_mo.with_context(ctx).action_confirm()
             for mo, move in zip(grouped_mo, moves):
                 mo.date_finished = move.date
                 finished_move = mo.move_finished_ids.filtered(lambda m: m.product_id == move.product_id)
