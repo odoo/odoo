@@ -16,7 +16,6 @@ export class DynamicTablePlugin extends Plugin {
         "toolbar",
         "selection",
         "dynamicField",
-        "qweb_table_plugin",
     ];
 
     resources = {
@@ -130,24 +129,26 @@ export class DynamicTablePlugin extends Plugin {
 
     createRowElement(target, basePath, path) {
         const tr = this.document.createElement("tr");
+        const tAsPrefix = "table_record_";
+
+        let id = 0;
+        this.document.querySelectorAll("[t-as], [t-set]").forEach((el) => {
+            for (const att of [el.getAttribute("t-as"), el.getAnimations("t-set")]) {
+                if (!att.startsWith(tAsPrefix)) {
+                    continue;
+                }
+                const value = parseInt(att.replace(tAsPrefix, ""));
+                if (typeof value == "number" && value > id) {
+                    id = value + 1;
+                }
+            }
+        });
+        tr.setAttribute("t-as", `${tAsPrefix}${id}`);
+
         tr.setAttribute(
             "t-foreach",
             this.dependencies.dynamicField.getFieldPath(target, basePath, path)
         );
-        tr.setAttribute("t-as", "x2many_record");
-        // const isInHeaderFooter = closestElement(target, ".header,.footer");
-        // const qwebVariables = getQwebVariables(target, isInHeaderFooter);
-        // tr.setAttribute(
-        //     "oe-context",
-        //     JSON.stringify({
-        //         x2many_record: {
-        //             model: fieldInfo.relation,
-        //             in_foreach: true,
-        //             name: fieldInfo.relationName,
-        //         },
-        //         ...qwebVariables,
-        //     })
-        // );
         return tr;
     }
 

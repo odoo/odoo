@@ -7,8 +7,6 @@ import { _t } from "@web/core/l10n/translation";
 import { FieldSelectorPopover } from "@html_editor/backend/dynamic_field/field_selector_popover";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { Plugin } from "@html_editor/plugin";
-
-import { QWebTablePlugin } from "./qweb_table_plugin";
 import { DynamicTablePlugin } from "./dynamic_table_plugin";
 
 const QWEB_T_OUT = ["t-field", "t-out", "t-esc"];
@@ -136,7 +134,7 @@ export class DynamicFieldPlugin extends Plugin {
             element: target,
         });
 
-        const [resModel, basePath] = await this.getResModel(target);
+        const { resModel, basePath } = await this.getResModel(target);
         const fullPath = target.getAttribute(this.fieldAttribute) || "";
         const initialPath = fullPath.substring(fullPath.indexOf(".") + 1);
 
@@ -196,7 +194,7 @@ export class DynamicFieldPlugin extends Plugin {
         });
 
         const target = this.getPopoverTarget(false);
-        const [resModel, basePath] = await this.getResModel(target);
+        const { resModel, basePath } = await this.getResModel(target);
         this.fieldPopover.open({
             target,
             props: {
@@ -260,7 +258,7 @@ export class DynamicFieldPlugin extends Plugin {
             variableName = childVariableName;
         }
 
-        return [resModel, variableName];
+        return { resModel, basePath: variableName };
     }
 
     getFieldPath(element, basePath, fieldPath) {
@@ -349,9 +347,4 @@ export class DynamicFieldPlugin extends Plugin {
     }
 }
 
-export const DYNAMIC_FIELD_PLUGINS = [
-    QWebPlugin,
-    DynamicFieldPlugin,
-    QWebTablePlugin,
-    DynamicTablePlugin,
-];
+export const DYNAMIC_FIELD_PLUGINS = [QWebPlugin, DynamicFieldPlugin, DynamicTablePlugin];
