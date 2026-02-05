@@ -23,6 +23,7 @@ export class CarouselSlidesOptionPlugin extends Plugin {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         legit_empty_link_predicates: (linkEl) => linkEl.matches(".carousel-item a.slide-link"),
         show_overlay_buttons_of_ancestor_predicates: (el) => el.matches("div.carousel-item"),
+        hover_effect_allowed_predicates: (el) => this.canHaveHoverEffect(el),
     };
 
     /**
@@ -42,6 +43,9 @@ export class CarouselSlidesOptionPlugin extends Plugin {
         for (const slideEl of noLinkSlideEls) {
             slideEl.classList.remove("clickable-slide");
         }
+    }
+    async canHaveHoverEffect(el) {
+        return !el.closest("*:has(> .slide-link)");
     }
 }
 

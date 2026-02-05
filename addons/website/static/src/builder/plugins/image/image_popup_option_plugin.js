@@ -17,7 +17,8 @@ export class ImagePopUpOptionPlugin extends Plugin {
 export class ImagePopUpOption extends BaseOptionComponent {
     static template = "website.ImagePopUpOption";
     static selector = "img";
-    static exclude = "a img, header img, footer img, .s_image_gallery img";
+    static exclude =
+        "a img, header img, footer img, .s_image_gallery img, *:has(> a.stretched-link) img";
 }
 
 registry.category("website-plugins").add(ImagePopUpOptionPlugin.id, ImagePopUpOptionPlugin);
