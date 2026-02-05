@@ -303,10 +303,11 @@ class HrEmployee(models.Model):
                 stop,
                 resources_per_tz=resources_per_tz,
             )
-            cal_public_leave_intervals_by_resource = cal._public_leave_intervals_batch(
+            cal_public_leave_intervals_by_resource = cal._leave_intervals_batch(
                 start,
                 stop,
                 resources_per_tz=resources_per_tz,
+                domain=[('resource_id', '=', False)]
             )
             for resource, leave_intervals in cal_leave_intervals_by_resource.items():
                 naive_leave_intervals = Intervals([(
