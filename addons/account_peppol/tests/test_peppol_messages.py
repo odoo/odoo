@@ -345,14 +345,15 @@ class TestPeppolMessage(AccountTestInvoicingCommon):
             'peppol_warning': False,
         }])
 
-        wizard.send_and_print_action()
-
-        self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
-        self.assertRecordValues(move, [{
-                'peppol_move_state': 'done',
-                'peppol_message_uuid': FAKE_UUID[0],
-            }],
-        )
+        # Try to send the invoice twice to ensure the second send doesn't mark the state as skipped
+        for _ in range(2):
+            wizard.send_and_print_action()
+            self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
+            self.assertRecordValues(move, [{
+                    'peppol_move_state': 'done',
+                    'peppol_message_uuid': FAKE_UUID[0],
+                }],
+            )
 
     def test_send_peppol_requires_peppol_document(self):
         """Without peppol document the Peppol option in the wizard is shown but readonly."""
