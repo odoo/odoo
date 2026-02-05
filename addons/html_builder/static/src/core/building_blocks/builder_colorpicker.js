@@ -182,7 +182,7 @@ export class BuilderColorPicker extends Component {
             if (style.backgroundImage !== "none") {
                 return `background-image: ${style.backgroundImage}`;
             } else {
-                return `background-color: var(--${colorCombination}-bg)`;
+                return `background-color: var(--hb-cp-${colorCombination}-bg)`;
             }
         }
         return "";
