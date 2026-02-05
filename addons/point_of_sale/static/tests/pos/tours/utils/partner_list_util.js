@@ -126,7 +126,7 @@ export function searchCustomerValue(val, pressEnter = false) {
         },
         {
             content: `Search customer with "${val}"`,
-            trigger: `.modal-dialog .input-group input`,
+            trigger: `.modal-header:has(.modal-title:contains(choose customer)) .input-group input`,
             run: `edit ${val}`,
         },
     ];
@@ -134,7 +134,7 @@ export function searchCustomerValue(val, pressEnter = false) {
     if (pressEnter) {
         steps.push({
             content: `Manually trigger keyup event`,
-            trigger: ".modal-header .input-group input",
+            trigger: ".modal-header:has(.modal-title:contains(choose customer)) .input-group input",
             run: function () {
                 document
                     .querySelector(".modal-header .input-group input")
@@ -143,7 +143,7 @@ export function searchCustomerValue(val, pressEnter = false) {
         });
         steps.push({
             content: `Press Enter to trigger "search more"`,
-            trigger: `.modal-dialog .input-group input`,
+            trigger: `.modal-header:has(.modal-title:contains(choose customer)) .input-group input`,
             run: function () {
                 document
                     .querySelector(".modal-dialog .input-group input")

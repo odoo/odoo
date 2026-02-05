@@ -962,8 +962,4 @@ class TestTours(HttpCase):
                 </activity>
             """,
         })
-        self.start_tour(
-            "/odoo?debug=1",
-            "mail_activity_view",
-            login="admin",
-        )
+        self.start_tour("/odoo?debug=1", "mail_activity_view_tour", login="admin")

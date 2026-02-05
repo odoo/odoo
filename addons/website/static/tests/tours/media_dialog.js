@@ -124,8 +124,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_media_dialog_icons",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        url: "/",
         edition: true,
     },
     () => [

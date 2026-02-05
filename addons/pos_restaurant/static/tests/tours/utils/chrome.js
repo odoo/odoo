@@ -1,5 +1,3 @@
-import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
-
 export function isTabActive(tabText) {
     return [
         {
@@ -12,8 +10,10 @@ export function isTabActive(tabText) {
 export function closePrintingWarning() {
     return [
         {
-            ...Dialog.confirm(),
             content: "acknowledge printing error ( because we don't have printer in the test. )",
+            trigger: `.modal:has(.modal-header:contains(printing failed)) .modal-footer .btn-primary:contains(continue)`,
+            run: "click",
+            timeout: 15000,
         },
     ];
 }

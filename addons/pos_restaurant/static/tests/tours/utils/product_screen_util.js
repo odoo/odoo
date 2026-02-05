@@ -138,7 +138,7 @@ export function discardOrderWarningDialog() {
         {
             trigger: `.modal-dialog:contains("It seems that the order has not been sent. Would you like to send it to preparation?")`,
         },
-        Dialog.discard(),
+        Dialog.discard({ title: `Warning !` }),
     ];
 }
 
