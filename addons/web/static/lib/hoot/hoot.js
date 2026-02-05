@@ -127,7 +127,6 @@ export {
     matches,
     microTick,
     middleClick,
-    observe,
     on,
     pointerDown,
     pointerUp,
