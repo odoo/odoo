@@ -2698,3 +2698,47 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(sale_picking.move_ids.quantity, 2)
         sale_picking.button_validate()
         self.assertEqual(sale_order.order_line.qty_delivered, 2.0)
+
+    def test_separate_child_mo_for_shared_component(self):
+        """Ensure that when confirming a Sale Order with multiple MTO products
+        sharing the same component (which has its own BOM), each parent
+        manufacturing order generates its own dedicated child MO instead of
+        reusing or updating an existing one.
+
+        This verifies that child MOs are created per parent MO (based on the
+        parent production group), so that each manufactured product is tracked
+        independently.
+        """
+        route_mto = self.env.ref('stock.route_warehouse0_mto').id
+        (self.product_a | self.product_b | self.product).route_ids = [route_mto]
+        self.env["mrp.bom"].create([
+            {
+                "product_tmpl_id": self.product_a.product_tmpl_id.id,
+                "bom_line_ids": [(0, 0, {"product_id": self.product.id, "product_qty": 1.0})],
+            },
+            {
+                "product_tmpl_id": self.product_b.product_tmpl_id.id,
+                "bom_line_ids": [(0, 0, {"product_id": self.product.id, "product_qty": 1.0})],
+            },
+            {
+                "product_tmpl_id": self.product.product_tmpl_id.id,
+                "bom_line_ids": [(0, 0, {"product_id": self.component_a.id, "product_qty": 1.0})],
+            },
+        ])
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 1,
+                }),
+                Command.create({
+                    'product_id': self.product_b.id,
+                    'product_uom_qty': 1,
+                }),
+            ],
+        })
+        so.action_confirm()
+        self.assertEqual(so.mrp_production_count, 2)
+        self.assertEqual(so.mrp_production_ids[0].mrp_production_child_count, 1)
+        self.assertEqual(so.mrp_production_ids[1].mrp_production_child_count, 1)
