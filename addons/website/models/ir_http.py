@@ -267,7 +267,8 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _post_dispatch(cls, response):
         super()._post_dispatch(response)
-        cls._register_website_track(response)
+        # the main tracking entrypoint - to be replaced.
+        # cls._register_website_track(response)
 
     @api.model
     def get_nearest_lang(self, lang_code):

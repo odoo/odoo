@@ -212,6 +212,7 @@ class WebsiteVisitorTests(WebsiteVisitorTestsCommon):
 
         existing_visitors = self.env['website.visitor'].search([])
         existing_tracks = self.env['website.track'].search([])
+        # TODO: Opening the URL will probably need to change to a tour, to enable the JS tracker
         self.url_open(self.untracked_page.url)
         self.url_open(self.tracked_page.url)
         self.url_open(self.tracked_page.url)

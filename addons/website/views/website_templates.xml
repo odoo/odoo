@@ -272,6 +272,66 @@
         <t t-if="website.plausible_shared_key and not editable">
             <script id="plausible_script" name="plausible" defer="defer" t-att-data-domain="website.plausible_site" t-att-src="website._get_plausible_script_url()"></script>
         </t>
+        <script id="odoo_tracking">
+            /**
+            * POC Odoo Analytics Tracker
+            * This is a crude proof of concept tracker for odoo.
+            * It could/should be moved to a separate file, maybe a standard interaction.
+            * To explore pros and cons - whether the delay in loading is acceptable.
+            */
+            (function() {
+                // TODO: try to filter bots based on webdriver, _phantom, __nightmare, Cypress etc. or see ["ir.http"].is_a_bot
+
+                const tracker = {
+                    endpoint: '/website/track',
+                    startTime: Date.now(),
+
+                    send(data) {
+                        const payload = JSON.stringify({
+                            ...data,
+                            url: window.location.href,
+                            path: window.location.pathname,
+                            referrer: document.referrer,
+                            screen_size: `${window.innerWidth}x${window.innerHeight}`,
+                            website_id: <t t-out="website.id"/>,
+                            res_model: "<t t-out="main_object._name"/>",
+                            res_id: <t t-out="main_object.id"/>,
+                            track: <t t-out="1 if main_object._name == 'website.page' and main_object.track else 0"/>,
+                        });
+
+                        // Use Beacon if available (better for async tracking as it prevents delays on unload)
+                        if (navigator.sendBeacon) {
+                            navigator.sendBeacon(this.endpoint, payload);
+                        } else {
+                            fetch(this.endpoint, {
+                                method: 'POST',
+                                body: payload,
+                                keepalive: true,
+                                headers: { 'Content-Type': 'application/json' }
+                            });
+                        }
+                    },
+
+                    init() {
+                        // Track Pageview after 2 seconds (attempt to filter out bots)
+                        // TODO: check if this is destroyed after navigating away.
+                        setTimeout(() => {
+                            this.send({ event: 'pageview' });
+                        }, 2000);
+
+                        // Sample: Track Engagement on exit
+                        window.addEventListener('visibilitychange', () => {
+                            if (document.visibilityState === 'hidden') {
+                                const timeSpent = Math.round((Date.now() - this.startTime) / 1000);
+                                // this.send({ event: 'engagement', seconds: timeSpent });
+                            }
+                        });
+                    }
+                };
+
+                tracker.init();
+            })();
+        </script>
     </xpath>
 
     <!-- Breadcrumb -->

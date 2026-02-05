@@ -222,6 +222,49 @@ class Website(Home):
         return super().web_login(*args, **kw)
 
     # ------------------------------------------------------
+    # Tracking
+    # ------------------------------------------------------
+    @http.route('/website/track', type='http', auth='public', methods=['POST'], csrf=False)
+    def track_event(self, **kwargs):
+        # this is a crude implementation of _register_website_track
+        # For this POC, simply lookup the page and track a visit
+        data = json.loads(request.httprequest.data.decode('utf-8')) if request.httprequest.data else {}
+        logger.info('TRACKING EVENT: %s', data)
+        # Not sure why the following is not in the request data
+        # Hack it for now
+        request.website = request.env['website'].browse(request.website_routing)
+        context_lang = request.env['ir.http'].get_nearest_lang(request.env.context.get('lang'))
+        request.lang = request.env['res.lang']._get_data(code=(context_lang))
+        # Improvements:
+        # - Instead of searching for the page based on URL, we could send that data in the httprequest - done
+        # - prevent arbitrary calls on this route (bot spam)
+        # - Clean up/ split the _get_visitor_from_request method (see lang, website_id, etc)
+        # - Handle other types of events? eg. time on page (plausible tracks: Appointment Confirmations, Lead Generated, 404, Order Confirmed - but these are records, except 404) 
+        # - Time: Since the event is sent 2 seconds after the script is loaded, the time of the event is not correct
+        # - use an interaction and rpc to avoid the manual beacon/ fetch call - to manage the lang and website etc. - consider including it in assets_frontend_minimal
+        #   also might provide the ability to prevent the call if the component/page is destroyed before the tracking is sent.
+        required_keys = {"url", "path", "website_id", "res_model", "res_id"}
+        resp = request.make_response('ok')
+        if (
+            data.get('event') == 'pageview'
+            and all(k in data for k in required_keys)
+            # no need to search as page_id is now sent by the script
+            # and (page := request.env['website.page'].sudo().search([('url', '=', data['path']), ('website_id', 'in', [False, int(data['website_id'])])], order="website_id ASC", limit=1))
+            # and page.track
+        ):
+            website_track_values = {'url': data['url']}
+            website_track_values['website_id'] = int(data['website_id'])
+            res_id = int(data['res_id'])
+            if data['res_model'] == 'website.page':
+                if not data['track']:
+                    return resp
+                website_track_values['page_id'] = res_id
+            request.env['website.visitor']._get_visitor_from_request(force_create=True, force_track_values=website_track_values)
+            logger.info("Visit logged on page id %s", website_track_values.get('page_id', data['url']))
+
+        return resp
+
+    # ------------------------------------------------------
     # Business
     # ------------------------------------------------------
 
