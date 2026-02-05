@@ -500,11 +500,13 @@ class AccountEdiCommon(models.AbstractModel):
         bank_details = list(set(map(sanitize_account_number, bank_details)))
         partner = self.env.company.partner_id if invoice.is_inbound() else invoice.partner_id
         banks_to_create = []
+
         acc_number_partner_bank_dict = {
             bank.sanitized_acc_number: bank
-            for bank in ResPartnerBank.with_context(active_test=False).search(
-                [('partner_id', '=', partner.id), ('acc_number', 'in', bank_details)]
-            )
+            for bank in ResPartnerBank.with_context(active_test=False).search([
+                *self.env['res.partner.bank']._check_company_domain(self.env.company),
+                ('partner_id', '=', partner.id), ('acc_number', 'in', bank_details)
+            ])
         }
         for account_number in bank_details:
             partner_bank = acc_number_partner_bank_dict.get(account_number, ResPartnerBank)
@@ -514,10 +516,15 @@ class AccountEdiCommon(models.AbstractModel):
                 invoice.partner_bank_id = partner_bank
                 return
             elif not partner_bank and account_number:
-                banks_to_create.append({
-                    'acc_number': account_number,
-                    'partner_id': partner.id,
-                })
+                bank_accounts = ResPartnerBank.with_context(active_test=False).sudo().search([
+                    ('partner_id', '=', partner.id), ('acc_number', '=', account_number)
+                ])
+
+                if not bank_accounts: # Avoid breaking SQL constraint partner_id, acc_number
+                    banks_to_create.append({
+                        'acc_number': account_number,
+                        'partner_id': partner.id,
+                    })
         if banks_to_create:
             invoice.partner_bank_id = ResPartnerBank.create(banks_to_create)[0]
 
