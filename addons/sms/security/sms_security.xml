@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <record id="ir_rule_sms_template_system" model="ir.rule">
-        <field name="name">SMS Template: system group granted all</field>
-        <field name="model_id" ref="sms.model_sms_template"/>
-        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
-    </record>
-</odoo>

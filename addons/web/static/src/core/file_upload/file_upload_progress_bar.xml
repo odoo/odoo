@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates>
-    <t t-name="web.FileUploadProgressBar">
-        <div class="position-absolute top-0 start-0 h-100 w-100">
-            <div class="o-file-upload-progress-bar-value h-100" t-ref="bar" t-att-style="'width: ' + (this.props.fileUpload.progress * 100) + '%;'"/>
-            <span class="position-absolute top-0 end-0 cursor-pointer o-file-upload-progress-bar-abort fa fa-times-circle" title="Cancel Upload" aria-label="Cancel Upload" t-on-click.stop.prevent="onCancel"/>
-        </div>
-    </t>
-</templates>
