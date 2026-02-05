@@ -13,6 +13,7 @@
         "views/myinvois_document_pos_views.xml",
         "views/pos_order_views.xml",
         "views/product_view.xml",
+        "views/res_partner_view.xml",
     ],
     'auto_install': True,
     'author': 'Odoo S.A.',
