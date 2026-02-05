@@ -6627,7 +6627,7 @@ test("Missing t-key is automatically filled with a warning", async () => {
                 <templates>
                     <t t-name="card">
                         <div>
-                            <span t-foreach="[1, 2, 3]" t-as="i" t-esc="i" />
+                            <span t-foreach="[1, 2, 3]" t-as="i" t-out="i" />
                         </div>
                     </t>
                 </templates>
@@ -6905,7 +6905,7 @@ test("can use JSON in kanban template", async () => {
                 <templates>
                     <t t-name="card">
                         <div>
-                            <span t-foreach="JSON.parse(record.foo.raw_value)" t-as="v" t-key="v_index" t-esc="v"/>
+                            <span t-foreach="JSON.parse(record.foo.raw_value)" t-as="v" t-key="v_index" t-out="v"/>
                         </div>
                     </t>
                 </templates>

@@ -175,6 +175,21 @@ class JSTooling:
         return pattern.sub(replacer, content)
 
     @staticmethod
+    def transform_arch_templates(content: str, transform_func: callable) -> str:
+        """Finds arch: `...` or arch = `...` template literals and applies a transform
+        function to the inner XML string.
+        """
+        pattern = re.compile(r"(\barch\b\s*(?:[:=])\s*`)(.*?)(`)", re.DOTALL)
+
+        def replacer(match: re.Match) -> str:
+            prefix = match.group(1)
+            xml_content = match.group(2)
+            suffix = match.group(3)
+            return f"{prefix}{transform_func(xml_content)}{suffix}"
+
+        return pattern.sub(replacer, content)
+
+    @staticmethod
     def clean_whitespace(content: str) -> str:
         """Removes trailing whitespace and lines containing only spaces.
 
@@ -264,6 +279,7 @@ def upgrade_t_esc(file_manager, log_info, log_error):
     files = [
         file for file in file_manager
         if file.path.suffix in ['.xml', '.js']
+        and "node_modules" not in file.path.parts
         and not any(file.path._str.endswith(p) for p in EXCLUDED_FILES + CHECKSUM_FILES)
     ]
     if not files:
@@ -294,6 +310,7 @@ def upgrade_t_esc(file_manager, log_info, log_error):
                 content = JSTooling.transform_js_string_literals(content, replace_t_esc)
             elif file.path.suffix == ".js":
                 content = JSTooling.transform_xml_literals(content, replace_t_esc)
+                content = JSTooling.transform_arch_templates(content, replace_t_esc)
             else:  # .xml
                 content = replace_t_esc(content)
             file.content = content

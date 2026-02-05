@@ -11527,10 +11527,10 @@ test(`Can't use FormRenderer implementation details in arch`, async () => {
         arch: `
             <form>
                 <div>
-                    <t t-esc="__owl__"/>
-                    <t t-esc="props"/>
-                    <t t-esc="env"/>
-                    <t t-esc="render"/>
+                    <t t-out="__owl__"/>
+                    <t t-out="props"/>
+                    <t t-out="env"/>
+                    <t t-out="render"/>
                 </div>
             </form>
         `,
