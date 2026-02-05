@@ -35,7 +35,9 @@
         <!-- Yellow bg to highlight requested view as google does -->
         <span class="js_fold" t-att-style="viewId === viewTree.id ? 'background-color: yellow': ''">
             <t t-out="viewTree.name"/> (<span class="fw-bold" t-out="viewTree.key"/>)
-            <span class="o_text_orange" t-if="viewTree.website_name" t-out="`[${viewTree.website_name}]`"/>
+            <span class="o_text_orange" t-if="viewTree.website_name">
+                [<t t-out="viewTree.website_name" />]
+            </span>
         </span>
         <a href="#" t-on-click.stop.prevent="() => this.openFormView(viewTree.id)">
             <i class="fa fa-eye ms-2 text-muted" title="Go to View"/>

@@ -41,7 +41,9 @@
             </li>
             <li t-if="time" class="list-group-item">
                 <i class="fa fa-fw fa-clock-o text-400" />
-                <span class="fw-bold ms-2" t-out="time" /> <small t-if="timeDuration"><b t-out="`(${timeDuration})`" /></small>
+                <span class="fw-bold ms-2" t-out="time" /> <small t-if="timeDuration">
+                    <b>(<t t-out="timeDuration" />)</b>
+                </small>
             </li>
         </ul>
         <ul class="list-group list-group-flush o_cw_popover_fields_secondary">

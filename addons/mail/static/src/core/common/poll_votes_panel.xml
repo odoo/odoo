@@ -25,7 +25,7 @@
                             <span class="mx-2 text-truncate fs-6" t-out="this.props.poll.start_message_id.getPersonaName(persona)"/>
                         </div>
                         <div t-if="option.vote_ids.length === 0 and option.fetchPollVotesCached.status === 'fetched'" class="w-100 h-100 d-flex flex-column justify-content-center align-items-center text-center">
-                            <span class="o-mail-PollVotesPanel-emptyEmoji">😅</span>
+                            <span class="o-mail-PollVotesPanel-emptyEmoji" t-translation="off">😅</span>
                             <span class="text-muted">There are no votes for this answer</span>
                         </div>
                     </TabPanel>

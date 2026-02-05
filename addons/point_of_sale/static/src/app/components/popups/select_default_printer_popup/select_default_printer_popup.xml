@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.SelectDefaultPrinterPopup" owl="1">
         <Dialog size="'sm'" title.translate="Several printers are available">
-            <t t-out="'Choose another printer'"/>
+            Choose another printer
             <t t-foreach="props.receipt_printers" t-as="p" t-key="p.id">
                 <div class="my-2">
                     <label class="d-flex align-items-center">

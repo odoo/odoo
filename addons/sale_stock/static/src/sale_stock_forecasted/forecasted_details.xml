@@ -28,7 +28,12 @@
                 <a t-if="line.reservation" t-out="line.reservation.name" href="#" class="fw-bold"
                     t-on-click.prevent="() => this.props.openView(line.reservation._name, 'form', line.reservation.id)"/>
             </t>
-            <span t-if="line.document_out and line.is_matched and line.document_out._name === 'sale.order'" t-out="' (Your SO)'"/>
+            <span
+                t-if="line.document_out and line.is_matched and line.document_out._name === 'sale.order'"
+                class="ms-1"
+            >
+                (Your SO)
+            </span>
         </xpath>
     </t>
 </templates>
