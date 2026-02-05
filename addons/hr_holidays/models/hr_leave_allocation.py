@@ -128,10 +128,6 @@ class HrLeaveAllocation(models.Model):
     virtual_remaining_leaves = fields.Float(compute='_compute_leaves', string='Available Time Off')
     expiring_carryover_days = fields.Float("The number of carried over days that will expire on carried_over_days_expiration_date")
     carried_over_days_expiration_date = fields.Date("Carried over days expiration date")
-    _duration_check = models.Constraint(
-        "CHECK( ( number_of_days > 0 AND allocation_type='regular') or (allocation_type != 'regular'))",
-        'The duration must be greater than 0.',
-    )
 
     @api.constrains('date_from', 'date_to')
     def _check_date_from_date_to(self):
@@ -275,6 +271,21 @@ class HrLeaveAllocation(models.Model):
                 allocation.number_of_days = allocation.number_of_days_display
             elif allocation_unit == 'hour' and allocation.employee_id:
                 allocation.number_of_days = allocation.number_of_hours_display / allocation.employee_id._get_hours_per_day(allocation.date_from)
+
+    @api.constrains('number_of_days', 'holiday_status_id', 'employee_id')
+    def _check_negative_allocation(self):
+        for allocation in self:
+            if allocation.number_of_days >= 0:
+                continue
+            if not allocation.holiday_status_id.allows_negative:
+                raise ValidationError(self.env._("Negative allocations are not allowed for this time off type."))
+            allocation_unit = allocation.type_request_unit
+            if allocation_unit != 'hour' and abs(allocation.number_of_days_display) > allocation.holiday_status_id.max_allowed_negative:
+                raise ValidationError(self.env._("The negative allocation cannot exceed the maximum allowed negative value of %(max)s day(s).",
+                      max=allocation.holiday_status_id.max_allowed_negative))
+            if allocation_unit == 'hour' and abs(allocation.number_of_hours_display) > allocation.holiday_status_id.max_allowed_negative:
+                raise ValidationError(self.env._("The negative allocation cannot exceed the maximum allowed negative value of %(max)s hour(s).",
+                      max=allocation.holiday_status_id.max_allowed_negative))
 
     @api.depends('allocation_type')
     def _compute_accrual_plan_id(self):
