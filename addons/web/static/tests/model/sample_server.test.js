@@ -12,7 +12,7 @@ const {
     MAX_FLOAT,
     MAX_INTEGER,
     MAX_MONETARY, // Number values
-    SUB_RECORDSET_SIZE, // Records sise
+    SUB_RECORDSET_SIZE,
 } = SampleServer;
 
 /**
@@ -33,6 +33,9 @@ class DeterministicSampleServer extends SampleServer {
     }
     _getRandomSubRecordId() {
         return (this.subRecordIdCpt++ % SUB_RECORDSET_SIZE) + 1;
+    }
+    _getRandomDate() {
+        return luxon.DateTime.fromISO("2016-05-25T09:08:34.123", { zone: "utc" });
     }
 }
 
@@ -83,9 +86,11 @@ const fields = {
                 ["employee", "Employee"],
             ],
         },
+        write_date: { type: "datetime" },
     },
     "res.country": {
         display_name: { string: "Name", type: "char" },
+        write_date: { type: "datetime" },
     },
     hobbit: {
         display_name: { string: "Name", type: "char" },
@@ -210,6 +215,21 @@ describe("RPC calls", () => {
         expect(Object.keys(result.records[0])).toEqual(["id", "manager_id"]);
         expect(result.records[0].manager_id.id).toBe(1);
         expect(result.records[0].manager_id.display_name).toMatch(/\w+/);
+    });
+
+    test("'search_read': many2one fields with write_date", async () => {
+        fields["res.users"].country_id = { string: "Country", type: "many2one" };
+        const server = new DeterministicSampleServer("res.users", fields["res.users"]);
+        const result = await server.mockRpc({
+            method: "web_search_read",
+            model: "res.users",
+            specification: {
+                country_id: {
+                    fields: { display_name: {}, write_date: {} },
+                },
+            },
+        });
+        expect(result.records[0].country_id.write_date).toBe("2016-05-25 09:08:34");
     });
 
     test("'web_read_group': no group", async () => {
