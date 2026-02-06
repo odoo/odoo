@@ -471,7 +471,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
             or file_data['mimetype'].endswith('/xml')
         ):
             try:
-                return etree.fromstring(file_data['raw'])
+                return etree.fromstring(file_data['raw'], parser=etree.XMLParser(remove_comments=True, resolve_entities=False))
             except etree.ParseError as e:
                 _logger.info('Error when reading the xml file "%s": %s', file_data['name'], e)
 
