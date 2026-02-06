@@ -2,6 +2,7 @@
 
 import odoo
 from uuid import uuid4
+from unittest.mock import patch
 
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
@@ -2163,6 +2164,76 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         sale_order.action_confirm()
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_settle_groupable_lot_total_amount', login="accountman")
+
+    def test_downpayment_fixed_tax_require_tax(self):
+        """Make sure that when a tax is required for all invoice line, fixed tax downpayment have a tax"""
+        fixed_tax = self.env['account.tax'].sudo().create({
+            'name': 'Fixed Tax',
+            'amount_type': 'fixed',
+            'amount': 10,
+        })
+
+        product_a = self.env['product.product'].sudo().create({
+            'name': 'Product A',
+            'available_in_pos': True,
+            'lst_price': 100,
+            'taxes_id': [fixed_tax.id],
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': product_a.id,
+                'name': product_a.name,
+                'product_uom_qty': 1,
+                'price_unit': product_a.lst_price,
+            })],
+        })
+        sale_order.action_confirm()
+        self.main_pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
+
+        self.main_pos_config.open_ui()
+        pos_order = {
+           'amount_paid': 20,
+           'amount_return': 0,
+           'amount_tax': 0,
+           'amount_total': 20,
+           'company_id': self.env.company.id,
+           'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+           'fiscal_position_id': False,
+           'to_invoice': True,
+           'partner_id': self.partner_a.id,
+           'pricelist_id': self.main_pos_config.available_pricelist_ids[0].id,
+           'lines': [[0,
+             0,
+             {'discount': 0,
+              'pack_lot_ids': [],
+              'price_unit': 20,
+              'product_id': self.main_pos_config.down_payment_product_id.id,
+              'price_subtotal': 20,
+              'price_subtotal_incl': 20,
+              'sale_order_line_id': sale_order.order_line[0].id,
+              'sale_order_origin_id': sale_order.id,
+              'qty': 1,
+              'tax_ids': []}]],
+           'name': 'Order 00044-003-0014',
+           'session_id': self.main_pos_config.current_session_id.id,
+           'sequence_number': self.main_pos_config.journal_id.id,
+           'payment_ids': [[0,
+             0,
+             {'amount': 20,
+              'name': fields.Datetime.now(),
+              'payment_method_id': self.main_pos_config.payment_method_ids[0].id}]],
+           'user_id': self.env.uid,
+           'uuid': str(uuid4()),
+            }
+
+        with patch('odoo.addons.account.models.account_move.AccountMove.require_tax_ids_on_invoice_lines', return_value=True):
+            res = self.env['pos.order'].sync_from_ui([pos_order])
+            tax_0_percent = self.env['account.tax'].search([('amount_type', '=', 'percent'), ('amount', '=', 0)], limit=1)
+            self.assertTrue(tax_0_percent)
+            pos_order = self.env['pos.order'].browse(res['pos.order'][0]['id'])
+            self.assertEqual(pos_order.account_move.line_ids.tax_ids, tax_0_percent, "The downpayment line should have the fixed tax applied")
 
 
 @odoo.tests.tagged('post_install', '-at_install')

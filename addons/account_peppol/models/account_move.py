@@ -70,3 +70,7 @@ class AccountMove(models.Model):
                 'partner_on_peppol': invoice.commercial_partner_id.peppol_verification_state in ('valid', 'not_valid_format'),
             }
         return render_context
+
+    @api.model
+    def require_tax_ids_on_invoice_lines(self):
+        return super().require_tax_ids_on_invoice_lines() or self.env.company.peppol_can_send
