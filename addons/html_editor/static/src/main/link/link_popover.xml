@@ -62,7 +62,7 @@
                                 placeholder="e.g. https://www.odoo.com"
                                 t-on-keydown="this.onKeydownEnter"
                                 t-on-input="this.onChange"/>
-                            <span class="ms-1" t-if="this.props.canUpload and !this.state.url">
+                            <span class="ms-1" t-if="this.props.canUpload">
                                 or <button class="btn btn-light btn-sm" t-on-click="this.uploadFile"><i class="fa fa-upload"/></button>
                             </span>
 
