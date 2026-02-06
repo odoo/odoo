@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add("customer_display_shows_qr_popup", {
             {
                 isActive: ["mobile"],
                 content: "Check that the Customer display url is valid",
-                trigger: ".o-overlay-item .modal .modal-body .small a",
+                trigger: ".o-overlay-item .modal .modal-footer a",
                 run: function (el) {
                     const url = el.anchor.href;
                     if (!url || url.includes("undefined")) {
@@ -36,7 +36,7 @@ registry.category("web_tour.tours").add("customer_display_shows_qr_popup", {
             {
                 isActive: ["mobile"],
                 content: "Check that the Qr popup has close button",
-                trigger: ".o-overlay-item .modal .modal-body button.button.btn-secondary",
+                trigger: ".o-overlay-item .modal .modal-footer button.btn-secondary",
             },
         ].flat(),
 });

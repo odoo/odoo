@@ -12,7 +12,7 @@
                 <h3 class="section-title" t-out="this.props.productTemplate.displayName + ' | ' + this.env.utils.formatCurrency(productInfo.all_prices.price_with_tax)"/>
                 <button type="button" class="btn-close mb-2" aria-label="Close" tabindex="-1" t-on-click="this.props.close"/>
             </t>
-            <div class="section-public-description mt-3 mb-4 pb-4 border-bottom text-start" t-if="this.props.productTemplate.productDescriptionMarkup">
+            <div class="section-public-description mb-4 pb-4 border-bottom text-start" t-if="this.props.productTemplate.productDescriptionMarkup">
                 <h3 class="section-title">
                     Description
                 </h3>
@@ -115,8 +115,8 @@
             </div>
             <t t-set-slot="footer">
                 <div class="d-flex flex-row gap-2 w-100">
-                    <button class="btn btn-primary btn-lg lh-lg w-50" t-on-click="this.props.close">Close</button>
-                    <button t-if="this.allowProductEdition" class="btn btn-secondary btn-lg lh-lg w-50" t-on-click="this.editProduct">Edit</button>
+                    <button class="btn btn-primary w-50" t-on-click="this.props.close">Close</button>
+                    <button t-if="this.allowProductEdition" class="btn btn-secondary w-50" t-on-click="this.editProduct">Edit</button>
                 </div>
             </t>
         </Dialog>

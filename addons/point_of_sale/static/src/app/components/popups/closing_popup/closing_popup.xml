@@ -2,17 +2,17 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.ClosePosPopup">
-        <Dialog contentClass="'close-pos-popup'">
+        <Dialog contentClass="'close-pos-popup'" bodyClass="'pt-2 pb-1'">
             <t t-set-slot="header">
-                <div class="d-flex flex-grow-1 justify-content-between">
-                    <h4 class="align-middle my-1">Closing Register</h4>
+                <div class="d-flex flex-grow-1 justify-content-between mb-2">
+                    <h4 class="align-middle my-1 fs-2">Closing Register</h4>
                     <div class="total-orders fw-bolder align-middle my-1">
                         <t t-out="this.props.orders_details.quantity"/> orders:
                         <span class="amount" t-out="this.env.utils.formatCurrency(this.props.orders_details.amount)"/>
                     </div>
                 </div>
             </t>
-                <div class="payment-methods-overview">
+                <div class="payment-methods-overview mt-n2">
                     <div t-if="this.pos.config.cash_control" class="w-100 mb-3">
                         <t t-set="diff" t-value="this.getDifference(this.props.default_cash_details.id)" />
                         <t t-set="counted" t-value="this.state.payments[this.props.default_cash_details.id]?.counted || '0'" />
@@ -118,21 +118,21 @@
                 <div class="w-100 d-flex flex-wrap justify-content-between gap-2" t-att-class="{'container-fluid row p-0': this.ui.isSmall}">
                     <!-- First line of buttons -->
                     <div t-att-class="{'col-12 col-md-6 p-0': this.ui.isSmall}" class="d-flex gap-2">
-                        <button class="button highlight btn btn-primary" t-att-disabled="!this.canConfirm()" t-on-click="this.confirm" t-att-class="this.ui.isSmall ? 'w-100' : 'btn-lg'">Close Register</button>
-                        <button class="button btn btn-secondary" t-att-disabled="!this.canCancel()" t-on-click="this.cancel" t-att-class="this.ui.isSmall ? 'w-100' : 'btn-lg'">Discard</button>
+                        <button class="button highlight btn btn-primary" t-att-disabled="!this.canConfirm()" t-on-click="this.confirm" t-att-class="{'w-100': this.ui.isSmall}">Close Register</button>
+                        <button class="button btn btn-secondary" t-att-disabled="!this.canCancel()" t-on-click="this.cancel" t-att-class="{'w-100': this.ui.isSmall}">Discard</button>
                     </div>
 
                     <!-- Second line of buttons -->
                     <div t-att-class="{'col-12 col-md-6 p-0': this.ui.isSmall}" class=" d-flex gap-2">
-                        <button t-if="this.pos.showCashMoveButton" class="button btn btn-secondary" t-att-class="this.ui.isSmall ? 'w-100' : 'btn-lg'" t-on-click="() => this.cashMove()">Cash In/Out</button>
+                        <button t-if="this.pos.showCashMoveButton" class="button btn btn-secondary" t-att-class="{'w-100': this.ui.isSmall}" t-on-click="() => this.cashMove()">Cash In/Out</button>
                         <button class="button icon btn btn-secondary"
                             t-on-click="this.downloadSalesReport"
-                            t-att-class="this.ui.isSmall ? 'w-100' : 'btn-lg ms-auto'"
+                            t-att-class="this.ui.isSmall ? 'w-100' : 'ms-auto'"
                             title="Download a report with all the sales of the current PoS Session">
                                 Daily Sale
                                 <i t-if="!this.ui.isSmall" class="fa fa-download" role="img"/>
                         </button>
-                        <button t-if="this.pos.ticketPrinter.hasReceiptPrinters" class="button icon btn btn-secondary" t-att-class="{'btn-lg': !this.ui.isSmall}">
+                        <button t-if="this.pos.ticketPrinter.hasReceiptPrinters" class="button icon btn btn-secondary">
                             <SaleDetailsButton/>
                         </button>
                     </div>

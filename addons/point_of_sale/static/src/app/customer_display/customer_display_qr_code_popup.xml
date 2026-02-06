@@ -2,49 +2,30 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.QrCodeCustomerDisplay">
-        <Dialog header="this.ui.isSmall" title.translate="Scan QR" footer="false" size="'md'">
-            <div class="container">
-                <div class="align-items-center d-flex justify-content-center w-100">
-                    <t t-if="this.ui.isSmall">
-                        <div class="d-flex flex-column align-items-center">
-                            <div class="text-center position-relative w-100 d-flex flex-column">
-                                <img id="CustomerDisplayqrCode" t-att-src="this.getQrCode()" alt="Customer QR Code"
-                                    class="img-fluid mb-3 square w-75 mx-auto d-block"/>
-
-                                <div class="small mb-3">
-                                    <t t-set="customerDisplayURL" t-value="this.props.customerDisplayURL"/>
-                                    <a t-att-href="customerDisplayURL" target="_blank" t-out="customerDisplayURL" />
-                                    <CopyButton content="customerDisplayURL" className="'ms-2 btn-primary'" successText.translate="Link copied to clipboard" icon="'fa-clone'"/>
-                                </div>
-                            </div>
-                            <button t-on-click="this.props.close" class="button btn btn-secondary mb-3 rounded-3">
-                                Close
-                            </button>
-                        </div>
-                    </t>
-                    <t t-if="!this.ui.isSmall">
-                        <div class="w-100 d-flex flex-column gap-3">
-                            <div>
-                                <h2>Open Customer Display</h2>
-                            </div>
-                            <p class="popup-text w-100">You can either use it on this device or scan the QR code to display it on another device</p>
-                            <div class="d-flex justify-content-between">
-                                <div class="d-flex gap-3 flex-grow-1">
-                                    <button t-on-click="this.openOnThisDevice" class="btn btn-primary h1 mb-3 rounded-3">
-                                        This device 
-                                    </button>
-                                    <button t-on-click="this.showQr" class="btn btn-secondary h1 mb-3 rounded-3">
-                                        Display QR
-                                    </button>
-                                </div>
-                                <button t-on-click="() => this.props.close()" class="btn btn-secondary h1 mb-3 rounded-3">
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                    </t>
-                </div>
-            </div>
-        </Dialog>
+        <t t-if="this.ui.isSmall">
+            <Dialog title.translate="Scan QR" size="'sm'" bodyClass="'d-flex justify-content-center'">
+                <img id="CustomerDisplayqrCode" t-att-src="this.getQrCode()" alt="Customer QR Code"
+                        class="img-fluid mb-3 w-50"/>
+                <t t-set-slot="footer">
+                    <t t-set="customerDisplayURL" t-value="this.props.customerDisplayURL"/>
+                    <a t-att-href="customerDisplayURL" target="_blank" class="btn btn-primary text-white">Open Customer Display</a>
+                    <button class="btn btn-secondary" t-on-click="() => this.props.close()">Discard</button>
+                </t>
+            </Dialog>
+        </t>
+        <t t-else="">
+            <Dialog title.translate="Open Customer Display" size="'md'">
+                <p class="popup-text mt-n3">You can either use it on this device or scan the QR code to display it on another device</p>
+                 <t t-set-slot="footer">
+                    <button t-on-click="this.openOnThisDevice" class="btn btn-primary">
+                        This device
+                    </button>
+                    <button t-on-click="this.showQr" class="btn btn-secondary">
+                        Display QR
+                    </button>
+                    <button class="btn btn-secondary ms-auto" t-on-click="() => this.props.close()">Discard</button>
+                </t>
+            </Dialog>
+        </t>
     </t>
 </templates>

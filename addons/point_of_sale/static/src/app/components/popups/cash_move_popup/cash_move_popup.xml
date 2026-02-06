@@ -2,8 +2,8 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.CashMovePopup">
-        <Dialog header="false">
-            <div class="input-amount d-flex mb-2 gap-2">
+        <Dialog header="false" bodyClass="'pb-0'">
+            <div class="input-amount d-flex mb-3 gap-2">
                 <div class="input-group" t-att-class="{ 'w-50' : this.ui.isSmall }">
                     <button t-on-click="() => this.onClickButton('in')" t-attf-class="input-type btn lh-lg #{this.ui.isSmall ? 'btn-md' : 'btn-lg'} #{this.state.type === 'in' ? 'highlight btn-success' : 'btn-secondary' }">
                         Cash In
@@ -33,19 +33,19 @@
                 <div class="w-100 d-flex flex-wrap justify-content-between gap-2">
                     <!-- First line of buttons -->
                     <div class="d-flex gap-2">
-                        <button class="button confirm btn btn-lg lh-lg btn-primary"
+                        <button class="button confirm btn btn-primary"
                             t-on-click="this.confirm"
                             t-att-disabled="!this.isValidCashMove()">
                             Confirm
                         </button>
-                        <button class="button cancel btn btn-lg lh-lg btn-secondary" t-on-click="this.props.close">
+                        <button class="button cancel btn btn-secondary" t-on-click="this.props.close">
                             Discard
                         </button>
                     </div>
 
                     <!-- Second line of buttons -->
                     <div class=" d-flex gap-2">
-                        <button class="button btn btn-secondary btn-lg" t-on-click="() => this.openDetails()" t-att-disabled="!this.state.cashMoves.length">Details</button>
+                        <button class="button btn btn-secondary" t-on-click="() => this.openDetails()" t-att-disabled="!this.state.cashMoves.length">Details</button>
                     </div>
                 </div>
             </t>

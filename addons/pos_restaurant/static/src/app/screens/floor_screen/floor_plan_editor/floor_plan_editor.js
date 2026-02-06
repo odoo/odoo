@@ -702,6 +702,7 @@ export class FloorPlanEditor extends FloorPlanBase {
             getPayload: async (newName) => {
                 this.floorPlanStore.addFloor(newName);
             },
+            size: "md",
         });
     }
 

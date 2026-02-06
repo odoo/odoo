@@ -11,6 +11,7 @@ export class SelectionPopup extends Component {
         getPayload: t.function(),
         close: t.function(),
         size: t.string().optional("lg"),
+        bodyClass: t.string().optional(""),
     });
 
     /**
