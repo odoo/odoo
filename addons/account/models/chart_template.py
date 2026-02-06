@@ -1540,6 +1540,7 @@ class AccountChartTemplate(models.AbstractModel):
             chart_template_data = template_data or self.env['account.chart.template'] \
                 .with_context(ignore_missing_tags=True) \
                 .with_company(company) \
+                .sudo() \
                 ._get_chart_template_data(company.chart_template)
             chart_template_data.pop('template_data', None)
             for mname, data in chart_template_data.items():
