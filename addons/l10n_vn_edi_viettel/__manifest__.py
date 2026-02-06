@@ -15,11 +15,12 @@ Vietnam - E-invoicing
 Using SInvoice by Viettel
     """,
     "data": [
-        'security/ir.model.access.csv',
+        "security/ir.model.access.csv",
+        "security/sinvoice_security.xml",
         "views/account_move_views.xml",
-        "views/res_config_settings_views.xml",
-        "views/res_partner_views.xml",
+        "views/account_journal_views.xml",
         "views/sinvoice_views.xml",
+        "views/res_config_settings_views.xml",
         "wizard/account_move_reversal_view.xml",
         "wizard/l10n_vn_edi_cancellation_request_views.xml",
     ],

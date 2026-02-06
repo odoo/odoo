@@ -6,10 +6,10 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//app[@name='account']" position="inside">
-                <block title="Vietnamese Integration" id="vn_localization" invisible="country_code != 'VN'">
-                    <setting id="sinvoice_setting" string="Setup SInvoice" help="Check the documentation to get credentials" documentation="/applications/finance/fiscal_localizations/vietnam.html" company_dependent="1" >
-                        <div class="content-group">
-                            <div class="mt16 row">
+                <block title="Vietnamese E-invoice Integration" id="vn_localization" invisible="country_code != 'VN'">
+                    <setting id="sinvoice_setting" string="Setup SInvoice" help="Issue E-invoice via SInvoice" documentation="/applications/finance/fiscal_localizations/vietnam.html" company_dependent="1" >
+                        <div class="content-group mb-3">
+                            <div class="mt16 row" title="SInvoice account">
                                 <label for="l10n_vn_edi_username" string="Username" class="col-3 col-lg-3 o_light_label"/>
                                 <field name="l10n_vn_edi_username" nolabel="1"/>
                             </div>
@@ -17,10 +17,25 @@
                                 <label for="l10n_vn_edi_password" string="Password" class="col-3 col-lg-3 o_light_label"/>
                                 <field name="l10n_vn_edi_password" password="True" nolabel="1"/>
                             </div>
-                            <div class="row">
-                                <label for="l10n_vn_edi_default_symbol" class="col-3 col-lg-3 o_light_label"/>
-                                <field name="l10n_vn_edi_default_symbol" nolabel="1"/>
+                            <div class="row" title="Used for all non-POS invoices unless a specific symbol is defined in each Invoice journal.">
+                                <label for="l10n_vn_edi_default_symbol_id" class="col-3 col-lg-3 o_light_label"/>
+                                <field name="l10n_vn_edi_default_symbol_id" nolabel="1" options="{'no_create': True}"/>
                             </div>
+                        </div>
+                        <div>
+                            <button
+                                string="Fetch Symbols"
+                                type="object"
+                                name="action_fetch_symbols"
+                                class="btn btn-primary"
+                                />
+                            <button
+                                string="View Invoice Symbol List"
+                                type="action"
+                                name="%(l10n_vn_edi_viettel.action_sinvoice_symbol)d"
+                                class="btn btn-link"
+                                icon="oi-arrow-right"
+                            />
                         </div>
                     </setting>
                 </block>

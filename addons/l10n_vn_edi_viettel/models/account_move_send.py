@@ -11,7 +11,7 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _is_vn_edi_applicable(self, move):
-        return bool(move.l10n_vn_edi_invoice_state == 'ready_to_send' and move._l10n_vn_edi_get_credentials_company())
+        return bool(move.l10n_vn_edi_invoice_state == 'ready_to_send' and move.company_id._l10n_vn_edi_get_credentials_company())
 
     def _get_all_extra_edis(self) -> dict:
         # EXTENDS 'account'
@@ -37,7 +37,7 @@ class AccountMoveSend(models.AbstractModel):
     def _get_placeholder_mail_attachments_data(self, move, invoice_edi_format=None, extra_edis=None, pdf_report=None):
         # EXTENDS 'account'
         results = super()._get_placeholder_mail_attachments_data(move, invoice_edi_format=invoice_edi_format, extra_edis=extra_edis, pdf_report=pdf_report)
-        if invoice_edi_format == 'vn_sinvoice' and move._l10n_vn_edi_get_credentials_company():
+        if invoice_edi_format == 'vn_sinvoice' and move.company_id._l10n_vn_edi_get_credentials_company():
             results.extend([{
                 'id': 'placeholder_sinvoice.pdf',
                 'name': f'{move.company_id.vat}-{move.l10n_vn_edi_invoice_symbol.name}101.pdf',
@@ -60,7 +60,7 @@ class AccountMoveSend(models.AbstractModel):
     def _generate_sinvoice_file_date(self, invoice, invoice_data):
         # Ensure that we still generate the file if 'generate' is ul10n_vn_edi_invoice_transaction_id-checked but send it.
         need_file = (
-            (invoice_data['invoice_edi_format'] == 'vn_sinvoice' and invoice._l10n_vn_edi_get_credentials_company())
+            (invoice_data['invoice_edi_format'] == 'vn_sinvoice' and invoice.company_id._l10n_vn_edi_get_credentials_company())
             or 'vn_sinvoice_send' in invoice_data['extra_edis']
         )
         # In case we already have a json file existing on the invoice, we skip regenerating it.
@@ -135,46 +135,9 @@ class AccountMoveSend(models.AbstractModel):
             if invoice.l10n_vn_edi_invoice_state != 'sent':
                 continue
 
-            # Download SInvoice documents in order to attach them to the email we sent to the customer.
-            # If the email is not being sent, we will still get the files and attach them to the invoice.
-            xml_data, xml_error_message = invoice._l10n_vn_edi_fetch_invoice_xml_file_data()
-            pdf_data, pdf_error_message = invoice._l10n_vn_edi_fetch_invoice_pdf_file_data()
-            if xml_error_message or pdf_error_message:
-                invoice_data['error'] = {
-                    'error_title': _('Error when receiving SInvoice files.'),
-                    'errors': [error_message for error_message in [xml_error_message, pdf_error_message] if error_message],
-                }
-
-            # Not using _link_invoice_documents for these because it depends on _need_invoice_document and I can't get it to work
-            # well while allowing users to download the files before sending.
-            attachments_data = []
-            for file, error in [(xml_data, xml_error_message), (pdf_data, pdf_error_message)]:
-                if error:
-                    continue
-
-                attachments_data.append({
-                    'name': file['name'],
-                    'raw': file['raw'],
-                    'mimetype': file['mimetype'],
-                    'res_model': invoice._name,
-                    'res_id': invoice.id,
-                    'res_field': file['res_field'],  # Binary field
-                })
-
-            if attachments_data:
-                attachments = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachments_data)
-                invoice.invalidate_recordset(fnames=[
-                    'l10n_vn_edi_sinvoice_xml_file_id',
-                    'l10n_vn_edi_sinvoice_xml_file',
-                    'l10n_vn_edi_sinvoice_pdf_file_id',
-                    'l10n_vn_edi_sinvoice_pdf_file',
-                ])
-
-                # Log the new attachment in the chatter for reference. Make sure to add the JSON file.
-                invoice.message_post(
-                    body=_('Invoice sent to SInvoice'),
-                    attachment_ids=attachments.ids + invoice.l10n_vn_edi_sinvoice_file_id.ids,
-                )
+            error = invoice._l10n_vn_edi_fetch_invoice_files()
+            if error:
+                invoice_data['error'] = error
 
             if self._can_commit():
                 self.env.cr.commit()

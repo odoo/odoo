@@ -4,56 +4,9 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.addons.l10n_vn_edi_viettel.models.account_move import _l10n_vn_edi_send_request, SINVOICE_API_URL
 
 
-# Invoice template that needs to be passed to Sinvoice and will determine the format of the resulting
-
-
-# invoice pdf on their system
-class L10n_Vn_Edi_ViettelSinvoiceTemplate(models.Model):
-    _name = 'l10n_vn_edi_viettel.sinvoice.template'
-    _description = 'SInvoice template'
-
-    name = fields.Char(
-        string='Template Code',
-        required=True,
-    )
-    template_invoice_type = fields.Selection(
-        selection=[
-            # Circular 32 being deprecated, only display types according to the Circular 78
-            ('1', '1 - Value-added invoice'),
-            ('2', '2 - Sales invoice'),
-            ('3', '3 - Public assets sales'),
-            ('4', '4 - National reserve sales'),
-            ('5', '5 - Invoice for national reserve sales'),
-            ('6', '6 - Warehouse release note'),
-        ],
-        required=True,
-    )
-    invoice_symbols_ids = fields.One2many(
-        comodel_name='l10n_vn_edi_viettel.sinvoice.symbol',
-        inverse_name='invoice_template_id',
-    )
-
-    _name_uniq = models.Constraint(
-        'unique (name)',
-        'The template code must be unique!',
-    )
-
-    @api.constrains('name', 'template_invoice_type')
-    def _constrains_changes(self):
-        """
-        Multiple API endpoints will use these data, we should thus not allow changing them if they have been used
-        for any invoices sent to sinvoice.
-        """
-        # The conditions are the same. If any symbols of the template are being used, we shouldn't allow editing it.
-        self.invoice_symbols_ids._constrains_changes()
-
-
-# Invoice symbol that needs to be passed to Sinvoice and will determine the prefix of the
-
-
-# invoice number on their system
 class L10n_Vn_Edi_ViettelSinvoiceSymbol(models.Model):
     _name = 'l10n_vn_edi_viettel.sinvoice.symbol'
     _description = 'SInvoice symbol'
@@ -80,19 +33,28 @@ class L10n_Vn_Edi_ViettelSinvoiceSymbol(models.Model):
     name = fields.Char(
         string='Symbol',
         required=True,
+        readonly=True,
     )
-    invoice_template_id = fields.Many2one(
-        comodel_name='l10n_vn_edi_viettel.sinvoice.template',
+    invoice_template_code = fields.Char(
+        string='Template Code',
         required=True,
-        index=True,
+        readonly=True,
     )
+    company_id = fields.Many2one(
+        'res.company',
+        string='Company',
+        required=True,
+        default=lambda self: self.env.company,
+        readonly=True,
+    )
+    active = fields.Boolean(default=True)
 
     _name_template_uniq = models.Constraint(
-        'unique (name, invoice_template_id)',
-        'The combination symbol/template must be unique!',
+        'unique (name, invoice_template_code, company_id)',
+        'The combination symbol/template must be unique per company!',
     )
 
-    @api.constrains('name', 'invoice_template_id')
+    @api.constrains('name', 'invoice_template_code')
     def _constrains_changes(self):
         """
         Multiple API endpoints will use these data, we should thus not allow changing them if they have been used
@@ -115,8 +77,98 @@ class L10n_Vn_Edi_ViettelSinvoiceSymbol(models.Model):
                 raise UserError(_('You cannot change the symbol value or template of the symbol %s because it has '
                                   'already been used to send invoices.', record.name))
 
-    @api.depends('name', 'invoice_template_id')
+    @api.depends('name', 'invoice_template_code')
     def _compute_display_name(self):
         """ As we allow multiple of the same symbol name, we need to also display the template to differentiate. """
         for symbol in self:
-            symbol.display_name = f'{symbol.name} ({symbol.invoice_template_id.name})'
+            symbol.display_name = f'{symbol.name} ({symbol.invoice_template_code})'
+
+    @api.model
+    def _l10n_vn_edi_lookup_symbols(self, company_id):
+        """Lookup available invoice symbols based on the company's tax code."""
+
+        # Get access token from the company
+        access_token, error = company_id._l10n_vn_edi_get_access_token()
+        if error:
+            return {}, error
+
+        symbols_data, error_message = _l10n_vn_edi_send_request(
+            method='POST',
+            url=f'{SINVOICE_API_URL}InvoiceAPI/InvoiceUtilsWS/getAllInvoiceTemplates',
+            json_data={
+                'taxCode': company_id.vat,
+                'invoiceType': "all",
+            },
+            headers={
+                'Content-Type': 'application/json',
+            },
+            cookies={'access_token': access_token},
+        )
+        return symbols_data, error_message
+
+    def action_fetch_symbols(self):
+        """Fetch symbols from the API and populate the list."""
+        errors = []
+        vn_companies = self.env.companies.filtered(lambda c: c.country_id.code == 'VN')
+
+        if not vn_companies:
+            raise UserError(_('Please select a Vietnamese company to fetch SInvoice symbol!'))
+
+        existing_symbols = {
+            (name, invoice_template_code, company_id): symbol
+            for name, invoice_template_code, company_id, symbol in self.with_context(active_test=False)._read_group(
+                domain=[('company_id', 'in', vn_companies.ids)],
+                groupby=['name', 'invoice_template_code', 'company_id'],
+                aggregates=['id:recordset'],
+            )
+        }
+
+        seen_keys = set()
+        symbols_to_create = []
+
+        for company in vn_companies:
+            if not company.vat:
+                errors.append(_('VAT number is missing on company %s.', company.display_name))
+                continue
+
+            symbols_data, error = self._l10n_vn_edi_lookup_symbols(company)
+
+            if error:
+                errors.append(_('%(company)s: %(error)s', company=company.display_name, error=error))
+                continue
+
+            if not symbols_data:
+                errors.append(_('No symbols found for company %s. Please check your configuration and try again.', company.display_name))
+                continue
+
+            for symbol_data in symbols_data.get('template', []):
+                symbol_code = symbol_data.get('invoiceSeri')
+                template_name = symbol_data.get('templateCode')
+                key = (symbol_code, template_name, company)
+
+                if key not in existing_symbols:
+                    symbols_to_create.append({
+                        'name': symbol_code,
+                        'invoice_template_code': template_name,
+                        'company_id': company.id,
+                    })
+
+                seen_keys.add(key)
+
+        if symbols_to_create:
+            self.create(symbols_to_create)
+
+        symbols_to_archive = [symbol for key, symbol in existing_symbols.items() if key not in seen_keys]
+        if symbols_to_archive:
+            self.browse([s.id for s in symbols_to_archive]).write({'active': False})
+
+        if errors:
+            if len(vn_companies) == 1:
+                raise UserError('\n'.join(msg.split(': ', 1)[-1] for msg in errors))
+            else:
+                raise UserError(_('Some companies encountered issues:\n\n%s', '\n'.join(errors)))
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
