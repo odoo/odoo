@@ -151,13 +151,13 @@ class ResPartner(models.Model):
             if not service_href:
                 return True
 
-            access_point_contact = True
+            access_point_description = True
             with contextlib.suppress(requests.exceptions.RequestException, etree.XMLSyntaxError):
                 response = requests.get(service_href, timeout=TIMEOUT)
                 if response.status_code == 200:
                     access_point_info = etree.fromstring(response.content)
-                    access_point_contact = access_point_info.findtext('.//{*}TechnicalContactUrl') or access_point_info.findtext('.//{*}TechnicalInformationUrl')
-            return access_point_contact
+                    access_point_description = access_point_info.findtext('.//{*}ServiceDescription')
+            return access_point_description
 
         return self._check_document_type_support(participant_info, ubl_cii_format)
 
