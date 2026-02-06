@@ -20,6 +20,7 @@ export class DateFilterButton extends Component {
 			shape: {
 				id: String,
 				label: String,
+				periodDays: Number,
 			},
 		},
 		update: Function,
