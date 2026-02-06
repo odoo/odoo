@@ -102,10 +102,8 @@
                                 context="{'default_create_employee': True}"/>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action"
                             groups="hr.group_hr_user" invisible="not active or not id" context="{'sort_by_responsible': True}"/>
-                        <button name="action_new_departure" string="End of Collaboration" type="object"
-                            groups="hr.group_hr_user" invisible="not id or departure_id or not active"/>
                         <button name="action_cancel_departure" string="Cancel Departure" type="object"
-                            invisible="not id or not departure_id or departure_apply_date"/>
+                            groups="hr.group_hr_user" invisible="not id or not departure_id or departure_apply_date"/>
                         <field name="version_id" widget="versions_timeline" invisible="not id" options="{'clickable': True}" readonly="False"/>
                     </header>
                     <sheet>
@@ -455,6 +453,11 @@
                                                 <span class="alert alert-warning" role="alert">
                                                     All selected actions have been executed on
                                                     <field name="departure_apply_date" readonly="1" class="oe_inline"/>
+                                                    <a name="action_cancel_departure" type="object" class="oe_inline"
+                                                        confirm="This action will delete the departure entirely. Are you sure you want to proceed?">
+                                                        <i class="oi oi-arrow-right ms-1"/>
+                                                        Cancel Departure
+                                                    </a>
                                                 </span>
                                             </div>
                                         </group>
@@ -985,6 +988,18 @@
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'list', 'view_id': ref('hr_employee_list_activites_view')})]"/>
             <field name="search_view_id" ref="view_employee_filter"/>
+        </record>
+
+        <record id="action_hr_employee_departure" model="ir.actions.server">
+            <field name="name">End of Collaboration</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="binding_model_id" ref="model_hr_employee"/>
+            <field name="group_ids" eval="[Command.link(ref('hr.group_hr_user'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    action = records.action_new_departure()
+            </field>
         </record>
 
         <record id="action_hr_employee_create_users_confirmation" model="ir.actions.server">

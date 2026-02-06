@@ -572,9 +572,8 @@ class HrVersion(models.Model):
                 date_version_end = next((d for d in next_versions.mapped('date_version') if d > version.date_version), None)
                 if date_version_end:
                     date_version_end -= relativedelta(days=1)
-                else:
-                    date_version_end = date.max
 
+            date_version_end = date_version_end or date.max
             date_contract_end = version.contract_date_end or date.max
             date_departure = version.departure_date or date.max
             version.date_end = False

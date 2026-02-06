@@ -2159,6 +2159,16 @@ class HrEmployee(models.Model):
 
     def action_new_departure(self):
         self.ensure_one()
+        if self.departure_id:
+            if self.departure_id.apply_date:
+                raise UserError(self.env._("You can't modify the departure of an employee that has already departed."))
+            return {
+                'name': self.env._('End of collaboration'),
+                'res_model': 'hr.employee.departure',
+                'res_id': self.departure_id.id,
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+            }
         return {
             'name': self.env._('End of collaboration'),
             'res_model': 'hr.employee.departure',
@@ -2172,4 +2182,5 @@ class HrEmployee(models.Model):
 
     def action_cancel_departure(self):
         self.ensure_one()
+        self.action_unarchive()
         self.departure_id.unlink()
