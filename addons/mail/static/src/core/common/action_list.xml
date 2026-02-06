@@ -46,13 +46,15 @@
     <t t-set="isInlineCircleButton" t-value="env.inComposer or (action.tags.includes('JOIN_LEAVE_CALL') and action.icon and !action.inlineName)"/>
     <!-- core-->
     <t t-set="btnClass" t-value="attClassObjectToString({
-        'o-mail-ActionList-button btn btn-secondary btn-group-item position-relative': true,
+        'o-mail-ActionList-button btn btn-group-item position-relative': true,
         'o-first': props.isFirstInGroup,
         'o-last': props.isLastInGroup,
         'active': action.isActive,
         'o-odooControlPanelSwitchStyle': props.odooControlPanelSwitchStyle,
         'o-hasBtnBg': hasBtnBg,
         'o-inline': props.inline,
+        'btn-secondary': !action.tags.includes('PRIMARY') and !action.tags.includes('DANGER') and !action.tags.includes('SUCCESS'),
+        'btn-primary': action.tags.includes('PRIMARY'),
         'btn-danger': action.tags.includes('DANGER'),
         'btn-success': action.tags.includes('SUCCESS'),
     })"/>
@@ -102,7 +104,7 @@
     <t t-set="btnClass" t-value="attClassObjectToString({
         [btnClass]: true,
         'o-text-white border-0 o-simulateDarkTheme': store.shouldSimulateDarkTheme(this),
-        'bg-700': store.shouldSimulateDarkTheme(this) and !action.tags.includes('DANGER') and !action.tags.includes('SUCCESS') and hasBtnBg,
+        'bg-700': store.shouldSimulateDarkTheme(this) and !action.tags.includes('DANGER') and !action.tags.includes('SUCCESS') and !action.tags.includes('PRIMARY') and hasBtnBg,
         'bg-transparent': store.shouldSimulateDarkTheme(this) and !hasBtnBg,
     })"/>
     <!-- dynamic classes-->

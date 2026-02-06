@@ -14,7 +14,7 @@ export const joinChannelAction = {
     name: _t("Join Channel"),
     sequence: 20,
     sequenceGroup: ({ owner }) => (owner.isDiscussContent ? undefined : 5),
-    tags: [ACTION_TAGS.SUCCESS],
+    tags: [ACTION_TAGS.PRIMARY],
 };
 registerThreadAction("join-channel", joinChannelAction);
 registerThreadAction("expand-discuss", {
