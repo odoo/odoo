@@ -254,3 +254,32 @@ class TestStockMoveLine(TestStockCommon):
 
         line = move.move_line_ids[0]
         self.assertEqual(line.lot_id, serial_lot)
+
+    def test_action_detailed_operations_domain_includes_new_lines(self):
+        """Test that newly created move lines remain visible in detailed operations view."""
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'product_uom_qty': 10.0,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+            })],
+        })
+        receipt.action_confirm()
+        initial_move_line = receipt.move_line_ids
+        self.assertRecordValues(initial_move_line, [{'quantity': 10.0}])
+        action = receipt.action_detailed_operations()
+        self.assertEqual(initial_move_line, self.env['stock.move.line'].search(action['domain']))
+
+        new_move_line = self.env['stock.move.line'].create({
+            'picking_id': receipt.id,
+            'product_id': self.productA.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_id': receipt.move_ids.id,
+            'quantity': 5.0,
+        })
+        self.assertEqual(initial_move_line | new_move_line, self.env['stock.move.line'].search(action['domain']))
