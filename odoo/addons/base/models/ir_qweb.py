@@ -352,6 +352,7 @@ structure.
 """
 from __future__ import annotations
 
+import ast
 import base64
 import fnmatch
 import io
@@ -386,7 +387,14 @@ from odoo.modules import Manifest
 from odoo.modules.registry import _REGISTRY_CACHES
 from odoo.tools import config, safe_eval, OrderedSet, frozendict, json
 from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
-from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, to_opcodes, _EXPR_OPCODES, _BLACKLIST
+from odoo.tools.safe_eval import (
+    _BLACKLIST,
+    _BUILTINS,
+    _EXPR_OPCODES,
+    assert_valid_codeobj,
+    safe_transformer_qweb,
+    to_opcodes,
+)
 from odoo.tools.lru import LRU
 from odoo.tools.misc import str2bool, file_open, file_path
 from odoo.tools.image import image_data_uri, FILETYPE_BASE64_MAGICWORD
@@ -1357,6 +1365,7 @@ class IrQweb(models.AbstractModel):
             'QwebContent': QwebContent,
             'ValueError': ValueError,
             **_BUILTINS,
+            safe_transformer_qweb.CALL_ID: safe_eval.safe_call,
         }
 
     # helpers for compilation
@@ -1611,6 +1620,11 @@ class IrQweb(models.AbstractModel):
             raise ValueError(f"Can not compile expression: {expr}")
 
         expression = self._compile_expr_tokens(tokens, ALLOWED_KEYWORD, raise_on_missing=raise_on_missing)
+
+        if safe_eval.UNSAFE_POLICY:
+            tree = ast.parse(expression.strip(), mode='eval')
+            tree = safe_transformer_qweb.visit(tree)
+            expression = ast.unparse(tree)
 
         assert_valid_codeobj(_SAFE_QWEB_OPCODES, compile(expression, '<>', 'eval'), expr)
 
