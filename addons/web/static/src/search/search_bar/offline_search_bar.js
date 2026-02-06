@@ -1,5 +1,6 @@
+import { onWillRender } from "@web/owl2/utils";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
-import { Component, onWillRender, onWillStart, useRef, useState } from "@odoo/owl";
+import { Component, onWillStart, useRef, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";

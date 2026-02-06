@@ -1,4 +1,5 @@
-import { Component, onWillRender, xml } from "@odoo/owl";
+import { onWillRender } from "@web/owl2/utils";
+import { Component, xml } from "@odoo/owl";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { zip } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";

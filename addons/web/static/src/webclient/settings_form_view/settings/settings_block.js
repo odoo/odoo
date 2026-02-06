@@ -1,8 +1,8 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
 import { HighlightText } from "../highlight_text/highlight_text";
 import { escapeRegExp } from "@web/core/utils/strings";
 
-import { Component, useState, useRef, onWillRender, useChildSubEnv } from "@odoo/owl";
+import { Component, useState, useRef, useChildSubEnv } from "@odoo/owl";
 
 export class SettingsBlock extends Component {
     static template = "web.SettingsBlock";

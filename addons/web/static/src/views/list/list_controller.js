@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
 import { user } from "@web/core/user";
@@ -27,15 +27,7 @@ import { OfflineActionHelper } from "@web/views/offline_action_helper";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 import { useExportRecords, useDeleteRecords } from "@web/views/view_hook";
 
-import {
-    Component,
-    onWillPatch,
-    onWillRender,
-    onWillStart,
-    useRef,
-    useState,
-    useSubEnv,
-} from "@odoo/owl";
+import { Component, onWillPatch, onWillStart, useRef, useState, useSubEnv } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 
