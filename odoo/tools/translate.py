@@ -40,6 +40,8 @@ from .i18n import format_list
 from .misc import file_open, file_path, frozendict, get_iso_codes, split_every, OrderedSet, SKIPPED_ELEMENT_TYPES
 
 if typing.TYPE_CHECKING:
+    import types
+
     from odoo.api import Environment
 
 __all__ = [
@@ -84,6 +86,25 @@ FIELD_TRANSLATE = {
     None: False,
     'standard': True,
 }
+
+
+def _get_frame(stack_level: int = 0) -> types.FrameType | None:
+    from odoo.tools.safe_eval import safe_call as wrapper_func  # noqa: PLC0415
+
+    stack_level += 1  # +1 to skip this function
+    frame = origin_frame = inspect.currentframe()
+
+    while frame:
+        if frame.f_code is not wrapper_func.__code__:
+            if stack_level == 0:
+                return frame
+            stack_level -= 1
+        frame = frame.f_back
+
+    _logger.warning(
+        'Impossible to retrieve frame for translation language, skipping translation %s',
+        origin_frame, stack_info=True,
+    )
 
 
 def is_translatable_attrib(key, node):
@@ -482,10 +503,7 @@ def get_translated_module(arg: str | int | typing.Any) -> str:  # frame not repr
             return arg
     else:
         if isinstance(arg, int):
-            frame = inspect.currentframe()
-            while arg > 0:
-                arg -= 1
-                frame = frame.f_back
+            frame = _get_frame(arg)
         else:
             frame = arg
         if not frame:
@@ -570,9 +588,7 @@ def _get_lang(frame, default_lang='') -> str:
 
 def _get_translation_source(stack_level: int, module: str = '', lang: str = '', default_lang: str = '') -> tuple[str, str]:
     if not (module and lang):
-        frame = inspect.currentframe()
-        for _index in range(stack_level + 1):
-            frame = frame.f_back
+        frame = _get_frame(stack_level + 1)  # +1 to skip this function
         lang = lang or _get_lang(frame, default_lang)
     if lang and lang != 'en_US':
         return get_translated_module(module or frame), lang

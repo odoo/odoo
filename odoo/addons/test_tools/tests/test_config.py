@@ -86,6 +86,7 @@ class TestConfigManager(TransactionCase):
             'pre_upgrade_scripts': [],
             'server_wide_modules': ['base', 'rpc', 'web'],
             'data_dir': DEFAULT_DATADIR,
+            'unsafe_policy': 'log',
 
             # HTTP
             'http_interface': '127.0.0.1',
@@ -205,6 +206,7 @@ class TestConfigManager(TransactionCase):
             'pre_upgrade_scripts': [],  # the path found in the config file is invalid
             'server_wide_modules': ['web', 'base', 'mail'],
             'data_dir': '/tmp/data-dir',
+            'unsafe_policy': 'log',
 
             # HTTP
             'http_interface': '10.0.0.254',
@@ -378,6 +380,7 @@ class TestConfigManager(TransactionCase):
             'transient_age_limit': 1.0,
             'translate_modules': "['all']",
             'unaccent': False,
+            'unsafe_policy': 'log',
             'update': {},
             'reinit': [],
             'upgrade_path': [],
@@ -502,6 +505,7 @@ class TestConfigManager(TransactionCase):
             'pre_upgrade_scripts': [],
             'server_wide_modules': ['web', 'base', 'mail'],
             'data_dir': '/tmp/data-dir',
+            'unsafe_policy': 'log',
 
             # HTTP
             'http_interface': '10.0.0.254',
@@ -632,6 +636,7 @@ class TestConfigManager(TransactionCase):
             'server_wide_modules': ['web', 'base', 'mail'],
             'skip_auto_install': False,
             'data_dir': '/tmp/data-dir',
+            'unsafe_policy': 'log',
 
             # HTTP
             'http_interface': '10.0.0.254',

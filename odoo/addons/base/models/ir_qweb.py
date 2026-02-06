@@ -352,6 +352,7 @@ structure.
 """
 from __future__ import annotations
 
+import ast
 import fnmatch
 import io
 import logging
@@ -385,7 +386,14 @@ from odoo.modules import Manifest
 from odoo.modules.registry import _REGISTRY_CACHES
 from odoo.tools import BinaryValue, config, safe_eval, OrderedSet, frozendict, json
 from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
-from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, to_opcodes, _EXPR_OPCODES, _BLACKLIST
+from odoo.tools.safe_eval import (
+    _BLACKLIST,
+    _BUILTINS,
+    _EXPR_OPCODES,
+    assert_valid_codeobj,
+    safe_transform,
+    to_opcodes,
+)
 from odoo.tools.lru import LRU
 from odoo.tools.misc import str2bool, file_open, file_path
 from odoo.tools.image import image_data_uri
@@ -1614,6 +1622,14 @@ class IrQweb(models.AbstractModel):
             raise ValueError(f"Can not compile expression: {expr}")
 
         expression = self._compile_expr_tokens(tokens, ALLOWED_KEYWORD, raise_on_missing=raise_on_missing)
+
+        if safe_eval.unsafe_policy():
+            # Note: if the generated safe expression is evaluated using `safe_eval`,
+            # there will be double wrapping: `CALL_ID(CALL_ID(...))`.
+            # Example: `_guess_qweb_variables.qweb_like_eval`
+            tree = ast.parse(expression.strip(), mode='eval')
+            tree = safe_transform(tree)
+            expression = ast.unparse(tree)
 
         assert_valid_codeobj(_SAFE_QWEB_OPCODES, compile(expression, '<>', 'eval'), expr)
 

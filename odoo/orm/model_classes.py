@@ -19,6 +19,7 @@ from odoo.tools import (
     frozendict,
     sql,
 )
+from odoo.tools.safe_eval import safe_checker
 from odoo.tools.translate import FIELD_TRANSLATE
 
 if typing.TYPE_CHECKING:
@@ -227,6 +228,7 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
     for model_name in registry.descendants([name], '_inherit', '_inherits'):
         registry[model_name]._setup_done__ = False
 
+    safe_checker.add_hook(model_cls, None)  # Optimization to serialize recordset(s) faster
     return model_cls
 
 

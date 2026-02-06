@@ -260,6 +260,14 @@ class configmanager:
                          help="Comma-separated list of server-wide modules.")
         group.add_option("-D", "--data-dir", dest="data_dir", type='path',  # sensitive default set in _load_default_options
                          help="Directory where to store Odoo data")
+        group.add_option("--unsafe-policy", dest='unsafe_policy', type='choice', my_default='log',
+                         choices=['disable', 'log', 'raise', 'terminate'],
+                         help="Policy if an unsafe object is detected during          "
+                              "arbitrary code execution                               "
+                              "- disable: No action taken                             "
+                              "- log: Log a warning with unsafe object information    "
+                              "- raise: Raise an exception (BaseException)            "
+                              "- terminate: Terminate the current worker process      ")
         parser.add_option_group(group)
 
         # HTTP

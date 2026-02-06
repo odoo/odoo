@@ -75,6 +75,7 @@ from odoo.tools import SQL, DotDict, config, file_open, float_compare, mute_logg
 from odoo.tools.binary import BinaryBytes
 from odoo.tools.mail import single_email_re
 from odoo.tools.misc import diff_zip, find_in_path, lower_logging, str2bool
+from odoo.tools.safe_eval import safe_whitelist
 from odoo.tools.xml_utils import _validate_xml
 
 import odoo.addons.base
@@ -2847,3 +2848,12 @@ class freeze_time:
 
 
 freezegun.freeze_time = freeze_time
+
+safe_whitelist.add_class('freezegun.api.FakeDate')
+safe_whitelist.add_class('freezegun.api.FakeDatetime')
+safe_whitelist.add_function('FakeDate.*')
+safe_whitelist.add_function('FakeDatetime.*')
+safe_whitelist.add_instance('odoo.sql_db.TestCursor')
+safe_whitelist.add_instance('odoo.tests.*')
+safe_whitelist.add_instance('unittest.mock.MagicMock')
+safe_whitelist.add_instance('unittest.mock.Mock')

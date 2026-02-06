@@ -14,24 +14,71 @@ condition/math builtins.
 #  - http://code.activestate.com/recipes/286134/
 #  - safe_eval in lp:~xrg/openobject-server/optimize-5.0
 #  - safe_eval in tryton http://hg.tryton.org/hgwebdir.cgi/trytond/rev/bbb5f73319ad
+import ast
+import contextvars
 import dis
 import functools
+import gc
 import logging
+import os
+import re
 import sys
 import types
 import typing
 import zoneinfo
+from collections import defaultdict, OrderedDict
+from enum import auto, IntEnum
+from json.encoder import c_make_encoder
 from opcode import opmap, opname
 from types import CodeType
+from weakref import WeakKeyDictionary
 
 import werkzeug
 from psycopg2 import OperationalError
 
 import odoo.exceptions
+from .config import config
+from .func import lazy
+from .misc import OrderedSet
 
 unsafe_eval = eval
 
 __all__ = ['const_eval', 'safe_eval']
+
+_logger = logging.getLogger(__name__)
+_logger_runtime = logging.getLogger(f'{__name__}.runtime')
+
+
+class UnsafePolicy(IntEnum):
+    DISABLE = 0
+    LOG = auto()
+    RAISE = auto()
+    TERMINATE = auto()
+
+
+@functools.cache
+def unsafe_policy():
+    policy = UnsafePolicy[config['unsafe_policy'].upper()]
+
+    if policy and c_make_encoder is None:
+        _logger_runtime.warning(
+            "Unsafe object policy '%s' is configured, but it is not supported on this runtime "
+            "(missing native encoder). The policy will be ignored.",
+            policy.name,
+        )
+        policy = UnsafePolicy.DISABLE
+
+    return policy
+
+
+class UnsafeObjectError(BaseException):
+
+    def __init__(self, obj):
+        obj_path = safe_whitelist.get_full_path(obj)
+        super().__init__(
+            f'Unsafe object access (type {type(obj)!r}): {obj!r} (path: {obj_path})',
+        )
+
 
 # The time module is usually already provided in the safe_eval environment
 # but some code, e.g. datetime.datetime.now() (Windows/Python 2.5.2, bug
@@ -195,8 +242,6 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
 ])) - _BLACKLIST
 
 
-_logger = logging.getLogger(__name__)
-
 def assert_no_dunder_name(code_obj, expr):
     """ assert_no_dunder_name(code_obj, expr) -> None
 
@@ -264,12 +309,20 @@ def compile_codeobj(expr: str, /, filename: str = '<unknown>', mode: typing.Lite
     try:
         if mode == 'eval':
             expr = expr.strip()  # eval() does not like leading/trailing whitespace
-        code_obj = compile(expr, filename or '', mode)
+
+        if unsafe_policy():
+            tree = ast.parse(expr, mode=mode)
+            tree = safe_transform(tree)
+            code_obj = compile(tree, filename or '', mode)
+            add_monitoring(code_obj)
+            return code_obj
+
+        return compile(expr, filename or '', mode)
+
     except (SyntaxError, TypeError, ValueError):
         raise
     except Exception as e:
         raise ValueError('%r while compiling\n%r' % (e, expr))
-    return code_obj
 
 
 def const_eval(expr):
@@ -409,7 +462,7 @@ def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
     except _BUBBLEUP_EXCEPTIONS:
         raise
 
-    except Exception as e:
+    except (Exception, UnsafeObjectError) as e:  # noqa: BLE001
         raise ValueError('%r while evaluating\n%r' % (e, expr))
 
     finally:
@@ -493,3 +546,541 @@ dateutil = wrap_module(dateutil, {
 json = wrap_module(__import__('json'), ['loads', 'dumps'])
 time = wrap_module(__import__('time'), ['time', 'strptime', 'strftime', 'sleep'])
 dateutil.tz.gettz = zoneinfo.ZoneInfo
+
+
+# Runtime verification is performed using three objects:
+# - safe_transformer: modifies the code to use the `safe_call` function
+#                     for each function call
+# - safe_checker: verifies the objects used during a call
+# - safe_whitelist: used during verifications
+
+
+class _SafeTransformer(ast.NodeTransformer):
+    """
+    Code transformer that wraps calls with :func:`_save_eval_call` in
+    order to check that the arguments are "safe".
+    """
+
+    # In Qweb, we use the transformer to modify the python expression.
+    # The ast will not be compiled, but instead "unparsed" in the transpiled template.
+    # The expression will be used later and therefore re-parsed.
+    # It is therefore necessary for the identifiers to be valid.
+
+    CALL_ID = '_save_eval_call'
+
+    def visit_Call(self, node):
+        """
+        Transforms:
+            func(*args, **kwargs)
+
+        Into:
+            _save_eval_call(func, *args, **kwargs)
+        """
+        self.generic_visit(node)
+        call = ast.Call(
+            func=ast.Name(id=self.CALL_ID, ctx=ast.Load()),
+            args=[node.func, *node.args],
+            keywords=node.keywords)
+        ast.copy_location(call, node)
+        ast.copy_location(call.func, node)
+        return call
+
+    def visit_FunctionDef(self, node):
+        """
+        Transforms:
+            @decorator_A()
+            @decorator_B()
+            def func():
+                pass
+
+        Into:
+            def func():
+                pass
+
+            func = _save_eval_call(_save_eval_call(decorator_A), _save_eval_call(_save_eval_call(decorator_B), func))
+        """
+        self.generic_visit(node)
+        if not node.decorator_list:
+            return node
+
+        current_wrapper = ast.Name(id=node.name, ctx=ast.Load())
+        ast.copy_location(current_wrapper, node)
+
+        while node.decorator_list:
+            decorator = node.decorator_list.pop()
+            current_wrapper = ast.Call(
+                func=ast.Name(id=self.CALL_ID, ctx=ast.Load()),
+                args=[
+                    decorator,
+                    current_wrapper,
+                ],
+                keywords=[],
+            )
+            ast.copy_location(current_wrapper, node)
+            ast.copy_location(current_wrapper.func, node)
+
+        assign = ast.Assign(
+            targets=[ast.Name(id=node.name, ctx=ast.Store())],
+            value=current_wrapper,
+        )
+        ast.copy_location(assign, node)
+        ast.copy_location(assign.targets[0], node)
+
+        return [node, assign]
+
+
+encoder_ctx = contextvars.ContextVar('encoder_ctx')
+
+
+class _SafeChecker:
+    """
+    Callable object that checks whether a value is considered "safe".
+    It does so by using on a JSON encoder, for which one can add type-specific hooks.
+    An empty hook simply considers the given type as completely safe,
+    while other hooks may check a value and return values to be recursively checked.
+    """
+
+    MAPPINGS = frozenset((dict, defaultdict, OrderedDict, types.MappingProxyType))
+    SEQUENCES = frozenset((list, tuple, set, frozenset, OrderedSet))
+
+    def __init__(self):
+        self.__hooks: WeakKeyDictionary[type, typing.Callable | None] = WeakKeyDictionary()
+        # Add hooks
+        for t in _SafeWhitelist.TRUSTED_TYPES: self.add_hook(t, None)  # Optimization to save time when serializing these types  # noqa: E701
+        for t in self.SEQUENCES: self.add_hook(t, list)  # noqa: E701
+        for t in self.MAPPINGS: self.add_hook(t, dict)  # noqa: E701
+        self.add_hook(type, self._hook_class)
+        self.add_hook(types.ModuleType, self._hook_module)
+        self.add_hook(types.BuiltinFunctionType, self._hook_builtin_function)
+        self.add_hook(types.BuiltinMethodType, self._hook_builtin_function)
+        self.add_hook(types.FunctionType, self._hook_function)
+        self.add_hook(types.MethodType, self._hook_function)
+        self.add_hook(types.MethodDescriptorType, self._hook_descriptor)
+        self.add_hook(functools.partial, self._hook_partial)
+        self.add_hook(lazy, self._hook_lazy)
+        self.add_hook(type(reversed([])), self._hook_simple_iterator)
+        d = {}
+        self.add_hook(type(d.items()), list)
+        self.add_hook(type(d.keys()), list)
+        self.add_hook(type(d.values()), list)
+        d = OrderedDict()
+        self.add_hook(type(d.items()), list)
+        self.add_hook(type(d.keys()), list)
+        self.add_hook(type(d.values()), list)
+        self.add_hook(types.GeneratorType, None)  # TODO: Make the hook (to listen for the yield event)
+
+    def add_hook(self, type_: type, hook: typing.Callable | None = None) -> None:
+        self.__hooks[type_] = hook
+
+    @property
+    def _encoder(self):
+        # Encoder must be thread safe (because of the markers structure)
+        try:
+            encoder = encoder_ctx.get()
+        except LookupError:
+            # markers, default, encoder, indent, key_separator, item_separator, sort_keys, skipkeys, allow_nan
+            encoder = c_make_encoder({}, self._default, lambda x: '', None, '', '', False, False, False)
+            encoder_ctx.set(encoder)
+        encoder.markers.clear()
+        return encoder
+
+    def check(self, obj) -> None:
+        """
+        Check whether the given object is considered "safe" according to
+        the rules defined in `SafeWhitelist`.
+
+        This method attempts to encode the object using a JSON encoder,
+        which validates the object's type and contents recursively.
+
+        :param obj: The object to be checked for safety.
+        :raises UnsafeObjectError: If the object or any nested element
+                                   is determined to be unsafe.
+        """
+        try:
+            self._encoder(obj, 0)
+            return
+        except (ValueError, TypeError, KeyError):
+            pass
+
+        stack = [obj]
+        seen = set()
+        while stack:
+            o = stack.pop()
+            if (id_o := id(o)) in seen:
+                continue
+            seen.add(id_o)
+            try:
+                self._encoder(o, 0)
+            except (ValueError, TypeError, KeyError) as e:
+                collection_o = self._default(o)
+                if type(collection_o) in self.MAPPINGS:
+                    stack.extend(collection_o.keys())
+                    stack.extend(collection_o.values())
+                    continue
+                if type(collection_o) in self.SEQUENCES:
+                    stack.extend(collection_o)
+                    continue
+                # Serialisation failure
+                _logger_runtime.warning('_json.c_make_encoder: %s %r', e, o)
+
+    def _default(self, obj):
+        """ Dispatch to the default check-serialisation function of `obj`. """
+        t_obj = type(obj)
+        try:
+            hook = self.__hooks[t_obj]
+        except KeyError:
+            if isinstance(obj, type):
+                hook = self._hook_class
+            else:
+                hook = self._hook_instance
+            self.__hooks[t_obj] = hook
+
+        if not hook:
+            return None
+
+        return hook(obj)
+
+    def _hook_simple_iterator(self, obj):
+        return gc.get_referents(obj)[-1]
+
+    def _hook_module(self, obj):
+        safe_whitelist.check_module(obj)
+
+    def _hook_builtin_function(self, obj):
+        if obj in safe_whitelist.TRUSTED_BUILTIN_FUNCTIONS:
+            return
+        safe_whitelist.check_function(obj)
+
+    def _hook_function(self, obj):
+        if obj is safe_call:
+            return
+        if getattr(obj, '__module__', False):  # Not user-defined
+            safe_whitelist.check_function(obj)
+
+    def _hook_descriptor(self, obj):
+        if hasattr(obj, '__objclass__'):  # Not bound
+            safe_whitelist.check_function(obj)
+
+    def _hook_partial(self, obj):
+        return (obj.func, obj.args, obj.keywords)
+
+    def _hook_lazy(self, obj):
+        if getattr(obj, '_func', None) is None:
+            return obj._cached_value
+        return (obj._func, obj._args, obj._kwargs)
+
+    def _hook_class(self, obj):
+        if obj in safe_whitelist.TRUSTED_TYPES:
+            return
+        safe_whitelist.check_class(obj)
+
+    def _hook_instance(self, obj):
+        safe_whitelist.check_instance(obj)
+
+
+class _SafeWhitelist:
+    """
+    Maintains a whitelist of trusted objects, which can be defined using
+    three methods: `add_class`, `add_instance` and `add_function`.
+
+    Each method accepts the fully qualified name of the object to trust.
+    A wildcard '*' at the end of a qualified name to trust all objects
+    within subpath namespace.
+
+    .. code-block:: python
+        safe_whitelist.add_class('odoo.orm.models.*')
+        safe_whitelist.add_instance('odoo.orm.environments.Environment')
+        safe_whitelist.add_function('odoo.tools.float_utils.float_compare')
+    """
+
+    RE_NOTHING = re.compile(r'(?!)')
+    TRUSTED_TYPES = frozenset((
+        *_SafeChecker.MAPPINGS, *_SafeChecker.SEQUENCES,
+        object, bool, int, float, str, bytes, bytearray, memoryview,
+        types.NoneType,
+        filter, map, enumerate, range, zip, reversed,
+        Exception, ValueError, TypeError, AttributeError, KeyError, ZeroDivisionError, UnboundLocalError,
+    ))
+    TRUSTED_BUILTIN_FUNCTIONS = frozenset((
+        min, max, sum, abs, sorted, round, len, repr, all, any, ord, chr, divmod,
+        isinstance, hasattr,
+    ))
+
+    @staticmethod
+    def get_full_path(cls_obj: type) -> str:
+        try:
+            qualname = cls_obj.__qualname__
+        except (AttributeError, RuntimeError):
+            qualname = ''
+
+        if module := getattr(cls_obj, '__module__', None):
+            if module in sys.modules:
+                return f'{module}.{qualname}'.strip('.')
+
+            # The object can be defined in a module which is not register,
+            # for example via `load_script`. It is the case for upgrade.
+            if code := getattr(cls_obj, '__code__', None):
+                file_path = os.path.abspath(code.co_filename)
+                for upgrade_path in config['upgrade_path']:
+                    upgrade_path = os.path.abspath(upgrade_path)
+                    if os.path.commonpath([file_path, upgrade_path]) == upgrade_path:
+                        return f'odoo.upgrade.{qualname}'.strip('.')
+
+        if type(cls_obj) is types.ModuleType:
+            return cls_obj.__name__
+        return qualname
+
+    def __init__(self):
+        self._classes = list()
+        self._instances = list()
+        self._functions = list()
+
+    def add_class(self, qualname: str) -> None:
+        self._classes.append(qualname)
+        self.add_instance(qualname)
+        vars(self).pop('_re_class', None)
+
+    def add_instance(self, qualname: str) -> None:
+        self._instances.append(qualname)
+        # Trust function of the class/instance implicitly
+        if not qualname.endswith('.*'):
+            qualname += '.*'
+        self.add_function(qualname)
+        vars(self).pop('_re_instance', None)
+
+    def add_function(self, qualname: str) -> None:
+        self._functions.append(qualname)
+        vars(self).pop('_re_function', None)
+
+    _re_class = functools.cached_property(lambda self: self._re_compile(self._classes))
+    _re_instance = functools.cached_property(lambda self: self._re_compile(self._instances))
+    _re_function = functools.cached_property(lambda self: self._re_compile(self._functions))
+
+    def _re_compile(self, trusted: list) -> typing.Pattern:
+        _initialize_safe_whitelist()
+        if not trusted:
+            return self.RE_NOTHING
+
+        # Make the trie
+        trie = {}
+        for path in trusted:
+            node = trie
+            for part in path.split('.'):
+                node = node.setdefault(part, {})
+
+        # Convert the trie to regex
+        def _trie_to_regex(trie):
+            if not trie:
+                return ''
+
+            re_parts = []
+            for key, subtree in trie.items():
+                assert key != '*' or not subtree
+                subpattern = '.+' if key == '*' else re.escape(key)
+                if child_pattern := _trie_to_regex(subtree):
+                    re_parts.append(fr'{subpattern}\.{child_pattern}')
+                else:
+                    re_parts.append(subpattern)
+
+            # non-capturing group only if multiple alternatives
+            if len(re_parts) == 1:
+                return re_parts[0]
+            return '(?:' + '|'.join(re_parts) + ')'
+
+        return re.compile(_trie_to_regex(trie))
+
+    def check_class(self, obj):
+        if not self._re_class.fullmatch(self.get_full_path(obj)):
+            raise UnsafeObjectError(obj)
+
+    def check_instance(self, obj):
+        obj = type(obj)
+        if not self._re_instance.fullmatch(self.get_full_path(obj)):
+            raise UnsafeObjectError(obj)
+
+    def check_function(self, obj):
+        if not self._re_function.fullmatch(self.get_full_path(obj)):
+            raise UnsafeObjectError(obj)
+
+    def check_module(self, obj):
+        raise UnsafeObjectError(obj)
+
+
+safe_transformer = _SafeTransformer()
+safe_transform = safe_transformer.visit
+safe_checker = _SafeChecker()
+safe_whitelist = _SafeWhitelist()
+
+
+def safe_call(callee, /, *args, **kwargs):
+    """ Ensure objects used for the call are safe """
+    try:
+        safe_checker.check((callee, args, kwargs))
+    except UnsafeObjectError as e:
+        _logger_runtime.warning(e)
+        if unsafe_policy() is UnsafePolicy.RAISE:
+            raise
+        if unsafe_policy() is UnsafePolicy.TERMINATE:
+            os._exit(1)
+    return callee(*args, **kwargs)
+
+
+def monitoring_call(code, instruction_offset, callee, arg0):
+    """ Ensure `_save_eval_call` is not overridden """
+    if callee is safe_call:
+        return
+    frame = sys._getframe(1)
+    call_id = safe_transformer.CALL_ID
+    assert call_id not in frame.f_locals or frame.f_locals[call_id] is safe_call
+    assert call_id not in frame.f_globals or frame.f_globals[call_id] is safe_call
+    assert frame.f_builtins[call_id] is safe_call
+
+
+_BUILTINS[safe_transformer.CALL_ID] = safe_call
+
+EVENTS = sys.monitoring.events
+TOOL_ID = 4  # Not prevent other tools from using "official IDs"
+sys.monitoring.use_tool_id(TOOL_ID, 'ODOO_UNSAFE_POLICY_TOOL')
+sys.monitoring.register_callback(TOOL_ID, EVENTS.CALL, monitoring_call)
+
+
+def add_monitoring(code):
+    codes = [code]
+    while codes:
+        code = codes.pop()
+        sys.monitoring.set_local_events(TOOL_ID, code, EVENTS.CALL)
+        codes.extend(const for const in code.co_consts if isinstance(const, types.CodeType))
+
+
+@functools.cache
+def _initialize_safe_whitelist():
+    # Primitive types and builtins (C functions)
+    safe_whitelist.add_function('bool.*')
+    safe_whitelist.add_function('int.*')
+    safe_whitelist.add_function('float.*')
+    safe_whitelist.add_function('str.*')
+    safe_whitelist.add_function('bytes.*')
+    safe_whitelist.add_function('list.*')
+    safe_whitelist.add_function('tuple.*')
+    safe_whitelist.add_function('set.*')
+    safe_whitelist.add_function('dict.*')
+    safe_whitelist.add_function('mappingproxy.*')
+    safe_whitelist.add_function('defaultdict.*')
+    safe_whitelist.add_function('OrderedDict.*')
+    safe_whitelist.add_function('_functools.reduce')
+    # Monkey patches
+    safe_whitelist.add_instance('odoo._monkeypatches.zoneinfo.ZoneInfo')
+    safe_whitelist.add_function('odoo._monkeypatches.*')
+    # Core
+    safe_whitelist.add_class('odoo.addons.*')  # TODO: Restrict addons
+    safe_whitelist.add_class('odoo.upgrade.*')
+    safe_whitelist.add_class('odoo.orm.domains.*')
+    safe_whitelist.add_class('odoo.orm.fields.*')
+    safe_whitelist.add_class('odoo.orm.fields_binary.*')
+    safe_whitelist.add_class('odoo.orm.fields_selection.*')
+    safe_whitelist.add_class('odoo.orm.models.*')
+    safe_whitelist.add_class('odoo.orm.commands.Command')
+    safe_whitelist.add_instance('odoo.orm.environments.Environment')
+    safe_whitelist.add_instance('odoo.orm.identifiers.NewId')
+    safe_whitelist.add_instance('odoo.orm.registry.Registry')
+    safe_whitelist.add_class('odoo.exceptions.AccessDenied')
+    safe_whitelist.add_class('odoo.exceptions.AccessError')
+    safe_whitelist.add_class('odoo.exceptions.MissingError')
+    safe_whitelist.add_class('odoo.exceptions.UserError')
+    safe_whitelist.add_class('odoo.exceptions.ValidationError')
+    # HTTP
+    safe_whitelist.add_instance('odoo.http._facade.HTTPRequest')
+    safe_whitelist.add_instance('odoo.http._facade.SafeResponse')
+    safe_whitelist.add_instance('odoo.http.geoip.GeoIP')
+    safe_whitelist.add_instance('odoo.http.requestlib.Request')
+    safe_whitelist.add_instance('odoo.http.response.Response')
+    safe_whitelist.add_instance('odoo.http.session.Session')
+    # Database
+    safe_whitelist.add_instance('odoo.sql_db.Cursor')
+    # Tools
+    safe_whitelist.add_class('odoo.tools.binary.*')
+    safe_whitelist.add_class('odoo.tools.convert.xml_import')
+    safe_whitelist.add_class('odoo.tools.func.lazy')
+    safe_whitelist.add_class('odoo.tools.json._ScriptSafe')
+    safe_whitelist.add_class('odoo.tools.json.JSON')
+    safe_whitelist.add_class('odoo.tools.profiler.QwebTracker')
+    safe_whitelist.add_class('odoo.tools.safe_eval.wrap_module')
+    safe_whitelist.add_instance('odoo.tools.misc.OrderedSet')
+    safe_whitelist.add_instance('odoo.tools.misc.ReversedIterable')
+    safe_whitelist.add_instance('odoo.tools.query.Query')
+    safe_whitelist.add_instance('odoo.tools.translate.LazyGettext')
+    safe_whitelist.add_function('odoo.tools.float_utils.float_compare')
+    safe_whitelist.add_function('odoo.tools.float_utils.float_is_zero')
+    safe_whitelist.add_function('odoo.tools.float_utils.float_repr')
+    safe_whitelist.add_function('odoo.tools.float_utils.float_round')
+    safe_whitelist.add_function('odoo.tools.mail.formataddr')
+    safe_whitelist.add_function('odoo.tools.mail.html2plaintext')
+    safe_whitelist.add_function('odoo.tools.mail.is_html_empty')
+    safe_whitelist.add_function('odoo.tools.misc.format_amount')
+    safe_whitelist.add_function('odoo.tools.misc.format_date')
+    safe_whitelist.add_function('odoo.tools.misc.format_duration')
+    safe_whitelist.add_function('odoo.tools.misc.street_split')
+    safe_whitelist.add_function('odoo.tools.safe_eval._import')
+    safe_whitelist.add_function('odoo.tools.translate.html_translate')
+    # Psycopg2
+    safe_whitelist.add_class('psycopg2.InterfaceError')
+    safe_whitelist.add_class('psycopg2.OperationalError')
+    safe_whitelist.add_class('psycopg2.ProgrammingError')
+    safe_whitelist.add_class('psycopg2.errors.*')
+    safe_whitelist.add_class('psycopg2.extensions.TransactionRollbackError')
+    # Cursor
+    safe_whitelist.add_function('cursor.fetchall')
+    safe_whitelist.add_function('cursor.fetchone')
+    # Dates - Times - Timezone
+    safe_whitelist.add_function('date.*')
+    safe_whitelist.add_class('datetime.date')
+    safe_whitelist.add_class('datetime.datetime')
+    safe_whitelist.add_class('datetime.time')
+    safe_whitelist.add_class('datetime.timedelta')
+    safe_whitelist.add_class('datetime.timezone')
+    safe_whitelist.add_function('datetime.*')
+    safe_whitelist.add_class('dateutil.relativedelta.relativedelta')
+    safe_whitelist.add_function('time.*')
+    safe_whitelist.add_instance('pytz.tzfile.UTC')
+    safe_whitelist.add_function('pytz.tzinfo.DstTzInfo.localize')
+    safe_whitelist.add_function('pytz.UTC.localize')
+    # Collections
+    safe_whitelist.add_class('collections.defaultdict')
+    safe_whitelist.add_class('collections.OrderedDict')
+    safe_whitelist.add_class('collections.abc.Mapping')
+    safe_whitelist.add_class('collections.abc.Sized')
+    safe_whitelist.add_class('collections.abc.ValuesView')
+    safe_whitelist.add_class('itertools.islice')
+    # Markup
+    safe_whitelist.add_class('markupsafe.*')
+    # Email
+    safe_whitelist.add_instance('email.headerregistry._UniqueAddressHeader')
+    safe_whitelist.add_instance('email.message.EmailMessage')
+    # JSON
+    safe_whitelist.add_instance('json.decoder.JSONDecodeError')
+    # XML
+    safe_whitelist.add_instance('lxml.etree._Element')
+    # UUID
+    safe_whitelist.add_instance('uuid.UUID')
+    # Math
+    safe_whitelist.add_function('math.*')
+    # Base64
+    safe_whitelist.add_function('base64.b64decode')
+    safe_whitelist.add_function('base64.b64encode')
+    safe_whitelist.add_function('base64.urlsafe_b64decode')
+    safe_whitelist.add_function('base64.urlsafe_b64encode')
+    # URL
+    safe_whitelist.add_function('urllib.parse.quote')
+    # Standard Numbers
+    safe_whitelist.add_function('stdnum.pl.nip.compact')
+    # Werkzeug
+    safe_whitelist.add_class('werkzeug.datastructures.structures.ImmutableMultiDict')
+    safe_whitelist.add_class('werkzeug.datastructures.structures.MultiDict')
+    safe_whitelist.add_class('werkzeug.exceptions.BadRequest')
+    safe_whitelist.add_class('werkzeug.exceptions.Forbidden')
+    safe_whitelist.add_class('werkzeug.exceptions.NotFound')
+    safe_whitelist.add_class('werkzeug.exceptions.RequestEntityTooLarge')
+    safe_whitelist.add_class('werkzeug.exceptions.Unauthorized')
+    safe_whitelist.add_instance('werkzeug.datastructures.file_storage.FileStorage')
+    safe_whitelist.add_instance('werkzeug.local.LocalProxy')
+    safe_whitelist.add_function('werkzeug.datastructures.structures.TypeConversionDict.*')

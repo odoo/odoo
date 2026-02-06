@@ -1,11 +1,18 @@
 import ast
 
 from textwrap import dedent
+from unittest.mock import patch
 
 from odoo import Command
-from odoo.tests.common import tagged, BaseCase
+from odoo.tests.common import tagged, BaseCase, TransactionCase
 from odoo.tools import mute_logger
-from odoo.tools.safe_eval import safe_eval, const_eval, expr_eval
+from odoo.tools.safe_eval import (
+    const_eval,
+    expr_eval,
+    safe_eval,
+    UnsafeObjectError,
+    UnsafePolicy,
+)
 
 
 @tagged('at_install', '-post_install')
@@ -185,3 +192,147 @@ class TestSafeEval(BaseCase):
                 c: int = a + b
                 return c
         """), mode="exec")
+
+
+@tagged('at_install', '-post_install')
+class TestSafeEvalRuntime(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.startClassPatcher(patch(
+            'odoo.tools.safe_eval.unsafe_policy',
+            lambda: UnsafePolicy.RAISE
+        ))
+
+        class UnsafeClass:
+            __module__ = 'odoo.unsafe_module'
+
+            def __init__(self, *args, **kwargs): ...
+
+        cls.unsafe_context = {'UnsafeClass': UnsafeClass}
+
+    def test_transform_decorators(self):
+        steps = []
+
+        def make_deco(x):
+            steps.append(f'make_deco_{x}')
+
+            def deco(func):
+                steps.append(f'deco_{x}')
+
+                def wrapper(*args, **kwargs):
+                    steps.append(f'wrapper_{x}')
+                    return func(*args, **kwargs)
+
+                return wrapper
+
+            return deco
+
+        expr = """
+            @make_deco('A')
+            @make_deco('B')
+            def func(*args, **kwargs):
+                return
+
+            func()
+        """
+        safe_eval(dedent(expr), {'make_deco': make_deco}, mode='exec')
+        self.assertListEqual(steps, [
+            'make_deco_A', 'make_deco_B',  # Evaluation order
+            'deco_B', 'deco_A',  # Wrapping order (reversed)
+            'wrapper_A', 'wrapper_B',  # Evaluation order
+        ])
+
+    @mute_logger('odoo.tools.safe_eval.runtime')
+    def test_check_callee(self):
+        expr = """
+            UnsafeClass()
+        """
+        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+            safe_eval(dedent(expr), self.unsafe_context, mode='exec')
+
+    @mute_logger('odoo.tools.safe_eval.runtime')
+    def test_check_args(self):
+        expr = """
+            callee = lambda *args, **kwargs: ...
+            callee(UnsafeClass)
+        """
+        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+            safe_eval(dedent(expr), self.unsafe_context, mode='exec')
+
+    @mute_logger('odoo.tools.safe_eval.runtime')
+    def test_check_kwargs(self):
+        expr = """
+            callee = lambda *args, **kwargs: ...
+            callee(kw=UnsafeClass)
+        """
+        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+            safe_eval(dedent(expr), self.unsafe_context, mode='exec')
+
+    @mute_logger('odoo.tools.safe_eval.runtime')
+    def test_check_structure(self):
+        expr = """
+            callee = lambda *args, **kwargs: ...
+            struct = {'a': {'b': {'c': UnsafeClass}}}
+            callee(struct)
+        """
+        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+            safe_eval(dedent(expr), self.unsafe_context, mode='exec')
+
+        expr = """
+            callee = lambda *args, **kwargs: ...
+            struct = ['a', 'b', 'c', UnsafeClass]
+            callee(struct)
+        """
+        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+            safe_eval(dedent(expr), self.unsafe_context, mode='exec')
+
+    @mute_logger('odoo.tools.safe_eval.runtime')
+    def test_check_builtin_callee(self):
+        expr = """
+            map(UnsafeClass, ['foo'])
+        """
+        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+            safe_eval(dedent(expr), self.unsafe_context, mode='exec')
+
+        expr = """
+            filter(UnsafeClass, ['foo'])
+        """
+        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+            safe_eval(dedent(expr), self.unsafe_context, mode='exec')
+
+        expr = """
+            sorted(['foo'], key=UnsafeClass)
+        """
+        with self.assertRaisesRegex(ValueError, '^UnsafeObjectError'):
+            safe_eval(dedent(expr), self.unsafe_context, mode='exec')
+
+    @mute_logger('odoo.tools.safe_eval.runtime')
+    def test_check_callee_qweb(self):
+        arch = '''
+            <t t-name="template">
+                <div>
+                    <t t-out="UnsafeClass()"/>
+                </div>
+            </t>
+        '''
+        view = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': arch,
+        })
+        with self.assertRaises(UnsafeObjectError):
+            self.env['ir.qweb']._render(view.id, self.unsafe_context)
+
+    def test_override_call(self):
+        expr = """
+            # Override in locals
+            _save_eval_call = lambda callee, *args, **kwargs: callee(*args, **kwargs)
+            UnsafeClass()
+        """
+        with self.assertRaisesRegex(ValueError, '^AssertionError'):
+            safe_eval(dedent(expr), self.unsafe_context, mode='exec')
+        # Note that without the assert protection, we get a `RecursionError`,
+        # because after transformer, the code becomes:
+        # `_save_eval_call = lambda callee, *args, **kwargs: _save_eval_call(callee, *args, **kwargs)`
