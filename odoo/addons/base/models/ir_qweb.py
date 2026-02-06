@@ -386,7 +386,15 @@ from odoo.modules import Manifest
 from odoo.modules.registry import _REGISTRY_CACHES
 from odoo.tools import config, safe_eval, OrderedSet, frozendict, json
 from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
-from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, to_opcodes, _EXPR_OPCODES, _BLACKLIST
+from odoo.tools.safe_eval import (
+    _BLACKLIST,
+    _BUILTINS,
+    _EXPR_OPCODES,
+    assert_valid_codeobj,
+    compile_codeobj,
+    safe_encoder,
+    to_opcodes,
+)
 from odoo.tools.lru import LRU
 from odoo.tools.misc import str2bool, file_open, file_path
 from odoo.tools.image import image_data_uri, FILETYPE_BASE64_MAGICWORD
@@ -581,6 +589,9 @@ class QwebCallParameters(NamedTuple):
             f" method={self.method!r} values={values!r} scope={self.scope!r}"
             f" directive={self.directive!r} path_xml={self.path_xml!r}>"
         )
+
+
+safe_encoder.hooks[QwebCallParameters] = list
 
 
 class QwebStackFrame(NamedTuple):
@@ -1039,7 +1050,7 @@ class IrQweb(models.AbstractModel):
             f"    code = {code!r}",
             "    return template_functions",
         ])
-        compiled = compile(wrap_code, f"<{ref}>", 'exec')
+        compiled = compile_codeobj(wrap_code, f"<{ref}>", 'exec')
         globals_dict = self.__prepare_globals()
         globals_dict['__builtins__'] = globals_dict  # So that unknown/unsafe builtins are never added.
         unsafe_eval(compiled, globals_dict)
