@@ -378,8 +378,63 @@ class MailActivity(models.Model):
 
         # retrieve activities and filter using their security rules
         query = super()._search(domain, offset, limit, order, **kwargs)
+<<<<<<< 873d7f3e31abd1598a44ffa6f9548b895bd2643a
         records = self._fetch_query(query, [self._fields[f] for f in SECURITY_FIELDS])
         return records._filtered_access('read')._as_query(ordered=bool(order))
+||||||| c2595e47e3b36120f4c3da8bfe8c16f6c5969a70
+        fnames_to_read = ['id', 'res_model', 'res_id', 'user_id']
+        rows = self.env.execute_query(query.select(
+            *[self._field_to_sql(self._table, fname) for fname in fnames_to_read],
+        ))
+
+        # group res_ids by model, and determine accessible records
+        # Note: the user can read all activities assigned to him (see at the end of the method)
+        model_ids = defaultdict(set)
+        for __, res_model, res_id, user_id in rows:
+            if user_id != self.env.uid and res_model:
+                model_ids[res_model].add(res_id)
+
+        allowed_ids = defaultdict(set)
+        for res_model, res_ids in model_ids.items():
+            records = self.env[res_model].browse(res_ids).exists()
+            # fall back on related document access right checks. Use the same as defined for mail.thread
+            # if available; otherwise fall back on read
+            operation = getattr(records, '_mail_post_access', 'read')
+            allowed_ids[res_model] = set(records._filtered_access(operation)._ids)
+
+        activities = self.browse(
+            id_
+            for id_, res_model, res_id, user_id in rows
+            if user_id == self.env.uid or res_id in allowed_ids[res_model]
+        )
+        return activities._as_query(order)
+=======
+        fnames_to_read = ['id', 'res_model', 'res_id', 'user_id']
+        rows = self.env.execute_query(query.select(
+            *[self._field_to_sql(self._table, fname) for fname in fnames_to_read],
+        ))
+
+        # group res_ids by model, and determine accessible records
+        # Note: the user can read all activities assigned to him (see at the end of the method)
+        model_ids = defaultdict(set)
+        for __, res_model, res_id, user_id in rows:
+            if user_id != self.env.uid and res_model:
+                model_ids[res_model].add(res_id)
+
+        allowed_ids = defaultdict(set)
+        for res_model, res_ids in model_ids.items():
+            allowed = self.env['mail.message']._filter_records_for_message_operation(
+                res_model, res_ids, 'read',
+            )
+            allowed_ids[res_model] = set(allowed._ids)
+
+        activities = self.browse(
+            id_
+            for id_, res_model, res_id, user_id in rows
+            if user_id == self.env.uid or res_id in allowed_ids[res_model]
+        )
+        return activities._as_query(order)
+>>>>>>> 493a8e49ce3496d318db7c0a5569843064b6f8e1
 
     @api.depends('summary', 'activity_type_id')
     def _compute_display_name(self):

@@ -1,11 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+# from odoo import exceptions
 from odoo.addons.mail.tests import common
 from odoo.tests import new_test_user, tagged, users
 
 
 @tagged("mail_message")
 class TestMailMessage(common.MailCommon):
+
     @users("employee")
     def test_can_star_message_without_write_access(self):
         message = self.env["mail.message"].sudo().create({
@@ -22,6 +24,7 @@ class TestMailMessage(common.MailCommon):
         self.env["mail.message"].unstar_all()
         self.assertNotIn(self.env.user.partner_id, message.starred_partner_ids)
 
+<<<<<<< 873d7f3e31abd1598a44ffa6f9548b895bd2643a
     def test_mail_message_inexisting_access(self):
         user = new_test_user(self.env, login="Bob", email="bob@test.com")
         inexisting_message = self.env['mail.message'].with_user(user).browse(-434264)
@@ -29,6 +32,27 @@ class TestMailMessage(common.MailCommon):
         self.assertTrue(inexisting_message.browse().has_access('read'))
         self.assertFalse(inexisting_message.has_access('read'))
 
+||||||| c2595e47e3b36120f4c3da8bfe8c16f6c5969a70
+=======
+    def test_mail_message_read_inexisting(self):
+        inexisting_message = self.env['mail.message'].with_user(self.user_employee).browse(-434264)
+        self.assertFalse(inexisting_message.exists())
+        self.assertTrue(inexisting_message.browse().has_access('read'), 'Should not crash (can read void)')
+        # TDE to check: cache pollution / inexisting not correctly tracked, ok-ish for stable
+        # with self.assertRaises(exceptions.AccessError):
+        #     inexisting_message.check_access_rule('read')
+
+    def test_mail_message_read_access(self):
+        self.env['res.company'].invalidate_model(['name'])
+        message_c1 = self._add_messages(self.env.company, "Company Note 1", author=self.user_employee.partner_id)
+        message_c2 = self._add_messages(self.company_2, "Company Note 2", author=self.user_employee_c2.partner_id)
+        search_result = self.env["mail.message"].with_context(
+            allowed_company_ids=[self.env.company.id]
+        ).with_user(self.user_employee).search([("model", "=", "res.company")])
+        self.assertIn(message_c1, search_result)
+        self.assertNotIn(message_c2, search_result)
+
+>>>>>>> 493a8e49ce3496d318db7c0a5569843064b6f8e1
     def test_unlink_failure_message_notify_author(self):
         recipient = new_test_user(self.env, login="Bob", email="invalid_email_addr")
         with self.mock_mail_gateway():
