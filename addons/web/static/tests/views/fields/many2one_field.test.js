@@ -35,11 +35,13 @@ import {
     toggleSearchBarMenu,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
+import { registry } from "@web/core/registry";
 
 import { user } from "@web/core/user";
 import { range } from "@web/core/utils/numbers";
 import { Record } from "@web/model/record";
 import { Field } from "@web/views/fields/field";
+import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { WebClient } from "@web/webclient/webclient";
 
@@ -4097,4 +4099,44 @@ test("highlight search in many2one", async () => {
         </span>
         ord
     `);
+});
+
+test("custom many2one field with write_date as related field", async () => {
+    Partner._records[0].trululu = 2;
+    Partner._records[0].write_date = "2023-02-13 10:00:00";
+    Partner._records[1].write_date = "2022-09-03 18:00:00";
+    class MyM2O extends Component {
+        static props = ["*"];
+        static components = { Many2OneField };
+        static template = xml`
+            <div>
+                <Many2OneField t-props="this.props"/>
+                <span class="date" t-esc="this.writeDate"/>
+            </div>`;
+        get writeDate() {
+            return this.props.record.data[this.props.name].write_date.toFormat("dd/MM/y");
+        }
+    }
+    const myM2O = {
+        ...buildM2OFieldDescription(MyM2O),
+        relatedFields: [{ name: "write_date", type: "datetime" }],
+    };
+    registry.category("fields").add("my_m2o", myM2O);
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form><field name="trululu" widget="my_m2o"/></form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name=trululu] input").toHaveValue("second record");
+    expect(".o_field_widget[name=trululu] .date").toHaveText("03/09/2022");
+
+    await contains(".o_field_widget[name=trululu] input").click();
+    await runAllTimers();
+    await clickFieldDropdownItem("trululu", "first record");
+
+    expect(".o_field_widget[name=trululu] input").toHaveValue("first record");
+    expect(".o_field_widget[name=trululu] .date").toHaveText("13/02/2023");
 });
