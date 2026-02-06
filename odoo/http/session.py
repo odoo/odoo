@@ -19,6 +19,7 @@ from odoo.api import Environment
 from odoo.tools import consteq, get_lang
 
 if typing.TYPE_CHECKING:
+    from collections.abc import Iterable
     from .requestlib import Request
 
 
@@ -83,13 +84,13 @@ class Session(MutableMapping):
         'sid',
     )
 
-    def __init__(self, data, sid, /, new=False):
-        self.can_save = True
+    def __init__(self, data, sid, /, new: bool = False):
+        self.can_save: bool = True
         self.__data = {}
         self.update(data)
-        self.is_dirty = False
+        self.is_dirty: bool = False
         self.is_new = new
-        self.should_rotate = False
+        self.should_rotate: bool = False
         self.sid = sid
 
     def __getitem__(self, item):
@@ -181,7 +182,7 @@ def get_default_session() -> dict:
     }
 
 
-def get_session_max_inactivity(env: Environment) -> int:
+def get_session_max_inactivity(env: Environment | None) -> int:
     if not env or env.cr.closed:
         return SESSION_LIFETIME
 
@@ -488,7 +489,7 @@ class SessionStore:
             _logger.debug("Could not load session from disk. Use new session.", exc_info=True)
             return self.new()
 
-    def rotate(self, session, env, *, soft=False):
+    def rotate(self, session: Session, env: Environment, *, soft: bool = False) -> None:
         """
         Rotate the session sid.
 
@@ -537,7 +538,7 @@ class SessionStore:
                 if os.path.getmtime(path) < threshold:
                     os.unlink(path)
 
-    def get_missing_session_identifiers(self, identifiers):
+    def get_missing_session_identifiers(self, identifiers: Iterable[str]) -> set[str]:
         """
         :param identifiers: session identifiers whose file existence must be checked
                             identifiers are a part session sid (first 42 chars)
@@ -559,7 +560,7 @@ class SessionStore:
                 identifiers.difference_update(sf.name[:42] for sf in session_files)
         return identifiers
 
-    def delete_from_identifiers(self, identifiers):
+    def delete_from_identifiers(self, identifiers: Iterable[str]) -> None:
         """ Delete session files matching identifiers within the session store. """
         files_to_unlink = []
         for identifier in identifiers:
@@ -575,7 +576,7 @@ class SessionStore:
             with suppress(OSError):
                 os.unlink(fn)
 
-    def delete_old_sessions(self, session):
+    def delete_old_sessions(self, session: Session) -> None:
         """ Delete old sessions based on expiration and cleanup flag value. """
         if 'gc_previous_sessions' in session:
             if session['create_time'] + SESSION_DELETION_TIMER < time.time():

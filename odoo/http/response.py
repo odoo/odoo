@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 import functools
 import logging
+import typing
 from datetime import datetime, timedelta
 
+import werkzeug.datastructures
 import werkzeug.exceptions
 import werkzeug.wrappers
 
@@ -15,9 +19,9 @@ class Response(werkzeug.wrappers.Response):
     this class's constructor can take the following additional
     parameters for QWeb Lazy Rendering.
 
-    :param str template: template to render
-    :param dict qcontext: Rendering context to use
-    :param int uid: User id to use for the ir.ui.view render call,
+    :param template: template to render
+    :param qcontext: Rendering context to use
+    :param uid: User id to use for the ir.ui.view render call,
         ``None`` to use the request's user (the default)
 
     these attributes are available as parameters on the Response object
@@ -28,25 +32,29 @@ class Response(werkzeug.wrappers.Response):
     """
     default_mimetype = 'text/html'
 
-    def __init__(self, *args, **kw):
-        template = kw.pop('template', None)
-        qcontext = kw.pop('qcontext', None)
-        uid = kw.pop('uid', None)
+    def __init__(self,
+        *args,
+        template: str | None = None,
+        qcontext: dict | None = None,
+        uid: int | None = None,
+        **kw,
+    ):
         super().__init__(*args, **kw)
         self.set_default(template, qcontext, uid)
 
     @classmethod
-    def load(cls, result, fname="<function>"):
+    def load(
+        cls,
+        result: Response | werkzeug.wrappers.Response | werkzeug.exceptions.HTTPException | bytes | str | None,
+        fname: str = "<function>",
+    ) -> Response:
         """
         Convert the return value of an endpoint into a Response.
 
         :param result: The endpoint return value to load the Response from.
-        :type result: Union[Response, werkzeug.wrappers.BaseResponse,
-            werkzeug.exceptions.HTTPException, str, bytes, NoneType]
-        :param str fname: The endpoint function name wherefrom the
-            result emanated, used for logging.
+        :param fname: The endpoint function name where the result emanated from,
+                      used for logging.
         :returns: The created :class:`~odoo.http.Response`.
-        :rtype: Response
         :raises TypeError: When ``result`` type is none of the above-
             mentioned type.
         """
@@ -58,7 +66,7 @@ class Response(werkzeug.wrappers.Response):
             raise result
 
         if isinstance(result, werkzeug.wrappers.Response):
-            response = cls.force_type(result)
+            response: Response = cls.force_type(result)
             response.set_default()
             return response
 
@@ -67,22 +75,22 @@ class Response(werkzeug.wrappers.Response):
 
         raise TypeError(f"{fname} returns an invalid value: {result}")
 
-    def set_default(self, template=None, qcontext=None, uid=None):
+    def set_default(self, template: str | None = None, qcontext: dict | None = None, uid: int | None = None) -> None:
         self.template = template
         self.qcontext = qcontext or dict()
         self.qcontext['response_template'] = self.template
         self.uid = uid
 
     @property
-    def is_qweb(self):
+    def is_qweb(self) -> bool:
         return self.template is not None
 
-    def render(self):
+    def render(self) -> typing.Any:
         """ Renders the Response's template, returns the result. """
         self.qcontext['request'] = request
         return request.env["ir.ui.view"]._render_template(self.template, self.qcontext)
 
-    def flatten(self):
+    def flatten(self) -> None:
         """
         Forces the rendering of the response's template, sets the result
         as response body and unsets :attr:`.template`
@@ -107,7 +115,8 @@ class Response(werkzeug.wrappers.Response):
 
 
 # Replace the above (unsafe) response by the facade safe one
-from ._facade import SafeResponse as Response  # noqa: F811
+if not typing.TYPE_CHECKING:
+    from ._facade import SafeResponse as Response  # noqa: F811
 
 
 class FutureResponse:

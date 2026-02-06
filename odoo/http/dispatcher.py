@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 import logging
 import traceback
+import typing
 import weakref
 from abc import ABC, abstractmethod
-from collections.abc import Callable, Collection
 from http import HTTPStatus
 
 from werkzeug.exceptions import (
@@ -17,6 +19,14 @@ from werkzeug.exceptions import default_exceptions as werkzeug_default_exception
 
 from odoo.exceptions import UserError
 from odoo.tools import exception_to_unicode
+
+if typing.TYPE_CHECKING:
+    from collections.abc import Collection
+
+    import werkzeug.routing
+
+    from .requestlib import Request
+    from .routing_map import Endpoint
 
 _logger = logging.getLogger('odoo.http')
 
@@ -51,7 +61,7 @@ for more details.
 """
 
 
-def serialize_exception(exception, *, message=None, arguments=None):
+def serialize_exception(exception: Exception, *, message: str | None = None, arguments=None) -> dict[str, typing.Any]:
     name = type(exception).__name__
     module = type(exception).__module__
 
@@ -64,7 +74,7 @@ def serialize_exception(exception, *, message=None, arguments=None):
     }
 
 
-_dispatchers = {}
+_dispatchers: dict[str, type[Dispatcher]] = {}
 
 
 class Dispatcher(ABC):
@@ -76,24 +86,24 @@ class Dispatcher(ABC):
         super().__init_subclass__()
         _dispatchers[cls.routing_type] = cls
 
-    def __init__(self, request):
+    def __init__(self, request: Request):
         # use a weak reference to break the cycle between the dispatcher and
         # the Request object so they can be collected by the GC
         self._request = weakref.ref(request)
 
     @property
-    def request(self):
+    def request(self) -> Request:
         return self._request()
 
     @classmethod
     @abstractmethod
-    def is_compatible_with(cls, request):
+    def is_compatible_with(cls, request: Request) -> bool:
         """
         Determine if the current request is compatible with this
         dispatcher.
         """
 
-    def pre_dispatch(self, rule, args):
+    def pre_dispatch(self, rule: werkzeug.routing.Rule, args):
         """
         Prepare the system before dispatching the request to its
         controller. This method is often overridden in ir.http to
@@ -125,7 +135,7 @@ class Dispatcher(ABC):
             self.request.httprequest.max_content_length = max_content_length
 
     @abstractmethod
-    def dispatch(self, endpoint, args):
+    def dispatch(self, endpoint: Endpoint, args) -> Response:
         """
         Extract the params from the request's body and call the
         endpoint. While it is preferred to override ir.http._pre_dispatch
@@ -133,7 +143,7 @@ class Dispatcher(ABC):
         a tight control over the dispatching.
         """
 
-    def post_dispatch(self, response):
+    def post_dispatch(self, response: Response):
         """
         Manipulate the HTTP response to inject various headers, also
         save the session when it is dirty.
@@ -143,7 +153,7 @@ class Dispatcher(ABC):
         root.set_csp(response)
 
     @abstractmethod
-    def handle_error(self, exc: Exception) -> Callable:
+    def handle_error(self, exc: Exception) -> Response | HTTPException:
         """
         Transform the exception into a valid HTTP response. Called upon
         any exception while serving a request.
@@ -188,8 +198,10 @@ class HttpDispatcher(Dispatcher):
                 raise BadRequest(e)
 
         if self.request.db:
-            return self.request.registry['ir.http']._dispatch(endpoint)
-        return endpoint(**self.request.params)
+            response = self.request.registry['ir.http']._dispatch(endpoint)
+        else:
+            response = endpoint(**self.request.params)
+        return response
 
     def handle_error(self, exc):
         """
@@ -200,7 +212,7 @@ class HttpDispatcher(Dispatcher):
         json.
 
         :param Exception exc: the exception that occurred.
-        :returns: a WSGI application
+        :returns: a WSGI response
         """
         if isinstance(exc, SessionExpiredException):
             if isinstance(exc, CheckIdentityException):

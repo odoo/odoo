@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 import functools
 import inspect
 import logging
+import typing
 import warnings
 from collections import defaultdict
 
@@ -10,6 +13,44 @@ from odoo.tools.func import filter_kwargs
 from .dispatcher import _dispatchers
 
 _logger = logging.getLogger('odoo.http')
+
+if typing.TYPE_CHECKING:
+    from collections.abc import Callable, Collection, Iterator, Sequence
+
+    import werkzeug.routing
+    from werkzeug.exceptions import HTTPException
+
+    from odoo.api import Environment
+
+    from .response import Response
+
+    HTTPMethods = typing.Literal['GET', 'POST', 'HEAD', 'PUT', 'DELETE', 'OPTIONS', 'PATCH']
+
+    class RoutingOpts(typing.TypedDict, total=False):
+        """Common attributes on the route() function."""
+        routes: typing.NotRequired[Sequence[str]]
+        methods: typing.NotRequired[Sequence[HTTPMethods] | None]
+        type: typing.NotRequired[str]
+        auth: typing.NotRequired[str]
+        cors: typing.NotRequired[str]
+        csrf: typing.NotRequired[bool]
+        readonly: typing.NotRequired[bool | Callable[[typing.Any, werkzeug.routing.Rule, typing.Any], bool]]  # controller, rule, args
+        handle_params_access_error: typing.NotRequired[Callable[[Exception], Response | HTTPException]]
+        captcha: typing.NotRequired[str]
+        save_session: typing.NotRequired[bool]
+
+    class Endpoint(typing.Protocol):
+        """The resulting function serving as the endpoint of a werkzeug rule."""
+        __name__: str
+        routing: RoutingOpts
+        original_routing: RoutingOpts
+        original_endpoint: Callable
+
+        def __call__(self, *args, **kwds) -> typing.Any:
+            # The return value can be anything depending on the type of the
+            # dispatcher. Examples, for type="http" a `Response`, for
+            # type="json", a value to dump, etc.
+            ...
 
 ROUTING_KEYS = {
     'alias',
@@ -62,7 +103,7 @@ class Controller:
             def greeting(self):
                 return super().handler()
     """
-    children_classes = defaultdict(list)  # indexed by module
+    children_classes = defaultdict[str, list[type]](list)  # indexed by module
 
     @classmethod
     def __init_subclass__(cls):
@@ -73,12 +114,14 @@ class Controller:
             Controller.children_classes[module].append(cls)
 
     @property
-    def env(self):
+    def env(self) -> Environment | None:
         return request.env if request else None
 
 
-# TODO: stop using **kwargs and actually list all known parameters
-def route(route=None, **routing):
+def route(
+    route: str | Sequence[str] | None = None,
+    **routing: typing.Unpack[RoutingOpts],
+):
     """
     Decorate a controller method in order to route incoming requests
     matching the given URL and options to the decorated method.
@@ -132,7 +175,7 @@ def route(route=None, **routing):
         on the http response and save dirty session on disk. ``False``
         by default for ``auth='bearer'``. ``True`` by default otherwise.
     """
-    def decorator(endpoint):
+    def decorator(endpoint: Callable[..., Response | typing.Any]) -> Endpoint:
         fname = f"<function {endpoint.__module__}.{endpoint.__name__}>"
 
         # Sanitize the routing
@@ -147,7 +190,7 @@ def route(route=None, **routing):
             f"@route(type={routing['type']!r}) is not one of {_dispatchers.keys()}"
         if route:
             routing['routes'] = [route] if isinstance(route, str) else route
-        wrong = routing.pop('method', None)
+        wrong = routing.pop('method', None)  # type: ignore
         if wrong is not None:
             _logger.warning("%s defined with invalid routing parameter 'method', assuming 'methods'", fname)
             routing['methods'] = wrong
@@ -173,7 +216,7 @@ def route(route=None, **routing):
     return decorator
 
 
-def _generate_routing_rules(modules, nodb_only, converters=None):
+def _generate_routing_rules(modules: Collection[str], nodb_only: bool, converters=None) -> Iterator[tuple[str, Endpoint]]:
     """
     Two-fold algorithm used to (1) determine which method in the
     controller inheritance tree should bind to what URL with respect to
@@ -239,7 +282,7 @@ def _generate_routing_rules(modules, nodb_only, converters=None):
             if not any(map(is_method_a_route, type(ctrl).mro())):
                 continue
 
-            merged_routing = {
+            merged_routing: RoutingOpts = {
                 # 'type': 'http',  # set below
                 'auth': 'user',
                 'methods': None,
@@ -272,14 +315,14 @@ def _generate_routing_rules(modules, nodb_only, converters=None):
                 # to `original_routing` and `original_endpoint`, assign
                 # the merged routing ONLY on the duplicated function to
                 # ensure method's immutability.
-                endpoint = functools.partial(method)
+                endpoint: Endpoint = functools.partial(method)
                 functools.update_wrapper(endpoint, method)
                 endpoint.routing = merged_routing
 
                 yield (url, endpoint)
 
 
-def _check_and_complete_route_definition(controller_cls, submethod, merged_routing):
+def _check_and_complete_route_definition(controller_cls: type[Controller], submethod: Endpoint, merged_routing: RoutingOpts) -> None:
     """Verify and complete the route definition.
 
     * Ensure 'type' is defined on each method's own routing.
