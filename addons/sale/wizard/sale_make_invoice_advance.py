@@ -317,7 +317,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 line_vals['analytic_distribution'] = line_analytic_distribution
             # round price unit
             line_vals['price_unit'] = order.currency_id.round(line_vals['price_unit'] * ratio)
-
+            if self.env['account.move'].require_tax_ids_on_invoice_lines() and not line_vals['tax_id']:
+                tax_0 = self.env['account.tax']._get_zero_tax()
+                line_vals['tax_id'] = (tax_0.id,)
             lines_values.append(line_vals)
             accounts.append(key['account_id'])
 
