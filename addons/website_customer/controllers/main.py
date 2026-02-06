@@ -75,14 +75,16 @@ class WebsiteCustomer(GoogleMap):
                 ('industry_id.name', 'ilike', search_value),
             ]
 
-        tag_id = post.get('tag_id')
-        if tag_id:
-            tag_id = request.env['ir.http']._unslug(tag_id)[1] or 0
-            domain += [('website_tag_ids', 'in', tag_id)]
+        tag_id = False
+        if request.website.is_view_active("website_customer.opt_tag_list"):
+            tag_id = post.get('tag_id')
+            if tag_id:
+                tag_id = request.env['ir.http']._unslug(tag_id)[1] or 0
+                domain += [('website_tag_ids', 'in', tag_id)]
 
         # group by industry, based on customers found with the search(domain)
         industry_groups = Partner.sudo()._read_group(
-            domain, ["industry_id"], ["__count"], order="industry_id")
+            domain, ["industry_id"], ["__count"], order=False)
 
         if industry:
             domain.append(('industry_id', '=', industry.id))
@@ -90,18 +92,23 @@ class WebsiteCustomer(GoogleMap):
                 industry_groups.append((industry, 0))
                 industry_groups = sorted(industry_groups, key=lambda group: group[0].name or '')
 
-        industries = [{
-            'industry_id_count': sum(count for __, count, in industry_groups),
-            'industry_id': (0, _("All Industries")),
-        }]
+        industries = []
         for g_industry, count in industry_groups:
             industries.append({
                 'industry_id_count': count,
                 'industry_id': g_industry and (g_industry.id, g_industry.display_name),
             })
+        # sort in python instead of groupby (avoid join)
+        industries.sort(key=lambda x: x["industry_id"] and x["industry_id"][1] or '')
+        industries.insert(0, {
+            'industry_id_count': sum(count for __, count, in industry_groups),
+            'industry_id': (0, _("All Industries")),
+        })
 
         # group by country, based on customers found with the search(domain)
-        country_groups = Partner.sudo()._read_group(domain, ["country_id"], ["__count"], order="country_id")
+        country_groups = Partner.sudo()._read_group(domain, ["country_id"], ["__count"], order=False)
+        country_groups.sort(key=lambda x: x[0].name or '')
+        partners_count = sum(count for __, count in country_groups)
 
         fallback_all_countries = False
         if country:
@@ -112,9 +119,10 @@ class WebsiteCustomer(GoogleMap):
                 country = None
             else:
                 domain += [('country_id', '=', country.id)]
+                partners_count = dict(country_groups).get(country, 0)
 
         countries = [{
-            'country_id_count': sum(count for __, count in country_groups),
+            'country_id_count': partners_count,
             'country_id': (0, _("All Countries")),
         }]
         for g_country, count in country_groups:
@@ -123,25 +131,27 @@ class WebsiteCustomer(GoogleMap):
                 'country_id': g_country and (g_country.id, g_country.sudo().display_name),
             })
 
-        # search customers to display
-        partner_count = Partner.sudo().search_count(domain)
-
         # pager
         url = '/customers'
         if industry:
             url += '/industry/%s' % industry.id
         if country:
             url += '/country/%s' % country.id
+
         pager = request.website.pager(
-            url=url, total=partner_count, page=page, step=self._references_per_page,
+            url=url, total=partners_count, page=page, step=self._references_per_page,
             scope=7, url_args=post
         )
+
+        if page > pager['page_count']:
+            raise werkzeug.exceptions.NotFound()
 
         partners = Partner.sudo().search(domain, offset=pager['offset'], limit=self._references_per_page)
         google_maps_api_key = request.website.google_maps_api_key
 
-        tags = Tag.search([('website_published', '=', True), ('partner_ids', 'in', partners.ids)], order='classname, name ASC')
-        tag = tag_id and Tag.browse(tag_id) or False
+        if request.website.is_view_active("website_customer.opt_tag_list"):
+            tags = Tag.search([('website_published', '=', True), ('partner_ids', 'in', partners.ids)], order='classname, name ASC')
+            tag = tag_id and Tag.browse(tag_id) or False
 
         values = {
             'countries': countries,
