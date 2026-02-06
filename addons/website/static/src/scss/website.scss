@@ -315,6 +315,16 @@ body {
                 > * {
                     margin-bottom: $spacer * 2;
                 }
+                // When breadcrumb exists, remove margin from header and apply
+                // it to breadcrumb instead
+                &:has(div.o_page_breadcrumb) {
+                    > header {
+                        margin-bottom: 0;
+                    }
+                    div.o_page_breadcrumb {
+                        margin-bottom: $spacer * 2;
+                    }
+                }
                 > header {
                     &, &.o_header_affix {
                         .navbar {

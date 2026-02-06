@@ -3,6 +3,7 @@ import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
     clickOnSnippet,
+    goToTheme,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
 
@@ -171,6 +172,31 @@ registerWebsitePreviewTour(
             trigger:
                 ":iframe nav[aria-label='breadcrumb'] ol.breadcrumb li:first-child a:contains(Home)",
         },
+        ...clickOnEditAndWaitEditMode(),
+        ...goToTheme(),
+        {
+            content: "Open the Page Layout dropdown",
+            trigger: ".hb-row[data-label='Page Layout'] .o-dropdown",
+            run: "click",
+        },
+        {
+            content: "Select the Postcard layout",
+            trigger: ".o-hb-select-dropdown-item[data-action-value='postcard']",
+            run: "click",
+        },
+        {
+            content: "Verify Breadcrumb has bottom spacing in postcard layout",
+            trigger: ":iframe .o_page_breadcrumb",
+            run() {
+                const marginBottom = getComputedStyle(this.anchor).marginBottom;
+                if (marginBottom === "0px") {
+                    throw new Error(
+                        `Expected breadcrumb to have bottom margin in Postcard layout, but got "${marginBottom}".`
+                    );
+                }
+            },
+        },
+        ...clickOnSave(),
         ...clickOnEditAndWaitEditMode(),
         ...clickOnSnippet(breadcrumb),
         ...openBackgroundColorPicker("Background Color", "Theme"),
