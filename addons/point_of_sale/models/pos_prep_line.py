@@ -19,6 +19,10 @@ class PosPrepLine(models.Model):
     product_id = fields.Many2one('product.product', compute="_compute_combo_fields", store=True)
     attribute_value_ids = fields.Many2many('product.template.attribute.value', compute="_compute_combo_fields", store=True)
 
+    # Prep orderlines group for splitting
+    child_prep_line_ids = fields.One2many('pos.prep.line', 'parent_prep_line_id')
+    parent_prep_line_id = fields.Many2one('pos.prep.line', string="original splitted prep line", index='btree_not_null')
+
     @api.depends('pos_order_line_id', 'pos_order_line_id.combo_line_ids', 'pos_order_line_id.combo_parent_id')
     def _compute_combo_fields(self):
         for line in self:

@@ -361,7 +361,7 @@ class PosOrder(models.Model):
         help="List of account moves created when this POS order was reversed and invoiced after session close."
     )
     source = fields.Selection(string="Origin", selection=[('pos', 'Point of Sale')], default='pos')
-    prep_order_group_id = fields.Many2one('pos.prep.order.group', string='Preparation Order Group', index='btree_not_null')
+    prep_order_ids = fields.One2many('pos.prep.order', 'pos_order_id', string='Preparation orders')
     _unique_uuid = models.Constraint('unique (uuid)', 'An order with this uuid already exists')
 
     def get_last_order_change_date(self):
@@ -1212,9 +1212,8 @@ class PosOrder(models.Model):
             'pos.pack.operation.lot': self.env['pos.pack.operation.lot']._load_pos_data_read(self.lines.pack_lot_ids, config) if config else [],
             'product.attribute.custom.value': self.env['product.attribute.custom.value']._load_pos_data_read(self.lines.custom_attribute_value_ids, config) if config else [],
             'account.move': self.env['account.move'].sudo()._load_pos_data_read(account_moves, config) if config else [],
-            'pos.prep.order': self.env['pos.prep.order']._load_pos_data_read(self.prep_order_group_id.prep_order_ids, config) if config else [],
-            'pos.prep.line': self.env['pos.prep.line']._load_pos_data_read(self.prep_order_group_id.prep_order_ids.prep_line_ids, config) if config else [],
-            'pos.prep.order.group': self.env['pos.prep.order.group']._load_pos_data_read(self.prep_order_group_id, config) if config else [],
+            'pos.prep.order': self.env['pos.prep.order']._load_pos_data_read(self.prep_order_ids, config) if config else [],
+            'pos.prep.line': self.env['pos.prep.line']._load_pos_data_read(self.prep_order_ids.prep_line_ids, config) if config else [],
         }
 
     @api.model

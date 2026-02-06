@@ -208,7 +208,8 @@ describe("pos_store.js", () => {
             pos_categ_id: 1,
             pos_categ_sequence: 1,
             group: false,
-            isCombo: false,
+            combo_line_ids: [],
+            combo_parent_uuid: undefined,
         });
         expect(receiptsData[0].changes.data[1]).toEqual({
             basic_name: "TEST 2",
@@ -220,7 +221,8 @@ describe("pos_store.js", () => {
             pos_categ_id: 2,
             pos_categ_sequence: 2,
             group: false,
-            isCombo: false,
+            combo_line_ids: [],
+            combo_parent_uuid: undefined,
         });
     });
 

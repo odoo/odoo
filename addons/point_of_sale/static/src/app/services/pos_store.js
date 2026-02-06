@@ -550,7 +550,7 @@ export class PosStore extends WithLazyGetterTrap {
                 if (
                     !ignoreChange &&
                     typeof order.id === "number" &&
-                    (order.prep_order_group_id?.prep_order_ids || []).length > 0
+                    (order.prep_order_ids || []).length > 0
                 ) {
                     const orderPresetDate = DateTime.fromISO(order.preset_time);
                     const isSame = DateTime.now().hasSame(orderPresetDate, "day");
@@ -1782,7 +1782,8 @@ export class PosStore extends WithLazyGetterTrap {
 
         if (this.config.printerCategories.size && !opts.byPassPrint) {
             try {
-                isPrinted = await this.printChanges(order);
+                const orderChange = order.getChanges({ cancelled: opts.cancelled });
+                isPrinted = await this.printChanges(order, orderChange);
             } catch (e) {
                 logPosMessage(
                     "Store",
@@ -1843,7 +1844,7 @@ export class PosStore extends WithLazyGetterTrap {
         for (const printer of printers) {
             const categoryIds = printer.config.product_categories_ids;
             const categoryIdsSet = new Set(categoryIds);
-            const receiptData = await order.generatePrinterData({ categoryIdsSet });
+            const receiptData = await order.generatePrinterData({ categoryIdsSet, orderChange });
 
             for (const data of receiptData) {
                 const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {

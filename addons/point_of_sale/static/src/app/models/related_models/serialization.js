@@ -51,6 +51,10 @@ const deepSerialization = (
             uuidMapping[targetModel] = {};
         }
         if (X2MANY_TYPES.has(field.type) && record[fieldName]) {
+            if (fieldName === "child_prep_line_ids") {
+                //create the prep_line and prep_order before original order is created
+                continue;
+            }
             if (opts.disableRecursive) {
                 if (opts.dynamicModels.includes(field.relation)) {
                     uuidMapping[targetModel][record.uuid] ??= {};
@@ -163,7 +167,13 @@ const deepSerialization = (
                     record.uuid &&
                     !recordDependencies[field.relation]?.[record[fieldName].uuid]
                 ) {
-                    if (!serialized[relatedModel][recordId] && record[fieldName]._dirty) {
+                    //check if pos.order.line since synched with orderline in dependencies
+                    //when unmerging
+                    if (
+                        !serialized[relatedModel][recordId] &&
+                        record[fieldName]._dirty &&
+                        field.relation != "pos.order.line"
+                    ) {
                         const relatedUUID = record[fieldName].uuid;
                         recordDependencies[field.relation] ??= {};
                         recordDependencies[field.relation][relatedUUID] ??= {

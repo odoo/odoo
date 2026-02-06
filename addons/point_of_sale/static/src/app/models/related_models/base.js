@@ -30,10 +30,7 @@ export class Base extends WithLazyGetterTrap {
      * @param {*} _vals
      */
     setup(_vals) {
-        if (typeof this.id !== "number" && this.models._dirtyRecords[this.model.name]) {
-            this.models._dirtyRecords[this.model.name].add(this.uuid);
-            this._dirty = true;
-        }
+        this._dirty = typeof this.id !== "number";
     }
 
     /**
@@ -91,27 +88,17 @@ export class Base extends WithLazyGetterTrap {
     }
 
     markDirty() {
-        if (
-            this.models._loadingData ||
-            this._dirty ||
-            !this.models._dirtyRecords[this.model.name]
-        ) {
+        if (this.models._loadingData || this._dirty) {
             return;
         }
 
         this._dirty = true;
-        this.models._dirtyRecords[this.model.name].add(this.uuid);
         this.model.getParentFields().forEach((field) => {
             this[field.name]?.markDirty?.();
         });
     }
 
     unmarkDirty() {
-        if (!this.models._dirtyRecords[this.model.name]) {
-            return;
-        }
-
-        this.models._dirtyRecords[this.model.name].delete(this.uuid);
         this._dirty = false;
     }
 }

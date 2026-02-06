@@ -536,11 +536,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 mapObj(processedModelDefs, (modelName) => new Model(modelName))
             );
 
-            this._dirtyRecords = dynamicModels.reduce((acc, name) => {
-                acc[name] = new Set();
-                return acc;
-            }, {});
-
             this[STORE_SYMBOL] = store;
         }
 

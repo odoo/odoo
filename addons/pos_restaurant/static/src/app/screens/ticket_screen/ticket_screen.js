@@ -68,6 +68,9 @@ patch(TicketScreen.prototype, {
 
             const serializedTipLine = order.getSelectedOrderline().serializeForORM();
             order.getSelectedOrderline().delete();
+            //TODO: LOWE is it good to handle like this duplicate code (also done in tip screen)
+            delete serializedTipLine["record_dependencies"];
+            delete serializedTipLine["relations_uuid_mapping"];
 
             promises.push(
                 new Promise((resolve) => {

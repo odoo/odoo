@@ -6,6 +6,7 @@ import { renderToElement } from "@web/core/utils/render";
 export async function generateReceiptsToPrint(order, orderChange) {
     const groupedReceiptsData = await order.generatePrinterData({
         categoryIdsSet: posmodel.config.printerCategories,
+        orderChange,
     });
     return groupedReceiptsData.map((data) =>
         renderToElement("point_of_sale.OrderChangeReceipt", {
@@ -15,9 +16,9 @@ export async function generateReceiptsToPrint(order, orderChange) {
 }
 
 // Return rendered order change receipts that will be printed when clicking "Order" button
-export async function generatePreparationReceipts() {
+export async function generatePreparationReceipts(cancelled) {
     const order = posmodel.getOrder();
-    const orderChange = order.preparationChanges;
+    const orderChange = order.getChanges({ cancelled });
     return await generateReceiptsToPrint(order, orderChange);
 }
 
@@ -26,9 +27,15 @@ export async function generateFireCourseReceipts() {
     const order = posmodel.getOrder();
     const course = order.getSelectedCourse();
     const orderChange = {
-        new: [],
-        cancelled: [],
-        noteUpdate: course.lines.map((line) => ({ product_id: line.getProduct().id })),
+        quantity: 0,
+        categoryCount: [],
+        printerData: {
+            addedQuantity: [],
+            removedQuantity: [],
+            noteUpdate: course.line_ids.map((line) => ({
+                product_id: line.getProduct().id,
+            })),
+        },
         noteUpdateTitle: `${course.name} ${_t("fired")}`,
         printNoteUpdateData: false,
     };
@@ -42,6 +49,7 @@ export function checkPreparationTicketData(
         invisibleInDom: [],
         lineOrder: [],
         fireCourse: false,
+        cancelled: false,
     }
 ) {
     const check = async () => {
@@ -50,7 +58,7 @@ export function checkPreparationTicketData(
         if (opts.fireCourse) {
             tickets = await generateFireCourseReceipts();
         } else {
-            tickets = await generatePreparationReceipts();
+            tickets = await generatePreparationReceipts(opts.cancelled);
         }
 
         if (

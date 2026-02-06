@@ -276,7 +276,7 @@ class TestFrontend(TestFrontendCommon):
     def test_05_tip_screen(self):
         self.pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True, 'tip_product_id': self.env.ref('point_of_sale.product_product_tip')})
         self.pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('PosResTipScreenTour', debug=True, step_delay=500)
+        self.start_pos_tour('PosResTipScreenTour')
 
         orders = self.env['pos.order'].search([], limit=5, order="id desc")
         order_tips = [o.tip_amount for o in orders]
@@ -316,8 +316,8 @@ class TestFrontend(TestFrontendCommon):
     def test_10_save_last_preparation_changes(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SaveLastPreparationChangesTour')
-        self.assertTrue(self.pos_config.current_session_id.order_ids.prep_order_group_id.prep_order_ids, "There should be a last order preparation change")
-        self.assertTrue(self.coca_cola_test.id == self.pos_config.current_session_id.order_ids.prep_order_group_id.prep_order_ids.prep_line_ids.product_id.id, "The last order preparation change should contain 'Coca'")
+        self.assertTrue(self.pos_config.current_session_id.order_ids.prep_order_ids, "There should be a last order preparation change")
+        self.assertTrue(self.coca_cola_test.id == self.pos_config.current_session_id.order_ids.prep_order_ids.prep_line_ids.product_id.id, "The last order preparation change should contain 'Coca'")
 
     def test_12_order_tracking(self):
         self.pos_config.write({'order_edit_tracking': True})
@@ -476,7 +476,7 @@ class TestFrontend(TestFrontendCommon):
             'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
         })
         self.pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('test_course_restaurant_preparation_tour', login="pos_user")
+        self.start_pos_tour('test_course_restaurant_preparation_tour', login="pos_user", debug=True, step_delay=500)
 
     def test_create_floor_tour(self):
         self.pos_config.with_user(self.pos_user).open_ui()

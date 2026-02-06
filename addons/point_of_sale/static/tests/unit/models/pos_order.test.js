@@ -22,6 +22,7 @@ test("uiState", async () => {
         requiredPartnerDetails: {},
         last_general_customer_note: "",
         last_internal_note: "",
+        printStack: {},
     });
 });
 
@@ -113,7 +114,7 @@ test("updateLastOrderChange", async () => {
 
     order.updateLastOrderChange();
 
-    expect(order.prep_order_group_id.prep_order_ids.length).toBe(2);
+    expect(order.prep_order_ids.length).toBe(2);
     const prepLines = firstLine.prep_line_ids || [];
     const totalPrepQty = prepLines.reduce((sum, l) => sum + l.quantity - l.cancelled, 0);
     expect(totalPrepQty).toBe(originalQty + 2);
@@ -124,7 +125,7 @@ test("updateLastOrderChange", async () => {
     firstLine.setQuantity(1);
 
     order.updateLastOrderChange();
-    expect(order.prep_order_group_id.prep_order_ids.length).toBe(2);
+    expect(order.prep_order_ids.length).toBe(2);
     const totalPrepQtyAfterCancelled = prepLines.reduce(
         (sum, l) => sum + l.quantity - l.cancelled,
         0
@@ -158,7 +159,6 @@ test("getPreparationChanges", async () => {
     const firstOrderlineChange = changes.printerData.addedQuantity[0];
     expect(firstOrderlineChange).toEqual({
         basic_name: firstLine.getProduct().name,
-        isCombo: firstLine.combo_item_id?.id || false,
         product_id: firstLine.getProduct().id,
         attribute_value_names: firstLine.attribute_value_ids.map((a) => a.name),
         quantity: firstLineOriginalQty,
@@ -167,6 +167,8 @@ test("getPreparationChanges", async () => {
         pos_categ_id: firstLine.getProduct().pos_categ_ids[0]?.id ?? 0,
         pos_categ_sequence: firstLine.getProduct().pos_categ_ids[0]?.sequence ?? 0,
         group: firstLine.getCourse() || false,
+        combo_line_ids: firstLine?.combo_line_ids,
+        combo_parent_uuid: firstLine?.combo_parent_id?.uuid,
     });
 
     //Check note update and change line quantity
@@ -181,7 +183,6 @@ test("getPreparationChanges", async () => {
     const secondOrderlineChange = secondChanges.printerData.addedQuantity[0];
     expect(secondOrderlineChange).toEqual({
         basic_name: secondLine.getProduct().name,
-        isCombo: secondLine.combo_item_id?.id || false,
         product_id: secondLine.getProduct().id,
         attribute_value_names: secondLine.attribute_value_ids.map((a) => a.name),
         quantity: 2,
@@ -190,19 +191,19 @@ test("getPreparationChanges", async () => {
         pos_categ_id: secondLine.getProduct().pos_categ_ids[0]?.id ?? 0,
         pos_categ_sequence: secondLine.getProduct().pos_categ_ids[0]?.sequence ?? 0,
         group: secondLine.getCourse() || false,
+        combo_line_ids: secondLine?.combo_line_ids,
+        combo_parent_uuid: secondLine?.combo_parent_id?.uuid,
     });
 
     //Check line delete
     order.updateLastOrderChange();
     const firstLineProduct = firstLine.getProduct();
-    const firstLineIsCombo = firstLine.combo_item_id?.id;
     const firstLineAttributes = firstLine.attribute_value_ids.map((a) => a.name);
     order.removeOrderline(firstLine);
     const deleteLineChanges = order.preparationChanges;
     const deleteOrderlineChange = deleteLineChanges.printerData.removedQuantity[0];
     expect(deleteOrderlineChange).toEqual({
         basic_name: firstLineProduct.name,
-        isCombo: firstLineIsCombo || false,
         product_id: firstLineProduct.id,
         attribute_value_names: firstLineAttributes,
         quantity: -firstLineOriginalQty,
@@ -211,6 +212,8 @@ test("getPreparationChanges", async () => {
         customer_note: "",
         pos_categ_id: firstLineProduct.pos_categ_ids[0]?.id ?? 0,
         pos_categ_sequence: firstLineProduct.pos_categ_ids[0]?.sequence ?? 0,
+        combo_line_ids: firstLine?.combo_line_ids,
+        combo_parent_uuid: firstLine?.combo_parent_id?.uuid,
     });
 });
 

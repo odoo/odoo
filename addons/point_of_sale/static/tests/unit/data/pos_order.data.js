@@ -130,7 +130,6 @@ export class PosOrder extends models.ServerModel {
         const posCustomAttributeValue = [];
         const posPrepOrder = [];
         const posPrepLine = [];
-        const posPrepOrderGroup = [];
         const readOrder = this.read(orderIds, this._load_pos_data_fields(config_id), false);
 
         for (const order of readOrder) {
@@ -163,19 +162,10 @@ export class PosOrder extends models.ServerModel {
 
             let prepOrders = [];
             let prepLines = [];
-            let prepOrderGroup = [];
 
-            if (order.prep_order_group_id) {
-                prepOrderGroup = this.env["pos.prep.order.group"].read(
-                    [order.prep_order_group_id],
-                    this.env["pos.prep.order.group"]._load_pos_data_fields(config_id),
-                    false
-                );
-            }
-
-            if (prepOrderGroup.length > 0) {
+            if (order.prep_order_ids.length > 0) {
                 prepOrders = this.env["pos.prep.order"].read(
-                    prepOrderGroup.flatMap((pog) => pog.prep_order_ids),
+                    order.prep_order_ids,
                     this.env["pos.prep.order"]._load_pos_data_fields(config_id),
                     false
                 );
@@ -191,7 +181,6 @@ export class PosOrder extends models.ServerModel {
 
             posPrepOrder.push(...prepOrders);
             posPrepLine.push(...prepLines);
-            posPrepOrderGroup.push(...prepOrderGroup);
             posOrderLine.push(...lines);
             posPayment.push(...payments);
             posPackOperationLot.push(...packLotLines);
@@ -207,7 +196,6 @@ export class PosOrder extends models.ServerModel {
             "product.attribute.custom.value": posCustomAttributeValue,
             "pos.prep.order": posPrepOrder,
             "pos.prep.line": posPrepLine,
-            "pos.prep.order.group": posPrepOrderGroup,
         };
     }
 }

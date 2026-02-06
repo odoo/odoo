@@ -53,7 +53,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
             ProductScreen.orderlinesHaveNoChange(),
-            checkPreparationTicketData([]),
             ProductScreen.totalAmountIs("4.40"),
 
             // Create 2nd order (paid)
@@ -88,7 +87,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             Chrome.closePrintingWarning(),
             FloorScreen.clickTable("4"),
             ProductScreen.orderlinesHaveNoChange(),
-            checkPreparationTicketData([]),
             ProductScreen.totalAmountIs("5.87"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
@@ -322,7 +320,7 @@ registry.category("web_tour.tours").add("CategLabelCheck", {
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Test Multi Category Product"),
-            ProductScreen.OrderButtonNotContain("Drinks"),
+            ProductScreen.OrderButtonContain("Drinks"),
         ].flat(),
 });
 registry.category("web_tour.tours").add("OrderChange", {

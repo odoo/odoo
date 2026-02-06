@@ -46,7 +46,6 @@ patch(PosSession.prototype, {
             "res.country",
             "res.country.state",
             "pos.prep.order",
-            "pos.prep.order.group",
             "pos.prep.line",
         ];
     },

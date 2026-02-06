@@ -107,14 +107,43 @@ export class SplitBillScreen extends Component {
         this.pos.startTransferOrder();
     }
 
+    _handleSplittedPrepLines(line, newLine, prepOrder) {
+        //TODO: LOWE what are the prepLines to transfer if there is more orderline qty thant prep qty
+        const prepLines = line.prep_line_ids;
+        let toDelete = this.qtyTracker[line.uuid];
+        for (const prepLine of prepLines) {
+            const qty = prepLine.quantity - prepLine.cancelled;
+            const deletedQty = Math.min(qty, toDelete);
+            if (deletedQty > 0) {
+                this.pos.models["pos.prep.line"].create({
+                    prep_order_id: prepOrder,
+                    pos_order_line_id: newLine,
+                    product_id: line.getProduct().id,
+                    quantity: deletedQty,
+                    cancelled: 0,
+                    attribute_value_ids: line.attribute_value_ids,
+                    parent_prep_line_id: prepLine.parent_prep_line_id || prepLine,
+                });
+                prepLine.quantity -= deletedQty;
+                toDelete -= deletedQty;
+            }
+            if (toDelete === 0) {
+                break;
+            }
+        }
+    }
+
     async createSplittedOrder() {
         const curOrderUuid = this.currentOrder.uuid;
         const originalOrder = this.pos.models["pos.order"].find((o) => o.uuid === curOrderUuid);
         const originalOrderName = this._getOrderName(originalOrder);
         const newOrderName = this._getSplitOrderName(originalOrderName);
-        const newOrder = this.pos.createNewOrder({
-            prep_order_group_id: originalOrder.prep_order_group_id,
-        });
+        const newOrder = this.pos.createNewOrder({});
+        const prepOrder = originalOrder.prep_order_ids?.length
+            ? this.pos.models["pos.prep.order"].create({
+                  pos_order_id: newOrder,
+              })
+            : null;
         newOrder.floating_order_name = newOrderName;
         newOrder.uiState.splittedOrderUuid = curOrderUuid;
         originalOrder.uiState.splittedOrderUuid = newOrder.uuid;
@@ -146,6 +175,7 @@ export class SplitBillScreen extends Component {
                 delete data.combo_line_ids;
                 delete data.uuid;
                 delete data.id;
+                delete data.prep_line_ids;
                 const newLine = this.pos.models["pos.order.line"].create(
                     {
                         ...data,
@@ -170,11 +200,13 @@ export class SplitBillScreen extends Component {
                 }
 
                 if (line.getQuantity() === this.qtyTracker[line.uuid]) {
-                    line.prep_line_ids.forEach((p) => (p.pos_order_line_id = newLine));
                     lineToDel.push(line);
                 } else {
                     const newQty = line.getQuantity() - this.qtyTracker[line.uuid];
                     line.update({ qty: newQty });
+                }
+                if (prepOrder) {
+                    this._handleSplittedPrepLines(line, newLine, prepOrder);
                 }
             }
         }

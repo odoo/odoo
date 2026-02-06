@@ -150,7 +150,6 @@ patch(PosStore.prototype, {
     handlePreparationOrder(destOrder, prepOrders) {
         for (const prepOrder of prepOrders) {
             prepOrder.pos_order_id = destOrder;
-            prepOrder.prep_order_group_id = destOrder.prep_order_group_id;
         }
     },
     handlePreparationLine(destLine, prepLines) {
@@ -899,13 +898,19 @@ patch(PosStore.prototype, {
     async printCourseTicket(course) {
         try {
             const changes = {
-                new: [],
-                cancelled: [],
-                noteUpdate: course.lines.map((line) => ({ product_id: line.getProduct().id })),
+                quantity: 0,
+                categoryCount: [],
+                printerData: {
+                    addedQuantity: [],
+                    removedQuantity: [],
+                    noteUpdate: course.line_ids.map((line) => ({
+                        product_id: line.getProduct().id,
+                    })),
+                },
                 noteUpdateTitle: `${course.name} ${_t("fired")}`,
                 printNoteUpdateData: false,
             };
-            await this.printChanges(this.getOrder(), [changes]);
+            await this.printChanges(this.getOrder(), changes);
         } catch (e) {
             logPosMessage("Store", "printCourseTicket", "Unable to print course", CONSOLE_COLOR, [
                 e,
