@@ -224,4 +224,19 @@ describe("toolbar dropdowns", () => {
         await expandToolbar();
         expect(".o-we-toolbar .btn[name='font']").toHaveCount(0);
     });
+
+    test("should cleanup whitespace after last element removal", async () => {
+        const { getEditor } = await setupHTMLBuilder(`
+            <section class="test_snippet" data-snippet="s_test" data-name="Test">
+                <p>Content to remove</p>
+            </section>
+        `);
+        const editor = getEditor();
+        const emptyStructureEl = editor.editable.querySelector(".oe_empty");
+        // The snippet is surrounded by new line text nodes.
+        expect(emptyStructureEl.childNodes.length).toBe(3);
+        await contains(":iframe .test_snippet").click();
+        await contains(".overlay .oe_snippet_remove").click();
+        expect(emptyStructureEl.childNodes.length).toBe(0);
+    });
 });
