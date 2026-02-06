@@ -110,14 +110,12 @@ class TestActivityRights(TestActivityCommon):
         self.env.invalidate_all()
         # check read access correctly uses '_mail_get_operation_for_mail_message_operation'
         admin_activities[0].with_user(self.user_employee).read(['summary'])
-        # TDE FIXME: does not check '_get_mail_message_access' :(
-        # admin_activities[1].with_user(self.user_employee).read(['summary'])
+        admin_activities[1].with_user(self.user_employee).read(['summary'])
 
         self.env.invalidate_all()
         # check search correctly uses '_get_mail_message_access'
-        _found = self.env['mail.activity'].with_user(self.user_employee).search([('res_model', '=', 'mail.test.access.custo')])
-        # TDE FIXME: does not check '_get_mail_message_access' :(
-        # self.assertEqual(found, admin_activities[:2] + emp_new_1 + emp_new_2, 'Should respect _get_mail_message_access, reading non locked records')
+        found = self.env['mail.activity'].with_user(self.user_employee).search([('res_model', '=', 'mail.test.access.custo')])
+        self.assertEqual(found, admin_activities[:2] + emp_new_1 + emp_new_2, 'Should respect _get_mail_message_access, reading non locked records')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_security_user_noaccess_automated(self):
@@ -892,14 +890,13 @@ class TestActivityMixin(TestActivityCommon):
         self.assertFalse(test_record.exists())
 
         self.env.invalidate_all()
-        self.assertFalse(
+        self.assertEqual(
             self.env['mail.activity'].with_user(self.user_admin).with_context(active_test=False).search(
-                [('active', '=', False)]),
-            'Should consider unassigned activity on removed record = no access'
+                [('active', '=', False)]), act,
+            'Should consider unassigned activity on removed record = access without crash'
         )
         self.env.invalidate_all()
-        with self.assertRaises(exceptions.AccessError):
-            _dummy = act.with_user(self.user_admin).read(['summary'])
+        _dummy = act.with_user(self.user_admin).read(['summary'])
 
 
 @tests.tagged("mail_activity", "post_install", "-at_install")
