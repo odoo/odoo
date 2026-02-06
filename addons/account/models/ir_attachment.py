@@ -32,7 +32,7 @@ class IrAttachment(models.Model):
         :returns:           A list with a dictionary.
         """
         try:
-            xml_tree = etree.fromstring(content)
+            xml_tree = etree.fromstring(content, parser=etree.XMLParser(remove_comments=True, resolve_entities=False))
         except Exception as e:
             _logger.info('Error when reading the xml file "%s": %s', filename, e)
             return []
