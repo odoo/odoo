@@ -4,13 +4,25 @@
     <t t-name="hr.VersionsTimeline" t-inherit="web.StatusBarField" t-inherit-mode="primary">
         <div t-ref="root" position="after">
             <div class="o_arrow_button_wrapper">
-                <button
-                    t-ref="datetime-picker-target-version"
-                    title="New Employee Record"
-                    t-on-click="onClickDateTimePickerBtn"
-                    class="btn btn-primary">
-                    <i class="fa fa-plus"/>
-                </button>
+                <Dropdown>
+                    <button t-attf-class="btn btn-primary o-dropdown-caret" data-bounce-button="" t-on-click="resetOptions">
+                        <i class="fa fa-plus"/>
+                    </button>
+                    <t t-set-slot="content"> 
+                        <div t-if="props.record.resId and props.record.data.contract_date_start">
+                            <DropdownItem tag="'button'" class="'btn btn-link p-0'" closingMode="'none'" t-on-click="onClickNewContractBtn">
+                                <div t-ref="datetime-picker-target-new-contract" class="px-3 py-2" t-att-data-tooltip="'Start new contract.'" t-att-class="this.state.openPicker == 'new' ? 'text-action' : ''">
+                                    New Contract
+                                </div>
+                            </DropdownItem>
+                        </div>
+                        <DropdownItem tag="'button'" class="'btn btn-link p-0'" closingMode="'none'" t-on-click.stop="() => this.togglePicker('amend', this.dateTimePickerAmendContract)">
+                            <div t-ref="datetime-picker-target-version" class="px-3 py-2" t-att-data-tooltip="'Create new employee record; copy dates automatically.'" t-att-class="this.state.openPicker == 'amend' ? 'text-action' : ''">
+                                Contract Amendment
+                            </div>
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
             </div>
         </div>
 

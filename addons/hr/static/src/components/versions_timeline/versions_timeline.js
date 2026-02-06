@@ -1,20 +1,28 @@
 import { onWillUpdateProps, useComponent, useState } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 import { Domain } from "@web/core/domain";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { serializeDate } from "@web/core/l10n/dates";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { getFieldDomain, useRecordObserver } from "@web/model/relational_model/utils";
 import { statusBarField, StatusBarField } from "@web/views/fields/statusbar/statusbar_field";
-import { _t } from "@web/core/l10n/translation";
 
 export class VersionsTimeline extends StatusBarField {
     static template = "hr.VersionsTimeline";
+    static components = {
+        Dropdown,
+        DropdownItem,
+    };
 
     /** @override **/
     setup() {
         super.setup();
         this.actionService = useService("action");
         this.orm = useService("orm");
+        this.state = useState({ openPicker: null });
 
         if (this.field.type === "many2one") {
             this.specialData = useSpecialDataNoCache((orm, props) => {
@@ -48,11 +56,36 @@ export class VersionsTimeline extends StatusBarField {
             });
         }
 
-        this.dateTimePicker = useDateTimePicker({
-            target: `datetime-picker-target-version`,
-            onApply: (date) => {
+        this.dateTimePickerNewContract = useDateTimePicker({
+            target: `datetime-picker-target-new-contract`,
+            onApply: async (date) => {
                 if (date) {
-                    this.createVersion(date);
+                    try {
+                        await this.tryAndCreateContract(serializeDate(date));
+                        this.togglePicker("new", this.dateTimePickerNewContract);
+                    } catch (error) {
+                        this.dateTimePickerNewContract.state.value = null;
+                        this.togglePicker("new", this.dateTimePickerNewContract);
+                        throw error;
+                    }
+                }
+            },
+            get pickerProps() {
+                return { type: "date" };
+            },
+        });
+
+        this.dateTimePickerAmendContract = useDateTimePicker({
+            target: `datetime-picker-target-version`,
+            onApply: async (date) => {
+                if (date) {
+                    try {
+                        await this.createVersion(date);
+                        this.togglePicker("amend", this.dateTimePickerAmendContract);
+                    } catch (error) {
+                        this.togglePicker("amend", this.dateTimePickerAmendContract);
+                        throw error;
+                    }
                 }
             },
             get pickerProps() {
@@ -61,41 +94,75 @@ export class VersionsTimeline extends StatusBarField {
         });
     }
 
+    togglePicker(pickerType, picker) {
+        if (this.state.openPicker === pickerType) {
+            picker.close();
+            this.state.openPicker = null;
+        } else {
+            if (this.state.openPicker === "new") {
+                this.dateTimePickerNewContract.close();
+            } else if (this.state.openPicker === "amend") {
+                this.dateTimePickerAmendContract.close();
+            }
+            picker.open();
+            this.state.openPicker = pickerType;
+        }
+    }
+
     displayContractLines() {
         return ["contract_type_id", "contract_date_start", "contract_date_end"].every(
             (fieldName) => fieldName in this.props.record.fields
         );
     }
 
-    async createVersion(date) {
-        await this.props.record.save();
-        const version_id = await this.orm.call("hr.employee", "create_version", [
-            this.props.record.evalContext.id,
-            { date_version: date },
-        ]);
+    resetOptions() {
+        this.state.openPicker = null;
+    }
 
-        await this.props.record.model.load({
+    async loadVersion(version_id) {
+        const { record } = this.props;
+        await record.save();
+        await record.model.load({
             context: {
-                ...this.props.record.model.env.searchModel.context,
+                ...record.model.env.searchModel.context,
                 version_id: version_id,
             },
         });
     }
 
-    onClickDateTimePickerBtn() {
-        this.dateTimePicker.open();
+    // Create contract
+    async tryAndCreateContract(date) {
+        await this.orm.call("hr.employee", "check_no_existing_contract", [
+            [this.props.record.resId],
+            date,
+        ]);
+        const contract = await this.orm.call("hr.employee", "create_contract", [
+            [this.props.record.resId],
+            date,
+        ]);
+        await this.loadVersion(contract);
+    }
+
+    async onClickNewContractBtn() {
+        const { record } = this.props;
+        await record.save();
+        await this.orm.call("hr.version", "check_contract_finished", [[record.data.version_id.id]]);
+        this.togglePicker("new", this.dateTimePickerNewContract);
+    }
+
+    // Amend contract
+    async createVersion(date) {
+        const version_id = await this.orm.call("hr.employee", "create_version", [
+            this.props.record.evalContext.id,
+            { date_version: date },
+        ]);
+
+        await this.loadVersion(version_id);
     }
 
     /** @override **/
     async selectItem(item) {
-        const { record } = this.props;
-        await record.save();
-        await this.props.record.model.load({
-            context: {
-                ...this.props.record.model.env.searchModel.context,
-                version_id: item.value,
-            },
-        });
+        this.loadVersion(item.value);
     }
 
     /** @override **/
