@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_tw_edi_ecpay_pos.EcpayInfoPopup">
+        <Dialog title.translate="Ecpay Invoicing Information" size="'md'">
+            <div id="ecpay_info_screen" class="container">
+                <div id="ecpay_invoice_info">
+                    <div class="row">
+                        <div id="ecpay_invoice_donate" class="ms-3 form-check form-switch">
+                            <label for="ecpay_invoice_donate_checkbox" class="form-check-label me-2">Donate</label>
+                            <input
+                                t-att-checked="this.state.isDonate"
+                                t-on-change="(ev) => this.state.isDonate = ev.target.checked"
+                                type="checkbox"
+                                id="ecpay_invoice_donate_checkbox"
+                                name="l10n_tw_edi_is_donate"
+                                class="form-check-input"
+                                role="switch"
+                            />
+                        </div>
+                    </div>
+                    <div id="ecpay_carrier_type_group" t-if="this.showCarrierType">
+                        <div class="row">
+                            <div id="carrier_type_selection" class="mt-3">
+                                <label for="l10n_tw_edi_carrier_type" class="form-label">Carrier</label>
+                                <select
+                                    t-att-value="this.state.carrierType"
+                                    t-on-change="(ev) => this.state.carrierType = ev.target.value"
+                                    id="l10n_tw_edi_carrier_type"
+                                    name="l10n_tw_edi_carrier_type"
+                                    class="form-select"
+                                >
+                                    <t t-foreach="Object.entries(this.carrierTypes)" t-as="carrierType" t-key="carrierType[0]">
+                                        <option t-att-value="carrierType[0]" t-out="carrierType[1]"/>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="ecpay_invoice_carrier_number" t-if="this.showCarrierNumber" class="row">
+                            <div class="mt-3">
+                                <label for="l10n_tw_edi_carrier_number" class="form-label">Carrier Number</label>
+                                <div class="input-group">
+                                    <input
+                                        t-att-value="this.state.carrierNumber"
+                                        t-on-input="(ev) => this.state.carrierNumber = ev.target.value"
+                                        id="l10n_tw_edi_carrier_number"
+                                        maxlength="20"
+                                        name="l10n_tw_edi_carrier_number"
+                                        type="text"
+                                        t-att-disabled="this.showReEnterCarrierNumber"
+                                        t-att-placeholder="this.carrierNumberPlaceholder"
+                                        class="form-control"
+                                    />
+                                    <button type="button" id="validate_carrier_number" class="btn btn-outline-primary btn-sm" t-if="this.showValidateCarrierNumber" t-on-click="this._onClickValidateCarrierNumber" t-att-disabled="this.state.isLoading">
+                                        Validate Carrier Number
+                                    </button>
+                                    <i t-if="this.state.isLoading" class="fa fa-spin fa-spinner me-1"/>
+                                    <button type="button" id="reenter_carrier_number" class="btn btn-outline-primary btn-sm" t-if="this.showReEnterCarrierNumber" t-on-click="() => this.state.validCarrierNumber = false">
+                                        ReEnter Carrier Number
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="ecpay_invoice_carrier_number_2" t-if="this.showCarrierNumber2" class="row">
+                            <div class="mt-3">
+                                <label for="l10n_tw_edi_carrier_number_2" class="form-label">Carrier Number 2</label>
+                                <div class="input-group">
+                                    <input
+                                        t-att-value="this.state.carrierNumber2"
+                                        t-on-input="(ev) => this.state.carrierNumber2 = ev.target.value"
+                                        id="l10n_tw_edi_carrier_number_2"
+                                        maxlength="20"
+                                        name="l10n_tw_edi_carrier_number_2"
+                                        type="text"
+                                        placeholder="Card visible code"
+                                        class="form-control"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="ecpay_invoice_love_code" t-if="!this.showCarrierType" class="row">
+                        <div class="mt-3">
+                            <label for="l10n_tw_edi_love_code" class="form-label">Love Code</label>
+                            <div class="input-group">
+                                <input
+                                    t-att-value="this.state.loveCode"
+                                    t-on-input="(ev) => this.state.loveCode = ev.target.value"
+                                    id="l10n_tw_edi_love_code"
+                                    maxlength="7"
+                                    name="l10n_tw_edi_love_code"
+                                    type="text"
+                                    class="form-control"
+                                    t-att-disabled="this.showReEnterLoveCode"
+                                    placeholder="Love code format is 3-7 digits"/>
+                                <button type="button" id="validate_love_code" class="btn btn-outline-primary btn-sm" t-if="this.showValidateLoveCode" t-on-click="this._onClickValidateLoveCode" t-att-disabled="this.state.isLoading">
+                                    Validate Love Code
+                                </button>
+                                <i t-if="this.state.isLoading" class="fa fa-spin fa-spinner me-1"/>
+                                <button type="button" id="reenter_love_code" class="btn btn-outline-primary btn-sm" t-if="this.showReEnterLoveCode" t-on-click="() => this.state.validLoveCode = false">
+                                    ReEnter Love Code
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="this.confirm">Ok</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
