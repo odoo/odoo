@@ -97,8 +97,9 @@ export class OptionsContainer extends BaseOptionComponent {
         this.props.foldedState.folded = !this.props.foldedState.folded;
     }
 
-    selectElement() {
+    onDoubleClick() {
         this.dependencies.builderOptions.updateContainers(this.props.editingElement);
+        document.getSelection().empty();
     }
 
     toggleOverlayPreview(el, show) {

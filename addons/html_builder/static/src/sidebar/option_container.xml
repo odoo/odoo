@@ -14,7 +14,7 @@
                 }"
                 t-att-role="isActionable ? 'button' : 'heading'"
                 t-on-click="toggleFold"
-                t-on-dblclick="selectElement"
+                t-on-dblclick="onDoubleClick"
             >
                 <i class="fa fa-fw mx-1" role="img" t-att-class="this.props.foldedState.folded ? 'fa-caret-right' : 'fa-caret-down'"></i>
                 <t t-out="title"/>
