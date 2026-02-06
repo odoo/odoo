@@ -1,6 +1,7 @@
 from odoo import Command
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo.tests import tagged
+from odoo import fields
 
 
 @tagged('post_install', '-at_install')
@@ -449,3 +450,64 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             'pos_categ_ids': [Command.set(self.pos_desk_misc_test.ids)],
         })
         self.start_pos_tour('test_cash_rounding_up_with_change')
+
+    def test_no_rounding_on_card_credit_note(self):
+        """
+        Tests that when we revert an invoice that was entirely paid by card, the rounding is
+        not applied if the only_round_cash_method is activated
+        """
+        self.main_pos_config.write({
+            'rounding_method': self.cash_rounding_add_invoice_line.id,
+            'cash_rounding': True,
+            'only_round_cash_method': True,
+        })
+        product = self.env['product.product'].create({
+            'name': "product_a",
+            'available_in_pos': True,
+            'list_price': 13.31,
+            'taxes_id': False,
+            'pos_categ_ids': [Command.set(self.pos_desk_misc_test.ids)],
+        })
+        self.main_pos_config.open_ui()
+        session = self.main_pos_config.current_session_id
+
+        order_data = {
+            'amount_paid': 13.31,
+            'amount_return': 0,
+            'amount_tax': 0,
+            'amount_total': 13.31,
+            'fiscal_position_id': False,
+            'lines': [Command.create({
+                'discount': 0,
+                'id': 1,
+                'pack_lot_ids': [],
+                'price_unit': 13.31,
+                'product_id': product.id,
+                'price_subtotal': 13.31,
+                'price_subtotal_incl': 13.31,
+                'qty': 1,
+                'tax_ids': [(6, 0, [])],
+            })],
+            'name': 'Order rounding test',
+            'partner_id': self.partner_a.id,
+            'session_id': session.id,
+            'sequence_number': 1,
+            'payment_ids': [Command.create({
+                'amount': 13.31,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.bank_payment_method.id,
+            })],
+            'uuid': '12345-123-1234',
+            'last_order_preparation_change': '{}',
+            'user_id': self.env.uid,
+            'to_invoice': True
+        }
+
+        order_id = self.env['pos.order'].sync_from_ui([order_data])['pos.order'][0]['id']
+        order = self.env['pos.order'].browse(order_id)
+        session.action_pos_session_closing_control()
+        action = order._generate_pos_order_invoice()
+        invoice = self.env['account.move'].browse(action['res_id'])
+        reversal = invoice._reverse_moves(cancel=False)
+        rounding_lines = reversal.line_ids.filtered(lambda l: l.name == 'cash_rounding_add_invoice_line')
+        self.assertEqual(rounding_lines.balance, 0.0)
