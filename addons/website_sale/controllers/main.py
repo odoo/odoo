@@ -1035,8 +1035,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
         request.pricelist = pricelist.sudo()
 
         if order_sudo := request.cart:
-            order_sudo.pricelist_id = pricelist
-            order_sudo._recompute_prices()
+            pl_before = order_sudo.pricelist_id
+            order_sudo._compute_pricelist_id()
+            if order_sudo.pricelist_id != pl_before:
+                order_sudo._recompute_prices()
 
     # ------------------------------------------------------
     # Checkout
