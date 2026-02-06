@@ -611,8 +611,9 @@ export class ProductPage extends Interaction {
 
         if (contactUsButton) {
             const contactUsButtonLink = contactUsButton.querySelector('a');
-            const url = contactUsButtonLink.getAttribute('data-url');
-            contactUsButtonLink.setAttribute('href', `${url}?subject=${combination.display_name}`);
+            const url = new URL(contactUsButtonLink.getAttribute('data-url'), window.location.href);
+            url.searchParams.set('subject', combination.display_name);
+            contactUsButtonLink.setAttribute('href', url.toString());
         }
 
         const price = parent.querySelector('.oe_price')?.querySelector('.oe_currency_value');
