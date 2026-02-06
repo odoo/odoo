@@ -15,6 +15,7 @@
     ],
     'auto_install': ['account'],
     'data': [
+        'data/account_tax_report_data.xml',
         'data/account_chart_template_data.xml',
         'data/l10n_latam.identification.type.csv',
     ],

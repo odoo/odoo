@@ -11,3 +11,4 @@ from . import l10n_co_edi_document_type
 from . import l10n_co_edi_payment_means
 from . import account_edi_xml_ubl_co
 from . import l10n_co_edi_dian_client
+from . import l10n_co_withholding_cert

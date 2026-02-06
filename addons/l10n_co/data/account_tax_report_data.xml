@@ -1,0 +1,669 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+
+    <!-- ===================================================================
+         Formulario 300 — Declaración de IVA (IVA Return)
+         Colombia tax report variant of generic_tax_report.
+         Aligned with DIAN Formulario 300 casilla numbers.
+         =================================================================== -->
+    <record id="tax_report_co_iva" model="account.report">
+        <field name="name">IVA Tax Report (Formulario 300)</field>
+        <field name="name@es_419">Declaración de IVA (Formulario 300)</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.co"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_co_iva_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@es_419">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+
+            <!-- ======================== I. INGRESOS (Income) ======================== -->
+            <record id="co_f300_section_income" model="account.report.line">
+                <field name="name">I. Income</field>
+                <field name="name@es_419">I. Ingresos Brutos</field>
+                <field name="aggregation_formula">CO_F300_INC_TOTAL.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+
+                    <!-- 27. Sales subject to IVA at general rate (19%) -->
+                    <record id="co_f300_sale_19_base" model="account.report.line">
+                        <field name="name">[27] Sales taxed at general rate (19%)</field>
+                        <field name="name@es_419">[27] Ventas gravadas a tarifa general (19%)</field>
+                        <field name="code">CO_F300_SALE_19</field>
+                        <field name="expression_ids">
+                            <record id="co_f300_sale_19_base_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-IVA_19_SALE_BASE</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- 28. Sales subject to IVA at 5% -->
+                    <record id="co_f300_sale_5_base" model="account.report.line">
+                        <field name="name">[28] Sales taxed at 5%</field>
+                        <field name="name@es_419">[28] Ventas gravadas a tarifa del 5%</field>
+                        <field name="code">CO_F300_SALE_5</field>
+                        <field name="expression_ids">
+                            <record id="co_f300_sale_5_base_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-IVA_5_SALE_BASE</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- 29. Exempt sales -->
+                    <record id="co_f300_sale_exempt" model="account.report.line">
+                        <field name="name">[29] Exempt sales</field>
+                        <field name="name@es_419">[29] Ventas exentas de IVA</field>
+                        <field name="code">CO_F300_SALE_EXEMPT</field>
+                        <field name="expression_ids">
+                            <record id="co_f300_sale_exempt_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-IVA_EXEMPT_SALE</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- 30. Excluded sales -->
+                    <record id="co_f300_sale_excluded" model="account.report.line">
+                        <field name="name">[30] Excluded sales</field>
+                        <field name="name@es_419">[30] Ventas excluidas de IVA</field>
+                        <field name="code">CO_F300_SALE_EXCL</field>
+                        <field name="expression_ids">
+                            <record id="co_f300_sale_excluded_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-IVA_EXCL_SALE</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- Total income -->
+                    <record id="co_f300_income_total" model="account.report.line">
+                        <field name="name">[32] Total gross income</field>
+                        <field name="name@es_419">[32] Total ingresos brutos</field>
+                        <field name="code">CO_F300_INC_TOTAL</field>
+                        <field name="aggregation_formula">CO_F300_SALE_19.balance + CO_F300_SALE_5.balance + CO_F300_SALE_EXEMPT.balance + CO_F300_SALE_EXCL.balance</field>
+                    </record>
+
+                </field>
+            </record>
+
+            <!-- ======================== II. IVA GENERADO (IVA Generated) ======================== -->
+            <record id="co_f300_section_iva_gen" model="account.report.line">
+                <field name="name">II. IVA Generated</field>
+                <field name="name@es_419">II. Impuesto Generado</field>
+                <field name="aggregation_formula">CO_F300_IVA_GEN_TOTAL.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+
+                    <!-- 33. IVA generated at 19% -->
+                    <record id="co_f300_iva_gen_19" model="account.report.line">
+                        <field name="name">[33] IVA generated at general rate (19%)</field>
+                        <field name="name@es_419">[33] IVA generado a tarifa general (19%)</field>
+                        <field name="code">CO_F300_IVA_GEN_19</field>
+                        <field name="expression_ids">
+                            <record id="co_f300_iva_gen_19_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-IVA_19_SALE</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- 34. IVA generated at 5% -->
+                    <record id="co_f300_iva_gen_5" model="account.report.line">
+                        <field name="name">[34] IVA generated at 5%</field>
+                        <field name="name@es_419">[34] IVA generado a tarifa del 5%</field>
+                        <field name="code">CO_F300_IVA_GEN_5</field>
+                        <field name="expression_ids">
+                            <record id="co_f300_iva_gen_5_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-IVA_5_SALE</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- 35. INC generated -->
+                    <record id="co_f300_inc_gen" model="account.report.line">
+                        <field name="name">[35] National consumption tax (INC) generated</field>
+                        <field name="name@es_419">[35] Impuesto nacional al consumo (INC) generado</field>
+                        <field name="code">CO_F300_INC_GEN</field>
+                        <field name="expression_ids">
+                            <record id="co_f300_inc_gen_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-INC_SALE</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- Total IVA generated -->
+                    <record id="co_f300_iva_gen_total" model="account.report.line">
+                        <field name="name">[38] Total IVA generated</field>
+                        <field name="name@es_419">[38] Total impuesto generado</field>
+                        <field name="code">CO_F300_IVA_GEN_TOTAL</field>
+                        <field name="aggregation_formula">CO_F300_IVA_GEN_19.balance + CO_F300_IVA_GEN_5.balance + CO_F300_INC_GEN.balance</field>
+                    </record>
+
+                </field>
+            </record>
+
+            <!-- ======================== III. IVA DESCONTABLE (Deductible IVA) ======================== -->
+            <record id="co_f300_section_iva_ded" model="account.report.line">
+                <field name="name">III. Deductible IVA</field>
+                <field name="name@es_419">III. IVA Descontable</field>
+                <field name="aggregation_formula">CO_F300_IVA_DED_TOTAL.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+
+                    <!-- 39. Deductible IVA on purchases at 19% -->
+                    <record id="co_f300_iva_ded_19" model="account.report.line">
+                        <field name="name">[39] Deductible IVA on purchases/services at 19%</field>
+                        <field name="name@es_419">[39] IVA descontable compras y servicios gravados 19%</field>
+                        <field name="code">CO_F300_IVA_DED_19</field>
+                        <field name="expression_ids">
+                            <record id="co_f300_iva_ded_19_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">IVA_19_PURCH</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- 40. Deductible IVA on purchases at 5% -->
+                    <record id="co_f300_iva_ded_5" model="account.report.line">
+                        <field name="name">[40] Deductible IVA on purchases/services at 5%</field>
+                        <field name="name@es_419">[40] IVA descontable compras y servicios gravados 5%</field>
+                        <field name="code">CO_F300_IVA_DED_5</field>
+                        <field name="expression_ids">
+                            <record id="co_f300_iva_ded_5_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">IVA_5_PURCH</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- 41. IVA on imports -->
+                    <record id="co_f300_iva_imports" model="account.report.line">
+                        <field name="name">[41] IVA paid on imports</field>
+                        <field name="name@es_419">[41] IVA pagado en importaciones</field>
+                        <field name="code">CO_F300_IVA_IMP</field>
+                        <field name="expression_ids">
+                            <record id="co_f300_iva_imports_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">IVA_IMP_PURCH</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- 42. INC on purchases -->
+                    <record id="co_f300_inc_ded" model="account.report.line">
+                        <field name="name">[42] INC paid on purchases</field>
+                        <field name="name@es_419">[42] INC pagado en compras</field>
+                        <field name="code">CO_F300_INC_DED</field>
+                        <field name="expression_ids">
+                            <record id="co_f300_inc_ded_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">INC_PURCH</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- Total deductible IVA -->
+                    <record id="co_f300_iva_ded_total" model="account.report.line">
+                        <field name="name">[46] Total deductible IVA</field>
+                        <field name="name@es_419">[46] Total IVA descontable</field>
+                        <field name="code">CO_F300_IVA_DED_TOTAL</field>
+                        <field name="aggregation_formula">CO_F300_IVA_DED_19.balance + CO_F300_IVA_DED_5.balance + CO_F300_IVA_IMP.balance + CO_F300_INC_DED.balance</field>
+                    </record>
+
+                </field>
+            </record>
+
+            <!-- ======================== IV. SALDO (Balance) ======================== -->
+            <record id="co_f300_section_balance" model="account.report.line">
+                <field name="name">IV. IVA Balance</field>
+                <field name="name@es_419">IV. Saldo</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+
+                    <!-- 47. Net IVA payable (generated - deductible) -->
+                    <record id="co_f300_net_iva" model="account.report.line">
+                        <field name="name">[47] Net IVA payable / (in favor)</field>
+                        <field name="name@es_419">[47] Saldo IVA a pagar / (a favor)</field>
+                        <field name="code">CO_F300_NET_IVA</field>
+                        <field name="aggregation_formula">CO_F300_IVA_GEN_TOTAL.balance - CO_F300_IVA_DED_TOTAL.balance</field>
+                    </record>
+
+                </field>
+            </record>
+
+        </field>
+    </record>
+
+
+    <!-- ===================================================================
+         Formulario 350 — Declaración de Retención en la Fuente
+         (Withholding Return)
+         =================================================================== -->
+    <record id="tax_report_co_withholding" model="account.report">
+        <field name="name">Withholding Report (Formulario 350)</field>
+        <field name="name@es_419">Retención en la Fuente (Formulario 350)</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.co"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_co_wh_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@es_419">Saldo</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+
+            <!-- ======================== RteFte — Withholding on Income ======================== -->
+            <record id="co_f350_section_rtefte" model="account.report.line">
+                <field name="name">Withholding on Income (RteFte)</field>
+                <field name="name@es_419">Retenciones en la Fuente por Renta</field>
+                <field name="aggregation_formula">CO_F350_RTEFTE_TOTAL.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+
+                    <!-- 27. Fees (Honorarios) -->
+                    <record id="co_f350_rtefte_hon_base" model="account.report.line">
+                        <field name="name">[27] Fees — base</field>
+                        <field name="name@es_419">[27] Honorarios — base</field>
+                        <field name="code">CO_F350_HON_BASE</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rtefte_hon_base_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEFTE_HON_BASE</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="co_f350_rtefte_hon" model="account.report.line">
+                        <field name="name">[27] Fees — withholding</field>
+                        <field name="name@es_419">[27] Honorarios — retención</field>
+                        <field name="code">CO_F350_HON</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rtefte_hon_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEFTE_HON</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- 28. Commissions (Comisiones) -->
+                    <record id="co_f350_rtefte_com_base" model="account.report.line">
+                        <field name="name">[28] Commissions — base</field>
+                        <field name="name@es_419">[28] Comisiones — base</field>
+                        <field name="code">CO_F350_COM_BASE</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rtefte_com_base_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEFTE_COM_BASE</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="co_f350_rtefte_com" model="account.report.line">
+                        <field name="name">[28] Commissions — withholding</field>
+                        <field name="name@es_419">[28] Comisiones — retención</field>
+                        <field name="code">CO_F350_COM</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rtefte_com_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEFTE_COM</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- 29. Services (Servicios) -->
+                    <record id="co_f350_rtefte_serv_base" model="account.report.line">
+                        <field name="name">[29] Services — base</field>
+                        <field name="name@es_419">[29] Servicios — base</field>
+                        <field name="code">CO_F350_SERV_BASE</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rtefte_serv_base_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEFTE_SERV_BASE</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="co_f350_rtefte_serv" model="account.report.line">
+                        <field name="name">[29] Services — withholding</field>
+                        <field name="name@es_419">[29] Servicios — retención</field>
+                        <field name="code">CO_F350_SERV</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rtefte_serv_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEFTE_SERV</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- 30. Purchases (Compras) -->
+                    <record id="co_f350_rtefte_compras_base" model="account.report.line">
+                        <field name="name">[30] Purchases — base</field>
+                        <field name="name@es_419">[30] Compras — base</field>
+                        <field name="code">CO_F350_COMPRAS_BASE</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rtefte_compras_base_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEFTE_COMPRAS_BASE</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="co_f350_rtefte_compras" model="account.report.line">
+                        <field name="name">[30] Purchases — withholding</field>
+                        <field name="name@es_419">[30] Compras — retención</field>
+                        <field name="code">CO_F350_COMPRAS</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rtefte_compras_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEFTE_COMPRAS</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- 31. Leases (Arrendamientos) -->
+                    <record id="co_f350_rtefte_arr_base" model="account.report.line">
+                        <field name="name">[31] Leases — base</field>
+                        <field name="name@es_419">[31] Arrendamientos — base</field>
+                        <field name="code">CO_F350_ARR_BASE</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rtefte_arr_base_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEFTE_ARR_BASE</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="co_f350_rtefte_arr" model="account.report.line">
+                        <field name="name">[31] Leases — withholding</field>
+                        <field name="name@es_419">[31] Arrendamientos — retención</field>
+                        <field name="code">CO_F350_ARR</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rtefte_arr_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEFTE_ARR</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- 32. Financial income (Rendimientos financieros) -->
+                    <record id="co_f350_rtefte_fin_base" model="account.report.line">
+                        <field name="name">[32] Financial income — base</field>
+                        <field name="name@es_419">[32] Rendimientos financieros — base</field>
+                        <field name="code">CO_F350_FIN_BASE</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rtefte_fin_base_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEFTE_REND_FIN_BASE</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="co_f350_rtefte_fin" model="account.report.line">
+                        <field name="name">[32] Financial income — withholding</field>
+                        <field name="name@es_419">[32] Rendimientos financieros — retención</field>
+                        <field name="code">CO_F350_FIN</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rtefte_fin_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEFTE_REND_FIN</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- 33. Payments abroad (Pagos al exterior) -->
+                    <record id="co_f350_rtefte_ext_base" model="account.report.line">
+                        <field name="name">[33] Payments abroad — base</field>
+                        <field name="name@es_419">[33] Pagos al exterior — base</field>
+                        <field name="code">CO_F350_EXT_BASE</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rtefte_ext_base_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEFTE_EXT_BASE</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="co_f350_rtefte_ext" model="account.report.line">
+                        <field name="name">[33] Payments abroad — withholding</field>
+                        <field name="name@es_419">[33] Pagos al exterior — retención</field>
+                        <field name="code">CO_F350_EXT</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rtefte_ext_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEFTE_EXT</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- Total RteFte -->
+                    <record id="co_f350_rtefte_total" model="account.report.line">
+                        <field name="name">[40] Total withholding on income (RteFte)</field>
+                        <field name="name@es_419">[40] Total retenciones en la fuente por renta</field>
+                        <field name="code">CO_F350_RTEFTE_TOTAL</field>
+                        <field name="aggregation_formula">CO_F350_HON.balance + CO_F350_COM.balance + CO_F350_SERV.balance + CO_F350_COMPRAS.balance + CO_F350_ARR.balance + CO_F350_FIN.balance + CO_F350_EXT.balance</field>
+                    </record>
+
+                </field>
+            </record>
+
+            <!-- ======================== RteIVA — VAT Withholding ======================== -->
+            <record id="co_f350_section_rteiva" model="account.report.line">
+                <field name="name">VAT Withholding (RteIVA)</field>
+                <field name="name@es_419">Retenciones de IVA</field>
+                <field name="aggregation_formula">CO_F350_RTEIVA_TOTAL.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+
+                    <!-- 42. RteIVA practiced (on purchases) -->
+                    <record id="co_f350_rteiva_purch_base" model="account.report.line">
+                        <field name="name">[42] VAT withholding practiced — base</field>
+                        <field name="name@es_419">[42] RteIVA practicada — base</field>
+                        <field name="code">CO_F350_RTEIVA_P_BASE</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rteiva_purch_base_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEIVA_PURCH_BASE</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="co_f350_rteiva_purch" model="account.report.line">
+                        <field name="name">[42] VAT withholding practiced — amount</field>
+                        <field name="name@es_419">[42] RteIVA practicada — valor</field>
+                        <field name="code">CO_F350_RTEIVA_P</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rteiva_purch_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEIVA_PURCH</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- 44. RteIVA suffered (on sales) -->
+                    <record id="co_f350_rteiva_sale_base" model="account.report.line">
+                        <field name="name">[44] VAT withholding suffered — base</field>
+                        <field name="name@es_419">[44] RteIVA sufrida — base</field>
+                        <field name="code">CO_F350_RTEIVA_S_BASE</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rteiva_sale_base_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEIVA_SALE_BASE</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="co_f350_rteiva_sale" model="account.report.line">
+                        <field name="name">[44] VAT withholding suffered — amount</field>
+                        <field name="name@es_419">[44] RteIVA sufrida — valor</field>
+                        <field name="code">CO_F350_RTEIVA_S</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rteiva_sale_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEIVA_SALE</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- Total RteIVA -->
+                    <record id="co_f350_rteiva_total" model="account.report.line">
+                        <field name="name">[46] Total VAT withholding</field>
+                        <field name="name@es_419">[46] Total retenciones de IVA</field>
+                        <field name="code">CO_F350_RTEIVA_TOTAL</field>
+                        <field name="aggregation_formula">CO_F350_RTEIVA_P.balance + CO_F350_RTEIVA_S.balance</field>
+                    </record>
+
+                </field>
+            </record>
+
+            <!-- ======================== RteICA — Municipal Industry & Commerce Withholding ======================== -->
+            <record id="co_f350_section_rteica" model="account.report.line">
+                <field name="name">Municipal Withholding (RteICA)</field>
+                <field name="name@es_419">Retenciones de ICA</field>
+                <field name="aggregation_formula">CO_F350_RTEICA_TOTAL.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+
+                    <!-- 47. RteICA practiced (on purchases) -->
+                    <record id="co_f350_rteica_purch_base" model="account.report.line">
+                        <field name="name">[47] ICA withholding practiced — base</field>
+                        <field name="name@es_419">[47] RteICA practicada — base</field>
+                        <field name="code">CO_F350_RTEICA_P_BASE</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rteica_purch_base_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEICA_PURCH_BASE</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="co_f350_rteica_purch" model="account.report.line">
+                        <field name="name">[47] ICA withholding practiced — amount</field>
+                        <field name="name@es_419">[47] RteICA practicada — valor</field>
+                        <field name="code">CO_F350_RTEICA_P</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rteica_purch_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEICA_PURCH</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- 48. RteICA suffered (on sales) -->
+                    <record id="co_f350_rteica_sale_base" model="account.report.line">
+                        <field name="name">[48] ICA withholding suffered — base</field>
+                        <field name="name@es_419">[48] RteICA sufrida — base</field>
+                        <field name="code">CO_F350_RTEICA_S_BASE</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rteica_sale_base_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEICA_SALE_BASE</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="co_f350_rteica_sale" model="account.report.line">
+                        <field name="name">[48] ICA withholding suffered — amount</field>
+                        <field name="name@es_419">[48] RteICA sufrida — valor</field>
+                        <field name="code">CO_F350_RTEICA_S</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rteica_sale_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEICA_SALE</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <!-- Total RteICA -->
+                    <record id="co_f350_rteica_total" model="account.report.line">
+                        <field name="name">[49] Total municipal withholding</field>
+                        <field name="name@es_419">[49] Total retenciones de ICA</field>
+                        <field name="code">CO_F350_RTEICA_TOTAL</field>
+                        <field name="aggregation_formula">CO_F350_RTEICA_P.balance + CO_F350_RTEICA_S.balance</field>
+                    </record>
+
+                </field>
+            </record>
+
+            <!-- ======================== RteFte on Sales (Suffered) ======================== -->
+            <record id="co_f350_section_rtefte_sale" model="account.report.line">
+                <field name="name">Withholding Suffered on Sales</field>
+                <field name="name@es_419">Retenciones Sufridas en Ventas</field>
+                <field name="aggregation_formula">CO_F350_RTEFTE_SALE.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+
+                    <record id="co_f350_rtefte_sale_base" model="account.report.line">
+                        <field name="name">RteFte suffered on sales — base</field>
+                        <field name="name@es_419">RteFte sufrida en ventas — base</field>
+                        <field name="code">CO_F350_RTEFTE_SALE_BASE</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rtefte_sale_base_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEFTE_SALE_BASE</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="co_f350_rtefte_sale" model="account.report.line">
+                        <field name="name">RteFte suffered on sales — amount</field>
+                        <field name="name@es_419">RteFte sufrida en ventas — valor</field>
+                        <field name="code">CO_F350_RTEFTE_SALE</field>
+                        <field name="expression_ids">
+                            <record id="co_f350_rtefte_sale_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">RTEFTE_SALE</field>
+                            </record>
+                        </field>
+                    </record>
+
+                </field>
+            </record>
+
+            <!-- ======================== TOTAL ======================== -->
+            <record id="co_f350_total" model="account.report.line">
+                <field name="name">[53] Total withholdings for the period</field>
+                <field name="name@es_419">[53] Total retenciones del periodo</field>
+                <field name="code">CO_F350_TOTAL</field>
+                <field name="aggregation_formula">CO_F350_RTEFTE_TOTAL.balance + CO_F350_RTEIVA_TOTAL.balance + CO_F350_RTEICA_TOTAL.balance</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+
+        </field>
+    </record>
+
+</odoo>

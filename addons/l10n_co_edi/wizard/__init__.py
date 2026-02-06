@@ -1,5 +1,3 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models
-from . import report
-from . import wizard
+from . import l10n_co_withholding_cert_wizard

@@ -45,6 +45,8 @@ Features:
         'views/account_journal_views.xml',
         'views/account_move_views.xml',
         'views/l10n_co_edi_uvt_views.xml',
+        'views/l10n_co_withholding_cert_views.xml',
+        'report/l10n_co_withholding_cert_report.xml',
     ],
     'installable': True,
     'auto_install': ['l10n_co', 'account_edi'],

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- PDF Report Action -->
+    <record id="action_report_withholding_cert" model="ir.actions.report">
+        <field name="name">Withholding Certificate</field>
+        <field name="model">l10n_co.withholding.certificate</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_co_edi.report_withholding_certificate</field>
+        <field name="report_file">l10n_co_edi.report_withholding_certificate</field>
+        <field name="print_report_name">'Withholding_Certificate_%s_%s_%s' % (object.partner_id.name, object.date_from, object.date_to)</field>
+        <field name="binding_model_id" ref="model_l10n_co_withholding_certificate"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- QWeb Template -->
+    <template id="report_withholding_certificate">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center">
+                            <span t-if="o.certificate_type == 'rtefte'">
+                                Certificado de Retención en la Fuente
+                            </span>
+                            <span t-elif="o.certificate_type == 'rteiva'">
+                                Certificado de Retención de IVA
+                            </span>
+                            <span t-elif="o.certificate_type == 'rteica'">
+                                Certificado de Retención de ICA
+                            </span>
+                            <span t-else="">
+                                Certificado de Retenciones
+                            </span>
+                        </h2>
+                        <p class="text-center text-muted">
+                            Art. 381 Estatuto Tributario
+                        </p>
+
+                        <div class="row mt-4 mb-4">
+                            <div class="col-6">
+                                <strong>Agente de Retención:</strong><br/>
+                                <span t-field="o.company_id.name"/><br/>
+                                NIT: <span t-field="o.company_id.vat"/><br/>
+                                <span t-field="o.company_id.street"/><br/>
+                                <span t-field="o.company_id.city"/>
+                                <t t-if="o.company_id.state_id">
+                                    , <span t-field="o.company_id.state_id.name"/>
+                                </t>
+                            </div>
+                            <div class="col-6">
+                                <strong>Sujeto de Retención:</strong><br/>
+                                <span t-field="o.partner_id.name"/><br/>
+                                <t t-if="o.partner_id.vat">
+                                    NIT/CC: <span t-field="o.partner_id.vat"/><br/>
+                                </t>
+                                <t t-if="o.partner_id.street">
+                                    <span t-field="o.partner_id.street"/><br/>
+                                </t>
+                                <t t-if="o.partner_id.city">
+                                    <span t-field="o.partner_id.city"/>
+                                    <t t-if="o.partner_id.state_id">
+                                        , <span t-field="o.partner_id.state_id.name"/>
+                                    </t>
+                                </t>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <strong>Periodo:</strong>
+                                <span t-field="o.date_from"/> —
+                                <span t-field="o.date_to"/>
+                            </div>
+                        </div>
+
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Concepto</th>
+                                    <th class="text-center">Tarifa (%)</th>
+                                    <th class="text-end">Base</th>
+                                    <th class="text-end">Retención</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.line_ids" t-as="line">
+                                    <tr>
+                                        <td><span t-field="line.concept"/></td>
+                                        <td class="text-center">
+                                            <span t-field="line.rate"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <span t-field="line.base_amount"
+                                                  t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                        <td class="text-end">
+                                            <span t-field="line.withheld_amount"
+                                                  t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                            <tfoot>
+                                <tr class="fw-bold">
+                                    <td colspan="2">Total</td>
+                                    <td class="text-end">
+                                        <span t-field="o.total_base"
+                                              t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="o.total_withheld"
+                                              t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <t t-if="o.notes">
+                            <div class="mt-4">
+                                <strong>Observaciones:</strong><br/>
+                                <span t-field="o.notes"/>
+                            </div>
+                        </t>
+
+                        <div class="mt-5 row">
+                            <div class="col-6 text-center">
+                                <div style="border-top: 1px solid #000; display: inline-block; min-width: 200px; padding-top: 5px;">
+                                    Firma del Agente de Retención
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

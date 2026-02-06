@@ -3,3 +3,4 @@
 from . import test_cufe_cude
 from . import test_uvt
 from . import test_xml_generation
+from . import test_tax_reports

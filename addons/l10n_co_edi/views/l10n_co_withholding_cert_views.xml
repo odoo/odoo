@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ==================== Certificate Form ==================== -->
+    <record id="l10n_co_withholding_cert_form" model="ir.ui.view">
+        <field name="name">l10n_co.withholding.certificate.form</field>
+        <field name="model">l10n_co.withholding.certificate</field>
+        <field name="arch" type="xml">
+            <form string="Withholding Certificate">
+                <header>
+                    <button name="action_compute_lines" type="object"
+                            string="Compute Lines" invisible="state != 'draft'"
+                            class="oe_highlight"/>
+                    <button name="action_confirm" type="object"
+                            string="Confirm" invisible="state != 'draft'"
+                            class="oe_highlight"/>
+                    <button name="action_deliver" type="object"
+                            string="Mark as Delivered" invisible="state != 'confirmed'"/>
+                    <button name="action_reset_draft" type="object"
+                            string="Reset to Draft" invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed,delivered"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="certificate_type"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="delivery_date" invisible="state != 'delivered'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Withholding Lines" name="lines">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="concept"/>
+                                    <field name="tax_id"/>
+                                    <field name="rate"/>
+                                    <field name="base_amount"/>
+                                    <field name="withheld_amount"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="total_base"/>
+                                <field name="total_withheld" class="oe_subtotal_footer_separator"/>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes" placeholder="Additional notes..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ==================== Certificate List ==================== -->
+    <record id="l10n_co_withholding_cert_list" model="ir.ui.view">
+        <field name="name">l10n_co.withholding.certificate.list</field>
+        <field name="model">l10n_co.withholding.certificate</field>
+        <field name="arch" type="xml">
+            <list string="Withholding Certificates" default_order="date_to desc">
+                <field name="partner_id"/>
+                <field name="certificate_type"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="total_base" sum="Total Base"/>
+                <field name="total_withheld" sum="Total Withheld"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'confirmed'"
+                       decoration-muted="state == 'delivered'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ==================== Certificate Search ==================== -->
+    <record id="l10n_co_withholding_cert_search" model="ir.ui.view">
+        <field name="name">l10n_co.withholding.certificate.search</field>
+        <field name="model">l10n_co.withholding.certificate</field>
+        <field name="arch" type="xml">
+            <search string="Withholding Certificates">
+                <field name="partner_id"/>
+                <field name="certificate_type"/>
+                <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="confirmed" string="Confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter name="delivered" string="Delivered" domain="[('state', '=', 'delivered')]"/>
+                <separator/>
+                <filter name="rtefte" string="RteFte" domain="[('certificate_type', 'in', ('rtefte', 'all'))]"/>
+                <filter name="rteiva" string="RteIVA" domain="[('certificate_type', 'in', ('rteiva', 'all'))]"/>
+                <filter name="rteica" string="RteICA" domain="[('certificate_type', 'in', ('rteica', 'all'))]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_partner" string="Partner" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_type" string="Type" context="{'group_by': 'certificate_type'}"/>
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ==================== Action ==================== -->
+    <record id="action_l10n_co_withholding_cert" model="ir.actions.act_window">
+        <field name="name">Withholding Certificates</field>
+        <field name="res_model">l10n_co.withholding.certificate</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="l10n_co_withholding_cert_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Generate withholding certificates
+            </p>
+            <p>
+                Use the "Generate Certificates" wizard to create certificates
+                for a specific period, or create one manually.
+            </p>
+        </field>
+    </record>
+
+    <!-- ==================== Menu Items ==================== -->
+    <menuitem id="menu_l10n_co_withholding_cert"
+              name="Withholding Certificates"
+              parent="account.account_reports_co_statements_menu"
+              action="action_l10n_co_withholding_cert"
+              sequence="50"/>
+
+    <!-- ==================== Wizard Form ==================== -->
+    <record id="l10n_co_withholding_cert_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_co.withholding.certificate.wizard.form</field>
+        <field name="model">l10n_co.withholding.certificate.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Withholding Certificates">
+                <group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group>
+                        <field name="certificate_type"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="partner_ids" widget="many2many_tags"
+                           placeholder="Leave empty for all partners..."/>
+                </group>
+                <footer>
+                    <button name="action_generate" type="object"
+                            string="Generate" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_co_withholding_cert_wizard" model="ir.actions.act_window">
+        <field name="name">Generate Withholding Certificates</field>
+        <field name="res_model">l10n_co.withholding.certificate.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_l10n_co_withholding_cert_wizard"
+              name="Generate Certificates"
+              parent="account.account_reports_co_statements_menu"
+              action="action_l10n_co_withholding_cert_wizard"
+              sequence="51"/>
+
+</odoo>
