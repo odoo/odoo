@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Pre-configured Colombian report schedules -->
+
+    <record id="schedule_iva_300" model="gpcb.report.schedule">
+        <field name="name">Formulario 300 (IVA)</field>
+        <field name="sequence">1</field>
+        <field name="report_type">iva_300</field>
+        <field name="frequency">bimonthly</field>
+        <field name="day_of_month">1</field>
+        <field name="lead_days">5</field>
+        <field name="state">paused</field>
+    </record>
+
+    <record id="schedule_withholding_350" model="gpcb.report.schedule">
+        <field name="name">Formulario 350 (Retención)</field>
+        <field name="sequence">2</field>
+        <field name="report_type">withholding_350</field>
+        <field name="frequency">monthly</field>
+        <field name="day_of_month">1</field>
+        <field name="lead_days">5</field>
+        <field name="state">paused</field>
+    </record>
+
+    <record id="schedule_withholding_cert" model="gpcb.report.schedule">
+        <field name="name">Certificados de Retención</field>
+        <field name="sequence">3</field>
+        <field name="report_type">withholding_cert</field>
+        <field name="frequency">annual</field>
+        <field name="day_of_month">1</field>
+        <field name="lead_days">30</field>
+        <field name="state">paused</field>
+    </record>
+
+    <record id="schedule_exogenous" model="gpcb.report.schedule">
+        <field name="name">Información Exógena</field>
+        <field name="sequence">4</field>
+        <field name="report_type">exogenous</field>
+        <field name="frequency">annual</field>
+        <field name="day_of_month">1</field>
+        <field name="lead_days">30</field>
+        <field name="state">paused</field>
+    </record>
+
+    <record id="schedule_balance_sheet" model="gpcb.report.schedule">
+        <field name="name">Balance General</field>
+        <field name="sequence">10</field>
+        <field name="report_type">balance_sheet</field>
+        <field name="frequency">monthly</field>
+        <field name="day_of_month">5</field>
+        <field name="lead_days">0</field>
+        <field name="state">paused</field>
+    </record>
+
+    <record id="schedule_profit_loss" model="gpcb.report.schedule">
+        <field name="name">Estado de Resultados</field>
+        <field name="sequence">11</field>
+        <field name="report_type">profit_loss</field>
+        <field name="frequency">monthly</field>
+        <field name="day_of_month">5</field>
+        <field name="lead_days">0</field>
+        <field name="state">paused</field>
+    </record>
+
+</odoo>

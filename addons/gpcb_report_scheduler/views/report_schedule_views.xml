@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Report Schedule: List View                                    -->
+    <!-- ============================================================ -->
+    <record id="gpcb_report_schedule_list" model="ir.ui.view">
+        <field name="name">gpcb.report.schedule.list</field>
+        <field name="model">gpcb.report.schedule</field>
+        <field name="arch" type="xml">
+            <list string="Report Schedules"
+                  decoration-muted="state == 'paused'">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="report_type"/>
+                <field name="frequency"/>
+                <field name="day_of_month"/>
+                <field name="auto_send"/>
+                <field name="last_run_date"/>
+                <field name="next_run_date"/>
+                <field name="run_count" string="Runs"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'active'"
+                       decoration-muted="state == 'paused'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Report Schedule: Form View                                    -->
+    <!-- ============================================================ -->
+    <record id="gpcb_report_schedule_form" model="ir.ui.view">
+        <field name="name">gpcb.report.schedule.form</field>
+        <field name="model">gpcb.report.schedule</field>
+        <field name="arch" type="xml">
+            <form string="Report Schedule">
+                <header>
+                    <button name="action_run_now" type="object"
+                            string="Run Now" class="btn-primary"
+                            invisible="state != 'active'"/>
+                    <button name="action_activate" type="object"
+                            string="Activate"
+                            invisible="state != 'paused'"/>
+                    <button name="action_pause" type="object"
+                            string="Pause"
+                            invisible="state != 'active'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_runs" type="object"
+                                class="oe_stat_button" icon="fa-history">
+                            <field name="run_count" widget="statinfo"
+                                   string="Executions"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Schedule Name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Configuration">
+                            <field name="report_type"/>
+                            <field name="frequency"/>
+                            <field name="day_of_month"/>
+                            <field name="lead_days"/>
+                            <field name="auto_send"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Schedule">
+                            <field name="last_run_date"/>
+                            <field name="next_run_date"/>
+                            <field name="notify_channel"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Recipients" name="recipients">
+                            <field name="recipient_ids" widget="many2many_tags"/>
+                        </page>
+                        <page string="History" name="history">
+                            <field name="run_ids" readonly="1">
+                                <list>
+                                    <field name="create_date" string="Date"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state in ('approved', 'sent')"
+                                           decoration-warning="state in ('generated', 'review')"
+                                           decoration-danger="state == 'failed'"/>
+                                    <field name="sent_date"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Report Schedule Run: List View                                -->
+    <!-- ============================================================ -->
+    <record id="gpcb_report_schedule_run_list" model="ir.ui.view">
+        <field name="name">gpcb.report.schedule.run.list</field>
+        <field name="model">gpcb.report.schedule.run</field>
+        <field name="arch" type="xml">
+            <list string="Report Runs" create="0"
+                  decoration-danger="state == 'failed'"
+                  decoration-success="state == 'sent'">
+                <field name="create_date" string="Generated"/>
+                <field name="schedule_id"/>
+                <field name="report_type"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="state" widget="badge"
+                       decoration-success="state in ('approved', 'sent')"
+                       decoration-warning="state in ('generated', 'review')"
+                       decoration-danger="state == 'failed'"/>
+                <field name="sent_date"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Report Schedule Run: Form View                                -->
+    <!-- ============================================================ -->
+    <record id="gpcb_report_schedule_run_form" model="ir.ui.view">
+        <field name="name">gpcb.report.schedule.run.form</field>
+        <field name="model">gpcb.report.schedule.run</field>
+        <field name="arch" type="xml">
+            <form string="Report Run" create="0">
+                <header>
+                    <button name="action_approve" type="object"
+                            string="Approve" class="btn-primary"
+                            invisible="state not in ('generated', 'review')"/>
+                    <button name="action_send" type="object"
+                            string="Send to Recipients"
+                            invisible="state not in ('generated', 'approved')"/>
+                    <button name="action_reset_to_generated" type="object"
+                            string="Reset"
+                            invisible="state not in ('failed', 'sent')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="generated,approved,sent"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="schedule_id"/>
+                            <field name="report_type"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                        <group>
+                            <field name="create_date" string="Generated At"/>
+                            <field name="sent_date"/>
+                            <field name="pdf_file" filename="pdf_filename"
+                                   invisible="not pdf_file"/>
+                            <field name="pdf_filename" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Report Data" name="data">
+                            <field name="report_data" widget="text" readonly="1"/>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes" placeholder="Review notes..."/>
+                        </page>
+                        <page string="Error" name="error"
+                              invisible="not error_message">
+                            <field name="error_message" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Actions                                                       -->
+    <!-- ============================================================ -->
+    <record id="action_gpcb_report_schedule" model="ir.actions.act_window">
+        <field name="name">Report Schedules</field>
+        <field name="res_model">gpcb.report.schedule</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Report Schedule
+            </p>
+            <p>
+                Configure automated generation of tax reports, financial statements,
+                and DIAN filing documents.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_gpcb_report_schedule_run" model="ir.actions.act_window">
+        <field name="name">Report Executions</field>
+        <field name="res_model">gpcb.report.schedule.run</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Menus                                                         -->
+    <!-- ============================================================ -->
+    <menuitem id="menu_gpcb_report_scheduler"
+              name="Report Scheduler"
+              parent="account.menu_finance_reports"
+              sequence="60"/>
+
+    <menuitem id="menu_gpcb_report_schedule_list"
+              name="Schedules"
+              parent="menu_gpcb_report_scheduler"
+              action="action_gpcb_report_schedule"
+              sequence="10"/>
+
+    <menuitem id="menu_gpcb_report_schedule_runs"
+              name="Execution History"
+              parent="menu_gpcb_report_scheduler"
+              action="action_gpcb_report_schedule_run"
+              sequence="20"/>
+
+</odoo>

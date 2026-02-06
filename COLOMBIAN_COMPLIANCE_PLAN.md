@@ -908,10 +908,21 @@ These fields should be:
 
 ---
 
-### Phase 11: Automated Report Scheduling, Filing & Delivery (Weeks 35-38)
+### Phase 11: Automated Report Scheduling, Filing & Delivery (Weeks 35-38) — DONE
 
 **Goal:** Automate the generation, review, filing, and delivery of recurring
 Colombian tax reports and financial statements.
+
+**Implemented:** `addons/gpcb_report_scheduler/` module with:
+- [x] Report schedule model (9 report types, 4 frequencies, recipients, auto-send)
+- [x] Report schedule run model (generation, review, approval, send workflow)
+- [x] Data generators: IVA/withholding, withholding certs, exogenous, financial reports
+- [x] Daily cron job checking all active schedules
+- [x] Email delivery via mail.mail with JSON report attachments
+- [x] 6 pre-configured Colombian schedules (IVA, Withholding, Certs, Exogenous, BS, P&L)
+- [x] All schedules start paused — activate after configuration
+- [x] Mail thread for tracking changes
+- [x] 45 tests (models, cron, data, views, security)
 
 #### 11.1 Report scheduler model
 
