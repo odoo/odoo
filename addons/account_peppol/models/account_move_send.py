@@ -222,59 +222,69 @@ class AccountMoveSend(models.AbstractModel):
             _logger.error('Failed to lock invoices for Peppol sending')
             return
 
-        try:
-            response = edi_user._call_peppol_proxy(
-                "/api/peppol/1/send_document",
-                params=params,
-            )
-        except AccountEdiProxyError as e:
-            for invoice, invoice_data in invoices_data_peppol.items():
-                invoice.peppol_move_state = 'error'
-                invoice_data['error'] = e.message
-        else:
-            if response.get('error'):
-                # at the moment the only error that can happen here is ParticipantNotReady error
-                for invoice, invoice_data in invoices_data_peppol.items():
+        all_invoices_items = list(invoices_data_peppol.items())
+        all_documents = params['documents']
+        batch_size = 100
+
+        # Iterate over the documents in batches of 100
+        for i in range(0, len(all_documents), batch_size):
+            batch_documents = all_documents[i: i + batch_size]
+            batch_invoices_items = all_invoices_items[i: i + batch_size]
+            batch_params = {'documents': batch_documents}
+
+            try:
+                response = edi_user._call_peppol_proxy(
+                    "/api/peppol/1/send_document",
+                    params=batch_params,
+                )
+            except AccountEdiProxyError as e:
+                for invoice, invoice_data in batch_invoices_items:
                     invoice.peppol_move_state = 'error'
-                    invoice_data['error'] = response['error']['message']
+                    invoice_data['error'] = e.message
             else:
-                # the response only contains message uuids,
-                # so we have to rely on the order to connect peppol messages to account.move
-                attachments_linked_message = _("The invoice has been sent to the Peppol Access Point. The following attachments were sent with the XML:")
-                attachments_not_linked_message = _("Some attachments could not be sent with the XML:")
-                for message, (invoice, invoice_data) in zip(response['messages'], invoices_data_peppol.items()):
-                    invoice.peppol_message_uuid = message['message_uuid']
-                    invoice.peppol_move_state = 'processing'
-                    attachments_linked, attachments_not_linked = self._get_ubl_available_attachments(
-                        invoice_data.get('mail_attachments_widget', []),
-                        invoice_data['invoice_edi_format']
-                    )
-                    if attachments_not_linked:
-                        invoice._message_log(body=attachments_not_linked_message, attachment_ids=attachments_not_linked.mapped('id'))
+                if response.get('error'):
+                    # at the moment the only error that can happen here is ParticipantNotReady error
+                    for invoice, invoice_data in batch_invoices_items:
+                        invoice.peppol_move_state = 'error'
+                        invoice_data['error'] = response['error']['message']
+                else:
+                    # the response only contains message uuids,
+                    # so we have to rely on the order to connect peppol messages to account.move
+                    attachments_linked_message = _("The invoice has been sent to the Peppol Access Point. The following attachments were sent with the XML:")
+                    attachments_not_linked_message = _("Some attachments could not be sent with the XML:")
+                    for message, (invoice, invoice_data) in zip(response['messages'], batch_invoices_items):
+                        invoice.peppol_message_uuid = message['message_uuid']
+                        invoice.peppol_move_state = 'processing'
+                        attachments_linked, attachments_not_linked = self._get_ubl_available_attachments(
+                            invoice_data.get('mail_attachments_widget', []),
+                            invoice_data['invoice_edi_format']
+                        )
+                        if attachments_not_linked:
+                            invoice._message_log(body=attachments_not_linked_message, attachment_ids=attachments_not_linked.mapped('id'))
 
-                    base_attachments = [
-                        (invoice_data[key]['name'], invoice_data[key]['raw'])
-                        for key in ['pdf_attachment_values', 'ubl_cii_xml_attachment_values']
-                        if invoice_data.get(key)
-                    ]
+                        base_attachments = [
+                            (invoice_data[key]['name'], invoice_data[key]['raw'])
+                            for key in ['pdf_attachment_values', 'ubl_cii_xml_attachment_values']
+                            if invoice_data.get(key)
+                        ]
 
-                    attachments_embedded = [
-                        (attachment.name, attachment.raw)
-                        for attachment in attachments_linked
-                    ] + base_attachments
+                        attachments_embedded = [
+                                                   (attachment.name, attachment.raw)
+                                                   for attachment in attachments_linked
+                                               ] + base_attachments
 
-                    new_message = invoice.with_context(no_new_invoice=True).message_post(
-                        body=attachments_linked_message,
-                        attachments=attachments_embedded
-                    )
+                        new_message = invoice.with_context(no_new_invoice=True).message_post(
+                            body=attachments_linked_message,
+                            attachments=attachments_embedded
+                        )
 
-                    if new_message.attachment_ids.ids:
-                        self.env.cr.execute("UPDATE ir_attachment SET res_id = NULL WHERE id IN %s", [tuple(new_message.attachment_ids.ids)])
-                        new_message.attachment_ids.write({
-                            'res_model': new_message._name,
-                            'res_id': new_message.id,
-                        })
-                self.env.ref('account_peppol.ir_cron_peppol_get_message_status')._trigger(at=fields.Datetime.now() + timedelta(minutes=5))
+                        if new_message.attachment_ids.ids:
+                            self.env.cr.execute("UPDATE ir_attachment SET res_id = NULL WHERE id IN %s", [tuple(new_message.attachment_ids.ids)])
+                            new_message.attachment_ids.write({
+                                'res_model': new_message._name,
+                                'res_id': new_message.id,
+                            })
+                    self.env.ref('account_peppol.ir_cron_peppol_get_message_status')._trigger(at=fields.Datetime.now() + timedelta(minutes=5))
 
         if self._can_commit():
             self._cr.commit()
