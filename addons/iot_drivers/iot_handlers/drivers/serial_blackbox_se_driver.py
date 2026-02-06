@@ -197,7 +197,7 @@ class SwedishBlackBoxDriver(SerialDriver):
             return error
 
         message_fields = list(data.get("high_level_message").values())
-        request_fields = ["RH", *message_fields[0:2], " ", " ", *message_fields[2:]]
+        request_fields = ["RH", *message_fields[0:3], " ", " ", *message_fields[3:]]
         request = "#".join(request_fields)
         response = self._request_action(request, self._connection)
         error = self._check_error(request, response)
