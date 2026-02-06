@@ -1569,8 +1569,8 @@ def _reexec(updated_modules=None):
     args = stripped_sys_argv()
     if updated_modules:
         args += ["-u", ','.join(updated_modules)]
-    if not args or args[0] != exe:
-        args.insert(0, exe)
+    if not args or args[0] not in (sys.executable, exe):
+        args.insert(0, sys.executable)
     # We should keep the LISTEN_* environment variabled in order to support socket activation on reexec
     os.execve(sys.executable, args, os.environ)
 
