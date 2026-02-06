@@ -55,8 +55,9 @@ class AccountFinancialYearOp(models.TransientModel):
             company_field: vals[wizard_field] for wizard_field, company_field in company_fields_to_update.items() if wizard_field in vals
         })
         opening_date = vals.get('opening_date', company_id.account_opening_date)
-        if opening_date:
-            company_id.account_opening_move_id.write({
+        opening_move = company_id.account_opening_move_id
+        if opening_date and opening_move.state == 'draft':
+            opening_move.write({
                 'date': fields.Date.from_string(opening_date) - timedelta(days=1),
             })
 
