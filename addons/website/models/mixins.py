@@ -378,16 +378,33 @@ class WebsiteSearchableMixin(models.AbstractModel):
 
     @api.model
     def _search_fetch(self, search_detail, search, limit, order):
+        offset, per_page = 0, False
+        options = search_detail.get('options', {})
+        if options.get('scope'):
+            scope = options['scope']
+            per_page = options.get('per_page', 10)
+            current_page = options.get('current_page', 1)
+
+            extra_limit = max((scope / 2), scope - current_page)
+
+            offset = (current_page - 1) * per_page
+            limit = (extra_limit + 1) * per_page
+
         fields = search_detail['search_fields']
         base_domain = search_detail['base_domain']
         domain = self._search_build_domain(base_domain, search, fields, search_detail.get('search_extra'))
         model = self.sudo() if search_detail.get('requires_sudo') else self
         results = model.search(
             domain,
+            offset=offset,
             limit=limit,
             order=search_detail.get('order', order)
         )
-        count = model.search_count(domain) if limit and limit == len(results) else len(results)
+        if per_page is False:
+            count = model.search_count(domain) if limit and limit == len(results) else len(results)
+        else:
+            count = len(results) + offset
+
         return results, count
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):

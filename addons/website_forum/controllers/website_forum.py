@@ -90,7 +90,7 @@ class WebsiteForum(WebsiteProfile):
 
     def _get_forum_post_search_options(self, forum=None, tag=None, filters=None, my=None, create_uid=False, include_answers=False, **post):
         return {
-            'allowFuzzy': not post.get('noFuzzy'),
+            'allowFuzzy': False,
             'create_uid': create_uid,
             'displayDescription': False,
             'displayDetail': False,
@@ -141,11 +141,18 @@ class WebsiteForum(WebsiteProfile):
             **post
         )
 
+        pager_scope = 10
+
+        options['per_page'] = self._post_per_page
+        options['scope'] = pager_scope
+        options['current_page'] = page
+
         slug = request.env['ir.http']._slug
         question_count, details, fuzzy_search_term = request.website._search_with_fuzzy(
             "forum_posts_only", search, limit=page * self._post_per_page, order=sorting, options=options)
+
         question_ids = details[0].get('results', Post)
-        question_ids = question_ids[(page - 1) * self._post_per_page:page * self._post_per_page]
+        question_ids = question_ids[:self._post_per_page]
 
         if not forum:
             url = '/forum/all'
@@ -162,22 +169,23 @@ class WebsiteForum(WebsiteProfile):
 
         pager = tools.lazy(lambda: request.website.pager(
             url=url, total=question_count, page=page, step=self._post_per_page,
-            scope=5, url_args=url_args))
+            scope=-pager_scope, url_args=url_args))  # scope negative, to force to use it (in stable)
 
         values = self._prepare_user_values(forum=forum, searches=post)
+
         values.update({
             'author': author,
             'edit_in_backend': True,
             'question_ids': question_ids,
             'question_count': question_count,
             'search_count': question_count,
+            'hide_search_count': pager['page_count'] >= (page + (pager_scope // 2)),  # count is limited in scoped page
             'pager': pager,
             'tag': tag,
             'filters': filters,
             'my': my,
             'sorting': sorting,
-            'search': fuzzy_search_term or search,
-            'original_search': fuzzy_search_term and search,
+            'search': search,
         })
 
         if forum or tag:
