@@ -209,7 +209,10 @@ class Company(models.Model):
         country = self._get_country_from_vat()
         chart_template = self.env['account.chart.template']._guess_chart_template(country)
         is_coa_module_installed = self.env['account.chart.template']._get_chart_template_mapping()[chart_template]['installed']
-
-        if is_coa_module_installed:
-            return EU_FIELD_MAP.get(chart_template, {})
-        return {}
+        if not is_coa_module_installed:
+            return {}
+        return {
+            field: value
+            for field, value in EU_FIELD_MAP.get(chart_template, {}).items()
+            if field in self.env['account.tax']._fields
+        }
