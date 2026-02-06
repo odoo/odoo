@@ -304,6 +304,35 @@ export function freezeDateTime(millis) {
     ];
 }
 
+const originalNow = DateTime.now;
+
+export function withTimeFreeze(millis, steps) {
+    return [
+        {
+            content: `Freeze time to ${millis}`,
+            trigger: "body",
+            run: () => {
+                sessionStorage.setItem("pos_test_frozen_time", millis);
+                DateTime.now = () => DateTime.fromMillis(millis);
+            },
+        },
+        ...steps,
+        {
+            content: "Unfreeze time",
+            trigger: "body",
+            run: () => {
+                sessionStorage.removeItem("pos_test_frozen_time");
+                DateTime.now = originalNow;
+            },
+        },
+    ].flat();
+}
+
+if (sessionStorage.getItem("pos_test_frozen_time")) {
+    const millis = parseInt(sessionStorage.getItem("pos_test_frozen_time"));
+    DateTime.now = () => DateTime.fromMillis(millis);
+}
+
 export function selectPresetDateButton(formattedDate) {
     return {
         trigger: `.modal-body button:contains("${formattedDate}")`,
