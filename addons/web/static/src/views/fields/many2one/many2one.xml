@@ -21,10 +21,10 @@
             <t t-if="props.readonly">
                 <t t-if="props.value">
                     <t t-if="props.canOpen">
-                        <a class="o_form_uri text-truncate d-inline-block w-100 align-bottom" t-att-class="props.linkCssClass" t-att-href="linkHref" t-on-click.prevent.stop="() => this.openRecord('action')" t-esc="displayName" t-att-title="displayName"/>
+                        <a class="o_form_uri text-truncate d-inline-block w-100 align-bottom" t-att-class="props.linkCssClass" t-att-href="linkHref" t-on-click.prevent.stop="() => this.openRecord('action')" t-out="displayName" t-att-title="displayName"/>
                     </t>
                     <t t-else="">
-                        <span t-esc="displayName" t-att-title="displayName" class="text-truncate d-inline-block w-100 align-bottom"/>
+                        <span t-out="displayName" t-att-title="displayName" class="text-truncate d-inline-block w-100 align-bottom"/>
                     </t>
                 </t>
             </t>
@@ -45,7 +45,7 @@
             <t t-if="lines.length">
                 <div class="o_field_many2one_extra">
                     <t t-foreach="lines" t-as="line" t-key="line_index">
-                        <div t-esc="line" t-att-title="line"  class="text-truncate"/>
+                        <div t-out="line" t-att-title="line"  class="text-truncate"/>
                     </t>
                 </div>
             </t>

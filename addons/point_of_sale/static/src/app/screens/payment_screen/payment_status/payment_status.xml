@@ -7,7 +7,7 @@
         </div>
         <section t-elif="this.currentTip.amount > 0 or showStatus" t-attf-class="paymentlines-container border-top pt-3 {{ !isComplete ? 'text-danger' : 'text-success'}}">
             <div t-if="this.currentTip.amount > 0" class="tip-container d-flex flex-lg-row justify-content-between align-items-center fs-2 mb-2 text-dark position-relative">
-                <span class="label pe-2" t-esc="tipLabel" />
+                <span class="label pe-2" t-out="tipLabel" />
                 <span class="align-self-end me-5 pe-5">
                     <PriceFormatter price="tipText" />
                 </span>

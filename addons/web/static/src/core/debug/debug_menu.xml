@@ -13,7 +13,7 @@
                 <t t-set-slot="content">
                     <t t-foreach="sectionEntries" t-as="entry" t-key="entry[0]">
                         <div class="dropdown-menu_group dropdown-header">
-                            <t t-esc="getSectionLabel(entry[0])"/>
+                            <t t-out="getSectionLabel(entry[0])"/>
                         </div>
                         <t t-foreach="entry[1]" t-as="element" t-key="element_index">
                             <DropdownItem
@@ -21,7 +21,7 @@
                                 onSelected="element.callback"
                                 attrs="{ href: element.href }"
                             >
-                                <span t-att-class="entry[0] and 'ps-3'" t-esc="element.description"/>
+                                <span t-att-class="entry[0] and 'ps-3'" t-out="element.description"/>
                             </DropdownItem>
                             <t t-if="element.type == 'component'" t-component="element.Component" t-props="element.props"/>
                         </t>

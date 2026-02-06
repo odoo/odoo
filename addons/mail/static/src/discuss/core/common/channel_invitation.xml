@@ -23,7 +23,7 @@
                         <t t-if="props.channel">No people found to invite.</t>
                         <t t-else="">No user found.</t>
                     </div>
-                    <div t-if="state.searchResultCount > selectablePartners.length" class="smaller text-muted mx-1 mb-1 fst-italic" t-esc="showingResultNarrowText"/>
+                    <div t-if="state.searchResultCount > selectablePartners.length" class="smaller text-muted mx-1 mb-1 fst-italic" t-out="showingResultNarrowText"/>
                     <t t-foreach="selectablePartners" t-as="selectablePartner" t-key="selectablePartner.id">
                         <t t-call="discuss.ChannelInvitation-selectableItem">
                             <t t-set="selectableItemIndex" t-value="selectablePartner_index"/>
@@ -43,18 +43,18 @@
                         <div class="o-discuss-ChannelInvitation-selectedList d-flex flex-wrap overflow-auto o-scrollbar-thin">
                             <t t-foreach="selectedPartners" t-as="selectedPartner" t-key="selectedPartner.id">
                                 <button class="btn btn-light fw-bolder smaller pe-1" title="Unselect person" t-on-click="() => this.onClickSelectedPartner(selectedPartner)">
-                                    <t t-esc="selectedPartner.name"/> <i class="oi oi-close border border-dark-subtle ms-1"/>
+                                    <t t-out="selectedPartner.name"/> <i class="oi oi-close border border-dark-subtle ms-1"/>
                                 </button>
                             </t>
                             <t t-foreach="state.selectedEmails" t-as="selectedEmail" t-key="selectedEmail">
                                 <button class="btn btn-light fw-bolder smaller pe-1" title="Unselect person" t-on-click="() => this.onClickSelectedEmail(selectedEmail)">
-                                    <t t-esc="selectedEmail"/> <i class="oi oi-close border border-dark-subtle ms-1"/>
+                                    <t t-out="selectedEmail"/> <i class="oi oi-close border border-dark-subtle ms-1"/>
                                 </button>
                             </t>
                         </div>
                     </div>
                     <button t-if="props.channel and (selectedPartners.length > 0 or state.selectedEmails.length > 0)" class="btn btn-primary w-100 my-2" t-att-title="invitationButtonText" t-on-click="onClickInvite">
-                        <t t-esc="invitationButtonText"/>
+                        <t t-out="invitationButtonText"/>
                     </button>
                 </t>
                 <hr t-if="props.channel?.invitationLink" class="border-dark-subtle"/>
@@ -64,7 +64,7 @@
                         <i class="fa fa-copy"/>
                     </button>
                 </div>
-                <div t-if="props.channel?.accessRestrictedToGroupText" class="mt-2 text-muted smaller mx-1" t-esc="props.channel.accessRestrictedToGroupText"/>
+                <div t-if="props.channel?.accessRestrictedToGroupText" class="mt-2 text-muted smaller mx-1" t-out="props.channel.accessRestrictedToGroupText"/>
             </div>
         </div>
     </t>
@@ -85,14 +85,14 @@
             <div class="d-flex flex-column mx-2 flex-grow-1 overflow-hidden o-mt-0_5">
                 <t t-if="selectablePartner">
                     <div class="d-flex overflow-hidden align-items-baseline" name="selectablePartnerName">
-                        <span class="text-truncate" t-esc="selectablePartner.name"/>
+                        <span class="text-truncate" t-out="selectablePartner.name"/>
                     </div>
                     <div class="d-flex flex-column flex-grow-1 gap-1" name="selectablePartnerDetail">
-                        <span t-if="selectablePartner.email" t-esc="selectablePartner.email" class="text-truncate text-start smaller text-600 fw-normal lh-1"/>
+                        <span t-if="selectablePartner.email" t-out="selectablePartner.email" class="text-truncate text-start smaller text-600 fw-normal lh-1"/>
                     </div>
                 </t>
                 <div t-else="" class="overflow-hidden d-flex flex-column align-items-baseline">
-                    <span class="text-truncate text-start w-100" t-esc="selectableEmailAddress"/>
+                    <span class="text-truncate text-start w-100" t-out="selectableEmailAddress"/>
                     <span t-if="state.sentEmails.has(selectableEmailAddress)" class="text-truncate text-start smaller text-600 fw-normal lh-1 w-100">Invitation already sent to this address</span>
                 </div>
             </div>

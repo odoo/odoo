@@ -25,7 +25,7 @@
                     textMaxLine="2"
                 >
                     <t t-set-slot="name">
-                        <t t-esc="message?.authorName or ''"/>
+                        <t t-out="message?.authorName or ''"/>
                     </t>
                     <t t-set-slot="body">
                         <span t-out="message?.previewText" t-att-class="{ 'opacity-75': message?.isEmpty }"/>
@@ -52,11 +52,11 @@
                 >
                     <t t-set-slot="name">
                         <div t-if="thread.parent_channel_id" class="d-flex align-items-center">
-                            <span class="text-truncate flex-shrink-0 opacity-75 mw-50" t-esc="thread.parent_channel_id.displayName"/>
+                            <span class="text-truncate flex-shrink-0 opacity-75 mw-50" t-out="thread.parent_channel_id.displayName"/>
                             <i class="oi oi-chevron-right o-xsmaller mx-1"/>
-                            <span class="text-truncate min-w-0" t-esc="thread.channel.displayName"/>
+                            <span class="text-truncate min-w-0" t-out="thread.channel.displayName"/>
                         </div>
-                        <t t-else="" t-esc="thread.displayName"/>
+                        <t t-else="" t-out="thread.displayName"/>
                     </t>
                     <t t-set-slot="body">
                         <t t-if="message?.hasOnlyAttachments">
@@ -82,8 +82,8 @@
             'pb-2': !isIosPwa,
         }" t-on-click="() => this.onClickNavTab(tab.id)" t-att-aria-label="tab.label">
             <i t-attf-class="o-mail-MessagingMenu-tabIcon {{ store.discuss.activeTab === tab.id and tab.activeIcon ? tab.activeIcon : tab.icon }} rounded-pill mx-auto p-2 fs-5" />
-            <span class="o-xsmaller" t-esc="tab.label" />
-            <span t-if="tab.counter" class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabCounter overflow-visible d-inline-block" t-att-class="{ 'o-starred': tab.id === 'starred' }" t-esc="tab.counter"/>
+            <span class="o-xsmaller" t-out="tab.label" />
+            <span t-if="tab.counter" class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabCounter overflow-visible d-inline-block" t-att-class="{ 'o-starred': tab.id === 'starred' }" t-out="tab.counter"/>
             <span t-elif="tab.channelHasUnread" class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabUnread overflow-visible d-inline-block ms-2"><i class="fa fa-circle"/></span>
         </button>
     </nav>

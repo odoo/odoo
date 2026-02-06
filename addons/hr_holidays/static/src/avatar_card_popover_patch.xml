@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.AvatarCardPopover" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o-mail-avatar-card-name-actions')]" position="after">
-            <span t-if="partner?.outOfOfficeDateEndText" class="text-warning me-1 smaller fw-bold opacity-75" t-esc="partner.outOfOfficeDateEndText"/>
+            <span t-if="partner?.outOfOfficeDateEndText" class="text-warning me-1 smaller fw-bold opacity-75" t-out="partner.outOfOfficeDateEndText"/>
         </xpath>
     </t>
 </templates>

@@ -13,8 +13,8 @@
                          <img class="rounded-3" t-att-src="item.image"/>
                     </div>
                     <div class="d-flex flex-column">
-                        <span t-esc="item.label" />
-                        <span t-esc="item.description" t-if="item.description" />
+                        <span t-out="item.label" />
+                        <span t-out="item.description" t-if="item.description" />
                     </div>
                </div>
                 <i t-attf-class="{{ item.isSelected ? 'fa fa-check text-action' : 'oi oi-chevron-right' }}"/>

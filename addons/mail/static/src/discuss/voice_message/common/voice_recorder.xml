@@ -8,7 +8,7 @@
                 'o-active recording ms-2 me-1': state.recording,
                 'mw-0': !state.recording,
                 'text-danger': state.limitWarning,
-            }" style="font-variant-numeric: tabular-nums;"><span class="d-flex text-truncate" t-esc="state.elapsed"/></div>
+            }" style="font-variant-numeric: tabular-nums;"><span class="d-flex text-truncate" t-out="state.elapsed"/></div>
             <span class="rounded-circle" t-att-class="{ 'p-1': state.recording }"><i t-att-class="!state.recording ? 'fa fa-fw fa-lg fa-microphone' : 'fa fa-fw fa-circle text-danger o-mail-VoiceRecorder-dot'"/></span>
         </button>
     </t>

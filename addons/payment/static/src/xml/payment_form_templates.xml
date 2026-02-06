@@ -11,7 +11,7 @@
                     <li t-foreach="linkedRecordsInfo" t-as="documentInfo" t-key="documentInfoIndex">
                         <a t-att-title="documentInfo.description"
                            t-att-href="documentInfo.url"
-                           t-esc="documentInfo.name"
+                           t-out="documentInfo.name"
                         />
                     </li>
                 </ul>

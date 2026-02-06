@@ -13,7 +13,7 @@
             </button>
             <Dropdown position="'bottom-end'" menuClass="'p-0'" state="dropdownState">
                 <button class="o_button_steps btn btn-primary mx-1" t-att-disabled="!state.steps.length">
-                    Steps <span class="bg-danger rounded py-1 px-2"><t t-esc="state.steps.length"/></span>
+                    Steps <span class="bg-danger rounded py-1 px-2"><t t-out="state.steps.length"/></span>
                 </button>
                 <t t-set-slot="content">
                     <div class="o_tour_recorder" style="height: 400px; width: 500px">
@@ -28,10 +28,10 @@
                             <tbody>
                                 <t t-foreach="state.steps" t-as="step" t-key="step_index">
                                     <tr class="o_tour_step" t-att-class="step.triggerNotUnique ? 'text-danger' : ''">
-                                        <td><t t-esc="step_index + 1"/>.</td>
+                                        <td><t t-out="step_index + 1"/>.</td>
                                         <td class="o_tour_step_trigger">
-                                            <t t-esc="step.trigger"/>
-                                            <span t-if="step.run and step.run != 'click'" class="fst-italic fw-lighter"><br/>(run: <t t-esc="step.run"/>) </span>
+                                            <t t-out="step.trigger"/>
+                                            <span t-if="step.run and step.run != 'click'" class="fst-italic fw-lighter"><br/>(run: <t t-out="step.run"/>) </span>
                                         </td>
                                         <td><button class="o_button_delete_step btn btn-link text-danger fa fa-trash mx-1" t-on-click.prevent.stop="() => this.removeStep(step_index)"/></td>
                                     </tr>

@@ -8,7 +8,7 @@
                             attrs="{ 'data-id': option.type }"
                             onSelected="() => this.update(option)">
 
-                <div class="o-date-option-label" t-esc="option.label"/>
+                <div class="o-date-option-label" t-out="option.label"/>
                 <t t-if="option.type === 'range'">
                     <div class="d-flex flex-row" t-on-click.stop="">
                         <DateTimeInput type="'date'" value="dateFrom()" onChange="(dateFrom) => this.setDateFrom(dateFrom)" />

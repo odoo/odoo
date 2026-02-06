@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="web.FieldSelectorField">
         <t t-if="props.readonly">
-            <span t-esc="formattedValue" />
+            <span t-out="formattedValue" />
         </t>
         <t t-else="">
             <ModelFieldSelector t-props="selectorProps" />

@@ -19,7 +19,7 @@
                                 Immediately
                             </t>
                                 <t t-else="">
-                                After <t t-esc="level.data.start_count"/> <t t-esc="level.data.start_type"/>(s)
+                                After <t t-out="level.data.start_count"/> <t t-out="level.data.start_type"/>(s)
                             </t>
                         </span>
                     </span>
@@ -33,7 +33,7 @@
                 <div class="content o_accrual_bg align-self-center w-100 h-100 px-3 py-2 my-3 ms-2 border rounded-3" role="button" t-on-click="editMilestone.bind(this, level.data.id)">
                     <span class="text">
                         <h4 class="header m-0" name="header">
-                            Accrual frequency : <t t-esc="level.data.added_value"/> <t t-esc="level.data.added_value_type"/>(s)
+                            Accrual frequency : <t t-out="level.data.added_value"/> <t t-out="level.data.added_value_type"/>(s)
                             <t t-if="level.data.frequency == 'hourly'">
                                 every hour.
                                 <br/>
@@ -43,33 +43,33 @@
                                 <br/>
                             </t>
                             <t t-elif="level.data.frequency == 'weekly'">
-                                every week on <t t-esc="getFullDay(level.data.week_day)"/>.
+                                every week on <t t-out="getFullDay(level.data.week_day)"/>.
                                 <br/>
                             </t>
                             <t t-elif="level.data.frequency == 'bimonthly'">
-                                twice a month on the <t t-esc="level.data.first_day"/>
+                                twice a month on the <t t-out="level.data.first_day"/>
                                 and the
-                                <t t-esc="level.data.second_day"/>
+                                <t t-out="level.data.second_day"/>
                                 of the month.
                                 <br/>
                             </t>
                             <t t-elif="level.data.frequency == 'monthly'">
-                                every month on the <t t-esc="level.data.first_day"/>
+                                every month on the <t t-out="level.data.first_day"/>
                                 of the month.
                                 <br/>
                             </t>
                             <t t-elif="level.data.frequency == 'biyearly'">
-                                twice a year on the <t t-esc="level.data.first_month_day"/>
+                                twice a year on the <t t-out="level.data.first_month_day"/>
                                 of
-                                <t t-esc="getFullMonth(level.data.first_month)"/>
+                                <t t-out="getFullMonth(level.data.first_month)"/>
                                 and the
-                                <t t-esc="level.data.second_month_day"/>
-                                of <t t-esc="getFullMonth(level.data.second_month)"/>.
+                                <t t-out="level.data.second_month_day"/>
+                                of <t t-out="getFullMonth(level.data.second_month)"/>.
                                 <br/>
                             </t>
                             <t t-elif="level.data.frequency == 'yearly'">
-                                every year on the <t t-esc="level.data.yearly_day"/>
-                                of <t t-esc="getFullMonth(level.data.yearly_month)"/>.
+                                every year on the <t t-out="level.data.yearly_day"/>
+                                of <t t-out="getFullMonth(level.data.yearly_month)"/>.
                                 <br/>
                             </t>
                         </h4>
@@ -79,26 +79,26 @@
                                     Unused days will be lost.<br/>
                                 </t>
                                 <t t-elif="level.data.carryover_options == 'unlimited'">
-                                    Unused days will be transferred totally on each <t t-esc="state.carryOverDate"/>.
+                                    Unused days will be transferred totally on each <t t-out="state.carryOverDate"/>.
                                     <br/>
                                 </t>
                                 <t t-else="">
-                                    Unused days will be transferred with a max of <t t-esc="level.data.postpone_max_days"/> <t t-esc="level.data.added_value_type"/>
-                                    on each <t t-esc="state.carryOverDate"/>.
+                                    Unused days will be transferred with a max of <t t-out="level.data.postpone_max_days"/> <t t-out="level.data.added_value_type"/>
+                                    on each <t t-out="state.carryOverDate"/>.
                                     <br/>
                                 </t>
                             </t>
                             <t t-if="level.data.cap_accrued_time_yearly">
                                 <t t-if="level.data.cap_accrued_time">
-                                    A yearly cap is set to <t t-esc="level.data.maximum_leave_yearly"/> <t t-esc="level.data.added_value_type"/>(s)
-                                    and a balance cap is set to <t t-esc="level.data.maximum_leave"/> <t t-esc="level.data.added_value_type"/>(s).
+                                    A yearly cap is set to <t t-out="level.data.maximum_leave_yearly"/> <t t-out="level.data.added_value_type"/>(s)
+                                    and a balance cap is set to <t t-out="level.data.maximum_leave"/> <t t-out="level.data.added_value_type"/>(s).
                                 </t>
                                 <t t-else="">
-                                    A yearly cap is set to <t t-esc="level.data.maximum_leave_yearly"/> <t t-esc="level.data.added_value_type"/>(s).
+                                    A yearly cap is set to <t t-out="level.data.maximum_leave_yearly"/> <t t-out="level.data.added_value_type"/>(s).
                                 </t>
                             </t>
                             <t t-elif="level.data.maximum_leave">
-                                A balance cap is set to <t t-esc="level.data.maximum_leave"/> <t t-esc="level.data.added_value_type"/>(s).
+                                A balance cap is set to <t t-out="level.data.maximum_leave"/> <t t-out="level.data.added_value_type"/>(s).
                             </t>
                         </div>
                     </span>

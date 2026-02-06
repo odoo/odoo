@@ -12,7 +12,7 @@
                     <img style="height:100px;width:100px;" class="rounded-4 p-4 bg-white shadow" t-att-src="state.manifest.icons?.[0]?.src"/>
                     <div class="d-inline-block">
                         <div class="d-flex align-items-center">
-                            <h1 class="mb-0" t-esc="state.manifest.name"></h1>
+                            <h1 class="mb-0" t-out="state.manifest.name"></h1>
                             <Dropdown t-if="pwa.isAvailable" menuClass="'p-2'">
                                 <button class="btn btn-link fa fa-pencil" />
                                 <t t-set-slot="content">

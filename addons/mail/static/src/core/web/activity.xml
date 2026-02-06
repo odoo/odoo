@@ -23,12 +23,12 @@
         <div class="flex-grow px-1">
             <div class="o-mail-Activity-info lh-1">
                 <span class="fw-bolder text-success" t-if="delay === 1">Tomorrow:</span>
-                <span class="fw-bolder text-success" t-elif="delay gt 0">Due in <t t-esc="delay"/> days:</span>
+                <span class="fw-bolder text-success" t-elif="delay gt 0">Due in <t t-out="delay"/> days:</span>
                 <span class="fw-bolder text-danger" t-elif="delay === -1">Yesterday:</span>
-                <span class="fw-bolder text-danger" t-elif="delay lt 0"><t t-esc="-delay"/> days overdue:</span>
+                <span class="fw-bolder text-danger" t-elif="delay lt 0"><t t-out="-delay"/> days overdue:</span>
                 <span class="fw-bolder text-warning" t-else="">Today:</span>
-                <span class="fw-bolder px-2 text-break"><t t-esc="displayName"/></span>
-                <span class="o-mail-Activity-user px-1" t-if="props.activity.user_id?.partner_id" >for <t t-esc="props.activity.user_id.partner_id.displayName"/></span>
+                <span class="fw-bolder px-2 text-break"><t t-out="displayName"/></span>
+                <span class="o-mail-Activity-user px-1" t-if="props.activity.user_id?.partner_id" >for <t t-out="props.activity.user_id.partner_id.displayName"/></span>
                 <button class="btn btn-link btn-primary p-0 lh-1 border-0">
                     <i class="fa fa-info-circle" role="img" title="Info" aria-label="Info" t-on-click="toggleDetails"/>
                 </button>
@@ -36,10 +36,10 @@
             <div t-if="state.showDetails">
                 <table class="o-mail-Activity-details table table-sm mt-2">
                     <tbody>
-                        <tr><td class="text-end fw-bolder">Activity type</td><td><t t-esc="props.activity.activity_type_id?.name"/></td></tr>
-                        <tr><td class="text-end fw-bolder">Created</td><td><t t-esc="props.activity.dateCreateFormatted"/> by <t t-esc="props.activity.create_uid?.name"/></td></tr>
-                        <tr t-if="props.activity.user_id"><td class="text-end fw-bolder">Assigned to</td><td><t t-esc="props.activity.user_id.name"/></td></tr>
-                        <tr><td class="text-end fw-bolder">Due on</td><td><t t-esc="props.activity.dateDeadlineFormatted"/></td></tr>
+                        <tr><td class="text-end fw-bolder">Activity type</td><td><t t-out="props.activity.activity_type_id?.name"/></td></tr>
+                        <tr><td class="text-end fw-bolder">Created</td><td><t t-out="props.activity.dateCreateFormatted"/> by <t t-out="props.activity.create_uid?.name"/></td></tr>
+                        <tr t-if="props.activity.user_id"><td class="text-end fw-bolder">Assigned to</td><td><t t-out="props.activity.user_id.name"/></td></tr>
+                        <tr><td class="text-end fw-bolder">Due on</td><td><t t-out="props.activity.dateDeadlineFormatted"/></td></tr>
                     </tbody>
                 </table>
             </div>

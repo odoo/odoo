@@ -61,8 +61,8 @@
     <t t-name="partner_autocomplete.DropdownOption">
         <div style="display: flex; justify-content: space-between; align-items: center; height: 24px;">
             <div>
-                <span t-esc="option.label"/>,
-                <span class="text-muted" t-esc="option.data.description"/>
+                <span t-out="option.label"/>,
+                <span class="text-muted" t-out="option.data.description"/>
             </div>
         </div>
     </t>

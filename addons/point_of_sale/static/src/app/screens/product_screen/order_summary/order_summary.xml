@@ -15,7 +15,7 @@
 			</Orderline>
 			<t t-set-slot="details">
 				<div t-if="isComboApplicable" class="combo-proposition d-flex justify-content-between align-items-center p-2 pb-0 ms-1">
-					<t t-esc="bestComboName"/>
+					<t t-out="bestComboName"/>
 					<button class="button btn btn-primary" t-on-click="() => this.applyBestCombo()">
 						<t t-if="this.state.potentialCombos.length > 1">Choose</t>
 						<t t-else="">Apply</t>

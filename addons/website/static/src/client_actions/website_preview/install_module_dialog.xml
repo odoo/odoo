@@ -6,7 +6,7 @@
         title="props.title"
         primaryTitle="installButtonTitle"
         primaryClick="() => this.onClickInstall()">
-        <t t-esc="props.installationText"/>
+        <t t-out="props.installationText"/>
     </WebsiteDialog>
 </t>
 

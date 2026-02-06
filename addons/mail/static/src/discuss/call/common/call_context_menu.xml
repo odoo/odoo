@@ -7,7 +7,7 @@
                 <i class="fa fa-fw fa-lg opacity-75" t-attf-class="{{state.rangeVolume > 0 ? 'fa-volume-up' : 'fa-volume-off'}}"/>
                 <div class="position-relative">
                     <input type="range" min="0.0" max="1" step="0.01" class="form-range h-auto" t-att-value="volume" t-model="state.rangeVolume" t-on-change="onChangeVolume"/>
-                    <output t-esc="`${Math.round(state.rangeVolume * 200)}%`" class="o-mail-CallContextMenu-volumeTooltip fw-bold rounded" t-attf-style="--progress:{{state.rangeVolume * 100}}%;"/>
+                    <output t-out="`${Math.round(state.rangeVolume * 200)}%`" class="o-mail-CallContextMenu-volumeTooltip fw-bold rounded" t-attf-style="--progress:{{state.rangeVolume * 100}}%;"/>
                 </div>
             </div>
             <t t-if="env.debug and !isSelf and rtc.connectionType === rtcConnectionTypes.P2P">

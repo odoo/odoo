@@ -49,8 +49,8 @@
             t-attf-aria-label="Select {{item.name}} scenario">
             <img t-attf-src="/point_of_sale/static/img/{{item.iconFile}}" t-attf-alt="{{item.name}}" class="o_image_64_contain mx-auto" />
             <div class="card-body p-0 text-start text-md-center">
-                <h3 class="card-title" t-esc="item.name"/>
-                <p class="card-text" t-esc="item.description"/>
+                <h3 class="card-title" t-out="item.name"/>
+                <p class="card-text" t-out="item.description"/>
             </div>
         </button>
     </t>

@@ -41,9 +41,9 @@
         <div><br/></div>
         <div>
             <span>---------- Forwarded message ----------</span><br/>
-            <span>Date: <t t-esc="date"/></span><br/>
-            <span>From: <t t-esc="name"/> <a t-att-href="'mailto:' + email" target="_blank">&lt;<t t-esc="email"/>&gt;</a></span><br/>
-            <span>Subject: <t t-esc="message.subject || message.default_subject"/></span>
+            <span>Date: <t t-out="date"/></span><br/>
+            <span>From: <t t-out="name"/> <a t-att-href="'mailto:' + email" target="_blank">&lt;<t t-out="email"/>&gt;</a></span><br/>
+            <span>Subject: <t t-out="message.subject || message.default_subject"/></span>
         </div>
         <t t-out="body"/>
     </t>
@@ -53,7 +53,7 @@
         <div class="o_mail_reply_container">
             <div class="o_mail_reply_content">
                 <div>
-                    <span>On <t t-esc="date"/> <t t-esc="name"/> <a t-att-href="'mailto:' + email" target="_blank">&lt;<t t-esc="email"/>&gt;</a>wrote</span>
+                    <span>On <t t-out="date"/> <t t-out="name"/> <a t-att-href="'mailto:' + email" target="_blank">&lt;<t t-out="email"/>&gt;</a>wrote</span>
                 </div>
                 <blockquote t-out="body"/>
             </div>

@@ -5,7 +5,7 @@
         <t t-if="props.readonly">
             <button class="d-flex align-items-center btn fw-normal p-0 o_disabled">
                 <span t-attf-class="o_status {{ statusColor(currentValue) }} "/>
-                <span t-if="props.showLabel" class="o_status_label ms-1" t-esc="label"/>
+                <span t-if="props.showLabel" class="o_status_label ms-1" t-out="label"/>
             </button>
         </t>
         <t t-else="">
@@ -13,7 +13,7 @@
                 <button class="btn btn-link d-flex p-0">
                     <div class="d-flex align-items-center" t-att-title="props.showLabel ? '' : label">
                         <span t-attf-class="o_status {{ statusColor(currentValue) }} "/>
-                        <span t-if="props.showLabel" class="o_status_label ms-1" t-esc="label"/>
+                        <span t-if="props.showLabel" class="o_status_label ms-1" t-out="label"/>
                     </div>
                 </button>
                 <t t-set-slot="content">
@@ -22,7 +22,7 @@
                             class="`d-flex align-items-center ${option[0] === currentValue ? 'active' : ''}`"
                             onSelected="() => this.updateRecord(option[0])" checked="option[0] === currentValue">
                                 <span t-attf-class="o_status ms-2 {{ statusColor(option[0]) }} "/>
-                                <span t-esc="option[1]"/>
+                                <span t-out="option[1]"/>
                         </CheckboxItem>
                     </t>
                 </t>

@@ -7,7 +7,7 @@
                 <BadgeTag color="tag.color" text="tag.text" onClick="tag.onClick"/>
             </t>
             <div t-if="!props.readonly" class="o_input_dropdown d-inline-flex w-100" tabindex="0" t-ref="mainElement" t-on-focus="onMainElementFocus" t-on-click="onMainElementFocus">
-                <span class="analytic_distribution_placeholder"><t t-if="!state.formattedData.length" t-esc="props.placeholder"/></span>
+                <span class="analytic_distribution_placeholder"><t t-if="!state.formattedData.length" t-out="props.placeholder"/></span>
                 <span class="o_dropdown_button" />
                 <t t-call="analytic.AnalyticDistributionPopup"/>
             </div>

@@ -31,7 +31,7 @@
                         <t t-elif="message.isPending" t-call="mail.Message.pendingStatus"/>
                         <t t-elif="!message.is_transient">
                             <small t-if="isActive and props.showDates" class="o-mail-Message-date o-xsmaller mt-2 text-center lh-1" t-att-title="message.datetimeShort">
-                                <t t-esc="message.dateSimple"/>
+                                <t t-out="message.dateSimple"/>
                             </small>
                             <t t-elif="message.starred" t-call="mail.Message.sidebarStarred"/>
                         </t>
@@ -39,7 +39,7 @@
                     <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': isEditing }" t-ref="messageContent">
                         <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !message.isNote, 'pe-2': props.asCard and isMobileOS }" name="header">
                             <span t-if="message.authorName and shouldDisplayAuthorName" class="o-mail-Message-author smaller" t-att-class="getAuthorAttClass()">
-                                <strong class="me-1 o-fw-600" t-esc="message.authorName"/>
+                                <strong class="me-1 o-fw-600" t-out="message.authorName"/>
                             </span>
                             <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
                             <t t-if="isAlignedRight and !message.bubbleColor and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
@@ -49,10 +49,10 @@
                             </small>
                             <small t-if="isPersistentMessageFromAnotherThread" t-on-click.prevent="openRecord" class="ms-1 text-500">
                                 <t t-if="message.channel_id">
-                                    (from <a t-att-href="message.resUrl"><t t-esc="message.thread.prefix"/><t t-esc="message.channel_id.displayName or message.default_subject"/></a>)
+                                    (from <a t-att-href="message.resUrl"><t t-out="message.thread.prefix"/><t t-out="message.channel_id.displayName or message.default_subject"/></a>)
                                 </t>
                                 <t t-else="">
-                                    on <a t-if="message.thread.displayName" t-att-href="message.resUrl" t-esc="message.thread.displayName"/><em class="pe-1 text-decoration-line-through" t-else="">Deleted document</em>
+                                    on <a t-if="message.thread.displayName" t-att-href="message.resUrl" t-out="message.thread.displayName"/><em class="pe-1 text-decoration-line-through" t-else="">Deleted document</em>
                                 </t>
                             </small>
                             <div t-if="props.message.scheduledDatetime" t-att-class="{ 'ms-2': (env.inChatWindow and isAlignedRight) or (isPersistentMessageFromAnotherThread) }" t-att-title="props.message.scheduledDateSimple">
@@ -117,11 +117,11 @@
                                                         <t t-elif="message.showTranslation" t-out="message.richTranslationValue"/>
                                                         <div class="o-mail-Message-richBody overflow-x-auto" t-elif="message.hasTextContent and message.richBody and !message.linkPreviewSquash" t-out="props.messageSearch?.highlight(message.richBody) ?? message.richBody"/>
                                                         <p class="fst-italic text-muted small" t-if="message.showTranslation">
-                                                            <t t-if="message.translationSource" t-esc="translatedFromText"/>
+                                                            <t t-if="message.translationSource" t-out="translatedFromText"/>
                                                         </p>
                                                         <p class="fst-italic text-muted small" t-if="message.translationErrors">
                                                             <i class="text-danger fa fa-warning" role="img" aria-label="Translation Failure"/>
-                                                            <t t-if="message.translationErrors" t-esc="translationFailureText"/>
+                                                            <t t-if="message.translationErrors" t-out="translationFailureText"/>
                                                         </p>
                                                         <t t-if="showSubtypeDescription" t-out="props.messageSearch?.highlight(message.subtype_id?.description) ?? message.subtype_id?.description"/>
                                                     </t>

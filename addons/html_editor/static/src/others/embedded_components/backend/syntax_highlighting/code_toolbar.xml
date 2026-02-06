@@ -5,7 +5,7 @@
             <div data-prevent-closing-overlay="true">
                 <Dropdown menuClass="'o_language_selector'">
                     <button class="btn" t-att-title="languages[props.currentLanguage]" name="language">
-                        <span class="px-1" t-esc="languages[props.currentLanguage]"/>
+                        <span class="px-1" t-out="languages[props.currentLanguage]"/>
                         <i class="fa fa-caret-down"></i>
                     </button>
                     <t t-set-slot="content">
@@ -13,7 +13,7 @@
                             <DropdownItem
                                 attrs="{ name: language[1] }"
                                 onSelected="() => props.onLanguageChange(language[0])" t-on-pointerdown.prevent="() => {}">
-                                <t t-esc="language[1]"/>
+                                <t t-out="language[1]"/>
                             </DropdownItem>
                         </t>
                     </t>

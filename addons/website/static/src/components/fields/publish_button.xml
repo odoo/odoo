@@ -9,10 +9,10 @@
     <div class="o_stat_info">
         <span class="o_stat_text o_hover"
               t-att-class="props.record.data[props.name] ? 'text-danger' : 'text-success'"
-              t-esc="props.record.data[props.name] ? unpublish : publish"/>
+              t-out="props.record.data[props.name] ? unpublish : publish"/>
         <span class="o_stat_text o_not_hover"
               t-att-class="props.record.data[props.name] ? 'text-success' : 'text-danger'"
-              t-esc="props.record.data[props.name] ? published : unpublished"/>
+              t-out="props.record.data[props.name] ? published : unpublished"/>
     </div>
 </t>
 

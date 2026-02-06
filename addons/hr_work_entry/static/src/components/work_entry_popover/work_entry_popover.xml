@@ -6,9 +6,9 @@
                 <div class="popover-header d-flex justify-content-between py-0 pe-2"
                      t-attf-class="o_gantt_color_#{currentRecord.record.data.color}">
                     <h4 class="py-1 m-0" name="work_entry_popover_header">
-                        <t t-esc="getDurationStr(currentRecord.record.data.duration)"/>
+                        <t t-out="getDurationStr(currentRecord.record.data.duration)"/>
                         -
-                        <t t-esc="currentRecord.record.data.work_entry_type_id.display_name"/>
+                        <t t-out="currentRecord.record.data.work_entry_type_id.display_name"/>
                         <sup t-if="getSource(currentRecord.record)"
                              tabindex="-1"
                              class="text-info p-1 cursor-default"
@@ -37,9 +37,9 @@
                         <div class="popover-header d-flex justify-content-between py-0 pe-2 rounded-0"
                              t-attf-class="o_gantt_color_#{newRecord.record.data.color}">
                             <h4 class="py-1 m-0" t-if="newRecord.record.data.work_entry_type_id &amp;&amp; newRecord.record.data.duration">
-                                <t t-esc="getDurationStr(newRecord.record.data.duration)"/>
+                                <t t-out="getDurationStr(newRecord.record.data.duration)"/>
                                 -
-                                <t t-esc="newRecord.record.data.work_entry_type_id.display_name"/>
+                                <t t-out="newRecord.record.data.work_entry_type_id.display_name"/>
                             </h4>
                             <h4 class="py-1 m-0" t-else="">
                                 New Work Entry

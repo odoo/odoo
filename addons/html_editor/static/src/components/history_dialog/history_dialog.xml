@@ -56,10 +56,10 @@
                                     <div class="revision-item-content d-flex justify-content-between align-items-center gap-3">
                                         <div class="revision-info lh-sm">
                                             <time class="revision-date fw-bold d-block" t-att-datetime="rev.create_date">
-                                                <t t-esc="this.getRevisionDate(rev)" />
+                                                <t t-out="this.getRevisionDate(rev)" />
                                             </time>
                                             <div class="revision-author text-muted text-truncate">
-                                                <small>by <t t-esc="rev.create_user_name" /></small>
+                                                <small>by <t t-out="rev.create_user_name" /></small>
                                             </div>
                                         </div>
                                         <div class="o_avatar">
@@ -105,10 +105,10 @@
                                 <small>
                                     <i class="fa fa-info-circle me-1" role="img" aria-hidden="true"/>
                                     <t t-if="state.currentView === 'content'">
-                                        Showing <strong t-esc="this.currentRevision.create_user_name" />'s description from <strong t-esc="this.getRevisionFullDate(this.currentRevision)" />
+                                        Showing <strong t-out="this.currentRevision.create_user_name" />'s description from <strong t-out="this.getRevisionFullDate(this.currentRevision)" />
                                     </t>
                                     <t t-else="">
-                                        Comparing current description with <strong t-esc="this.currentRevision.create_user_name" />'s version from <strong t-esc="this.getRevisionFullDate(this.currentRevision)" />
+                                        Comparing current description with <strong t-out="this.currentRevision.create_user_name" />'s version from <strong t-out="this.getRevisionFullDate(this.currentRevision)" />
                                     </t>
                                 </small>
                             </div>

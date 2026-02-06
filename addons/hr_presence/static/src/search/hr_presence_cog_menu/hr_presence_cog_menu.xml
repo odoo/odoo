@@ -23,7 +23,7 @@
                         <div role="separator" class="dropdown-divider"/>
                     </t>
                     <DropdownItem class="'o_menu_item'" onSelected="() => this.onItemSelected(item)">
-                        <t t-esc="item.description"/>
+                        <t t-out="item.description"/>
                     </DropdownItem>
                     <t t-set="currentGroup" t-value="item.groupNumber"/>
                 </t>

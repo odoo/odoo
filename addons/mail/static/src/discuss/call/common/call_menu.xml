@@ -12,7 +12,7 @@
                         <span class="position-relative small bg-inherit">
                             <img class="rounded-2 object-fit-cover" t-att-src="rtc.channel.avatarUrl" alt="Thread Image" style="width: 20px; height: 20px"/>
                         </span>
-                        <span class="text-truncate small pe-1" t-esc="rtc.channel.displayName"/>
+                        <span class="text-truncate small pe-1" t-out="rtc.channel.displayName"/>
                     </div>
                     <span class="o-rounded-bubble h-100 py-2 border-end border-dark border-opacity-25"/>
                     <Dropdown state="dropdownState">
@@ -20,7 +20,7 @@
                             <i class="fa fa-fw o-fs-small" t-attf-class="{{ icon }}" t-att-class="lastSelfActionAttClass"/>
                             <i class="oi oi-chevron-down o-xxsmaller opacity-75" t-att-class="{ 'mt-2': lastSelfAction?.tags.includes('WARNING_BADGE') }"/>
                             <span t-if="lastSelfAction?.tags.includes('WARNING_BADGE')" class="o-discuss-CallMenu-warningBadge fw-bolder badge p-0 rounded-circle d-flex justify-content-center align-items-center o-discuss-warningBadge position-absolute bg-warning" style="aspect-ratio: 1; font-size: 0.6rem;">
-                                <i t-if="lastSelfAction?.badgeIcon" t-att-class="lastSelfAction.badgeIcon"/><span t-elif="lastSelfAction.badgeText" t-esc="lastSelfAction.badgeText"/>
+                                <i t-if="lastSelfAction?.badgeIcon" t-att-class="lastSelfAction.badgeIcon"/><span t-elif="lastSelfAction.badgeText" t-out="lastSelfAction.badgeText"/>
                             </span>
                         </button>
                         <t t-set-slot="content">

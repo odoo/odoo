@@ -32,8 +32,8 @@
                         </div>
                         <div class="w-100 o-min-width-0">
                             <div class="o-mail-Message-header d-flex flex-wrap align-items-baseline mb-1 lh-1">
-                                <strong class="me-1 text-truncate"><t t-esc="message.rating_id.publisher_name"/></strong>
-                                <small class="text-muted opacity-50 me-2">Published on <t t-esc="message.rating_id.publisher_datetime"/></small>
+                                <strong class="me-1 text-truncate"><t t-out="message.rating_id.publisher_name"/></strong>
+                                <small class="text-muted opacity-50 me-2">Published on <t t-out="message.rating_id.publisher_datetime"/></small>
                                 <div t-if="store.self.is_user_publisher" class="d-flex rounded-0">
                                     <Dropdown>
                                         <button class="bg-transparent border-0">

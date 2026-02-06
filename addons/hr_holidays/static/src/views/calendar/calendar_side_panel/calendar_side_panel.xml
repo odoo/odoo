@@ -14,9 +14,9 @@
                     <h5>Time Off Balance</h5>
                     <ul class="ps-0">
                         <li t-foreach="leaveState.holidays" t-as="holiday" t-key="holiday[3]" class="mt-2 list-unstyled">
-                            <strong t-esc="holiday[0]"/>
-                            : <span class="o_timeoff_green text-success" t-esc="holiday[2] ? holiday[1].virtual_remaining_leaves : holiday[1].virtual_leaves_taken"/>
-                                <t t-if="holiday[2]"> / <span t-esc="holiday[1].max_leaves"/> <t t-if="holiday[1].unit_of_measure == 'hour'">Hours</t><t t-else="">Days</t> <span class="o_timeoff_green text-success">Available</span></t>
+                            <strong t-out="holiday[0]"/>
+                            : <span class="o_timeoff_green text-success" t-out="holiday[2] ? holiday[1].virtual_remaining_leaves : holiday[1].virtual_leaves_taken"/>
+                                <t t-if="holiday[2]"> / <span t-out="holiday[1].max_leaves"/> <t t-if="holiday[1].unit_of_measure == 'hour'">Hours</t><t t-else="">Days</t> <span class="o_timeoff_green text-success">Available</span></t>
                         </li>
                     </ul>
                 </div>
@@ -27,10 +27,10 @@
                         <li t-foreach="leaveState.mandatoryDays" t-as="mandatoryDay" t-key="mandatoryDay.id" class="mt-2 list-unstyled"
                             t-att-class="mandatoryDay.end &lt; currentDateTime ? 'text-muted' : 'fw-bold'">
                             <span
-                                    t-esc="getFormattedDateSpan(mandatoryDay.start, mandatoryDay.end)"
+                                    t-out="getFormattedDateSpan(mandatoryDay.start, mandatoryDay.end)"
                                     t-attf-class="hr_mandatory_day_{{ mandatoryDay.colorIndex }}"
                                     t-att-class="{ 'opacity-50': mandatoryDay.end &lt; currentDateTime }"/>
-                            : <t t-esc="mandatoryDay.title"/>
+                            : <t t-out="mandatoryDay.title"/>
                         </li>
                     </ul>
                 </div>
@@ -41,8 +41,8 @@
                         <li t-foreach="leaveState.bankHolidays" t-as="bankHoliday" t-key="bankHoliday.id" class="mt-2 list-unstyled"
                             t-att-class="bankHoliday.end &lt; currentDateTime ? 'text-muted' : 'fw-bold'">
                             <span
-                                    t-esc="getFormattedDateSpan(bankHoliday.start, bankHoliday.end)"/>
-                            : <t t-esc="bankHoliday.title"/>
+                                    t-out="getFormattedDateSpan(bankHoliday.start, bankHoliday.end)"/>
+                            : <t t-out="bankHoliday.title"/>
                         </li>
                     </ul>
                 </div>

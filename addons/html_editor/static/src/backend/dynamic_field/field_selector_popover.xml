@@ -29,7 +29,7 @@
         </div>
         <div t-if="env.debug and state.path" class="d-flex flex-column px-2 text-break">
             <span class="d-block fw-bolder">Technical name</span>
-            <code t-esc="state.path" />
+            <code t-out="state.path" />
         </div>
         <div class="d-flex flex-column px-2 fw-bolder" t-if="!props.disableLabel">
             <span class="d-block">
