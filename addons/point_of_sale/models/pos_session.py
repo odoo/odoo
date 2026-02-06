@@ -1080,6 +1080,19 @@ class PosSession(models.Model):
         data['pay_later_move_lines'] = MoveLine.create(vals)
         return data
 
+    def _try_to_get_outstanding_account(self, payment):
+        # In community the outstanding account is computed on the creation of account.payment records
+        if self.env['account.move']._get_invoice_in_payment_state() == 'in_payment':
+            payment.outstanding_account_id = payment._get_outstanding_account(payment.payment_type)
+
+    def _swap_accounts_if_negative_amount(self, payment, payment_amount):
+        if float_compare(payment_amount, 0, precision_rounding=self.currency_id.rounding) < 0:
+            payment.write({
+                'force_outstanding_account_id': payment.destination_account_id,
+                'destination_account_id': payment.outstanding_account_id,
+                'payment_type': 'outbound',
+            })
+
     def _create_combine_account_payment(self, payment_method, amounts, diff_amount):
         outstanding_account = payment_method.outstanding_account_id
         destination_account = self._get_receivable_account(payment_method)
@@ -1095,19 +1108,10 @@ class PosSession(models.Model):
             'company_id': self.company_id.id,
         })
 
-        # In community the outstanding account is computed on the creation of account.payment records
-        accounting_installed = self.env['account.move']._get_invoice_in_payment_state() == 'in_payment'
-        if not account_payment.outstanding_account_id and accounting_installed:
-            account_payment.outstanding_account_id = account_payment._get_outstanding_account(account_payment.payment_type)
+        if not account_payment.outstanding_account_id:
+            self._try_to_get_outstanding_account(account_payment)
 
-        if float_compare(amounts['amount'], 0, precision_rounding=self.currency_id.rounding) < 0:
-            # revert the accounts because account.payment doesn't accept negative amount.
-            account_payment.write({
-                'outstanding_account_id': account_payment.destination_account_id,
-                'destination_account_id': account_payment.outstanding_account_id,
-                'payment_type': 'outbound',
-            })
-
+        self._swap_accounts_if_negative_amount(account_payment, amounts['amount'])
         account_payment.action_post()
 
         diff_amount_compare_to_zero = self.currency_id.compare_amounts(diff_amount, 0)
@@ -1147,10 +1151,6 @@ class PosSession(models.Model):
         accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
         destination_account = accounting_partner.property_account_receivable_id
 
-        if float_compare(amounts['amount'], 0, precision_rounding=self.currency_id.rounding) < 0:
-            # revert the accounts because account.payment doesn't accept negative amount.
-            outstanding_account, destination_account = destination_account, outstanding_account
-
         account_payment = self.env['account.payment'].create({
             'amount': abs(amounts['amount']),
             'partner_id': accounting_partner.id,
@@ -1161,6 +1161,10 @@ class PosSession(models.Model):
             'pos_payment_method_id': payment_method.id,
             'pos_session_id': self.id,
         })
+        if not account_payment.outstanding_account_id:
+            self._try_to_get_outstanding_account(account_payment)
+
+        self._swap_accounts_if_negative_amount(account_payment, amounts['amount'])
         account_payment.action_post()
         return account_payment.move_id.line_ids.filtered(lambda line: line.account_id == accounting_partner.property_account_receivable_id)
 
