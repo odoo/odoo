@@ -13,7 +13,7 @@ class SaleOrderDiscount(models.TransientModel):
     sale_order_id = fields.Many2one(
         "sale.order", default=lambda self: self.env.context.get("active_id"), required=True
     )
-    order_line_ids = fields.Many2many('sale.order.line', compute='_compute_order_line_ids', store=True)
+    order_line_ids = fields.Many2many("sale.order.line", compute="_compute_order_line_ids", store=True)
     company_id = fields.Many2one(related="sale_order_id.company_id")
     currency_id = fields.Many2one(related="sale_order_id.currency_id")
     discount_amount = fields.Monetary(string="Amount")
@@ -26,6 +26,16 @@ class SaleOrderDiscount(models.TransientModel):
         ],
         default="sol_discount",
     )
+
+    # CONSTRAINT METHODS #
+    @api.constrains("discount_type", "discount_percentage")
+    def _check_discount_amount(self):
+        for wizard in self:
+            if (
+                wizard.discount_type in ("sol_discount", "so_discount")
+                and wizard.discount_percentage > 1.0
+            ):
+                raise ValidationError(_("Invalid discount amount"))
 
     @api.depends("sale_order_id")
     def _compute_order_line_ids(self):
@@ -119,7 +129,7 @@ class SaleOrderDiscount(models.TransientModel):
             discount_product = company.sale_discount_product_id
         return discount_product
 
-    def _create_discount_lines(self):
+    def _get_discount_values(self):
         self.ensure_one()
         self = self.with_context(lang=self.sale_order_id._get_lang())
 
@@ -150,9 +160,14 @@ class SaleOrderDiscount(models.TransientModel):
             computation_key=f"global_discount,{self.id}",
             grouping_function=grouping_function,
         )
-        order.order_line = [
-            Command.create(values)
-            for values in self._prepare_global_discount_so_lines(global_discount_base_lines)
+
+        return self._prepare_global_discount_so_lines(global_discount_base_lines)
+
+    def _create_discount_lines(self):
+        values = self._get_discount_values()
+        self.sale_order_id.order_line = [
+            Command.create(v)
+            for v in values
         ]
 
     def action_apply_discount(self):
