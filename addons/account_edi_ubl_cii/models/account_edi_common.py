@@ -400,12 +400,9 @@ class AccountEdiCommon(models.AbstractModel):
         ResPartnerBank = self.env['res.partner.bank'].with_env(self.env(context=clean_context(self.env.context)))
         bank_details = list(set(map(sanitize_account_number, bank_details)))
 
-        if invoice.move_type in ('out_refund', 'in_invoice'):
-            partner = invoice.partner_id
-        elif invoice.move_type in ('out_invoice', 'in_refund'):
-            partner = self.env.company.partner_id
-        else:
+        if invoice.move_type not in ('out_refund', 'in_invoice'):
             return
+        partner = invoice.partner_id
 
         banks_to_create = []
         acc_number_partner_bank_dict = {
