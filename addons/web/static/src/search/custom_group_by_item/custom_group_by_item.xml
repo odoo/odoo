@@ -6,7 +6,7 @@
             <option t-foreach="props.fields" t-as="field" t-key="field.name"
                 t-if="field.type !== 'properties' and !field.isProperty"
                 t-att-value="field.name"
-                t-esc="field.string"
+                t-out="field.string"
             />
         </select>
     </t>

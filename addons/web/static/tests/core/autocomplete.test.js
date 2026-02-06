@@ -126,7 +126,7 @@ test("autocomplete with resetOnSelect='true'", async () => {
         static components = { AutoComplete };
         static template = xml`
             <div>
-                <div class= "test_value" t-esc="state.value"/>
+                <div class= "test_value" t-out="state.value"/>
                 <AutoComplete value="''" sources="sources" resetOnSelect="true"/>
             </div>
         `;

@@ -277,12 +277,12 @@ test("select text inside t-out", async () => {
 });
 
 test("select text inside t-esc", async () => {
-    const { el } = await setupEditor(`<div><t t-esc="test">Hello</t></div>`, {
+    const { el } = await setupEditor(`<div><t t-out="test">Hello</t></div>`, {
         config,
     });
     expect(getContent(el)).toBe(
         '<p data-selection-placeholder=""><br></p>' +
-            `<div><t t-esc="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Hello</t></div>` +
+            `<div><t t-out="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Hello</t></div>` +
             '<p data-selection-placeholder=""><br></p>'
     );
 
@@ -291,13 +291,13 @@ test("select text inside t-esc", async () => {
     await tick();
     expect(getContent(el)).toBe(
         '<p data-selection-placeholder=""><br></p>' +
-            `<div><t t-esc="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">H[]ello</t></div>` +
+            `<div><t t-out="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">H[]ello</t></div>` +
             '<p data-selection-placeholder=""><br></p>'
     );
     await dblclick("t");
     expect(getContent(el)).toBe(
         '<p data-selection-placeholder=""><br></p>' +
-            `<div>[<t t-esc="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Hello</t>]</div>` +
+            `<div>[<t t-out="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Hello</t>]</div>` +
             '<p data-selection-placeholder=""><br></p>'
     );
 });
@@ -334,7 +334,7 @@ test("cleaning removes content editable", async () => {
         <div>
             <t t-field="test">Hello</t>
             <t t-out="test">Hello</t>
-            <t t-esc="test">Hello</t>
+            <t t-out="test">Hello</t>
             <t t-raw="test">Hello</t>
         </div>`,
         {
@@ -345,7 +345,7 @@ test("cleaning removes content editable", async () => {
         <p data-selection-placeholder=""><br></p><div>
             <t t-field="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Hello</t>
             <t t-out="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Hello</t>
-            <t t-esc="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Hello</t>
+            <t t-out="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Hello</t>
             <t t-raw="test" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Hello</t>
         </div><p data-selection-placeholder=""><br></p>`);
 
@@ -353,7 +353,7 @@ test("cleaning removes content editable", async () => {
         <div>
             <t t-field="test">Hello</t>
             <t t-out="test">Hello</t>
-            <t t-esc="test">Hello</t>
+            <t t-out="test">Hello</t>
             <t t-raw="test">Hello</t>
         </div>`);
 });

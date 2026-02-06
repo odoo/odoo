@@ -188,7 +188,7 @@ test("embed an arbitrary component in a dialog is possible", async () => {
     expect.assertions(4);
     class SubComponent extends Component {
         static template = xml`
-            <div class="o_subcomponent" t-esc="props.text" t-on-click="_onClick"/>
+            <div class="o_subcomponent" t-out="props.text" t-on-click="_onClick"/>
         `;
         static props = ["*"];
         _onClick() {

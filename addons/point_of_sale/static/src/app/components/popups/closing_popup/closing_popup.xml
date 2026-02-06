@@ -7,8 +7,8 @@
                 <div class="d-flex flex-grow-1 justify-content-between">
                     <h4 class="align-middle my-1">Closing Register</h4>
                     <div class="total-orders fw-bolder align-middle my-1">
-                        <t t-esc="props.orders_details.quantity"/> orders:
-                        <span class="amount" t-esc="env.utils.formatCurrency(props.orders_details.amount)"/>
+                        <t t-out="props.orders_details.quantity"/> orders:
+                        <span class="amount" t-out="env.utils.formatCurrency(props.orders_details.amount)"/>
                     </div>
                 </div>
             </t>
@@ -17,26 +17,26 @@
                         <t t-set="diff" t-value="getDifference(props.default_cash_details.id)" />
                         <t t-set="counted" t-value="state.payments[props.default_cash_details.id]?.counted || '0'" />
                         <div class="d-flex align-items-center justify-content-between fs-3">
-                            <span t-esc="props.default_cash_details.name" />
-                            <span t-esc="env.utils.formatCurrency(props.default_cash_details.amount)" />
+                            <span t-out="props.default_cash_details.name" />
+                            <span t-out="env.utils.formatCurrency(props.default_cash_details.amount)" />
                         </div>
                         <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2">
                             <span>Opening</span>
-                            <span t-esc="env.utils.formatCurrency(props.default_cash_details.opening)" />
+                            <span t-out="env.utils.formatCurrency(props.default_cash_details.opening)" />
                         </div>
                         <div t-if="props.default_cash_details.payment_amount" class="d-flex align-items-center justify-content-between text-muted border-start ps-2">
-                            <span>Payments in <t t-esc="props.default_cash_details.name"/></span>
-                            <span class="align-top" t-esc="env.utils.formatCurrency(Math.abs(props.default_cash_details.payment_amount))"/>
+                            <span>Payments in <t t-out="props.default_cash_details.name"/></span>
+                            <span class="align-top" t-out="env.utils.formatCurrency(Math.abs(props.default_cash_details.payment_amount))"/>
                         </div>
                         <t t-set="moveData" t-value="cashMoveData"/>
                         <PaymentMethodBreakdown title.translate="Cash In / Out" total_amount="cashMoveData.total" transactions="cashMoveData.moves"/>
                         <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2">
                             <span>Counted</span>
-                            <span t-esc="env.utils.formatCurrency(env.utils.parseValidFloat(counted))" />
+                            <span t-out="env.utils.formatCurrency(env.utils.parseValidFloat(counted))" />
                         </div>
                         <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2" t-att-class="{'text-danger fw-bold': diff}">
                             <span>Difference</span>
-                            <span class="cash-difference" t-esc="env.utils.formatCurrency(diff)" />
+                            <span class="cash-difference" t-out="env.utils.formatCurrency(diff)" />
                         </div>
                     </div>
                     <div class="w-100 mb-3" t-foreach="props.non_cash_payment_methods" t-as="pm" t-key="pm.id">
@@ -44,16 +44,16 @@
                         <t t-set="diff" t-value="_showDiff ? getDifference(pm.id) : 0" />
                         <t t-set="counted" t-value="_showDiff ? env.utils.parseValidFloat(state.payments[pm.id].counted) : 0" />
                         <div class="d-flex align-items-center justify-content-between fs-3">
-                            <span t-esc="pm.name" />
-                            <span t-esc="env.utils.formatCurrency(pm.amount)" />
+                            <span t-out="pm.name" />
+                            <span t-out="env.utils.formatCurrency(pm.amount)" />
                         </div>
                         <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2">
                             <span>Counted</span>
-                            <span t-esc="env.utils.formatCurrency(counted)" />
+                            <span t-out="env.utils.formatCurrency(counted)" />
                         </div>
                         <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2" t-att-class="{'text-danger fw-bold': diff}">
                             <span>Difference</span>
-                            <span t-esc="env.utils.formatCurrency(diff)" />
+                            <span t-out="env.utils.formatCurrency(diff)" />
                         </div>
                     </div>
                 </div>
@@ -77,7 +77,7 @@
                     <t t-foreach="validPms" t-as="pm" t-key="pm.id">
                         <div class="col-12" t-att-class="{'col-md-6': !this.isTheLastPM(pm)}">
                             <label class="form-label">
-                                <t t-esc="pm.name" /> Count
+                                <t t-out="pm.name" /> Count
                             </label>
                             <div class="d-flex w-100 gap-2 mt-1">
                                 <Input
@@ -99,7 +99,7 @@
                     <div class="opening-notes-container d-flex flex-column flex-grow-1 align-items-start" t-if="props.opening_notes" >
                         <label class="form-label" for="props.opening_notes">Opening note</label>
                         <textarea class="opening-notes form-control" rows="7" id="props.opening_notes" style="height: 60px">
-                            <t t-esc="props.opening_notes"/>
+                            <t t-out="props.opening_notes"/>
                         </textarea>
                     </div>
                     <div class="closing-notes-container d-flex flex-column flex-grow-1 align-items-start">
@@ -110,7 +110,7 @@
                 <div class="mt-3" t-if="orderForNextDays > 0">
                     <label class="form-label">Orders status</label>
                     <div class="alert alert-info" role="alert">
-                        You still have <span t-esc="orderForNextDays" /> open orders for the next few days.
+                        You still have <span t-out="orderForNextDays" /> open orders for the next few days.
                     </div>
                 </div>
             <t t-set-slot="footer">

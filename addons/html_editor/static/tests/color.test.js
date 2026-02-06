@@ -22,9 +22,9 @@ test("should apply a color to a slice of text in a span in a font", async () => 
 
 test("should apply a color to the qweb tag (1)", async () => {
     await testEditor({
-        contentBefore: `<div><p t-esc="'Test'" contenteditable="false">[Test]</p></div>`,
+        contentBefore: `<div><p t-out="'Test'" contenteditable="false">[Test]</p></div>`,
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
-        contentAfter: `<div>[<p t-esc="'Test'" contenteditable="false" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
+        contentAfter: `<div>[<p t-out="'Test'" contenteditable="false" style="color: rgb(255, 0, 0);">Test</p>]</div>`,
     });
 });
 

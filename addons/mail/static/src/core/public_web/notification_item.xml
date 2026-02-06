@@ -25,7 +25,7 @@
                     </span>
                     <span class="flex-grow-1"/>
                     <small t-if="props.datetime" class="o-mail-NotificationItem-date ms-2 me-1 flex-shrink-0 align-self-end smaller" t-att-class="{ 'opacity-75': props.muted, 'o-fw-600': !props.muted }" t-att-title="props.datetime?.toLocaleString(DateTime.DATETIME_SHORT) ?? ''">
-                        <t t-esc="dateText"/>
+                        <t t-out="dateText"/>
                     </small>
                     <t t-if="props.slots and props.slots.sideContent">
                         <t t-slot="sideContent"/>
@@ -44,7 +44,7 @@
                                 <span class="o-mail-NotificationItem-badge o-discuss-badgeShape d-flex align-items-center justify-content-center mx-1 my-0 rounded fw-bold o-mail-NotificationItem-markAsRead text-600 cursor-pointer shadow-sm position-absolute top-0 end-0 z-1" title="Mark As Read" t-ref="markAsRead"><i class="fa fa-check text-success"/></span>
                             </span>
                         </span>
-                        <span t-if="!props.muted" t-attf-class="o-mail-NotificationItem-badge o-discuss-badge {{ props.counter > 0 and props.muted === 2 ? 'o-muted' : '' }} {{ props.important ? 'o-important' : '' }} {{ props.counter === 0 ? 'o-empty me-1' : '' }} d-flex align-items-center justify-content-center m-0 o-mx-0_5 badge rounded-pill fw-bold o-mail-NotificationItem-counter shadow-sm"><t t-if="props.counter" t-esc="props.counter"/></span>
+                        <span t-if="!props.muted" t-attf-class="o-mail-NotificationItem-badge o-discuss-badge {{ props.counter > 0 and props.muted === 2 ? 'o-muted' : '' }} {{ props.important ? 'o-important' : '' }} {{ props.counter === 0 ? 'o-empty me-1' : '' }} d-flex align-items-center justify-content-center m-0 o-mx-0_5 badge rounded-pill fw-bold o-mail-NotificationItem-counter shadow-sm"><t t-if="props.counter" t-out="props.counter"/></span>
                     </div>
                 </div>
             </div>

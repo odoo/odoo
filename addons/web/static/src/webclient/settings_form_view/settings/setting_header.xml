@@ -3,7 +3,7 @@
     <t t-name="web.HeaderSetting">
         <div t-att-class="classNames">
             <label t-if="labelString" class="o_form_label" t-att-for="props.fieldId">
-                <t t-esc="labelString"/>
+                <t t-out="labelString"/>
             </label>
             <div class="input-group align-items-baseline w-auto o_field_highlight">
                 <t t-slot="fieldSlot"/>

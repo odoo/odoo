@@ -45,7 +45,7 @@
                                         <div t-else="" class="o_value">
                                             <t t-set="formattedValue" t-value="getFormattedValue(cell)"/>
                                             <span t-att-data-tooltip="formattedValue.help">
-                                                <t t-esc="formattedValue.value"/>
+                                                <t t-out="formattedValue.value"/>
                                                 <sup
                                                     t-if="formattedValue.currencies"
                                                     class="p-1 fw-bolder text-info"
@@ -80,7 +80,7 @@
             </t>
             <t t-elif="item.options">
                 <Dropdown>
-                    <button class="o_menu_item" t-esc="item.description"/>
+                    <button class="o_menu_item" t-out="item.description"/>
                     <t t-set-slot="content">
                         <t t-set="subGroup" t-value="null"/>
                         <t t-foreach="item.options" t-as="option" t-key="option.id">
@@ -88,7 +88,7 @@
                                 <div class="dropdown-divider" role="separator"/>
                             </t>
                             <DropdownItem class="'o_item_option'"
-                                t-esc="option.description"
+                                t-out="option.description"
                                 onSelected="() => this.onGroupBySelected({ itemId: item.id, optionId: option.id})"
                             />
                             <t t-set="subGroup" t-value="option.groupNumber"/>
@@ -98,7 +98,7 @@
             </t>
             <t t-else="">
                 <DropdownItem class="'o_menu_item'"
-                    t-esc="item.description"
+                    t-out="item.description"
                     onSelected="() => this.onGroupBySelected({ itemId: item.id })"
                 />
             </t>
@@ -134,7 +134,7 @@
             t-on-click.stop.synthetic="(ev) => this.onHeaderClick(ev, cell, isXAxis)"
         >
             <i t-attf-class="fa fa-{{ cell.isLeaf ? 'plus-square' : 'minus-square-o' }} me-1"/>
-            <span t-esc="cell.title"/>
+            <span t-out="cell.title"/>
         </th>
     </t>
 
@@ -143,7 +143,7 @@
                 o_pivot_sort_order_asc: cell.order === 'asc',
                 o_pivot_sort_order_desc: cell.order === 'desc',
             }" t-on-click.prevent="() => this.onMeasureClick(cell)" t-on-mouseover="onMouseEnter" t-on-mouseout="onMouseLeave">
-            <t t-esc="cell.title"/>
+            <t t-out="cell.title"/>
             <i t-if="cell.order === 'asc' || cell.order ==='desc'" t-attf-class="fa fa-caret-{{ cell.order === 'asc' ? 'up' : 'down' }} ms-1"/>
         </th>
     </t>

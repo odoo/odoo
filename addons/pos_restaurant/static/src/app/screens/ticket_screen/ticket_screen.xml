@@ -5,7 +5,7 @@
          <xpath expr="//div[@id='order-tags']" position="after">
             <t t-set="tableTag" t-value="getTableTag(order)"/>
             <div t-if="tableTag" t-attf-class="badge rounded o_colorlist_item_color_1 ms-1" style="font-size: 0.75rem !important;">
-                Table <t t-esc="tableTag" />
+                Table <t t-out="tableTag" />
             </div>
         </xpath>
     </t>

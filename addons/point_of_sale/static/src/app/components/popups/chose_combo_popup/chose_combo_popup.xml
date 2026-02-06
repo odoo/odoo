@@ -9,10 +9,10 @@
             <div class="flex-fill d-flex flex-column overflow-y-auto gap-2 combo-list">
                 <div class="d-flex justify-content-between p-3 combo-item" t-att-class="{'border-top': combo_index > 0}" t-foreach="this.allCombos" t-as="combo" t-key="combo_index">
                     <div>
-                        <span class="fs-3" t-esc="combo.productTmpl.display_name"/>
+                        <span class="fs-3" t-out="combo.productTmpl.display_name"/>
                         <ul class="mb-0 ps-3">
                             <li t-foreach="combo.lines" t-as="line" t-key="line_index" t-att-class="{'text-info': line.upsell}">
-                                - <t t-if="!line.upsell"><span t-esc="line.quantity"/> x </t><span t-esc="line.name"/><t t-if="line.upsell"> (up to <span t-esc="line.quantity"/> more)</t>
+                                - <t t-if="!line.upsell"><span t-out="line.quantity"/> x </t><span t-out="line.name"/><t t-if="line.upsell"> (up to <span t-out="line.quantity"/> more)</t>
                             </li>
                         </ul>
                     </div>

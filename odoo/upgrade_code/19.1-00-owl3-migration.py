@@ -4,7 +4,8 @@ import re
 EXCLUDED_FILES = (
     'addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
     'addons/web/static/lib/owl/owl.js',
-    'addons/web/static/src/owl2/utils.js'
+    'addons/web/static/src/owl2/utils.js',
+    'pos_blackbox_be/static/src/pos/overrides/navbar/navbar.xml',
 )
 
 
@@ -147,15 +148,54 @@ class JSTooling:
         Returns:
             The JS content with transformed XML templates.
         """
-        pattern = r'(xml\s*`)(.*?)(`)'
+        pattern = re.compile(r"(\bxml\s*`)(.*?)(`)", re.DOTALL)
 
-        def replacer(match):
+        def replacer(match: re.Match) -> str:
             prefix = match.group(1)
             xml_content = match.group(2)
             suffix = match.group(3)
             return f"{prefix}{transform_func(xml_content)}{suffix}"
 
-        return re.sub(pattern, replacer, content, flags=re.DOTALL)
+        return pattern.sub(replacer, content)
+
+    @staticmethod
+    def transform_js_string_literals(content: str, transform_func: callable) -> str:
+        """Finds JS string literals ('...', "...", `...`) and applies a transformation function.
+
+        Args:
+            content: The JS file content.
+            transform_func: Function to apply to the inner string.
+
+        Returns:
+            The JS content with transformed string literals.
+        """
+        pattern = re.compile(
+            r"'(?:\\.|[^'\\])*'|\"(?:\\.|[^\"\\])*\"|`(?:\\.|[^`\\])*`",
+            re.DOTALL,
+        )
+
+        def replacer(match: re.Match) -> str:
+            literal = match.group(0)
+            delimiter = literal[0]
+            inner = literal[1:-1]
+            return delimiter + transform_func(inner) + delimiter
+
+        return pattern.sub(replacer, content)
+
+    @staticmethod
+    def transform_arch_templates(content: str, transform_func: callable) -> str:
+        """Finds arch: `...` or arch = `...` template literals and applies a transform
+        function to the inner XML string.
+        """
+        pattern = re.compile(r"(\barch\b\s*(?:[:=])\s*`)(.*?)(`)", re.DOTALL)
+
+        def replacer(match: re.Match) -> str:
+            prefix = match.group(1)
+            xml_content = match.group(2)
+            suffix = match.group(3)
+            return f"{prefix}{transform_func(xml_content)}{suffix}"
+
+        return pattern.sub(replacer, content)
 
     @staticmethod
     def replace_usage(content: str, old_name: str, new_name: str) -> str:
@@ -271,11 +311,58 @@ def upgrade_use_external_listener(file_manager, log_info, log_error):
         file_manager.print_progress(fileno, len(js_files))
 
 
+def upgrade_t_esc(file_manager, log_info, log_error):
+    """Replaces the t-esc directive in xml templates with the t-out directive"""
+    files = [
+        file for file in file_manager
+        if file.path.suffix in ['.xml', '.js']
+        and "node_modules" not in file.path.parts
+        and not any(file.path._str.endswith(p) for p in EXCLUDED_FILES)
+    ]
+    if not files:
+        return
+
+    reg_t_esc_attr = re.compile(r"\bt-esc(?=\s*=\s*['\"])")
+    # matches: <attribute name="t-esc">  /  <attribute name="t-esc"/> /  <attribute remove="1" name="t-esc" />
+    reg_att_t_esc = re.compile(r'(<attribute\b[^>]*\bname\s*=\s*(["\']))t-esc(\2)')
+
+    def replace_t_esc(s: str) -> str:
+        s = reg_t_esc_attr.sub("t-out", s)
+        s = reg_att_t_esc.sub(r"\1t-out\3", s)
+        return s
+
+    for fileno, file in enumerate(files, start=1):
+        try:
+            content = file.path.read_text(encoding="utf-8")
+        except UnicodeDecodeError as e:
+            # For file enterprise/l10n_cl_edi_factoring/template/aec_template.xml
+            log_error(file.path, f"Upgrade_code: skipping non-utf8 file({e})")
+            continue
+
+        if "t-esc" not in content:
+            continue
+
+        try:
+            if file.path.name.endswith(".test.js"):
+                content = JSTooling.transform_js_string_literals(content, replace_t_esc)
+            elif file.path.suffix == ".js":
+                content = JSTooling.transform_xml_literals(content, replace_t_esc)
+                content = JSTooling.transform_arch_templates(content, replace_t_esc)
+            else:  # .xml
+                content = replace_t_esc(content)
+            file.content = content
+        except Exception as e:  # noqa: BLE001
+            log_error(file.path, e)
+
+        file_manager.print_progress(fileno, len(files))
+
+
 def upgrade(file_manager) -> str:
     """Main entry point called by Odoo."""
     collector = MigrationCollector()
 
     collector.run_sub("Migrating useEffect", upgrade_useeffect, file_manager)
     collector.run_sub("Migrating useExternalListener", upgrade_use_external_listener, file_manager)
+    collector.run_sub("Replacing 't-esc' with 't-out'", upgrade_t_esc, file_manager)
 
     return collector.get_final_logs()

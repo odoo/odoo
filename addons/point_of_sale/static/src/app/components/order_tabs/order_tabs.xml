@@ -9,7 +9,7 @@
         >
             <t t-set="order" t-value="scope.item" />
             <div class="floating-order-container position-relative">
-                <button t-esc="order.getName()"
+                <button t-out="order.getName()"
                     t-att-class="{ 'active': pos.getOrder()?.id === order.id }"
                     t-attf-class="{{`o_colorlist_item_color_transparent_${order.preset_id?.color}`}}"
                     class="btn btn-lg btn-secondary text-truncate mx-1 border-transparent"

@@ -123,7 +123,7 @@ export class HootReporting extends Component {
                                 <t t-if="result.test.status === Test.ABORTED">
                                     aborted after
                                 </t>
-                                <t t-esc="formatTime(result.test.duration, 'ms')" />
+                                <t t-out="formatTime(result.test.duration, 'ms')" />
                             </t>
                         </small>
                         <HootJobButtons job="result.test" />
@@ -141,16 +141,16 @@ export class HootReporting extends Component {
                             <span
                                 t-if="message.statusFilter"
                                 t-att-class="message.statusFilterClassName"
-                                t-esc="message.statusFilter"
+                                t-out="message.statusFilter"
                             />
                             tests found
                             <t t-if="message.filter">
                                 matching
-                                <strong class="text-primary" t-esc="message.filter" />
+                                <strong class="text-primary" t-out="message.filter" />
                             </t>
                             <t t-if="message.selectedSuiteName">
                                 in suite
-                                <strong class="text-primary" t-esc="message.selectedSuiteName" />
+                                <strong class="text-primary" t-out="message.selectedSuiteName" />
                             </t>.
                         </em>
                     </t>
@@ -185,9 +185,9 @@ export class HootReporting extends Component {
                     <t t-else="">
                         <div class="flex flex-col gap-3 p-5 rounded bg-gray-200 dark:bg-gray-800">
                             <h3 class="border-b border-gray pb-1">
-                                <strong class="text-primary" t-esc="runnerReporting.tests" />
+                                <strong class="text-primary" t-out="runnerReporting.tests" />
                                 /
-                                <span class="text-primary" t-esc="runnerState.tests.length" />
+                                <span class="text-primary" t-out="runnerState.tests.length" />
                                 tests completed
                             </h3>
                             <ul class="flex flex-col gap-2">
@@ -198,7 +198,7 @@ export class HootReporting extends Component {
                                             t-on-click.stop="() => this.filterResults('passed')"
                                         >
                                             <i class="fa fa-check-circle" />
-                                            <strong t-esc="runnerReporting.passed" />
+                                            <strong t-out="runnerReporting.passed" />
                                         </button>
                                         tests passed
                                     </li>
@@ -210,7 +210,7 @@ export class HootReporting extends Component {
                                             t-on-click.stop="() => this.filterResults('failed')"
                                         >
                                             <i class="fa fa-times-circle" />
-                                            <strong t-esc="runnerReporting.failed" />
+                                            <strong t-out="runnerReporting.failed" />
                                         </button>
                                         tests failed
                                     </li>
@@ -222,7 +222,7 @@ export class HootReporting extends Component {
                                             t-on-click.stop="() => this.filterResults('skipped')"
                                         >
                                             <i class="fa fa-pause-circle" />
-                                            <strong t-esc="runnerReporting.skipped" />
+                                            <strong t-out="runnerReporting.skipped" />
                                         </button>
                                         tests skipped
                                     </li>
@@ -234,7 +234,7 @@ export class HootReporting extends Component {
                                             t-on-click.stop="() => this.filterResults('todo')"
                                         >
                                             <i class="fa fa-exclamation-circle" />
-                                            <strong t-esc="runnerReporting.todo" />
+                                            <strong t-out="runnerReporting.todo" />
                                         </button>
                                         tests to do
                                     </li>

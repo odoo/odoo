@@ -6,12 +6,12 @@
                 <t t-set="is_next_meeting" t-value="true"/>
                 <t t-foreach="group.meetings" t-as="meeting" t-key="meeting.id">
                     <div class="o-calendar-meeting d-flex px-2">
-                        <span class="flex-grow-1 text-truncate" t-att-class="!meeting.allday and is_next_meeting ? 'fw-bold' : ''" t-esc="meeting.name"/>
+                        <span class="flex-grow-1 text-truncate" t-att-class="!meeting.allday and is_next_meeting ? 'fw-bold' : ''" t-out="meeting.name"/>
                         <span t-if="meeting.formattedStart">
                             <t t-if="meeting.allday">All Day</t>
                             <t t-else=''>
                                 <t t-set="is_next_meeting" t-value="false"/>
-                                <t t-esc="meeting.formattedStart"/>
+                                <t t-out="meeting.formattedStart"/>
                             </t>
                         </span>
                     </div>

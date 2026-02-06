@@ -21,7 +21,7 @@ export const base64Img =
 class TestEditor extends Component {
     static template = xml`
         <t t-if="props.styleContent">
-            <style t-esc="props.styleContent"></style>
+            <style t-out="props.styleContent"></style>
         </t>
         <Wysiwyg t-props="wysiwygProps" />`;
     static components = { Wysiwyg };

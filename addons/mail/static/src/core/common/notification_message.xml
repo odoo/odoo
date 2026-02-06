@@ -5,15 +5,15 @@
             <div class="o-mail-Message-jumpTarget position-absolute top-0 pe-none"/>
             <i t-if="message.notificationIcon" t-attf-class="{{ message.notificationIcon }} me-1 text-muted"/>
             <t t-if="message.notificationType === 'call'">
-                <span class="text-muted" t-esc="callInformation"/>
+                <span class="text-muted" t-out="callInformation"/>
             </t>
             <t t-elif="['channel_rename', 'thread_deletion'].includes(message.notificationType)">
                 <span class="text-muted" t-out="message.inlineBody"/>
             </t>
             <t t-else="">
-                <span class="o-mail-NotificationMessage-author d-inline text-muted" t-if="message.authorName and !message.richBody.includes(htmlEscape(message.authorName))" t-esc="message.authorName"/> <span class="text-muted" t-out="message.richBody"/>
+                <span class="o-mail-NotificationMessage-author d-inline text-muted" t-if="message.authorName and !message.richBody.includes(htmlEscape(message.authorName))" t-out="message.authorName"/> <span class="text-muted" t-out="message.richBody"/>
             </t>
-            <span class="o-mail-Message-date o-xsmaller ms-1" t-esc="message.dateSimpleWithDay"/>
+            <span class="o-mail-Message-date o-xsmaller ms-1" t-out="message.dateSimpleWithDay"/>
         </div>
     </t>
 </templates>

@@ -14,7 +14,7 @@
             <button t-if="!snippet.isInstallable and !snippet.isDisabled" class="o_snippet_thumbnail_area" t-on-click="props.onClickHandler" title="Insert snippet"/>
             <Image t-if="snippet.isDisabled" src="'/html_builder/static/img/snippet_disabled.svg'" class="'o_snippet_undroppable'"/>
             <div class="o_snippet_thumbnail_img" t-attf-style="background-image: url({{snippet.thumbnailSrc}});"/>
-            <span class="o_snippet_thumbnail_title" t-esc="snippet.title"/>
+            <span class="o_snippet_thumbnail_title" t-out="snippet.title"/>
             <button
                 t-if="snippet.isInstallable"
                 class="o_install_btn btn btn-success btn-lg position-absolute start-50 bottom-50 translate-middle-x visually-hidden-focusable z-1"

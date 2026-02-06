@@ -63,7 +63,7 @@ defineActions([
 test("error in a client action (at rendering)", async () => {
     expect.assertions(9);
     class Boom extends Component {
-        static template = xml`<div><t t-esc="a.b.c"/></div>`;
+        static template = xml`<div><t t-out="a.b.c"/></div>`;
         static props = ["*"];
     }
     actionRegistry.add("Boom", Boom);
@@ -96,7 +96,7 @@ test("error in a client action (after the first rendering)", async () => {
     class Boom extends Component {
         static template = xml`
             <div>
-                <t t-if="boom" t-esc="a.b.c"/>
+                <t t-if="boom" t-out="a.b.c"/>
                 <button t-else="" class="my_button" t-on-click="onClick">Click Me</button>
             </div>`;
         static props = ["*"];

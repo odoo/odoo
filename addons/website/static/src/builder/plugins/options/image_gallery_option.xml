@@ -25,7 +25,7 @@
     <BuilderRow label.translate="Columns" t-if="isActiveItem('grid_mode_opt') || isActiveItem('masonry_mode_opt')">
         <BuilderSelect>
             <t t-foreach="[1,2,3,4,6,12]" t-as="column" t-key="column">
-                <BuilderSelectItem action="'setImageGalleryColumns'" actionParam="column"><t t-esc="column"/></BuilderSelectItem>
+                <BuilderSelectItem action="'setImageGalleryColumns'" actionParam="column"><t t-out="column"/></BuilderSelectItem>
             </t>
         </BuilderSelect>
     </BuilderRow>

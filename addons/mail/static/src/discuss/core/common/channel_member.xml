@@ -4,7 +4,7 @@
         <div class="o-discuss-ChannelMember d-flex align-items-center p-1 bg-inherit rounded-3" t-att-class="attClass" t-on-click.stop="(ev) => this.onClickAvatar(ev)">
             <DiscussAvatar member="member"/>
             <div t-ref="displayName" class="d-flex overflow-hidden flex-column lh-sm">
-                <span class="ms-2 text-truncate text-muted fw-bold" t-esc="member.name" t-att-title="member.name"/>
+                <span class="ms-2 text-truncate text-muted fw-bold" t-out="member.name" t-att-title="member.name"/>
             </div>
             <i t-if="member.channel_role === 'owner'" class="ms-2 fa fa-star text-warning" role="img" title="Channel Owner" aria-label="Channel Owner"/>
             <i t-if="member.channel_role === 'admin'" class="ms-2 fa fa-star text-primary" role="img" title="Channel Admin" aria-label="Channel Admin"/>

@@ -17,7 +17,7 @@
         <div class="o_sidebar_topbar d-flex align-items-center justify-content-between flex-shrink-0 py-0 fs-4">
             <small class="d-flex align-items-center justify-content-between ms-2">
               <img class="o_burger_menu_avatar o_image_24_cover rounded" t-att-src="'/web/image?model=res.users&amp;field=avatar_128&amp;id=' + user.userId" alt="Menu"/>
-              <span class="o_burger_menu_username px-2"><t t-esc="user.name"/></span>
+              <span class="o_burger_menu_username px-2"><t t-out="user.name"/></span>
             </small>
             <div class="d-flex align-items-center h-100 bg-transparent">
                 <button t-if="this.router.shareUrl and this.isDisplayStandalone" class="o_sidebar_share fa fa-share-alt btn border-0 fs-5 text-reset" aria-label="Share URL" title="Share URL" t-on-click.stop="() => this._shareUrl()"/>

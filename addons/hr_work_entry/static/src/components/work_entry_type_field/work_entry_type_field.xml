@@ -20,7 +20,7 @@
         <div class="o_calendar_renderer o_radio_item position-relative cursor-pointer d-flex gap-1 align-items-center"
              t-att-class="props.className"
              style="background-color: inherit;">
-            <span class="small rounded-3 d-flex justify-content-center" t-esc="state.data?.display_code || ' '"
+            <span class="small rounded-3 d-flex justify-content-center" t-out="state.data?.display_code || ' '"
                   t-attf-class="o_calendar_color_#{state.data?.color || 0}"
                   style="background-color: rgb(var(--o-event-bg--subtle-rgb)); width: 5ch; height:23px; padding: 2px;"/>
         </div>

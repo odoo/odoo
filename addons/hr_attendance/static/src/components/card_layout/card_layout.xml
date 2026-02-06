@@ -18,10 +18,10 @@
             </div>
             <div class="o_hr_kiosk_mode_top d-flex flex-column-reverse flex-sm-row justify-content-between mx-4 my-3" t-if="this.props.activeDisplay != 'settings'">
                 <div class="o_hr_kiosk_mode_top_time d-flex flex-column-reverse flex-sm-row align-items-center justify-content-center mt-2 mt-sm-0">
-                    <span class="me-0 me-sm-2 display-6" t-esc="state.time"/>
+                    <span class="me-0 me-sm-2 display-6" t-out="state.time"/>
                     <div class="d-flex flex-sm-column gap-1 gap-sm-0 small">
-                        <span t-esc="state.dayOfWeek"/>
-                        <span t-esc="state.date"/>
+                        <span t-out="state.dayOfWeek"/>
+                        <span t-out="state.date"/>
                     </div>
                 </div>
             </div>
@@ -38,10 +38,10 @@
                 </div>
                 <div class="o_hr_kiosk_mode_top d-flex flex-column-reverse flex-sm-row justify-content-between mx-4 my-3" t-if="this.props.activeDisplay != 'settings'">
                     <div class="o_hr_kiosk_mode_top_time d-flex flex-column-reverse flex-sm-row align-items-center justify-content-center mt-2 mt-sm-0">
-                        <span class="me-0 me-sm-2 display-6" t-esc="state.time"/>
+                        <span class="me-0 me-sm-2 display-6" t-out="state.time"/>
                         <div class="d-flex flex-sm-column gap-1 gap-sm-0 small">
-                            <span t-esc="state.dayOfWeek"/>
-                            <span t-esc="state.date"/>
+                            <span t-out="state.dayOfWeek"/>
+                            <span t-out="state.date"/>
                         </div>
                     </div>
                 </div>

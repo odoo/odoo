@@ -15,7 +15,7 @@
         <!-- App Brand -->
         <DropdownItem
           t-if="!env.isSmall and currentApp"
-          t-esc="currentApp.name"
+          t-out="currentApp.name"
           class="'o_menu_brand d-flex'"
           onSelected="() => this.onNavBarDropdownItemSelection(currentApp)"
           attrs="{ href: getMenuItemHref(currentApp), 'data-menu-xmlid': currentApp.xmlid, 'data-section': currentApp.id }"
@@ -52,7 +52,7 @@
                 'border-top': !isNested &amp;&amp; subMenu_index != 0,
                 'py-2': isNested,
             }"
-            t-att-data-menu-xmlid="section.xmlid" t-esc="section.name"/>
+            t-att-data-menu-xmlid="section.xmlid" t-out="section.name"/>
         <ul class="list-unstyled ps-0">
             <t t-foreach="section.childrenTree" t-as="subSection" t-key="subSection_index">
                 <t t-call="web.SectionMenu">
@@ -68,7 +68,7 @@
             'border-top': !isNested &amp;&amp; subMenu_index != 0,
             'py-2': isNested,
         }">
-        <t t-esc="section.name"/>
+        <t t-out="section.name"/>
     </li>
   </t>
 
@@ -91,7 +91,7 @@
               t-key="app.id"
               class="{ 'o_app': true, focus: menuService.getCurrentApp() === app, 'o_disabled_offline': !this._isAvailable(app) }"
               onSelected="() => this.onNavBarDropdownItemSelection(app)"
-              t-esc="app.name"
+              t-out="app.name"
               attrs="{ href: getMenuItemHref(app), 'data-menu-xmlid': app.xmlid, 'data-section': app.id }"
             />
           </t>
@@ -116,7 +116,7 @@
                 <div t-if="!state.isAllAppsMenuOpened and currentApp" class="d-flex align-items-center m-3 mb-0">
                   <img style="height: 2em;" t-if="currentApp.webIconData" class="o_app_icon me-2" t-attf-src="{{currentApp.webIconData}}"/>
                   <i t-elif="currentApp.webIcon" t-att-class="`${currentApp.webIconClass} fa-2x me-2`" t-att-style="'color:' + currentApp.webIconColor"></i>
-                  <span class="fs-4 fw-bolder"><t t-esc="currentApp.name"/></span>
+                  <span class="fs-4 fw-bolder"><t t-out="currentApp.name"/></span>
                 </div>
                 <ul class="list-unstyled py-2 ps-0 mb-0">
                     <t t-if="!state.isAllAppsMenuOpened">
@@ -133,7 +133,7 @@
                           <div class="d-flex align-items-center">
                             <img style="height: 3em;" t-if="app.webIconData" class="o_app_icon me-2" t-attf-src="{{app.webIconData}}"/>
                             <i t-elif="app.webIcon" t-att-class="app.webIcon.split(',')[0] + ' fa-3x me-2'" t-att-style="'color:' + app.webIcon.split(',')[1]"></i>
-                            <t t-esc="app.name"/>
+                            <t t-out="app.name"/>
                           </div>
                         </li>
                       </t>
@@ -170,7 +170,7 @@
                                 o_disabled_offline: !this._isAvailable(section)
                             }"
                             onSelected="() => this.onNavBarDropdownItemSelection(section)"
-                            t-esc="section.name"
+                            t-out="section.name"
                             attrs="{
                                 href: getMenuItemHref(section),
                                 'data-hotkey': hotkey,
@@ -182,7 +182,7 @@
                     <t t-else="">
                         <Dropdown>
                             <button t-att-data-hotkey="hotkey" t-att-data-menu-xmlid="section.xmlid" data-available-offline="">
-                                <span t-esc="section.name" t-att-data-section="section.id" />
+                                <span t-out="section.name" t-att-data-section="section.id" />
                             </button>
                             <t t-set-slot="content">
                                 <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
@@ -221,13 +221,13 @@
           o_disabled_offline: !this._isAvailable(item),
           o_dropdown_menu_group_entry: decalage gt 20
         }"
-        t-esc="item.name"
+        t-out="item.name"
         onSelected="() => this.onNavBarDropdownItemSelection(item)"
         attrs="{ style: style, href: getMenuItemHref(item), 'data-menu-xmlid': item.xmlid, 'data-section': item.id }"
       />
 
       <t t-else="">
-        <div class="dropdown-menu_group dropdown-header" t-att-style="style" t-esc="item.name" />
+        <div class="dropdown-menu_group dropdown-header" t-att-style="style" t-out="item.name" />
         <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
           <t t-set="items" t-value="item.childrenTree" />
           <t t-set="decalage" t-value="decalage + 12" />
@@ -252,14 +252,14 @@
                   o_disabled_offline: !this._isAvailable(item)
                 }"
                 onSelected="() => this.onNavBarDropdownItemSelection(section)"
-                t-esc="section.name"
+                t-out="section.name"
                 attrs="{ href: getMenuItemHref(section), 'data-menu-xmlid': section.xmlid, 'data-section': section.id }"
               />
             </t>
             <t t-else="">
               <div
                 class="o_more_dropdown_section o_more_dropdown_section_group dropdown-header bg-100"
-                t-esc="section.name"
+                t-out="section.name"
               />
               <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
                 <t t-set="items" t-value="section.childrenTree" />

@@ -325,13 +325,13 @@ export class HootSearch extends Component {
                             class="flex border border-primary rounded"
                             t-att-title="count.tip"
                         >
-                            <span class="bg-btn px-1 transition-colors" t-esc="count.category" />
+                            <span class="bg-btn px-1 transition-colors" t-out="count.category" />
                             <span class="mx-1 flex gap-1">
                                 <t t-if="count.include.length">
-                                    <span class="text-emerald" t-esc="count.include.length" />
+                                    <span class="text-emerald" t-out="count.include.length" />
                                 </t>
                                 <t t-if="count.exclude.length">
-                                    <span class="text-rose" t-esc="count.exclude.length" />
+                                    <span class="text-rose" t-out="count.exclude.length" />
                                 </t>
                             </span>
                         </button>

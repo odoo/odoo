@@ -13,7 +13,7 @@ test("test the render service", async () => {
     class ComponentToBeRendered extends Component {
         static props = ["name"];
         static template = xml`
-            <div> It's me, <t t-esc="props.name" />! </div>
+            <div> It's me, <t t-out="props.name" />! </div>
         `;
     }
 

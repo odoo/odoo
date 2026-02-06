@@ -31,7 +31,7 @@
     </t>
     <t t-name="point_of_sale.inputIcon">
         <i t-if="props.icon.type === 'fa'" t-attf-class="fa {{props.icon.value}} {{margin}}"/>
-        <span t-if="props.icon.type === 'string'" t-attf-class="{{margin}}" t-esc="props.icon.value"/>
+        <span t-if="props.icon.type === 'string'" t-attf-class="{{margin}}" t-out="props.icon.value"/>
     </t>
 
 </templates>

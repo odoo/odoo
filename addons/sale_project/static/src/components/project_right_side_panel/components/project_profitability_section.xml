@@ -11,7 +11,7 @@
                             <span t-out="revenue_label"/>
                         </button>
                     </t>
-                    <t t-esc="revenue_label" t-else=""/>
+                    <t t-out="revenue_label" t-else=""/>
                     <a
                         class="revenue_section btn btn-link my-n2 py-2 text-action"
                         t-if="revenue.action" href="#"
@@ -24,9 +24,9 @@
                     </a>
                 </div>
             </td>
-            <td t-attf-class="text-end {{ revenue.invoiced + revenue.to_invoice === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenue.invoiced + revenue.to_invoice)"/></td>
-            <td t-attf-class="text-end {{ revenue.to_invoice === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenue.to_invoice)"/></td>
-            <td t-attf-class="text-end {{ revenue.invoiced === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenue.invoiced)"/></td>
+            <td t-attf-class="text-end {{ revenue.invoiced + revenue.to_invoice === 0 ? 'text-500' : ''}}"><t t-out="props.formatMonetary(revenue.invoiced + revenue.to_invoice)"/></td>
+            <td t-attf-class="text-end {{ revenue.to_invoice === 0 ? 'text-500' : ''}}"><t t-out="props.formatMonetary(revenue.to_invoice)"/></td>
+            <td t-attf-class="text-end {{ revenue.invoiced === 0 ? 'text-500' : ''}}"><t t-out="props.formatMonetary(revenue.invoiced)"/></td>
         </tr>
         <t t-if="!state.isFolded and this.props.revenue.isSectionFoldable">
             <tr class="table-active">
@@ -45,26 +45,26 @@
                                 <t t-set="uom_name" t-value="sale_item.product_uom_id and sale_item.product_uom_id[1]"/>
                                 <td class="ps-4">
                                     <a t-if="sale_item.action" href="#" t-on-click="() => this.onSaleItemActionClick(sale_item.action)">
-                                        <t t-esc="sale_item.display_name"/>
+                                        <t t-out="sale_item.display_name"/>
                                     </a>
-                                    <t t-else="" t-esc="sale_item.display_name"/>
+                                    <t t-else="" t-out="sale_item.display_name"/>
                                 </td>
                                 <td class="text-end">
                                     <div class="d-flex d-md-block flex-column">
-                                        <t t-esc="formatValue(sale_item.product_uom_qty, uom_name)"/>
-                                        <small t-esc="uom_name" class="ms-md-1 text-muted"/>
+                                        <t t-out="formatValue(sale_item.product_uom_qty, uom_name)"/>
+                                        <small t-out="uom_name" class="ms-md-1 text-muted"/>
                                     </div>
                                 </td>
                                 <td class="text-end">
                                     <div class="d-flex d-md-block flex-column">
-                                        <t t-esc="formatValue(sale_item.qty_delivered, uom_name)"/>
-                                        <small t-esc="uom_name" class="ms-md-1 text-muted"/>
+                                        <t t-out="formatValue(sale_item.qty_delivered, uom_name)"/>
+                                        <small t-out="uom_name" class="ms-md-1 text-muted"/>
                                     </div>
                                 </td>
                                 <td class="text-end">
                                     <div class="d-flex d-md-block flex-column">
-                                        <t t-esc="formatValue(sale_item.qty_invoiced, uom_name)"/>
-                                        <small t-esc="uom_name" class="ms-md-1 text-muted"/>
+                                        <t t-out="formatValue(sale_item.qty_invoiced, uom_name)"/>
+                                        <small t-out="uom_name" class="ms-md-1 text-muted"/>
                                     </div>
                                 </td>
                             </tr>

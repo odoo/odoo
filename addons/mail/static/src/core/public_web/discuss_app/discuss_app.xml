@@ -13,7 +13,7 @@
     <button class="btn btn-secondary flex-grow-1 p-2"
         t-att-class="{
             'active o-active shadow-none': mailbox.discussAppAsThread,
-        }" t-on-click="mailbox.setAsDiscussThread" t-esc="mailbox.display_name"
+        }" t-on-click="mailbox.setAsDiscussThread" t-out="mailbox.display_name"
     />
 </t>
 

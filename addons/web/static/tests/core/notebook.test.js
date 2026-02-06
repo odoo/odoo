@@ -146,8 +146,8 @@ test("notebook set vertically", async () => {
 test("notebook pages rendered by a template component", async () => {
     class NotebookPageRenderer extends Component {
         static template = xml`
-                <h3 t-esc="props.heading"></h3>
-                <p t-esc="props.text" />
+                <h3 t-out="props.heading"></h3>
+                <p t-out="props.text" />
             `;
         static props = {
             heading: String,

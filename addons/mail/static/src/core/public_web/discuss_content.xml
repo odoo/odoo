@@ -22,7 +22,7 @@
                 <div class="flex-grow-1 align-self-center align-items-center h-100 py-1" t-att-class="{ 'lh-sm': showsChatLocalDateTime }">
                     <div class="d-flex">
                         <div t-if="thread.channel?.parent_channel_id" class="d-flex align-items-center gap-1 ms-1">
-                            <span class="fw-bolder cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline" t-esc="thread.channel.parent_channel_id.displayName" t-on-click="() => this.thread?.channel?.parent_channel_id?.open({ focus: true })"/>
+                            <span class="fw-bolder cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline" t-out="thread.channel.parent_channel_id.displayName" t-on-click="() => this.thread?.channel?.parent_channel_id?.open({ focus: true })"/>
                             <i class="oi oi-chevron-right o-xsmaller mx-1"/>
                         </div>
                         <AutoresizeInput
@@ -51,7 +51,7 @@
                 <div t-if="store.inPublicPage and !ui.isSmall" class="d-flex align-items-center">
                     <img class="o-mail-DiscussContent-selfAvatar ms-3 me-1 rounded-3 object-fit-cover flex-shrink-0 smaller" alt="Avatar" t-att-src="store.self.avatarUrl"/>
                     <div class="fw-bold flex-shrink-1 text-dark">
-                        <t t-if="store.self_user" t-esc="store.self_user.name"/>
+                        <t t-if="store.self_user" t-out="store.self_user.name"/>
                         <t t-else="">
                             <AutoresizeInput
                                 className="'py-1'"

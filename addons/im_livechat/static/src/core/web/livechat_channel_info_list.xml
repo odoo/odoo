@@ -29,7 +29,7 @@
                 <t t-foreach="expectAnswerSteps" t-as="step" t-key="step.id">
                     <div class="d-flex align-items-center gap-1 bg-inherit rounded-3">
                         <i class="fa fa-comment-o me-1"/>
-                        <span class="text-truncate" t-esc="step.answer"/>
+                        <span class="text-truncate" t-out="step.answer"/>
                     </div>
                 </t>
             </div>
@@ -59,7 +59,7 @@
                     target="_blank"
                 >
                     <i class="fa fa-external-link opacity-75"/>
-                    <span class="ms-1 fw-bold" t-esc="record.name"/>
+                    <span class="ms-1 fw-bold" t-out="record.name"/>
                 </a>
             </t>
         </div>

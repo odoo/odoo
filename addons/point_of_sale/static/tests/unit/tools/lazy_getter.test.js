@@ -83,7 +83,7 @@ class WithStore extends Component {
     static props = {};
     static template = xml`
         <span t-att-class="property">
-            <t t-esc="constructor.name" />: <t t-esc="this.store[property]" />
+            <t t-out="constructor.name" />: <t t-out="this.store[property]" />
         </span>
     `;
 

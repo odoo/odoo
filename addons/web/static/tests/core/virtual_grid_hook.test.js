@@ -44,7 +44,7 @@ function getTestComponent(virtualGridParams) {
     class Item extends Component {
         static props = ["row", "col"];
         static template = xml`
-            <div class="item" t-att-data-row-id="props.row.id" t-att-data-col-id="props.col.id" t-att-style="style" t-esc="content"/>
+            <div class="item" t-att-data-row-id="props.row.id" t-att-data-col-id="props.col.id" t-att-style="style" t-out="content"/>
         `;
         get content() {
             return `${this.props.row.id}|${this.props.col.id}`;

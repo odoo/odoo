@@ -5,7 +5,7 @@
         <div class="o_favorite" t-att-class="{'o_disabled': props.readonly}" t-on-click.prevent.stop="update">
             <button class="btn btn-link btn-link-inline" t-att-class="{'pe-none' : props.readonly}">
                 <i t-att-class="iconClass" role="img" t-att-title="label" t-att-aria-label="label"/>
-                <t t-if="!props.readonly and !props.noLabel" t-esc="label"/>
+                <t t-if="!props.readonly and !props.noLabel" t-out="label"/>
             </button>
         </div>
     </t>

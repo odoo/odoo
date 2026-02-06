@@ -1086,12 +1086,12 @@ test("multi-level dropdown: recursive template can be rendered", async () => {
         templates: {
             ["recursive.Template"]: /* xml */ `
                 <Dropdown state="dropdown">
-                    <button><t t-esc="name" /></button>
+                    <button><t t-out="name" /></button>
                     <t t-set-slot="content">
                         <t t-foreach="items" t-as="item" t-key="item_index">
 
                             <t t-if="!item.children.length">
-                                <DropdownItem><t t-esc="item.name"/></DropdownItem>
+                                <DropdownItem><t t-out="item.name"/></DropdownItem>
                             </t>
 
                             <t t-else="" t-call="recursive.Template">

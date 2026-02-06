@@ -7,16 +7,16 @@
                 <h6 class="pt-3" t-out="countryLanguageLabel"/>
                 <div class="d-flex bg-inherit align-items-center gap-1">
                     <img t-if="props.thread.channel?.showCorrespondentCountry" class="o_country_flag" t-att-src="props.thread.channel.correspondentCountry.flagUrl" t-att-title="props.thread.channel.correspondentCountry.code or props.thread.channel.correspondentCountry.name" aria-label="Country"/>
-                    <span t-if="visitor?.lang_id" title="Language" t-esc="visitor.lang_id.name"/>
+                    <span t-if="visitor?.lang_id" title="Language" t-out="visitor.lang_id.name"/>
                 </div>
             </div>
             <div t-if="visitor?.pageVisitHistoryText" class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3">Recent page views</h6>
                 <div t-if="visitor.website_id">
                     <i class="me-1 fa fa-globe" aria-label="Website"/>
-                    <span t-esc="visitor.website_id.name"/>
+                    <span t-out="visitor.website_id.name"/>
                 </div>
-                <span t-esc="visitor.pageVisitHistoryText"/>
+                <span t-out="visitor.pageVisitHistoryText"/>
             </div>
             <div t-if="!props.thread.livechat_end_dt and recentConversations.length" class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3">Recent conversations</h6>
@@ -34,7 +34,7 @@
                         }"
                     >
                         <i class="fa fa-external-link opacity-75"/>
-                        <span class="ms-1 fw-bold" t-esc="channel.displayName"/>
+                        <span class="ms-1 fw-bold" t-out="channel.displayName"/>
                         <span t-if="channel.livechat_end_dt" class="o-xsmaller text-muted" t-out="CLOSED_ON_TEXT(channel)"/>
                     </a>
                 </div>

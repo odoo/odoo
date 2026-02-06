@@ -8,7 +8,7 @@
                         class="btn btn-lg py-3 rounded-3 d-flex gap-2 align-items-center justify-content-center"
                         t-att-class="item.isPrimary ? 'btn-primary' : 'btn-secondary'"
                         t-on-click="() => this.clickPrintButton(item)">
-                        <i t-attf-class="fa fa-2x {{item.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : item.icon}} me-1" /><t t-esc="item.label" />
+                        <i t-attf-class="fa fa-2x {{item.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : item.icon}} me-1" /><t t-out="item.label" />
                 </button>
             </div>
         </Dialog>

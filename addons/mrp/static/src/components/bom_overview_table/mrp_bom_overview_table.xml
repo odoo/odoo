@@ -6,9 +6,9 @@
             <div t-if="!!data.components || !!data.lines || !!data.operations" class="container-fluid">
                 <div class="d-flex mb-5">
                     <div class="me-auto">
-                        <h2><a href="#" t-on-click.prevent="goToProduct" t-esc="data.name"/></h2>
+                        <h2><a href="#" t-on-click.prevent="goToProduct" t-out="data.name"/></h2>
                         <hr t-if="data.bom_code"/>
-                        <h6 t-if="data.bom_code">Reference: <t t-esc="data.bom_code"/></h6>
+                        <h6 t-if="data.bom_code">Reference: <t t-out="data.bom_code"/></h6>
                     </div>
                 </div>
                 <table class="o_mrp_bom_expandable table">
@@ -44,29 +44,29 @@
                     <tfoot t-if="showUnitCosts">
                         <tr>
                             <td name="td_mrp_bom_f" class="text-end">
-                                <span t-if="!!data.byproducts &amp;&amp; data.byproducts.length > 0" t-esc="data.name"/>
+                                <span t-if="!!data.byproducts &amp;&amp; data.byproducts.length > 0" t-out="data.name"/>
                             </td>
                             <td/>
-                            <td t-if="showUom"><t t-esc="data.uom_name"/></td>
+                            <td t-if="showUom"><t t-out="data.uom_name"/></td>
                             <td t-if="forecastMode"/>
                             <td t-if="forecastMode"/>
                             <td t-if="forecastMode"/>
                             <td t-if="forecastMode"/>
                             <td class="text-end"><strong>Unit Cost</strong></td>
-                            <td class="text-end"><t t-esc="formatMonetary(data.bom_cost / data.quantity)"/></td>
+                            <td class="text-end"><t t-out="formatMonetary(data.bom_cost / data.quantity)"/></td>
                             <td t-if="showAttachments"/>
                         </tr>
                         <t t-if="data.byproducts &amp;&amp; data.byproducts.length > 0" t-foreach="data.byproducts" t-as="byproduct" t-key="byproduct.id">
                             <tr>
-                                <td name="td_mrp_bom_b" class="text-end" t-esc="byproduct.name"/>
+                                <td name="td_mrp_bom_b" class="text-end" t-out="byproduct.name"/>
                                 <td/>
-                                <td t-if="showUom"><t t-esc="data.uom_name"/></td>
+                                <td t-if="showUom"><t t-out="data.uom_name"/></td>
                                 <td t-if="forecastMode"/>
                                 <td t-if="forecastMode"/>
                                 <td t-if="forecastMode"/>
                                 <td t-if="forecastMode"/>
                                 <td class="text-end"><strong>Unit Cost</strong></td>
-                                <td class="text-end"><t t-esc="formatMonetary(byproduct.bom_cost / byproduct.quantity)"/></td>
+                                <td class="text-end"><t t-out="formatMonetary(byproduct.bom_cost / byproduct.quantity)"/></td>
                                 <td t-if="showAttachments"/>
                             </tr>
                         </t>

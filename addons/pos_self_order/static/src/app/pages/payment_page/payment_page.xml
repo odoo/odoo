@@ -14,7 +14,7 @@
                             class="g-col-12 g-col-md-6 btn btn-light btn-lg d-flex flex-column align-items-center gap-2  px-0 py-5  border border-light shadow-sm overflow-hidden"
                             t-on-click="() => this.selectMethod(payment_method.id)">
                             <i class="fa fa-credit-card" aria-hidden="true"></i>
-                            <span t-esc="payment_method.name" />
+                            <span t-out="payment_method.name" />
                         </button>
                     </div>
                     <div class="payment-state-container d-flex flex-column gap-4 align-items-center justify-content-center w-50 mx-auto p-3">

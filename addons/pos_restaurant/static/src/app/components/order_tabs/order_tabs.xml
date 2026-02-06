@@ -9,7 +9,7 @@
                 class="position-absolute rounded-circle d-flex align-items-center justify-content-center"
                 style="top: -7px; right: -6px; width: 1.5rem; height: 1.5rem"
                 t-att-class="{'text-bg-danger bg-danger': changes.nbrOfChanges}">
-                <span t-esc="changes.nbrOfChanges" />
+                <span t-out="changes.nbrOfChanges" />
             </div>
         </xpath>
         <xpath expr="//div[hasclass('floating-order-container')]" position="attributes">

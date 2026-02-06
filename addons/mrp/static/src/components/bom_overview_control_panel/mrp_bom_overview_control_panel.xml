@@ -10,7 +10,7 @@
                     <button t-on-click="() => this.props.print(true)" type="button" class="btn btn-secondary text-nowrap">Print All Variants</button>
                 </t>
                 </t> -->
-                <button t-if="props.foldable" t-on-click="clickTogglefold" type="button" class="btn btn-secondary" t-esc="foldButtonText"/>
+                <button t-if="props.foldable" t-on-click="clickTogglefold" type="button" class="btn btn-secondary" t-out="foldButtonText"/>
             </t>
             <t t-set-slot="control-panel-actions">
                 <div t-if="props.showVariants" class="input-group align-items-center">

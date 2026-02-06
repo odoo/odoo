@@ -19,7 +19,7 @@
                     <a role="button" class="d-flex align-items-center w-100 px-3 py-1 small" t-att-class="{ 'o-mail-NavigableList-active': state.activeIndex === option_index }" t-attf-class="{{ option.buttonClass }}">
                         <t t-if="option.optionTemplate" t-call="{{ option.optionTemplate }}"/>
                         <t t-elif="props.optionTemplate" t-call="{{ props.optionTemplate }}"/>
-                        <t t-else="" t-esc="option.label"/>
+                        <t t-else="" t-out="option.label"/>
                     </a>
                     <t t-set="lastGroup" t-value="option.group"/>
                 </div>

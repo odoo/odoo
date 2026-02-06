@@ -43,7 +43,7 @@
                             t-key="product_index"
                         >
                             <option t-att-value="product.id">
-                                <t t-esc="product.total_price"/>
+                                <t t-out="product.total_price"/>
                             </option>
                         </t>
                     </select>
