@@ -1607,13 +1607,13 @@ describe("toolbar open and close on user interaction", () => {
             expect(getContent(el)).toBe("<p>[test] text</p>");
             await advanceTime(100);
             // Toolbar is not open yet, waiting for a possible third click
-            await expectElementCount(".o-we-toolbar", 0);
+            expect(".o-we-toolbar").toHaveCount(0);
 
             // Third click
             await thirdClick(p);
             expect(getContent(el)).toBe("<p>[test text]</p>");
-            await advanceTime(500);
-            await expectElementCount(".o-we-toolbar", 1);
+            await advanceTime(400);
+            expect(".o-we-toolbar").toHaveCount(1);
         });
 
         test("toolbar should not open after triple click while mouse is down", async () => {
