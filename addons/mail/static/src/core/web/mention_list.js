@@ -14,6 +14,7 @@ export class MentionList extends Component {
     static props = {
         onSelect: { type: Function },
         close: { type: Function, optional: true },
+        thread: { optional: true },
         type: { type: String },
     };
     setup() {
@@ -28,22 +29,16 @@ export class MentionList extends Component {
         this.ref = useAutofocus({ mobile: true });
 
         useEffect(
-            () => {
-                if (!this.state.searchTerm) {
+            (term, delimiter, thread) => {
+                if (!term) {
                     this.state.options = [];
                     return;
                 }
                 this.sequential(async () => {
-                    await this.suggestionService.fetchSuggestions({
-                        delimiter: this.props.type === "partner" ? "@" : "#",
-                        term: this.state.searchTerm,
-                    });
+                    await this.suggestionService.fetchSuggestions({ delimiter, term }, { thread });
                     const suggestions = this.suggestionService.searchSuggestions(
-                        {
-                            delimiter: this.props.type === "partner" ? "@" : "#",
-                            term: this.state.searchTerm,
-                        },
-                        { sort: true }
+                        { delimiter, term },
+                        { sort: true, thread }
                     );
                     this.state.options = [
                         ...suggestions.mainSuggestions,
@@ -51,7 +46,11 @@ export class MentionList extends Component {
                     ];
                 });
             },
-            () => [this.state.searchTerm]
+            () => [
+                this.state.searchTerm,
+                this.props.type === "partner" ? "@" : "#",
+                this.props.thread,
+            ]
         );
     }
 
