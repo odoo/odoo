@@ -975,7 +975,7 @@ export class SelectionPlugin extends Plugin {
             isProtecting(node) || (isProtected(node) && !isUnprotecting(node));
         if (
             focusTarget !== anchorTarget &&
-            focusTarget.previousSibling === anchorTarget &&
+            focusTarget?.previousSibling === anchorTarget &&
             protectionCheck(anchorTarget)
         ) {
             return;
