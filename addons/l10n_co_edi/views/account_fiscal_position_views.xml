@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Fiscal Position form: add Colombian filter fields -->
+    <record id="view_account_fiscal_position_form_l10n_co_edi" model="ir.ui.view">
+        <field name="name">account.fiscal.position.form.l10n_co_edi</field>
+        <field name="model">account.fiscal.position</field>
+        <field name="inherit_id" ref="account.view_account_position_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='auto_apply']" position="after">
+                <field name="l10n_co_edi_tax_regime"
+                       invisible="not auto_apply"/>
+                <field name="l10n_co_edi_gran_contribuyente"
+                       invisible="not auto_apply"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- ============================================================
+             Colombian Fiscal Positions
+             Auto-applied based on partner tax classification.
+             Sequence determines priority (lower = higher priority).
+             ============================================================ -->
+
+        <!-- 1. Gran Contribuyente (Large Taxpayer)
+             When selling to a Gran Contribuyente, they are responsible for
+             self-withholding (autorretencion), so the seller typically does
+             not apply certain RteFte withholdings. -->
+        <record id="fiscal_position_co_gran_contribuyente" model="account.fiscal.position">
+            <field name="name">Gran Contribuyente</field>
+            <field name="name" lang="es_419">Gran Contribuyente</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="country_id" ref="base.co"/>
+            <field name="sequence">5</field>
+            <field name="l10n_co_edi_gran_contribuyente">yes</field>
+            <field name="note" type="html">
+                <p>Partner classified as Gran Contribuyente by DIAN (Res. O-13).
+                Modified withholding treatment applies.</p>
+            </field>
+            <!-- Tax mappings: remove RteFte withholdings on sales to Gran Contribuyente.
+                 The Gran Contribuyente self-withholds.
+                 Map RteFte sale taxes to nothing (empty dest removes the tax). -->
+        </record>
+
+        <!-- 2. Regimen Simple de Tributacion (SIMPLE)
+             Partners under the SIMPLE regime have a unified tax that replaces
+             IVA and income tax. Different IVA treatment applies. -->
+        <record id="fiscal_position_co_regimen_simple" model="account.fiscal.position">
+            <field name="name">Regimen Simple (SIMPLE)</field>
+            <field name="name" lang="es_419">Regimen Simple de Tributacion</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="country_id" ref="base.co"/>
+            <field name="sequence">6</field>
+            <field name="l10n_co_edi_tax_regime">simple</field>
+            <field name="note" type="html">
+                <p>Partner under Regimen Simple de Tributacion (SIMPLE).
+                Unified tax treatment applies per Art. 903 E.T.</p>
+            </field>
+        </record>
+
+        <!-- 3. No Responsable de IVA
+             Partners not responsible for IVA (formerly "Regimen Simplificado").
+             Sales to these partners still charge IVA but withholding treatment
+             may differ. -->
+        <record id="fiscal_position_co_no_responsable" model="account.fiscal.position">
+            <field name="name">No Responsable de IVA</field>
+            <field name="name" lang="es_419">No Responsable de IVA</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="country_id" ref="base.co"/>
+            <field name="sequence">7</field>
+            <field name="l10n_co_edi_tax_regime">not_responsible</field>
+            <field name="note" type="html">
+                <p>Partner is No Responsable de IVA (formerly Regimen Simplificado).
+                Standard IVA applies on sales. Withholding as applicable per
+                Persona Natural thresholds.</p>
+            </field>
+        </record>
+
+        <!-- 4. Foreign Customer / Supplier
+             Export/import transactions: IVA exempt for exports.
+             Uses country_id blank + auto_apply to match non-CO partners. -->
+        <record id="fiscal_position_co_foreign" model="account.fiscal.position">
+            <field name="name">Foreign (Exterior)</field>
+            <field name="name" lang="es_419">Exterior (Exportacion / Importacion)</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="sequence">20</field>
+            <field name="note" type="html">
+                <p>Foreign partner. Export invoices are IVA exempt (Art. 481 E.T.).
+                Different withholding treatment applies for payments abroad
+                (Art. 406-411 E.T.).</p>
+            </field>
+            <!-- No country_id set = matches partners from any non-domestic country.
+                 The system checks country_id; if not set on FP but partner is foreign
+                 relative to company, this position matches. -->
+        </record>
+
+        <!-- 5. Domestic (Standard Regimen Comun)
+             Default fiscal position for domestic Colombian transactions.
+             Standard IVA and withholding rules apply. -->
+        <record id="fiscal_position_co_domestic" model="account.fiscal.position">
+            <field name="name">Domestic (Regimen Comun)</field>
+            <field name="name" lang="es_419">Nacional (Regimen Comun)</field>
+            <field name="auto_apply" eval="True"/>
+            <field name="country_id" ref="base.co"/>
+            <field name="sequence">10</field>
+            <field name="l10n_co_edi_tax_regime">common</field>
+            <field name="note" type="html">
+                <p>Standard domestic transaction with Regimen Comun partner.
+                Full IVA and withholding rules apply.</p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

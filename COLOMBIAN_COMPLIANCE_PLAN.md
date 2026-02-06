@@ -481,31 +481,47 @@ addons/l10n_co_edi/
 - [x] Create tag hierarchy matching DIAN form line numbers (auto-created by report expressions)
 - [x] Verify tag aggregation produces correct report values (test suite validates tag-formula linkage)
 
-### Phase 5: Fiscal Positions & Partner Classification (Weeks 17-18)
+### Phase 5: Fiscal Positions & Partner Classification (Weeks 17-18) — DONE
+
+**Status:** COMPLETE. Partner classification, fiscal positions, and auto-detection implemented.
 
 **Goal:** Automate tax mapping based on partner type.
 
+**Implementation:**
+- `l10n_co_edi/models/res_partner.py` — Partner tax classification fields (tax_regime, gran_contribuyente, autorretenedor, fiscal_responsibility_ids, ciiu_code)
+- `l10n_co_edi/models/account_fiscal_position.py` — Fiscal position extension with auto-detection override
+- `l10n_co_edi/models/l10n_co_edi_fiscal_responsibility.py` — DIAN fiscal responsibility code model
+- `l10n_co_edi/data/l10n_co_edi.fiscal.responsibility.csv` — 14 DIAN fiscal responsibility codes (O-06 through R-99-PN)
+- `l10n_co_edi/data/account_fiscal_position_data.xml` — 5 pre-configured fiscal positions
+- `l10n_co_edi/views/res_partner_views.xml` — Partner form "Colombian Tax" tab
+- `l10n_co_edi/views/account_fiscal_position_views.xml` — FP form extension with CO filter fields
+- `l10n_co_edi/models/account_edi_xml_ubl_co.py` — Updated to use partner fiscal data for customer party in UBL XML
+- `l10n_co_edi/tests/test_fiscal_positions.py` — 17 tests
+
 #### 5.1 Partner fields for Colombian tax classification
 
-- [ ] Add fields to `res.partner`:
-  - `l10n_co_tax_regime`: Regimen Comun / Regimen Simple / No Responsable
-  - `l10n_co_gran_contribuyente`: Boolean
-  - `l10n_co_autorretenedor`: Boolean
-  - `l10n_co_fiscal_responsibilities`: Multi-select (O-13, O-15, O-23, O-47, etc.)
-  - `l10n_co_ciiu_code`: CIIU economic activity code
+- [x] Add fields to `res.partner`:
+  - `l10n_co_edi_tax_regime`: Regimen Comun / Regimen Simple / No Responsable
+  - `l10n_co_edi_gran_contribuyente`: Boolean
+  - `l10n_co_edi_autorretenedor`: Boolean
+  - `l10n_co_edi_fiscal_responsibility_ids`: Many2many to fiscal.responsibility model (14 DIAN codes)
+  - `l10n_co_edi_fiscal_responsibilities`: Computed Char from M2M (for XML generation compatibility)
+  - `l10n_co_edi_ciiu_code`: CIIU economic activity code
 
 #### 5.2 Pre-configured fiscal positions
 
-- [ ] Gran Contribuyente (purchases: no RteFte withholding on certain items)
-- [ ] Persona Natural No Declarante (higher withholding rates)
-- [ ] Regimen Simple (different IVA handling)
-- [ ] Foreign supplier (different withholding treatment)
-- [ ] Self-withholding company (add autorretencion on sales)
+- [x] Gran Contribuyente (seq=5, auto-applies to gran_contribuyente partners)
+- [x] Regimen Simple (seq=6, auto-applies to SIMPLE regime partners)
+- [x] No Responsable de IVA (seq=7, auto-applies to no_responsable partners)
+- [x] Domestic / Regimen Comun (seq=10, default for common regime partners)
+- [x] Foreign / Exterior (seq=20, auto-applies to non-CO partners)
+- [ ] Tax mappings for each position (deferred — requires defining destination taxes for each scenario)
 
 #### 5.3 Automatic fiscal position assignment
 
-- [ ] Based on partner tax classification fields
-- [ ] Configurable rules per company
+- [x] Override `_get_fpos_validation_functions` for CO companies
+- [x] Matching by tax_regime and gran_contribuyente fields
+- [x] Priority ordering via sequence (Gran Contribuyente > Regimen Simple > No Responsable > Domestic > Foreign)
 
 ### Phase 6: Documento Equivalente Electronico (Weeks 19-20)
 

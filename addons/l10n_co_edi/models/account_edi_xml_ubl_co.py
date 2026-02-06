@@ -317,22 +317,23 @@ class AccountEdiXmlUblCO(models.AbstractModel):
         id_type_code = self._get_co_id_type_code(commercial)
         check_digit = compute_nit_check_digit(vat) if id_type_code == '31' and vat else ''
 
-        # Fiscal responsibilities
+        # Fiscal responsibilities — supplier uses company data, customer uses partner data
         fiscal_resp = ''
         if role == 'supplier' and company.l10n_co_edi_fiscal_responsibilities:
             fiscal_resp = company.l10n_co_edi_fiscal_responsibilities
+        elif role == 'customer':
+            fiscal_resp = commercial.l10n_co_edi_fiscal_responsibilities or ''
 
         # Tax regime determines which TaxScheme to report
         tax_scheme_id = '01'  # IVA by default
         tax_scheme_name = 'IVA'
         if role == 'supplier':
             regime = company.l10n_co_edi_tax_regime
-            if regime == 'not_responsible':
-                tax_scheme_id = 'ZZ'
-                tax_scheme_name = 'No causa'
-            elif regime == 'simple':
-                tax_scheme_id = '01'
-                tax_scheme_name = 'IVA'
+        else:
+            regime = commercial.l10n_co_edi_tax_regime
+        if regime == 'not_responsible':
+            tax_scheme_id = 'ZZ'
+            tax_scheme_name = 'No causa'
 
         # Build PartyLegalEntity
         party_legal = {

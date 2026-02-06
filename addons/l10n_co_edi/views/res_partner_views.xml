@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Partner form: Colombian Tax Classification tab -->
+    <record id="view_partner_form_l10n_co_edi" model="ir.ui.view">
+        <field name="name">res.partner.form.l10n_co_edi</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales_purchases']" position="after">
+                <page name="l10n_co_edi_tax" string="Colombian Tax"
+                      invisible="not parent.country_id or parent.country_id != %(base.co)d">
+                    <group string="Tax Classification">
+                        <group>
+                            <field name="l10n_co_edi_tax_regime"/>
+                            <field name="l10n_co_edi_gran_contribuyente"/>
+                            <field name="l10n_co_edi_autorretenedor"/>
+                        </group>
+                        <group>
+                            <field name="l10n_co_edi_ciiu_code"/>
+                            <field name="l10n_co_edi_fiscal_responsibility_ids"
+                                   widget="many2many_tags"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
