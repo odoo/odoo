@@ -50,6 +50,7 @@ import { expandToolbar } from "./_helpers/toolbar";
 import { nodeSize } from "@html_editor/utils/position";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { ImageCrop } from "@html_editor/main/media/image_crop";
+import { DELAY_TOOLBAR_OPEN } from "@html_editor/main/toolbar/toolbar_plugin";
 
 test.tags("desktop");
 test("toolbar is only visible when selection is not collapsed in desktop", async () => {
@@ -535,7 +536,7 @@ test("toolbar works: displays correct font size on input", async () => {
     await press("8");
     expect(inputEl).toHaveValue("8");
     await advanceTime(200);
-    expect(".o_font_size_selector_menu").toHaveCount(1);
+    expectElementCount(".o_font_size_selector_menu", 1);
     expect(getContent(el)).toBe(`<p><span style="font-size: 8px;">[test]</span></p>`);
     await expectElementCount(".o-we-toolbar", 1);
 });
@@ -1416,7 +1417,8 @@ describe("toolbar open and close on user interaction", () => {
             await simulateDoubleClickSelect(p);
             expect(getContent(el)).toBe("<p>[test]</p>");
             // toolbar open after double click is debounced
-            await advanceTime(500);
+            await advanceTime(DELAY_TOOLBAR_OPEN);
+            await animationFrame();
             await expectElementCount(".o-we-toolbar", 1);
         });
 
@@ -1427,7 +1429,7 @@ describe("toolbar open and close on user interaction", () => {
             await simulateTripleClickSelect(p);
             expect(getContent(el)).toBe("<p>[test text]</p>");
             // toolbar open after triple click is debounced
-            await advanceTime(500);
+            await advanceTime(DELAY_TOOLBAR_OPEN);
             await expectElementCount(".o-we-toolbar", 1);
         });
 
@@ -1441,12 +1443,12 @@ describe("toolbar open and close on user interaction", () => {
             expect(getContent(el)).toBe("<p>[test] text</p>");
             await advanceTime(100);
             // Toolbar is not open yet, waiting for a possible third click
-            await expectElementCount(".o-we-toolbar", 0);
+            expect(".o-we-toolbar").toHaveCount(0);
 
             // Third click
             await thirdClick(p);
             expect(getContent(el)).toBe("<p>[test text]</p>");
-            await advanceTime(500);
+            await advanceTime(DELAY_TOOLBAR_OPEN);
             await expectElementCount(".o-we-toolbar", 1);
         });
 
@@ -1460,14 +1462,14 @@ describe("toolbar open and close on user interaction", () => {
             setSelection({ anchorNode: p, anchorOffset: 0, focusOffset: 1 });
             await tick(); // selectionChange
             expect(getContent(el)).toBe("<p>[test text]</p>");
-            await advanceTime(500);
+            await advanceTime(DELAY_TOOLBAR_OPEN);
             // Toolbar is not open yet, waiting for mouseup
             await expectElementCount(".o-we-toolbar", 0);
 
             // Mouse up
             manuallyDispatchProgrammaticEvent(p, "mouseup", { detail: 3 });
             manuallyDispatchProgrammaticEvent(p, "click", { detail: 3 });
-            await advanceTime(500);
+            await advanceTime(DELAY_TOOLBAR_OPEN);
             await expectElementCount(".o-we-toolbar", 1);
         });
 
@@ -1507,7 +1509,7 @@ describe("toolbar open and close on user interaction", () => {
 
             await keyUp(["Shift", "ArrowRight"]);
 
-            await advanceTime(500); // Toolbar open on keyup is debounced
+            await advanceTime(DELAY_TOOLBAR_OPEN); // Toolbar open on keyup is debounced
             await expectElementCount(".o-we-toolbar", 1);
         });
 
@@ -1525,7 +1527,7 @@ describe("toolbar open and close on user interaction", () => {
             // Toolbar should open after keyup
             await keyUp(["Shift", "ArrowRight"]);
 
-            await advanceTime(500); // toolbar open on keyup is debounced
+            await advanceTime(DELAY_TOOLBAR_OPEN); // toolbar open on keyup is debounced
             await expectElementCount(".o-we-toolbar", 1);
         });
 
@@ -1562,7 +1564,7 @@ describe("toolbar open and close on user interaction", () => {
             await tick(); // selectionChange
             await keyUp(["Shift", "ArrowRight"]);
             await advanceTime(100);
-            await expectElementCount(".o-we-toolbar", 0);
+            expect(".o-we-toolbar").toHaveCount(0);
 
             // Keystroke # 2
             await keyDown(["Shift", "ArrowRight"]);
@@ -1570,10 +1572,10 @@ describe("toolbar open and close on user interaction", () => {
             await tick(); // selectionChange
             await keyUp(["Shift", "ArrowRight"]);
             await advanceTime(100);
-            await expectElementCount(".o-we-toolbar", 0);
+            expect(".o-we-toolbar").toHaveCount(0);
 
             // Toolbar opens some time after the last keyup
-            await advanceTime(500);
+            await advanceTime(DELAY_TOOLBAR_OPEN);
             await expectElementCount(".o-we-toolbar", 1);
         });
 
