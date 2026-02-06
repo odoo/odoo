@@ -1,17 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <record id="action_sinvoice_template" model="ir.actions.act_window">
-        <field name="name">Templates</field>
-        <field name="res_model">l10n_vn_edi_viettel.sinvoice.template</field>
-        <field name="view_mode">list,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Add a template
-            </p>
-            <p>
-                A SInvoice template is used when sending invoices to SInvoice in order to know which
-                invoice template to use when rendering the invoice.
-            </p>
+
+    <record id="view_l10n_vn_edi_viettel_sinvoice_symbol_search" model="ir.ui.view" >
+        <field name="name">l10n_vn_edi_viettel.sinvoice.symbol.search</field>
+        <field name="model">l10n_vn_edi_viettel.sinvoice.symbol</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Symbol"/>
+                <field name="invoice_template_code"/>
+                <filter name="symbol_inactive" string="Inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_l10n_vn_edi_viettel_sinvoice_symbol_list" model="ir.ui.view" >
+        <field name="name">l10n_vn_edi_viettel.sinvoice.symbol.list</field>
+        <field name="model">l10n_vn_edi_viettel.sinvoice.symbol</field>
+        <field name="arch" type="xml">
+            <list create="0">
+                <header>
+                    <button name="action_fetch_symbols" 
+                            string="Fetch" 
+                            type="object" 
+                            class="btn-primary"
+                            display="always"/>
+                </header>
+                <field name="name"/>
+                <field name="invoice_template_code"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_l10n_vn_edi_viettel_sinvoice_symbol_form" model="ir.ui.view" >
+        <field name="name">l10n_vn_edi_viettel.sinvoice.symbol.form</field>
+        <field name="model">l10n_vn_edi_viettel.sinvoice.symbol</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="invoice_template_code"/>
+                    </group>
+                </sheet>
+            </form>
         </field>
     </record>
 
@@ -32,7 +63,6 @@
 
     <menuitem id="l10n_vn_edi_sinvoice_menu" name="SInvoice" groups="account.group_account_manager"
               parent="account.menu_finance_configuration" sequence="99">
-        <menuitem id="l10n_vn_edi_sinvoice_templates" action="action_sinvoice_template"/>
         <menuitem id="l10n_vn_edi_sinvoice_symbols" action="action_sinvoice_symbol"/>
     </menuitem>
 </odoo>

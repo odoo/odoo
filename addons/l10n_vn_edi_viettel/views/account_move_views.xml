@@ -5,37 +5,34 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//header" position="inside">
+            <header position="inside">
                 <button string="Send Payment Status"
                         name="action_l10n_vn_edi_update_payment_status"
                         type="object"
                         groups="account.group_account_invoice"
                         invisible="not l10n_vn_edi_invoice_number or l10n_vn_edi_invoice_state != 'payment_state_to_update'"/>
-            </xpath>
-            <xpath expr="//page[@id='other_tab_entry']" position="after">
-                <page id="l10n_vn_edi"
-                      string="SInvoice"
-                      invisible="move_type not in ['out_invoice', 'out_refund'] or country_code != 'VN'">
+            </header>
+            <xpath expr="//page[@id='l10n_vn']/group" position="replace"/>
+            <page id="l10n_vn" position="inside">
+                <group>
                     <group>
-                        <group>
-                            <field name="l10n_vn_edi_invoice_symbol" readonly="l10n_vn_edi_invoice_number"/>
-                            <field name="l10n_vn_edi_issue_date" invisible="not l10n_vn_edi_invoice_number"/>
-                        </group>
-                        <group>
-                            <field name="l10n_vn_edi_invoice_state"/>
-                            <field name="l10n_vn_edi_invoice_number" invisible="not l10n_vn_edi_invoice_number"/>
-                            <field name="l10n_vn_edi_reservation_code" invisible="not l10n_vn_edi_invoice_number"/>
-                        </group>
-                        <group string="Agreement"
-                               invisible="not l10n_vn_edi_replacement_origin_id
-                               and (not reversed_entry_id or not l10n_vn_edi_reversed_entry_invoice_number)">
-                            <field name="l10n_vn_edi_adjustment_type" readonly="l10n_vn_edi_invoice_number"/>
-                            <field name="l10n_vn_edi_agreement_document_name" readonly="l10n_vn_edi_invoice_number"/>
-                            <field name="l10n_vn_edi_agreement_document_date" readonly="l10n_vn_edi_invoice_number"/>
-                        </group>
+                        <field name="l10n_vn_edi_invoice_symbol" readonly="l10n_vn_edi_invoice_number" options="{'no_create': True}"/>
+                        <field name="l10n_vn_edi_issue_date" invisible="not l10n_vn_edi_invoice_number"/>
                     </group>
-                </page>
-            </xpath>
+                    <group>
+                        <field name="l10n_vn_edi_invoice_state"/>
+                        <field name="l10n_vn_edi_invoice_number" invisible="not l10n_vn_edi_invoice_number"/>
+                        <field name="l10n_vn_edi_reservation_code" invisible="not l10n_vn_edi_invoice_number"/>
+                    </group>
+                    <group string="Agreement"
+                            invisible="not l10n_vn_edi_replacement_origin_id
+                            and (not reversed_entry_id or not l10n_vn_edi_reversed_entry_invoice_number)">
+                        <field name="l10n_vn_edi_adjustment_type" readonly="l10n_vn_edi_invoice_number"/>
+                        <field name="l10n_vn_edi_agreement_document_name" readonly="l10n_vn_edi_invoice_number"/>
+                        <field name="l10n_vn_edi_agreement_document_date" readonly="l10n_vn_edi_invoice_number"/>
+                    </group>
+                </group>
+            </page>
         </field>
     </record>
 
@@ -77,6 +74,18 @@
         <field name="code">
             if records:
                 action = records.action_l10n_vn_edi_update_payment_status()
+        </field>
+    </record>
+
+    <record id="l10n_vn_edi_fetch_tax_code" model="ir.actions.server">
+        <field name="name">Fetch SInvoice with Taxcode</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">
+            for record in records:    
+                record.l10n_vn_edi_fetch_files_with_tax_code()
         </field>
     </record>
 </odoo>
