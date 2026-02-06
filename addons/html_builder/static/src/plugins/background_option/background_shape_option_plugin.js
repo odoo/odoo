@@ -639,7 +639,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
     getNeighborShapeEls(previousEl, nextEl) {
         const getBgShapedSnippetSiblingEl = (siblingEl, elementSibling) => {
             while (siblingEl) {
-                if (this.isVisibleSnippet(siblingEl)) {
+                if (this.isVisibleSnippet(siblingEl) && !siblingEl.matches(".oe_drop_clone")) {
                     return siblingEl.dataset.oeShapeData ? siblingEl : null;
                 }
                 siblingEl = siblingEl[elementSibling];
