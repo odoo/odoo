@@ -523,18 +523,27 @@ addons/l10n_co_edi/
 - [x] Matching by tax_regime and gran_contribuyente fields
 - [x] Priority ordering via sequence (Gran Contribuyente > Regimen Simple > No Responsable > Domestic > Foreign)
 
-### Phase 6: Documento Equivalente Electronico (Weeks 19-20)
+### Phase 6: Documento Equivalente Electronico (Weeks 19-20) — DONE
+
+**Status:** COMPLETE. DEE document types, CUDE logic, simplified buyer, and XML support implemented.
 
 **Goal:** Support electronic equivalent documents per Res. 000165/2023.
 
-- [ ] New document type model for the 13 DEE types
-- [ ] CUDE computation for equivalent documents
-- [ ] Simplified buyer data handling per Res. 000202/2025
-- [ ] 48-hour transmission window support for rural utilities
-- [ ] XML templates for most common DEE types:
-  - POS ticket (tiquete de maquina registradora POS)
-  - Public utility bill (factura de servicios publicos)
-  - Financial statement (extracto)
+**Implementation:**
+- `l10n_co_edi/data/l10n_co_edi.document.type.csv` — 20 document types (13 DEE)
+- `l10n_co_edi/models/account_move.py` — DEE fields and CUDE logic
+- `l10n_co_edi/models/account_edi_xml_ubl_co.py` — DEE CustomizationID, simplified buyer party
+- `l10n_co_edi/models/account_edi_format.py` — Relaxed DEE validation
+- `l10n_co_edi/tests/test_dee.py` — 15 tests
+
+- [x] 13 DEE document types (05=POS, 07-18, 20=Nota Soporte)
+- [x] CUDE computation for DEE (software PIN, not technical key)
+- [x] Simplified buyer data handling per Res. 000202/2025 (CONSUMIDOR FINAL)
+- [x] DEE type selection on invoice form
+- [x] CustomizationID and InvoiceTypeCode reflect DEE type code in UBL XML
+- [x] Relaxed partner validation for simplified buyer DEE
+- [ ] 48-hour transmission window for rural utilities (deferred)
+- [ ] POS auto-selection of DEE type 05 (deferred — l10n_co_pos bridge)
 
 ### Phase 7: Exogenous Information (Weeks 21-22)
 

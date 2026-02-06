@@ -64,10 +64,35 @@ class AccountMove(models.Model):
         help='Timestamp used for CUFE/CUDE computation (set at posting time).',
     )
 
+    # -- Documento Equivalente Electronico (DEE) --
+    l10n_co_edi_dee_type_id = fields.Many2one(
+        'l10n_co_edi.document.type',
+        string='DEE Type',
+        domain="[('is_dee', '=', True)]",
+        copy=False,
+        help='Documento Equivalente Electronico type. Set when this document '
+             'is an equivalent document (e.g., POS ticket, utility bill).',
+    )
+    l10n_co_edi_is_dee = fields.Boolean(
+        string='Is Equivalent Document',
+        compute='_compute_l10n_co_edi_is_dee',
+        store=True,
+    )
+    l10n_co_edi_dee_simplified_buyer = fields.Boolean(
+        string='Simplified Buyer Data',
+        help='Per Res. 000202/2025, POS equivalent documents may have simplified '
+             'buyer data (only 3 fields required). Enable for consumidor final.',
+    )
+
     # -- Computed --
     l10n_co_edi_is_colombian = fields.Boolean(
         compute='_compute_l10n_co_edi_is_colombian',
     )
+
+    @api.depends('l10n_co_edi_dee_type_id')
+    def _compute_l10n_co_edi_is_dee(self):
+        for move in self:
+            move.l10n_co_edi_is_dee = bool(move.l10n_co_edi_dee_type_id)
 
     @api.depends('company_id.account_fiscal_country_id')
     def _compute_l10n_co_edi_is_colombian(self):
@@ -106,28 +131,15 @@ class AccountMove(models.Model):
 
             tipo_ambiente = '2' if company.l10n_co_edi_test_mode else '1'
 
-            if move.move_type == 'out_invoice':
-                # CUFE for sales invoices — uses technical key
-                cl_tec = journal.l10n_co_edi_dian_technical_key or ''
-                cufe = compute_cufe(
-                    num_fac=move.name or '',
-                    fec_fac=edi_datetime,
-                    val_fac=subtotal,
-                    cod_imp_1='01',
-                    val_imp_1=iva_amount,
-                    cod_imp_2='04',
-                    val_imp_2=inc_amount,
-                    cod_imp_3='03',
-                    val_imp_3=ica_amount,
-                    val_tot=total,
-                    nit_ofe=nit_ofe,
-                    num_adq=num_adq,
-                    cl_tec=cl_tec,
-                    tipo_ambiente=tipo_ambiente,
-                )
-                move.l10n_co_edi_cufe_cude = cufe
-            elif move.move_type in ('out_refund', 'in_refund'):
-                # CUDE for credit/debit notes — uses software PIN
+            # DEE and credit/debit notes use CUDE (software PIN);
+            # regular sales invoices use CUFE (technical key)
+            use_cude = (
+                move.l10n_co_edi_is_dee
+                or move.move_type in ('out_refund', 'in_refund')
+            )
+
+            if use_cude:
+                # CUDE — for DEE, credit notes, debit notes
                 pin_software = company.l10n_co_edi_software_pin or ''
                 cude = compute_cude(
                     num_doc=move.name or '',
@@ -146,6 +158,26 @@ class AccountMove(models.Model):
                     tipo_ambiente=tipo_ambiente,
                 )
                 move.l10n_co_edi_cufe_cude = cude
+            elif move.move_type == 'out_invoice':
+                # CUFE — for regular sales invoices
+                cl_tec = journal.l10n_co_edi_dian_technical_key or ''
+                cufe = compute_cufe(
+                    num_fac=move.name or '',
+                    fec_fac=edi_datetime,
+                    val_fac=subtotal,
+                    cod_imp_1='01',
+                    val_imp_1=iva_amount,
+                    cod_imp_2='04',
+                    val_imp_2=inc_amount,
+                    cod_imp_3='03',
+                    val_imp_3=ica_amount,
+                    val_tot=total,
+                    nit_ofe=nit_ofe,
+                    num_adq=num_adq,
+                    cl_tec=cl_tec,
+                    tipo_ambiente=tipo_ambiente,
+                )
+                move.l10n_co_edi_cufe_cude = cufe
 
             # Build QR data
             if move.l10n_co_edi_cufe_cude:

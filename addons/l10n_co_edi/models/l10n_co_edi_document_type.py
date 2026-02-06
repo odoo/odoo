@@ -22,6 +22,10 @@ class L10nCoEdiDocumentType(models.Model):
         string='Description',
         translate=True,
     )
+    is_dee = fields.Boolean(
+        string='Is Equivalent Document',
+        help='True if this is a Documento Equivalente Electronico (DEE).',
+    )
     active = fields.Boolean(default=True)
 
     _unique_code = models.Constraint(

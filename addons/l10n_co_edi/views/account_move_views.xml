@@ -17,6 +17,13 @@
                         invisible="not l10n_co_edi_is_colombian or state != 'posted'"/>
             </xpath>
             <xpath expr="//group[@id='header_right_group']" position="after">
+                <group invisible="not l10n_co_edi_is_colombian" string="Documento Equivalente (DEE)">
+                    <field name="l10n_co_edi_dee_type_id"
+                           invisible="state == 'posted'"/>
+                    <field name="l10n_co_edi_is_dee" invisible="1"/>
+                    <field name="l10n_co_edi_dee_simplified_buyer"
+                           invisible="not l10n_co_edi_is_dee"/>
+                </group>
                 <group invisible="not l10n_co_edi_is_colombian or state != 'posted'" string="DIAN Electronic Invoicing">
                     <field name="l10n_co_edi_state" widget="badge"
                            decoration-success="l10n_co_edi_state == 'validated'"

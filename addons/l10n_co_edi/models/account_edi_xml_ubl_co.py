@@ -234,7 +234,8 @@ class AccountEdiXmlUblCO(models.AbstractModel):
                 '_text': invoice.l10n_co_edi_cufe_cude or '',
                 'schemeID': tipo_ambiente,
                 'schemeName': (
-                    'CUFE-SHA384' if vals['document_type'] == 'invoice'
+                    'CUFE-SHA384'
+                    if vals['document_type'] == 'invoice' and not invoice.l10n_co_edi_is_dee
                     else 'CUDE-SHA384'
                 ),
             },
@@ -244,7 +245,11 @@ class AccountEdiXmlUblCO(models.AbstractModel):
 
         # DIAN document type codes
         if vals['document_type'] == 'invoice':
-            document_node['cbc:InvoiceTypeCode'] = {'_text': '01'}
+            # DEE uses its own type code; regular invoices use '01'
+            type_code = '01'
+            if invoice.l10n_co_edi_is_dee and invoice.l10n_co_edi_dee_type_id:
+                type_code = invoice.l10n_co_edi_dee_type_id.code
+            document_node['cbc:InvoiceTypeCode'] = {'_text': type_code}
         elif vals['document_type'] == 'credit_note':
             document_node['cbc:CreditNoteTypeCode'] = {'_text': '91'}
 
@@ -254,6 +259,8 @@ class AccountEdiXmlUblCO(models.AbstractModel):
         10 = Standard sales invoice
         20 = Export invoice
         30 = Contingency invoice
+        05 = Documento Equivalente POS (tiquete)
+        07-18 = Other DEE types per Res. 000165/2023
         91 = Credit note
         92 = Debit note
         """
@@ -264,6 +271,10 @@ class AccountEdiXmlUblCO(models.AbstractModel):
             return '91'
         if doc_type == 'debit_note':
             return '92'
+
+        # DEE: use the specific document type code
+        if invoice.l10n_co_edi_is_dee and invoice.l10n_co_edi_dee_type_id:
+            return invoice.l10n_co_edi_dee_type_id.code
 
         if invoice.journal_id.l10n_co_edi_is_contingency:
             return '30'
@@ -295,6 +306,18 @@ class AccountEdiXmlUblCO(models.AbstractModel):
 
     def _add_invoice_accounting_customer_party_nodes(self, document_node, vals):
         partner = vals['customer']
+        invoice = vals['invoice']
+
+        # DEE with simplified buyer: use minimal party data per Res. 000202/2025
+        if invoice.l10n_co_edi_is_dee and invoice.l10n_co_edi_dee_simplified_buyer:
+            document_node['cac:AccountingCustomerParty'] = {
+                'cbc:AdditionalAccountID': {
+                    '_text': '2',  # Persona Natural
+                },
+                'cac:Party': self._get_co_simplified_buyer_node(vals),
+            }
+            return
+
         document_node['cac:AccountingCustomerParty'] = {
             'cbc:AdditionalAccountID': {
                 '_text': '1' if partner.is_company else '2',
@@ -304,6 +327,66 @@ class AccountEdiXmlUblCO(models.AbstractModel):
                 'partner': partner,
                 'role': 'customer',
             }),
+        }
+
+    def _get_co_simplified_buyer_node(self, vals):
+        """Build a minimal buyer party node for DEE POS tickets.
+
+        Per Res. 000202/2025, POS equivalent documents require only:
+        - Buyer name (or 'CONSUMIDOR FINAL')
+        - Identification type (or '13' for CC)
+        - Identification number (or '222222222222' for anonymous)
+        """
+        partner = vals.get('customer')
+        buyer_name = 'CONSUMIDOR FINAL'
+        buyer_id = '222222222222'
+        buyer_id_type = '13'  # CC
+
+        if partner and partner.vat:
+            buyer_name = partner.name or 'CONSUMIDOR FINAL'
+            buyer_id = (partner.vat or '').replace('-', '').strip()
+            buyer_id_type = self._get_co_id_type_code(partner.commercial_partner_id)
+
+        return {
+            'cac:PartyName': {
+                'cbc:Name': {'_text': buyer_name},
+            },
+            'cac:PhysicalLocation': {
+                'cac:Address': {
+                    'cac:Country': {
+                        'cbc:IdentificationCode': {'_text': 'CO'},
+                        'cbc:Name': {'_text': 'Colombia', 'languageID': 'es'},
+                    },
+                },
+            },
+            'cac:PartyTaxScheme': {
+                'cbc:RegistrationName': {'_text': buyer_name},
+                'cbc:CompanyID': {
+                    '_text': buyer_id,
+                    'schemeAgencyID': '195',
+                    'schemeAgencyName': 'CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)',
+                    'schemeID': '',
+                    'schemeName': buyer_id_type,
+                },
+                'cbc:TaxLevelCode': {
+                    '_text': 'R-99-PN',
+                    'listName': '48',
+                },
+                'cac:TaxScheme': {
+                    'cbc:ID': {'_text': 'ZZ'},
+                    'cbc:Name': {'_text': 'No causa'},
+                },
+            },
+            'cac:PartyLegalEntity': {
+                'cbc:RegistrationName': {'_text': buyer_name},
+                'cbc:CompanyID': {
+                    '_text': buyer_id,
+                    'schemeAgencyID': '195',
+                    'schemeAgencyName': 'CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)',
+                    'schemeID': '',
+                    'schemeName': buyer_id_type,
+                },
+            },
         }
 
     def _get_co_party_node(self, vals):

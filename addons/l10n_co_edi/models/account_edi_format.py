@@ -72,15 +72,19 @@ class AccountEdiFormat(models.Model):
         if not company.l10n_co_edi_certificate:
             errors.append(_('No digital certificate uploaded. A valid .p12 certificate is required.'))
 
-        if move.move_type == 'out_invoice' and not journal.l10n_co_edi_dian_technical_key:
+        # DEE uses CUDE (no technical key needed); regular invoices require it
+        is_dee = move.l10n_co_edi_is_dee
+        if move.move_type == 'out_invoice' and not is_dee and not journal.l10n_co_edi_dian_technical_key:
             errors.append(_('DIAN Technical Key (Clave Tecnica) is not configured on journal %s.', journal.name))
 
         if not journal.l10n_co_edi_dian_authorization:
             errors.append(_('DIAN Authorization Number is not configured on journal %s.', journal.name))
 
+        # DEE with simplified buyer allows anonymous consumers
         partner = move.commercial_partner_id
-        if not partner.vat and not partner.l10n_latam_identification_type_id:
-            errors.append(_('Customer %s must have an identification number (NIT/CC/CE).', partner.name))
+        if not (is_dee and move.l10n_co_edi_dee_simplified_buyer):
+            if not partner.vat and not partner.l10n_latam_identification_type_id:
+                errors.append(_('Customer %s must have an identification number (NIT/CC/CE).', partner.name))
 
         # Check numbering range
         if journal.l10n_co_edi_dian_range_to and journal.l10n_co_edi_range_remaining <= 0:
