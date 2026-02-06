@@ -103,10 +103,10 @@ export class ImageShapeOptionPlugin extends Plugin {
     async canHaveHoverEffect(imgEl) {
         const dataset = Object.assign({}, imgEl.dataset, await loadImageInfo(imgEl));
         return (
-            imgEl.tagName === "IMG" &&
-            !this.isDeviceShape(imgEl) &&
-            !this.isAnimableShape(dataset.shape) &&
-            this.isImageSupportedForShapes(imgEl, dataset)
+            !(imgEl.tagName === "IMG") ||
+            (!this.isDeviceShape(imgEl) &&
+                !this.isAnimableShape(dataset.shape) &&
+                this.isImageSupportedForShapes(imgEl, dataset))
         );
     }
     isDeviceShape(img) {

@@ -2,7 +2,9 @@ import {
     BaseOptionComponent,
     useDomState,
     SPECIAL_BLOCKQUOTE_SELECTOR,
+    BLOCKQUOTE_PARENT_HANDLERS,
 } from "@html_builder/core/utils";
+import { CARD_PARENT_HANDLERS, SPECIAL_CARD_SELECTOR } from "./utils";
 import {
     isImageSupportedForStyle,
     socialMediaElementsSelector,
@@ -15,8 +17,8 @@ import {
 export class AnimateOption extends BaseOptionComponent {
     static template = "website.AnimateOption";
     static dependencies = ["animateOption"];
-    static selector = ".o_animable, section .row > div, img, .fa, .btn";
-    static exclude = `[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, ${socialMediaElementsSelector}, ${SPECIAL_BLOCKQUOTE_SELECTOR}`;
+    static selector = ".o_animable, section .row > div, img, .fa, .btn, .s_card";
+    static exclude = `[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, ${socialMediaElementsSelector}, ${SPECIAL_BLOCKQUOTE_SELECTOR}, ${SPECIAL_CARD_SELECTOR}`;
     static props = {
         dropdownClass: { type: String, optional: true, default: "o-hb-select-dropdown" },
         requireAnimation: { type: Boolean, optional: true },
@@ -30,11 +32,18 @@ export class AnimateOption extends BaseOptionComponent {
             const hasAnimateClass = editingElement.classList.contains("o_animate");
             this.getDirectionsItems = this.dependencies.animateOption.getDirectionsItems;
             const { getEffectsItems } = this.dependencies.animateOption;
+            const isImage = editingElement.tagName === "IMG";
+            const isCardParent = editingElement.matches(CARD_PARENT_HANDLERS);
+            const isBlockquoteParent = editingElement.matches(BLOCKQUOTE_PARENT_HANDLERS);
 
             return {
                 isOptionActive: this.isOptionActive(editingElement),
                 hasAnimateClass: hasAnimateClass,
                 canHover: await this.canHaveHoverEffect(editingElement),
+                isImage: isImage,
+                isCardParent: isCardParent,
+                isBlockquoteParent: isBlockquoteParent,
+                isBlock: !isImage && !isCardParent && !isBlockquoteParent,
                 isLimitedEffect: this.limitedEffects.some((className) =>
                     editingElement.classList.contains(className)
                 ),

@@ -3200,6 +3200,61 @@ input[value*="data-oe-translation-source-sha"] {
     transition-timing-function: ease-out;
 }
 
+// On Hover Block /////////////////////////////////////////////////////////////
+
+.o_anim_on_hover {
+    transition: transform 0.3s ease, filter 0.3s ease;
+    --anim-shift: 10px;
+    --anim-color: #00000040;
+    --anim-intensity: 10;
+
+    &.o_anim_hover_overlay {
+        position: relative;
+    }
+
+    &.o_anim_hover_zoom_in, &.o_anim_hover_zoom_out {
+        transform-origin: center center;
+    }
+
+    /* TRANSLATE */
+    &.o_anim_hover_translate:hover {
+        transform: translateY(calc(-1 * var(--anim-shift)));
+        &.o_anim_hover_translate_bottom {
+            transform: translateY(var(--anim-shift));
+        }
+        &.o_anim_hover_translate_left {
+            transform: translateX(calc(-1 * var(--anim-shift)));
+        }
+        &.o_anim_hover_translate_right {
+            transform: translateX(var(--anim-shift));
+        }
+    }
+
+    /* OVERLAY */
+    &.o_anim_hover_overlay::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: var(--anim-color);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
+    &.o_anim_hover_overlay:hover::after {
+        opacity: 1;
+    }
+
+    /* ZOOM IN */
+    &.o_anim_hover_zoom_in:hover {
+        transform: scale(calc(1 + 0.01 * var(--anim-intensity)));
+    }
+
+    /* ZOOM OUT */
+    &.o_anim_hover_zoom_out:hover {
+        transform: scale(calc(1 - 0.01 * var(--anim-intensity)));
+    }
+}
+
 // Compatibility <= 13.0
 .o_anim_dur500 {
     animation-duration: 500ms;
