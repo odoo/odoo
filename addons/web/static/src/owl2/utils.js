@@ -55,7 +55,7 @@ export function onWillRender(cb) {
     const node = getCurrentNode();
     const renderFn = node.renderFn;
     node.renderFn = () => {
-        cb();
+        cb.call(node.component);
         return renderFn();
     };
 }
@@ -68,7 +68,7 @@ export function onRendered(cb) {
     const renderFn = node.renderFn;
     node.renderFn = () => {
         const result = renderFn();
-        cb();
+        cb.call(node.component);
         return result;
     };
 }
