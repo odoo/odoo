@@ -50,6 +50,7 @@ Features:
         'views/account_fiscal_position_views.xml',
         'views/l10n_co_edi_uvt_views.xml',
         'views/l10n_co_withholding_cert_views.xml',
+        'views/l10n_co_edi_exogenous_views.xml',
         'report/l10n_co_withholding_cert_report.xml',
     ],
     'installable': True,

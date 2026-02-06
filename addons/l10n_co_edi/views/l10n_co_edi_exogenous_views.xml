@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Exogenous Document: List View                                 -->
+    <!-- ============================================================ -->
+    <record id="l10n_co_edi_exogenous_document_list" model="ir.ui.view">
+        <field name="name">l10n_co_edi.exogenous.document.list</field>
+        <field name="model">l10n_co_edi.exogenous.document</field>
+        <field name="arch" type="xml">
+            <list string="Exogenous Documents"
+                  decoration-info="state == 'draft'"
+                  decoration-success="state == 'sent'">
+                <field name="year"/>
+                <field name="formato"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="line_count" string="Lines"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'confirmed'"
+                       decoration-success="state == 'sent'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Exogenous Document: Form View                                 -->
+    <!-- ============================================================ -->
+    <record id="l10n_co_edi_exogenous_document_form" model="ir.ui.view">
+        <field name="name">l10n_co_edi.exogenous.document.form</field>
+        <field name="model">l10n_co_edi.exogenous.document</field>
+        <field name="arch" type="xml">
+            <form string="Exogenous Document">
+                <header>
+                    <button name="action_compute_lines" type="object"
+                            string="Compute Lines" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_confirm" type="object"
+                            string="Confirm &amp; Generate XML" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_generate_xml" type="object"
+                            string="Regenerate XML"
+                            invisible="state != 'confirmed'"/>
+                    <button name="action_reset_to_draft" type="object"
+                            string="Reset to Draft"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed,sent"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <span>Exogenous Information — </span>
+                            <field name="formato" readonly="1" class="oe_inline"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="year" readonly="state != 'draft'"/>
+                            <field name="formato" readonly="state != 'draft'"
+                                   invisible="1"/>
+                            <field name="company_id"
+                                   groups="base.group_multi_company"
+                                   readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="line_count"/>
+                            <field name="xml_file" filename="xml_filename"
+                                   invisible="not xml_file"/>
+                            <field name="xml_filename" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Detail Lines" name="lines">
+                            <field name="line_ids" readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="partner_id"/>
+                                    <field name="partner_vat"/>
+                                    <field name="base_amount" sum="Total Base"/>
+                                    <field name="tax_amount" sum="Total Tax"/>
+                                    <field name="withholding_amount"
+                                           sum="Total Withholding"/>
+                                    <field name="tax_rate"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes" placeholder="Internal notes..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Exogenous Wizard: Form View                                   -->
+    <!-- ============================================================ -->
+    <record id="l10n_co_edi_exogenous_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_co_edi.exogenous.wizard.form</field>
+        <field name="model">l10n_co_edi.exogenous.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Exogenous Information">
+                <group>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="year"/>
+                    <field name="formato_ids"/>
+                </group>
+                <footer>
+                    <button name="action_generate" type="object"
+                            string="Generate" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Actions                                                       -->
+    <!-- ============================================================ -->
+    <record id="action_l10n_co_edi_exogenous_document" model="ir.actions.act_window">
+        <field name="name">Exogenous Information</field>
+        <field name="res_model">l10n_co_edi.exogenous.document</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Generate DIAN Exogenous Information
+            </p>
+            <p>
+                Use the wizard to generate annual third-party information
+                reports (Informacion Exogena) for DIAN submission.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_l10n_co_edi_exogenous_wizard" model="ir.actions.act_window">
+        <field name="name">Generate Exogenous Documents</field>
+        <field name="res_model">l10n_co_edi.exogenous.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Menus                                                         -->
+    <!-- ============================================================ -->
+    <menuitem id="menu_l10n_co_edi_exogenous"
+              name="Exogenous Information"
+              parent="account.menu_finance_reports"
+              action="action_l10n_co_edi_exogenous_document"
+              sequence="50"/>
+
+    <menuitem id="menu_l10n_co_edi_exogenous_wizard"
+              name="Generate Exogenous"
+              parent="menu_l10n_co_edi_exogenous"
+              action="action_l10n_co_edi_exogenous_wizard"
+              sequence="10"/>
+
+</odoo>

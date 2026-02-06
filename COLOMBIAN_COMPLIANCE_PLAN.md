@@ -545,17 +545,21 @@ addons/l10n_co_edi/
 - [ ] 48-hour transmission window for rural utilities (deferred)
 - [ ] POS auto-selection of DEE type 05 (deferred — l10n_co_pos bridge)
 
-### Phase 7: Exogenous Information (Weeks 21-22)
+### Phase 7: Exogenous Information (Weeks 21-22) — DONE
 
 **Goal:** Generate annual third-party reporting for DIAN.
 
-- [ ] Formato 1001 (payments and withholdings to third parties)
-- [ ] Formato 1003 (withholdings practiced)
-- [ ] Formato 1005 (IVA deductible)
-- [ ] Formato 1006 (IVA generated)
-- [ ] Formato 1007 (income received)
-- [ ] XML generation per DIAN schema
-- [ ] Pre-validation report for data quality
+- [x] Formato 1001 (payments and withholdings to third parties)
+- [x] Formato 1003 (withholdings practiced)
+- [x] Formato 1005 (IVA deductible)
+- [x] Formato 1006 (IVA generated)
+- [x] Formato 1007 (income received)
+- [x] XML generation per DIAN schema
+- [x] Wizard for batch document generation
+- [x] Views (list, form, statusbar), menus, actions
+- [x] Security access rules (user read-only, manager full)
+- [x] 44 tests (model structure, aggregation methods, XML structure, retention constants, wizard, views, security, integration)
+- [ ] Pre-validation report for data quality (deferred — enhancement)
 
 ### Phase 8: UI Modernization (Last — after all other phases)
 

@@ -6,3 +6,4 @@ from . import test_xml_generation
 from . import test_tax_reports
 from . import test_fiscal_positions
 from . import test_dee
+from . import test_exogenous
