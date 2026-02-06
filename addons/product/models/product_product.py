@@ -721,7 +721,8 @@ class ProductProduct(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        return super(ProductProduct, self.with_context(create_product_product=False)).create(vals_list)
+        products = super(ProductProduct, self.with_context(create_product_product=False)).create(vals_list)
+        return products.with_env(self.env)
 
     def action_archive(self):
         records = self.filtered('active')
