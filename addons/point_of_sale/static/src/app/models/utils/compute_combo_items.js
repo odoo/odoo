@@ -28,7 +28,7 @@ export const computeComboItems = (
         remainingTotal -= priceUnit * conf.qty;
 
         if (comboItem.id == childLineConf[childLineConf.length - 1].combo_item_id.id) {
-            priceUnit += remainingTotal;
+            priceUnit += remainingTotal / conf.qty;
         }
         const attribute_value_ids = conf.configuration?.attribute_value_ids?.map(
             (id) => productTemplateAttributeValueById[id]
