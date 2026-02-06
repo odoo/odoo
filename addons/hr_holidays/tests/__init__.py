@@ -35,3 +35,4 @@ from . import test_time_off_allocation_tour
 from . import test_flexible_resource_calendar
 from . import test_calendar_leaves_count
 from . import test_work_entry_holidays
+from . import test_balance_report
