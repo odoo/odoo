@@ -210,8 +210,7 @@ class Task(models.Model):
         search='_search_personal_stage_type_id', default=_default_personal_stage_type_id,
         help="The current user's personal task stage.", domain="[('user_id', '=', uid)]")
     partner_id = fields.Many2one('res.partner',
-        string='Customer', recursive=True, tracking=True, compute='_compute_partner_id', store=True, readonly=False,
-        domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]", )
+        string='Customer', recursive=True, tracking=True, compute='_compute_partner_id', store=True, readonly=False, check_company=True)
     email_cc = fields.Char(help='Email addresses that were in the CC of the incoming emails from this task and that are not currently linked to an existing customer.')
     company_id = fields.Many2one('res.company', string='Company', compute='_compute_company_id', store=True, readonly=False, recursive=True, copy=True, default=_default_company_id)
     color = fields.Integer(string='Color Index', export_string_translation=False)
