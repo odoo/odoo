@@ -7,16 +7,18 @@
          t-on-pointerenter="onPointerEnter" t-on-pointerleave="onPointerLeave">
         <div class="options-container-header d-flex align-items-center justify-content-between">
             <t t-set="isActionable" t-value="Object.keys(props.snippetModel).length > 0"></t>
+            <button role="button" class="collapse-section btn" data-tooltip="Collapse the section" t-on-click="toggleFold">
+                <i class="fa fa-fw" t-att-class="this.props.foldedState.folded ? 'fa-chevron-right' : 'fa-chevron-down'"></i>
+            </button>
+
             <span
                 class="options-container-label py-2 flex-grow-1"
                 t-att-class="{
                     'options-container-label-actionable cursor-pointer': isActionable,
                 }"
                 t-att-role="isActionable ? 'button' : 'heading'"
-                t-on-click="toggleFold"
-                t-on-dblclick="selectElement"
+                t-on-click="selectElement"
             >
-                <i class="fa fa-fw mx-1" role="img" t-att-class="this.props.foldedState.folded ? 'fa-caret-right' : 'fa-caret-down'"></i>
                 <t t-out="title"/>
                 <t t-if="props.optionTitleComponents" t-foreach="props.optionTitleComponents" t-as="optionTitleComponent" t-key="optionTitleComponent.id">
                     <t t-component="optionTitleComponent.Component" t-props="optionTitleComponent.props || {}"/>
