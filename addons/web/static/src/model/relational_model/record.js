@@ -534,14 +534,18 @@ export class Record extends DataPoint {
             });
             return pair && { id: pair[0], display_name: pair[1] };
         }
-        if (resId && displayName === undefined) {
+        const activeField = this.activeFields[fieldName];
+        const relatedFields = ["display_name"].concat(
+            Object.keys(activeField.related?.activeFields || {})
+        );
+        if (resId && relatedFields.some((relatedField) => value[relatedField] === undefined)) {
             const fieldSpec = { display_name: {} };
-            if (this.activeFields[fieldName].related) {
+            if (activeField.related) {
                 Object.assign(
                     fieldSpec,
                     getFieldsSpec(
-                        this.activeFields[fieldName].related.activeFields,
-                        this.activeFields[fieldName].related.fields,
+                        activeField.related.activeFields,
+                        activeField.related.fields,
                         getBasicEvalContext(this.config)
                     )
                 );
@@ -551,6 +555,12 @@ export class Record extends DataPoint {
                 specification: fieldSpec,
             };
             const records = await this.model.orm.webRead(resModel, [resId], kwargs);
+            for (const fieldName in records[0]) {
+                const field = activeField.related?.fields[fieldName];
+                if (field) {
+                    records[0][fieldName] = parseServerValue(field, records[0][fieldName]);
+                }
+            }
             return records[0];
         }
         return value;
@@ -913,16 +923,21 @@ export class Record extends DataPoint {
                 parsedValues[fieldName] = staticList;
             } else {
                 parsedValues[fieldName] = parseServerValue(field, value);
-                if (field.type === "properties") {
+                const parsedValue = parsedValues[fieldName];
+                if (field.type === "many2one" && parsedValue) {
+                    const relFields = this.activeFields[fieldName].related?.fields || {};
+                    for (const relFieldName of Object.keys(parsedValues[fieldName])) {
+                        const relField = relFields[relFieldName];
+                        if (relField) {
+                            const relValue = parsedValue[relFieldName];
+                            parsedValue[relFieldName] = parseServerValue(relField, relValue);
+                        }
+                    }
+                } else if (field.type === "properties") {
                     const parent = serverValues[field.definition_record];
                     Object.assign(
                         parsedValues,
-                        this._processProperties(
-                            parsedValues[fieldName],
-                            fieldName,
-                            parent,
-                            currentValues
-                        )
+                        this._processProperties(parsedValue, fieldName, parent, currentValues)
                     );
                 }
             }
