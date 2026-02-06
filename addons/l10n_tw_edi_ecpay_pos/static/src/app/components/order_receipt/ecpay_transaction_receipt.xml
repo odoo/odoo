@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <!-- Template for E-invoice transaction receipt printout. Content is in Traditional Chinese to match ECPay invoice format requirements. -->
+    <t t-name="l10n_tw_edi_ecpay_pos.EcpayTransactionReceipt">
+        <div class="d-flex flex-column px-2 pt-0 pos-receipt pos-receipt-ecpay-width">
+            <h1 class="display-6 pos-receipt-center-align">交易明細</h1>
+            <div class="fs-2">
+                <span>訂單編號:</span>
+                <t t-out="order.name"/>
+            </div>
+            <div class="fs-2">
+                <span>發票號碼:</span>
+                <t t-out="order.iis_number"/>
+            </div>
+            <div class="fs-2">
+                <span t-if="order.iis_carrier_num != '' and (order.iis_carrier_type == '' or order.iis_carrier_type == '1')">共通載具: </span>
+                <span t-if="order.iis_carrier_type == '2'">自然人憑證: </span>
+                <span t-if="order.iis_carrier_type == '3'">手機載具: </span>
+                <span><t t-out="order.iis_carrier_num"/></span>
+            </div>
+            <div class="fs-2">
+                <span>結帳時間:</span>
+                <t t-out="order.iis_create_date"/>
+            </div>
+            <br/>
+            <table class="table table-borderless fs-2">
+                <thead>
+                    <tr class="pos-receipt-center-align">
+                        <th><span>項目</span></th>
+                        <th><span>單價*數量</span></th>
+                        <th><span>⾦額</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-set="total_quantity" t-value="0"/>
+                    <t t-foreach="orderLines" t-as="line" t-key="line_index">
+                        <tr class="pos-receipt-left-align">
+                            <td width="40%">
+                                <t t-out="line.product_id.display_name"/>
+                            </td>
+                            <td width="30%">
+                                <t t-out="formatCurrency(line.displayPriceUnitIncl)"/>
+                                *
+                                <t t-out="line.qty"/>
+                            </td>
+                            <td width="30%">
+                                <t t-out="formatCurrency(line.priceIncl)"/>
+                                <span> TX</span>
+                            </td>
+                        </tr>
+                        <t t-set="total_quantity" t-value="total_quantity + line.qty"/>
+                    </t>
+                </tbody>
+            </table>
+            <div>
+                <div class="fs-2">
+                    <span>總計</span>
+                    <t t-out="total_quantity"/>
+                    <span> 項</span>
+                </div>
+                <div class="fs-2">
+                    <span>小計 </span>
+                    <t t-out="formatCurrency(order.l10n_tw_edi_invoice_amount-order.iis_tax_amount)" />
+                </div>
+                <div class="fs-2">
+                    <span>發票金額 </span>
+                    <t t-out="formatCurrency(order.l10n_tw_edi_invoice_amount)" />
+                </div>
+                <t t-foreach="paymentLines" t-as="line" t-key="line_index">
+                    <div class="fs-2">
+                        <t t-out="line.payment_method_id.name" /> <t t-out="line.amount" />
+                    </div>
+                </t>
+                <div class="fs-2">
+                    <span>找零 </span>
+                    <t t-out="order.change" />
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

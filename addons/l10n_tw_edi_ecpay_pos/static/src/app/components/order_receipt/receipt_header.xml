@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//div[@id='order-date']" position="replace">
+            <t t-if="order.isPrintEcpayInvoice and !order.ecpay_error">
+                <div id="order-date" t-out="order.iis_create_date" />
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>
