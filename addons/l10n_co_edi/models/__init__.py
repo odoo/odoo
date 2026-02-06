@@ -9,3 +9,4 @@ from . import l10n_co_edi_uvt
 from . import l10n_co_edi_tax_type
 from . import l10n_co_edi_document_type
 from . import l10n_co_edi_payment_means
+from . import account_edi_xml_ubl_co

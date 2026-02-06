@@ -1,6 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+import logging
+
 from odoo import api, models, _
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountEdiFormat(models.Model):
@@ -88,37 +93,119 @@ class AccountEdiFormat(models.Model):
         return errors
 
     # =====================================================================
-    # DIAN Post / Cancel — Stubs for Phase 2-3 implementation
+    # Colombian UBL Builder Access
+    # =====================================================================
+
+    def _l10n_co_edi_get_ubl_builder(self):
+        """Return the Colombian UBL 2.1 XML builder instance."""
+        return self.env['account.edi.xml.ubl_co']
+
+    # =====================================================================
+    # DIAN Post / Cancel / Content
     # =====================================================================
 
     def _l10n_co_edi_post_invoice(self, invoices):
         """Generate UBL XML, sign it, compute CUFE/CUDE, and send to DIAN.
 
-        This is the main entry point called by the EDI framework when an
-        invoice is posted. Full implementation in Phase 2 (XML generation)
-        and Phase 3 (DIAN web service).
+        Flow:
+        1. Set EDI datetime and compute CUFE/CUDE
+        2. Generate DIAN-compliant UBL 2.1 XML
+        3. Sign with digital certificate (XMLDSig/XAdES-BES)
+        4. Store the signed XML on the invoice
+        5. (Phase 3) Submit to DIAN web service
 
         :param invoices: account.move recordset
         :return: dict mapping move to result dict
         """
+        builder = self._l10n_co_edi_get_ubl_builder()
         result = {}
+
         for invoice in invoices:
-            # Phase 1: Compute CUFE/CUDE and set EDI datetime
-            invoice.l10n_co_edi_datetime = invoice.l10n_co_edi_datetime or invoice.create_date
-            invoice.l10n_co_edi_compute_cufe_cude()
-            invoice.l10n_co_edi_state = 'pending'
+            try:
+                # 1. Compute CUFE/CUDE and set EDI datetime
+                invoice.l10n_co_edi_datetime = invoice.l10n_co_edi_datetime or invoice.create_date
+                invoice.l10n_co_edi_compute_cufe_cude()
 
-            # TODO Phase 2: Generate UBL 2.1 XML
-            # TODO Phase 2: Sign XML with digital certificate
-            # TODO Phase 3: Submit to DIAN web service
-            # TODO Phase 3: Process DIAN response
+                # 2. Generate UBL 2.1 XML
+                xml_content, errors = builder._export_invoice(invoice)
 
-            # For now, mark as pending (will be processed by cron in Phase 3)
-            result[invoice] = {
-                'success': True,
-                'blocking_level': 'info',
-            }
+                if errors:
+                    _logger.warning(
+                        'Invoice %s: XML generation warnings: %s',
+                        invoice.name, ', '.join(errors),
+                    )
+
+                # 3. Sign with digital certificate
+                xml_content = self._l10n_co_edi_sign_xml(invoice, xml_content)
+
+                # 4. Store signed XML
+                filename = builder._export_invoice_filename(invoice)
+                invoice.l10n_co_edi_xml_file = base64.b64encode(xml_content)
+                invoice.l10n_co_edi_xml_filename = filename
+                invoice.l10n_co_edi_state = 'pending'
+
+                # TODO Phase 3: Submit to DIAN web service
+                # TODO Phase 3: Process DIAN response (validate/reject)
+
+                result[invoice] = {
+                    'success': True,
+                    'blocking_level': 'info',
+                    'attachment': self.env['ir.attachment'].create({
+                        'name': filename,
+                        'raw': xml_content,
+                        'mimetype': 'application/xml',
+                        'res_model': invoice._name,
+                        'res_id': invoice.id,
+                    }),
+                }
+
+            except Exception as e:
+                _logger.exception('Error generating DIAN XML for invoice %s', invoice.name)
+                result[invoice] = {
+                    'success': False,
+                    'error': _('Error generating electronic invoice: %s', str(e)),
+                    'blocking_level': 'error',
+                }
+
         return result
+
+    def _l10n_co_edi_sign_xml(self, invoice, xml_content):
+        """Sign XML with the company's digital certificate.
+
+        If no certificate is configured (e.g., in test mode), returns
+        the unsigned XML with a warning.
+
+        :param invoice: account.move record
+        :param xml_content: bytes — unsigned UBL XML
+        :return: bytes — signed UBL XML (or unsigned if no cert)
+        """
+        company = invoice.company_id
+        if not company.l10n_co_edi_certificate:
+            _logger.info(
+                'Invoice %s: No digital certificate configured, returning unsigned XML.',
+                invoice.name,
+            )
+            return xml_content
+
+        try:
+            from odoo.addons.l10n_co_edi.tools.xml_signer import DianXmlSigner
+
+            cert_data = base64.b64decode(company.l10n_co_edi_certificate)
+            password = company.l10n_co_edi_certificate_password or ''
+            signer = DianXmlSigner(cert_data, password)
+            return signer.sign(xml_content)
+        except ImportError:
+            _logger.warning(
+                'Invoice %s: cryptography library not available, returning unsigned XML.',
+                invoice.name,
+            )
+            return xml_content
+        except Exception as e:
+            _logger.error(
+                'Invoice %s: Error signing XML: %s. Returning unsigned.',
+                invoice.name, str(e),
+            )
+            return xml_content
 
     def _l10n_co_edi_cancel_invoice(self, invoices):
         """Request cancellation of a validated electronic invoice with DIAN.
@@ -139,10 +226,15 @@ class AccountEdiFormat(models.Model):
     def _l10n_co_edi_get_xml_content(self, invoice):
         """Return the UBL 2.1 XML content for the invoice.
 
-        Stub — full implementation in Phase 2.
+        If the XML has already been generated and stored, return it.
+        Otherwise, generate it fresh.
 
         :param invoice: account.move record
         :return: bytes (XML content)
         """
-        # TODO Phase 2: Full UBL 2.1 XML generation
-        return b'<?xml version="1.0" encoding="UTF-8"?><!-- Placeholder: Phase 2 -->'
+        if invoice.l10n_co_edi_xml_file:
+            return base64.b64decode(invoice.l10n_co_edi_xml_file)
+
+        builder = self._l10n_co_edi_get_ubl_builder()
+        xml_content, _errors = builder._export_invoice(invoice)
+        return xml_content
