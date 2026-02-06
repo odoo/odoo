@@ -64,7 +64,10 @@ export class ProductInfoPopup extends Component {
         });
     }
     get vatLabel() {
-        return this.pos.company.country_id.vat_label || _t("VAT");
+        return _t("VAT:");
+    }
+    get totalVatLabel() {
+        return _t("Total VAT:");
     }
     updateCountdown() {
         if (!this.state.activeSnooze) {
