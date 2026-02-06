@@ -8,6 +8,7 @@ import { Reactive } from "@web/core/utils/reactive";
 export const ACTION_TAGS = Object.freeze({
     DANGER: "DANGER",
     SUCCESS: "SUCCESS",
+    PRIMARY: "PRIMARY",
     IMPORTANT_BADGE: "IMPORTANT_BADGE",
     WARNING_BADGE: "WARNING_BADGE",
     CALL_LAYOUT: "CALL_LAYOUT",

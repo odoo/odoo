@@ -85,14 +85,20 @@
             }
         }
 
-        @each $status, $color in (danger: $danger, success: $success) {
+        @each $status, $color in (danger: $danger, success: $success, primary: $primary) {
             &.o-dropdown-item.btn-#{$status}:not(.o-tag-JOIN_LEAVE_CALL) {
                 &.focus {
                     background-color: rgba($color, 0.75);
                     color: white;
+                    &.o-tag-PRIMARY {
+                        background-color: rgba($color, .9);
+                    }
                 }
                 &:not(.focus) {
                     color: var(--o-mail-ActionList-#{$status}NoBgColor, #{$color});
+                    &.o-tag-PRIMARY {
+                        background-color: rgba($color, .35);
+                    }
                 }
             }
             &.o-inline.btn-#{$status}:not(.o-tag-JOIN_LEAVE_CALL):not(.o-hasBtnBg) {
