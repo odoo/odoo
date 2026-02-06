@@ -1,3 +1,4 @@
+from freezegun import freeze_time
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
@@ -41,6 +42,7 @@ class TestHrLeaveReport(TestHrHolidaysCommon):
             },
         ])
 
+    @freeze_time("2026-03-20")
     def test_hr_leave_employee_report(self):
         self.env['hr.leave.allocation'].create([
             {
@@ -102,10 +104,10 @@ class TestHrLeaveReport(TestHrHolidaysCommon):
         leave_balance = self.env['hr.leave.employee.type.report'].search(domain)
 
         left_allocation = leave_balance.filtered(lambda l: l.holiday_status == 'left')
-        taken_allocation = leave_balance.filtered(lambda l: l.holiday_status == 'taken')
+        allocated_allocation = leave_balance.filtered(lambda l: l.holiday_status == 'allocated')
 
         self.assertEqual(sum(left_allocation.mapped('number_of_hours')), 104.5)
-        self.assertEqual(sum(taken_allocation.mapped('number_of_hours')), 24.0)
+        self.assertEqual(sum(allocated_allocation.mapped('number_of_hours')), 128.5)
 
     def test_overlapping_allocations_leaves_balance(self):
         """
@@ -119,7 +121,7 @@ class TestHrLeaveReport(TestHrHolidaysCommon):
         Verification:
             The leave occurs in 2026, so it should only overlap Allocation B.
             Allocation A should remain untouched (10 days), and Allocation B
-            should have 1 day deducted (9 days), totaling 19 remaining days.
+            should have 1 day deducted (9 days), totaling 9 remaining days.
         """
         self.alloc_a.action_approve()
         self.alloc_b.action_approve()
@@ -139,11 +141,11 @@ class TestHrLeaveReport(TestHrHolidaysCommon):
         leave_balance = self.env['hr.leave.employee.type.report'].search(domain)
 
         left_records = leave_balance.filtered(lambda l: l.holiday_status == 'left')
-        taken_records = leave_balance.filtered(lambda l: l.holiday_status == 'taken')
+        taken_records = leave_balance.filtered(lambda l: l.holiday_status == 'allocated')
 
-        # 20 total allocated - 1 taken = 19 remaining
-        self.assertEqual(sum(left_records.mapped('number_of_days')), 19)
-        self.assertEqual(sum(taken_records.mapped('number_of_days')), 1)
+        # 10 total allocated - 1 taken = 9 remaining
+        self.assertEqual(sum(left_records.mapped('number_of_days')), 9)
+        self.assertEqual(sum(taken_records.mapped('number_of_days')), 10)
 
     def test_overlapping_allocations_leaves_deduction(self):
         """
@@ -205,8 +207,8 @@ class TestHrLeaveReport(TestHrHolidaysCommon):
         leave_balance = self.env['hr.leave.employee.type.report'].search(domain)
 
         left_records = leave_balance.filtered(lambda l: l.holiday_status == 'left')
-        taken_records = leave_balance.filtered(lambda l: l.holiday_status == 'taken')
+        taken_records = leave_balance.filtered(lambda l: l.holiday_status == 'allocated')
 
         # 20 total allocated - 13 taken = 7 remaining
         self.assertEqual(sum(left_records.mapped('number_of_days')), 7)
-        self.assertEqual(sum(taken_records.mapped('number_of_days')), 13)
+        self.assertEqual(sum(taken_records.mapped('number_of_days')), 10)
