@@ -118,7 +118,7 @@ class SaleOrderDiscount(models.TransientModel):
             discount_product = company.sale_discount_product_id
         return discount_product
 
-    def _create_discount_lines(self):
+    def _get_discount_values(self):
         self.ensure_one()
         self = self.with_context(lang=self.sale_order_id._get_lang())
 
@@ -149,9 +149,14 @@ class SaleOrderDiscount(models.TransientModel):
             computation_key=f'global_discount,{self.id}',
             grouping_function=grouping_function,
         )
-        order.order_line = [
-            Command.create(values)
-            for values in self._prepare_global_discount_so_lines(global_discount_base_lines)
+
+        return self._prepare_global_discount_so_lines(global_discount_base_lines)
+
+    def _create_discount_lines(self):
+        values = self._get_discount_values()
+        self.sale_order_id.order_line = [
+            Command.create(v)
+            for v in values
         ]
 
     def action_apply_discount(self):
