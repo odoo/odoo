@@ -4,7 +4,7 @@ from datetime import datetime
 import threading
 
 from odoo.sql_db import BaseCursor, Cursor, Savepoint, _logger
-import odoo
+import odoo.modules
 
 
 class TestCursor(BaseCursor):

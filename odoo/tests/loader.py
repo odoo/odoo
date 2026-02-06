@@ -109,12 +109,6 @@ def make_suite(module_names, position='at_install'):
 
 
 def run_suite(suite, global_report=None):
-    # avoid dependency hell
-    from ..modules import module
-    module.current_test = True
-
     results = OdooTestResult(global_report=global_report)
     suite(results)
-
-    module.current_test = False
     return results

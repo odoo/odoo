@@ -21,6 +21,9 @@ import odoo.release as release
 import odoo.tools as tools
 import odoo.upgrade
 
+if typing.TYPE_CHECKING:
+    from unittest import TestCase
+
 try:
     from packaging.requirements import InvalidRequirement, Requirement
 except ImportError:
@@ -106,8 +109,8 @@ TYPED_FIELD_DEFINITION_RE = re.compile(r'''
 
 _logger = logging.getLogger(__name__)
 
-current_test: bool = False
-"""Indicates whteher we are in a test mode"""
+current_test: TestCase | None = None
+"""The current test being run, if any"""
 
 
 class UpgradeHook:
