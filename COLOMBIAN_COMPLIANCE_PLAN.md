@@ -501,7 +501,11 @@ addons/l10n_co_edi/
 - [ ] XML generation per DIAN schema
 - [ ] Pre-validation report for data quality
 
-### Phase 8: UI Modernization (Weeks 23-28)
+### Phase 8: UI Modernization (Last — after all other phases)
+
+**Implementation note:** Phase 8 is intentionally scheduled last. Before any theme
+work begins, 5-6 complete theme mockup options will be presented for review and
+selection. No theme implementation will proceed until a direction is chosen.
 
 **Goal:** Modernize the accounting interface with a refreshed look and improved UX,
 while preserving the existing OWL component architecture.

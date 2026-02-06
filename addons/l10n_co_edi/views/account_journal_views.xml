@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_journal_form_co_edi" model="ir.ui.view">
+        <field name="name">account.journal.form.co.edi</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='advanced_settings']" position="after">
+                <page string="DIAN Numbering" name="l10n_co_edi_dian"
+                      invisible="company_id.account_fiscal_country_id != %(base.co)d">
+                    <group string="DIAN Authorized Numbering Range">
+                        <group>
+                            <field name="l10n_co_edi_dian_authorization"/>
+                            <field name="l10n_co_edi_dian_authorization_date"/>
+                            <field name="l10n_co_edi_dian_prefix"/>
+                            <field name="l10n_co_edi_dian_technical_key" password="True"/>
+                        </group>
+                        <group>
+                            <field name="l10n_co_edi_dian_range_from"/>
+                            <field name="l10n_co_edi_dian_range_to"/>
+                            <field name="l10n_co_edi_dian_range_valid_from"/>
+                            <field name="l10n_co_edi_dian_range_valid_to"/>
+                        </group>
+                    </group>
+                    <group string="Status">
+                        <group>
+                            <field name="l10n_co_edi_range_remaining"/>
+                            <field name="l10n_co_edi_is_contingency"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

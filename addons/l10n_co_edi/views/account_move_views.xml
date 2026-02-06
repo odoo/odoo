@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Invoice form: add DIAN status and CUFE display -->
+    <record id="view_move_form_co_edi" model="ir.ui.view">
+        <field name="name">account.move.form.co.edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="l10n_co_edi_is_colombian" invisible="1"/>
+                <button name="l10n_co_edi_compute_cufe_cude"
+                        string="Compute CUFE"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-barcode"
+                        invisible="not l10n_co_edi_is_colombian or state != 'posted'"/>
+            </xpath>
+            <xpath expr="//group[@id='header_right_group']" position="after">
+                <group invisible="not l10n_co_edi_is_colombian or state != 'posted'" string="DIAN Electronic Invoicing">
+                    <field name="l10n_co_edi_state" widget="badge"
+                           decoration-success="l10n_co_edi_state == 'validated'"
+                           decoration-warning="l10n_co_edi_state in ('pending', 'sent')"
+                           decoration-danger="l10n_co_edi_state == 'rejected'"/>
+                    <field name="l10n_co_edi_cufe_cude"/>
+                    <field name="l10n_co_edi_datetime"/>
+                    <field name="l10n_co_edi_xml_file" filename="l10n_co_edi_xml_filename"
+                           invisible="not l10n_co_edi_xml_file"/>
+                    <field name="l10n_co_edi_xml_filename" invisible="1"/>
+                    <field name="l10n_co_edi_dian_response_status"
+                           invisible="not l10n_co_edi_dian_response_status"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Invoice tree: add DIAN status column -->
+    <record id="view_move_tree_co_edi" model="ir.ui.view">
+        <field name="name">account.move.list.co.edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="before">
+                <field name="l10n_co_edi_state" optional="hide" widget="badge"
+                       decoration-success="l10n_co_edi_state == 'validated'"
+                       decoration-warning="l10n_co_edi_state in ('pending', 'sent')"
+                       decoration-danger="l10n_co_edi_state == 'rejected'"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

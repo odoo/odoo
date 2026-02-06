@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_company_form_co_edi" model="ir.ui.view">
+        <field name="name">res.company.form.co.edi</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='general_info']" position="after">
+                <page string="Colombian Electronic Invoicing" name="l10n_co_edi"
+                      invisible="account_fiscal_country_id != %(base.co)d">
+                    <group string="DIAN Software Registration">
+                        <group>
+                            <field name="l10n_co_edi_software_id"/>
+                            <field name="l10n_co_edi_software_pin" password="True"/>
+                            <field name="l10n_co_edi_test_mode"/>
+                            <field name="l10n_co_edi_test_set_id"
+                                   invisible="not l10n_co_edi_test_mode"/>
+                        </group>
+                    </group>
+                    <group string="Digital Certificate">
+                        <group>
+                            <field name="l10n_co_edi_certificate" filename="l10n_co_edi_certificate_filename"/>
+                            <field name="l10n_co_edi_certificate_filename" invisible="1"/>
+                            <field name="l10n_co_edi_certificate_password" password="True"/>
+                            <field name="l10n_co_edi_certificate_expiry"/>
+                        </group>
+                    </group>
+                    <group string="Company Tax Classification">
+                        <group>
+                            <field name="l10n_co_edi_tax_regime"/>
+                            <field name="l10n_co_edi_gran_contribuyente"/>
+                            <field name="l10n_co_edi_autorretenedor"/>
+                        </group>
+                        <group>
+                            <field name="l10n_co_edi_fiscal_responsibilities"/>
+                            <field name="l10n_co_edi_ciiu_code"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
