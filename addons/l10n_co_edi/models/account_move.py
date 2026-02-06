@@ -171,6 +171,60 @@ class AccountMove(models.Model):
         return result
 
     @api.model
+    def _l10n_co_edi_cron_poll_dian_status(self):
+        """Cron job: poll DIAN for status of pending/sent invoices.
+
+        Finds all Colombian invoices in 'pending' or 'sent' state and
+        queries DIAN for their current status.
+        """
+        pending_moves = self.search([
+            ('l10n_co_edi_state', 'in', ('pending', 'sent')),
+            ('l10n_co_edi_cufe_cude', '!=', False),
+            ('company_id.account_fiscal_country_id.code', '=', 'CO'),
+        ], limit=50)  # Process in batches
+
+        if not pending_moves:
+            return
+
+        import logging
+        _logger = logging.getLogger(__name__)
+        dian_client = self.env['l10n_co_edi.dian.client']
+
+        for move in pending_moves:
+            try:
+                company = move.company_id
+                track_id = move.l10n_co_edi_cufe_cude
+
+                response = dian_client._get_status(company, track_id)
+                if not response:
+                    continue
+
+                if dian_client._is_dian_response_success(response):
+                    move.l10n_co_edi_state = 'validated'
+                    move.l10n_co_edi_dian_response = response.get('application_response', '')
+                    move.l10n_co_edi_dian_response_status = str(response.get('status_code', ''))
+                    _logger.info('Invoice %s: DIAN validated successfully.', move.name)
+                elif response.get('status_code') is not None:
+                    # Got a definitive response — check if it's a rejection
+                    errors = response.get('errors', [])
+                    if errors:
+                        move.l10n_co_edi_state = 'rejected'
+                        move.l10n_co_edi_dian_response = response.get('raw_response', '')
+                        move.l10n_co_edi_dian_response_status = str(response.get('status_code', ''))
+                        error_msg = dian_client._format_dian_error(response)
+                        _logger.warning('Invoice %s: DIAN rejected: %s', move.name, error_msg)
+                    else:
+                        # Still processing — update state to 'sent' if it was 'pending'
+                        if move.l10n_co_edi_state == 'pending':
+                            move.l10n_co_edi_state = 'sent'
+
+            except Exception as e:
+                _logger.warning(
+                    'Invoice %s: Error polling DIAN status: %s',
+                    move.name, str(e),
+                )
+
+    @api.model
     def _l10n_co_edi_get_dian_tax_code(self, tax):
         """Map a Colombian tax to its DIAN tax type code.
 

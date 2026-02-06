@@ -112,12 +112,14 @@ class AccountEdiFormat(models.Model):
         2. Generate DIAN-compliant UBL 2.1 XML
         3. Sign with digital certificate (XMLDSig/XAdES-BES)
         4. Store the signed XML on the invoice
-        5. (Phase 3) Submit to DIAN web service
+        5. Submit to DIAN web service
+        6. Process DIAN response (validate/reject)
 
         :param invoices: account.move recordset
         :return: dict mapping move to result dict
         """
         builder = self._l10n_co_edi_get_ubl_builder()
+        dian_client = self.env['l10n_co_edi.dian.client']
         result = {}
 
         for invoice in invoices:
@@ -142,25 +144,53 @@ class AccountEdiFormat(models.Model):
                 filename = builder._export_invoice_filename(invoice)
                 invoice.l10n_co_edi_xml_file = base64.b64encode(xml_content)
                 invoice.l10n_co_edi_xml_filename = filename
-                invoice.l10n_co_edi_state = 'pending'
 
-                # TODO Phase 3: Submit to DIAN web service
-                # TODO Phase 3: Process DIAN response (validate/reject)
+                # 5. Submit to DIAN
+                company = invoice.company_id
+                dian_response = self._l10n_co_edi_submit_to_dian(
+                    dian_client, company, filename, xml_content, invoice,
+                )
 
-                result[invoice] = {
-                    'success': True,
-                    'blocking_level': 'info',
-                    'attachment': self.env['ir.attachment'].create({
-                        'name': filename,
-                        'raw': xml_content,
-                        'mimetype': 'application/xml',
-                        'res_model': invoice._name,
-                        'res_id': invoice.id,
-                    }),
-                }
+                # 6. Process response
+                attachment = self.env['ir.attachment'].create({
+                    'name': filename,
+                    'raw': xml_content,
+                    'mimetype': 'application/xml',
+                    'res_model': invoice._name,
+                    'res_id': invoice.id,
+                })
+
+                if dian_response and dian_client._is_dian_response_success(dian_response):
+                    invoice.l10n_co_edi_state = 'validated'
+                    invoice.l10n_co_edi_dian_response = dian_response.get('application_response', '')
+                    invoice.l10n_co_edi_dian_response_status = str(dian_response.get('status_code', ''))
+                    result[invoice] = {
+                        'success': True,
+                        'attachment': attachment,
+                    }
+                elif dian_response:
+                    # DIAN rejected the document
+                    error_msg = dian_client._format_dian_error(dian_response)
+                    invoice.l10n_co_edi_state = 'rejected'
+                    invoice.l10n_co_edi_dian_response = dian_response.get('raw_response', '')
+                    invoice.l10n_co_edi_dian_response_status = str(dian_response.get('status_code', ''))
+                    result[invoice] = {
+                        'success': False,
+                        'error': _('DIAN rejected the document: %s', error_msg),
+                        'blocking_level': 'error',
+                        'attachment': attachment,
+                    }
+                else:
+                    # No DIAN response (submission pending or skipped)
+                    invoice.l10n_co_edi_state = 'pending'
+                    result[invoice] = {
+                        'success': True,
+                        'blocking_level': 'info',
+                        'attachment': attachment,
+                    }
 
             except Exception as e:
-                _logger.exception('Error generating DIAN XML for invoice %s', invoice.name)
+                _logger.exception('Error processing DIAN invoice %s', invoice.name)
                 result[invoice] = {
                     'success': False,
                     'error': _('Error generating electronic invoice: %s', str(e)),
@@ -168,6 +198,41 @@ class AccountEdiFormat(models.Model):
                 }
 
         return result
+
+    def _l10n_co_edi_submit_to_dian(self, dian_client, company, filename, xml_content, invoice):
+        """Submit a signed XML to DIAN for validation.
+
+        Uses the appropriate method based on configuration:
+        - Test set submission during habilitacion (SendTestSetAsync)
+        - Synchronous submission for production (SendBillSync)
+
+        :return: parsed DIAN response dict, or None if submission is skipped
+        """
+        try:
+            # During habilitacion, use test set submission
+            test_set_id = company.l10n_co_edi_test_set_id
+            if company.l10n_co_edi_test_mode and test_set_id:
+                _logger.info(
+                    'Invoice %s: Submitting to DIAN test set %s',
+                    invoice.name, test_set_id,
+                )
+                return dian_client._send_test_set_async(
+                    company, filename, xml_content, test_set_id,
+                )
+
+            # Standard synchronous submission
+            _logger.info('Invoice %s: Submitting to DIAN (SendBillSync)', invoice.name)
+            return dian_client._send_bill_sync(company, filename, xml_content)
+
+        except Exception as e:
+            _logger.error(
+                'Invoice %s: DIAN submission failed: %s. Document stored locally as pending.',
+                invoice.name, str(e),
+            )
+            # Store the error but don't fail the posting — the cron will retry
+            invoice.l10n_co_edi_dian_response = str(e)
+            invoice.l10n_co_edi_state = 'pending'
+            return None
 
     def _l10n_co_edi_sign_xml(self, invoice, xml_content):
         """Sign XML with the company's digital certificate.

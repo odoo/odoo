@@ -13,4 +13,16 @@
         <field name="active">True</field>
     </record>
 
+    <!-- Cron: Poll DIAN for pending invoice status updates -->
+    <record id="ir_cron_l10n_co_edi_poll_dian" model="ir.cron">
+        <field name="name">Colombia EDI: Poll DIAN for pending document status</field>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">model._l10n_co_edi_cron_poll_dian_status()</field>
+        <field name="interval_number">15</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+    </record>
+
 </odoo>
