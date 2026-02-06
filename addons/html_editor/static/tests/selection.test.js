@@ -163,6 +163,66 @@ test("setEditableSelection should not crash if getSelection returns null", async
     expect(selection.endOffset).toBe(2);
 });
 
+test("getSelectionData should use the range of the document selection to set offsets (specifically for safari)", async () => {
+    const { editor } = await setupEditor("[]");
+    let selection = editor.shared.selection.getEditableSelection();
+    expect(selection.startOffset).toBe(0);
+    expect(selection.endOffset).toBe(0);
+
+    // Simulate the broken behavior of Safari where getSelection returns a selection
+    // with offsets outside of the actual node length, and the range is correct.
+    patchWithCleanup(document, {
+        getSelection: () => ({
+            ...selection,
+            anchorOffset: 1,
+            focusOffset: 1,
+            rangeCount: 1,
+            getRangeAt: () => ({
+                commonAncestorContainer: selection.anchorNode,
+                startContainer: selection.anchorNode,
+                endContainer: selection.focusNode,
+                startOffset: 0,
+                endOffset: 0,
+            }),
+        }),
+    });
+
+    selection = editor.shared.selection.getEditableSelection();
+    expect(selection.anchorOffset).toBe(0);
+});
+
+test("active selection shouldn't change when document selection is inconsistent with its range", async () => {
+    const { editor } = await setupEditor("<p>[]</p>abc");
+    let selection = editor.shared.selection.getEditableSelection();
+    const originalAnchorNode = selection.anchorNode;
+    expect(selection.startOffset).toBe(0);
+    expect(selection.endOffset).toBe(0);
+
+    // Simulate a very broken DOM selection with inconsistent anchor/focus nodes
+    // comparing its range.
+    patchWithCleanup(document, {
+        getSelection: () => ({
+            ...selection,
+            anchorNode: selection.anchorNode.parentNode,
+            focusNode: selection.focusNode.parentNode,
+            anchorOffset: 0,
+            focusOffset: 0,
+            rangeCount: 1,
+            getRangeAt: () => ({
+                commonAncestorContainer: selection.anchorNode,
+                startContainer: selection.anchorNode,
+                endContainer: selection.focusNode,
+                startOffset: 0,
+                endOffset: 0,
+            }),
+        }),
+    });
+
+    selection = editor.shared.selection.getEditableSelection();
+    expect(selection.anchorNode).toBe(originalAnchorNode);
+    expect(selection.anchorOffset).toBe(0);
+});
+
 test("modifySelection should not crash if getSelection returns null", async () => {
     const { editor } = await setupEditor("<p>a[b]</p>");
     let selection = editor.shared.selection.getEditableSelection();
@@ -1576,18 +1636,15 @@ describe("crash fixes", () => {
             config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
         });
         expect(getContent(el)).toBe("<p>x[]</p>");
-    })
+    });
 });
 
 describe("Preserve selection", () => {
-    const isSameCursor = (cursor1, cursor2) => {
-        return (
-            cursor1.anchor.node === cursor2.anchor.node &&
-            cursor1.anchor.offset === cursor2.anchor.offset &&
-            cursor1.focus.node === cursor2.focus.node &&
-            cursor1.focus.offset === cursor2.focus.offset
-        );
-    };
+    const isSameCursor = (cursor1, cursor2) =>
+        cursor1.anchor.node === cursor2.anchor.node &&
+        cursor1.anchor.offset === cursor2.anchor.offset &&
+        cursor1.focus.node === cursor2.focus.node &&
+        cursor1.focus.offset === cursor2.focus.offset;
 
     test("Should properly sync cursors (1)", async () => {
         const { editor, el } = await setupEditor(
