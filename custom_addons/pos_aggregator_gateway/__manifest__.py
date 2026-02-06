@@ -1,6 +1,6 @@
 {
     'name': 'POS Aggregator Gateway',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.0.1',
     'category': 'Point of Sale',
     'author': 'Laxya',
     'summary': 'Webhook Gateway for UberEats and DoorDash',

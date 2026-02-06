@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Tree/List View -->
     <record id="view_pos_aggregator_config_tree" model="ir.ui.view">
         <field name="name">pos.aggregator.config.tree</field>
         <field name="model">pos.aggregator.config</field>
@@ -7,12 +8,13 @@
             <list>
                 <field name="name"/>
                 <field name="provider"/>
+                <field name="environment"/>  <!-- ✅ NEW -->
                 <field name="active"/>
-                <field name="webhook_url" widget="url"/>
             </list>
         </field>
     </record>
 
+    <!-- Form View -->
     <record id="view_pos_aggregator_config_form" model="ir.ui.view">
         <field name="name">pos.aggregator.config.form</field>
         <field name="model">pos.aggregator.config</field>
@@ -21,37 +23,71 @@
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="e.g. Uber Eats Main Store"/>
+                            <field name="name" placeholder="e.g. Uber Eats - Sandbox"/>
                         </h1>
                     </div>
+                    
                     <group>
                         <group string="Provider">
                             <field name="provider"/>
+                            <field name="environment"/>  <!-- ✅ NEW -->
                             <field name="active"/>
                         </group>
-                        <group string="Configuration">
-                            <field name="store_id"/>
-                            <field name="client_id"/>
-                            <field name="client_secret" password="True"/>
+                        <group string="Store">
+                            <field name="store_id" placeholder="Store UUID from Uber"/>
                         </group>
                     </group>
-                    <group string="Integration Details">
-                        <field name="webhook_url" widget="url" readonly="1"/>
-                        <p class="text-muted">
-                            Copy this URL to your Uber Eats Developer Dashboard.
-                        </p>
-                    </group>
+
+                    <notebook>
+                        <page string="Credentials" name="credentials">
+                            <group>
+                                <group string="OAuth Credentials (for API calls TO Uber)">
+                                    <field name="client_id" placeholder="rWtBWLBtgI5S_X2Oyi9..."/>
+                                    <field name="client_secret" password="True" placeholder="OAuth Client Secret"/>
+                                    <field name="api_scopes" placeholder="eats.store eats.order..."/>  <!-- ✅ NEW -->
+                                </group>
+                                <group string="Webhook Security (for webhooks FROM Uber)">
+                                    <field name="webhook_signing_key" password="True" placeholder="HMAC Signing Key"/>  <!-- ✅ NEW -->
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Integration Details" name="integration">
+                            <group>
+                                <group string="Webhook Configuration">
+                                    <field name="webhook_url" widget="url" readonly="1"/>
+                                    <p class="text-muted">
+                                        Copy this URL to your Uber Eats Developer Dashboard → Webhooks section.
+                                    </p>
+                                </group>
+                                <group string="API Endpoints (Auto-computed)">
+                                    <field name="api_base_url" readonly="1"/>  <!-- ✅ NEW -->
+                                    <field name="auth_url" readonly="1"/>  <!-- ✅ NEW -->
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
     </record>
 
+    <!-- Action -->
     <record id="action_pos_aggregator_config" model="ir.actions.act_window">
         <field name="name">Aggregator Integrations</field>
         <field name="res_model">pos.aggregator.config</field>
         <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first aggregator integration
+            </p>
+            <p>
+                Configure delivery aggregators like Uber Eats to receive orders via webhooks.
+            </p>
+        </field>
     </record>
 
+    <!-- Menu -->
     <menuitem id="menu_pos_aggregator_config"
               name="Aggregator Integrations"
               parent="point_of_sale.menu_point_config_product"
