@@ -79,7 +79,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  */
 
 /** Delay in ms for toolbar open after keyup, double click or triple click. */
-const DELAY_TOOLBAR_OPEN = 300;
+export const DELAY_TOOLBAR_OPEN = 300;
 
 /**
  * @typedef { Object } ToolbarShared
