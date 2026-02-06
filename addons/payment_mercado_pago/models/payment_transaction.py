@@ -18,6 +18,44 @@ _logger = get_payment_logger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
+    def _get_pix_rendering_values(self):
+        if not self.partner_email:
+            raise ValidationError(
+                _("An email is required to process PIX payments. Please update your profile.")
+            )
+        payload = {
+            "type": "online",
+            "total_amount": str(self.amount),
+            "external_reference": self.reference or "",
+            "transactions": {
+                "payments": [
+                    {
+                        "amount": str(self.amount),
+                        "payment_method": {"id": "pix", "type": "bank_transfer"},
+                    }
+                ]
+            },
+            "payer": {"email": self.partner_email or ""},
+        }
+        try:
+            response_content = self._send_api_request(
+                "POST",
+                "/v1/orders",
+                json=payload,
+                idempotency_key=payment_utils.generate_idempotency_key(self, scope="token_payment"),
+            )
+        except ValidationError as error:
+            self._set_error(str(error))
+            return {}
+
+        api_url = response_content["transactions"]["payments"][0]["payment_method"]["ticket_url"]
+
+        return {
+            "api_url": api_url,
+            "http_method": "get",
+            "url_params": payment_utils.extract_url_params(api_url),
+        }
+
     def _get_specific_rendering_values(self, processing_values):
         """Override of `payment` to return Mercado Pago-specific rendering values.
 
@@ -29,6 +67,9 @@ class PaymentTransaction(models.Model):
         """
         if self.provider_code != "mercado_pago":
             return super()._get_specific_rendering_values(processing_values)
+
+        if self.payment_method_code == "pix":
+            return self._get_pix_rendering_values()
 
         # Initiate the payment and retrieve the payment link data.
         payload = self._mercado_pago_prepare_preference_request_payload()
