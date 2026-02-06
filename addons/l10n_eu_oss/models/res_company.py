@@ -276,7 +276,10 @@ class ResCompany(models.Model):
         chart_template = self.env['account.chart.template']._guess_chart_template(country)
         coa_module_name = self.env['account.chart.template']._get_chart_template_mapping()[chart_template]['module']
         is_coa_module_installed = coa_module_name in self.env['ir.module.module']._installed()
-
-        if is_coa_module_installed:
-            return EU_FIELD_MAP.get(chart_template, {})
-        return {}
+        if not is_coa_module_installed:
+            return {}
+        return {
+            field: value
+            for field, value in EU_FIELD_MAP.get(chart_template, {}).items()
+            if field in self.env['account.tax']._fields
+        }
