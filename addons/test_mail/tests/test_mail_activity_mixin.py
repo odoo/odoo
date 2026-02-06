@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
-from odoo import exceptions, fields, tests
+from odoo import fields, tests
 from odoo.addons.mail.models.mail_activity import MailActivity
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.tests.test_mail_activity import TestActivityCommon
@@ -759,18 +759,17 @@ class TestActivityMixin(TestActivityCommon):
         with patch.object(MailActivity, 'unlink', lambda self: None):
             test_record.unlink()
         self.assertTrue(act.exists())
-        self.assertFalse(act.sudo().active)
+        self.assertFalse(act.active)
         self.assertFalse(test_record.exists())
 
         self.env.invalidate_all()
-        self.assertFalse(
+        self.assertEqual(
             self.env['mail.activity'].with_user(self.user_admin).with_context(active_test=False).search(
-                [('active', '=', False)]),
-            'Should consider unassigned activity on removed record = no access'
+                [('active', '=', False)]), act,
+            'Should consider unassigned activity on removed record = access without crash'
         )
         self.env.invalidate_all()
-        with self.assertRaises(exceptions.AccessError):
-            _dummy = act.with_user(self.user_admin).read(['summary'])
+        _dummy = act.with_user(self.user_admin).read(['summary'])
 
 
 @tests.tagged('mail_activity', 'mail_activity_mixin')
