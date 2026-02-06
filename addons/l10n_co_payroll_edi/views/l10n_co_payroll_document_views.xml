@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Payroll Document: List View                                   -->
+    <!-- ============================================================ -->
+    <record id="l10n_co_payroll_document_list" model="ir.ui.view">
+        <field name="name">l10n_co.payroll.document.list</field>
+        <field name="model">l10n_co.payroll.document</field>
+        <field name="arch" type="xml">
+            <list string="Payroll Documents"
+                  decoration-info="state == 'draft'"
+                  decoration-success="state == 'validated'"
+                  decoration-danger="state == 'rejected'">
+                <field name="document_number"/>
+                <field name="employee_id"/>
+                <field name="document_type"/>
+                <field name="period_start"/>
+                <field name="period_end"/>
+                <field name="total_earnings" sum="Total Earnings"/>
+                <field name="total_deductions" sum="Total Deductions"/>
+                <field name="net_pay" sum="Net Pay"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state in ('confirmed', 'sent')"
+                       decoration-success="state == 'validated'"
+                       decoration-danger="state == 'rejected'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Payroll Document: Form View                                   -->
+    <!-- ============================================================ -->
+    <record id="l10n_co_payroll_document_form" model="ir.ui.view">
+        <field name="name">l10n_co.payroll.document.form</field>
+        <field name="model">l10n_co.payroll.document</field>
+        <field name="arch" type="xml">
+            <form string="Payroll Document">
+                <header>
+                    <button name="action_confirm" type="object"
+                            string="Confirm" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_generate_xml" type="object"
+                            string="Generate XML"
+                            invisible="state != 'confirmed'"/>
+                    <button name="action_send_to_dian" type="object"
+                            string="Send to DIAN" class="btn-primary"
+                            invisible="state != 'confirmed'"/>
+                    <button name="action_create_accounting_entry" type="object"
+                            string="Create Journal Entry"
+                            invisible="state not in ('confirmed', 'validated')"/>
+                    <button name="action_reset_to_draft" type="object"
+                            string="Reset to Draft"
+                            invisible="state in ('draft', 'validated')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed,sent,validated"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="document_number" readonly="1"
+                                   placeholder="Draft"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Employee">
+                            <field name="employee_id"
+                                   readonly="state != 'draft'"/>
+                            <field name="employee_vat"/>
+                            <field name="document_type"
+                                   readonly="state != 'draft'"/>
+                            <field name="adjusted_document_id"
+                                   invisible="document_type == 'nomina'"
+                                   readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Period">
+                            <field name="period_start"
+                                   readonly="state != 'draft'"/>
+                            <field name="period_end"
+                                   readonly="state != 'draft'"/>
+                            <field name="settlement_date"
+                                   readonly="state != 'draft'"/>
+                            <field name="company_id"
+                                   groups="base.group_multi_company"
+                                   readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Totals">
+                            <field name="total_earnings"/>
+                            <field name="total_deductions"/>
+                            <field name="net_pay"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="DIAN">
+                            <field name="cune" readonly="1"/>
+                            <field name="xml_file" filename="xml_filename"
+                                   invisible="not xml_file"/>
+                            <field name="xml_filename" invisible="1"/>
+                            <field name="move_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Earnings" name="earnings">
+                            <field name="earning_ids"
+                                   readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="concept"/>
+                                    <field name="concept_code"/>
+                                    <field name="quantity"/>
+                                    <field name="amount" sum="Total"/>
+                                    <field name="account_id"/>
+                                    <field name="line_type" column_invisible="1"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Deductions" name="deductions">
+                            <field name="deduction_ids"
+                                   readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="concept"/>
+                                    <field name="concept_code"/>
+                                    <field name="rate"/>
+                                    <field name="amount" sum="Total"/>
+                                    <field name="account_id"/>
+                                    <field name="line_type" column_invisible="1"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Provisions" name="provisions">
+                            <field name="provision_ids"
+                                   readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="concept"/>
+                                    <field name="concept_code"/>
+                                    <field name="rate"/>
+                                    <field name="amount" sum="Total"/>
+                                    <field name="account_id"/>
+                                    <field name="line_type" column_invisible="1"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="DIAN Response" name="dian"
+                              invisible="not dian_response">
+                            <field name="dian_response" readonly="1"/>
+                            <field name="dian_response_status" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Import Wizard: Form View                                      -->
+    <!-- ============================================================ -->
+    <record id="l10n_co_payroll_import_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_co.payroll.import.wizard.form</field>
+        <field name="model">l10n_co.payroll.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import Payroll Data">
+                <group>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="csv_file" filename="csv_filename"/>
+                    <field name="csv_filename" invisible="1"/>
+                    <field name="period_start"/>
+                    <field name="period_end"/>
+                    <field name="settlement_date"/>
+                </group>
+                <footer>
+                    <button name="action_import" type="object"
+                            string="Import" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Send Wizard: Form View                                        -->
+    <!-- ============================================================ -->
+    <record id="l10n_co_payroll_send_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_co.payroll.send.wizard.form</field>
+        <field name="model">l10n_co.payroll.send.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Send Payroll to DIAN">
+                <group>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="period_start"/>
+                    <field name="period_end"/>
+                </group>
+                <footer>
+                    <button name="action_send" type="object"
+                            string="Send to DIAN" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Actions                                                       -->
+    <!-- ============================================================ -->
+    <record id="action_l10n_co_payroll_document" model="ir.actions.act_window">
+        <field name="name">Electronic Payroll</field>
+        <field name="res_model">l10n_co.payroll.document</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create an Electronic Payroll Document
+            </p>
+            <p>
+                Import payroll data from external systems or create payroll
+                documents manually for DIAN electronic submission.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_l10n_co_payroll_import_wizard" model="ir.actions.act_window">
+        <field name="name">Import Payroll</field>
+        <field name="res_model">l10n_co.payroll.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_l10n_co_payroll_send_wizard" model="ir.actions.act_window">
+        <field name="name">Batch Send to DIAN</field>
+        <field name="res_model">l10n_co.payroll.send.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Menus                                                         -->
+    <!-- ============================================================ -->
+    <menuitem id="menu_l10n_co_payroll_edi"
+              name="Electronic Payroll"
+              parent="account.menu_finance"
+              sequence="70"/>
+
+    <menuitem id="menu_l10n_co_payroll_documents"
+              name="Payroll Documents"
+              parent="menu_l10n_co_payroll_edi"
+              action="action_l10n_co_payroll_document"
+              sequence="10"/>
+
+    <menuitem id="menu_l10n_co_payroll_import"
+              name="Import Payroll"
+              parent="menu_l10n_co_payroll_edi"
+              action="action_l10n_co_payroll_import_wizard"
+              sequence="20"/>
+
+    <menuitem id="menu_l10n_co_payroll_send"
+              name="Batch Send to DIAN"
+              parent="menu_l10n_co_payroll_edi"
+              action="action_l10n_co_payroll_send_wizard"
+              sequence="30"/>
+
+</odoo>

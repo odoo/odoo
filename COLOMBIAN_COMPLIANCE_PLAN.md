@@ -1015,11 +1015,24 @@ addons/gpcb_report_scheduler/
 
 ---
 
-### Phase 12: Electronic Payroll Data Exchange (Weeks 39-42)
+### Phase 12: Electronic Payroll Data Exchange (Weeks 39-42) — DONE
 
 **Goal:** Implement electronic delivery and receipt of payroll data (nomina electronica)
 compliant with DIAN requirements (Resolucion 000013 de 2021), and integrate payroll
 information into the accounting system for accurate expense recognition and withholding.
+
+**Implemented:** `addons/l10n_co_payroll_edi/` module with:
+- [x] Payroll document model (nomina individual, ajuste, nota de ajuste)
+- [x] Payroll line model with Colombian concept codes (17 earnings, 8 deductions, 10 provisions)
+- [x] CUNE computation (SHA-384, same pattern as CUFE/CUDE)
+- [x] UBL XML generation (NominaIndividual format with employer/worker/earnings/deductions)
+- [x] DIAN submission (reuses l10n_co_edi DIAN client)
+- [x] Journal entry generation from payroll (earnings→expense, deductions→liability)
+- [x] CSV import wizard with column mapping for external payroll systems
+- [x] Batch send wizard for monthly DIAN submission
+- [x] Company settings (employer type, ARL code)
+- [x] Sequence for document numbering (NE prefix)
+- [x] 60 tests (CUNE algorithm, concept codes, models, wizards, views, security)
 
 #### 12.1 Regulatory context
 

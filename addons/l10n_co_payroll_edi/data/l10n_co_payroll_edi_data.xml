@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Sequence for payroll document numbers -->
+    <record id="sequence_payroll_document" model="ir.sequence">
+        <field name="name">Electronic Payroll Document</field>
+        <field name="code">l10n_co.payroll.document</field>
+        <field name="prefix">NE%(year)s</field>
+        <field name="padding">6</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+
+</odoo>
