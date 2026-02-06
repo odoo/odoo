@@ -1,3 +1,4 @@
+import { useExternalListener } from "@web/owl2/utils";
 import { CallContextMenu } from "@mail/discuss/call/common/call_context_menu";
 import { CallParticipantVideo } from "@mail/discuss/call/common/call_participant_video";
 import { CallDropdown } from "@mail/discuss/call/common/call_dropdown";
@@ -7,7 +8,7 @@ import { isEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
-import { Component, onMounted, onWillUnmount, useRef, useExternalListener } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useRef } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 

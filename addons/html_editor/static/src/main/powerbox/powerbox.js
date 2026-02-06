@@ -1,5 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onPatched, useExternalListener, useRef } from "@odoo/owl";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
+import { Component, onPatched, useRef } from "@odoo/owl";
 
 /**
  * @todo @phoenix i think that most of the "control" code in this component

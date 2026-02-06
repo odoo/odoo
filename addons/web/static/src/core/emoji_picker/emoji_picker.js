@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import { markEventHandled } from "@web/core/utils/misc";
 
 import {
@@ -11,7 +11,6 @@ import {
     onWillUnmount,
     reactive,
     useComponent,
-    useExternalListener,
     useRef,
     useState,
     xml,

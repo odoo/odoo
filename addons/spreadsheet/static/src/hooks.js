@@ -1,11 +1,11 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 import { stores } from "@odoo/o-spreadsheet";
-import { useEnv, useExternalListener, useState } from "@odoo/owl";
+import { useEnv, useState } from "@odoo/owl";
 
 import { loadBundle } from "@web/core/assets";
 

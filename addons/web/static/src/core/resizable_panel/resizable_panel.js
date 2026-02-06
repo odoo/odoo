@@ -1,10 +1,9 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import {
     Component,
     onMounted,
     onWillUpdateProps,
     onWillUnmount,
-    useExternalListener,
     useRef,
     useComponent,
 } from "@odoo/owl";

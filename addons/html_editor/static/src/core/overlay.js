@@ -1,8 +1,7 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import {
     Component,
     onWillDestroy,
-    useExternalListener,
     useRef,
     useState,
     useSubEnv,

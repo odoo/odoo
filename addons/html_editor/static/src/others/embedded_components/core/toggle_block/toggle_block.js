@@ -1,11 +1,11 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import {
     getEditableDescendants,
     getEmbeddedProps,
     useEditableDescendants,
 } from "@html_editor/others/embedded_component_utils";
 import { browser } from "@web/core/browser/browser";
-import { Component, useExternalListener, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 const sessionStorage = browser.sessionStorage;
 export class EmbeddedToggleBlockComponent extends Component {

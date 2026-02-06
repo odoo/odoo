@@ -1,11 +1,10 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import { scrollTo } from "@html_builder/utils/scrolling";
 import {
     Component,
     onMounted,
     onWillStart,
     onWillUnmount,
-    useExternalListener,
     useRef,
 } from "@odoo/owl";
 

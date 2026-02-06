@@ -1,6 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import { Dropzone } from "@web/core/dropzone/dropzone";
-import { useExternalListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 /**

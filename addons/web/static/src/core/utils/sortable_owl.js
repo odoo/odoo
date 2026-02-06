@@ -1,5 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { onWillUnmount, reactive, useExternalListener } from "@odoo/owl";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
+import { onWillUnmount, reactive } from "@odoo/owl";
 import { useThrottleForAnimation } from "./timing";
 import { useSortable as nativeUseSortable } from "@web/core/utils/sortable";
 

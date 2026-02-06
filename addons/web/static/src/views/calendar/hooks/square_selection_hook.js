@@ -1,5 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { useComponent, useExternalListener, useRef } from "@odoo/owl";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
+import { useComponent, useRef } from "@odoo/owl";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { shallowEqual } from "@web/core/utils/objects";
 import { closest } from "@web/core/utils/ui";

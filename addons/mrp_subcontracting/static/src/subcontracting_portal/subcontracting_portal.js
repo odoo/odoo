@@ -1,10 +1,10 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import { useService } from '@web/core/utils/hooks';
 import { ActionContainer } from '@web/webclient/actions/action_container';
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { session } from '@web/session';
-import { Component, useExternalListener } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 export class SubcontractingPortalWebClient extends Component {
     static components = { ActionContainer, MainComponentsContainer };

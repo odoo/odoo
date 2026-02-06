@@ -1,4 +1,5 @@
-import { Component, useExternalListener, useState } from "@odoo/owl";
+import { useExternalListener } from "@web/owl2/utils";
+import { Component, useState } from "@odoo/owl";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { registry } from "@web/core/registry";
 import { ImageTransformation } from "./image_transformation";
