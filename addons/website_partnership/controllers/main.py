@@ -1,9 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug.urls
-
 from odoo.http import request, route
 from odoo.fields import Domain
+from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
 
 from odoo.tools.translate import LazyTranslate
@@ -77,9 +76,7 @@ class WebsitePartnership(WebsitePartnerPage):
 
         # format pager
         slug = request.env['ir.http']._slug
-        url = '/partners'
-        if grade:
-            url += '/grade/' + slug(grade)
+        url = f"/partners/grade/{slug(grade)}" if grade else "/partners"
         url_args = {}
         if search:
             url_args['search'] = search
@@ -90,14 +87,19 @@ class WebsitePartnership(WebsitePartnerPage):
 
         partners = self._get_partners(base_partner_domain, pager, references_per_page=references_per_page, search_order="complete_name ASC, id ASC")
 
+        keep = QueryURL('/partners', ['grade'],
+            grade=grade,
+            **{key: value for key, value in post.items() if (key == 'search')}
+        )
+
         values = {
             'grades': grades,
             'current_grade': grade,
             'partners': partners,
             'pager': pager,
             'searches': post,
-            'search_path': "%s" % werkzeug.urls.url_encode(post),
             'search': search,
+            'keep_partners_url': keep,
         }
         return values
 

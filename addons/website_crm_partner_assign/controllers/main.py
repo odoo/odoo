@@ -9,6 +9,7 @@ from odoo import fields
 from odoo import http
 from odoo.http import request
 from odoo.addons.portal.controllers.portal import CustomerPortal
+from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website_google_map.controllers.main import GoogleMap
 from odoo.addons.website_partnership.controllers.main import WebsitePartnership
 from odoo.fields import Domain
@@ -321,6 +322,12 @@ class WebsiteCrmPartnerAssign(WebsitePartnership, GoogleMap):
         google_maps_api_key = request.website.google_maps_api_key
         partners = self._get_partners(base_partner_domain, pager, references_per_page=references_per_page, search_order="grade_sequence ASC, implemented_partner_count DESC, complete_name ASC, id ASC")
 
+        keep = QueryURL('/partners', ['grade', 'country'],
+            grade=grade,
+            country=country,
+            **{key: value for key, value in post.items() if (key in ['search', 'country_all', 'industry'])}
+        )
+
         values = {
             'industries': industries,
             'current_industry': current_industry,
@@ -336,6 +343,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnership, GoogleMap):
             'search': search,
             'google_maps_api_key': google_maps_api_key,
             'fallback_all_countries': fallback_all_countries,
+            'keep_partners_url': keep
         }
         return values
 

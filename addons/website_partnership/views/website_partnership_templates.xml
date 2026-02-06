@@ -49,10 +49,10 @@
                             <ul class="list-group list-group-flush">
                                 <t t-foreach="grades" t-as="grade">
                                     <li class="list-group-item d-flex justify-content-between align-items-center ps-0 pb-0 border-0">
-                                        <a id="filter_category_link" t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }#{ '?' + (search_path or '') }"
+                                        <a id="filter_category_link" t-att-href="keep_partners_url(grade=grade['grade_id'][0])"
                                         class="text-reset" aria-label="See categories filters">
                                             <div class="form-check">
-                                                <input class="form-check-input pe-none" type="radio" t-attf-name="#{grade}" t-att-checked="bool(grade['active'])"/>
+                                                <input class="form-check-input pe-none" type="radio" t-attf-name="#{grade}" t-attf-id="#{grade}" t-att-checked="bool(grade['active'])"/>
                                                 <label class="form-check-label" t-attf-for="#{grade}" t-out="grade"/>
                                             </div>
                                         </a>
@@ -130,7 +130,7 @@
     <xpath expr="//div" position="before">
         <t t-set="contact_details" t-value="False"/>
         <div t-if="not edit_page" class="mt-4 mb-3">
-            <a id="link_back_to_partners" t-attf-href="/partners?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}" aria-label="Back to partners list"><i class="oi oi-chevron-left me-2"/>Back</a>
+            <a id="link_back_to_partners" t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or '' }" aria-label="Back to partners list"><i class="oi oi-chevron-left me-2"/>Back</a>
         </div>
     </xpath>
 
@@ -171,7 +171,7 @@
             </button>
             <div class="dropdown-menu">
                 <t t-foreach="grades" t-as="grade">
-                    <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % slug(grade['grade_id']) or '' }?#{ keep_query('search') }"
+                    <a t-att-href="keep_partners_url(grade=grade['grade_id'][0])"
                     class="dropdown-item d-flex justify-content-between">
                         <t t-out="grade['grade_id'][1] if grade['grade_id'][0] != 0 else all_categories_label" />&amp;nbsp;&amp;nbsp;
                         <span class="badge text-white bg-secondary rounded-pill px-2 py-1" t-out="grade['grade_id_count']"/>
