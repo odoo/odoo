@@ -23,7 +23,7 @@
                             <tbody>
                                 <tr class="text-normal">
                                     <td class="text-start w-70" name="subtotal">Subtotal:</td>
-                                    <td class="text-end w-30"><t t-out="extra_data['prices']['subtotal_amount']" /></td>
+                                    <td class="text-end w-30 font-monospace"><t t-out="extra_data['prices']['subtotal_amount']" /></td>
                                 </tr>
                                 <t t-foreach="extra_data['prices']['taxes']" t-as="tax">
                                     <tr name="taxes_line" class="text-normal">
