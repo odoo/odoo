@@ -1,6 +1,13 @@
 import re
 
 
+EXCLUDED_PATH = (
+    'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
+    'iot_drivers/static/src/',
+    'web/static/src/owl2',
+)
+
+
 class JSTooling:
     @staticmethod
     def is_commented(content: str, position: int) -> bool:
@@ -159,6 +166,16 @@ class JSTooling:
         content = re.sub(r'[ \t]+$', '', content, flags=re.MULTILINE)
         return content
 
+    @staticmethod
+    def get_js_files(file_manager):
+        path_pattern = re.compile('|'.join(EXCLUDED_PATH))
+        return [
+            file for file in file_manager
+            if '/static/src/' in file.path._str
+            and file.path.suffix == '.js'
+            and not re.search(path_pattern, file.path._str)
+        ]
+
 
 class MigrationCollector:
     """Collects logs from multiple sub-functions and pushes them to FileManager."""
@@ -198,19 +215,9 @@ class MigrationCollector:
             self.file_manager.add_to_summary("\n".join(self.reports))
 
 
-EXCLUDED_FILES = (
-    'o_spreadsheet.js',
-)
-
-
 def upgrade_useeffect(file_manager, log_info, log_error):
     """Sub-task: Migrate useEffect to useLayoutEffect, ignoring comments."""
-    js_files = [
-        file for file in file_manager
-        if '/static/src/' in file.path._str
-        and file.path.suffix == '.js'
-        and file.path.name not in EXCLUDED_FILES
-    ]
+    js_files = JSTooling.get_js_files(file_manager)
 
     for fileno, file in enumerate(js_files, start=1):
         try:
@@ -226,12 +233,7 @@ def upgrade_useeffect(file_manager, log_info, log_error):
 
 def upgrade_onwillrender(file_manager, log_info, log_error):
     """Sub-task: Migrate onWillRender, ignoring comments."""
-    js_files = [
-        file for file in file_manager
-        if '/static/src/' in file.path._str
-        and file.path.suffix == '.js'
-        and file.path.name not in EXCLUDED_FILES
-    ]
+    js_files = JSTooling.get_js_files(file_manager)
 
     for fileno, file in enumerate(js_files, start=1):
         try:
@@ -246,12 +248,7 @@ def upgrade_onwillrender(file_manager, log_info, log_error):
 
 def upgrade_onrendered(file_manager, log_info, log_error):
     """Sub-task: Migrate onRendered, ignoring comments."""
-    js_files = [
-        file for file in file_manager
-        if '/static/src/' in file.path._str
-        and file.path.suffix == '.js'
-        and file.path.name not in EXCLUDED_FILES
-    ]
+    js_files = JSTooling.get_js_files(file_manager)
 
     for fileno, file in enumerate(js_files, start=1):
         try:
