@@ -1342,9 +1342,8 @@ class TestMailAccessPerformance(BaseMailPerformance):
             ])
             records_model.message_unsubscribe(partner_ids=(cls.user_admin + cls.user_employee).partner_id.ids)
         # activities employee cannot read due to specific rules (other user on non open custo)
-        # TDE FIXME: should be only for Custo.3
         cls.activities_emp_nope = cls.activities.filtered(
-            lambda a: a.res_model == 'mail.test.access.custo' and a.res_id != cls.records_access_custo[0].id and a.user_id == cls.user_admin
+            lambda a: a.res_model == 'mail.test.access.custo' and a.res_id == cls.records_access_custo[2].id and a.user_id == cls.user_admin
         )
 
     @users('employee')
@@ -1353,10 +1352,9 @@ class TestMailAccessPerformance(BaseMailPerformance):
         # queries
         # fetch activities: 1
         # filter records: 3 (1 / model)
-        # exists: 3 (1 / model)
         # '_fetch_query': 1
         profile = self.profile() if self.warm else nullcontext()
-        with self.assertQueryCount(employee=8), profile:
+        with self.assertQueryCount(employee=5), profile:
             content = (self.activities - self.activities_emp_nope).with_env(self.env).read(['summary'])
         self.assertEqual(len(content), len(self.activities - self.activities_emp_nope))
 
@@ -1366,9 +1364,8 @@ class TestMailAccessPerformance(BaseMailPerformance):
         # queries
         # select mail.activity: 1
         # filter records: 3 (1 / model)
-        # exists: 3 (1 / model)
         profile = self.profile() if self.warm else nullcontext()
-        with self.assertQueryCount(employee=7), profile:
+        with self.assertQueryCount(employee=4), profile:
             found = self.activities.with_env(self.env).search([('summary', 'ilike', 'TestActivity')])
         self.assertEqual(found, self.activities - self.activities_emp_nope)
 
