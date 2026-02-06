@@ -1,11 +1,12 @@
 import { expect, test, describe } from "@odoo/hoot";
 import { click, tick, waitFor } from "@odoo/hoot-dom";
-import { setupEditor } from "./_helpers/editor";
+import { setupEditor, testEditor } from "./_helpers/editor";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getContent, setContent, setSelection } from "./_helpers/selection";
 import { splitBlock, undo } from "./_helpers/user_actions";
 import { contains } from "@web/../tests/web_test_helpers";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { unformat } from "./_helpers/format";
 
 test("icon toolbar is displayed", async () => {
     const { el } = await setupEditor(`<p><span class="fa fa-glass"></span></p>`);
@@ -338,4 +339,19 @@ test("should insert two empty paragraphs when Enter is pressed twice before the 
     expect(getContent(el)).toBe(
         `<p><br></p><p><br></p><p>\ufeff[]<span class="fa fa-glass" contenteditable="false">\u200B</span>\ufeff</p>`
     );
+});
+
+test("should wrap icons in feff when under list item", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+                <ul>
+                    <li><span class="fa fa-glass" contenteditable="false"></span></li>
+                </ul>
+            `),
+        contentBeforeEdit: unformat(`
+            <ul>
+                <li>\ufeff<span class="fa fa-glass" contenteditable="false">\u200B</span>\ufeff</li>
+            </ul>
+        `),
+    });
 });

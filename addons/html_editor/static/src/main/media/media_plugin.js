@@ -103,7 +103,7 @@ export class MediaPlugin extends Plugin {
         selectors_for_feff_providers: () =>
             `:is(${paragraphRelatedElementsSelector}, ${FORMATTABLE_TAGS.join(
                 ", "
-            )}, A) > :is(${ICON_SELECTOR})`,
+            )}, A, LI) > :is(${ICON_SELECTOR})`,
         before_save_handlers: this.savePendingImages.bind(this),
     };
 
