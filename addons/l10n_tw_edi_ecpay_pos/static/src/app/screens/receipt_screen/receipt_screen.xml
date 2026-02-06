@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ReceiptScreen" t-inherit="point_of_sale.ReceiptScreen" t-inherit-mode="extension">
+        <xpath expr="//OrderReceipt" position="after">
+            <EcpayCertificateReceipt  t-if="currentOrder.isPrintEcpayInvoice and !currentOrder.ecpay_error and !this.pos.data.network.offline" order="this.currentOrder" />
+            <EcpayTransactionReceipt  t-if="currentOrder.isPrintEcpayInvoice and !currentOrder.ecpay_error and !this.pos.data.network.offline" order="this.currentOrder" />
+        </xpath>
+    </t>
+</templates>
