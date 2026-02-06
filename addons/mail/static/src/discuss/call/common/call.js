@@ -227,7 +227,7 @@ export class Call extends Component {
         this.grid.el.style.setProperty("--width", "0");
         this.grid.el.style.setProperty("--height", "0");
         const { width, height } = this.grid.el.getBoundingClientRect();
-        const aspectRatio = this.minimized ? 1 : 16 / 9;
+        const aspectRatio = this.minimized && this.channel.videoCount === 0 ? 1 : 16 / 9;
         const tileCount = this.grid.el.children.length;
         let optimal = {
             area: 0,
