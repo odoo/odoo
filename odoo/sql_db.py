@@ -41,7 +41,7 @@ from .tools.misc import Callbacks, real_time
 if typing.TYPE_CHECKING:
     from odoo.orm.environments import Transaction
 
-    # when type checking, the BaseCursor exposes methods of the psycopg cursor
+    # when type checking, the Cursor exposes methods of the psycopg cursor
     _CursorProtocol = psycopg2.extensions.cursor
 else:
     _CursorProtocol = object
@@ -90,11 +90,11 @@ MAX_IDLE_TIMEOUT = 60 * 10
 
 
 class Savepoint:
-    """ Reifies an active breakpoint, allows :meth:`BaseCursor.savepoint` users
+    """ Reifies an active breakpoint, allows :meth:`Cursor.savepoint` users
     to internally rollback the savepoint (as many times as they want) without
     having to implement their own savepointing, or triggering exceptions.
 
-    Should normally be created using :meth:`BaseCursor.savepoint` rather than
+    Should normally be created using :meth:`Cursor.savepoint` rather than
     directly.
 
     The savepoint will be rolled back on unsuccessful context exits
@@ -105,7 +105,7 @@ class Savepoint:
     The savepoint can also safely be explicitly closed during context body. This
     will rollback by default.
 
-    :param BaseCursor cr: the cursor to execute the `SAVEPOINT` queries on
+    :param Cursor cr: the cursor to execute the `SAVEPOINT` queries on
     """
 
     def __init__(self, cr: _CursorProtocol):
@@ -135,14 +135,14 @@ class Savepoint:
 
 
 class _FlushingSavepoint(Savepoint):
-    def __init__(self, cr: BaseCursor):
+    def __init__(self, cr: Cursor):
         cr.flush()
         super().__init__(cr)
         self._default_env = cr.transaction.default_env if cr.transaction is not None else None
 
     def rollback(self):
         cr = self._cr
-        assert isinstance(cr, BaseCursor)
+        assert isinstance(cr, Cursor)
         if cr.transaction is not None:
             cr.transaction.default_env = self._default_env
             cr.transaction.clear()
@@ -151,7 +151,7 @@ class _FlushingSavepoint(Savepoint):
         super().rollback()
 
     def _close(self, rollback: bool):
-        assert isinstance(self._cr, BaseCursor)
+        assert isinstance(self._cr, Cursor)
         try:
             if not rollback:
                 self._cr.flush()
@@ -164,106 +164,7 @@ class _FlushingSavepoint(Savepoint):
 
 # _CursorProtocol declares the available methods and type information,
 # at runtime, it is just an `object`
-class BaseCursor(_CursorProtocol):
-    """ Base class for cursors that manage pre/post commit hooks. """
-    IN_MAX = 1000   # decent limit on size of IN queries - guideline = Oracle limit
-
-    transaction: Transaction | None
-    cache: dict[typing.Any, typing.Any]
-    dbname: str
-
-    def __init__(self) -> None:
-        self.precommit = Callbacks()
-        self.postcommit = Callbacks()
-        self.prerollback = Callbacks()
-        self.postrollback = Callbacks()
-        self._now: datetime | None = None
-        self.cache = {}
-        # By default a cursor has no transaction object.  A transaction object
-        # for managing environments is instantiated by registry.cursor().  It
-        # is not done here in order to avoid cyclic module dependencies.
-        self.transaction = None
-
-    def flush(self) -> None:
-        """ Flush the current transaction, and run precommit hooks. """
-        # In case some pre-commit added another pre-commit or triggered changes
-        # in the ORM, we must flush and run it again.
-        for _ in range(10):  # limit number of iterations
-            if self.transaction is not None:
-                self.transaction.flush()
-            if not self.precommit:
-                break
-            self.precommit.run()
-        else:
-            _logger.warning("Too many iterations for flushing the cursor!")
-
-    def execute(self, query, params=None, log_exceptions: bool = True) -> None:
-        """ Execute a query inside the current transaction.
-        """
-        raise NotImplementedError
-
-    def commit(self) -> None:
-        """ Commit the current transaction.
-        """
-        raise NotImplementedError
-
-    def rollback(self) -> None:
-        """ Rollback the current transaction.
-        """
-        raise NotImplementedError
-
-    def savepoint(self, flush: bool = True) -> Savepoint:
-        """context manager entering in a new savepoint
-
-        With ``flush`` (the default), will automatically run (or clear) the
-        relevant hooks.
-        """
-        if flush:
-            return _FlushingSavepoint(self)
-        else:
-            return Savepoint(self)
-
-    def __enter__(self):
-        """ Using the cursor as a contextmanager automatically commits and
-            closes it::
-
-                with cr:
-                    cr.execute(...)
-
-                # cr is committed if no failure occurred
-                # cr is closed in any case
-        """
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        try:
-            if exc_type is None:
-                self.commit()
-        finally:
-            self.close()
-
-    def dictfetchone(self) -> dict[str, typing.Any] | None:
-        """ Return the first row as a dict (column_name -> value) or None if no rows are available. """
-        raise NotImplementedError
-
-    def dictfetchmany(self, size: int) -> list[dict[str, typing.Any]]:
-        raise NotImplementedError
-
-    def dictfetchall(self) -> list[dict[str, typing.Any]]:
-        """ Return all rows as dicts (column_name -> value). """
-        raise NotImplementedError
-
-    def now(self) -> datetime:
-        """ Return the transaction's timestamp ``NOW() AT TIME ZONE 'UTC'``. """
-        if self._now is None:
-            self.execute("SELECT (now() AT TIME ZONE 'UTC')")
-            row = self.fetchone()
-            assert row
-            self._now = row[0]
-        return self._now
-
-
-class Cursor(BaseCursor):
+class Cursor(_CursorProtocol):
     """Represents an open transaction to the PostgreSQL DB backend,
        acting as a lightweight wrapper around psycopg2's
        ``cursor`` objects.
@@ -327,8 +228,22 @@ class Cursor(BaseCursor):
             *any* data which may be modified during the life of the cursor.
 
     """
+    IN_MAX = 1000   # decent limit on size of IN queries - guideline = Oracle limit
+
     def __init__(self, cnx: PsycoConnection, dbname: str):
         super().__init__()
+        self.precommit = Callbacks()
+        self.postcommit = Callbacks()
+        self.prerollback = Callbacks()
+        self.postrollback = Callbacks()
+        self._now: datetime | None = None
+        self.cache: dict[typing.Any, typing.Any] = {}
+
+        # By default a cursor has no transaction object.  A transaction object
+        # for managing environments is instantiated by registry.cursor().  It
+        # is not done here in order to avoid cyclic module dependencies.
+        self.transaction: Transaction | None = None
+
         self.sql_from_log: dict[str, tuple[int, float]] = {}
         self.sql_into_log: dict[str, tuple[int, float]] = {}
 
@@ -353,7 +268,60 @@ class Cursor(BaseCursor):
             self.execute("SET search_path = public, pg_catalog;")
             self.commit()  # ensure that the search_path remains after a rollback
 
+    def flush(self) -> None:
+        """ Flush the current transaction, and run precommit hooks. """
+        # In case some pre-commit added another pre-commit or triggered changes
+        # in the ORM, we must flush and run it again.
+        for _ in range(10):  # limit number of iterations
+            if self.transaction is not None:
+                self.transaction.flush()
+            if not self.precommit:
+                break
+            self.precommit.run()
+        else:
+            _logger.warning("Too many iterations for flushing the cursor!")
+
+    def savepoint(self, flush: bool = True) -> Savepoint:
+        """context manager entering in a new savepoint
+
+        With ``flush`` (the default), will automatically run (or clear) the
+        relevant hooks.
+        """
+        if flush:
+            return _FlushingSavepoint(self)
+        else:
+            return Savepoint(self)
+
+    def __enter__(self):
+        """ Using the cursor as a contextmanager automatically commits and
+            closes it::
+
+                with cr:
+                    cr.execute(...)
+
+                # cr is committed if no failure occurred
+                # cr is closed in any case
+        """
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        try:
+            if exc_type is None:
+                self.commit()
+        finally:
+            self.close()
+
+    def now(self) -> datetime:
+        """ Return the transaction's timestamp ``NOW() AT TIME ZONE 'UTC'``. """
+        if self._now is None:
+            self.execute("SELECT (now() AT TIME ZONE 'UTC')")
+            row = self.fetchone()
+            assert row
+            self._now = row[0]
+        return self._now
+
     def dictfetchone(self) -> dict[str, typing.Any] | None:
+        """ Return the first row as a dict (column_name -> value) or None if no rows are available. """
         description = self._obj.description
         assert description, "Query does not have results"
         row = self._obj.fetchone()
@@ -366,6 +334,7 @@ class Cursor(BaseCursor):
         return [dict(zip(names, row)) for row in self._obj.fetchmany(size)]
 
     def dictfetchall(self) -> list[dict[str, typing.Any]]:
+        """ Return all rows as dicts (column_name -> value). """
         description = self._obj.description
         assert description, "Query does not have results"
         names = [column.name for column in description]
@@ -399,6 +368,7 @@ class Cursor(BaseCursor):
         return self._obj.mogrify(query, params)
 
     def execute(self, query, params=None, log_exceptions: bool = True) -> None:
+        """ Execute a query inside the current transaction. """
         global sql_counter
 
         if isinstance(query, SQL):
@@ -537,7 +507,7 @@ class Cursor(BaseCursor):
             self._cnx.give_back(keep_in_pool=keep_in_pool)
 
     def commit(self) -> None:
-        """ Perform an SQL `COMMIT` """
+        """ Commit the current transaction. """
         self.flush()
         self._cnx.commit()
         if self.transaction is not None:
@@ -548,7 +518,7 @@ class Cursor(BaseCursor):
         self.postcommit.run()
 
     def rollback(self) -> None:
-        """ Perform an SQL `ROLLBACK` """
+        """ Rollback the current transaction. """
         self.precommit.clear()
         self.postcommit.clear()
         self.prerollback.run()
@@ -570,6 +540,9 @@ class Cursor(BaseCursor):
     @property
     def readonly(self) -> bool:
         return bool(self._cnx.readonly)
+
+
+BaseCursor = Cursor  # backward-compatibility
 
 
 class PsycoConnection(psycopg2.extensions.connection):

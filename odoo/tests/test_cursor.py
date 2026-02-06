@@ -1,13 +1,19 @@
 from __future__ import annotations
 
+import typing
 from datetime import datetime
-import threading
 
-from odoo.sql_db import BaseCursor, Cursor, Savepoint, _logger
 import odoo.modules
+from odoo.sql_db import Cursor, Savepoint, _logger
+
+if typing.TYPE_CHECKING:
+    import threading
+    from odoo.sql_db import PsycoConnection as _base_PsycoConnection
+else:
+    _base_PsycoConnection = object
 
 
-class TestCursor(BaseCursor):
+class TestCursor(Cursor):
     """ A pseudo-cursor to be used for tests, on top of a real cursor. It keeps
         the transaction open across requests, and simulates committing, rolling
         back, and closing:
@@ -29,14 +35,14 @@ class TestCursor(BaseCursor):
         +------------------------+---------------------------------------------------+
     """
     _cursors_stack: list[TestCursor] = []
+    _cnx: MockedPsycoConnection
 
     def __init__(self, cursor: Cursor, lock: threading.RLock, readonly: bool):
-        assert isinstance(cursor, BaseCursor)
-        super().__init__()
+        assert isinstance(cursor, Cursor) and not isinstance(cursor, TestCursor)
+        super().__init__(MockedPsycoConnection(cursor, readonly), cursor.dbname)
+        self._closed = True  # consider closed until acquired
+        self._cnx._obj = self._obj
         self._now = datetime.now()
-        self._closed: bool = False
-        self._cursor = cursor
-        self.readonly = readonly
         # we use a lock to serialize concurrent requests
         self._lock = lock
         current_test = odoo.modules.module.current_test
@@ -49,95 +55,91 @@ class TestCursor(BaseCursor):
             # Check after acquiring in case current_test has changed.
             # This can happen if the request was hanging between two tests.
             current_test.assertCanOpenTestCursor()
-            self._check_cursor_readonly()
+            if (
+                self._cursors_stack
+                and (last_cursor := self._cursors_stack[-1])
+                and last_cursor.readonly
+                and not self._cnx.readonly
+                and last_cursor._cnx._savepoint
+            ):
+                raise Exception('Opening a read/write test cursor from a readonly one')  # noqa: TRY301
         except Exception:
             self._lock.release()
             raise
+        self._closed = False
         self._cursors_stack.append(self)
-        # in order to simulate commit and rollback, the cursor maintains a
-        # savepoint at its last commit, the savepoint is created lazily
-        self._savepoint: Savepoint | None = None
-
-    def _check_cursor_readonly(self):
-        last_cursor = self._cursors_stack and self._cursors_stack[-1]
-        if last_cursor and last_cursor.readonly and not self.readonly and last_cursor._savepoint:
-            raise Exception('Opening a read/write test cursor from a readonly one')
-
-    def _check_savepoint(self) -> None:
-        if not self._savepoint:
-            # we use self._cursor._obj for the savepoint to avoid having the
-            # savepoint queries in the query counts, profiler, ...
-            # Those queries are tests artefacts and should be invisible.
-            self._savepoint = Savepoint(self._cursor._obj)
-            if self.readonly:
-                # this will simulate a readonly connection
-                self._cursor._obj.execute('SET TRANSACTION READ ONLY')  # use _obj to avoid impacting query count and profiler.
 
     def execute(self, *args, **kwargs) -> None:
-        assert not self._closed, "Cannot use a closed cursor"
-        self._check_savepoint()
-        return self._cursor.execute(*args, **kwargs)
+        assert not self.closed, "Cannot use a closed cursor"
+        self._cnx._check_savepoint()
+        return super().execute(*args, **kwargs)
 
-    def close(self) -> None:
-        if not self._closed:
-            try:
-                self.rollback()
-                if self.transaction is not None:
-                    self.transaction.default_env = None  # break the cyclic reference
-                    self.transaction.reset()
-                if self._savepoint:
-                    self._savepoint.close(rollback=False)
-            finally:
-                self._closed = True
-
-                tos = self._cursors_stack.pop()
-                if tos is not self:
-                    _logger.warning("Found different un-closed cursor when trying to close %s: %s", self, tos)
-                self._lock.release()
-
-    @property
-    def closed(self) -> bool:
-        return self._closed
+    def close(self):
+        if self._closed:
+            return
+        try:
+            super().close()
+        finally:
+            tos = self._cursors_stack.pop()
+            if tos is not self:
+                _logger.warning("Found different un-closed cursor when trying to close %s: %s", self, tos)
+            self._lock.release()
 
     def commit(self) -> None:
         """ Perform an SQL `COMMIT` """
-        self.flush()
-        if self._savepoint:
-            self._savepoint.close(rollback=self.readonly)
-            self._savepoint = None
-        if self.transaction is not None:
-            self.transaction.clear()
-        self.prerollback.clear()
-        self.postrollback.clear()
-        self.postcommit.clear()         # TestCursor ignores post-commit hooks by default
-
-    def rollback(self) -> None:
-        """ Perform an SQL `ROLLBACK` """
-        self.precommit.clear()
-        self.postcommit.clear()
-        self.prerollback.run()
-        if self._savepoint:
-            self._savepoint.close(rollback=True)
-            self._savepoint = None
-        if self.transaction is not None:
-            self.transaction.clear()
-        self.postrollback.run()
-
-    def __getattr__(self, name):
-        return getattr(self._cursor, name)
-
-    def dictfetchone(self):
-        """ Return the first row as a dict (column_name -> value) or None if no rows are available. """
-        return self._cursor.dictfetchone()
-
-    def dictfetchmany(self, size):
-        return self._cursor.dictfetchmany(size)
-
-    def dictfetchall(self):
-        return self._cursor.dictfetchall()
+        self.precommit.add(self.postcommit.clear)  # ignore post-commit hooks
+        super().commit()
 
     def now(self) -> datetime:
         """ Return the transaction's timestamp ``datetime.now()``. """
         if self._now is None:
             self._now = datetime.now()
         return self._now
+
+
+class MockedPsycoConnection(_base_PsycoConnection):
+    def __init__(self, cursor: Cursor, readonly: bool):
+        self._cursor = cursor
+        self.readonly = readonly
+        # In order to simulate commit and rollback, the connection maintains a
+        # savepoint at its last commit. This savepoint is created lazily.
+        self._savepoint: Savepoint | None = None
+        self._obj = None
+
+    def set_session(self, *a, **kw):
+        pass  # ignoring
+
+    def give_back(self, keep_in_pool=True):
+        del self._obj
+
+    def _check_savepoint(self) -> None:
+        if self._savepoint:
+            return
+        # We use self._obj for the savepoint to avoid having the savepoint
+        # queries in the query counts, profiler, etc. Those queries are tests
+        # artefacts and should be invisible.
+        obj = self._obj
+        self._savepoint = Savepoint(obj)
+        if self.readonly:
+            # this will simulate a readonly connection
+            obj.execute('SET TRANSACTION READ ONLY')
+
+    def commit(self):
+        if self._savepoint is not None:
+            self._savepoint.close(rollback=False)
+            self._savepoint = None
+
+    def rollback(self):
+        if self._savepoint is not None:
+            self._savepoint.close(rollback=True)
+            self._savepoint = None
+
+    def reset(self):
+        self.rollback()
+
+    @property
+    def closed(self) -> bool:
+        return self._cursor.closed
+
+    def __getattr__(self, name):
+        return getattr(self._cursor._cnx, name)

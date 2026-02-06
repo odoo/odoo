@@ -456,8 +456,8 @@ class TestTestCursor(common.TransactionCase):
         a = self.registry.cursor()
         b = self.registry.cursor()
         # This forces the savepoint to be created
-        a._check_savepoint()
-        b._check_savepoint()
+        a.execute("SELECT 1")
+        b.execute("SELECT 1")
         # `a` should warn that it found un-closed cursor `b` when trying to close itself
         with self.assertLogs('odoo.sql_db', level=logging.WARNING) as cm:
             a.close()
