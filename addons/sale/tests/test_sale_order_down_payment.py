@@ -1,5 +1,6 @@
 import uuid
 
+from unittest.mock import patch
 from odoo.tests import tagged
 from odoo import Command
 from .common import TestSaleCommon
@@ -1105,3 +1106,32 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         reversal_move.action_post()
         self.assertEqual(reversal_move.move_type, 'out_refund')
         self.assertIn('ref', so_dp_line.name)
+
+    def test_tax_fixed_amount_invoice_require_tax(self):
+        tax_fix = self.create_tax(5, {'amount_type': 'fixed'})
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': 'line1',
+                    'product_id': self.company_data['product_order_no'].id,
+                    'product_uom_qty': 1,
+                    'price_unit': 1210,
+                    'tax_id': [Command.set((tax_fix).ids)],
+                }),
+            ],
+        })
+
+        downpayment = self.env['sale.advance.payment.inv']\
+            .with_context(active_ids=sale_order.ids, active_model=sale_order._name)\
+            .create({
+                'advance_payment_method': 'fixed',
+                'fixed_amount': 200.0,
+            })
+        with patch('odoo.addons.account.models.account_move.AccountMove.require_tax_ids_on_invoice_lines', return_value=True):
+            downpayment.create_invoices()
+            sale_order.action_confirm()
+            tax_0 = self.env['account.tax'].search([('amount', '=', 0), ('amount_type', '=', 'percent')], limit=1)
+            self.assertEqual(sale_order.invoice_ids.line_ids.filtered(lambda l: l.is_downpayment).tax_ids, tax_0)
