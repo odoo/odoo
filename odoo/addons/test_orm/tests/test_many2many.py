@@ -1,7 +1,6 @@
-from unittest.mock import patch
-
-from odoo.fields import Command, Domain
+from odoo.fields import Command
 from odoo.tests.common import TransactionCase, new_test_user, tagged
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class Many2manyCase(TransactionCase):
@@ -62,33 +61,23 @@ class Many2manyCase(TransactionCase):
             'res_model': self.ship._name,
             'res_id': self.ship.id,
         }).with_user(user)
+        self.env['ir.rule'].create({
+            'name': "No access",
+            'model_id': self.env['ir.model']._get(attachment._name).id,
+            'domain_force': [(0, '=', 1)],
+        })
         record = self.env['test_orm.attachment.host'].create({
             'm2m_attachment_ids': [Command.link(attachment.id)],
         }).with_user(user)
 
+        self.assertFalse(attachment.has_access('read'))
         self.assertFalse(record.env.su)
-
         field = record._fields['m2m_attachment_ids']
         self.assertTrue(field.bypass_search_access)
 
-        # check that attachments are searched with bypass_access, and filtered with _check_access()
-        Attachment = type(attachment)
-        with (
-            patch.object(Attachment, '_search', autospec=True, side_effect=Attachment._search) as p_search,
-            patch.object(Attachment, '_access_domain', autospec=True, side_effect=Attachment._access_domain) as p_access,
-        ):
-            record.invalidate_model()
-            record.m2m_attachment_ids
-            p_search.assert_called_once_with(attachment.browse(), Domain.TRUE, order='id', bypass_access=True)
-            p_access.assert_called_once_with(attachment, 'read')
+        # attachments are always searched in sudo and filtered on record access
+        self.assertEqual(record.m2m_attachment_ids, attachment)
 
-        # check that otherwise, attachments are searched without bypass_access
+        # check that otherwise, attachments are filtered
         self.patch(field, 'bypass_search_access', False)
-        with (
-            patch.object(Attachment, '_search', autospec=True, side_effect=Attachment._search) as p_search,
-            patch.object(Attachment, '_access_domain', autospec=True, side_effect=Attachment._access_domain) as p_access,
-        ):
-            record.invalidate_model()
-            record.m2m_attachment_ids
-            p_search.assert_called_once_with(attachment.browse(), Domain.TRUE, order='id', bypass_access=False)
-            p_access.assert_called_once_with(attachment.browse(), 'read')
+        self.assertEqual(record.m2m_attachment_ids, attachment.browse())

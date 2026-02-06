@@ -86,7 +86,6 @@ class TestRules(TransactionCase):
 
         # check the container as the public user
         container_user = container_admin.with_user(self.env.ref('base.public_user'))
-        container_user.invalidate_model(['some_ids'])
         self.assertItemsEqual(container_user.some_ids.ids, [self.allowed.id])
 
         # this should fail
@@ -94,17 +93,37 @@ class TestRules(TransactionCase):
             container_user.write({'some_ids': [Command.set(ids)]})
 
         container_admin.write({'some_ids': [Command.set(ids)]})
-        container_user.invalidate_model(['some_ids'])
         self.assertItemsEqual(container_user.some_ids.ids, [self.allowed.id])
-        container_admin.invalidate_model(['some_ids'])
         self.assertItemsEqual(container_admin.some_ids.ids, ids)
 
-        # this removes all records
+        # this removes all accessible records
         container_user.write({'some_ids': [Command.clear()]})
-        container_user.invalidate_model(['some_ids'])
         self.assertItemsEqual(container_user.some_ids.ids, [])
-        container_admin.invalidate_model(['some_ids'])
-        self.assertItemsEqual(container_admin.some_ids.ids, [])
+        self.assertItemsEqual(container_admin.some_ids.ids, [self.forbidden.id])
+
+    def test_many2many_no_read_access(self):
+        # create container and remove model access
+        container_admin = self.env['test_access_right.container'].create({'some_ids': [Command.set([self.allowed.id])]})
+        self.env['ir.model.access'].search([('model_id', '=', self.env['ir.model']._get(container_admin.some_ids._name).id)]).unlink()
+
+        # user cannot see any records
+        container_user = container_admin.with_user(self.env.ref('base.public_user'))
+        corecords = container_user.some_ids
+        self.assertFalse(corecords)
+        self.assertFalse(corecords.has_access('read'))
+
+    def test_one2many_no_read_access(self):
+        # create container and remove model access
+        parent_admin = self.allowed
+        child_admin = self.env['test_access_right.child'].create({'parent_id': parent_admin.id})
+        self.env['ir.model.access'].search([('model_id', '=', self.env['ir.model']._get(child_admin._name).id)]).unlink()
+
+        # user cannot see any records
+        assert parent_admin.has_access('read')
+        parent_user = parent_admin.with_user(self.env.ref('base.public_user'))
+        corecords = parent_user.child_ids
+        self.assertFalse(corecords)
+        self.assertFalse(corecords.has_access('read'))
 
     def test_access_rule_performance(self):
         env = self.env(user=self.env.ref('base.public_user'))

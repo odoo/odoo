@@ -15,6 +15,7 @@ class Test_Access_RightSome_Obj(models.Model):
     )
     forbidden2 = fields.Integer(groups='test_orm.test_group')
     forbidden3 = fields.Integer(groups=fields.NO_ACCESS)
+    child_ids = fields.One2many('test_access_right.child', 'parent_id')
 
 
 class Test_Access_RightContainer(models.Model):
