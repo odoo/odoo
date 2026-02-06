@@ -376,6 +376,10 @@ class ProductProduct(models.Model):
         products = super(ProductProduct, self.with_context(create_product_product=False)).create(vals_list)
         # `_get_variant_id_for_combination` depends on existing variants
         self.env.registry.clear_cache()
+        if 'create_product_product' in products._context:
+            new_context = dict(products._context)
+            new_context.pop('create_product_product')
+            return products.with_context(new_context)
         return products
 
     def write(self, values):

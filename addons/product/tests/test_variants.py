@@ -244,6 +244,12 @@ class TestVariants(ProductVariantsCommon):
         self.assertEqual(variant_copy.name, 'Test Copy (copy) (copy)')
         self.assertEqual(len(variant_copy.product_variant_ids), 2)
 
+        # test copy of variant from variant
+        variant = self.env['product.product'].create({'name': 'Test Copy Variant'})
+        variant_copy = variant.copy()
+        self.assertTrue(variant_copy.exists())
+        self.assertEqual(variant_copy.name, 'Test Copy Variant (copy)')
+
     def test_dynamic_variants_copy(self):
         self.color_attr = self.env['product.attribute'].create({'name': 'Color', 'create_variant': 'dynamic'})
         self.color_attr_value_r = self.env['product.attribute.value'].create({'name': 'Red', 'attribute_id': self.color_attr.id})
@@ -262,10 +268,6 @@ class TestVariants(ProductVariantsCommon):
         self.assertEqual(template_dyn.name, 'Test Dynamical')
 
         variant_dyn = template_dyn._create_product_variant(template_dyn._get_first_possible_combination())
-        if 'create_product_product' in variant_dyn._context:
-            new_context = dict(variant_dyn._context)
-            new_context.pop('create_product_product')
-            variant_dyn = variant_dyn.with_context(new_context)
         self.assertEqual(len(template_dyn.product_variant_ids), 1)
 
         variant_dyn_copy = variant_dyn.copy()
