@@ -110,11 +110,24 @@ class AccountMove(models.Model):
             })
         return super().button_draft()
 
+<<<<<<< 0cba303d4e655d16762eff555412d7cb260a2d11
     @api.model
     def _load_pos_data_fields(self, config_id):
         result = super()._load_pos_data_fields(config_id)
         return result or ['id']
 
+||||||| 2f980679a545045e34af8a4175f8b29071529253
+=======
+    def _recompute_cash_rounding_lines(self):
+        self.ensure_one()
+        if self.reversed_entry_id:
+            pos_orders = self.reversed_entry_id.sudo().pos_order_ids
+            if pos_orders and self.reversed_entry_id.sudo().line_ids.filtered(lambda l: l.display_type == 'rounding' and not l.balance):
+                return
+        super()._recompute_cash_rounding_lines()
+
+
+>>>>>>> 34a6b2718c55cb143396acf137f5cbf0eae6c498
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
