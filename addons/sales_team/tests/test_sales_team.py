@@ -230,3 +230,109 @@ class TestAccessRights(SalesTeamCommon):
         self.assertNotIn(
             india_channel.id, self.env['crm.team'].search([]).ids,
             'Sales manager should be able to delete a Sales Team')
+
+class TestAddingAndRemovingTeamMembers(TestSalesCommon):
+    """Test adding and removing team members via member_ids field"""
+
+    def test_add_member_first_time(self):
+        """Test adding a user who has never been a member"""
+        # Create a new team with no members
+        new_team = self.env['crm.team'].create({
+            'name': 'Fresh Team',
+            'company_id': self.company_main.id,
+        })
+        self.assertEqual(new_team.member_ids, self.env['res.users'])
+        
+        # Add a member for the first time
+        new_team.write({'member_ids': [(4, self.user_sales_salesman.id)]})
+        
+        # Verify member was added
+        self.assertEqual(new_team.member_ids, self.user_sales_salesman)
+        self.assertEqual(len(new_team.crm_team_member_ids), 1)
+        self.assertTrue(new_team.crm_team_member_ids[0].active)
+
+    def test_remove_member(self):
+        """Test removing a member from a team deactivates the membership"""
+        # Start with sales_team_1 which has members
+        team = self.sales_team_1
+        initial_members = team.member_ids
+        self.assertTrue(self.user_sales_leads in initial_members)
+        
+        # Get the membership before removal
+        membership = team.crm_team_member_ids.filtered(lambda m: m.user_id == self.user_sales_leads)
+        self.assertEqual(len(membership), 1)
+        self.assertTrue(membership.active)
+        
+        # Remove the member via member_ids
+        team.write({'member_ids': [(3, self.user_sales_leads.id)]})
+        
+        # Verify member was removed from active members
+        self.assertNotIn(self.user_sales_leads, team.member_ids)
+        
+        # Verify membership was deactivated (not deleted)
+        membership = self.env['crm.team.member'].with_context(active_test=False).search([
+            ('crm_team_id', '=', team.id),
+            ('user_id', '=', self.user_sales_leads.id)
+        ])
+        self.assertEqual(len(membership), 1)
+        self.assertFalse(membership.active, "Membership should be deactivated, not deleted")
+
+    def test_remove_and_readd_member(self):
+        """Test removing and re-adding a member reactivates the same membership"""
+        team = self.sales_team_1
+        
+        # Remove member
+        team.write({'member_ids': [(3, self.user_sales_leads.id)]})
+        self.assertNotIn(self.user_sales_leads, team.member_ids)
+        
+        # Get the inactive membership
+        membership_after_remove = self.env['crm.team.member'].with_context(active_test=False).search([
+            ('crm_team_id', '=', team.id),
+            ('user_id', '=', self.user_sales_leads.id)
+        ])
+        membership_id = membership_after_remove.id
+        self.assertFalse(membership_after_remove.active)
+        
+        # Re-add the same member
+        team.write({'member_ids': [(4, self.user_sales_leads.id)]})
+        
+        # Verify member is back
+        self.assertIn(self.user_sales_leads, team.member_ids)
+        
+        # Verify the same membership was reactivated (not a new one created)
+        membership_after_readd = self.env['crm.team.member'].search([
+            ('crm_team_id', '=', team.id),
+            ('user_id', '=', self.user_sales_leads.id)
+        ])
+        self.assertEqual(len(membership_after_readd), 1)
+        self.assertEqual(membership_after_readd.id, membership_id, "Should reactivate existing membership")
+        self.assertTrue(membership_after_readd.active)
+        
+        # Verify no duplicate memberships were created
+        all_memberships = self.env['crm.team.member'].with_context(active_test=False).search([
+            ('crm_team_id', '=', team.id),
+            ('user_id', '=', self.user_sales_leads.id)
+        ])
+        self.assertEqual(len(all_memberships), 1, "Should not create duplicate memberships")
+
+    def test_replace_all_members(self):
+        """Test replacing all members at once using (6, 0, ids)"""
+        team = self.sales_team_1
+        original_members = team.member_ids
+        
+        # Replace with completely different set of members
+        new_members = self.user_sales_manager | self.user_sales_salesman
+        team.write({'member_ids': [(6, 0, new_members.ids)]})
+        
+        # Verify new members are active
+        self.assertEqual(team.member_ids, new_members)
+        
+        # Verify old members were deactivated
+        for old_member in original_members:
+            if old_member not in new_members:
+                membership = self.env['crm.team.member'].with_context(active_test=False).search([
+                    ('crm_team_id', '=', team.id),
+                    ('user_id', '=', old_member.id)
+                ])
+                self.assertFalse(membership.active if membership else True, f"Membership for {old_member.name} should be deactivated")
+
