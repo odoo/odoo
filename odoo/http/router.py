@@ -1,12 +1,16 @@
+from __future__ import annotations
+
 import functools
 import logging
 import re
 import threading
+import typing
 from os.path import join as opj
 from urllib.parse import urlparse
 
-import werkzeug
+import werkzeug.routing
 from psycopg2 import OperationalError
+from werkzeug.exceptions import HTTPException
 from werkzeug.urls import url_encode  # TODO: use urllib
 
 # TODO: drop the fallback
@@ -16,7 +20,8 @@ try:
 except ImportError:
     from werkzeug.contrib.fixers import ProxyFix
 
-import odoo
+import odoo.modules.db
+import odoo.service
 from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.modules.module import (
     Manifest,
@@ -26,10 +31,16 @@ from odoo.service.server import thread_local
 from odoo.tools import config, file_path, real_time
 from odoo.tools.misc import submap
 
+if typing.TYPE_CHECKING:
+    from collections.abc import Iterable, Mapping
+    from wsgiref.types import StartResponse, WSGIEnvironment
+
+    from .response import Response
+
 _logger = logging.getLogger('odoo.http')
 
 
-def db_list(force=False, host=None):
+def db_list(force: bool = False, host: str | None = None) -> list[str]:
     """
     Get the list of available databases.
 
@@ -46,7 +57,7 @@ def db_list(force=False, host=None):
     return db_filter(dbs, host)
 
 
-def db_filter(dbs, host=None):
+def db_filter(dbs: Iterable[str], host: str | None = None) -> list[str]:
     """
     Return the subset of ``dbs`` that match the dbfilter or the dbname
     server configuration. In case neither are configured, return ``dbs``
@@ -68,8 +79,7 @@ def db_filter(dbs, host=None):
         if host is None:
             host = request.httprequest.environ.get('HTTP_HOST', '')
         host = host.partition(':')[0]
-        if host.startswith('www.'):
-            host = host[4:]
+        host = host.removeprefix('www.')
         domain = host.partition('.')[0]
 
         dbfilter_re = re.compile(
@@ -85,26 +95,26 @@ def db_filter(dbs, host=None):
     return list(dbs)
 
 
-def dispatch_rpc(service_name, method, params):
+def dispatch_rpc(service_name: str, method: str, params: Mapping[str, typing.Any]) -> typing.Any:
     """
     Perform a RPC call.
 
-    :param str service_name: either "common", "db" or "object".
-    :param str method: the method name of the given service to execute
-    :param Mapping params: the keyword arguments for method call
+    :param service_name: either "common", "db" or "object".
+    :param method: the method name of the given service to execute
+    :param params: the keyword arguments for method call
     :return: the return value of the called method
-    :rtype: Any
     """
-    rpc_dispatchers = {
-        'common': odoo.service.common.dispatch,
-        'object': odoo.service.model.dispatch,
-    }
+    if service_name == 'object':
+        dispatch = odoo.service.model.dispatch
+    elif service_name == 'common':
+        dispatch = odoo.service.common.dispatch
+    else:
+        raise ValueError(f"Invalid service name: {service_name}")
 
     with borrow_request():
         threading.current_thread().uid = None
         threading.current_thread().dbname = None
 
-        dispatch = rpc_dispatchers[service_name]
         return dispatch(method, params)
 
 
@@ -116,7 +126,7 @@ class Application:
     """ Odoo WSGI application """
     # See also: https://www.python.org/dev/peps/pep-3333
 
-    def initialize(self):
+    def initialize(self) -> None:
         """
         Initialize the application.
 
@@ -135,7 +145,7 @@ class Application:
         manifest = Manifest.for_addon(module_name, display_warning=False)
         return manifest.static_path if manifest is not None else None
 
-    def get_static_file(self, url, host=''):
+    def get_static_file(self, url: str, host: str = '') -> str | None:
         """
         Get the full-path of the file if the url resolves to a local
         static file, otherwise return None.
@@ -184,16 +194,16 @@ class Application:
 
     @functools.cached_property
     def session_store(self):
-        path = odoo.tools.config.session_dir
+        path = config.session_dir
         _logger.debug('HTTP sessions stored in: %s', path)
         return SessionStore(path=path)
 
-    def get_db_router(self, db):
+    def get_db_router(self, db: str | None) -> werkzeug.routing.Map:
         if not db:
             return self.nodb_routing_map
         return request.env['ir.http'].routing_map()
 
-    def set_csp(self, response):
+    def set_csp(self, response: Response) -> None:
         headers = response.headers
         headers['X-Content-Type-Options'] = 'nosniff'
 
@@ -205,14 +215,14 @@ class Application:
 
         headers['Content-Security-Policy'] = "default-src 'none'"
 
-    def __call__(self, environ, start_response):
+    def __call__(self, environ: WSGIEnvironment, start_response: StartResponse) -> Iterable[bytes]:
         """
         WSGI application entry point.
 
-        :param dict environ: container for CGI environment variables
+        :param environ: container for CGI environment variables
             such as the request HTTP headers, the source IP address and
             the body as an io file.
-        :param callable start_response: function provided by the WSGI
+        :param start_response: function provided by the WSGI
             server that this application must call in order to send the
             HTTP response status line and the response headers.
         """
@@ -227,7 +237,7 @@ class Application:
             del current_thread.uid
         thread_local.rpc_model_method = ''
 
-        if odoo.tools.config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
+        if config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
             # The ProxyFix middleware has a side effect of updating the
             # environ, see https://github.com/pallets/werkzeug/pull/2184
             def fake_app(environ, start_response):
@@ -272,7 +282,7 @@ class Application:
                 # Logs the error here so the traceback starts with ``__call__``.
                 if hasattr(exc, 'loglevel'):
                     _logger.log(exc.loglevel, exc, exc_info=getattr(exc, 'exc_info', None))
-                elif isinstance(exc, werkzeug.exceptions.HTTPException):
+                elif isinstance(exc, HTTPException):
                     pass
                 elif isinstance(exc, SessionExpiredException):
                     _logger.info(exc)

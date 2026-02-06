@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 import logging
 import random
 import time
+import typing
 
 import psycopg2
 import psycopg2.errorcodes
@@ -8,13 +11,17 @@ import psycopg2.errorcodes
 from odoo.exceptions import ConcurrencyError, ValidationError
 from odoo.sql_db import PG_CONCURRENCY_EXCEPTIONS_TO_RETRY
 
+if typing.TYPE_CHECKING:
+    from collections.abc import Callable
+    from odoo.api import Environment
+
 _logger = logging.getLogger('odoo.http')
 
 MAX_TRIES_ON_CONCURRENCY_FAILURE = 5
 """ How many times retrying() is allowed to retry. """
 
 
-def retrying(func, env):
+def retrying[T](func: Callable[[], T], env: Environment) -> T:
     """
     Call ``func``in a loop until the SQL transaction commits with no
     serialisation error. It rollbacks the transaction in between calls.

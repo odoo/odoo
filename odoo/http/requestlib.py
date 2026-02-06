@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import functools
 import hashlib
 import hmac
@@ -5,6 +7,7 @@ import json
 import logging
 import threading
 import time
+import typing
 import warnings
 from contextlib import contextmanager, nullcontext
 from datetime import datetime
@@ -39,10 +42,21 @@ from odoo.tools import (
     profiler,
 )
 
+if typing.TYPE_CHECKING:
+    from collections.abc import Mapping, Iterable
+    import werkzeug.routing
+
+    from odoo.models import BaseModel
+    from .response import Response
+    from .routing_map import Endpoint
+    from .session import Session
+
+    HeaderType = Mapping[str, str | Iterable[str]] | Iterable[tuple[str, str]]
+
 _logger = logging.getLogger('odoo.http')
 
 _request_stack = LocalStack()
-request = _request_stack()
+request: Request = _request_stack()  # type: ignore[assignment]
 
 CSRF_TOKEN_SALT = 60 * 60 * 24 * 365  # 1 year
 """ The default csrf token lifetime, a salt against BREACH. """
@@ -62,13 +76,14 @@ NOT_FOUND_NODB = """\
 def borrow_request():
     """ Get the current request and unexpose it from the local stack. """
     req = _request_stack.pop()
+    assert req is not None
     try:
         yield req
     finally:
         _request_stack.push(req)
 
 
-def is_cors_preflight(request, endpoint):
+def is_cors_preflight(request: Request, endpoint: Endpoint) -> bool:
     return (
         request.httprequest.method == 'OPTIONS'
         and endpoint.routing.get('cors', False)
@@ -81,21 +96,23 @@ class Request:
     parameters, session utilities and request dispatching logic.
     """
 
-    def __init__(self, httprequest):
+    def __init__(self, httprequest: HTTPRequest):
         self.httprequest = httprequest
         self.future_response = FutureResponse()
         self.dispatcher = HttpDispatcher(self)  # until we match
-        # self.params = {}  # set by the Dispatcher
+        self.geoip = GeoIP(httprequest.remote_addr or '')
 
-        self.geoip = GeoIP(httprequest.remote_addr)
-        self.registry = None
-        self.env = None
+        # set by _serve_db
+        self.registry: Registry | None = None
+        self.env: Environment | None = None
+        # set by the Dispatcher
+        self.params: Mapping | None = None
 
-    def _post_init(self):
+    def _post_init(self) -> None:
         self.session, self.db = self._get_session_and_dbname()
         self._post_init = None
 
-    def _get_session_and_dbname(self):
+    def _get_session_and_dbname(self) -> tuple[Session, str | None]:
         sid = self.httprequest._session_id__
         session = root.session_store.get(sid, keep_sid=True)
 
@@ -134,7 +151,7 @@ class Request:
     # =====================================================
     # Getters and setters
     # =====================================================
-    def update_env(self, user=None, context=None, su=None):
+    def update_env(self, user: int | BaseModel | None = None, context: dict | None = None, su: bool | None = None) -> None:
         """ Update the environment of the current request.
 
         :param user: optional user/user id to change the current user
@@ -147,7 +164,7 @@ class Request:
         self.env.transaction.default_env = self.env
         threading.current_thread().uid = self.env.uid
 
-    def update_context(self, **overrides):
+    def update_context(self, **overrides) -> None:
         """
         Override the environment context of the current request with the
         values of ``overrides``. To replace the entire context, please
@@ -191,7 +208,7 @@ class Request:
     _cr = cr
 
     @functools.cached_property
-    def best_lang(self):
+    def best_lang(self) -> str | None:
         lang = self.httprequest.accept_languages.best
         if not lang:
             return None
@@ -216,16 +233,15 @@ class Request:
     # =====================================================
     # Helpers
     # =====================================================
-    def csrf_token(self, time_limit=None):
+    def csrf_token(self, time_limit: int | None = None) -> str:
         """
         Generates and returns a CSRF token for the current session
 
-        :param Optional[int] time_limit: the CSRF token should only be
+        :param time_limit: the CSRF token should only be
             valid for the specified duration (in second), by default
             48h, ``None`` for the token to be valid as long as the
             current user's session is.
         :returns: ASCII token string
-        :rtype: str
         """
         secret = self.env['ir.config_parameter'].sudo().get_str('database.secret')
         if not secret:
@@ -239,13 +255,12 @@ class Request:
         hm = hmac.new(secret.encode('ascii'), msg, hashlib.sha1).hexdigest()
         return f'{hm}o{max_ts}'
 
-    def validate_csrf(self, csrf):
+    def validate_csrf(self, csrf: str) -> bool:
         """
-        Is the given csrf token valid ?
+        Is the given csrf token valid?
 
-        :param str csrf: The token to validate.
+        :param csrf: The token to validate.
         :returns: ``True`` when valid, ``False`` when not.
-        :rtype: bool
         """
         if not csrf:
             return False
@@ -268,25 +283,23 @@ class Request:
         hm_expected = hmac.new(secret.encode('ascii'), msg, hashlib.sha1).hexdigest()
         return consteq(hm, hm_expected)
 
-    def default_context(self):
+    def default_context(self) -> dict:
         return dict(get_default_session()['context'], lang=self.default_lang())
 
-    def default_lang(self):
+    def default_lang(self) -> str:
         """Returns default user language according to request specification
 
         :returns: Preferred language if specified or 'en_US'
-        :rtype: str
         """
         return self.best_lang or DEFAULT_LANG
 
-    def get_http_params(self):
+    def get_http_params(self) -> dict:
         """
         Extract key=value pairs from the query string and the forms
         present in the body (both application/x-www-form-urlencoded and
         multipart/form-data).
 
         :returns: The merged key-value pairs.
-        :rtype: dict
         """
         return {
             **self.httprequest.args,
@@ -330,11 +343,16 @@ class Request:
 
         return nullcontext()
 
-    def _inject_future_response(self, response):
+    def _inject_future_response(self, response: Response):
         response.headers.extend(self.future_response.headers)
         return response
 
-    def make_response(self, data, headers=None, cookies=None, status=200):
+    def make_response(self,
+        data: str,
+        headers: HeaderType | None = None,
+        cookies: Mapping | None = None,
+        status: int = 200,
+    ) -> Response:
         """ Helper for non-HTML responses, or HTML responses with custom
         response headers or cookies.
 
@@ -343,13 +361,11 @@ class Request:
         complete response object, or the returned data will not be correctly
         interpreted by the clients.
 
-        :param str data: response body
-        :param int status: http status code
+        :param data: response body
+        :param status: http status code
         :param headers: HTTP headers to set on the response
-        :type headers: ``[(name, value)]``
-        :param collections.abc.Mapping cookies: cookies to set on the client
+        :param cookies: cookies to set on the client
         :returns: a response object.
-        :rtype: :class:`~odoo.http.Response`
         """
         response = Response(data, status=status, headers=headers)
         if cookies:
@@ -357,15 +373,20 @@ class Request:
                 response.set_cookie(k, v)
         return response
 
-    def make_json_response(self, data, headers=None, cookies=None, status=200):
+    def make_json_response(
+        self,
+        data: typing.Any,
+        headers: HeaderType | None = None,
+        cookies: Mapping | None = None,
+        status: int = 200,
+    ) -> Response:
         """ Helper for JSON responses, it json-serializes ``data`` and
         sets the Content-Type header accordingly if none is provided.
 
         :param data: the data that will be json-serialized into the response body
-        :param int status: http status code
-        :param List[(str, str)] headers: HTTP headers to set on the response
-        :param collections.abc.Mapping cookies: cookies to set on the client
-        :rtype: :class:`~odoo.http.Response`
+        :param status: http status code
+        :param headers: HTTP headers to set on the response
+        :param cookies: cookies to set on the client
         """
         data = json.dumps(data, ensure_ascii=False, default=json_default)
 
@@ -376,14 +397,14 @@ class Request:
 
         return self.make_response(data, headers.to_wsgi_list(), cookies, status)
 
-    def not_found(self, description=None):
+    def not_found(self, description: str | None = None) -> NotFound:
         """ Shortcut for a `HTTP 404
         <http://tools.ietf.org/html/rfc7231#section-6.5.4>`_ (Not Found)
         response
         """
         return NotFound(description)
 
-    def redirect(self, location, code=303, local=True):
+    def redirect(self, location: URL | str, code: int = 303, local: bool = True) -> Response:
         # compatibility, Werkzeug support URL as location
         if isinstance(location, URL):
             location = location.to_url()
@@ -393,30 +414,30 @@ class Request:
             return self.env['ir.http']._redirect(location, code)
         return redirect(location, code, Response=Response)
 
-    def redirect_query(self, location, query=None, code=303, local=True):
+    def redirect_query(self, location: str, query: dict | None = None, code: int = 303, local: bool = True) -> Response:
         if query:
             location += '?' + url_encode(query)
         return self.redirect(location, code=code, local=local)
 
-    def render(self, template, qcontext=None, lazy=True, **kw):
+    def render(self, template: str, qcontext: dict | None = None, lazy: bool = True, **kw) -> Response:
         """ Lazy render of a QWeb template.
 
         The actual rendering of the given template will occur at then end of
         the dispatching. Meanwhile, the template and/or qcontext can be
         altered or even replaced by a static response.
 
-        :param str template: template to render
-        :param dict qcontext: Rendering context to use
-        :param bool lazy: whether the template rendering should be deferred
+        :param template: template to render
+        :param qcontext: Rendering context to use
+        :param lazy: whether the template rendering should be deferred
                           until the last possible moment
-        :param dict kw: forwarded to werkzeug's Response object
+        :param kw: forwarded to werkzeug's Response object
         """
         response = Response(template=template, qcontext=qcontext, **kw)
         if not lazy:
             return response.render()
         return response
 
-    def reroute(self, path, query_string=None):
+    def reroute(self, path: str | bytes, query_string=None) -> None:
         """
         Rewrite the current request URL using the new path and query
         string. This act as a light redirection, it does not return a
@@ -442,7 +463,7 @@ class Request:
         threading.current_thread().url = httprequest.url
         self.httprequest = httprequest
 
-    def _save_session(self, env=None):
+    def _save_session(self, env: Environment | None = None):
         """
         Save a modified session on disk.
 
@@ -473,10 +494,11 @@ class Request:
                 httponly=True
             )
 
-    def _set_request_dispatcher(self, rule):
-        routing = rule.endpoint.routing
+    def _set_request_dispatcher(self, rule: werkzeug.routing.Rule):
+        endpoint: Endpoint = rule.endpoint  # type: ignore
+        routing = endpoint.routing
         dispatcher_cls = _dispatchers[routing['type']]
-        if (not is_cors_preflight(self, rule.endpoint)
+        if (not is_cors_preflight(self, endpoint)
             and not dispatcher_cls.is_compatible_with(self)):
             compatible_dispatchers = [
                 disp.routing_type
@@ -496,7 +518,7 @@ class Request:
     # =====================================================
     # Routing
     # =====================================================
-    def _serve_static(self):
+    def _serve_static(self) -> Response:
         """ Serve a static file from the file system. """
         module, _, path = self.httprequest.path[1:].partition('/static/')
         try:
@@ -517,7 +539,7 @@ class Request:
         except OSError:  # cover both missing file and invalid permissions
             raise NotFound(f'File "{path}" not found in module {module}.\n')
 
-    def _serve_nodb(self):
+    def _serve_nodb(self) -> Response:
         """
         Dispatch the request to its matching controller in a
         database-free environment.
@@ -533,7 +555,8 @@ class Request:
                 raise
             self._set_request_dispatcher(rule)
             self.dispatcher.pre_dispatch(rule, args)
-            response = self.dispatcher.dispatch(rule.endpoint, args)
+            endpoint: Endpoint = rule.endpoint  # type: ignore
+            response = self.dispatcher.dispatch(endpoint, args)
             self.dispatcher.post_dispatch(response)
             return response
         except HTTPException as exc:
@@ -544,7 +567,7 @@ class Request:
             HttpDispatcher(self).post_dispatch(response)
             return response
 
-    def _serve_db(self):
+    def _serve_db(self) -> Response:
         """ Load the ORM and use it to process the request. """
         # reuse the same cursor for building, checking the registry, for
         # matching the controller endpoint and serving the data
@@ -570,9 +593,10 @@ class Request:
                 # a controller endpoint matched -> dispatch it the request
                 self._set_request_dispatcher(rule)
                 serve_func = functools.partial(self._serve_ir_http, rule, args)
-                readonly = rule.endpoint.routing['readonly']
+                endpoint: Endpoint = rule.endpoint  # type: ignore
+                readonly = endpoint.routing['readonly']
                 if callable(readonly):
-                    readonly = readonly(rule.endpoint.func.__self__, rule, args)
+                    readonly = readonly(endpoint.func.__self__, rule, args)
 
             # keep on using the RO cursor when a readonly route matched,
             # and for serve fallback
@@ -620,7 +644,7 @@ class Request:
             if cr is not None:
                 cr.close()
 
-    def _update_served_exception(self, exc):
+    def _update_served_exception(self, exc: Exception) -> Exception:
         if isinstance(exc, HTTPException) and exc.code is None:
             return exc  # bubble up to _serve_db
         if (
@@ -634,7 +658,7 @@ class Request:
             exc.error_response = self.registry['ir.http']._handle_error(exc)
         return exc
 
-    def _serve_ir_http_fallback(self, not_found):
+    def _serve_ir_http_fallback(self, not_found: NotFound) -> Response:
         """
         Called when no controller match the request path. Delegate to
         ``ir.http._serve_fallback`` to give modules the opportunity to
@@ -653,7 +677,7 @@ class Request:
         no_fallback.error_response = self.registry['ir.http']._handle_error(no_fallback)
         raise no_fallback
 
-    def _serve_ir_http(self, rule, args):
+    def _serve_ir_http(self, rule: werkzeug.routing.Rule, args) -> Response:
         """
         Called when a controller match the request path. Delegate to
         ``ir.http`` to serve a response.
@@ -666,7 +690,11 @@ class Request:
 
 
 # ruff: noqa: E402
-from ._facade import DEFAULT_MAX_CONTENT_LENGTH, HTTPRequest  # noqa: F401
+if typing.TYPE_CHECKING:
+    HTTPRequest = werkzeug.wrappers.Request
+    from ._facade import DEFAULT_MAX_CONTENT_LENGTH
+else:
+    from ._facade import DEFAULT_MAX_CONTENT_LENGTH, HTTPRequest  # noqa: F401
 from .dispatcher import HttpDispatcher, JsonRPCDispatcher, _dispatchers
 from .geoip import GeoIP
 from .response import FutureResponse, Response
