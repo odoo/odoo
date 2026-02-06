@@ -1,5 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onWillRender, useExternalListener, useRef } from "@odoo/owl";
+import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
+import { Component, useExternalListener, useRef } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";

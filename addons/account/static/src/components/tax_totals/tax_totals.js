@@ -1,3 +1,4 @@
+import { onWillRender } from "@web/owl2/utils";
 import { formatMonetary } from "@web/views/fields/formatters";
 import { formatFloat } from "@web/core/utils/numbers";
 import { parseFloat } from "@web/views/fields/parsers";
@@ -7,7 +8,6 @@ import {
     Component,
     onPatched,
     onWillUpdateProps,
-    onWillRender,
     toRaw,
     useRef,
     useState,
