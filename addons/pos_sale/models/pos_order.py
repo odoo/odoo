@@ -29,6 +29,10 @@ class PosOrder(models.Model):
             order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, date_order.date())
 
     def _prepare_invoice_vals(self):
+        if self.env['account.move'].require_tax_ids_on_invoice_lines():
+            for line in self.lines.filtered(lambda l: not l.tax_ids and l.product_id == self.config_id.down_payment_product_id):
+                line.tax_ids = self.env['account.tax']._get_zero_tax()
+
         invoice_vals = super(PosOrder, self)._prepare_invoice_vals()
         invoice_vals['team_id'] = self.crm_team_id.id
         sale_orders = self.lines.mapped('sale_order_origin_id')
