@@ -539,6 +539,20 @@ export class SelfOrder extends Reactive {
                     config_name: this.config.name,
                     table_number: this.currentTable?.table_number,
                     floating_order_name: order.floating_order_name,
+                    getLineAttributeNames: (line) => {
+                        const result = (line.attribute_value_ids ?? []).map((a) => a.name);
+                        if (!line.combo_parent_id) {
+                            return result;
+                        }
+                        return [
+                            ...new Set([
+                                ...(line.product_id.product_template_variant_value_ids ?? []).map(
+                                    (a) => a.name
+                                ),
+                                ...result,
+                            ]),
+                        ];
+                    },
                 };
                 const receipt = renderToElement("pos_self_order.OrderChangeReceipt", {
                     changes: printingChanges,
