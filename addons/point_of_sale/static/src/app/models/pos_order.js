@@ -2,13 +2,12 @@ import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
 import { random5Chars } from "@point_of_sale/utils";
-import { roundCurrency } from "@point_of_sale/app/models/utils/currency";
+import { formatCurrency, roundCurrency } from "@point_of_sale/app/models/utils/currency";
 import { computeComboItems } from "./utils/compute_combo_items";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { localization } from "@web/core/l10n/localization";
 import { formatDate, serializeDateTime } from "@web/core/l10n/dates";
 
-const formatCurrency = registry.subRegistries.formatters.content.monetary[1];
 const { DateTime } = luxon;
 
 export class PosOrder extends Base {
@@ -990,12 +989,12 @@ export class PosOrder extends Base {
                 imageSrc: `/web/image/product.product/${l.product_id.id}/image_128`,
             })),
             finalized: this.finalized,
-            amount: formatCurrency(this.getTotalWithTax() || 0),
+            amount: formatCurrency(this.getTotalWithTax() || 0, this.currency),
             paymentLines: this.payment_ids.map((pl) => ({
                 name: pl.payment_method_id.name,
-                amount: formatCurrency(pl.getAmount()),
+                amount: formatCurrency(pl.getAmount(), this.currency),
             })),
-            change: this.getChange() && formatCurrency(this.getChange()),
+            change: this.getChange() && formatCurrency(this.getChange(), this.currency),
             generalCustomerNote: this.general_customer_note || "",
         };
     }
