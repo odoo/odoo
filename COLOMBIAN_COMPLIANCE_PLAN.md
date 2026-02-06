@@ -9,6 +9,11 @@ tax definitions, identification types) but lacks critical compliance modules req
 DIAN and Colombian law. The most significant gap is the absence of an electronic invoicing
 (facturacion electronica) module — a mandatory requirement for all Colombian taxpayers.
 
+Beyond compliance, this plan covers platform modernization: UI refresh options, a native
+iOS reporting app, a public REST API to support integration with the custom veterinary
+and lab testing POS project, automated report scheduling with DIAN filing, and electronic
+payroll data exchange (nomina electronica).
+
 ---
 
 ## 1. Current State Assessment
@@ -496,6 +501,567 @@ addons/l10n_co_edi/
 - [ ] XML generation per DIAN schema
 - [ ] Pre-validation report for data quality
 
+### Phase 8: UI Modernization (Weeks 23-28)
+
+**Goal:** Modernize the accounting interface with a refreshed look and improved UX,
+while preserving the existing OWL component architecture.
+
+#### 8.1 Current UI State
+
+The system uses:
+- **OWL framework** (Odoo Web Library) — a Vue-like reactive component system
+- **Bootstrap 5+** for CSS with extensive SCSS overrides in `addons/web/static/src/scss/`
+- **QWeb templates** for server-rendered views
+- Basic mobile CSS exists (control panels, calendar) but the core accounting views are
+  desktop-oriented
+
+#### 8.2 Modernization Options
+
+**Option A: Theme Refresh (Low effort, low risk)**
+- Create a custom SCSS theme overriding Bootstrap variables
+- Modern color palette, improved typography, better whitespace
+- Touch-friendly sizing for buttons and inputs (minimum 44px tap targets)
+- Dark mode support via CSS custom properties
+- Estimated effort: 2-3 weeks
+
+**Option B: Component-Level Redesign (Medium effort, medium risk)**
+- Rework key accounting views (invoice form, journal entries, reports dashboard)
+  as modern OWL components with improved layouts
+- Add contextual action panels, inline editing, and drag-and-drop
+- Implement responsive breakpoints for tablet use
+- Redesign the Colombian-specific views (EDI status, DIAN dashboard) from the start
+  with mobile-first layouts
+- Estimated effort: 4-6 weeks
+
+**Option C: Progressive Web App Shell (Higher effort, high reward)**
+- Build a PWA wrapper around the accounting module (following the pattern already
+  used by `point_of_sale` with its service worker at
+  `addons/point_of_sale/static/src/app/service_worker.js`)
+- Offline-capable report viewing with cached data
+- Push notifications for DIAN validation results, report due dates, certificate expiry
+- Home screen installable on mobile devices
+- Estimated effort: 6-8 weeks (can run in parallel with other phases)
+
+**Recommendation:** Start with Option A for immediate visual improvement, then pursue
+Option B for accounting-specific views during Phase 9 iOS development (shared design
+system). Option C is best suited for the vet/lab POS integration where offline capability
+is operationally important.
+
+#### 8.3 Key UI tasks
+
+- [ ] Define design tokens (colors, spacing, typography) as SCSS variables and CSS
+  custom properties for shared use across web and iOS
+- [ ] Create `gpcb_theme` module extending `web` with custom SCSS overrides
+- [ ] Redesign invoice form view: clearer tax breakdown display, DIAN status badges,
+  CUFE display, QR code preview
+- [ ] Add a Colombian compliance dashboard: DIAN submission status, upcoming filing
+  deadlines, certificate expiry warnings, numbering range utilization
+- [ ] Improve report viewer: interactive filters, inline drill-down, export to Excel/PDF
+- [ ] Responsive table components for tax reports (Formulario 300/350) usable on tablets
+- [ ] Accessibility audit: WCAG 2.1 AA compliance for all new/modified views
+- [ ] RTL-safe layouts (future-proofing for international expansion)
+
+#### 8.4 Design system deliverables
+
+- [ ] Component library documentation (Storybook-style catalog of OWL components)
+- [ ] Shared icon set for Colombian compliance features (DIAN, tax types, filing status)
+- [ ] Style guide for consistent use across web, iOS, and POS integration
+
+---
+
+### Phase 9: iOS Reporting App (Weeks 29-36)
+
+**Goal:** Build a native iOS app providing real-time access to financial reports,
+DIAN submission status, and key accounting dashboards for business owners and
+accounting managers on the go.
+
+#### 9.1 App Architecture
+
+```
+┌─────────────────────────────────────┐
+│         iOS App (Swift/SwiftUI)     │
+│  ┌──────────┐  ┌─────────────────┐  │
+│  │ Reports  │  │ DIAN Dashboard  │  │
+│  │ Viewer   │  │ & Notifications │  │
+│  ├──────────┤  ├─────────────────┤  │
+│  │ Offline  │  │ Push Notif.     │  │
+│  │ Cache    │  │ Service (APNs)  │  │
+│  └────┬─────┘  └────┬────────────┘  │
+│       │              │               │
+│  ┌────┴──────────────┴────────────┐  │
+│  │   API Client (URLSession)      │  │
+│  │   OAuth 2.0 / Token Auth       │  │
+│  └────────────┬───────────────────┘  │
+└───────────────┼─────────────────────┘
+                │ HTTPS (REST API from Phase 10)
+┌───────────────┼─────────────────────┐
+│  GPCB_Accounting Server (Odoo)      │
+│  ┌────────────┴───────────────────┐  │
+│  │  gpcb_api module (Phase 10)    │  │
+│  │  JSON REST endpoints           │  │
+│  └────────────────────────────────┘  │
+└─────────────────────────────────────┘
+```
+
+#### 9.2 Core features
+
+- [ ] **Authentication:** OAuth 2.0 / token-based auth against Odoo server; biometric
+  unlock (Face ID / Touch ID) for returning sessions; secure keychain storage
+- [ ] **Report dashboard:** Summary cards for key metrics — revenue, expenses, IVA
+  payable, withholdings balance, cash position
+- [ ] **Report viewer:**
+  - Formulario 300 (IVA return) — interactive, with period selection
+  - Formulario 350 (withholding return) — drill-down by concept
+  - Profit & Loss, Balance Sheet, Trial Balance
+  - Withholding certificates — view and share as PDF
+  - Custom date ranges and comparison periods
+- [ ] **DIAN status monitor:**
+  - Real-time invoice submission status (pending, validated, rejected)
+  - Batch resubmission trigger for rejected invoices
+  - Numbering range utilization and expiry alerts
+  - Certificate expiry countdown
+- [ ] **Notifications (APNs):**
+  - DIAN invoice rejection alerts
+  - Filing deadline reminders (configurable lead time)
+  - Numbering range low/exhausted warnings
+  - Payroll processing completion (Phase 12)
+  - Automated report ready for review (Phase 11)
+- [ ] **Offline mode:**
+  - Cache last-viewed reports locally (Core Data or SwiftData)
+  - Queue actions (e.g., approve invoice) for sync when online
+  - Background refresh via BGTaskScheduler
+- [ ] **PDF export and sharing:**
+  - Generate and share reports via iOS share sheet
+  - Email reports directly from the app
+  - AirPrint support
+
+#### 9.3 Technical requirements
+
+- [ ] Minimum target: iOS 16+ (SwiftUI with NavigationStack)
+- [ ] Swift 6 with strict concurrency checking
+- [ ] Charts: Swift Charts framework for financial visualizations
+- [ ] Networking: async/await with URLSession; Combine for reactive data binding
+- [ ] Local storage: SwiftData for report caching; Keychain for credentials
+- [ ] CI/CD: Xcode Cloud or Fastlane for TestFlight distribution
+- [ ] Unit and UI test coverage (XCTest + XCUITest)
+
+#### 9.4 Server-side requirements (depends on Phase 10 API)
+
+- [ ] Push notification registration endpoint (device token storage)
+- [ ] Report data endpoints returning JSON (not just PDF)
+- [ ] Webhook or polling endpoint for DIAN status changes
+- [ ] Efficient pagination for large report datasets
+- [ ] Compressed responses (gzip) for mobile bandwidth optimization
+
+---
+
+### Phase 10: POS Integration API for Vet & Lab Testing Sales (Weeks 29-34)
+
+**Goal:** Expose a documented, versioned REST API that enables the custom veterinary
+and lab testing POS project to create invoices, apply Colombian taxes, trigger DIAN
+electronic invoicing, and sync transactional data — all without direct database access.
+
+#### 10.1 API Module Structure
+
+```
+addons/gpcb_api/
+  __init__.py
+  __manifest__.py
+  controllers/
+    __init__.py
+    api_auth.py            # Token-based authentication
+    api_invoice.py         # Invoice CRUD + DIAN submission
+    api_partner.py         # Customer/supplier lookup & creation
+    api_product.py         # Product/service catalog
+    api_tax.py             # Tax computation preview
+    api_pos_session.py     # POS session management
+    api_report.py          # Report data for iOS app (Phase 9)
+    api_payroll.py         # Payroll data exchange (Phase 12)
+  models/
+    __init__.py
+    api_key.py             # API key management model
+    api_log.py             # Request/response audit logging
+  security/
+    ir.model.access.csv
+  views/
+    api_key_views.xml      # API key management UI
+    api_log_views.xml      # API audit log viewer
+  data/
+    api_data.xml           # Default configuration
+  tests/
+    __init__.py
+    test_api_invoice.py
+    test_api_auth.py
+    test_api_tax.py
+```
+
+#### 10.2 Authentication & security
+
+- [ ] API key model: generation, rotation, scoping (read-only vs read-write),
+  per-key rate limits, IP allowlisting
+- [ ] Token-based auth: API key in `Authorization: Bearer <token>` header
+- [ ] OAuth 2.0 option for the iOS app (authorization code flow with PKCE)
+- [ ] Per-endpoint permission checks mapped to Odoo security groups
+- [ ] Request/response audit logging with tamper-evident storage
+- [ ] Rate limiting: configurable per API key (default 100 req/min)
+- [ ] CORS configuration for browser-based POS clients
+- [ ] TLS 1.2+ required; reject plaintext connections
+
+#### 10.3 Invoice endpoints (Vet & Lab POS integration)
+
+```
+POST   /api/v1/invoices              # Create draft invoice
+GET    /api/v1/invoices/:id          # Retrieve invoice with DIAN status
+POST   /api/v1/invoices/:id/confirm  # Confirm and trigger DIAN submission
+POST   /api/v1/invoices/:id/cancel   # Request cancellation (credit note)
+GET    /api/v1/invoices/:id/pdf      # Download graphic representation
+GET    /api/v1/invoices/:id/xml      # Download signed UBL XML
+GET    /api/v1/invoices              # List/search invoices (paginated)
+```
+
+**Invoice creation payload (Vet/Lab specific):**
+```json
+{
+  "partner": {
+    "nit": "900123456-7",
+    "name": "Clinica Veterinaria El Prado",
+    "identification_type": "nit"
+  },
+  "journal_code": "VET01",
+  "lines": [
+    {
+      "product_code": "LAB-HEMOGRAMA",
+      "description": "Hemograma completo - canino",
+      "quantity": 1,
+      "unit_price": 85000,
+      "tax_ids": ["l10n_co_tax_8"],
+      "animal_id": "CHIP-123456789",
+      "animal_species": "canine",
+      "animal_name": "Luna"
+    },
+    {
+      "product_code": "CONS-GENERAL",
+      "description": "Consulta veterinaria general",
+      "quantity": 1,
+      "unit_price": 120000,
+      "tax_ids": ["l10n_co_tax_8"]
+    }
+  ],
+  "narration": "Paciente: Luna (Labrador, 3 anos). Propietario: Juan Perez.",
+  "payment_method": "cash"
+}
+```
+
+#### 10.4 Tax computation endpoint
+
+```
+POST   /api/v1/tax/compute           # Preview tax computation
+```
+
+This allows the POS to show tax breakdowns in real time before invoice creation:
+- Accepts a list of lines with product codes and amounts
+- Returns computed IVA, INC, and applicable withholdings
+- Respects fiscal position of the partner
+- Returns both unit and total tax amounts
+
+#### 10.5 Partner endpoints
+
+```
+GET    /api/v1/partners              # Search partners by NIT, name
+POST   /api/v1/partners              # Create new partner
+GET    /api/v1/partners/:id          # Retrieve partner details
+PATCH  /api/v1/partners/:id          # Update partner
+```
+
+- NIT validation (check digit algorithm) on creation
+- Auto-assign fiscal position based on partner type
+- Return fiscal responsibilities and withholding obligations
+
+#### 10.6 Product/service catalog endpoints
+
+```
+GET    /api/v1/products              # List/search products
+GET    /api/v1/products/:id          # Product detail with default taxes
+```
+
+- Filterable by category (lab test, consultation, medication, supplies)
+- Returns default tax_ids for automatic invoice line tax assignment
+- Supports barcode/SKU lookup for physical products
+
+#### 10.7 POS session endpoints
+
+```
+POST   /api/v1/pos/sessions/open     # Open a new POS session
+POST   /api/v1/pos/sessions/:id/close # Close session with cash count
+GET    /api/v1/pos/sessions/:id/summary # Session totals and reconciliation
+```
+
+- Maps to existing `pos.session` model
+- Handles payment method reconciliation
+- Returns Z-report data (session closing summary)
+
+#### 10.8 Vet/Lab domain extensions
+
+The custom POS will need domain-specific fields that flow through to invoices and
+reports. These should be handled via custom fields rather than core model changes:
+
+- [ ] `animal_id` — microchip or internal ID of the animal patient
+- [ ] `animal_species` — canine, feline, equine, bovine, avian, exotic, other
+- [ ] `animal_name` — patient name for invoice narration
+- [ ] `veterinarian_id` — attending vet (maps to `res.users` or `hr.employee`)
+- [ ] `lab_test_type` — categorization for reporting (hematology, chemistry, urinalysis,
+  imaging, microbiology, parasitology)
+- [ ] `sample_id` — lab sample tracking number
+- [ ] `referring_clinic_id` — for lab referral invoicing (partner)
+
+These fields should be:
+- Stored on `account.move.line` as custom fields (prefixed `x_vet_`)
+- Passed through the API in the invoice line payload
+- Available in report filters for vet/lab-specific analytics
+- Not required — the API works for any business; vet/lab fields are optional
+
+#### 10.9 API versioning & documentation
+
+- [ ] Version prefix: `/api/v1/` — breaking changes increment version
+- [ ] Auto-generated OpenAPI 3.0 spec from endpoint decorators
+- [ ] Interactive documentation at `/api/v1/docs` (Swagger UI or Redoc)
+- [ ] Extend existing `api_doc` module (`addons/api_doc/`) with REST endpoint docs
+- [ ] Changelog maintained per version
+- [ ] Deprecation policy: old versions supported for 6 months after successor release
+
+---
+
+### Phase 11: Automated Report Scheduling, Filing & Delivery (Weeks 35-38)
+
+**Goal:** Automate the generation, review, filing, and delivery of recurring
+Colombian tax reports and financial statements.
+
+#### 11.1 Report scheduler model
+
+```
+addons/gpcb_report_scheduler/
+  __init__.py
+  __manifest__.py
+  models/
+    __init__.py
+    report_schedule.py       # Schedule definitions
+    report_schedule_run.py   # Execution history/log
+  views/
+    report_schedule_views.xml
+  data/
+    ir_cron_data.xml         # Master cron job
+  security/
+    ir.model.access.csv
+```
+
+**`report.schedule` model fields:**
+- `name` — Human-readable schedule name
+- `report_type` — Selection: `iva_300`, `withholding_350`, `ica`, `income_tax`,
+  `withholding_cert`, `exogenous`, `balance_sheet`, `profit_loss`, `trial_balance`,
+  `custom`
+- `frequency` — Selection: `monthly`, `bimonthly`, `quarterly`, `annual`, `custom_cron`
+- `day_of_month` — Day to generate (e.g., 5th of each month for prior period)
+- `lead_days` — Days before filing deadline to generate (for review buffer)
+- `auto_file` — Boolean: automatically submit to DIAN (vs generate for review only)
+- `recipients` — Many2many to `res.partner` (email delivery list)
+- `notify_channel` — Selection: `email`, `push` (iOS app), `both`
+- `state` — Selection: `active`, `paused`, `archived`
+- `company_id` — Multi-company support
+
+#### 11.2 Execution workflow
+
+```
+┌──────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+│ ir.cron  │───>│  Generate    │───>│  Review      │───>│  File/Send   │
+│ triggers │    │  Report      │    │  (optional)  │    │  to DIAN     │
+└──────────┘    └──────┬───────┘    └──────┬───────┘    └──────┬───────┘
+                       │                   │                   │
+                       v                   v                   v
+                ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+                │ Store PDF +  │    │ Notify via   │    │ Store filing │
+                │ data snapshot│    │ email/push   │    │ confirmation │
+                └──────────────┘    └──────────────┘    └──────────────┘
+```
+
+#### 11.3 Key tasks
+
+- [ ] Master cron job: runs daily, checks all active schedules for due reports
+- [ ] Report generation: leverage existing `account.report` framework to produce
+  data snapshots and PDF/Excel outputs
+- [ ] Data snapshot storage: freeze report data at generation time so historical
+  reports remain immutable even if underlying data is later corrected
+- [ ] Review workflow:
+  - Generate report in "pending review" state
+  - Notify assigned reviewers (email + iOS push notification)
+  - Reviewer approves or requests regeneration with notes
+  - Approved reports proceed to filing/delivery
+- [ ] DIAN filing integration (depends on Phase 3):
+  - Formulario 300: auto-populate and submit via DIAN Muisca portal API (or generate
+    pre-filled XML for manual upload if API unavailable)
+  - Formulario 350: same approach
+  - Exogenous XML: auto-generate and stage for submission
+- [ ] Email delivery:
+  - Use existing `mail.mail` queue infrastructure
+  - Attach PDF + Excel to email
+  - Template-based email body with period summary
+  - CC/BCC support for external accountants
+- [ ] iOS push notifications (depends on Phase 9):
+  - "Formulario 300 for January 2026 is ready for review"
+  - "Filing deadline in 3 days — report not yet approved"
+  - "Formulario 350 filed successfully with DIAN"
+- [ ] Audit trail: full history of generation, review, filing, and delivery per schedule
+- [ ] Retry logic: if DIAN filing fails, retry with exponential backoff and alert on
+  persistent failure
+
+#### 11.4 Pre-configured schedules (Colombian defaults)
+
+| Report | Frequency | Generate Day | Filing Deadline |
+|--------|-----------|-------------|-----------------|
+| Formulario 300 (IVA) | Bimonthly | 1st of filing month | Varies by NIT last digit |
+| Formulario 350 (Withholding) | Monthly | 1st of following month | Varies by NIT last digit |
+| Withholding certificates | Annual | March 1 | March 31 |
+| Exogenous information | Annual | February 1 | March-April (by format) |
+| ICA return | Bimonthly/Annual | Varies by municipality | Varies |
+| Balance Sheet | Monthly | 5th of following month | Internal |
+| Profit & Loss | Monthly | 5th of following month | Internal |
+
+---
+
+### Phase 12: Electronic Payroll Data Exchange (Weeks 39-42)
+
+**Goal:** Implement electronic delivery and receipt of payroll data (nomina electronica)
+compliant with DIAN requirements (Resolucion 000013 de 2021), and integrate payroll
+information into the accounting system for accurate expense recognition and withholding.
+
+#### 12.1 Regulatory context
+
+Since 2021, Colombian employers must transmit payroll support documents (documentos
+soporte de nomina electronica) to DIAN. These are not invoices but informational
+documents that support payroll expense deductions. Key requirements:
+- UBL 2.1 extension for payroll (DIAN Technical Annex — Nomina Electronica)
+- CUNE generation (Codigo Unico de Nomina Electronica) — SHA-384 hash
+- Digital signature (same certificate as electronic invoicing)
+- Monthly transmission to DIAN
+- Adjustment notes for corrections
+
+#### 12.2 Module structure
+
+```
+addons/l10n_co_payroll_edi/
+  __init__.py
+  __manifest__.py
+  models/
+    __init__.py
+    l10n_co_payroll_document.py    # Payroll EDI document model
+    l10n_co_payroll_line.py        # Earnings, deductions, provisions
+    l10n_co_payroll_cune.py        # CUNE computation
+    res_company.py                 # Payroll EDI company settings
+  data/
+    payroll_edi_data.xml           # DIAN payroll codes
+    ubl_templates/                 # Payroll XML templates
+  views/
+    payroll_document_views.xml
+  wizard/
+    payroll_import_wizard.py       # Import from external payroll system
+    payroll_send_wizard.py         # Batch DIAN submission
+  security/
+    ir.model.access.csv
+  tests/
+    __init__.py
+    test_cune.py
+    test_payroll_xml.py
+```
+
+#### 12.3 Payroll document model
+
+Since the codebase does not include a full `hr_payroll` module (only `hr` base with
+`hr.payroll.structure.type` stub), the design must support two scenarios:
+
+**Scenario A: Standalone payroll EDI (no hr_payroll installed)**
+- Payroll data imported from external payroll system (e.g., Novasoft, Siigo, Helisa,
+  World Office) via CSV/Excel upload or API
+- `l10n_co.payroll.document` stores the structured data needed for DIAN XML
+- Focus is on DIAN transmission and accounting entry generation, not payroll computation
+
+**Scenario B: Integrated with hr_payroll (if installed later)**
+- Extend `hr.payslip` with DIAN EDI fields
+- Auto-generate payroll EDI documents from confirmed payslips
+- Compute CUNE from payslip data
+
+**Recommended approach:** Build Scenario A first (standalone), with hooks for Scenario B.
+
+#### 12.4 Data model fields (`l10n_co.payroll.document`)
+
+- `employee_id` — Link to `hr.employee`
+- `period_start` / `period_end` — Pay period dates
+- `settlement_date` — Payment date
+- `document_number` — Sequential per company
+- `cune` — Computed CUNE hash
+- `state` — `draft`, `confirmed`, `sent`, `validated`, `rejected`
+- **Earnings lines:**
+  - Base salary, transportation subsidy, overtime (HED, HEN, HEDDF, HENDF, HRN, HRNDF),
+    commissions, bonuses, vacation pay, disability pay, maternity/paternity leave
+- **Deductions lines:**
+  - Health (EPS) — 4%, Pension (AFP) — 4%, Solidarity fund (FSP) — 1%+,
+    RteFte on salary, union dues, voluntary deductions, embargoes
+- **Provisions (employer cost):**
+  - Health (EPS) — 8.5%, Pension (AFP) — 12%, ARL (risk-based), SENA — 2%,
+    ICBF — 3%, Caja de Compensacion — 4%, Severance (cesantias) — 8.33%,
+    Severance interest — 1%, Prima — 8.33%, Vacation — 4.17%
+- `total_earnings`, `total_deductions`, `net_pay`
+- `xml_file` — Generated UBL XML (binary attachment)
+- `dian_response` — Validation response from DIAN
+
+#### 12.5 Key tasks
+
+- [ ] CUNE generation: SHA-384 hash per DIAN payroll technical annex with unit tests
+- [ ] UBL XML templates for:
+  - Nomina Individual (standard monthly payroll)
+  - Nomina Individual de Ajuste (adjustment/correction)
+  - Nota de Ajuste (for reversals)
+- [ ] Digital signature: reuse certificate infrastructure from Phase 2
+- [ ] DIAN submission: reuse web service client from Phase 3 (same endpoints, different
+  document type)
+- [ ] Import wizard: CSV/Excel upload mapping external payroll system columns to the
+  document model; support for:
+  - Novasoft export format
+  - Siigo export format
+  - Generic columnar CSV with configurable mapping
+- [ ] API endpoint for payroll import (Phase 10 integration):
+  ```
+  POST   /api/v1/payroll/documents           # Create payroll document
+  GET    /api/v1/payroll/documents/:id        # Retrieve with DIAN status
+  POST   /api/v1/payroll/documents/:id/send   # Submit to DIAN
+  GET    /api/v1/payroll/documents            # List/search (paginated)
+  ```
+- [ ] Accounting entry generation:
+  - Auto-create journal entries from confirmed payroll documents
+  - Map earnings to expense accounts (PUC 5105xx - Salarios, 5110xx - Horas extras, etc.)
+  - Map deductions to liability accounts (PUC 2370xx - Retenciones, 2380xx - Aportes)
+  - Map provisions to liability/expense accounts
+  - Reconcile with bank payments
+- [ ] Monthly batch processing:
+  - Bulk import, validate, sign, and submit payroll documents
+  - Progress tracking with error reporting
+  - Partial submission support (skip errored documents, continue with valid ones)
+- [ ] Payroll cost reports:
+  - Monthly payroll cost summary by department/cost center
+  - Social security contribution summary (PILA reconciliation)
+  - Annual salary and withholding summary per employee (for Certificado de Ingresos
+    y Retenciones)
+- [ ] iOS push notifications (Phase 9):
+  - "Payroll batch for January 2026 processed: 45 accepted, 2 rejected"
+  - "Payroll filing deadline in 5 days"
+
+#### 12.6 PILA integration considerations
+
+PILA (Planilla Integrada de Liquidacion de Aportes) is the unified social security
+payment form. While full PILA generation is outside the initial scope, the payroll
+document model should store sufficient data to:
+- Reconcile PILA payments against recorded provisions
+- Generate a PILA pre-validation summary
+- Flag discrepancies between payroll documents and PILA operator reports
+
 ---
 
 ## 4. Architecture Considerations
@@ -517,6 +1083,30 @@ l10n_co_reports (new)
 l10n_co_edi_dee (new, optional)
   ├── l10n_co_edi
   └── point_of_sale (for POS tickets)
+
+gpcb_theme (new)
+  └── web (base web framework)
+
+gpcb_api (new)
+  ├── l10n_co_edi (for invoice DIAN submission via API)
+  ├── account (core accounting)
+  └── api_doc (auto-generated API documentation)
+
+gpcb_report_scheduler (new)
+  ├── l10n_co_reports (report definitions)
+  ├── l10n_co_edi (DIAN filing integration)
+  └── mail (email delivery infrastructure)
+
+l10n_co_payroll_edi (new)
+  ├── l10n_co_edi (shared DIAN client, certificate, signing)
+  ├── hr (employee data)
+  └── account (journal entry generation)
+
+iOS App (external, not an Odoo module)
+  └── Consumes gpcb_api REST endpoints
+
+Custom Vet/Lab POS (external, separate project)
+  └── Consumes gpcb_api REST endpoints
 ```
 
 ### 4.2 Reference implementations
@@ -541,29 +1131,61 @@ The following existing modules provide proven patterns to follow:
 
 ### 4.4 Testing strategy
 
-- Unit tests for CUFE/CUDE computation with known test vectors
+- Unit tests for CUFE/CUDE/CUNE computation with known test vectors
 - XML validation against DIAN XSD schemas
 - Integration tests with DIAN test environment (habilitacion)
 - End-to-end tests: invoice creation -> XML generation -> signing -> mock DIAN response
 - Tax computation tests for all withholding scenarios
+- API endpoint tests: authentication, CRUD operations, error handling, rate limiting
+- iOS app: XCTest unit tests + XCUITest for critical user flows
+- Report scheduler: cron execution tests with mocked clock, delivery verification
+- Payroll EDI: import wizard tests with sample data from Novasoft/Siigo formats
+- Load testing: API endpoints under concurrent POS terminal simulation (50+ terminals)
 
 ---
 
 ## 5. Priority Matrix
 
-| Phase | Priority | Effort | Business Impact |
-|-------|----------|--------|-----------------|
-| Phase 1: Foundation | P0 | Medium | Enables all subsequent work |
-| Phase 2: XML & Signing | P0 | High | Required for legal invoicing |
-| Phase 3: DIAN Integration | P0 | High | Required for legal invoicing |
-| Phase 4: Reporting | P1 | Medium | Required for tax filing |
-| Phase 5: Fiscal Positions | P1 | Low-Medium | Reduces manual errors |
-| Phase 6: DEE | P1 | Medium | Required for POS and utilities |
-| Phase 7: Exogenous Info | P2 | Medium | Annual filing requirement |
+| Phase | Priority | Effort | Timeline | Business Impact |
+|-------|----------|--------|----------|-----------------|
+| Phase 1: Foundation | P0 | Medium | Wk 1-4 | Enables all subsequent work |
+| Phase 2: XML & Signing | P0 | High | Wk 5-8 | Required for legal invoicing |
+| Phase 3: DIAN Integration | P0 | High | Wk 9-12 | Required for legal invoicing |
+| Phase 4: Reporting | P1 | Medium | Wk 13-16 | Required for tax filing |
+| Phase 5: Fiscal Positions | P1 | Low-Med | Wk 17-18 | Reduces manual errors |
+| Phase 6: DEE | P1 | Medium | Wk 19-20 | Required for POS and utilities |
+| Phase 7: Exogenous Info | P2 | Medium | Wk 21-22 | Annual filing requirement |
+| Phase 8: UI Modernization | P2 | Med-High | Wk 23-28 | User experience, adoption |
+| Phase 9: iOS App | P2 | High | Wk 29-36 | Mobile access for management |
+| Phase 10: POS API (Vet/Lab) | P1 | High | Wk 29-34 | Enables Vet/Lab POS project |
+| Phase 11: Report Scheduling | P1 | Medium | Wk 35-38 | Filing automation, compliance |
+| Phase 12: Payroll EDI | P2 | High | Wk 39-42 | Nomina electronica compliance |
 
-**Phases 1-3 are mandatory for legal operation in Colombia.**
-Phases 4-5 are required for periodic compliance.
-Phases 6-7 can be deferred depending on business type.
+**Phases 1-3** are mandatory for legal invoicing in Colombia.
+**Phases 4-5** are required for periodic tax compliance.
+**Phase 10** (API) is critical to unblock the Vet/Lab POS project and can start in
+parallel with Phase 8 once DIAN integration (Phase 3) is complete.
+**Phases 9 and 10** share a dependency (the API) and should be developed concurrently.
+**Phase 11** amplifies the value of Phases 4 and 7 by automating their outputs.
+**Phase 12** can be deferred if payroll is handled externally, but the transmission
+obligation to DIAN remains.
+
+### Parallelization opportunities
+
+```
+Wk 1-12:  [== Phase 1 ==][== Phase 2 ==][== Phase 3 ==]
+Wk 13-18: [==== Phase 4 ====][Phase 5]
+Wk 19-22: [Phase 6][Phase 7]
+Wk 23-28: [====== Phase 8: UI ======]
+Wk 29-36: [======= Phase 9: iOS =======]
+Wk 29-34: [===== Phase 10: API =====]    <- parallel with iOS
+Wk 35-38:                         [== Phase 11: Scheduling ==]
+Wk 39-42:                                 [== Phase 12: Payroll ==]
+```
+
+Phases 9 and 10 are designed for concurrent development — the API module (Phase 10)
+serves both the iOS app and the Vet/Lab POS. The iOS team and API team can work from
+a shared contract (OpenAPI spec) defined at the start of Week 29.
 
 ---
 
@@ -577,6 +1199,14 @@ Phases 6-7 can be deferred depending on business type.
 | Tax rate changes mid-year | High | Low | UVT-based thresholds; configurable tax rates; migration scripts |
 | Constitutional challenge to Decreto 1474 | Medium | Low | Design tax rules to be easily toggled |
 | Performance impact of XML generation | Low | Medium | Async processing; batch submission support |
+| iOS App Store rejection | Medium | Medium | Follow Apple HIG strictly; submit early for review; have TestFlight fallback |
+| API security breach | Low | Critical | Rate limiting, audit logging, token rotation, penetration testing before launch |
+| POS offline/connectivity loss at vet clinic | High | High | API queues failed requests; POS stores locally and syncs; contingency numbering |
+| External payroll system format changes | Medium | Low | Configurable column mapping in import wizard; template versioning |
+| Concurrent POS terminal load on API | Medium | Medium | Load test at 50+ terminals; connection pooling; caching for catalog endpoints |
+| Apple deprecates iOS framework dependency | Low | Medium | Use only first-party Apple frameworks (SwiftUI, Swift Charts, URLSession) |
+| Report scheduling produces incorrect data | Medium | High | Data snapshot immutability; comparison against manual calculation; review workflow |
+| Scope creep on vet/lab domain fields | High | Medium | Strict `x_vet_` prefix convention; optional fields only; no core model changes |
 
 ---
 
@@ -584,13 +1214,17 @@ Phases 6-7 can be deferred depending on business type.
 
 | Date | Obligation | Relevance |
 |------|-----------|-----------|
-| Monthly (varies) | IVA return (bimonthly for most; monthly for large taxpayers) | Phase 4 |
-| Monthly | Withholding return (Formulario 350) | Phase 4 |
-| March 31, 2026 | Withholding certificates for TY 2025 | Phase 4 |
-| April-June 2026 | Annual income tax return (dates vary by NIT) | Phase 4 |
-| March-April 2026 | Exogenous information submission | Phase 7 |
-| Ongoing | Electronic invoice issuance per transaction | Phases 1-3 |
+| Monthly (varies) | IVA return (bimonthly for most; monthly for large taxpayers) | Phase 4, 11 |
+| Monthly | Withholding return (Formulario 350) | Phase 4, 11 |
+| Monthly | Nomina electronica transmission to DIAN | Phase 12 |
+| Monthly | PILA payment (social security contributions) | Phase 12 |
+| March 31, 2026 | Withholding certificates for TY 2025 | Phase 4, 11 |
+| March 31, 2026 | Certificado de Ingresos y Retenciones to employees | Phase 12 |
+| April-June 2026 | Annual income tax return (dates vary by NIT) | Phase 4, 11 |
+| March-April 2026 | Exogenous information submission | Phase 7, 11 |
+| Ongoing | Electronic invoice issuance per transaction | Phases 1-3, 10 |
 | Ongoing | Documento equivalente electronico | Phase 6 |
+| Ongoing | Vet/Lab POS invoice transmission via API | Phase 10 |
 | July 31, 2026 | Tax normalization (Decreto 1474) | Informational |
 
 ---
@@ -610,5 +1244,36 @@ Phases 6-7 can be deferred depending on business type.
 4. **Test with DIAN:** Register for DIAN's test environment (habilitacion) early to
    validate XML format and web service integration before production deployment.
 
-5. **Phased rollout:** Implement the 7 phases sequentially, with Phases 1-3 as the
-   minimum viable product for Colombian compliance.
+5. **Design the API early:** The `gpcb_api` module (Phase 10) is a shared dependency
+   for both the iOS app and the Vet/Lab POS project. Define the OpenAPI spec during
+   Phase 3 so the external POS team can begin integration work against mock endpoints.
+
+6. **Vet/Lab POS: keep domain fields optional and prefixed.** Animal patient data,
+   lab test metadata, and veterinarian references should be optional `x_vet_` custom
+   fields on invoice lines — not changes to core accounting models. This keeps the
+   system usable for any business while supporting vet/lab-specific reporting.
+
+7. **iOS app: start with reports, expand to actions.** The MVP should focus on read-only
+   report viewing and DIAN status monitoring. Transactional features (approve invoices,
+   trigger resubmission) can follow once the read path is proven.
+
+8. **Automate before you're asked.** Report scheduling (Phase 11) should be prioritized
+   right after the API — manual report generation and email delivery is the most common
+   source of missed deadlines. Automated scheduling with review workflows eliminates
+   this risk.
+
+9. **Payroll EDI: import-first, compute-later.** Since there is no full `hr_payroll`
+   module in the codebase, build the payroll EDI module as a standalone import-and-transmit
+   system first. If a full payroll computation module is added later, integrate it via
+   hooks already designed into the architecture.
+
+10. **UI modernization: theme first, then components.** A Bootstrap theme refresh
+    (Phase 8, Option A) delivers immediate visual improvement with minimal risk.
+    Component-level redesign should target the new Colombian-specific views (DIAN
+    dashboard, EDI status) which have no legacy design constraints.
+
+11. **Phased rollout:** Implement the 12 phases with the following grouping:
+    - **MVP (Weeks 1-12):** Phases 1-3 — legal electronic invoicing
+    - **Compliance (Weeks 13-22):** Phases 4-7 — reporting, filing, fiscal automation
+    - **Platform (Weeks 23-38):** Phases 8-11 — UI, mobile, API, automation
+    - **Payroll (Weeks 39-42):** Phase 12 — nomina electronica
