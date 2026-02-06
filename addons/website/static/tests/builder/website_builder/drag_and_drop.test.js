@@ -63,6 +63,21 @@ test("Drag and drop at the same position should not add a step in the history", 
     expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
 });
 
+test("Drag and drop at the same place a section with connection shape", async () => {
+    await setupWebsiteBuilderWithSnippet("s_banner_connected");
+
+    await contains(":iframe .s_banner_connected").click();
+    expect(".overlay .o_overlay_options .o_move_handle.o_draggable").toHaveCount(1);
+
+    const { moveTo, drop } = await contains(".o_overlay_options .o_move_handle").drag();
+    expect(":iframe .oe_drop_zone").toHaveCount(1);
+    await moveTo(":iframe .oe_drop_zone");
+    await drop(getDragMoveHelper());
+    expect(":iframe .oe_drop_zone").toHaveCount(0);
+    await waitForEndOfOperation();
+    expect(":iframe .s_banner_connected").toHaveCount(1);
+});
+
 test("Drag and drop a column toggles the grid mode", async () => {
     await setupWebsiteBuilderWithSnippet(["s_text_image", "s_three_columns"], {
         loadIframeBundles: true,
