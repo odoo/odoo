@@ -557,6 +557,34 @@ export class SelfOrder extends Reactive {
                         title: _t("NEW"),
                         data: orderlines,
                     },
+<<<<<<< 79fafc8d110fcee83019df3861b99cf9a498ce00
+||||||| 9752d27fdcaa0d915bdb3340baf545715efc06eb
+                    preset_name: order.preset_id?.name || "",
+                    preset_time: order.presetDateTime,
+                    config_name: this.config.name,
+                    table_number: this.currentTable?.table_number,
+                    floating_order_name: order.floating_order_name,
+=======
+                    preset_name: order.preset_id?.name || "",
+                    preset_time: order.presetDateTime,
+                    config_name: this.config.name,
+                    table_number: this.currentTable?.table_number,
+                    floating_order_name: order.floating_order_name,
+                    getLineAttributeNames: (line) => {
+                        const result = (line.attribute_value_ids ?? []).map((a) => a.name);
+                        if (!line.combo_parent_id) {
+                            return result;
+                        }
+                        return [
+                            ...new Set([
+                                ...(line.product_id.product_template_variant_value_ids ?? []).map(
+                                    (a) => a.name
+                                ),
+                                ...result,
+                            ]),
+                        ];
+                    },
+>>>>>>> df854ce2d53c1d7d77315b5e53e141d5ac69606c
                 };
                 const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
                     data: printingChanges,

@@ -6,8 +6,63 @@
             <div t-if="data.tracker" class="pos-receipt-title" style="font-size: 85%;">
                 <span>Tracker number: <t t-esc="data.tracker"/></span>
             </div>
+<<<<<<< 79fafc8d110fcee83019df3861b99cf9a498ce00
             <div t-if="data.name" class="pos-receipt-order-data"><t t-esc="data.name"/></div>
         </xpath>
+||||||| 9752d27fdcaa0d915bdb3340baf545715efc06eb
+            <hr style="border: none; border-top: 4px dashed black;"/>
+            <div class="pos-receipt-title">
+                NEW
+            </div>
+            <br />
+            <t t-foreach="changes.new" t-as="change" t-key="change_index">
+                <div class="product-details d-flex" t-att-class="{'ms-5': change.combo_parent_id}">
+                    <span class="product-quantity me-3 mb-1" t-esc="change.qty"/>
+                    <span class="product-name" t-esc="change.full_product_name"/>
+                </div>
+                <t t-if="change.customer_note">
+                    <div>
+                        NOTE
+                        <span class="pos-receipt-right-align">...</span>
+                    </div>
+                    <div><span class="pos-receipt-left-padding">--- <t t-esc="change.customer_note" /></span></div>
+                    <br/>
+                </t>
+            </t>
+            <br />
+            <br />
+    </div>
+=======
+            <hr style="border: none; border-top: 4px dashed black;"/>
+            <div class="pos-receipt-title">
+                NEW
+            </div>
+            <t t-foreach="changes.new" t-as="change" t-key="change_index">
+                <div class="product-details d-flex mx-1" t-att-class="{'ms-5': change.combo_parent_id}" style="font-size: 150%;">
+                    <span class="product-quantity me-3" t-esc="change.qty"/>
+                    <span class="product-name" t-esc="change.product_id.name"/>
+                </div>
+                <div class="mx-1" t-att-class="{'ms-5': change.combo_parent_id}" style="font-size: 150%;">
+                   <t t-set="attribute_names" t-value="changes.getLineAttributeNames(change)" />
+                   <div t-if="attribute_names.length" class="ms-5" style="font-size: 91%;">
+                        <div t-foreach="attribute_names" t-as="attr" t-key="attr_index">
+                            - <t t-esc="attr" />
+                        </div>
+                   </div>
+                </div>
+                <t t-if="change.customer_note">
+                    <div>
+                        NOTE
+                        <span class="pos-receipt-right-align">...</span>
+                    </div>
+                    <div><span class="pos-receipt-left-padding">--- <t t-esc="change.customer_note" /></span></div>
+                    <br/>
+                </t>
+            </t>
+            <br />
+            <br />
+        </div>
+>>>>>>> df854ce2d53c1d7d77315b5e53e141d5ac69606c
     </t>
 
 </templates>
