@@ -137,7 +137,7 @@ class SaleOrder(models.Model):
         if self.env.context.get('disable_project_task_generation'):
             return False
 
-        project_count = len(self.project_ids)
+        project_count = len(self.sudo().project_ids)
         if len(self.company_id) == 1:
             # All orders are in the same company
             self.order_line.sudo().with_company(self.company_id)._timesheet_service_generation()
@@ -155,7 +155,7 @@ class SaleOrder(models.Model):
                     if project == sol.project_id and (project_template := sol.product_template_id.project_template_id):
                         project.sudo().company_id = project_template.sudo().company_id
                         break
-        return len(self.project_ids) > project_count
+        return len(self.sudo().project_ids) > project_count
 
     def _tasks_ids_domain(self):
         return ['&', ('is_template', '=', False), ('project_id', '!=', False), '|', ('sale_line_id', 'in', self.order_line.ids), ('sale_order_id', 'in', self.ids), ('has_template_ancestor', '=', False)]
