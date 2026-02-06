@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_ram_webiste" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.ram.webiste</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='website']/block[@id='website_info_settings']" position="after">
+                <block
+                    title="RAM Website"
+                    id="ram_webiste_settings_block"
+                    groups="ram_webiste.group_ram_website_manager"
+                >
+                    <setting
+                        id="ram_webiste_google_reviews_setting"
+                        string="Google Reviews"
+                        help="Optionally import reviews from Google Places into your website reviews."
+                    >
+                        <div class="content-group">
+                            <div class="row mt8">
+                                <label class="col-lg-3 o_light_label" for="ram_google_places_api_key" string="API Key"/>
+                                <field name="ram_google_places_api_key" placeholder="AIza..."/>
+                            </div>
+                            <div class="row mt8">
+                                <label class="col-lg-3 o_light_label" for="ram_google_place_id" string="Place ID"/>
+                                <field name="ram_google_place_id" placeholder="ChIJ..."/>
+                            </div>
+                            <div class="row mt8">
+                                <label class="col-lg-3 o_light_label" for="ram_google_reviews_language" string="Language"/>
+                                <field name="ram_google_reviews_language" placeholder="en"/>
+                            </div>
+                            <div class="row mt8">
+                                <label class="col-lg-3 o_light_label" for="ram_google_reviews_max" string="Max Reviews"/>
+                                <field name="ram_google_reviews_max"/>
+                            </div>
+                            <div class="mt8">
+                                <button
+                                    type="object"
+                                    name="action_ram_sync_google_reviews"
+                                    string="Sync Google Reviews Now"
+                                    class="btn btn-primary"
+                                />
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

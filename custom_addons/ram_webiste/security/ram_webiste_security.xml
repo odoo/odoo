@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_ram_website_manager" model="res.groups">
+        <field name="name">RAM Website Manager</field>
+        <field name="sequence">30</field>
+        <field name="privilege_id" ref="website.res_groups_privilege_website"/>
+    </record>
+
+    <!-- Convenience: website designers automatically get access to RAM Website menus/config. -->
+    <record id="website.group_website_designer" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('ram_webiste.group_ram_website_manager'))]"/>
+    </record>
+
+    <!-- Convenience: system admins can always manage it too. -->
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('ram_webiste.group_ram_website_manager'))]"/>
+    </record>
+</odoo>

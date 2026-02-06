@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="ram_contact_page" name="RAM Contact">
+        <t t-call="website.layout">
+            <div id="wrap" class="ram-website">
+                <section class="ram-page-hero">
+                    <div class="container">
+                        <p class="ram-kicker ram-reveal">Contact</p>
+                        <h1 class="ram-page-hero__title ram-reveal">Let’s plan something delicious</h1>
+                        <p class="ram-page-hero__lead ram-reveal">
+                            Bookings, catering, party courses, or a simple question—send a message and we’ll get back to you.
+                        </p>
+                    </div>
+                </section>
+
+                <section class="ram-section">
+                    <div class="container">
+                        <div class="row g-4">
+                            <div class="col-12 col-lg-7">
+                                <div class="ram-card ram-reveal">
+                                    <div class="ram-card__title">Send a message</div>
+                                    <t t-if="error">
+                                        <div class="alert alert-warning mb-3" role="alert" t-esc="error"/>
+                                    </t>
+                                    <form method="post" action="/ram/contact" class="ram-form">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <div class="row g-3">
+                                            <div class="col-12 col-md-6">
+                                                <label class="form-label" for="ram_contact_name">Name *</label>
+                                                <input
+                                                    id="ram_contact_name"
+                                                    class="form-control"
+                                                    type="text"
+                                                    name="name"
+                                                    required="required"
+                                                    t-att-value="(values or {}).get('name', '')"
+                                                />
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <label class="form-label" for="ram_contact_phone">Phone</label>
+                                                <input
+                                                    id="ram_contact_phone"
+                                                    class="form-control"
+                                                    type="tel"
+                                                    name="phone"
+                                                    t-att-value="(values or {}).get('phone', '')"
+                                                />
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label" for="ram_contact_email">Email</label>
+                                                <input
+                                                    id="ram_contact_email"
+                                                    class="form-control"
+                                                    type="email"
+                                                    name="email"
+                                                    t-att-value="(values or {}).get('email', '')"
+                                                />
+                                                <div class="form-text">Please add either email or phone so we can reply.</div>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label" for="ram_contact_message">Message *</label>
+                                                <textarea
+                                                    id="ram_contact_message"
+                                                    class="form-control"
+                                                    rows="6"
+                                                    name="message"
+                                                    required="required"
+                                                ><t t-esc="(values or {}).get('message', '')"/></textarea>
+                                            </div>
+                                            <div class="col-12 d-flex justify-content-end">
+                                                <button class="btn ram-btn ram-btn--primary" type="submit">
+                                                    Send
+                                                    <i class="fa fa-paper-plane ms-1"/>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-lg-5">
+                                <div class="ram-card ram-reveal">
+                                    <div class="ram-card__title">Quick links</div>
+                                    <div class="ram-list">
+                                        <a class="ram-list__item" href="/#menu">
+                                            <i class="fa fa-cutlery"/>
+                                            Menu
+                                            <i class="fa fa-angle-right ms-auto"/>
+                                        </a>
+                                        <a class="ram-list__item" href="/#reviews">
+                                            <i class="fa fa-comment"/>
+                                            Reviews
+                                            <i class="fa fa-angle-right ms-auto"/>
+                                        </a>
+                                        <a class="ram-list__item" href="/#locations">
+                                            <i class="fa fa-map-marker"/>
+                                            Location
+                                            <i class="fa fa-angle-right ms-auto"/>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="ram-card ram-reveal mt-4">
+                                    <div class="ram-card__title">Tip</div>
+                                    <p class="mb-0 text-muted">
+                                        For admin users: contact submissions create CRM Leads (see <b>CRM → Leads</b>).
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="ram_contact_thank_you" name="RAM Contact Thank You">
+        <t t-call="website.layout">
+            <div id="wrap" class="ram-website">
+                <section class="ram-page-hero ram-page-hero--success">
+                    <div class="container">
+                        <p class="ram-kicker ram-reveal">Thank you</p>
+                        <h1 class="ram-page-hero__title ram-reveal">Message Received!</h1>
+                        <p class="ram-page-hero__lead ram-reveal">
+                            We’ll get back to you as soon as we can.
+                        </p>
+                        <div class="ram-hero__cta ram-reveal">
+                            <a class="btn ram-btn ram-btn--primary" href="/">Back to home</a>
+                            <a class="btn ram-btn ram-btn--ghost" href="/#menu">Explore menu</a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>

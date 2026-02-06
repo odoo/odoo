@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffb703"/>
+      <stop offset="0.6" stop-color="#fb7185"/>
+      <stop offset="1" stop-color="#60a5fa"/>
+    </linearGradient>
+    <filter id="noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncA type="table" tableValues="0 0.25"/>
+      </feComponentTransfer>
+    </filter>
+  </defs>
+  <rect width="1600" height="1100" fill="url(#g)"/>
+  <rect width="1600" height="1100" filter="url(#noise)" opacity="0.35"/>
+  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+        font-family="Georgia, serif" font-size="80" fill="rgba(0,0,0,0.42)">Gallery</text>
+  <text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle"
+        font-family="Arial, sans-serif" font-size="28" fill="rgba(0,0,0,0.42)">Upload food / interior photos</text>
+</svg>
+

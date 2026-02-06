@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_ram_locations" model="ir.actions.act_window">
+        <field name="name">Locations</field>
+        <field name="res_model">ram.website.location</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="action_ram_reviews" model="ir.actions.act_window">
+        <field name="name">Reviews</field>
+        <field name="res_model">ram.website.review</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="action_ram_gallery_images" model="ir.actions.act_window">
+        <field name="name">Gallery</field>
+        <field name="res_model">ram.website.gallery.image</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem
+        id="menu_ram_website_root"
+        name="RAM Website"
+        sequence="15"
+        groups="ram_webiste.group_ram_website_manager"
+    />
+
+    <menuitem
+        id="menu_ram_website_config"
+        name="Configuration"
+        parent="ram_webiste.menu_ram_website_root"
+        sequence="10"
+        groups="ram_webiste.group_ram_website_manager"
+    />
+
+    <menuitem
+        id="menu_ram_website_locations"
+        name="Locations"
+        parent="ram_webiste.menu_ram_website_config"
+        action="ram_webiste.action_ram_locations"
+        sequence="10"
+        groups="ram_webiste.group_ram_website_manager"
+    />
+
+    <menuitem
+        id="menu_ram_website_reviews"
+        name="Reviews"
+        parent="ram_webiste.menu_ram_website_config"
+        action="ram_webiste.action_ram_reviews"
+        sequence="20"
+        groups="ram_webiste.group_ram_website_manager"
+    />
+
+    <menuitem
+        id="menu_ram_website_gallery"
+        name="Gallery"
+        parent="ram_webiste.menu_ram_website_config"
+        action="ram_webiste.action_ram_gallery_images"
+        sequence="30"
+        groups="ram_webiste.group_ram_website_manager"
+    />
+</odoo>

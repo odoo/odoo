@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ram_review_tree" model="ir.ui.view">
+        <field name="name">ram.website.review.tree</field>
+        <field name="model">ram.website.review</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="author_name"/>
+                <field name="rating"/>
+                <field name="source"/>
+                <field name="is_published"/>
+                <field name="website_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ram_review_form" model="ir.ui.view">
+        <field name="name">ram.website.review.form</field>
+        <field name="model">ram.website.review</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="website_publish_button" type="object" class="oe_stat_button" icon="fa-globe">
+                        <field name="is_published" widget="website_publish_button"/>
+                    </button>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="author_name"/>
+                        <h1><field name="author_name" placeholder="Customer name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="website_id"/>
+                            <field name="source"/>
+                            <field name="rating"/>
+                        </group>
+                        <group>
+                            <field name="review_time"/>
+                            <field name="review_url"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="content" placeholder="Review content..." nolabel="1"/>
+                    </group>
+                    <group string="External">
+                        <field name="external_id" readonly="1"/>
+                        <field name="author_photo_url"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

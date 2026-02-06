@@ -1,0 +1,35 @@
+{
+    "name": "RAM Restaurant Website",
+    "version": "19.0.1.0.0",
+    "category": "Website",
+    "summary": "Modern, animated restaurant website for RAM (Odoo 19 Community).",
+    "depends": [
+        "base_setup",
+        "website",
+        "website_sale",
+        "crm",
+    ],
+    "data": [
+        "security/ram_webiste_security.xml",
+        "security/ir.model.access.csv",
+        "views/ram_backend_menus.xml",
+        "views/product_template_views.xml",
+        "views/ram_location_views.xml",
+        "views/ram_review_views.xml",
+        "views/ram_gallery_views.xml",
+        "views/res_config_settings_views.xml",
+        "views/ram_website_templates.xml",
+        "views/ram_contact_templates.xml",
+        "data/ram_default_data.xml",
+        "data/ir_cron.xml",
+    ],
+    "assets": {
+        "web.assets_frontend": [
+            "ram_webiste/static/src/scss/ram_website.scss",
+            "ram_webiste/static/src/js/ram_website.js",
+        ],
+    },
+    "application": True,
+    "installable": True,
+    "license": "LGPL-3",
+}

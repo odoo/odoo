@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_ram_webiste_sync_google_reviews" model="ir.cron">
+        <field name="name">RAM Website: Sync Google Reviews</field>
+        <field name="interval_number">6</field>
+        <field name="interval_type">hours</field>
+        <field name="model_id" ref="model_ram_website_review"/>
+        <field name="code">model.cron_sync_google_reviews()</field>
+        <field name="state">code</field>
+        <field name="active">True</field>
+    </record>
+</odoo>
+

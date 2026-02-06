@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_order_api.DeliveryToggle" owl="1">
+        <div class="delivery-toggle-button btn btn-light d-flex align-items-center" 
+             t-att-class="{ 'text-success': state.isActive, 'text-danger': !state.isActive }"
+             t-on-click="toggleDelivery">
+            <i class="fa fa-motorcycle me-2" role="img" aria-label="Delivery Toggle" title="Delivery Toggle"/>
+            <span class="fw-bold">
+                <t t-out="state.isActive ? 'Delivery: ON' : 'Delivery: OFF'"/>
+            </span>
+        </div>
+    </t>
+
+    <t t-name="pos_order_api.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('navbar-menu')]" position="inside">
+            <DeliveryToggle />
+        </xpath>
+    </t>
+</templates>

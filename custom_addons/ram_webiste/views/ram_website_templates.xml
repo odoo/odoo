@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Shared bits -->
+    <template id="ram_star_rating" name="RAM Star Rating">
+        <t t-set="rating" t-value="int(rating or 0)"/>
+        <span class="ram-stars" t-att-title="('%s/5' % rating) if rating else ''">
+            <t t-foreach="[1,2,3,4,5]" t-as="i">
+                <i t-att-class="'fa fa-star' if rating &gt;= i else 'fa fa-star-o'"/>
+            </t>
+        </span>
+    </template>
+
+    <!-- Homepage -->
+    <template id="ram_homepage" inherit_id="website.homepage" name="RAM Homepage" priority="120">
+        <xpath expr="//div[@id='wrap']" position="replace">
+            <t t-set="website_id" t-value="request.website.id"/>
+
+            <t t-set="locations" t-value="request.env['ram.website.location'].sudo().search([('is_published', '=', True), '|', ('website_id', '=', False), ('website_id', '=', website_id)], order='sequence asc, id desc', limit=3)"/>
+            <t t-set="main_location" t-value="locations and locations[0] or False"/>
+
+            <t t-set="featured_products" t-value="request.env['product.template'].sudo().search([('sale_ok', '=', True), ('ram_available_on_website_menu', '=', True), ('ram_is_recommended', '=', True), ('is_published', '=', True), '|', ('website_id', '=', False), ('website_id', '=', website_id)], order='website_sequence asc, id desc', limit=6)"/>
+            <t t-set="menu_products" t-value="request.env['product.template'].sudo().search([('sale_ok', '=', True), ('ram_available_on_website_menu', '=', True), ('is_published', '=', True), '|', ('website_id', '=', False), ('website_id', '=', website_id)], order='website_sequence asc, id desc', limit=24)"/>
+
+            <t t-set="reviews" t-value="request.env['ram.website.review'].sudo().search([('is_published', '=', True), '|', ('website_id', '=', False), ('website_id', '=', website_id)], order='sequence asc, id desc', limit=12)"/>
+            <t t-set="gallery_images" t-value="request.env['ram.website.gallery.image'].sudo().search([('is_published', '=', True), '|', ('website_id', '=', False), ('website_id', '=', website_id)], order='sequence asc, id desc', limit=12)"/>
+
+            <div id="wrap" class="oe_structure ram-website">
+                <!-- Hero -->
+                <section class="ram-hero" id="top">
+                    <div class="ram-hero__bg">
+                        <span class="ram-blob ram-blob--a"/>
+                        <span class="ram-blob ram-blob--b"/>
+                        <span class="ram-blob ram-blob--c"/>
+                        <span class="ram-grid"/>
+                    </div>
+                    <div class="container">
+                        <div class="row align-items-center g-4">
+                            <div class="col-lg-7">
+                                <p class="ram-kicker ram-reveal">Indian Restaurant RAM</p>
+                                <h1 class="ram-hero__title ram-reveal">
+                                    Authentic Flavors, <span class="ram-accent">Bold Spices</span>.
+                                </h1>
+                                <p class="ram-hero__subtitle ram-reveal">
+                                    A modern take on classic Indian &amp; Nepali comfort food—crafted for curry lovers,
+                                    share‑plates, and late-night cravings.
+                                </p>
+                                <div class="ram-hero__cta ram-reveal">
+                                    <a class="btn ram-btn ram-btn--primary" href="#menu">Explore Menu</a>
+                                    <a class="btn ram-btn ram-btn--ghost" href="#contact">Contact / Book</a>
+                                </div>
+
+                                <div class="ram-pills ram-reveal" role="list">
+                                    <div class="ram-pill" role="listitem">
+                                        <i class="fa fa-clock-o ram-pill__icon"/>
+                                        <div class="ram-pill__text">
+                                            <div class="ram-pill__label">Hours</div>
+                                            <div class="ram-pill__value" t-if="main_location and main_location.opening_hours" t-esc="main_location.opening_hours"/>
+                                            <div class="ram-pill__value" t-else="">Open daily (see below)</div>
+                                        </div>
+                                    </div>
+                                    <div class="ram-pill" role="listitem">
+                                        <i class="fa fa-map-marker ram-pill__icon"/>
+                                        <div class="ram-pill__text">
+                                            <div class="ram-pill__label">Location</div>
+                                            <div class="ram-pill__value" t-if="main_location and main_location.address" t-esc="main_location.address"/>
+                                            <div class="ram-pill__value" t-else="">Nishikasai • Tokyo</div>
+                                        </div>
+                                    </div>
+                                    <div class="ram-pill" role="listitem">
+                                        <i class="fa fa-cutlery ram-pill__icon"/>
+                                        <div class="ram-pill__text">
+                                            <div class="ram-pill__label">Takeout</div>
+                                            <div class="ram-pill__value">Order ahead • Fast pickup</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-5">
+                                <div class="ram-hero-card ram-reveal">
+                                    <div class="ram-hero-card__top">
+                                        <div class="ram-badge">Chef’s Picks</div>
+                                        <div class="ram-hero-card__hint">Today’s vibe</div>
+                                    </div>
+                                    <div class="ram-hero-card__body">
+                                        <t t-if="featured_products">
+                                            <t t-foreach="featured_products[:3]" t-as="p">
+                                                <a class="ram-mini-dish" t-att-href="p.website_url or '#'">
+                                                    <img class="ram-mini-dish__img" t-att-src="website.image_url(p, 'image_512')" alt=""/>
+                                                    <div class="ram-mini-dish__meta">
+                                                        <div class="ram-mini-dish__name" t-esc="p.name"/>
+                                                        <div class="ram-mini-dish__sub">
+                                                            <t t-if="p.ram_spice_level and p.ram_spice_level != 'none'">
+                                                                <span class="ram-chip ram-chip--spice" t-esc="dict(p._fields['ram_spice_level'].selection).get(p.ram_spice_level)"/>
+                                                            </t>
+                                                            <span class="ram-chip">Menu</span>
+                                                        </div>
+                                                    </div>
+                                                    <i class="fa fa-angle-right ram-mini-dish__arrow"/>
+                                                </a>
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            <div class="ram-empty">
+                                                <div class="ram-empty__title">Add Featured Dishes</div>
+                                                <div class="ram-empty__text">
+                                                    Go to <b>Website → eCommerce → Products</b> and enable
+                                                    <b>Available on Website Menu</b> and <b>Recommended</b>.
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </div>
+                                    <div class="ram-hero-card__bottom">
+                                        <a class="ram-link" href="#reviews">See reviews</a>
+                                        <span class="ram-dot"/>
+                                        <a class="ram-link" href="#gallery">Gallery</a>
+                                        <span class="ram-dot"/>
+                                        <a class="ram-link" href="#locations">Find us</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Menu -->
+                <section class="ram-section" id="menu">
+                    <div class="container">
+                        <div class="ram-section__head ram-reveal">
+                            <div class="ram-section__kicker">Menu</div>
+                            <h2 class="ram-section__title">Curry classics, street snacks, and cozy favorites</h2>
+                            <p class="ram-section__lead">Flag dishes in Odoo to curate what shows up here—no code changes needed.</p>
+                        </div>
+
+                        <div class="row g-4 mt-2">
+                            <t t-foreach="menu_products" t-as="p">
+                                <div class="col-12 col-sm-6 col-lg-4">
+                                    <a class="ram-dish ram-reveal" t-att-href="p.website_url or '#'">
+                                        <div class="ram-dish__media">
+                                            <img class="ram-dish__img" t-att-src="website.image_url(p, 'image_512')" alt=""/>
+                                            <div class="ram-dish__shine"/>
+                                        </div>
+                                        <div class="ram-dish__body">
+                                            <div class="ram-dish__title" t-esc="p.name"/>
+                                            <div class="ram-dish__meta">
+                                                <t t-if="p.ram_spice_level and p.ram_spice_level != 'none'">
+                                                    <span class="ram-chip ram-chip--spice" t-esc="dict(p._fields['ram_spice_level'].selection).get(p.ram_spice_level)"/>
+                                                </t>
+                                                <span class="ram-chip" t-if="p.ram_is_recommended">Recommended</span>
+                                            </div>
+                                            <div class="ram-dish__desc" t-if="p.description_sale" t-esc="p.description_sale"/>
+                                            <div class="ram-dish__cta">
+                                                <span class="ram-dish__ctaText">View dish</span>
+                                                <i class="fa fa-long-arrow-right"/>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </t>
+                        </div>
+
+                        <div class="ram-callout ram-reveal" t-if="not menu_products">
+                            <div class="ram-callout__title">Your menu is empty.</div>
+                            <div class="ram-callout__text">
+                                Create products and publish them to the website, then tick
+                                <b>Available on Website Menu</b>.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Gallery -->
+                <section class="ram-section ram-section--alt" id="gallery">
+                    <div class="container">
+                        <div class="ram-section__head ram-reveal">
+                            <div class="ram-section__kicker">Gallery</div>
+                            <h2 class="ram-section__title">A little peek inside RAM</h2>
+                            <p class="ram-section__lead">Upload photos (food, drinks, interiors, parties) and we’ll lay them out beautifully.</p>
+                        </div>
+
+                        <div class="ram-gallery" t-if="gallery_images">
+                            <t t-foreach="gallery_images" t-as="g">
+                                <button
+                                    class="ram-gallery__item ram-reveal"
+                                    type="button"
+                                    t-att-data-full="website.image_url(g, 'image_1920')"
+                                    t-att-data-caption="g.caption or g.name"
+                                >
+                                    <img class="ram-gallery__img" t-att-src="website.image_url(g, 'image_1024')" alt=""/>
+                                    <span class="ram-gallery__overlay">
+                                        <span class="ram-gallery__label" t-esc="g.caption or g.name"/>
+                                    </span>
+                                </button>
+                            </t>
+                        </div>
+                        <div class="ram-callout ram-reveal" t-else="">
+                            <div class="ram-callout__title">Add your first photos.</div>
+                            <div class="ram-callout__text">Go to <b>RAM Website → Configuration → Gallery</b>.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Reviews -->
+                <section class="ram-section" id="reviews">
+                    <div class="container">
+                        <div class="ram-section__head ram-reveal">
+                            <div class="ram-section__kicker">Reviews</div>
+                            <h2 class="ram-section__title">People love RAM. We love them back.</h2>
+                            <p class="ram-section__lead">
+                                Pull in Google Reviews (optional) or write your own testimonials from the backend.
+                            </p>
+                        </div>
+
+                        <div class="ram-slider ram-reveal" data-ram-slider="reviews">
+                            <div class="ram-slider__track" id="ram_reviews_track">
+                                <t t-foreach="reviews" t-as="r">
+                                    <article class="ram-review">
+                                        <header class="ram-review__head">
+                                            <div class="ram-review__author">
+                                                <div class="ram-review__name" t-esc="r.author_name"/>
+                                                <div class="ram-review__meta">
+                                                    <t t-call="ram_webiste.ram_star_rating">
+                                                        <t t-set="rating" t-value="r.rating"/>
+                                                    </t>
+                                                    <span class="ram-review__source" t-if="r.source == 'google'">Google</span>
+                                                    <span class="ram-review__source" t-else="">Customer</span>
+                                                </div>
+                                            </div>
+                                            <a class="ram-review__link" t-if="r.review_url" t-att-href="r.review_url" target="_blank" rel="noopener">
+                                                View
+                                                <i class="fa fa-external-link"/>
+                                            </a>
+                                        </header>
+                                        <p class="ram-review__text" t-esc="r.content"/>
+                                    </article>
+                                </t>
+                                <t t-if="not reviews">
+                                    <article class="ram-review">
+                                        <header class="ram-review__head">
+                                            <div class="ram-review__author">
+                                                <div class="ram-review__name">No reviews yet</div>
+                                                <div class="ram-review__meta">
+                                                    <t t-call="ram_webiste.ram_star_rating">
+                                                        <t t-set="rating" t-value="5"/>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </header>
+                                        <p class="ram-review__text">Add reviews from <b>RAM Website → Configuration → Reviews</b>, or sync from Google Places.</p>
+                                    </article>
+                                </t>
+                            </div>
+                            <div class="ram-slider__controls">
+                                <button type="button" class="ram-slider__btn" data-ram-slider-prev="reviews" aria-label="Previous">
+                                    <i class="fa fa-angle-left"/>
+                                </button>
+                                <button type="button" class="ram-slider__btn" data-ram-slider-next="reviews" aria-label="Next">
+                                    <i class="fa fa-angle-right"/>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="ram-note ram-reveal">
+                            Want Google Reviews? Configure it in <b>Settings → Website → RAM Website</b>.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Locations -->
+                <section class="ram-section ram-section--alt" id="locations">
+                    <div class="container">
+                        <div class="ram-section__head ram-reveal">
+                            <div class="ram-section__kicker">Visit</div>
+                            <h2 class="ram-section__title">Find your way to RAM</h2>
+                            <p class="ram-section__lead">Great food tastes better when it’s easy to get to.</p>
+                        </div>
+
+                        <div class="row g-4">
+                            <t t-foreach="locations" t-as="loc">
+                                <div class="col-12 col-lg-4">
+                                    <div class="ram-location ram-reveal">
+                                        <div class="ram-location__media" t-if="loc.image_1920">
+                                            <img t-att-src="website.image_url(loc, 'image_1024')" alt=""/>
+                                        </div>
+                                        <div class="ram-location__body">
+                                            <div class="ram-location__name" t-esc="loc.name"/>
+                                            <div class="ram-location__line" t-if="loc.address">
+                                                <i class="fa fa-map-marker"/>
+                                                <span t-esc="loc.address"/>
+                                            </div>
+                                            <div class="ram-location__line" t-if="loc.opening_hours">
+                                                <i class="fa fa-clock-o"/>
+                                                <span t-esc="loc.opening_hours"/>
+                                            </div>
+                                            <div class="ram-location__line" t-if="loc.phone">
+                                                <i class="fa fa-phone"/>
+                                                <a t-att-href="'tel:%s' % loc.phone" class="o_force_ltr" t-esc="loc.phone"/>
+                                            </div>
+                                            <div class="ram-location__cta">
+                                                <a class="ram-btn ram-btn--ghost btn" t-if="loc.google_maps_url" t-att-href="loc.google_maps_url" target="_blank" rel="noopener">
+                                                    Open in Maps
+                                                    <i class="fa fa-external-link"/>
+                                                </a>
+                                                <a class="ram-btn ram-btn--primary btn" href="#contact">Book / Ask</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+
+                        <div class="ram-callout ram-reveal" t-if="not locations">
+                            <div class="ram-callout__title">Add your location.</div>
+                            <div class="ram-callout__text">Go to <b>RAM Website → Configuration → Locations</b>.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Social -->
+                <section class="ram-section" id="social">
+                    <div class="container">
+                        <div class="ram-section__head ram-reveal">
+                            <div class="ram-section__kicker">Social</div>
+                            <h2 class="ram-section__title">Follow the spice trail</h2>
+                            <p class="ram-section__lead">Drop your social links in Website settings (or keep these placeholders).</p>
+                        </div>
+
+                        <div class="ram-social ram-reveal">
+                            <a class="ram-social__btn" href="/website/social/facebook" target="_blank" rel="noopener">
+                                <i class="fa fa-facebook"/>
+                                Facebook
+                            </a>
+                            <a class="ram-social__btn" href="/website/social/instagram" target="_blank" rel="noopener">
+                                <i class="fa fa-instagram"/>
+                                Instagram
+                            </a>
+                            <a class="ram-social__btn" href="/website/social/youtube" target="_blank" rel="noopener">
+                                <i class="fa fa-youtube-play"/>
+                                YouTube
+                            </a>
+                            <a class="ram-social__btn" href="/website/social/google" target="_blank" rel="noopener">
+                                <i class="fa fa-google"/>
+                                Google
+                            </a>
+                        </div>
+
+                        <div class="row g-4 mt-1">
+                            <div class="col-12 col-lg-6">
+                                <div class="ram-embed ram-reveal">
+                                    <div class="ram-embed__title">Facebook</div>
+                                    <div class="ram-embed__body">
+                                        <div class="text-muted small">
+                                            Replace this embed with your page plugin if you have one.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                <div class="ram-embed ram-reveal">
+                                    <div class="ram-embed__title">Instagram</div>
+                                    <div class="ram-embed__body">
+                                        <div class="text-muted small">
+                                            Embed your feed here (or keep it lightweight with just links).
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Contact CTA -->
+                <section class="ram-section ram-contact-cta" id="contact">
+                    <div class="container">
+                        <div class="ram-contact-cta__card ram-reveal">
+                            <div class="ram-contact-cta__text">
+                                <h2 class="ram-contact-cta__title">Ready to eat?</h2>
+                                <p class="ram-contact-cta__lead">Questions, bookings, catering, party courses—send us a message.</p>
+                            </div>
+                            <div class="ram-contact-cta__actions">
+                                <a class="btn ram-btn ram-btn--primary" href="/ram/contact">Open Contact Form</a>
+                                <a class="btn ram-btn ram-btn--ghost" href="#top">Back to top</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Gallery Lightbox -->
+                <div class="ram-lightbox" id="ram_lightbox" aria-hidden="true">
+                    <button class="ram-lightbox__close" type="button" aria-label="Close">
+                        <i class="fa fa-times"/>
+                    </button>
+                    <div class="ram-lightbox__inner" role="dialog" aria-modal="true">
+                        <img class="ram-lightbox__img" alt=""/>
+                        <div class="ram-lightbox__caption"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Footer (override the default website footer) -->
+    <template id="ram_footer" inherit_id="website.layout" name="RAM Footer" priority="130">
+        <xpath expr="//div[@id='footer']" position="replace">
+            <t t-set="website" t-value="request.website"/>
+            <t t-set="company" t-value="request.env.company.sudo()"/>
+            <div id="footer" class="ram-footer oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
+                <section class="ram-footer__top">
+                    <div class="container">
+                        <div class="row g-4">
+                            <div class="col-12 col-lg-4">
+                                <div class="ram-footer__brand">
+                                    <div class="ram-footer__logo">RAM</div>
+                                    <div class="ram-footer__tag">Indian &amp; Nepali Restaurant</div>
+                                </div>
+                                <p class="ram-footer__blurb">
+                                    Bold spices, warm hospitality, and a menu made for sharing—thank you for supporting local.
+                                </p>
+                                <div class="ram-footer__social">
+                                    <a href="/website/social/facebook" class="ram-footer__socialBtn" aria-label="Facebook"><i class="fa fa-facebook"/></a>
+                                    <a href="/website/social/instagram" class="ram-footer__socialBtn" aria-label="Instagram"><i class="fa fa-instagram"/></a>
+                                    <a href="/website/social/google" class="ram-footer__socialBtn" aria-label="Google"><i class="fa fa-google"/></a>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-2">
+                                <div class="ram-footer__title">Explore</div>
+                                <ul class="ram-footer__links">
+                                    <li><a href="/#menu">Menu</a></li>
+                                    <li><a href="/#gallery">Gallery</a></li>
+                                    <li><a href="/#reviews">Reviews</a></li>
+                                    <li><a href="/#locations">Locations</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-6 col-lg-2">
+                                <div class="ram-footer__title">Help</div>
+                                <ul class="ram-footer__links">
+                                    <li><a href="/ram/contact">Contact</a></li>
+                                    <li><a href="/contactus">Odoo Contact</a></li>
+                                    <li><a href="/#social">Social</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-12 col-lg-4">
+                                <div class="ram-footer__title">Contact</div>
+                                <div class="ram-footer__contact">
+                                    <div class="ram-footer__contactLine" t-if="company.email">
+                                        <i class="fa fa-envelope"/>
+                                        <a t-att-href="'mailto:%s' % company.email" t-esc="company.email"/>
+                                    </div>
+                                    <div class="ram-footer__contactLine" t-if="company.phone">
+                                        <i class="fa fa-phone"/>
+                                        <a t-att-href="'tel:%s' % company.phone" class="o_force_ltr" t-esc="company.phone"/>
+                                    </div>
+                                    <div class="ram-footer__contactLine">
+                                        <i class="fa fa-map-marker"/>
+                                        <span t-esc="company.partner_id.contact_address or ''"/>
+                                    </div>
+                                </div>
+                                <div class="ram-footer__cta">
+                                    <a class="btn ram-btn ram-btn--primary" href="/ram/contact">Book / Ask</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="ram-footer__bottom">
+                    <div class="container">
+                        <div class="ram-footer__bottomRow">
+                            <div class="ram-footer__copy">
+                                <span t-esc="company.name"/> • <span>Powered by Odoo</span>
+                            </div>
+                            <div class="ram-footer__tinyLinks">
+                                <a href="/#top">Top</a>
+                                <span class="ram-dot"/>
+                                <a href="/web/login">Login</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </xpath>
+    </template>
+</odoo>
