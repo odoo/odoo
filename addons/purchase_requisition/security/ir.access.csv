@@ -1,0 +1,7 @@
+id,name,model_id,group_id/id,operation,domain
+access_purchase_requisition,purchase.requisition,purchase.requisition,purchase.group_purchase_user,rwcd,
+access_purchase_requisition_manager,purchase.requisition manager,purchase.requisition,purchase.group_purchase_manager,r,
+purchase_requisition_comp_rule,Purchase Requisition multi-company,purchase.requisition,,rwcd,"[('company_id', 'in', company_ids)]"
+access_purchase_requisition_line_purchase_user,purchase.requisition.line,purchase.requisition.line,purchase.group_purchase_user,rwcd,
+access_purchase_requisition_line_manager,purchase.requisition.line manager,purchase.requisition.line,purchase.group_purchase_manager,r,
+purchase_requisition_line_comp_rule,Purchase requisition Line multi-company,purchase.requisition.line,,rwcd,"[('company_id', 'in', company_ids)]"

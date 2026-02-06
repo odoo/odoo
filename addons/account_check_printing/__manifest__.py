@@ -11,12 +11,12 @@ The check settings are located in the accounting journals configuration page.
     """,
     'depends': ['account'],
     'data': [
-        'security/ir.model.access.csv',
         'data/account_check_printing_data.xml',
         'views/account_journal_views.xml',
         'views/account_payment_views.xml',
         'views/res_config_settings_views.xml',
-        'wizard/print_prenumbered_checks_views.xml'
+        'wizard/print_prenumbered_checks_views.xml',
+        'security/ir.access.csv',
     ],
     'post_init_hook': 'create_check_sequence_on_bank_journals',
     'author': 'Odoo S.A.',

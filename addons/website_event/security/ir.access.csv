@@ -1,0 +1,36 @@
+id,name,model_id,group_id/id,operation,domain
+event_event_public,Event: public/portal: published read,event.event,base.group_public,r,"[('website_published', '=', True)]"
+event_event_public_1,Event: public/portal: published read,event.event,base.group_portal,r,"[('website_published', '=', True)]"
+access_event_event_employee,event.event,event.event,base.group_user,r,
+ir_rule_event_event_ticket_public,Event Ticket: public/portal: published read,event.event.ticket,base.group_public,r,"[('event_id.website_published', '=', True)]"
+ir_rule_event_event_ticket_public_1,Event Ticket: public/portal: published read,event.event.ticket,base.group_portal,r,"[('event_id.website_published', '=', True)]"
+access_event_event_ticket_employee,event.event.ticket,event.event.ticket,base.group_user,r,
+ir_rule_event_slot_public,Event Slot: public/portal: published read,event.slot,base.group_public,r,"[('event_id.website_published', '=', True)]"
+ir_rule_event_slot_public_1,Event Slot: public/portal: published read,event.slot,base.group_portal,r,"[('event_id.website_published', '=', True)]"
+access_event_event_slot_employee,event.slot,event.slot,base.group_user,r,
+access_event_tag_category_public,event.tag.category,event.tag.category,base.group_public,r,
+access_event_tag_category_portal,event.tag.category,event.tag.category,base.group_portal,r,
+access_event_tag_category_employee,event.tag.category,event.tag.category,base.group_user,r,
+ir_rule_event_tag_public,Event Tag: public/portal: color = published and category = published,event.tag,base.group_public,r,"[('category_id.website_published', '=', True), ('color', '!=', False), ('color', '!=', 0)]"
+ir_rule_event_tag_public_1,Event Tag: public/portal: color = published and category = published,event.tag,base.group_portal,r,"[('category_id.website_published', '=', True), ('color', '!=', False), ('color', '!=', 0)]"
+access_event_tag_employee,event.tag,event.tag,base.group_user,r,
+access_website_event_menu_public,website.event.menu,website.event.menu,base.group_public,r,
+access_website_event_menu_portal,website.event.menu,website.event.menu,base.group_portal,r,
+access_website_event_menu_employee,website.event.menu,website.event.menu,base.group_user,r,
+access_website_event_menu_user,website.event.menu.user,website.event.menu,event.group_event_user,rwcd,
+access_website_visitor_user,website.visitor.user,website.visitor,event.group_event_registration_desk,rw,
+ir_rule_event_question_published,Event Question: not event groups: event published read,event.question,base.group_public,r,"[('event_ids', 'any', [('is_published', '=', True)])]"
+ir_rule_event_question_published_1,Event Question: not event groups: event published read,event.question,base.group_portal,r,"[('event_ids', 'any', [('is_published', '=', True)])]"
+ir_rule_event_question_published_2,Event Question: not event groups: event published read,event.question,base.group_user,r,"[('event_ids', 'any', [('is_published', '=', True)])]"
+ir_rule_event_question_published_3,Event Question: not event groups: event published read,event.question,event.group_event_manager,r,"[('event_ids', 'any', [('is_published', '=', True)])]"
+ir_rule_event_question_event_user,Event Question: event user: read all,event.question,event.group_event_manager,r,
+ir_rule_event_question_published_4,Event Question: not event groups: event published read,event.question,event.group_event_user,r,"[('event_ids', 'any', [('is_published', '=', True)])]"
+ir_rule_event_question_event_user_1,Event Question: event user: read all,event.question,event.group_event_user,r,
+ir_rule_event_question_event_user_2,Event Question: event user: read all,event.question,event.group_event_registration_desk,r,
+ir_rule_event_question_answer_published,Event Question Answer: not event groups: event published read,event.question.answer,base.group_public,r,"[('question_id.event_ids', 'any', [('is_published', '=', True)])]"
+ir_rule_event_question_answer_published_1,Event Question Answer: not event groups: event published read,event.question.answer,base.group_portal,r,"[('question_id.event_ids', 'any', [('is_published', '=', True)])]"
+ir_rule_event_question_answer_published_2,Event Question Answer: not event groups: event published read,event.question.answer,base.group_user,r,"[('question_id.event_ids', 'any', [('is_published', '=', True)])]"
+ir_rule_event_question_answer_published_3,Event Question Answer: not event groups: event published read,event.question.answer,event.group_event_registration_desk,r,"[('question_id.event_ids', 'any', [('is_published', '=', True)])]"
+ir_rule_event_question_answer_event_user,Event Question Answer: event user: read all,event.question.answer,event.group_event_registration_desk,r,
+ir_rule_event_question_answer_published_4,Event Question Answer: not event groups: event published read,event.question.answer,event.group_event_user,r,"[('question_id.event_ids', 'any', [('is_published', '=', True)])]"
+ir_rule_event_question_answer_event_user_1,Event Question Answer: event user: read all,event.question.answer,event.group_event_user,r,

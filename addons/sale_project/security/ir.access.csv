@@ -1,0 +1,10 @@
+id,name,model_id,group_id/id,operation,domain
+sale_order_line_rule_project_user,Project User Sales Orders Line,sale.order.line,project.group_project_manager,r,"[('state', '=', 'sale'), ('is_service', '=', True), '|', ('project_id','!=', False), ('task_id','!=', False)]"
+sale_order_line_rule_project_manager,Project Manager Sales Orders Line,sale.order.line,project.group_project_manager,r,"[('state', '=', 'sale'), ('is_service', '=', True), '|', ('project_id','!=', False), ('task_id','!=', False)]"
+sale_order_line_rule_project_user_1,Project User Sales Orders Line,sale.order.line,project.group_project_user,r,"[('state', '=', 'sale'), ('is_service', '=', True), '|', ('project_id','!=', False), ('task_id','!=', False)]"
+sale_order_rule_project_user,Project User User Orders,sale.order,project.group_project_manager,r,"[
+            ('order_line', 'any', [('state', '=', 'sale'), ('is_service', '=', True), '|', ('project_id','!=', False), ('task_id','!=', False)]),
+        ]"
+sale_order_rule_project_user_1,Project User User Orders,sale.order,project.group_project_user,r,"[
+            ('order_line', 'any', [('state', '=', 'sale'), ('is_service', '=', True), '|', ('project_id','!=', False), ('task_id','!=', False)]),
+        ]"

@@ -1,0 +1,10 @@
+id,name,model_id,group_id/id,operation,domain
+access_account_analytic_account,access_account_analytic_account,account.analytic.account,analytic.group_analytic_accounting,rwcd,
+analytic_comp_rule,Analytic multi company rule,account.analytic.account,,rwcd,"['|',('company_id','=',False),('company_id', 'parent_of', company_ids)]"
+analytic_line_analytic,Analytic line for Analytic Accounting,account.analytic.line,analytic.group_analytic_accounting,rwcd,
+analytic_line_comp_rule,Analytic line multi company rule,account.analytic.line,,rwcd,"[('company_id', 'in', company_ids)]"
+access_account_analytic_plan,access_account_analytic_plan,account.analytic.plan,analytic.group_analytic_accounting,rwcd,
+access_account_analytic_applicability,access_account_analytic_applicability,account.analytic.applicability,analytic.group_analytic_accounting,rwcd,
+analytic_applicability_comp_rule,Analytic applicability multi company rule,account.analytic.applicability,,rwcd,"['|',('company_id','=',False),('company_id', 'parent_of', company_ids)]"
+access_account_analytic_distribution_model,access_account_analytic_distribution_model,account.analytic.distribution.model,analytic.group_analytic_accounting,rwcd,
+analytic_distribution_model_comp_rule,Analytic distribution model multi company rule,account.analytic.distribution.model,,rwcd,"['|',('company_id','=',False),('company_id', 'parent_of', company_ids)]"

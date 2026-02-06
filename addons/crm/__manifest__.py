@@ -22,7 +22,6 @@
     ],
     'data': [
         'security/crm_security.xml',
-        'security/ir.model.access.csv',
 
         'data/crm_lead_merge_template.xml',
         'data/crm_lead_prediction_data.xml',
@@ -59,6 +58,7 @@
         'views/crm_menu_views.xml',
         'views/crm_helper_templates.xml',
         'views/crm_lead_templates.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/crm_team_demo.xml',

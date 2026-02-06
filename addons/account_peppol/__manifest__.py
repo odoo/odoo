@@ -29,7 +29,6 @@
         'data/cron.xml',
         'data/mail_templates_email_layouts.xml',
         'data/res_partner_data.xml',
-        'security/ir.model.access.csv',
         'views/account_move_views.xml',
         'views/account_portal_templates.xml',
         'views/peppol_authentication_views.xml',
@@ -37,6 +36,7 @@
         'views/res_config_settings_views.xml',
         'wizard/peppol_registration_views.xml',
         'wizard/peppol_config_wizard.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/account_peppol_demo.xml',

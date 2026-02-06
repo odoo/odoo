@@ -1,0 +1,102 @@
+id,name,model_id,group_id/id,operation,domain
+mail_group_rule_read_all,Mail Group: Access only public and joined groups,mail.group,base.group_public,r,"[
+            '|',
+            '|',
+            '|',
+                ('moderator_ids', 'in', user.id),
+                ('access_mode', '=', 'public'),
+                '&',
+                    ('access_mode', '=', 'groups'),
+                    ('access_group_id', 'in', user.all_group_ids.ids),
+                '&',
+                    ('access_mode', '=', 'members'),
+                    ('member_partner_ids', 'in', [user.partner_id.id]),
+            ]
+        "
+mail_group_rule_read_all_1,Mail Group: Access only public and joined groups,mail.group,base.group_portal,r,"[
+            '|',
+            '|',
+            '|',
+                ('moderator_ids', 'in', user.id),
+                ('access_mode', '=', 'public'),
+                '&',
+                    ('access_mode', '=', 'groups'),
+                    ('access_group_id', 'in', user.all_group_ids.ids),
+                '&',
+                    ('access_mode', '=', 'members'),
+                    ('member_partner_ids', 'in', [user.partner_id.id]),
+            ]
+        "
+access_mail_group_user,access_mail_group_user,mail.group,base.group_user,c,
+mail_group_rule_read_all_2,Mail Group: Access only public and joined groups,mail.group,base.group_user,r,"[
+            '|',
+            '|',
+            '|',
+                ('moderator_ids', 'in', user.id),
+                ('access_mode', '=', 'public'),
+                '&',
+                    ('access_mode', '=', 'groups'),
+                    ('access_group_id', 'in', user.all_group_ids.ids),
+                '&',
+                    ('access_mode', '=', 'members'),
+                    ('member_partner_ids', 'in', [user.partner_id.id]),
+            ]
+        "
+mail_group_rule_write_all,Mail Group: Moderator have write access on their group,mail.group,base.group_user,wd,"[('moderator_ids', 'in', user.id)]"
+mail_group_rule_administrator,Mail Group: Administrator have access to all mail group,mail.group,mail_group.group_mail_group_manager,rwcd,
+mail_group_member_rule_user,Mail Group Member: Members are accessible only by moderators,mail.group.member,base.group_user,rwcd,"[('mail_group_id.moderator_ids', 'in', user.id)]"
+mail_group_member_rule_administrator,Mail Group Member: Administrator have access to all members,mail.group.member,mail_group.group_mail_group_manager,rwcd,
+mail_group_message_rule_public,Mail Group Message: Only accepted message are accessible,mail.group.message,base.group_public,r,"[
+            '&',
+                ('moderation_status', '=', 'accepted'),
+                '|',
+                '|',
+                '|',
+                    ('mail_group_id.moderator_ids', 'in', user.id),
+                    ('mail_group_id.access_mode', '=', 'public'),
+                    '&',
+                        ('mail_group_id.access_mode', '=', 'groups'),
+                        ('mail_group_id.access_group_id', 'in', user.all_group_ids.ids),
+                    '&',
+                        ('mail_group_id.access_mode', '=', 'members'),
+                        ('mail_group_id.member_partner_ids', 'in', [user.partner_id.id]),
+            ]
+        "
+mail_group_message_rule_public_1,Mail Group Message: Only accepted message are accessible,mail.group.message,base.group_portal,r,"[
+            '&',
+                ('moderation_status', '=', 'accepted'),
+                '|',
+                '|',
+                '|',
+                    ('mail_group_id.moderator_ids', 'in', user.id),
+                    ('mail_group_id.access_mode', '=', 'public'),
+                    '&',
+                        ('mail_group_id.access_mode', '=', 'groups'),
+                        ('mail_group_id.access_group_id', 'in', user.all_group_ids.ids),
+                    '&',
+                        ('mail_group_id.access_mode', '=', 'members'),
+                        ('mail_group_id.member_partner_ids', 'in', [user.partner_id.id]),
+            ]
+        "
+mail_group_message_rule_user,Mail Group Message: Non-accepted messages are accessible only by moderators,mail.group.message,base.group_user,rwcd,"[
+                '&',
+                    '|',
+                        ('moderation_status', '=', 'accepted'),
+                        ('mail_group_id.moderator_ids', 'in', user.id),
+                    '|',
+                    '|',
+                    '|',
+                        ('mail_group_id.moderator_ids', 'in', user.id),
+                        ('mail_group_id.access_mode', '=', 'public'),
+                        '&',
+                            ('mail_group_id.access_mode', '=', 'groups'),
+                            ('mail_group_id.access_group_id', 'in', user.all_group_ids.ids),
+                        '&',
+                            ('mail_group_id.access_mode', '=', 'members'),
+                            ('mail_group_id.member_partner_ids', 'in', [user.partner_id.id]),
+            ]
+        "
+mail_group_message_rule_administrator,Mail Group Message: Administrator have access to all messages,mail.group.message,mail_group.group_mail_group_manager,rwcd,
+mail_group_moderation_rule_user,Mail Group Moderation: Moderation rules are accessible only by moderators,mail.group.moderation,base.group_user,rwcd,"[('mail_group_id.moderator_ids', 'in', user.id)]"
+mail_group_moderation_rule_administrator,Mail Group Moderation: Administrator have access to all moderation rules,mail.group.moderation,mail_group.group_mail_group_manager,rwcd,
+access_mail_group_message_reject,access_mail_group_message_reject,mail.group.message.reject,base.group_user,rwcd,

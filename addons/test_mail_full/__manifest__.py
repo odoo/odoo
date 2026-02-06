@@ -24,9 +24,8 @@ real applications. """,
     ],
     'data': [
         'data/mail_message_subtype_data.xml',
-        'security/ir.model.access.csv',
-        'security/ir_rule_data.xml',
         'views/test_portal_template.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_unit_tests': [

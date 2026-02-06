@@ -1,0 +1,4 @@
+id,name,model_id,group_id/id,operation,domain
+access_base_document_layout,access.base.document.layout,base.document.layout,base.group_system,rwc,
+res_users_settings_embedded_action_rule_user,res.users.settings.embedded.action: access their own entries,res.users.settings.embedded.action,base.group_user,rwcd,"[('user_setting_id.user_id', '=', user.id)]"
+res_users_settings_embedded_action_rule_admin,Administrators can access all User Settings embedded actions,res.users.settings.embedded.action,base.group_system,rwcd,

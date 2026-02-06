@@ -18,8 +18,7 @@ Publish your customers as business references on your website to attract new pot
     'data': [
         'views/website_customer_templates.xml',
         'views/res_partner_views.xml',
-        'security/ir.model.access.csv',
-        'security/ir_rule.xml',
+        'security/ir.access.csv',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

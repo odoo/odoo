@@ -9,8 +9,6 @@
         'hr',
     ],
     'data': [
-        'security/hr_work_entry_security.xml',
-        'security/ir.model.access.csv',
         'data/hr_work_entry_type_data.xml',
         'data/ir_cron_data.xml',
         'wizard/hr_work_entry_regeneration_wizard_views.xml',
@@ -20,6 +18,7 @@
         'views/hr_contract_template_views.xml',
         'views/resource_calendar_views.xml',
         'wizard/hr_departure_wizard_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/hr_work_entry_demo.xml',

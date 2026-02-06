@@ -1,0 +1,7 @@
+id,name,model_id,group_id/id,operation,domain
+rule_auth_passkey_key_user,Passkeys: Users can only access own Passkeys,auth.passkey.key,base.group_user,rw,"[('create_uid', '=', user.id)]"
+rule_auth_passkey_key_user_1,Passkeys: Users can only access own Passkeys,auth.passkey.key,base.group_portal,rw,"[('create_uid', '=', user.id)]"
+rule_auth_passkey_key_user_2,Passkeys: Users can only access own Passkeys,auth.passkey.key,base.group_erp_manager,rwd,"[('create_uid', '=', user.id)]"
+rule_auth_passkey_key_admin,Passkeys: Admins can view and delete other peoples Passkeys,auth.passkey.key,base.group_erp_manager,rd,
+rule_auth_passkey_key_create_portal,Passkeys: Users can only modify their own Passkey creation requests,auth.passkey.key.create,base.group_user,rwcd,"[('create_uid', '=', user.id)]"
+rule_auth_passkey_key_create_portal_1,Passkeys: Users can only modify their own Passkey creation requests,auth.passkey.key.create,base.group_portal,rwcd,"[('create_uid', '=', user.id)]"

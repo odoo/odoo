@@ -24,7 +24,6 @@ Also provides Nemhandel registration and invoice sending throught the Odoo Acces
     ],
     'auto_install': ['account'],
     'data': [
-        'security/ir.model.access.csv',
         'data/account_tax_report_data.xml',
         'data/account.account.tag.csv',
         'data/cron.xml',
@@ -35,6 +34,7 @@ Also provides Nemhandel registration and invoice sending throught the Odoo Acces
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
         'wizard/nemhandel_registration_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/demo_company.xml',

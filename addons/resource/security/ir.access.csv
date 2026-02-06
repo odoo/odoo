@@ -1,0 +1,15 @@
+id,name,model_id,group_id/id,operation,domain
+access_resource_calendar_user,resource.calendar.user,resource.calendar,base.group_user,r,
+access_resource_calendar_system,resource.calendar.system,resource.calendar,base.group_system,rwcd,
+access_resource_calendar_attendance_user,resource.calendar.attendance.user,resource.calendar.attendance,base.group_user,r,
+access_resource_calendar_attendance_system,resource.calendar.attendance.system,resource.calendar.attendance,base.group_system,rwcd,
+access_resource_resource,resource.resource,resource.resource,base.group_system,r,
+access_resource_resource_all,resource.resource all,resource.resource,base.group_user,r,
+resource_resource_multi_company,resource.resource multi-company,resource.resource,,rwcd,"[('company_id', 'in', company_ids + [False])]"
+resource_calendar_leaves_rule_group_user_create,resource.calendar.leaves: employee reads own or global,resource.calendar.leaves,base.group_user,r,"['|', ('resource_id', '=', False), ('resource_id.user_id', 'in', [False, user.id])]"
+resource_calendar_leaves_rule_group_user_modify,resource.calendar.leaves: employee modifies own,resource.calendar.leaves,base.group_user,wcd,"[('resource_id', '!=', False), ('resource_id.user_id', 'in', [False, user.id])]"
+resource_calendar_leaves_rule_group_user_create_1,resource.calendar.leaves: employee reads own or global,resource.calendar.leaves,base.group_system,r,"['|', ('resource_id', '=', False), ('resource_id.user_id', 'in', [False, user.id])]"
+resource_calendar_leaves_rule_group_user_modify_1,resource.calendar.leaves: employee modifies own,resource.calendar.leaves,base.group_system,wcd,"[('resource_id', '!=', False), ('resource_id.user_id', 'in', [False, user.id])]"
+resource_calendar_leaves_rule_group_admin_modify,resource.calendar.leaves: admin modifies global,resource.calendar.leaves,base.group_system,wcd,"[('resource_id', '=', False)]"
+resource_calendar_leaves_rule_group_admin_modify_1,resource.calendar.leaves: admin modifies global,resource.calendar.leaves,base.group_erp_manager,wcd,"[('resource_id', '=', False)]"
+resource_calendar_leaves_rule_multi_company,resource.calendar.leaves: multi-company rule,resource.calendar.leaves,,rwcd,"[('company_id', 'in', company_ids + [False])]"

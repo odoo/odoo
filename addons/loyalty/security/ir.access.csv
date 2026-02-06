@@ -1,0 +1,6 @@
+id,name,model_id,group_id/id,operation,domain
+sale_loyalty_program_company_rule,Loyalty program multi company rule,loyalty.program,,rwcd,"['|', ('company_id', 'in', company_ids + [False]), ('company_id', 'parent_of', company_ids)]"
+sale_loyalty_card_company_rule,Loyalty card multi company rule,loyalty.card,,rwcd,"['|', ('company_id', 'in', company_ids + [False]), ('company_id', 'parent_of', company_ids)]"
+loyalty_history_company_rule,Loyalty history multi company rule,loyalty.history,,rwcd,"['|', ('company_id', 'in', company_ids + [False]), ('company_id', 'parent_of', company_ids)]"
+sale_loyalty_rule_company_rule,Loyalty rule multi company rule,loyalty.rule,,rwcd,"['|', ('company_id', 'in', company_ids + [False]), ('company_id', 'parent_of', company_ids)]"
+sale_loyalty_reward_company_rule,Loyalty reward multi company rule,loyalty.reward,,rwcd,"['|', ('company_id', 'in', company_ids + [False]), ('company_id', 'parent_of', company_ids)]"

@@ -1,0 +1,12 @@
+id,name,model_id,group_id/id,operation,domain
+access_project_task_type_user,project.task.type.user,project.task.type,base.group_user,r,
+task_type_own_write_rule,Project/Task Type: write own stages,project.task.type,base.group_user,wcd,"[('user_id', '=', user.id)]"
+task_type_own_write_rule_1,Project/Task Type: write own stages,project.task.type,project.group_project_manager,wcd,"[('user_id', '=', user.id)]"
+task_type_own_write_rule_2,Project/Task Type: write own stages,project.task.type,project.group_project_user,wcd,"[('user_id', '=', user.id)]"
+task_edition_rule_internal,Project/Task: employees: Full access to own private task only,project.task,base.group_user,rwcd,"[('project_id', '=', False), ('user_ids', 'in', user.id), ('parent_id', '=', False)]"
+task_edition_rule_internal_1,Project/Task: employees: Full access to own private task only,project.task,project.group_project_user,rwcd,"[('project_id', '=', False), ('user_ids', 'in', user.id), ('parent_id', '=', False)]"
+access_project_tags_user,project.project_tags_user,project.tags,base.group_user,r,
+tags_own_write_rule,Project/tags employees: Full access to own tags only,project.tags,base.group_user,wcd,"[('create_uid', '=', user.id),('project_ids', '=', False)]"
+tags_own_write_rule_1,Project/tags employees: Full access to own tags only,project.tags,project.group_project_manager,wcd,"[('create_uid', '=', user.id),('project_ids', '=', False)]"
+tags_manager_rule,Project/tags: manager sees all,project.tags,project.group_project_manager,rwcd,
+access_mail_activity_todo_create,mail.activity.todo.create,mail.activity.todo.create,base.group_user,rwc,

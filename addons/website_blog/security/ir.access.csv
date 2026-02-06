@@ -1,0 +1,17 @@
+id,name,model_id,group_id/id,operation,domain
+website_blog_public,Blog: active only,blog.blog,base.group_public,r,"[('active', '=', True)]"
+website_blog_public_1,Blog: active only,blog.blog,base.group_portal,r,"[('active', '=', True)]"
+blog_blog_employee,blog.blog,blog.blog,base.group_user,r,
+blog_blog_manager,blog.blog,blog.blog,website_blog.group_website_blog_manager,rwcd,
+website_blog_post_public,Blog Post: public: published only,blog.post,base.group_public,r,"[('website_published', '=', True)]"
+website_blog_post_public_1,Blog Post: public: published only,blog.post,base.group_portal,r,"[('website_published', '=', True)]"
+blog_post_employee,blog.post,blog.post,base.group_user,r,
+blog_post_manager,blog.post,blog.post,website_blog.group_website_blog_manager,rwcd,
+blog_tag_public,blog.tag,blog.tag,base.group_public,r,
+blog_tag_portal,blog.tag,blog.tag,base.group_portal,r,
+blog_tag_employee,blog.tag,blog.tag,base.group_user,r,
+blog_tag_manager,blog.tag,blog.tag,website_blog.group_website_blog_manager,rwcd,
+blog_tag_category_public,blog.tag.category,blog.tag.category,base.group_public,r,
+blog_tag_category_portal,blog.tag.category,blog.tag.category,base.group_portal,r,
+blog_tag_category_employee,blog.tag.category,blog.tag.category,base.group_user,r,
+blog_tag_category_manager,blog.tag.category,blog.tag.category,website_blog.group_website_blog_manager,rwcd,

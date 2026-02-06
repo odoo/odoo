@@ -7,9 +7,9 @@
     'sequence': 70,
     'depends': ['purchase_requisition', 'purchase_stock'],
     'data': [
-        'security/ir.model.access.csv',
         'data/purchase_requisition_stock_data.xml',
         'views/purchase_requisition_views.xml',
+        'security/ir.access.csv',
     ],
     'auto_install': True,
     'author': 'Odoo S.A.',

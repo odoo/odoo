@@ -1,0 +1,71 @@
+id,name,model_id,group_id/id,operation,domain
+website_slides_forum_signed_in_user,Website forum: Signed In user can only access to forum related to courses,forum.forum,website_slides.group_website_slides_officer,rwc,"[
+            '&',
+                ('slide_channel_ids.website_published', '=', True),
+                '|',
+                    ('slide_channel_ids.visibility', 'in', ('public','connected')),
+                    ('slide_channel_ids.is_member', '=', True)
+            ]
+        "
+website_slides_forum_website_slides_officer,Website forum: website slides officer can access all forum,forum.forum,website_slides.group_website_slides_officer,rwc,
+website_slides_forum_public,Website forum: User can only access to forum related to public courses,forum.forum,base.group_public,r,"[('slide_channel_ids.website_published', '=', True), ('slide_channel_ids.visibility', '=', 'public')]"
+website_slides_forum_signed_in_user_1,Website forum: Signed In user can only access to forum related to courses,forum.forum,base.group_portal,r,"[
+            '&',
+                ('slide_channel_ids.website_published', '=', True),
+                '|',
+                    ('slide_channel_ids.visibility', 'in', ('public','connected')),
+                    ('slide_channel_ids.is_member', '=', True)
+            ]
+        "
+website_slides_forum_signed_in_user_2,Website forum: Signed In user can only access to forum related to courses,forum.forum,base.group_user,r,"[
+            '&',
+                ('slide_channel_ids.website_published', '=', True),
+                '|',
+                    ('slide_channel_ids.visibility', 'in', ('public','connected')),
+                    ('slide_channel_ids.is_member', '=', True)
+            ]
+        "
+website_slides_forum_signed_in_user_3,Website forum: Signed In user can only access to forum related to courses,forum.forum,base.group_erp_manager,rwcd,"[
+            '&',
+                ('slide_channel_ids.website_published', '=', True),
+                '|',
+                    ('slide_channel_ids.visibility', 'in', ('public','connected')),
+                    ('slide_channel_ids.is_member', '=', True)
+            ]
+        "
+website_slides_forum_public_post,Website forum post: User can only access to post linked to forum related to followed courses,forum.post,base.group_public,r,"[('forum_id.slide_channel_ids.website_published', '=', True), ('forum_id.slide_channel_ids.visibility', '=', 'public')]"
+website_slides_forum_post_signed_in_user,Website forum: Signed In user can only access to post linked to forum related to courses,forum.post,base.group_portal,rwcd,"[
+            '&',
+                ('forum_id.slide_channel_ids.website_published', '=', True),
+                '|',
+                    ('forum_id.slide_channel_ids.visibility', 'in', ('public','connected')),
+                    ('forum_id.slide_channel_ids.is_member', '=', True)
+            ]
+        "
+website_slides_forum_post_signed_in_user_1,Website forum: Signed In user can only access to post linked to forum related to courses,forum.post,base.group_user,rwcd,"[
+            '&',
+                ('forum_id.slide_channel_ids.website_published', '=', True),
+                '|',
+                    ('forum_id.slide_channel_ids.visibility', 'in', ('public','connected')),
+                    ('forum_id.slide_channel_ids.is_member', '=', True)
+            ]
+        "
+website_slides_forum_website_slides_officer_post,Website forum post: website slides officer can access all post,forum.post,website_slides.group_website_slides_officer,rwcd,
+website_slides_forum_public_tag,Website slides forum tag: Public User can only access to tag linked to forum related to public courses,forum.tag,base.group_public,rc,"[('forum_id.slide_channel_ids.website_published', '=', True), ('forum_id.slide_channel_ids.visibility', '=', 'public')]"
+website_slides_forum_tag_signed_in_user,Website forum: Signed In users can access tags linked to public or connected users-visibility courses,forum.tag,base.group_portal,rc,"[
+            '&',
+                ('forum_id.slide_channel_ids.website_published', '=', True),
+                '|',
+                    ('forum_id.slide_channel_ids.visibility', 'in', ('public','connected')),
+                    ('forum_id.slide_channel_ids.is_member', '=', True)
+            ]
+        "
+website_slides_forum_tag_signed_in_user_1,Website forum: Signed In users can access tags linked to public or connected users-visibility courses,forum.tag,base.group_user,rwcd,"[
+            '&',
+                ('forum_id.slide_channel_ids.website_published', '=', True),
+                '|',
+                    ('forum_id.slide_channel_ids.visibility', 'in', ('public','connected')),
+                    ('forum_id.slide_channel_ids.is_member', '=', True)
+            ]
+        "
+website_slides_forum_website_slides_officer_tag,Website slides forum tag: website slides officer can access all tag,forum.tag,website_slides.group_website_slides_officer,rwcd,

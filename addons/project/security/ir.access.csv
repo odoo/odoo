@@ -1,0 +1,214 @@
+id,name,model_id,group_id/id,operation,domain
+project_public_members_rule,Project: employees: following required for follower-only projects,project.project,project.group_project_user,r,"['|',
+                                        ('privacy_visibility', 'in', ['employees', 'portal']),
+                                        ('message_partner_ids', 'in', [user.partner_id.id])
+                                    ]"
+project_project_manager_rule,Project: project manager: see all,project.project,project.group_project_manager,rwcd,
+project_public_members_rule_1,Project: employees: following required for follower-only projects,project.project,project.group_project_manager,rwcd,"['|',
+                                        ('privacy_visibility', 'in', ['employees', 'portal']),
+                                        ('message_partner_ids', 'in', [user.partner_id.id])
+                                    ]"
+project_public_members_rule_2,Project: employees: following required for follower-only projects,project.project,base.group_user,r,"['|',
+                                        ('privacy_visibility', 'in', ['employees', 'portal']),
+                                        ('message_partner_ids', 'in', [user.partner_id.id])
+                                    ]"
+project_project_rule_portal,Project: portal users: portal and following,project.project,base.group_portal,r,"[
+            '&',
+                ('privacy_visibility', 'in', ['invited_users', 'portal']),
+                ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+        ]"
+project_comp_rule,Project: multi-company,project.project,,rwcd,"[('company_id', 'in', company_ids + [False])]"
+access_project_project_stage,project.project_stage,project.project.stage,base.group_user,r,
+access_project_project_stage_manager,project.project_stage.manager,project.project.stage,project.group_project_manager,rwcd,
+project_project_stage_rule,Project Stage: multi-company,project.project.stage,,rwcd,"[('company_id', 'in', company_ids + [False])]"
+access_project_task_type_user,project.task.type.user,project.task.type,base.group_user,r,
+access_project_task_type_project_user,project.task.type.project.user,project.task.type,project.group_project_user,r,
+task_type_own_write_rule,Project/Task Type: write own stages,project.task.type,project.group_project_user,wcd,"[('user_id', '=', user.id)]"
+task_type_manager_rule,Project/Task Type: manager sees all,project.task.type,project.group_project_manager,rwcd,
+task_type_own_write_rule_1,Project/Task Type: write own stages,project.task.type,project.group_project_manager,wcd,"[('user_id', '=', user.id)]"
+access_project_task_type_portal,task_type_portal,project.task.type,base.group_portal,r,
+task_type_visibility_rule,Project/Task Type: see own or unowned stages,project.task.type,,rwcd,"[('user_id', 'in', (False, user.id))]"
+task_visibility_rule,Project/Task: employees: follow required for follower-only projects,project.task,project.group_project_user,r,"[
+            '|',
+                '&',
+                    ('project_id', '!=', False),
+                    '|',
+                        ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+                        ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                '|',
+                    ('message_partner_ids', 'in', [user.partner_id.id]),
+                    # to subscribe check access to the record, follower is not enough at creation
+                    ('user_ids', 'in', user.id)
+        ]"
+task_visibility_rule_project_user,Project/Task: project users: follow required for follower-only projects,project.task,project.group_project_user,wcd,"[
+            '|',
+                '&',
+                    ('project_id', '!=', False),
+                    '|',
+                        ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+                        ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                '|',
+                    ('message_partner_ids', 'in', [user.partner_id.id]),
+                    # to subscribe check access to the record, follower is not enough at creation
+                    ('user_ids', 'in', user.id)
+        ]"
+ir_rule_private_task,Project: See private tasks,project.task,project.group_project_user,rwcd,"[
+            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+            '|', '|', ('project_id', '!=', False),
+                      ('parent_id', '!=', False),
+                 ('user_ids', 'in', user.id),
+        ]"
+task_visibility_rule_1,Project/Task: employees: follow required for follower-only projects,project.task,base.group_user,r,"[
+            '|',
+                '&',
+                    ('project_id', '!=', False),
+                    '|',
+                        ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+                        ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                '|',
+                    ('message_partner_ids', 'in', [user.partner_id.id]),
+                    # to subscribe check access to the record, follower is not enough at creation
+                    ('user_ids', 'in', user.id)
+        ]"
+project_task_rule_portal,Project/Task: portal users: can only see a task if he's a collaborator of the project and a follower of the task,project.task,base.group_portal,r,"[
+            ('project_id.privacy_visibility', 'in', ['invited_users', 'portal']),
+            ('has_template_ancestor', '=', False),
+            ('active', '=', True),
+            '|',
+                ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+                ('project_id.collaborator_ids', 'any', [
+                    ('partner_id', '=', user.partner_id.id),
+                    ('limited_access', '=', False),
+                ]),
+        ]"
+task_comp_rule,Project/Task: multi-company,project.task,,rwcd,"[('company_id', 'in', company_ids + [False])]"
+project_manager_all_project_tasks_rule,Project/Task: project manager: see all tasks linked to a project or its own tasks,project.task,project.group_project_manager,rwcd,"[
+            '|', ('project_id', '!=', False),
+                 ('user_ids', 'in', user.id),
+        ]"
+report_project_task_user_rule,Tasks Analysis: project visibility User,report.project.task.user,project.group_project_manager,r,"[
+        '|',
+            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+            '|',
+                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                '|',
+                    ('task_id.message_partner_ids', 'in', [user.partner_id.id]),
+                    ('user_ids', 'in', user.id),
+        ]"
+report_project_task_manager_rule,Tasks Analysis: project visibility Manager,report.project.task.user,project.group_project_manager,r,
+report_project_task_user_rule_1,Tasks Analysis: project visibility User,report.project.task.user,project.group_project_user,r,"[
+        '|',
+            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+            '|',
+                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                '|',
+                    ('task_id.message_partner_ids', 'in', [user.partner_id.id]),
+                    ('user_ids', 'in', user.id),
+        ]"
+report_project_task_user_report_comp_rule,Task Analysis multi-company,report.project.task.user,,rwcd,"[('company_id', 'in', company_ids + [False])]"
+access_partner_task_user,base.res.partner user,res.partner,project.group_project_user,r,
+access_resource_calendar,project.resource_calendar user,resource.calendar,project.group_project_user,r,
+access_resource_calendar_attendance,project.resource_calendar_attendance user,resource.calendar.attendance,project.group_project_user,r,
+access_resource_calendar_leaves_user,resource.calendar.leaves user,resource.calendar.leaves,project.group_project_user,rwcd,
+access_project_tags_all,project.project_tags_all,project.tags,base.group_user,r,
+access_project_tags_manager,project.project_tags_manager,project.tags,project.group_project_manager,rwcd,
+access_project_tags_portal,project_tags_portal,project.tags,base.group_portal,r,
+access_mail_activity_type_project_manager,mail.activity.type.project.manager,mail.activity.type,project.group_project_manager,rwcd,
+access_account_analytic_account_user,account.analytic.account,account.analytic.account,project.group_project_user,r,
+access_account_analytic_account_manager,account.analytic.account,account.analytic.account,project.group_project_manager,rwcd,
+access_account_analytic_line_project,account.analytic.line project,account.analytic.line,project.group_project_manager,rwcd,
+access_project_task_type_delete_wizard,project.task.type.delete.wizard,project.task.type.delete.wizard,project.group_project_manager,rwcd,
+access_project_project_stage_delete_wizard,project.project.stage.delete.wizard,project.project.stage.delete.wizard,project.group_project_manager,rwcd,
+access_project_task_recurrence,project.task.recurrence,project.task.recurrence,project.group_project_user,rwcd,
+burndown_chart_project_user_rule,Burndown chart: project visibility User,project.task.burndown.chart.report,project.group_project_manager,rwcd,"[
+        '|',
+            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+            '|',
+                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                ('user_ids', 'in', user.id),
+        ]"
+burndown_chart_project_manager_rule,Burndown chart: project visibility User,project.task.burndown.chart.report,project.group_project_manager,rwcd,
+burndown_chart_project_user_rule_1,Burndown chart: project visibility User,project.task.burndown.chart.report,project.group_project_user,r,"[
+        '|',
+            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+            '|',
+                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                ('user_ids', 'in', user.id),
+        ]"
+update_visibility_rule,Project/Update: employees: follow required for follower-only projects,project.update,base.group_user,r,"[
+        '|',
+            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+            '|',
+                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                '|',
+                    ('user_id', '=', user.id),
+                    ('project_id.user_id', '=', user.id)
+        ]"
+update_visibility_rule_1,Project/Update: employees: follow required for follower-only projects,project.update,project.group_project_user,rwcd,"[
+        '|',
+            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+            '|',
+                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                '|',
+                    ('user_id', '=', user.id),
+                    ('project_id.user_id', '=', user.id)
+        ]"
+update_visibility_rule_2,Project/Update: employees: follow required for follower-only projects,project.update,project.group_project_manager,rwcd,"[
+        '|',
+            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+            '|',
+                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                '|',
+                    ('user_id', '=', user.id),
+                    ('project_id.user_id', '=', user.id)
+        ]"
+update_visibility_project_admin,Project updates : Project user can see all project updates,project.update,project.group_project_manager,rwcd,
+update_comp_rule,Project/Updates: multi-company,project.update,,rwcd,"['|', ('project_id.company_id', 'in', company_ids), ('project_id.company_id', '=', False)]"
+milestone_visibility_rule,Project/Milestone: employees: follow required for follower-only projects,project.milestone,base.group_user,r,"[
+        '|',
+            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+            '|',
+                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                ('project_id.user_id', '=', user.id),
+        ]"
+project_milestone_rule_portal_project_sharing,Project/milestone portal users: portal user can read with project sharing feature,project.milestone,base.group_portal,r,"[
+            ('project_id.privacy_visibility', 'in', ['invited_users', 'portal']),
+            ('project_id.collaborator_ids.partner_id', 'in', [user.partner_id.id]),
+        ]"
+milestone_visibility_rule_1,Project/Milestone: employees: follow required for follower-only projects,project.milestone,project.group_project_user,rwcd,"[
+        '|',
+            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+            '|',
+                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                ('project_id.user_id', '=', user.id),
+        ]"
+milestone_visibility_rule_2,Project/Milestone: employees: follow required for follower-only projects,project.milestone,project.group_project_manager,rwcd,"[
+        '|',
+            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+            '|',
+                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                ('project_id.user_id', '=', user.id),
+        ]"
+milestone_visibility_project_admin,Project/Milestone: Project manager can see all project milestones,project.milestone,project.group_project_manager,rwcd,
+milestone_comp_rule,Project/Milestone: multi-company,project.milestone,,rwcd,"['|', ('project_id.company_id', 'in', company_ids), ('project_id.company_id', '=', False)]"
+access_project_collaborator_manager,project.collaborator.manager,project.collaborator,project.group_project_manager,rwcd,
+access_project_collaborator_user,project.collaborator.user,project.collaborator,project.group_project_user,r,
+project_collaborator_rule_portal,Project/Collaborator: portal users: can only see his own collobaroration in shared projects,project.collaborator,base.group_portal,r,"[
+            ('project_id.privacy_visibility', 'in', ['invited_users', 'portal']),
+            ('partner_id', '=', user.partner_id.id),
+        ]"
+access_project_share_manager,project.share.wizard.manager,project.share.wizard,project.group_project_manager,rwc,
+access_project_task_share_manager,project.task.share.wizard.manager,task.share.wizard,base.group_partner_manager,rwc,
+access_project_share_collaborator_manager,project.share.collaborator.wizard.manager,project.share.collaborator.wizard,project.group_project_manager,rwcd,
+access_project_personal_stage,project.personal.stage.user,project.task.stage.personal,base.group_user,rwcd,
+ir_rule_project_personal_stage_my,Project: See my own personal stage,project.task.stage.personal,,rwcd,"[('user_id', '=', user.id)]"
+access_mail_activity_plan_project_manager,mail.activity.plan.project.manager,mail.activity.plan,project.group_project_manager,r,
+mail_plan_rule_group_project_manager_task,Manager can manage project/task plans,mail.activity.plan,project.group_project_manager,wcd,"[('res_model', 'in', ('project.project', 'project.task'))]"
+access_mail_activity_plan_template_project_manager,mail.activity.plan.template.project.manager,mail.activity.plan.template,project.group_project_manager,r,
+mail_plan_templates_rule_group_project_manager_task,Manager can manage project/task plan templates,mail.activity.plan.template,project.group_project_manager,wcd,"[('plan_id.res_model', 'in', ('project.project', 'project.task'))]"
+access_project_template_create_wizard_user,project.template.create.wizard.user,project.template.create.wizard,project.group_project_user,rw,
+access_project_template_create_wizard_manager,project.template.create.wizard.manager,project.template.create.wizard,project.group_project_manager,rwcd,
+access_project_template_role_to_users_map_user,project.template.role.to.users.map.user,project.template.role.to.users.map,project.group_project_user,rw,
+access_project_template_role_to_users_map_manager,project.template.role.to.users.map.manager,project.template.role.to.users.map,project.group_project_manager,rwcd,
+access_project_role_user,project.role.user,project.role,project.group_project_user,r,
+access_project_role_manager,project.role.manager,project.role,project.group_project_manager,rwcd,

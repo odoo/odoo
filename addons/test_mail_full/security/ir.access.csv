@@ -1,0 +1,14 @@
+id,name,model_id,group_id/id,operation,domain
+access_mail_test_portal_user,mail.test.portal.user,mail.test.portal,base.group_user,rwcd,
+mail_test_portal_rule_portal,TestPortal: Portal should follow,mail.test.portal,base.group_portal,rw,"[('message_partner_ids', 'in', [user.partner_id.id])]"
+access_mail_test_portal_no_partner_portal,mail.test.portal.no.partner.all,mail.test.portal.no.partner,base.group_portal,r,
+access_mail_test_portal_no_partner_user,mail.test.portal.no.partner.user,mail.test.portal.no.partner,base.group_user,rwcd,
+access_mail_test_portal_public_access_action_portal,mail.test.portal.public.access.action.portal,mail.test.portal.public.access.action,base.group_portal,r,
+access_mail_test_portal_public_access_action_user,mail.test.portal.public.access.action.user,mail.test.portal.public.access.action,base.group_user,rwcd,
+mail_test_rating_rule_portal,TestRating: Portal should follow,mail.test.rating,base.group_portal,r,"[('message_partner_ids', 'in', [user.partner_id.id])]"
+access_mail_test_rating_user,mail.test.rating.user,mail.test.rating,base.group_user,rwcd,
+mail_test_rating_rule_mc,TestRating: Multi Company,mail.test.rating,,rwcd,"[('company_id', 'in', company_ids + [False])]"
+access_mail_test_rating_thread_portal,mail.test.rating.thread.portal,mail.test.rating.thread,base.group_portal,r,
+access_mail_test_rating_thread_user,mail.test.rating.thread.user,mail.test.rating.thread,base.group_user,rwcd,
+access_mail_test_rating_thread_read_portal,mail.test.rating.thread.read.portal,mail.test.rating.thread.read,base.group_portal,r,
+access_mail_test_rating_thread_read_user,mail.test.rating.thread.read.user,mail.test.rating.thread.read,base.group_user,rwcd,

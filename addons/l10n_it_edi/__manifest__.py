@@ -13,7 +13,6 @@ E-invoice implementation
     'category': 'Accounting/Localizations/EDI',
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations/italy.html',
     'data': [
-        'security/ir.model.access.csv',
         'data/account.account.tag.csv',
         'data/invoice_it_simplified_template.xml',
         'data/invoice_it_template.xml',
@@ -26,6 +25,7 @@ E-invoice implementation
         'views/portal_address_templates.xml',
         'views/report_invoice.xml',
         'views/res_config_settings_views.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_frontend': [

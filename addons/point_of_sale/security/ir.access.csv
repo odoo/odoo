@@ -1,0 +1,67 @@
+id,name,model_id,group_id/id,operation,domain
+access_pos_printer_manager,pos.printer.manager,pos.printer,point_of_sale.group_pos_manager,rwcd,
+access_pos_printer,pos.printer.user,pos.printer,point_of_sale.group_pos_user,r,
+access_pos_order,pos.order,pos.order,point_of_sale.group_pos_user,rwcd,
+access_pos_order_stock_worker,pos.order stock_worker,pos.order,stock.group_stock_user,r,
+rule_pos_multi_company,Point Of Sale Order,pos.order,,rwcd,"[('company_id', 'in', company_ids)]"
+access_pos_order_line,pos.order.line,pos.order.line,point_of_sale.group_pos_user,rwcd,
+rule_pos_order_line_multi_company,Point Of Sale Order Line,pos.order.line,,rwcd,"[('company_id', 'in', company_ids)]"
+access_pos_pack_operation_lot,pos.pack.operation.lot,pos.pack.operation.lot,point_of_sale.group_pos_user,rwcd,
+access_stock_picking_pos_user,stock.picking pos_user,stock.picking,point_of_sale.group_pos_user,rwcd,
+access_stock_warehouse_pos_user,stock.warehouse pos_user,stock.warehouse,point_of_sale.group_pos_user,r,
+access_stock_warehouse_manager,stock.warehouse manager,stock.warehouse,point_of_sale.group_pos_manager,r,
+access_stock_move_pos_user,stock.move pos_user,stock.move,point_of_sale.group_pos_user,rwcd,
+access_report_pos_order,report.pos.order,report.pos.order,point_of_sale.group_pos_user,r,
+rule_pos_order_report_multi_company,Point Of Sale Order Analysis multi-company,report.pos.order,,rwcd,"[('company_id', 'in', company_ids)]"
+access_account_journal_pos_user,account.journal pos_user,account.journal,point_of_sale.group_pos_user,r,
+access_account_payment_method_pos_user,account.payment.method pos_user,account.payment.method,point_of_sale.group_pos_manager,r,
+access_account_payment_method_line_pos_user,account.payment.method.line pos_user,account.payment.method.line,point_of_sale.group_pos_manager,r,
+rule_pos_bank_statement_line_user,Point Of Sale Bank Statement Line POS User,account.bank.statement.line,point_of_sale.group_pos_user,rwc,"[('pos_session_id', '!=', False)]"
+rule_pos_bank_statement_line_user_1,Point Of Sale Bank Statement Line POS User,account.bank.statement.line,point_of_sale.group_pos_manager,rwcd,"[('pos_session_id', '!=', False)]"
+rule_pos_bank_statement_line_account_user,Point Of Sale Bank Statement Line Accountant,account.bank.statement.line,account.group_account_invoice,r,
+rule_pos_bank_statement_line_account_user_1,Point Of Sale Bank Statement Line Accountant,account.bank.statement.line,account.group_account_basic,rwcd,
+access_product_product,product.product,product.product,point_of_sale.group_pos_user,r,
+access_product_template_pos_user,product.template pos user,product.template,point_of_sale.group_pos_user,r,
+access_product_product_supplierinfo_user,product.supplierinfo user,product.supplierinfo,point_of_sale.group_pos_user,r,
+access_stock_location_manager,stock.location manager,stock.location,point_of_sale.group_pos_manager,r,
+access_product_pricelist_manager,product.pricelist manager,product.pricelist,point_of_sale.group_pos_manager,rwcd,
+access_product_pricelist_user,product.pricelist user,product.pricelist,point_of_sale.group_pos_user,r,
+access_pos_session_user,pos.session user,pos.session,point_of_sale.group_pos_user,rwc,
+rule_pos_session_multi_company,Point Of Sale Session,pos.session,,rwcd,"[('config_id.company_id', 'in', company_ids)]"
+access_pos_config_user,pos.config user,pos.config,point_of_sale.group_pos_user,rw,
+access_pos_config_system_user,pos.config system,pos.config,base.group_system,rw,
+access_pos_config_manager,pos.config manager,pos.config,point_of_sale.group_pos_manager,rwcd,
+rule_pos_config_multi_company,Point Of Sale Config,pos.config,,rwcd,"[('company_id', 'in', company_ids)]"
+access_product_category_pos_manager,pos.category manager,pos.category,point_of_sale.group_pos_manager,rwcd,
+access_product_category_pos_user,pos.category user,pos.category,base.group_user,r,
+access_barcode_nomenclature_pos_user,barcode.nomenclature.pos.user,barcode.nomenclature,point_of_sale.group_pos_user,r,
+access_barcode_nomenclature_pos_manager,barcode.nomenclature.pos.manager,barcode.nomenclature,point_of_sale.group_pos_manager,rwcd,
+access_barcode_rule_pos_user,barcode.rule.pos.user,barcode.rule,point_of_sale.group_pos_user,r,
+access_barcode_rule_pos_manager,barcode.rule.pos.manager,barcode.rule,point_of_sale.group_pos_manager,rwcd,
+access_decimal_precision_user,decimal.precision,decimal.precision,point_of_sale.group_pos_user,r,
+access_pos_payment_user,pos.payment user,pos.payment,point_of_sale.group_pos_user,rwcd,
+rule_pos_payment_multi_company,PoS Payment,pos.payment,,rwcd,"[('company_id', 'in', company_ids)]"
+access_pos_payment_method_user,pos.payment.method user,pos.payment.method,point_of_sale.group_pos_user,r,
+access_pos_payment_method_manager,pos.payment.method manager,pos.payment.method,point_of_sale.group_pos_manager,rwcd,
+rule_pos_payment_method_multi_company,PoS Payment Method,pos.payment.method,,rwcd,"[('company_id', 'in', company_ids)]"
+access_product_combo_pos_user,product.combo user,product.combo,point_of_sale.group_pos_user,r,
+access_product_combo_item_pos_user,product.combo.item user,product.combo.item,point_of_sale.group_pos_user,r,
+access_pos_details_wizard,access.pos.details.wizard,pos.details.wizard,point_of_sale.group_pos_manager,rwc,
+access_pos_make_payment,access.pos.make.payment,pos.make.payment,point_of_sale.group_pos_manager,rwc,
+access_pos_close_session_wizard,access.pos.close.session.wizard,pos.close.session.wizard,point_of_sale.group_pos_user,rwc,
+access_account_cash_rounding_pos_user,account.cash.rounding pos_user,account.cash.rounding,point_of_sale.group_pos_user,r,
+access_pos_bill,pos.bill pos_user,pos.bill,point_of_sale.group_pos_user,rwcd,
+access_pos_daily_sales_reports_wizard,access.pos.daily.sales.reports.wizard,pos.daily.sales.reports.wizard,point_of_sale.group_pos_manager,rwc,
+rule_invoice_pos_user,Invoice POS User,account.move,point_of_sale.group_pos_user,r,"[('pos_order_ids', '!=', False)]"
+rule_invoice_line_pos_user,Invoice Line POS User,account.move.line,point_of_sale.group_pos_user,r,"[('move_id.pos_order_ids', '!=', False)]"
+access_pos_note,pos.note.user,pos.note,point_of_sale.group_pos_user,r,
+access_pos_note_manager,pos.note.manager,pos.note,point_of_sale.group_pos_manager,rwcd,
+access_pos_preset,pos.preset.user,pos.preset,point_of_sale.group_pos_user,r,
+access_pos_preset_manager,pos.preset.manager,pos.preset,point_of_sale.group_pos_manager,rwcd,
+access_pos_make_invoice,pos.make.invoice.user,pos.make.invoice,point_of_sale.group_pos_user,rwc,
+access_pos_make_invoice_manager,pos.make.invoice.manager,pos.make.invoice,point_of_sale.group_pos_manager,rwcd,
+access_pos_confirmation_wizard,pos.confirmation.wizard.user,pos.confirmation.wizard,point_of_sale.group_pos_user,rwcd,
+access_pos_confirmation_wizard_manager,pos.confirmation.wizard.manager,pos.confirmation.wizard,point_of_sale.group_pos_manager,rwcd,
+access_pos_product_template_snooze,pos.product.template.snooze,pos.product.template.snooze,point_of_sale.group_pos_user,rwcd,
+rule_pos_bank_statement_account_user,Point Of Sale Bank Statement Accountant,account.bank.statement,account.group_account_invoice,r,
+rule_pos_bank_statement_account_user_1,Point Of Sale Bank Statement Accountant,account.bank.statement,account.group_account_basic,rwcd,

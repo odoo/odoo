@@ -19,7 +19,6 @@
     ],
     'data': [
         'security/hr_security.xml',
-        'security/ir.model.access.csv',
         'data/digest_data.xml',
         'data/report_paperformat.xml',
         'wizard/hr_departure_wizard_views.xml',
@@ -50,6 +49,7 @@
         'data/hr_data.xml',
         'views/hr_export_mixin_views.xml',
         'data/ir_cron_data.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/hr_demo.xml',

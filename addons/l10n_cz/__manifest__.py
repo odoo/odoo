@@ -32,7 +32,7 @@ Tento modul definuje:
         'views/res_company_views.xml',
         'views/report_template.xml',
         'views/tax_office_view.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/demo_company.xml',

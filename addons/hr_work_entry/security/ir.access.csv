@@ -1,0 +1,10 @@
+id,name,model_id,group_id/id,operation,domain
+access_hr_work_entry_officer,access_hr_work_entry_officer,hr.work.entry,hr.group_hr_manager,rwcd,
+access_hr_work_entry_system,access_hr_work_entry_system,hr.work.entry,base.group_system,rwcd,
+ir_rule_hr_work_entry_multi_company,HR Work Entry Contract: Multi Company,hr.work.entry,,rwcd,"[('company_id', 'in', company_ids)]"
+access_hr_work_entry_type_officer,access_hr_work_entry_type_officer,hr.work.entry.type,hr.group_hr_user,r,
+access_hr_work_entry_type_manager,access_hr_work_entry_type_manager,hr.work.entry.type,hr.group_hr_manager,rwcd,
+ir_rule_hr_work_entry_type_multi_company,HR Work Entry: Multi Company,hr.work.entry.type,,rwcd,"[('country_id', 'in', user.env.companies.mapped('country_id').ids + [False])]"
+access_hr_work_entry_employee,access_hr_work_entry_employee,hr.user.work.entry.employee,hr.group_hr_user,r,
+hr_user_work_entry_employee,Work entries/Employee calendar filter: only self,hr.user.work.entry.employee,hr.group_hr_user,wcd,"[('user_id', '=', user.id)]"
+access_hr_work_entry_regeneration_wizard,access_hr_work_entry_regeneration_wizard,hr.work.entry.regeneration.wizard,hr.group_hr_manager,rwcd,

@@ -1,0 +1,3 @@
+id,name,model_id,group_id/id,operation,domain
+analytic_accout_subcontractor_rule,Analytic Account Subcontractor,account.analytic.account,base.group_portal,r,"[('bom_ids', 'in', user.partner_id.commercial_partner_id.bom_ids.ids)]"
+analytic_accout_line_subcontractor_rule,Analytic Account Line Subcontractor,account.analytic.line,base.group_portal,rw,"[('account_id.bom_ids', 'in', user.partner_id.commercial_partner_id.bom_ids.ids)]"

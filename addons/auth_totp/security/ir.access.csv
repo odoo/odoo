@@ -1,0 +1,6 @@
+id,name,model_id,group_id/id,operation,domain
+access_auth_totp_wizard,auth_totp wizard access rules,auth_totp.wizard,base.group_user,rwcd,
+rule_auth_totp_wizard,Users can only access their own wizard,auth_totp.wizard,,rwcd,"[('user_id', '=', user.id)]"
+api_key_user,Users can read and delete their own keys,auth_totp.device,base.group_user,r,"[('user_id', '=', user.id)]"
+api_key_user_1,Users can read and delete their own keys,auth_totp.device,base.group_portal,r,"[('user_id', '=', user.id)]"
+api_key_admin,Administrators can view user keys to revoke them,auth_totp.device,base.group_system,r,

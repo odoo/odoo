@@ -1,0 +1,39 @@
+id,name,model_id,group_id/id,operation,domain
+purchase_order_user_rule,Purchase User Purchase Orders,purchase.order,purchase.group_purchase_user,rwcd,
+purchase_order_user_rule_1,Purchase User Purchase Orders,purchase.order,purchase.group_purchase_manager,rwcd,
+purchase_order_invoicing_readonly_rule,Invoicing Readonly User Purchase Orders,purchase.order,account.group_account_readonly,r,
+purchase_order_invoicing_rule,Invoicing User Purchase Orders,purchase.order,account.group_account_invoice,rw,
+portal_purchase_order_user_rule,Portal Purchase Orders,purchase.order,base.group_portal,r,"[('partner_id', 'child_of', [user.commercial_partner_id.id])]"
+purchase_order_comp_rule,Purchase Order multi-company,purchase.order,,rwcd,"[('company_id', 'in', company_ids)]"
+purchase_order_line_user_rule,Purchase User Purchase Order Lines,purchase.order.line,purchase.group_purchase_user,rwcd,
+purchase_order_line_user_rule_1,Purchase User Purchase Order Lines,purchase.order.line,purchase.group_purchase_manager,rwcd,
+purchase_order_line_invoicing_readonly_rule,Invoicing Readonly User Purchase Order Lines,purchase.order.line,account.group_account_readonly,r,
+purchase_order_line_invoicing_rule,Invoicing User Purchase Order Lines,purchase.order.line,account.group_account_invoice,rw,
+portal_purchase_order_line_rule,Portal Purchase Order Lines,purchase.order.line,base.group_portal,r,"[('order_id.partner_id','child_of',[user.commercial_partner_id.id])]"
+purchase_order_line_comp_rule,Purchase Order Line multi-company,purchase.order.line,,rwcd,"[('company_id', 'in', company_ids)]"
+access_purchase_bill_line_match,purchase.bill.line.match user,purchase.bill.line.match,purchase.group_purchase_user,r,
+access_purchase_bill_line_match_readonly,purchase.bill.line.match readonly,purchase.bill.line.match,account.group_account_readonly,r,
+access_purchase_bill_line_match_invoicing_payments,purchase.bill.line.match invoice,purchase.bill.line.match,account.group_account_invoice,rw,
+access_bill_to_po_wizard,bill.to.po.wizard user,bill.to.po.wizard,purchase.group_purchase_user,rwc,
+access_account_tax_purchase_user,account.tax,account.tax,purchase.group_purchase_user,r,
+access_account_tax_purchase_user_manager,account.tax,account.tax,purchase.group_purchase_manager,r,
+access_account_tag_purchase_user,account.account.tag,account.account.tag,purchase.group_purchase_user,r,
+access_product_product_purchase_user,product.product.purchase.user,product.product,purchase.group_purchase_user,r,
+access_product_template_purchase_user,product.template purchase_user,product.template,purchase.group_purchase_user,r,
+access_account_fiscal_position_purchase_user,account.fiscal.position purchase,account.fiscal.position,purchase.group_purchase_user,r,
+access_res_partner_purchase_user,res.partner purchase,res.partner,purchase.group_purchase_user,r,
+access_res_partner_purchase_manager,res.partner.purchase.manager,res.partner,purchase.group_purchase_manager,rc,
+res_partner_rule_edit_all,edit all (purchase),res.partner,purchase.group_purchase_manager,w,
+access_account_journal,account.journal,account.journal,purchase.group_purchase_user,r,
+access_account_journal_manager,account.journal,account.journal,purchase.group_purchase_manager,r,
+purchase_user_account_move_rule,Purchase User Account Move,account.move,purchase.group_purchase_user,rwcd,"[('move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))]"
+purchase_user_account_move_line_rule,Purchase User Account Move Line,account.move.line,purchase.group_purchase_manager,rwcd,"[('move_id.move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))]"
+purchase_user_account_move_line_rule_1,Purchase User Account Move Line,account.move.line,purchase.group_purchase_user,rwc,"[('move_id.move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))]"
+purchase_user_account_analytic_line_rule,Purchase User Account Analytic Line,account.analytic.line,purchase.group_purchase_user,r,
+account_partial_reconcile,account.partial.reconcile.purchase.user,account.partial.reconcile,purchase.group_purchase_user,r,
+access_product_supplierinfo_purchase_manager,product.supplierinfo purchase_manager,product.supplierinfo,purchase.group_purchase_manager,rwcd,
+access_product_pricelist_item_purchase_manager,product.pricelist.item purchase_manager,product.pricelist.item,purchase.group_purchase_manager,rwcd,
+access_account_account_purchase_manager,account.account purchase manager,account.account,purchase.group_purchase_manager,r,
+access_report_purchase_order,purchase.stock.report,purchase.report,purchase.group_purchase_manager,r,
+access_report_purchase_order_user,purchase.stock.report user,purchase.report,purchase.group_purchase_user,r,
+purchase_order_report_comp_rule,Purchase Order Report multi-company,purchase.report,,rwcd,"[('company_id', 'in', company_ids)]"

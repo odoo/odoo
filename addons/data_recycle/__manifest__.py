@@ -13,7 +13,7 @@
         'views/data_recycle_record_views.xml',
         'views/data_cleaning_menu.xml',
         'views/data_recycle_templates.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'application': True,
     'assets': {

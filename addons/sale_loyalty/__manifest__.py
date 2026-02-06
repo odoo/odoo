@@ -8,7 +8,6 @@
     'depends': ['sale', 'loyalty'],
     'auto_install': True,
     'data': [
-        'security/ir.model.access.csv',
 
         'data/sale_loyalty_data.xml',
 
@@ -21,6 +20,7 @@
         'views/sale_portal_templates.xml',
         'views/res_partner_views.xml',
         'views/sale_loyalty_menus.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_backend': [

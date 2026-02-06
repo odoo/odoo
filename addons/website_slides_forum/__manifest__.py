@@ -10,8 +10,6 @@
         'website_forum'
     ],
     'data': [
-        'security/ir.model.access.csv',
-        'security/website_slides_forum_security.xml',
         'views/forum_forum_views.xml',
         'views/forum_post_views.xml',
         'views/res_config_settings_views.xml',
@@ -19,6 +17,7 @@
         'views/website_slides_menu_views.xml',
         'views/forum_forum_templates.xml',
         'views/website_slides_templates.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/slide_channel_demo.xml',

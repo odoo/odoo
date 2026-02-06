@@ -1,0 +1,44 @@
+id,name,model_id,group_id/id,operation,domain
+survey_survey_rule_survey_user,Survey: officer: unrestricted survey or in restricted users,survey.survey,survey.group_survey_user,rwcd,"[
+                '|', ('restrict_user_ids', 'in', user.id), ('restrict_user_ids', '=', False)]"
+survey_survey_rule_survey_manager,Survey: manager: all,survey.survey,survey.group_survey_manager,rwcd,
+survey_survey_rule_survey_user_1,Survey: officer: unrestricted survey or in restricted users,survey.survey,survey.group_survey_manager,rwcd,"[
+                '|', ('restrict_user_ids', 'in', user.id), ('restrict_user_ids', '=', False)]"
+survey_question_rule_survey_user,Survey question: officer: unrestricted survey or in restricted users,survey.question,survey.group_survey_user,rwcd,"[
+                '|', ('survey_id.restrict_user_ids', 'in', user.id), ('survey_id.restrict_user_ids', '=', False)]"
+survey_question_rule_survey_manager,Survey question: manager: all,survey.question,survey.group_survey_manager,rwcd,
+survey_question_rule_survey_user_1,Survey question: officer: unrestricted survey or in restricted users,survey.question,survey.group_survey_manager,rwcd,"[
+                '|', ('survey_id.restrict_user_ids', 'in', user.id), ('survey_id.restrict_user_ids', '=', False)]"
+survey_question_answer_rule_survey_user,Survey question answer: officer: unrestricted survey or in restricted users,survey.question.answer,survey.group_survey_user,rwcd,"[
+                '|',
+                    '|', ('question_id.survey_id.restrict_user_ids', 'in', user.id), ('matrix_question_id.survey_id.restrict_user_ids', 'in', user.id),
+                    '|', ('question_id.survey_id.restrict_user_ids', '=', False), ('matrix_question_id.survey_id.restrict_user_ids', '=', False)]
+            "
+survey_question_answer_rule_survey_manager,Survey question answer: manager: all,survey.question.answer,survey.group_survey_manager,rwcd,
+survey_question_answer_rule_survey_user_1,Survey question answer: officer: unrestricted survey or in restricted users,survey.question.answer,survey.group_survey_manager,rwcd,"[
+                '|',
+                    '|', ('question_id.survey_id.restrict_user_ids', 'in', user.id), ('matrix_question_id.survey_id.restrict_user_ids', 'in', user.id),
+                    '|', ('question_id.survey_id.restrict_user_ids', '=', False), ('matrix_question_id.survey_id.restrict_user_ids', '=', False)]
+            "
+survey_user_input_rule_survey_user,Survey user input: officer: unrestricted survey or in restricted users,survey.user_input,survey.group_survey_user,rwcd,"[
+                '&', ('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey')),
+                '|', ('survey_id.restrict_user_ids', 'in', user.id),
+                     ('survey_id.restrict_user_ids', '=', False)]"
+survey_user_input_rule_survey_manager,Survey user input: manager: all non specialized surveys,survey.user_input,survey.group_survey_manager,rwcd,"[('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey'))]"
+survey_user_input_rule_survey_user_1,Survey user input: officer: unrestricted survey or in restricted users,survey.user_input,survey.group_survey_manager,rwcd,"[
+                '&', ('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey')),
+                '|', ('survey_id.restrict_user_ids', 'in', user.id),
+                     ('survey_id.restrict_user_ids', '=', False)]"
+survey_user_input_line_rule_survey_user,Survey user input line: officer: unrestricted survey or in restricted users,survey.user_input.line,survey.group_survey_user,r,"[
+                '&', ('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey')),
+                '|', ('survey_id.restrict_user_ids', 'in', user.id),
+                     ('survey_id.restrict_user_ids', '=', False)]"
+survey_user_input_line_rule_survey_manager,Survey user input line: manager: all non specialized surveys,survey.user_input.line,survey.group_survey_manager,rwcd,"[('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey'))]"
+survey_user_input_line_rule_survey_user_1,Survey user input line: officer: unrestricted survey or in restricted users,survey.user_input.line,survey.group_survey_manager,rwcd,"[
+                '&', ('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey')),
+                '|', ('survey_id.restrict_user_ids', 'in', user.id),
+                     ('survey_id.restrict_user_ids', '=', False)]"
+access_gamification_badge_survey_user,gamification.badge.survey.user,gamification.badge,survey.group_survey_user,rwcd,
+survey_invite_survey_user,Survey invite: officer: unrestricted or in restricted users,survey.invite,survey.group_survey_user,rwc,"['|',  ('survey_id.restrict_user_ids', 'in', user.id),
+                ('survey_id.restrict_user_ids', '=', False)]"
+survey_invite_survey_manager,Survey invite: manager: all,survey.invite,survey.group_survey_manager,rwc,

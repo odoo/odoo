@@ -1,0 +1,8 @@
+id,name,model_id,group_id/id,operation,domain
+access_spreadsheet_dashboard_group_user,access_spreadsheet_dashboard_group_user,spreadsheet.dashboard.group,base.group_user,r,
+access_spreadsheet_dashboard_group,access_spreadsheet_dashboard_group,spreadsheet.dashboard.group,spreadsheet_dashboard.group_dashboard_manager,rwcd,
+ir_rule_spreadsheet_dashboard,Spreadsheet dashboard: groups,spreadsheet.dashboard,base.group_user,r,"[('group_ids', 'in', user.all_group_ids.ids)]"
+ir_rule_spreadsheet_dashboard_1,Spreadsheet dashboard: groups,spreadsheet.dashboard,spreadsheet_dashboard.group_dashboard_manager,rwcd,"[('group_ids', 'in', user.all_group_ids.ids)]"
+spreadsheet_dashboard_rule_manager,Spreadsheet dashboard: manager,spreadsheet.dashboard,spreadsheet_dashboard.group_dashboard_manager,rwcd,
+spreadsheet_dashboard_rule_company,Dashboard multi-company,spreadsheet.dashboard,,rwcd,"[('company_ids', 'in', company_ids + [False])]"
+spreadsheet_dashboard_share_create_uid_rule,spreadsheet.dashboard.share: create uid,spreadsheet.dashboard.share,base.group_user,rwcd,"[('create_uid', '=', user.id)]"

@@ -10,8 +10,7 @@ Bridge module between MRP subcontracting and Repair
         'mrp_subcontracting', 'repair'
     ],
     'data': [
-        'security/ir.model.access.csv',
-        'security/mrp_subcontracting_repair_security.xml',
+        'security/ir.access.csv',
     ],
     'auto_install': True,
     'author': 'Odoo S.A.',

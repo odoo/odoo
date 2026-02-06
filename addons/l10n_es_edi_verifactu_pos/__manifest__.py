@@ -9,9 +9,9 @@
         'point_of_sale',
     ],
     'data': [
-        'security/ir.model.access.csv',
         'views/pos_order_views.xml',
         'receipt/pos_order_receipt.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'point_of_sale._assets_pos': [

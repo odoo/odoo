@@ -1,0 +1,8 @@
+id,name,model_id,group_id/id,operation,domain
+access_quotation_document_sales_manager,access_quotation_document_sales_manager,quotation.document,sales_team.group_sale_manager,rwcd,
+access_quotation_document_user,access_quotation_document_user,quotation.document,base.group_user,r,
+quotation_document_comp_rule,Quotation document multi-company rule,quotation.document,,rwcd,"
+            ['|', ('company_id', '=', False), ('company_id', 'parent_of', company_ids)]
+        "
+access_sale_pdf_form_field_system,access_sale_pdf_form_field_user,sale.pdf.form.field,base.group_system,rwcd,
+access_sale_pdf_form_field_user,access_sale_pdf_form_field_user,sale.pdf.form.field,base.group_user,r,

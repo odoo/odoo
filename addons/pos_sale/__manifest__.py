@@ -14,8 +14,6 @@ This module adds a custom Sales Team for the Point of Sale. This enables you to 
     'depends': ['point_of_sale', 'sale_management'],
     'data': [
         'data/pos_sale_data.xml',
-        'security/pos_sale_security.xml',
-        'security/ir.model.access.csv',
         'views/point_of_sale_report.xml',
         'views/sale_order_views.xml',
         'views/pos_order_views.xml',
@@ -23,6 +21,7 @@ This module adds a custom Sales Team for the Point of Sale. This enables you to 
         'views/res_config_settings_views.xml',
         'views/stock_template.xml',
         'receipt/pos_order_receipt.xml',
+        'security/ir.access.csv',
     ],
     'auto_install': True,
     'assets': {

@@ -13,7 +13,6 @@ Features include:
     """,
     'depends': ['l10n_tr_nilvera', 'account_edi_ubl_cii', 'contacts'],
     'data': [
-        'security/ir.model.access.csv',
         'data/cron.xml',
         'data/res_partner_category_data.xml',
         'data/l10n_tr_nilvera_einvoice.tax.office.csv',
@@ -27,6 +26,7 @@ Features include:
         'views/account_tax_views.xml',
         'views/product_views.xml',
         'views/res_config_settings_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/demo_company.xml',

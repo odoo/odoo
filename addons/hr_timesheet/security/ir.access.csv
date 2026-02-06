@@ -1,0 +1,55 @@
+id,name,model_id,group_id/id,operation,domain
+timesheet_line_rule_user,account.analytic.line.timesheet.user,account.analytic.line,hr_timesheet.group_hr_timesheet_user,rwcd,"[
+                ('user_id', '=', user.id),
+                ('project_id', '!=', False),
+                '|', '|',
+                    ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+                    ('partner_id', '=', user.partner_id.id),
+                    ('message_partner_ids', 'in', [user.partner_id.id])
+            ]"
+timesheet_line_rule_user_1,account.analytic.line.timesheet.user,account.analytic.line,project.group_project_manager,rwcd,"[
+                ('user_id', '=', user.id),
+                ('project_id', '!=', False),
+                '|', '|',
+                    ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+                    ('partner_id', '=', user.partner_id.id),
+                    ('message_partner_ids', 'in', [user.partner_id.id])
+            ]"
+timesheet_line_rule_approver,account.analytic.line.timesheet.approver,account.analytic.line,project.group_project_manager,rwcd,"[
+                ('project_id', '!=', False),
+                '|', '|',
+                    ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+                    ('message_partner_ids', 'in', [user.partner_id.id]),
+                    ('partner_id', '=', user.partner_id.id),
+            ]"
+timesheet_line_rule_manager,account.analytic.line.timesheet.manager,account.analytic.line,project.group_project_manager,rwcd,"[('project_id', '!=', False)]"
+timesheet_line_rule_approver_1,account.analytic.line.timesheet.approver,account.analytic.line,hr_timesheet.group_hr_timesheet_approver,rwcd,"[
+                ('project_id', '!=', False),
+                '|', '|',
+                    ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+                    ('message_partner_ids', 'in', [user.partner_id.id]),
+                    ('partner_id', '=', user.partner_id.id),
+            ]"
+timesheet_line_rule_manager_1,account.analytic.line.timesheet.manager,account.analytic.line,hr_timesheet.group_timesheet_manager,rwcd,"[('project_id', '!=', False)]"
+access_account_analytic_user,analytic.account.analytic.timesheet.user,account.analytic.account,hr_timesheet.group_hr_timesheet_user,rw,
+access_uom_uom_hr_timesheet,uom.uom.timesheet.user,uom.uom,hr_timesheet.group_hr_timesheet_user,r,
+access_project_project,project.project.timesheet.user,project.project,hr_timesheet.group_hr_timesheet_user,r,
+timesheet_analysis_report_department_manager,Timesheets Analysis Report user,timesheets.analysis.report,base.group_user,r,"[
+                ('has_department_manager_access', '=', True),
+            ]"
+timesheets_analysis_report_comp_rule,Timesheets Analysis Report multi-company,timesheets.analysis.report,,rwcd,"[('company_id', 'in', company_ids)]"
+timesheet_analysis_report_user,Timesheets Analysis Report user,timesheets.analysis.report,hr_timesheet.group_hr_timesheet_user,r,"[
+                ('user_id', '=', user.id),
+                '|',
+                    ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+                    ('message_partner_ids', 'in', [user.partner_id.id])
+            ]"
+timesheet_analysis_report_approver,Timesheets Analysis Report approver,timesheets.analysis.report,hr_timesheet.group_hr_timesheet_approver,r,"[
+                '|',
+                    ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+                    ('project_id.message_partner_ids', 'in', [user.partner_id.id])
+            ]"
+timesheet_analysis_report_manager,Timesheets Analysis Report manager,timesheets.analysis.report,hr_timesheet.group_timesheet_manager,r,
+timesheet_analysis_report_manager_1,Timesheets Analysis Report manager,timesheets.analysis.report,project.group_project_manager,r,
+access_hr_employee_delete_wizard,hr.employee.delete.wizard,hr.employee.delete.wizard,hr.group_hr_user,rwc,
+access_account_analytic_line_calendar_employee,account.analytic.line.calendar.employee.timesheet.user,account.analytic.line.calendar.employee,hr_timesheet.group_hr_timesheet_user,rwcd,

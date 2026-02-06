@@ -10,7 +10,6 @@
     'uninstall_hook': 'uninstall_hook',
     'data': [
         'security/point_of_sale_security.xml',
-        'security/ir.model.access.csv',
         'data/default_barcode_patterns.xml',
         'data/digest_data.xml',
         'data/pos_note_data.xml',
@@ -55,7 +54,8 @@
         'views/pos_session_sales_details.xml',
         'views/product_tag_views.xml',
         'views/stock_reference_views.xml',
-        'receipt/pos_order_receipt.xml',  # needed in the backend and frontend
+        'receipt/pos_order_receipt.xml',  # needed in the backend and frontend,
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/demo_data.xml',

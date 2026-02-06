@@ -15,9 +15,6 @@
         'data/l10n_my_edi.industry_classification.csv',
         "data/res_partner.xml",
 
-        'security/ir.model.access.csv',
-        'security/myinvois_security.xml',
-
         'views/account_journal_dashboard_view.xml',
         'views/account_move_view.xml',
         'views/account_tax_view.xml',
@@ -32,6 +29,7 @@
 
         'wizard/myinvois_consolidate_invoice_wizard.xml',
         'wizard/myinvois_document_status_update_wizard.xml',
+        'security/ir.access.csv',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3'

@@ -23,7 +23,6 @@ Dashboard / Reports for Warehouse Management includes:
     'sequence': 16,
     'data': [
         'security/stock_account_security.xml',
-        'security/ir.model.access.csv',
         'data/stock_account_data.xml',
         'views/account_account_views.xml',
         'views/stock_account_views.xml',
@@ -39,6 +38,7 @@ Dashboard / Reports for Warehouse Management includes:
         'report/account_invoice_report_view.xml',
         'report/stock_avco_audit_report_views.xml',
         'report/stock_valuation_report.xml',
+        'security/ir.access.csv',
     ],
     'auto_install': True,
     'post_init_hook': '_post_init_hook',

@@ -1,0 +1,19 @@
+id,name,model_id,group_id/id,operation,domain
+event_track_public,Event Tracks: public/portal: published,event.track,base.group_public,r,"[('website_published', '=', True)]"
+event_track_public_1,Event Tracks: public/portal: published,event.track,base.group_portal,r,"[('website_published', '=', True)]"
+access_event_track_employee,event.track,event.track,base.group_user,r,
+access_event_track_user,event.track.user,event.track,event.group_event_user,rwc,
+access_event_track_manager,event.track.manager,event.track,event.group_event_manager,rwcd,
+ir_rule_event_track_tag_public,Event Track Tag: public/portal: color = published,event.track.tag,base.group_public,r,"['&', ('color', '!=', False), ('color', '!=', 0)]"
+ir_rule_event_track_tag_public_1,Event Track Tag: public/portal: color = published,event.track.tag,base.group_portal,r,"['&', ('color', '!=', False), ('color', '!=', 0)]"
+access_event_track_tag_employee,event.track.tag,event.track.tag,base.group_user,r,
+access_event_track_tag_user,event.track.tag.user,event.track.tag,event.group_event_user,rwc,
+access_event_track_tag_manager,event.track.tag.manager,event.track.tag,event.group_event_manager,rwcd,
+access_event_track_location_user,event.track.location.user,event.track.location,event.group_event_user,rwc,
+access_event_track_location_manager,event.track.location.manager,event.track.location,event.group_event_manager,rwcd,
+access_event_track_stage_public,event.track.stage,event.track.stage,base.group_public,r,
+access_event_track_stage_portal,event.track.stage,event.track.stage,base.group_portal,r,
+access_event_track_stage_employee,event.track.stage,event.track.stage,base.group_user,r,
+access_event_track_stage_manager,event.track.stage.manager,event.track.stage,event.group_event_manager,rwcd,
+access_event_track_visitor_manager,event.track.visitor.manager,event.track.visitor,event.group_event_manager,rwcd,
+access_event_track_tag_category_user,event.track.tag.category.user,event.track.tag.category,event.group_event_user,rwcd,

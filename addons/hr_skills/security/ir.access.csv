@@ -1,0 +1,29 @@
+id,name,model_id,group_id/id,operation,domain
+hr_resume_rule_employee,Resume: employee: read all,hr.resume.line,hr.group_hr_user,r,
+hr_resume_rule_employee_hr_user,Resume: HR user: all,hr.resume.line,hr.group_hr_user,rwcd,
+hr_skills_rule_employee_update,Resume: employee: create/write/unlink own,hr.resume.line,hr.group_hr_user,wcd,"[('employee_id.user_id','=',user.id)]"
+hr_resume_rule_employee_1,Resume: employee: read all,hr.resume.line,base.group_user,r,
+hr_skills_rule_employee_update_1,Resume: employee: create/write/unlink own,hr.resume.line,base.group_user,wcd,"[('employee_id.user_id','=',user.id)]"
+access_hr_resume_line_type,hr.resume.line.type,hr.resume.line.type,hr.group_hr_user,rwcd,
+access_hr_resume_line_type_employee,hr.resume.line.type.employee,hr.resume.line.type,base.group_user,r,
+access_hr_skill_type,hr.skill.type,hr.skill.type,hr.group_hr_user,rwcd,
+access_hr_skill_type_employee,hr.skill.type.employee,hr.skill.type,base.group_user,r,
+access_hr_skill_level,hr.skill.level,hr.skill.level,hr.group_hr_user,rwcd,
+access_hr_skill_level_employee,hr.skill.level.employee,hr.skill.level,base.group_user,r,
+access_hr_skill,hr.skill,hr.skill,hr.group_hr_user,rwcd,
+access_hr_skill_employee,hr.skill.employee,hr.skill,base.group_user,rc,
+hr_skill_rule_employee,Employee skill: employee: read all,hr.employee.skill,hr.group_hr_user,r,
+hr_skill_rule_hr_user,Employee skill: HR user: read all,hr.employee.skill,hr.group_hr_user,rwcd,
+hr_skill_rule_employee_update,Employee skill: employee: create/write/unlink own,hr.employee.skill,hr.group_hr_user,wcd,"[('employee_id.user_id','=',user.id)]"
+hr_skill_rule_employee_1,Employee skill: employee: read all,hr.employee.skill,base.group_user,r,
+hr_skill_rule_employee_update_1,Employee skill: employee: create/write/unlink own,hr.employee.skill,base.group_user,wcd,"[('employee_id.user_id','=',user.id)]"
+hr_employee_skill_report_hr_user,Employee Skill Report: HR user,hr.employee.skill.report,hr.group_hr_user,r,
+hr_employee_skill_report_manager,Employee Skill Report: employee's manager,hr.employee.skill.report,hr.group_hr_user,r,"[('has_department_manager_access', '=', True)]"
+hr_employee_skill_report_manager_1,Employee Skill Report: employee's manager,hr.employee.skill.report,base.group_user,r,"[('has_department_manager_access', '=', True)]"
+hr_employee_skill_report_multicompany,Employee Skill Report: Multi-Company Rule,hr.employee.skill.report,,rwcd,"[('company_id', 'in', company_ids + [False])]"
+hr_employee_skill_history_report_hr_user,Employee Skill History Report: HR user,hr.employee.skill.history.report,hr.group_hr_user,r,
+hr_employee_skill_history_report_manager,Employee Skill History Report: employee's manager,hr.employee.skill.history.report,hr.group_hr_user,r,"[('employee_id', 'child_of', user.employee_ids.ids)]"
+hr_employee_skill_history_report_manager_1,Employee Skill History Report: employee's manager,hr.employee.skill.history.report,base.group_user,r,"[('employee_id', 'child_of', user.employee_ids.ids)]"
+access_hr_job_skill,hr.job.skill,hr.job.skill,hr.group_hr_user,rwcd,
+access_hr_job_skill_employee,hr.job.skill.employee,hr.job.skill,base.group_user,r,
+access_hr_employee_cv_wizard,access_hr_employee_cv_wizard,hr.employee.cv.wizard,base.group_user,rwc,

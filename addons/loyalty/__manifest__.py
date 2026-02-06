@@ -6,8 +6,6 @@
     'category': 'Sales',
     'depends': ['product', 'portal', 'account'],
     'data': [
-        'security/ir.model.access.csv',
-        'security/loyalty_security.xml',
         'report/loyalty_report_templates.xml',
         'report/loyalty_report.xml',
         'data/mail_template_data.xml',
@@ -22,6 +20,7 @@
         'views/loyalty_rule_views.xml',
         'views/portal_templates.xml',
         'views/res_partner_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/loyalty_demo.xml',

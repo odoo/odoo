@@ -1,0 +1,37 @@
+id,name,model_id,group_id/id,operation,domain
+website_forum_public,Website forum: Public user can only access to public forum,forum.forum,base.group_public,r,"[('privacy', '=', 'public')]"
+website_forum_connected,Website forum: User can only access to public (or authorized) forum,forum.forum,base.group_portal,r,"[
+            '|',
+                ('privacy', 'in', ['public', 'connected']),
+                '&',
+                    ('privacy', '=', 'private'),
+                    ('authorized_group_id', 'in', user.all_group_ids.ids)]"
+website_forum_connected_1,Website forum: User can only access to public (or authorized) forum,forum.forum,base.group_user,r,"[
+            '|',
+                ('privacy', 'in', ['public', 'connected']),
+                '&',
+                    ('privacy', '=', 'private'),
+                    ('authorized_group_id', 'in', user.all_group_ids.ids)]"
+website_forum_connected_2,Website forum: User can only access to public (or authorized) forum,forum.forum,base.group_erp_manager,rwcd,"[
+            '|',
+                ('privacy', 'in', ['public', 'connected']),
+                '&',
+                    ('privacy', '=', 'private'),
+                    ('authorized_group_id', 'in', user.all_group_ids.ids)]"
+website_forum_private,Website forum: All access for manager,forum.forum,base.group_erp_manager,rwcd,
+website_forum_create_website_designer,Website forum: Website designer can create private forum,forum.forum,website.group_website_designer,c,
+website_forum_public_post,Website forum post: Public user can only access to public post,forum.post,base.group_public,r,"[('forum_id.privacy', '=', 'public')]"
+website_forum_connected_post,Website forum post: User can only access to public (or authorized) post,forum.post,base.group_portal,rwcd,"['|', ('forum_id.privacy', 'in', ['public', 'connected']), '&', ('forum_id.privacy', '=', 'private'), ('forum_id.authorized_group_id', 'in', user.all_group_ids.ids)]"
+website_forum_connected_post_1,Website forum post: User can only access to public (or authorized) post,forum.post,base.group_user,rwcd,"['|', ('forum_id.privacy', 'in', ['public', 'connected']), '&', ('forum_id.privacy', '=', 'private'), ('forum_id.authorized_group_id', 'in', user.all_group_ids.ids)]"
+website_forum_private_post,Website forum post : All access for manager,forum.post,base.group_erp_manager,rwcd,
+website_forum_post_vote_own,Website forum vote: own votes only,forum.post.vote,base.group_portal,rwc,"[('user_id', '=', user.id)]"
+website_forum_post_vote_own_1,Website forum vote: own votes only,forum.post.vote,base.group_user,rwcd,"[('user_id', '=', user.id)]"
+website_forum_post_vote_all,Website forum vote: all votes,forum.post.vote,base.group_erp_manager,rwcd,
+access_forum_post_reason_public,forum.post.reason.public,forum.post.reason,base.group_public,r,
+access_forum_post_reason_portal,forum.post.reason.portal,forum.post.reason,base.group_portal,r,
+access_forum_post_reason_user,forum.post.reason.user,forum.post.reason,base.group_user,r,
+access_forum_post_reason_website_designer,forum.post.reason.website.designer,forum.post.reason,website.group_website_designer,rwcd,
+website_forum_public_tag,Website forum tag: Public user can only access to tag linked to public forum,forum.tag,base.group_public,rc,"[('forum_id.privacy', '=', 'public')]"
+website_forum_connected_tag,Website forum tag: User can only access to tag linked to public (or authorized) forum,forum.tag,base.group_portal,rc,"['|', ('forum_id.privacy', 'in', ['public', 'connected']), '&', ('forum_id.privacy', '=', 'private'), ('forum_id.authorized_group_id', 'in', user.all_group_ids.ids)]"
+website_forum_connected_tag_1,Website forum tag: User can only access to tag linked to public (or authorized) forum,forum.tag,base.group_user,rwcd,"['|', ('forum_id.privacy', 'in', ['public', 'connected']), '&', ('forum_id.privacy', '=', 'private'), ('forum_id.authorized_group_id', 'in', user.all_group_ids.ids)]"
+website_forum_private_tag,Website forum tag : Manager user can access to all tags,forum.tag,base.group_erp_manager,rwcd,

@@ -26,7 +26,7 @@
         'views/report_disbursement_voucher_template.xml',
         'views/account_report.xml',
         'views/report_templates.xml',
-        'security/ir.model.access.csv'
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/demo_company.xml',

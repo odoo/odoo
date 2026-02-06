@@ -1,0 +1,15 @@
+id,name,model_id,group_id/id,operation,domain
+access_calendar_attendee_employee,calendar.attendee_employee,calendar.attendee,base.group_user,rwcd,
+access_calendar_attendee_employee_delete_wizard,calendar.attendee_employee_delete_wizard,calendar.popover.delete.wizard,base.group_user,rwcd,
+access_calendar_alarm,calendar.alarm,calendar.alarm,base.group_user,rwcd,
+calendar_event_rule_my,Own events,calendar.event,base.group_portal,r,"[('partner_ids', 'in', user.partner_id.id)]"
+calendar_event_rule_employee,All Calendar Event for employees,calendar.event,base.group_user,rwcd,
+access_calendar_event_partner_manager,calendar.event.partner.manager,calendar.event,base.group_partner_manager,rwcd,
+calendar_event_rule_private,Private events,calendar.event,,wcd,"['|', ('privacy', '!=', 'private'), '&', ('privacy', '=', 'private'), '|', ('user_id', '=', user.id), ('partner_ids', 'in', user.partner_id.id)]"
+access_calendar_event_type_all,calendar.event.type.all,calendar.event.type,base.group_user,r,
+access_calendar_event_type_manager,calendar.event.type.manager,calendar.event.type,base.group_system,rwcd,
+access_calendar_alarm_manager,access_calendar_alarm_manager,calendar.alarm_manager,base.group_user,rwcd,
+access_calendar_filters_all,access_calendar_contacts_all,calendar.filters,base.group_user,rwcd,
+access_calendar_filters,access_calendar_contacts,calendar.filters,base.group_system,rwcd,
+access_calendar_recurrence,access_calendar_recurrence,calendar.recurrence,base.group_user,rwcd,
+access_calendar_provider_config_manager,calendar.provider.config.manager,calendar.provider.config,base.group_system,rwcd,

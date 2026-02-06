@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <data noupdate="0">
 
@@ -9,39 +8,6 @@
 </data>
 <data noupdate="1">
 
-    <record id="analytic_comp_rule" model="ir.rule">
-        <field name="name">Analytic multi company rule</field>
-        <field name="model_id" ref="model_account_analytic_account"/>
-        <field eval="True" name="global"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'parent_of', company_ids)]</field>
-    </record>
-
     <!-- give access to all records, in case it is combined with another rule, like hr_timesheet.timesheet_line_rule_user -->
-    <record id="analytic_line_analytic" model="ir.rule" forcecreate="1">
-        <field name="name">Analytic line for Analytic Accounting</field>
-        <field name="model_id" ref="model_account_analytic_line"/>
-        <field name="groups" eval="[(4, ref('analytic.group_analytic_accounting'))]"/>
-    </record>
-
-    <record id="analytic_line_comp_rule" model="ir.rule">
-        <field name="name">Analytic line multi company rule</field>
-        <field name="model_id" ref="model_account_analytic_line"/>
-        <field eval="True" name="global"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-    </record>
-
-    <record id="analytic_applicability_comp_rule" model="ir.rule">
-        <field name="name">Analytic applicability multi company rule</field>
-        <field name="model_id" ref="model_account_analytic_applicability"/>
-        <field eval="True" name="global"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'parent_of', company_ids)]</field>
-    </record>
-
-    <record id="analytic_distribution_model_comp_rule" model="ir.rule">
-        <field name="name">Analytic distribution model multi company rule</field>
-        <field name="model_id" ref="model_account_analytic_distribution_model"/>
-        <field eval="True" name="global"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'parent_of', company_ids)]</field>
-    </record>
-</data>
+    </data>
 </odoo>

@@ -1,0 +1,12 @@
+id,name,model_id,group_id/id,operation,domain
+challenge_officer,Challenge Officer,gamification.challenge,hr.group_hr_user,rwcd,
+challenge_line_officer,Challenge Line Officer,gamification.challenge.line,hr.group_hr_user,rwcd,
+badge_officer,Badge Officer,gamification.badge,hr.group_hr_user,rwcd,
+hr_gamification_badge_base_user_owned_access,Base group user granted badge write/unlink access,gamification.badge.user,hr.group_hr_user,rwcd,"[('create_uid', '=', user.id)]"
+hr_gamification_badge_base_user_not_owned_access,Base group user not granted badge write/unlink access,gamification.badge.user,hr.group_hr_user,rc,"[('create_uid', '!=', user.id)]"
+hr_gamification_badge_group_hr_user_access,Officer: Manage all employees- Badge Access,gamification.badge.user,hr.group_hr_user,rwcd,
+hr_gamification_badge_base_user_owned_access_1,Base group user granted badge write/unlink access,gamification.badge.user,base.group_user,rwcd,"[('create_uid', '=', user.id)]"
+hr_gamification_badge_base_user_not_owned_access_1,Base group user not granted badge write/unlink access,gamification.badge.user,base.group_user,rc,"[('create_uid', '!=', user.id)]"
+hr_gamification_badge_base_user_owned_access_2,Base group user granted badge write/unlink access,gamification.badge.user,base.group_erp_manager,rwcd,"[('create_uid', '=', user.id)]"
+hr_gamification_badge_base_user_not_owned_access_2,Base group user not granted badge write/unlink access,gamification.badge.user,base.group_erp_manager,rc,"[('create_uid', '!=', user.id)]"
+goal_gamification_hr_user_visibility,HR Officer can see any goal,gamification.goal,hr.group_hr_user,rw,

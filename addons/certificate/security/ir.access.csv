@@ -1,0 +1,5 @@
+id,name,model_id,group_id/id,operation,domain
+access_certificate_admin,certificate.access_certificate,certificate.certificate,base.group_system,rwcd,
+certificate_rule_company,Certificate multi-company,certificate.certificate,,rwcd,"['|', ('company_id', '=', False), ('company_id', 'parent_of', company_ids)]"
+access_key_admin,certificate.access_key,certificate.key,base.group_system,rwcd,
+key_rule_company,Key multi-company,certificate.key,,rwcd,"['|', ('company_id', '=', False), ('company_id', 'parent_of', company_ids)]"

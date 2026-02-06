@@ -1,0 +1,17 @@
+id,name,model_id,group_id/id,operation,domain
+equipment_rule_user,Users are allowed to access equipment they follow,maintenance.equipment,base.group_user,r,"[('message_partner_ids', 'in', [user.partner_id.id])]"
+equipment_rule_user_1,Users are allowed to access equipment they follow,maintenance.equipment,maintenance.group_equipment_manager,rwcd,"[('message_partner_ids', 'in', [user.partner_id.id])]"
+equipment_rule_admin_user,Equipment administrator,maintenance.equipment,maintenance.group_equipment_manager,rwcd,
+maintenance_equipment_comp_rule,Maintenance Equipment Multi-company rule,maintenance.equipment,,rwcd,"[('company_id', 'in', company_ids + [False])]"
+equipment_request_rule_user,Users are allowed to access their own maintenance requests,maintenance.request,base.group_user,rwcd,"['|', '|', ('owner_user_id', '=', user.id), ('message_partner_ids', 'in', [user.partner_id.id]), ('user_id', '=', user.id)]"
+equipment_request_rule_admin_user,Administrator of maintenance requests,maintenance.request,maintenance.group_equipment_manager,rwcd,
+maintenance_request_comp_rule,Maintenance Request Multi-company rule,maintenance.request,,rwcd,"[('company_id', 'in', company_ids + [False])]"
+access_equipment_category_user,equipment.category.user,maintenance.equipment.category,base.group_user,r,
+access_equipment_category_admin_user,equipment.category system user,maintenance.equipment.category,maintenance.group_equipment_manager,rwcd,
+maintenance_equipment_category_comp_rule,Maintenance Equipment Category Multi-company rule,maintenance.equipment.category,,rwcd,"[('company_id', 'in', company_ids + [False])]"
+access_maintenance_stage_user,maintenance.stage.user,maintenance.stage,base.group_user,r,
+access_maintenance_stage_admin_user,equipment.request.stage system user,maintenance.stage,maintenance.group_equipment_manager,rwcd,
+access_maintenance_team_user,maintenance.team.user,maintenance.team,base.group_user,r,
+access_maintenance_team_admin_user,maintenance.team.admin.user,maintenance.team,maintenance.group_equipment_manager,rwcd,
+maintenance_team_comp_rule,Maintenance Team Multi-company rule,maintenance.team,,rwcd,"[('company_id', 'in', company_ids + [False])]"
+access_mail_activity_type_equipment_manager,mail.activity.type.equipment.manager,mail.activity.type,maintenance.group_equipment_manager,rwcd,

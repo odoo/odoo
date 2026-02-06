@@ -1,0 +1,16 @@
+id,name,model_id,group_id/id,operation,domain
+access_livechat_channel_user,im_livechat.channel.user,im_livechat.channel,im_livechat.im_livechat_group_user,r,
+access_livechat_channel_manager,im_livechat.channel.manager,im_livechat.channel,im_livechat.im_livechat_group_manager,rwcd,
+access_livechat_support_report_channel,im_livechat.report.channel,im_livechat.report.channel,im_livechat.im_livechat_group_manager,r,
+access_livechat_channel_rule_user,im_livechat.channel.rule,im_livechat.channel.rule,im_livechat.im_livechat_group_user,rwc,
+access_livechat_channel_rule_manager,im_livechat.channel.rule,im_livechat.channel.rule,im_livechat.im_livechat_group_manager,rwcd,
+access_livechat_expertise_internal_user,im_livechat.expertise.internal.user,im_livechat.expertise,base.group_user,r,
+access_livechat_expertise_livechat_manager,im_livechat.expertise.manager,im_livechat.expertise,im_livechat.im_livechat_group_manager,rwcd,
+access_chatbot_script_user,chatbot.script.user,chatbot.script,im_livechat.im_livechat_group_manager,rwcd,
+access_chatbot_script_step_user,chatbot.script.step.user,chatbot.script.step,im_livechat.im_livechat_group_manager,rwcd,
+access_chatbot_script_answer_user,chatbot.script.answer.user,chatbot.script.answer,im_livechat.im_livechat_group_manager,rwcd,
+access_chatbot_message_user,chatbot.script.user,chatbot.message,im_livechat.im_livechat_group_manager,rwcd,
+access_im_livechat_channel_member_history_user,im_livechat.channel.member.history,im_livechat.channel.member.history,im_livechat.im_livechat_group_user,r,
+ir_rule_discuss_channel_im_livechat_group_user,discuss.channel: livechat users can read all livechat channels,discuss.channel,im_livechat.im_livechat_group_user,r,"[('channel_type', '=', 'livechat')]"
+ir_rule_discuss_channel_member_im_livechat_group_user,discuss.channel.member: livechat users can read all livechat channel members and can invite anyone,discuss.channel.member,im_livechat.im_livechat_group_user,rc,"[('channel_id.channel_type', '=', 'livechat')]"
+ir_rule_discuss_call_history_im_livechat_group_user,discuss.call.history: livechat users can access all call histories,discuss.call.history,im_livechat.im_livechat_group_user,r,"[('channel_id.channel_type', '=', 'livechat')]"

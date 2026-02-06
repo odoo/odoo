@@ -1,0 +1,6 @@
+id,name,model_id,group_id/id,operation,domain
+hr_job_public,Job Positions: Public,hr.job,base.group_public,r,"[('website_published', '=', True)]"
+hr_job_portal,Job Positions: Portal,hr.job,base.group_portal,r,"[('website_published', '=', True)]"
+access_hr_job_public_employee,hr.job.public,hr.job,base.group_user,r,
+hr_job_officer,Job Positions: HR Officer,hr.job,hr_recruitment.group_hr_recruitment_user,r,
+hr_department_public,Job department: Public,hr.department,base.group_public,r,"['|', ('jobs_ids.website_published', '=', True), ('child_ids', 'not in', [])]"

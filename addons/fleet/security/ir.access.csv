@@ -1,0 +1,32 @@
+id,name,model_id,group_id/id,operation,domain
+fleet_vehicle_model_access_right_user,fleet_vehicle_model_access_right,fleet.vehicle.model,fleet.fleet_group_user,r,
+fleet_vehicle_model_access_right,fleet_vehicle_model_access_right,fleet.vehicle.model,fleet.fleet_group_manager,rwcd,
+fleet_vehicle_tag_access_right_user,fleet_vehicle_tag_access_right,fleet.vehicle.tag,fleet.fleet_group_user,r,
+fleet_vehicle_tag_access_right,fleet_vehicle_tag_access_right,fleet.vehicle.tag,fleet.fleet_group_manager,rwcd,
+fleet_vehicle_state_access_right_user,fleet_vehicle_state_access_right,fleet.vehicle.state,fleet.fleet_group_user,r,
+fleet_vehicle_state_access_right,fleet_vehicle_state_access_right,fleet.vehicle.state,fleet.fleet_group_manager,rwcd,
+fleet_vehicle_model_brand_access_right_user,fleet_vehicle_model_brand_access_right,fleet.vehicle.model.brand,fleet.fleet_group_user,r,
+fleet_vehicle_model_brand_access_right,fleet_vehicle_model_brand_access_right,fleet.vehicle.model.brand,fleet.fleet_group_manager,rwcd,
+fleet_vehicle_model_brand_category_right_user,fleet_vehicle_model_category_access_right,fleet.vehicle.model.category,fleet.fleet_group_user,r,
+fleet_vehicle_model_category_access_right,fleet_vehicle_model_brand_category_right,fleet.vehicle.model.category,fleet.fleet_group_manager,rwcd,
+fleet_rule_vehicle_visibility_user,User has all rights on vehicle,fleet.vehicle,fleet.fleet_group_user,rwcd,
+fleet_rule_vehicle_visibility_manager,Administrator has all rights on vehicle,fleet.vehicle,fleet.fleet_group_manager,rwcd,
+fleet_rule_vehicle_visibility_user_1,User has all rights on vehicle,fleet.vehicle,fleet.fleet_group_manager,rwcd,
+ir_rule_fleet_vehicle,Fleet vehicle: Multi Company,fleet.vehicle,,rwcd,"[('company_id', 'in', company_ids + [False])]"
+fleet_vehicle_log_services_access_right_user,fleet_vehicle_log_services_access_right,fleet.vehicle.log.services,fleet.fleet_group_user,r,
+fleet_rule_service_visibility_manager,Administrator has all rights on vehicle's services,fleet.vehicle.log.services,fleet.fleet_group_manager,rwcd,
+ir_rule_fleet_log_services,Fleet log services: Multi Company,fleet.vehicle.log.services,,rwcd,"[('company_id', 'in', company_ids + [False])]"
+fleet_vehicle_log_contract_access_right_user,fleet_vehicle_log_contract_access_right,fleet.vehicle.log.contract,fleet.fleet_group_user,rwcd,
+fleet_rule_contract_visibility_manager,Administrator has all rights on vehicle's contracts,fleet.vehicle.log.contract,fleet.fleet_group_manager,rwcd,
+ir_rule_fleet_vehicle_log_contract,Fleet vehicle log contract: Multi Company,fleet.vehicle.log.contract,,rwcd,"[('company_id', 'in', company_ids + [False])]"
+fleet_service_type_access_right_user,fleet_service_type_access_right,fleet.service.type,fleet.fleet_group_user,r,
+fleet_service_type_access_right,fleet_service_type_access_right,fleet.service.type,fleet.fleet_group_manager,rwcd,
+fleet_vehicle_odometer_access_right,fleet_vehicle_odometer_access_right,fleet.vehicle.odometer,fleet.fleet_group_user,rwcd,
+fleet_rule_odometer_visibility_manager,Administrator has all rights on vehicle's vehicle's odometer,fleet.vehicle.odometer,fleet.fleet_group_manager,rwcd,
+ir_rule_fleet_odometer,Fleet odometer: Multi Company,fleet.vehicle.odometer,,rwcd,"[('vehicle_id.company_id', 'in', company_ids + [False])]"
+access_mail_activity_type_fleet_manager,mail.activity.type.fleet.manager,mail.activity.type,fleet.fleet_group_manager,rwcd,
+access_fleet_vehicle_assignation_log_fleet_group_user,fleet_vehicle_assignation_log fleet_group_user,fleet.vehicle.assignation.log,fleet.fleet_group_user,rwcd,
+access_fleet_report_manager,fleet_vehicle_cost_report_access_right,fleet.vehicle.cost.report,fleet.fleet_group_manager,r,
+ir_rule_fleet_report,Costs Analysis: Multi Company,fleet.vehicle.cost.report,,rwcd,"[('company_id', 'in', company_ids + [False])]"
+access_fleet_vehicle_send_mail,access.fleet.vehicle.send.mail,fleet.vehicle.send.mail,fleet.fleet_group_manager,rwc,
+access_fleet_vehicle_odometer_report_manager,fleet_vehicle_odometer_report_access_right,fleet.vehicle.odometer.report,fleet.fleet_group_manager,rwcd,
