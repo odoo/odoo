@@ -3,11 +3,13 @@
 
 import json
 
+from werkzeug.test import EnvironBuilder
 from werkzeug.urls import url_encode
 
 from unittest.mock import patch, Mock
 from odoo import tests
 from odoo.addons.website.controllers.main import Website
+from odoo.addons.website.tools import MockRequest
 from odoo.tools import mute_logger, submap
 
 
@@ -194,3 +196,17 @@ class TestControllers(tests.HttpCase):
         res = self.url_open('/website/action/my_test_action')
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, "{'message': 'Succeeded'}")
+
+    def test_website_force_domain_redirect(self):
+        """
+        Test that /website/force/{website.id} redirects domain correctly
+        """
+        website = self.env['website'].search([], limit=1)
+        website.domain = self.base_url()
+        with MockRequest(self.env, website=website, url_root='http://example.com') as mock_request:
+            mock_request.httprequest.environ = EnvironBuilder(base_url='http://example.com').get_environ()
+            redirect = Website().website_force(website_id=website.id, path='/?a=b&c=d')
+            self.assertEqual(
+                redirect.headers['Location'],
+                f'{self.base_url()}/website/force/{website.id}?isredir=1&path=%2F%3Fa%3Db%26c%3Dd'
+            )
