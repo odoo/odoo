@@ -105,6 +105,7 @@ patch(ControlButtons.prototype, {
         this.dialog.add(TextInputPopup, {
             title: _t("Enter Code"),
             placeholder: _t("Gift card or Discount code"),
+            size: "md",
             getPayload: async (code) => {
                 code = code.trim();
                 if (code !== "") {

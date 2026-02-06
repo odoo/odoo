@@ -155,6 +155,7 @@ export class PaymentScreen extends Component {
             this.dialog.add(AlertDialog, {
                 title: _t("Oh snap !"),
                 body: result.data,
+                size: result.size,
             });
             return false;
         }

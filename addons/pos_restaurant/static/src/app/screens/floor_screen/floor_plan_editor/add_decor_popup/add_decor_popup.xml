@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.floor_editor.add_decor_popup">
-         <Dialog bodyClass="'o_fp_decor_menu'" size="'lg'" footer="false">
+         <Dialog bodyClass="'o_fp_decor_menu pt-0 px-4 pb-4'" size="'lg'" footer="false">
              <t t-set-slot="header">
                 <button type="button" t-on-click="this.props.close" class="btn-close" aria-label="Close" tabindex="-1"/>
             </t>
@@ -89,7 +89,7 @@
              </div>
 
              <h3 class="mb-3 mt-4">Shapes</h3>
-             <div class="d-flex flex-wrap gap-3 align-items-center mb-3 ">
+             <div class="d-flex flex-wrap gap-3 align-items-center">
                   <button class="btn btn-outline-secondary p-3" t-on-click="this.addText">
                      <div class="decor_item d-flex justify-content-center align-items-center">
                         <span class="fw-bold fs-4">Text</span>

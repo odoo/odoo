@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.NumberPopup">
-        <Dialog title="this.props.title" contentClass="'pos-number-popup'" bodyClass="'d-flex flex-column justify-content-center'" size="'sm'">
+        <Dialog title="this.props.title" contentClass="'pos-number-popup'" bodyClass="'d-flex flex-column justify-content-center py-0'" size="'sm'">
             <div t-if="this.props.subtitle" class="subtitle p-1 mx-auto" t-out="this.props.subtitle"/>
             <div class="input-symbol mb-3">
                 <div class="popup-input value active form-control form-control-lg text-center position-relative">
@@ -26,12 +26,12 @@
             <t t-set-slot="footer">
                 <div class="d-flex flex-grow-1 justify-content-center w-100">
                     <button t-att-disabled="!this.props.isValid(this.state.buffer)"
-                        class="btn btn-primary btn-lg lh-lg o-default-button me-2 flex-fill"
+                        class="btn btn-primary o-default-button me-2 flex-fill"
                         tabindex="1"
                         t-on-click="this.confirm">
                         <t t-out="this.confirmButtonLabel"/>
                     </button>
-                    <button class="btn btn-secondary btn-lg lh-lg o-default-button flex-fill"
+                    <button class="btn btn-secondary o-default-button flex-fill"
                         tabindex="1"
                         t-on-click="this.cancel">
                         Discard

@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.CashMoveListPopup">
-        <Dialog title.translate="Cash move details" size="'md'" footer="false">
+        <Dialog title.translate="Cash move details" size="this.cashMoves().length !== 0 ? 'md' : 'sm'" footer="false">
             <div class="cash-move-list overflow-y-auto flex-grow-1 rounded-bottom-3 bg-view">
                 <t t-if="this.cashMoves().length !== 0">
                     <table t-if="!this.ui.isSmall"  class="table table-striped table-hover">
@@ -65,7 +65,7 @@
                         </div>
                     </t>
                 </t>
-                <div t-else="" class="d-flex justify-content-center">
+                <div t-else="" class="d-flex justify-content-center mt-2 mb-4">
                     <span class="fs-4">No cash move found</span>
                 </div>
             </div>

@@ -413,7 +413,7 @@ export class PosOrder extends PosOrderAccounting {
 
         const { status: canSend, message } = payment_method.getPaymentInterfaceStates();
         if (!canSend) {
-            return { status: false, data: message };
+            return { status: false, data: message, size: "sm" };
         }
         const totalAmountDue = this.getDefaultAmountDueToPayIn(payment_method);
         const newPaymentLine = this.models["pos.payment"].create({
