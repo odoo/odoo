@@ -1,10 +1,12 @@
 /** @odoo-module **/
+import { useState } from "@odoo/owl";
 
 import { renderToElement } from "@web/core/utils/render";
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
 import { closestBlock, setCursorEnd } from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 import { patch } from "@web/core/utils/patch";
 import { MentionList } from "@mail/core/web/mention_list";
+import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { isEventHandled } from "@web/core/utils/misc";
@@ -18,10 +20,14 @@ patch(Wysiwyg.prototype, {
                 onClose: () => this.focus(),
             });
             this.triggerMentionList = this.triggerMentionList.bind(this);
+            this.mailStore = useState(useService("mail.store"));
         }
     },
     get inDiscuss() {
-        return this.props.options.recordInfo?.res_model === "mail.compose.message";
+        return (
+            this.props.options.recordInfo?.res_model === "mail.compose.message" &&
+            this.env.services["mail.store"]
+        );
     },
     async startEdition() {
         const res = await super.startEdition(...arguments);
@@ -56,6 +62,10 @@ patch(Wysiwyg.prototype, {
             this.stepBeforeMention = this.odooEditor._historySteps.length - 2;
             const closest = closestBlock(this.odooEditor.document.getSelection().anchorNode);
             this.mentionList.open(closest, {
+                thread: this.mailStore.Thread.get({
+                    model: this.props.options.record.data.model,
+                    id: JSON.parse(this.props.options.record.data.res_ids || "[]")[0],
+                }),
                 type: ev.key === "@" ? "partner" : "channel",
                 onSelect: this.selectMention.bind(this),
             });
