@@ -7,6 +7,7 @@ the ORM does, in fact.
 """
 from __future__ import annotations
 
+import functools
 import logging
 import os
 import re
@@ -326,7 +327,7 @@ class Cursor(BaseCursor):
             *any* data which may be modified during the life of the cursor.
 
     """
-    def __init__(self, pool: ConnectionPool, dbname: str, dsn: dict):
+    def __init__(self, cnx: PsycoConnection, dbname: str):
         super().__init__()
         self.sql_from_log: dict[str, tuple[int, float]] = {}
         self.sql_into_log: dict[str, tuple[int, float]] = {}
@@ -339,22 +340,14 @@ class Cursor(BaseCursor):
         # is raised by any of the following initializations
         self._closed: bool = True
 
-        self.__pool: ConnectionPool = pool
         self.dbname = dbname
-
-        self._cnx: PsycoConnection = pool.borrow(dsn)
-        self._obj: psycopg2.extensions.cursor = self._cnx.cursor()
+        self._cnx = cnx
+        self._obj: psycopg2.extensions.cursor = cnx.cursor()
         if _logger.isEnabledFor(logging.DEBUG):
             self.__caller: tuple[str, str | int] | None = frame_codeinfo(currentframe(), 2)
         else:
             self.__caller = None
         self._closed = False   # real initialization value
-        self._cnx.set_session(
-            # See the docstring of this class.
-            isolation_level=ISOLATION_LEVEL_REPEATABLE_READ,
-            readonly=pool.readonly,
-            autocommit=False,
-        )
 
         if os.getenv('ODOO_FAKETIME_TEST_MODE') and self.dbname in tools.config['db_name']:
             self.execute("SET search_path = public, pg_catalog;")
@@ -393,7 +386,7 @@ class Cursor(BaseCursor):
             _logger.log(logging.DEBUG if self._cnx.closed else logging.WARNING, msg)
             # Just close the raw connection as other all environments are
             # (being) collected at this time.
-            self.__pool.give_back(self._cnx, keep_in_pool=False)
+            self._cnx.give_back(keep_in_pool=False)
 
     def _format(self, query, params=None) -> str:
         encoding = psycopg2.extensions.encodings[self.connection.encoding]
@@ -541,7 +534,7 @@ class Cursor(BaseCursor):
                 config['db_system'] if config['db_system'] not in config['db_name'] else '',
                 config['db_template'],
             )
-            self.__pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
+            self._cnx.give_back(keep_in_pool=keep_in_pool)
 
     def commit(self) -> None:
         """ Perform an SQL `COMMIT` """
@@ -593,6 +586,9 @@ class PsycoConnection(psycopg2.extensions.connection):
                 def password(self):
                     pass
             return PsycoConnectionInfo(self)
+
+    def give_back(self, keep_in_pool=True):
+        raise RuntimeError('not bound to a pool')
 
 
 class ConnectionPool:
@@ -673,6 +669,7 @@ class ConnectionPool:
             result = psycopg2.connect(
                 connection_factory=PsycoConnection,
                 **connection_info)
+            result.give_back = functools.partial(self.give_back, result)
         except psycopg2.Error:
             _logger.info('Connection to the database failed')
             raise
@@ -757,7 +754,14 @@ class Connection:
 
     def cursor(self) -> Cursor:
         _logger.debug('create cursor to %r', self.dsn)
-        return Cursor(self.__pool, self.__dbname, self.__dsn)
+        cnx = self.__pool.borrow(self.__dsn)
+        cnx.set_session(
+            # See the docstring of this class.
+            isolation_level=ISOLATION_LEVEL_REPEATABLE_READ,
+            readonly=self.__pool.readonly,
+            autocommit=False,
+        )
+        return Cursor(cnx, self.__dbname)
 
     def __bool__(self):
         raise NotImplementedError()
