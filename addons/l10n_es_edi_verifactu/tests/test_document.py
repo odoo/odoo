@@ -590,3 +590,47 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
             self.user.groups_id = self.env.ref(group)
             # Should not raise an error for accounting users
             move.with_user(self.user).read(['l10n_es_edi_verifactu_document_ids'])
+
+    def test_oss_invoice(self):
+        """ For OSS taxes, the tax amount should not be reported. """
+        if not self.env['ir.module.module'].search([
+            ('name', '=', 'l10n_eu_oss'),
+            ('state', '=', 'installed'),
+        ]):
+            self.skipTest("l10n_eu_oss is not installed")
+
+        self.company._map_eu_taxes()
+        self.partner_a.vat = False
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2019-01-30',
+            'date': '2019-01-30',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_1.id,
+                    'price_unit': 1000.0,
+                }),
+            ],
+        })
+        invoice.action_post()
+        tax = invoice.invoice_line_ids.tax_ids
+        self.assertTrue(tax, "The invoice should have taxes applied after fiscal position mapping.")
+        self.assertEqual(tax.l10n_es_type, 'no_sujeto_loc')
+        self.assertEqual(tax.l10n_es_applicability, '01')
+
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
+
+        self.assertFalse(document.errors)
+
+        registro = document._get_document_dict()['RegistroAlta']
+        desglose = registro['Desglose']['DetalleDesglose'][0]
+
+        self.assertEqual(desglose['ClaveRegimen'], '17')
+        self.assertEqual(desglose['CalificacionOperacion'], 'N2')
+        self.assertEqual(desglose['Impuesto'], '01')
+        self.assertEqual(registro['CuotaTotal'], '0.00')
+        self.assertEqual(registro['ImporteTotal'], desglose['BaseImponibleOimporteNoSujeto'])
+        self.assertNotIn('TipoImpositivo', desglose)
+        self.assertNotIn('CuotaRepercutida', desglose)
