@@ -1,4 +1,5 @@
-import { Component, onMounted, useExternalListener, useState } from "@odoo/owl";
+import { useExternalListener } from "@web/owl2/utils";
+import { Component, onMounted, useState } from "@odoo/owl";
 import { Handles } from "@pos_restaurant/app/screens/floor_screen/floor_plan_editor/handles/handles";
 import { _t } from "@web/core/l10n/translation";
 import { getColorRGBA, getColors } from "@pos_restaurant/app/services/floor_plan/utils/colors";

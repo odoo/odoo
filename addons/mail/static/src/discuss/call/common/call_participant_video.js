@@ -1,4 +1,5 @@
-import { Component, onMounted, onPatched, status, useExternalListener, useRef } from "@odoo/owl";
+import { useExternalListener } from "@web/owl2/utils";
+import { Component, onMounted, onPatched, status, useRef } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 /**

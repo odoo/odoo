@@ -1,3 +1,4 @@
+import { useExternalListener } from "@web/owl2/utils";
 import { markEventHandled } from "@web/core/utils/misc";
 
 import {
@@ -11,7 +12,6 @@ import {
     reactive,
     useComponent,
     useEffect,
-    useExternalListener,
     useRef,
     useState,
     xml,

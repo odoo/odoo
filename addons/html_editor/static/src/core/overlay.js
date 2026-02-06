@@ -1,8 +1,8 @@
+import { useExternalListener } from "@web/owl2/utils";
 import {
     Component,
     onWillDestroy,
     useEffect,
-    useExternalListener,
     useRef,
     useState,
     useSubEnv,

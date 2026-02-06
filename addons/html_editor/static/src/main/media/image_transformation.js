@@ -1,3 +1,4 @@
+import { useExternalListener } from "@web/owl2/utils";
 /*
 Copyright (c) 2014 Christophe Matthieu,
 
@@ -23,7 +24,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import { Component, onMounted, useExternalListener, useRef } from "@odoo/owl";
+import { Component, onMounted, useRef } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { usePositionHook } from "@html_editor/position_hook";
 

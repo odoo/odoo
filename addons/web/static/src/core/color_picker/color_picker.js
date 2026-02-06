@@ -1,4 +1,5 @@
-import { Component, useEffect, useRef, useState, useExternalListener } from "@odoo/owl";
+import { useExternalListener } from "@web/owl2/utils";
+import { Component, useEffect, useRef, useState } from "@odoo/owl";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { isCSSColor, isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";

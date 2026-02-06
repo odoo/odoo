@@ -1,3 +1,4 @@
+import { useExternalListener } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
@@ -21,7 +22,6 @@ import {
     Component,
     useState,
     useRef,
-    useExternalListener,
     onWillStart,
     onPatched,
 } from "@odoo/owl";

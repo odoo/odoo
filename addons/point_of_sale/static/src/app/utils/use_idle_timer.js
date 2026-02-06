@@ -1,4 +1,4 @@
-import { useExternalListener } from "@odoo/owl";
+import { useExternalListener } from "@web/owl2/utils";
 
 const UserPresenceEvents = ["mousemove", "mousedown", "touchmove", "click", "scroll", "keypress"];
 

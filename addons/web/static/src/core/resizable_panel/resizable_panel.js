@@ -1,10 +1,10 @@
+import { useExternalListener } from "@web/owl2/utils";
 import {
     Component,
     onMounted,
     onWillUpdateProps,
     onWillUnmount,
     useEffect,
-    useExternalListener,
     useRef,
     useComponent,
 } from "@odoo/owl";

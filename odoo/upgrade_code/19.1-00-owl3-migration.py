@@ -1,6 +1,13 @@
 import re
 
 
+EXCLUDED_FILES = (
+    'addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
+    'addons/web/static/lib/owl/owl.js',
+    'addons/web/static/src/owl2/utils.js'
+)
+
+
 class JSTooling:
     @staticmethod
     def is_commented(content: str, position: int) -> bool:
@@ -11,12 +18,12 @@ class JSTooling:
             position: The index of the word to check.
 
         Returns:
-            True if the line starts with // before the position.
+            True if the line starts with //, /* or /** before the position.
         """
         # We look back to the start of the current line
         line_start = content.rfind('\n', 0, position) + 1
-        line_text = content[line_start:position]
-        return '//' in line_text
+        line_text = content[line_start:position].lstrip()
+        return '//' in line_text or '/*' in line_text or '/**' in line_text or line_text.startswith("*")
 
     @staticmethod
     def has_active_usage(content: str, word: str) -> bool:
@@ -151,20 +158,6 @@ class JSTooling:
         return re.sub(pattern, replacer, content, flags=re.DOTALL)
 
     @staticmethod
-    def replace_usage(content: str, old_name: str, new_name: str) -> str:
-        """Replaces variable usage using word boundaries.
-
-        Args:
-            content: The file content.
-            old_name: Original variable name.
-            new_name: New variable name.
-
-        Returns:
-            The updated content.
-        """
-        return re.sub(rf'\b{old_name}\b', new_name, content)
-
-    @staticmethod
     def clean_whitespace(content: str) -> str:
         """Removes trailing whitespace and lines containing only spaces.
 
@@ -221,3 +214,32 @@ class MigrationCollector:
     def get_final_logs(self) -> str:
         """Returns all collected reports as a single string."""
         return "\n".join(self.reports)
+
+
+def upgrade_use_external_listener(file_manager, log_info, log_error):
+    """ Changes the imports from useExternalListeners from "@odoo/owl" to "@web/owl2/utils". """
+    js_files = [
+        f for f in file_manager
+        if '/static/src/' in f.path._str
+        and f.path.suffix == '.js'
+        and not any(f.path._str.endswith(p) for p in EXCLUDED_FILES)
+    ]
+
+    for fileno, file in enumerate(js_files, start=1):
+        try:
+            if not JSTooling.has_active_usage(file.content, 'useExternalListener'):
+                continue
+            file.content = JSTooling.remove_import(file.content, 'useExternalListener', '@odoo/owl')
+            file.content = JSTooling.add_import(file.content, 'useExternalListener', '@web/owl2/utils')
+        except Exception as e:
+            log_error(file.path, e)
+        file_manager.print_progress(fileno, len(js_files))
+
+
+def upgrade(file_manager) -> str:
+    """Main entry point called by Odoo."""
+    collector = MigrationCollector()
+
+    collector.run_sub("Migrating useExternalListener", upgrade_use_external_listener, file_manager)
+
+    return collector.get_final_logs()

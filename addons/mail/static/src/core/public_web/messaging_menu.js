@@ -1,9 +1,10 @@
+import { useExternalListener } from "@web/owl2/utils";
 import { CountryFlag } from "@mail/core/common/country_flag";
 import { ImStatus } from "@mail/core/common/im_status";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { useDiscussSystray } from "@mail/utils/common/hooks";
 
-import { Component, useExternalListener, useRef, useState, useSubEnv } from "@odoo/owl";
+import { Component, useRef, useState, useSubEnv } from "@odoo/owl";
 
 import { hasTouch, isDisplayStandalone, isIOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";

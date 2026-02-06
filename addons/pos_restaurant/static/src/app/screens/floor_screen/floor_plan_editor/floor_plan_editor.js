@@ -1,4 +1,5 @@
-import { onMounted, onWillUnmount, useEffect, useRef, useExternalListener } from "@odoo/owl";
+import { useExternalListener } from "@web/owl2/utils";
+import { onMounted, onWillUnmount, useEffect, useRef } from "@odoo/owl";
 import { EditDecorProperties } from "./edit_decor/edit_decor";
 import { EditTableProperties } from "./edit_table/edit_table";
 import { EditFloorProperties } from "./edit_floor/edit_floor";

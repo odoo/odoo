@@ -1,4 +1,5 @@
-import { Component, onWillRender, useEffect, useExternalListener, useRef } from "@odoo/owl";
+import { useExternalListener } from "@web/owl2/utils";
+import { Component, onWillRender, useEffect, useRef } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
