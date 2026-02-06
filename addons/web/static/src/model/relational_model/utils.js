@@ -185,6 +185,7 @@ export function patchActiveFields(activeField, patch) {
     activeField.isHandle = activeField.isHandle || patch.isHandle;
     // x2manys
     if (patch.related) {
+        activeField.related = activeField.related || { activeFields: {}, fields: {} };
         const related = activeField.related;
         for (const fieldName in patch.related.activeFields) {
             if (fieldName in related.activeFields) {
