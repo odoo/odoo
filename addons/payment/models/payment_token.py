@@ -83,7 +83,10 @@ class PaymentToken(models.Model):
         if 'active' in vals:
             if vals['active']:
                 if any(
-                    not token.payment_method_id.active
+                    (
+                        token.payment_method_id != self.env.ref('payment.payment_method_unknown')
+                        and not token.payment_method_id.active
+                    )
                     or token.provider_id.state == 'disabled'
                     for token in self
                 ):
