@@ -192,7 +192,7 @@ class SaleOrderLine(models.Model):
             if not line.is_expense and line.product_id.type == 'consu':
                 line.qty_delivered_method = 'stock_move'
 
-    @api.depends('move_ids.state', 'move_ids.location_dest_usage', 'move_ids.quantity', 'move_ids.product_uom')
+    @api.depends('move_ids.state', 'move_ids.scrap_id', 'move_ids.quantity', 'move_ids.product_uom')
     def _compute_qty_delivered(self):
         super(SaleOrderLine, self)._compute_qty_delivered()
 
@@ -328,7 +328,7 @@ class SaleOrderLine(models.Model):
         outgoing_moves_ids = set()
         incoming_moves_ids = set()
 
-        moves = self.move_ids.filtered(lambda r: r.state != 'cancel' and r.location_dest_usage != 'inventory' and self.product_id == r.product_id)
+        moves = self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrap_id and self.product_id == r.product_id)
         if moves and not strict:
             # The first move created was the one created from the intial rule that started it all.
             sorted_moves = moves.sorted('id')

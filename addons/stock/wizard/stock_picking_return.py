@@ -119,7 +119,7 @@ class StockReturnPicking(models.TransientModel):
             for move in wizard.picking_id.move_ids:
                 if move.state == 'cancel':
                     continue
-                if move.location_dest_usage == 'inventory':
+                if move.scrap_id:
                     continue
                 product_return_moves_data = dict(product_return_moves_data_tmpl)
                 product_return_moves_data.update(wizard._prepare_stock_return_picking_line_vals_from_move(move))
@@ -225,7 +225,7 @@ class StockReturnPicking(models.TransientModel):
         self.ensure_one()
         for return_move in self.product_return_moves:
             stock_move = return_move.move_id
-            if not stock_move or stock_move.state == 'cancel' or stock_move.location_dest_usage == 'inventory':
+            if not stock_move or stock_move.state == 'cancel' or stock_move.scrap_id:
                 continue
             quantity = stock_move.quantity
             for move in stock_move.move_dest_ids:

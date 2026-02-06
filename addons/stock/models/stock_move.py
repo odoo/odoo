@@ -353,7 +353,7 @@ class StockMove(models.Model):
         for move in self:
             move.is_quantity_done_editable = move.product_id
 
-    @api.depends('picking_id.name', 'scrap_id.name', 'location_dest_usage', 'is_inventory', 'inventory_name')
+    @api.depends('picking_id.name', 'scrap_id', 'is_inventory', 'inventory_name')
     def _compute_reference(self):
         for move in self:
             if move.scrap_id:
@@ -932,7 +932,7 @@ Please change the quantity done or the rounding precision in your settings.""",
     def _do_unreserve(self):
         moves_to_unreserve = OrderedSet()
         for move in self:
-            if move.state == 'cancel' or (move.state == 'done' and move.location_dest_usage == 'inventory') or move.picked:
+            if move.state == 'cancel' or (move.state == 'done' and move.scrap_id) or move.picked:
                 # We may have cancelled move in an open picking in a "propagate_cancel" scenario.
                 # We may have done move in an open picking in a scrap scenario.
                 continue
@@ -2029,9 +2029,9 @@ Please change the quantity done or the rounding precision in your settings.""",
         StockMove.browse(moves_to_redirect).move_line_ids._apply_putaway_strategy()
 
     def _action_cancel(self):
-        if any(move.state == 'done' and move.location_dest_usage != 'inventory' for move in self):
+        if any(move.state == 'done' and not move.scrap_id for move in self):
             raise UserError(_('You cannot cancel a stock move that has been set to \'Done\'. Create a return in order to reverse the moves which took place.'))
-        moves_to_cancel = self.filtered(lambda m: m.state != 'cancel' and not (m.state == 'done' and m.location_dest_usage == 'inventory'))
+        moves_to_cancel = self.filtered(lambda m: m.state != 'cancel' and not (m.state == 'done' and m.scrap_id))
         moves_to_cancel.picked = False
         # self cannot contain moves that are either cancelled or done, therefore we can safely
         # unlink all associated move_line_ids
@@ -2540,7 +2540,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         """ Open the form view of the move's reference document, if one exists, otherwise open form view of self
         """
         self.ensure_one()
-        if not self.is_inventory and self.location_dest_usage == 'inventory':
+        if self.scrap_id:
             return {
                 'res_model': 'stock.scrap',
                 'type': 'ir.actions.act_window',

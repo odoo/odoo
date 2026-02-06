@@ -204,11 +204,11 @@ class MrpProduction(models.Model):
         'stock.move', 'raw_material_production_id', 'Components',
         compute='_compute_move_raw_ids', store=True, readonly=False,
         copy=False,
-        domain=[('location_dest_usage', '!=', 'inventory')])
+        domain=[('scrap_id', '=', False)])
     move_finished_ids = fields.One2many(
         'stock.move', 'production_id', 'Finished Products', readonly=False,
         compute='_compute_move_finished_ids', store=True, copy=False,
-        domain=[('location_dest_usage', '!=', 'inventory')])
+        domain=[('scrap_id', '=', False)])
     # technical field: inverse field for `stock.move.raw_material_production_id`
     all_move_raw_ids = fields.One2many('stock.move', 'raw_material_production_id')
     # technical field: inverse field for `stock.move.production_id`

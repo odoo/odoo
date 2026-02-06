@@ -249,7 +249,7 @@ class StockMove(models.Model):
         for values in vals_list:
             mo_id = values.get('raw_material_production_id', False) or values.get('production_id', False)
             location_dest = self.env['stock.location'].browse(values.get('location_dest_id'))
-            if mo_id and location_dest.usage != 'inventory':
+            if mo_id and not values.get('scrap_id'):
                 mo = mo_id_to_mo[mo_id]
                 if not mo:
                     mo = mo.browse(mo_id)

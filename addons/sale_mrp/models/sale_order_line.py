@@ -64,7 +64,7 @@ class SaleOrderLine(models.Model):
                         else:
                             delivered_qties[order_line] = order_line.product_uom_qty
                         continue
-                    moves = order_line.move_ids.filtered(lambda m: m.state == 'done' and m.location_dest_usage != 'inventory')
+                    moves = order_line.move_ids.filtered(lambda m: m.state == 'done' and not m.scrap_id)
                     filters = {
                         # in/out perspective w/ respect to moves is flipped for sale order document
                         'incoming_moves': lambda m:
@@ -140,13 +140,13 @@ class SaleOrderLine(models.Model):
 
         return {
             'incoming_moves': lambda m: (
-                m.state != 'cancel' and m.location_dest_usage != 'inventory'
+                m.state != 'cancel' and not m.scrap_id
                 and m.rule_id.id in triggering_rule_ids
                 and m.location_final_id.usage == 'customer'
                 and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)
             )),
             'outgoing_moves': lambda m: (
-                m.state != 'cancel' and m.location_dest_usage != 'inventory'
+                m.state != 'cancel' and not m.scrap_id
                 and m.location_id.usage == 'customer' and m.to_refund
             ),
         }
@@ -158,7 +158,7 @@ class SaleOrderLine(models.Model):
         # kits that are currently in delivery
         bom = self.env['mrp.bom'].sudo()._bom_find(self.product_id, bom_type='phantom', company_id=self.company_id.id)[self.product_id]
         if bom and self.move_ids:
-            moves = self.move_ids.filtered(lambda r: r.state != 'cancel' and r.location_dest_usage != 'inventory')
+            moves = self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrap_id)
             filters = self._get_incoming_outgoing_moves_filter()
             order_qty = previous_product_uom_qty.get(self.id, 0) if previous_product_uom_qty else self.product_uom_qty
             order_qty = self.product_uom_id._compute_quantity(order_qty, bom.product_uom_id)

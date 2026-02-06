@@ -196,7 +196,7 @@ class StockLocation(models.Model):
     def _check_scrap_location(self):
         for record in self:
             if record.usage == 'inventory' and self.env['stock.picking.type'].search_count([('code', '=', 'mrp_operation'), ('default_location_dest_id', '=', record.id)], limit=1):
-                raise ValidationError(_("You cannot set a location as a scrap location when it is assigned as a destination location for a manufacturing type operation."))
+                raise ValidationError(self.env._("You cannot set a location as a inventory loss location when it is assigned as a destination location for a manufacturing type operation."))
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_master_data(self):
