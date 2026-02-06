@@ -4,6 +4,7 @@ import { getContent } from "../_helpers/selection";
 import { execCommand } from "../_helpers/userCommands";
 import { simulateArrowKeyPress } from "../_helpers/user_actions";
 import { animationFrame, keyDown, keyUp, press, click, tick } from "@odoo/hoot-dom";
+import { unformat } from "../_helpers/format";
 
 async function insertSeparator(editor) {
     execCommand(editor, "insertSeparator");
@@ -62,11 +63,150 @@ describe("insert separator", () => {
         });
     });
 
-    test("should not insert a separator inside a list", async () => {
-        await testEditor({
-            contentBefore: "<ul><li>[]<br></li></ul>",
-            stepFunction: insertSeparator,
-            contentAfter: "<ul><li>[]<br></li></ul>",
+    describe("list", () => {
+        test("insert separator after list when cursor is inside list item", async () => {
+            await testEditor({
+                contentBefore: "<ul><li>abc[]</li></ul>",
+                stepFunction: insertSeparator,
+                contentAfter: "<ul><li>abc</li></ul><hr><p>[]<br></p>",
+            });
+        });
+        test("insert separator after list when cursor is inside an empty list item", async () => {
+            await testEditor({
+                contentBefore: "<ul><li>[]<br></li></ul>",
+                stepFunction: insertSeparator,
+                contentAfter: "<ul><li><br></li></ul><hr><p>[]<br></p>",
+            });
+        });
+        test("insert separator after list when cursor is inside an empty list item (2)", async () => {
+            await testEditor({
+                contentBefore: "<ul><li>abc</li><li>[]<br></li></ul>",
+                stepFunction: insertSeparator,
+                contentAfter: "<ul><li>abc</li><li><br></li></ul><hr><p>[]<br></p>",
+            });
+        });
+        test("split list and insert separator after list when cursor is in middle list item", async () => {
+            await testEditor({
+                contentBefore: "<ul><li>abc</li><li>[]<br></li><li>def</li></ul>",
+                stepFunction: insertSeparator,
+                contentAfter:
+                    "<ul><li>abc</li><li><br></li></ul><hr><p>[]<br></p><ul><li>def</li></ul>",
+            });
+        });
+        test("split list and insert separator after list when cursor is in middle list item (2)", async () => {
+            await testEditor({
+                contentBefore: "<ul><li>abc</li><li>def[]</li><li>ghi</li></ul>",
+                stepFunction: insertSeparator,
+                contentAfter:
+                    "<ul><li>abc</li><li>def</li></ul><hr><p>[]<br></p><ul><li>ghi</li></ul>",
+            });
+        });
+        test("split list and insert separator after list when cursor is in nested list item", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <ul>
+                        <li>
+                            <p>A</p>
+                            <ul>
+                                <li class="oe-nested">
+                                    <ul>
+                                        <li>B[]</li>
+                                        <li>C</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>D</li>
+                    </ul>
+                `),
+                stepFunction: insertSeparator,
+                contentAfter: unformat(`
+                    <ul>
+                        <li>
+                            <p>A</p>
+                            <ul>
+                                <li class="oe-nested">
+                                    <ul>
+                                        <li>B</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <hr>
+                    <p>[]<br></p>
+                    <ul>
+                        <li class="oe-nested">
+                            <ul>
+                                <li class="oe-nested">
+                                    <ul>
+                                        <li>C</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>D</li>
+                    </ul>
+                `),
+            });
+        });
+        test("split list and insert separator after list when cursor is in nested list item (2)", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <ul>
+                        <li>
+                            <p>A</p>
+                            <ul>
+                                <li>
+                                    <p>B[]</p>
+                                    <ul>
+                                        <li>C</li>
+                                    </ul>
+                                </li>
+                                <li>D</li>
+                            </ul>
+                        </li>
+                        <li>E</li>
+                    </ul>
+                `),
+                stepFunction: insertSeparator,
+                contentAfter: unformat(`
+                    <ul>
+                        <li>
+                            <p>A</p>
+                            <ul>
+                                <li>
+                                    <p>B</p>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <hr>
+                    <p>[]<br></p>
+                    <ul>
+                        <li class="oe-nested">
+                            <ul>
+                                <li class="oe-nested">
+                                    <ul>
+                                        <li>C</li>
+                                    </ul>
+                                </li>
+                                <li>D</li>
+                            </ul>
+                        </li>
+                        <li>E</li>
+                    </ul>
+                `),
+            });
+        });
+        test("should insert a separator inside a table that is wrapped in li", async () => {
+            await testEditor({
+                contentBefore:
+                    "<ul><li>ab</li><li><br><table><tbody><tr><td><p>cd[]</p></td></tr></tbody></table></li></ul>",
+                stepFunction: insertSeparator,
+                contentAfter:
+                    "<ul><li>ab</li><li><br><table><tbody><tr><td><p>cd</p><hr><p>[]<br></p></td></tr></tbody></table></li></ul>",
+            });
         });
     });
 
