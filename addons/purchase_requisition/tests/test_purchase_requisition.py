@@ -37,11 +37,21 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         quantity = 26
 
         # Create a pruchase requisition with type blanket order and two product
-        line1 = (0, 0, {'product_id': self.product_09.id, 'product_qty': quantity, 'product_uom_id': self.product_uom_id.id, 'price_unit': price_product09})
-        line2 = (0, 0, {'product_id': self.product_13.id, 'product_qty': quantity, 'product_uom_id': self.product_uom_id.id, 'price_unit': price_product13})
-
-        requisition_blanket = self.env['purchase.requisition'].create({
-            'line_ids': [line1, line2],
+        requisition_blanket = self.env['purchase.requisition'].with_company(self.env.company).create({
+            'line_ids': [
+                Command.create({
+                    'product_id': self.product_09.id,
+                    'product_qty': quantity,
+                    'product_uom_id': self.product_uom_id.id,
+                    'price_unit': price_product09,
+                }),
+                Command.create({
+                    'product_id': self.product_13.id,
+                    'product_qty': quantity,
+                    'product_uom_id': self.product_uom_id.id,
+                    'price_unit': price_product13,
+                }),
+            ],
             'requisition_type': 'blanket_order',
             'vendor_id': self.res_partner_1.id,
         })
@@ -124,14 +134,15 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         })
 
         # create an empty blanket order
-        line1 = (0, 0, {
-            'product_id': product2.id,
-            'product_uom_id': product2.uom_po_id.id,
-            'price_unit': 41,
-            'product_qty': 10,
-        })
-        requisition_blanket = self.env['purchase.requisition'].create({
-            'line_ids': [line1],
+        requisition_blanket = self.env['purchase.requisition'].with_company(self.env.company).create({
+            'line_ids': [
+                Command.create({
+                    'product_id': product2.id,
+                    'product_uom_id': product2.uom_po_id.id,
+                    'price_unit': 41,
+                    'product_qty': 10,
+                }),
+            ],
             'requisition_type': 'blanket_order',
             'vendor_id': vendor.id,
         })
@@ -493,11 +504,11 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         })
 
         # Create a purchase requisition with type purchase template and two products
-        line1 = Command.create({'product_id': self.product_09.id, 'product_uom_id': self.product_uom_id.id})
-        line2 = Command.create({'product_id': self.product_13.id, 'product_uom_id': self.product_uom_id.id})
-
-        purchase_template = self.env['purchase.requisition'].create({
-            'line_ids': [line1, line2],
+        purchase_template = self.env['purchase.requisition'].with_company(self.env.company).create({
+            'line_ids': [
+                Command.create({'product_id': self.product_09.id, 'product_uom_id': self.product_uom_id.id}),
+                Command.create({'product_id': self.product_13.id, 'product_uom_id': self.product_uom_id.id}),
+            ],
             'requisition_type': 'purchase_template',
             'vendor_id': self.res_partner_1.id,
         })
@@ -557,6 +568,42 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         alt_po_id = alt_po_wizard.action_create_alternative()['res_id']
         alt_po = self.env['purchase.order'].browse(alt_po_id)
         self.assertEqual(orig_po.order_line.taxes_id, alt_po.order_line.taxes_id)
+
+    def test_blanket_order_supplierinfo_company(self):
+        """ Test that supplierinfo created from a blanket order has the correct company """
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        product_mc = self.env['product.product'].create({
+            'name': 'Multi-Company Product',
+            'type': 'consu',
+        })
+        vendor_mc = self.env['res.partner'].create({
+            'name': 'Multi-Company Vendor',
+        })
+
+        # Create Blanket Order in Company A (self.env.company)
+        requisition = self.env['purchase.requisition'].with_company(self.env.company).create({
+            'line_ids': [Command.create({
+                'product_id': product_mc.id,
+                'product_qty': 10.0,
+                'price_unit': 100.0,
+            })],
+            'requisition_type': 'blanket_order',
+            'vendor_id': vendor_mc.id,
+            'company_id': self.env.company.id,
+        })
+
+        # Confirm the requisition while in Company B
+        requisition.with_company(company_b).action_confirm()
+
+        # Check created supplierinfo
+        supplierinfo = self.env['product.supplierinfo'].search([
+            ('product_id', '=', product_mc.id),
+            ('partner_id', '=', vendor_mc.id),
+            ('purchase_requisition_id', '=', requisition.id),
+        ])
+
+        self.assertTrue(supplierinfo, "Supplier info should have been created")
+        self.assertEqual(supplierinfo.company_id, self.env.company, "Supplier info should belong to Company A")
 
     def test_alternative_purchase_order_merge(self):
         group_purchase_alternatives = self.env.ref('purchase_requisition.group_purchase_alternatives')
