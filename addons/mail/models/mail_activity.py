@@ -423,12 +423,10 @@ class MailActivity(models.Model):
 
         allowed_ids = defaultdict(set)
         for res_model, res_ids in model_ids.items():
-            records = self.env[res_model].with_user(access_rights_uid or self._uid).browse(res_ids)
-            # fall back on related document access right checks. Use the same as defined for mail.thread
-            # if available; otherwise fall back on read
-            operation = getattr(records, '_mail_post_access', 'read')
-            if records.check_access_rights(operation, raise_exception=False):
-                allowed_ids[res_model] = set(records._filter_access_rules(operation)._ids)
+            allowed = self.env['mail.message']._filter_records_for_message_operation(
+                res_model, res_ids, 'read',
+            )
+            allowed_ids[res_model] = set(allowed._ids)
 
         activities = self.browse(
             id_
