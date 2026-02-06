@@ -1,4 +1,5 @@
-import { useState, onRendered } from "@odoo/owl";
+import { onRendered } from "@web/owl2/utils";
+import { useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { BooleanToggleField, booleanToggleField } from "@web/views/fields/boolean_toggle/boolean_toggle_field";
 

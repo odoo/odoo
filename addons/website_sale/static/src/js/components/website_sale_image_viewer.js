@@ -1,5 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { onMounted, onRendered, useRef, useState } from "@odoo/owl";
+import { onRendered, useLayoutEffect } from "@web/owl2/utils";
+import { onMounted, useRef, useState } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useDebounced } from "@web/core/utils/timing";

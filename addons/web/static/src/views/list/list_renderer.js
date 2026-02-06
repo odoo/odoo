@@ -1,3 +1,4 @@
+import { onWillRender } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -30,7 +31,6 @@ import {
     onPatched,
     onWillDestroy,
     onWillPatch,
-    onWillRender,
     onWillStart,
     status,
     useExternalListener,

@@ -1,6 +1,6 @@
+import { onRendered } from "@web/owl2/utils";
 import {
     onMounted,
-    onRendered,
     onPatched,
     onWillDestroy,
     reactive,

@@ -1,6 +1,7 @@
+import { onWillRender } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
-import { Component, onWillRender, onWillUpdateProps, useState } from "@odoo/owl";
+import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 import { Many2One } from "@web/views/fields/many2one/many2one";
 
 export class WorkEntryType extends Component {
