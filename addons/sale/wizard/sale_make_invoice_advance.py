@@ -230,11 +230,19 @@ class SaleAdvancePaymentInv(models.TransientModel):
         else:
             name = self.env._("Down Payment")
 
-        return so_line._prepare_invoice_line(
+        down_payment_line_values = so_line._prepare_invoice_line(
             name=name,
             quantity=1.0,
             **({'account_id': account.id} if account else {}),
         )
+
+        if self.env['account.move'].require_tax_ids_on_invoice_lines():
+            _, _, tax_ids = down_payment_line_values['tax_ids'][0]
+            if not tax_ids:
+                tax_0 = self.env['account.tax']._get_zero_tax()
+                down_payment_line_values['tax_ids'] = [Command.set(tax_0.ids)]
+
+        return down_payment_line_values
 
     def _get_down_payment_account(self, product):
         """ Retrieve the down payment account to use.
