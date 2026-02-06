@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- API Log: List View -->
+    <record id="gpcb_api_log_list" model="ir.ui.view">
+        <field name="name">gpcb.api.log.list</field>
+        <field name="model">gpcb.api.log</field>
+        <field name="arch" type="xml">
+            <list string="API Logs" create="0" edit="0"
+                  decoration-danger="status_code &gt;= 400"
+                  decoration-warning="status_code &gt;= 300 and status_code &lt; 400"
+                  decoration-muted="status_code == 0">
+                <field name="create_date" string="Timestamp"/>
+                <field name="endpoint"/>
+                <field name="method"/>
+                <field name="user_id"/>
+                <field name="status_code"/>
+                <field name="duration_ms" string="Duration (ms)"/>
+                <field name="ip_address"/>
+                <field name="error_message" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- API Log: Form View -->
+    <record id="gpcb_api_log_form" model="ir.ui.view">
+        <field name="name">gpcb.api.log.form</field>
+        <field name="model">gpcb.api.log</field>
+        <field name="arch" type="xml">
+            <form string="API Log Entry" create="0" edit="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="endpoint"/>
+                            <field name="method"/>
+                            <field name="status_code"/>
+                            <field name="duration_ms"/>
+                        </group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="ip_address"/>
+                            <field name="create_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Request">
+                            <field name="request_body" widget="text"/>
+                        </page>
+                        <page string="Response">
+                            <field name="response_body" widget="text"/>
+                        </page>
+                        <page string="Error" invisible="not error_message">
+                            <field name="error_message" widget="text"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_gpcb_api_log" model="ir.actions.act_window">
+        <field name="name">API Logs</field>
+        <field name="res_model">gpcb.api.log</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Menu: under Settings > Technical -->
+    <menuitem id="menu_gpcb_api_log"
+              name="API Logs"
+              parent="base.menu_custom"
+              action="action_gpcb_api_log"
+              sequence="90"/>
+
+</odoo>
