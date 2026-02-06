@@ -114,7 +114,7 @@
     <div t-attf-id="#{id}" t-attf-class="carousel slide #{colorContrast}" t-att-data-bs-ride="ride" t-attf-data-bs-interval="#{interval}" style="margin: 0 12px;">
         <div class="carousel-inner">
             <t t-foreach="images" t-as="image" t-key="image_index">
-                <div t-attf-class="carousel-item #{image_index == index and 'active' or None}">
+                <div t-attf-class="carousel-item #{image_index == index and 'active' or ''}">
                     <t t-if="!copyAttributes">
                         <img class="img img-fluid d-block" t-att-src="image.getAttribute('src')" t-att-alt="image.alt" data-name="Image"/>
                     </t>
