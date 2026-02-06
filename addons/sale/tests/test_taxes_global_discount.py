@@ -115,19 +115,15 @@ class TestTaxesGlobalDiscountSale(TestTaxCommonSale, TestTaxesGlobalDiscount):
         self.assertRecordValues(
             so, [{"amount_untaxed": 2000.0, "amount_tax": 0.0, "amount_total": 2000.0}]
         )
-
         # Put a discount of 25%.
-        wizard = self._apply_sale_order_discount(so, "percent", 25)
-
+        self._apply_sale_order_discount(so, "percent", 25)
         self.assertRecordValues(so.order_line, [{"price_unit": 2000.0}, {"price_unit": -500.0}])
         self.assertRecordValues(
             so, [{"amount_untaxed": 1500.0, "amount_tax": 0.0, "amount_total": 1500.0}]
         )
 
         # Put another discount of 10%.
-        wizard.discount_percentage = 0.10
-        wizard.action_apply_discount()
-
+        self._apply_sale_order_discount(so, "percent", 10)
         self.assertRecordValues(
             so.order_line, [{"price_unit": 2000.0}, {"price_unit": -500.0}, {"price_unit": -150.0}]
         )
