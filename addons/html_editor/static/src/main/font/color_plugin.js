@@ -264,7 +264,10 @@ export class ColorPlugin extends Plugin {
             }
             const li = closestElement(node, "li");
             if (li && color && this.dependencies.selection.isNodeContentsFullySelected(li)) {
-                return rgbaToHex(li.style.color).toLowerCase() !== hexColor;
+                const existingColor = li.style.color
+                    ? li.style.color
+                    : [...li.classList].find((cls) => TEXT_CLASSES_REGEX.test(cls));
+                return rgbaToHex(existingColor).toLowerCase() !== hexColor;
             }
             return true;
         });
