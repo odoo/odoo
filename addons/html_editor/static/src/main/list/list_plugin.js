@@ -8,6 +8,7 @@ import {
     wrapInlinesInBlocks,
 } from "@html_editor/utils/dom";
 import {
+    getDeepestEditablePosition,
     getDeepestPosition,
     isElement,
     isEmptyBlock,
@@ -182,6 +183,7 @@ export class ListPlugin extends Plugin {
         normalize_handlers: this.normalize.bind(this),
         step_added_handlers: this.updateToolbarButtons.bind(this),
         delete_handlers: this.adjustListPaddingOnDelete.bind(this),
+        before_insert_separator_handlers: this.exitList.bind(this),
 
         /** Overrides */
         delete_backward_overrides: this.handleDeleteBackward.bind(this),
@@ -1278,6 +1280,33 @@ export class ListPlugin extends Plugin {
         const listItem = closestElement(selection.anchorNode);
         if (isListItem(listItem)) {
             this.adjustListPadding(listItem.parentElement);
+        }
+    }
+
+    /**
+     * Exit the list from given list item by splitting
+     * the list.
+     *
+     * @param {HTMLElement} blockEl
+     */
+    exitList(blockEl) {
+        let li;
+        if (isListItem(blockEl)) {
+            li = blockEl;
+        } else if (isListItem(blockEl.parentElement)) {
+            li = blockEl.parentElement;
+        }
+        if (li) {
+            // Helper li to split the list
+            const [, after] = this.dependencies.split.splitElementBlock({
+                targetNode: blockEl,
+                targetOffset: nodeSize(blockEl),
+                blockToSplit: li,
+            });
+            const [anchorNode, anchorOffset] = getDeepestEditablePosition(after, 0);
+            this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
+            // Fully outdent li to exit the list
+            this.liToBlocks(after);
         }
     }
 

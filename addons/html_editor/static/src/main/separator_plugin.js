@@ -2,11 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
 import { closestElement, firstLeaf, lastLeaf, selectElements } from "../utils/dom_traversal";
-import {
-    isEmptyBlock,
-    isListItemElement,
-    paragraphRelatedElementsSelector,
-} from "../utils/dom_info";
+import { isEmptyBlock, paragraphRelatedElementsSelector } from "../utils/dom_info";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { fillEmpty, removeClass, splitTextNode } from "@html_editor/utils/dom";
 import { DIRECTIONS, nodeSize, rightPos } from "@html_editor/utils/position";
@@ -58,11 +54,11 @@ export class SeparatorPlugin extends Plugin {
     };
 
     insertSeparator() {
-        const selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
+        let selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
         const block = closestBlock(selection.startContainer);
-        const element =
-            closestElement(selection.startContainer, paragraphRelatedElementsSelector) ||
-            (block && !isListItemElement(block) ? block : null);
+        this.dispatchTo("before_insert_separator_handlers", block);
+        selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
+        const element = closestElement(selection.startContainer, paragraphRelatedElementsSelector);
 
         if (element && element !== this.editable) {
             const sep = this.document.createElement("hr");
