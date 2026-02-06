@@ -88,15 +88,19 @@ COPY --from=builder --chown=odoo:odoo /opt/venv /opt/venv
 COPY --chown=odoo:odoo odoo ./odoo
 COPY --chown=odoo:odoo odoo-bin ./
 
-# Copy addons
+# Copy official odoo addons
 COPY --chown=odoo:odoo addons ./addons
+
+# Copy custom addons to SEPARATE directory
+COPY --chown=odoo:odoo custom_addons ./custom_addons
 
 # Copy setup configuration
 COPY --chown=odoo:odoo setup.py setup.cfg ./
 
 # Create required directories with proper permissions
 RUN mkdir -p /var/lib/odoo \
-    /opt/odoo/extra-addons \
+    /opt/odoo/custom_addons \
+    /opt/odoo/extra-addons \   
     /opt/odoo/logs \
     /tmp/odoo-sessions \
     /tmp/odoo-session-config \
