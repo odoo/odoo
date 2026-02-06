@@ -1,4 +1,4 @@
-import { reactive } from "@odoo/owl";
+import { reactive, markRaw } from "@odoo/owl";
 import { Model } from "@odoo/o-spreadsheet";
 import { registry } from "@web/core/registry";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
@@ -258,6 +258,7 @@ export class DashboardLoader {
         config.custom.odooDataProvider.addEventListener("data-source-updated", () =>
             model.dispatch("EVALUATE_CELLS")
         );
+        markRaw(model);
         return model;
     }
 
