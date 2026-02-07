@@ -52,6 +52,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             'partner_id': cls.company_data['company'].partner_id.id,
             'bank_id': cls.caixabank.id,
             'acc_type': 'iban',
+            'allow_out_payment': True,
         })
 
         # ==== Business ====
