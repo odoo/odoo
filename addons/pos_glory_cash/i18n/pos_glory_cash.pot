@@ -6,20 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-01-25 18:36+0000\n"
+"POT-Creation-Date: 2026-02-06 18:36+0000\n"
+"PO-Revision-Date: 2026-02-06 18:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-
-#. module: pos_glory_cash
-#. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
-msgid "Are you sure you want to reset the cash machine?"
-msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -41,7 +35,7 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "Cash Machine Error"
 msgstr ""
 
@@ -62,13 +56,13 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "Cash deposited: %s"
 msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/screens/payment_screen/payment_lines/payment_lines.xml:0
+#: code:addons/pos_glory_cash/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Cash inserted:"
 msgstr ""
 
@@ -80,13 +74,19 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/screens/payment_screen/payment_lines/payment_lines.xml:0
+#: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.js:0
+msgid "Cash machine is disconnected"
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Cash machine status:"
 msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "Change given: %s"
 msgstr ""
 
@@ -104,7 +104,7 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/screens/payment_screen/payment_lines/payment_lines.xml:0
+#: code:addons/pos_glory_cash/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid ""
 "Consider emptying the cash machine, the following coins/bills are nearly "
 "full:"
@@ -124,8 +124,8 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
-msgid "Discard"
+#: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.xml:0
+msgid "Current cash machine status:"
 msgstr ""
 
 #. module: pos_glory_cash
@@ -147,8 +147,8 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/screens/payment_screen/payment_lines/payment_lines.xml:0
-msgid "Download logs"
+#: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.xml:0
+msgid "Download Logs"
 msgstr ""
 
 #. module: pos_glory_cash
@@ -165,7 +165,7 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
 "Failed to connect to Glory cash machine, please ensure it is switched on and"
 " connected to the network."
@@ -173,7 +173,7 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
 "Failed to login to Glory cash machine, please check the configured username "
 "and password."
@@ -181,13 +181,13 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "GLORY TRANSACTION CANCELLED"
 msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "GLORY TRANSACTION SUCCESSFUL"
 msgstr ""
 
@@ -215,8 +215,14 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "Only managers can withdraw cash from the cash machine."
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.xml:0
+msgid "Open Admin Page"
 msgstr ""
 
 #. module: pos_glory_cash
@@ -226,15 +232,20 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
-msgid "Reset"
+#: code:addons/pos_glory_cash/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Request sent"
 msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
-#: code:addons/pos_glory_cash/static/src/screens/payment_screen/payment_lines/payment_lines.xml:0
-msgid "Reset cash machine"
+#: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.xml:0
+msgid "Reset Cash Machine"
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.js:0
+msgid "Reset complete"
 msgstr ""
 
 #. module: pos_glory_cash
@@ -245,40 +256,38 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.js:0
+msgid "Resetting cash machine..."
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/utils/constants.js:0
 msgid "Starting payment"
 msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
-msgid ""
-"The cash machine contents could not be verified as it is busy with another "
-"operation."
-msgstr ""
-
-#. module: pos_glory_cash
-#. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "The cash machine has an error, please consult its display for details."
 msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/screens/payment_screen/payment_lines/payment_lines.xml:0
+#: code:addons/pos_glory_cash/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "The cash machine has run out of the following coins/bills:"
 msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
 "The cash machine is busy with another operation. Do you want to cancel it?"
 msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
 "The cash machine is currently in collection/replenishment mode, please "
 "finish this process on the machine before making a payment."
@@ -286,39 +295,31 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "The cash machine is disconnected."
 msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "The cash machine is in use by another POS."
 msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/screens/payment_screen/payment_lines/payment_lines.xml:0
+#: code:addons/pos_glory_cash/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "The cash machine is running low on the following coins/bills:"
 msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/screens/payment_screen/payment_lines/payment_lines.xml:0
+#: code:addons/pos_glory_cash/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "The cash machine must be emptied, the following coins/bills are full:"
 msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
-msgid ""
-"The cash machine requires verification of its contents, a collection process"
-" will now start. Please refer to the cash machine display."
-msgstr ""
-
-#. module: pos_glory_cash
-#. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
 "The payment failed due to an unrecoverable error - see the cash machine "
 "screen for details."
@@ -326,13 +327,19 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
+msgid "The payment failed for an unknown reason: %s"
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "There is insufficient cash in the machine to give change."
 msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
 "There is insufficient change in the cash machine to handle the payment. It "
 "must be cancelled to continue."
@@ -340,7 +347,7 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "Transaction ID: %s"
 msgstr ""
 
