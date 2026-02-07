@@ -5,13 +5,12 @@ import { formatDate, formatDateTime, serializeDateTime } from "@web/core/l10n/da
 import { omit } from "@web/core/utils/objects";
 import { parseUTCString, qrCodeSrc, random5Chars, uuidv4, gte, lt } from "@point_of_sale/utils";
 import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
-import { roundCurrency } from "@point_of_sale/app/models/utils/currency";
+import { formatCurrency, roundCurrency } from "@point_of_sale/app/models/utils/currency";
 import { computeComboItems } from "./utils/compute_combo_items";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { toRaw } from "@odoo/owl";
 
 const { DateTime } = luxon;
-const formatCurrency = registry.subRegistries.formatters.content.monetary[1];
 
 export class PosOrder extends Base {
     static pythonModel = "pos.order";
@@ -1088,12 +1087,12 @@ export class PosOrder extends Base {
                 imageSrc: `/web/image/product.product/${l.product_id.id}/image_128`,
             })),
             finalized: this.finalized,
-            amount: formatCurrency(this.get_total_with_tax() || 0),
+            amount: formatCurrency(this.get_total_with_tax() || 0, this.currency),
             paymentLines: this.payment_ids.map((pl) => ({
                 name: pl.payment_method_id.name,
-                amount: formatCurrency(pl.get_amount()),
+                amount: formatCurrency(pl.get_amount(), this.currency),
             })),
-            change: this.get_change() && formatCurrency(this.get_change()),
+            change: this.get_change() && formatCurrency(this.get_change(), this.currency),
             generalNote: this.general_note || "",
             qrPaymentData: toRaw(this.get_selected_paymentline()?.qrPaymentData),
         };

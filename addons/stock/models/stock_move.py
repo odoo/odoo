@@ -2254,6 +2254,13 @@ Please change the quantity done or the rounding precision of your unit of measur
         else:
             return []
 
+    def _get_report_description_picking(self):
+        self.ensure_one()
+        description = self.description_picking or ""
+        if description.startswith(self.product_id.display_name):
+            description = description.removeprefix(self.product_id.display_name).strip()
+        return description
+
     def _set_quantity_done_prepare_vals(self, qty):
         def _move_qty(qty):
             return self.product_id.uom_id._compute_quantity(qty, self.product_uom, round=False)
