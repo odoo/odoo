@@ -563,10 +563,12 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
         bank1 = self.env['res.partner.bank'].create({
             'account_number': 'BE43798822936101',
             'partner_id': self.partner_a.id,
+            'allow_out_payment': True,
         })
         bank2 = self.env['res.partner.bank'].create({
             'account_number': 'BE85812541345906',
             'partner_id': self.partner_a.id,
+            'allow_out_payment': True,
         })
 
         self.in_invoice_1.with_context(skip_readonly_check=True).partner_bank_id = bank1
