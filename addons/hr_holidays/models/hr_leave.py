@@ -1678,6 +1678,8 @@ class HolidaysRequest(models.Model):
         day_period = self.env.context.get('day_period', False)
         if day_period:
             domain += [('day_period', '=', day_period)]
+        domain += ['|', ("date_from", "<=", request_date_from), ("date_from", "=", False)]
+        domain += ['|', ("date_to", ">=", request_date_from), ("date_to", "=", False)]
         attendances = self.env['resource.calendar.attendance'].read_group(domain,
             ['ids:array_agg(id)', 'hour_from:min(hour_from)', 'hour_to:max(hour_to)',
              'week_type', 'dayofweek', 'day_period'],
@@ -1688,7 +1690,9 @@ class HolidaysRequest(models.Model):
 
         default_value = DummyAttendance(0, 0, 0, 'morning', False)
 
-        if resource_calendar_id.two_weeks_calendar:
+        # We will not take into account the entire logic of two_weeks_calendar if there are no attendances, for example, because
+        # we are trying to create a leave with a date before to the start date defined in the employee's calendar.
+        if resource_calendar_id.two_weeks_calendar and attendances:
             # find week type of start_date
             start_week_type = self.env['resource.calendar.attendance'].get_week_type(request_date_from)
             attendance_actual_week = [att for att in attendances if att.week_type is False or int(att.week_type) == start_week_type]
