@@ -18,20 +18,24 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
             cls.company_data['company'].write({
                 'bank_ids': [Command.create({
                     'acc_number': 'HU0123456789',
+                    'allow_out_payment': True,
                 })]
             })
             cls.partner_company.write({
                 'bank_ids': [Command.create({
                     'acc_number': 'HU6666666666',
+                    'allow_out_payment': True,
                 })]
             })
             cls.bank_company = cls.env['res.partner.bank'].create({
                 'acc_number': 'HU7357735773',
                 'partner_id': cls.company_data['company'].partner_id.id,
+                'allow_out_payment': True,
             })
             cls.bank_partner = cls.env['res.partner.bank'].create({
                 'acc_number': 'HU9487189480',
                 'partner_id': cls.partner_company.id,
+                'allow_out_payment': True,
             })
 
     def test_invoice_and_credit_note(self):

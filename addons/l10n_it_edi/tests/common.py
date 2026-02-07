@@ -61,6 +61,7 @@ class TestItEdi(AccountTestInvoicingCommon):
             'acc_number': 'IT1212341234123412341234123',
             'bank_name': 'BIG BANK',
             'bank_bic': 'BIGGBANQ',
+            'allow_out_payment': True,
         })
 
         # Partners

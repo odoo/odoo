@@ -26,6 +26,7 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
             'acc_type': 'iban',
             'partner_id': cls.company_data['company'].partner_id.id,
             'acc_number': 'DK5000400440116243',
+            'allow_out_payment': True,
         })
 
         cls.company_data['company'].partner_id.update({
