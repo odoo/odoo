@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2026-01-13 13:04+0000\n"
+"PO-Revision-Date: 2026-02-07 12:26+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-1/"
 "payment_adyen/pl/>\n"
@@ -36,12 +36,16 @@ msgid ""
 "                    the Capture Delay to manual on your Adyen account "
 "settings."
 msgstr ""
+"<strong>Ostrzeżenie:</strong> Aby ręcznie zarejestrować kwotę, należy "
+"również ustawić\n"
+"                    opóźnienie rejestracji na ręczne w ustawieniach konta "
+"Adyen."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "A request was sent to void the transaction %(reference)s."
-msgstr ""
+msgstr "Wysłano prośbę o unieważnienie transakcji %(reference)s."
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_key
@@ -69,7 +73,7 @@ msgstr "Wystąpił błąd podczas przetwarzania płatności. Spróbuj ponownie."
 #. odoo-javascript
 #: code:addons/payment_adyen/static/src/interactions/payment_form.js:0
 msgid "Cannot display the payment form"
-msgstr ""
+msgstr "Nie można wyświetlić formularza płatności"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_client_key
@@ -92,12 +96,12 @@ msgstr "Nazwa wyświetlana"
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_hmac_key
 msgid "HMAC Key"
-msgstr ""
+msgstr "Klucz HMAC"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_capture_wizard__has_adyen_tx
 msgid "Has Adyen Tx"
-msgstr ""
+msgstr "Ma Adyen Tx"
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_capture_wizard__id
@@ -153,34 +157,34 @@ msgstr "Przetwarzanie płatności nie powiodło się"
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "Received data with invalid payment state: %s"
-msgstr ""
+msgstr "Otrzymano dane z nieprawidłowym statusem płatności: %s"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "Received data with missing payment state."
-msgstr ""
+msgstr "Otrzymano dane z brakującym statusem płatnosci."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/controllers/main.py:0
 msgid "Received tampered payment request data."
-msgstr ""
+msgstr "Otrzymano sfałszowane dane dotyczące żądania płatności."
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_token__adyen_shopper_reference
 msgid "Shopper Reference"
-msgstr ""
+msgstr "Referencja Shopper"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_api_key
 msgid "The API key of the webservice user"
-msgstr ""
+msgstr "Klucz API użytkownika usługi internetowej"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_hmac_key
 msgid "The HMAC key of the webhook"
-msgstr ""
+msgstr "Klucz HMAC webhooka"
 
 #. module: payment_adyen
 #. odoo-python
@@ -189,17 +193,19 @@ msgid ""
 "The amount processed by Adyen for the transaction %s is different than the "
 "one requested. Another transaction is created with the correct amount."
 msgstr ""
+"Kwota przetworzona przez Adyen dla transakcji %s różni się od żądanej kwoty. "
+"Tworzona jest kolejna transakcja z prawidłową kwotą."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_api_url_prefix
 msgid "The base URL for the API endpoints"
-msgstr ""
+msgstr "Podstawowy adres URL dla punktów końcowych API"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "The capture of the transaction %s failed."
-msgstr ""
+msgstr "Nie udało się przechwycić transakcji %s."
 
 #. module: payment_adyen
 #: model_terms:ir.ui.view,arch_db:payment_adyen.payment_capture_wizard_view_form
@@ -207,23 +213,26 @@ msgid ""
 "The capture or void of the transaction might take a few minutes to be\n"
 "                    processed by Adyen and reflected in Odoo."
 msgstr ""
+"Przechwycenie lub unieważnienie transakcji może potrwać kilka minut, zanim "
+"zostanie\n"
+"                    przetworzone przez Adyen i odzwierciedlone w Odoo."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid ""
 "The capture request of %(amount)s for transaction %(ref)s has been sent."
-msgstr ""
+msgstr "Wysłano żądanie przechwycenia %(amount)s dla transakcji %(ref)s."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_client_key
 msgid "The client key of the webservice user"
-msgstr ""
+msgstr "Klucz klienta użytkownika usługi internetowej"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_merchant_account
 msgid "The code of the merchant account to use with this provider"
-msgstr ""
+msgstr "Kod konta handlowego, którego należy używać w przypadku tego dostawcy"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__code
@@ -233,16 +242,16 @@ msgstr "Kod techniczny tego dostawcy usług płatniczych."
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_token__adyen_shopper_reference
 msgid "The unique reference of the partner owning this token"
-msgstr ""
+msgstr "Unikalny numer referencyjny partnera posiadającego ten token"
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "The void of the transaction %s failed."
-msgstr ""
+msgstr "Unieważnianie transakcji %s zakończyło się niepowodzeniem."
 
 #. module: payment_adyen
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "Your payment was refused. Please try again."
-msgstr ""
+msgstr "Twoja płatność została odrzucona. Spróbuj ponownie później."

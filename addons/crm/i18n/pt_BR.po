@@ -21,16 +21,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-30 18:35+0000\n"
-"PO-Revision-Date: 2026-01-31 12:26+0000\n"
+"PO-Revision-Date: 2026-02-07 12:19+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
-"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"s19-1/crm/pt_BR/>\n"
+"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
+"odoo-s19-1/crm/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
-"1000000 == 0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : "
+"((n != 0 && n % 1000000 == 0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: crm
@@ -334,6 +334,27 @@ msgid ""
 "</t>\n"
 "        </t>"
 msgstr ""
+"<t>\n"
+"Olá, <t t-out=\"object.partner_id and object.partner_id.name or ''\">Acme "
+"Corporation</t>,<br/><br/>\n"
+"Boas-vindas à <t t-out=\"object.company_id.name or ''\">My Company "
+"(San Francisco)</t>.\n"
+"É um prazer conhecê-lo! Agora que você está conosco, você descobrirá o que "
+"<t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> tem "
+"a oferecer. Meu nome é <t t-out=\"object.user_id.name or ''\">Marc Demo</t> "
+"e vou ajudá-lo a tirar o máximo proveito do Odoo. Podemos agendar uma rápida "
+"demonstração em breve?<br/>Sinta-se à vontade para entrar em contato a "
+"qualquer momento!<br/><br/>Atenciosamente,<br/>\n"
+"<t t-if=\"object.user_id\"> <b><t t-out=\"object.user_id.name or ''\"> Marc "
+"Demo</t></b> <br/> E-mail: <t t-out=\"object.user_id.email or ''\""
+">mark.brown23@example.com</t>\n"
+"    <br/>Telefone: <t t-out=\"object.user_id.phone or ''\">+1 "
+"650-123-4567</t>\n"
+"</t><t t-else=\"\">\n"
+"    <t t-out=\"object.company_id.name or ''\"> Minha Empresa (São Francisco)"
+"</t>\n"
+"</t>\n"
+"       </t>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
@@ -617,6 +638,8 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the "
 "<b>first team by default.</b>"
 msgstr ""
+"Como você não é membro de nenhuma equipe de vendas, o funil da <b>primeira "
+"equipe é exibido por padrão.</b>"
 
 #. module: crm
 #. odoo-javascript
@@ -767,7 +790,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_stage
 msgid "CRM Stage"
-msgstr ""
+msgstr "Estágio do CRM"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.ir_cron_crm_lead_assign_ir_actions_server

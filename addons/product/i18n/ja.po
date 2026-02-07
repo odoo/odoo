@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-16 18:37+0000\n"
-"PO-Revision-Date: 2026-01-31 12:36+0000\n"
+"PO-Revision-Date: 2026-02-07 12:29+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "product/ja/>\n"
@@ -531,12 +531,12 @@ msgstr "要アクション"
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Active Products"
-msgstr "アクティブなプロダクト"
+msgstr "有効なプロダクト"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_ids
@@ -2184,7 +2184,7 @@ msgstr "仕入先価格表のテンプレートをインポート"
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_search
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
 msgid "Inactive"
-msgstr "非アクティブ"
+msgstr "無効"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__incoming_qty
@@ -2724,7 +2724,7 @@ msgstr "いいえ、そのままにして下さい。"
 #. module: product
 #: model:product.template,description_sale:product.product_template_acoustic_bloc_screens
 msgid "Noise-reducing panels for open spaces"
-msgstr ""
+msgstr "オープンスペース用防音パネル"
 
 #. module: product
 #. odoo-python
@@ -2815,12 +2815,12 @@ msgstr "オリーブ"
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
 msgid "On Hand"
-msgstr ""
+msgstr "手持在庫"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
 msgid "On hand:"
-msgstr ""
+msgstr "手持在庫:"
 
 #. module: product
 #. odoo-python
@@ -2892,7 +2892,7 @@ msgstr "アウトドアダイニングテーブル"
 #: model:ir.model.fields,field_description:product.field_product_product__outgoing_qty
 #: model:ir.model.fields,field_description:product.field_product_template__outgoing_qty
 msgid "Outgoing"
-msgstr ""
+msgstr "出庫"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_options_overhead_shelves
@@ -3161,7 +3161,7 @@ msgstr "ラベル印刷"
 #. module: product
 #: model:product.template,description_sale:product.product_product_24_product_template
 msgid "Private pod with desk and chair"
-msgstr ""
+msgstr "デスクと椅子が付いた個室"
 
 #. module: product
 #. odoo-python
@@ -3390,7 +3390,7 @@ msgstr "プロダクト単位"
 #: model:ir.model.fields,field_description:product.field_product_product__import_attribute_values
 #: model:ir.model.fields,field_description:product.field_product_template__import_attribute_values
 msgid "Product Values"
-msgstr ""
+msgstr "プロダクト価値"
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
@@ -3521,7 +3521,7 @@ msgstr "数量 (%s 単位)"
 #: model:ir.model.fields,field_description:product.field_product_product__qty_available
 #: model:ir.model.fields,field_description:product.field_product_template__qty_available
 msgid "Quantity On Hand"
-msgstr ""
+msgstr "手持在庫数"
 
 #. module: product
 #. odoo-javascript
@@ -3540,6 +3540,13 @@ msgid ""
 "Otherwise, this includes goods arriving to any Stock Location with "
 "'internal' type."
 msgstr ""
+"予定されている入庫プロダクトの数量。\n"
+"単一の在庫ロケーションのコンテキストでは、このロケーション、またはその子ロケ"
+"ーションに入庫予定の商品が含まれます。\n"
+"単一の倉庫のコンテキストでは、この倉庫の在庫ロケーション、またはその子ロケー"
+"ションに入庫予定の商品が含まれます。\n"
+"それ以外の場合、タイプが '内部'のすべての在庫ロケーションに入庫予定の商品が含"
+"まれます。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__outgoing_qty
@@ -3552,6 +3559,13 @@ msgid ""
 "Otherwise, this includes goods leaving any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Quantity of planned outgoing products.\n"
+"単一の在庫ロケーションのコンテキストでは、このロケーション、またはその子ロケ"
+"ーションから出庫予定の商品が含まれます。\n"
+"単一の倉庫のコンテキストでは、この倉庫の在庫ロケーション、またはその子ロケー"
+"ションから出庫予定の商品が含まれます。\n"
+"それ以外の場合は、タイプが '内部' のすべての在庫ロケーションから出庫予定の商"
+"品が含まれます。"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
@@ -3567,7 +3581,7 @@ msgstr "Ray-Ban"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "Recursive pricelist rules detected: %s"
-msgstr ""
+msgstr "再帰的な価格表ルールが検出されました: %s"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_red
@@ -3656,7 +3670,7 @@ msgstr "レストラン経費"
 #. module: product
 #: model:product.template,description_sale:product.product_product_5_product_template
 msgid "Right-aligned desk with storage"
-msgstr ""
+msgstr "右寄せデスク(収納付き)"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_rolex
@@ -3681,7 +3695,7 @@ msgstr "ルールヒント"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Rules"
-msgstr ""
+msgstr "ルール"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__sale_ok
@@ -3776,12 +3790,12 @@ msgstr "靴サイズ"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Short Description"
-msgstr ""
+msgstr "短い説明"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__show_price_extra
 msgid "Show Extra Price"
-msgstr ""
+msgstr "追加価格を表示"
 
 #. module: product
 #. odoo-javascript
@@ -3793,13 +3807,13 @@ msgstr "名前を表示"
 #: model:ir.model.fields,field_description:product.field_product_product__show_qty_update_button
 #: model:ir.model.fields,field_description:product.field_product_template__show_qty_update_button
 msgid "Show Qty Update Button"
-msgstr ""
+msgstr "数量更新ボタンを表示"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__show_sales_price_page
 #: model:ir.model.fields,field_description:product.field_product_template__show_sales_price_page
 msgid "Show Sales Price Page"
-msgstr ""
+msgstr "販売価格ページを表示"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -3809,7 +3823,7 @@ msgstr "次回活動日が過去のすべてのレコードを表示"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__show_price_extra
 msgid "Show separately the extra price for this attribute value."
-msgstr ""
+msgstr "この属性値に対する追加料金を別途表示します。"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_silver
@@ -3824,7 +3838,7 @@ msgstr "サイズ"
 #. module: product
 #: model:product.template,description_sale:product.product_product_9_product_template
 msgid "Soft-close pedal bin for office use"
-msgstr ""
+msgstr "オフィス用ソフトクローズペダル式ゴミ箱"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_sony
@@ -4038,6 +4052,9 @@ msgid ""
 "is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", \"%"
 "(id)s\""
 msgstr ""
+"既存の製品に設定されている属性値が異なります。\"%(imported_values)s\" は\"%"
+"(existing_values)s\" と一致しません。(\"%(external_id)s\", \"%(id)s\" に対し"
+"て)"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -4122,7 +4139,8 @@ msgstr "丸め方法は必ず正の値にして下さい。"
 msgid ""
 "The sale price can be set manually or computed from the product template. "
 "Click on the 'Configure Variants' button to set the extra attribute prices."
-msgstr ""
+msgstr "販売価格は手動で設定するか、プロダクトテンプレートから計算できます。「バリア"
+"ントを設定」ボタンをクリックして追加属性の価格を設定してください。"
 
 #. module: product
 #. odoo-python
@@ -4226,20 +4244,20 @@ msgstr "本日の活動"
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
 msgid "Total Forecasted"
-msgstr ""
+msgstr "予測合計"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
 msgid "Total On Hand"
-msgstr ""
+msgstr "手持在庫合計"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_storable
 #: model:ir.model.fields,field_description:product.field_product_template__is_storable
 msgid "Track Inventory"
-msgstr ""
+msgstr "在庫追跡"
 
 #. module: product
 #: model:product.template,name:product.consu_delivery_01_product_template
@@ -4282,7 +4300,8 @@ msgstr "%sフォーマット用のレポートテンプレートが見つかり�
 msgid ""
 "Unable to import products with attribute value without attribute name "
 "(defined as: attribute:value): %s"
-msgstr ""
+msgstr "属性名のない属性値(定義例: 属性:値)を持つプロダクトのインポートができません:%"
+"s"
 
 #. module: product
 #. odoo-python
@@ -4290,7 +4309,8 @@ msgstr ""
 msgid ""
 "Unable to import products with attribute values but without name of product "
 "set"
-msgstr ""
+msgstr "プロダクト名が設定されていない状態では、属性値付きのプロダクトをインポートで"
+"きません"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_underarmour
@@ -4353,12 +4373,12 @@ msgstr "単位 & パッケージング"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_view_list_qty
 msgid "Update Quantities"
-msgstr ""
+msgstr "数量を更新"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_variant_edit_qty_action
 msgid "Update Variant Quantities"
-msgstr ""
+msgstr "バリアント数量を更新"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -4438,7 +4458,7 @@ msgstr "ユーザ名"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "VINT_1000"
-msgstr ""
+msgstr "VINT_1000"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
@@ -4757,8 +4777,7 @@ msgstr "%s プロダクトの追加料金を更新しようとしています。
 msgid ""
 "You are deactivating the pricelist feature. Every active pricelist will be "
 "archived."
-msgstr ""
-"価格表機能を停止しています。すべてのアクティブな価格表はアーカイブされます。"
+msgstr "価格表機能を停止しています。すべての有効な価格表はアーカイブされます。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price

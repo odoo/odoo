@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 18:35+0000\n"
-"PO-Revision-Date: 2026-01-31 12:50+0000\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"PO-Revision-Date: 2026-02-07 12:38+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "stock/ja/>\n"
@@ -311,7 +311,7 @@ msgstr "'在庫棚卸シート'"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_delivery
 msgid "'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
-msgstr "'配送伝票 - %s - %s' % (object.partner_id.name or '', object.name)"
+msgstr "'納品伝票 - %s - %s' % (object.partner_id.name or '', object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
@@ -676,7 +676,7 @@ msgstr ""
 "            </strong>\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        詳細については、添付いたしました配送伝票をご確認ください。<br/><br/"
+"        詳細については、添付いたしました納品伝票をご確認ください。<br/><br/"
 ">\n"
 "        何卒よろしくお願いいたします。\n"
 "        <t t-if=\"user.signature\">\n"
@@ -1145,7 +1145,7 @@ msgstr "要アクション"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__active
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__active
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_ids
@@ -1637,7 +1637,7 @@ msgstr "自動"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_delivery_slip
 msgid "Auto Print Delivery Slip"
-msgstr "配送伝票の自動印刷"
+msgstr "納品伝票の自動印刷"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_lot_labels
@@ -1894,8 +1894,8 @@ msgstr ""
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
 msgstr ""
-"アクティブな項目のチェックを外すことで、ロケーションを削除することなしに非表"
-"示にできます。"
+"有効な項目のチェックを外すことで、ロケーションを削除することなしに非表示にで"
+"きます。"
 
 #. module: stock
 #. odoo-python
@@ -2094,7 +2094,7 @@ msgstr "印刷するラベルのタイプを選択する"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Choose Warehouses"
-msgstr ""
+msgstr "倉庫を選択"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__inventory_datetime
@@ -3164,7 +3164,7 @@ msgstr "納品書"
 #: code:addons/stock/models/stock_warehouse.py:0
 #: model:stock.picking.type,name:stock.picking_type_out
 msgid "Delivery Orders"
-msgstr "配送"
+msgstr "出荷オーダ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_route_id
@@ -3175,7 +3175,7 @@ msgstr "配送ルート"
 #: model:ir.actions.report,name:stock.action_report_delivery
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Delivery Slip"
-msgstr "配送伝票"
+msgstr "納品伝票"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__sale_delay
@@ -3323,12 +3323,12 @@ msgstr "配送先 "
 #: model:ir.model.fields,field_description:stock.field_stock_package__package_dest_id
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__parent_dest_id
 msgid "Destination Container"
-msgstr ""
+msgstr "宛先コンテナ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__parent_dest_name
 msgid "Destination Container Name"
-msgstr ""
+msgstr "宛先コンテナ名"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -3375,7 +3375,7 @@ msgstr "先梱包"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__result_package_dest_name
 msgid "Destination Package Name"
-msgstr ""
+msgstr "宛先梱包名"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -3425,7 +3425,7 @@ msgstr "差異"
 #. module: stock
 #: model:ir.model,name:stock.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "ダイジェスト"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -3481,7 +3481,7 @@ msgstr "インポートロットを表示"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_lot_on_delivery_slip
 msgid "Display Lots & Serial Numbers on Delivery Slips"
-msgstr "ロット/シリアル番号を配送伝票に表示"
+msgstr "ロット/シリアル番号を納品伝票に表示"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__display_name
@@ -3555,7 +3555,7 @@ msgstr "表示名"
 #. module: stock
 #: model:res.groups,name:stock.group_lot_on_delivery_slip
 msgid "Display Serial & Lot Number in Delivery Slips"
-msgstr "配送伝票にシリアル/ロット番号表示"
+msgstr "納品伝票にシリアル/ロット番号表示"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3625,7 +3625,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_move__procurement_values
 msgid ""
 "Dummy field to store procurement values to propagate them to later steps"
-msgstr ""
+msgstr "調達値を保存し、後続のステップへ引き継ぐためのダミーフィールド"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__sn_duplicated
@@ -3641,7 +3641,7 @@ msgstr "Dymo"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 msgid "Earliest Possible Arrival"
-msgstr ""
+msgstr "最短到着日"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
@@ -3673,7 +3673,7 @@ msgstr "有効日"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__effective_route_id
 msgid "Effective Route"
-msgstr ""
+msgstr "有効なルート"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__effective_route_id
@@ -3681,6 +3681,8 @@ msgid ""
 "Either the route set directly or the one computed to be used by this "
 "replenishment"
 msgstr ""
+"この補充で使用するために直接設定されたルート、または計算されたルートのいずれ"
+"か"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_move_email_validation
@@ -3714,8 +3716,7 @@ msgstr ""
 "Odooバーコードアプリでペースの速い体験をお楽しみください。それは非常に速く、"
 "安定したインターネット接続がなくても機能します。在庫調整、バッチピッキング、"
 "ロットまたはパレットの移動、在庫不足チェックなど、すべてのフローをサポートし"
-"ます。'アプリ'メニューに移動して、バーコードインターフェイスをアクティブにし"
-"ます。"
+"ます。'アプリ'メニューに移動して、バーコードインターフェイスを有効にします。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__tracking
@@ -4055,7 +4056,7 @@ msgstr "完全ロケーション名"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__complete_name
 msgid "Full Package Name"
-msgstr ""
+msgstr "梱包の完全名称"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -4157,12 +4158,12 @@ msgstr "ハードウエア"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__has_quants
 msgid "Has Contents"
-msgstr ""
+msgstr "内容物あり"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__has_lines_without_result_package
 msgid "Has Lines Without Result Package"
-msgstr ""
+msgstr "結果梱包が未設定の明細あり"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__has_message
@@ -4392,8 +4393,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the route "
 "without removing it."
 msgstr ""
-"このアクティブ項目をFalseに設定すると、ルートは削除することなく非表示にするこ"
-"とができます。"
+"この有効項目をFalseに設定すると、ルートは削除することなく非表示にすることがで"
+"きます。"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__empty
@@ -4408,7 +4409,7 @@ msgstr "同じシリアル番号が別のクアントにある場合"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_request_count__show_expected_quantity
 msgid "If the user can see the expected quantity or not"
-msgstr ""
+msgstr "ユーザが予想数量を確認できるかどうか"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_delivery_slip
@@ -4417,7 +4418,7 @@ msgid ""
 "of a picking when it is validated."
 msgstr ""
 "このチェックボックスにチェックを入れると、Odooはピッキングが認証されると自動"
-"的に配送伝票を印刷します。"
+"的に納品伝票を印刷します。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_lot_labels
@@ -4553,6 +4554,8 @@ msgid ""
 "If ticked, packages to move will be directly displayed in Barcode instead of "
 "the products they contain"
 msgstr ""
+"チェックすると、移動対象の梱包が、その中身のプロダクトではなくバーコードに直"
+"接表示されます"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__set_package_type
@@ -4560,6 +4563,8 @@ msgid ""
 "If ticked, you will be able to select which package or package type to use "
 "in a put in pack"
 msgstr ""
+"チェックすると、パックに投入する際に使用する梱包または梱包タイプを選択できる"
+"ようになります"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__active
@@ -4605,12 +4610,12 @@ msgstr "在庫調整用のテンプレートをインポートする"
 #. odoo-python
 #: code:addons/stock/wizard/stock_replenishment_info.py:0
 msgid "In %s day(s)"
-msgstr ""
+msgstr "%s 日後"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
-msgstr "入荷タイプ"
+msgstr "入庫タイプ"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date_deadline
@@ -4911,12 +4916,12 @@ msgstr "在庫調整理由"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_request_count
 msgid "Inventory Request"
-msgstr ""
+msgstr "在庫申請"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_route
 msgid "Inventory Route"
-msgstr ""
+msgstr "在庫ルート"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
@@ -4933,7 +4938,7 @@ msgstr "日時"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_date_editable
 msgid "Is Date Editable"
-msgstr ""
+msgstr "日付が編集可能"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__is_empty
@@ -4967,7 +4972,7 @@ msgstr "一部梱包"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_date_editable
 msgid "Is Scheduled Date Editable"
-msgstr ""
+msgstr "予定日が編集可能"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_signed
@@ -4977,7 +4982,7 @@ msgstr "署名済"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__is_entire_pack
 msgid "Is added through entire package"
-msgstr ""
+msgstr "梱包全体で追加"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_initial_demand_editable
@@ -5019,7 +5024,7 @@ msgstr "一部または全てを運送する商品を指定します。"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__json_popover
 msgid "JSON data for popover widget"
-msgstr ""
+msgstr "ポップオーバーウィジェット用JSONデータ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__json_popover
@@ -5055,7 +5060,7 @@ msgstr "Jsonポップアップ"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__json_replenishment_graph
 msgid "Json Replenishment Graph"
-msgstr ""
+msgstr "JSON補充グラフ"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__7
@@ -5106,12 +5111,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_digest_digest__kpi_stock_delivery_count_value
 msgid "Kpi Stock Delivery Count Value"
-msgstr ""
+msgstr "KPI出庫件数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_digest_digest__kpi_stock_receipt_count_value
 msgid "Kpi Stock Receipt Count Value"
-msgstr ""
+msgstr "KPI入庫件数"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_print_labels
@@ -5589,7 +5594,7 @@ msgstr "ロット/シリアル番号"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Lots & Serial numbers will appear on the delivery slip"
-msgstr "配送伝票にロット/シリアル番号が表示されます"
+msgstr "納品伝票にロット/シリアル番号が表示されます"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
@@ -6613,7 +6618,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
 msgid "Out Type"
-msgstr "出荷タイプ"
+msgstr "出庫タイプ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__outermost_package_id
@@ -7796,12 +7801,13 @@ msgid ""
 "Otherwise, this includes goods arriving to any Stock Location with "
 "'internal' type."
 msgstr ""
-"計画された入荷製品の数量。\n"
-"単一の在庫場所のコンテキストでは、これには、この場所またはその子のいずれかに"
-"到着する製品が含まれます。\n"
-"単一の倉庫の場合、これには、この倉庫またはその子の在庫場所に到着する製品が含"
-"まれます。\n"
-"それ以外の場合、これには'内部'タイプの在庫場所に到着する製品が含まれます。"
+"予定されている入庫プロダクトの数量。\n"
+"単一の在庫ロケーションのコンテキストでは、このロケーション、またはその子ロ"
+"ケーションに入庫予定の商品が含まれます。\n"
+"単一の倉庫のコンテキストでは、この倉庫の在庫ロケーション、またはその子ロケー"
+"ションに入庫予定の商品が含まれます。\n"
+"それ以外の場合、タイプが '内部'のすべての在庫ロケーションに入庫予定の商品が含"
+"まれます。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__outgoing_qty
@@ -8603,6 +8609,11 @@ msgid "Sample data"
 msgstr "サンプルデータ"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid "Save"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0
 msgid "Save the product form before updating the Quantity On Hand."
@@ -9294,7 +9305,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__state
 msgid "State"
-msgstr "都道府県・州"
+msgstr "状態"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__state
@@ -11714,8 +11725,7 @@ msgid ""
 "You need to activate storage locations to be able to do internal operation "
 "types."
 msgstr ""
-"内部オペレーションタイプを実行するため、保管場所をアクティブにする必要があり"
-"ます。"
+"内部オペレーションタイプを実行するため、保管場所を有効にする必要があります。"
 
 #. module: stock
 #. odoo-python

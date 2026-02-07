@@ -1,19 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_dpopay
+# * pos_dpopay
 #
+# "Maitê Dietze (madi)" <madi@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-09 18:37+0000\n"
-"PO-Revision-Date: 2026-01-09 18:37+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2026-02-07 12:45+0000\n"
+"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
+"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
+"odoo-s19-1/pos_dpopay/pt_BR/>\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_bearer_token
@@ -21,16 +25,19 @@ msgid ""
 "Bearer token used for authenticating requests. Automatically refreshed when "
 "expired."
 msgstr ""
+"Token portador usado para autenticar solicitações. Atualizado "
+"automaticamente quando expira."
 
 #. module: pos_dpopay
 #: model:ir.model.fields.selection,name:pos_dpopay.selection__pos_payment_method__dpopay_payment_mode__card
 msgid "Card"
-msgstr ""
+msgstr "Cartão"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_test_mode
 msgid "Check this to use DPO Pay's sandbox environment for testing purposes."
 msgstr ""
+"Marque esta opção para usar o ambiente sandbox do DPO Pay para fins de teste."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_payment_mode
@@ -39,84 +46,89 @@ msgid ""
 "Card - regular card payments\n"
 "Mobile Money - M-Pesa / Airtel Mobile Money"
 msgstr ""
+"Escolha o modo de pagamento permitido:\n"
+"Cartão - pagamentos regulares com cartão\n"
+"Mobile Money - M-Pesa / Airtel Mobile Money"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_mobile_money_phone
 msgid "Customer's phone number used to complete the Mobile Money payment."
 msgstr ""
+"Número de telefone do cliente usado para concluir o pagamento com Mobile "
+"Money."
 
 #. module: pos_dpopay
 #: model_terms:ir.ui.view,arch_db:pos_dpopay.pos_payment_method_view_form_inherit_pos_dpopay
 msgid "DPO Pay"
-msgstr ""
+msgstr "DPO Pay"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_chain_id
 msgid "DPO Pay Chain-ID"
-msgstr ""
+msgstr "DPO Pay Chain-ID"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_client_id
 msgid "DPO Pay Client ID"
-msgstr ""
+msgstr "DPO Pay Client ID"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_client_secret
 msgid "DPO Pay Client Secret"
-msgstr ""
+msgstr "Segredo do cliente DPO Pay"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_mid
 msgid "DPO Pay Merchant ID"
-msgstr ""
+msgstr "DPO Pay ID do comerciante"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_tid
 msgid "DPO Pay Terminal ID"
-msgstr ""
+msgstr "ID do terminal de pagamento DPO"
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "DPO Pay terminal is currently offline."
-msgstr ""
+msgstr "O terminal de pagamento DPO está atualmente offline."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__display_name
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome de exibição"
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Dpo Pay Error"
-msgstr ""
+msgstr "Erro no pagamento do Dpo"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_bearer_token
 msgid "Dpopay Bearer Token"
-msgstr ""
+msgstr "Token de Portador Dpopay"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_payment_mode
 msgid "Dpopay Payment Mode"
-msgstr ""
+msgstr "Modo de pagamento Dpopay"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_test_mode
 msgid "Enable Test Mode"
-msgstr ""
+msgstr "Ativar modo de teste"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_chain_id
 msgid "Enter the Chain-ID header value(e.g., DPO-DTM-Testing)"
-msgstr ""
+msgstr "Insira o valor do cabeçalho Chain-ID (por exemplo, DPO-DTM-Testing)"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_mid
 msgid "Enter the Merchant ID assigned by DPO Pay (e.g., 123456789012)."
-msgstr ""
+msgstr "Insira o ID do comerciante atribuído pela DPO Pay (ex.: 123456789012)."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_tid
@@ -124,70 +136,72 @@ msgid ""
 "Enter the unique Terminal ID (TID) of your DPO Pay POS terminal (e.g., "
 "XXXXXXXX)."
 msgstr ""
+"Insira o ID exclusivo do terminal (TID) do seu terminal PDV DPO Pay "
+"(por exemplo, XXXXXXXX)."
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Failed to cancel payment."
-msgstr ""
+msgstr "Falha ao cancelar o pagamento."
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Failed to fetch last transaction result."
-msgstr ""
+msgstr "Falha ao obter o resultado da última transação."
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Failed to retrieve payment status."
-msgstr ""
+msgstr "Não foi possível recuperar o status do pagamento."
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Failed to retrieve transaction result."
-msgstr ""
+msgstr "Falha ao recuperar o resultado da transação."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__id
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_dpopay
 #. odoo-python
 #: code:addons/pos_dpopay/models/pos_payment_method.py:0
 msgid "Invalid Chain ID. Please verify the configuration. %s"
-msgstr ""
+msgstr "ID da cadeia inválida. Verifique a configuração. %s"
 
 #. module: pos_dpopay
 #. odoo-python
 #: code:addons/pos_dpopay/models/pos_payment_method.py:0
 msgid "Invalid endpoint"
-msgstr ""
+msgstr "Ponto final inválido"
 
 #. module: pos_dpopay
 #: model:ir.model.fields.selection,name:pos_dpopay.selection__pos_payment_method__dpopay_payment_mode__momo
 msgid "Mobile Money"
-msgstr ""
+msgstr "Mobile Money"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_mobile_money_phone
 msgid "Mobile Money Phone Number(Last 4 Digit)"
-msgstr ""
+msgstr "Número de telefone do Mobile Money (últimos 4 dígitos)"
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Payment is declined by DPO Pay."
-msgstr ""
+msgstr "O pagamento foi recusado pelo DPO Pay."
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Payment is unsuccessful."
-msgstr ""
+msgstr "O pagamento não foi bem-sucedido."
 
 #. module: pos_dpopay
 #. odoo-python
@@ -196,36 +210,39 @@ msgid ""
 "Please ensure the device is online and confirm that the Merchant ID (MID) "
 "and Terminal ID (TID) are correct. %s"
 msgstr ""
+"Certifique-se de que o dispositivo está online e confirme se o ID do "
+"comerciante (MID) e o ID do terminal (TID) estão corretos. %s"
 
 #. module: pos_dpopay
 #: model:ir.model,name:pos_dpopay.model_pos_payment
 msgid "Point of Sale Payment"
-msgstr ""
+msgstr "Pagamento no Ponto de Venda"
 
 #. module: pos_dpopay
 #: model:ir.model,name:pos_dpopay.model_pos_payment_method
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "Método de pagamento no Ponto de Venda"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_rrn
 msgid "RRN"
-msgstr ""
+msgstr "RRN"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_transaction_ref
 msgid "Reference number required for Mobile Money refund transactions."
 msgstr ""
+"Número de referência necessário para transações de reembolso do Mobile Money."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment__dpopay_rrn
 msgid "Retrieval Reference Number generated for the DPO Pay transaction."
-msgstr ""
+msgstr "Número de referência de recuperação gerado para a transação DPO Pay."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_client_id
 msgid "The Client ID provided by DPO Pay for authenticating requests."
-msgstr ""
+msgstr "O ID do cliente fornecido pela DPO Pay para autenticar solicitações."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_client_secret
@@ -233,29 +250,31 @@ msgid ""
 "The Client Secret provided by DPO Pay for secure access. Keep it "
 "confidential."
 msgstr ""
+"A Chave Secreta do Cliente fornecida pela DPO Pay para acesso seguro. "
+"Mantenha-a confidencial."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_transaction_ref
 msgid "Transaction Reference"
-msgstr ""
+msgstr "Referência da transação"
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Transaction amount must be greater than zero."
-msgstr ""
+msgstr "O valor da transação deve ser maior que zero."
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Unable to initiate DPO payment. Please try again."
-msgstr ""
+msgstr "Não foi possível iniciar o pagamento DPO. Tente novamente."
 
 #. module: pos_dpopay
 #. odoo-javascript
 #: code:addons/pos_dpopay/static/src/app/utils/payment/payment_dpopay.js:0
 msgid "Unable to reach DPO Pay terminal."
-msgstr ""
+msgstr "Não é possível acessar o terminal DPO Pay."
 
 #. module: pos_dpopay
 #. odoo-python
@@ -263,3 +282,5 @@ msgstr ""
 msgid ""
 "Unable to retrieve DPO Pay bearer token: check Client ID and Client Secret."
 msgstr ""
+"Não foi possível recuperar o token de portador DPO Pay: verifique o ID do "
+"cliente e o segredo do cliente."

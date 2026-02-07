@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2026-01-31 12:25+0000\n"
+"PO-Revision-Date: 2026-02-07 12:18+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "event/ja/>\n"
@@ -2827,7 +2827,7 @@ msgstr "要アクション"
 #: model:ir.model.fields,field_description:event.field_event_question__active
 #: model:ir.model.fields,field_description:event.field_event_registration__active
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_ids
@@ -5346,6 +5346,10 @@ msgid ""
 "- there are seats available on event\n"
 "- the tickets are sellable (if ticketing is used)"
 msgstr ""
+"登録が可能な条件：\n"
+"- イベントが終了またはキャンセルされていないこと\n"
+"- イベントに空き席があること\n"
+"- チケットが販売可能であること（チケットシステムを使用している場合)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
@@ -5389,7 +5393,7 @@ msgstr "レスポンシブHTMLフルページチケット"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Reusable"
-msgstr ""
+msgstr "再利用可"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
@@ -5451,7 +5455,7 @@ msgstr "スケジューラEメール"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Search Event Question"
-msgstr ""
+msgstr "イベント質問を検索"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -5588,7 +5592,7 @@ msgstr "複数スロットイベントでは、スロットの選択は必須で
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Slot(s)"
-msgstr ""
+msgstr "スロット"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_slot_ids
@@ -5853,7 +5857,8 @@ msgstr ""
 msgid ""
 "The limit per order cannot be greater than %(limit_orderable)s. Please check "
 "ticket %(ticket_name)s"
-msgstr ""
+msgstr "1オーダあたりの上限は%(limit_orderable)s を超えてはいけません。チケットをご確"
+"認ください。%(ticket_name)s"
 
 #. module: event
 #. odoo-python
@@ -5861,14 +5866,16 @@ msgstr ""
 msgid ""
 "The limit per order cannot be greater than the maximum seats number. Please "
 "check ticket %(ticket_name)s"
-msgstr ""
+msgstr "1オーダあたりの上限は最大座席数を超えることはできません。チケットをご確認くだ"
+"さい%(ticket_name)s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 msgid ""
 "The limit per order must be positive. Please check ticket %(ticket_name)s"
-msgstr ""
+msgstr "オーダごとの上限は正の数でなければなりません。チケットをご確認ください%"
+"(ticket_name)s"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -5997,7 +6004,7 @@ msgstr "これはテンプレート%(template_link)s に関連している可能
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 msgid "This question is used by"
-msgstr ""
+msgstr "この質問の使用者："
 
 #. module: event
 #. odoo-javascript
@@ -6388,7 +6395,7 @@ msgstr "すでに回答がある質問のタイプを変更することはでき
 #. odoo-python
 #: code:addons/event/models/event_question.py:0
 msgid "You cannot delete a default question."
-msgstr ""
+msgstr "デフォルトの質問は削除できません。"
 
 #. module: event
 #. odoo-python
@@ -6396,7 +6403,8 @@ msgstr ""
 msgid ""
 "You cannot delete a question that has already been answered by attendees. "
 "You can archive it instead."
-msgstr ""
+msgstr "参加者が回答済みの質問は削除できません。代わりにアーカイブすることができます"
+"。"
 
 #. module: event
 #. odoo-python
@@ -6471,7 +6479,7 @@ msgstr "例: VIPチケット"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "event_id"
-msgstr ""
+msgstr "event_id"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
@@ -6523,7 +6531,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event
 msgid "reserved"
-msgstr "引当済"
+msgstr "予約済"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form

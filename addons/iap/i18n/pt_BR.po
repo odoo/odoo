@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~15.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2026-01-31 12:29+0000\n"
+"PO-Revision-Date: 2026-02-07 12:21+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-s19-1/iap/pt_BR/>\n"
@@ -254,7 +254,6 @@ msgstr "Gerenciar serviços e comprar créditos"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-#, fuzzy
 msgid "Manage your auto-refill payment method"
 msgstr "Gerencie seu método de pagamento para recarga automática"
 
@@ -274,7 +273,7 @@ msgstr "Não existe nenhum serviço com o nome técnico fornecido"
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 msgid "Odoo In-App Purchase"
-msgstr ""
+msgstr "Compra no aplicativo Odoo"
 
 #. module: iap
 #: model:ir.model.fields,help:iap.field_iap_account__auto_refill_threshold
@@ -283,6 +282,9 @@ msgid ""
 "the following pack with your payment method on file. Set to 0 to disable "
 "auto-refill."
 msgstr ""
+"Quando você tiver esse número de créditos ou menos, o sistema comprará "
+"automaticamente o pacote a seguir com o método de pagamento cadastrado. "
+"Defina como 0 para desativar a recarga automática."
 
 #. module: iap
 #: model:ir.model.fields,help:iap.field_iap_account__warning_threshold
@@ -290,6 +292,9 @@ msgid ""
 "Once you have this many credits or less, the system will automatically "
 "notify the following recipients by email. Set to 0 to disable email warnings."
 msgstr ""
+"Quando você tiver esse número de créditos ou menos, o sistema notificará "
+"automaticamente os seguintes destinatários por e-mail. Defina como 0 para "
+"desativar os avisos por e-mail."
 
 #. module: iap
 #. odoo-python
@@ -311,6 +316,8 @@ msgstr "Só pode existir um serviço com um technical_name específco"
 msgid ""
 "Only one service pack can exist with a specific iap_service_pack_identifier"
 msgstr ""
+"Apenas um service pack pode existir com um identificador específico "
+"iap_service_pack_identifier"
 
 #. module: iap
 #. odoo-python
@@ -322,7 +329,7 @@ msgstr "Defina um limite de alertas de e-mail positivo."
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_price_description
 #: model:ir.model.fields,field_description:iap.field_iap_service__price_description
 msgid "Price Description"
-msgstr ""
+msgstr "Descrição do preço"
 
 #. module: iap
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__registered
@@ -332,7 +339,7 @@ msgstr "Registrado"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service_pack__price
 msgid "Sales Price (EUR)"
-msgstr ""
+msgstr "Preço de venda (EUR)"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_id
@@ -348,12 +355,12 @@ msgstr "Serviço bloqueado"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__pack_ids
 msgid "Service Packs"
-msgstr ""
+msgstr "Pacotes de Serviços"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
 msgid "Set Alerts & Auto-Refill"
-msgstr ""
+msgstr "Definir alertas e recarga automática"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__state
@@ -373,6 +380,9 @@ msgid ""
 "The IAP server is unreachable and the information may not be up to date.\n"
 "Please try again later."
 msgstr ""
+"O servidor IAP está inacessível e as informações podem não estar atualizadas."
+"\n"
+"Tente novamente mais tarde."
 
 #. module: iap
 #. odoo-python
@@ -386,6 +396,8 @@ msgid ""
 "The In-App Purchase pack the system will automatically buy when reaching "
 "your refill threshold."
 msgstr ""
+"O pacote de compras no aplicativo que o sistema comprará automaticamente "
+"quando atingir seu limite de recarga."
 
 #. module: iap
 #. odoo-python
@@ -410,7 +422,7 @@ msgstr "Não registrado"
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.view_iap_users_tree
 msgid "Users"
-msgstr ""
+msgstr "Usuários"
 
 #. module: iap
 #. odoo-javascript

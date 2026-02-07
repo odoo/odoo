@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-16 18:36+0000\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
 "PO-Revision-Date: 2026-01-24 12:31+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-1/mail/"
@@ -27,8 +27,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
-" ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: mail
@@ -2630,9 +2630,9 @@ msgid ""
 "Cannot change the active state of the following channels: %(channels)s. You "
 "must be the owner or a system administrator to change it."
 msgstr ""
-"Non è possibile modificare lo stato attivo dei seguenti canali: %(channels)"
-"s. Per modificarlo è necessario essere il proprietario o un amministratore "
-"di sistema."
+"Non è possibile modificare lo stato attivo dei seguenti canali: %"
+"(channels)s. Per modificarlo è necessario essere il proprietario o un "
+"amministratore di sistema."
 
 #. module: mail
 #. odoo-python
@@ -4304,13 +4304,14 @@ msgstr "Vuoi che le persone ti vedano durante il meeting?"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
 #: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.js:0
 msgid "Do you want to remove \"%(member_name)s\" from this channel?"
 msgstr "Vuoi rimuovere \"%(member_name)s\" da questo canale?"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.js:0
+#: code:addons/mail/static/src/discuss/core/common/channel_member_model.js:0
 msgid ""
 "Do you want to remove owner from yourself? You will no longer have full "
 "control over the channel and its settings."
@@ -4320,7 +4321,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.js:0
+#: code:addons/mail/static/src/discuss/core/common/channel_member_model.js:0
 msgid ""
 "Do you want to set \"%(member_name)s\" as the owner? This means that the "
 "member will have full control over the channel and its settings.\n"
@@ -7539,6 +7540,12 @@ msgid "Meeting"
 msgstr "Incontro"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member.xml:0
+msgid "Member Actions"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__member_count
 msgid "Member Count"
 msgstr "Numero iscritti"
@@ -10236,15 +10243,9 @@ msgstr "Rimuovi"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
-msgid "Remove Channel Admin"
-msgstr "Rimuovi amministratore canale"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
-msgid "Remove Channel Owner"
-msgstr "Rimuovi proprietario canale"
+#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
+msgid "Remove Admin"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -10255,6 +10256,18 @@ msgstr "Elimina azione contesto"
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__remove_followers
 msgid "Remove Followers"
 msgstr "Elimina seguaci"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
+msgid "Remove Member"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
+msgid "Remove Owner"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -10277,12 +10290,6 @@ msgstr "Rimuovi indirizzo da lista nera"
 #: model:ir.model,name:mail.model_mail_blacklist_remove
 msgid "Remove email from blacklist wizard"
 msgstr "Procedura rimozione e-mail da lista nera"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
-msgid "Remove from Channel"
-msgstr "Rimuovi dal canale"
 
 #. module: mail
 #. odoo-javascript
@@ -11263,21 +11270,21 @@ msgstr "Server di tipo POP."
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
-msgid "Set Channel Admin"
-msgstr "Imposta amministratore canale"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
-msgid "Set Channel Owner"
-msgstr "Imposta proprietario canale"
+#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
+msgid "Set Admin"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
 msgid "Set Email"
 msgstr "Imposta e-mail"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
+msgid "Set Owner"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -12322,8 +12329,8 @@ msgid ""
 "The role '%(role_name)s' is not supported for the channel type '%"
 "(channel_type)s'."
 msgstr ""
-"Il ruolo \"%(role_name)s\" non è supportato per il tipo di canale "
-"\"%(channel_type)s\"."
+"Il ruolo \"%(role_name)s\" non è supportato per il tipo di canale \"%"
+"(channel_type)s\"."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel_member__channel_role
@@ -15127,6 +15134,21 @@ msgstr "il tuo alias"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” in “%(channel_name)s”"
+
+#~ msgid "Remove Channel Admin"
+#~ msgstr "Rimuovi amministratore canale"
+
+#~ msgid "Remove Channel Owner"
+#~ msgstr "Rimuovi proprietario canale"
+
+#~ msgid "Remove from Channel"
+#~ msgstr "Rimuovi dal canale"
+
+#~ msgid "Set Channel Admin"
+#~ msgstr "Imposta amministratore canale"
+
+#~ msgid "Set Channel Owner"
+#~ msgstr "Imposta proprietario canale"
 
 #~ msgid "%(user)s connected. This is their first connection. Wish them luck."
 #~ msgstr ""

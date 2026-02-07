@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-30 18:35+0000\n"
-"PO-Revision-Date: 2026-01-06 16:15+0000\n"
+"PO-Revision-Date: 2026-02-07 12:24+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-1/"
 "hr_work_entry/pl/>\n"
@@ -31,8 +31,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
-"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_work_entry
@@ -56,10 +56,10 @@ msgstr ""
 "\n"
 "Harmonogram pracy: Wpisy pracy będą generowane na podstawie poniższych "
 "godzin pracy.\n"
-"Frekwencja: Wpisy pracy będą generowane z obecności pracownika. (wymaga "
-"aplikacji Obecności)\n"
-"Planowanie: Wpisy pracy będą generowane z harmonogramu pracownika. (wymaga "
-"aplikacji Planowanie)\n"
+"Frekwencja: Wpisy pracy będą generowane na podstawie obecności pracownika. "
+"(wymaga aplikacji Obecności)\n"
+"Planowanie: Wpisy pracy będą generowane na podstawie harmonogramu "
+"pracownika. (wymaga aplikacji Planowanie)\n"
 "    "
 
 #. module: hr_work_entry
@@ -163,7 +163,7 @@ msgstr "Czas nieobecności"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__active
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Active"
-msgstr "Aktywne"
+msgstr "Aktywny"
 
 #. module: hr_work_entry
 #. odoo-javascript
@@ -245,7 +245,7 @@ msgstr "Przerwa na karmienie piersią"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_small_unemployment_birth
 msgid "Brief Holiday (Birth)"
-msgstr "Krótki urlop (narodziny)"
+msgstr "Krótki urlop (poród)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_non_provided_service_childminders
@@ -561,7 +561,7 @@ msgstr "Nadgodziny w podwójnej stawce"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Draft"
-msgstr "Projekt"
+msgstr "Wersja robocza"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__duration
@@ -691,7 +691,7 @@ msgstr "Dodatkowy urlop wypoczynkowy"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_extra_legal_public_holiday
 msgid "Extra-legal Public Holiday"
-msgstr ""
+msgstr "Dodatkowy dzień wolny od pracy"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_extra_legal_sectoral_holiday
@@ -1332,12 +1332,12 @@ msgstr "Dzień wolny za nadgodziny"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_overtime_work_days_daytime
 msgid "Overtime Workday Daytime"
-msgstr ""
+msgstr "Nadgodziny dobowe (dzienne)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_overtime_work_days_nighttime
 msgid "Overtime Workday Nighttime"
-msgstr ""
+msgstr "Nadgodziny dobowe (nocne)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_overtime_no_onss_horeca
@@ -1602,7 +1602,7 @@ msgstr "Czas pracy zasobu"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_rest_days_overtime
 msgid "Rest Days Overtime"
-msgstr ""
+msgstr "Nadgodziny w dni wolne"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_retro_overtime
@@ -1647,7 +1647,7 @@ msgstr "SPT"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_sick_leave
 msgid "STO"
-msgstr "ZW"
+msgstr "L4"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_strike
@@ -1739,7 +1739,7 @@ msgstr "Ustaw jako wersję roboczą"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__shortcut_behavior
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__shortcut_behavior
 msgid "Shortcut Behavior"
-msgstr ""
+msgstr "Zachowanie skrótu"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_100
@@ -1749,7 +1749,7 @@ msgstr "Zwolnienie lekarskie (100% płatne)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_75
 msgid "Sick Leave (75% Paid)"
-msgstr "Urlop zdrowotny (płatne 75%)"
+msgstr "Urlop zdrowotny (75% płatne)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_sick_leave_unpaid
@@ -1765,7 +1765,7 @@ msgstr "Zwolnienie lekarskie 80%"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_sick_leave
 msgid "Sick Time Off"
-msgstr "Urlop chorobowy"
+msgstr "Zwolnienie lekarskie"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_pl_work_entry_type_sick_leave
@@ -1775,7 +1775,7 @@ msgstr "Zwolnienie lekarskie (płatne w 80%)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_part_sick
 msgid "Sick Time Off (Without Guaranteed Salary)"
-msgstr "Urlop chorobowy (Bez gwarantowanego wynagrodzenia)"
+msgstr "Zwolnienie lekarskie (Bez gwarantowanego wynagrodzenia)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sk_work_entry_type_sick_25
@@ -1801,12 +1801,12 @@ msgstr "Zwolnienie lekarskie (płatne 75%)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_sick_leave_unpaid
 msgid "Sick Time off (Unpaid)"
-msgstr "Zwolnienie lekarskie (niepłatne)"
+msgstr "Zwolnienie lekarskie (bezpłatne)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_simple_holiday_pay_variable_salary
 msgid "Simple Holiday Pay - Variable Salary"
-msgstr "Prost wynagrodzenie za urlop - wynagrodzenie zmienne"
+msgstr "Proste wynagrodzenie za urlop - wynagrodzenie zmienne"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_situational_unemployment
@@ -2025,7 +2025,7 @@ msgid ""
 "be <= '%(latest_available_date)s', which correspond to the generated work "
 "entries time interval."
 msgstr ""
-"Data od musi być >= '%(earliest_available_date)s', a data do musi być <= '%"
+"Data OD musi być >= '%(earliest_available_date)s', a data DO musi być <= '%"
 "(latest_available_date)s', co odpowiada wygenerowanemu przedziałowi "
 "czasowemu wpisów pracy."
 
@@ -2148,7 +2148,7 @@ msgstr "Nieuzasadniony powód"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_unpaid_leave
 msgid "Unpaid"
-msgstr "Nieopłacone"
+msgstr "Niepłatny"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_unpaid_wt
@@ -2258,7 +2258,7 @@ msgstr "Weekend"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_welcome_leave
 msgid "Welcome Leave"
-msgstr ""
+msgstr "Urlop adopcyjny"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -2379,7 +2379,7 @@ msgstr "Godziny pracy"
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_version__work_entry_source__calendar
 msgid "Working Schedule"
-msgstr "Godziny pracy"
+msgstr "Harmonogram pracy"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry_type__category__working_time

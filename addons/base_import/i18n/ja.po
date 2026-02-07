@@ -6,15 +6,15 @@
 # Martin Trigaux, 2022
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-16 18:36+0000\n"
-"PO-Revision-Date: 2025-12-09 14:04+0000\n"
+"PO-Revision-Date: 2026-02-07 12:16+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "base_import/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -53,9 +53,8 @@ msgstr "%sレコードがインポートされました"
 msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect."
-msgstr ""
-"単一カラムがファイル内に見つかりました。これはファイルセパレータが間違ってい"
-"るときによくあることです。"
+msgstr "単一列がファイル内に見つかりました。これはファイルセパレータが間違っていると"
+"きによくあることです。"
 
 #. module: base_import
 #. odoo-javascript
@@ -153,7 +152,7 @@ msgstr "'再開'をクリックしてインポートを続行し、次の行%s�
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Column %(column)s contains incorrect values (value: %(value)s)"
-msgstr "カラム%(column)sに正しくない値が含まれています (値: %(value)s)"
+msgstr "列%(column)sに正しくない値が含まれています (値: %(value)s)"
 
 #. module: base_import
 #. odoo-python
@@ -161,13 +160,12 @@ msgstr "カラム%(column)sに正しくない値が含まれています (値: %
 msgid ""
 "Column %(column)s contains incorrect values. Error in line %(line)d: %"
 "(error)s"
-msgstr ""
-"カラム%(column)s に正しくない値が含まれています。エラー行 %(line)d: %(error)s"
+msgstr "列%(column)s に正しくない値が含まれています。エラー行 %(line)d: %(error)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
 msgid "Column Name"
-msgstr "カラム名"
+msgstr "列名"
 
 #. module: base_import
 #. odoo-javascript
@@ -353,7 +351,7 @@ msgstr "ファイル"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "File Column"
-msgstr "ファイルカラム"
+msgstr "ファイル列"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_name
@@ -446,9 +444,9 @@ msgid ""
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
 msgstr ""
-"ファイルにカラム名が含まれている場合\n"
-"　　　Odoo はフィールドに関連するカラムを自動認識します。\n"
-"　　　この機能により、カラムが多いファイルのインポートでも簡単に\n"
+"ファイルに列名が含まれている場合\n"
+"　　　Odoo はフィールドに関連する列を自動認識します。\n"
+"　　　この機能により、列が多いファイルのインポートでも簡単に\n"
 "　　　作業ができます。"
 
 #. module: base_import
@@ -533,7 +531,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
-msgstr "異常値あり 行 %(row)s, カラム%(col)s: %(cell_value)s"
+msgstr "異常値あり 行 %(row)s, 列%(col)s: %(cell_value)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
@@ -830,7 +828,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "This column will be concatenated in field"
-msgstr "このカラムはフィールド内で連結されます"
+msgstr "この列はフィールド内で連結されます"
 
 #. module: base_import
 #. odoo-javascript

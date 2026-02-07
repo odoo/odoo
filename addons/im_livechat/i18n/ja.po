@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-30 18:35+0000\n"
-"PO-Revision-Date: 2026-01-31 12:29+0000\n"
+"PO-Revision-Date: 2026-02-07 12:24+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "im_livechat/ja/>\n"
@@ -243,7 +243,7 @@ msgstr "要アクション"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__active
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -886,7 +886,7 @@ msgstr "ドラッグして移動"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__duration
 msgid "Duration"
-msgstr "時間"
+msgstr "対応時間"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__duration
@@ -906,7 +906,7 @@ msgstr "会話の長さ(時間)"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.discuss_channel_view_kanban
 msgid "Duration:"
-msgstr "期間:"
+msgstr "対応時間:"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__question_email
@@ -1151,7 +1151,7 @@ msgstr "会話のコピーはこちらです。相手："
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/thread_model_patch.js:0
 msgid "Here's the most recent message:"
-msgstr ""
+msgstr "最新のメッセージは以下の通りです："
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__hide_button
@@ -1481,7 +1481,7 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Leave"
-msgstr "解除"
+msgstr "退出"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1498,7 +1498,7 @@ msgstr "チャネルから退席"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/thread_model_patch.js:0
 msgid "Leave Conversation"
-msgstr ""
+msgstr "会話から退出"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1507,7 +1507,8 @@ msgstr ""
 msgid ""
 "Leaving will end the live chat with %(channel_name)s. Are you sure you want "
 "to continue?"
-msgstr ""
+msgstr "退出すると、%(channel_name)s とのライブチャットが終了します。続行してもよろし"
+"いですか？"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -2658,12 +2659,12 @@ msgstr "セッション中にその人物が費やした時間(時間単位)"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
 msgid "Time to Open"
-msgstr ""
+msgstr "自動表示までの時間"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_response
 msgid "Time to answer (sec)"
-msgstr "回答時間(秒)"
+msgstr "応答時間(秒)"
 
 #. module: im_livechat
 #: model:digest.tip,name:im_livechat.digest_tip_im_livechat_0
@@ -2691,6 +2692,14 @@ msgid ""
 "installed on your server to geolocate visitors. Without it, rules that "
 "include country restrictions will be ignored."
 msgstr ""
+"このルールをウェブサイトの特定のページにのみ適用するには、/shop のような URL "
+"正規表現を入力してください。これは /shop で始まるすべてのページ(例：/shop/pro"
+"duct)に一致します。すべてのページにルールを適用する場合は、このフィールドを空"
+"のままにしてください。<br/>\n"
+"                                    オンプレミス版のデータベースでは、訪問者"
+"の位置情報を取得するために、サーバに GeoIP をインストールする必要があります。"
+"GeoIP がインストールされていない場合、国による制限を含むルールは無視されます"
+"。"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_agent_history_action
@@ -2808,7 +2817,7 @@ msgstr "ユーザの生の回答"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "View Contact"
-msgstr ""
+msgstr "連絡先を表示"
 
 #. module: im_livechat
 #. odoo-python
@@ -2954,7 +2963,7 @@ msgstr "ウィジェット"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Window Colors"
-msgstr ""
+msgstr "ウィンドウカラー"
 
 #. module: im_livechat
 #: model_terms:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing_email
@@ -2969,7 +2978,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/im_livechat/controllers/channel.py:0
 msgid "Write expertises: Only LINK and UNLINK commands are allowed."
-msgstr ""
+msgstr "専門知識の設定では、LINKおよびUNLINKコマンドのみ使用できます。"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -3015,7 +3024,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_category_patch.xml:0
 msgid "You have joined this live chat channel"
-msgstr ""
+msgstr "このライブチャットチャネルに参加しました"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -3063,7 +3072,7 @@ msgstr "例: こんにちは。どのようなご用件でしょうか？"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. Need help? Chat with us."
-msgstr ""
+msgstr "例：サポートが必要ですか？チャットでお問い合わせください。"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -3080,7 +3089,7 @@ msgstr "通話中"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/discuss_sidebar_category_patch.xml:0
 msgid "joined"
-msgstr ""
+msgstr "参加済"
 
 #. module: im_livechat
 #. odoo-javascript

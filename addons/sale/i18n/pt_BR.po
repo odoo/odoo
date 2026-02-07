@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 18:36+0000\n"
-"PO-Revision-Date: 2026-01-31 12:42+0000\n"
+"POT-Creation-Date: 2026-02-06 18:36+0000\n"
+"PO-Revision-Date: 2026-02-07 12:32+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s19-1/sale/pt_BR/>\n"
@@ -141,7 +141,6 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
-#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <t t-set=\"color\" t-"
@@ -594,8 +593,8 @@ msgstr ""
 "value=\"object._get_product_documents()\"/> <t t-if=\"documents\">\n"
 "                            <br/> <t t-if=\"len(documents)&gt;1\"> Aqui "
 "estão alguns documentos adicionais que podem ser do seu interesse: </t>\n"
-"                            <t t-else=\"\">Aqui está um documento adicional "
-"que pode ser do seu interesse:\n"
+"                            <t t-else=\"\"Há um documento adicional que pode "
+"ser do seu interesse:\n"
 "                           </t>\n"
 "                            <ul style=\"margin-bottom: 0;\"> \n"
 "                               <t t-foreach=\"documents\" t-"
@@ -789,9 +788,9 @@ msgstr ""
 "                                                        </t> \n"
 "                                                   </t>\n"
 "                                                </t> \n"
-"                                               <span style=\"display: inline-"
-"block;  margin-top: 4px; padding: 4px 8px; border-radius: 20px; background-"
-"color: #e9ecef; color: #454748; font-size: 12px;\">\n"
+"                                               <t t-out=\"', "
+"'.join(combo_line.product_id.product_template_attribute_value_ids.mapped('name'))"
+"\"/>\n"
 "                                                    <t t-"
 "out=\"int(line.product_uom_qty) or ''\"> 10000</t>\n"
 "                                                    <t t-"
@@ -1037,7 +1036,6 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
-#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
@@ -1100,10 +1098,10 @@ msgstr ""
 "       <t t-if=\"documents\">\n"
 "            <br/> \n"
 "           <t t-if=\"len(documents)&gt;1\"> \n"
-"                Aqui estão alguns documentos adicionais que podem ser do seu "
+"                Há documentos adicionais que podem ser do seu interesse: </"
+"t>\n"
+"            <t t-else=\"\">Há um documento adicional que pode ser do seu "
 "interesse: </t>\n"
-"            <t t-else=\"\">Aqui está um documento adicional que pode ser do "
-"seu interesse: </t>\n"
 "            <ul style=\"margin-bottom: 0;\"> <t t-foreach=\"documents\" t-"
 "as=\"document\">\n"
 "                    <li style=\"font-size: 13px;\"> <a t-"
@@ -1299,12 +1297,14 @@ msgid ""
 "                                Outgoing\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_value text-muted\">\n"
+"                                Enviado                           </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "<span groups=\"!uom.group_uom\">Sold</span>"
-msgstr ""
+msgstr "<span groups=\"!uom.group_uom\">Vendido</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -1393,7 +1393,7 @@ msgstr "<strong>Observações sobre posição fiscal:</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Incoterm</strong>"
-msgstr ""
+msgstr "<strong>Incoterm</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1472,7 +1472,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_storable
 msgid "A storable product is a product for which you manage stock."
-msgstr ""
+msgstr "Produtos armazenáveis são aqueles cujo estoque é administrado."
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -5907,7 +5907,6 @@ msgstr "O produto (%(product)s) tem valores incompatíveis: %(value_list)s"
 
 #. module: sale
 #. odoo-python
-#: code:addons/sale/controllers/portal.py:0
 #: code:addons/sale/wizard/payment_link_wizard.py:0
 msgid "The sale order has expired."
 msgstr ""

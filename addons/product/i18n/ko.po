@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-16 18:37+0000\n"
-"PO-Revision-Date: 2026-01-31 12:36+0000\n"
+"PO-Revision-Date: 2026-02-07 12:29+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-1/"
 "product/ko/>\n"
@@ -1837,6 +1837,11 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"예측 수량(보유 수량 - 출고 + 입고 - 반출 수량으로 계산)단일 재고 위치인 상황"
+"에서는 해당 위치 또는 그 하위 위치에 보관되어 있는 품목까지 포함합니다.단일 "
+"창고인 상황에서는 해당 창고 또는 그 하위 위치에 보관 되어 있는 품목까지 포함"
+"합니다.기타의 경우, '내부' 유형으로 모든 재고 위치에 보관 중인 품목이 포함됩"
+"니다."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
@@ -3523,6 +3528,12 @@ msgid ""
 "Otherwise, this includes goods arriving to any Stock Location with "
 "'internal' type."
 msgstr ""
+"계획된 입고 품목의 수량.\n"
+"단일 재고 공간이 있는 상황에서, 이 공간나 그 하위 공간에 도착한 품목이 여기에"
+" 포함됩니다.\n"
+"단일 창고의 경우, 이 창고의 재고 공간 또는 그 하위 공간에 도착한 품목이 여기"
+"에 포함됩니다.\n"
+"그렇지 않으면 '내부' 유형의 재고 공간에 도착한 품목이 포함됩니다."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__outgoing_qty

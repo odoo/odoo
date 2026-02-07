@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-30 18:35+0000\n"
-"PO-Revision-Date: 2026-01-31 12:25+0000\n"
+"PO-Revision-Date: 2026-02-07 12:18+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/crm/"
 "ja/>\n"
@@ -325,6 +325,30 @@ msgid ""
 "</t>\n"
 "        </t>"
 msgstr ""
+"<t>\n"
+"<t t-out=\"object.partner_id and object.partner_id.name or ''\">Acme Corporat"
+"ion</t>様<br/><br/>\n"
+"<t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>へよ"
+"うこそ。\n"
+"当社のサービスにご興味をお持ちいただき、誠にありがとうございます。ご登録が完"
+"了いたしましたので、<t t-out=\"object.company_id.name or ''\">My Company "
+"(San Francisco)</t>のサービスをぜひお試しください。 私は、<t t-out="
+"\"object.user_id.name or ''\">Marc Demo</t> と申します。Odooを最大限にご活用"
+"いただけるようサポートさせていただきます。つきましては、近日中に簡単なデモを"
+"ご案内させていただきたいのですが、いかがでしょうか?<br/>\n"
+"何かございましたら、お気軽にお問い合わせください。<br/><br/>\n"
+"よろしくおねがいいたします。<br/>\n"
+"<t t-if=\"object.user_id\">\n"
+"    <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
+"    <br/>メール: <t t-out=\"object.user_id.email or ''\""
+">mark.brown23@example.com</t>\n"
+"    <br/>電話: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"    <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>"
+"\n"
+"</t>\n"
+"        </t>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
@@ -394,12 +418,12 @@ msgstr "要アクション"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__lead_tomerge_ids
 msgid "Active Leads"
-msgstr "アクティブなリード"
+msgstr "有効なリード"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action
@@ -1873,7 +1897,7 @@ msgstr "販売チーム内"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Inactive"
-msgstr "非アクティブ"
+msgstr "無効"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__email_state__incorrect
@@ -1962,7 +1986,7 @@ msgstr "Kpi Crm 受注案件評価額"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_active_count
 msgid "Lang Active Count"
-msgstr "Langアクティブカウント"
+msgstr "Lang有効カウント"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_id
@@ -2744,7 +2768,7 @@ msgstr "データがありません！"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "No detours, no delays - from %(stage_name)s straight to the win! 🚀"
-msgstr ""
+msgstr "ムダも遅れもなく、%(stage_name)s から一気に成約へ🚀"
 
 #. module: crm
 #. odoo-python
@@ -2844,12 +2868,12 @@ msgstr "先月割り当てられたリードと案件の数。"
 msgid ""
 "Number of leads assigned to this member in the last 24 hours (lost leads "
 "excluded)"
-msgstr ""
+msgstr "過去24時間以内にこのメンバーに割り当てられたリード数(失効リードを除く)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
 msgid "Number of leads assigned to this member in the last 30 days"
-msgstr ""
+msgstr "直近30日におけるこのメンバーに割り当てられたリード数"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
@@ -3104,7 +3128,7 @@ msgstr "保留"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Phew, that took some effort — but you nailed it. Good job!"
-msgstr ""
+msgstr "ふぅ、少し大変でしたが、見事にやり遂げました。お疲れさまでした!"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone
@@ -3380,12 +3404,12 @@ msgstr "Ringover VOIP 電話"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_rotting
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Rotting"
-msgstr ""
+msgstr "停滞"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Rotting in"
-msgstr ""
+msgstr "停滞中"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_use_auto_assignment
@@ -3486,7 +3510,7 @@ msgstr "案件を検索"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Search in our directory of 300.000+ companies"
-msgstr ""
+msgstr "30万社以上の企業ディレクトリで検索"
 
 #. module: crm
 #. odoo-javascript
@@ -3508,19 +3532,19 @@ msgstr "少なくとも2つのリード/案件をリストから選択し、マ�
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Select or create a contact..."
-msgstr ""
+msgstr "連絡先を選択または作成..."
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Send a Survey"
-msgstr ""
+msgstr "アンケートを送信"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Send an email and get leads from replies"
-msgstr ""
+msgstr "メールを送信し、返信からリードを獲得"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mail_compose
@@ -3593,7 +3617,7 @@ msgstr "案件のみ表示"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Show to all teams"
-msgstr ""
+msgstr "すべてのチームに表示"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_optout
@@ -3925,7 +3949,8 @@ msgstr ""
 msgid ""
 "This new lead created by %(creation_source)s was automatically assigned to "
 "team leader %(user_name)s"
-msgstr ""
+msgstr "%(creation_source)s によって作成されたこの新規リードは、自動的にチームリーダ%"
+"(user_name)sに割り当てられました"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4014,12 +4039,14 @@ msgid ""
 "To work with the CRM, you should <a name=\"%d\" type=\"action\" "
 "tabindex=\"-1\">join a team.</a>"
 msgstr ""
+"CRMを利用するには、<a name=\"%d\" type=\"action\" tabindex=\"-1\">チームに参"
+"加してください。</a>"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "To work with the CRM, you should join a team."
-msgstr ""
+msgstr "CRMを使用するにはチームに参加する必要があります。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -4068,7 +4095,7 @@ msgstr "CRMにメールを送信してみましょう"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Turn visitors into leads"
-msgstr ""
+msgstr "訪問客をリードに変換"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_type
@@ -4305,7 +4332,7 @@ msgstr "ウェルカムデモ"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "What are the requirements to move an opportunity to this stage?"
-msgstr ""
+msgstr "このステージに案件を進めるための要件は何ですか?"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
@@ -4338,19 +4365,19 @@ msgstr "成約/失注"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Wow, that was fast. That deal didn’t stand a chance!"
-msgstr ""
+msgstr "すごく早いですね。この商談はあっという間に決着しました!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Yay, your first win from %(utm_source_name)s!"
-msgstr ""
+msgstr "%(utm_source_name)sからの初の成約、おめでとうございます!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Yeah! Best deal out of the last 7 days for the team."
-msgstr ""
+msgstr "素晴らしい!この 1 週間でチーム一番の成果です。"
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_yearly
@@ -4391,7 +4418,7 @@ msgstr "直近7日の自己記録を更新しました。"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You just expanded the map! First win in %(country)s."
-msgstr ""
+msgstr "マップを拡張しました!%(country)s での初成約です。"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
@@ -4410,13 +4437,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You're on a winning streak. 3 deals in 3 days, congrats!"
-msgstr ""
+msgstr "絶好調ですね!3 日間で 3 件の成約、おめでとうございます!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You're on fire! Fifth deal won today 🔥"
-msgstr ""
+msgstr "すばらしい!今日5件目の成約です🔥"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4442,7 +4469,7 @@ msgstr "例：月次"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "e.g. (555) 555-0199"
-msgstr ""
+msgstr "例：(555) 555-0199"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4452,7 +4479,7 @@ msgstr "例: プロダクトの価格設定"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "e.g. Qualification"
-msgstr ""
+msgstr "例：資格"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
@@ -4467,7 +4494,7 @@ msgstr "例: https://www.odoo.com"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "e.g. john.doe@email.com"
-msgstr ""
+msgstr "例：john.doe@email.com"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -4500,7 +4527,7 @@ msgstr "値あり"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "incoming email"
-msgstr ""
+msgstr "受信メール"
 
 #. module: crm
 #. odoo-python

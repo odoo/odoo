@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-04 18:35+0000\n"
-"PO-Revision-Date: 2026-01-31 12:37+0000\n"
+"PO-Revision-Date: 2026-02-07 12:30+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "project/ja/>\n"
@@ -2449,7 +2449,7 @@ msgstr "クローズ済タスクを隠す"
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__2
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__2
 msgid "High priority"
-msgstr "優先度高"
+msgstr "高優先度"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -3252,7 +3252,7 @@ msgstr "マイルストンなし"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Parent Task"
-msgstr ""
+msgstr "親タスクなし"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -3286,7 +3286,7 @@ msgstr "まだデータはありません！"
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "No email"
-msgstr ""
+msgstr "メールなし"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_milestone_action
@@ -3422,7 +3422,7 @@ msgstr "予定通り"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__periodic
 msgid "On a periodic basis"
-msgstr ""
+msgstr "定期的に"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__monthly
@@ -3592,7 +3592,7 @@ msgstr "予定日"
 #. module: project
 #: model:project.role,name:project.project_role_8
 msgid "Plumber"
-msgstr ""
+msgstr "配管工"
 
 #. module: project
 #. odoo-javascript
@@ -3682,7 +3682,7 @@ msgstr "プライベートタスクはテンプレートに変換できません
 #. module: project
 #: model:project.project,name:project.project_template_1
 msgid "Product Launch Campaign"
-msgstr ""
+msgstr "プロダクトローンチキャンペーン"
 
 #. module: project
 #. odoo-javascript
@@ -3801,7 +3801,7 @@ msgstr "プロジェクトステージ削除ウィザード"
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
 msgid "Project Stage: Send rating"
-msgstr ""
+msgstr "プロジェクトステージ：評価を送信"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_project_stage_configure
@@ -3813,7 +3813,7 @@ msgstr "プロジェクトステージ"
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Project Tag"
-msgstr ""
+msgstr "プロジェクトタグ"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
@@ -3878,6 +3878,29 @@ msgid ""
 "access.\n"
 "- Project admins have access to private projects, even if not followers.\n"
 msgstr ""
+"プロジェクトとタスクの可視性:\n"
+"- 招待された内部ユーザ: フォローしているプロジェクトまたはタスクのみアクセス"
+"可能。担当者には自動的にアクセス権が付与されます。\n"
+"- 招待された内部ユーザおよびポータルユーザ: 上記と同様、ポータルユーザに拡張"
+"されます。\n"
+"- すべての内部ユーザ: プロジェクトおよびそのすべてのタスクへのフルアクセス権"
+"。\n"
+"- すべての内部ユーザおよび招待されたポータルユーザ: 内部ユーザはフルアクセス"
+"権を取得。ポータルユーザはフォローしているプロジェクトまたはタスクのみアクセ"
+"ス可能。\n"
+"\n"
+"ポータルアクセスレベル:\n"
+"- 読み取り専用: ポータルユーザはポータル経由でタスクを表示できますが、編集は"
+"不可。\n"
+"- 編集(限定): ポータルユーザはカンバン/リストビューにアクセスでき、フォロー中"
+"のタスクの限定フィールドを編集可能。\n"
+"- 編集: 上記と同様、全タスクへのアクセス権付き。\n"
+"\n"
+"その他のルール:\n"
+"- 内部ユーザは、プロジェクトアクセス権がなくても直接リンクからタスクを開けま"
+"す。\n"
+"- プロジェクト管理者は、非フォロワーであっても非公開プロジェクトにアクセスで"
+"きます。\n"
 
 #. module: project
 #. odoo-javascript
@@ -4013,12 +4036,12 @@ msgstr "出版"
 #. module: project
 #: model:project.role,name:project.project_role_9
 msgid "Quality & Safety Officer"
-msgstr ""
+msgstr "品質・安全管理責任者"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__quarterly
 msgid "Quarterly"
-msgstr "四半期毎"
+msgstr "四半期"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
@@ -4055,7 +4078,7 @@ msgstr "評価平均テキスト"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Rating Email"
-msgstr ""
+msgstr "評価メール"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
@@ -4085,7 +4108,7 @@ msgstr "評価前回の数値"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Rating Periodicity"
-msgstr ""
+msgstr "評価の頻度"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
@@ -4322,13 +4345,13 @@ msgstr "役割ごとのユーザ設定"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Rotting"
-msgstr ""
+msgstr "停滞"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Rotting in"
-msgstr ""
+msgstr "停滞中"
 
 #. module: project
 #. odoo-javascript
@@ -4405,7 +4428,7 @@ msgstr "マイルストン検索"
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "Search in Parent Task"
-msgstr ""
+msgstr "親タスク内を検索"
 
 #. module: project
 #. odoo-python
@@ -4446,7 +4469,7 @@ msgstr "セキュリティトークン"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "See Parent Task"
-msgstr ""
+msgstr "親タスクを参照"
 
 #. module: project
 #. odoo-javascript
@@ -4468,7 +4491,7 @@ msgstr "招待状を送信"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_active
 msgid "Send a customer rating request"
-msgstr ""
+msgstr "顧客評価の依頼を送信"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__sequence
@@ -4574,7 +4597,7 @@ msgstr "サブタスクとトップメニューを表示"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 msgid "Show to all companies"
-msgstr ""
+msgstr "すべての会社に表示"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4682,7 +4705,7 @@ msgstr "ステージ変更"
 #: model:ir.model.fields,field_description:project.field_project_project_stage__name
 #: model:ir.model.fields,field_description:project.field_project_task_type__name
 msgid "Stage Name"
-msgstr ""
+msgstr "ステージ名"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__user_id
@@ -4692,7 +4715,7 @@ msgstr "ステージ所有者"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_active
 msgid "Stage Rating Status"
-msgstr ""
+msgstr "ステージ評価ステータス"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
@@ -4790,7 +4813,7 @@ msgstr "概要"
 #. module: project
 #: model:project.role,name:project.project_role_7
 msgid "Surface Installer"
-msgstr ""
+msgstr "表面施工業者"
 
 #. module: project
 #. odoo-javascript
@@ -4906,7 +4929,7 @@ msgstr "タスクの繰り返し"
 #. module: project
 #: model:ir.model,name:project.model_task_share_wizard
 msgid "Task Sharing"
-msgstr ""
+msgstr "タスク分担"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -5059,7 +5082,7 @@ msgstr "タスク。テスト"
 #: model:ir.model.fields,field_description:project.field_project_role__user_ids
 #: model_terms:ir.ui.view,arch_db:project.project_role_view_search
 msgid "Team Members"
-msgstr ""
+msgstr "チームメンバ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__template_id
@@ -5071,7 +5094,7 @@ msgstr "テンプレート"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__template_has_dates
 msgid "Template Has Dates"
-msgstr ""
+msgstr "テンプレートに日付あり"
 
 #. module: project
 #. odoo-python
@@ -5319,13 +5342,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "This new task has been created in the \"%(project_name)s\" project."
-msgstr ""
+msgstr "この新しいタスクが \"%(project_name)s\" プロジェクトに作成されました。"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "This new task is not part of any project."
-msgstr ""
+msgstr "この新しいタスクは、どのプロジェクトにも属していません。"
 
 #. module: project
 #. odoo-python

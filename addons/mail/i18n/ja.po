@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-16 18:36+0000\n"
-"PO-Revision-Date: 2026-01-31 12:35+0000\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"PO-Revision-Date: 2026-02-07 12:29+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/mail/"
 "ja/>\n"
@@ -1121,12 +1121,12 @@ msgstr "購読の際デフォルトで有効化されます。"
 #: model:ir.model.fields,field_description:mail.field_mail_template__active
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_search
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__res_domain
 msgid "Active domain"
-msgstr "アクティブなドメイン"
+msgstr "有効なドメイン"
 
 #. module: mail
 #. odoo-javascript
@@ -2568,8 +2568,9 @@ msgid ""
 "Canned response that will automatically be substituted with longer content "
 "in your messages. Type '::' followed by the name of your shortcut "
 "(e.g. ::hello) to use in your messages."
-msgstr "定型文は、メッセージの中で自動的に長い内容に置き換えられます。'::' の後にショ"
-"ートカット名(例 ::hello)を入力して下さい。"
+msgstr ""
+"定型文は、メッセージの中で自動的に長い内容に置き換えられます。'::' の後に"
+"ショートカット名(例 ::hello)を入力して下さい。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
@@ -2595,8 +2596,8 @@ msgid ""
 "Cannot change the active state of the following channels: %(channels)s. You "
 "must be the owner or a system administrator to change it."
 msgstr ""
-"次のチャネルのアクティブ状態は変更できません：%(channels)s。これを変更するに"
-"は、あなたがオーナーであるか、システム管理者である必要があります。"
+"次のチャネルの有効状態は変更できません：%(channels)s。これを変更するには、あ"
+"なたがオーナーであるか、システム管理者である必要があります。"
 
 #. module: mail
 #. odoo-python
@@ -2616,8 +2617,9 @@ msgstr "以下のオプションにリンクされている投票を変更でき
 msgid ""
 "Cannot create %(channels)s: initial message should belong to parent channel "
 "or one of its sub-channels."
-msgstr "%(channels)s を作成できません : 初期メッセージは親チャンネルまたはそのサブチ"
-"ャンネルのいずれかに属している必要があります。"
+msgstr ""
+"%(channels)s を作成できません : 初期メッセージは親チャンネルまたはそのサブ"
+"チャンネルのいずれかに属している必要があります。"
 
 #. module: mail
 #. odoo-python
@@ -2647,7 +2649,8 @@ msgstr "投票が終了した投票には投票できません: \"%s\""
 #. odoo-python
 #: code:addons/mail/models/mail_poll_vote.py:0
 msgid "Cannot vote on poll \"%(polls)s\": only one vote is allowed per user."
-msgstr "投票 \"%(polls)s\" には投票できません：ユーザごとに1票のみ投票可能です。"
+msgstr ""
+"投票 \"%(polls)s\" には投票できません：ユーザごとに1票のみ投票可能です。"
 
 #. module: mail
 #. odoo-python
@@ -2958,7 +2961,7 @@ msgstr "クリックして再試行"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.xml:0
 msgid "Click the"
-msgstr ""
+msgstr "以下をクリック："
 
 #. module: mail
 #. odoo-javascript
@@ -3046,7 +3049,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated carbon copy of recipients addresses"
-msgstr ""
+msgstr "CCに指定する受信者のメールアドレス(カンマ区切り)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -3144,7 +3147,7 @@ msgstr "設定"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure ICE Servers"
-msgstr ""
+msgstr "ICEサーバの設定"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -3214,7 +3217,7 @@ msgstr "接続に失敗しました(送信メールサーバーの問題)"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/mail_server_configurator_selection/mail_server_configurator_selection.js:0
 msgid "Connection failed: %s"
-msgstr ""
+msgstr "接続に失敗しました:%s"
 
 #. module: mail
 #. odoo-python
@@ -3324,19 +3327,19 @@ msgstr "内容"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
 msgid "Conversation hidden until new messages arrive."
-msgstr ""
+msgstr "新しいメッセージが届くまで会話は非表示です。"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_channel_model.js:0
 msgid "Conversation hidden."
-msgstr ""
+msgstr "会話は非表示です。"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.js:0
 msgid "Conversations"
-msgstr ""
+msgstr "会話"
 
 #. module: mail
 #. odoo-javascript
@@ -3348,7 +3351,7 @@ msgstr "リンクをコピー"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Copy Text"
-msgstr ""
+msgstr "テキストをコピー"
 
 #. module: mail
 #. odoo-python
@@ -3356,7 +3359,7 @@ msgstr ""
 msgid ""
 "Could not contact the mail server, please check your outgoing email server "
 "configuration."
-msgstr ""
+msgstr "メールサーバに接続できません。送信メールサーバ設定を確認して下さい。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_bounce
@@ -3452,7 +3455,7 @@ msgstr "新しいレコードを作成する"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/create_poll_dialog.xml:0
 msgid "Create a poll"
-msgstr ""
+msgstr "投票を作成"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_plan_action
@@ -3614,17 +3617,17 @@ msgstr "カスタムバウンスメッセージ"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom ICE Server with Twilio"
-msgstr ""
+msgstr "Twilio搭載の顧客ICEサーバ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom ICE Servers"
-msgstr ""
+msgstr "カスタムICEサーバ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom SFU Server"
-msgstr ""
+msgstr "カスタムSFUサーバ"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__custom_template
@@ -3644,12 +3647,12 @@ msgstr "カスタムチャネル名"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_notification_notification_partner_required
 msgid "Customer is required for inbox notification"
-msgstr ""
+msgstr "受信トレイ通知には顧客が必要です"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_notification_notification_partner_or_email_required
 msgid "Customer or email is required for inbox / email notification"
-msgstr ""
+msgstr "受信トレイ / メール通知には、顧客またはメールアドレスが必要です"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -3710,7 +3713,7 @@ msgstr "メッセージがピンされた日時"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_tracking_duration_mixin__rotting_days
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "このリソースが最後に更新されてからの経過日数"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__days
@@ -3720,7 +3723,7 @@ msgstr "日"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_duration_mixin__rotting_days
 msgid "Days Rotting"
-msgstr ""
+msgstr "停滞日数"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -3808,7 +3811,7 @@ msgstr "ノート初期値"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
 msgid "Default Recipients"
-msgstr ""
+msgstr "デフォルト宛先"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__summary
@@ -3904,7 +3907,7 @@ msgstr "削除"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/attachment_list.js:0
 msgid "Delete Attachment"
-msgstr ""
+msgstr "添付ファイルを削除"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete
@@ -3916,7 +3919,7 @@ msgstr "メールの削除"
 #: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.xml:0
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Delete Thread"
-msgstr ""
+msgstr "スレッドを削除"
 
 #. module: mail
 #. odoo-javascript
@@ -3928,7 +3931,7 @@ msgstr "すべてのプレビューを削除"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/create_poll_option_dialog.xml:0
 msgid "Delete option"
-msgstr ""
+msgstr "選択肢を削除"
 
 #. module: mail
 #. odoo-javascript
@@ -3965,7 +3968,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Describe when this template should be used"
-msgstr ""
+msgstr "このテンプレートを使用すべき場合を説明"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__description
@@ -3988,7 +3991,7 @@ msgstr "このサブタイプのために投稿したメッセージに追加さ
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_spam
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_spam
 msgid "Detected As Spam"
-msgstr ""
+msgstr "スパムとして検出されました"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__default_display_mode
@@ -4019,7 +4022,7 @@ msgstr "ダイレクトメッセージ"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Disable background blur"
-msgstr ""
+msgstr "背景ぼかしを無効化"
 
 #. module: mail
 #. odoo-javascript
@@ -4041,7 +4044,7 @@ msgstr "破棄"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Discard editing"
-msgstr ""
+msgstr "編集を破棄"
 
 #. module: mail
 #. odoo-javascript
@@ -4055,7 +4058,7 @@ msgstr "終了"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Disconnected from the call by the server"
-msgstr ""
+msgstr "サーバによって通話が切断されました"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_discuss
@@ -4070,19 +4073,19 @@ msgstr "ディスカス"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.js:0
 msgid "Discuss cannot access your camera"
-msgstr ""
+msgstr "ディスカスはカメラにアクセスできません"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.js:0
 msgid "Discuss cannot access your camera and microphone"
-msgstr ""
+msgstr "ディスカスはカメラとマイクにアクセスできません"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_denied_dialog.js:0
 msgid "Discuss cannot access your microphone"
-msgstr ""
+msgstr "ディスカスはマイクにアクセスできません"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_discuss_channel_member_unmute_ir_actions_server
@@ -4092,7 +4095,7 @@ msgstr "ディスカス: チャネルメンバミュート解除"
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_category
 msgid "Discussion Category"
-msgstr ""
+msgstr "ディスカッションカテゴリ"
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_channel
@@ -4114,7 +4117,7 @@ msgstr "閉じる"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/blur_performance_warning.xml:0
 msgid "Dismiss warning"
-msgstr ""
+msgstr "警告を閉じる"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_base_module_uninstall__display_name
@@ -4236,43 +4239,50 @@ msgstr "本当にこのプレビューを削除しますか？"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Do you want people to hear you in the meeting?"
-msgstr ""
+msgstr "会議で、あなたの音声を参加者に聞こえるようにしたいですか?"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_preview.xml:0
 msgid "Do you want people to see and hear you in the meeting?"
-msgstr ""
+msgstr "会議中に、あなたの映像と音声を参加者に共有しますか?"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "Do you want people to see you in the meeting?"
-msgstr ""
+msgstr "会議で、あなたの映像を他の参加者に表示しますか?"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
 #: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.js:0
 msgid "Do you want to remove \"%(member_name)s\" from this channel?"
-msgstr ""
+msgstr "このチャネルから \"%(member_name)s\" を削除しますか?"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.js:0
+#: code:addons/mail/static/src/discuss/core/common/channel_member_model.js:0
 msgid ""
 "Do you want to remove owner from yourself? You will no longer have full "
 "control over the channel and its settings."
 msgstr ""
+"自分自身からオーナー権限を削除しますか?この操作を行うと、チャネルおよびその設"
+"定に対する完全な管理権限を失います。"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.js:0
+#: code:addons/mail/static/src/discuss/core/common/channel_member_model.js:0
 msgid ""
 "Do you want to set \"%(member_name)s\" as the owner? This means that the "
 "member will have full control over the channel and its settings.\n"
 "\n"
 "This action cannot be reverted."
 msgstr ""
+"\"%(member_name)s\" をオーナーに設定しますか？これにより、そのメンバーはチャ"
+"ネルとその設定を完全に管理できるようになります。\n"
+"\n"
+"この操作は元に戻せません。"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_upload_document
@@ -4285,7 +4295,7 @@ msgstr "ドキュメント"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
 msgid "Document Follower"
-msgstr ""
+msgstr "ドキュメントフォロワー"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__res_ids
@@ -4423,7 +4433,7 @@ msgstr "重複したEメール"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/create_poll_dialog.xml:0
 msgid "Duration"
-msgstr ""
+msgstr "期間"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__duration_hour
@@ -4714,7 +4724,7 @@ msgstr "メール To"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/mail_server_configurator_selection/mail_server_configurator_selection.xml:0
 msgid "Emails sent via"
-msgstr ""
+msgstr "送信元メールサーバ"
 
 #. module: mail
 #. odoo-javascript
@@ -4749,7 +4759,7 @@ msgstr "順序付き追跡を有効にする"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_preview.js:0
 msgid "Enable background blur"
-msgstr ""
+msgstr "背景ぼかしを有効化"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__end_dt
@@ -4759,19 +4769,19 @@ msgstr "終了日時"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_poll__end_message_id
 msgid "End Message"
-msgstr ""
+msgstr "終了メッセージ"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "End Poll"
-msgstr ""
+msgstr "投票を終了"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__ended_poll_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__ended_poll_ids
 msgid "Ended Poll"
-msgstr ""
+msgstr "終了した投票"
 
 #. module: mail
 #. odoo-javascript
@@ -5023,7 +5033,7 @@ msgstr "失敗: %(modelName)s"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__is_favorite
 msgid "Favorite"
-msgstr ""
+msgstr "お気に入り"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__starred_partner_ids
@@ -5134,7 +5144,7 @@ msgstr "ファイル"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
 msgid "Filter Messages"
-msgstr ""
+msgstr "メッセージをフィルタリング"
 
 #. module: mail
 #. odoo-javascript
@@ -5729,8 +5739,8 @@ msgid ""
 "How long the audio broadcast will remain active after passing the volume "
 "threshold"
 msgstr ""
-"音量のしきい値を超えた後、音声のブロードキャストはどれくらいの間アクティブな"
-"状態を保つか"
+"音量のしきい値を超えた後、音声のブロードキャストはどれくらいの間有効な状態を"
+"保つか"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_ice_server
@@ -6134,7 +6144,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid "Inactive Alias"
-msgstr "非アクティブなエイリアス"
+msgstr "無効なエイリアス"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__fetchmail_server_id
@@ -6153,7 +6163,7 @@ msgstr "受信トレイ"
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__email
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Incoming Email"
-msgstr "受信Eメール"
+msgstr "受信メール"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -6490,7 +6500,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__is_active
 msgid "Is Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__is_current_user_or_guest_author
@@ -6966,7 +6976,7 @@ msgstr "チャネルから退席"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/thread_model_patch.js:0
 msgid "Leave Conversation"
-msgstr "会話から出る"
+msgstr "会話から退出"
 
 #. module: mail
 #. odoo-javascript
@@ -7449,6 +7459,12 @@ msgstr ""
 #: model:mail.activity.type,summary:mail.mail_activity_data_meeting
 msgid "Meeting"
 msgstr "ミーティング"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member.xml:0
+msgid "Member Actions"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__member_count
@@ -9369,7 +9385,7 @@ msgstr "ピクチャ・イン・ピクチャ"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_actions_patch.js:0
 msgid "Pin"
-msgstr "ピン"
+msgstr "ピン留め"
 
 #. module: mail
 #. odoo-javascript
@@ -10116,14 +10132,8 @@ msgstr "削除"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
-msgid "Remove Channel Admin"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
-msgid "Remove Channel Owner"
+#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
+msgid "Remove Admin"
 msgstr ""
 
 #. module: mail
@@ -10135,6 +10145,18 @@ msgstr "コンテキストアクションを削除"
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__state__remove_followers
 msgid "Remove Followers"
 msgstr "フォロワーを削除"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
+msgid "Remove Member"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
+msgid "Remove Owner"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -10157,12 +10179,6 @@ msgstr "ブラックリストから住所を削除する"
 #: model:ir.model,name:mail.model_mail_blacklist_remove
 msgid "Remove email from blacklist wizard"
 msgstr "ブラックリストウィザードからメールを削除する"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
-msgid "Remove from Channel"
-msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -11128,14 +11144,8 @@ msgstr "サーバタイプPOP"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
-msgid "Set Channel Admin"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/web/avatar_card/avatar_card_popover.xml:0
-msgid "Set Channel Owner"
+#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
+msgid "Set Admin"
 msgstr ""
 
 #. module: mail
@@ -11146,6 +11156,12 @@ msgstr "Eメールを設定する"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
+msgid "Set Owner"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
 msgid "Set Scheduled Date"
 msgstr "予定日を設定"
@@ -11153,8 +11169,7 @@ msgstr "予定日を設定"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__active
 msgid "Set active to false to hide the channel without removing it."
-msgstr ""
-"チャンネルを削除せずに非表示にするには、「アクティブ」をオフにして下さい。"
+msgstr "チャンネルを削除せずに非表示にするには、「有効」をオフにして下さい。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -11456,7 +11471,7 @@ msgstr "開始者: %(authorName)s"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_rtc_session_view_form
 msgid "State"
-msgstr "都道府県・州"
+msgstr "状態"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__state

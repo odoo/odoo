@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-16 18:37+0000\n"
-"PO-Revision-Date: 2026-01-31 12:33+0000\n"
+"PO-Revision-Date: 2026-02-07 12:27+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-1/"
 "payment/ja/>\n"
@@ -238,7 +238,7 @@ msgstr "有効化"
 #: model:ir.model.fields,field_description:payment.field_payment_method__active
 #: model:ir.model.fields,field_description:payment.field_payment_token__active
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__active_provider_id
@@ -1843,7 +1843,7 @@ msgstr "支払詳細"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment Followup"
-msgstr "支払フォローアップ"
+msgstr "支払い督促"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -2466,31 +2466,31 @@ msgstr "回答にご協力頂き、誠にありがとうございます!"
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s encountered an error."
-msgstr ""
+msgstr "%(formatted_amount)s の%(tx_label)s %(ref)s でエラーが発生しました。"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been authorized."
-msgstr ""
+msgstr "%(formatted_amount)s の%(tx_label)s %(ref)s が承認されました。"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been canceled."
-msgstr ""
+msgstr "%(formatted_amount)s の %(tx_label)s %(ref)s はキャンセルされました。"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been confirmed."
-msgstr ""
+msgstr "%(tx_label)s %(ref)s(%(formatted_amount)s)が確定されました。"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s is pending."
-msgstr ""
+msgstr "%(formatted_amount)s の%(tx_label)s %(ref)s が保留中です。"
 
 #. module: payment
 #. odoo-python
@@ -2682,6 +2682,8 @@ msgid ""
 "The payment provider rejected the request.\n"
 "%s"
 msgstr ""
+"決済プロバイダーがリクエストを拒否しました。\n"
+"%s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__primary_payment_method_id
@@ -2708,7 +2710,7 @@ msgstr "取引のプロバイダ参照"
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The refund %(ref)s of %(formatted_amount)s has been initiated."
-msgstr ""
+msgstr "返金%(ref)s ：金額%(formatted_amount)s について、手続きを開始しました。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__image_payment_form
@@ -2776,7 +2778,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The transaction %(ref)s of %(formatted_amount)s has been initiated."
-msgstr ""
+msgstr "%(formatted_amount)s の取引%(ref)s が開始されました。"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
@@ -2924,7 +2926,7 @@ msgstr "取引の承認は、以下の決済プロバイダではサポートさ
 #. module: payment
 #: model:payment.method,name:payment.payment_method_troy
 msgid "Troy"
-msgstr ""
+msgstr "Troy"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_truemoney
@@ -2999,12 +3001,12 @@ msgstr "VISA"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_vnptwallet
 msgid "VNPT Money"
-msgstr ""
+msgstr "VNPTマネー"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_vpbank
 msgid "VP Bank"
-msgstr ""
+msgstr "VP銀行"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_valu
@@ -3034,7 +3036,7 @@ msgstr "Vietcombank"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_viettelpay
 msgid "Viettel Pay"
-msgstr ""
+msgstr "Viettel Pay"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_vipps
@@ -3121,7 +3123,8 @@ msgstr ""
 msgid ""
 "Whether the transaction happened in a production environment. False for "
 "transactions created before this tracking was implemented."
-msgstr ""
+msgstr "その取引が本番環境で発生したかどうかを示します。この追跡機能が実装される以前"
+"に作成された取引については、False となります。"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_transfer
@@ -3131,7 +3134,7 @@ msgstr "電信送金"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_woori
 msgid "Woori Bank"
-msgstr ""
+msgstr "Woori Bank"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_worldline
@@ -3149,9 +3152,8 @@ msgstr "Xendit"
 msgid ""
 "You can't unarchive tokens linked to inactive payment methods or disabled "
 "providers."
-msgstr ""
-"非アクティブな支払方法または無効なプロバイダーにリンクされたトークンをアーカ"
-"イブ解除することはできません。"
+msgstr "無効な支払方法または無効なプロバイダーにリンクされたトークンをアーカイブ解除"
+"することはできません。"
 
 #. module: payment
 #. odoo-python
@@ -3167,7 +3169,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_method.py:0
 msgid "You cannot delete a payment method linked to a provider."
-msgstr ""
+msgstr "プロバイダーに紐づけられた支払い方法は削除できません。"
 
 #. module: payment
 #. odoo-python
@@ -3339,13 +3341,13 @@ msgstr "お客様の支払方法"
 msgid ""
 "Your payment operation could not be completed for following transactions: %"
 "(tx_refs)s"
-msgstr ""
+msgstr "以下の取引について、お支払いの処理が完了できませんでした：%(tx_refs)s"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "Your payment operation has been successfully submitted."
-msgstr ""
+msgstr "お支払いの手続きは正常に送信されました。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -3355,7 +3357,7 @@ msgstr "郵便番号"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_zalopay
 msgid "Zalopay"
-msgstr ""
+msgstr "Zalopay"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
