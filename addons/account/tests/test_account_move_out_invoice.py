@@ -1783,6 +1783,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         bank1 = self.env['res.partner.bank'].create({
             'acc_number': 'BE43798822936101',
             'partner_id': self.partner_a.id,
+            "allow_out_payment": True,
         })
 
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
@@ -2635,6 +2636,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             "bank_name": "FAKE",
             "acc_number": "1234567890",
             "partner_id": self.partner_a.id,
+            "allow_out_payment": True,
         })
 
         move = self.env["account.move"].with_context(default_move_type="out_invoice").new({
@@ -4585,11 +4587,13 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             "bank_name": "FAKE",
             "acc_number": "1234567890",
             "partner_id": company_1.partner_id.id,
+            "allow_out_payment": True,
         })
         bank_2 = self.env["res.partner.bank"].create({
             "bank_name": "FAKE 2",
             "acc_number": "1234567890",
             "partner_id": company_2.partner_id.id,
+            "allow_out_payment": True,
         })
         invoice_new = self.env["account.move"].with_context(default_move_type="out_invoice").new({
             "company_id": company_1.id,
