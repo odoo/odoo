@@ -7,13 +7,13 @@
 # Wil Odoo, 2025
 #
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
-# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:38+0000\n"
-"PO-Revision-Date: 2025-12-20 11:46+0000\n"
+"PO-Revision-Date: 2026-02-07 11:57+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s18-3/"
 "website_event_track/es/>\n"
@@ -21,8 +21,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
-"0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: website_event_track
@@ -1271,7 +1271,7 @@ msgstr "Disponible en todas las páginas de agenda del evento"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_main
 msgid "Back to All Talks"
-msgstr "Volver a todas las sesiones"
+msgstr "Volver a todas las presentaciones/charlas"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -1522,8 +1522,8 @@ msgid ""
 "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PROPOSAL PAGES "
 "OF ALL EVENTS"
 msgstr ""
-"ARRASTRE LOS BLOQUES DE CREACIÓN AQUÍ PARA QUE ESTÉN DISPONIBLES PARA TODAS "
-"LAS PÁGINAS DE PROPUESTA PARA TODOS LOS EVENTOS"
+"ARRASTRE LOS BLOQUES DE CREACIÓN AQUÍ PARA QUE ESTÉN DISPONIBLES EN TODAS "
+"LAS PÁGINAS DE PROPUESTA DE TODOS LOS EVENTOS"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -1865,8 +1865,9 @@ msgid ""
 "track' % (slug(event))\">register to your favorites talks now.</a>"
 msgstr ""
 "Prepárese y\n"
-"                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/"
-"track' % (slug(event))\">inscríbase ahora en sus charlas favoritas.</a>"
+"                    <a class=\"o_translate_inline\" t-att-href="
+"\"'/event/%s/track' % (slug(event))\">apúntese ya a sus charlas "
+"favoritas.</a>"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -2482,7 +2483,7 @@ msgstr "No, gracias"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "No thanks & don't ask again"
-msgstr "No y no volver a preguntar"
+msgstr "No, gracias. No volver a preguntar"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_action_from_visitor
@@ -2907,8 +2908,8 @@ msgid ""
 "Talk already in your Favorites. The page does not seem to be up-to-date and "
 "needs a refresh."
 msgstr ""
-"Esta charla ya está en sus favoritos. La página no parece estar actualizada "
-"y necesita una."
+"Esta charla ya está en sus favoritos. Parece que la página no está "
+"actualizada, recárguela."
 
 #. module: website_event_track
 #. odoo-javascript
@@ -3091,7 +3092,7 @@ msgid ""
 "Timely release of presentation material (slides),\n"
 "                            for publishing on our website."
 msgstr ""
-"Entrega puntual del material de presentación (diapositivas)\n"
+"Entrega puntual del material de la presentación (diapositivas)\n"
 "                            para publicarlo en nuestro sitio web."
 
 #. module: website_event_track
@@ -3249,7 +3250,7 @@ msgstr "Sesión bloqueada"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
 msgid "Track successfully added to your favorites."
-msgstr "Charla añadida con éxito a sus favoritos."
+msgstr "Charla añadida a sus favoritos."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_ids
@@ -3315,8 +3316,8 @@ msgstr "Mensajes sin leer"
 #: code:addons/website_event_track/models/website_visitor.py:0
 msgid "Unsupported 'Not In' operation on track wishlist visitors"
 msgstr ""
-"Operación incompatible “No en” en la lista de deseos de las sesiones de los "
-"visitantes"
+"No es posible utilizar la operación «No en» con los visitantes que tienen "
+"charlas en favoritos"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
@@ -3401,7 +3402,7 @@ msgstr "No pudimos encontrar ninguna sesión en este momento."
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
 msgid "We could not find any track matching your search for:"
 msgstr ""
-"No pudimos encontrar ninguna sesión con los términos de búsqueda que usó:"
+"No hemos podido encontrar ninguna sesión que coincida con los que busca:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal

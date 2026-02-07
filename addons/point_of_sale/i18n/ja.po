@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-15 18:37+0000\n"
-"PO-Revision-Date: 2026-01-31 11:25+0000\n"
+"POT-Creation-Date: 2026-02-06 18:37+0000\n"
+"PO-Revision-Date: 2026-02-07 11:56+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-3/"
 "point_of_sale/ja/>\n"
@@ -732,7 +732,7 @@ msgstr "point_of_sale用のSMS機能を有効化する"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__active
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__active
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_ids
@@ -959,7 +959,7 @@ msgstr "キャッシャーが明細ごとに値引を設定できるようにす
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Allow to access each other's active orders"
-msgstr "相互のアクティブなオーダへアクセスを許可"
+msgstr "相互の有効なオーダへアクセスを許可"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3789,7 +3789,7 @@ msgstr "ハードウェアステータス"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__has_active_session
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_has_active_session
 msgid "Has Active Session"
-msgstr "アクティブなセッションがあります"
+msgstr "有効なセッションがあります"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_control
@@ -3841,6 +3841,12 @@ msgid "Hide Use Payment Terminal"
 msgstr "「決済端末を使用」を非表示にする"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Hide details"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__group_pos_preset
 msgid "Hide or show the Presets menu in the Point of Sale configuration."
 msgstr "POS の設定で、プリセットメニューを表示または非表示にします。"
@@ -3864,8 +3870,8 @@ msgid ""
 "plate mid-meal.\n"
 "Make sure to close all sessions first to avoid any issues."
 msgstr ""
-"お待ち下さい! POSセッションがまだアクティブなのに商品をアーカイブするのは、ま"
-"るで食事の途中でお皿を下げるようなものです。\n"
+"お待ち下さい! POSセッションがまだ有効なのに商品をアーカイブするのは、まるで食"
+"事の途中でお皿を下げるようなものです。\n"
 "問題を避けるために、必ず全てのセッションをクローズしてからにして下さい。"
 
 #. module: point_of_sale
@@ -5424,6 +5430,12 @@ msgid ""
 msgstr ""
 "PoSアプリのマネージャーアクセス権を持つユーザのみが、オーダのプロダクト価格を"
 "変更できます。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Oops!"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7352,6 +7364,12 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Reload data"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
 msgid "Remaining"
 msgstr "残り"
@@ -8077,6 +8095,12 @@ msgid "Show category images in the Point of Sale interface."
 msgstr "POSインターフェイスにカテゴリ画像を表示します。"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Show details"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_module_pos_hr
 msgid "Show employee login screen"
@@ -8186,6 +8210,14 @@ msgstr ""
 msgid "Some, if not all, post-processing after syncing order failed."
 msgstr ""
 "全てでなければ、いくつかについて、同期オーダー後の後処理に失敗しました。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid ""
+"Something went wrong... If you really are stuck, share the report with your "
+"friendly support service"
+msgstr ""
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_sourdough_loaf_product_template
@@ -9221,7 +9253,7 @@ msgid ""
 "being used by order %(pos_order)s in the active pos session %(pos_session)s"
 msgstr ""
 "この仕訳帳は、支払方法%(payment_method)s (オーダ%(pos_order)sで使用されてい"
-"る、アクティブなposセッション%(pos_session)s内)に関連付けられています。"
+"る、有効なposセッション%(pos_session)s内)に関連付けられています。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10192,7 +10224,7 @@ msgstr "POSの設定で使用されている丸め方法は削除できません
 #. odoo-python
 #: code:addons/point_of_sale/models/ir_sequence.py:0
 msgid "You cannot delete a sequence used in an active session: %s"
-msgstr "アクティブなセッションで使用されているシーケンスは削除できません: %s"
+msgstr "有効なセッションで使用されているシーケンスは削除できません: %s"
 
 #. module: point_of_sale
 #. odoo-python
