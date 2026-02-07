@@ -6,15 +6,15 @@
 # Wil Odoo, 2024
 # Marta Wacławek, 2025
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-01-17 09:05+0000\n"
-"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"PO-Revision-Date: 2026-02-07 10:35+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-18/"
 "payment_razorpay/pl/>\n"
 "Language: pl\n"
@@ -47,12 +47,12 @@ msgstr "Nie można nawiązać połączenia z interfejsem API."
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid "Enable recurring payments on Razorpay"
-msgstr ""
+msgstr "Włącz płatności cykliczne w Razorpay"
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid "Key Id"
-msgstr ""
+msgstr "Id klucza"
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
@@ -94,7 +94,7 @@ msgstr "Razorpay"
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_key_id
 msgid "Razorpay Key Id"
-msgstr ""
+msgstr "Klucz identyfikacyjny Razorpay"
 
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_key_secret
@@ -116,48 +116,48 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
 msgid "Received data with invalid status: %s"
-msgstr ""
+msgstr "Otrzymano dane o nieprawidłowym statusie: %s"
 
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
 msgid "Received data with missing entity id."
-msgstr ""
+msgstr "Otrzymano dane z brakującym identyfikatorem podmiotu."
 
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
 msgid "Received data with missing reference."
-msgstr ""
+msgstr "Otrzymano dane z bez referencji."
 
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
 msgid "Received data with missing status."
-msgstr ""
+msgstr "Otrzymano dane z brakującym statusem."
 
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
 msgid "Received incomplete refund data."
-msgstr ""
+msgstr "Otrzymano niekompletne dane dotyczące zwrotu kosztów."
 
 #. module: payment_razorpay
 #: model:ir.model.fields,help:payment_razorpay.field_payment_provider__razorpay_key_id
 msgid "The key solely used to identify the account with Razorpay."
-msgstr ""
+msgstr "Klucz używany wyłącznie do identyfikacji konta w Razorpay."
 
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
 msgid "The phone number is invalid."
-msgstr ""
+msgstr "Numer telefonu jest nieprawidłowy."
 
 #. module: payment_razorpay
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
 msgid "The phone number is missing."
-msgstr ""
+msgstr "Brakuje numeru telefonu."
 
 #. module: payment_razorpay
 #: model:ir.model.fields,help:payment_razorpay.field_payment_provider__code
@@ -175,6 +175,7 @@ msgstr "Transakcja nie jest powiązana z tokenem."
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
 msgid "Transactions processed by Razorpay can't be manually voided from Odoo."
 msgstr ""
+"Transakcje przetwarzane przez Razorpay nie mogą być ręcznie anulowane w Odoo."
 
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
@@ -188,6 +189,8 @@ msgid ""
 "You can not pay amounts greater than %(currency_symbol)s %(max_amount)s with "
 "this payment method"
 msgstr ""
+"Za pomocą tej metody płatności nie można dokonać płatności kwot wyższych niż "
+"%(currency_symbol)s %(max_amount)s."
 
 #. module: payment_razorpay
 #. odoo-python
