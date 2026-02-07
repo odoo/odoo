@@ -11,13 +11,13 @@
 # J Ponte, 2025
 # Daniel Reis, 2025
 # Humberto Sousa <humberto.sousa@smartimprove.pt>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2025-11-20 16:07+0000\n"
+"PO-Revision-Date: 2026-02-07 08:07+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-17/"
 "hr_timesheet/pt/>\n"
@@ -25,9 +25,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
-"1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : "
+"((n != 0 && n % 1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
@@ -165,6 +165,23 @@ msgid ""
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"not has_timesheet\">\n"
+"                        Não pode excluir funcionários que têm folhas de "
+"horas.\n"
+"                        <span invisible=\"not has_active_employee\">\n"
+"                            Pode arquivar esses funcionários ou excluir "
+"primeiro todas as suas folhas de horas.\n"
+"                        </span>\n"
+"                        <span invisible=\"has_active_employee\" groups="
+"\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                            Por favor, exclua primeiro todas as folhas de "
+"horas deles.\n"
+"                        </span>\n"
+"                    </span>\n"
+"                    <span invisible=\"has_timesheet\">\n"
+"                        Tem certeza de que deseja excluir estes funcionários?"
+"\n"
+"                    </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -620,7 +637,7 @@ msgstr "Horas/Minutos"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__total_hours_spent
 msgid "Hours By Task (Including Subtasks)"
-msgstr ""
+msgstr "Horas por Tarefa (incluindo Sub-tarefas)"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__effective_hours
@@ -663,14 +680,14 @@ msgstr "Projeto interno"
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid "Invalid operator: %s"
-msgstr ""
+msgstr "Operador inválido: %s"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 #, python-format
 msgid "Invalid value: %s"
-msgstr ""
+msgstr "Valor inválido: %s"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__is_encode_uom_days
@@ -1066,6 +1083,8 @@ msgid ""
 "These tasks have some timesheet entries referencing them. Before removing "
 "these tasks, you have to remove these timesheet entries."
 msgstr ""
+"Essas tarefas têm algumas entradas de folhas de horas que as referenciam. "
+"Antes de remover essas tarefas, precisa de remover esses registos de horas."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1086,7 +1105,7 @@ msgstr "Este mês"
 #: code:addons/hr_timesheet/models/project_task.py:0
 #, python-format
 msgid "This operator %s is not supported in this search method."
-msgstr ""
+msgstr "Este operador %s não é suportado neste método de pesquisa."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1116,6 +1135,8 @@ msgid ""
 "This task has some timesheet entries referencing it. Before removing this "
 "task, you have to remove these timesheet entries."
 msgstr ""
+"Esta tarefa tem algumas entradas de folhas de horas que a referenciam. Antes "
+"de a remover, precisa de remover esse registos de horas."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1452,6 +1473,15 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Use estas palavras-chave no título para definir novas tarefas:\n"
+"\n"
+"30h Aloque 30 horas para a tarefa\n"
+"#tags Defina etiquetas na tarefa\n"
+"@user Atribua a tarefa a um utilizador\n"
+"! Defina uma alta prioridade para a tarefa\n"
+"\n"
+"Certifique-se de usar o formato e a ordem corretos. Por ex.: Melhorar o ecrã "
+"de configuração 5h #funcionalidade #v16 @Mitchell !"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id

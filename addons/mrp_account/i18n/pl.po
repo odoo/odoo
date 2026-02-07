@@ -7,13 +7,14 @@
 # Wil Odoo, 2025
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2025-11-20 17:36+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-02-07 08:07+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-17/"
 "mrp_account/pl/>\n"
 "Language: pl\n"
@@ -21,9 +22,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
-"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -43,7 +44,7 @@ msgstr "2023-08-15"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
 msgid "<span class=\"o_stat_text\">Analytic Account</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Konto analityczne</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
@@ -53,7 +54,7 @@ msgstr "<span class=\"o_stat_text\">Wycena</span>"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "<span style=\"margin-right: 15px;\">Total</span>"
-msgstr ""
+msgstr "<span style=\"margin-right: 15px;\">Razem</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -88,7 +89,7 @@ msgstr "<span>Jednostka miary </span>"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "Acme Corp."
-msgstr ""
+msgstr "Acme Corp."
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_account
@@ -121,7 +122,7 @@ msgstr "Wyszukiwanie analitycznej dystrybucji"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__analytic_distribution_text
 msgid "Analytic Distribution Text"
-msgstr ""
+msgstr "Tekst rozbicia analitycznego"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_line
@@ -151,17 +152,17 @@ msgstr "Zestawienie materiałowe"
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
 #, python-format
 msgid "Bills of Materials"
-msgstr "Zestawienia materiałowe"
+msgstr "Zestawienia materiałów"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_count
 msgid "BoM Count"
-msgstr "Liczba BoM"
+msgstr "Liczba zest. mat."
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
 msgid "Bom"
-msgstr "Bom"
+msgstr "Zest. mat."
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__category
@@ -175,7 +176,7 @@ msgstr "Kategoria"
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
 msgid "Compute Price from BoM"
-msgstr "Oblicz cenę z zestawienia materiałowego"
+msgstr "Oblicz cenę z zestawienia materiałów"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
@@ -186,12 +187,12 @@ msgid ""
 "bill of materials, for manufactured products only."
 msgstr ""
 "Oblicz cenę produktu przy użyciu produktów i operacji na powiązanych "
-"składnikach z zestawienia materiałowego, tylko dla wytworzonych produktów."
+"składnikach z zestawienia materiałów tylko dla wytworzonych produktów."
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_ids
 msgid "Costs Hour Account"
-msgstr ""
+msgstr "Rachunek godzinowy kosztów"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__distribution_analytic_account_ids
@@ -307,6 +308,10 @@ msgid ""
 "                If there are any workcenter/employee costs, this value will "
 "remain on the account once the production is completed."
 msgstr ""
+"To konto będzie wykorzystywane jako odpowiednik wyceny zarówno dla "
+"komponentów, jak i produktów końcowych zleceń produkcyjnych.\n"
+"Jeśli istnieją jakieś koszty gniazda roboczego/pracownika, ta wartość "
+"pozostanie w koncie, jak tylko produkcja dobiegnie końca."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -316,17 +321,17 @@ msgstr "Jednostki"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "WIP Report for"
-msgstr ""
+msgstr "Raport WIP dla"
 
 #. module: mrp_account
 #: model:ir.actions.report,name:mrp_account.wip_report
 msgid "WIP report"
-msgstr ""
+msgstr "Raport WIP"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__wc_analytic_account_line_ids
 msgid "Wc Analytic Account Line"
-msgstr "Pozycja konta analitycznego Wc"
+msgstr "Pozycja konta analitycznego Gp"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter
@@ -341,19 +346,19 @@ msgstr "Obciążenie centrum roboczego"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workorder
 msgid "Work Order"
-msgstr "Zlecenie operacji"
+msgstr "Zlecenie robocze"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workorder_count
 msgid "Work Order Count"
-msgstr "Liczba zleceń operacji"
+msgstr "Liczba zleceń robocze"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/analytic_account.py:0
 #, python-format
 msgid "Work Orders"
-msgstr "Zlecenia operacji"
+msgstr "Zlecenia robocze"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workcenter_ids
@@ -366,7 +371,7 @@ msgstr "Gniazdo produkcyjne"
 #: code:addons/mrp_account/models/mrp_workorder.py:0
 #, python-format
 msgid "[WC] %s"
-msgstr "[WC] %s"
+msgstr "[GP] %s"
 
 #~ msgid "Stock Valuation Layer"
 #~ msgstr "Warstwa wyceny zapasów"
