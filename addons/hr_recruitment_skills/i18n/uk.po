@@ -1,26 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* hr_recruitment_skills
+# * hr_recruitment_skills
 #
 # Translators:
 # Wil Odoo, 2024
 #
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
-"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"PO-Revision-Date: 2026-02-07 10:33+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
+"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-18/"
+"hr_recruitment_skills/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
+"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && "
+"(n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && "
+"(n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 ))"
+" ? 2: 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_recruitment_skills
 #: model:ir.model,name:hr_recruitment_skills.model_hr_applicant
@@ -31,12 +35,12 @@ msgstr "Заявник"
 #: model:ir.model,name:hr_recruitment_skills.model_hr_candidate
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__candidate_id
 msgid "Candidate"
-msgstr ""
+msgstr "Кандидат"
 
 #. module: hr_recruitment_skills
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_candidate_view_tree
 msgid "Create Application"
-msgstr ""
+msgstr "Створити заявку"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__create_uid
@@ -56,7 +60,7 @@ msgstr "Назва для відображення"
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_job__skill_ids
 msgid "Expected Skills"
-msgstr ""
+msgstr "Очікувані навички"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__id
@@ -82,28 +86,28 @@ msgstr "Останнє оновлення"
 #. odoo-python
 #: code:addons/hr_recruitment_skills/models/hr_job.py:0
 msgid "Matching Candidates"
-msgstr ""
+msgstr "Співставлення кандидатів"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate__matching_score
 msgid "Matching Score(%)"
-msgstr ""
+msgstr "Співставлення балів(%)"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate__matching_skill_ids
 msgid "Matching Skills"
-msgstr ""
+msgstr "Співставлення навичок"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate__missing_skill_ids
 msgid "Missing Skills"
-msgstr ""
+msgstr "Відсутні навички"
 
 #. module: hr_recruitment_skills
 #. odoo-python
 #: code:addons/hr_recruitment_skills/models/hr_job.py:0
 msgid "No Matching Candidates"
-msgstr ""
+msgstr "Немає співставлених кандидатів"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__level_progress
@@ -120,7 +124,7 @@ msgstr "Прогрес від нульових знань (0%) до повної
 #: code:addons/hr_recruitment_skills/static/src/components/search_job_applicant_menu/search_job_applicant_menu.xml:0
 #: model:ir.actions.server,name:hr_recruitment_skills.action_applicant_search_applicant
 msgid "Search Matching Applicants"
-msgstr ""
+msgstr "Пошук відповідних заявників"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__skill_ids
@@ -147,7 +151,7 @@ msgstr "Типи навичок"
 #. module: hr_recruitment_skills
 #: model:ir.model,name:hr_recruitment_skills.model_hr_candidate_skill
 msgid "Skill level for a candidate"
-msgstr ""
+msgstr "Рівень кваліфікації кандидата"
 
 #. module: hr_recruitment_skills
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__candidate_skill_ids
@@ -164,7 +168,7 @@ msgstr "Навички"
 #. odoo-python
 #: code:addons/hr_recruitment_skills/models/hr_candidate_skill.py:0
 msgid "The skill %(name)s and skill type %(type)s doesn't match"
-msgstr "Навичка %(name)s і тип навички %(type)s не співпадають "
+msgstr "Навичка %(name)s і тип навички %(type)s не співпадають"
 
 #. module: hr_recruitment_skills
 #. odoo-python
@@ -184,3 +188,5 @@ msgid ""
 "We do not have any candidates who meet the skill requirements for this job "
 "position in the database at the moment."
 msgstr ""
+"Наразі в нашій базі даних немає кандидатів, які відповідають вимогам до "
+"кваліфікації для цієї посади."
