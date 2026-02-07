@@ -26,6 +26,7 @@ class TestQris(AccountTestInvoicingCommon):
             'partner_id': cls.company_data['company'].partner_id.id,
             'l10n_id_qris_api_key': 'apikey',
             'l10n_id_qris_mid': 'mid',
+            'allow_out_payment': True,
         })
         cls.qris_qr_invoice = cls.env['account.move'].create({
             'move_type': 'out_invoice',
