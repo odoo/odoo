@@ -1683,6 +1683,7 @@ class TestPointOfSaleFlow(CommonPosTest):
             'acc_number': 'FR7612345678901234567890123',
             'partner_id': self.company.partner_id.id,
             'bank_name': 'Test Bank',
+            'allow_out_payment': True,
         })
         current_session = self.pos_config_usd.current_session_id
         self.order = self.env['pos.order'].create({
