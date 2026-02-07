@@ -272,7 +272,8 @@ class AccountTestInvoicingCommon(ProductCommon):
     @classmethod
     def get_default_groups(cls):
         groups = super().get_default_groups()
-        return groups | cls.env.ref('account.group_account_manager') | cls.env.ref('account.group_account_user')
+        return groups | cls.env.ref('account.group_account_manager') | cls.env.ref('account.group_account_user') \
+            | cls.env.ref('account.group_validate_bank_account')
 
     @classmethod
     def setup_other_currency(cls, code, **kwargs):

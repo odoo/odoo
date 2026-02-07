@@ -36,6 +36,7 @@ class TestUBLROCommon(TestUBLCommon):
             'partner_id': cls.company_data['company'].partner_id.id,
             'acc_number': 'RO98RNCB1234567890123456',
             'bank_id': cls.bank.id,
+            'allow_out_payment': True,
         })
 
         cls.partner_a = cls.env['res.partner'].create({
@@ -47,7 +48,7 @@ class TestUBLROCommon(TestUBLCommon):
             'vat': 'RO1234567897',
             'phone': '+40 123 456 780',
             'street': "Rolling Roast, 88",
-            'bank_ids': [(0, 0, {'acc_number': 'RO98RNCB1234567890123456'})],
+            'bank_ids': [(0, 0, {'acc_number': 'RO98RNCB1234567890123456', 'allow_out_payment': True})],
             'ref': 'ref_partner_a',
             'invoice_edi_format': 'ciusro',
         })
