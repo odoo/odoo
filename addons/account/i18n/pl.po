@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 18:35+0000\n"
-"PO-Revision-Date: 2026-01-17 13:19+0000\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"PO-Revision-Date: 2026-02-07 13:35+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s18-4/"
 "account/pl/>\n"
@@ -2193,6 +2193,8 @@ msgid ""
 "Account Code Mapping cannot be accessed directly. It is designed to be used "
 "only through the Chart of Accounts."
 msgstr ""
+"Nie można uzyskać bezpośredniego dostępu do mapowania kodów kont. Jest ono "
+"przeznaczone wyłącznie do użytku za pośrednictwem planu kont."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
@@ -3667,7 +3669,7 @@ msgstr "Załączniki"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__attachments_not_supported
 msgid "Attachments Not Supported"
-msgstr ""
+msgstr "Załączniki nie są obsługiwane"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_audit_trail_report
@@ -6810,7 +6812,7 @@ msgstr "Wyświetl kwotę"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__display_attachments_widget
 msgid "Display Attachments Widget"
-msgstr ""
+msgstr "Widżet wyświetlający załączniki"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_days_next_month
@@ -8573,7 +8575,7 @@ msgstr "Ma ostrzeżenie Iban"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__has_invalid_analytics
 msgid "Has Invalid Analytics"
-msgstr ""
+msgstr "Ma nieprawidłowe dane analityczne"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__journal_has_invalid_statements
@@ -8717,7 +8719,7 @@ msgstr "Jak obliczana jest łączna kwota podatku w zamówieniach i fakturach"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "ICE:"
-msgstr ""
+msgstr "ICE:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
@@ -10228,7 +10230,7 @@ msgstr "Pozycje dziennika"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_line_ids
 #: model:ir.model.fields,field_description:account.field_account_move__journal_line_ids
 msgid "Journal Items (DEPRECATED)"
-msgstr ""
+msgstr "Pozycje dziennika (PRZESTARZAŁE)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -16281,6 +16283,14 @@ msgid "The entry is secured with an inalterable hash."
 msgstr "Wpis jest zabezpieczony niezmienialnym haszem."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry is using accounts (%(accounts_codes_names)s) from a different "
+"company."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
 #: model:ir.model.fields,help:account.field_res_company__expense_account_id
 #: model:ir.model.fields,help:account.field_res_config_settings__expense_account_id
@@ -17292,7 +17302,7 @@ msgstr "Ten powtarzający się ruch zostanie zaksięgowany do tego dnia włączn
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting locks once a journal entry is created."
-msgstr ""
+msgstr "To ustawienie blokuje się po utworzeniu wpisu do dziennika."
 
 #. module: account
 #. odoo-python
@@ -19194,6 +19204,8 @@ msgstr "Nie można zamieścić wpisu w zarchiwizowanym dzienniku (%(journal)s)"
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry with an archived analytic account: %s"
 msgstr ""
+"Nie możesz zaksięgować wpisu, korzystając ze zarchiwizowanego konta "
+"analitycznego: %s"
 
 #. module: account
 #. odoo-python
@@ -19420,6 +19432,8 @@ msgid ""
 "You may only use samples in demo mode, try uploading one of your invoices "
 "instead."
 msgstr ""
+"Możesz korzystać z próbek tylko w trybie demonstracyjnym. Spróbuj przesłać "
+"jedną ze swoich faktur."
 
 #. module: account
 #. odoo-python
