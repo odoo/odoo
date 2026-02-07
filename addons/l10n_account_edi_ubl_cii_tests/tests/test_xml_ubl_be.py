@@ -25,7 +25,7 @@ class TestUBLBE(TestUBLCommon):
             'city': "Ramillies",
             'vat': 'BE0202239951',
             'country_id': cls.env.ref('base.be').id,
-            'bank_ids': [(0, 0, {'acc_number': 'BE15001559627230'})],
+            'bank_ids': [(0, 0, {'acc_number': 'BE15001559627230', 'allow_out_payment': True})],
             'ref': 'ref_partner_1',
         })
 
@@ -37,7 +37,7 @@ class TestUBLBE(TestUBLCommon):
             'city': "Ramillies",
             'vat': 'BE0477472701',
             'country_id': cls.env.ref('base.be').id,
-            'bank_ids': [(0, 0, {'acc_number': 'BE90735788866632'})],
+            'bank_ids': [(0, 0, {'acc_number': 'BE90735788866632', 'allow_out_payment': True})],
             'ref': 'ref_partner_2',
         })
 
@@ -93,6 +93,7 @@ class TestUBLBE(TestUBLCommon):
         cls.acc_bank = cls.env['res.partner.bank'].create({
             'acc_number': 'BE15001559627231',
             'partner_id': cls.company_data['company'].partner_id.id,
+            'allow_out_payment': True,
         })
 
         cls.invoice = cls.env['account.move'].create({
