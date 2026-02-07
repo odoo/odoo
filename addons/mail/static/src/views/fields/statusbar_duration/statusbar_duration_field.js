@@ -30,7 +30,7 @@ export const statusBarDurationField = {
     ...statusBarField,
     component: StatusBarDurationField,
     displayName: _t("Status with time"),
-    supportedTypes: ["many2one"],
+    supportedTypes: ["many2one", "selection"],
     fieldDependencies: [{ name: "duration_tracking", type: "JSON" }],
 };
 
