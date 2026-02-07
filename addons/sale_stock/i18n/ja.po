@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-01-30 09:50+0000\n"
+"PO-Revision-Date: 2026-02-07 08:09+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/"
 "sale_stock/ja/>\n"
@@ -86,7 +86,7 @@ msgid ""
 "                </span>"
 msgstr ""
 "<span invisible=\"not display_delivery_alert\">\n"
-"                    一部の配送はすでに完了しています。返品は配送オーダから作"
+"                    一部の配送はすでに完了しています。返品は出荷オーダから作"
 "成できます。\n"
 "                </span>"
 
@@ -171,7 +171,7 @@ msgstr "会社"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
 msgid "Completion date of the first delivery order."
-msgstr "最初の配送オーダの完了日"
+msgstr "最初の出荷オーダの完了日"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
@@ -206,7 +206,7 @@ msgstr "配送警告"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
-msgstr "配送"
+msgstr "出荷オーダ"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_status
@@ -310,7 +310,7 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
-"全てのプロダクトを一度に配送する場合、配送オーダはプロダクトのリードタイムが"
+"全てのプロダクトを一度に配送する場合、出荷オーダはプロダクトのリードタイムが"
 "最も長い順序で予定されます。それ以外の場合は、最短のものを基準とします。"
 
 #. module: sale_stock
@@ -380,7 +380,7 @@ msgstr "仕訳明細"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "Last Delivery Orders"
-msgstr "最終配送オーダ"
+msgstr "最終出荷オーダ"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__customer_lead
@@ -439,7 +439,7 @@ msgstr "利用可能予定なし"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
 msgid "Not Delivered"
-msgstr "未配送"
+msgstr "未出荷"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -491,7 +491,7 @@ msgstr "プロダクトの移動(在庫移動ライン)"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
 msgid "Qty Available Today"
-msgstr "本日利用可能な数量"
+msgstr "本日利用可能数量"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
