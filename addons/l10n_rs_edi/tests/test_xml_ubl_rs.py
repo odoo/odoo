@@ -26,6 +26,7 @@ class TestUBLRS(TestUBLCommon):
         cls.env['res.partner.bank'].create({
             'partner_id': cls.company_data['company'].partner_id.id,
             'account_number': 'RS1234123456123456123456',
+            'allow_out_payment': True,
         })
 
         cls.partner_a = cls.env['res.partner'].create({

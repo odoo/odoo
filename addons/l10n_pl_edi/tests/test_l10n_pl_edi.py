@@ -298,6 +298,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon):
             'account_number': '12 3456 7890 0000 0000 1234 5678',
             'partner_id': self.partner_pl.id,
             'bank_name': "Test Bank PL",
+            'allow_out_payment': True,
         })
 
         invoice = self.env['account.move'].create({

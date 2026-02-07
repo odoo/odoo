@@ -47,6 +47,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             'partner_id': cls.company_data['company'].partner_id.id,
             'bank_name': 'CAIXABANK',
             'bank_bic': 'CAIXESBBXXX',
+            'allow_out_payment': True,
         })
 
         # ==== Business ====

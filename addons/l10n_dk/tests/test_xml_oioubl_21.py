@@ -27,6 +27,7 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
         cls.env['res.partner.bank'].create({
             'partner_id': cls.company_data['company'].partner_id.id,
             'account_number': 'DK5000400440116243',
+            'allow_out_payment': True,
         })
 
         cls.company_data['company'].partner_id.update({
