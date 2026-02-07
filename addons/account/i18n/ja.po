@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
-"PO-Revision-Date: 2026-01-29 07:31+0000\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"PO-Revision-Date: 2026-02-06 09:13+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/account/"
 "ja/>\n"
@@ -980,7 +980,7 @@ msgstr ""
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                <t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
-"Interior</t>御中、\n"
+"Interior</t>様\n"
 "            </t>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
@@ -1109,7 +1109,7 @@ msgstr ""
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                <t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
-"Interior</t>御中\n"
+"Interior</t>様\n"
 "            </t>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
@@ -3407,7 +3407,7 @@ msgstr "有効にして販売領収書を作成します"
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__state__active
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__activity_ids
@@ -4101,12 +4101,12 @@ msgstr "分析項目"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "分析明細行"
+msgstr "分析明細"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Analytic Lines"
-msgstr "分析明細行"
+msgstr "分析明細"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_applicability
@@ -4137,7 +4137,7 @@ msgstr "分析レポート"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_line_ids
 msgid "Analytic lines"
-msgstr "分析明細行"
+msgstr "分析明細"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7690,7 +7690,7 @@ msgstr "強制記帳を表示"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_inactive_currency_warning
 #: model:ir.model.fields,field_description:account.field_account_move__display_inactive_currency_warning
 msgid "Display Inactive Currency Warning"
-msgstr "非アクティブ通貨警告を表示"
+msgstr "無効通貨警告を表示"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__display_invoice_edi_format
@@ -9172,7 +9172,7 @@ msgstr "会計ではないラインでの差引勘定または収支計算を禁
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__force_post
 msgid "Force"
-msgstr "強制する"
+msgstr "強制"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__force_restrictive_audit_trail
@@ -10295,7 +10295,7 @@ msgstr "無効"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Inactive Accounts"
-msgstr "非アクティブな勘定科目"
+msgstr "無効な勘定科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__inalterable_hash
@@ -11492,7 +11492,7 @@ msgstr "現在の並び順を維持する"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_difference_handling__open
 msgid "Keep open"
-msgstr "未決のままにする"
+msgstr "未消込にする"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__property_account_income_id
@@ -15544,7 +15544,7 @@ msgstr "取り消す"
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__state__revoked
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "Revoked"
-msgstr "キャンセル済"
+msgstr "承認取消済"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_line__horizontal_split_side__right
@@ -16301,18 +16301,17 @@ msgstr "0.0より大きい値を設定すると、信用限度額のチェック
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
-msgstr ""
-"削除せずにアカウントタグを非表示にするにはfalseにアクティブに設定します。"
+msgstr "削除せずにアカウントタグを非表示にするにはfalseに有効に設定します。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__active
 msgid "Set active to false to hide the Journal without removing it."
-msgstr "削除せずに仕訳帳を非表示にするにはfalseにアクティブに設定します。"
+msgstr "削除せずに仕訳帳を非表示にするにはfalseに有効に設定します。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__active
 msgid "Set active to false to hide the tax without removing it."
-msgstr "削除せずに税を非表示にするにはfalseにアクティブに設定します。"
+msgstr "削除せずに税を非表示にするにはfalseに有効に設定します。"
 
 #. module: account
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_sales_tax
@@ -18057,6 +18056,14 @@ msgid "The entry is secured with an inalterable hash."
 msgstr "仕訳は変更不可能なハッシュで保護されています。"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry is using accounts (%(accounts_codes_names)s) from a different "
+"company."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
 #: model:ir.model.fields,help:account.field_res_company__expense_account_id
 #: model:ir.model.fields,help:account.field_res_config_settings__expense_account_id
@@ -18810,7 +18817,8 @@ msgstr ""
 msgid ""
 "This analytic distribution will apply to all financial accounts sharing the "
 "prefix specified."
-msgstr "この分析分配は、指定されたプレフィックスを共有するすべての勘定科目に適用され"
+msgstr ""
+"この分析分配は、指定されたプレフィックスを共有するすべての勘定科目に適用され"
 "ます。"
 
 #. module: account
@@ -20453,7 +20461,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You can not reconcile cancelled entries."
-msgstr "キャンセル済の仕訳の消込はできません。"
+msgstr "取消済みの仕訳の消込はできません。"
 
 #. module: account
 #. odoo-python

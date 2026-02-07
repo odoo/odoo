@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-30 18:35+0000\n"
-"PO-Revision-Date: 2026-01-29 02:18+0000\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"PO-Revision-Date: 2026-02-05 08:03+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/ko/>\n"
@@ -3913,7 +3913,7 @@ msgstr "사용 결제 터미널 숨기기"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
 msgid "Hide details"
-msgstr ""
+msgstr "세부 정보 숨기기"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__group_pos_preset
@@ -4496,7 +4496,7 @@ msgstr "LED 램프"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
 msgid "LNA Permission status"
-msgstr ""
+msgstr "LNA 권한 상태"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__name
@@ -4761,7 +4761,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Local Network Access"
-msgstr ""
+msgstr "로컬 네트워크 액세스"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4791,7 +4791,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
 msgid "Local Network Access permission granted."
-msgstr ""
+msgstr "로컬 네트워크 액세스 권한이 부여되었습니다."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5620,7 +5620,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
 msgid "Oops!"
-msgstr ""
+msgstr "잠시만요!"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7571,7 +7571,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
 msgid "Reload data"
-msgstr ""
+msgstr "데이터 새로고침"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8305,7 +8305,7 @@ msgstr "POS 화면에서 카테고리 이미지를 표시합니다."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
 msgid "Show details"
-msgstr ""
+msgstr "세부 정보 표시"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
@@ -9508,16 +9508,6 @@ msgid ""
 msgstr "이 전표는 결제 방법과 연계되어 있습니다. 유형을 수정할 수 없습니다."
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_journal.py:0
-msgid ""
-"This journal is associated with payment method %(payment_method)s that is "
-"being used by order %(pos_order)s in the active pos session %(pos_session)s"
-msgstr ""
-"이 전표는 활성화된 POS 세션 %(payment_method)s의 주문 %(pos_order)s에서 사용 "
-"중인 %(pos_session)s 결제 수단과 연결되어 있습니다."
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.js:0
 msgid "This operation will destroy all ${"
@@ -10314,6 +10304,14 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+msgid ""
+"You can not archive this journal because it is set on the following payment "
+"method : %s."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 msgid "You can not change the %s of the refund order."
@@ -10845,6 +10843,14 @@ msgstr "버튼을 눌러 활성화합니다."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "사용"
+
+#~ msgid ""
+#~ "This journal is associated with payment method %(payment_method)s that is "
+#~ "being used by order %(pos_order)s in the active pos session %"
+#~ "(pos_session)s"
+#~ msgstr ""
+#~ "이 전표는 활성화된 POS 세션 %(payment_method)s의 주문 %(pos_order)s에서 사"
+#~ "용 중인 %(pos_session)s 결제 수단과 연결되어 있습니다."
 
 #~ msgid ""
 #~ "Unable to create consolidated invoice/s because the following orders "

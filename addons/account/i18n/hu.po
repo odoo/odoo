@@ -20,15 +20,15 @@
 # Martin Trigaux, 2023
 # Szabolcs Rádi, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Nagy Géza <geza.nagy@oregional.hu>, 2025.
+# Nagy Géza <geza.nagy@oregional.hu>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
-"PO-Revision-Date: 2025-11-10 14:28+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"PO-Revision-Date: 2026-02-05 00:35+0000\n"
+"Last-Translator: Nagy Géza <geza.nagy@oregional.hu>\n"
 "Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-19/"
 "account/hu/>\n"
 "Language: hu\n"
@@ -36,7 +36,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -3537,8 +3537,8 @@ msgid ""
 "Always positive amount concerned by this matching expressed in the debit "
 "line foreign currency."
 msgstr ""
-"Mindig pozitív összeg, amelyet ez az egyeztetés érint, a terhelési sor "
-"külföldi pénznemében kifejezve."
+"Mindig pozitív összeg, amelyet ez az egyeztetés érint, a tartozik sor idegen "
+"pénznemében kifejezve."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__amount
@@ -10454,7 +10454,7 @@ msgstr "Számla online fizetés"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_outstanding_credits_debits_widget
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_outstanding_credits_debits_widget
 msgid "Invoice Outstanding Credits Debits Widget"
-msgstr "Számla Kintlévőségek Hitelek Terhelések Widget"
+msgstr "Számla kintlévőség jóváírás-terhelés widget"
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices
@@ -11882,7 +11882,7 @@ msgstr "Matched Credits"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__matched_debit_ids
 msgid "Matched Debits"
-msgstr "Megfelelő terhelések"
+msgstr "Egyeztetett terhelések"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__reconciled_line_ids
@@ -13286,7 +13286,7 @@ msgstr "Kiemelkedő bevételek számlák"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Outstanding credits"
-msgstr "Vásárlók felé fennmaradt követelések"
+msgstr "Fennálló jóváírások"
 
 #. module: account
 #. odoo-python
@@ -15208,7 +15208,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__checked
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reviewed"
-msgstr ""
+msgstr "Átnézve"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -17758,6 +17758,14 @@ msgid "The entry is secured with an inalterable hash."
 msgstr "A bejegyzés egy megváltoztathatatlan hash-sel van biztosítva"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry is using accounts (%(accounts_codes_names)s) from a different "
+"company."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
 #: model:ir.model.fields,help:account.field_res_company__expense_account_id
 #: model:ir.model.fields,help:account.field_res_config_settings__expense_account_id
@@ -18931,13 +18939,13 @@ msgstr "Teljes alapösszeg"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Total Credit"
-msgstr "Összes bevétel/követelés"
+msgstr "Összes követel"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Total Debit"
-msgstr "Összes terhelés"
+msgstr "Összes tartozik"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__total_invoiced
@@ -18985,24 +18993,26 @@ msgstr "Összes aláírt"
 msgid ""
 "Total amount due (including sales orders and this document): %(total_credit)s"
 msgstr ""
+"Fizetendő összesen (vevői rendelésekkel plusz jelen dokumentummal): %"
+"(total_credit)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Total amount due (including sales orders): %(total_credit)s"
-msgstr ""
+msgstr "Fizetendő összesen (vevői rendelésekkel): %(total_credit)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Total amount due (including this document): %(total_credit)s"
-msgstr ""
+msgstr "Fizetendő összesen (jelen dokumentummal): %(total_credit)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Total amount due: %(total_credit)s"
-msgstr ""
+msgstr "Fizetendő összesen: %(total_credit)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__total_amount
@@ -20072,7 +20082,7 @@ msgstr "Leírás: Az elszámolás a csere számla"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
 msgid "Wrong credit or debit value in accounting entry!"
-msgstr "Hibás hitel- vagy terhelési érték a könyvelési tételben!"
+msgstr "Hibás követel vagy tartozik érték a könyvelési tételben!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -20821,7 +20831,7 @@ msgstr "Nincsenek hozzáférési jogaid számla közzétételéhez"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "You have"
-msgstr "Önnek van"
+msgstr "Vannak"
 
 #. module: account
 #. odoo-python
@@ -21257,7 +21267,7 @@ msgstr "jog"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "listed below for this customer."
-msgstr "az alábbiakban felsorolva ennek az ügyfélnek."
+msgstr "a vevőhöz az alábbi lista szerint."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -21323,7 +21333,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding credits"
-msgstr "kiváló hitelek"
+msgstr "fennálló jóváírások"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

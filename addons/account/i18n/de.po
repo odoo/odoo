@@ -28,8 +28,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
-"PO-Revision-Date: 2026-01-30 14:46+0000\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"PO-Revision-Date: 2026-02-05 08:03+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/account/"
 "de/>\n"
@@ -1402,10 +1402,10 @@ msgid ""
 "invisible=\"duplicated_ref_ids.length &gt; 1\">Delete duplicate</span>"
 msgstr ""
 "<i class=\"fa fa-trash text-danger\"/>\n"
-"                            <span class=\"text-danger\" invisible="
-"\"duplicated_ref_ids.length == 1\">Alle Duplikate löschen</span>\n"
-"                            <span class=\"text-danger\" invisible="
-"\"duplicated_ref_ids.length &gt; 1\">Duplikat löschen</span>"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length == 1\">Alle Duplikate löschen</span>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length &gt; 1\">Duplikat löschen</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -6682,7 +6682,7 @@ msgstr "Eine E-Mail-Vorlage erstellen"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
 msgid "Create a bill manually"
-msgstr "Eine Rechnung manuell erstellen"
+msgstr "Rechnung manuell erstellen"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type
@@ -8779,8 +8779,8 @@ msgid ""
 "Employer's portion of payroll-related taxes (eg. Social Security, Medicare, "
 "FUTA/SUTA)"
 msgstr ""
-"Arbeitgeberanteil an lohnbezogenen Steuern "
-"(z. B. Sozialversicherung, Medicare, FUTA/SUTA)"
+"Arbeitgeberanteil an lohnbezogenen Steuern (z. B. Sozialversicherung, "
+"Medicare, FUTA/SUTA)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
@@ -9101,7 +9101,8 @@ msgstr "Aufwand"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_meals
 msgid "Expenses incurred when eating or drinking at bars or restaurants"
-msgstr "Ausgaben, die beim Essen oder Trinken in Bars oder Restaurants anfallen"
+msgstr ""
+"Ausgaben, die beim Essen oder Trinken in Bars oder Restaurants anfallen"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_vehicles_expense
@@ -9277,7 +9278,8 @@ msgstr "Zahlenangabe"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Fill in the details of the product or see the suggestion."
-msgstr "Füllen Sie die Produktdetails aus und sehen Sie sich die Vorschläge an."
+msgstr ""
+"Füllen Sie die Produktdetails aus und sehen Sie sich die Vorschläge an."
 
 #. module: account
 #. odoo-javascript
@@ -9872,7 +9874,7 @@ msgstr "Generischer Steuerbericht"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Get Paid online. Send electronic invoices."
-msgstr "Online bezahlt werden. Elektronische Rechnungen versenden."
+msgstr "Erhalten Sie Online-Zahlungen. Versenden Sie elektronische Rechnungen."
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_hash_integrity
@@ -11280,7 +11282,8 @@ msgstr ""
 #: code:addons/account/models/account_tax.py:0
 msgid ""
 "Invoice and credit note distribution should have the same number of lines."
-msgstr "Rechnungen und Gutschriften sollten die gleiche Anzahl an Zeilen haben."
+msgstr ""
+"Rechnungen und Gutschriften sollten die gleiche Anzahl an Zeilen haben."
 
 #. module: account
 #. odoo-python
@@ -12551,8 +12554,8 @@ msgid ""
 msgstr ""
 "Manuell: Bezahlen Sie mit einer beliebigen Zahlungsmethode außerhalb von "
 "Odoo.\n"
-"Scheck: Bezahlen Sie Rechnungen per Scheck und drucken Sie sie aus Odoo aus."
-"\n"
+"Scheck: Bezahlen Sie Rechnungen per Scheck und drucken Sie sie aus Odoo "
+"aus.\n"
 "SEPA-Überweisung: Bezahlen Sie im SEPA-Raum, indem Sie eine SEPA-"
 "Überweisungsdatei bei Ihrer Bank einreichen. Das Modul account_sepa ist "
 "erforderlich.\n"
@@ -18676,6 +18679,14 @@ msgstr "Die Buchung ist nicht ausgeglichen."
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
 msgstr "Die Buchung ist mit einem unveränderlichen Hashwert gesichert."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry is using accounts (%(accounts_codes_names)s) from a different "
+"company."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id

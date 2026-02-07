@@ -7,13 +7,14 @@
 # Tony Ng, 2025
 #
 # Ho Pak Wai <wai@users.noreply.translate.odoo.com>, 2026.
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-01-23 07:37+0000\n"
-"Last-Translator: Ho Pak Wai <wai@users.noreply.translate.odoo.com>\n"
+"PO-Revision-Date: 2026-02-06 06:07+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-19/website_sale_wishlist/zh_Hant/>\n"
 "Language: zh_TW\n"
@@ -79,42 +80,94 @@ msgid ""
 "                }\n"
 "                }"
 msgstr ""
+".heartBeat {\n"
+"                        animation: heartBeat 1.3s ease-in-out forwards;\n"
+"                        animation-delay: 0.75s;\n"
+"                        transform-origin: 74.5px 25.5px;\n"
+"                    }\n"
+"                @keyframes heartBeat {\n"
+"                        0% {\n"
+"                        transform: scale(1);\n"
+"                        }\n"
+"\n"
+"                        14% {\n"
+"                            transform: scale(1.2);\n"
+"                        }\n"
+"\n"
+"                        28% {\n"
+"                            transform: scale(1);\n"
+"                        }\n"
+"\n"
+"                        42% {\n"
+"                            transform: scale(1.2);\n"
+"                        }\n"
+"\n"
+"                        70% {\n"
+"                            transform: scale(1);\n"
+"                        }\n"
+"                    }\n"
+"                .swing {\n"
+"                    animation: swing 1.3s ease forwards;\n"
+"                    animation-delay: 0.75s;\n"
+"                    transform-origin: top center\n"
+"                }\n"
+"                @keyframes swing {\n"
+"                    20% {\n"
+"                    transform: rotate(15deg)\n"
+"                }\n"
+"\n"
+"                40% {\n"
+"                    transform: rotate(-10deg)\n"
+"                }\n"
+"\n"
+"                60% {\n"
+"                    transform: rotate(5deg)\n"
+"                }\n"
+"\n"
+"                80% {\n"
+"                    transform: rotate(-5deg)\n"
+"                }\n"
+"\n"
+"                to {\n"
+"                    transform: rotate(0deg)\n"
+"                }\n"
+"                }"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
 msgid "1 Column"
-msgstr ""
+msgstr "1 欄"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
 msgid "2 Columns"
-msgstr ""
+msgstr "2 欄"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
 msgid "3 Columns"
-msgstr ""
+msgstr "3 欄"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
 msgid "4 Columns"
-msgstr ""
+msgstr "4 欄"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
 msgid "5 Columns"
-msgstr ""
+msgstr "5 欄"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
 msgid "6 Columns"
-msgstr ""
+msgstr "6 欄"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -163,7 +216,7 @@ msgstr "加入願望清單"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_website__wishlist_opt_products_design_classes
 msgid "CSS class for wishlist page design"
-msgstr ""
+msgstr "願望清單頁面設計的 CSS 格式類"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_partner
@@ -199,7 +252,7 @@ msgstr "預設貨幣"
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
 msgid "Desktop"
-msgstr ""
+msgstr "桌面"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product__display_name
@@ -220,29 +273,29 @@ msgstr "此合作夥伴的重複願望清單產品。"
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
 msgid "Fixed"
-msgstr ""
+msgstr "固定"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
 msgid "Fixed - On Hover"
-msgstr ""
+msgstr "固定 - 滑鼠經過時"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
 msgid "Gap"
-msgstr ""
+msgstr "間距"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_website__wishlist_gap
 msgid "Gap between products on the wishlist page"
-msgstr ""
+msgstr "願望清單頁面上產品之間的間距"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
 msgid "Handle your wishlist from the menu icon."
-msgstr ""
+msgstr "你可使用選單圖示，管理你的願望清單。"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product__id
@@ -257,13 +310,13 @@ msgstr "識別號"
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
 msgid "In your wishlist"
-msgstr ""
+msgstr "在你的願望清單中"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
 msgid "Inline"
-msgstr ""
+msgstr "文中"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__write_uid
@@ -279,13 +332,13 @@ msgstr "最後更新於"
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
 msgid "Layout"
-msgstr ""
+msgstr "版面佈局"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
 msgid "Mobile"
-msgstr ""
+msgstr "流動裝置"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -295,23 +348,23 @@ msgstr "我的願望清單"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_website__wishlist_mobile_columns
 msgid "Number of columns to display on mobile for the wishlist page (1 or 2)"
-msgstr ""
+msgstr "流動裝置顯示願望清單頁面的欄數（只可是 1 或 2）"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_website__wishlist_grid_columns
 msgid "Number of columns to display on the wishlist page"
-msgstr ""
+msgstr "願望清單頁面顯示的欄數"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
 msgid "On Hover"
-msgstr ""
+msgstr "滑鼠經過時"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Original price"
-msgstr ""
+msgstr "原價"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__partner_id
@@ -358,17 +411,17 @@ msgstr "產品願望清單"
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
 msgid "Products Design"
-msgstr ""
+msgstr "產品設計"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Remove from wishlist"
-msgstr ""
+msgstr "從願望清單中移除"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Sale price"
-msgstr ""
+msgstr "銷售價格"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_cart_lines
@@ -378,7 +431,7 @@ msgstr "儲存備用"
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Shop"
-msgstr ""
+msgstr "商店"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -411,33 +464,33 @@ msgstr "願望清單"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_website__wishlist_grid_columns
 msgid "Wishlist Grid Columns"
-msgstr ""
+msgstr "願望清單網格直欄"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_website__wishlist_gap
 msgid "Wishlist Grid Gap"
-msgstr ""
+msgstr "願望清單網格間距"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_website__wishlist_mobile_columns
 msgid "Wishlist Mobile Columns"
-msgstr ""
+msgstr "願望清單流動裝置直欄"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option_plugin.js:0
 msgid "Wishlist Page"
-msgstr ""
+msgstr "願望清單頁面"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_website__wishlist_opt_products_design_classes
 msgid "Wishlist Page Design Class"
-msgstr ""
+msgstr "願望清單頁面設計格式類"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Your wishlist is empty!"
-msgstr ""
+msgstr "你的願望清單現時空白。"
 
 #~ msgid ""
 #~ "<i class=\"fa fa-fw fa-heart\"/>\n"
