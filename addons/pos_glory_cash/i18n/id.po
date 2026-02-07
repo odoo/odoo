@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"POT-Creation-Date: 2026-02-06 18:36+0000\n"
 "PO-Revision-Date: 2025-11-20 03:05+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
@@ -19,12 +19,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.12.2\n"
-
-#. module: pos_glory_cash
-#. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
-msgid "Are you sure you want to reset the cash machine?"
-msgstr "Apakah Anda yakin ingin mereset mesin kas?"
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -46,7 +40,7 @@ msgstr "Membatalkan pembayaran"
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "Cash Machine Error"
 msgstr "Eror Mesin Kas"
 
@@ -67,13 +61,13 @@ msgstr "Username Mesin Kas"
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "Cash deposited: %s"
 msgstr "Kas dideposit: %s"
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/screens/payment_screen/payment_lines/payment_lines.xml:0
+#: code:addons/pos_glory_cash/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Cash inserted:"
 msgstr "Kas dimasukkan:"
 
@@ -85,13 +79,19 @@ msgstr "Error mesin kas"
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/screens/payment_screen/payment_lines/payment_lines.xml:0
+#: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.js:0
+msgid "Cash machine is disconnected"
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Cash machine status:"
 msgstr "Status mesin kas:"
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "Change given: %s"
 msgstr "Kembalian diberikan: %s"
 
@@ -109,7 +109,7 @@ msgstr "Pengumpulan sedang berlangsung"
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/screens/payment_screen/payment_lines/payment_lines.xml:0
+#: code:addons/pos_glory_cash/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid ""
 "Consider emptying the cash machine, the following coins/bills are nearly "
 "full:"
@@ -130,9 +130,9 @@ msgstr "Menghitung kas yang dipulihkan"
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
-msgid "Discard"
-msgstr "Buang"
+#: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.xml:0
+msgid "Current cash machine status:"
+msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -153,9 +153,9 @@ msgstr "Nama Tampilan"
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/screens/payment_screen/payment_lines/payment_lines.xml:0
-msgid "Download logs"
-msgstr "Unduh log"
+#: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.xml:0
+msgid "Download Logs"
+msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -171,7 +171,7 @@ msgstr "Gagal untuk mengautentikasi"
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
 "Failed to connect to Glory cash machine, please ensure it is switched on and "
 "connected to the network."
@@ -181,7 +181,7 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
 "Failed to login to Glory cash machine, please check the configured username "
 "and password."
@@ -191,13 +191,13 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "GLORY TRANSACTION CANCELLED"
 msgstr "TRANSAKSI GLORY DIBATALKAN"
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "GLORY TRANSACTION SUCCESSFUL"
 msgstr "TRANSAKSI GLORY SUKSES"
 
@@ -225,9 +225,15 @@ msgstr "Memulai"
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "Only managers can withdraw cash from the cash machine."
 msgstr "Hanya manajer dapat menarik tunai dari mesin kas."
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.xml:0
+msgid "Open Admin Page"
+msgstr ""
 
 #. module: pos_glory_cash
 #: model:ir.model,name:pos_glory_cash.model_pos_payment_method
@@ -236,16 +242,21 @@ msgstr "Metode Pembayaran POS"
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
-msgid "Reset"
-msgstr "Reset"
+#: code:addons/pos_glory_cash/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
+msgid "Request sent"
+msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
-#: code:addons/pos_glory_cash/static/src/screens/payment_screen/payment_lines/payment_lines.xml:0
-msgid "Reset cash machine"
-msgstr "Reset mesin kas"
+#: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.xml:0
+msgid "Reset Cash Machine"
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.js:0
+msgid "Reset complete"
+msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -255,41 +266,38 @@ msgstr "Mereset"
 
 #. module: pos_glory_cash
 #. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/backend/glory_admin_buttons/glory_admin_buttons.js:0
+msgid "Resetting cash machine..."
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/utils/constants.js:0
 msgid "Starting payment"
 msgstr "Memulai pembayaran"
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
-msgid ""
-"The cash machine contents could not be verified as it is busy with another "
-"operation."
-msgstr ""
-"Konten mesin kas tidak dapat diverifikasi karena sibuk dengan operasi lain."
-
-#. module: pos_glory_cash
-#. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "The cash machine has an error, please consult its display for details."
 msgstr "Mesin kas memiliki error, silakan konsultasi tampilannya untuk detail."
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/screens/payment_screen/payment_lines/payment_lines.xml:0
+#: code:addons/pos_glory_cash/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "The cash machine has run out of the following coins/bills:"
 msgstr "Mesin kas tidak memiliki koin/tunai berikut:"
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
 "The cash machine is busy with another operation. Do you want to cancel it?"
 msgstr "Mesin kas sibuk dengan operasi lain. Apakah Anda ingin membatalkannya?"
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
 "The cash machine is currently in collection/replenishment mode, please "
 "finish this process on the machine before making a payment."
@@ -299,41 +307,31 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "The cash machine is disconnected."
 msgstr "Mesin kas tidak terhubung."
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "The cash machine is in use by another POS."
 msgstr "Mesin kas digunakan oleh POS lain."
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/screens/payment_screen/payment_lines/payment_lines.xml:0
+#: code:addons/pos_glory_cash/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "The cash machine is running low on the following coins/bills:"
 msgstr "Mesin kas hanya memiliki sedikit koin/tunai berikut:"
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/screens/payment_screen/payment_lines/payment_lines.xml:0
+#: code:addons/pos_glory_cash/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "The cash machine must be emptied, the following coins/bills are full:"
 msgstr "Mesin kas harus dikosongkan, koin/tunai berikut sudah penuh:"
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
-msgid ""
-"The cash machine requires verification of its contents, a collection process "
-"will now start. Please refer to the cash machine display."
-msgstr ""
-"Mesin kas memerlukan verifikasi kontennya, proses koleksi sekarang akan "
-"dimulai. Silakan merujuk ke tampilan mesin kas."
-
-#. module: pos_glory_cash
-#. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
 "The payment failed due to an unrecoverable error - see the cash machine "
 "screen for details."
@@ -343,13 +341,19 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
+msgid "The payment failed for an unknown reason: %s"
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "There is insufficient cash in the machine to give change."
 msgstr "Terdapat kas yang tidak mencukupi di mesin untuk memberikan kembalian."
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
 "There is insufficient change in the cash machine to handle the payment. It "
 "must be cancelled to continue."
@@ -359,7 +363,7 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
-#: code:addons/pos_glory_cash/static/src/glory.js:0
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid "Transaction ID: %s"
 msgstr "ID Transaksi: %s"
 
@@ -404,3 +408,32 @@ msgstr "Menunggu kas dimasukkan"
 #: code:addons/pos_glory_cash/static/src/utils/constants.js:0
 msgid "Waiting for inventory"
 msgstr "Menunggu inventaris"
+
+#~ msgid "Are you sure you want to reset the cash machine?"
+#~ msgstr "Apakah Anda yakin ingin mereset mesin kas?"
+
+#~ msgid "Discard"
+#~ msgstr "Buang"
+
+#~ msgid "Download logs"
+#~ msgstr "Unduh log"
+
+#~ msgid "Reset"
+#~ msgstr "Reset"
+
+#~ msgid "Reset cash machine"
+#~ msgstr "Reset mesin kas"
+
+#~ msgid ""
+#~ "The cash machine contents could not be verified as it is busy with "
+#~ "another operation."
+#~ msgstr ""
+#~ "Konten mesin kas tidak dapat diverifikasi karena sibuk dengan operasi "
+#~ "lain."
+
+#~ msgid ""
+#~ "The cash machine requires verification of its contents, a collection "
+#~ "process will now start. Please refer to the cash machine display."
+#~ msgstr ""
+#~ "Mesin kas memerlukan verifikasi kontennya, proses koleksi sekarang akan "
+#~ "dimulai. Silakan merujuk ke tampilan mesin kas."

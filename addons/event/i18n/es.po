@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-01-23 06:06+0000\n"
+"PO-Revision-Date: 2026-02-05 15:33+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/event/es/"
 ">\n"
@@ -26,8 +26,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
-"0) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: event
@@ -294,6 +294,11 @@ msgid ""
 "community module, a case study, methodology feedback, technical, etc. Each "
 "presentation must be in English.</em>"
 msgstr ""
+"<em>Si deseas realizar una presentación, envía tu propuesta lo antes posible "
+"para su aprobación al Sr. Famke Jenssens a ngh [arroba] tuempresa [punto] "
+"com. La presentación puede ser sobre un módulo comunitario, sobre un caso "
+"práctico, una metodología de feedback, temas técnicos, etc. Todas las "
+"presentaciones deben ser en inglés.</em>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
@@ -369,6 +374,9 @@ msgid ""
 "                                    Attendee answers\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Respuestas de los asistentes\n"
+"                               </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -2796,7 +2804,7 @@ msgid ""
 "Event:\t\t%(event_start)s - %(event_end)s\n"
 "Slot:\t\t%(slot_name)s"
 msgstr ""
-"No se puede programar un espacio fuera del tiempo que durará un evento.\n"
+"No se puede programar una franja horaria fuera del horario del evento.\n"
 "\n"
 "Evento:\t\t%(event_start)s - %(event_end)s\n"
 "Espacio:\t\t%(slot_name)s"
@@ -2979,6 +2987,8 @@ msgid ""
 "Allow this question to be selected and reused for any future event. Always "
 "true for default questions."
 msgstr ""
+"Permite seleccionar y reutilizar esta pregunta para cualquier evento futuro. "
+"La opción siempre está seleccionada para las preguntas predeterminadas."
 
 #. module: event
 #: model:event.event,name:event.event_6
@@ -3335,6 +3345,9 @@ msgid ""
 "Check this for order-level questions (e.g., 'Company Name') where the answer "
 "is the same for everyone."
 msgstr ""
+"Marca esta casilla para preguntas relacionadas con el pedido "
+"(por ejemplo, «Nombre de la empresa») en las que la respuesta es la misma "
+"para todos."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_type_id
@@ -3820,7 +3833,7 @@ msgstr "Respuesta a la pregunta del evento"
 #. module: event
 #: model:ir.ui.menu,name:event.event_question_menu
 msgid "Event Questions"
-msgstr ""
+msgstr "Preguntas sobre el evento"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -3944,7 +3957,7 @@ msgstr "Tipo de evento"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__event_type_ids
 msgid "Event Types"
-msgstr ""
+msgstr "Tipos de eventos"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_tree
@@ -4137,7 +4150,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "For each attendee"
-msgstr ""
+msgstr "Para cada asistente"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
@@ -4302,7 +4315,7 @@ msgstr "Inicio"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
 msgid "Hour range"
-msgstr ""
+msgstr "Intervalo horario"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__hours
@@ -4432,7 +4445,7 @@ msgstr "En proceso"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_question__is_default
 msgid "Include by default in new events."
-msgstr ""
+msgstr "Incluir por defecto en nuevos eventos."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_tz
@@ -4565,7 +4578,7 @@ msgstr "John Doe"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "John Doe's avatar"
-msgstr ""
+msgstr "Avatar de John Doe"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -4683,7 +4696,7 @@ msgstr "Limitar inscripciones"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__limit_max_per_order
 msgid "Limit per Order"
-msgstr ""
+msgstr "Límite por pedido"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
@@ -4816,6 +4829,8 @@ msgid ""
 "Maximum of this product per order.\n"
 "Set to 0 to ignore this rule"
 msgstr ""
+"Máximo de este producto por pedido.\n"
+"Establece en 0 para ignorar esta regla"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
@@ -4893,7 +4908,7 @@ msgstr "Nuevo"
 #. odoo-javascript
 #: code:addons/event/static/src/views/event_slot_calendar/event_slot_calendar_controller.js:0
 msgid "New Slot"
-msgstr ""
+msgstr "Nuevo espacio"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_calendar_event_id
@@ -4940,7 +4955,7 @@ msgstr "¡No hay asistentes!"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_question_action
 msgid "No questions yet! Please create one."
-msgstr ""
+msgstr "¡Aún no hay preguntas! Por favor, crea una."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__barcode_nomenclature_id
@@ -4950,12 +4965,12 @@ msgstr "Nomenclatura"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Not Reusable"
-msgstr ""
+msgstr "No reutilizable"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Not mandatory"
-msgstr ""
+msgstr "No obligatoria"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__note
@@ -5056,7 +5071,7 @@ msgstr "Una vez por pedido"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Once per order"
-msgstr ""
+msgstr "Una vez por pedido"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -5364,6 +5379,10 @@ msgid ""
 "- there are seats available on event\n"
 "- the tickets are sellable (if ticketing is used)"
 msgstr ""
+"Las inscripciones están abiertas si:\n"
+"- el evento no ha finalizado ni se ha cancelado\n"
+"- hay plazas disponibles para el evento\n"
+"- las entradas se pueden vender (si se utiliza la venta de entradas)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
@@ -5408,7 +5427,7 @@ msgstr "Entrada en página completa, HTML responsivo"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Reusable"
-msgstr ""
+msgstr "Reutilizable"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
@@ -5470,7 +5489,7 @@ msgstr "Programador de correos"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "Search Event Question"
-msgstr ""
+msgstr "Buscar pregunta sobre el evento"
 
 #. module: event
 #: model_terms:event.event,description:event.event_5
@@ -5608,7 +5627,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Slot(s)"
-msgstr ""
+msgstr "Espacios"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_slot_ids
@@ -5881,6 +5900,8 @@ msgid ""
 "The limit per order cannot be greater than %(limit_orderable)s. Please check "
 "ticket %(ticket_name)s"
 msgstr ""
+"El límite por pedido no puede ser superior a %(limit_orderable)s. Por favor, "
+"comprueba la entrada %(ticket_name)s"
 
 #. module: event
 #. odoo-python
@@ -5889,6 +5910,8 @@ msgid ""
 "The limit per order cannot be greater than the maximum seats number. Please "
 "check ticket %(ticket_name)s"
 msgstr ""
+"El límite por pedido no puede ser superior al número máximo de plazas. Por "
+"favor, comprueba tu entrada %(ticket_name)s"
 
 #. module: event
 #. odoo-python
@@ -5896,6 +5919,8 @@ msgstr ""
 msgid ""
 "The limit per order must be positive. Please check ticket %(ticket_name)s"
 msgstr ""
+"El límite por pedido debe ser positivo. Por favor, comprueba la entrada %"
+"(ticket_name)s"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -6027,7 +6052,7 @@ msgstr "Esto puede estar vinculado a la plantilla %(template_link)s."
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 msgid "This question is used by"
-msgstr ""
+msgstr "Esta pregunta la utiliza"
 
 #. module: event
 #. odoo-javascript
@@ -6430,7 +6455,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_question.py:0
 msgid "You cannot delete a default question."
-msgstr ""
+msgstr "No se puede eliminar una pregunta predeterminada."
 
 #. module: event
 #. odoo-python
@@ -6439,6 +6464,8 @@ msgid ""
 "You cannot delete a question that has already been answered by attendees. "
 "You can archive it instead."
 msgstr ""
+"No se puede eliminar una pregunta que ya han respondido los asistentes. Sin "
+"embargo, se puede archivar."
 
 #. module: event
 #. odoo-python
@@ -6515,7 +6542,7 @@ msgstr "p. ej. Entrada VIP"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "event_id"
-msgstr ""
+msgstr "event_id"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form

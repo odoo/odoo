@@ -22,8 +22,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
-"PO-Revision-Date: 2026-01-23 18:27+0000\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"PO-Revision-Date: 2026-02-04 07:55+0000\n"
 "Last-Translator: Tomáš Píšek <Tomas.Pisek@seznam.cz>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/account/"
 "sk/>\n"
@@ -863,7 +863,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "            <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                Vážený(á)\n"
+"                Vážený klient\n"
 "                <t t-if=\"object.partner_id.parent_id\">\n"
 "                    <t t-out=\"object.partner_id.name or ''\">Brandon "
 "Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
@@ -978,7 +978,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Vážený zákazník\n"
+"        Vážený klient\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            <t t-if=\"object.partner_id.name\">\n"
 "                <t t-out=\"object.partner_id.name\">Brandon Freeman</t> (<t "
@@ -1106,7 +1106,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Vážený zákazník\n"
+"        Vážený klient\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            <t t-if=\"object.partner_id.name\">\n"
 "                <t t-out=\"object.partner_id.name\">Brandon Freeman</t> (<t "
@@ -1204,7 +1204,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear\n"
+"        Vážený klient\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> "
 "(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
@@ -1272,8 +1272,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Vážený(á)<t t-out=\"object.partner_id.name or ''\">Azure Interior</"
-"t><br/><br/>\n"
+"        Vážený klient<t t-out=\"object.partner_id.name or ''\">Azure "
+"Interior</t><br/><br/>\n"
 "        Ďakujeme za vašu platbu.\n"
 "        V prílohe posielame potvrdení o prijatej platbe <span style=\"font-"
 "weight:bold;\" t-out=\"(object.name or '').replace('/','-') or "
@@ -3632,7 +3632,7 @@ msgstr "Aktivovať automatické účtovanie"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate to create sale receipt"
-msgstr "Aktiváciou vytvoríte potvrdenie o predaji"
+msgstr "Aktiváciou vytvoríte predajné účtenky"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__active
@@ -8343,13 +8343,13 @@ msgstr "Návrh proforma faktúry"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Draft Purchase Receipt"
-msgstr "Návrh dokladu o kúpe"
+msgstr "Návrh nákupnej účtenky"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Draft Sales Receipt"
-msgstr "Návrh predajného dokladu"
+msgstr "Návrh predajnej účtenky"
 
 #. module: account
 #. odoo-python
@@ -13290,7 +13290,7 @@ msgstr "Neobsahuje"
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Not Due"
-msgstr "Nie je splatné"
+msgstr "Neskôr"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__not_hashable_unlocked_move_ids
@@ -14724,7 +14724,7 @@ msgstr "Pri platbe použite nasledujúce údaje:"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__pos_receipt_label
 msgid "PoS receipt label"
-msgstr "PoS potvrdenka"
+msgstr "PoS účtenka"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__access_url
@@ -15149,7 +15149,7 @@ msgstr "Dátum uzamknutia nákupu"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_receipt
 msgid "Purchase Receipt"
-msgstr "Nákupná potvrdenka"
+msgstr "Nákupná účtenka"
 
 #. module: account
 #. odoo-python
@@ -15316,12 +15316,12 @@ msgstr "Dôvod uvedený na dobropise"
 #: code:addons/account/static/src/components/receipt_selector/receipt_selector.js:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_bill_filter
 msgid "Receipt"
-msgstr "Príjem"
+msgstr "Nákupná účtenka"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Receipts"
-msgstr "Príjemky"
+msgstr "Účtenky"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_receivable
@@ -16060,7 +16060,7 @@ msgstr "Predaj"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__show_sale_receipts
 msgid "Sale Receipt"
-msgstr "Potvrdenie o predaji"
+msgstr "Predajná účtenka"
 
 #. module: account
 #. odoo-python
@@ -16097,7 +16097,7 @@ msgstr "Dátum uzamknutia predaja"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_receipt
 msgid "Sales Receipt"
-msgstr "Predajná potvrdenka"
+msgstr "Predajná účtenka"
 
 #. module: account
 #. odoo-python
@@ -18481,6 +18481,14 @@ msgstr "Záznam nie je vyrovnaný."
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
 msgstr "Záznam je zabezpečený nezmeniteľným hash kódom."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry is using accounts (%(accounts_codes_names)s) from a different "
+"company."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
