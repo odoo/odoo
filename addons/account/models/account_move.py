@@ -1048,13 +1048,12 @@ class AccountMove(models.Model):
             """Sorting priority:
             0. Same currency as the move or no currency
             1. Different currency
-            Then: prefer banks allowing outgoing payments (trusted ones)
             """
             if bank.currency_id == move.currency_id or not bank.currency_id:
                 currency_priority = 0
             else:
                 currency_priority = 1
-            return (currency_priority, not bank.allow_out_payment)
+            return currency_priority
 
         for move in self:
             if move.is_inbound() and (
@@ -1062,12 +1061,12 @@ class AccountMove(models.Model):
                     move.preferred_payment_method_line_id
                     or move.bank_partner_id.property_inbound_payment_method_line_id
                 )
-            ) and payment_method.journal_id:
+            ) and payment_method.journal_id and payment_method.journal_id.bank_account_id.allow_out_payment:
                 move.partner_bank_id = payment_method.journal_id.bank_account_id
                 continue
 
             move.partner_bank_id = move.bank_partner_id.bank_ids.filtered(
-                lambda bank: not bank.company_id or bank.company_id == move.company_id
+                lambda bank: (not bank.company_id or bank.company_id == move.company_id) and bank.allow_out_payment
             ).sorted(key=_bank_selection_key)[:1]
 
     @api.depends('partner_id')
@@ -5548,6 +5547,10 @@ class AccountMove(models.Model):
                 validation_msgs.add(_(
                     "The recipient bank account linked to this invoice is archived.\n"
                     "So you cannot confirm the invoice."
+                ))
+            if invoice.partner_bank_id and invoice.is_inbound() and not invoice.partner_bank_id.allow_out_payment:
+                raise UserError(_(
+                    "The company bank account linked to this invoice is not trusted, please double-check and trust it before confirming, or remove it"
                 ))
             if float_compare(invoice.amount_total, 0.0, precision_rounding=invoice.currency_id.rounding) < 0:
                 validation_msgs.add(_(
