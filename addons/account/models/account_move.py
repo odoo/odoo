@@ -1026,10 +1026,10 @@ class AccountMove(models.Model):
     @api.depends('bank_partner_id')
     def _compute_partner_bank_id(self):
         for move in self:
-            # This will get the bank account from the partner in an order with the trusted first
+            # This will get the trusted bank accounts from the partner
             bank_ids = move.bank_partner_id.bank_ids.filtered(
-                lambda bank: not bank.company_id or bank.company_id == move.company_id
-            ).sorted(lambda bank: not bank.allow_out_payment)
+                lambda bank: (not bank.company_id or bank.company_id == move.company_id) and bank.allow_out_payment
+            )
             move.partner_bank_id = bank_ids[:1]
 
     @api.depends('partner_id')
@@ -5330,6 +5330,10 @@ class AccountMove(models.Model):
                 validation_msgs.add(_(
                     "The recipient bank account linked to this invoice is archived.\n"
                     "So you cannot confirm the invoice."
+                ))
+            if invoice.partner_bank_id and invoice.is_inbound() and not invoice.partner_bank_id.allow_out_payment:
+                raise UserError(_(
+                    "The company bank account linked to this invoice is not trusted, please double-check and trust it before confirming, or remove it"
                 ))
             if float_compare(invoice.amount_total, 0.0, precision_rounding=invoice.currency_id.rounding) < 0:
                 validation_msgs.add(_(
