@@ -101,6 +101,31 @@ class TableCompute:
         return rows
 
 
+def _get_parent_category_route(depth, param_name='_'):
+    """Recursively build the parent category part of the route."""
+    if depth < 1:
+        return ''
+    parent_path = _get_parent_category_route(depth - 1, param_name + '_')
+    return f'{parent_path}/<model("product.public.category"):{param_name}>'
+
+
+def _get_category_routes(suffix=''):
+    """Build all category routes with a parent category depth from 0 to 4 (i.e. in addition to the
+    current category, we support up to 4 nested parent categories in the route).
+
+    Depths greater than 4 are not supported to avoid having too long URLs.
+
+    The max depth should stay in sync with `ProductPublicCategory._compute_website_url`.
+    """
+    return [
+        (
+            f'{SHOP_PATH}/category{_get_parent_category_route(depth)}'
+            f'/<model("product.public.category"):category>{suffix}'
+        )
+        for depth in range(5)
+    ]
+
+
 class WebsiteSale(payment_portal.PaymentPortal):
     _express_checkout_route = '/shop/express_checkout'
     _express_checkout_delivery_route = '/shop/express/shipping_address_change'
@@ -168,7 +193,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         dom = sitemap_qs2dom(qs, f'{SHOP_PATH}/category', Category._rec_name)
         dom &= website.website_domain()
         for cat in Category.search(dom):
-            loc = f'{SHOP_PATH}/category/{env["ir.http"]._slug(cat)}'
+            loc = cat.website_url
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
@@ -183,7 +208,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         dom = sitemap_qs2dom(qs, SHOP_PATH, ProductTemplate._rec_name)
         dom &= Domain(website.sale_product_domain())
         for product in ProductTemplate.with_context(prefetch_fields=False).search(dom):
-            loc = f'{SHOP_PATH}/product/{env["ir.http"]._slug(product)}'
+            loc = product.website_url
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
@@ -250,28 +275,29 @@ class WebsiteSale(payment_portal.PaymentPortal):
         [
             SHOP_PATH,
             f'{SHOP_PATH}/page/<int:page>',
-            f'{SHOP_PATH}/category/<model("product.public.category"):category>',
-            f'{SHOP_PATH}/category/<model("product.public.category"):category>/page/<int:page>',
+            *_get_category_routes(),
+            *_get_category_routes('/page/<int:page>'),
         ],
         type='http',
         auth='public',
         website=True,
         list_as_website_content=_lt("Shop"),
         sitemap=sitemap_shop,
-        # Sends a 404 error in case of any Access error instead of 403.
+        # Return a 404 instead of a 403 error in case of an access error.
         handle_params_access_error=lambda e, **kwargs: NotFound.code,
     )
     def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, tags='', **post):
         if not request.website.has_ecommerce_access():
             return request.redirect(f'/web/login?redirect={request.httprequest.path}')
 
+        post = {k: v for k, v in post.items() if not k.startswith('_')}
         is_category_in_query = category and isinstance(category, str)
         category = self._validate_and_get_category(category)
         # TODO: remove support for `category` param in version 20 (or later).
-        if is_category_in_query:
+        if is_category_in_query and category:
             query = request.httprequest.args.to_dict(flat=False)
             query.pop('category', None)
-            url = urlparse(self._get_shop_path(category, page))
+            url = urlparse(category.website_url + (f'/page/{page}' if page else ''))
             return request.redirect(
                 url._replace(query=urlencode(query, doseq=True)).geturl(), code=301
             )
@@ -329,7 +355,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 post['tags'] = None
                 tags = {}
 
-        url = self._get_shop_path(category)
+        url = category.website_url if category else SHOP_PATH
         keep = QueryURL(
             url, **self._shop_get_query_url_kwargs(search, min_price, max_price, **post)
         )
@@ -557,7 +583,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     "Wrong format: got `pricelist=%s`, expected an integer", pricelist,
                 ))
             if not self._apply_selectable_pricelist(pricelist_id):
-                return request.redirect(self._get_shop_path())
+                return request.redirect(SHOP_PATH)
 
         request.update_context(website_sale_product_page=True)
         # TODO: remove support for `category` param and path in version 20 (or later).
@@ -588,13 +614,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         document = request.env['product.document'].browse(document_id).sudo().exists()
         if not document or not document.active:
-            return request.redirect(self._get_shop_path())
+            return request.redirect(SHOP_PATH)
 
         if not document.shown_on_product_page or not (
             document.res_id == product_template.id
             and document.res_model == 'product.template'
         ):
-            return request.redirect(self._get_shop_path())
+            return request.redirect(SHOP_PATH)
 
         return request.env['ir.binary']._get_stream_from(
             document.ir_attachment_id,
@@ -775,7 +801,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             markup_data.append(self._prepare_breadcrumb_markup_data(
                 website.get_base_url(), category
             ))
-        keep = QueryURL(self._get_shop_path(), **request.session.get('attribute_value_params', {}))
+        keep = QueryURL(SHOP_PATH, **request.session.get('attribute_value_params', {}))
 
         attribute_value_params = self._get_attribute_value_params(kwargs)
         attribute_value_dict = self._get_attribute_value_dict(attribute_value_params)
@@ -840,7 +866,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 '@type': 'ListItem',
                 'position': i,
                 'name': cat.name,
-                'item': f'{base_url}{self._get_shop_path(cat)}',
+                'item': f'{base_url}{cat.website_url}',
             } for i, cat in enumerate(category.parents_and_self, start=1)],
         }
 
@@ -891,7 +917,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     pass
             redirect_url = decoded_url.replace(query=url_encode(args)).to_url()
 
-        return request.redirect(redirect_url or self._get_shop_path())
+        return request.redirect(redirect_url or SHOP_PATH)
 
     @route('/shop/pricelist', type='http', auth='public', website=True, sitemap=False)
     def pricelist(self, promo, **post):
@@ -1581,7 +1607,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             assert order_sudo.id == request.session.get('sale_last_order_id')
 
         if not order_sudo:
-            return request.redirect(self._get_shop_path())
+            return request.redirect(SHOP_PATH)
 
         errors = self._get_shop_payment_errors(order_sudo) if order_sudo.state != 'sale' else []
         if errors:
@@ -1591,7 +1617,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         tx_sudo = order_sudo.get_portal_last_transaction()
         if order_sudo.amount_total and not tx_sudo:
-            return request.redirect(self._get_shop_path())
+            return request.redirect(SHOP_PATH)
 
         if not order_sudo.amount_total and not tx_sudo and order_sudo.state != 'sale':
             order_sudo._check_cart_is_ready_to_be_paid()
@@ -1601,7 +1627,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # clean context and session, then redirect to the confirmation page
         request.website.sale_reset()
         if tx_sudo and tx_sudo.state == 'draft':
-            return request.redirect(self._get_shop_path())
+            return request.redirect(SHOP_PATH)
 
         return request.redirect('/shop/confirmation')
 
@@ -1619,7 +1645,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             order = request.env['sale.order'].sudo().browse(sale_order_id)
             values = self._prepare_shop_payment_confirmation_values(order)
             return request.render("website_sale.confirmation", values)
-        return request.redirect(self._get_shop_path())
+        return request.redirect(SHOP_PATH)
 
     def _prepare_shop_payment_confirmation_values(self, order):
         """
@@ -1671,7 +1697,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 ('Content-Disposition', content_disposition(filename, 'inline')),
             ]
             return request.make_response(pdf, headers=pdfhttpheaders)
-        return request.redirect(self._get_shop_path())
+        return request.redirect(SHOP_PATH)
 
     @route(['/shop/print/invoice'], type='http', auth="public", website=True, sitemap=False)
     def print_invoice(self, **kwargs):
@@ -1692,7 +1718,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     ('Content-Disposition', content_disposition(filename, 'inline')),
                 ]
                 return request.make_response(pdf, headers=pdfhttpheaders)
-        return request.redirect(self._get_shop_path())
+        return request.redirect(SHOP_PATH)
 
     # === CHECK METHODS === #
 
@@ -1726,7 +1752,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not order_sudo or order_sudo.state != 'draft':
             request.session['sale_order_id'] = None
             request.session['sale_transaction_id'] = None
-            return request.redirect(self._get_shop_path())
+            return request.redirect(SHOP_PATH)
 
         # Check that the cart is not empty.
         if not order_sudo.order_line:
@@ -1951,16 +1977,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ):
             return category
         return ProductCategory
-
-    @staticmethod
-    def _get_shop_path(category=None, page=0):
-        path = SHOP_PATH
-        if category:
-            slug = request.env['ir.http']._slug
-            path += f'/category/{slug(category)}'
-        if page:
-            path += f'/page/{page}'
-        return path
 
     def _get_attribute_value_params(self, query_params):
         """Extract the attribute value query params from a dict of more general query params.

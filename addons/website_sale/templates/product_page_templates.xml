@@ -50,7 +50,7 @@
                                     >
                                         <a
                                             class="py-2 py-lg-0"
-                                            t-att-href="keep('%s/category/%s' % (shop_path, slug(cat)))"
+                                            t-att-href="keep(cat.website_url)"
                                         >
                                             <i
                                                 class="oi oi-chevron-left d-lg-none me-1"
@@ -64,7 +64,7 @@
                                     <span t-field="product.name" />
                                 </li>
                                 <li class="breadcrumb-item d-lg-none">
-                                    <a t-att-href="category and keep('%s/category/%s' % (shop_path, slug(cat))) or keep(shop_path)">
+                                    <a t-att-href="keep(category.website_url or shop_path)">
                                         <i class="oi oi-chevron-left me-2" role="img"/>
                                         <t t-if="category.name" t-out="category.name"/>
                                         <t t-else="" t-call="website_sale.all_products_link_name"/>

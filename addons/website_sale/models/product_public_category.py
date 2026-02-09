@@ -124,7 +124,16 @@ class ProductPublicCategory(models.Model):
                 category.parents_and_self = category
 
     @api.depends('parents_and_self')
+    @api.depends_context('show_parent_categories')
     def _compute_display_name(self):
+        """Override to include the parent category names in the category's display name.
+
+        By default, parent category names are included, but they can be excluded by setting the
+        `show_parent_categories` context key to `False`.
+        """
+        if not self.env.context.get('show_parent_categories', True):
+            super()._compute_display_name()
+            return
         for category in self:
             category.display_name = " / ".join(category.parents_and_self.mapped(
                 lambda cat: cat.name or self.env._("New")
@@ -132,9 +141,13 @@ class ProductPublicCategory(models.Model):
 
     def _compute_website_url(self):
         super()._compute_website_url()
+        slug = self.env['ir.http']._slug
         for category in self:
             if category.id:
-                category.website_url = f'{SHOP_PATH}/category/%s' % self.env['ir.http']._slug(category)
+                # Only take the current category and its 4 closest parents to avoid having too long
+                # URLs. This number should stay in sync with the category route computation.
+                category_slugs = [slug(cat) for cat in category.parents_and_self[-5:]]
+                category.website_url = f'{SHOP_PATH}/category/%s' % '/'.join(category_slugs)
 
     @api.depends('product_tmpl_ids.is_published', 'child_id.has_published_products')
     def _compute_has_published_products(self):
