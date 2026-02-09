@@ -52,7 +52,7 @@ def find_header(
     return next((value for header, value in headers if header == name), default)
 
 
-class HTTPClient:
+class HTTPSocket:
     def __init__(self, client_sock, client_addr, *, prelude=b''):
         self.sock = client_sock
         self.addr = client_addr
@@ -120,7 +120,7 @@ class HTTPClient:
 
         return environ
 
-    def serve(self):
+    def process_request(self):
         t0 = real_time()
         current_thread = threading.current_thread()
         current_thread.query_count = 0

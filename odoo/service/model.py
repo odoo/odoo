@@ -13,8 +13,6 @@ from odoo.models import BaseModel, get_public_method
 from odoo.modules.registry import Registry
 from odoo.tools import lazy
 
-from .server import thread_local
-
 _logger = logging.getLogger(__name__)
 
 
@@ -105,12 +103,12 @@ def execute_cr(cr, uid, obj, method, args, kw):
     recs = env.get(obj)
     if recs is None:
         raise UserError(f"Object {obj} doesn't exist")  # pylint: disable=missing-gettext
-    thread_local.rpc_model_method = f'{obj}.{method}'
+    threading.current_thread().rpc_model_method = f'{obj}.{method}'
     result = retrying(partial(call_kw, recs, method, args, kw), env)
     # force evaluation of lazy values before the cursor is closed, as it would
     # error afterwards if the lazy isn't already evaluated (and cached)
-    for l in _traverse_containers(result, lazy):
-        _0 = l._value
+    for x in _traverse_containers(result, lazy):
+        _0 = x._value
     if result is None:
         _logger.info('The method %s of the object %s cannot return `None`!', method, obj)
     return result
@@ -121,7 +119,7 @@ def _traverse_containers(val, type_):
     through standard containers (non-string mappings or sequences) *unless*
     they're selected by the type filter
     """
-    from odoo.models import BaseModel
+    from odoo.models import BaseModel  # noqa: PLC0415
     if isinstance(val, type_):
         yield val
     elif isinstance(val, (str, bytes, BaseModel)):

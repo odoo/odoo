@@ -22,8 +22,7 @@ from odoo.modules.module import (
     Manifest,
     initialize_sys_path,
 )
-from odoo.service.server import thread_local
-from odoo.tools import config, file_path, real_time
+from odoo.tools import config, file_path
 from odoo.tools.misc import submap
 
 _logger = logging.getLogger('odoo.http')
@@ -217,11 +216,6 @@ class Application:
             HTTP response status line and the response headers.
         """
         current_thread = threading.current_thread()
-        if hasattr(current_thread, 'dbname'):
-            del current_thread.dbname
-        if hasattr(current_thread, 'uid'):
-            del current_thread.uid
-        thread_local.rpc_model_method = ''
 
         if odoo.tools.config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
             # The ProxyFix middleware has a side effect of updating the
@@ -239,6 +233,7 @@ class Application:
             try:
                 request._post_init()
                 current_thread.url = httprequest.url
+                __import__('logging').getLogger('juc').debug(httprequest.url)
 
                 if self.get_static_file(httprequest.path):
                     response = request._serve_static()

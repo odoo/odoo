@@ -54,6 +54,7 @@ except ImportError:
         return None
 
 from odoo import api, sql_db
+from odoo.http.server import HTTPSocket
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 from odoo.tools import OrderedSet, config, gc, osutil, profiler
@@ -64,15 +65,6 @@ _logger = logging.getLogger(__name__)
 
 SLEEP_INTERVAL = 60     # 1 min
 GEVENT_STOP_TIMEOUT = 60
-
-
-# A global-ish object, each thread/worker uses its own
-thread_local = threading.local()
-
-# the model and method name that was called via rpc, for logging
-thread_local.rpc_model_method = ''
-
-from odoo.http.client import HTTPClient  # noqa: E402
 
 
 def memory_info(process):
@@ -420,13 +412,9 @@ class ThreadedServer(CommonServer):
             if config['test_enable']:
                 client.settimeout(5)
 
-            http_client = HTTPClient(client, address, prelude=prelude)
+            http_socket = HTTPSocket(client, address, prelude=prelude)
             del prelude
-            http_client.serve()
-            # if http_client.upgrade == b'websocket':
-            #     ws_client = WSClient(client, address, prelude=http_client.conn.trailing_data)
-            #     del http_client
-            #     ws_client.serve()
+            http_socket.process_request()
         except BaseException:  # noqa: BLE001
             current_thread = threading.current_thread()
             _logger.critical("Thread %s (%s) Exception occurred, quitting...",
@@ -448,7 +436,7 @@ class ThreadedServer(CommonServer):
                 socket.AF_INET,
                 socket.SOCK_STREAM,
             )
-            _logger.info('HTTP service running through socket activation')
+            _logger.info("HTTP service running through socket activation")
         else:
             family = (socket.AF_UNIX if interface.startswith('unix://')
                 else socket.AF_INET6 if ':' in interface
@@ -459,7 +447,7 @@ class ThreadedServer(CommonServer):
                 family=family,
                 backlog=max(128, config.max_http_threads),
             )
-            _logger.info('HTTP service running on %s:%s',
+            _logger.info("HTTP service running on %s:%s",
                     f'[{interface}]' if ':' in interface else interface, port)
 
         server.settimeout(1)  # it uses poll(2) under the hood
@@ -1300,8 +1288,8 @@ class WorkerHTTP(Worker):
         # Prevent fd inherientence close_on_exec
         flags = fcntl.fcntl(client, fcntl.F_GETFD) | fcntl.FD_CLOEXEC
         fcntl.fcntl(client, fcntl.F_SETFD, flags)
-        http_client = HTTPClient(client, addr)
-        http_client.serve()
+        http_socket = HTTPSocket(client, addr)
+        http_socket.process_request()
 
         self.request_count += 1
 
