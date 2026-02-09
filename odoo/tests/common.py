@@ -2247,9 +2247,7 @@ class HttpCase(TransactionCase):
 
     @classmethod
     def http_port(cls):
-        if odoo.service.server.server is None:
-            return None
-        return odoo.service.server.server.httpd.server_port
+        return config['http_port']
 
     def setUp(self):
         super().setUp()

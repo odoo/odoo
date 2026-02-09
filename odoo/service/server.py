@@ -422,7 +422,7 @@ class ThreadedServer(CommonServer):
         finally:
             client.close()
 
-    def http_server_thread(self, interface, port, stop_event):
+    def http_server_thread(self, stop_event):
 
         piscine = ThreadPoolExecutor(
             max_workers=config.max_http_threads or None,  # None: no limit
@@ -438,17 +438,20 @@ class ThreadedServer(CommonServer):
             )
             _logger.info("HTTP service running through socket activation")
         else:
-            family = (socket.AF_UNIX if interface.startswith('unix://')
-                else socket.AF_INET6 if ':' in interface
+            family = (socket.AF_UNIX if self.interface.startswith('unix://')
+                else socket.AF_INET6 if ':' in self.interface
                 else socket.AF_INET
             )
             server = socket.create_server(
-                (interface, port),
+                (self.interface, self.port),
                 family=family,
                 backlog=max(128, config.max_http_threads),
             )
+            if self.port == 0:
+                self.port = config['http_port'] = server.getsockname()[1]
             _logger.info("HTTP service running on %s:%s",
-                    f'[{interface}]' if ':' in interface else interface, port)
+                    f'[{self.interface}]' if ':' in self.interface else self.interface,
+                    self.port)
 
         server.settimeout(1)  # it uses poll(2) under the hood
         with piscine, server:
@@ -463,7 +466,7 @@ class ThreadedServer(CommonServer):
     def http_spawn(self):
         threading.Thread(
             target=self.http_server_thread,
-            args=(self.interface, self.port, self.stop_event),
+            args=(self.stop_event,),
             name="odoo.service.httpd",
             daemon=True,
         ).start()
@@ -709,6 +712,8 @@ class GeventServer(CommonServer):
         sock.bind((self.interface, self.port))
         sock.listen(128)
         sock.setblocking(0)
+        if self.port == 0:
+            self.port = config['gevent_port'] = sock.getsockname()[1]
 
         self.httpd = WSGIServer(
             sock, self.app,
@@ -964,12 +969,6 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGUSR2, log_ormcache_stats)
 
         if config['http_enable']:
-            if config.http_socket_activation:
-                _logger.info('HTTP service running through socket activation')
-            else:
-                _logger.info('HTTP service running on %s:%s',
-                    f'[{self.interface}]' if ':' in self.interface else self.interface, self.port)
-
             if os.environ.get('ODOO_HTTP_SOCKET_FD'):
                 # reload
                 self.socket = socket.socket(fileno=int(os.environ.pop('ODOO_HTTP_SOCKET_FD')))
@@ -986,7 +985,15 @@ class PreforkServer(CommonServer):
                 self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
                 self.socket.setblocking(0)
                 self.socket.bind((self.interface, self.port))
+                if self.port == 0:
+                    self.port = config['http_port'] = self.socket.getsockname()[0]
                 self.socket.listen(8 * self.population)
+
+            if config.http_socket_activation:
+                _logger.info('HTTP service running through socket activation')
+            else:
+                _logger.info('HTTP service running on %s:%s',
+                    f'[{self.interface}]' if ':' in self.interface else self.interface, self.port)
 
     def fork_and_reload(self):
         _logger.info("Reloading server")
