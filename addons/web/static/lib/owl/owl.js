@@ -1,6 +1,47 @@
 (function (exports) {
     'use strict';
 
+    // Custom error class that wraps error that happen in the owl lifecycle
+    class OwlError extends Error {
+        cause;
+    }
+
+    /**
+     * Parses an XML string into an XML document, throwing errors on parser errors
+     * instead of returning an XML document containing the parseerror.
+     *
+     * @param xml the string to parse
+     * @returns an XML document corresponding to the content of the string
+     */
+    function parseXML(xml) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(xml, "text/xml");
+        if (doc.getElementsByTagName("parsererror").length) {
+            let msg = "Invalid XML in template.";
+            const parsererrorText = doc.getElementsByTagName("parsererror")[0].textContent;
+            if (parsererrorText) {
+                msg += "\nThe parser has produced the following error message:\n" + parsererrorText;
+                const re = /\d+/g;
+                const firstMatch = re.exec(parsererrorText);
+                if (firstMatch) {
+                    const lineNumber = Number(firstMatch[0]);
+                    const line = xml.split("\n")[lineNumber - 1];
+                    const secondMatch = re.exec(parsererrorText);
+                    if (line && secondMatch) {
+                        const columnIndex = Number(secondMatch[0]) - 1;
+                        if (line[columnIndex]) {
+                            msg +=
+                                `\nThe error might be located at xml line ${lineNumber} column ${columnIndex}\n` +
+                                    `${line}\n${"-".repeat(columnIndex - 1)}^`;
+                        }
+                    }
+                }
+            }
+            throw new OwlError(msg);
+        }
+        return doc;
+    }
+
     function filterOutModifiersFromData(dataList) {
         dataList = dataList.slice();
         const modifiers = [];
@@ -10,7 +51,7 @@
         }
         return { modifiers, data: dataList };
     }
-    const config = {
+    const config$1 = {
         // whether or not blockdom should normalize DOM whenever a block is created.
         // Normalizing dom mean removing empty text nodes (or containing only spaces)
         shouldNormalizeDom: true,
@@ -32,7 +73,11 @@
     // -----------------------------------------------------------------------------
     // Toggler node
     // -----------------------------------------------------------------------------
+    const txt = document.createTextNode("");
     class VToggler {
+        key;
+        child;
+        parentEl;
         constructor(key, child) {
             this.key = key;
             this.child = child;
@@ -57,11 +102,13 @@
                 child1.patch(child2, withBeforeRemove);
             }
             else {
-                child2.mount(this.parentEl, child1.firstNode());
+                const firstNode = child1.firstNode();
+                firstNode.parentElement.insertBefore(txt, firstNode);
                 if (withBeforeRemove) {
                     child1.beforeRemove();
                 }
                 child1.remove();
+                child2.mount(this.parentEl, txt);
                 this.child = child2;
                 this.key = other.key;
             }
@@ -81,10 +128,6 @@
     }
     function toggler(key, child) {
         return new VToggler(key, child);
-    }
-
-    // Custom error class that wraps error that happen in the owl lifecycle
-    class OwlError extends Error {
     }
 
     const { setAttribute: elemSetAttribute, removeAttribute } = Element.prototype;
@@ -256,7 +299,7 @@
      */
     function batched(callback) {
         let scheduled = false;
-        return async (...args) => {
+        return async function batchedCall(...args) {
             if (!scheduled) {
                 scheduled = true;
                 await Promise.resolve();
@@ -334,13 +377,6 @@
             }
         }).then(fn || function () { });
     }
-    async function loadFile(url) {
-        const result = await fetch(url);
-        if (!result.ok) {
-            throw new OwlError("Error while fetching xml templates");
-        }
-        return await result.text();
-    }
     /*
      * This class just transports the fact that a string is safe
      * to be injected as HTML. Overriding a JS primitive is quite painful though
@@ -408,7 +444,7 @@
             const data = currentTarget[eventKey];
             if (!data)
                 return;
-            config.mainEventHandler(data, ev, currentTarget);
+            config$1.mainEventHandler(data, ev, currentTarget);
         }
         function setup(data) {
             this[eventKey] = data;
@@ -449,7 +485,7 @@
             const _data = dom[eventKey];
             if (_data) {
                 for (const data of Object.values(_data)) {
-                    const stopped = config.mainEventHandler(data, event, dom);
+                    const stopped = config$1.mainEventHandler(data, event, dom);
                     if (stopped)
                         return;
                 }
@@ -477,6 +513,10 @@
     // Multi NODE
     // -----------------------------------------------------------------------------
     class VMulti {
+        children;
+        anchors;
+        parentEl;
+        isOnlyChild;
         constructor(children) {
             this.children = children;
         }
@@ -614,6 +654,9 @@
     const characterDataSetData$1 = getDescriptor$2(characterDataProto$1, "data").set;
     const nodeRemoveChild$2 = nodeProto$3.removeChild;
     class VSimpleNode {
+        text;
+        parentEl;
+        el;
         constructor(text) {
             this.text = text;
         }
@@ -640,7 +683,7 @@
             return this.text;
         }
     }
-    class VText$1 extends VSimpleNode {
+    let VText$1 = class VText extends VSimpleNode {
         mount(parent, afterNode) {
             this.mountNode(document.createTextNode(toText(this.text)), parent, afterNode);
         }
@@ -651,7 +694,7 @@
                 this.text = text2;
             }
         }
-    }
+    };
     class VComment extends VSimpleNode {
         mount(parent, afterNode) {
             this.mountNode(document.createComment(toText(this.text)), parent, afterNode);
@@ -714,7 +757,7 @@
         // step 0: prepare html base element
         const doc = new DOMParser().parseFromString(`<t>${str}</t>`, "text/xml");
         const node = doc.firstChild.firstChild;
-        if (config.shouldNormalizeDom) {
+        if (config$1.shouldNormalizeDom) {
             normalizeNode(node);
         }
         // step 1: prepare intermediate tree
@@ -767,7 +810,7 @@
                     info.push({ type: "child", idx: index });
                     el = document.createTextNode("");
                 }
-                currentNS || (currentNS = node.namespaceURI);
+                currentNS ||= node.namespaceURI;
                 if (!el) {
                     el = currentNS
                         ? document.createElementNS(currentNS, tagName)
@@ -901,7 +944,7 @@
     function buildContext(tree, ctx, fromIdx) {
         if (!ctx) {
             const children = new Array(tree.info.filter((v) => v.type === "child").length);
-            ctx = { collectors: [], locations: [], children, cbRefs: [], refN: tree.refN, refList: [] };
+            ctx = { collectors: [], locations: [], children, cbRefs: [], refN: tree.refN };
             fromIdx = 0;
         }
         if (tree.refN) {
@@ -1008,14 +1051,16 @@
                     });
                     break;
                 }
-                case "ref":
-                    const index = ctx.cbRefs.push(info.idx) - 1;
+                case "ref": {
                     ctx.locations.push({
                         idx: info.idx,
                         refIdx: info.refIdx,
-                        setData: makeRefSetter(index, ctx.refList),
+                        setData: NO_OP,
                         updateData: NO_OP,
                     });
+                    ctx.cbRefs.push(info.idx);
+                    break;
+                }
             }
         }
     }
@@ -1024,29 +1069,9 @@
     // -----------------------------------------------------------------------------
     function buildBlock(template, ctx) {
         let B = createBlockClass(template, ctx);
-        if (ctx.cbRefs.length) {
-            const cbRefs = ctx.cbRefs;
-            const refList = ctx.refList;
-            let cbRefsNumber = cbRefs.length;
-            B = class extends B {
-                mount(parent, afterNode) {
-                    refList.push(new Array(cbRefsNumber));
-                    super.mount(parent, afterNode);
-                    for (let cbRef of refList.pop()) {
-                        cbRef();
-                    }
-                }
-                remove() {
-                    super.remove();
-                    for (let cbRef of cbRefs) {
-                        let fn = this.data[cbRef];
-                        fn(null);
-                    }
-                }
-            };
-        }
         if (ctx.children.length) {
             B = class extends B {
+                children;
                 constructor(data, children) {
                     super(data);
                     this.children = children;
@@ -1058,14 +1083,9 @@
         return (data) => new B(data);
     }
     function createBlockClass(template, ctx) {
-        const { refN, collectors, children } = ctx;
+        const { refN, collectors, children, locations, cbRefs } = ctx;
         const colN = collectors.length;
-        ctx.locations.sort((a, b) => a.idx - b.idx);
-        const locations = ctx.locations.map((loc) => ({
-            refIdx: loc.refIdx,
-            setData: loc.setData,
-            updateData: loc.updateData,
-        }));
+        locations.sort((a, b) => a.idx - b.idx);
         const locN = locations.length;
         const childN = children.length;
         const childrenLocs = children;
@@ -1076,6 +1096,11 @@
         const nodeInsertBefore = nodeProto$2.insertBefore;
         const elementRemove = elementProto.remove;
         class Block {
+            el;
+            parentEl;
+            data;
+            children;
+            refs;
             constructor(data) {
                 this.data = data;
             }
@@ -1141,6 +1166,15 @@
                 }
                 this.el = el;
                 this.parentEl = parent;
+                if (cbRefs.length) {
+                    const data = this.data;
+                    const refs = this.refs;
+                    for (let cbRef of cbRefs) {
+                        const { idx, refIdx } = locations[cbRef];
+                        const fn = data[idx];
+                        fn(refs[refIdx], null);
+                    }
+                }
             };
             Block.prototype.patch = function patch(other, withBeforeRemove) {
                 if (this === other) {
@@ -1189,16 +1223,23 @@
                     }
                 }
             };
+            Block.prototype.remove = function remove() {
+                if (cbRefs.length) {
+                    const data = this.data;
+                    const refs = this.refs;
+                    for (let cbRef of cbRefs) {
+                        const { idx, refIdx } = locations[cbRef];
+                        const fn = data[idx];
+                        fn(null, refs[refIdx]);
+                    }
+                }
+                elementRemove.call(this.el);
+            };
         }
         return Block;
     }
     function setText(value) {
         characterDataSetData.call(this, toText(value));
-    }
-    function makeRefSetter(index, refs) {
-        return function setRef(fn) {
-            refs[refs.length - 1][index] = () => fn(this);
-        };
     }
 
     const getDescriptor = (o, p) => Object.getOwnPropertyDescriptor(o, p);
@@ -1211,6 +1252,10 @@
     // List Node
     // -----------------------------------------------------------------------------
     class VList {
+        children;
+        anchor;
+        parentEl;
+        isOnlyChild;
         constructor(children) {
             this.children = children;
         }
@@ -1422,8 +1467,10 @@
     const nodeInsertBefore = nodeProto.insertBefore;
     const nodeRemoveChild = nodeProto.removeChild;
     class VHtml {
+        html;
+        parentEl;
+        content = [];
         constructor(html) {
-            this.content = [];
             this.html = html;
         }
         mount(parent, afterNode) {
@@ -1497,9 +1544,12 @@
     function createCatcher(eventsSpec) {
         const n = Object.keys(eventsSpec).length;
         class VCatcher {
+            child;
+            handlerData;
+            handlerFns = [];
+            parentEl;
+            afterNode = null;
             constructor(child, handlers) {
-                this.handlerFns = [];
-                this.afterNode = null;
                 this.child = child;
                 this.handlerData = handlers;
             }
@@ -1595,9 +1645,97 @@
         vnode.remove();
     }
 
+    let contextStack = [];
+    function saveContext() {
+        const savedStack = contextStack.slice();
+        return () => {
+            contextStack = savedStack;
+        };
+    }
+    function getContext(type) {
+        const context = contextStack.at(-1);
+        if (!context) {
+            throw new OwlError(`No active context`);
+        }
+        if (type && type !== context.type) {
+            throw new OwlError(`Expected to be in a ${type} context`);
+        }
+        return context;
+    }
+    function createAsyncProtection(context, callback) {
+        return async function asyncContextProtection(...args) {
+            if (context.status > 1 /* STATUS.MOUNTED */) {
+                throw new OwlError(`Function called after the end of life of the ${context.type}`);
+            }
+            const result = await callback.call(this, ...args);
+            if (context.status > 1 /* STATUS.MOUNTED */) {
+                return new Promise(() => { });
+            }
+            return result;
+        };
+    }
+    /**
+     * Captures the current context and gives methods to run
+     * functions within the captured context.
+     */
+    function useContext() {
+        const context = contextStack.at(-1);
+        return {
+            run(callback) {
+                if (context) {
+                    contextStack.push(context);
+                    let result;
+                    try {
+                        result = callback();
+                    }
+                    finally {
+                        contextStack.pop();
+                    }
+                    return result;
+                }
+                else {
+                    return callback();
+                }
+            },
+            protectAsync(callback) {
+                if (context) {
+                    callback = createAsyncProtection(context, callback);
+                }
+                return callback;
+            },
+            runWithAsyncProtection(callback) {
+                if (context) {
+                    callback = createAsyncProtection(context, callback);
+                }
+                return callback();
+            },
+        };
+    }
+
+    class Component {
+        static template = "";
+        __owl__;
+        constructor(node) {
+            this.__owl__ = node;
+        }
+        setup() { }
+    }
+
     // Maps fibers to thrown errors
     const fibersInError = new WeakMap();
     const nodeErrorHandlers = new WeakMap();
+    function destroyApp(app, error) {
+        try {
+            app.destroy();
+        }
+        catch (e) {
+            // mute all errors here because we are in a corrupted state anyway
+        }
+        const e = Object.assign(new OwlError(`[Owl] Unhandled error. Destroying the root component`), {
+            cause: error,
+        });
+        return e;
+    }
     function _handleError(node, error) {
         if (!node) {
             return false;
@@ -1610,9 +1748,10 @@
         if (errorHandlers) {
             let handled = false;
             // execute in the opposite order
+            const finalize = () => destroyApp(node.app, error);
             for (let i = errorHandlers.length - 1; i >= 0; i--) {
                 try {
-                    errorHandlers[i](error);
+                    errorHandlers[i](error, finalize);
                     handled = true;
                     break;
                 }
@@ -1628,10 +1767,6 @@
     }
     function handleError(params) {
         let { error } = params;
-        // Wrap error if it wasn't wrapped by wrapError (ie when not in dev mode)
-        if (!(error instanceof OwlError)) {
-            error = Object.assign(new OwlError(`An error occured in the owl lifecycle (see this Error's "cause" property)`), { cause: error });
-        }
         const node = "node" in params ? params.node : params.fiber.node;
         const fiber = "fiber" in params ? params.fiber : node.fiber;
         if (fiber) {
@@ -1640,1147 +1775,65 @@
             let current = fiber;
             do {
                 current.node.fiber = current;
+                fibersInError.set(current, error);
                 current = current.parent;
             } while (current);
             fibersInError.set(fiber.root, error);
         }
         const handled = _handleError(node, error);
         if (!handled) {
-            console.warn(`[Owl] Unhandled error. Destroying the root component`);
-            try {
-                node.app.destroy();
-            }
-            catch (e) {
-                console.error(e);
-            }
-            throw error;
+            throw destroyApp(node.app, error);
         }
     }
 
-    function makeChildFiber(node, parent) {
-        let current = node.fiber;
-        if (current) {
-            cancelFibers(current.children);
-            current.root = null;
-        }
-        return new Fiber(node, parent);
-    }
-    function makeRootFiber(node) {
-        let current = node.fiber;
-        if (current) {
-            let root = current.root;
-            // lock root fiber because canceling children fibers may destroy components,
-            // which means any arbitrary code can be run in onWillDestroy, which may
-            // trigger new renderings
-            root.locked = true;
-            root.setCounter(root.counter + 1 - cancelFibers(current.children));
-            root.locked = false;
-            current.children = [];
-            current.childrenMap = {};
-            current.bdom = null;
-            if (fibersInError.has(current)) {
-                fibersInError.delete(current);
-                fibersInError.delete(root);
-                current.appliedToDom = false;
-                if (current instanceof RootFiber) {
-                    // it is possible that this fiber is a fiber that crashed while being
-                    // mounted, so the mounted list is possibly corrupted. We restore it to
-                    // its normal initial state (which is empty list or a list with a mount
-                    // fiber.
-                    current.mounted = current instanceof MountFiber ? [current] : [];
-                }
-            }
-            return current;
-        }
-        const fiber = new RootFiber(node, null);
-        if (node.willPatch.length) {
-            fiber.willPatch.push(fiber);
-        }
-        if (node.patched.length) {
-            fiber.patched.push(fiber);
-        }
-        return fiber;
-    }
-    function throwOnRender() {
-        throw new OwlError("Attempted to render cancelled fiber");
-    }
-    /**
-     * @returns number of not-yet rendered fibers cancelled
-     */
-    function cancelFibers(fibers) {
-        let result = 0;
-        for (let fiber of fibers) {
-            let node = fiber.node;
-            fiber.render = throwOnRender;
-            if (node.status === 0 /* NEW */) {
-                node.cancel();
-            }
-            node.fiber = null;
-            if (fiber.bdom) {
-                // if fiber has been rendered, this means that the component props have
-                // been updated. however, this fiber will not be patched to the dom, so
-                // it could happen that the next render compare the current props with
-                // the same props, and skip the render completely. With the next line,
-                // we kindly request the component code to force a render, so it works as
-                // expected.
-                node.forceNextRender = true;
-            }
-            else {
-                result++;
-            }
-            result += cancelFibers(fiber.children);
-        }
-        return result;
-    }
-    class Fiber {
-        constructor(node, parent) {
-            this.bdom = null;
-            this.children = [];
-            this.appliedToDom = false;
-            this.deep = false;
-            this.childrenMap = {};
-            this.node = node;
-            this.parent = parent;
-            if (parent) {
-                this.deep = parent.deep;
-                const root = parent.root;
-                root.setCounter(root.counter + 1);
-                this.root = root;
-                parent.children.push(this);
-            }
-            else {
-                this.root = this;
-            }
-        }
-        render() {
-            // if some parent has a fiber => register in followup
-            let prev = this.root.node;
-            let scheduler = prev.app.scheduler;
-            let current = prev.parent;
-            while (current) {
-                if (current.fiber) {
-                    let root = current.fiber.root;
-                    if (root.counter === 0 && prev.parentKey in current.fiber.childrenMap) {
-                        current = root.node;
-                    }
-                    else {
-                        scheduler.delayedRenders.push(this);
-                        return;
-                    }
-                }
-                prev = current;
-                current = current.parent;
-            }
-            // there are no current rendering from above => we can render
-            this._render();
-        }
-        _render() {
-            const node = this.node;
-            const root = this.root;
-            if (root) {
-                try {
-                    this.bdom = true;
-                    this.bdom = node.renderFn();
-                }
-                catch (e) {
-                    node.app.handleError({ node, error: e });
-                }
-                root.setCounter(root.counter - 1);
-            }
-        }
-    }
-    class RootFiber extends Fiber {
-        constructor() {
-            super(...arguments);
-            this.counter = 1;
-            // only add stuff in this if they have registered some hooks
-            this.willPatch = [];
-            this.patched = [];
-            this.mounted = [];
-            // A fiber is typically locked when it is completing and the patch has not, or is being applied.
-            // i.e.: render triggered in onWillUnmount or in willPatch will be delayed
-            this.locked = false;
-        }
-        complete() {
-            const node = this.node;
-            this.locked = true;
-            let current = undefined;
-            let mountedFibers = this.mounted;
-            try {
-                // Step 1: calling all willPatch lifecycle hooks
-                for (current of this.willPatch) {
-                    // because of the asynchronous nature of the rendering, some parts of the
-                    // UI may have been rendered, then deleted in a followup rendering, and we
-                    // do not want to call onWillPatch in that case.
-                    let node = current.node;
-                    if (node.fiber === current) {
-                        const component = node.component;
-                        for (let cb of node.willPatch) {
-                            cb.call(component);
-                        }
-                    }
-                }
-                current = undefined;
-                // Step 2: patching the dom
-                node._patch();
-                this.locked = false;
-                // Step 4: calling all mounted lifecycle hooks
-                while ((current = mountedFibers.pop())) {
-                    current = current;
-                    if (current.appliedToDom) {
-                        for (let cb of current.node.mounted) {
-                            cb();
-                        }
-                    }
-                }
-                // Step 5: calling all patched hooks
-                let patchedFibers = this.patched;
-                while ((current = patchedFibers.pop())) {
-                    current = current;
-                    if (current.appliedToDom) {
-                        for (let cb of current.node.patched) {
-                            cb();
-                        }
-                    }
-                }
-            }
-            catch (e) {
-                // if mountedFibers is not empty, this means that a crash occured while
-                // calling the mounted hooks of some component. So, there may still be
-                // some component that have been mounted, but for which the mounted hooks
-                // have not been called. Here, we remove the willUnmount hooks for these
-                // specific component to prevent a worse situation (willUnmount being
-                // called even though mounted has not been called)
-                for (let fiber of mountedFibers) {
-                    fiber.node.willUnmount = [];
-                }
-                this.locked = false;
-                node.app.handleError({ fiber: current || this, error: e });
-            }
-        }
-        setCounter(newValue) {
-            this.counter = newValue;
-            if (newValue === 0) {
-                this.node.app.scheduler.flush();
-            }
-        }
-    }
-    class MountFiber extends RootFiber {
-        constructor(node, target, options = {}) {
-            super(node, null);
-            this.target = target;
-            this.position = options.position || "last-child";
-        }
-        complete() {
-            let current = this;
-            try {
-                const node = this.node;
-                node.children = this.childrenMap;
-                node.app.constructor.validateTarget(this.target);
-                if (node.bdom) {
-                    // this is a complicated situation: if we mount a fiber with an existing
-                    // bdom, this means that this same fiber was already completed, mounted,
-                    // but a crash occurred in some mounted hook. Then, it was handled and
-                    // the new rendering is being applied.
-                    node.updateDom();
-                }
-                else {
-                    node.bdom = this.bdom;
-                    if (this.position === "last-child" || this.target.childNodes.length === 0) {
-                        mount$1(node.bdom, this.target);
-                    }
-                    else {
-                        const firstChild = this.target.childNodes[0];
-                        mount$1(node.bdom, this.target, firstChild);
-                    }
-                }
-                // unregistering the fiber before mounted since it can do another render
-                // and that the current rendering is obviously completed
-                node.fiber = null;
-                node.status = 1 /* MOUNTED */;
-                this.appliedToDom = true;
-                let mountedFibers = this.mounted;
-                while ((current = mountedFibers.pop())) {
-                    if (current.appliedToDom) {
-                        for (let cb of current.node.mounted) {
-                            cb();
-                        }
-                    }
-                }
-            }
-            catch (e) {
-                this.node.app.handleError({ fiber: current, error: e });
-            }
-        }
-    }
-
-    // Special key to subscribe to, to be notified of key creation/deletion
-    const KEYCHANGES = Symbol("Key changes");
-    // Used to specify the absence of a callback, can be used as WeakMap key but
-    // should only be used as a sentinel value and never called.
-    const NO_CALLBACK = () => {
-        throw new Error("Called NO_CALLBACK. Owl is broken, please report this to the maintainers.");
-    };
-    const objectToString = Object.prototype.toString;
-    const objectHasOwnProperty = Object.prototype.hasOwnProperty;
-    // Use arrays because Array.includes is faster than Set.has for small arrays
-    const SUPPORTED_RAW_TYPES = ["Object", "Array", "Set", "Map", "WeakMap"];
-    const COLLECTION_RAW_TYPES = ["Set", "Map", "WeakMap"];
-    /**
-     * extract "RawType" from strings like "[object RawType]" => this lets us ignore
-     * many native objects such as Promise (whose toString is [object Promise])
-     * or Date ([object Date]), while also supporting collections without using
-     * instanceof in a loop
-     *
-     * @param obj the object to check
-     * @returns the raw type of the object
-     */
-    function rawType(obj) {
-        return objectToString.call(toRaw(obj)).slice(8, -1);
-    }
-    /**
-     * Checks whether a given value can be made into a reactive object.
-     *
-     * @param value the value to check
-     * @returns whether the value can be made reactive
-     */
-    function canBeMadeReactive(value) {
-        if (typeof value !== "object") {
-            return false;
-        }
-        return SUPPORTED_RAW_TYPES.includes(rawType(value));
-    }
-    /**
-     * Creates a reactive from the given object/callback if possible and returns it,
-     * returns the original object otherwise.
-     *
-     * @param value the value make reactive
-     * @returns a reactive for the given object when possible, the original otherwise
-     */
-    function possiblyReactive(val, cb) {
-        return canBeMadeReactive(val) ? reactive(val, cb) : val;
-    }
-    const skipped = new WeakSet();
-    /**
-     * Mark an object or array so that it is ignored by the reactivity system
-     *
-     * @param value the value to mark
-     * @returns the object itself
-     */
-    function markRaw(value) {
-        skipped.add(value);
-        return value;
-    }
-    /**
-     * Given a reactive objet, return the raw (non reactive) underlying object
-     *
-     * @param value a reactive value
-     * @returns the underlying value
-     */
-    function toRaw(value) {
-        return targets.has(value) ? targets.get(value) : value;
-    }
-    const targetToKeysToCallbacks = new WeakMap();
-    /**
-     * Observes a given key on a target with an callback. The callback will be
-     * called when the given key changes on the target.
-     *
-     * @param target the target whose key should be observed
-     * @param key the key to observe (or Symbol(KEYCHANGES) for key creation
-     *  or deletion)
-     * @param callback the function to call when the key changes
-     */
-    function observeTargetKey(target, key, callback) {
-        if (callback === NO_CALLBACK) {
-            return;
-        }
-        if (!targetToKeysToCallbacks.get(target)) {
-            targetToKeysToCallbacks.set(target, new Map());
-        }
-        const keyToCallbacks = targetToKeysToCallbacks.get(target);
-        if (!keyToCallbacks.get(key)) {
-            keyToCallbacks.set(key, new Set());
-        }
-        keyToCallbacks.get(key).add(callback);
-        if (!callbacksToTargets.has(callback)) {
-            callbacksToTargets.set(callback, new Set());
-        }
-        callbacksToTargets.get(callback).add(target);
-    }
-    /**
-     * Notify Reactives that are observing a given target that a key has changed on
-     * the target.
-     *
-     * @param target target whose Reactives should be notified that the target was
-     *  changed.
-     * @param key the key that changed (or Symbol `KEYCHANGES` if a key was created
-     *   or deleted)
-     */
-    function notifyReactives(target, key) {
-        const keyToCallbacks = targetToKeysToCallbacks.get(target);
-        if (!keyToCallbacks) {
-            return;
-        }
-        const callbacks = keyToCallbacks.get(key);
-        if (!callbacks) {
-            return;
-        }
-        // Loop on copy because clearReactivesForCallback will modify the set in place
-        for (const callback of [...callbacks]) {
-            clearReactivesForCallback(callback);
-            callback();
-        }
-    }
-    const callbacksToTargets = new WeakMap();
-    /**
-     * Clears all subscriptions of the Reactives associated with a given callback.
-     *
-     * @param callback the callback for which the reactives need to be cleared
-     */
-    function clearReactivesForCallback(callback) {
-        const targetsToClear = callbacksToTargets.get(callback);
-        if (!targetsToClear) {
-            return;
-        }
-        for (const target of targetsToClear) {
-            const observedKeys = targetToKeysToCallbacks.get(target);
-            if (!observedKeys) {
-                continue;
-            }
-            for (const [key, callbacks] of observedKeys.entries()) {
-                callbacks.delete(callback);
-                if (!callbacks.size) {
-                    observedKeys.delete(key);
-                }
-            }
-        }
-        targetsToClear.clear();
-    }
-    function getSubscriptions(callback) {
-        const targets = callbacksToTargets.get(callback) || [];
-        return [...targets].map((target) => {
-            const keysToCallbacks = targetToKeysToCallbacks.get(target);
-            let keys = [];
-            if (keysToCallbacks) {
-                for (const [key, cbs] of keysToCallbacks) {
-                    if (cbs.has(callback)) {
-                        keys.push(key);
-                    }
-                }
-            }
-            return { target, keys };
-        });
-    }
-    // Maps reactive objects to the underlying target
-    const targets = new WeakMap();
-    const reactiveCache = new WeakMap();
-    /**
-     * Creates a reactive proxy for an object. Reading data on the reactive object
-     * subscribes to changes to the data. Writing data on the object will cause the
-     * notify callback to be called if there are suscriptions to that data. Nested
-     * objects and arrays are automatically made reactive as well.
-     *
-     * Whenever you are notified of a change, all subscriptions are cleared, and if
-     * you would like to be notified of any further changes, you should go read
-     * the underlying data again. We assume that if you don't go read it again after
-     * being notified, it means that you are no longer interested in that data.
-     *
-     * Subscriptions:
-     * + Reading a property on an object will subscribe you to changes in the value
-     *    of that property.
-     * + Accessing an object's keys (eg with Object.keys or with `for..in`) will
-     *    subscribe you to the creation/deletion of keys. Checking the presence of a
-     *    key on the object with 'in' has the same effect.
-     * - getOwnPropertyDescriptor does not currently subscribe you to the property.
-     *    This is a choice that was made because changing a key's value will trigger
-     *    this trap and we do not want to subscribe by writes. This also means that
-     *    Object.hasOwnProperty doesn't subscribe as it goes through this trap.
-     *
-     * @param target the object for which to create a reactive proxy
-     * @param callback the function to call when an observed property of the
-     *  reactive has changed
-     * @returns a proxy that tracks changes to it
-     */
-    function reactive(target, callback = NO_CALLBACK) {
-        if (!canBeMadeReactive(target)) {
-            throw new OwlError(`Cannot make the given value reactive`);
-        }
-        if (skipped.has(target)) {
-            return target;
-        }
-        if (targets.has(target)) {
-            // target is reactive, create a reactive on the underlying object instead
-            return reactive(targets.get(target), callback);
-        }
-        if (!reactiveCache.has(target)) {
-            reactiveCache.set(target, new WeakMap());
-        }
-        const reactivesForTarget = reactiveCache.get(target);
-        if (!reactivesForTarget.has(callback)) {
-            const targetRawType = rawType(target);
-            const handler = COLLECTION_RAW_TYPES.includes(targetRawType)
-                ? collectionsProxyHandler(target, callback, targetRawType)
-                : basicProxyHandler(callback);
-            const proxy = new Proxy(target, handler);
-            reactivesForTarget.set(callback, proxy);
-            targets.set(proxy, target);
-        }
-        return reactivesForTarget.get(callback);
-    }
-    /**
-     * Creates a basic proxy handler for regular objects and arrays.
-     *
-     * @param callback @see reactive
-     * @returns a proxy handler object
-     */
-    function basicProxyHandler(callback) {
-        return {
-            get(target, key, receiver) {
-                // non-writable non-configurable properties cannot be made reactive
-                const desc = Object.getOwnPropertyDescriptor(target, key);
-                if (desc && !desc.writable && !desc.configurable) {
-                    return Reflect.get(target, key, receiver);
-                }
-                observeTargetKey(target, key, callback);
-                return possiblyReactive(Reflect.get(target, key, receiver), callback);
-            },
-            set(target, key, value, receiver) {
-                const hadKey = objectHasOwnProperty.call(target, key);
-                const originalValue = Reflect.get(target, key, receiver);
-                const ret = Reflect.set(target, key, toRaw(value), receiver);
-                if (!hadKey && objectHasOwnProperty.call(target, key)) {
-                    notifyReactives(target, KEYCHANGES);
-                }
-                // While Array length may trigger the set trap, it's not actually set by this
-                // method but is updated behind the scenes, and the trap is not called with the
-                // new value. We disable the "same-value-optimization" for it because of that.
-                if (originalValue !== Reflect.get(target, key, receiver) ||
-                    (key === "length" && Array.isArray(target))) {
-                    notifyReactives(target, key);
-                }
-                return ret;
-            },
-            deleteProperty(target, key) {
-                const ret = Reflect.deleteProperty(target, key);
-                // TODO: only notify when something was actually deleted
-                notifyReactives(target, KEYCHANGES);
-                notifyReactives(target, key);
-                return ret;
-            },
-            ownKeys(target) {
-                observeTargetKey(target, KEYCHANGES, callback);
-                return Reflect.ownKeys(target);
-            },
-            has(target, key) {
-                // TODO: this observes all key changes instead of only the presence of the argument key
-                // observing the key itself would observe value changes instead of presence changes
-                // so we may need a finer grained system to distinguish observing value vs presence.
-                observeTargetKey(target, KEYCHANGES, callback);
-                return Reflect.has(target, key);
-            },
-        };
-    }
-    /**
-     * Creates a function that will observe the key that is passed to it when called
-     * and delegates to the underlying method.
-     *
-     * @param methodName name of the method to delegate to
-     * @param target @see reactive
-     * @param callback @see reactive
-     */
-    function makeKeyObserver(methodName, target, callback) {
-        return (key) => {
-            key = toRaw(key);
-            observeTargetKey(target, key, callback);
-            return possiblyReactive(target[methodName](key), callback);
-        };
-    }
-    /**
-     * Creates an iterable that will delegate to the underlying iteration method and
-     * observe keys as necessary.
-     *
-     * @param methodName name of the method to delegate to
-     * @param target @see reactive
-     * @param callback @see reactive
-     */
-    function makeIteratorObserver(methodName, target, callback) {
-        return function* () {
-            observeTargetKey(target, KEYCHANGES, callback);
-            const keys = target.keys();
-            for (const item of target[methodName]()) {
-                const key = keys.next().value;
-                observeTargetKey(target, key, callback);
-                yield possiblyReactive(item, callback);
-            }
-        };
-    }
-    /**
-     * Creates a forEach function that will delegate to forEach on the underlying
-     * collection while observing key changes, and keys as they're iterated over,
-     * and making the passed keys/values reactive.
-     *
-     * @param target @see reactive
-     * @param callback @see reactive
-     */
-    function makeForEachObserver(target, callback) {
-        return function forEach(forEachCb, thisArg) {
-            observeTargetKey(target, KEYCHANGES, callback);
-            target.forEach(function (val, key, targetObj) {
-                observeTargetKey(target, key, callback);
-                forEachCb.call(thisArg, possiblyReactive(val, callback), possiblyReactive(key, callback), possiblyReactive(targetObj, callback));
-            }, thisArg);
-        };
-    }
-    /**
-     * Creates a function that will delegate to an underlying method, and check if
-     * that method has modified the presence or value of a key, and notify the
-     * reactives appropriately.
-     *
-     * @param setterName name of the method to delegate to
-     * @param getterName name of the method which should be used to retrieve the
-     *  value before calling the delegate method for comparison purposes
-     * @param target @see reactive
-     */
-    function delegateAndNotify(setterName, getterName, target) {
-        return (key, value) => {
-            key = toRaw(key);
-            const hadKey = target.has(key);
-            const originalValue = target[getterName](key);
-            const ret = target[setterName](key, value);
-            const hasKey = target.has(key);
-            if (hadKey !== hasKey) {
-                notifyReactives(target, KEYCHANGES);
-            }
-            if (originalValue !== target[getterName](key)) {
-                notifyReactives(target, key);
-            }
-            return ret;
-        };
-    }
-    /**
-     * Creates a function that will clear the underlying collection and notify that
-     * the keys of the collection have changed.
-     *
-     * @param target @see reactive
-     */
-    function makeClearNotifier(target) {
-        return () => {
-            const allKeys = [...target.keys()];
-            target.clear();
-            notifyReactives(target, KEYCHANGES);
-            for (const key of allKeys) {
-                notifyReactives(target, key);
-            }
-        };
-    }
-    /**
-     * Maps raw type of an object to an object containing functions that can be used
-     * to build an appropritate proxy handler for that raw type. Eg: when making a
-     * reactive set, calling the has method should mark the key that is being
-     * retrieved as observed, and calling the add or delete method should notify the
-     * reactives that the key which is being added or deleted has been modified.
-     */
-    const rawTypeToFuncHandlers = {
-        Set: (target, callback) => ({
-            has: makeKeyObserver("has", target, callback),
-            add: delegateAndNotify("add", "has", target),
-            delete: delegateAndNotify("delete", "has", target),
-            keys: makeIteratorObserver("keys", target, callback),
-            values: makeIteratorObserver("values", target, callback),
-            entries: makeIteratorObserver("entries", target, callback),
-            [Symbol.iterator]: makeIteratorObserver(Symbol.iterator, target, callback),
-            forEach: makeForEachObserver(target, callback),
-            clear: makeClearNotifier(target),
-            get size() {
-                observeTargetKey(target, KEYCHANGES, callback);
-                return target.size;
-            },
-        }),
-        Map: (target, callback) => ({
-            has: makeKeyObserver("has", target, callback),
-            get: makeKeyObserver("get", target, callback),
-            set: delegateAndNotify("set", "get", target),
-            delete: delegateAndNotify("delete", "has", target),
-            keys: makeIteratorObserver("keys", target, callback),
-            values: makeIteratorObserver("values", target, callback),
-            entries: makeIteratorObserver("entries", target, callback),
-            [Symbol.iterator]: makeIteratorObserver(Symbol.iterator, target, callback),
-            forEach: makeForEachObserver(target, callback),
-            clear: makeClearNotifier(target),
-            get size() {
-                observeTargetKey(target, KEYCHANGES, callback);
-                return target.size;
-            },
-        }),
-        WeakMap: (target, callback) => ({
-            has: makeKeyObserver("has", target, callback),
-            get: makeKeyObserver("get", target, callback),
-            set: delegateAndNotify("set", "get", target),
-            delete: delegateAndNotify("delete", "has", target),
-        }),
-    };
-    /**
-     * Creates a proxy handler for collections (Set/Map/WeakMap)
-     *
-     * @param callback @see reactive
-     * @param target @see reactive
-     * @returns a proxy handler object
-     */
-    function collectionsProxyHandler(target, callback, targetRawType) {
-        // TODO: if performance is an issue we can create the special handlers lazily when each
-        // property is read.
-        const specialHandlers = rawTypeToFuncHandlers[targetRawType](target, callback);
-        return Object.assign(basicProxyHandler(callback), {
-            // FIXME: probably broken when part of prototype chain since we ignore the receiver
-            get(target, key) {
-                if (objectHasOwnProperty.call(specialHandlers, key)) {
-                    return specialHandlers[key];
-                }
-                observeTargetKey(target, key, callback);
-                return possiblyReactive(target[key], callback);
-            },
-        });
-    }
-
-    let currentNode = null;
-    function saveCurrent() {
-        let n = currentNode;
-        return () => {
-            currentNode = n;
-        };
-    }
-    function getCurrent() {
-        if (!currentNode) {
-            throw new OwlError("No active component (a hook function should only be called in 'setup')");
-        }
-        return currentNode;
-    }
-    function useComponent() {
-        return currentNode.component;
-    }
-    /**
-     * Apply default props (only top level).
-     */
-    function applyDefaultProps(props, defaultProps) {
-        for (let propName in defaultProps) {
-            if (props[propName] === undefined) {
-                props[propName] = defaultProps[propName];
-            }
-        }
-    }
-    // -----------------------------------------------------------------------------
-    // Integration with reactivity system (useState)
-    // -----------------------------------------------------------------------------
-    const batchedRenderFunctions = new WeakMap();
-    /**
-     * Creates a reactive object that will be observed by the current component.
-     * Reading data from the returned object (eg during rendering) will cause the
-     * component to subscribe to that data and be rerendered when it changes.
-     *
-     * @param state the state to observe
-     * @returns a reactive object that will cause the component to re-render on
-     *  relevant changes
-     * @see reactive
-     */
-    function useState(state) {
-        const node = getCurrent();
-        let render = batchedRenderFunctions.get(node);
-        if (!render) {
-            render = batched(node.render.bind(node, false));
-            batchedRenderFunctions.set(node, render);
-            // manual implementation of onWillDestroy to break cyclic dependency
-            node.willDestroy.push(clearReactivesForCallback.bind(null, render));
-        }
-        return reactive(state, render);
-    }
-    class ComponentNode {
-        constructor(C, props, app, parent, parentKey) {
-            this.fiber = null;
-            this.bdom = null;
-            this.status = 0 /* NEW */;
-            this.forceNextRender = false;
-            this.nextProps = null;
-            this.children = Object.create(null);
-            this.refs = {};
-            this.willStart = [];
-            this.willUpdateProps = [];
-            this.willUnmount = [];
-            this.mounted = [];
-            this.willPatch = [];
-            this.patched = [];
-            this.willDestroy = [];
-            currentNode = this;
-            this.app = app;
-            this.parent = parent;
-            this.props = props;
-            this.parentKey = parentKey;
-            const defaultProps = C.defaultProps;
-            props = Object.assign({}, props);
-            if (defaultProps) {
-                applyDefaultProps(props, defaultProps);
-            }
-            const env = (parent && parent.childEnv) || app.env;
-            this.childEnv = env;
-            for (const key in props) {
-                const prop = props[key];
-                if (prop && typeof prop === "object" && targets.has(prop)) {
-                    props[key] = useState(prop);
-                }
-            }
-            this.component = new C(props, env, this);
-            const ctx = Object.assign(Object.create(this.component), { this: this.component });
-            this.renderFn = app.getTemplate(C.template).bind(this.component, ctx, this);
-            this.component.setup();
-            currentNode = null;
-        }
-        mountComponent(target, options) {
-            const fiber = new MountFiber(this, target, options);
-            this.app.scheduler.addFiber(fiber);
-            this.initiateRender(fiber);
-        }
-        async initiateRender(fiber) {
-            this.fiber = fiber;
-            if (this.mounted.length) {
-                fiber.root.mounted.push(fiber);
-            }
-            const component = this.component;
-            try {
-                await Promise.all(this.willStart.map((f) => f.call(component)));
-            }
-            catch (e) {
-                this.app.handleError({ node: this, error: e });
-                return;
-            }
-            if (this.status === 0 /* NEW */ && this.fiber === fiber) {
-                fiber.render();
-            }
-        }
-        async render(deep) {
-            if (this.status >= 2 /* CANCELLED */) {
-                return;
-            }
-            let current = this.fiber;
-            if (current && (current.root.locked || current.bdom === true)) {
-                await Promise.resolve();
-                // situation may have changed after the microtask tick
-                current = this.fiber;
-            }
-            if (current) {
-                if (!current.bdom && !fibersInError.has(current)) {
-                    if (deep) {
-                        // we want the render from this point on to be with deep=true
-                        current.deep = deep;
-                    }
-                    return;
-                }
-                // if current rendering was with deep=true, we want this one to be the same
-                deep = deep || current.deep;
-            }
-            else if (!this.bdom) {
-                return;
-            }
-            const fiber = makeRootFiber(this);
-            fiber.deep = deep;
-            this.fiber = fiber;
-            this.app.scheduler.addFiber(fiber);
-            await Promise.resolve();
-            if (this.status >= 2 /* CANCELLED */) {
-                return;
-            }
-            // We only want to actually render the component if the following two
-            // conditions are true:
-            // * this.fiber: it could be null, in which case the render has been cancelled
-            // * (current || !fiber.parent): if current is not null, this means that the
-            //   render function was called when a render was already occurring. In this
-            //   case, the pending rendering was cancelled, and the fiber needs to be
-            //   rendered to complete the work.  If current is null, we check that the
-            //   fiber has no parent.  If that is the case, the fiber was downgraded from
-            //   a root fiber to a child fiber in the previous microtick, because it was
-            //   embedded in a rendering coming from above, so the fiber will be rendered
-            //   in the next microtick anyway, so we should not render it again.
-            if (this.fiber === fiber && (current || !fiber.parent)) {
-                fiber.render();
-            }
-        }
-        cancel() {
-            this._cancel();
-            delete this.parent.children[this.parentKey];
-            this.app.scheduler.scheduleDestroy(this);
-        }
-        _cancel() {
-            this.status = 2 /* CANCELLED */;
-            const children = this.children;
-            for (let childKey in children) {
-                children[childKey]._cancel();
-            }
-        }
-        destroy() {
-            let shouldRemove = this.status === 1 /* MOUNTED */;
-            this._destroy();
-            if (shouldRemove) {
-                this.bdom.remove();
-            }
-        }
-        _destroy() {
-            const component = this.component;
-            if (this.status === 1 /* MOUNTED */) {
-                for (let cb of this.willUnmount) {
-                    cb.call(component);
-                }
-            }
-            for (let child of Object.values(this.children)) {
-                child._destroy();
-            }
-            if (this.willDestroy.length) {
-                try {
-                    for (let cb of this.willDestroy) {
-                        cb.call(component);
-                    }
-                }
-                catch (e) {
-                    this.app.handleError({ error: e, node: this });
-                }
-            }
-            this.status = 3 /* DESTROYED */;
-        }
-        async updateAndRender(props, parentFiber) {
-            this.nextProps = props;
-            props = Object.assign({}, props);
-            // update
-            const fiber = makeChildFiber(this, parentFiber);
-            this.fiber = fiber;
-            const component = this.component;
-            const defaultProps = component.constructor.defaultProps;
-            if (defaultProps) {
-                applyDefaultProps(props, defaultProps);
-            }
-            currentNode = this;
-            for (const key in props) {
-                const prop = props[key];
-                if (prop && typeof prop === "object" && targets.has(prop)) {
-                    props[key] = useState(prop);
-                }
-            }
-            currentNode = null;
-            const prom = Promise.all(this.willUpdateProps.map((f) => f.call(component, props)));
-            await prom;
-            if (fiber !== this.fiber) {
-                return;
-            }
-            component.props = props;
-            fiber.render();
-            const parentRoot = parentFiber.root;
-            if (this.willPatch.length) {
-                parentRoot.willPatch.push(fiber);
-            }
-            if (this.patched.length) {
-                parentRoot.patched.push(fiber);
-            }
-        }
-        /**
-         * Finds a child that has dom that is not yet updated, and update it. This
-         * method is meant to be used only in the context of repatching the dom after
-         * a mounted hook failed and was handled.
-         */
-        updateDom() {
-            if (!this.fiber) {
-                return;
-            }
-            if (this.bdom === this.fiber.bdom) {
-                // If the error was handled by some child component, we need to find it to
-                // apply its change
-                for (let k in this.children) {
-                    const child = this.children[k];
-                    child.updateDom();
-                }
-            }
-            else {
-                // if we get here, this is the component that handled the error and rerendered
-                // itself, so we can simply patch the dom
-                this.bdom.patch(this.fiber.bdom, false);
-                this.fiber.appliedToDom = true;
-                this.fiber = null;
-            }
-        }
-        /**
-         * Sets a ref to a given HTMLElement.
-         *
-         * @param name the name of the ref to set
-         * @param el the HTMLElement to set the ref to. The ref is not set if the el
-         *  is null, but useRef will not return elements that are not in the DOM
-         */
-        setRef(name, el) {
-            if (el) {
-                this.refs[name] = el;
-            }
-        }
-        // ---------------------------------------------------------------------------
-        // Block DOM methods
-        // ---------------------------------------------------------------------------
-        firstNode() {
-            const bdom = this.bdom;
-            return bdom ? bdom.firstNode() : undefined;
-        }
-        mount(parent, anchor) {
-            const bdom = this.fiber.bdom;
-            this.bdom = bdom;
-            bdom.mount(parent, anchor);
-            this.status = 1 /* MOUNTED */;
-            this.fiber.appliedToDom = true;
-            this.children = this.fiber.childrenMap;
-            this.fiber = null;
-        }
-        moveBeforeDOMNode(node, parent) {
-            this.bdom.moveBeforeDOMNode(node, parent);
-        }
-        moveBeforeVNode(other, afterNode) {
-            this.bdom.moveBeforeVNode(other ? other.bdom : null, afterNode);
-        }
-        patch() {
-            if (this.fiber && this.fiber.parent) {
-                // we only patch here renderings coming from above. renderings initiated
-                // by the component will be patched independently in the appropriate
-                // fiber.complete
-                this._patch();
-                this.props = this.nextProps;
-            }
-        }
-        _patch() {
-            let hasChildren = false;
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            for (let _k in this.children) {
-                hasChildren = true;
-                break;
-            }
-            const fiber = this.fiber;
-            this.children = fiber.childrenMap;
-            this.bdom.patch(fiber.bdom, hasChildren);
-            fiber.appliedToDom = true;
-            this.fiber = null;
-        }
-        beforeRemove() {
-            this._destroy();
-        }
-        remove() {
-            this.bdom.remove();
-        }
-        // ---------------------------------------------------------------------------
-        // Some debug helpers
-        // ---------------------------------------------------------------------------
-        get name() {
-            return this.component.constructor.name;
-        }
-        get subscriptions() {
-            const render = batchedRenderFunctions.get(this);
-            return render ? getSubscriptions(render) : [];
-        }
-    }
-
-    const TIMEOUT = Symbol("timeout");
-    const HOOK_TIMEOUT = {
-        onWillStart: 3000,
-        onWillUpdateProps: 3000,
-    };
-    function wrapError(fn, hookName) {
-        const error = new OwlError();
-        const timeoutError = new OwlError();
-        const node = getCurrent();
-        return (...args) => {
-            const onError = (cause) => {
-                error.cause = cause;
-                error.message =
-                    cause instanceof Error
-                        ? `The following error occurred in ${hookName}: "${cause.message}"`
-                        : `Something that is not an Error was thrown in ${hookName} (see this Error's "cause" property)`;
-                throw error;
-            };
-            let result;
-            try {
-                result = fn(...args);
-            }
-            catch (cause) {
-                onError(cause);
-            }
-            if (!(result instanceof Promise)) {
-                return result;
-            }
-            const timeout = HOOK_TIMEOUT[hookName];
-            if (timeout) {
-                const fiber = node.fiber;
-                Promise.race([
-                    result.catch(() => { }),
-                    new Promise((resolve) => setTimeout(() => resolve(TIMEOUT), timeout)),
-                ]).then((res) => {
-                    if (res === TIMEOUT && node.fiber === fiber && node.status <= 2) {
-                        timeoutError.message = `${hookName}'s promise hasn't resolved after ${timeout / 1000} seconds`;
-                        console.log(timeoutError);
-                    }
-                });
-            }
-            return result.catch(onError);
-        };
-    }
     // -----------------------------------------------------------------------------
     //  hooks
     // -----------------------------------------------------------------------------
+    function decorate(node, f, hookName) {
+        const result = f.bind(node.component);
+        if (node.app.dev) {
+            const suffix = f.name ? ` <${f.name}>` : "";
+            Reflect.defineProperty(result, "name", {
+                value: hookName + suffix,
+            });
+        }
+        return result;
+    }
     function onWillStart(fn) {
-        const node = getCurrent();
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.willStart.push(decorate(fn.bind(node.component), "onWillStart"));
+        const { node } = getContext("component");
+        node.willStart.push(decorate(node, fn, "onWillStart"));
     }
     function onWillUpdateProps(fn) {
-        const node = getCurrent();
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.willUpdateProps.push(decorate(fn.bind(node.component), "onWillUpdateProps"));
+        const { node } = getContext("component");
+        node.willUpdateProps.push(decorate(node, fn, "onWillUpdateProps"));
     }
     function onMounted(fn) {
-        const node = getCurrent();
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.mounted.push(decorate(fn.bind(node.component), "onMounted"));
+        const { node } = getContext("component");
+        node.mounted.push(decorate(node, fn, "onMounted"));
     }
     function onWillPatch(fn) {
-        const node = getCurrent();
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.willPatch.unshift(decorate(fn.bind(node.component), "onWillPatch"));
+        const { node } = getContext("component");
+        node.willPatch.unshift(decorate(node, fn, "onWillPatch"));
     }
     function onPatched(fn) {
-        const node = getCurrent();
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.patched.push(decorate(fn.bind(node.component), "onPatched"));
+        const { node } = getContext("component");
+        node.patched.push(decorate(node, fn, "onPatched"));
     }
     function onWillUnmount(fn) {
-        const node = getCurrent();
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.willUnmount.unshift(decorate(fn.bind(node.component), "onWillUnmount"));
+        const { node } = getContext("component");
+        node.willUnmount.unshift(decorate(node, fn, "onWillUnmount"));
     }
     function onWillDestroy(fn) {
-        const node = getCurrent();
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        node.willDestroy.push(decorate(fn.bind(node.component), "onWillDestroy"));
-    }
-    function onWillRender(fn) {
-        const node = getCurrent();
-        const renderFn = node.renderFn;
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        fn = decorate(fn.bind(node.component), "onWillRender");
-        node.renderFn = () => {
-            fn();
-            return renderFn();
-        };
-    }
-    function onRendered(fn) {
-        const node = getCurrent();
-        const renderFn = node.renderFn;
-        const decorate = node.app.dev ? wrapError : (fn) => fn;
-        fn = decorate(fn.bind(node.component), "onRendered");
-        node.renderFn = () => {
-            const result = renderFn();
-            fn();
-            return result;
-        };
+        const context = getContext();
+        if (context.type === "component") {
+            context.node.willDestroy.unshift(decorate(context.node, fn, "onWillDestroy"));
+        }
+        else {
+            context.manager.onDestroyCb.push(fn);
+        }
     }
     function onError(callback) {
-        const node = getCurrent();
+        const { node } = getContext("component");
         let handlers = nodeErrorHandlers.get(node);
         if (!handlers) {
             handlers = [];
@@ -2789,24 +1842,445 @@
         handlers.push(callback.bind(node.component));
     }
 
-    class Component {
-        constructor(props, env, node) {
-            this.props = props;
-            this.env = env;
-            this.__owl__ = node;
+    var ComputationState;
+    (function (ComputationState) {
+        ComputationState[ComputationState["EXECUTED"] = 0] = "EXECUTED";
+        ComputationState[ComputationState["STALE"] = 1] = "STALE";
+        ComputationState[ComputationState["PENDING"] = 2] = "PENDING";
+    })(ComputationState || (ComputationState = {}));
+    const atomSymbol = Symbol("Atom");
+    let observers = [];
+    let currentComputation;
+    function createComputation(options = {}) {
+        return {
+            state: ComputationState.STALE,
+            value: undefined,
+            compute() { },
+            sources: new Set(),
+            observers: new Set(),
+            isDerived: false,
+            ...options,
+        };
+    }
+    function onReadAtom(atom) {
+        if (!currentComputation) {
+            return;
         }
-        setup() { }
-        render(deep = false) {
-            this.__owl__.render(deep === true);
+        currentComputation.sources.add(atom);
+        atom.observers.add(currentComputation);
+    }
+    function onWriteAtom(atom) {
+        for (const ctx of atom.observers) {
+            if (ctx.state === ComputationState.EXECUTED) {
+                if (ctx.isDerived) {
+                    markDownstream(ctx);
+                }
+                else {
+                    observers.push(ctx);
+                }
+            }
+            ctx.state = ComputationState.STALE;
+        }
+        batchProcessEffects();
+    }
+    const batchProcessEffects = batched(processEffects);
+    function processEffects() {
+        const length = observers.length;
+        for (let i = 0; i < length; i++) {
+            updateComputation(observers[i]);
+        }
+        observers = [];
+    }
+    function getCurrentComputation() {
+        return currentComputation;
+    }
+    function setComputation(computation) {
+        currentComputation = computation;
+    }
+    function updateComputation(computation) {
+        const state = computation.state;
+        if (state === ComputationState.EXECUTED) {
+            return;
+        }
+        if (state === ComputationState.PENDING) {
+            for (const source of computation.sources) {
+                if (!("compute" in source)) {
+                    continue;
+                }
+                updateComputation(source);
+            }
+            // If the state is still not stale after processing the sources, it means
+            // none of the dependencies have changed.
+            // todo: test it
+            if (computation.state !== ComputationState.STALE) {
+                computation.state = ComputationState.EXECUTED;
+                return;
+            }
+        }
+        // todo: test performance. We might want to avoid removing the atoms to
+        // directly re-add them at compute. Especially as we are making them stale.
+        removeSources(computation);
+        const previousComputation = currentComputation;
+        currentComputation = computation;
+        computation.value = computation.compute();
+        computation.state = ComputationState.EXECUTED;
+        currentComputation = previousComputation;
+    }
+    function removeSources(computation) {
+        const sources = computation.sources;
+        for (const source of sources) {
+            const observers = source.observers;
+            observers.delete(computation);
+            // todo: if source has no effect observer anymore, remove its sources too
+            // todo: test it
+        }
+        sources.clear();
+    }
+    function markDownstream(computation) {
+        for (const observer of computation.observers) {
+            // if the state has already been marked, skip it
+            if (observer.state) {
+                continue;
+            }
+            observer.state = ComputationState.PENDING;
+            if (observer.isDerived) {
+                markDownstream(observer);
+            }
+            else {
+                observers.push(observer);
+            }
         }
     }
-    Component.template = "";
+    function untrack(fn) {
+        const previousComputation = currentComputation;
+        currentComputation = undefined;
+        let result;
+        try {
+            result = fn();
+        }
+        finally {
+            currentComputation = previousComputation;
+        }
+        return result;
+    }
+
+    const anyType = function validateAny() { };
+    const booleanType = function validateBoolean(context) {
+        if (typeof context.value !== "boolean") {
+            context.addIssue({ message: "value is not a boolean" });
+        }
+    };
+    const numberType = function validateNumber(context) {
+        if (typeof context.value !== "number") {
+            context.addIssue({ message: "value is not a number" });
+        }
+    };
+    const stringType = function validateString(context) {
+        if (typeof context.value !== "string") {
+            context.addIssue({ message: "value is not a string" });
+        }
+    };
+    function arrayType(elementType) {
+        return function validateArray(context) {
+            if (!Array.isArray(context.value)) {
+                context.addIssue({ message: "value is not an array" });
+                return;
+            }
+            if (!elementType) {
+                return;
+            }
+            for (let index = 0; index < context.value.length; index++) {
+                context.withKey(index).validate(elementType);
+            }
+        };
+    }
+    function constructorType(constructor) {
+        return function validateConstructor(context) {
+            if (!(typeof context.value === "function") ||
+                !(context.value === constructor || context.value.prototype instanceof constructor)) {
+                context.addIssue({ message: `value is not '${constructor.name}' or an extension` });
+            }
+        };
+    }
+    function customValidator(type, validator, errorMessage = "value does not match custom validation") {
+        return function validateCustom(context) {
+            context.validate(type);
+            if (!context.isValid) {
+                return;
+            }
+            if (!validator(context.value)) {
+                context.addIssue({ message: errorMessage });
+            }
+        };
+    }
+    function functionType(parameters = [], result = undefined) {
+        return function validateFunction(context) {
+            if (typeof context.value !== "function") {
+                context.addIssue({ message: "value is not a function" });
+            }
+        };
+    }
+    function instanceType(constructor) {
+        return function validateInstanceType(context) {
+            if (!(context.value instanceof constructor)) {
+                context.addIssue({ message: `value is not an instance of '${constructor.name}'` });
+            }
+        };
+    }
+    function literalType(literal) {
+        return function validateLiteral(context) {
+            if (context.value !== literal) {
+                context.addIssue({
+                    message: `value is not equal to ${typeof literal === "string" ? `'${literal}'` : literal}`,
+                });
+            }
+        };
+    }
+    function validateObjectShape(context, shape) {
+        const missingKeys = [];
+        for (const key in shape) {
+            const property = key.endsWith("?") ? key.slice(0, -1) : key;
+            if (context.value[property] === undefined) {
+                if (!key.endsWith("?")) {
+                    missingKeys.push(property);
+                }
+                continue;
+            }
+            context.withKey(property).validate(shape[key]);
+        }
+        if (missingKeys.length) {
+            context.addIssue({
+                message: "object value have missing keys",
+                missingKeys,
+            });
+        }
+    }
+    function validateObjectKeys(context, keys) {
+        const missingKeys = keys.filter((key) => {
+            if (key.endsWith("?")) {
+                return false;
+            }
+            return !(key in context.value);
+        });
+        if (missingKeys.length) {
+            context.addIssue({
+                message: "object value have missing keys",
+                missingKeys,
+            });
+        }
+    }
+    function objectType(schema = {}) {
+        return function validateObject(context) {
+            if (typeof context.value !== "object" ||
+                Array.isArray(context.value) ||
+                context.value === null) {
+                context.addIssue({ message: "value is not an object" });
+                return;
+            }
+            if (!schema) {
+                return;
+            }
+            if (Array.isArray(schema)) {
+                validateObjectKeys(context, schema);
+            }
+            else {
+                validateObjectShape(context, schema);
+            }
+        };
+    }
+    function promiseType(type) {
+        return function validatePromise(context) {
+            if (!(context.value instanceof Promise)) {
+                context.addIssue({ message: "value is not a promise" });
+            }
+        };
+    }
+    function recordType(valueType) {
+        return function validateRecord(context) {
+            if (typeof context.value !== "object" ||
+                Array.isArray(context.value) ||
+                context.value === null) {
+                context.addIssue({ message: "value is not an object" });
+                return;
+            }
+            if (!valueType) {
+                return;
+            }
+            for (const key in context.value) {
+                context.withKey(key).validate(valueType);
+            }
+        };
+    }
+    function tuple(types) {
+        return function validateTuple(context) {
+            if (!Array.isArray(context.value)) {
+                context.addIssue({ message: "value is not an array" });
+                return;
+            }
+            if (context.value.length !== types.length) {
+                context.addIssue({ message: "tuple value does not have the correct length" });
+                return;
+            }
+            for (let index = 0; index < types.length; index++) {
+                context.withKey(index).validate(types[index]);
+            }
+        };
+    }
+    function union(types) {
+        return function validateUnion(context) {
+            let firstIssueIndex = 0;
+            const subIssues = [];
+            for (const type of types) {
+                const subContext = context.withIssues(subIssues);
+                subContext.validate(type);
+                if (subIssues.length === firstIssueIndex || subContext.issueDepth > 0) {
+                    context.mergeIssues(subIssues.slice(firstIssueIndex));
+                    return;
+                }
+                firstIssueIndex = subIssues.length;
+            }
+            context.addIssue({
+                message: "value does not match union type",
+                subIssues,
+            });
+        };
+    }
+    function reactiveValueType(type) {
+        return function validateReactiveValue(context) {
+            if (typeof context.value !== "function" || !context.value[atomSymbol]) {
+                context.addIssue({ message: "value is not a reactive value" });
+            }
+        };
+    }
+    const types = {
+        any: anyType,
+        array: arrayType,
+        boolean: booleanType,
+        constructor: constructorType,
+        customValidator: customValidator,
+        function: functionType,
+        instanceOf: instanceType,
+        literal: literalType,
+        number: numberType,
+        object: objectType,
+        promise: promiseType,
+        signal: reactiveValueType,
+        record: recordType,
+        string: stringType,
+        tuple: tuple,
+        union: union,
+    };
+
+    function assertType(value, validation, errorMessage = "Value does not match the type") {
+        const issues = validateType(value, validation);
+        if (issues.length) {
+            const issueStrings = JSON.stringify(issues, (key, value) => {
+                if (typeof value === "function") {
+                    return value.name;
+                }
+                return value;
+            }, 2);
+            throw new OwlError(`${errorMessage}\n${issueStrings}`);
+        }
+    }
+    function createContext$1(issues, value, path, parent) {
+        return {
+            issueDepth: 0,
+            path,
+            value,
+            get isValid() {
+                return !issues.length;
+            },
+            addIssue(issue) {
+                issues.push({
+                    received: this.value,
+                    path: this.path,
+                    ...issue,
+                });
+            },
+            mergeIssues(newIssues) {
+                issues.push(...newIssues);
+            },
+            validate(type) {
+                type(this);
+                if (!this.isValid && parent) {
+                    parent.issueDepth = this.issueDepth + 1;
+                }
+            },
+            withIssues(issues) {
+                return createContext$1(issues, this.value, this.path, this);
+            },
+            withKey(key) {
+                return createContext$1(issues, this.value[key], this.path.concat(key), this);
+            },
+        };
+    }
+    function validateType(value, validation) {
+        const issues = [];
+        validation(createContext$1(issues, value, []));
+        return issues;
+    }
+
+    function validateObjectWithDefaults(schema, defaultValues) {
+        const keys = Array.isArray(schema) ? schema : Object.keys(schema);
+        const mandatoryDefaultedKeys = keys.filter((key) => !key.endsWith("?") && key in defaultValues);
+        return (context) => {
+            if (mandatoryDefaultedKeys.length) {
+                context.addIssue({
+                    message: "props have default values on mandatory keys",
+                    keys: mandatoryDefaultedKeys,
+                });
+            }
+            context.validate(types.object(schema));
+        };
+    }
+    function props(type, defaults) {
+        const { node, app, componentName } = getContext("component");
+        function getProp(key) {
+            if (node.props[key] === undefined && defaults) {
+                return defaults[key];
+            }
+            return node.props[key];
+        }
+        const result = Object.create(null);
+        function applyPropGetters(keys) {
+            for (const key of keys) {
+                Reflect.defineProperty(result, key, {
+                    enumerable: true,
+                    get: getProp.bind(null, key),
+                });
+            }
+        }
+        if (type) {
+            const keys = (Array.isArray(type) ? type : Object.keys(type)).map((key) => key.endsWith("?") ? key.slice(0, -1) : key);
+            applyPropGetters(keys);
+            if (app.dev) {
+                const validation = defaults ? validateObjectWithDefaults(type, defaults) : types.object(type);
+                assertType(node.props, validation, `Invalid component props (${componentName})`);
+                node.willUpdateProps.push((np) => {
+                    assertType(np, validation, `Invalid component props (${componentName})`);
+                });
+            }
+        }
+        else {
+            applyPropGetters(Object.keys(node.props));
+            node.willUpdateProps.push((np) => {
+                for (let key in result) {
+                    Reflect.deleteProperty(result, key);
+                }
+                applyPropGetters(Object.keys(np));
+            });
+        }
+        return result;
+    }
 
     const VText = text("").constructor;
     class VPortal extends VText {
+        content;
+        selector;
+        target = null;
         constructor(selector, content) {
             super("");
-            this.target = null;
             this.selector = selector;
             this.content = content;
         }
@@ -2847,16 +2321,20 @@
     function portalTemplate(app, bdom, helpers) {
         let { callSlot } = helpers;
         return function template(ctx, node, key = "") {
-            return new VPortal(ctx.props.target, callSlot(ctx, node, key, "default", false, null));
+            return new VPortal(ctx.this.props.target, callSlot(ctx, node, key, "default", false, null));
         };
     }
     class Portal extends Component {
+        static template = "__portal__";
+        props = props({
+            target: types.string,
+        });
         setup() {
             const node = this.__owl__;
             onMounted(() => {
                 const portal = node.bdom;
                 if (!portal.target) {
-                    const target = document.querySelector(this.props.target);
+                    const target = document.querySelector(node.props.target);
                     if (target) {
                         portal.content.moveBeforeDOMNode(target.firstChild, target);
                     }
@@ -2871,164 +2349,389 @@
             });
         }
     }
-    Portal.template = "__portal__";
-    Portal.props = {
-        target: {
-            type: String,
-        },
-        slots: true,
-    };
 
-    // -----------------------------------------------------------------------------
-    // helpers
-    // -----------------------------------------------------------------------------
-    const isUnionType = (t) => Array.isArray(t);
-    const isBaseType = (t) => typeof t !== "object";
-    const isValueType = (t) => typeof t === "object" && t && "value" in t;
-    function isOptional(t) {
-        return typeof t === "object" && "optional" in t ? t.optional || false : false;
-    }
-    function describeType(type) {
-        return type === "*" || type === true ? "value" : type.name.toLowerCase();
-    }
-    function describe(info) {
-        if (isBaseType(info)) {
-            return describeType(info);
-        }
-        else if (isUnionType(info)) {
-            return info.map(describe).join(" or ");
-        }
-        else if (isValueType(info)) {
-            return String(info.value);
-        }
-        if ("element" in info) {
-            return `list of ${describe({ type: info.element, optional: false })}s`;
-        }
-        if ("shape" in info) {
-            return `object`;
-        }
-        return describe(info.type || "*");
-    }
-    function toSchema(spec) {
-        return Object.fromEntries(spec.map((e) => e.endsWith("?") ? [e.slice(0, -1), { optional: true }] : [e, { type: "*", optional: false }]));
+    // Special key to subscribe to, to be notified of key creation/deletion
+    const KEYCHANGES = Symbol("Key changes");
+    const objectToString = Object.prototype.toString;
+    const objectHasOwnProperty = Object.prototype.hasOwnProperty;
+    // Use arrays because Array.includes is faster than Set.has for small arrays
+    const SUPPORTED_RAW_TYPES = ["Object", "Array", "Set", "Map", "WeakMap"];
+    const COLLECTION_RAW_TYPES = ["Set", "Map", "WeakMap"];
+    /**
+     * extract "RawType" from strings like "[object RawType]" => this lets us ignore
+     * many native objects such as Promise (whose toString is [object Promise])
+     * or Date ([object Date]), while also supporting collections without using
+     * instanceof in a loop
+     *
+     * @param obj the object to check
+     * @returns the raw type of the object
+     */
+    function rawType(obj) {
+        return objectToString.call(toRaw(obj)).slice(8, -1);
     }
     /**
-     * Main validate function
+     * Checks whether a given value can be made into a proxy object.
+     *
+     * @param value the value to check
+     * @returns whether the value can be made proxy
      */
-    function validate(obj, spec) {
-        let errors = validateSchema(obj, spec);
-        if (errors.length) {
-            throw new OwlError("Invalid object: " + errors.join(", "));
+    function canBeMadeReactive(value) {
+        if (typeof value !== "object") {
+            return false;
         }
+        return SUPPORTED_RAW_TYPES.includes(rawType(value));
     }
     /**
-     * Helper validate function, to get the list of errors. useful if one want to
-     * manipulate the errors without parsing an error object
+     * Creates a proxy from the given object/callback if possible and returns it,
+     * returns the original object otherwise.
+     *
+     * @param value the value make proxy
+     * @returns a proxy for the given object when possible, the original otherwise
      */
-    function validateSchema(obj, schema) {
-        if (Array.isArray(schema)) {
-            schema = toSchema(schema);
-        }
-        obj = toRaw(obj);
-        let errors = [];
-        // check if each value in obj has correct shape
-        for (let key in obj) {
-            if (key in schema) {
-                let result = validateType(key, obj[key], schema[key]);
-                if (result) {
-                    errors.push(result);
-                }
-            }
-            else if (!("*" in schema)) {
-                errors.push(`unknown key '${key}'`);
-            }
-        }
-        // check that all specified keys are defined in obj
-        for (let key in schema) {
-            const spec = schema[key];
-            if (key !== "*" && !isOptional(spec) && !(key in obj)) {
-                const isObj = typeof spec === "object" && !Array.isArray(spec);
-                const isAny = spec === "*" || (isObj && "type" in spec ? spec.type === "*" : isObj);
-                let detail = isAny ? "" : ` (should be a ${describe(spec)})`;
-                errors.push(`'${key}' is missing${detail}`);
-            }
-        }
-        return errors;
+    function possiblyReactive(val, atom) {
+        return !atom && canBeMadeReactive(val) ? proxy(val) : val;
     }
-    function validateBaseType(key, value, type) {
-        if (typeof type === "function") {
-            if (typeof value === "object") {
-                if (!(value instanceof type)) {
-                    return `'${key}' is not a ${describeType(type)}`;
-                }
-            }
-            else if (typeof value !== type.name.toLowerCase()) {
-                return `'${key}' is not a ${describeType(type)}`;
-            }
-        }
-        return null;
+    const skipped = new WeakSet();
+    /**
+     * Mark an object or array so that it is ignored by the reactivity system
+     *
+     * @param value the value to mark
+     * @returns the object itself
+     */
+    function markRaw(value) {
+        skipped.add(value);
+        return value;
     }
-    function validateArrayType(key, value, descr) {
-        if (!Array.isArray(value)) {
-            return `'${key}' is not a list of ${describe(descr)}s`;
-        }
-        for (let i = 0; i < value.length; i++) {
-            const error = validateType(`${key}[${i}]`, value[i], descr);
-            if (error) {
-                return error;
-            }
-        }
-        return null;
+    /**
+     * Given a proxy objet, return the raw (non proxy) underlying object
+     *
+     * @param value a proxy value
+     * @returns the underlying value
+     */
+    function toRaw(value) {
+        return targets.has(value) ? targets.get(value) : value;
     }
-    function validateType(key, value, descr) {
-        if (value === undefined) {
-            return isOptional(descr) ? null : `'${key}' is undefined (should be a ${describe(descr)})`;
+    const targetToKeysToAtomItem = new WeakMap();
+    function getTargetKeyAtom(target, key) {
+        let keyToAtomItem = targetToKeysToAtomItem.get(target);
+        if (!keyToAtomItem) {
+            keyToAtomItem = new Map();
+            targetToKeysToAtomItem.set(target, keyToAtomItem);
         }
-        else if (isBaseType(descr)) {
-            return validateBaseType(key, value, descr);
+        let atom = keyToAtomItem.get(key);
+        if (!atom) {
+            atom = {
+                value: undefined,
+                observers: new Set(),
+            };
+            keyToAtomItem.set(key, atom);
         }
-        else if (isValueType(descr)) {
-            return value === descr.value ? null : `'${key}' is not equal to '${descr.value}'`;
-        }
-        else if (isUnionType(descr)) {
-            let validDescr = descr.find((p) => !validateType(key, value, p));
-            return validDescr ? null : `'${key}' is not a ${describe(descr)}`;
-        }
-        let result = null;
-        if ("element" in descr) {
-            result = validateArrayType(key, value, descr.element);
-        }
-        else if ("shape" in descr) {
-            if (typeof value !== "object" || Array.isArray(value)) {
-                result = `'${key}' is not an object`;
+        return atom;
+    }
+    /**
+     * Observes a given key on a target with an callback. The callback will be
+     * called when the given key changes on the target.
+     *
+     * @param target the target whose key should be observed
+     * @param key the key to observe (or Symbol(KEYCHANGES) for key creation
+     *  or deletion)
+     * @param callback the function to call when the key changes
+     */
+    function onReadTargetKey(target, key, atom) {
+        onReadAtom(atom ?? getTargetKeyAtom(target, key));
+    }
+    /**
+     * Notify Reactives that are observing a given target that a key has changed on
+     * the target.
+     *
+     * @param target target whose Reactives should be notified that the target was
+     *  changed.
+     * @param key the key that changed (or Symbol `KEYCHANGES` if a key was created
+     *   or deleted)
+     */
+    function onWriteTargetKey(target, key, atom) {
+        if (!atom) {
+            const keyToAtomItem = targetToKeysToAtomItem.get(target);
+            if (!keyToAtomItem) {
+                return;
             }
-            else {
-                const errors = validateSchema(value, descr.shape);
-                if (errors.length) {
-                    result = `'${key}' doesn't have the correct shape (${errors.join(", ")})`;
+            if (!keyToAtomItem.has(key)) {
+                return;
+            }
+            atom = keyToAtomItem.get(key);
+        }
+        onWriteAtom(atom);
+    }
+    // Maps proxy objects to the underlying target
+    const targets = new WeakMap();
+    const proxyCache = new WeakMap();
+    function proxifyTarget(target, atom) {
+        if (!canBeMadeReactive(target)) {
+            throw new OwlError(`Cannot make the given value reactive`);
+        }
+        if (skipped.has(target)) {
+            return target;
+        }
+        if (targets.has(target)) {
+            // target is reactive, create a reactive on the underlying object instead
+            return target;
+        }
+        const reactive = proxyCache.get(target);
+        if (reactive) {
+            return reactive;
+        }
+        const targetRawType = rawType(target);
+        const handler = COLLECTION_RAW_TYPES.includes(targetRawType)
+            ? collectionsProxyHandler(target, targetRawType, atom)
+            : basicProxyHandler(atom);
+        const proxy = new Proxy(target, handler);
+        proxyCache.set(target, proxy);
+        targets.set(proxy, target);
+        return proxy;
+    }
+    /**
+     * Creates a reactive proxy for an object. Reading data on the proxy object
+     * subscribes to changes to the data. Writing data on the object will cause the
+     * notify callback to be called if there are suscriptions to that data. Nested
+     * objects and arrays are automatically made reactive as well.
+     *
+     * Whenever you are notified of a change, all subscriptions are cleared, and if
+     * you would like to be notified of any further changes, you should go read
+     * the underlying data again. We assume that if you don't go read it again after
+     * being notified, it means that you are no longer interested in that data.
+     *
+     * Subscriptions:
+     * + Reading a property on an object will subscribe you to changes in the value
+     *    of that property.
+     * + Accessing an object's keys (eg with Object.keys or with `for..in`) will
+     *    subscribe you to the creation/deletion of keys. Checking the presence of a
+     *    key on the object with 'in' has the same effect.
+     * - getOwnPropertyDescriptor does not currently subscribe you to the property.
+     *    This is a choice that was made because changing a key's value will trigger
+     *    this trap and we do not want to subscribe by writes. This also means that
+     *    Object.hasOwnProperty doesn't subscribe as it goes through this trap.
+     *
+     * @param target the object for which to create a proxy proxy
+     * @param callback the function to call when an observed property of the
+     *  proxy has changed
+     * @returns a proxy that tracks changes to it
+     */
+    function proxy(target) {
+        return proxifyTarget(target, null);
+    }
+    /**
+     * Creates a basic proxy handler for regular objects and arrays.
+     *
+     * @param callback @see proxy
+     * @returns a proxy handler object
+     */
+    function basicProxyHandler(atom) {
+        return {
+            get(target, key, receiver) {
+                // non-writable non-configurable properties cannot be made proxy
+                const desc = Object.getOwnPropertyDescriptor(target, key);
+                if (desc && !desc.writable && !desc.configurable) {
+                    return Reflect.get(target, key, receiver);
                 }
-            }
-        }
-        else if ("values" in descr) {
-            if (typeof value !== "object" || Array.isArray(value)) {
-                result = `'${key}' is not an object`;
-            }
-            else {
-                const errors = Object.entries(value)
-                    .map(([key, value]) => validateType(key, value, descr.values))
-                    .filter(Boolean);
-                if (errors.length) {
-                    result = `some of the values in '${key}' are invalid (${errors.join(", ")})`;
+                onReadTargetKey(target, key, atom);
+                return possiblyReactive(Reflect.get(target, key, receiver), atom);
+            },
+            set(target, key, value, receiver) {
+                const hadKey = objectHasOwnProperty.call(target, key);
+                const originalValue = Reflect.get(target, key, receiver);
+                const ret = Reflect.set(target, key, toRaw(value), receiver);
+                if (!hadKey && objectHasOwnProperty.call(target, key)) {
+                    onWriteTargetKey(target, KEYCHANGES, atom);
                 }
+                // While Array length may trigger the set trap, it's not actually set by this
+                // method but is updated behind the scenes, and the trap is not called with the
+                // new value. We disable the "same-value-optimization" for it because of that.
+                if (originalValue !== Reflect.get(target, key, receiver) ||
+                    (key === "length" && Array.isArray(target))) {
+                    onWriteTargetKey(target, key, atom);
+                }
+                return ret;
+            },
+            deleteProperty(target, key) {
+                const ret = Reflect.deleteProperty(target, key);
+                // TODO: only notify when something was actually deleted
+                onWriteTargetKey(target, KEYCHANGES, atom);
+                onWriteTargetKey(target, key, atom);
+                return ret;
+            },
+            ownKeys(target) {
+                onReadTargetKey(target, KEYCHANGES, atom);
+                return Reflect.ownKeys(target);
+            },
+            has(target, key) {
+                // TODO: this observes all key changes instead of only the presence of the argument key
+                // observing the key itself would observe value changes instead of presence changes
+                // so we may need a finer grained system to distinguish observing value vs presence.
+                onReadTargetKey(target, KEYCHANGES, atom);
+                return Reflect.has(target, key);
+            },
+        };
+    }
+    /**
+     * Creates a function that will observe the key that is passed to it when called
+     * and delegates to the underlying method.
+     *
+     * @param methodName name of the method to delegate to
+     * @param target @see proxy
+     * @param callback @see proxy
+     */
+    function makeKeyObserver(methodName, target, atom) {
+        return (key) => {
+            key = toRaw(key);
+            onReadTargetKey(target, key, atom);
+            return possiblyReactive(target[methodName](key), atom);
+        };
+    }
+    /**
+     * Creates an iterable that will delegate to the underlying iteration method and
+     * observe keys as necessary.
+     *
+     * @param methodName name of the method to delegate to
+     * @param target @see proxy
+     * @param callback @see proxy
+     */
+    function makeIteratorObserver(methodName, target, atom) {
+        return function* () {
+            onReadTargetKey(target, KEYCHANGES, atom);
+            const keys = target.keys();
+            for (const item of target[methodName]()) {
+                const key = keys.next().value;
+                onReadTargetKey(target, key, atom);
+                yield possiblyReactive(item, atom);
             }
-        }
-        if ("type" in descr && !result) {
-            result = validateType(key, value, descr.type);
-        }
-        if ("validate" in descr && !result) {
-            result = !descr.validate(value) ? `'${key}' is not valid` : null;
-        }
-        return result;
+        };
+    }
+    /**
+     * Creates a forEach function that will delegate to forEach on the underlying
+     * collection while observing key changes, and keys as they're iterated over,
+     * and making the passed keys/values proxy.
+     *
+     * @param target @see proxy
+     * @param callback @see proxy
+     */
+    function makeForEachObserver(target, atom) {
+        return function forEach(forEachCb, thisArg) {
+            onReadTargetKey(target, KEYCHANGES, atom);
+            target.forEach(function (val, key, targetObj) {
+                onReadTargetKey(target, key, atom);
+                forEachCb.call(thisArg, possiblyReactive(val, atom), possiblyReactive(key, atom), possiblyReactive(targetObj, atom));
+            }, thisArg);
+        };
+    }
+    /**
+     * Creates a function that will delegate to an underlying method, and check if
+     * that method has modified the presence or value of a key, and notify the
+     * proxys appropriately.
+     *
+     * @param setterName name of the method to delegate to
+     * @param getterName name of the method which should be used to retrieve the
+     *  value before calling the delegate method for comparison purposes
+     * @param target @see proxy
+     */
+    function delegateAndNotify(setterName, getterName, target, atom) {
+        return (key, value) => {
+            key = toRaw(key);
+            const hadKey = target.has(key);
+            const originalValue = target[getterName](key);
+            const ret = target[setterName](key, value);
+            const hasKey = target.has(key);
+            if (hadKey !== hasKey) {
+                onWriteTargetKey(target, KEYCHANGES, atom);
+            }
+            if (originalValue !== target[getterName](key)) {
+                onWriteTargetKey(target, key, atom);
+            }
+            return ret;
+        };
+    }
+    /**
+     * Creates a function that will clear the underlying collection and notify that
+     * the keys of the collection have changed.
+     *
+     * @param target @see proxy
+     */
+    function makeClearNotifier(target, atom) {
+        return () => {
+            const allKeys = [...target.keys()];
+            target.clear();
+            onWriteTargetKey(target, KEYCHANGES, atom);
+            for (const key of allKeys) {
+                onWriteTargetKey(target, key, atom);
+            }
+        };
+    }
+    /**
+     * Maps raw type of an object to an object containing functions that can be used
+     * to build an appropritate proxy handler for that raw type. Eg: when making a
+     * proxy set, calling the has method should mark the key that is being
+     * retrieved as observed, and calling the add or delete method should notify the
+     * proxys that the key which is being added or deleted has been modified.
+     */
+    const rawTypeToFuncHandlers = {
+        Set: (target, atom) => ({
+            has: makeKeyObserver("has", target, atom),
+            add: delegateAndNotify("add", "has", target, atom),
+            delete: delegateAndNotify("delete", "has", target, atom),
+            keys: makeIteratorObserver("keys", target, atom),
+            values: makeIteratorObserver("values", target, atom),
+            entries: makeIteratorObserver("entries", target, atom),
+            [Symbol.iterator]: makeIteratorObserver(Symbol.iterator, target, atom),
+            forEach: makeForEachObserver(target, atom),
+            clear: makeClearNotifier(target, atom),
+            get size() {
+                onReadTargetKey(target, KEYCHANGES, atom);
+                return target.size;
+            },
+        }),
+        Map: (target, atom) => ({
+            has: makeKeyObserver("has", target, atom),
+            get: makeKeyObserver("get", target, atom),
+            set: delegateAndNotify("set", "get", target, atom),
+            delete: delegateAndNotify("delete", "has", target, atom),
+            keys: makeIteratorObserver("keys", target, atom),
+            values: makeIteratorObserver("values", target, atom),
+            entries: makeIteratorObserver("entries", target, atom),
+            [Symbol.iterator]: makeIteratorObserver(Symbol.iterator, target, atom),
+            forEach: makeForEachObserver(target, atom),
+            clear: makeClearNotifier(target, atom),
+            get size() {
+                onReadTargetKey(target, KEYCHANGES, atom);
+                return target.size;
+            },
+        }),
+        WeakMap: (target, atom) => ({
+            has: makeKeyObserver("has", target, atom),
+            get: makeKeyObserver("get", target, atom),
+            set: delegateAndNotify("set", "get", target, atom),
+            delete: delegateAndNotify("delete", "has", target, atom),
+        }),
+    };
+    /**
+     * Creates a proxy handler for collections (Set/Map/WeakMap)
+     *
+     * @param callback @see proxy
+     * @param target @see proxy
+     * @returns a proxy handler object
+     */
+    function collectionsProxyHandler(target, targetRawType, atom) {
+        // TODO: if performance is an issue we can create the special handlers lazily when each
+        // property is read.
+        const specialHandlers = rawTypeToFuncHandlers[targetRawType](target, atom);
+        return Object.assign(basicProxyHandler(atom), {
+            // FIXME: probably broken when part of prototype chain since we ignore the receiver
+            get(target, key) {
+                if (objectHasOwnProperty.call(specialHandlers, key)) {
+                    return specialHandlers[key];
+                }
+                onReadTargetKey(target, key, atom);
+                return possiblyReactive(target[key], atom);
+            },
+        });
     }
 
     const ObjectCreate = Object.create;
@@ -3041,7 +2744,7 @@
     }
     function callSlot(ctx, parent, key, name, dynamic, extra, defaultContent) {
         key = key + "__slot_" + name;
-        const slots = ctx.props.slots || {};
+        const slots = ctx.__owl__.props.slots || {};
         const { __render, __ctx, __scope } = slots[name] || {};
         const slotScope = ObjectCreate(__ctx || {});
         if (__scope) {
@@ -3123,6 +2826,11 @@
         return true;
     }
     class LazyValue {
+        fn;
+        ctx;
+        component;
+        node;
+        key;
         constructor(fn, ctx, component, node, key) {
             this.fn = fn;
             this.ctx = capture(ctx);
@@ -3146,83 +2854,51 @@
         }
         let safeKey;
         let block;
-        switch (typeof value) {
-            case "object":
-                if (value instanceof Markup) {
-                    safeKey = `string_safe`;
-                    block = html(value);
-                }
-                else if (value instanceof LazyValue) {
-                    safeKey = `lazy_value`;
-                    block = value.evaluate();
-                }
-                else if (value instanceof String) {
-                    safeKey = "string_unsafe";
-                    block = text(value);
-                }
-                else {
-                    // Assuming it is a block
-                    safeKey = "block_safe";
-                    block = value;
-                }
-                break;
-            case "string":
-                safeKey = "string_unsafe";
-                block = text(value);
-                break;
-            default:
-                safeKey = "string_unsafe";
-                block = text(String(value));
+        if (value instanceof Markup) {
+            safeKey = `string_safe`;
+            block = html(value);
+        }
+        else if (value instanceof LazyValue) {
+            safeKey = `lazy_value`;
+            block = value.evaluate();
+        }
+        else {
+            safeKey = "string_unsafe";
+            block = text(value);
         }
         return toggler(safeKey, block);
     }
-    /**
-     * Validate the component props (or next props) against the (static) props
-     * description.  This is potentially an expensive operation: it may needs to
-     * visit recursively the props and all the children to check if they are valid.
-     * This is why it is only done in 'dev' mode.
-     */
-    function validateProps(name, props, comp) {
-        const ComponentClass = typeof name !== "string"
-            ? name
-            : comp.constructor.components[name];
-        if (!ComponentClass) {
-            // this is an error, wrong component. We silently return here instead so the
-            // error is triggered by the usual path ('component' function)
-            return;
+    function createRef(ref) {
+        if (!ref) {
+            throw new OwlError(`Ref is undefined or null`);
         }
-        const schema = ComponentClass.props;
-        if (!schema) {
-            if (comp.__owl__.app.warnIfNoStaticProps) {
-                console.warn(`Component '${ComponentClass.name}' does not have a static props description`);
+        let add;
+        let remove;
+        if (ref.add && ref.delete) {
+            add = ref.add.bind(ref);
+            remove = ref.delete.bind(ref);
+        }
+        else if (ref.set) {
+            add = ref.set.bind(ref);
+            remove = () => ref.set(null);
+        }
+        else {
+            throw new OwlError(`Ref should implement either a 'set' function or 'add' and 'delete' functions`);
+        }
+        return (el, previousEl) => {
+            if (previousEl) {
+                remove(previousEl);
             }
-            return;
-        }
-        const defaultProps = ComponentClass.defaultProps;
-        if (defaultProps) {
-            let isMandatory = (name) => Array.isArray(schema)
-                ? schema.includes(name)
-                : name in schema && !("*" in schema) && !isOptional(schema[name]);
-            for (let p in defaultProps) {
-                if (isMandatory(p)) {
-                    throw new OwlError(`A default value cannot be defined for a mandatory prop (name: '${p}', component: ${ComponentClass.name})`);
-                }
+            if (el) {
+                add(el);
             }
-        }
-        const errors = validateSchema(props, schema);
-        if (errors.length) {
-            throw new OwlError(`Invalid props for component '${ComponentClass.name}': ` + errors.join(", "));
-        }
-    }
-    function makeRefWrapper(node) {
-        let refNames = new Set();
-        return (name, fn) => {
-            if (refNames.has(name)) {
-                throw new OwlError(`Cannot set the same ref more than once in the same component, ref "${name}" was set multiple times in ${node.name}`);
-            }
-            refNames.add(name);
-            return fn;
         };
+    }
+    function modelExpr(value) {
+        if (typeof value !== "function" || typeof value.set !== "function") {
+            throw new OwlError(`Invalid t-model expression: expression should evaluate to a function with a 'set' method defined on it`);
+        }
+        return value;
     }
     const helpers = {
         withDefault,
@@ -3235,57 +2911,31 @@
         setContextValue,
         shallowEqual,
         toNumber,
-        validateProps,
         LazyValue,
         safeOutput,
         createCatcher,
         markRaw,
         OwlError,
-        makeRefWrapper,
+        createRef,
+        modelExpr,
     };
-
-    /**
-     * Parses an XML string into an XML document, throwing errors on parser errors
-     * instead of returning an XML document containing the parseerror.
-     *
-     * @param xml the string to parse
-     * @returns an XML document corresponding to the content of the string
-     */
-    function parseXML(xml) {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(xml, "text/xml");
-        if (doc.getElementsByTagName("parsererror").length) {
-            let msg = "Invalid XML in template.";
-            const parsererrorText = doc.getElementsByTagName("parsererror")[0].textContent;
-            if (parsererrorText) {
-                msg += "\nThe parser has produced the following error message:\n" + parsererrorText;
-                const re = /\d+/g;
-                const firstMatch = re.exec(parsererrorText);
-                if (firstMatch) {
-                    const lineNumber = Number(firstMatch[0]);
-                    const line = xml.split("\n")[lineNumber - 1];
-                    const secondMatch = re.exec(parsererrorText);
-                    if (line && secondMatch) {
-                        const columnIndex = Number(secondMatch[0]) - 1;
-                        if (line[columnIndex]) {
-                            msg +=
-                                `\nThe error might be located at xml line ${lineNumber} column ${columnIndex}\n` +
-                                    `${line}\n${"-".repeat(columnIndex - 1)}^`;
-                        }
-                    }
-                }
-            }
-            throw new OwlError(msg);
-        }
-        return doc;
-    }
 
     const bdom = { text, createBlock, list, multi, html, toggler, comment };
     class TemplateSet {
+        static registerTemplate(name, fn) {
+            globalTemplates[name] = fn;
+        }
+        dev;
+        rawTemplates = Object.create(globalTemplates);
+        templates = {};
+        getRawTemplate;
+        translateFn;
+        translatableAttributes;
+        Portal = Portal;
+        customDirectives;
+        runtimeUtils;
+        hasGlobalValues;
         constructor(config = {}) {
-            this.rawTemplates = Object.create(globalTemplates);
-            this.templates = {};
-            this.Portal = Portal;
             this.dev = config.dev || false;
             this.translateFn = config.translateFn;
             this.translatableAttributes = config.translatableAttributes;
@@ -3303,9 +2953,6 @@
             this.customDirectives = config.customDirectives || {};
             this.runtimeUtils = { ...helpers, __globals__: config.globalValues || {} };
             this.hasGlobalValues = Boolean(config.globalValues && Object.keys(config.globalValues).length);
-        }
-        static registerTemplate(name, fn) {
-            globalTemplates[name] = fn;
         }
         addTemplate(name, template) {
             if (name in this.rawTemplates) {
@@ -3339,13 +2986,12 @@
             }
         }
         getTemplate(name) {
-            var _a;
             if (!(name in this.templates)) {
-                const rawTemplate = ((_a = this.getRawTemplate) === null || _a === void 0 ? void 0 : _a.call(this, name)) || this.rawTemplates[name];
+                const rawTemplate = this.getRawTemplate?.(name) || this.rawTemplates[name];
                 if (rawTemplate === undefined) {
                     let extraInfo = "";
                     try {
-                        const componentName = getCurrent().component.constructor.name;
+                        const { componentName } = getContext("component");
                         extraInfo = ` (for component "${componentName}")`;
                     }
                     catch { }
@@ -3488,7 +3134,7 @@
         let s = expr[0];
         if (s && s.match(/[a-zA-Z_\$]/)) {
             let i = 1;
-            while (expr[i] && expr[i].match(/\w/)) {
+            while (expr[i] && expr[i].match(/[\w\$]/)) {
                 s += expr[i];
                 i++;
             }
@@ -3617,7 +3263,7 @@
                     stack.pop();
             }
             let isVar = token.type === "SYMBOL" && !RESERVED_WORDS.includes(token.value);
-            if (token.type === "SYMBOL" && !RESERVED_WORDS.includes(token.value)) {
+            if (isVar) {
                 if (prevToken) {
                     // normalize missing tokens: {a} should be equivalent to {a:a}
                     if (groupType === "LEFT_BRACE" &&
@@ -3736,14 +3382,22 @@
     // BlockDescription
     // -----------------------------------------------------------------------------
     class BlockDescription {
+        static nextBlockId = 1;
+        varName;
+        blockName;
+        dynamicTagName = null;
+        isRoot = false;
+        hasDynamicChildren = false;
+        children = [];
+        data = [];
+        dom;
+        currentDom;
+        childNumber = 0;
+        target;
+        type;
+        parentVar = "";
+        id;
         constructor(target, type) {
-            this.dynamicTagName = null;
-            this.isRoot = false;
-            this.hasDynamicChildren = false;
-            this.children = [];
-            this.data = [];
-            this.childNumber = 0;
-            this.parentVar = "";
             this.id = BlockDescription.nextBlockId++;
             this.varName = "b" + this.id;
             this.blockName = "block" + this.id;
@@ -3788,7 +3442,6 @@
             return t.innerHTML;
         }
     }
-    BlockDescription.nextBlockId = 1;
     function createContext(parentCtx, params) {
         return Object.assign({
             block: null,
@@ -3802,14 +3455,15 @@
         }, params);
     }
     class CodeTarget {
+        name;
+        indentLevel = 0;
+        loopLevel = 0;
+        code = [];
+        hasRoot = false;
+        hasCache = false;
+        shouldProtectScope = false;
+        on;
         constructor(name, on) {
-            this.indentLevel = 0;
-            this.loopLevel = 0;
-            this.code = [];
-            this.hasRoot = false;
-            this.hasCache = false;
-            this.shouldProtectScope = false;
-            this.hasRefWrapper = false;
             this.name = name;
             this.on = on || null;
         }
@@ -3828,9 +3482,6 @@
             if (this.shouldProtectScope) {
                 result.push(`  ctx = Object.create(ctx);`);
                 result.push(`  ctx[isBoundary] = 1`);
-            }
-            if (this.hasRefWrapper) {
-                result.push(`  let refWrapper = makeRefWrapper(this.__owl__);`);
             }
             if (this.hasCache) {
                 result.push(`  let cache = ctx.cache || {};`);
@@ -3865,16 +3516,21 @@
     ];
     const translationRE = /^(\s*)([\s\S]+?)(\s*)$/;
     class CodeGenerator {
+        blocks = [];
+        nextBlockId = 1;
+        hasSafeContext;
+        isDebug = false;
+        targets = [];
+        target = new CodeTarget("template");
+        templateName;
+        dev;
+        translateFn;
+        translatableAttributes = TRANSLATABLE_ATTRS;
+        ast;
+        staticDefs = [];
+        slotNames = new Set();
+        helpers = new Set();
         constructor(ast, options) {
-            this.blocks = [];
-            this.nextBlockId = 1;
-            this.isDebug = false;
-            this.targets = [];
-            this.target = new CodeTarget("template");
-            this.translatableAttributes = TRANSLATABLE_ATTRS;
-            this.staticDefs = [];
-            this.slotNames = new Set();
-            this.helpers = new Set();
             this.translateFn = options.translateFn || ((s) => s);
             if (options.translatableAttributes) {
                 const attrs = new Set(TRANSLATABLE_ATTRS);
@@ -3898,7 +3554,7 @@
         }
         generateCode() {
             const ast = this.ast;
-            this.isDebug = ast.type === 12 /* TDebug */;
+            this.isDebug = ast.type === 11 /* ASTType.TDebug */;
             BlockDescription.nextBlockId = 1;
             nextDataIds = {};
             this.compileAST(ast, {
@@ -4054,43 +3710,41 @@
          */
         compileAST(ast, ctx) {
             switch (ast.type) {
-                case 1 /* Comment */:
+                case 1 /* ASTType.Comment */:
                     return this.compileComment(ast, ctx);
-                case 0 /* Text */:
+                case 0 /* ASTType.Text */:
                     return this.compileText(ast, ctx);
-                case 2 /* DomNode */:
+                case 2 /* ASTType.DomNode */:
                     return this.compileTDomNode(ast, ctx);
-                case 4 /* TEsc */:
-                    return this.compileTEsc(ast, ctx);
-                case 8 /* TOut */:
+                case 7 /* ASTType.TOut */:
                     return this.compileTOut(ast, ctx);
-                case 5 /* TIf */:
+                case 4 /* ASTType.TIf */:
                     return this.compileTIf(ast, ctx);
-                case 9 /* TForEach */:
+                case 8 /* ASTType.TForEach */:
                     return this.compileTForeach(ast, ctx);
-                case 10 /* TKey */:
+                case 9 /* ASTType.TKey */:
                     return this.compileTKey(ast, ctx);
-                case 3 /* Multi */:
+                case 3 /* ASTType.Multi */:
                     return this.compileMulti(ast, ctx);
-                case 7 /* TCall */:
+                case 6 /* ASTType.TCall */:
                     return this.compileTCall(ast, ctx);
-                case 15 /* TCallBlock */:
+                case 14 /* ASTType.TCallBlock */:
                     return this.compileTCallBlock(ast, ctx);
-                case 6 /* TSet */:
+                case 5 /* ASTType.TSet */:
                     return this.compileTSet(ast, ctx);
-                case 11 /* TComponent */:
+                case 10 /* ASTType.TComponent */:
                     return this.compileComponent(ast, ctx);
-                case 12 /* TDebug */:
+                case 11 /* ASTType.TDebug */:
                     return this.compileDebug(ast, ctx);
-                case 13 /* TLog */:
+                case 12 /* ASTType.TLog */:
                     return this.compileLog(ast, ctx);
-                case 14 /* TSlot */:
-                    return this.compileTSlot(ast, ctx);
-                case 16 /* TTranslation */:
+                case 13 /* ASTType.TCallSlot */:
+                    return this.compileTCallSlot(ast, ctx);
+                case 15 /* ASTType.TTranslation */:
                     return this.compileTTranslation(ast, ctx);
-                case 17 /* TTranslationContext */:
+                case 16 /* ASTType.TTranslationContext */:
                     return this.compileTTranslationContext(ast, ctx);
-                case 18 /* TPortal */:
+                case 17 /* ASTType.TPortal */:
                     return this.compileTPortal(ast, ctx);
             }
         }
@@ -4141,7 +3795,7 @@
                 });
             }
             else {
-                const createFn = ast.type === 0 /* Text */ ? xmlDoc.createTextNode : xmlDoc.createComment;
+                const createFn = ast.type === 0 /* ASTType.Text */ ? xmlDoc.createTextNode : xmlDoc.createComment;
                 block.insert(createFn.call(xmlDoc, value));
             }
             return block.varName;
@@ -4163,7 +3817,6 @@
             return `[${modifiersCode}${this.captureExpression(handler)}, ctx]`;
         }
         compileTDomNode(ast, ctx) {
-            var _a;
             let { block, forceNewBlock } = ctx;
             const isNewBlock = !block || forceNewBlock || ast.dynamicTag !== null || ast.ns;
             let codeIdx = this.target.code.length;
@@ -4219,7 +3872,7 @@
                     }
                 }
                 else if (this.translatableAttributes.includes(key)) {
-                    const attrTranslationCtx = ((_a = ast.attrsTranslationCtx) === null || _a === void 0 ? void 0 : _a[key]) || ctx.translationCtx;
+                    const attrTranslationCtx = ast.attrsTranslationCtx?.[key] || ctx.translationCtx;
                     attrs[key] = this.translateFn(ast.attrs[key], attrTranslationCtx);
                 }
                 else {
@@ -4235,14 +3888,11 @@
             // t-model
             let tModelSelectedExpr;
             if (ast.model) {
-                const { hasDynamicChildren, baseExpr, expr, eventType, shouldNumberize, shouldTrim, targetAttr, specialInitTargetAttr, } = ast.model;
-                const baseExpression = compileExpr(baseExpr);
-                const bExprId = generateId("bExpr");
-                this.define(bExprId, baseExpression);
+                const { hasDynamicChildren, expr, eventType, shouldNumberize, shouldTrim, targetAttr, specialInitTargetAttr, } = ast.model;
                 const expression = compileExpr(expr);
                 const exprId = generateId("expr");
-                this.define(exprId, expression);
-                const fullExpression = `${bExprId}[${exprId}]`;
+                this.helpers.add("modelExpr");
+                this.define(exprId, `modelExpr(${expression})`);
                 let idx;
                 if (specialInitTargetAttr) {
                     let targetExpr = targetAttr in attrs && `'${attrs[targetAttr]}'`;
@@ -4253,23 +3903,23 @@
                             targetExpr = compileExpr(dynamicTgExpr);
                         }
                     }
-                    idx = block.insertData(`${fullExpression} === ${targetExpr}`, "prop");
+                    idx = block.insertData(`${exprId}() === ${targetExpr}`, "prop");
                     attrs[`block-property-${idx}`] = specialInitTargetAttr;
                 }
                 else if (hasDynamicChildren) {
                     const bValueId = generateId("bValue");
                     tModelSelectedExpr = `${bValueId}`;
-                    this.define(tModelSelectedExpr, fullExpression);
+                    this.define(tModelSelectedExpr, `${exprId}()`);
                 }
                 else {
-                    idx = block.insertData(`${fullExpression}`, "prop");
+                    idx = block.insertData(`${exprId}()`, "prop");
                     attrs[`block-property-${idx}`] = targetAttr;
                 }
                 this.helpers.add("toNumber");
                 let valueCode = `ev.target.${targetAttr}`;
                 valueCode = shouldTrim ? `${valueCode}.trim()` : valueCode;
                 valueCode = shouldNumberize ? `toNumber(${valueCode})` : valueCode;
-                const handler = `[(ev) => { ${fullExpression} = ${valueCode}; }]`;
+                const handler = `[(ev) => { ${exprId}.set(${valueCode}); }]`;
                 idx = block.insertData(handler, "hdlr");
                 attrs[`block-handler-${idx}`] = eventType;
             }
@@ -4281,19 +3931,9 @@
             }
             // t-ref
             if (ast.ref) {
-                if (this.dev) {
-                    this.helpers.add("makeRefWrapper");
-                    this.target.hasRefWrapper = true;
-                }
-                const isDynamic = INTERP_REGEXP.test(ast.ref);
-                let name = `\`${ast.ref}\``;
-                if (isDynamic) {
-                    name = replaceDynamicParts(ast.ref, (expr) => this.captureExpression(expr, true));
-                }
-                let setRefStr = `(el) => this.__owl__.setRef((${name}), el)`;
-                if (this.dev) {
-                    setRefStr = `refWrapper(${name}, ${setRefStr})`;
-                }
+                const refExpr = compileExpr(ast.ref);
+                this.helpers.add("createRef");
+                const setRefStr = `createRef(${refExpr})`;
                 const idx = block.insertData(setRefStr, "ref");
                 attrs["block-ref"] = String(idx);
             }
@@ -4347,32 +3987,6 @@
             }
             return block.varName;
         }
-        compileTEsc(ast, ctx) {
-            let { block, forceNewBlock } = ctx;
-            let expr;
-            if (ast.expr === "0") {
-                this.helpers.add("zero");
-                expr = `ctx[zero]`;
-            }
-            else {
-                expr = compileExpr(ast.expr);
-                if (ast.defaultValue) {
-                    this.helpers.add("withDefault");
-                    // FIXME: defaultValue is not translated
-                    expr = `withDefault(${expr}, ${toStringExpression(ast.defaultValue)})`;
-                }
-            }
-            if (!block || forceNewBlock) {
-                block = this.createBlock(block, "text", ctx);
-                this.insertBlock(`text(${expr})`, block, { ...ctx, forceNewBlock: forceNewBlock && !block });
-            }
-            else {
-                const idx = block.insertData(expr, "txt");
-                const text = xmlDoc.createElement(`block-text-${idx}`);
-                block.insert(text);
-            }
-            return block.varName;
-        }
         compileTOut(ast, ctx) {
             let { block } = ctx;
             if (block) {
@@ -4388,7 +4002,7 @@
                 let bodyValue = null;
                 bodyValue = BlockDescription.nextBlockId;
                 const subCtx = createContext(ctx);
-                this.compileAST({ type: 3 /* Multi */, content: ast.body }, subCtx);
+                this.compileAST({ type: 3 /* ASTType.Multi */, content: ast.body }, subCtx);
                 this.helpers.add("safeOutput");
                 blockStr = `safeOutput(${compileExpr(ast.expr)}, b${bodyValue})`;
             }
@@ -4593,7 +4207,7 @@
             let ctxVar = ctx.ctxVar || "ctx";
             if (ast.context) {
                 ctxVar = generateId("ctx");
-                this.addLine(`let ${ctxVar} = ${compileExpr(ast.context)};`);
+                this.addLine(`let ${ctxVar} = {this: ${compileExpr(ast.context)}, __owl__: this.__owl__};`);
             }
             const isDynamic = INTERP_REGEXP.test(ast.name);
             const subTemplate = isDynamic ? interpolate(ast.name) : "`" + ast.name + "`";
@@ -4606,7 +4220,7 @@
                 this.addLine(`${ctxVar}[isBoundary] = 1;`);
                 this.helpers.add("isBoundary");
                 const subCtx = createContext(ctx, { ctxVar });
-                const bl = this.compileMulti({ type: 3 /* Multi */, content: ast.body }, subCtx);
+                const bl = this.compileMulti({ type: 3 /* ASTType.Multi */, content: ast.body }, subCtx);
                 if (bl) {
                     this.helpers.add("zero");
                     this.addLine(`${ctxVar}[zero] = ${bl};`);
@@ -4654,7 +4268,7 @@
             const expr = ast.value ? compileExpr(ast.value || "") : "null";
             if (ast.body) {
                 this.helpers.add("LazyValue");
-                const bodyAst = { type: 3 /* Multi */, content: ast.body };
+                const bodyAst = { type: 3 /* ASTType.Multi */, content: ast.body };
                 const name = this.compileInNewTarget("value", bodyAst, ctx);
                 let key = this.target.currentKey(ctx);
                 let value = `new LazyValue(${name}, ctx, this, node, ${key})`;
@@ -4700,7 +4314,7 @@
          */
         formatProp(name, value, attrsTranslationCtx, translationCtx) {
             if (name.endsWith(".translate")) {
-                const attrTranslationCtx = (attrsTranslationCtx === null || attrsTranslationCtx === void 0 ? void 0 : attrsTranslationCtx[name]) || translationCtx;
+                const attrTranslationCtx = attrsTranslationCtx?.[name] || translationCtx;
                 value = toStringExpression(this.translateFn(value, attrTranslationCtx));
             }
             else {
@@ -4793,9 +4407,6 @@
             else {
                 expr = `\`${ast.name}\``;
             }
-            if (this.dev) {
-                this.addLine(`helpers.validateProps(${expr}, ${propVar}, this);`);
-            }
             if (block && (ctx.forceNewBlock === false || ctx.tKeyExpr)) {
                 // todo: check the forcenewblock condition
                 this.insertAnchor(block);
@@ -4850,7 +4461,7 @@
             this.staticDefs.push({ id: name, expr: `createCatcher(${JSON.stringify(spec)})` });
             return `${name}(${expr}, [${handlers.join(",")}])`;
         }
-        compileTSlot(ast, ctx) {
+        compileTCallSlot(ast, ctx) {
             this.helpers.add("callSlot");
             let { block } = ctx;
             let blockString;
@@ -4967,7 +4578,7 @@
     }
     function _parse(xml, ctx) {
         normalizeXML(xml);
-        return parseNode(xml, ctx) || { type: 0 /* Text */, value: "" };
+        return parseNode(xml, ctx) || { type: 0 /* ASTType.Text */, value: "" };
     }
     function parseNode(node, ctx) {
         if (!(node instanceof Element)) {
@@ -4983,9 +4594,8 @@
             parseTTranslation(node, ctx) ||
             parseTTranslationContext(node, ctx) ||
             parseTKey(node, ctx) ||
-            parseTEscNode(node, ctx) ||
             parseTOutNode(node, ctx) ||
-            parseTSlot(node, ctx) ||
+            parseTCallSlot(node, ctx) ||
             parseComponent(node, ctx) ||
             parseDOMNode(node, ctx) ||
             parseTSetNode(node, ctx) ||
@@ -5010,10 +4620,10 @@
             if (!ctx.inPreTag && lineBreakRE.test(value) && !value.trim()) {
                 return null;
             }
-            return { type: 0 /* Text */, value };
+            return { type: 0 /* ASTType.Text */, value };
         }
         else if (node.nodeType === Node.COMMENT_NODE) {
-            return { type: 1 /* Comment */, value: node.textContent || "" };
+            return { type: 1 /* ASTType.Comment */, value: node.textContent || "" };
         }
         return null;
     }
@@ -5054,10 +4664,10 @@
             node.removeAttribute("t-debug");
             const content = parseNode(node, ctx);
             const ast = {
-                type: 12 /* TDebug */,
+                type: 11 /* ASTType.TDebug */,
                 content,
             };
-            if (content === null || content === void 0 ? void 0 : content.hasNoRepresentation) {
+            if (content?.hasNoRepresentation) {
                 ast.hasNoRepresentation = true;
             }
             return ast;
@@ -5067,11 +4677,11 @@
             node.removeAttribute("t-log");
             const content = parseNode(node, ctx);
             const ast = {
-                type: 13 /* TLog */,
+                type: 12 /* ASTType.TLog */,
                 expr,
                 content,
             };
-            if (content === null || content === void 0 ? void 0 : content.hasNoRepresentation) {
+            if (content?.hasNoRepresentation) {
                 ast.hasNoRepresentation = true;
             }
             return ast;
@@ -5081,8 +4691,6 @@
     // -----------------------------------------------------------------------------
     // Regular dom node
     // -----------------------------------------------------------------------------
-    const hasDotAtTheEnd = /\.[\w_]+\s*$/;
-    const hasBracketsAtTheEnd = /\[[^\[]+\]\s*$/;
     const ROOT_SVG_TAGS = new Set(["svg", "g", "path"]);
     function parseDOMNode(node, ctx) {
         const { tagName } = node;
@@ -5119,20 +4727,6 @@
                 if (!["input", "select", "textarea"].includes(tagName)) {
                     throw new OwlError("The t-model directive only works with <input>, <textarea> and <select>");
                 }
-                let baseExpr, expr;
-                if (hasDotAtTheEnd.test(value)) {
-                    const index = value.lastIndexOf(".");
-                    baseExpr = value.slice(0, index);
-                    expr = `'${value.slice(index + 1)}'`;
-                }
-                else if (hasBracketsAtTheEnd.test(value)) {
-                    const index = value.lastIndexOf("[");
-                    baseExpr = value.slice(0, index);
-                    expr = value.slice(index + 1, -1);
-                }
-                else {
-                    throw new OwlError(`Invalid t-model expression: "${value}" (it should be assignable)`);
-                }
                 const typeAttr = node.getAttribute("type");
                 const isInput = tagName === "input";
                 const isSelect = tagName === "select";
@@ -5143,8 +4737,7 @@
                 const hasNumberMod = attr.includes(".number");
                 const eventType = isRadioInput ? "click" : isSelect || hasLazyMod ? "change" : "input";
                 model = {
-                    baseExpr,
-                    expr,
+                    expr: value,
                     targetAttr: isCheckboxInput ? "checked" : "value",
                     specialInitTargetAttr: isRadioInput ? "checked" : null,
                     eventType,
@@ -5186,7 +4779,7 @@
         }
         const children = parseChildren(node, ctx);
         return {
-            type: 2 /* DomNode */,
+            type: 2 /* ASTType.DomNode */,
             tag: tagName,
             dynamicTag,
             attrs,
@@ -5199,55 +4792,26 @@
         };
     }
     // -----------------------------------------------------------------------------
-    // t-esc
-    // -----------------------------------------------------------------------------
-    function parseTEscNode(node, ctx) {
-        if (!node.hasAttribute("t-esc")) {
-            return null;
-        }
-        const escValue = node.getAttribute("t-esc");
-        node.removeAttribute("t-esc");
-        const tesc = {
-            type: 4 /* TEsc */,
-            expr: escValue,
-            defaultValue: node.textContent || "",
-        };
-        let ref = node.getAttribute("t-ref");
-        node.removeAttribute("t-ref");
-        const ast = parseNode(node, ctx);
-        if (!ast) {
-            return tesc;
-        }
-        if (ast.type === 2 /* DomNode */) {
-            return {
-                ...ast,
-                ref,
-                content: [tesc],
-            };
-        }
-        return tesc;
-    }
-    // -----------------------------------------------------------------------------
     // t-out
     // -----------------------------------------------------------------------------
     function parseTOutNode(node, ctx) {
-        if (!node.hasAttribute("t-out") && !node.hasAttribute("t-raw")) {
+        if (!node.hasAttribute("t-out") && !node.hasAttribute("t-esc")) {
             return null;
         }
-        if (node.hasAttribute("t-raw")) {
-            console.warn(`t-raw has been deprecated in favor of t-out. If the value to render is not wrapped by the "markup" function, it will be escaped`);
+        if (node.hasAttribute("t-esc")) {
+            console.warn(`t-esc has been deprecated in favor of t-out. If the value to render is not wrapped by the "markup" function, it will be escaped`);
         }
-        const expr = (node.getAttribute("t-out") || node.getAttribute("t-raw"));
+        const expr = (node.getAttribute("t-out") || node.getAttribute("t-esc"));
         node.removeAttribute("t-out");
-        node.removeAttribute("t-raw");
-        const tOut = { type: 8 /* TOut */, expr, body: null };
+        node.removeAttribute("t-esc");
+        const tOut = { type: 7 /* ASTType.TOut */, expr, body: null };
         const ref = node.getAttribute("t-ref");
         node.removeAttribute("t-ref");
         const ast = parseNode(node, ctx);
         if (!ast) {
             return tOut;
         }
-        if (ast.type === 2 /* DomNode */) {
+        if (ast.type === 2 /* ASTType.DomNode */) {
             tOut.body = ast.content.length ? ast.content : null;
             return {
                 ...ast,
@@ -5286,7 +4850,7 @@
         const hasNoIndex = hasNoTCall && !html.includes(`${elem}_index`);
         const hasNoValue = hasNoTCall && !html.includes(`${elem}_value`);
         return {
-            type: 9 /* TForEach */,
+            type: 8 /* ASTType.TForEach */,
             collection,
             elem,
             body,
@@ -5309,7 +4873,7 @@
             return null;
         }
         const ast = {
-            type: 10 /* TKey */,
+            type: 9 /* ASTType.TKey */,
             expr: key,
             content,
         };
@@ -5331,12 +4895,12 @@
         node.removeAttribute("t-call-context");
         if (node.tagName !== "t") {
             const ast = parseNode(node, ctx);
-            const tcall = { type: 7 /* TCall */, name: subTemplate, body: null, context };
-            if (ast && ast.type === 2 /* DomNode */) {
+            const tcall = { type: 6 /* ASTType.TCall */, name: subTemplate, body: null, context };
+            if (ast && ast.type === 2 /* ASTType.DomNode */) {
                 ast.content = [tcall];
                 return ast;
             }
-            if (ast && ast.type === 11 /* TComponent */) {
+            if (ast && ast.type === 10 /* ASTType.TComponent */) {
                 return {
                     ...ast,
                     slots: {
@@ -5353,7 +4917,7 @@
         }
         const body = parseChildren(node, ctx);
         return {
-            type: 7 /* TCall */,
+            type: 6 /* ASTType.TCall */,
             name: subTemplate,
             body: body.length ? body : null,
             context,
@@ -5368,7 +4932,7 @@
         }
         const name = node.getAttribute("t-call-block");
         return {
-            type: 15 /* TCallBlock */,
+            type: 14 /* ASTType.TCallBlock */,
             name,
         };
     }
@@ -5381,7 +4945,7 @@
         }
         const condition = node.getAttribute("t-if");
         node.removeAttribute("t-if");
-        const content = parseNode(node, ctx) || { type: 0 /* Text */, value: "" };
+        const content = parseNode(node, ctx) || { type: 0 /* ASTType.Text */, value: "" };
         let nextElement = node.nextElementSibling;
         // t-elifs
         const tElifs = [];
@@ -5404,7 +4968,7 @@
             nextElement.remove();
         }
         return {
-            type: 5 /* TIf */,
+            type: 4 /* ASTType.TIf */,
             condition,
             content,
             tElif: tElifs.length ? tElifs : null,
@@ -5425,7 +4989,7 @@
         if (node.textContent !== node.innerHTML) {
             body = parseChildren(node, ctx);
         }
-        return { type: 6 /* TSet */, name, value, defaultValue, body, hasNoRepresentation: true };
+        return { type: 5 /* ASTType.TSet */, name, value, defaultValue, body, hasNoRepresentation: true };
     }
     // -----------------------------------------------------------------------------
     // Components
@@ -5554,7 +5118,7 @@
             }
         }
         return {
-            type: 11 /* TComponent */,
+            type: 10 /* ASTType.TComponent */,
             name,
             isDynamic,
             dynamicProps,
@@ -5567,11 +5131,15 @@
     // -----------------------------------------------------------------------------
     // Slots
     // -----------------------------------------------------------------------------
-    function parseTSlot(node, ctx) {
-        if (!node.hasAttribute("t-slot")) {
+    function parseTCallSlot(node, ctx) {
+        if (!node.hasAttribute("t-call-slot") && !node.hasAttribute("t-slot")) {
             return null;
         }
-        const name = node.getAttribute("t-slot");
+        if (node.hasAttribute("t-slot")) {
+            console.warn(`t-slot has been renamed t-call-slot.`);
+        }
+        const name = (node.getAttribute("t-call-slot") || node.getAttribute("t-slot"));
+        node.removeAttribute("t-call-slot");
         node.removeAttribute("t-slot");
         let attrs = null;
         let attrsTranslationCtx = null;
@@ -5593,7 +5161,7 @@
             }
         }
         return {
-            type: 14 /* TSlot */,
+            type: 13 /* ASTType.TCallSlot */,
             name,
             attrs,
             attrsTranslationCtx,
@@ -5605,8 +5173,8 @@
     // Translation
     // -----------------------------------------------------------------------------
     function wrapInTTranslationAST(r) {
-        const ast = { type: 16 /* TTranslation */, content: r };
-        if (r === null || r === void 0 ? void 0 : r.hasNoRepresentation) {
+        const ast = { type: 15 /* ASTType.TTranslation */, content: r };
+        if (r?.hasNoRepresentation) {
             ast.hasNoRepresentation = true;
         }
         return ast;
@@ -5617,7 +5185,7 @@
         }
         node.removeAttribute("t-translation");
         const result = parseNode(node, ctx);
-        if ((result === null || result === void 0 ? void 0 : result.type) === 3 /* Multi */) {
+        if (result?.type === 3 /* ASTType.Multi */) {
             const children = result.content.map(wrapInTTranslationAST);
             return makeASTMulti(children);
         }
@@ -5628,11 +5196,11 @@
     // -----------------------------------------------------------------------------
     function wrapInTTranslationContextAST(r, translationCtx) {
         const ast = {
-            type: 17 /* TTranslationContext */,
+            type: 16 /* ASTType.TTranslationContext */,
             content: r,
             translationCtx,
         };
-        if (r === null || r === void 0 ? void 0 : r.hasNoRepresentation) {
+        if (r?.hasNoRepresentation) {
             ast.hasNoRepresentation = true;
         }
         return ast;
@@ -5644,7 +5212,7 @@
         }
         node.removeAttribute("t-translation-context");
         const result = parseNode(node, ctx);
-        if ((result === null || result === void 0 ? void 0 : result.type) === 3 /* Multi */) {
+        if (result?.type === 3 /* ASTType.Multi */) {
             const children = result.content.map((c) => wrapInTTranslationContextAST(c, translationCtx));
             return makeASTMulti(children);
         }
@@ -5662,12 +5230,12 @@
         const content = parseNode(node, ctx);
         if (!content) {
             return {
-                type: 0 /* Text */,
+                type: 0 /* ASTType.Text */,
                 value: "",
             };
         }
         return {
-            type: 18 /* TPortal */,
+            type: 17 /* ASTType.TPortal */,
             target,
             content,
         };
@@ -5683,7 +5251,7 @@
         for (let child of node.childNodes) {
             const childAst = parseNode(child, ctx);
             if (childAst) {
-                if (childAst.type === 3 /* Multi */) {
+                if (childAst.type === 3 /* ASTType.Multi */) {
                     children.push(...childAst.content);
                 }
                 else {
@@ -5694,7 +5262,7 @@
         return children;
     }
     function makeASTMulti(children) {
-        const ast = { type: 3 /* Multi */, content: children };
+        const ast = { type: 3 /* ASTType.Multi */, content: children };
         if (children.every((c) => c.hasNoRepresentation)) {
             ast.hasNoRepresentation = true;
         }
@@ -5755,28 +5323,26 @@
         }
     }
     /**
-     * Normalizes the content of an Element so that t-esc directives on components
-     * are removed and instead places a <t t-esc=""> as the default slot of the
+     * Normalizes the content of an Element so that t-out directives on components
+     * are removed and instead places a <t t-out=""> as the default slot of the
      * component. Also throws if the component already has content. This function
      * modifies the Element in place.
      *
      * @param el the element containing the tree that should be normalized
      */
-    function normalizeTEscTOut(el) {
-        for (const d of ["t-esc", "t-out"]) {
-            const elements = [...el.querySelectorAll(`[${d}]`)].filter((el) => el.tagName[0] === el.tagName[0].toUpperCase() || el.hasAttribute("t-component"));
-            for (const el of elements) {
-                if (el.childNodes.length) {
-                    throw new OwlError(`Cannot have ${d} on a component that already has content`);
-                }
-                const value = el.getAttribute(d);
-                el.removeAttribute(d);
-                const t = el.ownerDocument.createElement("t");
-                if (value != null) {
-                    t.setAttribute(d, value);
-                }
-                el.appendChild(t);
+    function normalizeTOut(el) {
+        const elements = [...el.querySelectorAll(`[t-out]`)].filter((el) => el.tagName[0] === el.tagName[0].toUpperCase() || el.hasAttribute("t-component"));
+        for (const el of elements) {
+            if (el.childNodes.length) {
+                throw new OwlError(`Cannot have t-out on a component that already has content`);
             }
+            const value = el.getAttribute("t-out");
+            el.removeAttribute("t-out");
+            const t = el.ownerDocument.createElement("t");
+            if (value != null) {
+                t.setAttribute("t-out", value);
+            }
+            el.appendChild(t);
         }
     }
     /**
@@ -5787,7 +5353,7 @@
      */
     function normalizeXML(el) {
         normalizeTIf(el);
-        normalizeTEscTOut(el);
+        normalizeTOut(el);
     }
 
     function compile(template, options = {
@@ -5798,7 +5364,7 @@
         // some work
         const hasSafeContext = template instanceof Node
             ? !(template instanceof Element) || template.querySelector("[t-set], [t-call]") === null
-            : !template.includes("t-set") && !template.includes("t-call");
+            : !template.includes("t-set=") && !template.includes("t-call=");
         // code generation
         const codeGenerator = new CodeGenerator(ast, { ...options, hasSafeContext });
         const code = codeGenerator.generateCode();
@@ -5816,18 +5382,709 @@
     }
 
     // do not modify manually. This file is generated by the release script.
-    const version = "2.8.1";
+    const version = "3.0.0-alpha";
+
+    function makeChildFiber(node, parent) {
+        let current = node.fiber;
+        if (current) {
+            cancelFibers(current.children);
+            current.root = null;
+        }
+        return new Fiber(node, parent);
+    }
+    function makeRootFiber(node) {
+        let current = node.fiber;
+        if (current) {
+            let root = current.root;
+            // lock root fiber because canceling children fibers may destroy components,
+            // which means any arbitrary code can be run in onWillDestroy, which may
+            // trigger new renderings
+            root.locked = true;
+            root.setCounter(root.counter + 1 - cancelFibers(current.children));
+            root.locked = false;
+            current.children = [];
+            current.childrenMap = {};
+            current.bdom = null;
+            if (fibersInError.has(current)) {
+                fibersInError.delete(current);
+                fibersInError.delete(root);
+                current.appliedToDom = false;
+                if (current instanceof RootFiber) {
+                    // it is possible that this fiber is a fiber that crashed while being
+                    // mounted, so the mounted list is possibly corrupted. We restore it to
+                    // its normal initial state (which is empty list or a list with a mount
+                    // fiber.
+                    current.mounted = current instanceof MountFiber ? [current] : [];
+                }
+            }
+            return current;
+        }
+        const fiber = new RootFiber(node, null);
+        if (node.willPatch.length) {
+            fiber.willPatch.push(fiber);
+        }
+        if (node.patched.length) {
+            fiber.patched.push(fiber);
+        }
+        return fiber;
+    }
+    function throwOnRender() {
+        throw new OwlError("Attempted to render cancelled fiber");
+    }
+    /**
+     * @returns number of not-yet rendered fibers cancelled
+     */
+    function cancelFibers(fibers) {
+        let result = 0;
+        for (let fiber of fibers) {
+            let node = fiber.node;
+            fiber.render = throwOnRender;
+            if (node.status === 0 /* STATUS.NEW */) {
+                node.cancel();
+            }
+            node.fiber = null;
+            if (fiber.bdom) {
+                // if fiber has been rendered, this means that the component props have
+                // been updated. however, this fiber will not be patched to the dom, so
+                // it could happen that the next render compare the current props with
+                // the same props, and skip the render completely. With the next line,
+                // we kindly request the component code to force a render, so it works as
+                // expected.
+                node.forceNextRender = true;
+            }
+            else {
+                result++;
+            }
+            result += cancelFibers(fiber.children);
+        }
+        return result;
+    }
+    class Fiber {
+        node;
+        bdom = null;
+        root; // A Fiber that has been replaced by another has no root
+        parent;
+        children = [];
+        appliedToDom = false;
+        deep = false;
+        childrenMap = {};
+        constructor(node, parent) {
+            this.node = node;
+            this.parent = parent;
+            if (parent) {
+                this.deep = parent.deep;
+                const root = parent.root;
+                root.setCounter(root.counter + 1);
+                this.root = root;
+                parent.children.push(this);
+            }
+            else {
+                this.root = this;
+            }
+        }
+        render() {
+            // if some parent has a fiber => register in followup
+            let prev = this.root.node;
+            let scheduler = prev.app.scheduler;
+            let current = prev.parent;
+            while (current) {
+                if (current.fiber) {
+                    let root = current.fiber.root;
+                    if (root.counter === 0 && prev.parentKey in current.fiber.childrenMap) {
+                        current = root.node;
+                    }
+                    else {
+                        scheduler.delayedRenders.push(this);
+                        return;
+                    }
+                }
+                prev = current;
+                current = current.parent;
+            }
+            // there are no current rendering from above => we can render
+            this._render();
+        }
+        _render() {
+            const node = this.node;
+            const root = this.root;
+            if (root) {
+                // todo: should use updateComputation somewhere else.
+                const c = getCurrentComputation();
+                setComputation(node.signalComputation);
+                try {
+                    this.bdom = true;
+                    this.bdom = node.renderFn();
+                }
+                catch (e) {
+                    node.app.handleError({ node, error: e });
+                }
+                setComputation(c);
+                root.setCounter(root.counter - 1);
+            }
+        }
+    }
+    class RootFiber extends Fiber {
+        counter = 1;
+        // only add stuff in this if they have registered some hooks
+        willPatch = [];
+        patched = [];
+        mounted = [];
+        // A fiber is typically locked when it is completing and the patch has not, or is being applied.
+        // i.e.: render triggered in onWillUnmount or in willPatch will be delayed
+        locked = false;
+        complete() {
+            const node = this.node;
+            this.locked = true;
+            let current = undefined;
+            let mountedFibers = this.mounted;
+            try {
+                // Step 1: calling all willPatch lifecycle hooks
+                for (current of this.willPatch) {
+                    // because of the asynchronous nature of the rendering, some parts of the
+                    // UI may have been rendered, then deleted in a followup rendering, and we
+                    // do not want to call onWillPatch in that case.
+                    let node = current.node;
+                    if (node.fiber === current) {
+                        const component = node.component;
+                        for (let cb of node.willPatch) {
+                            cb.call(component);
+                        }
+                    }
+                }
+                current = undefined;
+                // Step 2: patching the dom
+                node._patch();
+                this.locked = false;
+                // Step 4: calling all mounted lifecycle hooks
+                while ((current = mountedFibers.pop())) {
+                    current = current;
+                    if (current.appliedToDom) {
+                        for (let cb of current.node.mounted) {
+                            cb();
+                        }
+                    }
+                }
+                // Step 5: calling all patched hooks
+                let patchedFibers = this.patched;
+                while ((current = patchedFibers.pop())) {
+                    current = current;
+                    if (current.appliedToDom) {
+                        for (let cb of current.node.patched) {
+                            cb();
+                        }
+                    }
+                }
+            }
+            catch (e) {
+                // if mountedFibers is not empty, this means that a crash occured while
+                // calling the mounted hooks of some component. So, there may still be
+                // some component that have been mounted, but for which the mounted hooks
+                // have not been called. Here, we remove the willUnmount hooks for these
+                // specific component to prevent a worse situation (willUnmount being
+                // called even though mounted has not been called)
+                for (let fiber of mountedFibers) {
+                    fiber.node.willUnmount = [];
+                }
+                this.locked = false;
+                node.app.handleError({ fiber: current || this, error: e });
+            }
+        }
+        setCounter(newValue) {
+            this.counter = newValue;
+            if (newValue === 0) {
+                this.node.app.scheduler.flush();
+            }
+        }
+    }
+    class MountFiber extends RootFiber {
+        target;
+        position;
+        constructor(node, target, options = {}) {
+            super(node, null);
+            this.target = target;
+            this.position = options.position || "last-child";
+        }
+        complete() {
+            let current = this;
+            try {
+                const node = this.node;
+                node.children = this.childrenMap;
+                node.app.constructor.validateTarget(this.target);
+                if (node.bdom) {
+                    // this is a complicated situation: if we mount a fiber with an existing
+                    // bdom, this means that this same fiber was already completed, mounted,
+                    // but a crash occurred in some mounted hook. Then, it was handled and
+                    // the new rendering is being applied.
+                    node.updateDom();
+                }
+                else {
+                    node.bdom = this.bdom;
+                    if (this.position === "last-child" || this.target.childNodes.length === 0) {
+                        mount$1(node.bdom, this.target);
+                    }
+                    else {
+                        const firstChild = this.target.childNodes[0];
+                        mount$1(node.bdom, this.target, firstChild);
+                    }
+                }
+                // unregistering the fiber before mounted since it can do another render
+                // and that the current rendering is obviously completed
+                node.fiber = null;
+                node.status = 1 /* STATUS.MOUNTED */;
+                this.appliedToDom = true;
+                let mountedFibers = this.mounted;
+                while ((current = mountedFibers.pop())) {
+                    if (current.appliedToDom) {
+                        for (let cb of current.node.mounted) {
+                            cb();
+                        }
+                    }
+                }
+            }
+            catch (e) {
+                this.node.app.handleError({ fiber: current, error: e });
+            }
+        }
+    }
+
+    class ComponentNode {
+        el;
+        app;
+        fiber = null;
+        component;
+        bdom = null;
+        status = 0 /* STATUS.NEW */;
+        forceNextRender = false;
+        parentKey;
+        props;
+        renderFn;
+        parent;
+        children = Object.create(null);
+        willStart = [];
+        willUpdateProps = [];
+        willUnmount = [];
+        mounted = [];
+        willPatch = [];
+        patched = [];
+        willDestroy = [];
+        signalComputation;
+        pluginManager;
+        constructor(C, props, app, parent, parentKey) {
+            this.app = app;
+            this.parent = parent;
+            this.parentKey = parentKey;
+            this.pluginManager = parent ? parent.pluginManager : app.pluginManager;
+            this.signalComputation = createComputation({
+                compute: () => this.render(false),
+                state: ComputationState.EXECUTED,
+                isDerived: false,
+            });
+            this.props = Object.assign({}, props);
+            contextStack.push({
+                type: "component",
+                app,
+                componentName: C.name,
+                node: this,
+                get status() {
+                    return this.node.status;
+                },
+            });
+            const previousComputation = getCurrentComputation();
+            setComputation(undefined);
+            this.component = new C(this);
+            const ctx = { this: this.component, __owl__: this };
+            this.renderFn = app.getTemplate(C.template).bind(this.component, ctx, this);
+            this.component.setup();
+            setComputation(previousComputation);
+            contextStack.length = 0; // clear context stack
+        }
+        mountComponent(target, options) {
+            const fiber = new MountFiber(this, target, options);
+            this.app.scheduler.addFiber(fiber);
+            let prev = getCurrentComputation();
+            this.initiateRender(fiber);
+            // only useful if the component is a root, and a willstart function just
+            // crashed synchonously. In that case, it is possible that the previous
+            // computation has not been properly restored
+            setComputation(prev);
+        }
+        async initiateRender(fiber) {
+            this.fiber = fiber;
+            if (this.mounted.length) {
+                fiber.root.mounted.push(fiber);
+            }
+            const component = this.component;
+            let prev = getCurrentComputation();
+            setComputation(undefined);
+            try {
+                let promises = this.willStart.map((f) => f.call(component));
+                setComputation(prev);
+                await Promise.all(promises);
+            }
+            catch (e) {
+                this.app.handleError({ node: this, error: e });
+                return;
+            }
+            if (this.status === 0 /* STATUS.NEW */ && this.fiber === fiber) {
+                fiber.render();
+            }
+        }
+        async render(deep) {
+            if (this.status >= 2 /* STATUS.CANCELLED */) {
+                return;
+            }
+            let current = this.fiber;
+            if (current && (current.root.locked || current.bdom === true)) {
+                await Promise.resolve();
+                // situation may have changed after the microtask tick
+                current = this.fiber;
+            }
+            if (current) {
+                if (!current.bdom && !fibersInError.has(current)) {
+                    if (deep) {
+                        // we want the render from this point on to be with deep=true
+                        current.deep = deep;
+                    }
+                    return;
+                }
+                // if current rendering was with deep=true, we want this one to be the same
+                deep = deep || current.deep;
+            }
+            else if (!this.bdom) {
+                return;
+            }
+            const fiber = makeRootFiber(this);
+            fiber.deep = deep;
+            this.fiber = fiber;
+            this.app.scheduler.addFiber(fiber);
+            await Promise.resolve();
+            if (this.status >= 2 /* STATUS.CANCELLED */) {
+                return;
+            }
+            // We only want to actually render the component if the following two
+            // conditions are true:
+            // * this.fiber: it could be null, in which case the render has been cancelled
+            // * (current || !fiber.parent): if current is not null, this means that the
+            //   render function was called when a render was already occurring. In this
+            //   case, the pending rendering was cancelled, and the fiber needs to be
+            //   rendered to complete the work.  If current is null, we check that the
+            //   fiber has no parent.  If that is the case, the fiber was downgraded from
+            //   a root fiber to a child fiber in the previous microtick, because it was
+            //   embedded in a rendering coming from above, so the fiber will be rendered
+            //   in the next microtick anyway, so we should not render it again.
+            if (this.fiber === fiber && (current || !fiber.parent)) {
+                fiber.render();
+            }
+        }
+        cancel() {
+            this._cancel();
+            delete this.parent.children[this.parentKey];
+            this.app.scheduler.scheduleDestroy(this);
+        }
+        _cancel() {
+            this.status = 2 /* STATUS.CANCELLED */;
+            const children = this.children;
+            for (let childKey in children) {
+                children[childKey]._cancel();
+            }
+        }
+        destroy() {
+            let shouldRemove = this.status === 1 /* STATUS.MOUNTED */;
+            this._destroy();
+            if (shouldRemove) {
+                this.bdom.remove();
+            }
+        }
+        _destroy() {
+            const component = this.component;
+            if (this.status === 1 /* STATUS.MOUNTED */) {
+                for (let cb of this.willUnmount) {
+                    cb.call(component);
+                }
+            }
+            for (let child of Object.values(this.children)) {
+                child._destroy();
+            }
+            if (this.willDestroy.length) {
+                try {
+                    for (let cb of this.willDestroy) {
+                        cb.call(component);
+                    }
+                }
+                catch (e) {
+                    this.app.handleError({ error: e, node: this });
+                }
+            }
+            this.status = 3 /* STATUS.DESTROYED */;
+        }
+        async updateAndRender(props, parentFiber) {
+            props = Object.assign({}, props);
+            // update
+            const fiber = makeChildFiber(this, parentFiber);
+            this.fiber = fiber;
+            const component = this.component;
+            let prev = getCurrentComputation();
+            setComputation(undefined);
+            let promises = this.willUpdateProps.map((f) => f.call(component, props));
+            setComputation(prev);
+            await Promise.all(promises);
+            if (fiber !== this.fiber) {
+                return;
+            }
+            this.props = props;
+            fiber.render();
+            const parentRoot = parentFiber.root;
+            if (this.willPatch.length) {
+                parentRoot.willPatch.push(fiber);
+            }
+            if (this.patched.length) {
+                parentRoot.patched.push(fiber);
+            }
+        }
+        /**
+         * Finds a child that has dom that is not yet updated, and update it. This
+         * method is meant to be used only in the context of repatching the dom after
+         * a mounted hook failed and was handled.
+         */
+        updateDom() {
+            if (!this.fiber) {
+                return;
+            }
+            if (this.bdom === this.fiber.bdom) {
+                // If the error was handled by some child component, we need to find it to
+                // apply its change
+                for (let k in this.children) {
+                    const child = this.children[k];
+                    child.updateDom();
+                }
+            }
+            else {
+                // if we get here, this is the component that handled the error and rerendered
+                // itself, so we can simply patch the dom
+                this.bdom.patch(this.fiber.bdom, false);
+                this.fiber.appliedToDom = true;
+                this.fiber = null;
+            }
+        }
+        // ---------------------------------------------------------------------------
+        // Block DOM methods
+        // ---------------------------------------------------------------------------
+        firstNode() {
+            const bdom = this.bdom;
+            return bdom ? bdom.firstNode() : undefined;
+        }
+        mount(parent, anchor) {
+            const bdom = this.fiber.bdom;
+            this.bdom = bdom;
+            bdom.mount(parent, anchor);
+            this.status = 1 /* STATUS.MOUNTED */;
+            this.fiber.appliedToDom = true;
+            this.children = this.fiber.childrenMap;
+            this.fiber = null;
+        }
+        moveBeforeDOMNode(node, parent) {
+            this.bdom.moveBeforeDOMNode(node, parent);
+        }
+        moveBeforeVNode(other, afterNode) {
+            this.bdom.moveBeforeVNode(other ? other.bdom : null, afterNode);
+        }
+        patch() {
+            if (this.fiber && this.fiber.parent) {
+                // we only patch here renderings coming from above. renderings initiated
+                // by the component will be patched independently in the appropriate
+                // fiber.complete
+                this._patch();
+            }
+        }
+        _patch() {
+            let hasChildren = false;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            for (let _k in this.children) {
+                hasChildren = true;
+                break;
+            }
+            const fiber = this.fiber;
+            this.children = fiber.childrenMap;
+            this.bdom.patch(fiber.bdom, hasChildren);
+            fiber.appliedToDom = true;
+            this.fiber = null;
+        }
+        beforeRemove() {
+            this._destroy();
+        }
+        remove() {
+            this.bdom.remove();
+        }
+    }
+
+    function effect(fn) {
+        const computation = createComputation({
+            compute() {
+                // In case the cleanup read an atom.
+                // todo: test it
+                setComputation(undefined);
+                unsubscribeEffect(computation);
+                setComputation(computation);
+                return fn();
+            },
+            isDerived: false,
+        });
+        getCurrentComputation()?.observers.add(computation);
+        updateComputation(computation);
+        // Remove sources and unsubscribe
+        return function cleanupEffect() {
+            // In case the cleanup read an atom.
+            // todo: test it
+            const previousComputation = getCurrentComputation();
+            setComputation(undefined);
+            unsubscribeEffect(computation);
+            setComputation(previousComputation);
+        };
+    }
+    function unsubscribeEffect(effect) {
+        removeSources(effect);
+        cleanupEffect(effect);
+        for (const childEffect of effect.observers) {
+            // Consider it executed to avoid it's re-execution
+            // todo: make a test for it
+            childEffect.state = ComputationState.EXECUTED;
+            removeSources(childEffect);
+            unsubscribeEffect(childEffect);
+        }
+        effect.observers.clear();
+    }
+    function cleanupEffect(effect) {
+        // the computation.value of an effect is a cleanup function
+        const cleanupFn = effect.value;
+        if (cleanupFn && typeof cleanupFn === "function") {
+            cleanupFn();
+            effect.value = undefined;
+        }
+    }
+
+    class Plugin {
+        static _shadowId;
+        static get id() {
+            return this._shadowId ?? this.name;
+        }
+        static set id(shadowId) {
+            this._shadowId = shadowId;
+        }
+        __owl__;
+        constructor(manager) {
+            this.__owl__ = manager;
+        }
+        setup() { }
+    }
+    class PluginManager {
+        app;
+        config;
+        onDestroyCb = [];
+        plugins;
+        status = 0 /* STATUS.NEW */;
+        constructor(app, options = {}) {
+            this.app = app;
+            this.config = options.config ?? {};
+            if (options.parent) {
+                const parent = options.parent;
+                parent.onDestroyCb.push(() => this.destroy());
+                this.plugins = Object.create(parent.plugins);
+            }
+            else {
+                this.plugins = {};
+            }
+            if (options.plugins) {
+                const plugins = options.plugins;
+                this.onDestroyCb.push(effect(() => {
+                    this.startPlugins(plugins());
+                }));
+            }
+            else {
+                this.status = 1 /* STATUS.MOUNTED */;
+            }
+        }
+        destroy() {
+            const cbs = this.onDestroyCb;
+            while (cbs.length) {
+                cbs.pop()();
+            }
+            this.status = 3 /* STATUS.DESTROYED */;
+        }
+        getPluginById(id) {
+            return this.plugins[id] || null;
+        }
+        getPlugin(pluginConstructor) {
+            return this.getPluginById(pluginConstructor.id);
+        }
+        startPlugin(pluginConstructor) {
+            if (!pluginConstructor.id) {
+                throw new OwlError(`Plugin "${pluginConstructor.name}" has no id`);
+            }
+            if (this.plugins.hasOwnProperty(pluginConstructor.id)) {
+                const existingPluginType = this.getPluginById(pluginConstructor.id).constructor;
+                if (existingPluginType !== pluginConstructor) {
+                    throw new OwlError(`Trying to start a plugin with the same id as an other plugin (id: '${pluginConstructor.id}', existing plugin: '${existingPluginType.name}', starting plugin: '${pluginConstructor.name}')`);
+                }
+                return null;
+            }
+            const plugin = new pluginConstructor(this);
+            plugin.setup();
+            this.plugins[pluginConstructor.id] = plugin;
+            return plugin;
+        }
+        startPlugins(pluginConstructors) {
+            contextStack.push({
+                type: "plugin",
+                app: this.app,
+                manager: this,
+                get status() {
+                    return this.manager.status;
+                },
+            });
+            try {
+                for (const pluginConstructor of pluginConstructors) {
+                    this.startPlugin(pluginConstructor);
+                }
+            }
+            finally {
+                contextStack.pop();
+            }
+            this.status = 1 /* STATUS.MOUNTED */;
+        }
+    }
+
+    function computed(getter, options = {}) {
+        const computation = createComputation({
+            compute: () => {
+                onWriteAtom(computation);
+                return getter();
+            },
+            isDerived: true,
+        });
+        function readComputed() {
+            updateComputation(computation);
+            onReadAtom(computation);
+            return computation.value;
+        }
+        readComputed[atomSymbol] = computation;
+        readComputed.set = options.set ?? (() => { });
+        return readComputed;
+    }
 
     // -----------------------------------------------------------------------------
     //  Scheduler
     // -----------------------------------------------------------------------------
     class Scheduler {
+        // capture the value of requestAnimationFrame as soon as possible, to avoid
+        // interactions with other code, such as test frameworks that override them
+        static requestAnimationFrame = window.requestAnimationFrame.bind(window);
+        tasks = new Set();
+        requestAnimationFrame;
+        frame = 0;
+        delayedRenders = [];
+        cancelledNodes = new Set();
+        processing = false;
         constructor() {
-            this.tasks = new Set();
-            this.frame = 0;
-            this.delayedRenders = [];
-            this.cancelledNodes = new Set();
-            this.processing = false;
             this.requestAnimationFrame = Scheduler.requestAnimationFrame;
         }
         addFiber(fiber) {
@@ -5848,7 +6105,7 @@
                 let renders = this.delayedRenders;
                 this.delayedRenders = [];
                 for (let f of renders) {
-                    if (f.root && f.node.status !== 3 /* DESTROYED */ && f.node.fiber === f) {
+                    if (f.root && f.node.status !== 3 /* STATUS.DESTROYED */ && f.node.fiber === f) {
                         f.render();
                     }
                 }
@@ -5871,7 +6128,7 @@
                 this.processFiber(task);
             }
             for (let task of this.tasks) {
-                if (task.node.status === 3 /* DESTROYED */) {
+                if (task.node.status === 3 /* STATUS.DESTROYED */) {
                     this.tasks.delete(task);
                 }
             }
@@ -5887,7 +6144,7 @@
                 this.tasks.delete(fiber);
                 return;
             }
-            if (fiber.node.status === 3 /* DESTROYED */) {
+            if (fiber.node.status === 3 /* STATUS.DESTROYED */) {
                 this.tasks.delete(fiber);
                 return;
             }
@@ -5906,111 +6163,194 @@
             }
         }
     }
-    // capture the value of requestAnimationFrame as soon as possible, to avoid
-    // interactions with other code, such as test frameworks that override them
-    Scheduler.requestAnimationFrame = window.requestAnimationFrame.bind(window);
+
+    function buildSignal(value, set, options) {
+        const atom = {
+            type: "signal",
+            value,
+            observers: new Set(),
+        };
+        let readValue = set(atom);
+        const readSignal = () => {
+            onReadAtom(atom);
+            return readValue;
+        };
+        readSignal[atomSymbol] = atom;
+        readSignal.set = function writeSignal(newValue) {
+            if (Object.is(atom.value, newValue)) {
+                return;
+            }
+            atom.value = newValue;
+            readValue = set(atom);
+            onWriteAtom(atom);
+        };
+        return readSignal;
+    }
+    function signal(value, options = {}) {
+        return buildSignal(value, (atom) => atom.value);
+    }
+    signal.invalidate = function (signal) {
+        if (typeof signal !== "function" || signal[atomSymbol]?.type !== "signal") {
+            throw new OwlError(`Value is not a signal (${signal})`);
+        }
+        onWriteAtom(signal[atomSymbol]);
+    };
+    signal.Array = function (initialValue, options = {}) {
+        return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
+    };
+    signal.Object = function (initialValue, options) {
+        return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
+    };
+    signal.Map = function (initialValue, options) {
+        return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
+    };
+    signal.Set = function (initialValue, options) {
+        return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
+    };
+
+    class Resource {
+        _items = signal.Array([]);
+        _name;
+        _validation;
+        constructor(options = {}) {
+            this._name = options.name;
+            this._validation = options.validation;
+        }
+        items = computed(() => {
+            return this._items()
+                .sort((el1, el2) => el1[0] - el2[0])
+                .map((elem) => elem[1]);
+        });
+        add(item, options = {}) {
+            if (this._validation) {
+                const info = this._name ? ` (resource '${this._name}')` : "";
+                assertType(item, this._validation, `Resource item does not match the type${info}`);
+            }
+            this._items().push([options.sequence ?? 50, item]);
+            return this;
+        }
+        delete(item) {
+            const items = this._items().filter(([seq, val]) => val !== item);
+            this._items.set(items);
+            return this;
+        }
+        has(item) {
+            return this._items().some(([s, value]) => value === item);
+        }
+    }
+    function useResource(r, elements) {
+        for (let elem of elements) {
+            r.add(elem);
+        }
+        onWillDestroy(() => {
+            for (let elem of elements) {
+                r.delete(elem);
+            }
+        });
+    }
 
     let hasBeenLogged = false;
     const apps = new Set();
-    window.__OWL_DEVTOOLS__ || (window.__OWL_DEVTOOLS__ = { apps, Fiber, RootFiber, toRaw, reactive });
+    window.__OWL_DEVTOOLS__ ||= { apps, Fiber, RootFiber, toRaw, proxy };
     class App extends TemplateSet {
-        constructor(Root, config = {}) {
+        static validateTarget = validateTarget;
+        static apps = apps;
+        static version = version;
+        name;
+        scheduler = new Scheduler();
+        roots = new Set();
+        pluginManager;
+        constructor(config = {}) {
             super(config);
-            this.scheduler = new Scheduler();
-            this.subRoots = new Set();
-            this.root = null;
             this.name = config.name || "";
-            this.Root = Root;
             apps.add(this);
+            let plugins;
+            if (config.plugins) {
+                if (config.plugins instanceof Resource) {
+                    plugins = config.plugins.items;
+                }
+                else {
+                    plugins = computed(() => config.plugins);
+                }
+            }
+            this.pluginManager = new PluginManager(this, { plugins, config: config.config });
             if (config.test) {
                 this.dev = true;
             }
-            this.warnIfNoStaticProps = config.warnIfNoStaticProps || false;
             if (this.dev && !config.test && !hasBeenLogged) {
                 console.info(`Owl is running in 'dev' mode.`);
                 hasBeenLogged = true;
             }
-            const env = config.env || {};
-            const descrs = Object.getOwnPropertyDescriptors(env);
-            this.env = Object.freeze(Object.create(Object.getPrototypeOf(env), descrs));
-            this.props = config.props || {};
-        }
-        mount(target, options) {
-            const root = this.createRoot(this.Root, { props: this.props });
-            this.root = root.node;
-            this.subRoots.delete(root.node);
-            return root.mount(target, options);
         }
         createRoot(Root, config = {}) {
             const props = config.props || {};
-            // hack to make sure the sub root get the sub env if necessary. for owl 3,
-            // would be nice to rethink the initialization process to make sure that
-            // we can create a ComponentNode and give it explicitely the env, instead
-            // of looking it up in the app
-            const env = this.env;
-            if (config.env) {
-                this.env = config.env;
+            let resolve;
+            let reject;
+            const promise = new Promise((res, rej) => {
+                resolve = res;
+                reject = rej;
+            });
+            const restore = saveContext();
+            let node;
+            let error = null;
+            try {
+                node = this.makeNode(Root, props);
             }
-            const restore = saveCurrent();
-            const node = this.makeNode(Root, props);
-            restore();
-            if (config.env) {
-                this.env = env;
+            catch (e) {
+                error = e;
+                reject(e);
             }
-            this.subRoots.add(node);
-            return {
-                node,
+            finally {
+                restore();
+            }
+            const root = {
+                node: node,
+                promise,
                 mount: (target, options) => {
-                    App.validateTarget(target);
-                    if (this.dev) {
-                        validateProps(Root, props, { __owl__: { app: this } });
+                    if (error) {
+                        return promise;
                     }
-                    const prom = this.mountNode(node, target, options);
-                    return prom;
+                    App.validateTarget(target);
+                    this.mountNode(node, target, resolve, reject, options);
+                    return promise;
                 },
                 destroy: () => {
-                    this.subRoots.delete(node);
+                    this.roots.delete(root);
                     node.destroy();
                     this.scheduler.processTasks();
                 },
             };
+            this.roots.add(root);
+            return root;
         }
         makeNode(Component, props) {
             return new ComponentNode(Component, props, this, null, null);
         }
-        mountNode(node, target, options) {
-            const promise = new Promise((resolve, reject) => {
-                let isResolved = false;
-                // manually set a onMounted callback.
-                // that way, we are independant from the current node.
-                node.mounted.push(() => {
-                    resolve(node.component);
-                    isResolved = true;
-                });
-                // Manually add the last resort error handler on the node
-                let handlers = nodeErrorHandlers.get(node);
-                if (!handlers) {
-                    handlers = [];
-                    nodeErrorHandlers.set(node, handlers);
-                }
-                handlers.unshift((e) => {
-                    if (!isResolved) {
-                        reject(e);
-                    }
-                    throw e;
-                });
+        mountNode(node, target, resolve, reject, options) {
+            // Manually add the last resort error handler on the node
+            let handlers = nodeErrorHandlers.get(node);
+            if (!handlers) {
+                handlers = [];
+                nodeErrorHandlers.set(node, handlers);
+            }
+            handlers.unshift((e, finalize) => {
+                const finalError = finalize();
+                reject(finalError);
+            });
+            // manually set a onMounted callback.
+            // that way, we are independant from the current node.
+            node.mounted.push(() => {
+                resolve(node.component);
+                handlers.shift();
             });
             node.mountComponent(target, options);
-            return promise;
         }
         destroy() {
-            if (this.root) {
-                for (let subroot of this.subRoots) {
-                    subroot.destroy();
-                }
-                this.root.destroy();
-                this.scheduler.processTasks();
+            for (let root of this.roots) {
+                root.destroy();
             }
+            this.pluginManager.destroy();
+            this.scheduler.processTasks();
             apps.delete(this);
         }
         createComponent(name, isStatic, hasSlotsProp, hasDynamicPropList, propList) {
@@ -6085,11 +6425,10 @@
             return handleError(...args);
         }
     }
-    App.validateTarget = validateTarget;
-    App.apps = apps;
-    App.version = version;
     async function mount(C, target, config = {}) {
-        return new App(C, config).mount(target, config);
+        const app = new App(config);
+        const root = app.createRoot(C, config);
+        return root.mount(target, config);
     }
 
     const mainEventHandler = (data, ev, currentTarget) => {
@@ -6130,72 +6469,73 @@
                 throw new OwlError(`Invalid handler (expected a function, received: '${handler}')`);
             }
             let node = data[1] ? data[1].__owl__ : null;
-            if (node ? node.status === 1 /* MOUNTED */ : true) {
+            if (node ? node.status === 1 /* STATUS.MOUNTED */ : true) {
                 handler.call(node ? node.component : null, ev);
             }
         }
         return stopped;
     };
 
-    function status(component) {
-        switch (component.__owl__.status) {
-            case 0 /* NEW */:
+    class Registry {
+        _map = signal.Object(Object.create(null));
+        _name;
+        _validation;
+        constructor(options = {}) {
+            this._name = options.name || "registry";
+            this._validation = options.validation;
+        }
+        entries = computed(() => {
+            const entries = Object.entries(this._map())
+                .sort((el1, el2) => el1[1][0] - el2[1][0])
+                .map(([str, elem]) => [str, elem[1]]);
+            return entries;
+        });
+        items = computed(() => this.entries().map((e) => e[1]));
+        addById(item, options = {}) {
+            if (!item.id) {
+                throw new OwlError(`Item should have an id key (registry '${this._name}')`);
+            }
+            return this.add(item.id, item, { sequence: options.sequence ?? 50 });
+        }
+        add(key, value, options = {}) {
+            if (this._validation) {
+                const info = this._name ? ` (registry '${this._name}', key: '${key}')` : ` (key: '${key}')`;
+                assertType(value, this._validation, `Registry entry does not match the type${info}`);
+            }
+            this._map()[key] = [options.sequence ?? 50, value];
+            return this;
+        }
+        get(key, defaultValue) {
+            const hasKey = key in this._map();
+            if (!hasKey && arguments.length < 2) {
+                throw new Error(`KeyNotFoundError: Cannot find key "${key}" (registry '${this._name}')`);
+            }
+            return hasKey ? this._map()[key][1] : defaultValue;
+        }
+        delete(key) {
+            delete this._map()[key];
+        }
+        has(key) {
+            return key in this._map();
+        }
+    }
+
+    function status(entity) {
+        switch (entity.__owl__.status) {
+            case 0 /* STATUS.NEW */:
                 return "new";
-            case 2 /* CANCELLED */:
+            case 2 /* STATUS.CANCELLED */:
                 return "cancelled";
-            case 1 /* MOUNTED */:
-                return "mounted";
-            case 3 /* DESTROYED */:
+            case 1 /* STATUS.MOUNTED */:
+                return entity instanceof Plugin ? "started" : "mounted";
+            case 3 /* STATUS.DESTROYED */:
                 return "destroyed";
         }
     }
 
     // -----------------------------------------------------------------------------
-    // useRef
+    // useEffect
     // -----------------------------------------------------------------------------
-    /**
-     * The purpose of this hook is to allow components to get a reference to a sub
-     * html node or component.
-     */
-    function useRef(name) {
-        const node = getCurrent();
-        const refs = node.refs;
-        return {
-            get el() {
-                const el = refs[name];
-                return inOwnerDocument(el) ? el : null;
-            },
-        };
-    }
-    // -----------------------------------------------------------------------------
-    // useEnv and useSubEnv
-    // -----------------------------------------------------------------------------
-    /**
-     * This hook is useful as a building block for some customized hooks, that may
-     * need a reference to the env of the component calling them.
-     */
-    function useEnv() {
-        return getCurrent().component.env;
-    }
-    function extendEnv(currentEnv, extension) {
-        const env = Object.create(currentEnv);
-        const descrs = Object.getOwnPropertyDescriptors(extension);
-        return Object.freeze(Object.defineProperties(env, descrs));
-    }
-    /**
-     * This hook is a simple way to let components use a sub environment.  Note that
-     * like for all hooks, it is important that this is only called in the
-     * constructor method.
-     */
-    function useSubEnv(envExtension) {
-        const node = getCurrent();
-        node.component.env = extendEnv(node.component.env, envExtension);
-        useChildSubEnv(envExtension);
-    }
-    function useChildSubEnv(envExtension) {
-        const node = getCurrent();
-        node.childEnv = extendEnv(node.childEnv, envExtension);
-    }
     /**
      * This hook will run a callback when a component is mounted and patched, and
      * will run a cleanup function before patching and before unmounting the
@@ -6209,53 +6549,82 @@
      *      again. The default value returns an array containing only NaN because
      *      NaN !== NaN, which will cause the effect to rerun on every patch.
      */
-    function useEffect(effect, computeDependencies = () => [NaN]) {
-        let cleanup;
-        let dependencies;
-        onMounted(() => {
-            dependencies = computeDependencies();
-            cleanup = effect(...dependencies);
-        });
-        onPatched(() => {
-            const newDeps = computeDependencies();
-            const shouldReapply = newDeps.some((val, i) => val !== dependencies[i]);
-            if (shouldReapply) {
-                dependencies = newDeps;
-                if (cleanup) {
-                    cleanup();
-                }
-                cleanup = effect(...dependencies);
-            }
-        });
-        onWillUnmount(() => cleanup && cleanup());
+    function useEffect(fn) {
+        onWillDestroy(effect(fn));
     }
     // -----------------------------------------------------------------------------
-    // useExternalListener
+    // useListener
     // -----------------------------------------------------------------------------
     /**
      * When a component needs to listen to DOM Events on element(s) that are not
-     * part of his hierarchy, we can use the `useExternalListener` hook.
-     * It will correctly add and remove the event listener, whenever the
-     * component is mounted and unmounted.
+     * part of his hierarchy, we can use the `useListener` hook.
+     * It will immediately add the listener, and remove it whenever the plugin or
+     * component is destroyed.
      *
      * Example:
      *  a menu needs to listen to the click on window to be closed automatically
      *
      * Usage:
      *  in the constructor of the OWL component that needs to be notified,
-     *  `useExternalListener(window, 'click', this._doSomething);`
+     *  `useListener(window, 'click', () => this._doSomething());`
      * */
-    function useExternalListener(target, eventName, handler, eventParams) {
-        const node = getCurrent();
-        const boundHandler = handler.bind(node.component);
-        onMounted(() => target.addEventListener(eventName, boundHandler, eventParams));
-        onWillUnmount(() => target.removeEventListener(eventName, boundHandler, eventParams));
+    function useListener(target, eventName, handler, eventParams) {
+        if (typeof target === "function") {
+            // this is a ref
+            useEffect(() => {
+                const el = target();
+                if (el) {
+                    el.addEventListener(eventName, handler, eventParams);
+                    return () => el.removeEventListener(eventName, handler, eventParams);
+                }
+                return;
+            });
+        }
+        else {
+            target.addEventListener(eventName, handler, eventParams);
+            onWillDestroy(() => target.removeEventListener(eventName, handler, eventParams));
+        }
+    }
+    // -----------------------------------------------------------------------------
+    // useApp
+    // -----------------------------------------------------------------------------
+    function useApp() {
+        return getContext().app;
     }
 
-    config.shouldNormalizeDom = false;
-    config.mainEventHandler = mainEventHandler;
+    function plugin(pluginType) {
+        const context = getContext();
+        const manager = context.type === "component" ? context.node.pluginManager : context.manager;
+        let plugin = manager.getPluginById(pluginType.id);
+        if (!plugin) {
+            if (context.type === "plugin") {
+                plugin = manager.startPlugin(pluginType);
+            }
+            else {
+                throw new OwlError(`Unknown plugin "${pluginType.id}"`);
+            }
+        }
+        return plugin;
+    }
+    function config(name, type) {
+        const { app, manager } = getContext("plugin");
+        if (app.dev && type) {
+            assertType(manager.config, types.object({ [name]: type }), "Config does not match the type");
+        }
+        return manager.config[name.endsWith("?") ? name.slice(0, -1) : name];
+    }
+    function providePlugins(pluginConstructors, config) {
+        const { node } = getContext("component");
+        const manager = new PluginManager(node.app, { parent: node.pluginManager, config });
+        node.pluginManager = manager;
+        onWillDestroy(() => manager.destroy());
+        manager.startPlugins(pluginConstructors);
+    }
+
+    config$1.shouldNormalizeDom = false;
+    config$1.mainEventHandler = mainEventHandler;
     const blockDom = {
-        config,
+        config: config$1,
         // bdom entry points
         mount: mount$1,
         patch,
@@ -6288,45 +6657,49 @@
     exports.Component = Component;
     exports.EventBus = EventBus;
     exports.OwlError = OwlError;
+    exports.Plugin = Plugin;
+    exports.Registry = Registry;
+    exports.Resource = Resource;
     exports.__info__ = __info__;
+    exports.assertType = assertType;
     exports.batched = batched;
     exports.blockDom = blockDom;
+    exports.computed = computed;
+    exports.config = config;
+    exports.effect = effect;
     exports.htmlEscape = htmlEscape;
-    exports.loadFile = loadFile;
     exports.markRaw = markRaw;
     exports.markup = markup;
     exports.mount = mount;
     exports.onError = onError;
     exports.onMounted = onMounted;
     exports.onPatched = onPatched;
-    exports.onRendered = onRendered;
     exports.onWillDestroy = onWillDestroy;
     exports.onWillPatch = onWillPatch;
-    exports.onWillRender = onWillRender;
     exports.onWillStart = onWillStart;
     exports.onWillUnmount = onWillUnmount;
     exports.onWillUpdateProps = onWillUpdateProps;
-    exports.reactive = reactive;
+    exports.plugin = plugin;
+    exports.props = props;
+    exports.providePlugins = providePlugins;
+    exports.proxy = proxy;
+    exports.signal = signal;
     exports.status = status;
     exports.toRaw = toRaw;
-    exports.useChildSubEnv = useChildSubEnv;
-    exports.useComponent = useComponent;
+    exports.types = types;
+    exports.untrack = untrack;
+    exports.useApp = useApp;
+    exports.useContext = useContext;
     exports.useEffect = useEffect;
-    exports.useEnv = useEnv;
-    exports.useExternalListener = useExternalListener;
-    exports.useRef = useRef;
-    exports.useState = useState;
-    exports.useSubEnv = useSubEnv;
-    exports.validate = validate;
+    exports.useListener = useListener;
+    exports.useResource = useResource;
     exports.validateType = validateType;
     exports.whenReady = whenReady;
     exports.xml = xml;
 
-    Object.defineProperty(exports, '__esModule', { value: true });
 
-
-    __info__.date = '2025-09-23T07:17:45.055Z';
-    __info__.hash = '5211116';
+    __info__.date = '2026-02-09T10:03:33.340Z';
+    __info__.hash = '7787e8b';
     __info__.url = 'https://github.com/odoo/owl';
 
 
