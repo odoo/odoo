@@ -1,7 +1,8 @@
+import { useComponent } from "@web/owl2/utils";
 import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
 import { barcodeService } from "@barcodes/barcode_service";
 import { registry } from "@web/core/registry";
-import { EventBus, onWillDestroy, useComponent } from "@odoo/owl";
+import { EventBus, onWillDestroy } from "@odoo/owl";
 import { session } from "@web/session";
 
 const INPUT_KEYS = new Set(

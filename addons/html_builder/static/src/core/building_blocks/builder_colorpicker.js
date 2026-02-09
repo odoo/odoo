@@ -1,5 +1,6 @@
+import { useComponent } from "@web/owl2/utils";
 import { ColorSelector } from "@html_editor/main/font/color_selector";
-import { Component, useComponent } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import {
     useColorPicker,
     DEFAULT_COLORS,

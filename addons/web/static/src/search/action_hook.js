@@ -1,5 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { onMounted, useComponent, useExternalListener } from "@odoo/owl";
+import { useComponent, useLayoutEffect } from "@web/owl2/utils";
+import { onMounted, useExternalListener } from "@odoo/owl";
 
 export const scrollSymbol = Symbol("scroll");
 

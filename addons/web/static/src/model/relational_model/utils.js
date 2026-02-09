@@ -1,4 +1,5 @@
-import { markup, onWillDestroy, onWillStart, onWillUpdateProps, useComponent } from "@odoo/owl";
+import { useComponent } from "@web/owl2/utils";
+import { markup, onWillDestroy, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { evalPartialContext, makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import {

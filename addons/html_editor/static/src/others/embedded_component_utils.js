@@ -1,14 +1,5 @@
-import { onRendered } from "@web/owl2/utils";
-import {
-    onMounted,
-    onPatched,
-    onWillDestroy,
-    reactive,
-    toRaw,
-    useComponent,
-    useRef,
-    useState,
-} from "@odoo/owl";
+import { onRendered, useComponent } from "@web/owl2/utils";
+import { onMounted, onPatched, onWillDestroy, reactive, toRaw, useRef, useState } from "@odoo/owl";
 
 /**
  * @typedef {HTMLElement} HostElement host element for an embedded component
