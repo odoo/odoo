@@ -19,6 +19,7 @@ class ResPartner(models.Model):
         company_dependent=False,  # behave like company dependent field but is not company_dependent
         domain=lambda self: [('company_id', 'in', (self.env.company.id, False))],
         help="Used for sales to the current partner",
+        tracking=True,
     )
 
     # the specific pricelist to compute property_product_pricelist
@@ -28,6 +29,21 @@ class ResPartner(models.Model):
         company_dependent=True,
     )
 
+    is_pricelist_computed = fields.Boolean( 
+    string="Is Pricelist Computed",
+    default=False,
+    )
+
+
+    def write(self, values):
+        if 'property_product_pricelist' in values:
+            for partner in self:
+                old_value = partner.property_product_pricelist.id
+                new_value = values.get('property_product_pricelist')
+                if old_value != new_value:
+                    partner.is_pricelist_computed = True
+        return super().write(values)
+        
     @api.depends('country_id', 'specific_property_product_pricelist')
     @api.depends_context('company', 'country_code')
     def _compute_product_pricelist(self):
