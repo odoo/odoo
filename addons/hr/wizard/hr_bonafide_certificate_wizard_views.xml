@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_bonafide_certificate_wizard_view_form" model="ir.ui.view">
+        <field name="name">hr.bonafide.certificate.wizard.form</field>
+        <field name="model">hr.bonafide.certificate.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Bonafide Certificate">
+                <group>
+                    <field name="joining_date"/>
+                    <field name="request_date"/>
+                    <field name="reason_for_request"/>
+                    <field name="state_reason" invisible="reason_for_request != 'others'" required="reason_for_request == 'others'"/>
+                </group>
+                <footer>
+                    <button name="action_print" string="Print" type="object" class="btn-primary"/>
+                    <button string="Discard" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hr_bonafide_certificate" model="ir.actions.act_window">
+        <field name="name">Bonafide Certificate</field>
+        <field name="res_model">hr.bonafide.certificate.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_hr_employee"/>
+        <field name="binding_view_types">form</field>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>
