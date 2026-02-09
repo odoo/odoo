@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from lxml import etree
 
 from odoo import _, api, fields, models, tools
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
@@ -152,14 +153,6 @@ class AccountEdiProxyClientUser(models.Model):
                 continue
 
             company = edi_user.company_id
-            journal = company.peppol_purchase_journal_id
-            # use the first purchase journal if the Peppol journal is not set up
-            # to create the move anyway
-            if not journal:
-                journal = self.env['account.journal'].search([
-                    *self.env['account.journal']._check_company_domain(company),
-                    ('type', '=', 'purchase')
-                ], limit=1)
 
             need_retrigger = need_retrigger or len(message_uuids) > job_count
             message_uuids = message_uuids[:job_count]
@@ -185,9 +178,32 @@ class AccountEdiProxyClientUser(models.Model):
 
                 try:
                     attachment = self.env['ir.attachment'].create(attachment_vals)
+                    xml_tree = etree.fromstring(attachment.raw)
+                    invoice_type_code = xml_tree.findtext('.//{*}InvoiceTypeCode')
+                    credit_note_type_code = xml_tree.findtext('.//{*}CreditNoteTypeCode')
+
+                    if invoice_type_code in ['389', '527'] or credit_note_type_code == '261':
+                        # 389/527: Self-billing invoice; 261: Self-billing credit note
+                        journal = self.env['account.journal'].search(
+                            [
+                                *self.env['account.journal']._check_company_domain(self.company_id),
+                                ('type', '=', 'sale'),
+                            ],
+                            limit=1,
+                        )
+                        move_type = 'out_invoice' if invoice_type_code else 'out_refund'
+                    else:
+                        # use the first purchase journal if the Peppol journal is not set up
+                        # to create the move anyway
+                        journal = company.peppol_purchase_journal_id or self.env['account.journal'].search([
+                            *self.env['account.journal']._check_company_domain(company),
+                            ('type', '=', 'purchase')
+                        ], limit=1)
+                        move_type = 'in_invoice'
+
                     move = journal\
                         .with_context(
-                            default_move_type='in_invoice',
+                            default_move_type=move_type,
                             default_peppol_move_state=content['state'],
                             default_peppol_message_uuid=uuid,
                             default_journal_id=journal.id,

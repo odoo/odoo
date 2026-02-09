@@ -4185,10 +4185,14 @@ class AccountMove(models.Model):
         action['res_id'] = self.copy().id
         return action
 
+    def _is_exportable_as_self_invoice(self):
+        # To override in account_peppol_selfbilling
+        return False
+
     def action_send_and_print(self):
         template = self.env.ref(self._get_mail_template(), raise_if_not_found=False)
 
-        if any(not x.is_sale_document(include_receipts=True) for x in self):
+        if any(not x.is_sale_document(include_receipts=True) and not x._is_exportable_as_self_invoice() for x in self):
             raise UserError(_("You can only send sales documents"))
 
         return {
