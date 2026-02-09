@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { click, edit, queryAllTexts } from "@odoo/hoot-dom";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
@@ -25,7 +26,7 @@ class DashboardSearchBarMenuWrapper extends Component {
     };
 
     setup() {
-        this.props.model.on("update", this, () => this.render(true));
+        this.props.model.on("update", this, () => render(this, true));
         onWillUnmount(() => this.props.model.off("update", this));
     }
 }

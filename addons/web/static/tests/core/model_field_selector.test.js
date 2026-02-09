@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { expect, getFixture, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
@@ -84,7 +85,7 @@ test("creating a field chain from scratch", async () => {
         onUpdate(path) {
             expect.step(`update: ${path}`);
             this.path = path;
-            this.render();
+            render(this);
         }
     }
 
@@ -325,7 +326,7 @@ test("Using back button in popover", async () => {
         }
         onUpdate(path) {
             this.path = path;
-            this.render();
+            render(this);
         }
     }
 
@@ -480,7 +481,7 @@ test("Edit path in popover debug input", async () => {
         }
         onUpdate(path) {
             this.path = path;
-            this.render();
+            render(this);
         }
     }
 
@@ -766,7 +767,7 @@ test("support properties", async () => {
         onUpdate(path) {
             this.path = path;
             expect.step(path);
-            this.render();
+            render(this);
         }
     }
 
@@ -861,7 +862,7 @@ test("clear button (allowEmpty=true)", async () => {
         onUpdate(path) {
             this.path = path;
             expect.step(`path is ${JSON.stringify(path)}`);
-            this.render();
+            render(this);
         }
     }
 
@@ -913,7 +914,7 @@ test("Modify path in popover debug input and click away", async () => {
         update(path) {
             this.path = path;
             expect.step(path);
-            this.render();
+            render(this);
         }
     }
 

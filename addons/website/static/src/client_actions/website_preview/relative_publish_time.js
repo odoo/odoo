@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { _t } from "@web/core/l10n/translation";
 
@@ -50,7 +51,7 @@ export class RelativePublishTime extends RelativeTime {
 
         this.timeout = setTimeout(() => {
             this.computeRelativeTime(this.props.datetime ?? datetime);
-            this.render();
+            render(this);
         }, updateDelay);
     }
 }

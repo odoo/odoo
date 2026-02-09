@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { makeContext } from "@web/core/context";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
@@ -178,7 +179,7 @@ export class X2ManyField extends Component {
                         limit -= 1;
                     }
                     await list.load({ limit, offset });
-                    this.render();
+                    render(this);
                 }
             },
             withAccessKey: false,

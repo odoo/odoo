@@ -1,4 +1,4 @@
-import { useRef } from "@web/owl2/utils";
+import { render, useRef } from "@web/owl2/utils";
 import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
@@ -27,7 +27,7 @@ export class StockValuationReportFilters extends Component {
             onApply: (newDate) => {
                 if (newDate) {
                     this.env.controller.setDate(newDate);
-                    this.render();
+                    render(this);
                 }
             },
         });

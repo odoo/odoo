@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, mockFetch, runAllTimers } from "@odoo/hoot-mock";
@@ -109,7 +110,7 @@ test("error in a client action (after the first rendering)", async () => {
         }
         onClick() {
             this.boom = true;
-            this.render();
+            render(this);
         }
     }
     actionRegistry.add("Boom", Boom);

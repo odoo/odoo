@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { Component, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useRegistry } from "@web/core/registry_hook";
@@ -30,7 +31,7 @@ export class MainComponentsContainer extends Component {
     handleComponentError(error, C) {
         // remove the faulty component and rerender without it
         this.Components.entries.splice(this.Components.entries.indexOf(C), 1);
-        this.render();
+        render(this);
         /**
          * we rethrow the error to notify the user something bad happened.
          * We do it after a tick to make sure owl can properly finish its

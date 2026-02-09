@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { click, queryFirst } from "@odoo/hoot-dom";
@@ -268,7 +269,7 @@ test("defaultPage recomputed when isVisible is dynamic", async () => {
     expect(".page1").toHaveCount(1);
     expect(".nav-link.active").toHaveText("page1");
     defaultPageVisible = true;
-    parent.render(true);
+    render(parent, true);
 
     await animationFrame();
     expect(".page3").toHaveCount(1);
@@ -279,7 +280,7 @@ test("defaultPage recomputed when isVisible is dynamic", async () => {
     expect(".page2").toHaveCount(1);
     expect(".nav-link.active").toHaveText("page2");
 
-    parent.render(true);
+    render(parent, true);
     await animationFrame();
     expect(".page2").toHaveCount(1);
     expect(".nav-link.active").toHaveText("page2");

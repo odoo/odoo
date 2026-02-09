@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
+import { render, useLayoutEffect, useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
@@ -60,9 +60,9 @@ export class SpreadsheetDashboardAction extends Component {
             () => {
                 const dashboard = this.loader.getActiveDashboard();
                 if (dashboard && dashboard.status === Status.Loaded) {
-                    const render = () => this.render(true);
-                    dashboard.model.on("update", this, render);
-                    return () => dashboard.model.off("update", this, render);
+                    const onUpdate = () => render(this, true);
+                    dashboard.model.on("update", this, onUpdate);
+                    return () => dashboard.model.off("update", this, onUpdate);
                 }
             },
             () => {

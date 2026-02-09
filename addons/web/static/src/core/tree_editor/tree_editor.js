@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -219,7 +220,7 @@ export class TreeEditor extends Component {
             // this means that the parent might not render the domain selector
             // but we need to udpate editors
             await this.prepareInfo(this.props);
-            this.render();
+            render(this);
         }
         this.notifyChanges();
     }

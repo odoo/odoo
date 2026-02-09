@@ -1,4 +1,4 @@
-import { useComponent, useLayoutEffect } from "@web/owl2/utils";
+import { render, useComponent, useLayoutEffect } from "@web/owl2/utils";
 import { useExternalListener } from "@odoo/owl";
 import { pick, shallowEqual } from "@web/core/utils/objects";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
@@ -10,7 +10,7 @@ import { useThrottleForAnimation } from "@web/core/utils/timing";
  *  a ref to the scrollable element
  * @property {ScrollPosition} [initialScroll={ left: 0, top: 0 }]
  *  the initial scroll position of the scrollable element
- * @property {(changed: Partial<VirtualGridIndexes>) => void} [onChange=() => this.render()]
+ * @property {(changed: Partial<VirtualGridIndexes>) => void} [onChange=() => render(this)]
  *  a callback called when the visible items change, i.e. when on scroll or resize.
  *  the default implementation is to re-render the component.
  * @property {number} [bufferCoef=1]
@@ -108,7 +108,7 @@ function getIndexes({ sizes, start, span, prevStartIndex, bufferCoef = BUFFER_CO
  */
 export function useVirtualGrid({ scrollableRef, initialScroll, onChange, bufferCoef }) {
     const comp = useComponent();
-    onChange ||= () => comp.render();
+    onChange ||= () => render(comp);
 
     const current = { scroll: { left: 0, top: 0, ...initialScroll } };
     const computeColumnsIndexes = () =>

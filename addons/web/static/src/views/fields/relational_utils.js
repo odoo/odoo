@@ -1,4 +1,4 @@
-import { useComponent, useEnv, useLayoutEffect, useState, useSubEnv } from "@web/owl2/utils";
+import { render, useComponent, useEnv, useLayoutEffect, useState, useSubEnv } from "@web/owl2/utils";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -693,7 +693,7 @@ export class X2ManyFieldDialog extends Component {
         useSubEnv({ config: this.props.config });
         this.env.dialogData.dismiss = () => this.discard();
 
-        useBus(this.record.model.bus, "update", () => this.render(true));
+        useBus(this.record.model.bus, "update", () => render(this, true));
 
         this.modalRef = useChildRef();
 
@@ -819,7 +819,7 @@ export class X2ManyFieldDialog extends Component {
             if (this.title) {
                 this.title = this.title.replace(_t("Open:"), _t("New:"));
             }
-            this.render(true);
+            render(this, true);
         }
     }
 }

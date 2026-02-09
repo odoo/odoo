@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { AttendeeCalendarController } from "@calendar/views/attendee_calendar/attendee_calendar_controller";
 import { user } from "@web/core/user";
@@ -38,7 +39,7 @@ patch(AttendeeCalendarController.prototype, {
             }
         } else {
             await this.model.load();
-            this.render(true);
+            render(this, true);
         }
     },
 
@@ -49,7 +50,7 @@ patch(AttendeeCalendarController.prototype, {
             [[user.userId]],
         );
         await this.model.load();
-        this.render(true);
+        render(this, true);
     },
 
     async onUnpauseMicrosoftSynchronization() {
@@ -59,6 +60,6 @@ patch(AttendeeCalendarController.prototype, {
             [[user.userId]],
         );
         await this.onStopMicrosoftSynchronization();
-        this.render(true);
+        render(this, true);
     }
 });

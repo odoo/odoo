@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { Component, onWillDestroy, onWillUpdateProps, xml } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -35,7 +36,7 @@ export class RelativeTime extends Component {
         const updateDelay = absDelta < MINUTE ? absDelta : absDelta < HOUR ? MINUTE : HOUR;
         this.timeout = setTimeout(() => {
             this.computeRelativeTime(this.props.datetime);
-            this.render();
+            render(this);
         }, updateDelay);
     }
 }

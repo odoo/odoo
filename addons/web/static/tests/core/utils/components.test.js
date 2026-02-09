@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { expect, getFixture, test } from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
@@ -27,7 +28,7 @@ test("ErrorHandler component", async () => {
         }
         handleError() {
             this.flag = false;
-            this.render();
+            render(this);
         }
     }
 

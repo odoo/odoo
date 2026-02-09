@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { isId } from "@web/core/tree_editor/utils";
@@ -69,6 +70,6 @@ export class RecordSelector extends Component {
 
     update(resIds) {
         this.props.update(resIds[0] || false);
-        this.render(true);
+        render(this, true);
     }
 }

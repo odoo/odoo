@@ -1,4 +1,4 @@
-import { useComponent, useLayoutEffect } from "@web/owl2/utils";
+import { render, useComponent, useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
@@ -45,7 +45,7 @@ export function useActionLinks({ resModel, reload }) {
         if (data.method !== undefined && data.model !== undefined) {
             const options = {};
             if (data.reloadOnClose) {
-                options.onClose = reload || (() => component.render());
+                options.onClose = reload || (() => render(component));
             }
             const action = await keepLast.add(orm.call(data.model, data.method));
             if (action !== undefined) {

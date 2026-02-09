@@ -1,4 +1,5 @@
 
+import { render } from "@web/owl2/utils";
 import { Component } from '@odoo/owl';
 
 export class QuantityButtons extends Component {
@@ -36,7 +37,7 @@ export class QuantityButtons extends Component {
         // If the quantity wasn't updated, the component won't rerender, and the input will display
         // a stale value. As a result, we need to manually rerender the input.
         if (!didUpdateQuantity) {
-            this.render();
+            render(this);
         }
     }
 }
