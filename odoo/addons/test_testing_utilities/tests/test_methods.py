@@ -120,6 +120,11 @@ First differing element 0:
         self.env.cr.execute("SHOW test_testing_utilities.a_flag")
         self.assertEqual(self.env.cr.fetchone(), ('',))
 
+    def test_assertRaises_invalid_exception_type(self):
+        with self.assertRaisesRegex(TypeError, "exception type"):
+            with self.assertRaises("not a class"):
+                pass
+
     def test_assertRaises_error_at_setup(self):
         """Checks that an exception raised during the *setup* of assertRaises
         bubbles up correctly.
