@@ -518,7 +518,7 @@ export class MailThread extends models.ServerModel {
                                 message_id: message.id,
                                 store_data: new mailDataHelpers.Store(
                                     MailMessage.browse(message.id),
-                                    makeKwArgs({ for_current_user: true, add_followers: true })
+                                    makeKwArgs({ for_current_user: true, inbox_fields: true })
                                 ).get_result(),
                             },
                         ]);

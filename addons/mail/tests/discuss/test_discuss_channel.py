@@ -131,7 +131,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "display_name": "Group",
                                         "id": test_group.id,
                                         "model": "discuss.channel",
-                                        "module_icon": "/mail/static/description/icon.png",
                                         "rating_avg": 0.0,
                                         "rating_count": 0,
                                     },

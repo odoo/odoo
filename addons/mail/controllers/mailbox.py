@@ -12,7 +12,7 @@ class MailboxController(http.Controller):
         res = request.env["mail.message"]._message_fetch(domain, **(fetch_params or {}))
         messages = res.pop("messages")
         store = Store()
-        store.add(messages, "_store_message_fields", fields_params={"add_followers": True})
+        store.add(messages, "_store_message_fields", fields_params={"inbox_fields": True})
         return {**res, "data": store.get_result(), "messages": messages.ids}
 
     @http.route("/mail/history/messages", methods=["POST"], type="jsonrpc", auth="user", readonly=True)

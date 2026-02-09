@@ -3390,7 +3390,7 @@ class MailThread(models.AbstractModel):
                     ("partner_id", "in", users.partner_id.ids),
                 ]
             )
-            batch_vals = {"msg_vals": msg_vals, "add_followers": True, "followers": followers}
+            batch_vals = {"msg_vals": msg_vals, "inbox_fields": True, "followers": followers}
             for user in users:
                 store = Store(bus_channel=user).add(
                     message.with_user(user).with_context(allowed_company_ids=[]),

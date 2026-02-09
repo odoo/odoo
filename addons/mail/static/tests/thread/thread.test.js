@@ -662,7 +662,7 @@ test("[text composer] Opening thread with needaction messages should mark all me
         message_id: messageId,
         store_data: new mailDataHelpers.Store(
             pyEnv["mail.message"].browse(messageId),
-            makeKwArgs({ for_current_user: true, add_followers: true })
+            makeKwArgs({ for_current_user: true, inbox_fields: true })
         ).get_result(),
     });
     await contains("button:has(:text('Inbox'))", { contains: [".badge:text('1')"] });
@@ -719,7 +719,7 @@ test("Opening thread with needaction messages should mark all messages of thread
         message_id: messageId,
         store_data: new mailDataHelpers.Store(
             pyEnv["mail.message"].browse(messageId),
-            makeKwArgs({ for_current_user: true, add_followers: true })
+            makeKwArgs({ for_current_user: true, inbox_fields: true })
         ).get_result(),
     });
     await contains("button:has(:text('Inbox'))", { contains: [".badge:text('1')"] });

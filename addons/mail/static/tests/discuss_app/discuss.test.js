@@ -520,7 +520,7 @@ test("receive new needaction messages", async () => {
         message_id: messageId_1,
         store_data: new mailDataHelpers.Store(
             pyEnv["mail.message"].browse(messageId_1),
-            makeKwArgs({ for_current_user: true, add_followers: true })
+            makeKwArgs({ for_current_user: true, inbox_fields: true })
         ).get_result(),
     });
     await contains("button:has(:text('Inbox'))", { contains: [".badge:text('1')"] });
@@ -544,7 +544,7 @@ test("receive new needaction messages", async () => {
         message_id: messageId_2,
         store_data: new mailDataHelpers.Store(
             pyEnv["mail.message"].browse(messageId_2),
-            makeKwArgs({ for_current_user: true, add_followers: true })
+            makeKwArgs({ for_current_user: true, inbox_fields: true })
         ).get_result(),
     });
     await contains("button:has(:text('Inbox'))", { contains: [".badge:text('2')"] });
@@ -578,7 +578,7 @@ test("receive a message that is not linked to thread", async () => {
         message_id: messageId_1,
         store_data: new mailDataHelpers.Store(
             pyEnv["mail.message"].browse(messageId_1),
-            makeKwArgs({ for_current_user: true, add_followers: true })
+            makeKwArgs({ for_current_user: true, inbox_fields: true })
         ).get_result(),
     });
     await contains("button:has(:text('Inbox'))", { contains: [".badge:text('1')"] });
