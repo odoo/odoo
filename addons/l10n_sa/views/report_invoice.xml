@@ -186,7 +186,7 @@
         <!-- End Credit/Debit notes reasons -->
         <!-- Call custom tax totals templates -->
          <div id="right-elements" position="attributes">
-            <attribute name="t-attf-class">#{'col-6 mt-5' if report_type == 'pdf' else 'col-12 col-md-5'} ms-5 d-inline-block float-end</attribute>
+            <attribute name="t-attf-class">#{'col-7 mt-5' if report_type == 'pdf' else 'col-12 col-md-7'} ms-5 d-inline-block float-end</attribute>
          </div>
         <t t-call="l10n_gcc_invoice.l10n_gcc_document_tax_totals" position="attributes">
             <attribute name="t-call">l10n_sa.l10n_sa_document_tax_totals</attribute>
