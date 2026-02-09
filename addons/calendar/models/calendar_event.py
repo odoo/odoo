@@ -215,6 +215,7 @@ class CalendarEvent(models.Model):
     alarm_ids = fields.Many2many(
         'calendar.alarm', 'calendar_alarm_calendar_event_rel',
         string='Reminders', ondelete="restrict",
+        default=lambda self: self.env.ref('calendar.alarm_notif_1', raise_if_not_found=False),
         help="Notifications sent to all attendees to remind of the meeting.")
     # RECURRENCE FIELD
     recurrency = fields.Boolean('Recurrent')

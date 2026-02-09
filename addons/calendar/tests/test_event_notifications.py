@@ -305,7 +305,7 @@ class TestEventNotifications(CalendarMailCommon):
                     'start': now + relativedelta(minutes=50),
                     'stop': now + relativedelta(minutes=55),
                     'partner_ids': [(4, self.partner.id)],
-                    'alarm_ids': [(4, alarm.id)]
+                    'alarm_ids': [(6, 0, alarm.ids)]
                 })
 
     def test_email_alarm(self):
@@ -615,7 +615,7 @@ class TestEventNotifications(CalendarMailCommon):
                     'start': now + relativedelta(minutes=50),
                     'stop': now + relativedelta(minutes=55),
                     'partner_ids': [(4, self.partner.id)],
-                    'alarm_ids': [(4, alarm.id)]
+                    'alarm_ids': [(6, 0, alarm.ids)]
                 })
 
     def test_calendar_recurring_event_delete_notification(self):
