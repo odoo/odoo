@@ -669,7 +669,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
 publicWidget.registry.WebsiteSale = WebsiteSale
 
 publicWidget.registry.WebsiteSaleSearchModal = publicWidget.Widget.extend({
-    selector: '#o_wsale_search_modal',
+    selector: "#o_wsale_search_modal, #o_wsale_product_search_modal",
     disabledInEditableMode: true,
 
     //--------------------------------------------------------------------------
@@ -682,6 +682,9 @@ publicWidget.registry.WebsiteSaleSearchModal = publicWidget.Widget.extend({
             ev.target.querySelector('.oe_search_box').focus();
         });
     },
+    destroy() {
+        Modal.getInstance(this.el)?.hide();
+    }
 });
 
 publicWidget.registry.WebsiteSaleAccordionProduct = publicWidget.Widget.extend({
