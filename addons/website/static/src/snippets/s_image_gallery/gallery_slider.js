@@ -23,6 +23,7 @@ export class GallerySlider extends Interaction {
     };
 
     setup() {
+        this.liEls = [];
         this.hideOnClickIndicator = true;
         this.carouselEl = this.el.classList.contains("carousel")
             ? this.el
@@ -142,7 +143,7 @@ export class GallerySlider extends Interaction {
     }
 
     onSlidCarousel() {
-        if (this.liEls) {
+        if (this.liEls.length > 0) {
             const active = [...this.liEls].filter((el) => el.classList.contains("active"));
             const index = active.length ? [...this.liEls].indexOf(active[0]) : 0;
             this.page = Math.floor(index / this.realNbPerPage);
