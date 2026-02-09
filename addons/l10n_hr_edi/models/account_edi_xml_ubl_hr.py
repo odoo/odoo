@@ -378,6 +378,7 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
             if not line_values['product_uom_id']:
                 line_values.pop('product_uom_id')  # if no uom, pop it so it's inferred from the product_id
             lines_values.append(line_values)
+            lines_values += self._retrieve_discount_as_line(invoice, line_values, line_values['tax_ids'])
             lines_values += self._retrieve_line_charges(invoice, line_values, line_values['tax_ids'])
         return lines_values, logs
 

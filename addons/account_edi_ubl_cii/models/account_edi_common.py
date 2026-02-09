@@ -644,6 +644,7 @@ class AccountEdiCommon(models.AbstractModel):
             if not line_values['product_uom_id']:
                 line_values.pop('product_uom_id')  # if no uom, pop it so it's inferred from the product_id
             lines_values.append(line_values)
+            lines_values += self._retrieve_discount_as_line(invoice, line_values, line_values['tax_ids'])
             lines_values += self._retrieve_line_charges(invoice, line_values, line_values['tax_ids'])
         return lines_values, logs
 
@@ -806,10 +807,17 @@ class AccountEdiCommon(models.AbstractModel):
 
         # discount
         discount = 0
+        discount_as_line = []
         currency = self.env.company.currency_id
         if not float_is_zero(delivered_qty * price_unit, currency.decimal_places) and price_subtotal is not None:
             inferred_discount = 100 * (1 - (price_subtotal - charge_amount) / currency.round(delivered_qty * price_unit))
             discount = inferred_discount if not float_is_zero(inferred_discount, currency.decimal_places) else 0.0
+        elif discount_amount:
+            # Create a fixed discount
+            discount_as_line.append({
+                'amount': discount_amount,
+                'reason': 'Discount',
+            })
 
         # Sometimes, the xml received is very bad; e.g.:
         #   * unit price = 0, qty = 0, but price_subtotal = -200
@@ -836,6 +844,7 @@ class AccountEdiCommon(models.AbstractModel):
             'discount': discount,
             'tax_nodes': self._get_tax_nodes(tree),  # see `_retrieve_taxes`
             'charges': charges,  # see `_retrieve_line_charges`
+            'discount_as_line': discount_as_line,  # see `_retrieve_discount_as_line`
         }
 
     def _import_product(self, **product_vals):
@@ -912,6 +921,22 @@ class AccountEdiCommon(models.AbstractModel):
                 if tax.price_include:
                     line_values['price_unit'] *= (1 + tax.amount / 100)
         return taxes, logs
+
+    def _retrieve_discount_as_line(self, record, line_values, taxes):
+        """
+        Handle the discount on the document line at import thant can't be transformed as percent.
+
+        It creates a new aml.
+        """
+        discount_vals = []
+        for discount in line_values.pop('discount_as_line'):
+            discount_vals.append([
+                discount['reason'],
+                1,
+                discount['amount'] * -1,
+                taxes,
+            ])
+        return record._get_line_vals_list(discount_vals)
 
     def _retrieve_line_charges(self, record, line_values, taxes):
         """

@@ -444,6 +444,52 @@ class TestAccountEdiUblCii(TestUblCiiCommon):
         for line in imported_invoice.invoice_line_ids:
             self.assertFalse(line.discount, "A discount on the imported lines signals a rounding error in the discount computation")
 
+    def test_import_discount_2(self):
+        """
+        Some product have no price, but have allowance and discount.
+        Defaut behavior is to apply discount as percent on product price.
+        If no product price is provided, this doesn't work and sum of created lines doesn't equal the imported invoice amount.
+        This test ensure this case is treated.
+        """
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 0,
+                }),
+            ],
+        })
+        my_invoice_raw = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
+        my_invoice_root = etree.fromstring(my_invoice_raw)
+        modifying_xpath = """<xpath expr="(//*[local-name()='InvoiceLine']/*[local-name()='LineExtensionAmount'])" position="after">
+            <AllowanceCharge>
+                <ChargeIndicator>true</ChargeIndicator>
+                <AllowanceChargeReason>FREIGHT</AllowanceChargeReason>
+                <Amount currencyID="EUR">1.00</Amount>
+            </AllowanceCharge>
+            <AllowanceCharge>
+                <ChargeIndicator>false</ChargeIndicator>
+                <AllowanceChargeReason>DISCOUNTED FUEL SURCHARGE</AllowanceChargeReason>
+                <Amount currencyID="EUR">0.50</Amount>
+            </AllowanceCharge>
+            </xpath>"""
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': etree.tostring(self.with_applied_xpath(my_invoice_root, modifying_xpath)),
+            'name': 'test_invoice.xml',
+        })
+
+        imported_invoice = self._import_as_attachment_on(attachment=xml_attachment, journal=self.company_data["default_journal_sale"])
+        self.assertEqual(len(imported_invoice.invoice_line_ids), 3)
+        self.assertRecordValues(imported_invoice, [{'amount_total': 0.50}])
+        self.assertRecordValues(imported_invoice.invoice_line_ids, [
+            {'name': self.product_a.name, 'price_subtotal': 0.00},
+            {'name': 'Discount', 'price_subtotal': -0.50},
+            {'name': ' FREIGHT', 'price_subtotal': 1.0},
+        ])
+
     def test_payment_means_code_in_facturx_xml(self):
         bank_ing = self.env['res.bank'].create({'name': 'ING', 'bic': 'BBRUBEBB'})
         partner_bank = self.env['res.partner.bank'].create({
