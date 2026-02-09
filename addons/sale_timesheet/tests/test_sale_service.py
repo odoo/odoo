@@ -688,12 +688,10 @@ class TestSaleService(TestCommonSaleTimesheet):
             The conversion to time should be processed as follows :
                 H : qty = uom_qty [Hours]
                 D : qty = uom_qty * 8 [Hours]
-                U : qty =  uom_qty [Hours]
-                Other : qty = 0
 
             Test Cases:
             ==========
-            1) Create a 4 SOL on a SO With different UOM
+            1) Create a 2 SOL on a SO With different UOM
             2) Confirm the SO
             3) Check the project allocated hour is correctly set
             4) Repeat with different timesheet encoding UOM
@@ -709,15 +707,10 @@ class TestSaleService(TestCommonSaleTimesheet):
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 8,
             'product_uom_id': self.env.ref('uom.product_uom_hour').id,  # 8 hours
-        }, {
-            'order_id': self.sale_order.id,
-            'product_id': self.product_delivery_timesheet3.id,
-            'product_uom_qty': 6,
-            'product_uom_id': self.env.ref('uom.product_uom_unit').id,  # 6 hours
         }])
         self.sale_order.action_confirm()
         allocated_hours = self.sale_order.project_ids.allocated_hours
-        self.assertEqual(16 + 8 + 6, allocated_hours,
+        self.assertEqual(16 + 8, allocated_hours,
                          "Project's allocated hours should add up correctly.")
 
         self.env.company.timesheet_encode_uom_id = self.env.ref('uom.product_uom_day')
@@ -820,6 +813,7 @@ class TestSaleService(TestCommonSaleTimesheet):
         Ensure hours are rounded consistently on SO & invoice.
         """
         self.env['decimal.precision'].search([('name', '=', 'Product Unit')]).digits = 0
+        self.product_delivery_timesheet3.uom_id._invalidate_cache(['rounding'])
         self.env['sale.order.line'].create({
             'name': self.product_delivery_timesheet3.name,
             'product_id': self.product_delivery_timesheet3.id,
