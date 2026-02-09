@@ -45,6 +45,7 @@ export class MentionPlugin extends Plugin {
             this.mentionList.open({
                 props: {
                     onSelect: this.onSelect.bind(this),
+                    thread: this.config.thread,
                     type: ev.data === "@" ? "partner" : "channel",
                     close: () => {
                         this.mentionList.close();
