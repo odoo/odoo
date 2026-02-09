@@ -1,8 +1,7 @@
-import { useEnv, useLayoutEffect } from "@web/owl2/utils";
+import { useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { user } from "@web/core/user";
 import { registry } from "../registry";
 
-import { useSubEnv } from "@odoo/owl";
 const debugRegistry = registry.category("debug");
 
 const getAccessRights = async () => {

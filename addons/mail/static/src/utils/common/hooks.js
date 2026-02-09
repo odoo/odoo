@@ -1,4 +1,4 @@
-import { useComponent, useLayoutEffect } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import {
     Component,
     onMounted,
@@ -8,7 +8,6 @@ import {
     toRaw,
     useRef,
     useState,
-    useSubEnv,
     xml,
 } from "@odoo/owl";
 

@@ -1,5 +1,5 @@
+import { useSubEnv } from "@web/owl2/utils";
 import { DependencyManager } from "../core/dependency_manager";
-import { useSubEnv } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 /**

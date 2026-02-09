@@ -1,5 +1,5 @@
+import { useSubEnv } from "@web/owl2/utils";
 import { AccountProductCatalogSearchModel } from "@account/components/product_catalog/search/search_model";
-import { useSubEnv } from "@odoo/owl";
 import { getSuggestToggleState } from "../utils";
 
 export class PurchaseStockProductCatalogSearchModel extends AccountProductCatalogSearchModel {

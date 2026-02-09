@@ -1,7 +1,8 @@
+import { useSubEnv } from "@web/owl2/utils";
 import { ActionList } from "@mail/core/common/action_list";
 import { DiscussSearch } from "@mail/core/public_web/discuss_search";
 
-import { Component, onMounted, useSubEnv } from "@odoo/owl";
+import { Component, onMounted } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";

@@ -1,3 +1,4 @@
+import { useSubEnv } from "@web/owl2/utils";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { Call } from "@mail/discuss/call/common/call";
@@ -8,7 +9,7 @@ import {
     useMessageScrolling,
 } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, onWillUnmount, useChildSubEnv, useSubEnv } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useChildSubEnv } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useService } from "@web/core/utils/hooks";

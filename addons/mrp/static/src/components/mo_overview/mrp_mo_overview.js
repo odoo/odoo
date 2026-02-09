@@ -1,4 +1,5 @@
-import { Component, EventBus, onWillStart, useSubEnv, useState } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
+import { Component, EventBus, onWillStart, useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";

@@ -1,4 +1,4 @@
-import { useSubEnv } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
 import { rpc } from "@web/core/network/rpc";
 import { useDebounced } from "@web/core/utils/timing";
 import { KanbanRecord } from "@web/views/kanban/kanban_record";

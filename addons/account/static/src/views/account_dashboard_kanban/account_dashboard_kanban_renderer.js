@@ -1,7 +1,8 @@
+import { useSubEnv } from "@web/owl2/utils";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { DashboardKanbanRecord } from "./account_dashboard_kanban_record";
 
-import { useSubEnv, reactive } from "@odoo/owl";
+import { reactive } from "@odoo/owl";
 
 export class DashboardKanbanRenderer extends KanbanRenderer {
     static template = "account.DashboardKanbanRenderer";

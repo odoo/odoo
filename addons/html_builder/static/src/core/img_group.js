@@ -1,4 +1,5 @@
-import { Component, useSubEnv, xml } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
+import { Component, xml } from "@odoo/owl";
 import { batched } from "@web/core/utils/timing";
 
 export class ImgGroup extends Component {

@@ -1,4 +1,5 @@
-import { Component, useState, useSubEnv, useRef } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
+import { Component, useState, useRef } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { AttributeSelection } from "@pos_self_order/app/components/attribute_selection/attribute_selection";

@@ -1,4 +1,5 @@
-import { Component, useState, onMounted, useSubEnv } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
+import { Component, useState, onMounted } from "@odoo/owl";
 import { ModelStore } from "@api_doc/doc_model_store";
 import { useDocUI } from "@api_doc/utils/doc_ui_store";
 import { ApiKeyModal } from "@api_doc/components/doc_modal_api_key";
