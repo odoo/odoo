@@ -15,7 +15,7 @@
                         <select id="formview_default_fields" class="o_input" t-model="state.fieldToSet">
                             <option value=""/>
                             <option t-foreach="defaultFields" t-as="field" t-att-value="field.name" t-key="field.name">
-                                <t t-out="field.string"/> = <t t-out="field.displayed"/>
+                                <t t-out="field.string"/> = <t t-out="window.String(field.displayed)"/>
                             </option>
                         </select>
                     </td>
