@@ -1,7 +1,8 @@
+import { useState } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { Component, onWillDestroy, useState } from "@odoo/owl";
+import { Component, onWillDestroy } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";

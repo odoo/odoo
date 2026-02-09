@@ -1,7 +1,8 @@
+import { useState } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
-import { Component, onWillStart, useState } from "@odoo/owl";
+import { Component, onWillStart } from "@odoo/owl";
 
 import { useSequential } from "@mail/utils/common/hooks";
 import { _t } from "@web/core/l10n/translation";

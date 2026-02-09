@@ -1,4 +1,5 @@
-import { Component, onWillStart, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, onWillStart } from "@odoo/owl";
 import { ColorPicker } from "@web/core/color_picker/color_picker";
 import { HighlightPicker } from "./highlight_picker";
 import { normalizeColor } from "@html_builder/utils/utils_css";

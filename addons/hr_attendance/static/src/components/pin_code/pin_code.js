@@ -1,4 +1,5 @@
-import { Component, onWillStart, useState, onWillDestroy } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, onWillStart, onWillDestroy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { range } from "@web/core/utils/numbers";
 

@@ -1,6 +1,7 @@
+import { useState } from "@web/owl2/utils";
 import { formatDate } from "@web/core/l10n/dates";
 import { useService } from '@web/core/utils/hooks';
-import { Component, useState, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillUpdateProps } from "@odoo/owl";
 
 const { DateTime } = luxon;
 

@@ -1,7 +1,7 @@
+import { useState } from "@web/owl2/utils";
 import { AttendeeCalendarModel } from "@calendar/views/attendee_calendar/attendee_calendar_model";
 import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
-import { useState } from "@odoo/owl";
 
 patch(AttendeeCalendarModel, {
     services: [...AttendeeCalendarModel.services],

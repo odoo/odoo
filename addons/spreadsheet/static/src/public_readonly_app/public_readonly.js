@@ -1,5 +1,5 @@
-import { useChildSubEnv } from "@web/owl2/utils";
-import { Component, markRaw, onWillStart, useState } from "@odoo/owl";
+import { useChildSubEnv, useState } from "@web/owl2/utils";
+import { Component, markRaw, onWillStart } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { download } from "@web/core/network/download";
 

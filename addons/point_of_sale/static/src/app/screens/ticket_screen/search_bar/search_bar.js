@@ -1,5 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, useExternalListener, useState } from "@odoo/owl";
+import { useLayoutEffect, useState } from "@web/owl2/utils";
+import { Component, useExternalListener } from "@odoo/owl";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 
 /**

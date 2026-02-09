@@ -1,7 +1,8 @@
+import { useState } from "@web/owl2/utils";
 import { AttachmentView } from "@mail/core/common/attachment_view";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 
-import { onMounted, onWillUnmount, useState } from "@odoo/owl";
+import { onMounted, onWillUnmount } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { SIZES } from "@web/core/ui/ui_service";

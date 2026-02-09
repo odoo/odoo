@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { Domain } from '@web/core/domain';
 import { registry } from '@web/core/registry';
@@ -11,7 +11,7 @@ import {
     m2oSupportedOptions,
     Many2OneField,
 } from "@web/views/fields/many2one/many2one_field";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { exprToBoolean } from "@web/core/utils/strings";
 
 export class MailingFilterDropdown extends Dropdown {

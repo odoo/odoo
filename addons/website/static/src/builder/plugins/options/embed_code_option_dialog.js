@@ -1,8 +1,9 @@
+import { useState } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { useService } from "@web/core/utils/hooks";
 import { EditHeadBodyDialog } from "@website/components/edit_head_body_dialog/edit_head_body_dialog";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 export class EmbedCodeOptionDialog extends Component {
     static template = "website.EmbedCodeOptionDialog";

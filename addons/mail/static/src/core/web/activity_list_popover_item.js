@@ -1,9 +1,10 @@
+import { useState } from "@web/owl2/utils";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { computeDelay } from "@mail/utils/common/dates";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { FileUploader } from "@web/views/fields/file_handler";

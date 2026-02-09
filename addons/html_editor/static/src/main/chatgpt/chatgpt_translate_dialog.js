@@ -1,4 +1,4 @@
-import { useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
 import { ChatGPTDialog } from "./chatgpt_dialog";
 
 export class ChatGPTTranslateDialog extends ChatGPTDialog {

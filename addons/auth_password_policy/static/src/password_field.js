@@ -1,3 +1,4 @@
+import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -6,7 +7,7 @@ import { useInputField } from "@web/views/fields/input_field_hook";
 
 import { recommendations, ConcretePolicy } from "./password_policy";
 import { Meter } from "./password_meter";
-import { Component, onWillStart, useState } from "@odoo/owl";
+import { Component, onWillStart } from "@odoo/owl";
 
 export class PasswordField extends Component {
     static props = standardFieldProps;

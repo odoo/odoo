@@ -1,7 +1,7 @@
-import { useRef } from "@web/owl2/utils";
+import { useRef, useState } from "@web/owl2/utils";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";

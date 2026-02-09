@@ -1,4 +1,5 @@
-import { onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
 export class FormActionFieldsOption extends BaseOptionComponent {

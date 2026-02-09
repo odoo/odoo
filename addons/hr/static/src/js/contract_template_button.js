@@ -1,5 +1,5 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, useState } from "@odoo/owl";
+import { useRef, useState } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { SelectionField } from "@web/views/fields/selection/selection_field";

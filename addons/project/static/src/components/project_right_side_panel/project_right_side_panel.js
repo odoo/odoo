@@ -1,3 +1,4 @@
+import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { formatFloat } from "@web/views/fields/formatters";
@@ -7,7 +8,7 @@ import { ProjectRightSidePanelSection } from './components/project_right_side_pa
 import { ProjectMilestone } from './components/project_milestone';
 import { ProjectProfitability } from './components/project_profitability';
 import { getCurrency } from '@web/core/currency';
-import { Component, onWillStart, useState } from "@odoo/owl";
+import { Component, onWillStart } from "@odoo/owl";
 import { SIZES } from "@web/core/ui/ui_service";
 
 export class ProjectRightSidePanel extends Component {

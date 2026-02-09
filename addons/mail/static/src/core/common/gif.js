@@ -1,4 +1,5 @@
-import { Component, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 
 import { Deferred, KeepLast } from "@web/core/utils/concurrency";
 import { memoize } from "@web/core/utils/functions";

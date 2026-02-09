@@ -1,4 +1,5 @@
-import { Component, EventBus, onWillDestroy, onWillStart, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, EventBus, onWillDestroy, onWillStart } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { rpc, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";

@@ -1,5 +1,6 @@
+import { useState } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { formatFloat, formatFloatTime } from "@web/views/fields/formatters";
 
 export class ProjectProfitabilitySection extends Component {

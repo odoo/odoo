@@ -1,5 +1,6 @@
+import { useState } from "@web/owl2/utils";
 import { _t } from '@web/core/l10n/translation';
-import { Component, onWillStart, useState } from '@odoo/owl';
+import { Component, onWillStart } from '@odoo/owl';
 import { formatCurrency } from '@web/core/currency';
 import { useService, useBus } from '@web/core/utils/hooks';
 import { DateFilterButton, DATE_OPTIONS } from '../date_filter_button/date_filter_button';

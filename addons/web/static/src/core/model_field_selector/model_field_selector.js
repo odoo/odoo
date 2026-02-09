@@ -1,4 +1,5 @@
-import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";

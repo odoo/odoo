@@ -1,11 +1,10 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import {
     applyObjectPropertyDifference,
     getEmbeddedProps,
     StateChangeManager,
     useEmbeddedState,
 } from "@html_editor/others/embedded_component_utils";
-import { useState } from "@odoo/owl";
 import { ReadonlyEmbeddedFileComponent } from "@html_editor/others/embedded_components/core/file/readonly_file";
 
 export class EmbeddedFileComponent extends ReadonlyEmbeddedFileComponent {

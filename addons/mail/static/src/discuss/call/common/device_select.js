@@ -1,4 +1,5 @@
-import { Component, onWillDestroy, onWillStart, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, onWillDestroy, onWillStart } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";

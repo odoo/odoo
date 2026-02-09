@@ -1,4 +1,5 @@
-import { useState, onWillStart, onWillDestroy } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { onWillStart, onWillDestroy } from "@odoo/owl";
 
 export function useRegistry(registry) {
     const state = useState({ entries: registry.getEntries() });

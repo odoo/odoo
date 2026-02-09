@@ -1,4 +1,4 @@
-import { useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
 import { patch } from "@web/core/utils/patch";
 import { TimeOffCalendarSidePanel } from "@hr_holidays/views/calendar/calendar_side_panel/calendar_side_panel";
 

@@ -1,4 +1,5 @@
-import { Component, onWillStart, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, onWillStart } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 import { useAutofocus, useService } from "@web/core/utils/hooks";

@@ -1,4 +1,5 @@
-import { Component, useState, onWillUpdateProps, onWillDestroy } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, onWillUpdateProps, onWillDestroy } from "@odoo/owl";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useCachedModel } from "@html_builder/core/cached_model_utils";
 import { _t } from "@web/core/l10n/translation";

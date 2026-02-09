@@ -1,4 +1,5 @@
-import { Component, useExternalListener, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, useExternalListener } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";

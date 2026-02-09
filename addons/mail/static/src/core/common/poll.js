@@ -1,7 +1,8 @@
+import { useState } from "@web/owl2/utils";
 import { PollVotesPanel } from "@mail/core/common/poll_votes_panel";
 import { useDynamicInterval } from "@mail/utils/common/misc";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 

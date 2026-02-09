@@ -1,4 +1,5 @@
-import { Component, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { range } from "@web/core/utils/numbers";
 
 const HOURS = range(24).map((hour) => [hour, String(hour)]);

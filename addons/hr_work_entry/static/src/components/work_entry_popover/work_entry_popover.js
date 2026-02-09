@@ -1,8 +1,8 @@
-import { useRef } from "@web/owl2/utils";
+import { useRef, useState } from "@web/owl2/utils";
 import { formatFloatTime } from "@web/views/fields/formatters";
 import { Record } from "@web/model/record";
 import { FormRenderer } from "@web/views/form/form_renderer";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { serializeDate } from "@web/core/l10n/dates";

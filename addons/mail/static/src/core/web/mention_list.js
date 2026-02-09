@@ -1,6 +1,6 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 
 import { NavigableList } from "@mail/core/common/navigable_list";

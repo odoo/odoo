@@ -1,7 +1,7 @@
-import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect, useState, useSubEnv } from "@web/owl2/utils";
 import { CallPreview } from "@mail/discuss/call/common/call_preview";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";

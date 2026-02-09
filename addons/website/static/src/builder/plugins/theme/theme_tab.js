@@ -1,5 +1,5 @@
-import { useSubEnv } from "@web/owl2/utils";
-import { Component, useState } from "@odoo/owl";
+import { useState, useSubEnv } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
 import { useOptionsSubEnv } from "@html_builder/utils/utils";
 

@@ -1,8 +1,8 @@
-import { useChildSubEnv } from "@web/owl2/utils";
+import { useChildSubEnv, useState } from "@web/owl2/utils";
 import { AccordionItem, ACCORDION } from "@web/core/dropdown/accordion_item";
 import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 export class PropertiesGroupByItem extends Component {
     static template = "web.PropertiesGroupByItem";

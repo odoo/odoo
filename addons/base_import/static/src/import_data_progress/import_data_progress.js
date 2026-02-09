@@ -1,5 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, useState } from "@odoo/owl";
+import { useLayoutEffect, useState } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 
 export class ImportDataProgress extends Component {
     static template = "ImportDataProgress";

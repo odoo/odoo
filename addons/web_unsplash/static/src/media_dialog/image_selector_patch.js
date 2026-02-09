@@ -1,3 +1,4 @@
+import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -6,7 +7,6 @@ import { useService } from "@web/core/utils/hooks";
 import { ImageSelector } from "@html_editor/main/media/media_dialog/image_selector";
 
 import { UnsplashError } from "../unsplash_error/unsplash_error";
-import { useState } from "@odoo/owl";
 
 patch(ImageSelector.prototype, {
     setup() {

@@ -1,4 +1,4 @@
-import { useRef, useSubEnv } from "@web/owl2/utils";
+import { useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { rpc } from "@web/core/network/rpc";
@@ -12,7 +12,7 @@ import {
     removeTextHighlight,
     getObservedEls,
 } from "@website/js/highlight_utils";
-import { useState, Component, onWillStart, onMounted, status } from "@odoo/owl";
+import { Component, onWillStart, onMounted, status } from "@odoo/owl";
 import { onceAllImagesLoaded } from "@website/utils/images";
 
 const NO_OP = () => {};

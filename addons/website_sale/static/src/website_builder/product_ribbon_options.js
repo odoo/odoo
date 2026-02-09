@@ -1,5 +1,6 @@
+import { useState } from "@web/owl2/utils";
 import { BaseOptionComponent } from "@html_builder/core/utils";
-import { onWillStart, useState } from "@odoo/owl";
+import { onWillStart } from "@odoo/owl";
 
 export class ProductsRibbonOption extends BaseOptionComponent {
     static template = 'website_sale.ProductsRibbonOptionPlugin';

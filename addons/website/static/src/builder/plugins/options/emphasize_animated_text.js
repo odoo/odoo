@@ -1,4 +1,5 @@
-import { Component, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { useBus } from "@web/core/utils/hooks";
 

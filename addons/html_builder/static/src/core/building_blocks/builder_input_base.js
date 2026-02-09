@@ -1,4 +1,5 @@
-import { Component, onWillUpdateProps, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, onWillUpdateProps } from "@odoo/owl";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 import { useActionInfo } from "../utils";
 

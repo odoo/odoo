@@ -1,4 +1,5 @@
-import { Component, onPatched, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, onPatched } from "@odoo/owl";
 
 export const ACCORDION = Symbol("Accordion");
 export class AccordionItem extends Component {

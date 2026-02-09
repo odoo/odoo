@@ -1,5 +1,5 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, useState } from "@odoo/owl";
+import { useRef, useState } from "@web/owl2/utils";
+import { Component, onMounted } from "@odoo/owl";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";

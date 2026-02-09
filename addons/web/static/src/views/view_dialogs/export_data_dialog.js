@@ -1,4 +1,4 @@
-import { useRef } from "@web/owl2/utils";
+import { useRef, useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
@@ -10,7 +10,7 @@ import { fuzzyLookup } from "@web/core/utils/search";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { useDebounced } from "@web/core/utils/timing";
 
-import { Component, useState, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
 
 class DeleteExportListDialog extends Component {
     static components = { Dialog };

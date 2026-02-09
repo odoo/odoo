@@ -1,5 +1,5 @@
-import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, toRaw, useState } from "@odoo/owl";
+import { onWillRender, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { Component, toRaw } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";

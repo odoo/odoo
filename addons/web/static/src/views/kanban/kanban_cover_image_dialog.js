@@ -1,8 +1,9 @@
+import { useState } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
 import { FileInput } from "@web/core/file_input/file_input";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, useState, onWillStart } from "@odoo/owl";
+import { Component, onWillStart } from "@odoo/owl";
 
 let nextDialogId = 1;
 

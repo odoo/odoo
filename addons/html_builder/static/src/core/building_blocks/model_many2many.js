@@ -1,4 +1,5 @@
-import { Component, useState, onWillStart, onWillUpdateProps, status } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, onWillStart, onWillUpdateProps, status } from "@odoo/owl";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { useDomState } from "@html_builder/core/utils";

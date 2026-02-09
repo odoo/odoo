@@ -1,6 +1,7 @@
+import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 export class ProgressBar extends Component {
     static template = "html_editor.ProgressBar";

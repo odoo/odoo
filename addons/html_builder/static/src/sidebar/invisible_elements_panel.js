@@ -1,4 +1,5 @@
-import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { getSnippetName, isElementInViewport } from "@html_builder/utils/utils";
 
 /**

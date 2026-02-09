@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, useState } from "@odoo/owl";
+import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { getLastConnectedUsers, setLastConnectedUsers } from "@web/core/user";
 import { imageUrl } from "@web/core/utils/urls";

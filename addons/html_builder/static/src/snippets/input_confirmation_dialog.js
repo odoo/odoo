@@ -1,4 +1,4 @@
-import { useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 export class InputConfirmationDialog extends ConfirmationDialog {

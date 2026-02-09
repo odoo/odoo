@@ -1,4 +1,5 @@
-import { Component, onMounted, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, onMounted } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { redirect } from "@web/core/utils/urls";

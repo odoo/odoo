@@ -1,10 +1,11 @@
+import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { deserializeDateTime, formatDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { useService, useBus } from "@web/core/utils/hooks";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { OptimizeSEODialog } from "@website/components/dialog/seo";
 import { RelativePublishTime } from "./relative_publish_time";
 

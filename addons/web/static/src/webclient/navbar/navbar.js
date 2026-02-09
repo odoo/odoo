@@ -1,4 +1,4 @@
-import { useChildSubEnv, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
@@ -12,7 +12,6 @@ import {
     Component,
     onWillDestroy,
     useExternalListener,
-    useState,
     onWillUnmount,
 } from "@odoo/owl";
 

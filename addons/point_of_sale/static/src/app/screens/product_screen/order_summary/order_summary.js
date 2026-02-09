@@ -1,6 +1,6 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useState } from "@web/owl2/utils";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { useService } from "@web/core/utils/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";

@@ -1,5 +1,5 @@
+import { useState } from "@web/owl2/utils";
 import { BaseOptionComponent } from "@html_builder/core/utils";
-import { useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 export class TranslateWebpageOption extends BaseOptionComponent {

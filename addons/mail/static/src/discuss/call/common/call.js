@@ -1,10 +1,10 @@
-import { useRef } from "@web/owl2/utils";
+import { useRef, useState } from "@web/owl2/utils";
 import { BlurPerformanceWarning } from "@mail/discuss/call/common/blur_performance_warning";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
 import { PttAdBanner } from "@mail/discuss/call/common/ptt_ad_banner";
 
-import { Component, onMounted, onPatched, onWillUnmount, toRaw, useState } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillUnmount, toRaw } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";

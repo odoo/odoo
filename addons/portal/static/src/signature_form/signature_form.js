@@ -1,5 +1,5 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, useState } from "@odoo/owl";
+import { useRef, useState } from "@web/owl2/utils";
+import { Component, onMounted } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { addLoadingEffect } from '@web/core/utils/ui';
 import { rpc } from "@web/core/network/rpc";

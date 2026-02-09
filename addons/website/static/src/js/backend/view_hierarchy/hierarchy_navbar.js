@@ -1,7 +1,7 @@
-import { useRef } from "@web/owl2/utils";
+import { useRef, useState } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 export class HierarchyNavbar extends Component {
     static template = "website.hierarchy_navbar";

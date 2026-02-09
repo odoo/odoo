@@ -1,7 +1,7 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useState } from "@web/owl2/utils";
 import { LocationList } from '@delivery/js/location_selector/location_list/location_list';
 import { MapContainer } from '@delivery/js/location_selector/map_container/map_container';
-import { Component, onMounted, onWillUnmount, useState } from '@odoo/owl';
+import { Component, onMounted, onWillUnmount } from '@odoo/owl';
 import { browser } from '@web/core/browser/browser';
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from '@web/core/l10n/translation';

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import {
     Component,
     markup,
@@ -6,7 +6,6 @@ import {
     onWillStart,
     onWillUnmount,
     onWillUpdateProps,
-    useState,
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";

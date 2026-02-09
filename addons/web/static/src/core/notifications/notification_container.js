@@ -1,7 +1,8 @@
+import { useState } from "@web/owl2/utils";
 import { Notification } from "./notification";
 import { Transition } from "@web/core/transition";
 
-import { Component, xml, useState } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 
 export class NotificationContainer extends Component {
     static props = {

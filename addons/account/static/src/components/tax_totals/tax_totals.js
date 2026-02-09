@@ -1,4 +1,4 @@
-import { onWillRender, useRef } from "@web/owl2/utils";
+import { onWillRender, useRef, useState } from "@web/owl2/utils";
 import { formatMonetary } from "@web/views/fields/formatters";
 import { formatFloat } from "@web/core/utils/numbers";
 import { parseFloat } from "@web/views/fields/parsers";
@@ -9,7 +9,6 @@ import {
     onPatched,
     onWillUpdateProps,
     toRaw,
-    useState,
 } from "@odoo/owl";
 import { useNumpadDecimal } from "@web/views/fields/numpad_decimal_hook";
 

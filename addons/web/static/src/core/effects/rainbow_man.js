@@ -1,7 +1,7 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useState } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 
-import { Component, useExternalListener, useState } from "@odoo/owl";
+import { Component, useExternalListener } from "@odoo/owl";
 
 /**
  * @typedef Common

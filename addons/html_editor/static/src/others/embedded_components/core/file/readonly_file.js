@@ -1,3 +1,4 @@
+import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { downloadFile } from "@web/core/network/download";
 import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
@@ -9,7 +10,7 @@ import {
 } from "@html_editor/others/embedded_components/core/embedded_component_toolbar/embedded_component_toolbar";
 import { StateFileModel } from "@html_editor/others/embedded_components/core/file/state_file_model";
 import { getEmbeddedProps } from "@html_editor/others/embedded_component_utils";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 export class ReadonlyEmbeddedFileComponent extends Component {
     static components = {

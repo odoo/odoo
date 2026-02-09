@@ -1,8 +1,9 @@
+import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
-import { Component, useState, onWillDestroy, status, markup } from "@odoo/owl";
+import { Component, onWillDestroy, status, markup } from "@odoo/owl";
 
 const POSTPROCESS_GENERATED_CONTENT = (content, baseContainer) => {
     let lines = content.split("\n");

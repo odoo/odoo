@@ -1,6 +1,6 @@
-import { useRef } from "@web/owl2/utils";
+import { useRef, useState } from "@web/owl2/utils";
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
-import { onWillStart, onMounted, useState } from "@odoo/owl";
+import { onWillStart, onMounted } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 

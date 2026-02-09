@@ -1,4 +1,4 @@
-import { useRef } from "@web/owl2/utils";
+import { useRef, useState } from "@web/owl2/utils";
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -15,7 +15,7 @@ import { useService } from "@web/core/utils/hooks";
 import { ResourceEditorWarningOverlay } from "./resource_editor_warning";
 import { checkSCSS, checkXML, formatXML } from "./utils";
 
-import { Component, onWillUnmount, onWillStart, reactive, useState } from "@odoo/owl";
+import { Component, onWillUnmount, onWillStart, reactive } from "@odoo/owl";
 
 const BUNDLES_RESTRICTION = [
     "web.assets_frontend",

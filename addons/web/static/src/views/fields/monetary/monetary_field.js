@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useState } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { formatMonetary } from "../formatters";
@@ -8,7 +8,7 @@ import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { nbsp } from "@web/core/utils/strings";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { getCurrency } from "@web/core/currency";
 
 export class MonetaryField extends Component {

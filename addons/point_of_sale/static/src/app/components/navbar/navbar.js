@@ -1,3 +1,4 @@
+import { useState } from "@web/owl2/utils";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { isDisplayStandalone } from "@web/core/browser/feature_detection";
@@ -8,7 +9,7 @@ import {
     SaleDetailsButton,
     handleSaleDetails,
 } from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
-import { Component, onMounted, useState, useExternalListener } from "@odoo/owl";
+import { Component, onMounted, useExternalListener } from "@odoo/owl";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { barcodeService } from "@barcodes/barcode_service";

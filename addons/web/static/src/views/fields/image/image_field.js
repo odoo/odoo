@@ -1,4 +1,4 @@
-import { onWillRender } from "@web/owl2/utils";
+import { onWillRender, useState } from "@web/owl2/utils";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -8,7 +8,7 @@ import { isBinarySize } from "@web/core/utils/binary";
 import { FileUploader } from "../file_handler";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 const { DateTime } = luxon;
 
 export const fileTypeMagicWordMap = {

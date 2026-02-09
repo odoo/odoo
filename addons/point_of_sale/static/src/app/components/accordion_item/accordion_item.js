@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, useState, onMounted } from "@odoo/owl";
+import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { Component, onMounted } from "@odoo/owl";
 
 export class AccordionItem extends Component {
     static template = "pos_hr.AccordionItem";

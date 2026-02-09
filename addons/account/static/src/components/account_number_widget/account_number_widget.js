@@ -1,8 +1,9 @@
+import { useState } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { CharField, charField } from "@web/views/fields/char/char_field";
 import { useDebounced } from "@web/core/utils/timing";
 import { useService } from "@web/core/utils/hooks";
-import { useState, onMounted, onPatched } from "@odoo/owl";
+import { onMounted, onPatched } from "@odoo/owl";
 
 export const DELAY = 400;
 

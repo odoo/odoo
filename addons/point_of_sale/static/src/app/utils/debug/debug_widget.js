@@ -1,7 +1,7 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { useState, Component, onMounted, onWillDestroy } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";

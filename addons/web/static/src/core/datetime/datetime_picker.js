@@ -1,5 +1,5 @@
-import { onWillRender } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, useState } from "@odoo/owl";
+import { onWillRender, useState } from "@web/owl2/utils";
+import { Component, onWillUpdateProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { MAX_VALID_DATE, MIN_VALID_DATE, clampDate, isInRange, today } from "../l10n/dates";
 import { localization } from "../l10n/localization";

@@ -1,8 +1,8 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useState } from "@web/owl2/utils";
 import { useDebounced } from "@web/core/utils/timing";
 import { useAutofocus } from "@web/core/utils/hooks";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 export class SearchMedia extends Component {
     static template = "html_editor.SearchMedia";

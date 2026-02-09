@@ -1,5 +1,5 @@
-import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, useState } from "@odoo/owl";
+import { onWillRender, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { Component, onWillUpdateProps } from "@odoo/owl";
 
 /**
  * A notebook component that will render only the current page and allow

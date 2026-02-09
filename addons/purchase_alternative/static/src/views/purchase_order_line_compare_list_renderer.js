@@ -1,6 +1,6 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useState, useSubEnv } from "@web/owl2/utils";
 import { ListRenderer } from "@web/views/list/list_renderer";
-import { onWillStart, useState } from "@odoo/owl";
+import { onWillStart } from "@odoo/owl";
 
 export class PurchaseOrderLineCompareListRenderer extends ListRenderer {
     setup() {

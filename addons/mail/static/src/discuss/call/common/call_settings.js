@@ -1,4 +1,5 @@
-import { Component, onWillStart, useExternalListener, useState, xml } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, onWillStart, useExternalListener, xml } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
