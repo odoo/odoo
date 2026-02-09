@@ -121,7 +121,7 @@ class MailingMailingTest(models.TransientModel):
                 'email_to': valid_email,
                 'subject': subject,
                 'body_html': body,
-                'is_notification': True,
+                'is_notification': False,
                 'mailing_id': mailing.id,
                 'attachment_ids': [
                     (4, attachment.id) for attachment in mailing.attachment_ids
