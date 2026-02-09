@@ -1,9 +1,10 @@
+import { markup } from "@odoo/owl";
 import { tourState } from "@web_tour/js/tour_state";
 import * as hoot from "@odoo/hoot-dom";
 import { utils } from "@web/core/ui/ui_service";
 import { TourStep } from "@web_tour/js/tour_step";
 import { TourInteractiveObserver } from "@web_tour/js/tour_interactive/tour_interactive_observer";
-import { pointerState } from "@web_tour/js/tour_pointer/tour_pointer";
+import { TourInteractivePointer } from "@web_tour/js/tour_interactive/tour_interactive_pointer";
 
 /**
  * @typedef ConsumeEvent
@@ -22,19 +23,20 @@ export class TourInteractive {
 
     /**
      * @param {Tour} data
+     * @param env
      */
-    constructor(data) {
+    constructor(data, env) {
         Object.assign(this, data);
-        this.steps = this.steps.map((step) => new TourStep(step, this));
+        this.env = env;
+        this.steps = this.steps.map((step) => new TourStep(step, this.mode));
         this.actions = this.steps.flatMap((s) => this.getSubActions(s));
         this.isBusy = false;
     }
 
     /**
-     * @param {import("@web_tour/js/tour_pointer/tour_pointer").TourPointer} pointer
      * @param {Function} onTourEnd
      */
-    start(env, onTourEnd) {
+    start(onTourEnd) {
         this.onTourEnd = onTourEnd;
         if (TourInteractive.observer) {
             TourInteractive.observer.disconnect();
@@ -42,9 +44,11 @@ export class TourInteractive {
         TourInteractive.observer = new TourInteractiveObserver(() => this._onMutation());
         TourInteractive.observer.observe(document.body);
         this.currentActionIndex = tourState.getCurrentIndex();
+
+        this.pointer = new TourInteractivePointer(this.env);
         this.play();
-        env.bus.addEventListener("ACTION_MANAGER:UPDATE", () => (this.isBusy = true));
-        env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", () => (this.isBusy = false));
+        this.env.bus.addEventListener("ACTION_MANAGER:UPDATE", () => (this.isBusy = true));
+        this.env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", () => (this.isBusy = false));
     }
 
     backward() {
@@ -84,8 +88,10 @@ export class TourInteractive {
 
     play() {
         this.removeListeners();
+        this.pointer.remove();
         if (this.currentActionIndex === this.actions.length) {
             TourInteractive.observer.disconnect();
+            this.end();
             this.onTourEnd();
             return;
         }
@@ -109,13 +115,24 @@ export class TourInteractive {
         this.updatePointer();
     }
 
+    async end() {
+        this.pointer.remove();
+        let message = tourState.getCurrentConfig().rainbowManMessage || this.rainbowManMessage;
+        if (message && window.DOMPurify) {
+            message = window.DOMPurify.sanitize(message);
+            this.env.services.effect.add({
+                type: "rainbow_man",
+                message: markup(message),
+            });
+        }
+        tourState.clear();
+    }
+
     updatePointer() {
-        pointerState.trigger = undefined;
         if (this.anchorEls.length) {
-            pointerState.trigger = this.anchorEls[0];
-            pointerState.content = this.currentAction.content;
-            pointerState.position = this.currentAction.tooltipPosition;
-            pointerState.isZone = this.currentAction.event === "drop";
+            this.pointer.pointTo(this.anchorEls[0], this.currentAction);
+        } else {
+            this.pointer.remove();
         }
     }
 
@@ -435,7 +452,7 @@ export class TourInteractive {
                 ) {
                     this.backward();
                 } else {
-                    pointerState.trigger = undefined;
+                    this.pointer.remove();
                 }
                 return;
             }

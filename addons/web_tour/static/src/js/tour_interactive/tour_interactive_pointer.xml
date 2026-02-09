@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="web_tour.TourPointerOverlay">
+        <div
+            t-ref="this.tourOverlayRef"
+            class="o_tour_overlay"
+        />
+    </t>
+    <t t-name="web_tour.TourInteractivePointer.Content">
+        <div 
+            class="o_tour_pointer_content px-1"
+            t-on-click="this.props.onClick"
+            t-att-style="this.props.cursor ? 'cursor: ' + this.props.cursor : ''"
+        >
+            <div class="p-2">
+                <t t-out="this.props.content" />
+            </div>
+            <div class="d-flex justify-content-start" t-if="!this.props.hideButton">
+                <button class="btn btn-link shadow-none" t-on-click="this.props.onEnd">End Tour</button>
+            </div>
+        </div>
+    </t>
+</templates>

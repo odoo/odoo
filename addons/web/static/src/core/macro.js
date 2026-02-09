@@ -138,6 +138,7 @@ export class Macro {
             // If falsy action result, it means the action worked properly.
             // So we can proceed to the next step.
             const actionResult = await Promise.race([executeStep(), launchTimer()]);
+            this.currentIndex++;
             if (actionResult) {
                 this.stop();
                 return;
@@ -146,7 +147,6 @@ export class Macro {
             this.stop(error);
             return;
         }
-        this.currentIndex++;
         await this.advance();
     }
 
@@ -154,11 +154,12 @@ export class Macro {
         if (this.isComplete) {
             return;
         }
-        this.isComplete = true;
         if (error) {
+            this.isComplete = true;
             const step = this.steps[this.currentIndex];
             this.onError({ error, step, index: this.currentIndex });
         } else if (this.currentIndex === this.steps.length) {
+            this.isComplete = true;
             this.onComplete();
         }
     }
