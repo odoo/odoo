@@ -878,12 +878,8 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_ids')
     def _compute_amount(self):
-        AccountTax = self.env['account.tax']
         for line in self:
-            company = line.company_id or self.env.company
-            base_line = line._prepare_base_line_for_taxes_computation()
-            AccountTax._add_tax_details_in_base_line(base_line, company)
-            AccountTax._round_base_lines_tax_details([base_line], company)
+            base_line = line._get_base_line()
             line.price_subtotal = base_line['tax_details']['total_excluded_currency']
             line.price_total = base_line['tax_details']['total_included_currency']
             line.price_tax = line.price_total - line.price_subtotal
@@ -957,6 +953,15 @@ class SaleOrderLine(models.Model):
         for so_line in lines_by_analytic:
             delivered_qties[so_line] = mapping.get(so_line.id or so_line._origin.id, 0.0)
         return delivered_qties
+
+    def _get_base_line(self):
+        self.ensure_one()
+        AccountTax = self.env['account.tax']
+        company = self.company_id or self.env.company
+        base_line = self._prepare_base_line_for_taxes_computation()
+        AccountTax._add_tax_details_in_base_line(base_line, company)
+        AccountTax._round_base_lines_tax_details([base_line], company)
+        return base_line
 
     def _get_downpayment_state(self):
         self.ensure_one()

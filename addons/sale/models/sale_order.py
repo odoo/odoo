@@ -312,10 +312,13 @@ class SaleOrder(models.Model):
         groups="sales_team.group_sale_salesman",
         string="Tags")
 
-    # Remaining non stored computed fields (hide/make fields readonly, ...)
-    amount_undiscounted = fields.Float(
-        string="Amount Before Discount",
-        compute='_compute_amount_undiscounted', digits=0)
+    # Remaining non-stored computed fields (hide/make fields readonly, ...)
+    advantage_subtotal = fields.Monetary(
+        string="Advantage (tax excluded)", compute='_compute_advantages',
+    )
+    advantage_total = fields.Monetary(
+        string="Advantage (tax included)", compute='_compute_advantages',
+    )
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', string="Country code")
     company_price_include = fields.Selection(related='company_id.account_price_include')
     delivery_status = fields.Selection([
@@ -732,12 +735,30 @@ class SaleOrder(models.Model):
                 tx.amount for tx in order.transaction_ids if tx.state in ('authorized', 'done')
             )
 
-    def _compute_amount_undiscounted(self):
+    def _compute_advantages(self):
         for order in self:
-            total = 0.0
+            total = subtotal = 0.0
             for line in order.order_line:
-                total += (line.price_subtotal * 100)/(100-line.discount) if line.discount != 100 else (line.price_unit * line.product_uom_qty)
-            order.amount_undiscounted = total
+                base_line = line._get_base_line()
+                discount_factor = (
+                    (1 - base_line['discount'] / 100) if base_line['discount'] != 100 else 1
+                )
+                incl_tax_discounted_price = base_line['tax_details']['total_included_currency']
+                incl_tax_original_price = incl_tax_discounted_price / discount_factor
+                excl_tax_discounted_price = base_line['tax_details']['total_excluded_currency']
+                excl_tax_original_price = excl_tax_discounted_price / discount_factor
+                total += (
+                    incl_tax_discounted_price - incl_tax_original_price
+                    if incl_tax_original_price > 0
+                    else incl_tax_discounted_price
+                )
+                subtotal += (
+                    excl_tax_discounted_price - excl_tax_original_price
+                    if excl_tax_original_price > 0
+                    else excl_tax_discounted_price
+                )
+            order.advantage_total = total
+            order.advantage_subtotal = subtotal
 
     @api.depends('order_line.qty_delivered', 'order_line.product_uom_qty', 'state')
     def _compute_delivery_status(self):
