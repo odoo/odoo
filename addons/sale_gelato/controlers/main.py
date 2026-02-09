@@ -30,9 +30,15 @@ class GelatoController(Controller):
         _logger.info("Webhook notification received from Gelato:\n%s", pprint.pformat(event_data))
 
         if event_data['event'] == 'order_status_updated':
-            # Check the signature of the webhook notification.
-            order_id = int(event_data['orderReferenceId'])
+            try:
+                order_id = int(event_data['orderReferenceId'])
+            except ValueError:  # A test notification was sent with the "{{MyOrderId}}" placeholder.
+                return request.make_json_response('')  # Discard test webhook notifications.
             order_sudo = request.env['sale.order'].sudo().browse(order_id).exists()
+            if not order_sudo:
+                return request.make_json_response('')  # Discard unknown orders.
+
+            # Check the signature of the webhook notification.
             received_signature = request.httprequest.headers.get('signature', '')
             self._verify_notification_signature(received_signature, order_sudo)
 
