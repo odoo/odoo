@@ -975,9 +975,11 @@ class ResourceCalendar(models.Model):
         if day_period:
             attendances = [att for att in init_attendances if att.day_period == day_period]
             for attendance in filter(lambda att: att.day_period == 'full_day', init_attendances):
+                # Split full-day attendances at their midpoint.
+                half_time = (attendance.hour_from + attendance.hour_to) / 2
                 attendances.append(attendance._replace(
-                    hour_from=attendance.hour_from if day_period == 'morning' else 12,
-                    hour_to=attendance.hour_to if day_period == 'afternoon' else 12,
+                    hour_from=attendance.hour_from if day_period == 'morning' else half_time,
+                    hour_to=attendance.hour_to if day_period == 'afternoon' else half_time,
                 ))
 
         else:
