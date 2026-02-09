@@ -1,5 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { useComponent, useEnv } from "@odoo/owl";
+import { useComponent, useLayoutEffect } from "@web/owl2/utils";
+import { useEnv } from "@odoo/owl";
 import { DROPDOWN_GROUP } from "@web/core/dropdown/dropdown_group";
 
 /**

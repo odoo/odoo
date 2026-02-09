@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect } from "@web/owl2/utils";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -37,15 +37,7 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
  * @typedef {import("services").ServiceFactories} Services
  */
 
-import {
-    Component,
-    onWillUpdateProps,
-    status,
-    useComponent,
-    useEnv,
-    useState,
-    useSubEnv,
-} from "@odoo/owl";
+import { Component, onWillUpdateProps, status, useEnv, useState, useSubEnv } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { highlightText, odoomark } from "@web/core/utils/html";
 import { deepEqual } from "@web/core/utils/objects";

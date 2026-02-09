@@ -1,6 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
-import { useComponent } from "@odoo/owl";
 
 export function useBarcodeReader(callbackMap, exclusive = false) {
     const current = useComponent();

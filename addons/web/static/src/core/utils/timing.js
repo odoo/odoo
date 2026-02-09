@@ -1,5 +1,6 @@
+import { useComponent } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
-import { onWillUnmount, useComponent } from "@odoo/owl";
+import { onWillUnmount } from "@odoo/owl";
 
 /**
  * Creates a batched version of a callback so that all calls to it in the same

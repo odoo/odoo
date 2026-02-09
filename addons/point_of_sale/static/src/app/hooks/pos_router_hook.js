@@ -1,6 +1,6 @@
+import { useComponent } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { usePos, usePosRouter } from "./pos_hook";
-import { useComponent } from "@odoo/owl";
 
 export const useRouterParamsChecker = () => {
     const component = useComponent();

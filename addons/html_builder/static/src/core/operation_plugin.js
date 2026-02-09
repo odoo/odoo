@@ -1,5 +1,5 @@
+import { useComponent } from "@web/owl2/utils";
 import { Plugin } from "@html_editor/plugin";
-import { useComponent } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { Operation } from "./operation";
 

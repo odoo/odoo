@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect } from "@web/owl2/utils";
 import {
     Component,
     onMounted,
@@ -6,7 +6,6 @@ import {
     onWillUnmount,
     useExternalListener,
     useRef,
-    useComponent,
 } from "@odoo/owl";
 
 function useResizable({

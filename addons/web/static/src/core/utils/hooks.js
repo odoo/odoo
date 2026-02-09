@@ -1,16 +1,7 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect } from "@web/owl2/utils";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 
-import {
-    status,
-    useComponent,
-    useRef,
-    onWillUnmount,
-    useState,
-    toRaw,
-    onMounted,
-    onPatched,
-} from "@odoo/owl";
+import { status, useRef, onWillUnmount, useState, toRaw, onMounted, onPatched } from "@odoo/owl";
 import { router } from "@web/core/browser/router";
 
 /**

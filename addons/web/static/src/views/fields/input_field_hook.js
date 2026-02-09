@@ -1,8 +1,8 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect } from "@web/owl2/utils";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useBus } from "@web/core/utils/hooks";
 
-import { useComponent, useRef } from "@odoo/owl";
+import { useRef } from "@odoo/owl";
 
 /**
  * This hook is meant to be used by field components that use an input or

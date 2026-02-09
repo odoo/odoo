@@ -1,5 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { useComponent } from "@odoo/owl";
+import { useComponent, useLayoutEffect } from "@web/owl2/utils";
 
 /**
  * Hook used to enrich html and provide automatic links to action.
