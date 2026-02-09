@@ -47,9 +47,21 @@ class StockWarehouse(models.Model):
         if self.opening_hours:
             opening_hours_dict = {str(i): [] for i in range(7)}
             for att in self.opening_hours.attendance_ids:
+<<<<<<< 40154cfdbe6d6f07b3a4b9f7cf4c25d7ac8ea445
                 opening_hours_dict[att.dayofweek].append(
                     f'{format_duration(att.hour_from)} - {format_duration(att.hour_to)}'
                 )
+||||||| fb987f8ce85f90dac14cdf0f0f47d7fdaeefbbea
+                if att.day_period in ('morning', 'afternoon'):
+                    opening_hours_dict[att.dayofweek].append(
+                        f'{format_duration(att.hour_from)} - {format_duration(att.hour_to)}'
+                    )
+=======
+                if att.day_period in ('morning', 'afternoon', 'full_day'):
+                    opening_hours_dict[att.dayofweek].append(
+                        f'{format_duration(att.hour_from)} - {format_duration(att.hour_to)}'
+                    )
+>>>>>>> ca3596855bd8f1ce46c71be99ad70183b066ea21
             pickup_location_values['opening_hours'] = opening_hours_dict
         else:
             pickup_location_values['opening_hours'] = {}
