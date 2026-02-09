@@ -300,6 +300,7 @@ class AccountFiscalPosition(models.Model):
             'res_model': 'account.tax',
             'views': [(list_view.id if list_view else False, 'list'), (False, 'form')],
             'domain': [('id', 'in', self.tax_ids.ids)],
+            'context': {'active_test': False},
         }
 
     def action_create_foreign_taxes(self):
