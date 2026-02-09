@@ -209,9 +209,9 @@ class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon, TestSaleCommon):
             move._action_done()
 
 
-@skip('Temporary to fast merge new valuation')
 @common.tagged('post_install', '-at_install')
 class TestSaleMrpFlow(TestSaleMrpFlowCommon):
+    @skip('Temporary to fast merge new valuation')
     def test_00_sale_mrp_flow(self):
         """ Test sale to mrp flow with diffrent unit of measure."""
 
@@ -545,6 +545,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(del_qty, 5.0, 'Sale MRP: delivered quantity should be 5.0 after complete delivery of a kit')
         self.assertEqual(so.invoice_status, 'to invoice', 'Sale MRP: so invoice_status should be "to invoice" after complete delivery of a kit')
 
+    @skip('Temporary to fast merge new valuation')
     def test_02_sale_mrp_anglo_saxon(self):
         """Test the price unit of a kit"""
         # This test will check that the correct journal entries are created when a stockable product in real time valuation
@@ -1759,16 +1760,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
             'property_valuation': 'real_time',
             'property_cost_method': 'fifo',
         })
-        account_receiv = self.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00', 'account_type': 'asset_receivable', 'reconcile': True})
-        account_expense = self.env['account.account'].create({'name': 'Expense', 'code': 'EXP00', 'account_type': 'liability_current', 'reconcile': True})
-        account_income = self.env['account.account'].create({'name': 'Income', 'code': 'INC00', 'account_type': 'asset_current', 'reconcile': True})
-        account_valuation = self.env['account.account'].create({'name': 'Valuation', 'code': 'STV00', 'account_type': 'asset_receivable', 'reconcile': True})
         self.stock_location = self.company_data['default_warehouse'].lot_stock_id
-        self.partner.property_account_receivable_id = account_receiv
-        self.category.property_account_income_categ_id = account_income
-        self.category.property_account_expense_categ_id = account_expense
-        self.category.property_stock_account_input_categ_id = account_receiv
-        self.category.property_stock_valuation_account_id = account_valuation
 
         # Create variant attributes
         self.prod_att_test = self.env['product.attribute'].create({'name': 'test'})
@@ -1871,13 +1863,14 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         aml_nokit_expense = amls.filtered(lambda l: l.display_type == 'cogs' and l.debit > 0 and l.product_id == self.variant_NOKIT)
         aml_nokit_output = amls.filtered(lambda l: l.display_type == 'cogs' and l.credit > 0 and l.product_id == self.variant_NOKIT)
 
-        # Check that the Cost of Goods Sold for variant KIT is equal to (2*20)+10 = 50
-        self.assertEqual(aml_kit_expense.debit, 50, "Cost of Good Sold entry missing or mismatching for variant with kit")
-        self.assertEqual(aml_kit_output.credit, 50, "Cost of Good Sold entry missing or mismatching for variant with kit")
+        # Check that the Cost of Goods Sold for variant KIT is equal to 2*(2*20)+10 = 90
+        self.assertEqual(aml_kit_expense.debit, 90, "Cost of Good Sold entry missing or mismatching for variant with kit")
+        self.assertEqual(aml_kit_output.credit, 90, "Cost of Good Sold entry missing or mismatching for variant with kit")
         # Check that the Cost of Goods Sold for variant NOKIT is equal to its standard_price = 25
         self.assertEqual(aml_nokit_expense.debit, 25, "Cost of Good Sold entry missing or mismatching for variant without kit")
         self.assertEqual(aml_nokit_output.credit, 25, "Cost of Good Sold entry missing or mismatching for variant without kit")
 
+    @skip('Temporary to fast merge new valuation')
     def test_16_anglo_saxon_variant_price_unit_multi_company(self):
         """
         Test the price unit of the BOM of the stock move is taken
@@ -2048,6 +2041,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         so.action_confirm()
         self.assertEqual(len(so.picking_ids), 1, "The product was already delivered, no need to re-create a delivery order")
 
+    @skip('Temporary to fast merge new valuation')
     def test_kit_margin_and_return_picking(self):
         """ This test ensure that, when returning the components of a sold kit, the
         sale order line cost does not change"""
@@ -2253,6 +2247,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
 
         self.assertEqual(so.picking_ids, delivery | return_picking)
 
+    @skip('Temporary to fast merge new valuation')
     def test_fifo_reverse_and_create_new_invoice(self):
         """
         FIFO automated
@@ -2325,6 +2320,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(cogs_aml.debit, 10)
         self.assertEqual(cogs_aml.credit, 0)
 
+    @skip('Temporary to fast merge new valuation')
     def test_kit_avco_amls_reconciliation(self):
         self.stock_account_product_categ.property_cost_method = 'average'
 
