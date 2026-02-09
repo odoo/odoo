@@ -7,7 +7,6 @@ from odoo import Command, fields
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-@skip('Temporary to fast merge new valuation')
 class TestPosMrp(CommonPosMrpTest):
     def test_bom_kit_order_total_cost(self):
         order, _ = self.create_backend_pos_order({
@@ -22,6 +21,7 @@ class TestPosMrp(CommonPosMrpTest):
         self.pos_config_usd.current_session_id.action_pos_session_closing_control()
         self.assertEqual(order.lines[0].total_cost, 10.0)
 
+    @skip('Temporary to fast merge new valuation')
     def test_bom_kit_with_kit_invoice_valuation(self):
         self.product_product_kit_one.categ_id = self.category_fifo_realtime
         self.product_product_kit_two.categ_id = self.category_fifo_realtime
@@ -62,6 +62,7 @@ class TestPosMrp(CommonPosMrpTest):
             lambda l: l.product_id == self.product_product_kit_three).debit, 0.0)
         self.pos_config_usd.current_session_id.action_pos_session_closing_control()
 
+    @skip('Temporary to fast merge new valuation')
     def test_bom_kit_different_uom_invoice_valuation(self):
         """This test make sure that when a kit is made of product using UoM A but the bom line uses UoM B
            the price unit is correctly computed on the invoice lines.
