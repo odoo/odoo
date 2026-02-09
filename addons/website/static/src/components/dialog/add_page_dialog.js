@@ -134,6 +134,8 @@ class AddPageTemplatePreview extends Component {
             const styleEl = document.createElement("style");
             // Prevent successive resizes.
             const fullHeight = getComputedStyle(document.querySelector(".o_action_manager")).height;
+            const threeQuarterHeight = `${Math.round((3 * parseInt(fullHeight)) / 4)}px`;
+            // This is kept for compatibility
             const halfHeight = `${Math.round(parseInt(fullHeight) / 2)}px`;
             const css = `
                 html, body {
@@ -161,6 +163,9 @@ class AddPageTemplatePreview extends Component {
                 }
                 section.o_half_screen_height {
                     min-height: ${halfHeight} !important;
+                }
+                section.o_three_quarter_height {
+                    min-height: ${threeQuarterHeight} !important;
                 }
                 section.o_full_screen_height {
                     min-height: ${fullHeight} !important;
