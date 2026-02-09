@@ -461,18 +461,20 @@ class DigestDigest(models.Model):
         """
         start, end, companies = self._get_kpi_compute_parameters()
 
+        company_field = self._get_company_field(model)
+
         base_domain = Domain([
             (date_field, '>=', start),
             (date_field, '<', end),
         ])
         if not is_cross_company:
-            base_domain &= Domain('company_id', 'in', companies.ids)
+            base_domain &= Domain(company_field, 'in', companies.ids)
         if additional_domain:
             base_domain &= Domain(additional_domain)
 
         values = self.env[model]._read_group(
             domain=base_domain,
-            groupby=[] if is_cross_company else ['company_id'],
+            groupby=[] if is_cross_company else [company_field],
             aggregates=[f'{sum_field}:sum'] if sum_field else ['__count'],
         )
 
@@ -485,6 +487,9 @@ class DigestDigest(models.Model):
             for digest in self:
                 company = digest.company_id or self.env.company
                 digest[digest_kpi_field] = values_per_company.get(company.id, 0)
+
+    def _get_company_field(self, model):
+        return 'company_ids' if model in ['res.users'] else 'company_id'
 
     @api.model
     def _get_all_kpi_fields(self):
