@@ -269,6 +269,27 @@ test("simple rendering", async () => {
     expect(".o_group_info_button").toHaveCount(0); // not displayed in non debug mode
 });
 
+test("simple rendering in readonly", async () => {
+    await mountView({
+        type: "form",
+        arch: `
+            <form edit="0">
+                <sheet>
+                    <field name="group_ids" widget="res_user_group_ids"/>
+                </sheet>
+            </form>`,
+        resModel: "res.users",
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name=group_ids] input").toHaveCount(0);
+    expect(queryAllTexts(".o_field_res_user_group_ids_privilege span")).toEqual([
+        "Access Rights",
+        "Project User",
+        "",
+    ]);
+});
+
 test("simple rendering (debug)", async () => {
     serverState.debug = "1";
     await mountView({
