@@ -64,8 +64,8 @@ export class GallerySlider extends Interaction {
                 ) - 3; // - navigator - 1 to leave some space
             this.realNbPerPage = this.nbPerPage || 1;
             this.nbPages = Math.ceil(this.liEls.length / this.realNbPerPage);
+            this.onSlidCarousel();
         }
-        this.onSlidCarousel();
     }
 
     destroy() {
