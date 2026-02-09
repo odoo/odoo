@@ -845,6 +845,13 @@ class IrAttachment(models.Model):
         self.ensure_one()
         return self.url and not self.file_size and self.url.startswith(('http://', 'https://', 'ftp://'))
 
+    def _get_public_url(self):
+        """ Return a public URL for the attachment if available. """
+        self.ensure_one()
+        if self._is_remote_source():
+            return self.url
+        return False
+
     def _migrate_remote_to_local(self):
         if self.type == 'binary':
             return
