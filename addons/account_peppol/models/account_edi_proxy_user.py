@@ -2,6 +2,7 @@
 
 import logging
 from datetime import timedelta
+from lxml import etree
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
@@ -159,7 +160,28 @@ class AccountEdiProxyClientUser(models.Model):
 
     def _peppol_get_import_journal_and_move_type(self, attachment):
         self.ensure_one()
-        return self.company_id.peppol_purchase_journal_id, 'in_invoice'
+        # Self-billed invoices are invoices which your customer creates on your behalf and sends you via Peppol.
+        # In this case, the invoice needs to be created as an out_invoice in a sale journal.
+        xml_tree = etree.fromstring(attachment.raw)
+
+        invoice_type_code = xml_tree.findtext('.//{*}InvoiceTypeCode')
+        credit_note_type_code = xml_tree.findtext('.//{*}CreditNoteTypeCode')
+
+        if invoice_type_code in ['389', '527'] or credit_note_type_code == '261':
+            # 329/527: Self-billing invoice; 261: Self-billing credit note
+            journal = self.env['account.journal'].search(
+                [
+                    *self.env['account.journal']._check_company_domain(self.company_id),
+                    ('type', '=', 'sale'),
+                ],
+                limit=1,
+            )
+            move_type = 'out_invoice' if invoice_type_code else 'out_refund'
+        else:
+            journal = self.company_id.peppol_purchase_journal_id
+            move_type = 'in_invoice'
+
+        return journal, move_type
 
     def _peppol_get_new_documents(self):
         # Context added to not break stable policy: useful to tweak on databases processing large invoices
