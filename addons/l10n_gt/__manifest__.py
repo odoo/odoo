@@ -19,6 +19,9 @@ taxes and the Quetzal currency.""",
         'account',
     ],
     'auto_install': ['account'],
+    'data': [
+        'data/res.city.csv'
+    ],
     'demo': [
         'demo/demo_company.xml',
     ],
