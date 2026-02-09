@@ -822,7 +822,13 @@ export class LinkPlugin extends Plugin {
         const isSelectionInProtected =
             this.document.getSelection()?.isCollapsed &&
             (isProtecting(anchorNode) || isProtected(anchorNode));
-        if (!selectionData.currentSelectionIsInEditable || isSelectionInProtected) {
+        if (
+            !(
+                selectionData.documentSelectionIsInEditable &&
+                this.dependencies.selection.editableDocumentHasFocus()
+            ) ||
+            isSelectionInProtected
+        ) {
             const popoverEl = document.querySelector(".o-we-linkpopover");
             const anchorNode = document.getSelection()?.anchorNode;
             if (
