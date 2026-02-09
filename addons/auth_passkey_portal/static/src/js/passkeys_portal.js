@@ -39,12 +39,20 @@ export class PortalPasskey extends Interaction {
     }
 
     async onDelete() {
-        await handleCheckIdentity(
-            this.services.orm.call("auth.passkey.key", "action_delete_passkey", [this.id]),
-            this.services.orm,
-            this.services.dialog
-        );
-        location.reload();
+        this.services.dialog.add(InputConfirmationDialog, {
+            title: _t("Are you sure?"),
+            body: renderToMarkup("auth_passkey_portal.delete", { name: this.name }),
+            confirmLabel: _t("Yes, Delete"),
+            confirm: async () => {
+                await handleCheckIdentity(
+                    this.services.orm.call("auth.passkey.key", "action_delete_passkey", [this.id]),
+                    this.services.orm,
+                    this.services.dialog
+                );
+                location.reload();
+            },
+            cancel: () => {},
+        });
     }
 }
 

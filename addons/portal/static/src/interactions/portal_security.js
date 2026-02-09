@@ -121,17 +121,27 @@ export class PortalSecurity extends Interaction {
         window.location.reload();
     }
     async onRevokeAllSessionsClick() {
-        await this.waitFor(
-            handleCheckIdentity(
-                this.waitFor(
-                    this.services.orm.call("res.users", "action_revoke_all_devices", [user.userId])
-                ),
-                this.services.orm,
-                this.services.dialog
-            )
-        );
-        window.location.reload();
-        return true;
+        this.services.dialog.add(ConfirmationDialog, {
+            title: _t("Are you sure?"),
+            body: _t("All sessions on any other device will be logged out"),
+            size: 'md',
+            confirmLabel: _t("Yes, log-out any other session"),
+            confirmClass: 'btn-warning',
+            confirm: async () => {
+                await this.waitFor(
+                    handleCheckIdentity(
+                        this.waitFor(
+                            this.services.orm.call("res.users", "action_revoke_all_devices", [user.userId])
+                        ),
+                        this.services.orm,
+                        this.services.dialog
+                    )
+                );
+                window.location.reload();
+                return true;
+            },
+            cancel: () => {},
+        });
     }
 }
 
