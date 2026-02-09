@@ -1,4 +1,4 @@
-import { Component, useState, useSubEnv } from '@odoo/owl';
+import { Component, onMounted, onWillUnmount, useState, useSubEnv } from '@odoo/owl';
 import { formatCurrency } from '@web/core/currency';
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from '@web/core/l10n/translation';
@@ -54,6 +54,9 @@ export class ComboConfiguratorDialog extends Component {
         this._initSelectedComboItems();
         this.getPriceUrl = '/sale/combo_configurator/get_price';
         useSubEnv({ currency: { id: this.props.currency_id } });
+
+        onMounted(() => this.env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:ADD"));
+        onWillUnmount(() => this.env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:REMOVE"));
     }
 
     /**
