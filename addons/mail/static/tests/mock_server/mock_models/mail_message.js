@@ -66,12 +66,12 @@ export class MailMessage extends models.ServerModel {
     }
 
     /** @param {number[]} ids */
-    _to_store(store, fields, for_current_user, add_followers) {
-        const kwargs = getKwArgs(arguments, "store", "fields", "for_current_user", "add_followers");
+    _to_store(store, fields, for_current_user, inbox_fields) {
+        const kwargs = getKwArgs(arguments, "store", "fields", "for_current_user", "inbox_fields");
         store = kwargs.store;
         fields = kwargs.fields;
         for_current_user = kwargs.for_current_user ?? false;
-        add_followers = kwargs.add_followers ?? false;
+        inbox_fields = kwargs.inbox_fields ?? false;
 
         /** @type {import("mock_models").MailFollowers} */
         const MailFollowers = this.env["mail.followers"];
@@ -108,7 +108,7 @@ export class MailMessage extends models.ServerModel {
                         "priority",
                     ])["priority"]["selection"];
                 }
-                if (for_current_user && add_followers) {
+                if (for_current_user && inbox_fields) {
                     thread_data.selfFollower = mailDataHelpers.Store.one(
                         MailFollowers.browse(
                             MailFollowers.search([

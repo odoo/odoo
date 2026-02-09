@@ -1089,7 +1089,7 @@ class MailMessage(models.Model):
         *,
         format_reply=True,
         msg_vals=False,
-        add_followers=False,
+        inbox_fields=False,
         followers=None,
     ):
         """
@@ -1101,12 +1101,13 @@ class MailMessage(models.Model):
           accessing it directly. It lessens query count in some optimized use
           cases by avoiding access message content in db;
 
-        :param add_followers: if True, also add followers of the current target for each thread of
-            each message. Only applicable if ``res.target`` is a specific user.
+        :param inbox_fields: if True, also add inbox fields: followers of the current target for
+            each thread of each message as well as module icon and priority fields.
+            Only applicable if ``res.target`` is a specific user.
 
         :param followers: if given, use this pre-computed list of followers instead of fetching
             them. It lessen query count in some optimized use cases.
-            Only applicable if ``add_followers`` is True.
+            Only applicable if ``inbox_fields`` is True.
         """
         # sudo: mail.message - reading attachments on accessible message is allowed
         res.many(
@@ -1187,7 +1188,7 @@ class MailMessage(models.Model):
         non_channel_records = filter(lambda record: record._name != "discuss.channel", records)
         target_user = res.target_user()
         follower_by_record_and_partner = defaultdict(self.env["mail.followers"].browse)
-        if target_user and add_followers and non_channel_records:
+        if target_user and inbox_fields and non_channel_records:
             if followers is None:
                 domain = Domain.OR(
                     [("res_model", "=", model), ("res_id", "in", [r.id for r in records])]
@@ -1209,23 +1210,23 @@ class MailMessage(models.Model):
                 res.attr(
                     "module_icon",
                     lambda t: modules.module.get_module_icon(t._original_module),
-                    predicate=lambda t: t._original_module,
+                    predicate=lambda t: inbox_fields and t._original_module,
                 ),
                 res.one(
                     "selfFollower",
                     ["is_active", "partner_id"],
-                    predicate=lambda t: target_user and add_followers and non_channel_records,
+                    predicate=lambda t: target_user and inbox_fields and non_channel_records,
                     value=lambda t: follower_by_record_and_partner[t, target_user.partner_id],
                 ),
                 res.attr(
                     "priority",
                     value=lambda t: t[t._priority_field],
-                    predicate=lambda t: hasattr(t, "_priority_field"),
+                    predicate=lambda t: inbox_fields and hasattr(t, "_priority_field"),
                     sudo=True,
                 ),
                 res.attr(
                     "priority_definition",
-                    predicate=lambda t: hasattr(t, "_priority_field"),
+                    predicate=lambda t: inbox_fields and hasattr(t, "_priority_field"),
                     value=lambda t: t.fields_get([t._priority_field], ["selection"])[t._priority_field]["selection"],
                 ),
             ),

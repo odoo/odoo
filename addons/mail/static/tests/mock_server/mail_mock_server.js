@@ -540,7 +540,7 @@ async function discuss_inbox_messages(request) {
         ...res,
         data: new mailDataHelpers.Store(
             MailMessage.browse(messages.map((message) => message.id)),
-            makeKwArgs({ for_current_user: true, add_followers: true })
+            makeKwArgs({ for_current_user: true, inbox_fields: true })
         ).get_result(),
         messages: messages.map((message) => message.id),
     };
