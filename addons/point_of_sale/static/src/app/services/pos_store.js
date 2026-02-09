@@ -48,6 +48,7 @@ import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 import OrderPaymentValidation from "../utils/order_payment_validation";
 import { logPosMessage } from "../utils/pretty_console_log";
 import { initLNA } from "../utils/init_lna";
+import { OdooLocalPrinter } from "@point_of_sale/app/utils/printer/local_printer";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -710,6 +711,8 @@ export class PosStore extends WithLazyGetterTrap {
 
         if (this.config.other_devices && this.config.epson_printer_ip) {
             this.hardwareProxy.printer = new EpsonPrinter({ ip: this.config.epson_printer_ip });
+        } else if (window.OdooNativeApp) {
+            this.hardwareProxy.printer = new OdooLocalPrinter();
         }
     }
 

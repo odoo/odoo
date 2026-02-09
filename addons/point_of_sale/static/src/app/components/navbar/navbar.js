@@ -45,7 +45,7 @@ export class Navbar extends Component {
         this.notification = useService("notification");
         this.hardwareProxy = useService("hardware_proxy");
         this.dialog = useService("dialog");
-        this.isDisplayStandalone = isDisplayStandalone();
+        this.isDisplayStandalone = isDisplayStandalone() || Boolean(window.OdooNativeApp);
         this.isBarcodeScannerSupported = isBarcodeScannerSupported;
         this.timeout = null;
         this.bufferedInput = "";
