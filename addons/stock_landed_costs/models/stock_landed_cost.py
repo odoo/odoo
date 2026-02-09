@@ -6,6 +6,7 @@ from collections import defaultdict
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_is_zero
+from odoo.fields import Command
 
 
 SPLIT_METHOD = [
@@ -268,6 +269,20 @@ class StockLandedCost(models.Model):
                    for cost_line, val_amount in val_to_cost_lines.items()):
                 return False
         return True
+
+    def write(self, vals):
+        """ Prevent the user from adding the landed cost to receipt of a sbp.
+        """
+        if 'picking_ids' in vals:
+            for command in vals['picking_ids']:
+                if command[0] == Command.LINK:
+                    picking = self.env['stock.picking'].browse(command[1])
+                    if picking.picking_type_code == 'incoming' and all(move.is_subcontract for move in picking.move_ids):
+                        raise UserError(_(
+                            "You are trying to add a landed cost to the Receipt of a subcontracted product, the landed cost"
+                            "should instead be added to the related Manufacturing Order"
+                        ))
+        return super().write(vals)
 
 
 class StockLandedCostLines(models.Model):
