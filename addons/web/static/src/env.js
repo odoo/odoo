@@ -6,6 +6,7 @@ import { appTranslateFn } from "@web/core/l10n/translation";
 import { session } from "@web/session";
 import { isMacOS } from "@web/core/browser/feature_detection";
 import { compatibilityDirectives, compatibilityGlobals } from "@web/owl2/utils";
+import { EnvPlugin } from "./owl2/compatibility";
 
 // -----------------------------------------------------------------------------
 // Types
@@ -233,7 +234,7 @@ export async function mountComponent(component, target, appConfig = {}) {
         env = await makeEnv();
         await startServices(env);
     }
-    const app = new App(component, {
+    const app = new App({
         env,
         getTemplate,
         dev: env.debug || session.test_mode,
@@ -243,9 +244,11 @@ export async function mountComponent(component, target, appConfig = {}) {
         translateFn: appTranslateFn,
         customDirectives,
         globalValues,
+        plugins: [EnvPlugin],
+        config: { env },
         ...appConfig,
     });
-    const root = await app.mount(target);
+    const root = await app.createRoot(component).mount(target);
     if (isRoot) {
         odoo.__WOWL_DEBUG__ = { root };
     }

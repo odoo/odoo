@@ -1,43 +1,7 @@
+import { _getCurrentNode } from "./compatibility";
+
 // @ts-ignore
 const owl = globalThis.owl;
-
-/**
- * @type {any}
- */
-let currentNode = null;
-
-owl.Component = class Component extends owl.Component {
-    static template = "";
-
-    /**
-     * @param {any} props
-     * @param {any} env
-     * @param {any} node
-     */
-    constructor(props, env, node) {
-        super(props, env, node);
-        this.props = props;
-        this.env = env;
-        this.__owl__ = node;
-        currentNode = node;
-    }
-
-    setup() {}
-
-    /**
-     * @param {boolean} deep
-     */
-    render(deep = false) {
-        this.__owl__.render(deep === true);
-    }
-};
-
-function getCurrentNode() {
-    if (!currentNode) {
-        throw new Error("No current node");
-    }
-    return currentNode;
-}
 
 /**
  * @param {any} component
@@ -51,7 +15,7 @@ export function render(component, deep = false) {
  * @param {() => void} cb
  */
 export function onWillRender(cb) {
-    const node = getCurrentNode();
+    const node = _getCurrentNode();
     const renderFn = node.renderFn;
     node.renderFn = () => {
         cb.call(node.component);
@@ -63,7 +27,7 @@ export function onWillRender(cb) {
  * @param {() => void} cb
  */
 export function onRendered(cb) {
-    const node = getCurrentNode();
+    const node = _getCurrentNode();
     const renderFn = node.renderFn;
     node.renderFn = () => {
         const result = renderFn();
@@ -82,7 +46,7 @@ export function useRef(name) {
 /**
  */
 export function useComponent() {
-    return getCurrentNode().component;
+    return _getCurrentNode().component;
 }
 
 /**
@@ -92,7 +56,7 @@ export function useComponent() {
  * @param {any} eventParams
  */
 export function useExternalListener(target, eventName, handler, eventParams) {
-    const node = getCurrentNode();
+    const node = _getCurrentNode();
     const boundHandler = handler.bind(node.component);
     owl.onMounted(() => target.addEventListener(eventName, boundHandler, eventParams));
     owl.onWillUnmount(() => target.removeEventListener(eventName, boundHandler, eventParams));

@@ -188,6 +188,7 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web.assets_frontend_minimal'),
 
             'web/static/lib/owl/owl.js',
+            'web/static/src/owl2/compatibility.js',
             'web/static/src/owl2/utils.js',
             'web/static/lib/owl/odoo_module.js',
             'web/static/src/owl2/utils.js',
@@ -361,7 +362,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/luxon/luxon.js',
             'web/static/src/libs/luxon.js',
             'web/static/lib/owl/owl.js',
-            'web/static/src/owl2/utils.js',
+            'web/static/src/owl2/compatibility.js',
             'web/static/src/owl2/utils.js',
             'web/static/lib/owl/odoo_module.js',
             'web/static/src/owl2/utils.js',
@@ -437,6 +438,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/module_loader.js',
 
             'web/static/lib/owl/owl.js',
+            'web/static/src/owl2/compatibility.js',
             'web/static/src/owl2/utils.js',
             'web/static/lib/owl/odoo_module.js',
             'web/static/src/owl2/utils.js',
