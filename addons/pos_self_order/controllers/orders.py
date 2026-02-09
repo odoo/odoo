@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 from odoo import http, fields, _
 from odoo.http import request
 from odoo.tools import float_round
@@ -9,7 +10,7 @@ from odoo.tools import consteq
 
 class PosSelfOrderController(http.Controller):
     @http.route("/pos-self-order/process-order/<device_type>/", auth="public", type="jsonrpc", website=True)
-    def process_order(self, order, access_token, table_identifier, device_type):
+    def process_order(self, order, access_token, table_identifier, device_type, preparation_change=None):
         pos_config, _ = self._verify_authorization(access_token, table_identifier, order)
         pos_session = pos_config.current_session_id
         preset_id = order['preset_id'] if pos_config.use_presets else False
@@ -58,6 +59,9 @@ class PosSelfOrderController(http.Controller):
 
         if amount_total == 0:
             order_ids._process_saved_order(False)
+
+        if preparation_change:
+            order_ids.write({'last_order_preparation_change': json.dumps(preparation_change)})
 
         return self._generate_return_values(order_ids, pos_config)
 
@@ -198,7 +202,7 @@ class PosSelfOrderController(http.Controller):
     @http.route('/kiosk/payment/<int:pos_config_id>/<device_type>', auth='public', type='jsonrpc', website=True)
     def pos_self_order_kiosk_payment(self, pos_config_id, order, payment_method_id, access_token, device_type):
         pos_config = self._verify_pos_config(access_token)
-        results = self.process_order(order, access_token, None, device_type)
+        results = self.process_order(order, access_token, None, device_type, None)
 
         if not results['pos.order'][0].get('id'):
             raise BadRequest("Something went wrong")

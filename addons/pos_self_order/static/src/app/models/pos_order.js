@@ -63,4 +63,23 @@ patch(PosOrder.prototype, {
             }
         }
     },
+    getLastOrderPreparationChange() {
+        const preparation_change = {
+            lines: {},
+            general_customer_note: this.general_customer_note,
+        };
+
+        this.lines.forEach((line) => {
+            preparation_change.lines[line.preparationKey] = {
+                uuid: line.uuid,
+                name: line.getFullProductName(),
+                note: line.getNote(),
+                customer_note: line.getCustomerNote(),
+                product_id: line.getProduct().id,
+                quantity: line.getQuantity(),
+                attribute_value_ids: line.attribute_value_ids.map((attr) => attr.id),
+            };
+        });
+        return preparation_change;
+    },
 });

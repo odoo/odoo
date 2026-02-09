@@ -432,6 +432,23 @@ registry.category("web_tour.tours").add("test_mobile_self_order_preparation_chan
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_send_to_kitchen_button", {
+    steps: () =>
+        [
+            Utils.checkIsNoBtn("My Order"),
+            Utils.clickBtn("Order Now"),
+            ProductPage.clickProduct("Coca-Cola"),
+            ProductPage.clickProduct("Fanta"),
+            Utils.clickBtn("Checkout"),
+            CartPage.checkProduct("Fanta", "2.53", "1"),
+            CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+            Utils.clickBtn("Order"),
+            CartPage.selectTable("1"),
+            ConfirmationPage.isShown(),
+            Utils.clickBtn("Ok"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_self_order_table_sharing-each_mode", {
     steps: () =>
         [
