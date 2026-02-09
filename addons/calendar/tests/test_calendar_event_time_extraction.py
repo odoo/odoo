@@ -17,7 +17,7 @@ class TestCalendarEventTimeExtraction(TransactionCase):
             ('9H standup', 9, 0, 10, 0),
             ('9:00 presentation', 9, 0, 10, 0),
             ('09:00 call', 9, 0, 10, 0),
-            ('9 am sync', 9, 0, 10, 0),
+            ('9 pm sync', 21, 0, 22, 0),
             ('21h dinner', 21, 0, 22, 0),
             ('21:30 evening call', 21, 30, 22, 30),
             ('2pm review', 14, 0, 15, 0),
@@ -31,10 +31,10 @@ class TestCalendarEventTimeExtraction(TransactionCase):
             result = event._parse_time_from_title(title)
 
             self.assertIsNotNone(result, f"Failed to parse time from: {title}")
-            self.assertEqual(result['start_time'].hour, start_h, f"Wrong start hour for: {title}")
-            self.assertEqual(result['start_time'].minute, start_m, f"Wrong start minute for: {title}")
-            self.assertEqual(result['end_time'].hour, end_h, f"Wrong end hour for: {title}")
-            self.assertEqual(result['end_time'].minute, end_m, f"Wrong end minute for: {title}")
+            self.assertEqual(result[0].hour, start_h, f"Wrong start hour for: {title}")
+            self.assertEqual(result[0].minute, start_m, f"Wrong start minute for: {title}")
+            self.assertEqual(result[1].hour, end_h, f"Wrong end hour for: {title}")
+            self.assertEqual(result[1].minute, end_m, f"Wrong end minute for: {title}")
 
     def test_parse_time_from_title_ranges(self):
         test_cases = [
@@ -47,6 +47,7 @@ class TestCalendarEventTimeExtraction(TransactionCase):
             ('9:00-10:30 session', 9, 0, 10, 30),
             ('10h-12h break', 10, 0, 12, 0),
             ('11 pm to 1 am lan party', 23, 0, 1, 0),
+            ('9 to 5 worktime', 9, 0, 17, 0),
 
             # Mixed suffix inheritance
             ('9am-11 workshop', 9, 0, 11, 0),
@@ -64,11 +65,10 @@ class TestCalendarEventTimeExtraction(TransactionCase):
             result = event._parse_time_from_title(title)
 
             self.assertIsNotNone(result, f"Failed to parse time from: {title}")
-            self.assertEqual(result['start_time'].hour, start_h, f"Wrong start hour for: {title}")
-            self.assertEqual(result['start_time'].minute, start_m, f"Wrong start minute for: {title}")
-            self.assertIn('end_time', result, f"Should have end_time for: {title}")
-            self.assertEqual(result['end_time'].hour, end_h, f"Wrong end hour for: {title}")
-            self.assertEqual(result['end_time'].minute, end_m, f"Wrong end minute for: {title}")
+            self.assertEqual(result[0].hour, start_h, f"Wrong start hour for: {title}")
+            self.assertEqual(result[0].minute, start_m, f"Wrong start minute for: {title}")
+            self.assertEqual(result[1].hour, end_h, f"Wrong end hour for: {title}")
+            self.assertEqual(result[1].minute, end_m, f"Wrong end minute for: {title}")
 
     def test_parse_time_from_title_no_time(self):
         """Test titles without time information"""
@@ -129,7 +129,6 @@ class TestCalendarEventTimeExtraction(TransactionCase):
         start_tz, stop_tz = self.get_event_times_in_user_tz(event)
 
         self.assertFalse(event.allday)
-        self.assertEqual(event.name, "meeting")
         self.assertEqual(start_tz.hour, 9, "Start hour should be updated to 9")
         self.assertEqual(start_tz.minute, 0, "Start minute should be 0")
         self.assertEqual(stop_tz.hour, 10, "end hour should be updated to 10")
@@ -149,7 +148,6 @@ class TestCalendarEventTimeExtraction(TransactionCase):
         start_tz, stop_tz = self.get_event_times_in_user_tz(event)
 
         self.assertFalse(event.allday)
-        self.assertEqual(event.name, "review")
         self.assertEqual(start_tz.hour, 14, "Start hour should be 14")
         self.assertEqual(start_tz.minute, 30, "Start minute should be 30")
         self.assertEqual(stop_tz.hour, 16, "Stop hour should be 16")
@@ -183,15 +181,3 @@ class TestCalendarEventTimeExtraction(TransactionCase):
 
         self.assertTrue(event.allday)
         self.assertEqual(event.start, original_start, "Start should not change when no time in title")
-
-    def test_convert_to_24h(self):
-        event = self.CalendarEvent.new({})
-
-        self.assertEqual(event._convert_to_24h(9, 'am'), 9)
-        self.assertEqual(event._convert_to_24h(12, 'am'), 0)  # Midnight
-        self.assertEqual(event._convert_to_24h(2, 'pm'), 14)
-        self.assertEqual(event._convert_to_24h(12, 'pm'), 12)  # Noon
-        self.assertEqual(event._convert_to_24h(14, 'h'), 14)
-        self.assertEqual(event._convert_to_24h(9, 'h'), 9)
-        self.assertEqual(event._convert_to_24h(15, None), 15)
-        self.assertEqual(event._convert_to_24h(9, None), 9)

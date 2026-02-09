@@ -5,8 +5,8 @@ import logging
 import math
 import re
 import uuid
-from datetime import datetime, timedelta, UTC, time
-from itertools import repeat
+from babel.dates import parse_time
+from datetime import datetime, timedelta, UTC
 from zoneinfo import ZoneInfo
 
 from markupsafe import Markup
@@ -28,7 +28,7 @@ from odoo.addons.calendar.models.calendar_recurrence import (
 from odoo.addons.calendar.models.utils import interval_from_events
 from odoo.tools.intervals import intervals_overlap
 from odoo.tools.translate import _
-from odoo.tools.misc import get_lang
+from odoo.tools.misc import get_lang, babel_locale_parse
 from odoo.tools import html2plaintext, html_sanitize, is_html_empty, single_email_re
 from odoo.exceptions import UserError, ValidationError
 
@@ -613,41 +613,34 @@ class CalendarEvent(models.Model):
             if not event.env.context.get("is_quick_create_form") or not event.name or not event.allday:
                 return
 
-            time_info = event._parse_time_from_title(event.name)
-            if not time_info:
+            parsed_time = event._parse_time_from_title(event.name)
+            if not parsed_time:
                 return
 
+            start_time, end_time = parsed_time
             event.allday = False
 
+            # The user enters the meeting time in their own timezone, but we store it as UTC
             tz_name = self.env.context.get('tz') or self.env.user.partner_id.tz or 'UTC'
             self_tz = event.with_context(tz=tz_name)
 
             # Get the event date in the user's timezone
             start_local = end_local = fields.Datetime.context_timestamp(self_tz, fields.Datetime.from_string(event.start))
 
-            # handle day overflow like 11pm - 1am
-            if time_info['start_time'].hour > time_info['end_time'].hour or \
+            # Handle day overflow like 11pm - 1am
+            if start_time.hour > end_time.hour or \
                 (
-                    time_info['start_time'].hour == time_info['end_time'].hour and
-                    time_info['start_time'].minute > time_info['end_time'].minute
+                    start_time.hour == end_time.hour and
+                    start_time.minute > end_time.minute
                 ):
                 end_local += timedelta(days=1)
 
-            new_start_utc = self._apply_time_in_tz(start_local, time_info['start_time'])
-            new_stop_utc = self._apply_time_in_tz(end_local, time_info['end_time'])
-
-            # Adjust for leading whitespace if not start of string
-            start_index = time_info['start_index'] + (1 if time_info['start_index'] > 0 else 0)
-            # Remove the time from the title
-            event_title = (
-                    event.name[:start_index] +
-                    event.name[time_info['end_index']:]
-            )
+            new_start_utc = self._apply_time_in_tz(start_local, start_time)
+            new_stop_utc = self._apply_time_in_tz(end_local, end_time)
 
             event.update({
                 'start': new_start_utc,
                 'stop': new_stop_utc,
-                'name': event_title
             })
 
     @staticmethod
@@ -670,68 +663,27 @@ class CalendarEvent(models.Model):
 
         start_raw, end_raw = match.groups()
 
-        def parse_time_string(part):
-            """Parse a single time fragment like: '9', '9am', '21:30', '9 h', '9:30pm'"""
-            part = part.replace(" ", "").lower()
-
-            suffix = None
-            for s in ("am", "pm", "a.m.", "a.m", "p.m.", "p.m", "h", "hr"):
-                if part.endswith(s):
-                    suffix = s
-                    part = part[: -len(s)]
-                    break
-
-            if ":" in part:
-                hour, minute = map(int, part.split(":", 1))
-            else:
-                hour, minute = int(part), 0
-
-            return hour, minute, suffix
-
-        start_hour, start_min, start_suffix = parse_time_string(start_raw)
-        if end_raw:
-            end_hour, end_min, end_suffix = parse_time_string(end_raw)
+        locale = babel_locale_parse(get_lang(self.env).code)
+        start_parsed = parse_time(start_raw, locale=locale)
+        if end_raw is not None:
+            end_parsed = parse_time(end_raw, locale=locale)
         else:
-            end_hour, end_min, end_suffix = start_hour, start_min, start_suffix
+            # If the user didn't provide an end time, the meeting should last one hour
+            dt = datetime.combine(datetime.today(), start_parsed)
+            end_parsed = (dt + timedelta(hours=1)).time()
 
-        # Use suffix from second part if missing (9-11h, 9-11pm)
-        start_suffix = start_suffix or end_suffix
+        # Handle case were pm suffix is added to end time 9-11pm. Since the the start/end times are
+        # parsed individually, it would result in 9-23, instead of 21-23
+        if end_parsed.hour > 12 > start_parsed.hour and start_parsed.hour < end_parsed.hour:
+            dt = datetime.combine(datetime.today(), start_parsed)
+            start_parsed = (dt + timedelta(hours=12)).time()
 
-        if not end_suffix and 12 >= start_hour > end_hour:
-            # `9-5` -> assume this means 9am-5pm
-            if not start_suffix or start_suffix in ['a.m.', 'a.m', 'am', 'h', 'hr']:
-                end_suffix = "pm"
-            # 10pm-4 -> assume this means 10pm-4am
-            else:
-                end_suffix = "am"
-        else:
-            end_suffix = end_suffix or start_suffix
+        # 9 to 5 should assume 9am to 5pm
+        if start_parsed > end_parsed and start_parsed.hour <= 12:
+            dt = datetime.combine(datetime.today(), end_parsed)
+            end_parsed = (dt + timedelta(hours=12)).time()
 
-        start_24_notation = self._convert_to_24h(start_hour, start_suffix)
-        end_24_notation = self._convert_to_24h(end_hour, end_suffix)
-
-        # If the user didn't provide an end time, the meeting should last one hour
-        if not end_raw:
-            end_24_notation += 1
-            if end_24_notation >= 24:
-                end_24_notation -= 24
-
-        return {
-            "start_time": time(start_24_notation, start_min),
-            "end_time": time(end_24_notation, end_min),
-            "start_index": match.start(),
-            "end_index": match.end(),
-        }
-
-    @staticmethod
-    def _convert_to_24h(hour, suffix):
-        """Convert hour to 24-hour format based on suffix (am/pm/h)."""
-        if suffix and 'p' in suffix and hour != 12:
-            return hour + 12
-        elif suffix and 'a' in suffix and hour == 12:
-            return 0
-        # If suffix is 'h', 'hr' or None, assume 24-hour format if >= 12
-        return hour
+        return start_parsed, end_parsed
 
     # ------------------------------------------------------------
     # CRUD
