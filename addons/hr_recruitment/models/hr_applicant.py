@@ -23,7 +23,7 @@ AVAILABLE_PRIORITIES = [
 class HrApplicant(models.Model):
     _name = 'hr.applicant'
     _description = "Applicant"
-    _order = "priority desc, id desc"
+    _order = "priority desc, sequence, id desc"
     _inherit = [
                'mail.thread.main.attachment',
                'mail.thread.blacklist',
