@@ -110,6 +110,7 @@
                     <field name="tag_ids" domain="[('applicability', '=', 'accounts')]" optional="hide" widget="many2many_tags"/>
                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                     <field name="company_ids" widget="many2many_tags" readonly="True" groups="base.group_multi_company"/>
+                    <field name="description" optional="hide"/>
                 </list>
             </field>
         </record>
