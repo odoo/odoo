@@ -3803,7 +3803,12 @@ class SnippetsMenu extends Component {
                         dropped = true;
                     }
                 }
-                if (!dropped && y > 3 && x + helper.getBoundingClientRect().height < this.el.getBoundingClientRect().left) {
+                const sidebarRect = this.el.getBoundingClientRect();
+                const isRTL = document.body.classList.contains("o_rtl");
+                const isOutOfSidebar = isRTL
+                    ? sidebarRect.left + sidebarRect.width < x - helper.getBoundingClientRect().width / 2
+                    : x + helper.getBoundingClientRect().width / 2 < sidebarRect.left;
+                if (!dropped && y > 3 && isOutOfSidebar) {
                     const point = { x, y };
                     let droppedOnNotNearest = touching(doc.body.querySelectorAll('.oe_structure_not_nearest'), point);
                     // If dropped outside of a dropzone with class oe_structure_not_nearest,
