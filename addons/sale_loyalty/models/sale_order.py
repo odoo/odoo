@@ -1228,7 +1228,10 @@ class SaleOrder(models.Model):
         products = order_lines.product_id
         products_qties = dict.fromkeys(products, 0)
         for line in order_lines:
-            products_qties[line.product_id] += line.product_uom_qty
+            product_qty = line.product_uom_id._compute_quantity(
+                line.product_uom_qty, line.product_id.uom_id
+            )
+            products_qties[line.product_id] += product_qty
         # Contains the products that can be applied per rule
         products_per_rule = programs._get_valid_products(products)
 
