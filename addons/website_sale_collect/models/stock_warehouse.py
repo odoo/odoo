@@ -47,7 +47,7 @@ class StockWarehouse(models.Model):
         if self.opening_hours:
             opening_hours_dict = {str(i): [] for i in range(7)}
             for att in self.opening_hours.attendance_ids:
-                if att.day_period in ('morning', 'afternoon'):
+                if att.day_period in ('morning', 'afternoon', 'full_day'):
                     opening_hours_dict[att.dayofweek].append(
                         f'{format_duration(att.hour_from)} - {format_duration(att.hour_to)}'
                     )
