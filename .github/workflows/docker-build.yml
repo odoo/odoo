@@ -459,7 +459,7 @@ jobs:
           docker compose pull
 
           echo "🔄 Starting all services..."
-          docker compose up -d
+          docker compose up -d --force-recreate
 
           echo "✅ Deployment completed. Listing services..."
           docker ps --filter "label=com.docker.compose.project" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"

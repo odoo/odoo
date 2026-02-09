@@ -88,13 +88,15 @@
 
 // Reveal animations (IntersectionObserver adds .is-inview)
 .ram-reveal {
-    opacity: 1;
+    opacity: 0;
+    transform: translateY(20px);
     transition: opacity 700ms cubic-bezier(0.2, 0.9, 0.2, 1), transform 700ms cubic-bezier(0.2, 0.9, 0.2, 1);
+    will-change: opacity, transform;
 }
 
 .ram-reveal.is-inview {
-    opacity: 1;
-    transform: translateY(0);
+    opacity: 1 !important;
+    transform: translateY(0) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -430,77 +432,191 @@
 }
 
 // ------------------------------------------------------------
+// Dishes 2.0 (Menu items)
+// ------------------------------------------------------------
+.ram-dish-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+// ------------------------------------------------------------
 // Menu cards
 // ------------------------------------------------------------
 .ram-dish {
-    display: block;
-    border-radius: var(--ram-radius-lg);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background: rgba(255, 255, 255, 0.06);
-    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.24);
+    position: relative;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
     overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: flex;
+    flex-direction: column;
     height: 100%;
-    transition: transform 170ms ease, border-color 170ms ease, background 170ms ease, box-shadow 170ms ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.15);
+        transform: translateY(-4px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
 }
-.ram-dish:hover {
-    transform: translateY(-4px);
-    border-color: rgba(255, 255, 255, 0.22);
+
+.ram-dish--compact {
+    border-radius: 16px; 
+    
+    .ram-dish__body {
+        padding: 12px 14px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .ram-dish__title {
+        font-size: 1.1rem;
+        margin-bottom: 0;
+        line-height: 1.3;
+    }
+    
+    .ram-dish__media {
+        aspect-ratio: 16/9;
+    }
+}
+
+.ram-dish--expanded {
     background: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 26px 70px rgba(0, 0, 0, 0.32);
+    border-color: var(--ram-accent-1);
+    
+    .ram-dish__details {
+        display: block;
+        animation: ramSlideDown 0.3s ease-out;
+    }
 }
+
 .ram-dish__media {
     position: relative;
-    aspect-ratio: 16/10;
+    width: 100%;
+    aspect-ratio: 4/3;
     overflow: hidden;
+    cursor: pointer;
 }
+
 .ram-dish__img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transform: scale(1.04);
-    transition: transform 240ms ease;
+    transition: transform 0.5s ease;
+    
+    .ram-dish:hover & {
+        transform: scale(1.05);
+    }
 }
-.ram-dish:hover .ram-dish__img {
-    transform: scale(1.10);
-}
+
 .ram-dish__shine {
     position: absolute;
-    inset: -40% -40%;
-    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.22), transparent 55%);
-    transform: rotate(12deg);
-    opacity: 0.25;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+    pointer-events: none;
 }
+
 .ram-dish__body {
-    padding: 16px 16px 14px;
+    padding: 18px;
+    background: linear-gradient(180deg, rgba(13, 16, 32, 0.4), rgba(13, 16, 32, 0.8));
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
+
+.ram-dish__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    min-height: 2.5rem;
+    cursor: pointer;
+}
+
 .ram-dish__title {
-    font-weight: 900;
-    font-size: 1.1rem;
-    letter-spacing: -0.01em;
-    line-height: 1.2;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
 }
+
+.ram-dish__price {
+    font-family: var(--ram-font-mono);
+    font-weight: 700;
+    color: var(--ram-accent-1);
+    white-space: nowrap;
+}
+
+.ram-dish__details {
+    display: none;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
 .ram-dish__meta {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-top: 10px;
+    margin-bottom: 10px;
 }
+
 .ram-dish__desc {
-    margin-top: 10px;
+    font-size: 0.9rem;
     color: var(--ram-muted);
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    line-height: 1.5;
+    margin-bottom: 12px;
 }
-.ram-dish__cta {
-    margin-top: 14px;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 800;
-    color: rgba(255, 255, 255, 0.92);
+
+.ram-dish__footer {
+    margin-top: auto;
+    padding-top: 12px;
+}
+
+.ram-dish__actions {
+    width: 100%;
+    
+    button {
+        width: 100%;
+    }
+}
+
+.ram-dish__note-form {
+    animation: ramFadeIn 0.2s ease-out;
+    margin-top: 8px;
+    background: rgba(0,0,0,0.3);
+    padding: 8px;
+    border-radius: 8px;
+    
+    .ram-dish__note-input {
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.12);
+        color: white;
+        font-size: 0.85rem;
+        width: 100%;
+        margin-bottom: 0.5rem;
+        
+        &:focus {
+            background: rgba(255,255,255,0.15);
+            border-color: var(--ram-accent-1);
+            box-shadow: none;
+        }
+        &::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+    }
+}
+
+@keyframes ramSlideDown {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes ramFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 // ------------------------------------------------------------
@@ -998,3 +1114,612 @@
 .ram-footer__tinyLinks a:hover {
     color: rgba(255, 255, 255, 0.92);
 }
+// ------------------------------------------------------------
+// Cart UI
+// ------------------------------------------------------------
+.ram-cart-floating {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 1050;
+    transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+.ram-cart-floating:hover {
+    transform: scale(1.1);
+}
+.ram-cart-floating__btn {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--ram-accent-1), var(--ram-accent-2));
+    border: none;
+    color: #000;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 12px 36px rgba(255, 183, 3, 0.4);
+    position: relative;
+}
+.ram-cart-count {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #fff;
+    color: #000;
+    font-size: 12px;
+    font-weight: 900;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--ram-accent-1);
+}
+
+.ram-cart-sidebar {
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    width: 100%;
+    max-width: 500px;
+    background: rgba(15, 15, 30, 0.98); /* Increased opacity from 0.45 to 0.98 */
+    color: #ffffff !important;
+    border-left: 1px solid var(--ram-border);
+    z-index: 1100;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.2, 1);
+    box-shadow: -20px 0 60px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(20px);
+
+    /* Ensure all text inside is light */
+    h1, h2, h3, h4, h5, h6, p, span, div, label, strong, small {
+        color: #ffffff !important;
+    }
+
+    .form-control {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #ffffff !important;
+        
+        &::placeholder {
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+    }
+}
+.ram-cart-sidebar.active {
+    transform: translateX(0);
+}
+
+.ram-cart-sidebar__header {
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--ram-border);
+}
+.ram-cart-sidebar__title {
+    margin: 0;
+    font-weight: 900;
+    font-family: var(--ram-font-head);
+}
+.ram-cart-sidebar__close {
+    background: none;
+    border: none;
+    color: var(--ram-text);
+    font-size: 24px;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+.ram-cart-sidebar__close:hover {
+    opacity: 1;
+}
+
+.ram-cart-sidebar__body {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 24px;
+}
+
+.ram-cart-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: var(--ram-surface-2);
+    border: 1px solid var(--ram-border);
+    border-radius: 12px;
+    margin-bottom: 12px;
+}
+.ram-cart-item__thumb-wrapper {
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--ram-border);
+}
+.ram-cart-item__thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.ram-cart-item__info {
+    flex: 1;
+}
+.ram-cart-item__name {
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+.ram-cart-item__controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 6px;
+}
+.ram-cart-qty-btn {
+    width: 24px;
+    height: 24px;
+    display: grid;
+    place-items: center;
+    border-radius: 6px;
+    border: 1px solid var(--ram-border);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.2s;
+    &:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: var(--ram-accent-1);
+    }
+}
+.ram-cart-qty-val {
+    font-weight: 800;
+    font-size: 0.9rem;
+    min-width: 1ch;
+    text-align: center;
+}
+
+.ram-cart-sidebar__footer {
+    padding: 24px;
+    border-top: 1px solid var(--ram-border);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.ram-btn--primary {
+    color: #000000 !important;
+    background: #ffb703 !important; /* Solid bright color for maximum reliability */
+    background: linear-gradient(135deg, #ffb703, #fb7185) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    font-weight: 800 !important;
+    span, i, strong { 
+        color: #000000 !important;
+        opacity: 1 !important;
+    }
+}
+
+.ram-cart-sidebar__footer, .ram-cart-sidebar__footer-sticky {
+    padding: 24px;
+    border-top: 1px solid var(--ram-border);
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* Space between Checkout and Continue Shopping */
+}
+
+.ram-cart-screen {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.ram-empty-cart {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--ram-muted);
+}
+
+// ------------------------------------------------------------
+// Configurator Modal
+// ------------------------------------------------------------
+.ram-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+
+    &.active {
+        opacity: 1;
+        pointer-events: auto;
+        
+        .ram-modal__container {
+            transform: translateY(0);
+        }
+    }
+}
+
+.ram-modal__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+.ram-modal__container {
+    background: #ffffff; /* Use white background for modal for better contrast */
+    color: #1a1a1a; /* Dark text for readability */
+    width: 100%;
+    max-width: 500px;
+    border-radius: 20px;
+    position: relative;
+    z-index: 1201;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    animation: ramModalIn 0.5s cubic-bezier(0.2, 0.9, 0.2, 1);
+
+    /* Ensure all text inside modal is dark */
+    h1, h2, h3, h4, h5, h6, p, span, div, label, strong, small {
+        color: #1a1a1a !important;
+    }
+
+    .ram-modal__header {
+        padding: 24px;
+        border-bottom: 1px solid #eeeeee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .ram-modal__title {
+        margin: 0;
+        font-weight: 800;
+        font-family: var(--ram-font-head);
+    }
+}
+
+.ram-modal__close {
+    background: none;
+    border: none;
+    color: var(--ram-text);
+    font-size: 20px;
+}
+
+.ram-modal__body {
+    padding: 24px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.ram-modal__footer {
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--ram-surface-2);
+    border-top: 1px solid var(--ram-border);
+}
+
+.ram-config-price {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--ram-accent-1);
+
+    &::before {
+        content: var(--ram-currency, "Rs. ");
+        font-size: 14px;
+        opacity: 0.6;
+    }
+}
+
+.ram-config-group {
+    margin-bottom: 32px;
+}
+
+.ram-config-group__title {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 800;
+    color: var(--ram-muted);
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.ram-config-options {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+}
+
+.ram-config-option {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--ram-surface-2);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        background: var(--ram-border);
+    }
+
+    &.active {
+        background: rgba(255, 183, 3, 0.1);
+        border-color: var(--ram-accent-1);
+    }
+}
+
+.ram-config-option__img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-right: 12px;
+}
+
+.ram-config-option__name {
+    flex-grow: 1;
+    font-weight: 700;
+}
+
+.ram-config-option__price {
+    font-size: 13px;
+    color: var(--ram-accent-1);
+    font-weight: 800;
+}
+
+// ------------------------------------------------------------
+// Checkout Form & Payment
+// ------------------------------------------------------------
+.ram-payment-option {
+    padding: 16px;
+    background: var(--ram-surface-2);
+    border: 2px solid transparent;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    transition: all 0.2s;
+    cursor: pointer;
+
+    &.active {
+        background: rgba(255, 183, 3, 0.1);
+        border-color: var(--ram-accent-1);
+    }
+
+    .form-check-input {
+        margin-top: 4px;
+    }
+}
+
+.ram-success-icon {
+    animation: ram-bounce 1s infinite alternate;
+}
+
+@keyframes ram-bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-10px); }
+}
+
+// ------------------------------------------------------------
+// UX Refinements (Phase 9)
+// ------------------------------------------------------------
+
+.ram-category-bar {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 12px;
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+}
+
+.ram-category-btn {
+    flex: 0 0 auto;
+    padding: 10px 20px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--ram-border);
+    color: var(--ram-muted);
+    font-weight: 700;
+    transition: all 160ms ease;
+    cursor: pointer;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    &.active {
+        background: var(--ram-accent-1);
+        border-color: var(--ram-accent-1);
+        color: #000;
+        box-shadow: 0 8px 20px rgba(255, 183, 3, 0.3);
+    }
+}
+
+.ram-closed-banner {
+    padding: 16px 20px;
+    border-radius: var(--ram-radius);
+    background: rgba(251, 113, 133, 0.12);
+    border: 1px solid rgba(251, 113, 133, 0.25);
+    color: #fda4af;
+}
+
+.ram-closed-banner__icon {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: rgba(251, 113, 133, 0.2);
+    font-size: 1.25rem;
+}
+
+.ram-mini-dish[role="button"] {
+    cursor: pointer;
+    user-select: none;
+}
+
+.ram-mini-dish .ram-mini-dish__arrow {
+    font-size: 1.25rem;
+    color: var(--ram-accent-1);
+    opacity: 0.6;
+    transition: transform 140ms ease, opacity 140ms ease;
+}
+
+.ram-mini-dish:hover .ram-mini-dish__arrow {
+    transform: scale(1.15);
+    opacity: 1;
+}
+
+.ram-mini-dish:active {
+    transform: scale(0.98);
+}
+
+.ram-dish-wrapper {
+    transition: opacity 250ms ease, transform 250ms ease;
+}
+
+.ram-dish-wrapper.d-none {
+    display: none !important;
+}
+
+// ------------------------------------------------------------
+// Lightbox Enhancements (Phase 10)
+// ------------------------------------------------------------
+.ram-lightbox {
+    &__toolbar {
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        display: flex;
+        gap: 12px;
+        z-index: 10;
+    }
+
+    &__tool, &__close {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.2s;
+        &:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+    }
+
+    &__nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        font-size: 24px;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        z-index: 5;
+        transition: all 0.2s;
+        &:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        &--prev { left: 24px; }
+        &--next { right: 24px; }
+    }
+
+    &__content {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.2, 1);
+    }
+
+    &.is-zoomed .ram-lightbox__content {
+        transform: scale(1.5);
+        cursor: zoom-out;
+    }
+}
+
+// ------------------------------------------------------------
+// Review Avatars (Phase 10)
+// ------------------------------------------------------------
+.ram-review {
+    &__author {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    &__avatar-wrapper {
+        flex: 0 0 44px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 1px solid var(--ram-border);
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    &__avatar {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        
+        &--placeholder {
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            color: var(--ram-accent-1);
+            background: rgba(255, 183, 3, 0.15);
+        }
+    }
+
+    &__author-info {
+        flex: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .ram-lightbox__nav {
+        width: 44px;
+        height: 44px;
+        &--prev { left: 12px; }
+        &--next { right: 12px; }
+    }
+}
+

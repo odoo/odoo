@@ -12,6 +12,7 @@
     'depends': ['point_of_sale'],
     'assets': {
         'point_of_sale.assets': [
+            'pos_remote_print/static/src/js/models.js',
             'pos_remote_print/static/src/js/remote_print.js',
         ],
     },

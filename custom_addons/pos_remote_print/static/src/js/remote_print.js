@@ -1,76 +1,89 @@
 /** @odoo-module */
 
-import { Patch } from "@web/core/utils/patch";
-import { PosStore } from "@point_of_sale/app/store/pos_store";
+import { patch } from "@web/core/utils/patch";
+import { PosStore } from "@point_of_sale/app/services/pos_store";
 import { useService } from "@web/core/utils/hooks";
 
-Patch(PosStore.prototype, {
+patch(PosStore.prototype, {
     setup() {
         super.setup(...arguments);
         this.busService = useService("bus_service");
+        this.notification = useService("notification");
+        this.orm = useService("orm"); // Ensure ORM service is available
+
+        // Bind for callback context
+        this._onNewRemoteOrder = this._onNewRemoteOrder.bind(this);
         
-        // Subscribe if config allows
         if (this.config.accept_remote_orders) {
-            this.busService.addChannel("pos_remote_orders");
-            this.busService.subscribe("pos_remote_orders", (payload) => {
-                this._handleRemoteOrder(payload);
-            });
-            console.log("POS Remote Print: Listening for orders...");
+            this.busService.subscribe("NEW_REMOTE_ORDER", this._onNewRemoteOrder);
+            console.log("POS Remote Print: Listening for NEW_REMOTE_ORDER...");
         }
     },
 
-    async _handleRemoteOrder(payload) {
-        // payload: { order_id: 123, uuid: '...' }
-        // Type: 'new_order' (usually bus sends [type, payload] or just payload depending on version)
-        // Assuming payload is the data part.
-
-        console.log("Remote Order Received:", payload);
-        
-        // 1. Attempt to Claim (Lock) the order
-        // We call a backend method to "Claim" the print job.
-        // This ensures only 1 tablet prints it.
-        
+    async _onNewRemoteOrder(payload) {
+        console.log("🚀 Remote Order Signal:", payload);
         try {
-            const shouldPrint = await this.orm.call(
+            const orderId = payload.order_id;
+            
+            // 1. Fetch full order data from backend
+            // usage: read_pos_data([ids], config_id)
+            const serverData = await this.orm.call(
                 "pos.order", 
-                "claim_remote_print", 
-                [[payload.order_id], this.pos_session.id]
+                "read_pos_data", 
+                [[orderId], this.config.id]
             );
-
-            if (shouldPrint) {
-                // 2. Fetch Order Data and Print
-                // We reuse existing print logic? 
-                // We need to fetch the order details to render the receipt.
-                
-                // For MVP, we might just print a simple "New Notification" or fetch the full order
-                // print_order_receipt is complex, it expects an Order object in JS.
-                // We can use this.env.services.report? Or load the order into POS?
-                
-                await this._printRemoteOrder(payload.order_id);
+            
+            if (!serverData || !serverData['pos.order'] || !serverData['pos.order'].length) {
+                console.warn("⚠️ Remote order data empty or not found:", orderId);
+                return;
             }
-        } catch (e) {
-            console.error("Remote Print Error:", e);
-        }
-    },
 
-    async _printRemoteOrder(orderId) {
-        // Fetch order details from server
-        // This is a simplification. Real implementation needs to construct the receipt data.
-        // We can call `get_order_details` (custom) or use `read`.
-        
-        const orders = await this.orm.read("pos.order", [orderId], ["name", "lines", "amount_total"]);
-        if (!orders || !orders.length) return;
-        
-        const orderData = orders[0];
-        // Trigger Printer
-        // Implementation depends on if we use HW Proxy or Browser Print
-        // Assuming standard kitchen printing via printer_id
-        
-        // Ideally we just trigger a reprint_receipt kind of flow
-        console.log("Printing Remote Order:", orderData.name);
-        
-        // TODO: Full Ticket Rendering Logic
-        // For now, we alert (simulated print)
-        // alert(`Printing Order ${orderData.name} - Kitchen`);
+            // 2. Load data into POS Store
+            // This updates existing orders or adds new ones
+            await this.load_server_data(serverData);
+            
+            // 3. Get the loaded Order instance
+            const order = this.models["pos.order"].get(orderId);
+            
+            if (order) {
+                // 4. Notify User
+                this.notification.add(`New ${payload.source} Order: ${order.name}`, {
+                    title: "Remote Order Received",
+                    type: "info",
+                    sticky: false
+                });
+
+                // 5. Trigger Auto-Print (if configured)
+                if (this.config.accept_remote_orders && order.delivery_status === 'received') {
+                    // Prevent duplicate prints via backend lock logic
+                    // We call backend to claim the print
+                    const shouldPrint = await this.orm.call(
+                        "pos.order", 
+                        "claim_remote_print", 
+                        [[order.id], this.pos_session.id]
+                    );
+
+                    if (shouldPrint) {
+                         // Print Kitchen Ticket
+                         // In Odoo 17+, printChanges is used for kitchen printing
+                         // usage: printChanges(order)
+                         // But we need to check if order has changes to print?
+                         // API orders valid as 'changes'?
+                         
+                         // Force 'saved' state to ensure it prints?
+                         // Actually, printChanges checks 'order.hasChangesToPrint()'
+                         // API orders might not have 'lines' marked as new in frontend if loaded from backend.
+                         // But if they are 'paid', kitchen printing might behave differently.
+                         
+                         // For now, let's just log and maybe trigger a reprint if needed.
+                         console.log("🖨️ Printing Remote Order Ticket:", order.name);
+                         // await this.printChanges(order); // Uncomment if kitchen printing flow is verified
+                    }
+                }
+            }
+            
+        } catch (e) {
+             console.error("❌ Remote Order Sync Failed:", e);
+        }
     }
 });

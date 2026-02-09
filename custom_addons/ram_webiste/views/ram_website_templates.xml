@@ -17,9 +17,12 @@
 
             <t t-set="locations" t-value="request.env['ram.website.location'].sudo().search([('is_published', '=', True), '|', ('website_id', '=', False), ('website_id', '=', website_id)], order='sequence asc, id desc', limit=3)"/>
             <t t-set="main_location" t-value="locations and locations[0] or False"/>
+            <t t-set="pos_session" t-value="request.env['pos.session'].sudo().search([('state', '=', 'opened'), ('delivery_active', '=', True), ('config_id.accept_remote_orders', '=', True)], limit=1)"/>
+            <t t-set="ordering_available" t-value="bool(pos_session)"/>
 
-            <t t-set="featured_products" t-value="request.env['product.template'].sudo().search([('sale_ok', '=', True), ('ram_available_on_website_menu', '=', True), ('ram_is_recommended', '=', True), ('is_published', '=', True), '|', ('website_id', '=', False), ('website_id', '=', website_id)], order='website_sequence asc, id desc', limit=6)"/>
-            <t t-set="menu_products" t-value="request.env['product.template'].sudo().search([('sale_ok', '=', True), ('ram_available_on_website_menu', '=', True), ('is_published', '=', True), '|', ('website_id', '=', False), ('website_id', '=', website_id)], order='website_sequence asc, id desc', limit=24)"/>
+            <t t-set="featured_products" t-value="request.env['product.template'].sudo().search([('available_in_pos', '=', True), ('ram_available_on_website_menu', '=', True), ('ram_is_recommended', '=', True), '|', ('website_id', '=', False), ('website_id', '=', website_id)], order='website_sequence asc, id desc', limit=6)"/>
+            <t t-set="menu_products" t-value="request.env['product.template'].sudo().search([('available_in_pos', '=', True), ('ram_available_on_website_menu', '=', True), '|', ('website_id', '=', False), ('website_id', '=', website_id)], order='website_sequence asc, id desc', limit=24)"/>
+            <t t-set="categories" t-value="request.env['pos.category'].sudo().search([('id', 'in', menu_products.mapped('pos_categ_ids').ids)])"/>
 
             <t t-set="reviews" t-value="request.env['ram.website.review'].sudo().search([('is_published', '=', True), '|', ('website_id', '=', False), ('website_id', '=', website_id)], order='sequence asc, id desc', limit=12)"/>
             <t t-set="gallery_images" t-value="request.env['ram.website.gallery.image'].sudo().search([('is_published', '=', True), '|', ('website_id', '=', False), ('website_id', '=', website_id)], order='sequence asc, id desc', limit=12)"/>
@@ -85,7 +88,15 @@
                                     <div class="ram-hero-card__body">
                                         <t t-if="featured_products">
                                             <t t-foreach="featured_products[:3]" t-as="p">
-                                                <a class="ram-mini-dish" t-att-href="p.website_url or '#'">
+                                                <div class="ram-mini-dish js_ram_dish_trigger" 
+                                                     t-att-data-product-id="p.id"
+                                                     t-att-data-product-name="p.name"
+                                                     t-att-data-price="p.ram_website_price"
+                                                     t-att-data-has-variations="'1' if p.attribute_line_ids or p.combo_ids else '0'"
+                                                     t-att-data-tax-amount="p.ram_website_price - p.list_price"
+                                                     t-att-data-thumb="website.image_url(p, 'image_128')"
+                                                     t-att-disabled="not ordering_available"
+                                                     role="button">
                                                     <img class="ram-mini-dish__img" t-att-src="website.image_url(p, 'image_512')" alt=""/>
                                                     <div class="ram-mini-dish__meta">
                                                         <div class="ram-mini-dish__name" t-esc="p.name"/>
@@ -96,21 +107,26 @@
                                                             <span class="ram-chip">Menu</span>
                                                         </div>
                                                     </div>
-                                                    <i class="fa fa-angle-right ram-mini-dish__arrow"/>
-                                                </a>
+                                                    <div class="ms-auto d-flex align-items-center gap-2">
+                                                        <span class="fw-bold" t-esc="p.ram_website_price" t-options="{'widget': 'monetary', 'display_currency': request.website.currency_id}"/>
+                                                        <i class="fa fa-plus-circle ram-mini-dish__arrow"/>
+                                                    </div>
+                                                </div>
                                             </t>
                                         </t>
                                         <t t-else="">
                                             <div class="ram-empty">
                                                 <div class="ram-empty__title">Add Featured Dishes</div>
                                                 <div class="ram-empty__text">
-                                                    Go to <b>Website → eCommerce → Products</b> and enable
+                                                    Go to <b>Point of Sale → Products</b> and enable
                                                     <b>Available on Website Menu</b> and <b>Recommended</b>.
                                                 </div>
                                             </div>
                                         </t>
                                     </div>
                                     <div class="ram-hero-card__bottom">
+                                        <a class="ram-link" href="#menu">Explore Menu</a>
+                                        <span class="ram-dot"/>
                                         <a class="ram-link" href="#reviews">See reviews</a>
                                         <span class="ram-dot"/>
                                         <a class="ram-link" href="#gallery">Gallery</a>
@@ -126,35 +142,88 @@
                 <!-- Menu -->
                 <section class="ram-section" id="menu">
                     <div class="container">
-                        <div class="ram-section__head ram-reveal">
-                            <div class="ram-section__kicker">Menu</div>
-                            <h2 class="ram-section__title">Curry classics, street snacks, and cozy favorites</h2>
-                            <p class="ram-section__lead">Flag dishes in Odoo to curate what shows up here—no code changes needed.</p>
-                        </div>
+                            <div class="ram-section__head ram-reveal">
+                                <div class="ram-section__kicker">Menu</div>
+                                <h2 class="ram-section__title">Curry classics, street snacks, and cozy favorites</h2>
+                                <p class="ram-section__lead">Flag dishes in Odoo to curate what shows up here—no code changes needed.</p>
+                            </div>
+
+                            <!-- Closed Status Banner -->
+                            <div t-if="not ordering_available" class="ram-closed-banner ram-reveal mt-4">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="ram-closed-banner__icon">
+                                        <i class="fa fa-info-circle"/>
+                                    </div>
+                                    <div class="ram-closed-banner__text">
+                                        <strong>Ordering is currently unavailable</strong>
+                                        <p class="mb-0 opacity-75 small">The restaurant is closed for delivery or session is not active. Please check back later.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Category Filter bar -->
+                            <div class="ram-category-bar ram-reveal mt-5" t-if="categories">
+                                <button class="ram-category-btn active js_ram_filter_category" data-category-id="all">
+                                    All Items
+                                </button>
+                                <t t-foreach="categories" t-as="cat">
+                                    <button class="ram-category-btn js_ram_filter_category" t-att-data-category-id="cat.id">
+                                        <t t-esc="cat.name"/>
+                                    </button>
+                                </t>
+                            </div>
 
                         <div class="row g-4 mt-2">
                             <t t-foreach="menu_products" t-as="p">
-                                <div class="col-12 col-sm-6 col-lg-4">
-                                    <a class="ram-dish ram-reveal" t-att-href="p.website_url or '#'">
-                                        <div class="ram-dish__media">
+                                <div t-attf-class="col-12 col-sm-6 col-lg-3 ram-dish-wrapper js_ram_dish_item #{' '.join(['cat-' + str(cid) for cid in p.pos_categ_ids.ids])}">
+                                <div class="ram-dish-card js_ram_dish_trigger"
+                                     t-att-data-product-id="p.id"
+                                     t-att-data-product-name="p.name"
+                                     t-att-data-price="p.ram_website_price"
+                                     t-att-data-has-variations="'1' if p.attribute_line_ids or p.combo_ids else '0'"
+                                     t-att-data-tax-amount="p.ram_website_price - p.list_price"
+                                     t-att-data-thumb="website.image_url(p, 'image_256')">
+                                    <div class="ram-dish ram-dish--compact ram-reveal">
+                                        <div class="ram-dish__media" onclick="this.closest('.ram-dish').classList.toggle('ram-dish--expanded')">
                                             <img class="ram-dish__img" t-att-src="website.image_url(p, 'image_512')" alt=""/>
                                             <div class="ram-dish__shine"/>
                                         </div>
                                         <div class="ram-dish__body">
-                                            <div class="ram-dish__title" t-esc="p.name"/>
-                                            <div class="ram-dish__meta">
-                                                <t t-if="p.ram_spice_level and p.ram_spice_level != 'none'">
-                                                    <span class="ram-chip ram-chip--spice" t-esc="dict(p._fields['ram_spice_level'].selection).get(p.ram_spice_level)"/>
-                                                </t>
-                                                <span class="ram-chip" t-if="p.ram_is_recommended">Recommended</span>
+                                            <div class="ram-dish__header" onclick="this.closest('.ram-dish').classList.toggle('ram-dish--expanded')">
+                                                <div class="ram-dish__title" t-esc="p.name"/>
+                                                <div class="ram-dish__price" t-esc="p.ram_website_price" t-options="{'widget': 'monetary', 'display_currency': request.website.currency_id}"/>
                                             </div>
-                                            <div class="ram-dish__desc" t-if="p.description_sale" t-esc="p.description_sale"/>
-                                            <div class="ram-dish__cta">
-                                                <span class="ram-dish__ctaText">View dish</span>
-                                                <i class="fa fa-long-arrow-right"/>
+                                            
+                                            <div class="ram-dish__details">
+                                                <div class="ram-dish__meta">
+                                                    <t t-if="p.ram_spice_level and p.ram_spice_level != 'none'">
+                                                        <span class="ram-chip ram-chip--spice" t-esc="dict(p._fields['ram_spice_level'].selection).get(p.ram_spice_level)"/>
+                                                    </t>
+                                                    <span class="ram-chip" t-if="p.ram_is_recommended">Recommended</span>
+                                                </div>
+                                                <div class="ram-dish__desc" t-if="p.description_sale" t-esc="p.description_sale"/>
+                                            </div>
+
+                                            <div class="ram-dish__footer">
+                                                <div class="ram-dish__actions">
+                                                    <button t-att-class="'btn ram-btn ram-btn--sm ram-btn--primary js_ram_add_to_cart ' + ('disabled' if not ordering_available else '')" 
+                                                            type="button"
+                                                            t-att-disabled="'disabled' if not ordering_available else None"
+                                                            t-if="ordering_available"
+                                                            t-att-data-product-id="p.id"
+                                                            t-att-data-product-name="p.name"
+                                                            t-att-data-price="p.ram_website_price"
+                                                            t-att-data-has-variations="'1' if p.attribute_line_ids or p.combo_ids else '0'"
+                                                            t-att-data-tax-amount="p.ram_website_price - p.list_price"
+                                                            t-att-data-thumb="website.image_url(p, 'image_256')">
+                                                        Add
+                                                    </button>
+                                                    <button class="btn ram-btn ram-btn--sm ram-btn--ghost disabled" type="button" disabled="disabled" t-else="">Closed</button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </a>
+                                    </div>
+                                </div>
                                 </div>
                             </t>
                         </div>
@@ -162,8 +231,8 @@
                         <div class="ram-callout ram-reveal" t-if="not menu_products">
                             <div class="ram-callout__title">Your menu is empty.</div>
                             <div class="ram-callout__text">
-                                Create products and publish them to the website, then tick
-                                <b>Available on Website Menu</b>.
+                                Go to <b>Point of Sale → Products</b>, mark them as <b>Published</b>, 
+                                and tick <b>Available on Website Menu</b>. (Published toggle is in the stat buttons at the top)
                             </div>
                         </div>
                     </div>
@@ -217,13 +286,19 @@
                                     <article class="ram-review">
                                         <header class="ram-review__head">
                                             <div class="ram-review__author">
-                                                <div class="ram-review__name" t-esc="r.author_name"/>
-                                                <div class="ram-review__meta">
-                                                    <t t-call="ram_webiste.ram_star_rating">
-                                                        <t t-set="rating" t-value="r.rating"/>
-                                                    </t>
-                                                    <span class="ram-review__source" t-if="r.source == 'google'">Google</span>
-                                                    <span class="ram-review__source" t-else="">Customer</span>
+                                                <div class="ram-review__avatar-wrapper">
+                                                    <img t-if="r.author_photo_url" t-att-src="r.author_photo_url" class="ram-review__avatar" alt=""/>
+                                                    <div t-else="" class="ram-review__avatar ram-review__avatar--placeholder" t-esc="r.author_name[:1] if r.author_name else 'C'"/>
+                                                </div>
+                                                <div class="ram-review__author-info">
+                                                    <div class="ram-review__name" t-esc="r.author_name"/>
+                                                    <div class="ram-review__meta">
+                                                        <t t-call="ram_webiste.ram_star_rating">
+                                                            <t t-set="rating" t-value="r.rating"/>
+                                                        </t>
+                                                        <span class="ram-review__source" t-if="r.source == 'google'">Google</span>
+                                                        <span class="ram-review__source" t-else="">Customer</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <a class="ram-review__link" t-if="r.review_url" t-att-href="r.review_url" target="_blank" rel="noopener">
@@ -280,7 +355,7 @@
                                 <div class="col-12 col-lg-4">
                                     <div class="ram-location ram-reveal">
                                         <div class="ram-location__media" t-if="loc.image_1920">
-                                            <img t-att-src="website.image_url(loc, 'image_1024')" alt=""/>
+                                            <img class="ram-gallery__img" t-att-src="website.image_url(loc, 'image_1024')" alt=""/>
                                         </div>
                                         <div class="ram-location__body">
                                             <div class="ram-location__name" t-esc="loc.name"/>
@@ -386,13 +461,28 @@
                 </section>
 
                 <!-- Gallery Lightbox -->
-                <div class="ram-lightbox" id="ram_lightbox" aria-hidden="true">
-                    <button class="ram-lightbox__close" type="button" aria-label="Close">
-                        <i class="fa fa-times"/>
+                <div class="ram-lightbox" id="ram_lightbox" aria-hidden="true" tabindex="-1">
+                    <div class="ram-lightbox__toolbar">
+                        <button class="ram-lightbox__tool js_ram_lightbox_zoom" type="button" aria-label="Zoom">
+                            <i class="fa fa-search-plus"/>
+                        </button>
+                        <button class="ram-lightbox__close" type="button" aria-label="Close">
+                            <i class="fa fa-times"/>
+                        </button>
+                    </div>
+                    
+                    <button class="ram-lightbox__nav ram-lightbox__nav--prev js_ram_lightbox_prev" type="button" aria-label="Previous">
+                        <i class="fa fa-angle-left"/>
                     </button>
+                    <button class="ram-lightbox__nav ram-lightbox__nav--next js_ram_lightbox_next" type="button" aria-label="Next">
+                        <i class="fa fa-angle-right"/>
+                    </button>
+
                     <div class="ram-lightbox__inner" role="dialog" aria-modal="true">
-                        <img class="ram-lightbox__img" alt=""/>
-                        <div class="ram-lightbox__caption"/>
+                        <div class="ram-lightbox__content">
+                            <img class="ram-lightbox__img" alt=""/>
+                            <div class="ram-lightbox__caption"/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -478,6 +568,216 @@
                     </div>
                 </section>
             </div>
+        </xpath>
+    </template>
+    <template id="ram_product_configurator" name="RAM Product Configurator">
+        <div id="ram_config_modal" class="ram-modal" aria-hidden="true" role="dialog">
+            <div class="ram-modal__overlay js_ram_close_config"></div>
+            <div class="ram-modal__container">
+                <div class="ram-modal__header">
+                    <h3 id="ram_config_title" class="ram-modal__title">Configure Item</h3>
+                    <button class="ram-modal__close js_ram_close_config" aria-label="Close">
+                        <i class="fa fa-times"/>
+                    </button>
+                </div>
+                <div id="ram_config_body" class="ram-modal__body">
+                    <!-- JS will render attributes and combos here -->
+                </div>
+                <div class="ram-modal__footer">
+                    <div class="ram-config-price" id="ram_config_total_price">0.00</div>
+                    <button id="js_ram_add_configured_item" class="btn ram-btn ram-btn--primary">
+                        Add to Order
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="ram_cart_ui" inherit_id="website.layout" name="RAM Cart UI">
+        <xpath expr="//div[@id='wrapwrap']" position="inside">
+            <tset t-set="pos_session" t-value="request.env['pos.session'].sudo().search([('state', '=', 'opened'), ('delivery_active', '=', True), ('config_id.accept_remote_orders', '=', True)], limit=1)"/>
+            <t t-if="pos_session">
+                <!-- Load ordering JavaScript directly -->
+                <script type="text/javascript">
+                    window.ram_user_id = <t t-esc="request.session.uid or 0"/>;
+                    window.ram_currency_symbol = "<t t-esc="request.website.currency_id.symbol"/>";
+                    window.ram_currency_position = "<t t-esc="request.website.currency_id.position"/>";
+                </script>
+                <script type="text/javascript" src="/ram_webiste/static/src/js/ram_ordering.js"></script>
+                
+                <t t-call="ram_webiste.ram_product_configurator"/>
+                
+                <!-- Floating Cart Button -->
+                <div id="ram_cart_floating" class="ram-cart-floating d-none">
+                    <button class="ram-cart-floating__btn" aria-label="Open Cart">
+                        <i class="fa fa-shopping-cart"/>
+                        <span class="ram-cart-count">0</span>
+                    </button>
+                </div>
+
+                <!-- Cart Sidebar -->
+                <div id="ram_cart_sidebar" class="ram-cart-sidebar" aria-hidden="true" role="dialog">
+                    <div class="ram-cart-sidebar__header">
+                        <div class="d-flex align-items-center w-100 me-3">
+                            <button class="btn btn-link p-0 me-3 js_ram_switch_tab active" data-tab="items" style="color: inherit; text-decoration: none; border-bottom: 2px solid var(--ram-accent-1); font-weight: 800;">Cart</button>
+                            <button class="btn btn-link p-0 js_ram_switch_tab" data-tab="history" style="color: rgba(255,255,255,0.6); text-decoration: none; font-weight: 800;">My Orders</button>
+                        </div>
+                        <button class="ram-cart-sidebar__close js_ram_close_cart" aria-label="Close">
+                            <i class="fa fa-times"/>
+                        </button>
+                    </div>
+                    
+                    <div class="ram-cart-sidebar__body">
+                        <!-- Screen 0: Order History -->
+                        <div id="ram_cart_screen_history" class="ram-cart-screen d-none">
+                            <h4 class="mb-4">Recent Orders</h4>
+                            <div id="ram_order_history_list" class="ram-order-history-list">
+                                <!-- JS Will Render Here -->
+                            </div>
+                            <div class="ram-cart-sidebar__footer-sticky mt-4">
+                                <button class="btn btn-outline-light w-100 js_ram_close_cart" onclick="window.location.href='/#menu'">
+                                    Continue Shopping
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Screen 1: Cart Items -->
+                        <div id="ram_cart_screen_items" class="ram-cart-screen">
+                            <div id="ram_cart_items" class="ram-cart-items">
+                                <!-- JS Will Render Here -->
+                            </div>
+                            <div class="ram-cart-sidebar__footer-sticky">
+                                <div class="ram-cart-total-row d-flex justify-content-between mb-1 text-muted small">
+                                    <span>Taxes</span>
+                                    <span>
+                                        <t t-if="request.website.currency_id.position == 'before'">
+                                            <t t-esc="request.website.currency_id.symbol"/> 
+                                        </t>
+                                        <span class="ram-cart-total-tax">0.00</span>
+                                        <t t-if="request.website.currency_id.position == 'after'">
+                                            <t t-esc="request.website.currency_id.symbol"/>
+                                        </t>
+                                    </span>
+                                </div>
+                                <button id="js_ram_go_to_checkout" class="btn ram-btn ram-btn--primary w-100 d-none">
+                                    Checkout (
+                                    <t t-if="request.website.currency_id.position == 'before'">
+                                        <t t-esc="request.website.currency_id.symbol"/> 
+                                    </t>
+                                    <span class="ram-cart-total-price">0.00</span>
+                                    <t t-if="request.website.currency_id.position == 'after'">
+                                        <t t-esc="request.website.currency_id.symbol"/>
+                                    </t>)
+                                </button>
+                                <button class="btn btn-outline-light w-100 mt-2 js_ram_close_cart" onclick="window.location.href='/#menu'">
+                                    Continue Shopping
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Screen 2: Checkout Form -->
+                        <div id="ram_cart_screen_checkout" class="ram-cart-screen d-none">
+                            <button class="btn btn-link p-0 mb-3 js_ram_back_to_cart">
+                                <i class="fa fa-angle-left me-1"/> Back to cart
+                            </button>
+                            <h4 class="mb-4">Delivery Details</h4>
+                            <div class="ram-cart-form">
+                                <div class="form-group mb-3">
+                                    <label for="ram_order_name">Full Name</label>
+                                    <input type="text" id="ram_order_name" class="form-control" placeholder="John Doe" required="required"/>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="ram_order_phone">Phone Number</label>
+                                    <input type="tel" id="ram_order_phone" class="form-control" placeholder="+977 98..." required="required"/>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="ram_order_email">Email Address</label>
+                                    <input type="email" id="ram_order_email" class="form-control" placeholder="john@example.com" required="required"/>
+                                </div>
+                                <div class="form-group mb-4">
+                                    <label class="form-label fw-bold">Delivery Address</label>
+                                    <div class="row g-2">
+                                        <div class="col-12">
+                                            <input type="text" id="ram_order_street" class="form-control" placeholder="Street Address, Apt, Building" required="required"/>
+                                        </div>
+                                        <div class="col-7">
+                                            <input type="text" id="ram_order_city" class="form-control" placeholder="City" required="required"/>
+                                        </div>
+                                        <div class="col-5">
+                                            <input type="text" id="ram_order_zip" class="form-control" placeholder="Zip / Postal"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-4">
+                                    <label for="ram_order_notes">Order Notes (Optional)</label>
+                                    <textarea id="ram_order_notes" class="form-control" rows="2" placeholder="Any special instructions for the entire order?"></textarea>
+                                </div>
+
+                                <div class="ram-payment-section mt-5">
+                                    <h4 class="mb-3">Payment</h4>
+                                    <div class="ram-payment-options">
+                                        <!-- "Pay at Counter" disabled for now (Delivery primary) -->
+                                        <!--
+                                        <div class="form-check ram-payment-option">
+                                            <input class="form-check-input" type="radio" name="ram_payment" id="pay_counter" value="counter"/>
+                                            <label class="form-check-label" for="pay_counter">
+                                                <strong>Pay at Counter</strong>
+                                                <small class="d-block text-muted">Cash or Card upon pickup/delivery</small>
+                                            </label>
+                                        </div>
+                                        -->
+                                        
+                                        <div class="form-check ram-payment-option active">
+                                            <input class="form-check-input" type="radio" name="ram_payment" id="pay_online" value="online" checked="checked"/>
+                                            <label class="form-check-label" for="pay_online">
+                                                <strong>Online Payment (Card)</strong>
+                                                <small class="d-block text-muted">Secure payment via Stripe/Card</small>
+                                            </label>
+                                        </div>
+
+                                        <!-- Card Input Simulation -->
+                                        <div id="ram_card_form" class="ram-card-form mt-4 p-3 rounded" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                                            <div class="mb-3">
+                                                <label class="small text-muted mb-1">Card Number</label>
+                                                <input type="text" class="form-control form-control-sm" placeholder="XXXX XXXX XXXX XXXX" maxlength="19"/>
+                                            </div>
+                                            <div class="row g-2">
+                                                <div class="col-6">
+                                                    <label class="small text-muted mb-1">Expiry</label>
+                                                    <input type="text" class="form-control form-control-sm" placeholder="MM/YY" maxlength="5"/>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="small text-muted mb-1">CVV</label>
+                                                    <input type="password" class="form-control form-control-sm" placeholder="***" maxlength="3"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="ram-cart-sidebar__footer-sticky mt-4">
+                                <button id="js_ram_submit_order" class="btn ram-btn ram-btn--primary w-100">
+                                    Pay &amp; Submit • <span class="ram-cart-total-price">0.00</span>
+                                </button>
+                                <button class="btn btn-outline-light w-100 mt-2 js_ram_close_cart" onclick="window.location.href='/#menu'">
+                                    Continue Shopping
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Screen 3: Success -->
+                        <div id="ram_cart_screen_success" class="ram-cart-screen d-none text-center py-5">
+                            <div class="ram-success-icon mb-4">
+                                <i class="fa fa-check-circle fa-5x text-success"/>
+                            </div>
+                            <h3>Order Received!</h3>
+                            <p class="text-muted mb-4">Your order <strong id="ram_success_ref">#...</strong> is being prepared.</p>
+                            <button class="btn ram-btn ram-btn--ghost js_ram_close_cart">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </t>
         </xpath>
     </template>
 </odoo>

@@ -102,59 +102,142 @@ publicWidget.registry.RamWebsite = publicWidget.Widget.extend({
         const img = lb.querySelector(".ram-lightbox__img");
         const cap = lb.querySelector(".ram-lightbox__caption");
         const closeBtn = lb.querySelector(".ram-lightbox__close");
+        const nextBtn = lb.querySelector(".js_ram_lightbox_next");
+        const prevBtn = lb.querySelector(".js_ram_lightbox_prev");
+        const zoomBtn = lb.querySelector(".js_ram_lightbox_zoom");
+
         let lastTrigger = null;
+        let galleryItems = [];
+        let currentIndex = -1;
+        let isZoomed = false;
+
+        const syncGalleryItems = () => {
+            galleryItems = [...document.querySelectorAll(".ram-gallery__item")];
+        };
 
         const close = () => {
             lb.classList.remove("is-open");
+            lb.classList.remove("is-zoomed");
+            isZoomed = false;
             lb.setAttribute("aria-hidden", "true");
             lb.setAttribute("aria-modal", "false");
             
-            // Return focus to the trigger element
             if (lastTrigger) {
                 lastTrigger.focus();
             }
 
-            if (img) img.removeAttribute("src");
+            if (img) {
+                img.removeAttribute("src");
+                img.style.transform = "";
+            }
             if (cap) cap.textContent = "";
         };
 
-        const open = (src, caption, trigger) => {
-            lastTrigger = trigger;
-            if (img) img.src = src;
+        const open = (index, trigger) => {
+            if (index < 0 || index >= galleryItems.length) return;
+            
+            currentIndex = index;
+            const btn = galleryItems[index];
+            const src = btn.getAttribute("data-full");
+            const caption = btn.getAttribute("data-caption");
+            
+            lastTrigger = trigger || btn;
+            if (img) {
+                img.src = src;
+                img.style.transform = "";
+            }
             if (cap) cap.textContent = caption || "";
             
             lb.classList.add("is-open");
-            // Set aria-hidden to false BEFORE moving focus
+            lb.classList.remove("is-zoomed");
+            isZoomed = false;
             lb.setAttribute("aria-hidden", "false");
             lb.setAttribute("aria-modal", "true");
             
-            // Move focus to close button
             setTimeout(() => closeBtn?.focus(), 50);
         };
 
+        const navigate = (dir) => {
+            let nextIdx = currentIndex + dir;
+            if (nextIdx < 0) nextIdx = galleryItems.length - 1;
+            if (nextIdx >= galleryItems.length) nextIdx = 0;
+            open(nextIdx);
+        };
+
+        const toggleZoom = () => {
+            isZoomed = !isZoomed;
+            lb.classList.toggle("is-zoomed", isZoomed);
+        };
+
         closeBtn?.addEventListener("click", close);
+        nextBtn?.addEventListener("click", () => navigate(1));
+        prevBtn?.addEventListener("click", () => navigate(-1));
+        zoomBtn?.addEventListener("click", toggleZoom);
+
         lb.addEventListener("click", (ev) => {
             if (ev.target === lb || ev.target.classList.contains("ram-lightbox__inner")) close();
         });
         
         window.addEventListener("keydown", (ev) => {
-            if (ev.key === "Escape" && lb.classList.contains("is-open")) close();
+            if (!lb.classList.contains("is-open")) return;
+            if (ev.key === "Escape") close();
+            if (ev.key === "ArrowRight") navigate(1);
+            if (ev.key === "ArrowLeft") navigate(-1);
         });
 
         document.addEventListener("click", (ev) => {
             const btn = ev.target.closest?.(".ram-gallery__item");
             if (!btn) return;
-            const full = btn.getAttribute("data-full");
-            if (!full) return;
-            open(full, btn.getAttribute("data-caption"), btn);
+            syncGalleryItems();
+            const idx = galleryItems.indexOf(btn);
+            if (idx !== -1) open(idx, btn);
+        });
+
+        // Add Category Filtering logic here
+        document.addEventListener("click", (ev) => {
+            const filterBtn = ev.target.closest(".js_ram_filter_category");
+            if (!filterBtn) return;
+            
+            const categoryId = filterBtn.dataset.categoryId;
+            
+            // Update active button state
+            document.querySelectorAll(".js_ram_filter_category").forEach(b => {
+                b.classList.toggle("active", b === filterBtn);
+            });
+            
+            // Filter items
+            document.querySelectorAll(".js_ram_dish_item").forEach(item => {
+                if (categoryId === "all") {
+                    item.classList.remove("d-none");
+                } else {
+                    item.classList.toggle("d-none", !item.classList.contains(`cat-${categoryId}`));
+                }
+            });
         });
 
         // Global image error handling to prevent broken icons
         document.addEventListener("error", (ev) => {
             if (ev.target.tagName === "IMG" && ev.target.classList.contains("ram-gallery__img")) {
                 if (ev.target.classList.contains("is-placeholder")) return;
-                ev.target.src = "/web/static/img/placeholder.png";
-                ev.target.classList.add("is-placeholder");
+                
+                console.warn("🖼️ Image load failed:", ev.target.src);
+                
+                // If it's a gallery image, try the 'full' image if the thumbnail fails
+                const btn = ev.target.closest(".ram-gallery__item") || ev.target.closest(".ram-location__media");
+                const full = btn?.getAttribute("data-full");
+                
+                if (full && ev.target.src !== full) {
+                    console.log("🔄 Trying full image fallback:", full);
+                    ev.target.src = full;
+                } else if (ev.target.src.includes('image_1024')) {
+                    const raw = ev.target.src.replace('image_1024', 'image_1920');
+                    console.log("🔄 Trying raw image fallback:", raw);
+                    ev.target.src = raw;
+                } else {
+                    console.error("❌ All image fallbacks failed for:", ev.target.src);
+                    ev.target.src = "/web/static/img/placeholder.png";
+                    ev.target.classList.add("is-placeholder");
+                }
             }
         }, true);
     },
@@ -177,7 +260,24 @@ publicWidget.registry.RamWebsite = publicWidget.Widget.extend({
                 
                 const author = document.createElement("div");
                 author.className = "ram-review__author";
+
+                const avatarWrapper = document.createElement("div");
+                avatarWrapper.className = "ram-review__avatar-wrapper";
+                if (r.author_photo_url) {
+                    const avatar = document.createElement("img");
+                    avatar.className = "ram-review__avatar";
+                    avatar.src = r.author_photo_url;
+                    avatarWrapper.appendChild(avatar);
+                } else {
+                    const placeholder = document.createElement("div");
+                    placeholder.className = "ram-review__avatar ram-review__avatar--placeholder";
+                    placeholder.textContent = (r.author_name || "C").charAt(0).toUpperCase();
+                    avatarWrapper.appendChild(placeholder);
+                }
                 
+                const authorInfo = document.createElement("div");
+                authorInfo.className = "ram-review__author-info";
+
                 const nameText = document.createElement("div");
                 nameText.className = "ram-review__name";
                 nameText.textContent = r.author_name || "Customer";
@@ -195,8 +295,11 @@ publicWidget.registry.RamWebsite = publicWidget.Widget.extend({
                 
                 meta.appendChild(stars);
                 meta.appendChild(source);
-                author.appendChild(nameText);
-                author.appendChild(meta);
+                authorInfo.appendChild(nameText);
+                authorInfo.appendChild(meta);
+                
+                author.appendChild(avatarWrapper);
+                author.appendChild(authorInfo);
                 header.appendChild(author);
 
                 if (r.review_url) {

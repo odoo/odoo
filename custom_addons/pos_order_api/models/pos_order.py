@@ -6,7 +6,8 @@ from odoo.exceptions import ValidationError, UserError
 _logger = logging.getLogger(__name__)
 
 # Default Delivery Preset ID (configured in Odoo)
-DELIVERY_PRESET_ID = 3
+# Default Delivery Preset ID (configured in Odoo)
+# DELIVERY_PRESET_ID = 3  <-- REMOVED per user request for dynamic lookup
 
 class PosOrder(models.Model):
     _inherit = 'pos.order'
@@ -47,9 +48,7 @@ class PosOrder(models.Model):
     api_delivery_address = fields.Text(string='API Delivery Address')
     api_order_notes = fields.Text(string='API Order Notes')
 
-    _sql_constraints = [
-        ('unique_uuid_uniq', 'unique(unique_uuid)', 'Order UUID must be unique!'),
-    ]
+    _unique_uuid_uniq = models.Constraint('UNIQUE(unique_uuid)', 'Order UUID must be unique!')
 
     @api.model
     def create_api_order(self, order_data):
@@ -65,9 +64,10 @@ class PosOrder(models.Model):
             return existing
 
         # 2. Session resolution
+        # STRICT MODE: Only find session that is OPEN, Delivery is ACTIVE, and Remote Orders ACCEPTED.
+        # We do NOT fallback to just any open session.
         session_id = order_data.get('session_id')
         if not session_id:
-            # Find open session, check delivery_active AND config setting
             session = self.env['pos.session'].search([
                 ('state', '=', 'opened'),
                 ('delivery_active', '=', True),
@@ -75,11 +75,17 @@ class PosOrder(models.Model):
             ], limit=1)
             
             if not session:
-                 raise UserError(_("No Open & Active Delivery Session found (or remote orders disabled in config). Online ordering is paused."))
+                 raise UserError(_("Order Rejected: No active POS session found accepting remote orders."))
         else:
             session = self.env['pos.session'].browse(session_id)
-            if not session.delivery_active or not session.config_id.accept_remote_orders:
-                 raise UserError(_("Delivery is currently paused for this session or POS configuration."))
+            if not session.exists() or session.state != 'opened':
+                 raise UserError(_("Order Rejected: The specified session is closed or does not exist."))
+            
+            if not session.delivery_active:
+                 raise UserError(_("Order Rejected: Delivery is currently disabled for this session."))
+                 
+            if not session.config_id.accept_remote_orders:
+                 raise UserError(_("Order Rejected: This POS configuration does not accept remote orders."))
         
         session_id = session.id
         
@@ -124,6 +130,7 @@ class PosOrder(models.Model):
                 'tax_ids': [(6, 0, taxes.ids)],
                 'full_product_name': product.name,
                 'name': product.name,
+                'customer_note': line.get('note'), # Map note from API to POS line
             }))
 
         amount_total = total_paid # In POS, paid usually equals total
@@ -145,18 +152,22 @@ class PosOrder(models.Model):
         order_name = f"Order {session.config_id.id:05d}-{session.id:03d}-{sequence_number:04d}"
 
         # 5. Build Order Values
+        # Decisions based on payment mode
+        payment_mode = order_data.get('payment_method', 'online')
+        is_paid = payment_mode == 'online'
+        
         order_vals = {
             'name': order_name,
             'pos_reference': pos_reference,
             'tracking_number': tracking_number,
             'sequence_number': sequence_number,
             'session_id': session_id,
-            'preset_id': DELIVERY_PRESET_ID,  # Assign to Delivery preset (visible in Delivery tab)
-            'delivery_status': 'received',     # Initial status for delivery workflow
+            'preset_id': self.env['pos.preset'].search([('name', 'ilike', 'Delivery')], limit=1).id or 3,
+            'delivery_status': 'received',
             'lines': lines_data,
             'amount_tax': total_tax,
             'amount_total': amount_total,
-            'amount_paid': amount_total,
+            'amount_paid': amount_total if is_paid else 0.0,
             'amount_return': 0.0,
             'partner_id': order_data.get('partner_id'),
             'fiscal_position_id': fiscal_position.id if fiscal_position else False,
@@ -169,14 +180,20 @@ class PosOrder(models.Model):
             'api_customer_phone': order_data.get('customer_phone'),
             'api_delivery_address': order_data.get('delivery_address'),
             'api_order_notes': order_data.get('notes'),
-            'general_customer_note': order_data.get('notes'), # Odoo 19 standard field
-            'state': 'paid', # Directly paid
-            'payment_ids': [[0, 0, {
+            'general_customer_note': order_data.get('notes'),
+            'state': 'paid' if is_paid else 'draft',
+        }
+
+        if is_paid:
+            order_vals['payment_ids'] = [[0, 0, {
                 'amount': amount_total,
                 'payment_method_id': order_data['payment_method_id'],
                 'name': uuid.uuid4().hex[:8],
             }]]
-        }
+        else:
+            # For draft orders, we don't send payment_ids
+            # They stay in draft until Paid in POS UI
+            pass
 
         # 5. Create Order
         # We rely on Odoo's create to pick up the sequence.
@@ -199,10 +216,12 @@ class PosOrder(models.Model):
             _logger.error(f"API Order Creation Failed: {e}")
             raise ValidationError(f"System Error: {str(e)}")
 
-    # NOTE: Do NOT override _load_pos_data_fields for pos.order in Odoo 19.
-    # The base PosOrder class doesn't define this method - it inherits an empty list from pos.load.mixin.
-    # Order data is loaded via read_pos_data() which reads ALL fields directly.
-    # Custom fields defined on the model are automatically included.
+    # NOTE: DO NOT override _load_pos_data_fields for pos.order in Odoo 19 Community.
+    # In Odoo 19, if _load_pos_data_fields returns an empty list (default), 
+    # the system automatically loads ALL fields (approx 100+), including custom ones.
+    # Returning a non-empty list here blocks this behavior and causes the POS crash 
+    # as core fields like 'lines' disappear from the frontend model.
+
 
     @api.model
     def claim_remote_print(self, order_id, session_id):
@@ -255,3 +274,32 @@ class PosOrder(models.Model):
         
         _logger.info(f"Order {order.pos_reference} status changed: {old_status} -> {new_status}")
         return True
+    def _get_invoice_lines_values(self, line_values, pos_line, move_type):
+        """
+        OVERRIDE: Odoo 19 treats 'combo' products as Sections (display_type='line_section')
+        which drops the price and tax data. We must force them to be regular lines
+        if they have a price > 0, otherwise the invoice total will be wrong.
+        """
+        res = super()._get_invoice_lines_values(line_values, pos_line, move_type)
+        
+        # If it was converted to a section but has a price, revert it to a normal line
+        if res.get('display_type') == 'line_section' and line_values['price_unit'] != 0:
+            # Re-apply standard line values
+            qty_sign = -1 if (
+                (move_type == 'out_invoice' and pos_line.order_id.is_refund)
+                or (move_type == 'out_refund' and not pos_line.order_id.is_refund)
+            ) else 1
+            
+            res.update({
+                'display_type': False, # Standard line
+                'product_id': line_values['product_id'].id,
+                'quantity': qty_sign * line_values['quantity'],
+                'discount': line_values['discount'],
+                'price_unit': line_values['price_unit'],
+                'name': line_values['name'],
+                'tax_ids': [(6, 0, line_values['tax_ids'].ids)],
+                'product_uom_id': line_values['uom_id'].id,
+                'extra_tax_data': self.env['account.tax']._export_base_line_extra_tax_data(line_values),
+            })
+            
+        return res

@@ -7,7 +7,7 @@
     "depends": [
         "base_setup",
         "website",
-        "website_sale",
+        "point_of_sale",
         "crm",
     ],
     "data": [
@@ -28,6 +28,7 @@
         "web.assets_frontend": [
             "ram_webiste/static/src/scss/ram_website.scss",
             "ram_webiste/static/src/js/ram_website.js",
+            "ram_webiste/static/src/js/ram_ordering.js",
         ],
     },
     "application": True,

@@ -8,6 +8,7 @@ import { patch } from "@web/core/utils/patch";
 
 export class DeliveryToggle extends Component {
     static template = "pos_order_api.DeliveryToggle";
+    static props = {};
 
     setup() {
         this.pos = usePos();
