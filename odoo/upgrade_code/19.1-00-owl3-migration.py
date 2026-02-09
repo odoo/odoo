@@ -226,7 +226,7 @@ def upgrade_useeffect(file_manager, log_info, log_error):
             file.content = JSTooling.remove_import(file.content, 'useEffect', '@odoo/owl')
             file.content = JSTooling.replace_usage(file.content, 'useEffect', 'useLayoutEffect')
             file.content = JSTooling.add_import(file.content, 'useLayoutEffect', '@web/owl2/utils')
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             log_error(file.path, e)
         file_manager.print_progress(fileno, len(js_files))
 
@@ -241,7 +241,7 @@ def upgrade_onwillrender(file_manager, log_info, log_error):
                 continue
             file.content = JSTooling.remove_import(file.content, 'onWillRender', '@odoo/owl')
             file.content = JSTooling.add_import(file.content, 'onWillRender', '@web/owl2/utils')
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             log_error(file.path, e)
         file_manager.print_progress(fileno, len(js_files))
 
@@ -256,7 +256,7 @@ def upgrade_onrendered(file_manager, log_info, log_error):
                 continue
             file.content = JSTooling.remove_import(file.content, 'onRendered', '@odoo/owl')
             file.content = JSTooling.add_import(file.content, 'onRendered', '@web/owl2/utils')
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             log_error(file.path, e)
         file_manager.print_progress(fileno, len(js_files))
 
