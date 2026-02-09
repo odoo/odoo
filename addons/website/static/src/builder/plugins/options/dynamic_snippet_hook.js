@@ -1,5 +1,6 @@
+import { useEnv } from "@web/owl2/utils";
 import { useDomState } from "@html_builder/core/utils";
-import { onWillStart, useEnv } from "@odoo/owl";
+import { onWillStart } from "@odoo/owl";
 
 export function useDynamicSnippetOption(modelNameFilter, contextualFilterDomain = []) {
     const env = useEnv();
