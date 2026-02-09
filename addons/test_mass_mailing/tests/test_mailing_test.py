@@ -129,16 +129,20 @@ class TestMailingTest(TestMassMailCommon):
             'mass_mailing_id': mailing.id,
         })
 
-        with self.mock_mail_gateway():
+        with self.mock_mail_gateway(mail_unlink_sent=True):
             mailing_test.send_mail_test()
 
         expected_test_record = self.env[mailing.mailing_model_real].search([], limit=1)
         self.assertEqual(expected_test_record, self.test_records[0], 'Should take first found one')
         expected_subject = f'Subject {expected_test_record.name} <t t-out="object.name"/>'
         expected_body = 'Hello {{ object.name }}' + f' {expected_test_record.name}'
+        # Also test that related messages were properly deleted
+        expected_test_subject = '[TEST] %s' % expected_subject
+        self.assertFalse(self.env['mail.mail'].search([('subject', '=', expected_test_subject)]))
+        self.assertFalse(self.env['mail.message'].search([('subject', '=', expected_test_subject)]))
 
         self.assertSentEmail(self.env.user.partner_id, ['test@test.com'],
-            subject='[TEST] %s' % expected_subject,
+            subject=expected_test_subject,
             body_content=expected_body)
 
         with self.mock_mail_gateway():
@@ -160,21 +164,6 @@ class TestMailingTest(TestMassMailCommon):
             'test@test.com',
             "Should use the value of the previous record's email_to as default",
         )
-
-        # Also test that related messages were properly deleted
-        mailing.subject = 'Dummy Subject'
-
-        with self.mock_mail_gateway(mail_unlink_sent=True):
-            mailing_test.send_mail_test()
-
-        test_subject = '[TEST] %s' % mailing.subject
-        self.assertSentEmail(
-            self.env.user.partner_id,
-            ['test@test.com'],
-            subject=test_subject,
-        )
-        self.assertFalse(self.env['mail.mail'].search([('subject', '=', test_subject)]))
-        self.assertFalse(self.env['mail.message'].search([('subject', '=', test_subject)]))
 
 
 @tagged('mailing_manage', 'twilio')
