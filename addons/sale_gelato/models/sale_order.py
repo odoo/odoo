@@ -4,6 +4,8 @@ import logging
 import pprint
 from functools import partial, wraps
 
+from markupsafe import Markup
+
 from odoo import _, api, models
 from odoo.exceptions import UserError, ValidationError
 
@@ -183,9 +185,13 @@ class SaleOrder(models.Model):
                 payload=payload,
                 method='PATCH',
             )
-        except UserError:
+        except UserError as e:
             self.message_post(
-                body=self.env._("Unable to confirm the order %s on Gelato.", gelato_order_id),
+                body=self.env._(
+                    "Unable to confirm the order %(order_reference)s on Gelato.%(error_message)s",
+                    order_reference=gelato_order_id,
+                    error_message=Markup("<br/>%s") % e,
+                ),
                 author_id=self.env.ref('base.partner_root').id,
             )
         finally:
@@ -213,9 +219,13 @@ class SaleOrder(models.Model):
             data = utils.make_request(
                 api_key, 'order', 'v4', f'orders/{gelato_order_id}', method='DELETE'
             )
-        except UserError:
+        except UserError as e:
             self.message_post(
-                body=self.env._("Unable to delete the order %s on Gelato.", gelato_order_id),
+                body=self.env._(
+                    "Unable to delete the order %(order_reference)s on Gelato.%(error_message)s",
+                    order_reference=gelato_order_id,
+                    error_message=Markup("<br/>%s") % e,
+                ),
                 author_id=self.env.ref('base.partner_root').id,
             )
         finally:
