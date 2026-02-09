@@ -352,6 +352,8 @@ class TestCreateEvents(TestCommon):
         self.assertEqual(self.organizer_user.microsoft_last_sync_date, False,
                          "Variable last_sync_date must be False due to sync stop.")
 
+        # Avoid default alarm for the test event as self.call_post_commit_hooks never clear self.env.cr.postcommit._funcs.
+        self.simple_event_values.update(alarm_ids=False)
         # Create a not synced event (local).
         simple_event_values_updated = self.simple_event_values
         for date_field in ['start', 'stop']:
