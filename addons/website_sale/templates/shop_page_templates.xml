@@ -173,9 +173,7 @@
         <t t-set="website_sale_sortable" t-value="website._get_product_sort_mapping()"/>
         <t t-call="website.layout"
             additional_title="category.name"
-            opt_wsale_filter_tags="is_view_active('website_sale.filter_products_tags')"
-            website_sale_sortable="website_sale_sortable"
-            isSortingBy="[sort for sort in website_sale_sortable if sort[0]==request.params.get('order', '')]">
+            website_sale_sortable="website_sale_sortable">
             <t t-set="grid_block_name">Grid</t>
             <t t-set="product_block_name">Product</t>
 
@@ -188,6 +186,7 @@
             <t t-set="opt_wsale_categories" t-value="is_view_active('website_sale.products_categories')"/>
             <t t-set="opt_wsale_attributes" t-value="is_view_active('website_sale.products_attributes')"/>
             <t t-set="opt_wsale_filter_price" t-value="is_view_active('website_sale.filter_products_price')"/>
+            <t t-set="opt_wsale_filter_tags" t-value="is_view_active('website_sale.filter_products_tags')"/>
             <t t-set="opt_wsale_design_grid" t-value="'o_wsale_products_opt_design_grid' in website.shop_opt_products_design_classes"/>
 
             <t t-set="opt_wsale_categories_top" t-value="is_view_active('website_sale.products_categories_top')"/>
@@ -207,6 +206,7 @@
 
             <t t-set="isFilteringByPrice" t-if="opt_wsale_filter_price" t-value="float_round(available_min_price, 2) != float_round(min_price, 2) or float_round(available_max_price, 2) != float_round(max_price, 2)"/>
             <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
+            <t t-set="isSortingBy" t-value="[sort for sort in website_sale_sortable if sort[0]==request.params.get('order', '')]"/>
 
             <t
                 t-set="wsale_has_filters_btn"
