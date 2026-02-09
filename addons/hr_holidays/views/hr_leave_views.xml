@@ -49,8 +49,8 @@
                 <filter name="missing_document" string="Missing Document"
                     domain="['&amp;', ('holiday_status_id.support_document', '=', True), ('attachment_ids', '=', False)]"/>
                 <separator/>
-                <filter domain="[('state', '=', 'confirm')]" string="First Approval" name="approve"/>
-                <filter domain="[('state', '=', 'validate1')]" string="Second Approval" name="second_approval"/>
+                <filter domain="[('state', '=', 'confirm')]" string="First Approver" name="approve"/>
+                <filter domain="[('state', '=', 'validate1')]" string="Second Approver" name="second_approval"/>
                 <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="to_approve"/>
                 <filter string="Approved" domain="[('state', '=', 'validate')]" name="validated"/>
                 <filter name="cancelled_leaves" string="Cancelled" domain="[('state', '=', 'cancel')]"/>

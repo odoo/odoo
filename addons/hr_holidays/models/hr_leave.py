@@ -182,11 +182,13 @@ class HrLeave(models.Model):
     # details
     meeting_id = fields.Many2one('calendar.event', string='Meeting', copy=False)
     first_approver_id = fields.Many2one(
-        'hr.employee', string='First Approval', readonly=True, copy=False,
+        'hr.employee', string='First Approver', readonly=True, copy=False,
         help='This area is automatically filled by the user who validate the time off')
     second_approver_id = fields.Many2one(
-        'hr.employee', string='Second Approval', readonly=True, copy=False,
+        'hr.employee', string='Second Approver', readonly=True, copy=False,
         help='This area is automatically filled by the user who validate the time off with second level (If time off type need second validation)')
+    first_approve_date = fields.Datetime('First Approval Date', readonly=True, copy=False)
+    second_approver_date = fields.Datetime('Second Approval Date', readonly=True, copy=False)
 
     can_approve = fields.Boolean(compute='_compute_can_approve', export_string_translation=False)
     can_validate = fields.Boolean(compute='_compute_can_validate', export_string_translation=False)
@@ -1163,7 +1165,12 @@ class HrLeave(models.Model):
                 leave_to_approve += leave
             else:
                 raise UserError(self.env._('You cannot approve this leave.'))
-        leave_to_approve.write({'state': 'validate1', 'first_approver_id': current_employee.id})
+        leave_to_approve.write(
+            {
+                'state': 'validate1',
+                'first_approver_id': current_employee.id,
+                'first_approve_date': fields.Datetime.now(),
+            })
         leave_to_validate._action_validate(check_state)
         if not self.env.context.get('leave_fast_create'):
             self.activity_update()
@@ -1259,8 +1266,8 @@ class HrLeave(models.Model):
             else:
                 leaves_first_approver += leave
 
-        leaves_second_approver.write({'second_approver_id': current_employee.id})
-        leaves_first_approver.write({'first_approver_id': current_employee.id})
+        leaves_second_approver.write({'second_approver_id': current_employee.id, 'second_approver_date': fields.Datetime.now()})
+        leaves_first_approver.write({'first_approver_id': current_employee.id, 'first_approve_date': fields.Datetime.now()})
 
         self._validate_leave_request()
         if not self.env.context.get('leave_fast_create'):
@@ -1274,8 +1281,10 @@ class HrLeave(models.Model):
 
         self._notify_manager()
         validated_holidays = self.filtered(lambda hol: hol.state == 'validate1')
-        validated_holidays.write({'state': 'refuse', 'first_approver_id': current_employee.id})
-        (self - validated_holidays).write({'state': 'refuse', 'second_approver_id': current_employee.id})
+        validated_holidays.write(
+            {'state': 'refuse', 'first_approver_id': current_employee.id, 'first_approve_date': False}
+        )
+        (self - validated_holidays).write({'state': 'refuse', 'second_approver_id': current_employee.id, 'second_approver_date': False})
         # Delete the meeting
         self.mapped('meeting_id').write({'active': False})
         # Post a second message, more verbose than the tracking message
