@@ -1,3 +1,4 @@
+import { useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
@@ -8,7 +9,7 @@ import { TimeOffCalendarSidePanel } from "./calendar_side_panel/calendar_side_pa
 import { TimeOffCalendarMobileFilterPanel } from "./calendar_filter_panel/calendar_mobile_filter_panel";
 import { TimeOffFormViewDialog } from "../view_dialog/form_view_dialog";
 import { useLeaveCancelWizard } from "../hooks";
-import { EventBus, useSubEnv } from "@odoo/owl";
+import { EventBus } from "@odoo/owl";
 
 export class TimeOffCalendarController extends CalendarController {
     static components = {

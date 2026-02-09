@@ -1,4 +1,4 @@
-import { useComponent, useEnv, useLayoutEffect } from "@web/owl2/utils";
+import { useComponent, useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { isElement, isTextNode } from "@html_editor/utils/dom_info";
 import {
     Component,
@@ -10,7 +10,6 @@ import {
     toRaw,
     useRef,
     useState,
-    useSubEnv,
 } from "@odoo/owl";
 import { convertNumericToUnit, getHtmlStyle } from "@html_editor/utils/formatting";
 import { useBus } from "@web/core/utils/hooks";

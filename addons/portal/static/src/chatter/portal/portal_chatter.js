@@ -1,7 +1,8 @@
+import { useSubEnv } from "@web/owl2/utils";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 
 import { OverlayContainer } from "@web/core/overlay/overlay_container";
-import { Component, xml, useSubEnv } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class PortalChatter extends Component {

@@ -1,4 +1,4 @@
-import { useSubEnv } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
 import { ProductCatalogKanbanRecord } from "@product/product_catalog/kanban_record";
 import { ProductCatalogAccountMoveLine } from "./account_move_line";
 import { patch } from "@web/core/utils/patch";

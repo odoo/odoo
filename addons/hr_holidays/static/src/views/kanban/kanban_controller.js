@@ -1,5 +1,6 @@
+import { useSubEnv } from "@web/owl2/utils";
 import { KanbanController } from "@web/views/kanban/kanban_controller";
-import { EventBus, useSubEnv } from "@odoo/owl";
+import { EventBus } from "@odoo/owl";
 
 export class TimeOffKanbanController extends KanbanController {
     setup() {

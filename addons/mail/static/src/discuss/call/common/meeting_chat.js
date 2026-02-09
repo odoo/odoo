@@ -1,9 +1,10 @@
+import { useSubEnv } from "@web/owl2/utils";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { Typing } from "@mail/discuss/typing/common/typing";
 
-import { Component, useState, useSubEnv } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useChildRef, useService } from "@web/core/utils/hooks";

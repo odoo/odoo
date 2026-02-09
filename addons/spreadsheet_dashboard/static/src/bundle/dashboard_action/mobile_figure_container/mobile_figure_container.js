@@ -1,6 +1,7 @@
+import { useSubEnv } from "@web/owl2/utils";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 
-import { Component, useSubEnv } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 const { registries, stores } = spreadsheet;
 const { figureRegistry } = registries;
 const { ModelStore, useStoreProvider } = stores;

@@ -1,3 +1,4 @@
+import { useSubEnv } from "@web/owl2/utils";
 import {
     ProductLabelSectionAndNoteListRender,
     productLabelSectionAndNoteOne2Many,
@@ -10,7 +11,6 @@ import {
     sectionAndNoteText,
     SectionAndNoteText,
 } from '@account/components/section_and_note_fields_backend/section_and_note_fields_backend';
-import { useSubEnv } from '@odoo/owl';
 import { registry } from '@web/core/registry';
 import { CharField } from '@web/views/fields/char/char_field';
 

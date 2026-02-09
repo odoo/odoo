@@ -1,5 +1,6 @@
+import { useSubEnv } from "@web/owl2/utils";
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { Component, useSubEnv } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { useBackButton, useForwardRefToParent, useService } from "@web/core/utils/hooks";
 
