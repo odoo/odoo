@@ -1,4 +1,4 @@
-import { useComponent, useLayoutEffect } from "@web/owl2/utils";
+import { useComponent, useEnv, useLayoutEffect } from "@web/owl2/utils";
 import { isElement, isTextNode } from "@html_editor/utils/dom_info";
 import {
     Component,
@@ -8,7 +8,6 @@ import {
     onWillUpdateProps,
     reactive,
     toRaw,
-    useEnv,
     useRef,
     useState,
     useSubEnv,

@@ -1,5 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { EventBus, onWillDestroy, useChildSubEnv, useEnv } from "@odoo/owl";
+import { useEnv, useLayoutEffect } from "@web/owl2/utils";
+import { EventBus, onWillDestroy, useChildSubEnv } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { effect } from "@web/core/utils/reactive";

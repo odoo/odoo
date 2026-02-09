@@ -1,5 +1,5 @@
-import { onWillRender } from "@web/owl2/utils";
-import { useEnv, useSubEnv, useState } from "@odoo/owl";
+import { onWillRender, useEnv } from "@web/owl2/utils";
+import { useSubEnv, useState } from "@odoo/owl";
 
 /**
  * @typedef PagerUpdateParams

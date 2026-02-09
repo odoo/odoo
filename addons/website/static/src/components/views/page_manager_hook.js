@@ -1,8 +1,9 @@
+import { useEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
-import { onWillStart, useEnv, useState } from "@odoo/owl";
+import { onWillStart, useState } from "@odoo/owl";
 
 /**
  * Used to share code and keep the same behaviour on different types of 'website
