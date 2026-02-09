@@ -141,7 +141,7 @@
                     t-attf-class="breadcrumb-item {{cat_index &lt; cat_size - 2 and 'd-none d-lg-inline'}}"
                 >
                     <a
-                        t-att-href="keep('%s/category/%s' % (shop_path, slug(cat)))"
+                        t-att-href="keep(cat.website_url)"
                         t-field="cat.name"
                     />
                 </li>
@@ -1058,7 +1058,7 @@
                         role="presentation"
                     >
                         <a
-                            t-att-href="keep('%s/category/%s' % (shop_path, slug(c)))"
+                            t-att-href="keep(c.website_url)"
                             class="o_wsale_filmstrip_link d-block w-100 h-100 text-decoration-none"
                             draggable="false"
                             role="menuitem"
@@ -1260,7 +1260,7 @@
 
     <template id="website_sale.categorie_link" name="Category Link">
         <a
-            t-att-href="keep('%s/category/%s' % (shop_path, slug(c)))"
+            t-att-href="keep(c.website_url)"
             t-attf-class="{{c.id == category.id and 'text-decoration-underline'}} p-0"
             t-field="c.name"
         />
