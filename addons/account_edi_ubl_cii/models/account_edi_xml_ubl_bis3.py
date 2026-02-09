@@ -150,7 +150,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # shall not be blank.
 
         if intracom_delivery:
-            partner_shipping = invoice.partner_shipping_id or customer
+            partner_shipping = invoice.company_id.partner_id if invoice.is_purchase_document() else (invoice.partner_shipping_id or customer)
 
             return [{
                 'actual_delivery_date': invoice.invoice_date,
@@ -257,6 +257,10 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             vals['line_quantity'] *= -1
 
         return vals
+
+    def _can_export_selfbilling(self):
+        # Overridden in `account_peppol_selfbilling`
+        return False
 
     def _export_invoice_vals(self, invoice):
         # EXTENDS account.edi.xml.ubl_21

@@ -169,6 +169,24 @@ class ResPartner(models.Model):
                 return True
         return False
 
+    def _can_receive_self_billing(self, ubl_cii_format):
+        """Look up whether the partner can receive the self-billing variant of the
+        given EDI format on Peppol.
+        """
+        edi_identification = f'{self.peppol_eas}:{self.peppol_endpoint}'.lower()
+        participant_info = self._peppol_lookup_participant(edi_identification)
+
+        if not participant_info:
+            return False
+
+        if expected_customization_id := self.env['account.edi.xml.ubl_bis3']._get_selfbilling_customization_ids().get(ubl_cii_format):
+            for service in participant_info.get('services', []):
+                service_document_id = service.get('document_id')
+                if service_document_id and expected_customization_id in service_document_id:
+                    return True
+
+        return False
+
     @api.onchange('ubl_cii_format', 'peppol_endpoint', 'peppol_eas')
     def _onchange_verify_peppol_status(self):
         self.button_account_peppol_check_partner_endpoint()
