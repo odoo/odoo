@@ -14,6 +14,7 @@ from odoo.addons.iot_drivers.tools.system import (
     git,
     pip,
     path_file,
+    update_conf,
 )
 
 _logger = logging.getLogger(__name__)
@@ -104,6 +105,7 @@ def checkout(branch):
 
     _logger.info("Cleaning the working directory")
     git("clean", "-dfx")
+    update_conf({"iot_handlers_etag": ""})  # Reset to trigger handlers re-download as `clean -dfx` deletes custom one
 
 
 def update_requirements():
