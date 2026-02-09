@@ -23,7 +23,7 @@ class DiscussGifController(Controller):
             )
             response.raise_for_status()
         except (urllib3.exceptions.MaxRetryError, requests.exceptions.HTTPError):
-            _logger.error("Exceeded the request's maximum size for a searching term.")
+            _logger.warning("Exceeded the request's maximum size for a searching term.")
 
         if not response:
             raise BadRequest()
