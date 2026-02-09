@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
@@ -811,6 +812,32 @@ class TestSaleService(TestCommonSaleTimesheet):
         sale_order_2._compute_timesheet_count()
         sale_order_2._compute_show_hours_recorded_button()
         self.assertTrue(sale_order_2.show_hours_recorded_button, "There is a product service with the service_policy set on 'delivered on timesheet' and a project on the sale order, the button should be displayed")
+
+    def test_compute_show_timesheet_button_salesperson_no_timesheet_project_access(self):
+        """ A salesperson without timesheet or project groups should be able to
+        open a sale order without getting an AccessError."""
+        salesperson = mail_new_test_user(
+            self.env,
+            name='Salesperson No Timesheet',
+            login='salesperson_no_ts',
+            email='salesperson_no_ts@example.com',
+            groups='base.group_user,sales_team.group_sale_salesman',
+        )
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'user_id': salesperson.id,
+        })
+        self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.product_delivery_timesheet2.id,
+            'product_uom_qty': 5,
+        })
+        sale_order.action_confirm()
+        # Computing show_hours_recorded_button as the restricted salesperson
+        # should not raise an AccessError when reading timesheet_count and
+        # project_count internally.
+        sale_order_as_salesperson = sale_order.with_user(salesperson)
+        sale_order_as_salesperson._compute_show_hours_recorded_button()
 
     def test_timesheet_hours_delivered_rounding(self):
         """
