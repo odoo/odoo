@@ -743,7 +743,7 @@ class TestSaleService(TestCommonSaleTimesheet):
         self.assertFalse(sale_order_1.show_project_button, "There is no project on the sale order, the button should be hidden")
         line_1.project_id = self.project_global.id
         sale_order_1._compute_show_project_and_task_button()
-        self.assertFalse(sale_order_1.show_create_project_button, "There is a product service with the service_policy set on 'delivered on timesheet' and a project on the sale order, the button should be hidden")
+        self.assertTrue(sale_order_1.show_create_project_button, "The 'create Project Button' should be displayed reguardless of the service product type")
         self.assertTrue(sale_order_1.show_project_button, "There is a product service with the service_policy set on 'delivered on timesheet' and a project on the sale order, the button should be displayed")
 
     def test_compute_show_timesheet_button(self):

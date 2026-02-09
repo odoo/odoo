@@ -144,4 +144,3 @@ class ProjectMilestone(models.Model):
                 milestone.display_name = f'{milestone.display_name} \t --{format_date(self.env, milestone.deadline)}--'
             elif milestone.deadline:
                 milestone.display_name = f'{milestone.display_name} - {format_date(self.env, milestone.deadline)}'
-

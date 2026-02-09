@@ -128,7 +128,7 @@ class SaleOrder(models.Model):
         self._generate_template()
         for record in self:
             for lines in record.order_line:
-                if(not lines.project_id.sale_line_id):
+                if (not lines.project_id.sale_line_id):
                     lines.project_id.sale_line_id = lines
         return super()._action_confirm()
 

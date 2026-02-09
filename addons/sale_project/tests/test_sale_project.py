@@ -407,7 +407,7 @@ class TestSaleProject(TestSaleProjectCommon):
         line_delivered_milestone.project_id = self.project_global
         sale_order_1._compute_show_project_and_task_button()
         # A project can always be made reguardless of the state of the sale order as long as the user has the acess rigths to project
-        ##self.assertFalse(sale_order_1.show_create_project_button, "There is a product service with the service_policy set on 'delivered on milestone' and a project on the sale order, the button should be hidden")
+        self.assertTrue(sale_order_1.show_create_project_button, "There is a product service with the service_policy set on 'delivered on milestone' the button should be displayed reguardless of product service type")
         self.assertTrue(sale_order_1.show_project_button, "There is a product service with the service_policy set on 'delivered on milestone' and a project on the sale order, the button should be displayed")
 
         # add an ordered_prepaid service product
