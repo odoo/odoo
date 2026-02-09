@@ -71,6 +71,11 @@ registry.category("web_tour.tours").add("self_order_preset_slot_tour", {
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
+        {
+            content: "Check that average preparation time badge is displayed on Takeaway preset",
+            trigger:
+                ".preset_btn:contains('Takeaway') .badge.text-bg-light:contains('Average time: 20 minutes')",
+        },
         LandingPage.selectLocation("Takeaway"),
         ProductPage.clickProduct("Coca-Cola"),
         Utils.clickBtn("Checkout"),
