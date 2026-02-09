@@ -543,7 +543,7 @@ class MailThread(models.AbstractModel):
             return
         self.env.cr.precommit.add(self._track_finalize)
         initial_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.{self._name}', {})
-        for record in self:
+        for record in self.sudo():
             if not record.id:
                 continue
             values = initial_values.setdefault(record.id, {})
