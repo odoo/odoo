@@ -78,14 +78,14 @@
             <span class="mx-2">to</span>
             <BuilderNumberInput unit="'%'" dataAttributeAction="'scrollZoneEnd'" action="'forceAnimation'" />
         </BuilderRow>
-        <BuilderContext t-if="this.isActiveItem('animation_on_appearance_opt')">
+        <BuilderContext t-if="this.isActiveItem('animation_on_appearance_opt') and !state.hasSharedTiming">
             <!-- Start After -->
             <BuilderRow label.translate="Start After" level="1">
-                <BuilderNumberInput styleAction="'animation-delay'" action="'forceAnimation'" unit="'s'" />
+                <BuilderNumberInput styleAction="'animation-delay'" action="'forceAnimation'" unit="'s'" min="0" step="0.1" />
             </BuilderRow>
             <!-- Duration -->
             <BuilderRow label.translate="Duration" level="1">
-                <BuilderNumberInput styleAction="'animation-duration'" action="'forceAnimation'" default="0.4" unit="'s'" />
+                <BuilderNumberInput styleAction="'animation-duration'" action="'forceAnimation'" default="0.4" unit="'s'" min="0.1" step="0.1" />
             </BuilderRow>
         </BuilderContext>
         <t t-if="this.isActiveItem('animation_on_hover_opt')">
