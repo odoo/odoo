@@ -36,7 +36,7 @@ class JSTooling:
         Returns:
             True if at least one usage is not commented out.
         """
-        for match in re.finditer(rf'\b{word}\b', content):
+        for match in re.finditer(rf'\b{word}\(', content):
             if not JSTooling.is_commented(content, match.start()):
                 return True
         return False
