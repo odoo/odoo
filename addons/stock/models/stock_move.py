@@ -191,7 +191,7 @@ class StockMove(models.Model):
     forecast_expected_date = fields.Datetime('Forecasted Expected date', compute='_compute_forecast_information', compute_sudo=True)
     lot_ids = fields.Many2many('stock.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', string='Serial Numbers', readonly=False)
     reservation_date = fields.Date('Date to Reserve', compute='_compute_reservation_date', store=True, help="Computes when a move should be reserved")
-    packaging_uom_id = fields.Many2one('uom.uom', 'Packaging', help="Packaging unit from sale or purchase orders", compute='_compute_packaging_uom_id', precompute=True, recursive=True, store=True)
+    packaging_uom_id = fields.Many2one('uom.uom', 'Packaging', help="Packaging unit from sale or purchase orders", compute='_compute_packaging_uom_id', precompute=True, store=True)
     packaging_uom_qty = fields.Float('Packaging Quantity', help="Quantity in the packaging unit", compute='_compute_packaging_uom_qty', store=True)
     show_quant = fields.Boolean("Show Quant", compute="_compute_show_info")
     show_lots_m2o = fields.Boolean("Show lot_id", compute="_compute_show_info")
@@ -652,15 +652,10 @@ Please change the quantity done or the rounding precision in your settings.""",
             elif move.picking_type_id.reservation_method == 'manual':
                 move.reservation_date = False
 
-    @api.depends('product_uom', 'move_orig_ids', 'move_dest_ids', 'move_orig_ids.packaging_uom_id', 'move_dest_ids.packaging_uom_id')
+    @api.depends('product_uom')
     def _compute_packaging_uom_id(self):
         for move in self:
-            if move.move_orig_ids.packaging_uom_id:
-                move.packaging_uom_id = move.move_orig_ids[0].packaging_uom_id
-            elif move.move_dest_ids.packaging_uom_id:
-                move.packaging_uom_id = move.move_dest_ids[0].packaging_uom_id
-            else:
-                move.packaging_uom_id = move.product_uom
+            move.packaging_uom_id = move.product_uom
 
     @api.depends('product_uom_qty', 'packaging_uom_id')
     def _compute_packaging_uom_qty(self):
