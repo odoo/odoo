@@ -19,10 +19,6 @@ export class DeviceSelect extends Component {
             type: String,
             optional: true,
         },
-        roundedType: {
-            type: String,
-            optional: true,
-        },
     };
     static components = { Dropdown, DropdownItem };
     static template = "discuss.CallDeviceSelect";
@@ -36,7 +32,6 @@ export class DeviceSelect extends Component {
         this.state = useState({
             userDevices: [],
             selectedDevice: undefined,
-            isSelectOpen: false,
         });
         this.abortController = new AbortController();
         this.isBrowserChrome = isBrowserChrome();
@@ -63,14 +58,6 @@ export class DeviceSelect extends Component {
 
     get selectLabel() {
         return this.state.selectedDevice?.label;
-    }
-
-    openSelect(state) {
-        if (state === true) {
-            this.state.isSelectOpen = true;
-        } else if (state === false) {
-            this.state.isSelectOpen = false;
-        }
     }
 
     async updateDevicesList() {
