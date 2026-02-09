@@ -160,6 +160,21 @@ class TestMailingTest(TestMassMailCommon):
             "Should use the value of the previous record's email_to as default",
         )
 
+        # Also test that related messages were properly deleted
+        mailing.subject = 'Dummy Subject'
+
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            mailing_test.send_mail_test()
+
+        test_subject = '[TEST] %s' % mailing.subject
+        self.assertSentEmail(
+            self.env.user.partner_id,
+            ['test@test.com'],
+            subject=test_subject,
+        )
+        self.assertFalse(self.env['mail.mail'].search([('subject', '=', test_subject)]))
+        self.assertFalse(self.env['mail.message'].search([('subject', '=', test_subject)]))
+
 
 @tagged('mailing_manage', 'twilio')
 class TestMailingSMSTest(TestMassSMSCommon, MockSmsTwilioApi):
