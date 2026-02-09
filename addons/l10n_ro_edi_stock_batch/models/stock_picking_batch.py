@@ -374,11 +374,18 @@ class StockPickingBatch(models.Model):
                 uit = last_validated.l10n_ro_edi_stock_uit
                 raw_xml = last_validated.attachment_id.raw
 
-            self._l10n_ro_edi_stock_create_document_stock_sent({
+            edi_document = self._l10n_ro_edi_stock_create_document_stock_sent({
                 'l10n_ro_edi_stock_load_id': content['index_incarcare'],
                 'l10n_ro_edi_stock_uit': uit,
                 'raw_xml': raw_xml,
             })
+            self._message_log(
+                body=_(
+                    "Generated eTransport XML (UIT: %(uit)s) was sent to the authority.",
+                    uit=uit,
+                ),
+                attachment_ids=edi_document.attachment_id.ids
+            )
 
     def _l10n_ro_edi_stock_fetch_document_status(self):
         session = requests.Session()
