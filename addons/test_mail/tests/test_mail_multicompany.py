@@ -327,7 +327,9 @@ class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
             ),
         ):
             with self.subTest(user_name=test_user.name):
+                # Authenticate as test_user and enable all the companies in the UI via cookies
                 self.authenticate(test_user.login, test_user.login)
+                self.opener.cookies.set("cids", '-'.join(str(num) for num in test_user.company_ids.ids))
                 # crash if calling using portal users -> dedicated portal routes currently
                 if test_user in self.user_portal + self.user_portal_c2:
                     with self.assertRaises(JsonRpcException):
@@ -362,6 +364,96 @@ class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
         self.authenticate(self.user_employee_c2.login, self.user_employee_c2.login)
         messages = self.make_jsonrpc_request("/mail/inbox/messages")
         self.assertEqual(len(messages['data']['mail.message']), 1)
+
+    def test_mail_thread_data_access(self):
+        """ Test to check the read and write access reflected in the records'
+         chatter, in MC environment"""
+        # Record belonging to company_3
+        # The model enforces write access only when the active company is company_3
+        record = self.env["mail.test.multi.company.restrict.write"].create(
+            {"name": "Company 3 Record", "company_id": self.company_3.id}
+        )
+        # user_employee_c2:
+        # - main company = company_2
+        # - allowed companies = company_2 + company_3
+        self.user_employee_c2.company_ids = [(4, self.company_3.id)]
+        self.authenticate(self.user_employee_c2.login, self.user_employee_c2.login)
+        # Case 1: UI-selected company = company_2 (via cookies, cids)
+        # - User can read the record
+        # - User cannot write the record
+        # - Chatter must reflect the same permissions
+        self.opener.cookies.set("cids", str(self.company_2.id))
+        data = self.make_jsonrpc_request(
+            "/mail/thread/data",
+            {
+                "thread_id": record.id,
+                "thread_model": "mail.test.multi.company.restrict.write",
+                "request_list": [],
+            },
+        )
+        # Sanity check: ORM access behaves as expected
+        self.assertTrue(record.sudo(False).with_user(self.user_employee_c2).with_company(self.company_2).has_access("read"))
+        self.assertFalse(record.sudo(False).with_user(self.user_employee_c2).with_company(self.company_2).has_access("write"))
+        # Chatter permissions must match record permissions
+        self.assertTrue(data["mail.thread"][0]["hasReadAccess"])
+        self.assertFalse(data["mail.thread"][0]["hasWriteAccess"])
+        # Case 2: UI-selected company = company_2 (main) + company_3 (via cookies, cids)
+        # - User can read the record
+        # - User cannot write the record
+        # - Chatter must reflect the same permissions
+        self.opener.cookies.set("cids", str(self.company_2.id) + "-" + str(self.company_3.id))
+        data = self.make_jsonrpc_request(
+            "/mail/thread/data",
+            {
+                "thread_id": record.id,
+                "thread_model": "mail.test.multi.company.restrict.write",
+                "request_list": [],
+            },
+        )
+        # Sanity check: ORM access behaves as expected
+        self.assertTrue(record.sudo(False).with_user(self.user_employee_c2).with_company(self.company_2).has_access("read"))
+        self.assertFalse(record.sudo(False).with_user(self.user_employee_c2).with_company(self.company_2).has_access("write"))
+        # Chatter permissions must match record permissions
+        self.assertTrue(data["mail.thread"][0]["hasReadAccess"])
+        self.assertFalse(data["mail.thread"][0]["hasWriteAccess"])
+        # Case 3: UI-selected company = company_3 (via cids)
+        # - User can read the record
+        # - User can now write the record
+        # - Chatter must grant write access accordingly
+        self.opener.cookies.set("cids", str(self.company_3.id))
+        data = self.make_jsonrpc_request(
+            "/mail/thread/data",
+            {
+                "thread_id": record.id,
+                "thread_model": "mail.test.multi.company.restrict.write",
+                "request_list": [],
+            },
+        )
+        # ORM access is unchanged (write depends on active company context)
+        self.assertTrue(record.sudo(False).with_user(self.user_employee_c2).with_company(self.company_3).has_access("read"))
+        self.assertTrue(record.sudo(False).with_user(self.user_employee_c2).with_company(self.company_3).has_access("write"))
+        # Chatter permissions must now correctly grant write access
+        self.assertTrue(data["mail.thread"][0]["hasReadAccess"])
+        self.assertTrue(data["mail.thread"][0]["hasWriteAccess"])
+        # Case 4: UI-selected company = company_3 (main) + company_2 (via cids)
+        # - User can read the record
+        # - User can now write the record
+        # - Chatter must grant write access accordingly
+        self.opener.cookies.set("cids", str(self.company_3.id) + "-" + str(self.company_2.id))
+        data = self.make_jsonrpc_request(
+            "/mail/thread/data",
+            {
+                "thread_id": record.id,
+                "thread_model": "mail.test.multi.company.restrict.write",
+                "request_list": [],
+            },
+        )
+        # ORM access is unchanged (write depends on active company context)
+        self.assertTrue(record.sudo(False).with_user(self.user_employee_c2).with_company(self.company_3).has_access("read"))
+        self.assertTrue(record.sudo(False).with_user(self.user_employee_c2).with_company(self.company_3).has_access("write"))
+        # Chatter permissions must now correctly grant write access
+        self.assertTrue(data["mail.thread"][0]["hasReadAccess"])
+        self.assertTrue(data["mail.thread"][0]["hasWriteAccess"])
 
     def test_redirect_to_records(self):
         """ Test mail/view redirection in MC environment, notably cids being
