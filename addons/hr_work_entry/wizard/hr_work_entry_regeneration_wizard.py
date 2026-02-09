@@ -95,7 +95,6 @@ class HrWorkEntryRegenerationWizard(models.TransientModel):
         return ['active']
 
     def regenerate_work_entries(self, slots=None, record_ids=None):
-        write_vals = {field: False for field in self._work_entry_fields_to_nullify()}
         if not slots:
             if not self.env.context.get('work_entry_skip_validation'):
                 if not self.search_criteria_completed:
@@ -123,8 +122,6 @@ class HrWorkEntryRegenerationWizard(models.TransientModel):
                         start = current
                     end = current
                 range_by_employee[start, end].append(employee_id)
-            work_entries = self.env['hr.work.entry'].browse(record_ids)
-            work_entries.write(write_vals)
             for (date_from, date_to), employee_ids in range_by_employee.items():
                 valid_employees = self.env["hr.employee"].browse(employee_ids)
                 valid_employees.generate_work_entries(date_from, date_to, True)

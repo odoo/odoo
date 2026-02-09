@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_tw_tax_report_404" model="account.report">
+        <field name="name">404 Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.tw"/>
+        <field name="filter_multi_company">tax_units</field>
+        <field name="default_opening_date_filter">previous_return_period</field>
+        <field name="only_tax_exigible" eval="True"/>
+        <field name="column_ids">
+            <record id="l10n_tw_tax_report_404_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+            <record id="l10n_tw_tax_report_404_tax" model="account.report.column">
+                <field name="name">Tax</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_tw_tax_report_404_tw_404_s" model="account.report.line">
+                <field name="name">Sales</field>
+                <field name="name@zh_TW">銷項</field>
+                <field name="code">TW_404_S</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="children_ids">
+                    <record id="l10n_tw_tax_report_404_tw_404-gbrt" model="account.report.line">
+                        <field name="name">Special Industry Tax Items (GBRT)</field>
+                        <field name="name@zh_TW">特種稅額</field>
+                        <field name="code">TW_404-GBRT</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="children_ids">
+                            <record id="l10n_tw_tax_report_404_tw_404_52" model="account.report.line">
+                                <field name="name">52 25% Special Dining Industry</field>
+                                <field name="name@zh_TW">52 25% 特種飲食業</field>
+                                <field name="code">TW_404_52</field>
+                                <field name="hierarchy_level">5</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_tw_tax_report_404_tw_404_52_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-GBRT 52</field>
+                                    </record>
+                                    <record id="l10n_tw_tax_report_404_tw_404_52_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-GBRT 53</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_tw_tax_report_404_tw_404_54" model="account.report.line">
+                                <field name="name">54 15% Special Dining Industry</field>
+                                <field name="name@zh_TW">54 15% 特種飲食業</field>
+                                <field name="code">TW_404_54</field>
+                                <field name="hierarchy_level">5</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_tw_tax_report_404_tw_404_54_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-GBRT 54</field>
+                                    </record>
+                                    <record id="l10n_tw_tax_report_404_tw_404_54_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-GBRT 55</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_tw_tax_report_404_tw_404_84" model="account.report.line">
+                                <field name="name">84 5% Banking &amp; Insurance Industries&apos;  Core Business Revenue</field>
+                                <field name="name@zh_TW">84 5% 銀行業、保險業經營銀行、保險本業收入</field>
+                                <field name="code">TW_404_84</field>
+                                <field name="hierarchy_level">5</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_tw_tax_report_404_tw_404_84_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-GBRT 84</field>
+                                    </record>
+                                    <record id="l10n_tw_tax_report_404_tw_404_84_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-GBRT 85</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_tw_tax_report_404_tw_404_56" model="account.report.line">
+                                <field name="name">56 2% Other Core Business Revenue (excluding core banking/insurance business income)</field>
+                                <field name="name@zh_TW">56 2% 銀行業、保險業及信託投資業經營前項以外專屬金融本業入</field>
+                                <field name="code">TW_404_56</field>
+                                <field name="hierarchy_level">5</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_tw_tax_report_404_tw_404_56_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-GBRT 56</field>
+                                    </record>
+                                    <record id="l10n_tw_tax_report_404_tw_404_56_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-GBRT 57</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_tw_tax_report_404_tw_404_58" model="account.report.line">
+                                <field name="name">58 5% Non-core Business Revenue</field>
+                                <field name="name@zh_TW">58 5% 非專屬本業收入</field>
+                                <field name="code">TW_404_58</field>
+                                <field name="hierarchy_level">5</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_tw_tax_report_404_tw_404_58_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-GBRT 58</field>
+                                    </record>
+                                    <record id="l10n_tw_tax_report_404_tw_404_58_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-GBRT 59</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_tw_tax_report_404_tw_404_60" model="account.report.line">
+                                <field name="name">60 1% Small Business Entities, Reinsurance Revenue etc.</field>
+                                <field name="name@zh_TW">60 1% 再保收入</field>
+                                <field name="code">TW_404_60</field>
+                                <field name="hierarchy_level">5</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_tw_tax_report_404_tw_404_60_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-GBRT 60</field>
+                                    </record>
+                                    <record id="l10n_tw_tax_report_404_tw_404_60_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-GBRT 61</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_tw_tax_report_404_tw_404_62" model="account.report.line">
+                                <field name="name">62 Tax-Exempt Revenue</field>
+                                <field name="name@zh_TW">62 免稅收入</field>
+                                <field name="code">TW_404_62</field>
+                                <field name="hierarchy_level">5</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_tw_tax_report_404_tw_404_62_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_tw_tax_report_404_tw_404_63" model="account.report.line">
+                                <field name="name">63: Less Returns &amp; Allowances</field>
+                                <field name="name@zh_TW">63 減：退回及折讓</field>
+                                <field name="code">TW_404_63</field>
+                                <field name="hierarchy_level">5</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_tw_tax_report_404_tw_404_63_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">GBRT 63</field>
+                                    </record>
+                                    <record id="l10n_tw_tax_report_404_tw_404_63_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">GBRT 64</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_tw_tax_report_404_tw_404_65" model="account.report.line">
+                                <field name="name">65 GBRT - Subtotal ⑤</field>
+                                <field name="name@zh_TW">65 合計 ⑤</field>
+                                <field name="code">TW_404_65</field>
+                                <field name="hierarchy_level">7</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_tw_tax_report_404_tw_404_65_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">TW_404_52.balance + TW_404_54.balance + TW_404_84.balance + TW_404_56.balance + TW_404_58.balance + TW_404_60.balance - TW_404_63.balance</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="l10n_tw_tax_report_404_tw_404_66" model="account.report.line">
+                                <field name="name">66 GBRT Tax - Subtotal ⑥</field>
+                                <field name="name@zh_TW">66 合計稅額</field>
+                                <field name="code">TW_404_66</field>
+                                <field name="hierarchy_level">7</field>
+                                <field name="foldable" eval="False"/>
+                                <field name="expression_ids">
+                                    <record id="l10n_tw_tax_report_404_tw_404_66_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">TW_404_52.tax + TW_404_54.tax + TW_404_84.tax + TW_404_56.tax + TW_404_58.tax + TW_404_60.tax - TW_404_63.tax</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_tw_tax_report_404_tw_404_p" model="account.report.line">
+                <field name="name">Purchase / Business Inputs</field>
+                <field name="name@zh_TW">進項</field>
+                <field name="code">TW_404_P</field>
+                <field name="hierarchy_level">0</field>
+                <field name="foldable" eval="False"/>
+                <field name="children_ids">
+                    <record id="l10n_tw_tax_report_404_tw_404_67" model="account.report.line">
+                        <field name="name">67 1% Reinsurance Premium Income for Foreign Insurance Companies</field>
+                        <field name="name@zh_TW">67 1% 外國保險業再保費收入</field>
+                        <field name="code">TW_404_67</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_404_tw_404_67_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">GBRT 67</field>
+                            </record>
+                            <record id="l10n_tw_tax_report_404_tw_404_67_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">GBRT 68</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_404_tw_404_69" model="account.report.line">
+                        <field name="name">69 2% Services related to the Core Business under Article 11 (excluding core banking/insurance business income)</field>
+                        <field name="name@zh_TW">69 2% 第 11 條各業專屬本業勞務 (不含銀行業、保險業經營銀行、保險本業收入)</field>
+                        <field name="code">TW_404_69</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_404_tw_404_69_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">GBRT 69</field>
+                            </record>
+                            <record id="l10n_tw_tax_report_404_tw_404_69_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">GBRT 70</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_404_tw_404_71" model="account.report.line">
+                        <field name="name">71 5% Others (including core banking/insurance business income)</field>
+                        <field name="name@zh_TW">71 5% 其他 (含銀行業、保險業經營銀行、保險本業收入)</field>
+                        <field name="code">TW_404_71</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_404_tw_404_71_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">GBRT 71</field>
+                            </record>
+                            <record id="l10n_tw_tax_report_404_tw_404_71_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">GBRT 72</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_404_tw_404_74" model="account.report.line">
+                        <field name="name">74 Total ⑬</field>
+                        <field name="name@zh_TW">74 合計 ⑬</field>
+                        <field name="code">TW_404_74</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_404_tw_404_74_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TW_404_67.balance + TW_404_69.balance + TW_404_71.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_tw_tax_report_404_tw_404_76" model="account.report.line">
+                        <field name="name">76 Total - Tax on Purchase &amp; Costs ⑱
+</field>
+                        <field name="name@zh_TW">76 合計稅額 - 進貨及費用 ⑱</field>
+                        <field name="code">TW_404_76</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="foldable" eval="False"/>
+                        <field name="expression_ids">
+                            <record id="l10n_tw_tax_report_404_tw_404_76_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">TW_404_67.tax + TW_404_69.tax + TW_404_71.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_tw_tax_report_404_tw_404_111" model="account.report.line">
+                <field name="name">111 Tax Payable for the Current Period (Month) ⑥＋⑱</field>
+                <field name="name@zh_TW">111 本期應實繳稅額 ⑥＋⑱</field>
+                <field name="code">TW_404_111</field>
+                <field name="hierarchy_level">1</field>
+                <field name="foldable" eval="False"/>
+                <field name="expression_ids">
+                    <record id="l10n_tw_tax_report_404_tw_404_111_balance" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">TW_404_66.balance + TW_404_76.tax</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -42,8 +42,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2026-01-15 14:29+0000\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"PO-Revision-Date: 2026-02-04 16:41+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/pl/>\n"
@@ -89,7 +89,7 @@ msgstr " - Z \"%(uom_from)s\" na \"%(uom_to)s\""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "% Disc"
-msgstr "% Dysk"
+msgstr "% zniżki"
 
 #. module: point_of_sale
 #. odoo-python
@@ -169,7 +169,7 @@ msgstr "Znaleziono %s klientów dla \"%s\"."
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
 "%s has a total amount of %s, are you sure you want to delete this order?"
-msgstr "%sma łączną kwotę %s, czy na pewno chcesz usunąć to zamówienie?"
+msgstr "%s ma łączną kwotę %s, czy na pewno chcesz usunąć to zamówienie?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -289,8 +289,8 @@ msgstr ""
 #: model:product.template,description_sale:point_of_sale.product_template_blue_denim_jeans
 msgid "5-pocket jeans in cotton denim with a slight stretch for good comfort."
 msgstr ""
-"Jeansy z 5 kieszeniami z bawełnianego denimu z lekkim rozciągnięciem dla "
-"komfortu noszenia."
+"Jeansy z 5 kieszeniami z bawełnianego denimu ze stretchem dla komfortu "
+"noszenia."
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_template_blue_denim_jeans_slim
@@ -533,7 +533,7 @@ msgstr "<strong>Notatka końca sesji: </strong>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "<strong>Number of discounts</strong>:"
-msgstr "<strong>Liczba upustów</strong>:"
+msgstr "<strong>Liczba zniżek</strong>:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -569,7 +569,7 @@ msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data."
 msgstr ""
-"Globalnie unikatowy identyfikator dla tej konfiguracji PoS, używany w celu "
+"Globalny, unikatowy identyfikator dla tej konfiguracji PoS, używany w celu "
 "zapobiegania konfliktom w danych generowanych przez klienta."
 
 #. module: point_of_sale
@@ -594,7 +594,7 @@ msgid ""
 "A session is a period of time, usually one day, during which you sell "
 "through the Point of Sale."
 msgstr ""
-"Sesja to okres czasu, zwykle jeden dzień, podczas którego sprzedajesz za "
+"Sesja to okres, zwykle jeden dzień, podczas którego sprzedajesz za "
 "pośrednictwem punktu sprzedaży."
 
 #. module: point_of_sale
@@ -707,7 +707,7 @@ msgstr "Zaokrąglanie gotówki na koncie"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__account_move_id
 msgid "Account Move"
-msgstr "Ruch na koncie"
+msgstr "Zapis księgowy"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__bank_payment_ids
@@ -998,7 +998,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
 msgid "All sales lines"
-msgstr "Wszystkie pozycje"
+msgstr "Wszystkie pozycje sprzedaży"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1032,7 +1032,7 @@ msgid ""
 "Allows to know if all the total cost of the order lines have already been "
 "computed"
 msgstr ""
-"Pozwala dowiedzieć się, czy wszystkie całkowite koszty linii zamówienia "
+"Pozwala dowiedzieć się, czy wszystkie całkowite koszty poazycji zamówienia "
 "zostały już obliczone."
 
 #. module: point_of_sale
@@ -1279,8 +1279,8 @@ msgstr "Automatyczne zatwierdzanie płatności na terminalu"
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__rescue
 msgid "Auto-generated session for orphan orders, ignored in constraints"
 msgstr ""
-"Automatycznie wygenerowana sesja dla zleceń osieroconych, ignorowana w "
-"wiązaniach"
+"Automatycznie wygenerowana sesja dla porzuconych zleceń, ignorowana w "
+"ograniczeniach"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order_line__price_type__automatic
@@ -1376,7 +1376,7 @@ msgstr "Dostępne w POS"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__average_price
 msgid "Average Price"
-msgstr "Cena przeciętna"
+msgstr "Średnia cena"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1502,6 +1502,8 @@ msgstr "Podstawowy rachunek"
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 msgid "Be aware that reloading data will delete unsaved orders."
 msgstr ""
+"Pamiętaj, że ponowne załadowanie danych spowoduje usunięcie niezapisanych "
+"zamówień."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
@@ -1587,7 +1589,8 @@ msgstr "Przez:"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
 msgid "Bypass browser printing and prints via the hardware proxy."
 msgstr ""
-"Pomija drukowanie przeglądarką i drukuje za pośrednictwem proxy sprzętowego."
+"Pomija drukowanie z przeglądarki i drukuje za pośrednictwem proxy "
+"sprzętowego."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2061,6 +2064,12 @@ msgstr ""
 "Sprawdź ustawienie „Device ID” (Identyfikator urządzenia) w konfiguracji "
 "drukarki.\n"
 "Powinno być ustawione na: local_printer"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Checking Local Network Access permission..."
+msgstr "Sprawdzanie uprawnień dostępu do sieci lokalnej..."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_cheese_croissant_product_template
@@ -3292,7 +3301,7 @@ msgstr "Nazwa wyświetlana"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
 msgid "Display QR"
-msgstr ""
+msgstr "Wyświetl QR"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3772,7 +3781,7 @@ msgstr "Do nieprecyzyjnych przemysłowych ekranów dotykowych."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Force Cancel"
-msgstr ""
+msgstr "Wymuś anulowanie"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3791,7 +3800,7 @@ msgstr "Wymuś ukończenie"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Force cancel"
-msgstr ""
+msgstr "Wymuś anulowanie"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4004,6 +4013,12 @@ msgstr "Ukryj metodę kodu QR"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__hide_use_payment_terminal
 msgid "Hide Use Payment Terminal"
 msgstr "Ukryj terminal płatniczy"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Hide details"
+msgstr "Ukryj szczegóły"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__group_pos_preset
@@ -4592,6 +4607,12 @@ msgid "LED Lamp"
 msgstr "Lampa LED"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
+msgid "LNA Permission status"
+msgstr "Status zezwolenia LNA"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__name
 msgid "Label"
@@ -4817,8 +4838,8 @@ msgid ""
 "List of account moves created when this POS order was reversed and invoiced "
 "after session close."
 msgstr ""
-"Lista operacji na koncie utworzonych po cofnięciu tego zamówienia PoS i "
-"wystawieniu faktury po zamknięciu sesji."
+"Lista zapisów księgowych na koncie utworzonych po cofnięciu tego zamówienia "
+"PoS i wystawieniu faktury po zamknięciu sesji."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4857,15 +4878,23 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+msgid "Local Network Access"
+msgstr "Dostęp do sieci lokalnej"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
 msgid ""
 "Local Network Access configuration is enabled, but your browser is not "
 "Chromium-based. Please use a Chromium-based browser to benefit from this "
-"feature."
+"feature. Please note that IOS devices do not support Local Network Access "
+"yet."
 msgstr ""
 "Konfiguracja dostępu do sieci lokalnej jest włączona, ale Twoja przeglądarka "
 "nie jest oparta na Chromium. Aby korzystać z tej funkcji, użyj przeglądarki "
-"opartej na Chromium."
+"opartej na Chromium. Należy pamiętać, że urządzenia z systemem iOS nie "
+"obsługują jeszcze dostępu do sieci lokalnej."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4880,6 +4909,18 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
+msgid "Local Network Access is not configured for this POS."
+msgstr "Dostęp do sieci lokalnej nie jest skonfigurowany dla tego PoS."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
+msgid "Local Network Access permission granted."
+msgstr "Udzielono uprawnień dostępu do sieci lokalnej."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
 msgid ""
 "Local Network Access permission is denied. Some hardware devices might not "
 "work properly. Please allow Local Network Access in your browser settings."
@@ -4887,6 +4928,18 @@ msgstr ""
 "Odmowa dostępu do sieci lokalnej. Niektóre urządzenia sprzętowe mogą nie "
 "działać prawidłowo. Zezwól na dostęp do sieci lokalnej w ustawieniach "
 "przeglądarki."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
+msgid ""
+"Local Network Access permission is not yet granted. Some hardware devices "
+"might not work properly. Please allow Local Network Access in your browser "
+"settings."
+msgstr ""
+"Nie udzielono jeszcze uprawnień dostępu do sieci lokalnej. Niektóre "
+"urządzenia sprzętowe mogą nie działać prawidłowo. Zezwól na dostęp do sieci "
+"lokalnej w ustawieniach przeglądarki."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5469,6 +5522,8 @@ msgstr "Nie ma żadnego dostępnego slotu na ten dzień"
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 msgid "No valid orders were selected. No new invoices could be generated"
 msgstr ""
+"Nie wybrano żadnych ważnych zamówień. Nie można wygenerować żadnych nowych "
+"faktur."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__barcode_nomenclature_id
@@ -5702,6 +5757,12 @@ msgid ""
 msgstr ""
 "Tylko użytkownicy z uprawnieniami Menedżera dostępu do aplikacji PoS mogą "
 "modyfikować ceny produktów przy zamówieniach."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Oops!"
+msgstr "Ups!"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7660,6 +7721,12 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Reload data"
+msgstr "Załaduj ponownie dane"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.js:0
 msgid "Remaining"
 msgstr "Pozostało"
@@ -7777,7 +7844,7 @@ msgstr "Zwrócony"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__reversed_move_ids
 msgid "Reversal Account Moves"
-msgstr "Ruch na koncie odwrócenia"
+msgstr "Odwrócenie zapisu księgowego"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7966,7 +8033,7 @@ msgstr "Skan"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
 msgid "Scan QR"
-msgstr ""
+msgstr "Zeskanuj kod QR"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8395,6 +8462,12 @@ msgid "Show category images in the Point of Sale interface."
 msgstr "Pokaż obrazy kategorii w interfejsie Punktu Sprzedaży."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Show details"
+msgstr "Pokaż szczegóły"
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_module_pos_hr
 msgid "Show employee login screen"
@@ -8507,6 +8580,16 @@ msgid "Some, if not all, post-processing after syncing order failed."
 msgstr ""
 "Niektóre, jeśli nie wszystkie, procesy przetwarzania po synchronizacji nie "
 "powiodły się."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid ""
+"Something went wrong... If you really are stuck, share the report with your "
+"friendly support service"
+msgstr ""
+"Coś poszło nie tak... Jeśli utknąłeś, udostępnij raport naszemu "
+"sympatycznemu działowi wsparcia"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_sourdough_loaf_product_template
@@ -9585,7 +9668,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
 msgid "This device"
-msgstr ""
+msgstr "To urządzenie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
@@ -9643,17 +9726,6 @@ msgid ""
 msgstr ""
 "Ten dziennik jest powiązany z metodą płatności. Nie można modyfikować jego "
 "typu"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_journal.py:0
-msgid ""
-"This journal is associated with payment method %(payment_method)s that is "
-"being used by order %(pos_order)s in the active pos session %(pos_session)s"
-msgstr ""
-"Ten dziennik jest powiązany z metodą płatności %(payment_method)s, która "
-"jest używana przez zamówienie %(pos_order)s w aktywnej sesji pos %"
-"(pos_session)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10462,6 +10534,16 @@ msgid ""
 "You can either use it on this device or scan the QR code to display it on "
 "another device"
 msgstr ""
+"Możesz użyć go na tym urządzeniu lub zeskanować kod QR, aby wyświetlić go na "
+"innym urządzeniu."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+msgid ""
+"You can not archive this journal because it is set on the following payment "
+"method : %s."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11016,6 +11098,24 @@ msgstr "aby aktywować przyciski."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "używając"
+
+#~ msgid ""
+#~ "This journal is associated with payment method %(payment_method)s that is "
+#~ "being used by order %(pos_order)s in the active pos session %"
+#~ "(pos_session)s"
+#~ msgstr ""
+#~ "Ten dziennik jest powiązany z metodą płatności %(payment_method)s, która "
+#~ "jest używana przez zamówienie %(pos_order)s w aktywnej sesji pos %"
+#~ "(pos_session)s"
+
+#~ msgid ""
+#~ "Local Network Access configuration is enabled, but your browser is not "
+#~ "Chromium-based. Please use a Chromium-based browser to benefit from this "
+#~ "feature."
+#~ msgstr ""
+#~ "Konfiguracja dostępu do sieci lokalnej jest włączona, ale Twoja "
+#~ "przeglądarka nie jest oparta na Chromium. Aby korzystać z tej funkcji, "
+#~ "użyj przeglądarki opartej na Chromium."
 
 #~ msgid ""
 #~ "Unable to create consolidated invoice/s because the following orders "

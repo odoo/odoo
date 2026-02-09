@@ -1,10 +1,12 @@
 import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
+import { refreshSublevelLines } from "@html_builder/core/building_blocks/builder_row";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { describe, expect, test } from "@odoo/hoot";
 import {
     advanceTime,
     animationFrame,
     hover,
+    queryAll,
     queryAllTexts,
     queryOne,
     waitFor,
@@ -86,6 +88,60 @@ test("hide empty row and display row with content", async () => {
 
     await contains("[data-class-action='my-custom-class']").click();
     expect(queryAllTexts(selectorRowLabel)).toEqual(["Row 1", "Row 3"]);
+});
+
+test("reconnects lines across mixed levels", async () => {
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`
+                <div class="options-container">
+                    <BuilderRow label="'root-1'">root-1</BuilderRow>
+                    <BuilderRow label="'level-1'" level="1">A</BuilderRow>
+                    <BuilderRow label="'level-2'" level="2">B</BuilderRow>
+                    <BuilderRow label="'level-1'" level="1">C</BuilderRow>
+                    <BuilderRow label="'root-2'">root-2</BuilderRow>
+                    <BuilderRow label="'level-1'" level="1">D</BuilderRow>
+                    <BuilderRow label="'level-2'" level="2">E</BuilderRow>
+                    <BuilderRow label="'level-2'" level="2">F</BuilderRow>
+                    <BuilderRow label="'level-3'" level="3">G</BuilderRow>
+                    <BuilderRow label="'level-3'" level="3">H</BuilderRow>
+                    <BuilderRow label="'level-2'" level="2">I</BuilderRow>
+                    <BuilderRow label="'level-1'" level="1">J</BuilderRow>
+                </div>`;
+        }
+    );
+
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    await waitFor(".options-container .hb-row-label");
+
+    const labelEls = queryAll(".options-container .hb-row-label");
+    const rowEls = queryAll(".options-container .hb-row");
+    const rects = [
+        { top: 0, bottom: 40 },
+        { top: 40, bottom: 80 },
+        { top: 80, bottom: 120 },
+        { top: 120, bottom: 160 },
+        { top: 160, bottom: 200 },
+        { top: 200, bottom: 240 },
+        { top: 240, bottom: 280 },
+        { top: 280, bottom: 320 },
+        { top: 320, bottom: 360 },
+        { top: 360, bottom: 400 },
+        { top: 400, bottom: 440 },
+        { top: 440, bottom: 480 },
+    ];
+    labelEls.forEach((labelEl, index) => {
+        labelEl.getBoundingClientRect = () => rects[index];
+    });
+    refreshSublevelLines(rowEls[10]);
+    await animationFrame();
+
+    const offsets = labelEls.map((labelEl) =>
+        labelEl.style.getPropertyValue("--o-hb-row-sublevel-top")
+    );
+    expect(offsets).toEqual(["", "", "", "-40px", "", "", "", "", "", "", "-80px", "-200px"]);
 });
 
 /* ================= Collapse template ================= */

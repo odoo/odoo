@@ -32,8 +32,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2026-01-23 07:35+0000\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"PO-Revision-Date: 2026-02-06 13:05+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/account/"
 "es/>\n"
@@ -198,7 +198,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(name)s - Draft at (%(currency_amount)s)"
-msgstr ""
+msgstr "%(name)s - Borrador en (%(currency_amount)s)"
 
 #. module: account
 #. odoo-python
@@ -210,7 +210,7 @@ msgstr "%(name)s cuota #%(number)s"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(name)s%(ref)s at %(currency_amount)s"
-msgstr ""
+msgstr "%(name)s%(ref)s en %(currency_amount)s"
 
 #. module: account
 #. odoo-python
@@ -1409,6 +1409,12 @@ msgid ""
 "                            <span class=\"text-danger\" "
 "invisible=\"duplicated_ref_ids.length &gt; 1\">Delete duplicate</span>"
 msgstr ""
+"<i class=\"fa fa-trash text-danger\"/>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length == 1\">Eliminar todos los duplicados</"
+"span>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length &gt; 1\">Eliminar duplicado</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -2771,7 +2777,7 @@ msgstr ""
 "                                Ha recibido este mensaje porque figura como "
 "seguidor en\n"
 "                                <strong t-"
-"out=\"object.journal_id.display_name or 'this journal'\"/>.\n"
+"out=\"object.journal_id.display_name or 'este diario'\"/>.\n"
 "                                <span style=\"display:block; margin:18px "
 "auto; height:1px; max-width:420px; background:#ece3ed;\"/>\n"
 "                                <t t-if=\"unsubscribe_url\">\n"
@@ -11506,7 +11512,7 @@ msgstr "Es doméstico"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_draft_duplicated_ref_ids
 #: model:ir.model.fields,field_description:account.field_account_move__is_draft_duplicated_ref_ids
 msgid "Is Draft Duplicated Ref"
-msgstr ""
+msgstr "Referencia duplicada en estado borrador"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__is_mail_template_editor
@@ -18627,6 +18633,14 @@ msgid "The entry is secured with an inalterable hash."
 msgstr "El asiento está asegurado con un hash inalterable."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry is using accounts (%(accounts_codes_names)s) from a different "
+"company."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
 #: model:ir.model.fields,help:account.field_res_company__expense_account_id
 #: model:ir.model.fields,help:account.field_res_config_settings__expense_account_id
@@ -19372,18 +19386,6 @@ msgstr "Esta semana"
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_year
 msgid "This Year"
 msgstr "Este año"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"This account is configured in %(journal_names)s journal(s) (ids %"
-"(journal_ids)s) as payment debit or credit account. This means that this "
-"account's type should be reconcilable."
-msgstr ""
-"Esta cuenta está configurada en %(journal_names)s diario(s) (ids %"
-"(journal_ids)s) como cuenta de crédito o débito de pago. Esto significa que "
-"el tipo de esta cuenta debe poder conciliarse."
 
 #. module: account
 #. odoo-python
@@ -20584,7 +20586,7 @@ msgstr "Suministros"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_utilities
 msgid "Utility bills for water, gas, electricity, heating, etc"
-msgstr "Facturas de suministros de agua, gas, electricidad, calefacción, etc."
+msgstr "Facturas de suministro de agua, gas, electricidad, calefacción, etc."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_accrued_orders_wizard__currency_id
@@ -21838,6 +21840,16 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+msgid ""
+"You may only use samples in demo mode, try uploading one of your invoices "
+"instead."
+msgstr ""
+"Solo puedes utilizar ejemplos en modo demostración. Prueba a subir una de "
+"tus facturas."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "You must select at least 2 accounts."
 msgstr "Debe seleccionar al menos 2 cuentas."
@@ -22539,6 +22551,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Factura de autofacturación (ref. {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid ""
+#~ "This account is configured in %(journal_names)s journal(s) (ids %"
+#~ "(journal_ids)s) as payment debit or credit account. This means that this "
+#~ "account's type should be reconcilable."
+#~ msgstr ""
+#~ "Esta cuenta está configurada en %(journal_names)s diario(s) (ids %"
+#~ "(journal_ids)s) como cuenta de crédito o débito de pago. Esto significa "
+#~ "que el tipo de esta cuenta debe poder conciliarse."
 
 #~ msgid "%(ref)s (%(currency_amount)s)"
 #~ msgstr "%(ref)s (%(currency_amount)s)"

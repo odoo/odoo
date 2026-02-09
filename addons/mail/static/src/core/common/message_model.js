@@ -431,7 +431,6 @@ export class Message extends Record {
         return Boolean(
             !this.is_transient &&
                 !this.isPending &&
-                this.thread &&
                 this.store.self_partner?.main_user_id?.share === false &&
                 this.persistent
         );
@@ -540,12 +539,11 @@ export class Message extends Record {
         attachments = [],
         { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [] } = {}
     ) {
-        const bodyEl = createElementWithContent("div", this.body);
-        bodyEl.querySelector("span.o-mail-Message-edited")?.remove();
-        if (
-            createElementWithContent("div", body).innerHTML === bodyEl.innerHTML &&
-            attachments.length === 0
-        ) {
+        const messageBodyEl = createElementWithContent("div", this.body);
+        const updatedBodyEl = createElementWithContent("div", body);
+        messageBodyEl.querySelector("span.o-mail-Message-edited")?.remove();
+        updatedBodyEl.querySelector("span.o-mail-Message-edited")?.remove();
+        if (updatedBodyEl.innerHTML === messageBodyEl.innerHTML && attachments.length === 0) {
             return;
         }
         const validMentions = this.store.getMentionsFromText(body, {

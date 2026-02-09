@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2026-01-23 11:28+0000\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"PO-Revision-Date: 2026-02-02 13:44+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/account/nl/"
 ">\n"
@@ -13755,7 +13755,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/controllers/terms.py:0
 msgid "Oops"
-msgstr "Oep"
+msgstr "Oeps"
 
 #. module: account
 #. odoo-python
@@ -18574,6 +18574,14 @@ msgid "The entry is secured with an inalterable hash."
 msgstr "De invoer is beveiligd met een onveranderlijke hash."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry is using accounts (%(accounts_codes_names)s) from a different "
+"company."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
 #: model:ir.model.fields,help:account.field_res_company__expense_account_id
 #: model:ir.model.fields,help:account.field_res_config_settings__expense_account_id
@@ -19314,18 +19322,6 @@ msgstr "Deze week"
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_year
 msgid "This Year"
 msgstr "Dit jaar"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"This account is configured in %(journal_names)s journal(s) (ids %"
-"(journal_ids)s) as payment debit or credit account. This means that this "
-"account's type should be reconcilable."
-msgstr ""
-"Deze rekening is in %(journal_names)s dagboek(en) (ids %(journal_ids)s) "
-"geconfigureerd als debet- of creditrekening voor betalingen. Dit betekent "
-"dat het type van deze rekening afletterbaar moet zijn."
 
 #. module: account
 #. odoo-python
@@ -21781,6 +21777,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+msgid ""
+"You may only use samples in demo mode, try uploading one of your invoices "
+"instead."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "You must select at least 2 accounts."
 msgstr "Je moet minstens 2 rekeningen selecteren."
@@ -22482,6 +22486,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Self-billing verkoopfactuur (Ref {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid ""
+#~ "This account is configured in %(journal_names)s journal(s) (ids %"
+#~ "(journal_ids)s) as payment debit or credit account. This means that this "
+#~ "account's type should be reconcilable."
+#~ msgstr ""
+#~ "Deze rekening is in %(journal_names)s dagboek(en) (ids %(journal_ids)s) "
+#~ "geconfigureerd als debet- of creditrekening voor betalingen. Dit betekent "
+#~ "dat het type van deze rekening afletterbaar moet zijn."
 
 #~ msgid "%(ref)s (%(currency_amount)s)"
 #~ msgstr "%(ref)s (%(currency_amount)s)"

@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-09 18:36+0000\n"
-"PO-Revision-Date: 2026-01-16 18:25+0000\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"PO-Revision-Date: 2026-02-06 11:13+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/stock/ru/"
 ">\n"
@@ -19,9 +19,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural="
-"(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 "
-": n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: stock
@@ -776,7 +776,7 @@ msgstr "<span class=\"o_stat_text\">Номера лотов/серий</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "<span class=\"o_stat_text\">Lots/Serial Numbers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Партии/серийные номера</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -1362,7 +1362,6 @@ msgstr "Все переводы"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/views/search/stock_report_search_panel.xml:0
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "All Warehouses"
 msgstr "Все склады"
 
@@ -2102,6 +2101,11 @@ msgstr "Выберите макет этикетки"
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Choose Type of Labels To Print"
 msgstr "Выберите тип этикеток для печати"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
+msgid "Choose Warehouses"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__inventory_datetime
@@ -8664,6 +8668,11 @@ msgid "Sample data"
 msgstr "Демо-данные"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid "Save"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0
 msgid "Save the product form before updating the Quantity On Hand."
@@ -10104,8 +10113,8 @@ msgstr ""
 "позволяет создавать пополнение по запросу, привязанное к вашим заказам на "
 "продажу (например), как только они будут подтверждены. Заказы на закупку, "
 "производственные заказы и т. д. создаются автоматически в зависимости от "
-"установленного для товара способа пополнения "
-"(маршрут «Купить» или «Произвести»)."
+"установленного для товара способа пополнения (маршрут «Купить» или "
+"«Произвести»)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10992,6 +11001,7 @@ msgstr "Места хранения поставщика"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_package_history_list
 msgid "View"
 msgstr "Просмотр"
 

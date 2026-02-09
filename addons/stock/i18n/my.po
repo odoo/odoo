@@ -2,15 +2,15 @@
 # This file contains the translation of the following modules:
 # * stock
 #
-# Oakarmin Iron <oakarminiron@gmail.com>, 2025.
+# Oakarmin Iron <oakarminiron@gmail.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-09 18:36+0000\n"
-"PO-Revision-Date: 2025-11-15 11:30+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"PO-Revision-Date: 2026-02-04 11:26+0000\n"
+"Last-Translator: Oakarmin Iron <oakarminiron@gmail.com>\n"
 "Language-Team: Burmese <https://translate.odoo.com/projects/odoo-19/stock/my/"
 ">\n"
 "Language: my\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock
 #. odoo-python
@@ -1195,9 +1195,8 @@ msgstr ""
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/views/search/stock_report_search_panel.xml:0
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "All Warehouses"
-msgstr ""
+msgstr "ဂိုဒေါင် အားလုံး"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -1803,7 +1802,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
 msgid "Categories"
-msgstr ""
+msgstr "အမျိုးအစားများ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_search_form_view_stock_report
@@ -1892,6 +1891,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Choose Type of Labels To Print"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
+msgid "Choose Warehouses"
 msgstr ""
 
 #. module: stock
@@ -3565,7 +3569,7 @@ msgstr ""
 #. module: stock
 #: model:product.removal,name:stock.removal_fifo
 msgid "First In First Out (FIFO)"
-msgstr ""
+msgstr "အရင်ဝင် အရင်ထွက် (ဖိုင်ဖို)"
 
 #. module: stock
 #. odoo-javascript
@@ -3607,7 +3611,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__removal_strategy_id
 msgid "Force Removal Strategy"
-msgstr ""
+msgstr "ဖယ်ထုတ်ခြင်း ဗျူဟာ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_forecast
@@ -4590,7 +4594,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 msgid "Inventory Valuation"
-msgstr ""
+msgstr "ပစ္စည်း တန်ဖိုးဖြတ်ခြင်း"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_at_date
@@ -5137,7 +5141,7 @@ msgstr "နေရာများ"
 #. module: stock
 #: model:ir.actions.server,name:stock.action_toggle_is_locked
 msgid "Lock/Unlock"
-msgstr ""
+msgstr "သော့ပိတ် / ပြန်ဖွင့်"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_category_form_view_inherit
@@ -5149,7 +5153,7 @@ msgstr "လော်ဂျက်စတစ်"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__barcode_rule__type__lot
 msgid "Lot"
-msgstr ""
+msgstr "လော့"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__lot_label_format
@@ -5170,7 +5174,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Lot numbers"
-msgstr ""
+msgstr "လော့ နံပါတ်များ"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__lots
@@ -5187,14 +5191,14 @@ msgstr ""
 #: model:ir.model,name:stock.model_stock_lot
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__lot_id
 msgid "Lot/Serial"
-msgstr ""
+msgstr "လော့ / စီရီရယ်"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
 msgid "Lot/Serial #"
-msgstr ""
+msgstr "လော့ / စီရီရယ် #"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__name
@@ -5208,7 +5212,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Lot/Serial Number"
-msgstr ""
+msgstr "လော့ / စီရီရယ် နံပါတ်"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_lot_label
@@ -5239,7 +5243,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_production_lot
 msgid "Lots & Serial Numbers"
-msgstr ""
+msgstr "လော့ & စီရီရယ် နံပါတ်များ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5250,7 +5254,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
 #: model:ir.ui.menu,name:stock.menu_action_production_lot_form
 msgid "Lots / Serial Numbers"
-msgstr ""
+msgstr "လော့ / စီရီရယ် နံပါတ်များ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lots_visible
@@ -5288,7 +5292,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.package_history_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_search
 msgid "Main Packages"
-msgstr ""
+msgstr "ပင်မ အထုပ်များ"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
@@ -5340,7 +5344,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__reservation_method__manual
 msgid "Manually"
-msgstr ""
+msgstr "မန်နူရယ်ဖြင့်"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -5437,7 +5441,7 @@ msgstr "မက်ဆေ့ဂျ်များ"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_removal__method
 msgid "Method"
-msgstr ""
+msgstr "နည်းလမ်း"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__product_min_qty
@@ -5486,7 +5490,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Move Detail"
-msgstr ""
+msgstr "ရွေ့ပြောင်းမှူ အသေးစိတ်"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_type_entire_packs
@@ -5500,7 +5504,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_package__move_line_ids
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__move_line_ids
 msgid "Move Line"
-msgstr ""
+msgstr "ရွေ့ပြောင်းမှူ လိုင်း"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__move_line_ids
@@ -5508,7 +5512,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree_detailed
 msgid "Move Lines"
-msgstr ""
+msgstr "ရွေ့ပြောင်းမှူ လိုင်းများ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_lines_count
@@ -5529,7 +5533,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_put_in_pack__move_line_ids
 msgid "Move lines"
-msgstr ""
+msgstr "ရွေ့ပြောင်းမှူ လိုင်းများ"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__origin_returned_move_id
@@ -5547,7 +5551,7 @@ msgstr "အရွေ့များ"
 #: model:ir.actions.act_window,name:stock.stock_move_action
 #: model:ir.ui.menu,name:stock.stock_move_menu
 msgid "Moves Analysis"
-msgstr ""
+msgstr "ရွေ့ပြောင်းမှူ ဆန်းစစ်ချက်"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_line_action
@@ -5658,7 +5662,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__create_backorder__never
 msgid "Never"
-msgstr ""
+msgstr "ဘယ်တော့မှ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__never_product_template_attribute_value_ids
@@ -7673,7 +7677,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_stock_references
 #: model_terms:ir.ui.view,arch_db:stock.stock_reference_tree_view
 msgid "References"
-msgstr ""
+msgstr "မှီငြမ်းချက်များ"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_stock_quant_relocate
@@ -7784,7 +7788,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "Replenishment"
-msgstr ""
+msgstr "ပြန်လည်ဖြည့်တင်းခြင်း"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__horizon_days
@@ -8190,6 +8194,11 @@ msgid "Sample data"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid "Save"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0
 msgid "Save the product form before updating the Quantity On Hand."
@@ -8582,7 +8591,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code
 msgid "Short Name"
-msgstr ""
+msgstr "အမည် အတိုကောက်"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__code
@@ -10324,6 +10333,7 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_package_history_list
 msgid "View"
 msgstr "ဗျူး"
 

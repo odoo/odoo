@@ -770,7 +770,13 @@ class StockPicking(models.Model):
         all_moves._fields['forecast_availability'].compute_value(all_moves)
         for picking in pickings:
             # In case of draft the behavior of forecast_availability is different : if forecast_availability < 0 then there is a issue else not.
-            if any(move.product_id.uom_id.compare(move.forecast_availability, 0 if move.state == 'draft' else move.product_qty) == -1 for move in picking.move_ids):
+            if any(
+                move.product_id
+                and move.product_id.uom_id.compare(
+                    move.forecast_availability, 0 if move.state == 'draft' else move.product_qty
+                ) == -1
+                for move in picking.move_ids
+            ):
                 picking.products_availability = _('Not Available')
                 picking.products_availability_state = 'late'
             else:

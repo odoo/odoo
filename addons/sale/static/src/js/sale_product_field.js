@@ -259,21 +259,25 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             selectedComboItems: selectedComboItems,
             edit: edit,
             save: async (mainProduct, optionalProducts) => {
-                await Promise.all([
-                    // Don't add main product if it's a combo product as it has already been added
-                    // from combo configurator
-                    ...(
-                        !selectedComboItems.length ?
-                            [applyProduct(this.props.record, mainProduct)]: []
-                    ),
-                    ...optionalProducts.map(async product => {
-                        const line = await saleOrderRecord.data.order_line.addNewRecord({
-                            position: 'bottom', mode: 'readonly'
-                        });
-                        const productData = this._prepareNewLineData(line, product);
-                        await applyProduct(line, productData);
-                    }),
-                ]);
+                // Don't add main product if it's a combo product as it has already been added
+                // from combo configurator
+                const proms = !selectedComboItems.length
+                    ? [applyProduct(this.props.record, mainProduct)]
+                    : [];
+
+                for (const [i, product] of optionalProducts.entries()) {
+                    const index =
+                        saleOrderRecord.data.order_line.records.indexOf(this.props.record)
+                        + selectedComboItems.length
+                        + i;
+                    const line = await saleOrderRecord.data.order_line.addNewRecordAtIndex(index, {
+                        mode: 'readonly',
+                    });
+                    const productData = this._prepareNewLineData(line, product);
+                    proms.push(applyProduct(line, productData));
+                }
+
+                await Promise.all(proms);
                 this._onProductUpdate();
                 saleOrderRecord.data.order_line.leaveEditMode();
             },

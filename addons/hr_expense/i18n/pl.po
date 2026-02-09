@@ -34,8 +34,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-15 18:36+0000\n"
-"PO-Revision-Date: 2026-01-15 14:28+0000\n"
+"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"PO-Revision-Date: 2026-02-03 18:18+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "hr_expense/pl/>\n"
@@ -44,8 +44,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
-"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_expense
@@ -871,6 +871,11 @@ msgid "Expenses Report"
 msgstr "Raport wydatków"
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+msgid "Expenses approval"
+msgstr "Zatwierdzanie wydatków"
+
+#. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expenses of %(employee)s"
@@ -970,6 +975,11 @@ msgstr "Przejdź do konta"
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Guideline"
 msgstr "Wytyczne"
+
+#. module: hr_expense
+#: model:ir.actions.server,name:hr_expense.ir_cron_send_submitted_expenses_mail_ir_actions_server
+msgid "HR Expense: Send Submitted Expenses Mail"
+msgstr "Wydatki HR: wysyłanie zgłoszonych wydatków pocztą elektroniczną"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_message
@@ -1291,11 +1301,11 @@ msgstr "Nowe wpisy wydatków"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid ""
-"New expenses are awaiting your approval.\n"
-"                You can review them by following this link"
+"New expenses are waiting for your approval. You can Review them by following "
+"this link."
 msgstr ""
-"Nowe wydatki oczekują na Twoje zatwierdzenie.\n"
-"                Możesz je przejrzeć pod tym linkiem"
+"Nowe wydatki czekają na Twoją akceptację. Możesz je przejrzeć, klikając ten "
+"link."
 
 #. module: hr_expense
 #. odoo-python
@@ -1396,6 +1406,7 @@ msgstr "Liczby obliczone z Twoich osobistych wydatków."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Odoo"
 msgstr "Odoo"
 
@@ -1511,7 +1522,7 @@ msgstr "Kontrahent"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_payment_register
 msgid "Pay"
-msgstr ""
+msgstr "Zapłać"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_method_line_id
@@ -1593,6 +1604,7 @@ msgstr "Zaksięgowano"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Powered by"
 msgstr "Powered by"
 
@@ -2471,6 +2483,13 @@ msgstr "używać OCR do wypełniania danych ze zdjęcia rachunku"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "z tym samym pokwitowaniem już istnieje."
+
+#~ msgid ""
+#~ "New expenses are awaiting your approval.\n"
+#~ "                You can review them by following this link"
+#~ msgstr ""
+#~ "Nowe wydatki oczekują na Twoje zatwierdzenie.\n"
+#~ "                Możesz je przejrzeć pod tym linkiem"
 
 #~ msgid "View Attachments"
 #~ msgstr "Zobacz załączniki"

@@ -38,6 +38,7 @@ class HrEmployee(models.Model):
             res['views']['search']['arch'] = res['views']['search']['arch'].replace('today_location_name', dayfield)
         if 'list' in res['views']:
             res['views']['list']['arch'] = res['views']['list']['arch'].replace('work_location_name', dayfield)
+        res["models"][self._name]["fields"].update(self.fields_get([dayfield]))
         return res
 
     def _compute_exceptional_location_id(self):

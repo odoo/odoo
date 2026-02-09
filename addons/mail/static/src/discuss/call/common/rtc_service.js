@@ -2012,7 +2012,7 @@ export class Rtc extends Record {
                 outputTrack = blurredStream.getVideoTracks()[0];
             } catch (_e) {
                 this.notification.add(_e.message, { type: "warning" });
-                this.store.settings.useBlur = false;
+                this.store.settings.setUseBlur(false);
                 outputTrack = sourceStream.getVideoTracks()[0];
             }
         } else if (!this.store.settings.useBlur && type === "camera") {

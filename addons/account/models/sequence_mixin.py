@@ -4,7 +4,7 @@ from datetime import date
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import format_date
-from odoo.tools import frozendict, date_utils, SQL
+from odoo.tools import frozendict, date_utils, index_exists, SQL
 
 import logging
 import re
@@ -51,8 +51,7 @@ class SequenceMixin(models.AbstractModel):
         # Add an index to optimise the query searching for the highest sequence number
         if not self._abstract and self._sequence_index:
             index_name = self._table + '_sequence_index'
-            self.env.cr.execute(SQL('SELECT indexname FROM pg_indexes WHERE indexname = %s', index_name))
-            if not self.env.cr.fetchone():
+            if not index_exists(self.env.cr, index_name):
                 self.env.cr.execute(SQL("""
                     CREATE INDEX %(index_name)s ON %(table)s (%(sequence_index)s, sequence_prefix desc, sequence_number desc, %(field)s);
                     CREATE INDEX %(index2_name)s ON %(table)s (%(sequence_index)s, id desc, sequence_prefix);
@@ -70,11 +69,10 @@ class SequenceMixin(models.AbstractModel):
                   JOIN pg_index ix ON t.oid = ix.indrelid
                   JOIN pg_attribute a ON a.attrelid = t.oid
                                      AND a.attnum = ANY(ix.indkey)
-                  JOIN pg_namespace n ON t.relnamespace = n.oid
                  WHERE t.relkind = 'r'
                    AND t.relname = %(table)s
+                   AND t.relnamespace = current_schema::regnamespace
                    AND a.attname = %(column)s
-                   AND n.nspname = current_schema
                    AND ix.indisunique
                 """,
                 table=self._table,

@@ -673,6 +673,7 @@ registry.category("web_tour.tours").add("test_open_register_with_preset_takeaway
             FloorScreen.clickTable("5"),
             Chrome.presetTimingSlotHourNotExists("09:00"),
             Chrome.selectPresetTimingSlotHour("12:20"),
+            Chrome.waitRequest(),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickControlButton("Cancel Order"),
             Dialog.cancel({ title: "Existing orderlines" }),

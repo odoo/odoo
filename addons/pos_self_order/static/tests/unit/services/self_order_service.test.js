@@ -261,6 +261,16 @@ test("sendDraftOrderToServer", async () => {
     expect(store.models["pos.order"].length).toBe(1);
 });
 
+test("sendDraftOrderToServer updateLastOrderChange", async () => {
+    const store = await setupSelfPosEnv();
+    const order = await getFilledSelfOrder(store);
+
+    const product1 = store.models["product.template"].get(8);
+    await store.addToCart(product1, 1, "");
+    await store.sendDraftOrderToServer();
+    expect(Object.keys(order.last_order_preparation_change.lines)).toHaveLength(3);
+});
+
 describe("setOrderPrices", () => {
     test("Combo products order", async () => {
         const store = await setupSelfPosEnv();
@@ -337,4 +347,32 @@ test("cancelBackendOrder", async () => {
 
     expect(order.state).toBe("cancel");
     expect(store.router.activeSlot).toBe("default");
+});
+
+test("resetCategorySelection", async () => {
+    const store = await setupSelfPosEnv();
+    store.computeAvailableCategories();
+    const [ctg1, ctg2] = store.availableCategories.slice(0, 2);
+
+    // Kiosk Mode
+    store.config.self_ordering_mode = "kiosk";
+    expect(store.currentCategory.id).toBe(ctg1.id);
+    store.currentCategory = ctg2;
+    expect(store.currentCategory.id).toBe(ctg2.id);
+    store.resetCategorySelection();
+    expect(store.currentCategory.id).toBe(ctg1.id);
+
+    // Mobile Mode
+    store.config.self_ordering_mode = "mobile";
+    store.currentCategory = ctg2;
+    expect(store.currentCategory.id).toBe(ctg2.id);
+    store.resetCategorySelection();
+    expect(store.currentCategory.id).toBe(ctg2.id);
+
+    // On Order Confirmation
+    await getFilledSelfOrder(store);
+    store.config.self_ordering_mode = "kiosk";
+    expect(store.currentCategory.id).toBe(ctg2.id);
+    await store.confirmOrder();
+    expect(store.currentCategory.id).toBe(ctg1.id);
 });

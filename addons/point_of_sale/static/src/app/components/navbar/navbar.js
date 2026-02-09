@@ -21,6 +21,7 @@ import { _t } from "@web/core/l10n/translation";
 import { uuidv4 } from "@point_of_sale/utils";
 import { QrCodeCustomerDisplay } from "@point_of_sale/app/customer_display/customer_display_qr_code_popup";
 import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
@@ -53,6 +54,13 @@ export class Navbar extends Component {
         });
         useExternalListener(document, "keydown", this.handleKeydown.bind(this));
         this.openPresetTiming = useAsyncLockedMethod(this.openPresetTiming);
+    }
+
+    openLnaPopup() {
+        this.dialog.add(AlertDialog, {
+            title: _t("LNA Permission status"),
+            body: this.pos.lnaState.message,
+        });
     }
 
     handleKeydown(event) {

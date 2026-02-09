@@ -904,7 +904,7 @@ class ResPartner(models.Model):
         for partner, pre_values in zip(self, pre_values_list, strict=True):
             if internal_users := partner.user_ids.filtered(lambda u: u._is_internal() and u != self.env.user):
                 internal_users.check_access('write')
-            updated = {fname: fvalue for fname, fvalue in vals.items() if partner[fname] != pre_values[fname]}
+            updated = {fname: fvalue for fname, fvalue in vals.items() if partner[fname] != pre_values.get(fname)}
             if updated:
                 partner._fields_sync(updated)
         return result
@@ -929,6 +929,7 @@ class ResPartner(models.Model):
             return partners
 
         for partner, vals in zip(partners, vals_list):
+            vals = self.env['res.partner']._add_missing_default_values(vals)
             partner._fields_sync(vals)
         return partners
 

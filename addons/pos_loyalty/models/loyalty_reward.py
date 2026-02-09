@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, api
+from odoo.fields import Domain
+
 import ast
 import json
 
@@ -18,7 +20,20 @@ class LoyaltyReward(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data, config):
-        return [('program_id', 'in', config._get_program_ids().ids)]
+        reward_product_tag_domain = [
+            ('reward_product_tag_id', '!=', False),
+            '|',
+            ('reward_product_tag_id.product_template_ids.active', '=', True),
+            ('reward_product_tag_id.product_product_ids.active', '=', True),
+        ]
+        return Domain.AND([
+            [('program_id', 'in', config._get_program_ids().ids)],
+            Domain.OR([
+                [('reward_type', '!=', 'product')],
+                [('reward_product_id.active', '=', True)],
+                reward_product_tag_domain,
+            ]),
+        ])
 
     @api.model
     def _load_pos_data_fields(self, config):

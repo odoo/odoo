@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2026-01-23 13:46+0000\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"PO-Revision-Date: 2026-02-02 15:29+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/es/>\n"
@@ -1467,6 +1467,8 @@ msgstr "Recibo básico"
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 msgid "Be aware that reloading data will delete unsaved orders."
 msgstr ""
+"Ten en cuenta que al volver a cargar los datos se eliminarán los pedidos no "
+"guardados."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
@@ -1517,10 +1519,10 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
-"Aumente sus ventas con múltiples tipos de programas: cupones, promociones, "
-"tarjetas de regalo y fidelidad. Puede establecer condiciones específicas "
-"(productos, clientes, importe de compra mínimo, periodo). Las recompensas "
-"pueden ser descuentos (% o un importe) o productos gratis."
+"Impulsa tus ventas con distintos tipos de programas: cupones, promociones, "
+"tarjetas regalo y fidelización. Se pueden definir condiciones específicas "
+"(productos, clientes, importe mínimo de compra, período). Las recompensas "
+"pueden ser descuentos (% o importe) o productos gratuitos."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_brand
@@ -2025,6 +2027,12 @@ msgstr ""
 "Comprueba la configuración de la impresora para ver el ajuste «ID del "
 "dispositivo».\n"
 "Debe estar configurado en: «local_printer»"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Checking Local Network Access permission..."
+msgstr "Comprobando el permiso de acceso a la red local..."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_cheese_croissant_product_template
@@ -3977,6 +3985,12 @@ msgid "Hide Use Payment Terminal"
 msgstr "Ocultar Usar terminal de pago"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Hide details"
+msgstr "Ocultar detalles"
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__group_pos_preset
 msgid "Hide or show the Presets menu in the Point of Sale configuration."
 msgstr ""
@@ -4561,6 +4575,12 @@ msgid "LED Lamp"
 msgstr "Lámpara LED"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
+msgid "LNA Permission status"
+msgstr "Estado del permiso de LNA"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__name
 msgid "Label"
@@ -4828,15 +4848,23 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+msgid "Local Network Access"
+msgstr "Acceso a la red local"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
 msgid ""
 "Local Network Access configuration is enabled, but your browser is not "
 "Chromium-based. Please use a Chromium-based browser to benefit from this "
-"feature."
+"feature. Please note that IOS devices do not support Local Network Access "
+"yet."
 msgstr ""
 "La configuración de acceso a la red local está habilitada, pero tu navegador "
 "no está basado en Chromium. Utiliza un navegador basado en Chromium para "
-"beneficiarte de esta función."
+"beneficiarte de esta función. Ten en cuenta que los dispositivos iOS aún no "
+"admiten el acceso a la red local."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4851,6 +4879,18 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
+msgid "Local Network Access is not configured for this POS."
+msgstr "El acceso a la red local no está configurado para este TPV."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
+msgid "Local Network Access permission granted."
+msgstr "Permiso de acceso a la red local concedido."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
 msgid ""
 "Local Network Access permission is denied. Some hardware devices might not "
 "work properly. Please allow Local Network Access in your browser settings."
@@ -4858,6 +4898,18 @@ msgstr ""
 "Se ha denegado el permiso de acceso a la red local. Es posible que algunos "
 "dispositivos de hardware no funcionen correctamente. Permite el acceso a la "
 "red local en la configuración de tu navegador."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
+msgid ""
+"Local Network Access permission is not yet granted. Some hardware devices "
+"might not work properly. Please allow Local Network Access in your browser "
+"settings."
+msgstr ""
+"Aún no se ha concedido el permiso de acceso a la red local. Es posible que "
+"algunos dispositivos de hardware no funcionen correctamente. Permite el "
+"acceso a la red local en la configuración de tu navegador."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5443,6 +5495,8 @@ msgstr "No hay espacios disponibles para este día"
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 msgid "No valid orders were selected. No new invoices could be generated"
 msgstr ""
+"No se han seleccionado pedidos válidos. No se han podido generar nuevas "
+"facturas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__barcode_nomenclature_id
@@ -5677,6 +5731,12 @@ msgid ""
 msgstr ""
 "Solo los usuarios con permisos de acceso de gerente en la aplicación Punto "
 "de Venta pueden modificar los precios de los productos en los pedidos."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Oops!"
+msgstr "¡Vaya!"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7639,6 +7699,12 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Reload data"
+msgstr "Volver a cargar datos"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.js:0
 msgid "Remaining"
 msgstr "Restantes"
@@ -8334,7 +8400,7 @@ msgstr "Política de envío"
 #. odoo-python
 #: code:addons/point_of_sale/models/res_partner.py:0
 msgid "Shopping cart"
-msgstr "Cesta de compras"
+msgstr "Cesta"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_apple_pie_product_template
@@ -8373,6 +8439,12 @@ msgstr "Mostrar imágenes de la categoría"
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_show_category_images
 msgid "Show category images in the Point of Sale interface."
 msgstr "Muestre imágenes de la categoría en la interfaz del TPV"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Show details"
+msgstr "Mostrar detalles"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
@@ -8487,6 +8559,16 @@ msgid "Some, if not all, post-processing after syncing order failed."
 msgstr ""
 "Algunos, si no es que todos, de los procesos posteriores a la sincronización "
 "del pedido fallaron."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid ""
+"Something went wrong... If you really are stuck, share the report with your "
+"friendly support service"
+msgstr ""
+"Se ha producido un error... Comunícate con el equipo de soporte si necesitas "
+"ayuda"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_sourdough_loaf_product_template
@@ -9638,16 +9720,6 @@ msgstr ""
 "Este diario está asociado con un método de pago. No puede modificar su tipo."
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_journal.py:0
-msgid ""
-"This journal is associated with payment method %(payment_method)s that is "
-"being used by order %(pos_order)s in the active pos session %(pos_session)s"
-msgstr ""
-"Este diario está asociado con el método de pago %(payment_method)s que se "
-"usa en el pedido %(pos_order)s en la sesión %(pos_session)s activa del TPV."
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.js:0
 msgid "This operation will destroy all ${"
@@ -10458,6 +10530,14 @@ msgstr ""
 "visualizarlo en otro dispositivo"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+msgid ""
+"You can not archive this journal because it is set on the following payment "
+"method : %s."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 msgid "You can not change the %s of the refund order."
@@ -11018,6 +11098,24 @@ msgstr "para activar los botones."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "usando"
+
+#~ msgid ""
+#~ "This journal is associated with payment method %(payment_method)s that is "
+#~ "being used by order %(pos_order)s in the active pos session %"
+#~ "(pos_session)s"
+#~ msgstr ""
+#~ "Este diario está asociado con el método de pago %(payment_method)s que se "
+#~ "usa en el pedido %(pos_order)s en la sesión %(pos_session)s activa del "
+#~ "TPV."
+
+#~ msgid ""
+#~ "Local Network Access configuration is enabled, but your browser is not "
+#~ "Chromium-based. Please use a Chromium-based browser to benefit from this "
+#~ "feature."
+#~ msgstr ""
+#~ "La configuración de acceso a la red local está habilitada, pero tu "
+#~ "navegador no está basado en Chromium. Utiliza un navegador basado en "
+#~ "Chromium para beneficiarte de esta función."
 
 #~ msgid ""
 #~ "Unable to create consolidated invoice/s because the following orders "

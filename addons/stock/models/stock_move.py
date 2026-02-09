@@ -1105,6 +1105,9 @@ Please change the quantity done or the rounding precision in your settings.""",
                         'id': value,
                         'display_name': self.env['stock.move.line'][key].browse(value).display_name
                     }
+        first_number = product.lot_sequence_id.number_next_actual - product.lot_sequence_id.number_increment
+        if (first_lot and first_lot == product.lot_sequence_id.get_next_char(first_number)):
+            product.lot_sequence_id.sudo().write({'number_next_actual': first_number + len(lot_qties)})
         return vals_list
 
     def _push_apply(self):

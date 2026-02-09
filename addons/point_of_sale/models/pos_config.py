@@ -712,7 +712,7 @@ class PosConfig(models.Model):
         return new_vals
 
     def _get_forbidden_change_fields(self):
-        return ['module_pos_restaurant', 'payment_method_ids']
+        return ['module_pos_restaurant', 'payment_method_ids', 'active']
 
     def unlink(self):
         # Delete the pos.config records first then delete the sequences linked to them

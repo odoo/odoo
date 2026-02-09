@@ -843,12 +843,7 @@ class TemplatePreviewableWebsiteConfigAction extends WebsiteConfigAction {
         // The promise ensures this completes before continuing, avoiding a race
         // that could mark the element o_dirty and trigger an unnecessary save.
         if (params.previewClass) {
-            await new Promise((resolve) => {
-                requestAnimationFrame(() => {
-                    params.previewClass.split(/\s+/).forEach((cls) => el.classList.add(cls));
-                    resolve();
-                });
-            });
+            params.previewClass.split(/\s+/).forEach((cls) => el.classList.add(cls));
         }
     }
 }

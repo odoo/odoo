@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2026-01-05 11:11+0000\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"PO-Revision-Date: 2026-01-27 15:08+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/account/"
 "ar/>\n"
@@ -179,7 +179,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(name)s - Draft at (%(currency_amount)s)"
-msgstr ""
+msgstr "%(name)s - مسودة (%(currency_amount)s)"
 
 #. module: account
 #. odoo-python
@@ -191,7 +191,7 @@ msgstr "%(name)s رقم القسط %(number)s"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(name)s%(ref)s at %(currency_amount)s"
-msgstr ""
+msgstr "%(name)s%(ref)s بمبلغ %(currency_amount)s"
 
 #. module: account
 #. odoo-python
@@ -1380,6 +1380,11 @@ msgid ""
 "                            <span class=\"text-danger\" "
 "invisible=\"duplicated_ref_ids.length &gt; 1\">Delete duplicate</span>"
 msgstr ""
+"<i class=\"fa fa-trash text-danger\"/>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length == 1\">حذف كافة النسخ المكررة</span>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length &gt; 1\">حذف النسخة المكررة</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -2522,6 +2527,234 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<t t-set=\"portal_url\" t-value=\"object.get_portal_url()\"/>\n"
+"<t t-set=\"unsubscribe_url\" t-value=\"ctx.get('unsubscribe_url', False)\"/"
+">\n"
+"\n"
+"<div style=\"margin:0; padding:0; color:#2c2431;\">\n"
+"    <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
+"style=\"width:100%; background:#f7f4f8; padding:40px 0;\">\n"
+"        <tr>\n"
+"            <td align=\"center\">\n"
+"                <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
+"width=\"640\" style=\"width:100%; max-width:640px; background:#ffffff; "
+"border-radius:16px; overflow:hidden; box-shadow:0 20px 45px rgba(56, 37, 60, "
+"0.12);\">\n"
+"                    <tr>\n"
+"                        <td colspan=\"2\" style=\"background:linear-"
+"gradient(140deg,#714B67 0%,#8a6381 55%,#bfa8c2 100%); color:#ffffff; "
+"padding:38px;\">\n"
+"                            <table cellpadding=\"0\" cellspacing=\"0\" "
+"border=\"0\" style=\"width:100%;\">\n"
+"                                <tr>\n"
+"                                    <td style=\"font-size:13px; letter-"
+"spacing:0.3px; text-transform:uppercase; opacity:0.78;\">\n"
+"                                        <t t-"
+"if=\"object.is_sale_document(include_receipts=True)\">فاتورة صادرة</t>\n"
+"                                        <t t-else=\"\">Iفاتورة واردة</t>\n"
+"                                    </td>\n"
+"                                    <td align=\"right\">\n"
+"                                        <img alt=\"Odoo\" src=\"/web/static/"
+"img/logo_inverse_white_206px.png\" style=\"height:30px; width:92px; object-"
+"fit:contain;\"/>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                                <tr>\n"
+"                                    <td colspan=\"2\" style=\"padding-"
+"top:22px; font-size:26px; line-height:1.45; font-weight:600; color:#ffffff;"
+"\">\n"
+"                                        توجد فاتورة جديدة في <t t-"
+"out=\"object.journal_id.display_name\"/>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                                <tr>\n"
+"                                    <td colspan=\"2\" style=\"padding-"
+"top:18px; font-size:14px; opacity:0.85; line-height:1.6; color:#ffffff;\">\n"
+"                                        تم إنشاء فاتورة جديدة في <t t-"
+"out=\"object.journal_id.display_name\"/>دفتر يومية <t t-"
+"out=\"object.company_id.name\"/>!\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <tr>\n"
+"                        <td colspan=\"2\" style=\"padding:34px 38px;\">\n"
+"                            <table cellpadding=\"0\" cellspacing=\"0\" "
+"border=\"0\" style=\"width:100%; border-collapse:separate; border-spacing:0 "
+"16px;\">\n"
+"                                <tr>\n"
+"                                    <td colspan=\"2\" style=\"padding:0;\">\n"
+"                                        <table cellpadding=\"0\" "
+"cellspacing=\"0\" border=\"0\" style=\"width:100%; background:#fbf7fc; "
+"border-radius:16px;\">\n"
+"                                            <tr>\n"
+"                                                <td style=\"padding:24px "
+"26px;\">\n"
+"                                                    <div style=\"font-"
+"size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;"
+"\">المستند</div>\n"
+"                                                    <div style=\"margin-"
+"top:8px; font-size:20px; font-weight:600; color:#2c2431; word-break:break-"
+"word;\">\n"
+"                                                        <t t-"
+"out=\"object._get_move_display_name()\"/>\n"
+"                                                    </div>\n"
+"                                                    <t t-if=\"object.ref\">\n"
+"                                                        <div style=\"margin-"
+"top:6px; color:#7f6c84;\">المرجع: <t t-out=\"object.ref\"/></div>\n"
+"                                                    </t>\n"
+"                                                </td>\n"
+"                                                <t t-if=\"not "
+"object.currency_id.is_zero(object.amount_total)\">\n"
+"                                                    <td style=\"padding:24px "
+"26px; border-left:1px solid #efe6f3;\" align=\"right\">\n"
+"                                                        <div style=\"font-"
+"size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;"
+"\">الإجمالي</div>\n"
+"                                                        <div style=\"margin-"
+"top:8px; font-size:22px; font-weight:600; color:#2c2431;\">\n"
+"                                                            <t t-"
+"out=\"format_amount(object.amount_total, object.currency_id)\"/>\n"
+"                                                        </div>\n"
+"                                                    </td>\n"
+"                                                </t>\n"
+"                                            </tr>\n"
+"                                        </table>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                                <tr>\n"
+"                                    <td colspan=\"2\" style=\"padding:0;\">\n"
+"                                        <table cellpadding=\"0\" "
+"cellspacing=\"0\" border=\"0\" style=\"width:100%; margin-top:18px;\">\n"
+"                                            <tr>\n"
+"                                                <td style=\"padding:0;\">\n"
+"                                                    <div "
+"style=\"display:flex; flex-wrap:wrap; gap:12px; justify-content:flex-start;"
+"\">\n"
+"                                                        <t t-"
+"if=\"object.partner_id\">\n"
+"                                                            <div "
+"style=\"flex:0 1 180px; min-width:160px; background:#fff; border:1px solid "
+"#efe6f3; border-radius:12px; padding:12px 16px;\">\n"
+"                                                                <div "
+"style=\"font-size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\">الشريك</div>\n"
+"                                                                <div "
+"style=\"margin-top:6px; font-size:15px; font-weight:500; color:#2c2431; word-"
+"break:break-word;\">\n"
+"                                                                    <t t-"
+"out=\"object.partner_id.display_name\"/>\n"
+"                                                                </div>\n"
+"                                                            </div>\n"
+"                                                        </t>\n"
+"                                                        <div style=\"flex:0 "
+"1 150px; min-width:140px; background:#fff; border:1px solid #efe6f3; border-"
+"radius:12px; padding:12px 16px;\">\n"
+"                                                            <div "
+"style=\"font-size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\">تاريخ الفاتورة</div>\n"
+"                                                            <div "
+"style=\"margin-top:6px; font-size:15px; color:#2c2431;\">\n"
+"                                                                <t t-"
+"out=\"format_date(object.invoice_date or object.date)\"/>\n"
+"                                                            </div>\n"
+"                                                        </div>\n"
+"                                                        <t t-"
+"if=\"object.invoice_date_due\">\n"
+"                                                            <div "
+"style=\"flex:0 1 150px; min-width:140px; background:#fff; border:1px solid "
+"#efe6f3; border-radius:12px; padding:12px 16px;\">\n"
+"                                                                <div "
+"style=\"font-size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\">تاريخ الاستحقاق</div>\n"
+"                                                                <div "
+"style=\"margin-top:6px; font-size:15px; color:#2c2431;\">\n"
+"                                                                    <t t-"
+"out=\"format_date(object.invoice_date_due)\"/>\n"
+"                                                                </div>\n"
+"                                                            </div>\n"
+"                                                        </t>\n"
+"                                                        <t t-"
+"if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"                                                            <div "
+"style=\"flex:0 1 180px; min-width:160px; background:#fff; border:1px solid "
+"#efe6f3; border-radius:12px; padding:12px 16px;\">\n"
+"                                                                <div "
+"style=\"font-size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\">حالة الدفع</div>\n"
+"                                                                <div "
+"style=\"margin-top:6px; font-size:15px; color:#2c2431; text-"
+"transform:capitalize;\">\n"
+"                                                                    تم دفع "
+"قيمة هذه الفاتورة بالفعل\n"
+"                                                                </div>\n"
+"                                                            </div>\n"
+"                                                        </t>\n"
+"                                                        <t t-"
+"if=\"object.currency_id != object.company_currency_id\">\n"
+"                                                            <div "
+"style=\"flex:0 1 150px; min-width:140px; background:#fff; border:1px solid "
+"#efe6f3; border-radius:12px; padding:12px 16px;\">\n"
+"                                                                <div "
+"style=\"font-size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\">العملة</div>\n"
+"                                                                <div "
+"style=\"margin-top:6px; font-size:15px; color:#2c2431;\">\n"
+"                                                                    <t t-"
+"out=\"object.currency_id.display_name\"/>\n"
+"                                                                </div>\n"
+"                                                            </div>\n"
+"                                                        </t>\n"
+"                                                    </div>\n"
+"                                                </td>\n"
+"                                            </tr>\n"
+"                                        </table>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"\n"
+"                            <div style=\"margin:18px 0 0; padding:18px 22px; "
+"background:#f9f2f9; border-radius:12px; border:1px solid #eadff0; font-"
+"size:13px; color:#6f5c73; line-height:1.6;\">\n"
+"                                <strong style=\"color:#2c2431;\">الملفات "
+"المشمولة:</strong> تم إرفاق الملفات الأصلية حتى تتمكن من الرجوع إليها.\n"
+"                            </div>\n"
+"\n"
+"                            <div style=\"margin-top:32px; text-align:center;"
+"\" t-if=\"object.move_type != 'in_invoice'\">\n"
+"                                <a t-if=\"portal_url\" t-attf-"
+"href=\"{{ portal_url }}\" style=\"display:inline-block; margin:0 10px 14px; "
+"padding:13px 30px; min-width:210px; background:linear-"
+"gradient(135deg,#714B67 0%,#9b77a3 100%); color:#FFFFFF; text-"
+"decoration:none; border-radius:12px; font-weight:600; font-size:14px;\" "
+"target=\"_blank\">\n"
+"                                    عرض على البوابة\n"
+"                                </a>\n"
+"                            </div>\n"
+"\n"
+"                            <p style=\"margin:28px 0 0; font-size:12px; "
+"color:#8f8596; text-align:center;\">\n"
+"                                لقد تلقيت هذه الرسالة لأنه قد تم تعيينك "
+"كمراقب في\n"
+"                                <strong t-"
+"out=\"object.journal_id.display_name or 'this journal'\"/>.\n"
+"                                <span style=\"display:block; margin:18px "
+"auto; height:1px; max-width:420px; background:#ece3ed;\"/>\n"
+"                                <t t-if=\"unsubscribe_url\">\n"
+"                                    أتفضل عدم تلقّي هذه الرسائل بعد الآن؟ <a "
+"t-attf-href=\"{{ unsubscribe_url }}\" style=\"color:#8f8596; text-"
+"decoration:underline;\" target=\"_blank\">ألغِ اشتراكك من هنا</a>.\n"
+"                                </t>\n"
+"                            </p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            </td>\n"
+"        </tr>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #. odoo-python
@@ -3850,7 +4083,7 @@ msgstr "تم دفعها بالفعل:"
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "Already unsubscribed"
-msgstr ""
+msgstr "تم إلغاء الاشتراك بالفعل"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__always
@@ -4371,7 +4604,7 @@ msgstr "المرفقات"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__attachments_not_supported
 msgid "Attachments Not Supported"
-msgstr ""
+msgstr "المرفقات غير مدعومة"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_audit_trail_report
@@ -4604,7 +4837,7 @@ msgstr "الرصيد"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__balance_negate
 msgid "Balance Negate"
-msgstr ""
+msgstr "إلغاء الرصيد"
 
 #. module: account
 #. odoo-javascript
@@ -4819,7 +5052,7 @@ msgstr "نوع الحساب البنكي: عادي أو برقم دولي. يُ�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Bank accounts"
-msgstr ""
+msgstr "الحسابات البنكية"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_bank_cash
@@ -4942,6 +5175,8 @@ msgid ""
 "Batch invoice sending is unavailable. Please, activate the cron to enable "
 "batch sending of invoices."
 msgstr ""
+"خاصية إرسال الفواتير المجمعة غير متوفرة في الوقت الحالي. يرجى تفعيل cron "
+"لتمكين خاصية إرسال الفواتير المجمعة."
 
 #. module: account
 #. odoo-python
@@ -7438,7 +7673,7 @@ msgstr "مهمَل"
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "Deprecated link"
-msgstr ""
+msgstr "رابط مهلك"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_depreciation
@@ -7660,7 +7895,7 @@ msgstr "مبلغ العرض"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__display_attachments_widget
 msgid "Display Attachments Widget"
-msgstr ""
+msgstr "عرض أداة المرفقات"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_days_next_month
@@ -7670,7 +7905,7 @@ msgstr "عرض أيام الشهر التالي"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_hash
 msgid "Display Force Hash"
-msgstr ""
+msgstr "عرض فرض التجزئة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_post
@@ -8319,6 +8554,8 @@ msgid ""
 "Email addresses that will receive copy for sent and received invoices. "
 "Separate entries with ';'."
 msgstr ""
+"عناوين البريد الإلكتروني التي ستتلقى نسخة من الفواتير المرسلة والمستلمة. "
+"افصل بين العناوين بعلامة ';'."
 
 #. module: account
 #. odoo-javascript
@@ -8720,7 +8957,7 @@ msgstr "منتهي الصلاحية"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Export ZIP"
-msgstr ""
+msgstr "تصدير الملف المضغوط"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__expression_label
@@ -9474,7 +9711,7 @@ msgstr "تاريخ الإقفال العام"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "Go to cron configuration"
-msgstr ""
+msgstr "انتقل إلى تهيئة cron"
 
 #. module: account
 #. odoo-python
@@ -9605,7 +9842,7 @@ msgstr "يحتوي على تحذير Iban"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__has_invalid_analytics
 msgid "Has Invalid Analytics"
-msgstr ""
+msgstr "يحتوي على تحليلات غير صالحة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__journal_has_invalid_statements
@@ -9777,7 +10014,7 @@ msgstr "كيفية احتساب مبلغ الضريبة في أوامر البي
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "ICE:"
-msgstr ""
+msgstr "ICE:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
@@ -10622,13 +10859,13 @@ msgstr "آخر أيام السنة المالية غير صحيح"
 #: code:addons/account/models/account_report.py:0
 msgid ""
 "Invalid formula for expression '%(label)s' of line '%(line)s': %(formula)s"
-msgstr ""
+msgstr "صيغة غير صالحة للتعبير '%(label)s' في البند '%(line)s': %(formula)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "Invalid token"
-msgstr ""
+msgstr "الرمز غير صالح"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_inventory_valuation
@@ -11073,7 +11310,7 @@ msgstr "محلي"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_draft_duplicated_ref_ids
 #: model:ir.model.fields,field_description:account.field_account_move__is_draft_duplicated_ref_ids
 msgid "Is Draft Duplicated Ref"
-msgstr ""
+msgstr "مرجع نسخة المسودة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__is_mail_template_editor
@@ -11146,7 +11383,7 @@ msgstr "تسجيل الدفع كمسودة"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_sale_installed
 #: model:ir.model.fields,field_description:account.field_account_move__is_sale_installed
 msgid "Is Sale Installed"
-msgstr ""
+msgstr "تم تثبيت المبيعات"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_same_currency
@@ -11374,7 +11611,7 @@ msgstr "عناصر اليومية"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_line_ids
 #: model:ir.model.fields,field_description:account.field_account_move__journal_line_ids
 msgid "Journal Items (DEPRECATED)"
-msgstr ""
+msgstr "بنود اليومية (مهلكة)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -11385,7 +11622,7 @@ msgstr "اسم دفتر اليومية"
 #. module: account
 #: model:mail.template,name:account.mail_template_invoice_subscriber
 msgid "Journal Notification"
-msgstr ""
+msgstr "إشعار دفتر اليومية"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_suspense_account_id
@@ -16051,7 +16288,7 @@ msgstr "إرسال"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__incoming_einvoice_notification_email
 msgid "Send Copy To"
-msgstr ""
+msgstr "إرسال نسخة إلى"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__allow_out_payment
@@ -16406,7 +16643,7 @@ msgstr "إظهار الخصائص المحاسبية - للقراءة فقط"
 #. odoo-javascript
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 msgid "Show Composition"
-msgstr ""
+msgstr "عرض التكوين"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
@@ -16485,7 +16722,7 @@ msgstr "إظهار تفاصيل شروط الدفع"
 #. odoo-javascript
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 msgid "Show Prices"
-msgstr ""
+msgstr "عرض الأسعار"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_reset_to_draft_button
@@ -16800,7 +17037,7 @@ msgstr "تقييم المخزون"
 #. module: account
 #: model:account.account,name:account.1_stock_variation
 msgid "Stock Variation"
-msgstr ""
+msgstr "تباين المخزون"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16864,7 +17101,7 @@ msgstr "الناتج الفرعي"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
 msgid "Successfully unsubscribed"
-msgstr ""
+msgstr "تم إلغاء الاشتراك بنجاح"
 
 #. module: account
 #. odoo-python
@@ -18074,6 +18311,14 @@ msgid "The entry is secured with an inalterable hash."
 msgstr "تم تأمين هذا القيد باستخدام تجزئة غير قابلة للتغيير."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry is using accounts (%(accounts_codes_names)s) from a different "
+"company."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
 #: model:ir.model.fields,help:account.field_res_company__expense_account_id
 #: model:ir.model.fields,help:account.field_res_config_settings__expense_account_id
@@ -18423,7 +18668,7 @@ msgstr "لا يمكن أن يكون للأقسام المحددة في تقري�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "The selected"
-msgstr ""
+msgstr "المحددة"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__hash_date
@@ -18781,18 +19026,6 @@ msgstr "هذه السنة"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"This account is configured in %(journal_names)s journal(s) (ids %"
-"(journal_ids)s) as payment debit or credit account. This means that this "
-"account's type should be reconcilable."
-msgstr ""
-"تمت تهيئة الحساب في يومية/يوميات %(journal_names)s (المُعرّفات %"
-"(journal_ids)s) كحساب دفع عن طريق الخصم أو حساب الرصيد. هذا يعني أن نوع "
-"الحساب هذا قابل للتسوية."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
 msgid "This account was split off from %(account_name)s (%(company_name)s)."
 msgstr "تم تقسيم الحساب من %(account_name)s (%(company_name)s)."
 
@@ -19051,7 +19284,7 @@ msgstr "سيتم ترحيل هذخ الحركة الدورية حتى وفي ه�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting locks once a journal entry is created."
-msgstr ""
+msgstr "يتم قفل هذا الإعداد بمجرد أن يتم إنشاء قييد في دفتر اليومية."
 
 #. module: account
 #. odoo-python
@@ -20418,7 +20651,7 @@ msgstr "أنت على وشك الإرسال"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
 msgid "You are about to unsubscribe"
-msgstr ""
+msgstr "أنت على وشك إلغاء الاشتراك"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
@@ -20530,6 +20763,8 @@ msgid ""
 "You can unsubscribe from emails received upon invoice sending and reception "
 "here."
 msgstr ""
+"يمكنك إلغاء الاشتراك من الرسائل الإلكترونية التي تتلقاها عند إرسالك للفواتير "
+"واستلامها هنا."
 
 #. module: account
 #. odoo-python
@@ -21143,6 +21378,16 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+msgid ""
+"You may only use samples in demo mode, try uploading one of your invoices "
+"instead."
+msgstr ""
+"لا يمكنك استخدام النماذج إلا في الوضع التجريبي، حاول تحميل إحدى فواتيرك بدلاً "
+"من ذلك."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "You must select at least 2 accounts."
 msgstr "عليك تحديد حسابين على الأقل."
@@ -21425,7 +21670,7 @@ msgstr "مثال: شركتي"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. finance@example.com; accountant@example.com"
-msgstr ""
+msgstr "على سبيل المثال: finance@example.com؛ accountant@example.com"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
@@ -21468,7 +21713,7 @@ msgstr "الوضع المالي [%s]"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
 msgid "from invoice notifications."
-msgstr ""
+msgstr "من إشعارات الفواتير."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -21794,6 +22039,8 @@ msgid ""
 "{{ object.company_id.name }} - New invoice in "
 "{{ object.journal_id.display_name or 'Invoices' }} journal"
 msgstr ""
+"{{ object.company_id.name }} - فاتورة جديدة في دفتر يومية "
+"{{ object.journal_id.display_name or 'Invoices' }}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note
@@ -21831,6 +22078,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} الفاتورة الذاتية (المرجع {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "This account is configured in %(journal_names)s journal(s) (ids %"
+#~ "(journal_ids)s) as payment debit or credit account. This means that this "
+#~ "account's type should be reconcilable."
+#~ msgstr ""
+#~ "تمت تهيئة الحساب في يومية/يوميات %(journal_names)s (المُعرّفات %"
+#~ "(journal_ids)s) كحساب دفع عن طريق الخصم أو حساب الرصيد. هذا يعني أن نوع "
+#~ "الحساب هذا قابل للتسوية."
 
 #~ msgid "%(ref)s (%(currency_amount)s)"
 #~ msgstr "%(ref)s (%(currency_amount)s)"

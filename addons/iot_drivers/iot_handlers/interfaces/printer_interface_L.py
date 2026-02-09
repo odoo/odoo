@@ -103,10 +103,12 @@ class PrinterInterface(Interface):
     def get_identifier(self, path):
         """
         Necessary because the path is not always a valid Cups identifier,
-        as it may contain characters typically found in URLs or paths.
+        as it may contain characters typically found in URLs or paths,
+        or it may exceed the length limit.
 
           - Removes characters: ':', '/', '.', '\', and space.
           - Removes the exact strings: "uuid=" and "serial=".
+          - Truncates the string to 127 characters.
 
         Example 1:
             Input: "ipp://printers/printer1:1234/abcd"
@@ -116,7 +118,7 @@ class PrinterInterface(Interface):
             Input: "uuid=1234-5678-90ab-cdef"
             Output: "1234-5678-90ab-cdef
         """
-        return re.sub(r'[:\/\.\\ ]|(uuid=)|(serial=)', '', path)
+        return re.sub(r'[:\/\.\\ ]|(uuid=)|(serial=)', '', path)[:127]
 
     def get_ip(self, device_path):
         hostname = urlsplit(device_path).hostname
@@ -156,7 +158,7 @@ class PrinterInterface(Interface):
                 if device.device_type == 'printer' and ip and ip == device.ip
             ), None)
             if already_registered_identifier:
-                result.append({'identifier': already_registered_identifier})
+                result.append({'identifier': already_registered_identifier, 'disconnect_counter': 0})
                 continue
 
             printers_with_same_ip = sorted(printers_with_same_ip, key=lambda printer: printer['identifier'])

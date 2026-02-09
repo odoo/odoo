@@ -85,6 +85,10 @@ class StripeController(http.Controller):
                 tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference(
                     'stripe', data
                 )
+
+                if not tx_sudo:
+                    return request.make_json_response('')
+
                 self._verify_signature(tx_sudo)
 
                 if event['type'].startswith('payment_intent'):  # Payment operation.

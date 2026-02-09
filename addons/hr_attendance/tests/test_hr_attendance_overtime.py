@@ -1202,3 +1202,20 @@ class TestHrAttendanceOvertime(HttpCase):
 
         for a, e in zip(actual, expected):
             self.assertAlmostEqual(a, e)
+
+    def test_check_linked_overtime_to_attendance(self):
+        morning_att, afternoon_att = self.env['hr.attendance'].create([{
+            'employee_id': self.employee.id,
+            'check_in': datetime(2023, 1, 4, 7, 0),
+            'check_out': datetime(2023, 1, 4, 11, 0)
+        }, {
+            'employee_id': self.employee.id,
+            'check_in': datetime(2023, 1, 4, 12, 0),
+            'check_out': datetime(2023, 1, 4, 19, 30)
+        }])
+        overtime_lines = (morning_att + afternoon_att).linked_overtime_ids
+        self.assertFalse(morning_att.linked_overtime_ids)
+        # The overtime line is linked to the afternoon attendance
+        self.assertTrue(afternoon_att.linked_overtime_ids)
+        # Should be the same as it's the reverse checking
+        self.assertEqual(overtime_lines._linked_attendances(), afternoon_att)

@@ -1,4 +1,5 @@
 import json
+import logging
 from base64 import b64decode, b64encode
 from datetime import datetime
 
@@ -35,6 +36,8 @@ SANDBOX_AUTH = {
 }
 
 ERROR_MESSAGE = _lt("Something went wrong. Please onboard the journal again.")
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountJournal(models.Model):
@@ -153,6 +156,27 @@ class AccountJournal(models.Model):
 
     # ====== Certificate Methods =======
 
+    def _l10n_sa_get_csid_error(self, csid):
+        """
+            Return a formatted error string if the CSID response has an 'error' or 'errors'
+            key or doesn't have a 'binarySecurityToken'
+        """
+        error_msg = ""
+        unknown_error_msg = _("Unknown response returned from ZATCA. Please check the logs.")
+        if error := csid.get('error'):
+            error_msg = error
+        elif errors := csid.get('errors'):
+            error_msg = " <br/>" + " <br/>- ".join([err['message'] if isinstance(err, dict) else err for err in errors])
+        elif 'error' in [csid.get('type', "").lower(), csid.get('status', "").lower()]:
+            error_msg = csid.get('message') or unknown_error_msg
+        elif not csid.get('binarySecurityToken'):
+            error_msg = unknown_error_msg
+
+        if error_msg:
+            _logger.warning("Failed to obtain CSID: %s", csid)
+
+        return error_msg
+
     def _l10n_sa_reset_certificates(self):
         """
             Reset all certificate values, including CSR and compliance checks
@@ -204,9 +228,9 @@ class AccountJournal(models.Model):
             Request a Compliance Cryptographic Stamp Identifier (CCSID) from ZATCA
         """
         CCSID_data = self._l10n_sa_api_get_compliance_CSID(otp)
-        if CCSID_data.get('errors') or CCSID_data.get('error'):
-            error = CCSID_data['errors'][0]['message'] if CCSID_data.get('errors') else CCSID_data['error']
-            raise UserError(Markup("%s<br/>%s") % (_("Please check the details below and onboard the journal again:"), error))
+        if error := self._l10n_sa_get_csid_error(CCSID_data):
+            raise UserError(_("Please check the details below and onboard the journal again: %s", error))
+
         cert_id = self.env['certificate.certificate'].sudo().create({
             'name': 'CCSID Certificate',
             'content': b64decode(CCSID_data['binarySecurityToken']),
@@ -243,12 +267,8 @@ class AccountJournal(models.Model):
 
         CCSID_data = json.loads(self_sudo.l10n_sa_compliance_csid_json)
         PCSID_data = self_sudo._l10n_sa_request_production_csid(CCSID_data, renew, OTP)
-        if PCSID_data.get('error') or PCSID_data.get('errors'):
-            raise UserError(_(
-                "Could not obtain Production CSID: %s",
-                PCSID_data['errors'][0] if PCSID_data.get('errors') else PCSID_data['error']
-            ))
-
+        if error := self._l10n_sa_get_csid_error(PCSID_data):
+            raise UserError(_("Could not obtain Production CSID: %s", error))
         self_sudo.l10n_sa_production_csid_json = json.dumps(PCSID_data)
         pcsid_certificate = self_sudo.env['certificate.certificate'].create({
             'name': 'PCSID Certificate',

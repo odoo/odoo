@@ -28,9 +28,11 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", {
             ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "1"),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "2"),
             // At this point, AAA Test Partner has 4 points.
+            PosLoyalty.isMoreControlButtonActive(true),
             PosLoyalty.isRewardButtonHighlighted(true),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "3"),
             PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1"),
+            PosLoyalty.isMoreControlButtonActive(false),
             PosLoyalty.isRewardButtonHighlighted(false),
             PosLoyalty.orderTotalIs("6.40"),
             PosLoyalty.finalizeOrder("Cash", "10"),
@@ -53,12 +55,12 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", {
             // because there is not enough points to purchase it. Unfortunately, we
             // can't check that here.
             PosLoyalty.orderTotalIs("0.00"),
-            ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "1"),
-            ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "2"),
-            ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "3"),
-            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "1.00"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "2.00"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "3.00"),
             PosLoyalty.isRewardButtonHighlighted(false),
-            ProductScreen.selectedOrderlineHas("Whiteboard Pen", "4"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            ProductScreen.selectedOrderlineHas("Whiteboard Pen", "4.00"),
             PosLoyalty.isRewardButtonHighlighted(true),
 
             PosLoyalty.orderTotalIs("12.80"),

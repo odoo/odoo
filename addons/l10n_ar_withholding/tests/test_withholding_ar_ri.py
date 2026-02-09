@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.l10n_ar.tests.common import TestAr
+from odoo.addons.l10n_ar.tests.common import TestArCommon
 from odoo.tests import tagged
 from odoo import Command
 from datetime import datetime
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestL10nArWithholdingArRi(TestAr):
+class TestArWithholdingArRi(TestArCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -134,6 +134,19 @@ class TestL10nArWithholdingArRi(TestAr):
         })
         in_third_party_check.action_post()
         return in_third_party_check
+
+    def in_invoice_wht_5(self, l10n_latam_document_number):
+        in_invoice_wht = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'date': '2023-01-01',
+            'invoice_date': '2023-01-01',
+            'partner_id': self.res_partner_adhoc.id,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 156087.00, 'tax_ids': [Command.set(self.tax_21.ids)]})],
+            'l10n_latam_document_number': l10n_latam_document_number,
+
+        })
+        in_invoice_wht.action_post()
+        return in_invoice_wht
 
     def new_payment_register(self, move_ids, taxes):
         wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=move_ids.ids).create({'payment_date': '2023-01-01'})
@@ -401,3 +414,24 @@ class TestL10nArWithholdingArRi(TestAr):
         self.assertEqual(wizard.l10n_ar_withholding_ids.base_amount, 26387.81)
         self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 1166.54)
         self.assertEqual(wizard.l10n_ar_net_amount, 30762.71)
+
+    def test_11_withholding_amounts_1(self):
+        """Check computation of withholding tax amount."""
+        self.tax_wth_test_1.write({'amount': 4.5})
+        moves = self.in_invoice_wht_5('2-1')
+        taxes = [{'id': self.tax_wth_test_1.id, 'base_amount': sum(moves.mapped('amount_untaxed'))}]
+        wizard = self.new_payment_register(moves, taxes)
+        action = wizard.action_create_payments()
+        payment = self.env['account.payment'].browse(action['res_id'])
+        self.assertRecordValues(payment.move_id.line_ids.sorted('balance'), [
+            # Liquidity line:
+            {'debit': 0.0, 'credit': 181841.35, 'currency_id': wizard.currency_id.id, 'amount_currency': -181841.35, 'reconciled': False},
+            # base line:
+            {'debit': 0.0, 'credit': 156087.0, 'currency_id': wizard.currency_id.id, 'amount_currency': -156087.0, 'reconciled': False},
+            # withholding line:
+            {'debit': 0.0, 'credit': 7023.92, 'currency_id': wizard.currency_id.id, 'amount_currency': -7023.92, 'reconciled': False},
+            # base line:
+            {'debit': 156087.0, 'credit': 0.0, 'currency_id': wizard.currency_id.id, 'amount_currency': 156087.0, 'reconciled': False},
+            # Receivable line:
+            {'debit': 188865.27, 'credit': 0.0, 'currency_id': wizard.currency_id.id, 'amount_currency': 188865.27, 'reconciled': True}
+        ])

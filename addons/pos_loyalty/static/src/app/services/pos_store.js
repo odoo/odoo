@@ -365,6 +365,10 @@ patch(PosStore.prototype, {
             );
         });
     },
+    async applyDiscount(percent, order = this.getOrder()) {
+        await super.applyDiscount(...arguments);
+        await this.updatePrograms();
+    },
     async addLineToCurrentOrder(vals, opt = {}, configure = true) {
         if (!vals.product_tmpl_id && vals.product_id) {
             vals.product_tmpl_id = vals.product_id.product_tmpl_id;
@@ -428,6 +432,9 @@ patch(PosStore.prototype, {
         }
 
         const result = await super.addLineToCurrentOrder(vals, opt, configure);
+        if (!result) {
+            return;
+        }
 
         const rewardsToApply = [];
         for (const reward of potentialRewards) {

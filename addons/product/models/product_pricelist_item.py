@@ -113,7 +113,7 @@ class ProductPricelistItem(models.Model):
              " in order to show discount to customer.",
         index=True, default='fixed', required=True)
 
-    fixed_price = fields.Float(string="Fixed Price", digits='Product Price')
+    fixed_price = fields.Float(string="Fixed Price", min_display_digits='Product Price')
     percent_price = fields.Float(
         string="Percentage Price",
         help="You can apply a mark-up by setting a negative discount.")
@@ -125,13 +125,13 @@ class ProductPricelistItem(models.Model):
         help="You can apply a mark-up by setting a negative discount.")
     price_round = fields.Float(
         string="Price Rounding",
-        digits='Product Price',
+        min_display_digits='Product Price',
         help="Sets the price so that it is a multiple of this value.\n"
              "Rounding is applied after the discount and before the surcharge.\n"
              "To have prices that end in 9.99, round off to 10.00 and set an extra at -0.01")
     price_surcharge = fields.Float(
         string="Extra Fee",
-        digits='Product Price',
+        min_display_digits='Product Price',
         help="Specify the fixed amount to add or subtract (if negative) to the amount calculated with the discount.")
 
     price_markup = fields.Float(
@@ -144,11 +144,11 @@ class ProductPricelistItem(models.Model):
 
     price_min_margin = fields.Float(
         string="Min. Price Margin",
-        digits='Product Price',
+        min_display_digits='Product Price',
         help="Specify the minimum amount of margin over the base price.")
     price_max_margin = fields.Float(
         string="Max. Price Margin",
-        digits='Product Price',
+        min_display_digits='Product Price',
         help="Specify the maximum amount of margin over the base price.")
 
     # functional fields used for usability purposes

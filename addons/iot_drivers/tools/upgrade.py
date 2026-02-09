@@ -135,37 +135,35 @@ def check_git_branch(server_url=None):
         _logger.exception('An error occurred while trying to update the code with git')
 
 
-def _ensure_production_remote(local_remote):
+def _ensure_production_remote():
     """Ensure that the remote repository is the production one
     (https://github.com/odoo/odoo.git).
-
-    :param local_remote: The name of the remote repository.
     """
     production_remote = "https://github.com/odoo/odoo.git"
-    if git('remote', 'get-url', local_remote) != production_remote:
+    if git("remote", "get-url", "origin") != production_remote:
         _logger.info("Setting remote repository to production: %s", production_remote)
-        git('remote', 'set-url', local_remote, production_remote)
+        git("remote", "set-url", "origin", production_remote)
 
 
-def checkout(branch, remote=None):
+def checkout(branch):
     """Checkout to the given branch of the given git remote.
 
     :param branch: The name of the branch to check out.
-    :param remote: The name of the local git remote to use (usually ``origin`` but computed if not provided).
     """
     _logger.info("Preparing local repository for checkout")
+    _ensure_production_remote()
+
+    _logger.warning("Checking out origin/%s", branch)
+    if git("fetch", "origin", branch, "--depth=1", "--prune") is None:
+        _logger.error("Failed to fetch origin/%", branch)
+        return
+    if git("reset", "FETCH_HEAD", "--hard") is None:
+        _logger.error("Failed to reset on FETCH_HEAD")
+        return
     git('branch', '-m', branch)  # Rename the current branch to the target branch name
 
-    remote = remote or git('config', f'branch.{branch}.remote') or 'origin'
-    _ensure_production_remote(remote)
-
-    _logger.warning("Checking out %s/%s", remote, branch)
-    git('remote', 'set-branches', remote, branch)
-    git('fetch', remote, branch, '--depth=1', '--prune')  # refs/remotes to avoid 'unknown revision'
-    git('reset', 'FETCH_HEAD', '--hard')
-
     _logger.info("Cleaning the working directory")
-    git('clean', '-dfx')
+    git("clean", "-dfx")
 
 
 def update_requirements():

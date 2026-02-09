@@ -1099,6 +1099,11 @@ class IrModelFields(models.Model):
             _logger.warning("Deprecated since Odoo 19, ir.model.fields.translate becomes Selection, the value should be a string")
             vals['translate'] = 'html_translate' if vals.get('ttype') == 'html' else 'standard'
 
+        if column_rename and self.state == 'manual':
+            # renaming a studio field, remove inherits fields
+            # we need to set the uninstall flag to allow removing them
+            (self._prepare_update() - self).with_context(**{MODULE_UNINSTALL_FLAG: True}).unlink()
+
         res = super(IrModelFields, self).write(vals)
 
         self.env.flush_all()
@@ -1862,9 +1867,8 @@ class IrModelConstraint(models.Model):
                     FROM pg_constraint cs
                     JOIN pg_class cl
                     ON (cs.conrelid = cl.oid)
-                    JOIN pg_namespace n ON cl.relnamespace = n.oid
                     WHERE cs.contype IN %s AND cs.conname = %s AND cl.relname = %s
-                    AND n.nspname = current_schema
+                    AND cl.relnamespace = current_schema::regnamespace
                     """, ('c', 'u', 'x') if typ == 'u' else (typ,), hname, table
                 )):
                     self.env.execute_query(SQL(

@@ -65,7 +65,7 @@ WHERE
     -- Ignore moves for standard cost method. Only display the list of cost updates
     AND (
         (pt.categ_id IS NOT NULL AND pc.property_cost_method ->> company.id::text IN ('fifo', 'average'))
-        OR (pt.categ_id IS NULL OR pc.property_cost_method IS NULL AND company.cost_method IN ('fifo', 'average'))
+        OR (pt.categ_id IS NULL OR (pc.property_cost_method IS NULL OR pc.property_cost_method ->> company.id::text IS NULL) AND company.cost_method IN ('fifo', 'average'))
     )
 UNION ALL
 SELECT
@@ -88,13 +88,17 @@ WHERE
         self.env.cr.execute(query)
 
     def _compute_cumulative_fields(self):
+        total_records_grouped = self.env['stock.avco.report'].search(
+            [('product_id', 'in', self.product_id.mapped('id')), ('company_id', 'in', self.company_id.mapped('id'))]
+        ).grouped(lambda m: (m.product_id, m.company_id))
         for records in self.grouped(lambda m: (m.product_id, m.company_id)).values():
-            records = records.sorted('date, id')
+            current_page_records = records.sorted('date, id')
+            total_records = total_records_grouped.get((records.product_id, records.company_id)).sorted('date, id')
             added_value = 0.0
             total_value = 0.0
             total_quantity = 0.0
             avco = 0.0
-            for record in records:
+            for record in total_records:
                 if record.res_model_name == 'stock.move':
                     if record.quantity > 0:
                         added_value = record.value
@@ -109,10 +113,11 @@ WHERE
 
                 if total_quantity:
                     avco = total_value / total_quantity
-                record.added_value = added_value
-                record.total_value = total_value
-                record.total_quantity = total_quantity
-                record.avco_value = avco
+                if record in current_page_records:
+                    record.added_value = added_value
+                    record.total_value = total_value
+                    record.total_quantity = total_quantity
+                    record.avco_value = avco
 
     def _compute_justification(self):
         self.justification = False

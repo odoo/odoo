@@ -5,6 +5,7 @@ import {
     convertHslToRgb,
     convertRgbaToCSSColor,
     convertRgbToHsl,
+    normalizeCSSColor,
 } from "@web/core/utils/colors";
 import { uniqueId } from "@web/core/utils/functions";
 import { clamp } from "@web/core/utils/numbers";
@@ -139,7 +140,9 @@ export class CustomColorPicker extends Component {
             const newSelectedColor = newProps.selectedColor
                 ? newProps.selectedColor
                 : newProps.defaultColor;
-            this.setSelectedColor(newSelectedColor);
+            if (normalizeCSSColor(newSelectedColor) !== this.colorComponents.cssColor) {
+                this.setSelectedColor(newSelectedColor);
+            }
         });
     }
 

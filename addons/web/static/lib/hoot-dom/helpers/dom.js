@@ -1202,24 +1202,27 @@ export function getNodeAttribute(node, attribute) {
 
 /**
  * @param {Node} node
+ * @param {boolean} [raw]
  * @returns {NodeValue}
  */
-export function getNodeValue(node) {
-    switch (node.type) {
-        case "checkbox":
-        case "radio":
-            return node.checked;
-        case "file":
-            return [...node.files];
-        case "number":
-        case "range":
-            return node.valueAsNumber;
-        case "date":
-        case "datetime-local":
-        case "month":
-        case "time":
-        case "week":
-            return node.valueAsDate.toISOString();
+export function getNodeValue(node, raw) {
+    if (!raw) {
+        switch (node.type) {
+            case "checkbox":
+            case "radio":
+                return node.checked;
+            case "file":
+                return [...node.files];
+            case "number":
+            case "range":
+                return node.valueAsNumber;
+            case "date":
+            case "datetime-local":
+            case "month":
+            case "time":
+            case "week":
+                return node.valueAsDate.toISOString();
+        }
     }
     return node.value;
 }

@@ -177,7 +177,7 @@ class SaleOrderLine(models.Model):
     price_unit = fields.Float(
         string="Unit Price",
         compute='_compute_price_unit',
-        digits='Product Price',
+        min_display_digits='Product Price',
         store=True, readonly=False, required=True, precompute=True)
     technical_price_unit = fields.Float()
 
@@ -1325,8 +1325,18 @@ class SaleOrderLine(models.Model):
 
     def write(self, vals):
         values = vals
-        if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
-            raise UserError(_("You cannot change the type of a sale order line. Instead you should delete the current line and create a new line of the proper type."))
+        if 'display_type' in values:
+            new_type = values.get('display_type')
+            invalid_lines = self.filtered(
+                lambda line:
+                    line.display_type != new_type
+                    and not (line.display_type == 'line_subsection' and new_type == 'line_section')
+            )
+            if invalid_lines:
+                raise UserError(_(
+                    "You cannot change the type of a sale order line. Instead you should "
+                    "delete the current line and create a new line of the proper type."
+                ))
 
         if 'product_id' in values and any(
             sol.product_id.id != values['product_id']

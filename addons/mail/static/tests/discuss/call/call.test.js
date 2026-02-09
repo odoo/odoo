@@ -39,6 +39,7 @@ import {
 import { browser } from "@web/core/browser/browser";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -913,6 +914,35 @@ test("dynamic focus switches to talking participant", async () => {
     await contains(".o-dropdown-item", { count: 0 });
     await click("[title='More']");
     await contains(".o-dropdown-item:contains('Autofocus speaker')");
+});
+
+test("Shows warning badge on mic/camera on non-granted permission in meeting conversations", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: pyEnv["res.partner"].create({ name: "Bob" }),
+        }),
+        channel_id: channelId,
+    });
+    const env = await start();
+    const rtc = env.services["discuss.rtc"];
+    rtc.microphonePermission = "denied";
+    rtc.cameraPermission = "denied";
+    await openDiscuss(channelId);
+    await click("button[title='New Meeting']");
+    await contains("button[title='Stop camera']");
+    await contains("button[title='Stop camera'].o-tag-DANGER");
+    await contains("button[title='Stop camera'].o-tag-WARNING_BADGE");
+
+    await click(".o-mail-DiscussSidebarChannel:text('General')");
+    await click("[title='Join Call']");
+    await contains("button[title='Turn camera on']");
+    await contains("button[title='Turn camera on'].o-tag-DANGER", { count: 0 });
+    await contains("button[title='Turn camera on'].o-tag-WARNING_BADGE", { count: 0 });
+    await click("button[title='Disconnect']");
+    await waitNotifications(["discuss.channel.rtc.session/ended"]);
 });
 
 test("should not show context menu on participant card when not in a call", async () => {

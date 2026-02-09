@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2026-01-16 08:35+0000\n"
+"POT-Creation-Date: 2026-01-30 18:36+0000\n"
+"PO-Revision-Date: 2026-02-03 07:25+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "account_edi_ubl_cii/fi/>\n"
@@ -1050,6 +1050,12 @@ msgid ""
 msgstr "Lasku on muutettu hyvityslaskuksi ja määrät on palautettu."
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+msgid "The prepaid amount of %s corresponds to the withholding tax applied."
+msgstr "Ennakkoon maksettu summa %s vastaa sovellettua lähdeveroa."
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_tax__ubl_cii_tax_exemption_reason_code
 msgid ""
 "The reason why the amount is exempted from VAT or why no VAT is being "
@@ -1422,6 +1428,8 @@ msgstr ""
 msgid ""
 "VATEX-EU-144 - Exempt based on article 144 of Council Directive 2006/112/EC"
 msgstr ""
+"VATEX-EU-144 - Vapautus neuvoston direktiivin 2006/112/EY artiklan 144 "
+"perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-146-1e
@@ -1429,6 +1437,8 @@ msgid ""
 "VATEX-EU-146-1E - Exempt based on article 146 section 1 (e) of Council "
 "Directive 2006/112/EC"
 msgstr ""
+"VATEX-EU-146-1E - Vapautus neuvoston direktiivin 2006/112/EY artiklan 146 "
+"kohdan 1 (e) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148
@@ -1568,12 +1578,16 @@ msgstr ""
 msgid ""
 "VATEX-EU-153 - Exempt based on article 153 of Council Directive 2006/112/EC"
 msgstr ""
+"VATEX-EU-153 - Vapautus neuvoston direktiivin 2006/112/EY artiklan 153 "
+"perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-159
 msgid ""
 "VATEX-EU-159 - Exempt based on article 159 of Council Directive 2006/112/EC"
 msgstr ""
+"VATEX-EU-159 - Vapautus neuvoston direktiivin 2006/112/EY artiklan 159 "
+"perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-309
@@ -1640,6 +1654,8 @@ msgid ""
 "VATEX-FR-298SEXDECIESA - Exempt based on article 298 sexdecies A of the Code "
 "Général des Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-298SEXDECIESA - Vapautus artiklan 298 sexdecies A of the Code "
+"Général des Impôts (CGI; yleinen verokoodi) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-ae
@@ -1647,6 +1663,8 @@ msgid ""
 "VATEX-FR-AE - Exempt based on 2 of article 283 of the Code Général des "
 "Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-AE - Vapautus artiklan 283 Code Général des Impôts (CGI; yleinen "
+"verokoodi) kohdan 2 perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261-1
@@ -1654,6 +1672,8 @@ msgid ""
 "VATEX-FR-CGI261-1 - Exempt based on 1 of article 261 of the Code Général des "
 "Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI261-1 - Vapautus artiklan 261 Code Général des Impôts (CGI; "
+"yleinen verokoodi) kohdan 1 perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261-2
@@ -1661,6 +1681,8 @@ msgid ""
 "VATEX-FR-CGI261-2 - Exempt based on 2 of article 261 of the Code Général des "
 "Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI261-2 - Vapautus artiklan 261 Code Général des Impôts (CGI; "
+"yleinen verokoodi) kohdan 2 perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261-3
@@ -1668,6 +1690,8 @@ msgid ""
 "VATEX-FR-CGI261-3 - Exempt based on 3 of article 261 of the Code Général des "
 "Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI261-3 - Vapautus artiklan 261 Code Général des Impôts (CGI; "
+"yleinen verokoodi) kohdan 3 perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261-4
@@ -1675,6 +1699,8 @@ msgid ""
 "VATEX-FR-CGI261-4 - Exempt based on 4 of article 261 of the Code Général des "
 "Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI261-4 - Vapautus artiklan 261 Code Général des Impôts (CGI; "
+"yleinen verokoodi) kohdan 4 perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261-5
@@ -1682,6 +1708,8 @@ msgid ""
 "VATEX-FR-CGI261-5 - Exempt based on 5 of article 261 of the Code Général des "
 "Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI261-5 - Vapautus artiklan 261 Code Général des Impôts (CGI; "
+"yleinen verokoodi) kohdan 5 perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261-7
@@ -1689,6 +1717,8 @@ msgid ""
 "VATEX-FR-CGI261-7 - Exempt based on 7 of article 261 of the Code Général des "
 "Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI261-7 - Vapautus artiklan 261 Code Général des Impôts (CGI; "
+"yleinen verokoodi) kohdan 7 perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261-8
@@ -1696,6 +1726,8 @@ msgid ""
 "VATEX-FR-CGI261-8 - Exempt based on 8 of article 261 of the Code Général des "
 "Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI261-8 - Vapautus artiklan 261 Code Général des Impôts (CGI; "
+"yleinen verokoodi) kohdan 8 perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261a
@@ -1703,6 +1735,8 @@ msgid ""
 "VATEX-FR-CGI261A - Exempt based on article 261 A of the Code Général des "
 "Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI261A - Vapautus artiklan 261 A Code Général des Impôts (CGI; "
+"yleinen verokoodi) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261b
@@ -1710,6 +1744,8 @@ msgid ""
 "VATEX-FR-CGI261B - Exempt based on article 261 B of the Code Général des "
 "Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI261B - Vapautus artiklan 261 B Code Général des Impôts (CGI; "
+"yleinen verokoodi) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261c-1
@@ -1717,6 +1753,8 @@ msgid ""
 "VATEX-FR-CGI261C-1 - Exempt based on 1° of article 261 C of the Code Général "
 "des Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI261C-1 - Vapautus artiklan 261 C Code Général des Impôts (CGI; "
+"yleinen verokoodi) kohdan 1 perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261c-2
@@ -1724,6 +1762,8 @@ msgid ""
 "VATEX-FR-CGI261C-2 - Exempt based on 2° of article 261 C of the Code Général "
 "des Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI261C-2 - Vapautus artiklan 261 C Code Général des Impôts (CGI; "
+"yleinen verokoodi) kohdan 2 perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261c-3
@@ -1731,6 +1771,8 @@ msgid ""
 "VATEX-FR-CGI261C-3 - Exempt based on 3° of article 261 C of the Code Général "
 "des Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI261C-3 - Vapautus artiklan 261 C Code Général des Impôts (CGI; "
+"yleinen verokoodi) kohdan 3 perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261d-1
@@ -1738,6 +1780,8 @@ msgid ""
 "VATEX-FR-CGI261D-1 - Exempt based on 1° of article 261 D of the Code Général "
 "des Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI261D-1 - Vapautus artiklan 261 D Code Général des Impôts (CGI; "
+"yleinen verokoodi) kohdan 1 perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261d-1bis
@@ -1745,6 +1789,8 @@ msgid ""
 "VATEX-FR-CGI261D-1BIS - Exempt based on 1°bis of article 261 D of the Code "
 "Général des Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI261D-1BIS - Vapautus artiklan 261 D Code Général des Impôts "
+"(CGI; yleinen verokoodi) kohdan 1bis perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261d-2
@@ -1752,6 +1798,8 @@ msgid ""
 "VATEX-FR-CGI261D-2 - Exempt based on 2° of article 261 D of the Code Général "
 "des Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI261D-2 - Vapautus artiklan 261 D Code Général des Impôts (CGI; "
+"yleinen verokoodi) kohdan 2 perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261d-3
@@ -1759,6 +1807,8 @@ msgid ""
 "VATEX-FR-CGI261D-3 - Exempt based on 3° of article 261 D of the Code Général "
 "des Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI261D-3 - Vapautus artiklan 261 D Code Général des Impôts (CGI; "
+"yleinen verokoodi) kohdan 3 perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261d-4
@@ -1766,6 +1816,8 @@ msgid ""
 "VATEX-FR-CGI261D-4 - Exempt based on 4° of article 261 D of the Code Général "
 "des Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI261D-4 - Vapautus artiklan 261 D Code Général des Impôts (CGI; "
+"yleinen verokoodi) kohdan 4 perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261e-1
@@ -1773,6 +1825,8 @@ msgid ""
 "VATEX-FR-CGI261E-1 - Exempt based on 1° of article 261 E of the Code Général "
 "des Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI261E-1 - Vapautus artiklan 261 E Code Général des Impôts (CGI; "
+"yleinen verokoodi) kohdan 1 perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261e-2
@@ -1780,6 +1834,8 @@ msgid ""
 "VATEX-FR-CGI261E-2 - Exempt based on 2° of article 261 E of the Code Général "
 "des Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI261E-2 - Vapautus artiklan 261 E Code Général des Impôts (CGI; "
+"yleinen verokoodi) kohdan 2 perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi275
@@ -1787,6 +1843,8 @@ msgid ""
 "VATEX-FR-CGI275 - Exempt based on article 275 of the Code Général des Impôts "
 "(CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI275 - Vapautus artiklan 275 Code Général des Impôts (CGI; "
+"yleinen verokoodi) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi277a
@@ -1794,6 +1852,8 @@ msgid ""
 "VATEX-FR-CGI277A - Exempt based on article 277 A of the Code Général des "
 "Impôts (CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI277A - Vapautus artiklan 277 A Code Général des Impôts (CGI; "
+"yleinen verokoodi) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi295
@@ -1801,6 +1861,8 @@ msgid ""
 "VATEX-FR-CGI295 - Exempt based on article 295 of the Code Général des Impôts "
 "(CGI ; General tax code)"
 msgstr ""
+"VATEX-FR-CGI295 - Vapautus artiklan 295 Code Général des Impôts (CGI; "
+"yleinen verokoodi) perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cnwvat

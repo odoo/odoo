@@ -12,7 +12,7 @@ class StockLot(models.Model):
     company_currency_id = fields.Many2one('res.currency', 'Valuation Currency', compute='_compute_value', compute_sudo=True)
     standard_price = fields.Float(
         "Cost", company_dependent=True,
-        digits='Product Price', groups="base.group_user",
+        min_display_digits='Product Price', groups="base.group_user",
         help="""Value of the lot (automatically computed in AVCO).
         Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
         Used to compute margins on sale orders."""
@@ -101,11 +101,12 @@ class StockLot(models.Model):
 
         :param new_price: new standard price
         """
+        product_values = []
         for lot in self:
             if lot.product_id.cost_method != 'average' or lot.standard_price == old_price:
                 continue
             product = lot.product_id
-            self.env['product.value'].sudo().create({
+            product_values.append({
                 'product_id': product.id,
                 'lot_id': lot.id,
                 'value': lot.standard_price,
@@ -114,3 +115,5 @@ class StockLot(models.Model):
                 'description': _('%(lot)s price update from %(old_price)s to %(new_price)s by %(user)s',
                     lot=lot.name, old_price=old_price, new_price=lot.standard_price, user=self.env.user.name)
             })
+
+        self.env['product.value'].sudo().create(product_values)

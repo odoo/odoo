@@ -178,7 +178,13 @@ export class PosStore extends WithLazyGetterTrap {
             this.syncAllOrdersDebounced();
         });
 
-        initLNA(this.notification);
+        this.lnaState = {
+            type: "pending",
+            message: _t("Checking Local Network Access permission..."),
+        };
+        initLNA(this.notification, (type, message) => {
+            this.lnaState = { type, message };
+        });
     }
 
     navigate(routeName, routeParams = {}) {
@@ -579,7 +585,7 @@ export class PosStore extends WithLazyGetterTrap {
     async deleteOrders(orders, serverIds = [], ignoreChange = false) {
         const ordersToDelete = [];
         const actionPosOrderCancelCall = async (orderIds) => {
-            await this.data.call("pos.order", "action_pos_order_cancel", orderIds, {
+            await this.data.call("pos.order", "action_pos_order_cancel", [orderIds], {
                 context: {
                     device_identifier: this.device.identifier,
                 },
@@ -840,15 +846,15 @@ export class PosStore extends WithLazyGetterTrap {
             price_type: "price_unit" in vals ? "manual" : "original",
             price_extra: 0,
             price_unit: 0,
-            order_id: this.getOrder(),
-            qty: this.getOrder().preset_id?.is_return ? -1 : 1,
+            order_id: order,
+            qty: order.preset_id?.is_return ? -1 : 1,
             tax_ids: productTemplate.taxes_id.map((tax) => ["link", tax]),
             product_id: productTemplate.product_variant_ids[0],
             ...vals,
         };
 
         // Handle refund constraints
-        if (order.isSaleDisallowed(values, options)) {
+        if (order.isSaleDisallowed(values, options) && !opts.force) {
             this.dialog.add(AlertDialog, {
                 title: _t("Oops.."),
                 body: _t("Ensure you validate the refund before taking another order."),
@@ -992,12 +998,6 @@ export class PosStore extends WithLazyGetterTrap {
         if (configure) {
             this.numberBuffer.reset();
         }
-
-        this.hasJustAddedProduct = true;
-        clearTimeout(this.productReminderTimeout);
-        this.productReminderTimeout = setTimeout(() => {
-            this.hasJustAddedProduct = false;
-        }, 3000);
 
         return order.getSelectedOrderline();
     }

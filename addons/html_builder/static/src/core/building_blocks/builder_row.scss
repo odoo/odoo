@@ -1,6 +1,6 @@
 @mixin sublevel-line($_level-left: 0) {
     position: absolute;
-    top: 0;
+    top: var(--o-hb-row-sublevel-top, 0);
     bottom: 0;
     left: $_level-left - $o-we-border-width;
     border: $o-we-border-width solid var(--o-hb-row-sublevel-color, #{mix($o-we-bg-lighter, $o-we-fg-light)});

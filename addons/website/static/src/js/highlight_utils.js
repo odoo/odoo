@@ -257,6 +257,7 @@ export function makeHighlightSvgs(highlightEl, highlightID) {
     const inPreviewIframe =
         highlightEl.ownerDocument.documentElement.classList.contains("o_add_snippets_preview");
     const scale = inPreviewIframe ? highlightEl.offsetWidth / containerRect.width : 1;
+    const rtl = window.getComputedStyle(highlightEl).direction === "rtl";
     const firstRect = highlightEl.getClientRects()[0];
     const svgs = [];
     for (const rects of finalRects) {
@@ -266,12 +267,16 @@ export function makeHighlightSvgs(highlightEl, highlightID) {
             numberOfCharPerWidth,
         });
         svgs.push(svg);
-        const spanOffsetX = firstRect.x - containerRect.x;
-        const spanOffsetY = firstRect.y - containerRect.y;
-        svg.style.left = `${(rects.x - containerRect.x - spanOffsetX) * scale}px`;
-        svg.style.top = `${(rects.y - containerRect.y - spanOffsetY) * scale}px`;
+        svg.style.top = `${(rects.y - firstRect.y) * scale}px`;
         svg.style.bottom = `0px`;
-        svg.style.right = `0px`;
+        if (rtl) {  // Position from the right instead of left and mirror the SVG
+            svg.style.right = `${(firstRect.right - rects.right) * scale}px`;
+            svg.dataset.rtlIntendedRightPosition = rects.right;
+            svg.style.transform = "scale(-1, 1)";
+        } else {
+            svg.style.left = `${(rects.x - firstRect.x) * scale}px`;
+            svg.style.right = "0px";
+        }
     }
     return svgs;
 }
@@ -279,6 +284,22 @@ export function applyTextHighlight(highlightEl, highlightID) {
     const svgs = makeHighlightSvgs(highlightEl, highlightID);
     for (const svg of svgs) {
         highlightEl.appendChild(svg);
+        adaptHighlightPosition(highlightEl, svg);
+    }
+}
+
+/**
+ * Fix highlight position after highlight insertion
+ *
+ * @param {HTMLElement} highlightEl
+ * @param {HTMLElement} svg
+ */
+export function adaptHighlightPosition(highlightEl, svg) {
+    // Reposition element in RTL to what was intended because
+    // safari positionning work differently than other browsers
+    if ("rtlIntendedRightPosition" in svg.dataset) {
+        const rightPositionDelta = svg.getBoundingClientRect().right - parseFloat(svg.dataset.rtlIntendedRightPosition);
+        svg.style.right = `${parseFloat(svg.style.right) + rightPositionDelta}px`;
     }
 }
 
@@ -406,12 +427,19 @@ function rectToBatch(rects) {
     }
     const rectBatches = [];
     let lastX = rects[0].x - 1;
+    let lastY = rects[0].y;
+    let lastHeight = rects[0].height;
     let lineIndex2 = 0;
     for (const rect of rects) {
-        if (rect.x <= lastX) {
+        // 90% of the previous rectangle height is the tolerance value used
+        // to determine whether two rectangles belong to the same line based
+        // on their vertical position.
+        if (rect.x <= lastX || rect.y - lastY > lastHeight * 0.9) {
             lineIndex2++;
         }
         lastX = rect.x;
+        lastY = rect.y;
+        lastHeight = rect.height;
         rectBatches[lineIndex2] = rectBatches[lineIndex2] || [];
         rectBatches[lineIndex2].push(rect);
     }
@@ -442,10 +470,6 @@ function getTextnodeRects(el) {
     range.setEnd(el, el.textContent.length);
     return [...range.getClientRects()];
 }
-// todo: handle RTL
-// function isRTL(el) {
-//     return window.getComputedStyle(el).direction === "rtl";
-// }
 
 /**
  * Returns the closest ancestor element that should be observed for adapting

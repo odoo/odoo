@@ -357,6 +357,10 @@ export class ImagePlugin extends Plugin {
                 description: _t("Embed the image in the document."),
                 icon: "fa-image",
                 run: () => {
+                    this.dispatchTo(
+                        "before_paste_handlers",
+                        this.dependencies.selection.getEditableSelection()
+                    );
                     const img = this.document.createElement("IMG");
                     img.setAttribute("src", url);
                     this.dependencies.dom.insert(img);

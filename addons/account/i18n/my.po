@@ -3,15 +3,15 @@
 # * account
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Oakarmin Iron <oakarminiron@gmail.com>, 2025.
+# Oakarmin Iron <oakarminiron@gmail.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2025-11-17 10:57+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"PO-Revision-Date: 2026-02-04 11:26+0000\n"
+"Last-Translator: Oakarmin Iron <oakarminiron@gmail.com>\n"
 "Language-Team: Burmese <https://translate.odoo.com/projects/odoo-19/account/"
 "my/>\n"
 "Language: my\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -3831,7 +3831,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Auto-Complete"
-msgstr ""
+msgstr "အလိုအလျှောက်ပြီးစီး"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_vendor_bill_id
@@ -7331,7 +7331,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Download"
-msgstr ""
+msgstr "ဒေါင်းလုဒ်"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__advance_tax_payment_account_id
@@ -9196,7 +9196,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_uom_uom__id
 #: model:ir.model.fields,field_description:account.field_validate_account_move__id
 msgid "ID"
-msgstr "နံပါတ်"
+msgstr "အိုင်ဒီ"
 
 #. module: account
 #. odoo-python
@@ -9911,7 +9911,7 @@ msgstr ""
 #: model:account.journal,name:account.1_inventory_valuation
 #: model:account.journal,name:account.2_inventory_valuation
 msgid "Inventory Valuation"
-msgstr ""
+msgstr "ပစ္စည်း တန်ဖိုးဖြတ်ခြင်း"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
@@ -11374,7 +11374,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "Manually"
-msgstr ""
+msgstr "မန်နူရယ်ဖြင့်"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__mapped_partner_id
@@ -11581,7 +11581,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_method_id
 msgid "Method"
-msgstr ""
+msgstr "နည်းလမ်း"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_ground_transportation
@@ -11727,7 +11727,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__move_line_ids
 msgid "Move Line"
-msgstr ""
+msgstr "ရွေ့ပြောင်းမှူ လိုင်း"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__move_to_hash_ids
@@ -11887,7 +11887,7 @@ msgstr "အသားတင်"
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__never
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__never
 msgid "Never"
-msgstr ""
+msgstr "ဘယ်တော့မှ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -14320,7 +14320,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Reject"
-msgstr ""
+msgstr "ငြင်းပယ်"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__rejected
@@ -17125,6 +17125,14 @@ msgid "The entry is secured with an inalterable hash."
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry is using accounts (%(accounts_codes_names)s) from a different "
+"company."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
 #: model:ir.model.fields,help:account.field_res_company__expense_account_id
 #: model:ir.model.fields,help:account.field_res_config_settings__expense_account_id
@@ -17743,15 +17751,6 @@ msgstr "ယခု နှစ်"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-msgid ""
-"This account is configured in %(journal_names)s journal(s) (ids %"
-"(journal_ids)s) as payment debit or credit account. This means that this "
-"account's type should be reconcilable."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
 msgid "This account was split off from %(account_name)s (%(company_name)s)."
 msgstr ""
 
@@ -18324,7 +18323,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.account_transactions_menu
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Transactions"
-msgstr ""
+msgstr "ထရန်ဇက်ရှင်းများ"
 
 #. module: account
 #. odoo-python
@@ -19930,6 +19929,14 @@ msgid ""
 "You have to configure the 'Exchange Gain or Loss Journal' in your company "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+msgid ""
+"You may only use samples in demo mode, try uploading one of your invoices "
+"instead."
 msgstr ""
 
 #. module: account

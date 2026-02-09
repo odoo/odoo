@@ -1,0 +1,33 @@
+<templates>
+    <t t-name="point_of_sale.CriticalPOSError">
+        <div class="card pos-error rounded">
+            <div class="o_error_dialog p-0">
+                <div role="alert">
+                    <div class="card-header">
+                        <h1> Oops! </h1>
+                    </div>
+                    <div class="card-body">
+                        <p>Something went wrong... If you really are stuck, share the report with your friendly support service</p>
+                        <button class="btn btn-link p-0" t-on-click="() => this.state.expanded = !this.state.expanded" >
+                            <t t-if="this.state.expanded">Hide details</t>
+                            <t t-if="!this.state.expanded">Show details</t>
+                        </button>
+                        <div t-if="state.expanded" class="bg-100 mb-0 clearfix mt-3 position-relative o_error_detail">
+                            <button class="btn position-absolute bg-100" t-ref="copyButton" t-on-click="copyToClipboard">
+                                <i class="fa fa-clipboard" />
+                            </button>
+                            <div class="ps-3 pt-3">
+                                <pre t-esc="props.error.stack"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="m-2 p-2">
+                        <div class="flex align-self-center">
+                            <button class="btn btn-primary" t-on-click="fullReset">Reload data</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

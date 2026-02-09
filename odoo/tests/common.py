@@ -1459,6 +1459,7 @@ class ChromeBrowser:
             '--disable-translate': '',
             '--no-sandbox': '',
             '--disable-gpu': '',
+            '--enable-unsafe-swiftshader': '',
             '--mute-audio': '',
         }
         switches = {
@@ -2312,13 +2313,25 @@ class HttpCase(TransactionCase):
         self.session.logout(keep_db=keep_db)
         odoo.http.root.session_store.save(self.session)
 
-    def authenticate(self, user, password, browser: ChromeBrowser = None):
+    def authenticate(self, user, password, *,
+        browser: ChromeBrowser = None, session_extra: dict | None = None):
         if getattr(self, 'session', None):
             odoo.http.root.session_store.delete(self.session)
 
         self.session = session = odoo.http.root.session_store.new()
-        session.update(odoo.http.get_default_session(), db=get_db_name())
+        session.update(
+            odoo.http.get_default_session(),
+            db=get_db_name(),
+            # In order to avoid perform a query to each first `url_open`
+            # in a test (insert `res.device.log`).
+            _trace_disable=True,
+        )
         session.context['lang'] = odoo.http.DEFAULT_LANG
+
+        if session_extra:
+            if extra_ctx := session_extra.pop('context', None):
+                session.context.update(extra_ctx)
+            session.update(session_extra)
 
         if user: # if authenticated
             # Flush and clear the current transaction.  This is useful, because

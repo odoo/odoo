@@ -226,7 +226,8 @@
                 default="{ display_name: state.valueList.defaultItemName, selected: false }"
                 defaultNewValue="{ id: state.valueList.defaultItemName }"
                 forbidLastItemRemoval="true"
-                records="state.valueList.availableRecords" />
+                records="state.valueList.availableRecords"
+                isInputDisabled="state.valueList.isInputDisabled" />
         </div>
     </BuilderRow>
     <BuilderRow label.translate="Requirement"

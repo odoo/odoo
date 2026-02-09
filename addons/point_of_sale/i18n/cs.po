@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:35+0000\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
 "PO-Revision-Date: 2025-12-20 09:36+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/"
@@ -2023,6 +2023,12 @@ msgstr ""
 "Mělo by být nastaveno na: „local_printer“"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Checking Local Network Access permission..."
+msgstr ""
+
+#. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_cheese_croissant_product_template
 msgid "Cheese Croissant"
 msgstr "Sýrový croissant"
@@ -3957,6 +3963,12 @@ msgid "Hide Use Payment Terminal"
 msgstr "Skrýt Použít platební terminál"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Hide details"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__group_pos_preset
 msgid "Hide or show the Presets menu in the Point of Sale configuration."
 msgstr "Skrýt nebo zobrazit nabídku předvoleb v konfiguraci prodejního místa."
@@ -4538,6 +4550,12 @@ msgid "LED Lamp"
 msgstr "LED Lampa"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
+msgid "LNA Permission status"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__name
 msgid "Label"
@@ -4802,15 +4820,19 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+msgid "Local Network Access"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
 msgid ""
 "Local Network Access configuration is enabled, but your browser is not "
 "Chromium-based. Please use a Chromium-based browser to benefit from this "
-"feature."
+"feature. Please note that IOS devices do not support Local Network Access "
+"yet."
 msgstr ""
-"Konfigurace přístupu k místní síti je povolena, ale váš prohlížeč není "
-"založen na Chromiu. Chcete-li tuto funkci využívat, použijte prohlížeč "
-"založený na Chromiu."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4825,12 +4847,33 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
+msgid "Local Network Access is not configured for this POS."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
+msgid "Local Network Access permission granted."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
 msgid ""
 "Local Network Access permission is denied. Some hardware devices might not "
 "work properly. Please allow Local Network Access in your browser settings."
 msgstr ""
 "Přístup k místní síti je odepřen. Některá hardwarová zařízení nemusí "
 "fungovat správně. Povolte přístup k místní síti v nastavení prohlížeče."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
+msgid ""
+"Local Network Access permission is not yet granted. Some hardware devices "
+"might not work properly. Please allow Local Network Access in your browser "
+"settings."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5646,6 +5689,12 @@ msgid ""
 msgstr ""
 "Pouze uživatelé s přístupovými právy Správce pro aplikaci PoS mohou měnit "
 "ceny produktů na objednávkách."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Oops!"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7602,6 +7651,12 @@ msgstr "Načíst všechna data (může trvat déle v závislosti na množství d
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Reload data"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.js:0
 msgid "Remaining"
 msgstr "Zbývá"
@@ -8336,6 +8391,12 @@ msgid "Show category images in the Point of Sale interface."
 msgstr "Zobrazit obrázky kategorií v rozhraní prodejního místa."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Show details"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_module_pos_hr
 msgid "Show employee login screen"
@@ -8446,6 +8507,14 @@ msgid "Some, if not all, post-processing after syncing order failed."
 msgstr ""
 "Některé, pokud ne všechny, následné zpracování po synchronizaci objednávky "
 "selhalo."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid ""
+"Something went wrong... If you really are stuck, share the report with your "
+"friendly support service"
+msgstr ""
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_sourdough_loaf_product_template
@@ -9557,17 +9626,6 @@ msgid ""
 msgstr "Tento deník je spojen se způsobem platby. Nemůžete změnit jeho typ"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_journal.py:0
-msgid ""
-"This journal is associated with payment method %(payment_method)s that is "
-"being used by order %(pos_order)s in the active pos session %(pos_session)s"
-msgstr ""
-"Tento deník je ztotožňován s platební metodou %(payment_method)s, která byla "
-"použita v objednávce %(pos_order)s během aktivní relace pokladního systému "
-"PoS %(pos_session)s."
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.js:0
 msgid "This operation will destroy all ${"
@@ -10373,6 +10431,14 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+msgid ""
+"You can not archive this journal because it is set on the following payment "
+"method : %s."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 msgid "You can not change the %s of the refund order."
@@ -10919,6 +10985,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "s použitím"
+
+#~ msgid ""
+#~ "This journal is associated with payment method %(payment_method)s that is "
+#~ "being used by order %(pos_order)s in the active pos session %"
+#~ "(pos_session)s"
+#~ msgstr ""
+#~ "Tento deník je ztotožňován s platební metodou %(payment_method)s, která "
+#~ "byla použita v objednávce %(pos_order)s během aktivní relace pokladního "
+#~ "systému PoS %(pos_session)s."
+
+#~ msgid ""
+#~ "Local Network Access configuration is enabled, but your browser is not "
+#~ "Chromium-based. Please use a Chromium-based browser to benefit from this "
+#~ "feature."
+#~ msgstr ""
+#~ "Konfigurace přístupu k místní síti je povolena, ale váš prohlížeč není "
+#~ "založen na Chromiu. Chcete-li tuto funkci využívat, použijte prohlížeč "
+#~ "založený na Chromiu."
 
 #~ msgid ""
 #~ "Unable to create consolidated invoice/s because the following orders "

@@ -56,10 +56,11 @@ test("Send message button activation (access rights dependent)", async () => {
     await start();
     const simpleId = pyEnv["mail.test.multi.company"].create({ name: "Test MC Simple" });
     const simpleMcId = pyEnv["mail.test.multi.company.read"].create({
-        name: "Test MC Readonly",
+        name: "Test MC Readonly with Activities",
     });
     async function assertSendButton(
         enabled,
+        activities,
         msg,
         model = null,
         resId = null,
@@ -73,12 +74,23 @@ test("Send message button activation (access rights dependent)", async () => {
         }
         if (enabled) {
             await contains(".o-mail-Chatter-topbar button:enabled", { text: "Send message" });
+            await contains(".o-mail-Chatter-topbar button:enabled", { text: "Log note" });
+            if (activities) {
+                await contains(".o-mail-Chatter-topbar button:enabled", { text: "Activity" });
+
+            }
         } else {
             await contains(".o-mail-Chatter-topbar button:disabled", { text: "Send message" });
+            await contains(".o-mail-Chatter-topbar button:disabled", { text: "Log note" });
+            if (activities) {
+                await contains(".o-mail-Chatter-topbar button:disabled", { text: "Activity" });
+
+            }
         }
     }
     await assertSendButton(
         true,
+        false,
         "Record, all rights",
         "mail.test.multi.company",
         simpleId,
@@ -86,6 +98,7 @@ test("Send message button activation (access rights dependent)", async () => {
         true
     );
     await assertSendButton(
+        true,
         true,
         "Record, all rights",
         "mail.test.multi.company.read",
@@ -95,6 +108,7 @@ test("Send message button activation (access rights dependent)", async () => {
     );
     await assertSendButton(
         false,
+        false,
         "Record, no write access",
         "mail.test.multi.company",
         simpleId,
@@ -102,16 +116,17 @@ test("Send message button activation (access rights dependent)", async () => {
     );
     await assertSendButton(
         true,
+        true,
         "Record, read access but model accept post with read only access",
         "mail.test.multi.company.read",
         simpleMcId,
         true
     );
-    await assertSendButton(false, "Record, no rights", "mail.test.multi.company", simpleId);
-    await assertSendButton(false, "Record, no rights", "mail.test.multi.company.read", simpleMcId);
+    await assertSendButton(false, false, "Record, no rights", "mail.test.multi.company", simpleId);
+    await assertSendButton(false, true, "Record, no rights", "mail.test.multi.company.read", simpleMcId);
     // Note that rights have no impact on send button for draft record (chatter.isTemporary=true)
-    await assertSendButton(true, "Draft record", "mail.test.multi.company");
-    await assertSendButton(true, "Draft record", "mail.test.multi.company.read");
+    await assertSendButton(true, false, "Draft record", "mail.test.multi.company");
+    await assertSendButton(true, true, "Draft record", "mail.test.multi.company.read");
 });
 
 test("basic chatter rendering with a model without activities", async () => {

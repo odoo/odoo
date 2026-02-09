@@ -34,6 +34,10 @@ export class EditWebsiteSystrayItem extends Component {
         this.props.onEditPage();
     }
 
+    onEditDropdownClick() {
+        this.closeNotification?.();
+    }
+
     get currentWebsiteInfo() {
         return this.websiteService.currentWebsite?.metadata;
     }
@@ -111,7 +115,7 @@ export class EditWebsiteSystrayItem extends Component {
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, "text/html");
             if (doc.querySelector("#wrap .o_delay_translation")) {
-                this.notification.add(
+                this.closeNotification = this.notification.add(
                     _t('Click on "Edit/Translate" to apply changes made on default language.'),
                     { type: "info" }
                 );

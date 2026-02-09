@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2026-01-23 07:34+0000\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"PO-Revision-Date: 2026-02-02 13:44+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/nl/>\n"
@@ -1708,7 +1708,7 @@ msgstr "Winkelmandje"
 #: model:pos.payment.method,name:point_of_sale.cash_payment_method_furniture
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Cash"
-msgstr "Cash"
+msgstr "Contant"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1773,7 +1773,7 @@ msgstr "Kasboek"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__statement_line_ids
 msgid "Cash Lines"
-msgstr "Cashregels"
+msgstr "Contantregels"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -2026,6 +2026,12 @@ msgid ""
 msgstr ""
 "Controleer de printerconfiguratie voor de instelling 'Apparaat-ID'.\n"
 "Deze moet zijn ingesteld op: local_printer"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Checking Local Network Access permission..."
+msgstr ""
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_cheese_croissant_product_template
@@ -3974,6 +3980,12 @@ msgid "Hide Use Payment Terminal"
 msgstr "Verberg gebruik betaalterminal"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Hide details"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__group_pos_preset
 msgid "Hide or show the Presets menu in the Point of Sale configuration."
 msgstr "Verberg of toon het Voorinstellingen-menu in de Kassaconfiguratie."
@@ -4560,6 +4572,12 @@ msgid "LED Lamp"
 msgstr "LED lamp"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
+msgid "LNA Permission status"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__name
 msgid "Label"
@@ -4827,15 +4845,19 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
+msgid "Local Network Access"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
 msgid ""
 "Local Network Access configuration is enabled, but your browser is not "
 "Chromium-based. Please use a Chromium-based browser to benefit from this "
-"feature."
+"feature. Please note that IOS devices do not support Local Network Access "
+"yet."
 msgstr ""
-"De configuratie voor toegang tot het lokale netwerk is ingeschakeld, maar je "
-"browser is niet gebaseerd op Chromium. Gebruik een browser op basis van "
-"Chromium om deze functie te kunnen gebruiken."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4851,6 +4873,18 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
+msgid "Local Network Access is not configured for this POS."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
+msgid "Local Network Access permission granted."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
 msgid ""
 "Local Network Access permission is denied. Some hardware devices might not "
 "work properly. Please allow Local Network Access in your browser settings."
@@ -4858,6 +4892,15 @@ msgstr ""
 "Toegang tot het lokale netwerk wordt geweigerd. Sommige hardwareapparaten "
 "werken mogelijk niet goed. Sta toegang tot het lokale netwerk toe in je "
 "browserinstellingen."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/init_lna.js:0
+msgid ""
+"Local Network Access permission is not yet granted. Some hardware devices "
+"might not work properly. Please allow Local Network Access in your browser "
+"settings."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5659,7 +5702,7 @@ msgstr "Alleen afronden op contante betalingen"
 msgid ""
 "Only journals of type 'Cash' or 'Bank' could be used with payment methods."
 msgstr ""
-"Enkel dagboeken van het type 'Cash' of 'Bank' kunnen worden gebruikt met "
+"Enkel dagboeken van het type 'Kas' of 'Bank' kunnen worden gebruikt met "
 "betaalmethodes."
 
 #. module: point_of_sale
@@ -5677,6 +5720,12 @@ msgid ""
 msgstr ""
 "Alleen gebruikers met manager rechten van de kassa kunnen de productprijzen "
 "op orders aanpassen."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Oops!"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6074,7 +6123,7 @@ msgstr "Kassaverkopen"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__pos_sequence
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__pos_sequence
 msgid "POS Sequence"
-msgstr "Kassa Volgorde"
+msgstr "Kassareeks"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__pos_session_id
@@ -7637,6 +7686,12 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Reload data"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.js:0
 msgid "Remaining"
 msgstr "Resterend"
@@ -8374,6 +8429,12 @@ msgid "Show category images in the Point of Sale interface."
 msgstr "Categorie afbeeldingen in het kassasysteem weergeven."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid "Show details"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_module_pos_hr
 msgid "Show employee login screen"
@@ -8485,6 +8546,14 @@ msgid "Some, if not all, post-processing after syncing order failed."
 msgstr ""
 "Sommige, zo niet alle, nabewerkingen na de synchronisatievolgorde zijn "
 "mislukt."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
+msgid ""
+"Something went wrong... If you really are stuck, share the report with your "
+"friendly support service"
+msgstr ""
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_sourdough_loaf_product_template
@@ -8685,7 +8754,7 @@ msgstr "Afhalen / Bezorging / Leden"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 msgid "Tare"
-msgstr "Defect"
+msgstr "Tarra"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9640,17 +9709,6 @@ msgstr ""
 "wijzigen"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/account_journal.py:0
-msgid ""
-"This journal is associated with payment method %(payment_method)s that is "
-"being used by order %(pos_order)s in the active pos session %(pos_session)s"
-msgstr ""
-"Dit dagboek is gekoppeld aan betaalmethode %(payment_method)s die wordt "
-"gebruikt door bestelling %(pos_order)s in de actieve Kassasessie %"
-"(pos_session)s."
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.js:0
 msgid "This operation will destroy all ${"
@@ -10467,6 +10525,14 @@ msgstr ""
 "ander apparaat weer te geven"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+msgid ""
+"You can not archive this journal because it is set on the following payment "
+"method : %s."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 msgid "You can not change the %s of the refund order."
@@ -10901,7 +10967,7 @@ msgstr "voor een order van"
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/product_info_banner/product_info_banner.xml:0
 msgid "forecasted"
-msgstr "prognose"
+msgstr "voorspeld"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11027,6 +11093,24 @@ msgstr "om de knoppen te activeren."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "gebruikende"
+
+#~ msgid ""
+#~ "This journal is associated with payment method %(payment_method)s that is "
+#~ "being used by order %(pos_order)s in the active pos session %"
+#~ "(pos_session)s"
+#~ msgstr ""
+#~ "Dit dagboek is gekoppeld aan betaalmethode %(payment_method)s die wordt "
+#~ "gebruikt door bestelling %(pos_order)s in de actieve Kassasessie %"
+#~ "(pos_session)s."
+
+#~ msgid ""
+#~ "Local Network Access configuration is enabled, but your browser is not "
+#~ "Chromium-based. Please use a Chromium-based browser to benefit from this "
+#~ "feature."
+#~ msgstr ""
+#~ "De configuratie voor toegang tot het lokale netwerk is ingeschakeld, maar "
+#~ "je browser is niet gebaseerd op Chromium. Gebruik een browser op basis "
+#~ "van Chromium om deze functie te kunnen gebruiken."
 
 #~ msgid ""
 #~ "Unable to create consolidated invoice/s because the following orders "

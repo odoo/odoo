@@ -252,6 +252,42 @@ test("floatIsZero", () => {
 });
 
 describe("formatFloat", () => {
+    test("precision", () => {
+        patchWithCleanup(localization, {
+            decimalPoint: ".",
+            grouping: [3, 0],
+            thousandsSep: ",",
+        });
+
+        let options = {};
+        expect(formatFloat(3, options)).toBe("3.00");
+        expect(formatFloat(3.1, options)).toBe("3.10");
+        expect(formatFloat(3.12, options)).toBe("3.12");
+        expect(formatFloat(3.129, options)).toBe("3.13");
+
+        options = { digits: [15, 3] };
+        expect(formatFloat(3, options)).toBe("3.000");
+        expect(formatFloat(3.1, options)).toBe("3.100");
+        expect(formatFloat(3.123, options)).toBe("3.123");
+        expect(formatFloat(3.1239, options)).toBe("3.124");
+
+        options = { minDigits: 3 };
+        expect(formatFloat(0, options)).toBe("0.000");
+        expect(formatFloat(3, options)).toBe("3.000");
+        expect(formatFloat(3.1, options)).toBe("3.100");
+        expect(formatFloat(3.123, options)).toBe("3.123");
+        expect(formatFloat(3.1239, options)).toBe("3.1239");
+        expect(formatFloat(3.1231239, options)).toBe("3.123124");
+        expect(formatFloat(1234567890.1234567890, options)).toBe("1,234,567,890.12346");
+
+        options = { minDigits: 3, digits: [15, 4] };
+        expect(formatFloat(3, options)).toBe("3.000");
+        expect(formatFloat(3.1, options)).toBe("3.100");
+        expect(formatFloat(3.123, options)).toBe("3.123");
+        expect(formatFloat(3.1239, options)).toBe("3.1239");
+        expect(formatFloat(3.1234567, options)).toBe("3.1235");
+    });
+
     test("localized", () => {
         patchWithCleanup(localization, {
             decimalPoint: ".",
@@ -343,7 +379,7 @@ describe("formatFloat", () => {
             expect(formatFloat(value, options)).toBe(resHuman);
         });
 
-        Object.assign(options, { humanReadable: false });
+        Object.assign(options, { humanReadable: false, digits: undefined, minDigits: undefined});
         expect(formatFloat(-0.0000001, options)).toBe("0.00");
     });
 });

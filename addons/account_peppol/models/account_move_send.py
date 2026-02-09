@@ -1,3 +1,5 @@
+import logging
+
 from base64 import b64encode
 from datetime import timedelta
 
@@ -6,6 +8,8 @@ from odoo import api, fields, models, _
 from odoo.addons.account.models.company import PEPPOL_LIST
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.account_peppol.exceptions import get_peppol_error_message
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -164,6 +168,7 @@ class AccountMoveSend(models.AbstractModel):
 
         params = {'documents': []}
         invoices_data_peppol = {}
+        to_lock_peppol_invoices = self.env['account.move']
         for invoice, invoice_data in invoices_data.items():
             partner = invoice.partner_id.commercial_partner_id.with_company(invoice.company_id)
             if 'peppol' in invoice_data['sending_methods'] and self._is_applicable_to_move('peppol', invoice, **invoice_data):
@@ -194,11 +199,16 @@ class AccountMoveSend(models.AbstractModel):
                     'ubl': b64encode(xml_file).decode(),
                 })
                 invoices_data_peppol[invoice] = invoice_data
+                to_lock_peppol_invoices |= invoice
 
         if not params['documents']:
             return
 
         edi_user = next(iter(invoices_data)).company_id.account_peppol_edi_user
+
+        if not self.env['res.company']._with_locked_records(to_lock_peppol_invoices, allow_raising=False):
+            _logger.error('Failed to lock invoices for Peppol sending')
+            return
 
         try:
             response = edi_user._call_peppol_proxy(
@@ -243,10 +253,19 @@ class AccountMoveSend(models.AbstractModel):
                         for attachment in attachments_linked
                     ] + base_attachments
 
-                    invoice.message_post(
+                    new_message = invoice.message_post(
                         body=attachments_linked_message,
                         attachments=attachments_embedded
                     )
+
+                    if new_message.attachment_ids.ids:
+                        if invoice.message_main_attachment_id in new_message.attachment_ids:
+                            invoice.message_main_attachment_id = None
+                        self.env.cr.execute("UPDATE ir_attachment SET res_id = NULL WHERE id IN %s", [tuple(new_message.attachment_ids.ids)])
+                        new_message.attachment_ids.write({
+                            'res_model': new_message._name,
+                            'res_id': new_message.id,
+                        })
                 self.env.ref('account_peppol.ir_cron_peppol_get_message_status')._trigger(at=fields.Datetime.now() + timedelta(minutes=5))
 
         if self._can_commit():

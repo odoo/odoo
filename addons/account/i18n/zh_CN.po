@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-22 18:35+0000\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
 "PO-Revision-Date: 2025-12-05 04:17+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -17844,6 +17844,14 @@ msgid "The entry is secured with an inalterable hash."
 msgstr "记项使用不可更改的哈希值进行保护。"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"The entry is using accounts (%(accounts_codes_names)s) from a different "
+"company."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
 #: model:ir.model.fields,help:account.field_res_company__expense_account_id
 #: model:ir.model.fields,help:account.field_res_config_settings__expense_account_id
@@ -18509,17 +18517,6 @@ msgstr "本周"
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_year
 msgid "This Year"
 msgstr "本年"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"This account is configured in %(journal_names)s journal(s) (ids %"
-"(journal_ids)s) as payment debit or credit account. This means that this "
-"account's type should be reconcilable."
-msgstr ""
-"该科目在%(journal_names)s日记账（ID%(journal_ids)s）中配置为付款借方或贷方科"
-"目。这意味著该科目的类型应为可对账。"
 
 #. module: account
 #. odoo-python
@@ -20793,6 +20790,14 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal_dashboard.py:0
+msgid ""
+"You may only use samples in demo mode, try uploading one of your invoices "
+"instead."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "You must select at least 2 accounts."
 msgstr "您必须至少选择 2 个账户。"
@@ -21461,6 +21466,14 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} 自助开票发票（参考号 {{ object.name or 'n/"
 "a' }}）"
+
+#~ msgid ""
+#~ "This account is configured in %(journal_names)s journal(s) (ids %"
+#~ "(journal_ids)s) as payment debit or credit account. This means that this "
+#~ "account's type should be reconcilable."
+#~ msgstr ""
+#~ "该科目在%(journal_names)s日记账（ID%(journal_ids)s）中配置为付款借方或贷方"
+#~ "科目。这意味著该科目的类型应为可对账。"
 
 #~ msgid "%(ref)s (%(currency_amount)s)"
 #~ msgstr "%(ref)s（%(currency_amount)s）"

@@ -17,6 +17,7 @@ import { getContent, setSelection } from "./_helpers/selection";
 import { insertText, tripleClick } from "./_helpers/user_actions";
 import { withSequence } from "@html_editor/utils/resource";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import { SelectionPlugin } from "@html_editor/core/selection_plugin";
 
 test("getEditableSelection should work, even if getSelection returns null", async () => {
     const { editor } = await setupEditor("<p>a[b]</p>");
@@ -133,6 +134,29 @@ describe("documentSelectionIsInEditable", () => {
     });
 });
 
+test("getSelectionData should validate the offsets of activeSelection", async () => {
+    const { editor } = await setupEditor("<p>a[b]</p>");
+    let selection = editor.shared.selection.getEditableSelection();
+    expect(selection.startOffset).toBe(1);
+    expect(selection.endOffset).toBe(2);
+
+    // We simulate getSelection() returning null while activeSelection has an
+    // offset pointing to a deleted element. This is an edge case that occurs in
+    // Chrome (see commit message).
+    patchWithCleanup(document, {
+        getSelection: () => null,
+    });
+    patchWithCleanup(SelectionPlugin.prototype, {
+        getSelectionData() {
+            this.activeSelection = { ...this.activeSelection, anchorOffset: 5 };
+            return super.getSelectionData();
+        },
+    });
+
+    selection = editor.shared.selection.getEditableSelection();
+    expect(selection.anchorOffset).toBe(0);
+});
+
 test("setEditableSelection should not crash if getSelection returns null", async () => {
     const { editor } = await setupEditor("<p>a[b]</p>");
     let selection = editor.shared.selection.getEditableSelection();
@@ -200,6 +224,23 @@ test("press 'ctrl+a' in 'contenteditable' should only select his content", async
     expect(getContent(el)).toBe(
         `<p data-selection-placeholder=""><br></p><div contenteditable="false"><p contenteditable="true">[ab]</p><p contenteditable="true">cd</p></div><p data-selection-placeholder=""><br></p>`
     );
+});
+
+test.tags("focus required");
+test("should focus the nearest editable ancestor when selection is inside a non-editable", async () => {
+    const { editor } = await setupEditor(
+        `<div contenteditable="false"><p contenteditable="true">[test]</p></div>`
+    );
+    const p = queryOne('p[contenteditable="true"]');
+    expect(p).toBeFocused();
+
+    // Moved focus outside of the editable
+    p.blur();
+    expect(document.body).toBeFocused();
+
+    editor.shared.selection.focusEditable();
+    // Focus should be on the closest editable element of the selection
+    expect(p).toBeFocused();
 });
 
 test("restore a selection when you are not in the editable shouldn't move the focus", async () => {

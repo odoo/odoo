@@ -9,60 +9,33 @@ from .common import PurchaseTestCommon
 
 
 class TestReplenishWizard(PurchaseTestCommon):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.vendor = cls.env['res.partner'].create(dict(name='The Replenisher'))
-        cls.product1_price = 500
-
-        # Create a product with the 'buy' route and
-        # the 'supplierinfo' prevously created
-        cls.product1 = cls.env['product.product'].create({
-            'name': 'product a',
-            'is_storable': True,
-            'route_ids': [Command.link(cls.route_buy.id)],
-        })
-        # Create a supplier info witch the previous vendor
-        cls.supplierinfo = cls.env['product.supplierinfo'].create({
-            'product_id': cls.product1.id,
-            'partner_id': cls.vendor.id,
-            'price': cls.product1_price,
-        })
-
-        # Additional Values required by the replenish wizard
-        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
-        cls.uom_pack_6 = cls.env.ref('uom.product_uom_pack_6')
-        cls.wh = cls.env['stock.warehouse'].search([('company_id', '=', cls.env.user.id)], limit=1)
-
     def test_replenish_buy_1(self):
         """ Set a quantity to replenish via the "Buy" route and check if
         a purchase order is created with the correct values
         """
         self.product_uom_qty = 42
-        # Even though product1 doesn't have the 'Buy' route enabled, as it is enable through the wh it should pick it up regardless.
-        self.wh.buy_to_resupply = True
-        self.product1.route_ids = [Command.clear()]
-
-        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=self.product1.product_tmpl_id.id).create({
-            'product_id': self.product1.id,
-            'product_tmpl_id': self.product1.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+        self._use_route_buy(self.product)
+        self.product.seller_ids.price = 10
+        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=self.product.product_tmpl_id.id).create({
+            'product_id': self.product.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'product_uom_id': self.uom.id,
             'quantity': self.product_uom_qty,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse.id,
         })
         genrated_picking = replenish_wizard.launch_replenishment()
         links = genrated_picking.get("params", {}).get("links")
         url = links and links[0].get("url", "") or ""
-        purchase_order_id, model_name = self.url_extract_rec_id_and_model(url)
+        purchase_order_id, model_name = self._url_extract_rec_id_and_model(url)
 
         last_po_id = False
         if purchase_order_id and model_name:
             last_po_id = self.env[model_name].browse(int(purchase_order_id))
         self.assertTrue(last_po_id, 'Purchase Order not found')
-        order_line = last_po_id.order_line.search([('product_id', '=', self.product1.id)])
+        order_line = last_po_id.order_line.search([('product_id', '=', self.product.id)])
         self.assertTrue(order_line, 'The product is not in the Purchase Order')
         self.assertEqual(order_line.product_qty, self.product_uom_qty, 'Quantities does not match')
-        self.assertEqual(order_line.price_unit, self.product1_price, 'Prices does not match')
+        self.assertEqual(order_line.price_unit, 10, 'Prices does not match')
 
     def test_chose_supplier_1(self):
         """ Choose supplier based on the ordered quantity and minimum price
@@ -73,44 +46,37 @@ class TestReplenishWizard(PurchaseTestCommon):
         2)seq2 vendor1 100  min qty 10
         -> 2) should be chosen
         """
-        product_to_buy = self.env['product.product'].create({
-            'name': "Furniture Service",
-            'is_storable': True,
-            'route_ids': [Command.link(self.route_buy.id)],
-        })
-        vendor1 = self.env['res.partner'].create({'name': 'vendor1', 'email': 'from.test@example.com'})
-
-        supplierinfo1 = self.env['product.supplierinfo'].create({
-            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-            'partner_id': vendor1.id,
+        self._use_route_buy(self.product, create_seller=False)
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'partner_id': self.vendor.id,
             'min_qty': 1,
             'price': 140,
             'sequence': 1,
         })
-        supplierinfo2 = self.env['product.supplierinfo'].create({
-            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-            'partner_id': vendor1.id,
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'partner_id': self.vendor.id,
             'min_qty': 10,
             'price': 100,
             'sequence': 2,
         })
-
-        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=product_to_buy.product_tmpl_id.id).create({
-            'product_id': product_to_buy.id,
-            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=self.product.product_tmpl_id.id).create({
+            'product_id': self.product.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'product_uom_id': self.uom.id,
             'quantity': 10,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse.id,
         })
         genrated_picking = replenish_wizard.launch_replenishment()
         links = genrated_picking.get("params", {}).get("links")
         url = links and links[0].get("url", "") or ""
-        purchase_order_id, model_name = self.url_extract_rec_id_and_model(url)
+        purchase_order_id, model_name = self._url_extract_rec_id_and_model(url)
 
         last_po_id = False
         if purchase_order_id and model_name:
             last_po_id = self.env[model_name].browse(int(purchase_order_id))
-        self.assertEqual(last_po_id.partner_id, vendor1)
+        self.assertEqual(last_po_id.partner_id, self.vendor)
         self.assertEqual(last_po_id.order_line.price_unit, 100)
 
     def test_chose_supplier_2(self):
@@ -123,47 +89,44 @@ class TestReplenishWizard(PurchaseTestCommon):
         3)seq3 vendor1 100 min qty 10
         -> 3) should be chosen
         """
-        product_to_buy = self.env['product.product'].create({
-            'name': "Furniture Service",
-            'is_storable': True,
-            'route_ids': [Command.link(self.route_buy.id)],
-        })
+        self._use_route_buy(self.product, create_seller=False)
+
         vendor1 = self.env['res.partner'].create({'name': 'vendor1', 'email': 'from.test@example.com'})
         vendor2 = self.env['res.partner'].create({'name': 'vendor2', 'email': 'from.test2@example.com'})
 
-        supplierinfo1 = self.env['product.supplierinfo'].create({
-            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': self.product.product_tmpl_id.id,
             'partner_id': vendor1.id,
             'min_qty': 1,
             'price': 140,
             'sequence': 1,
         })
-        supplierinfo2 = self.env['product.supplierinfo'].create({
-            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': self.product.product_tmpl_id.id,
             'partner_id': vendor2.id,
             'min_qty': 10,
             'price': 90,
             'sequence': 2,
         })
-        supplierinfo3 = self.env['product.supplierinfo'].create({
-            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': self.product.product_tmpl_id.id,
             'partner_id': vendor1.id,
             'min_qty': 10,
             'price': 100,
             'sequence': 3,
         })
 
-        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=product_to_buy.product_tmpl_id.id).create({
-            'product_id': product_to_buy.id,
-            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=self.product.product_tmpl_id.id).create({
+            'product_id': self.product.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'product_uom_id': self.uom.id,
             'quantity': 10,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse.id,
         })
         genrated_picking = replenish_wizard.launch_replenishment()
         links = genrated_picking.get("params", {}).get("links")
         url = links and links[0].get("url", "") or ""
-        purchase_order_id, model_name = self.url_extract_rec_id_and_model(url)
+        purchase_order_id, model_name = self._url_extract_rec_id_and_model(url)
 
         last_po_id = False
         if purchase_order_id and model_name:
@@ -180,38 +143,34 @@ class TestReplenishWizard(PurchaseTestCommon):
         2)seq1 vendor2 50
         -> 2) should be chosen
         """
-        product_to_buy = self.env['product.product'].create({
-            'name': "Furniture Service",
-            'is_storable': True,
-            'route_ids': [Command.link(self.route_buy.id)],
-        })
+        self._use_route_buy(self.product, create_seller=False)
         vendor1 = self.env['res.partner'].create({'name': 'vendor1', 'email': 'from.test@example.com'})
         vendor2 = self.env['res.partner'].create({'name': 'vendor2', 'email': 'from.test2@example.com'})
 
         supplierinfo1 = self.env['product.supplierinfo'].create({
-            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
             'partner_id': vendor1.id,
             'price': 50,
             'sequence': 2,
         })
         supplierinfo2 = self.env['product.supplierinfo'].create({
-            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
             'partner_id': vendor2.id,
             'price': 50,
             'sequence': 1,
         })
 
-        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=product_to_buy.product_tmpl_id.id).create({
-            'product_id': product_to_buy.id,
-            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=self.product.product_tmpl_id.id).create({
+            'product_id': self.product.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'product_uom_id': self.uom.id,
             'quantity': 10,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse.id,
         })
         genrated_picking = replenish_wizard.launch_replenishment()
         links = genrated_picking.get("params", {}).get("links")
         url = links and links[0].get("url", "") or ""
-        purchase_order_id, model_name = self.url_extract_rec_id_and_model(url)
+        purchase_order_id, model_name = self._url_extract_rec_id_and_model(url)
 
         last_po_id = False
         if purchase_order_id and model_name:
@@ -229,47 +188,42 @@ class TestReplenishWizard(PurchaseTestCommon):
         2)seq3 vendor1 80 min qty 5
         -> 2) should be chosen
         """
-        product_to_buy = self.env['product.product'].create({
-            'name': "Furniture Service",
-            'is_storable': True,
-            'route_ids': [Command.link(self.route_buy.id)],
-        })
-        vendor1 = self.env['res.partner'].create({'name': 'vendor1', 'email': 'from.test@example.com'})
+        self._use_route_buy(self.product, create_seller=False)
         supplierinfo1 = self.env['product.supplierinfo'].create({
-            'partner_id': vendor1.id,
+            'partner_id': self.vendor.id,
             'price': 100,
-            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
             'min_qty': 2
         })
         supplierinfo2 = self.env['product.supplierinfo'].create({
-            'partner_id': vendor1.id,
+            'partner_id': self.vendor.id,
             'price': 60,
-            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
             'min_qty': 10
         })
         supplierinfo3 = self.env['product.supplierinfo'].create({
-            'partner_id': vendor1.id,
+            'partner_id': self.vendor.id,
             'price': 80,
-            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
             'min_qty': 5
         })
-        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=product_to_buy.product_tmpl_id.id).create({
-            'product_id': product_to_buy.id,
-            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=self.product.product_tmpl_id.id).create({
+            'product_id': self.product.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'product_uom_id': self.uom.id,
             'quantity': 10,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse.id,
         })
         genrated_picking = replenish_wizard.launch_replenishment()
         links = genrated_picking.get("params", {}).get("links")
         url = links and links[0].get("url", "") or ""
-        purchase_order_id, model_name = self.url_extract_rec_id_and_model(url)
+        purchase_order_id, model_name = self._url_extract_rec_id_and_model(url)
 
         last_po_id = False
         if purchase_order_id and model_name:
             last_po_id = self.env[model_name].browse(int(purchase_order_id))
 
-        self.assertEqual(last_po_id.partner_id, vendor1)
+        self.assertEqual(last_po_id.partner_id, self.vendor)
         self.assertEqual(last_po_id.order_line.price_unit, 60)
 
     def test_chose_supplier_5(self):
@@ -280,28 +234,32 @@ class TestReplenishWizard(PurchaseTestCommon):
         2)seq2 vendor 110 discount 20%
         -> 2) should be chosen
         """
-        self.supplierinfo.product_tmpl_id = self.product1.product_tmpl_id.id
-        self.supplierinfo.price = 100
-        self.supplierinfo.discount = 10.0
+        self._use_route_buy(self.product, create_seller=False)
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'partner_id': self.vendor.id,
+            'price': 100,
+            'discount': 10.0,
+        })
 
         self.env['product.supplierinfo'].create({
-            'product_tmpl_id': self.product1.product_tmpl_id.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
             'partner_id': self.vendor.id,
             'price': 110,
             'discount': 20.0,
         })
 
-        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=self.product1.product_tmpl_id.id).create({
-            'product_id': self.product1.id,
-            'product_tmpl_id': self.product1.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=self.product.product_tmpl_id.id).create({
+            'product_id': self.product.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'product_uom_id': self.uom.id,
             'quantity': 1,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse.id,
         })
         generated_picking = replenish_wizard.launch_replenishment()
         links = generated_picking.get("params", {}).get("links")
         url = links and links[0].get("url", "") or ""
-        purchase_order_id, model_name = self.url_extract_rec_id_and_model(url)
+        purchase_order_id, model_name = self._url_extract_rec_id_and_model(url)
 
         last_po_id = False
         if purchase_order_id and model_name:
@@ -311,33 +269,28 @@ class TestReplenishWizard(PurchaseTestCommon):
         self.assertEqual(last_po_id.order_line.discount, 20.0)
 
     def test_supplier_delay(self):
-        product_to_buy = self.env['product.product'].create({
-            'name': "Furniture Service",
-            'is_storable': True,
-            'route_ids': [Command.link(self.route_buy.id)],
-        })
-        vendor1 = self.env['res.partner'].create({'name': 'vendor1', 'email': 'from.test@example.com'})
+        self._use_route_buy(self.product, create_seller=False)
         supplier_delay = self.env['product.supplierinfo'].create({
-            'partner_id': vendor1.id,
+            'partner_id': self.vendor.id,
             'price': 100,
-            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
             'min_qty': 2,
             'delay': 3
         })
         supplier_no_delay = self.env['product.supplierinfo'].create({
-            'partner_id': vendor1.id,
+            'partner_id': self.vendor.id,
             'price': 100,
-            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
             'min_qty': 2,
             'delay' : 0
         })
         with freeze_time("2023-01-01"):
             wizard = self.env['product.replenish'].create({
-                'product_id': product_to_buy.id,
-                'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-                'product_uom_id': self.uom_unit.id,
+                'product_id': self.product.id,
+                'product_tmpl_id': self.product.product_tmpl_id.id,
+                'product_uom_id': self.uom.id,
                 'quantity': 1,
-                'warehouse_id': self.wh.id,
+                'warehouse_id': self.warehouse.id,
                 'route_id': self.route_buy.id,
             })
             wizard.supplier_id = supplier_no_delay
@@ -346,23 +299,18 @@ class TestReplenishWizard(PurchaseTestCommon):
             self.assertEqual(fields.Datetime.from_string('2023-01-04 00:00:00'), wizard.date_planned)
 
     def test_purchase_delay(self):
-        product_to_buy = self.env['product.product'].create({
-            'name': "Furniture Service",
-            'is_storable': True,
-            'route_ids': [Command.link(self.route_buy.id)],
-        })
-        vendor = self.env['res.partner'].create({'name': 'vendor1', 'email': 'from.test@example.com'})
+        self._use_route_buy(self.product, create_seller=False)
         supplier1 = self.env['product.supplierinfo'].create({
-            'partner_id': vendor.id,
+            'partner_id': self.vendor.id,
             'price': 100,
-            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
             'min_qty': 2,
             'delay': 0
         })
         supplier2 = self.env['product.supplierinfo'].create({
-            'partner_id': vendor.id,
+            'partner_id': self.vendor.id,
             'price': 100,
-            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
             'min_qty': 2,
             'delay' : 0
         })
@@ -370,11 +318,11 @@ class TestReplenishWizard(PurchaseTestCommon):
 
         with freeze_time("2023-01-01"):
             wizard = self.env['product.replenish'].create({
-                'product_id': product_to_buy.id,
-                'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-                'product_uom_id': self.uom_unit.id,
+                'product_id': self.product.id,
+                'product_tmpl_id': self.product.product_tmpl_id.id,
+                'product_uom_id': self.uom.id,
                 'quantity': 1,
-                'warehouse_id': self.wh.id,
+                'warehouse_id': self.warehouse.id,
                 'route_id': self.route_buy.id,
             })
             wizard.supplier_id = supplier1
@@ -385,7 +333,7 @@ class TestReplenishWizard(PurchaseTestCommon):
             self.assertEqual(fields.Datetime.from_string('2023-01-06 00:00:00'), wizard.date_planned)
 
     def test_purchase_supplier_route_delay(self):
-        product_to_buy = self.env['product.product'].create({
+        self.product = self.env['product.product'].create({
             'name': "Furniture Service",
             'is_storable': True,
             'route_ids': [Command.link(self.route_buy.id)],
@@ -394,7 +342,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         supplier = self.env['product.supplierinfo'].create({
             'partner_id': vendor.id,
             'price': 100,
-            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
             'min_qty': 2,
             'delay': 2
         })
@@ -402,11 +350,11 @@ class TestReplenishWizard(PurchaseTestCommon):
 
         with freeze_time("2023-01-01"):
             wizard = self.env['product.replenish'].create({
-                'product_id': product_to_buy.id,
-                'product_tmpl_id': product_to_buy.product_tmpl_id.id,
-                'product_uom_id': self.uom_unit.id,
+                'product_id': self.product.id,
+                'product_tmpl_id': self.product.product_tmpl_id.id,
+                'product_uom_id': self.uom.id,
                 'quantity': 1,
-                'warehouse_id': self.wh.id,
+                'warehouse_id': self.warehouse.id,
                 'route_id': self.route_buy.id,
             })
             wizard.supplier_id = supplier
@@ -431,9 +379,9 @@ class TestReplenishWizard(PurchaseTestCommon):
         replenish_wizard = self.env['product.replenish'].create({
             'product_id': product.id,
             'product_tmpl_id': product.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'product_uom_id': self.uom.id,
             'quantity': 1,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse.id,
             'route_id': self.route_buy.id,
         })
         replenish_wizard.launch_replenishment()
@@ -471,9 +419,9 @@ class TestReplenishWizard(PurchaseTestCommon):
         replenish_wizard = self.env['product.replenish'].create({
             'product_id': product.id,
             'product_tmpl_id': product.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'product_uom_id': self.uom.id,
             'quantity': 1,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse.id,
             'route_id': self.route_buy.id,
             'supplier_id': product.seller_ids[2].id  # partner_b price 100$
         })
@@ -486,19 +434,18 @@ class TestReplenishWizard(PurchaseTestCommon):
     def test_delete_buy_route_and_replenish(self):
         """ Test that the replenish wizard does not crash when the 'buy' route is deleted """
         self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False).unlink()
-        self.product1.product_tmpl_id.seller_ids.unlink()
         replenish_wizard = self.env['product.replenish'].create({
-            'product_id': self.product1.id,
-            'product_tmpl_id': self.product1.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'product_id': self.product.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'product_uom_id': self.uom.id,
         })
-        self.assertTrue(replenish_wizard._get_route_domain(self.product1.product_tmpl_id))
+        self.assertTrue(replenish_wizard._get_route_domain(self.product.product_tmpl_id))
 
     def test_inter_wh_replenish(self):
         """ Test that the replenish order has the correct supplier in a replenish between
         warehouses of the same company.
         """
-        main_warehouse = self.wh
+        main_warehouse = self.warehouse
         second_warehouse = self.env['stock.warehouse'].create({
             'name': 'Second Warehouse',
             'code': 'WH02',
@@ -508,33 +455,47 @@ class TestReplenishWizard(PurchaseTestCommon):
         })
         interwh_route = self.env['stock.route'].search([('supplied_wh_id', '=', main_warehouse.id), ('supplier_wh_id', '=', second_warehouse.id)])
 
-        self.product1.route_ids = [Command.link(interwh_route.id)]
+        self.product.route_ids = [Command.link(interwh_route.id)]
 
-        wizard_form = Form(self.env['product.replenish'].with_context(default_product_tmpl_id=self.product1.product_tmpl_id.id))
+        wizard_form = Form(self.env['product.replenish'].with_context(default_product_tmpl_id=self.product.product_tmpl_id.id))
         wizard_form.route_id = interwh_route
         wizard = wizard_form.save()
         generated_picking = wizard.launch_replenishment()
         links = generated_picking.get("params", {}).get("links")
         url = links and links[0].get("url", "") or ""
-        stock_picking_id, model_name = self.url_extract_rec_id_and_model(url)
+        stock_picking_id, model_name = self._url_extract_rec_id_and_model(url)
 
         stock_picking = self.env[model_name].browse(int(stock_picking_id))
 
         self.assertEqual(stock_picking.partner_id, second_warehouse.partner_id)
 
     def test_purchase_order_uom(self):
+        self._use_route_buy(self.product, create_seller=False)
+        price_list_uom, price_list_pack_of_6 = self.env['product.supplierinfo'].create([{
+            'partner_id': self.vendor.id,
+            'product_id': self.product.id,
+            'price': 1.0,
+            'product_uom_id': self.uom.id,
+        }, {
+            'partner_id': self.vendor.id,
+            'product_id': self.product.id,
+            'price': 5.0,
+            'product_uom_id': self.uom_pack_of_6.id,
+            'min_qty': 2,
+        }])
+
         replenish_wizard = self.env['product.replenish'].create({
-            'product_id': self.fuzzy_drink.id,
-            'product_tmpl_id': self.fuzzy_drink.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'product_id': self.product.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'product_uom_id': self.uom.id,
             'quantity': 10,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse.id,
             'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id,
-            'supplier_id': self.fuzzy_drink.seller_ids[1].id,  # pricelist with uom "Pack of 6"
+            'supplier_id': price_list_pack_of_6.id,  # pricelist with uom "Pack of 6"
         })
         replenish_wizard.launch_replenishment()
         po = self.env['purchase.order'].search([
-            ('partner_id', '=', self.fuzzy_drink.seller_ids[1].partner_id.id)
+            ('partner_id', '=', self.vendor.id)
         ], order='id DESC', limit=1)
         self.assertEqual(po.order_line.product_qty, 10, 'Generated PO line must respect the requested quantity from the wizard')
         self.assertEqual(po.order_line.product_uom_id, replenish_wizard.product_uom_id, 'Generated PO line must respect the requested UOM from the wizard')
@@ -542,17 +503,17 @@ class TestReplenishWizard(PurchaseTestCommon):
         po.button_cancel()
 
         replenish_wizard = self.env['product.replenish'].create({
-            'product_id': self.fuzzy_drink.id,
-            'product_tmpl_id': self.fuzzy_drink.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
+            'product_id': self.product.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'product_uom_id': self.uom.id,
             'quantity': 15,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse.id,
             'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id,
-            'supplier_id': self.fuzzy_drink.seller_ids[1].id,  # pricelist with uom "Pack of 6"
+            'supplier_id': price_list_pack_of_6.id,  # pricelist with uom "Pack of 6"
         })
         replenish_wizard.launch_replenishment()
         po = self.env['purchase.order'].search([
-            ('partner_id', '=', self.fuzzy_drink.seller_ids[1].partner_id.id)
+            ('partner_id', '=', self.vendor.id)
         ], order='id DESC', limit=1)
         self.assertEqual(po.order_line.product_qty, 15, 'Generated PO line must respect the requested quantity from the wizard')
         self.assertEqual(po.order_line.product_uom_id, replenish_wizard.product_uom_id, 'Generated PO line must respect the requested UOM from the wizard')
@@ -560,17 +521,17 @@ class TestReplenishWizard(PurchaseTestCommon):
         po.button_cancel()
 
         replenish_wizard = self.env['product.replenish'].create({
-            'product_id': self.fuzzy_drink.id,
-            'product_tmpl_id': self.fuzzy_drink.product_tmpl_id.id,
-            'product_uom_id': self.uom_pack_6.id,
+            'product_id': self.product.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'product_uom_id': self.uom_pack_of_6.id,
             'quantity': 1,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse.id,
             'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id,
-            'supplier_id': self.fuzzy_drink.seller_ids[1].id,  # pricelist with uom "Pack of 6"
+            'supplier_id': price_list_pack_of_6.id,  # pricelist with uom "Pack of 6"
         })
         replenish_wizard.launch_replenishment()
         po = self.env['purchase.order'].search([
-            ('partner_id', '=', self.fuzzy_drink.seller_ids[1].partner_id.id)
+            ('partner_id', '=', self.vendor.id)
         ], order='id DESC', limit=1)
         self.assertEqual(po.order_line.product_qty, 1, 'Generated PO line must respect the requested quantity from the wizard')
         self.assertEqual(po.order_line.product_uom_id, replenish_wizard.product_uom_id, 'Generated PO line must respect the requested UOM from the wizard')
@@ -578,17 +539,17 @@ class TestReplenishWizard(PurchaseTestCommon):
         po.button_cancel()
 
         replenish_wizard = self.env['product.replenish'].create({
-            'product_id': self.fuzzy_drink.id,
-            'product_tmpl_id': self.fuzzy_drink.product_tmpl_id.id,
-            'product_uom_id': self.uom_pack_6.id,
+            'product_id': self.product.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'product_uom_id': self.uom_pack_of_6.id,
             'quantity': 2,
-            'warehouse_id': self.wh.id,
+            'warehouse_id': self.warehouse.id,
             'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id,
-            'supplier_id': self.fuzzy_drink.seller_ids[0].id,  # pricelist with uom "Unit"
+            'supplier_id': price_list_uom.id,  # pricelist with uom "Unit"
         })
         replenish_wizard.launch_replenishment()
         po = self.env['purchase.order'].search([
-            ('partner_id', '=', self.fuzzy_drink.seller_ids[0].partner_id.id)
+            ('partner_id', '=', self.vendor.id)
         ], order='id DESC', limit=1)
         self.assertEqual(po.order_line.product_qty, 2, 'Generated PO line must respect the requested quantity from the wizard')
         self.assertEqual(po.order_line.product_uom_id, replenish_wizard.product_uom_id, 'Generated PO line must respect the requested UOM from the wizard')
