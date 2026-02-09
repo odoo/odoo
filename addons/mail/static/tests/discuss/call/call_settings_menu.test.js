@@ -64,12 +64,12 @@ test("Renders the call settings", async () => {
     rtc.microphonePermission = "granted";
     const browserDefaultLabel = isBrowserChrome() ? "Default" : "Browser Default";
     await click(".o-mail-DeviceSelect-button[data-kind='audioinput']:has(:text('Default'))");
-    await contains(".o-dropdown-item:has(:text('mockAudioDeviceLabel'))");
-    await contains(`.o-dropdown-item:has(:text(${browserDefaultLabel}))`);
+    await contains(".o-dropdown-item:text('mockAudioDeviceLabel')");
+    await contains(`.o-dropdown-item:text(${browserDefaultLabel})`);
     rtc.cameraPermission = "granted";
     await click(".o-mail-DeviceSelect-button[data-kind='videoinput']:has(:text('Default'))");
-    await contains(".o-dropdown-item:has(:text('mockVideoDeviceLabel'))");
-    await contains(`.o-dropdown-item:has(:text(${browserDefaultLabel}))`);
+    await contains(".o-dropdown-item:text('mockVideoDeviceLabel')");
+    await contains(`.o-dropdown-item:text(${browserDefaultLabel})`);
     await contains("button:text('Voice Detection')");
     await contains("button:text('Push to Talk')");
     await contains("span:text('Voice detection sensitivity')");
