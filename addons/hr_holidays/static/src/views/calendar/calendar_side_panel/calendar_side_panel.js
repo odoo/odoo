@@ -1,8 +1,9 @@
+import { useState } from "@web/owl2/utils";
 import { CalendarSidePanel } from "@web/views/calendar/calendar_side_panel/calendar_side_panel";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { Cache } from "@web/core/utils/cache";
 import { useService } from "@web/core/utils/hooks";
-import { useState, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { onWillStart, onWillUpdateProps } from "@odoo/owl";
 
 export class TimeOffCalendarSidePanel extends CalendarSidePanel {
     static components = {

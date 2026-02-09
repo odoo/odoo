@@ -1,5 +1,6 @@
+import { useState } from "@web/owl2/utils";
 import { useBus } from "@web/core/utils/hooks";
-import { EventBus, Component, useState, markup } from "@odoo/owl";
+import { EventBus, Component, markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 export class FullscreenIndication extends Component {

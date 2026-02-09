@@ -1,4 +1,4 @@
-import { onRendered, useComponent, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { onRendered, useComponent, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -32,7 +32,7 @@ import { FormErrorDialog } from "./form_error_dialog/form_error_dialog";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
 import { FormCogMenu } from "./form_cog_menu/form_cog_menu";
 
-import { Component, onError, onMounted, onWillUnmount, status, useState } from "@odoo/owl";
+import { Component, onError, onMounted, onWillUnmount, status } from "@odoo/owl";
 import { FetchRecordError } from "@web/model/relational_model/errors";
 import { effect } from "@web/core/utils/reactive";
 import { ConnectionLostError } from "@web/core/network/rpc";

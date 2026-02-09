@@ -1,3 +1,4 @@
+import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { formatInteger } from "../formatters";
@@ -6,7 +7,7 @@ import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 export class IntegerField extends Component {
     static template = "web.IntegerField";

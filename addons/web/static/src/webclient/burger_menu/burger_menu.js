@@ -1,3 +1,4 @@
+import { useState } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { Transition } from "@web/core/transition";
 import { user } from "@web/core/user";
@@ -11,7 +12,7 @@ import { router } from "@web/core/browser/router";
 import { BurgerUserMenu } from "./burger_user_menu/burger_user_menu";
 import { MobileSwitchCompanyMenu } from "./mobile_switch_company_menu/mobile_switch_company_menu";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 /**
  * This file includes the widget Menu in mobile to render the BurgerMenu which

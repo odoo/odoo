@@ -1,5 +1,5 @@
-import { useEnv, useSubEnv } from "@web/owl2/utils";
-import { useExternalListener, useState } from "@odoo/owl";
+import { useEnv, useState, useSubEnv } from "@web/owl2/utils";
+import { useExternalListener } from "@odoo/owl";
 
 function isSmall() {
     return window.innerWidth < 960;

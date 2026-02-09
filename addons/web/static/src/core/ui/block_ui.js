@@ -1,7 +1,8 @@
+import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 
-import { EventBus, Component, useState } from "@odoo/owl";
+import { EventBus, Component } from "@odoo/owl";
 
 export class BlockUI extends Component {
     static props = {

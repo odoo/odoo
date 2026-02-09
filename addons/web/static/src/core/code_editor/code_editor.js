@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillStart, useState, status } from "@odoo/owl";
+import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { Component, onMounted, onWillStart, status } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 
 export class CodeEditor extends Component {

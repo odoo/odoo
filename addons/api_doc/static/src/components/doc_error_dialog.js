@@ -1,4 +1,5 @@
-import { Component, useState, xml } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 
 export class DocErrorDialog extends Component {

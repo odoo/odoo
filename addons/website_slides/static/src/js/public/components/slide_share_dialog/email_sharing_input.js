@@ -1,10 +1,10 @@
-import { useRef } from "@web/owl2/utils";
+import { useRef, useState } from "@web/owl2/utils";
 import { rpc } from "@web/core/network/rpc";
 import { session } from "@web/session";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 export class EmailSharingInput extends Component {
     static template = "website_slides.EmailSharingInput";

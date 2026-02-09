@@ -1,5 +1,5 @@
+import { useState } from "@web/owl2/utils";
 import { BaseOptionComponent } from "@html_builder/core/utils";
-import { useState } from "@odoo/owl";
 
 export class FooterTemplateOption extends BaseOptionComponent {
     static template = "website.FooterTemplateOption";

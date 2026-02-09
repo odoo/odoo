@@ -1,8 +1,8 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useState } from "@web/owl2/utils";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { Layout } from "@web/search/layout";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
 

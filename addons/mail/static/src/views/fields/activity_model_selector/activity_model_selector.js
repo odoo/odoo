@@ -1,5 +1,6 @@
+import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { memoize } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { ModelSelector } from "@web/core/model_selector/model_selector";

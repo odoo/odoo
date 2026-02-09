@@ -1,4 +1,4 @@
-import { useState } from '@odoo/owl';
+import { useState } from "@web/owl2/utils";
 import { patch } from '@web/core/utils/patch';
 import { SelectMenu } from '@web/core/select_menu/select_menu';
 import { _t } from '@web/core/l10n/translation';

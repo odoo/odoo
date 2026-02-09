@@ -1,6 +1,7 @@
+import { useState } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 export class MailingPreviewDisplayModeToggle extends Component {
     static template = "mass_mailing.MailingPreviewModeToggle";

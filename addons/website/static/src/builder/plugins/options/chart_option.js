@@ -1,6 +1,6 @@
+import { useState } from "@web/owl2/utils";
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
-import { useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { isCSSColor } from "@web/core/utils/colors";
 

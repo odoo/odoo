@@ -1,6 +1,7 @@
+import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { BarcodeVideoScanner, isBarcodeScannerSupported } from "./barcode_video_scanner";
 
 export class BarcodeDialog extends Component {

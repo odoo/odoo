@@ -1,5 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, useState } from '@odoo/owl';
+import { useLayoutEffect, useState } from "@web/owl2/utils";
+import { Component } from '@odoo/owl';
 import { useService } from "@web/core/utils/hooks";
 import { ItemAddedNotification } from '@website_sale/js/cart_notification/item_added_notification/item_added_notification';
 import { WarningNotification } from '@website_sale/js/cart_notification/warning_notification/warning_notification';

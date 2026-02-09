@@ -1,5 +1,5 @@
-import { onRendered } from "@web/owl2/utils";
-import { useState, onMounted } from "@odoo/owl";
+import { onRendered, useState } from "@web/owl2/utils";
+import { onMounted } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { StateSelectionField, stateSelectionField } from "@web/views/fields/state_selection/state_selection_field";
 

@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { useState } from "@odoo/owl";
+import { useRef, useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";

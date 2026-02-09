@@ -1,7 +1,8 @@
+import { useState } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useChildRef } from "@web/core/utils/hooks";
-import { useState, Component } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 const NO_OP = () => {};
 

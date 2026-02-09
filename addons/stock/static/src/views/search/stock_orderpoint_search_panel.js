@@ -1,5 +1,6 @@
+import { useState } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
-import { onWillStart, useState } from '@odoo/owl';
+import { onWillStart } from '@odoo/owl';
 import { SearchPanel } from "@web/search/search_panel/search_panel";
 
 

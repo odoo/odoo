@@ -1,3 +1,4 @@
+import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { formatDuration } from "../formatters";
@@ -6,7 +7,7 @@ import { standardFieldProps } from "../standard_field_props";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { parseDuration, parseFloatDuration } from "../parsers";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 export class FloatTimeField extends Component {

@@ -1,5 +1,6 @@
+import { useState } from "@web/owl2/utils";
 import { useAutofocus } from "@web/core/utils/hooks";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 export class TipCell extends Component {
     static template = "point_of_sale.TipCell";

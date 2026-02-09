@@ -1,4 +1,5 @@
-import { onWillStart, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { onWillStart } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { FloatTimeSelectionPopover } from "./float_time_selection_popover";

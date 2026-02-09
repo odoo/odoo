@@ -1,4 +1,5 @@
-import { useState, onMounted, onWillUnmount, onPatched } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { onMounted, onWillUnmount, onPatched } from "@odoo/owl";
 import { debounce } from "@web/core/utils/timing";
 
 export function useScrollShadow(scrollContainerRef, options = {}) {

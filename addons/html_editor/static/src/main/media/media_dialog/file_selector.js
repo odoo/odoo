@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
@@ -8,7 +8,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { useDebounced } from "@web/core/utils/timing";
 import { SearchMedia } from "./search_media";
 
-import { Component, xml, useState, onWillStart } from "@odoo/owl";
+import { Component, xml, onWillStart } from "@odoo/owl";
 
 export const IMAGE_MIMETYPES = [
     "image/jpg",

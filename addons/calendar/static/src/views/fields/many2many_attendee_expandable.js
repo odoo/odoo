@@ -1,5 +1,5 @@
+import { useState } from "@web/owl2/utils";
 import { Many2ManyAttendee, many2ManyAttendee } from "@calendar/views/fields/many2many_attendee";
-import { useState } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 export class Many2ManyAttendeeExpandable extends Many2ManyAttendee {

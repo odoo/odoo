@@ -1,6 +1,7 @@
+import { useState } from "@web/owl2/utils";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";

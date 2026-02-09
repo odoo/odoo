@@ -1,5 +1,5 @@
-import { useSubEnv } from "@web/owl2/utils";
-import { Component, useState } from '@odoo/owl';
+import { useState, useSubEnv } from "@web/owl2/utils";
+import { Component } from '@odoo/owl';
 import { formatCurrency } from '@web/core/currency';
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from '@web/core/l10n/translation';

@@ -1,7 +1,8 @@
+import { useState } from "@web/owl2/utils";
 import { SearchMedia } from "./search_media";
 import { fonts } from "@html_editor/utils/fonts";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 export class IconSelector extends Component {
     static mediaSpecificClasses = ["fa"];

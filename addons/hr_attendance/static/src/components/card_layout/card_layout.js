@@ -1,4 +1,5 @@
-import { Component, useState, onWillUnmount } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, onWillUnmount } from "@odoo/owl";
 
 const { DateTime } = luxon;
 export class CardLayout extends Component {

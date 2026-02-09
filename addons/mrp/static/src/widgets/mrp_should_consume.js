@@ -1,8 +1,8 @@
-import { useRef } from "@web/owl2/utils";
+import { useRef, useState } from "@web/owl2/utils";
 import { FloatField, floatField } from "@web/views/fields/float/float_field";
 import { formatFloat } from "@web/views/fields/formatters";
 import { registry } from "@web/core/registry";
-import { onPatched, onMounted, useState } from "@odoo/owl";
+import { onPatched, onMounted } from "@odoo/owl";
 
 /**
  * This widget is used to display alongside the total quantity to consume of a production order,

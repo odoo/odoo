@@ -1,4 +1,4 @@
-import { useComponent, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import {
     Component,
     onMounted,
@@ -6,7 +6,6 @@ import {
     onWillUnmount,
     onWillUpdateProps,
     status,
-    useState,
 } from "@odoo/owl";
 import { LazyComponent, loadBundle } from "@web/core/assets";
 import { Deferred } from "@web/core/utils/concurrency";

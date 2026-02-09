@@ -1,5 +1,6 @@
+import { useState } from "@web/owl2/utils";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { effect } from "@web/core/utils/reactive";
 import { ConversionError, formatDate, formatDateTime, parseDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";

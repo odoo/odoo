@@ -1,5 +1,5 @@
-import { useSubEnv } from "@web/owl2/utils";
-import { Component, onWillDestroy, onWillStart, useState } from "@odoo/owl";
+import { useState, useSubEnv } from "@web/owl2/utils";
+import { Component, onWillDestroy, onWillStart } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { generatePdfThumbnail } from "@web/core/utils/pdfjs";
 import { ShareTargetItem } from "@web/webclient/share_target/share_target_item";

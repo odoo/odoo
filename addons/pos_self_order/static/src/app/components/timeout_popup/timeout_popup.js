@@ -1,4 +1,5 @@
-import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, onMounted, onWillUnmount } from "@odoo/owl";
 
 export class TimeoutPopup extends Component {
     static template = "pos_self_order.TimeoutPopup";

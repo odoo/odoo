@@ -1,7 +1,8 @@
+import { useState } from "@web/owl2/utils";
 import { Domain } from '@web/core/domain';
 import { rpc } from "@web/core/network/rpc";
 import { SearchModel } from '@web/search/search_model';
-import { useState, onWillStart } from "@odoo/owl";
+import { onWillStart } from "@odoo/owl";
 const { DateTime } = luxon;
 
 export class LunchSearchModel extends SearchModel {

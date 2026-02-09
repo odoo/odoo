@@ -1,9 +1,10 @@
+import { useState } from "@web/owl2/utils";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 
-import { useState, Component } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 export class TestsSharedJsPython extends Component {
     static template = "account.TestsSharedJsPython";

@@ -1,4 +1,5 @@
-import { Component, useState, xml } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, xml } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";

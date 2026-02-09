@@ -1,4 +1,5 @@
-import { Component, onWillStart, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, onWillStart } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { isValidEmail } from "@point_of_sale/utils";
 import { Dialog } from "@web/core/dialog/dialog";

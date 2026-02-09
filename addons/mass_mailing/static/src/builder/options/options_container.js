@@ -1,5 +1,5 @@
+import { useState } from "@web/owl2/utils";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
-import { useState } from "@odoo/owl";
 
 export class OptionsContainerWithSnippetVersionControl extends OptionsContainer {
     static template = "mass_mailing.OptionsContainer";

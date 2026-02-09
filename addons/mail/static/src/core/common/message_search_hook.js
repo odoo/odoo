@@ -1,6 +1,7 @@
+import { useState } from "@web/owl2/utils";
 import { useSequential } from "@mail/utils/common/hooks";
 import { getInnerHtml } from "@mail/utils/common/html";
-import { useState, onWillUnmount } from "@odoo/owl";
+import { onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { createDocumentFragmentFromContent } from "@web/core/utils/html";
 import { escapeRegExp } from "@web/core/utils/strings";

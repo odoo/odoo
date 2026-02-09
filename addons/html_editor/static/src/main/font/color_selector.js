@@ -1,5 +1,6 @@
+import { useState } from "@web/owl2/utils";
 import { isColorGradient } from "@web/core/utils/colors";
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import {
     useColorPicker,
     DEFAULT_COLORS,

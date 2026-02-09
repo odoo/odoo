@@ -1,6 +1,7 @@
+import { useState } from "@web/owl2/utils";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";

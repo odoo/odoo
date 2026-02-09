@@ -1,4 +1,5 @@
-import { Component, useState } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useBus } from "@web/core/utils/hooks";
 

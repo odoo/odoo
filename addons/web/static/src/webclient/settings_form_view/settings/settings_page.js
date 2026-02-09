@@ -1,7 +1,7 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 
 export class SettingsPage extends Component {

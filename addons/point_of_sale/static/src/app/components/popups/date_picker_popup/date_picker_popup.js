@@ -1,7 +1,8 @@
+import { useState } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { _t } from "@web/core/l10n/translation";
-import { Component, onMounted, useState } from "@odoo/owl";
+import { Component, onMounted } from "@odoo/owl";
 const { DateTime } = luxon;
 
 export class DatePickerPopup extends Component {

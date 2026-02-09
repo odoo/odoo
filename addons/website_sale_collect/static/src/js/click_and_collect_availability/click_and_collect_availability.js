@@ -1,4 +1,5 @@
-import { Component, useState } from '@odoo/owl';
+import { useState } from "@web/owl2/utils";
+import { Component } from '@odoo/owl';
 import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { useBus, useService } from '@web/core/utils/hooks';
