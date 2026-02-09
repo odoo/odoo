@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
@@ -804,6 +805,44 @@ class TestSaleService(TestCommonSaleTimesheet):
         sale_order_2._compute_timesheet_count()
         sale_order_2._compute_show_hours_recorded_button()
         self.assertTrue(sale_order_2.show_hours_recorded_button, "There is a product service with the service_policy set on 'delivered on timesheet' and a project on the sale order, the button should be displayed")
+
+    def test_compute_show_timesheet_button_salesperson_user_timesheet(self):
+        """
+        Test Case:
+        ==========
+        1) Create a salesperson user with only User access to timesheet and no access to project
+        2) Create a SO with a timesheet product and confirm it as the salesperson
+        3) Record hours with another user
+        4) read show_hours_recorded_button as the salesperson should not raise an AccessError
+        """
+        salesperson = mail_new_test_user(
+            self.env,
+            name='Salesperson',
+            login='salesperson',
+            email='salesperson_no_ts@example.com',
+            groups='base.group_user,sales_team.group_sale_salesman,hr_timesheet.group_hr_timesheet_user',
+        )
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'user_id': salesperson.id,
+        })
+        so_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.product_delivery_timesheet2.id,
+            'product_uom_qty': 5,
+        })
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': so_line.task_id.project_id.id,
+            'task_id': so_line.task_id.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_manager.id,
+        })
+        sale_order.action_confirm()
+        # Computing show_hours_recorded_button as the restricted salesperson
+        # should not raise an AccessError when reading timesheet_count and
+        # project_count.
+        self.assertTrue(sale_order.with_user(salesperson).show_hours_recorded_button, "The salesperson should be able to see the hours recorded button even without access to other's timesheet and project.")
 
     def test_timesheet_hours_delivered_rounding(self):
         """
