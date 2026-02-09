@@ -1,7 +1,8 @@
+import { useRef } from "@web/owl2/utils";
 import { Dialog } from '@web/core/dialog/dialog';
 import { formatMonetary } from "@web/views/fields/formatters";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { Component, onMounted, markup, useRef } from "@odoo/owl";
+import { Component, onMounted, markup } from "@odoo/owl";
 
 export class ProductMatrixDialog extends Component {
     static template = "product_matrix.dialog";

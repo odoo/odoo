@@ -1,7 +1,7 @@
-import { useComponent, useLayoutEffect } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { CreatePollDialog } from "@mail/core/common/create_poll_dialog";
 
-import { toRaw, useRef, useState } from "@odoo/owl";
+import { toRaw, useState } from "@odoo/owl";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 
 import { _t } from "@web/core/l10n/translation";

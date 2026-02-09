@@ -1,8 +1,9 @@
+import { useRef } from "@web/owl2/utils";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_app/sidebar/sidebar";
 import { useHover } from "@mail/utils/common/hooks";
 
-import { Component, useRef } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 

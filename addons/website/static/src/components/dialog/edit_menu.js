@@ -1,9 +1,9 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import wUtils from "@website/js/utils";
 import { WebsiteDialog } from "./dialog";
-import { Component, useState, onWillStart, useRef, reactive } from "@odoo/owl";
+import { Component, useState, onWillStart, reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { isEmail } from "@web/core/utils/strings";

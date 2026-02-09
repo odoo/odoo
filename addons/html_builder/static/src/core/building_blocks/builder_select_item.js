@@ -1,4 +1,5 @@
-import { Component, markup, onMounted, useRef } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, markup, onMounted } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import {
     clickableBuilderComponentProps,

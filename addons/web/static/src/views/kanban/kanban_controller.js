@@ -1,4 +1,4 @@
-import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
@@ -25,7 +25,7 @@ import { KanbanRenderer } from "./kanban_renderer";
 import { useProgressBar } from "./progress_bar_hook";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 
-import { Component, onMounted, onWillStart, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillStart, useState } from "@odoo/owl";
 import { QuickCreateState } from "./kanban_record_quick_create";
 import { effect } from "@web/core/utils/reactive";
 

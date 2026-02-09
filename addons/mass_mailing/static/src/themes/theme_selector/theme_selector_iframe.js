@@ -1,3 +1,4 @@
+import { useRef } from "@web/owl2/utils";
 import { ThemeSelector } from "./theme_selector";
 import { assets, AssetsLoadingError, getBundle, loadBundle } from "@web/core/assets";
 import {
@@ -8,7 +9,6 @@ import {
     onWillUpdateProps,
     reactive,
     status,
-    useRef,
     useState,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";

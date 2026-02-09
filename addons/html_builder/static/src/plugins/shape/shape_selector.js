@@ -1,4 +1,5 @@
-import { useRef, useState } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { useState } from "@odoo/owl";
 import { ImgGroup } from "@html_builder/core/img_group";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { useThrottleForAnimation } from "@web/core/utils/timing";

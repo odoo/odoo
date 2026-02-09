@@ -1,4 +1,5 @@
-import { Component, useRef, useState } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, useState } from "@odoo/owl";
 import { scrollToSelected } from "@pos_self_order/app/utils/scroll_to_selected";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";

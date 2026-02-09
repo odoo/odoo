@@ -1,4 +1,5 @@
-import { Component, useRef } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 
 import { useMessageActions } from "@mail/core/common/message_actions";
 import { MessageReactionList } from "@mail/core/common/message_reaction_list";

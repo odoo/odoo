@@ -1,4 +1,5 @@
-import { Component, toRaw, useRef, useState } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, toRaw, useState } from "@odoo/owl";
 import * as BarcodeScanner from "@web/core/barcode/barcode_dialog";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { isMobileOS } from "@web/core/browser/feature_detection";

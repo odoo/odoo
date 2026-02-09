@@ -1,6 +1,7 @@
+import { useRef } from "@web/owl2/utils";
 import { useHotkey } from "../hotkeys/hotkey_hook";
 
-import { Component, useRef } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 /**
  * Custom checkbox

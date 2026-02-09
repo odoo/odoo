@@ -1,10 +1,10 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useRef, useSubEnv } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { isToday } from "@mail/utils/common/dates";
 import { useHover } from "@mail/utils/common/hooks";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 
-import { Component, useRef } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { useService } from "@web/core/utils/hooks";

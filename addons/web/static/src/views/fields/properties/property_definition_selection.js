@@ -1,8 +1,8 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { uuid } from "@web/core/utils/strings";
 
-import { Component, useState, useRef } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { useSortable } from "@web/core/utils/sortable_owl";
 
 export class PropertyDefinitionSelection extends Component {

@@ -1,5 +1,6 @@
+import { useRef } from "@web/owl2/utils";
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
-import { onWillStart, useRef } from "@odoo/owl";
+import { onWillStart } from "@odoo/owl";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { user } from "@web/core/user";
 import { ResCompanyUpdateDialog } from "../components/company_update_dialog";

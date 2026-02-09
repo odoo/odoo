@@ -1,4 +1,5 @@
-import { Component, useRef } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 

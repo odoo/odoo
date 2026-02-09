@@ -1,11 +1,11 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { renderToFragment } from "@web/core/utils/render";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { Component, onMounted, status, useState, useRef } from "@odoo/owl";
+import { Component, onMounted, status, useState } from "@odoo/owl";
 
 export class MailingPreviewIframe extends Component {
     static template = "mass_mailing.MailingPreviewIframe";

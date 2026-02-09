@@ -1,4 +1,5 @@
-import { onMounted, onWillUnmount, useRef } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { onMounted, onWillUnmount } from "@odoo/owl";
 
 export const useStickyTitleObserver = (name, callback) => {
     const ref = useRef(name);

@@ -1,5 +1,5 @@
-import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
-import { Component, onWillDestroy, useExternalListener, useRef, useState, xml } from "@odoo/owl";
+import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { Component, onWillDestroy, useExternalListener, useState, xml } from "@odoo/owl";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
 import { getIFrame } from "@web/core/position/utils";

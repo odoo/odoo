@@ -1,4 +1,4 @@
-import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Notebook } from "@web/core/notebook/notebook";
 import { Setting } from "./setting/setting";
@@ -16,7 +16,7 @@ import { FormCompiler } from "./form_compiler";
 import { FormLabel } from "./form_label";
 import { StatusBarButtons } from "./status_bar_buttons/status_bar_buttons";
 
-import { Component, onMounted, onWillUnmount, useRef, useState, xml } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useState, xml } from "@odoo/owl";
 
 export class FormRenderer extends Component {
     static template = xml`<t t-call="{{ templates.FormRenderer }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this: this }) }" />`;

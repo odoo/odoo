@@ -1,4 +1,5 @@
-import { Component, useRef, onMounted, onPatched } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, onPatched } from "@odoo/owl";
 import { useHorizontalScrollShadow } from "../../utils/scroll_shadow_hook";
 import { useDraggableScroll } from "../../utils/scroll_dnd_hook";
 import { scrollItemIntoViewX } from "../../utils/scroll";

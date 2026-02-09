@@ -1,4 +1,4 @@
-import { onWillRender } from "@web/owl2/utils";
+import { onWillRender, useRef } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -34,7 +34,6 @@ import {
     onWillStart,
     status,
     useExternalListener,
-    useRef,
     useState,
 } from "@odoo/owl";
 import { getCurrencyRates } from "@web/core/currency";

@@ -1,5 +1,6 @@
+import { useRef } from "@web/owl2/utils";
 import { BaseOptionComponent } from "@html_builder/core/utils";
-import { onMounted, useRef } from "@odoo/owl";
+import { onMounted } from "@odoo/owl";
 
 export class ThemeShadowOption extends BaseOptionComponent {
     static template = "website.ThemeShadowOption";

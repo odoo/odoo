@@ -1,5 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, useRef, useState } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, useState } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { useAutofocus, useBackButton, useService } from "@web/core/utils/hooks";
 import { clamp } from "@web/core/utils/numbers";

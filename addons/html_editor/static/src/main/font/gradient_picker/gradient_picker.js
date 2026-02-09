@@ -1,4 +1,5 @@
-import { Component, useState, useRef } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, useState } from "@odoo/owl";
 import { CustomColorPicker as ColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
 import {
     isColorGradient,

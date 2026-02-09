@@ -1,6 +1,7 @@
 /* global Carousel */
 
-import { Component, onMounted, onWillStart, onWillUnmount, useRef } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { LanguagePopup } from "@pos_self_order/app/components/language_popup/language_popup";

@@ -1,4 +1,5 @@
-import { Component, useRef } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { useChildRef } from "@web/core/utils/hooks";
 import {
     basicContainerBuilderComponentProps,

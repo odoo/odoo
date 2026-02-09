@@ -1,5 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, useRef } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { renderToElement } from "@web/core/utils/render";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";

@@ -1,7 +1,8 @@
+import { useRef } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Notebook } from "@web/core/notebook/notebook";
 
-import { Component, useRef } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 const random = (min, max) => Math.floor(Math.random() * (max - min) + min);
 

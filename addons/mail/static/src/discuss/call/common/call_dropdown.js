@@ -1,5 +1,5 @@
-import { useSubEnv } from "@web/owl2/utils";
-import { Component, useRef, useState, useExternalListener } from "@odoo/owl";
+import { useRef, useSubEnv } from "@web/owl2/utils";
+import { Component, useState, useExternalListener } from "@odoo/owl";
 import { useNavigation } from "@web/core/navigation/navigation";
 import { usePosition } from "@web/core/position/position_hook";
 

@@ -1,4 +1,5 @@
-import { onWillDestroy, useRef } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { onWillDestroy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 /**

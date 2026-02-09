@@ -1,4 +1,4 @@
-import { useChildSubEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
@@ -15,7 +15,7 @@ import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { renderToElement } from "@web/core/utils/render";
 import { nbsp } from "@web/core/utils/strings";
 
-import { Component, onMounted, toRaw, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, toRaw, useState } from "@odoo/owl";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { isMobileOS } from "@web/core/browser/feature_detection";

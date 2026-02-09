@@ -1,11 +1,11 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { formatFloat } from "@web/views/fields/formatters";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import { Component, onWillStart, useRef } from "@odoo/owl";
+import { Component, onWillStart } from "@odoo/owl";
 
 export class GaugeField extends Component {
     static template = "web.GaugeField";

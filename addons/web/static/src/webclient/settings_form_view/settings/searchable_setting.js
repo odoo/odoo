@@ -1,4 +1,5 @@
-import { onMounted, useRef, useState } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { onMounted, useState } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { normalizedMatch } from "@web/core/l10n/utils";
 import { Setting } from "@web/views/form/setting/setting";

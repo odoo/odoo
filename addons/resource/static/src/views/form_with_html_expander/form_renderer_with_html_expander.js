@@ -1,7 +1,6 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { FormRenderer } from "@web/views/form/form_renderer";
-import { useRef } from "@odoo/owl";
 
 export class FormRendererWithHtmlExpander extends FormRenderer {
     static props = {

@@ -23,7 +23,8 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import { Component, onMounted, useExternalListener, useRef } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, useExternalListener } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { usePositionHook } from "@html_editor/position_hook";
 import { closestElement } from "@html_editor/utils/dom_traversal";

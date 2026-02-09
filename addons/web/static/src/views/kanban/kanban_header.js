@@ -1,4 +1,5 @@
-import { Component, useRef } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";

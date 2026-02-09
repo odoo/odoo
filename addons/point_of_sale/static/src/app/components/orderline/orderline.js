@@ -1,4 +1,5 @@
-import { Component, useRef } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { useTimedPress } from "@point_of_sale/app/utils/use_timed_press";
 import { formatCurrency } from "@web/core/currency";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";

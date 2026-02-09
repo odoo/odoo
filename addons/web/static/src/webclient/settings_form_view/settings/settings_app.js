@@ -1,5 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, useState, useRef } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, useState } from "@odoo/owl";
 
 export class SettingsApp extends Component {
     static template = "web.SettingsApp";

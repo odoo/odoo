@@ -1,4 +1,4 @@
-import { useRef } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useAutoresize } from "@web/core/utils/autoresize";
 import { DateTimeField, dateField, dateRangeField, dateTimeField } from "./datetime_field";

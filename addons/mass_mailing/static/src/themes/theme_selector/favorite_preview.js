@@ -1,4 +1,5 @@
-import { Component, onMounted, onWillStart, useRef } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, onWillStart } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { renderToFragment } from "@web/core/utils/render";
 

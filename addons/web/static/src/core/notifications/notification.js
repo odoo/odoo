@@ -1,4 +1,5 @@
-import { Component, useRef, onMounted } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted } from "@odoo/owl";
 
 const AUTOCLOSE_DELAY = 4000;
 

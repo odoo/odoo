@@ -1,4 +1,5 @@
-import { onMounted, useRef, Component, onWillDestroy } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { onMounted, Component, onWillDestroy } from "@odoo/owl";
 import {
     applyTextHighlight,
     textHighlightFactory,

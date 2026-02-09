@@ -1,5 +1,6 @@
+import { useRef } from "@web/owl2/utils";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { Component, onMounted, onWillUnmount, useExternalListener, useRef } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useExternalListener } from "@odoo/owl";
 import { getColumnIndex, getRowIndex } from "@html_editor/utils/table";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";

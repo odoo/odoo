@@ -1,6 +1,7 @@
 /** @ts-check */
 
-import { Component, onMounted, onWillUpdateProps, useRef } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, onWillUpdateProps } from "@odoo/owl";
 import { useNumpadDecimal } from "@web/views/fields/numpad_decimal_hook";
 import { parseFloat } from "@web/views/fields/parsers";
 

@@ -1,5 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { useRef } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 
 import { patch } from "@web/core/utils/patch";
 

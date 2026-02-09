@@ -1,5 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, useRef, useState } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, useState } from "@odoo/owl";
 
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
