@@ -1606,6 +1606,7 @@ class AccountMove(models.Model):
         :param round_from_tax_lines:    Indicate if the manual tax amounts of tax journal items should be kept or not.
                                         It only works when the move is stored.
         :return:                        A tuple <base_lines, tax_lines> for the taxes computation.
+        :rtype: tuple[list[dict], list[dict]]
         """
         self.ensure_one()
         AccountTax = self.env['account.tax']

@@ -1365,7 +1365,7 @@ class AccountTax(models.Model):
 
         The whole method is designed to ease the conversion from a business record.
         For example, when passing either account.move.line, either sale.order.line or purchase.order.line,
-        providing explicitely a 'product_id' in kwargs is not necessary since all those records already have
+        providing explicitly a 'product_id' in kwargs is not necessary since all those records already have
         an `product_id` field.
 
         [!] Mirror of the same method in account_tax.js.
@@ -1374,6 +1374,7 @@ class AccountTax(models.Model):
         :param record:  A representation of a business object a.k.a a record or a dictionary.
         :param kwargs:  The extra values to override some values that will be taken from the record.
         :return:        A dictionary representing a base line.
+        :rtype: dict
         """
         def load(field, fallback, from_base_line=False):
             return self._get_base_line_field_value_from_record(record, field, kwargs, fallback, from_base_line=from_base_line)
@@ -1467,6 +1468,7 @@ class AccountTax(models.Model):
         :param record:  A representation of a business object a.k.a a record or a dictionary.
         :param kwargs:  The extra values to override some values that will be taken from the record.
         :return:        A dictionary representing a tax line.
+        :rtype: dict
         """
         def load(field, fallback):
             return self._get_base_line_field_value_from_record(record, field, kwargs, fallback)
@@ -2355,7 +2357,7 @@ class AccountTax(models.Model):
 
     @api.model
     def _prepare_tax_line_repartition_grouping_key(self, tax_line):
-        """ Used by '_prepare_tax_lines' to build the accounting grouping key to know if the tax line could be updated
+        """ Used by ``_prepare_tax_lines`` to build the accounting grouping key to know if the tax line could be updated
         or not when recomputing the tax lines.
         Take care this method should remain consistent regarding the grouping key built from the base line.
 

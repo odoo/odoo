@@ -1271,7 +1271,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                 for i in range(len(ignore_schema)):
                     cls._apply_json_ignore_schema(data[i], ignore_schema[i])
 
-    def assert_json(self, content_to_assert: dict | list, test_name: str, subfolder=''):
+    def assert_json(self, content_to_assert: dict | list, test_name: str, subfolder='', force_save=False):
         """
         Helper to save/assert a dictionary to a JSON file located in the corresponding module `test_files`.
         By default, this method will assert the dictionary with the JSON content.
@@ -1284,26 +1284,35 @@ class AccountTestInvoicingCommon(ProductCommon):
         :param content_to_assert: dictionary | list to save or assert to the corresponding test file
         :param test_name: the test file name
         :param subfolder: the test file subfolder(s), separated by `/` if there is more than one
+        :param force_save: force the assert method to save the XML to the test file instead of asserting it
         """
         json_path = self._get_test_file_path(f"{test_name}.json", subfolder=subfolder)
         content_to_assert = json.loads(json.dumps(content_to_assert))
         if json_ignore_schema := self._get_json_ignore_schema(subfolder):
             self._apply_json_ignore_schema(content_to_assert, json_ignore_schema)
 
-        if 'SAVE_JSON' in config['test_tags']:
+        if 'SAVE_JSON' in (config['test_tags'] or '').split(',') or force_save:
             with file_open(json_path, 'w') as f:
                 f.write(json.dumps(content_to_assert, indent=4))
             _logger.info("Saved the generated JSON content to %s", json_path)
         else:
             with file_open(json_path, 'rb') as f:
                 expected_content = json.loads(f.read())
-            self.assertDictEqual(content_to_assert, expected_content)
+            try:
+                self.assertDictEqual(content_to_assert, expected_content)
+            except AssertionError:
+                if not force_save and 'SAVE_JSON_ON_FAIL' in config['test_tags']:
+                    self.assert_json(content_to_assert=content_to_assert, test_name=test_name, subfolder=subfolder, force_save=True)
+                else:
+                    raise
 
     def assert_xml(
             self,
             xml_element: str | bytes | etree._Element,
             test_name: str,
             subfolder='',
+            xpath_to_apply='',
+            force_save=False,
     ):
         """
         Helper to save/assert an XML element/string/bytes to an XML file.
@@ -1320,6 +1329,8 @@ class AccountTestInvoicingCommon(ProductCommon):
         :param xml_element: the _Element/str/bytes content to be saved or asserted
         :param test_name: the test file name
         :param subfolder: the test file subfolder(s), separated by `/` if there is more than one
+        :param xpath_to_apply: optional `xpath` string to be applied on the expected file
+        :param force_save: force the assert method to save the XML to the test file instead of asserting it
         :return:
         """
         file_name = f"{test_name}.xml"
@@ -1329,7 +1340,7 @@ class AccountTestInvoicingCommon(ProductCommon):
         if isinstance(xml_element, bytes):
             xml_element = etree.fromstring(xml_element)
 
-        if 'SAVE_XML' in config['test_tags']:
+        if 'SAVE_XML' in (config['test_tags'] or '').split(',') or force_save:
             # Save the XML to tmp folder before modifying some elements with `___ignore___`
             etree.indent(xml_element, space='\t')
             with patch.object(re, 'fullmatch', lambda _arg1, _arg2: True):
@@ -1367,7 +1378,21 @@ class AccountTestInvoicingCommon(ProductCommon):
                 expected_xml_str = f.read()
 
             expected_xml_tree = etree.fromstring(expected_xml_str)
-            self.assertXmlTreeEqual(xml_element, expected_xml_tree)
+            if xpath_to_apply:
+                expected_xml_tree = self.with_applied_xpath(expected_xml_tree, xpath_to_apply)
+            try:
+                self.assertXmlTreeEqual(xml_element, expected_xml_tree)
+            except AssertionError:
+                if not force_save and 'SAVE_XML_ON_FAIL' in config['test_tags']:
+                    self.assert_xml(
+                        xml_element=xml_element,
+                        test_name=test_name,
+                        subfolder=subfolder,
+                        xpath_to_apply=xpath_to_apply,
+                        force_save=True,
+                    )
+                else:
+                    raise
 
     @classmethod
     def _turn_node_as_dict_hierarchy(cls, node, path=''):
