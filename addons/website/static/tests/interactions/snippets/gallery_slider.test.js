@@ -1,4 +1,5 @@
 import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
+import { contains } from "@web/../tests/web_test_helpers";
 
 import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { animationFrame, click, leave, press, queryOne } from "@odoo/hoot-dom";
@@ -150,6 +151,18 @@ const defaultOldLightbox = `
     </main>
 `;
 
+const singleImagePopupGallery = `
+    <section class="s_image_gallery o_slideshow o_image_popup">
+        <div id="slideshow_sample" class="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.library_image_16" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+`;
+
 test("gallery_slider does nothing if there is no o_slideshow s_image_gallery", async () => {
     const { core } = await startInteractions(`
         <div id="wrapwrap">
@@ -242,4 +255,11 @@ test("carousel autoplay pauses while lightbox is open and resumes after closing"
     expect(".carousel .carousel-item:nth-child(1)").not.toHaveClass("active");
     expect(".carousel .carousel-item:nth-child(2)").toHaveClass("active");
     expect(".carousel .carousel-item:nth-child(3)").not.toHaveClass("active");
+});
+
+test("slideshow with one image and popup on image doesn't crash on click", async () => {
+    const { core } = await startInteractions(singleImagePopupGallery);
+    expect(core.interactions).toHaveLength(2);
+    await contains("img").click();
+    expect(".o_image_lightbox").not.toBe(null);
 });
