@@ -6005,6 +6005,27 @@ class AccountMove(models.Model):
             self._post(soft=False)
         if autopost_bills_wizard := self._show_autopost_bills_wizard():
             return autopost_bills_wizard
+        if self in self.env.companies.mapped('account_opening_move_id'):
+            # Insanely expensive logic coming up
+            line = self.env['account.bank.statement.line'].search([
+                ('move_id', '=', self.id),
+            ])
+            if not line:
+                default_journal = self.env['account.bank.statement.line']._get_default_journal()
+                line = self.env['account.bank.statement.line'].create({
+                    'date': self.date,
+                    'name': _("Opening balance credit + debit"),
+                    'amount': self.amount_total,
+                    # 'move_id': self.id,
+                    'journal_id': default_journal.id,
+                })
+            if not line.statement_id:
+                self.env['account.bank.statement'].create({
+                    'name': _("Bank Account Balancing"),
+                    'date': self.date,
+                    'journal_id': default_journal.id,
+                    'line_ids': [Command.link(line.id)],
+                })
         return False
 
     def _get_moves_requiring_confirmation(self):

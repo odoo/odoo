@@ -936,6 +936,14 @@ class ResCompany(models.Model):
 
         if opening_move:
             opening_move.write(move_values)
+            if opening_move.state == 'posted':
+                self.env['account.bank.statement.line'].create({
+                    'date': opening_move.date,
+                    'name': opening_move.ref,
+                    'amount': opening_move.amount_total,
+                    'company_id': self.id,
+                    'move_id': opening_move.id,
+                })
         else:
             self.account_opening_move_id = self.env['account.move'].create(move_values)
 
