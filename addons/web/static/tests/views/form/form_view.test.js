@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { after, before, expect, test } from "@odoo/hoot";
 import {
     clear,
@@ -8120,7 +8121,7 @@ test(`correct amount of buttons`, async () => {
 
     const assertFormContainsNButtonsWithSizeClass = async function (sizeClass, n) {
         screenSize = sizeClass;
-        formView.render(true); // deep rendering
+        render(formView, true); // deep rendering
         await animationFrame();
         expect(`.o-form-buttonbox button.oe_stat_button`).toHaveCount(n);
     };

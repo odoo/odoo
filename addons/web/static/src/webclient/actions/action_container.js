@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { Component, xml, onWillDestroy } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
@@ -16,7 +17,7 @@ export class ActionContainer extends Component {
         this.info = {};
         this.onActionManagerUpdate = ({ detail: info }) => {
             this.info = info;
-            this.render();
+            render(this);
         };
         this.env.bus.addEventListener("ACTION_MANAGER:UPDATE", this.onActionManagerUpdate);
         onWillDestroy(() => {

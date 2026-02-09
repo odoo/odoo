@@ -1,4 +1,4 @@
-import { onWillRender, useRef, useState } from "@web/owl2/utils";
+import { render, onWillRender, useRef, useState } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -268,7 +268,7 @@ export class ListRenderer extends Component {
         useBus(this.uiService.bus, "resize", () => {
             if (isSmall !== this.uiService.isSmall) {
                 isSmall = this.uiService.isSmall;
-                this.render();
+                render(this);
             }
         });
 
@@ -1179,7 +1179,7 @@ export class ListRenderer extends Component {
             total: list.count,
             onUpdate: async ({ offset, limit }) => {
                 await list.load({ limit, offset });
-                this.render(true);
+                render(this, true);
             },
             withAccessKey: false,
         };
@@ -2102,7 +2102,7 @@ export class ListRenderer extends Component {
         this.saveOptionalActiveFields(
             this.allColumns.filter((col) => this.optionalActiveFields[col.name] && col.optional)
         );
-        this.render();
+        render(this);
     }
 
     /**
@@ -2124,13 +2124,13 @@ export class ListRenderer extends Component {
         this.saveOptionalActiveFields(
             this.allColumns.filter((col) => this.optionalActiveFields[col.name] && col.optional)
         );
-        this.render();
+        render(this);
     }
 
     toggleDebugOpenView() {
         this.debugOpenView = !this.debugOpenView;
         browser.localStorage.setItem(this.keyDebugOpenView, this.debugOpenView);
-        this.render();
+        render(this);
     }
 
     /**

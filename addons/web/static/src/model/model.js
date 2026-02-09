@@ -1,4 +1,4 @@
-import { useComponent } from "@web/owl2/utils";
+import { render, useComponent } from "@web/owl2/utils";
 import { RPCError } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { Race } from "@web/core/utils/concurrency";
@@ -137,7 +137,7 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
 
     const model = new ModelClass(component.env, params, services);
 
-    const onUpdate = () => component.render(true);
+    const onUpdate = () => render(component, true);
     model.bus.addEventListener("update", onUpdate);
     onWillUnmount(() => model.bus.removeEventListener("update", onUpdate));
 

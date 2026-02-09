@@ -1,4 +1,4 @@
-import { useChildSubEnv, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { render, useChildSubEnv, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
@@ -50,7 +50,7 @@ export class NavBar extends Component {
         let adaptCounter = 0;
         const renderAndAdapt = () => {
             adaptCounter++;
-            this.render();
+            render(this);
         };
 
         systrayRegistry.addEventListener("UPDATE", renderAndAdapt);
@@ -211,7 +211,11 @@ export class NavBar extends Component {
             // Do not render if more menu items stayed the same.
             return;
         }
-        return this.render();
+        this.render();
+    }
+
+    render() {
+        render(this);
     }
 
     onNavBarDropdownItemSelection(menu) {

@@ -1,4 +1,4 @@
-import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { render, onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { Component, useExternalListener } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";
@@ -72,7 +72,7 @@ export class StatusBarField extends Component {
         const adjust = () => {
             status = "adjusting";
             this.adjustVisibleItems();
-            this.render();
+            render(this);
         };
 
         useLayoutEffect(() => {

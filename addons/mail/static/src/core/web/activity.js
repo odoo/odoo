@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { render, useState } from "@web/owl2/utils";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
@@ -48,7 +48,7 @@ export class Activity extends Component {
     updateDelayAtNight() {
         browser.clearTimeout(this.updateDelayMidnightTimeout);
         this.updateDelayMidnightTimeout = browser.setTimeout(
-            () => this.render(),
+            () => render(this),
             getMsToTomorrow() + 100
         ); // Make sure there is no race condition
     }

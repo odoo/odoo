@@ -1,4 +1,4 @@
-import { useComponent, useLayoutEffect, useState } from "@web/owl2/utils";
+import { render, useComponent, useLayoutEffect, useState } from "@web/owl2/utils";
 import { browser } from "./browser/browser";
 
 import { Component, onWillUpdateProps, status, xml } from "@odoo/owl";
@@ -87,7 +87,7 @@ export function useTransition({
                 if (status(component) === "mounted" || immediate) {
                     state.stage = "enter";
                     // force a render here so that we get a patch even if the state didn't change
-                    component.render();
+                    render(component);
                     onNextPatch = () => {
                         state.stage = "enter-active";
                     };

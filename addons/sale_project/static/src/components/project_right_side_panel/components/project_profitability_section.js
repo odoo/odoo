@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { render, useState } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
 import { formatFloat, formatFloatTime } from "@web/views/fields/formatters";
@@ -64,7 +64,7 @@ export class ProjectProfitabilitySection extends Component {
         );
         this.sale_items = [...this.sale_items, ...newItems.sol_items];
         this.state.displayLoadMore = newItems.displayLoadMore;
-        this.render();
+        render(this);
     }
 
     async onSaleItemActionClick(params) {

@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { describe, expect, test } from "@odoo/hoot";
 import { press, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -60,7 +61,7 @@ test("a component can be the  UI active element: simple usage", async () => {
     expect(getService("ui").activeElement).toBe(queryOne("#owner"));
     expect("#owner input").toBeFocused();
     comp.hasRef = false;
-    comp.render();
+    render(comp);
     await animationFrame();
     expect(getService("ui").activeElement).toBe(document);
     expect(document.body).toBeFocused();

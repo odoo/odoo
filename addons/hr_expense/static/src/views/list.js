@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { ExpenseDashboard } from "@hr_expense/components/expense_dashboard";
 import { ExpenseDocumentUpload, ExpenseDocumentDropZone } from "@hr_expense/mixins/document_upload";
 
@@ -55,7 +56,7 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
                 },
                 onClose: async () => {
                     await this.model.root.load();
-                    this.render(true);
+                    render(this, true);
                 }
             });
         }

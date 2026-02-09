@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, edit, press, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
@@ -74,7 +75,7 @@ async function makeExpressionEditor(params = {}) {
                         props.update(expression);
                     }
                     this.expressionEditorProps.expression = expression;
-                    this.render();
+                    render(this);
                 },
             };
             this.expressionEditorProps.fields = fieldFilters
@@ -83,7 +84,7 @@ async function makeExpressionEditor(params = {}) {
         }
         async set(expression) {
             this.expressionEditorProps.expression = expression;
-            this.render();
+            render(this);
             await animationFrame();
         }
     }

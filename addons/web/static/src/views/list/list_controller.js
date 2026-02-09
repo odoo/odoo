@@ -1,4 +1,4 @@
-import { onWillRender, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { render, onWillRender, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
 import { user } from "@web/core/user";
@@ -331,7 +331,7 @@ export class ListController extends Component {
             if (!list.editedRecord) {
                 await (group || list).addNewRecord(this.editable === "top");
             }
-            this.render();
+            render(this);
         } else {
             await this.props.createRecord();
         }

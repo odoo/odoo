@@ -1,4 +1,5 @@
 /* eslint no-restricted-syntax: 0 */
+import { render } from "@web/owl2/utils";
 import { after, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import {
@@ -216,7 +217,7 @@ test("[cache] update the cache if hash are different - template", async () => {
         "hash: 30b", //Fetch with the hash of the translation in cache
     ]);
 
-    component.render();
+    render(component);
     await animationFrame();
     // The value hasn't been updated with the new translation, this is because owl caches the translated templates for performance reasons.
     // This is a known limitation.
@@ -293,7 +294,7 @@ test("[cache] update the cache if hash are different - js", async () => {
         "hash: 30b", //Fetch with the hash of the translation in cache
     ]);
 
-    component.render();
+    render(component);
     await animationFrame();
     // Using the updated translated terms
     expect("#main").toHaveText("Salut");

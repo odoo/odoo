@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { render, useState } from "@web/owl2/utils";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -71,7 +71,7 @@ export class HrOrgChart extends Component {
             this.managers = [];
             this.children = [];
             if (this.view_employee_id) {
-                this.render(true);
+                render(this, true);
             }
             this.view_employee_id = null;
         } else if (employeeId !== this.view_employee_id || force) {
@@ -97,7 +97,7 @@ export class HrOrgChart extends Component {
             this.children = orgData.children;
             this.managers_more = orgData.managers_more;
             this.self = orgData.self;
-            this.render(true);
+            render(this, true);
         }
     }
 

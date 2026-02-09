@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
@@ -86,7 +87,7 @@ export class Many2ManyTagsAvatarFieldPopover extends Many2ManyTagsAvatarField {
     async _saveUpdate() {
         await this.props.record.save({ reload: false });
         // manual render to dirty record
-        this.render();
+        render(this);
         // update dropdown
         this.autoCompleteRef.el?.querySelector("input")?.click();
     }

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { render, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
@@ -447,7 +447,7 @@ export class KanbanController extends Component {
                     if (!noReload) {
                         await root.load();
                         this.model.useSampleModel = false;
-                        this.render(true); // FIXME WOWL reactivity
+                        render(this, true); // FIXME WOWL reactivity
                     }
                 },
             };

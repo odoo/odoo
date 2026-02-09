@@ -1,3 +1,4 @@
+import { render } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { press, queryAll, queryAllAttributes, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockDate, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
@@ -72,13 +73,13 @@ async function makeDomainSelector(params = {}) {
                         props.update(domain, fromDebug);
                     }
                     this.domainSelectorProps.domain = domain;
-                    this.render();
+                    render(this);
                 },
             };
         }
         async set(domain) {
             this.domainSelectorProps.domain = domain;
-            this.render();
+            render(this);
             await animationFrame();
         }
     }
@@ -468,7 +469,7 @@ test("multi selection", async () => {
         }
         update(domain) {
             this.domain = domain;
-            this.render();
+            render(this);
         }
     }
 
@@ -632,7 +633,7 @@ test("debug input in model field selector popover", async () => {
         update(domain) {
             expect.step(domain);
             this.domain = domain;
-            this.render();
+            render(this);
         }
     }
     await mountWithCleanup(Parent);
@@ -1010,7 +1011,7 @@ test("support properties", async () => {
         update(domain) {
             expect(domain).toBe(expectedDomain);
             this.domain = domain;
-            this.render();
+            render(this);
         }
     }
 
