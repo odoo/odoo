@@ -6,8 +6,9 @@ from werkzeug.exceptions import HTTPException
 from odoo.tools._vendor.useragents import UserAgent
 from odoo.tools.facade import Proxy, ProxyAttr, ProxyFunc
 
-# Please import DEFAULT_MAX_CONTENT_LENGTH from odoo.http.requestlib
+# Please import those two from odoo.http.requestlib
 DEFAULT_MAX_CONTENT_LENGTH = 128 * 1024 * 1024  # 128MiB
+MAX_FORM_SIZE = 10 * 1024 * 1024  # 10MiB
 
 
 class HTTPRequest:
@@ -16,7 +17,7 @@ class HTTPRequest:
         httprequest.user_agent_class = UserAgent  # use vendored userAgent since it will be removed in 2.1
         httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableMultiDict
         httprequest.max_content_length = DEFAULT_MAX_CONTENT_LENGTH
-        httprequest.max_form_memory_size = 10 * 1024 * 1024  # 10 MB
+        httprequest.max_form_memory_size = MAX_FORM_SIZE
         self._session_id__ = httprequest.cookies.get('session_id', '')
 
         self.__wrapped = httprequest
