@@ -1,4 +1,5 @@
-import { Component, onWillDestroy, useChildSubEnv, xml } from "@odoo/owl";
+import { useChildSubEnv } from "@web/owl2/utils";
+import { Component, onWillDestroy, xml } from "@odoo/owl";
 
 const GROUPS = new Map();
 

@@ -1,6 +1,6 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
 import { useChildRefs, useForwardRefsToParent, useScrollState } from "@mail/utils/common/hooks";
-import { Component, useChildSubEnv, useRef, useState, xml } from "@odoo/owl";
+import { Component, useRef, useState, xml } from "@odoo/owl";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 
 /**

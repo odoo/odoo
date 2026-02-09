@@ -1,8 +1,8 @@
-import { useComponent, useLayoutEffect } from "@web/owl2/utils";
+import { useChildSubEnv, useComponent, useLayoutEffect } from "@web/owl2/utils";
 import { reposition } from "@web/core/position/utils";
 import { omit } from "@web/core/utils/objects";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
-import { EventBus, onWillDestroy, useChildSubEnv, useRef } from "@odoo/owl";
+import { EventBus, onWillDestroy, useRef } from "@odoo/owl";
 
 /**
  * @typedef {import("@web/core/position/utils").ComputePositionOptions} ComputePositionOptions

@@ -1,4 +1,5 @@
-import { Component, markRaw, reactive, useChildSubEnv, xml } from "@odoo/owl";
+import { useChildSubEnv } from "@web/owl2/utils";
+import { Component, markRaw, reactive, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 class DialogWrapper extends Component {

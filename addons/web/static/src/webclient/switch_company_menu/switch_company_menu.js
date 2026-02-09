@@ -1,9 +1,10 @@
+import { useChildSubEnv } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 
-import { Component, useChildSubEnv, useRef, useState } from "@odoo/owl";
+import { Component, useRef, useState } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { _t } from "@web/core/l10n/translation";
 import { symmetricalDifference } from "@web/core/utils/arrays";
@@ -134,7 +135,7 @@ export class CompanySelector {
     _getBranches(companyId) {
         return getCompany(companyId).child_ids || [];
     }
-    
+
     _isCompanyAllowed(companyId) {
         return user.allowedCompanies.some((c) => c.id == companyId);
     }
