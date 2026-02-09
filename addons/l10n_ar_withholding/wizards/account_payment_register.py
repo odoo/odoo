@@ -138,7 +138,8 @@ class AccountPaymentRegister(models.TransientModel):
                 '|', ('from_date', '>=', date), ('from_date', '=', False),
                 '|', ('to_date', '<=', date), ('to_date', '=', False),
                 ('partner_id', '=', wizard.partner_id.commercial_partner_id.id),
-                ('tax_id.l10n_ar_withholding_payment_type', '=', wizard.partner_type)
+                ('tax_id.l10n_ar_withholding_payment_type', '=', wizard.partner_type),
+                ('tax_id.active', '=', True)
             ])
             wizard.l10n_ar_withholding_ids = [Command.clear()] + [Command.create({'tax_id': x.tax_id.id}) for x in partner_taxes]
 
