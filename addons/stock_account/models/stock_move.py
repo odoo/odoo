@@ -233,7 +233,55 @@ class StockMove(models.Model):
             return 0
         total_value = sum(self.mapped('value'))
         total_qty = sum(m._get_valued_qty() for m in self)
+<<<<<<< a60570453c671c23acb66ee8c00745e7b9ec03ab
         return total_value / total_qty if total_qty else self.product_id.standard_price
+||||||| 5d2e4b0f3fa8cdf2a977db05c7c2565b06ca2513
+        return total_value / total_qty if total_qty else 0
+
+    def _get_cogs_price_unit(self, quantity=0):
+        """ Returns the COGS unit price to value this stock move
+        quantity should be given in product uom """
+
+        total_qty = sum(m._get_valued_qty() for m in self)
+        if not total_qty:
+            return 0
+        return sum(self.mapped('value')) / total_qty if self.product_id.cost_method == 'fifo' else self.product_id.standard_price
+
+    @api.model
+    def _get_valued_types(self):
+        """Returns a list of `valued_type` as strings. During `action_done`, we'll call
+        `_is_[valued_type]'. If the result of this method is truthy, we'll consider the move to be
+        valued.
+
+        :returns: a list of `valued_type`
+        :rtype: list
+        """
+        return ['in', 'out', 'dropshipped', 'dropshipped_returned']
+=======
+        return total_value / total_qty if total_qty else 0
+
+    def _get_cogs_price_unit(self, quantity=0):
+        """ Returns the COGS unit price to value this stock move
+        quantity should be given in product uom """
+
+        if len(self.product_id) > 1:
+            return 0
+        total_qty = sum(m._get_valued_qty() for m in self)
+        if not total_qty:
+            return 0
+        return sum(self.mapped('value')) / total_qty if self.product_id.cost_method == 'fifo' else self.product_id.standard_price
+
+    @api.model
+    def _get_valued_types(self):
+        """Returns a list of `valued_type` as strings. During `action_done`, we'll call
+        `_is_[valued_type]'. If the result of this method is truthy, we'll consider the move to be
+        valued.
+
+        :returns: a list of `valued_type`
+        :rtype: list
+        """
+        return ['in', 'out', 'dropshipped', 'dropshipped_returned']
+>>>>>>> 3d64d97e6946611b3f11fe9a8cdc056865a54fb6
 
     def _set_value(self, correction_quantity=None):
         """Set the value of the move.
