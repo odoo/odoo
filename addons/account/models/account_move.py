@@ -4014,7 +4014,11 @@ class AccountMove(models.Model):
         # reconcile if state is in draft and move has reversal_entry_id set
         draft_reverse_moves = to_post.filtered(lambda move: move.reversed_entry_id and move.reversed_entry_id.state == 'posted')
 
-        to_post.write({
+        to_post.with_context(
+            skip_invoice_sync=True,
+            skip_invoice_line_sync=True,
+            skip_account_move_synchronization=True,
+        ).write({
             'state': 'posted',
             'posted_before': True,
         })

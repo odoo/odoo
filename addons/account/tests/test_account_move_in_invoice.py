@@ -2839,3 +2839,92 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         action = credit_note_wizard.reverse_moves()
         credit_note = self.env['account.move'].browse(action['res_id'])
         self.assertEqual(credit_note.amount_total, invoice.amount_total)
+
+    def test_preserve_user_modifications_on_posting(self):
+        """Test that user modifications to journal entry lines are preserved when posting invoices.
+
+        Scenario:
+        1. Create a sales invoice with 2 product lines: price 100 and 200 (total 300)
+        2. Use Form to manually modify the journal entry lines to allocate amounts by 40% and 60% ratio
+        3. Post the invoice
+        4. Verify that user modifications are preserved after posting
+        """
+        # Create a sales invoice with 2 product lines using Form
+        with Form(self.env['account.move'].with_context(default_move_type='out_invoice')) as invoice_form:
+            invoice_form.partner_id = self.partner_a
+            invoice_form.invoice_date = fields.Date.from_string('2019-01-01')
+
+            # Add first product line (price 100)
+            with invoice_form.invoice_line_ids.new() as line_form:
+                line_form.product_id = self.product_a
+                line_form.quantity = 1.0
+                line_form.price_unit = 100.0
+                line_form.tax_ids.clear()  # No taxes for simplicity
+
+            # Add second product line (price 200)
+            with invoice_form.invoice_line_ids.new() as line_form:
+                line_form.product_id = self.product_b
+                line_form.quantity = 1.0
+                line_form.price_unit = 200.0
+                line_form.tax_ids.clear()  # No taxes for simplicity
+
+        invoice = invoice_form.save()
+
+        # Get the product lines (should be 2 lines for the 2 products)
+        product_lines = invoice.line_ids.filtered(lambda l: l.display_type == 'product')
+        self.assertEqual(len(product_lines), 2, "Should have 2 product lines")
+
+        # Sort lines by credit amount to ensure consistent order
+        product_lines = product_lines.sorted(lambda l: l.credit, reverse=True)
+
+        # Initially, amounts should be 200 and 100
+        self.assertEqual(product_lines[0].credit, 200.0, "First line should have 200")
+        self.assertEqual(product_lines[1].credit, 100.0, "Second line should have 100")
+
+        # Calculate 40% and 60% allocation of total (300)
+        total_amount = 300.0
+        allocation_40_percent = total_amount * 0.4  # 120.0
+        allocation_60_percent = total_amount * 0.6  # 180.0
+
+        # Use Form to simulate user modifications to journal entry lines
+        with Form(invoice) as invoice_form:
+            # Find and modify the first product line (originally 200) to 60% allocation (180)
+            with invoice_form.line_ids.edit(0) as line_form:
+                line_form.amount_currency = -allocation_60_percent  # 180.0 (60%)
+            with invoice_form.line_ids.edit(1) as line_form:
+                line_form.amount_currency = -allocation_40_percent  # 120.0 (40%)
+
+        invoice = invoice_form.save()
+        invoice.action_post()
+
+        # Verify that user modifications are preserved after posting
+        self.assertRecordValues(invoice.line_ids, [
+            # Product lines with user modifications preserved (60% and 40% allocation)
+            {
+                'display_type': 'product',
+                'credit': 180.0,
+                'amount_currency': -180.0,
+                'product_id': self.product_a.id,
+            },
+            {
+                'display_type': 'product',
+                'credit': 120.0,
+                'amount_currency': -120.0,
+                'product_id': self.product_b.id,
+            },
+            # Receivable line balances the total
+            {
+                'display_type': 'payment_term',
+                'debit': 300.0,
+                'credit': 0.0,
+                'amount_currency': 300.0,
+                'product_id': False,
+            }
+        ])
+
+        # Verify invoice state and totals
+        self.assertRecordValues(invoice, [{
+            'state': 'posted',
+            'amount_total': 300.0,
+            'amount_untaxed': 300.0,
+        }])
