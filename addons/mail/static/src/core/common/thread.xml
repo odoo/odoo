@@ -82,7 +82,7 @@
         <div class="o-mail-Thread-error">
             An error occurred while fetching messages.
         </div>
-        <span t-if="props.thread.hasLoadingFailedError" class="o-xsmaller text-muted" t-out="props.thread.hasLoadingFailedError"/>
+        <span t-if="props.thread.hasLoadingFailedError" class="o-xsmaller text-muted" t-out="window.String(props.thread.hasLoadingFailedError)"/>
         <button class="btn btn-link" t-on-click="onClickLoadOlder">
             Click here to retry
         </button>

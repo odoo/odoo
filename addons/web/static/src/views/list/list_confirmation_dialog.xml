@@ -47,7 +47,7 @@
                                     <td style="pointer-events: none;">
                                         <span t-if="isValueEmpty(field)">None</span>
                                         <span t-elif="isValueOperation(field)" t-att-name="field.name">
-                                            <t t-out="field.label"></t> <t t-out="props.changes[field.name]"></t>
+                                            <t t-out="field.label"></t> <t t-out="window.string(props.changes[field.name])"></t>
                                         </span>
                                         <Field t-else="" name="field.name" record="props.record" type="field.widget" readonly="true" fieldInfo="field.fieldNode"/>
                                     </td>

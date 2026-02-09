@@ -45,7 +45,7 @@
                             <t t-set="discountPc" t-value="getGlobalDiscountPc()" />
                             <div t-if="discountPc" class="text-dark"
                                 t-attf-class="{{ this.ui.isSmall ? 'fs-6' : 'fs-2' }}">
-                                With <t t-out="discountPc" />% discount
+                                With <t t-out="window.String(discountPc)" />% discount
                             </div>
                         </div>
 
