@@ -1,4 +1,4 @@
-import { onWillRender } from "@web/owl2/utils";
+import { onWillRender, useChildSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
@@ -9,7 +9,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { FormRenderer } from "@web/views/form/form_renderer";
 
-import { Component, toRaw, useChildSubEnv } from "@odoo/owl";
+import { Component, toRaw } from "@odoo/owl";
 
 /**
  * This widget is only used for the 'group_ids' field of the 'res.users'

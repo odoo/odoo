@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
@@ -14,7 +14,6 @@ import {
     onWillUpdateProps,
     reactive,
     toRaw,
-    useChildSubEnv,
     useRef,
     useState,
 } from "@odoo/owl";

@@ -1,5 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onWillDestroy, useChildSubEnv, useRef, useState } from "@odoo/owl";
+import { useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
+import { Component, onWillDestroy, useRef, useState } from "@odoo/owl";
 import { sortBy } from "@web/core/utils/arrays";
 import { ErrorHandler } from "@web/core/utils/components";
 

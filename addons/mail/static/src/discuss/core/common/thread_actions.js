@@ -1,3 +1,4 @@
+import { useChildSubEnv } from "@web/owl2/utils";
 import { ACTION_TAGS } from "@mail/core/common/action";
 import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { AttachmentPanel } from "@mail/discuss/core/common/attachment_panel";
@@ -7,8 +8,6 @@ import { ChannelMemberList } from "@mail/discuss/core/common/channel_member_list
 import { DeleteThreadDialog } from "@mail/discuss/core/common/delete_thread_dialog";
 import { NotificationSettings } from "@mail/discuss/core/common/notification_settings";
 import { PinnedMessagesPanel } from "@mail/discuss/core/common/pinned_messages_panel";
-
-import { useChildSubEnv } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";

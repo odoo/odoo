@@ -1,8 +1,8 @@
+import { useChildSubEnv } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { getVideoUrl } from "@html_editor/utils/url";
-import { useChildSubEnv } from "@odoo/owl";
 import { CustomMediaDialog } from "./custom_media_dialog";
 
 export class X2ManyMediaViewer extends X2ManyField {

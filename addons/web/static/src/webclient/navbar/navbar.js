@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
@@ -15,7 +15,6 @@ import {
     useRef,
     useState,
     onWillUnmount,
-    useChildSubEnv,
 } from "@odoo/owl";
 
 const systrayRegistry = registry.category("systray");
