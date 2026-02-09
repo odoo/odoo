@@ -211,9 +211,16 @@ class AccountBankStatement(models.Model):
         for stmt in self:
             description = None
             if not stmt.is_valid:
-                description = _("The starting balance doesn't match the ending balance of the previous statement, or an earlier statement is missing.")
+                description = _(
+                    'Initial balance (%s) does not match previous statement',
+                    formatLang(self.env, stmt.balance_start, currency_obj=stmt.currency_id),
+                )
             elif not stmt.is_complete:
-                description = _("The running balance (%s) doesn't match the specified ending balance.", formatLang(self.env, stmt.balance_end, currency_obj=stmt.currency_id))
+                description = _(
+                    'Incorrect ending balance, expected %s',
+                    formatLang(self.env, stmt.balance_end, currency_obj=stmt.currency_id),  # TODO check if _end or _end_real
+                )
+            # elif not self (no init balance) TODO: implement once NASTI explains how it should work
             stmt.problem_description = description
 
     def _search_is_valid(self, operator, value):
@@ -225,18 +232,19 @@ class AccountBankStatement(models.Model):
     # -------------------------------------------------------------------------
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
+    def _get_previous_statement(self):
+        """Get the previous statement based on first_line_index ordering."""
+        self.ensure_one()
+        return self.env['account.bank.statement'].search([
+            ('journal_id', '=', self.journal_id.id),
+            ('first_line_index', '<', self.first_line_index),
+            ('first_line_index', '!=', False),
+        ], order='first_line_index DESC', limit=1)
+
     def _get_statement_validity(self):
         """ Compares the balance_start to the previous statements balance_end_real """
         self.ensure_one()
-        previous = self.env['account.bank.statement'].search(
-            [
-                ('first_line_index', '<', self.first_line_index),
-                ('first_line_index', '!=', False),
-                ('journal_id', '=', self.journal_id.id),
-            ],
-            limit=1,
-            order='first_line_index DESC',
-        )
+        previous = self._get_previous_statement()
         return not previous or self.currency_id.compare_amounts(self.balance_start, previous.balance_end_real) == 0
 
     def _get_invalid_statement_ids(self, all_statements=None):
@@ -273,6 +281,44 @@ class AccountBankStatement(models.Model):
         })
         res = self.env.cr.fetchall()
         return [r[0] for r in res]
+
+    def action_open_statements_to_review(self):
+        self.ensure_one()
+
+        statement_line_ids = self.env['account.bank.statement.line']
+        # if not self.is_complete:  # not is_complete but Idk what yet, depends on what NASTI says about no_initial_balance
+        #     lines_with_no_statement = self.env['account.bank.statement.line'].search_fetch(
+        #         domain=[
+        #             ('journal_id', '=', self.journal_id.id),
+        #             ('statement_id', '=', False),
+        #             ('internal_index', '<', self.first_line_index),
+        #         ],
+        #         field_names=['id'],
+        #     )
+        #     statement_line_ids += self.line_ids
+        #     statement_line_ids |= lines_with_no_statement
+        # elif not self.is_valid:
+        if not self.is_valid:
+            statement_line_ids = self.line_ids
+            previous_statement = self._get_previous_statement()
+            if previous_statement:
+                statement_line_ids |= previous_statement.line_ids
+
+        return statement_line_ids._get_records_action(
+            name=_("Review Statements"),
+            views=[[False, 'kanban'], [False, 'list']],
+            path="reconciliation",  # to allow going back and forward without breaking the URL
+            context={
+                **self.env.context,
+                'kanban_view_ref': 'account_accountant.view_bank_statement_line_kanban_bank_rec_widget',
+            },
+        )
+
+    def action_open_entries(self):
+        self.ensure_one()
+        action = self.env.ref('account.action_account_moves_all_audit').read()[0]
+        action['domain'] = [('line_ids.bank_statement_line_id.statement_id', '=', self.id)]
+        return action
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS

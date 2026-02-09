@@ -795,20 +795,24 @@ class AccountJournal(models.Model):
     def _get_journal_dashboard_bank_running_balance(self):
         # In order to not recompute everything from the start, we take the last
         # bank statement and only sum starting from there.
-        self.env.cr.execute("""
+        self.env.cr.execute(SQL("""
             SELECT journal.id AS journal_id,
+                   journal.name as journal_name,
                    statement.id AS statement_id,
                    COALESCE(statement.balance_end_real, 0) AS balance_end_real,
                    without_statement.amount AS unlinked_amount,
-                   without_statement.count AS unlinked_count
+                   without_statement.count AS unlinked_count,
+                   misc.amount AS misc_amount,
+                   misc.count AS misc_count
               FROM account_journal journal
          LEFT JOIN LATERAL (  -- select latest statement based on the date
                            SELECT id,
                                   first_line_index,
-                                  balance_end_real
+                                  balance_end_real,
+                                  date
                              FROM account_bank_statement
                             WHERE journal_id = journal.id
-                              AND company_id = ANY(%s)
+                              AND company_id = ANY(%(company_ids)s)
                               AND first_line_index IS NOT NULL
                          ORDER BY date DESC, id DESC
                             LIMIT 1
@@ -821,19 +825,31 @@ class AccountJournal(models.Model):
                             WHERE stl.statement_id IS NULL
                               AND move.state != 'cancel'
                               AND stl.journal_id = journal.id
-                              AND stl.company_id = ANY(%s)
+                              AND stl.company_id = ANY(%(company_ids)s)
                               AND stl.internal_index >= COALESCE(statement.first_line_index, '')
                             LIMIT 1
                    ) without_statement ON TRUE
-             WHERE journal.id = ANY(%s)
-        """, [self.env.companies.ids, self.env.companies.ids, self.ids])
+         LEFT JOIN LATERAL ( -- sum all misc entries in the journal's default account after the last statement date
+                           SELECT COALESCE(SUM(aml.balance), 0.0) AS amount,
+                                  COUNT(*)
+                             FROM account_move_line aml
+                            WHERE aml.statement_line_id IS NULL  -- or statement_id? what's the difference?
+                              AND aml.parent_state = 'posted'
+                              AND aml.payment_id IS NULL
+                              AND aml.account_id = journal.default_account_id
+                              AND aml.company_id = ANY(%(company_ids)s)
+                              AND aml.date > statement.date
+                   ) misc ON TRUE
+
+             WHERE journal.id = ANY(%(journal_ids)s)
+        """, company_ids=self.env.companies.ids, journal_ids=self.ids))
         query_res = {res['journal_id']: res for res in self.env.cr.dictfetchall()}
         result = {}
         for journal in self:
             journal_vals = query_res[journal.id]
             result[journal.id] = (
-                bool(journal_vals['statement_id'] or journal_vals['unlinked_count']),
-                journal_vals['balance_end_real'] + journal_vals['unlinked_amount'],
+                bool(journal_vals['statement_id'] or journal_vals['unlinked_count'] or journal_vals['misc_count']),
+                journal_vals['balance_end_real'] + journal_vals['unlinked_amount'] + journal_vals['misc_amount'],
             )
         return result
 
@@ -1139,7 +1155,7 @@ class AccountJournal(models.Model):
             'name': _("Journal Entries"),
             'res_model': 'account.move',
             'search_view_id': (self.env.ref('account.view_account_move_with_gaps_in_sequence_filter').id, 'search'),
-            'view_mode': 'list,form',
+            'view_mode': 'kanban,form',
             'domain': domain,
             'context': {
                 'search_default_group_by_sequence_prefix': 1,
