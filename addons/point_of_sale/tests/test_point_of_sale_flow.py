@@ -2100,3 +2100,98 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.env['pos.order'].sync_from_ui([product_order])
         order = self.env['pos.order'].search([])
         self.assertEqual(order.name, f"/AA - {order.pos_reference.split('-')[-1]} - 1.B")
+
+    def test_invoice_after_session_close_anglo_saxon_stock_reversal(self):
+        """
+        Test that invoicing after session close with anglo-saxon accounting
+        correctly reverses the stock valuation entries.
+        """
+        self.env.company.anglo_saxon_accounting = True
+        self.env.company.inventory_valuation = "real_time"
+
+        self.pos_config_usd.open_ui()
+        current_session = self.pos_config_usd.current_session_id
+        current_session.update_stock_at_closing = False
+
+        stock_variation_account = self.env["account.account"].create({
+            "name": "Stock Variation Test",
+            "code": "STVAR001",
+            "account_type": "expense",
+        })
+        stock_valuation_account = self.env["account.account"].create({
+            "name": "Stock Valuation Test",
+            "code": "STVAL001",
+            "account_type": "asset_current",
+            "account_stock_variation_id": stock_variation_account.id,
+        })
+
+        product = self.env["product.product"].create({
+            "name": "Storable Product",
+            "is_storable": True,
+            "available_in_pos": True,
+            "lst_price": 100.0,
+            "standard_price": 50.0,  # Cost price
+            "categ_id": self.env["product.category"].create({
+                "name": "Test Anglo-Saxon Category",
+                "property_valuation": "real_time",
+                "property_cost_method": "fifo",
+                "property_stock_valuation_account_id": stock_valuation_account.id,
+            }).id,
+            "taxes_id": False,
+        })
+
+        self.env["stock.quant"]._update_available_quantity(
+            product,
+            self.pos_config_usd.picking_type_id.default_location_src_id,
+            10,
+        )
+
+        order, _ = self.create_backend_pos_order({
+            "order_data": {
+                "partner_id": self.partner_mobt.id,
+            },
+            "line_data": [
+                {"product_id": product.id, "qty": 1},
+            ],
+            "payment_data": [
+                {"payment_method_id": self.bank_payment_method.id, "amount": 100},
+            ],
+        })
+
+        self.assertEqual(order.state, "paid")
+        self.assertEqual(len(order.picking_ids), 1)
+        self.assertEqual(order.picking_ids.state, "done")
+
+        current_session.action_pos_session_closing_control()
+        self.assertEqual(current_session.state, "closed")
+
+        product_accounts = product._get_product_accounts()
+        expense_account = product_accounts["expense"]
+
+        session_move = current_session.move_id
+        session_expense_lines = session_move.line_ids.filtered(
+            lambda l: l.account_id == expense_account
+        )
+        self.assertGreater(len(session_expense_lines), 0)
+
+        session_expense_balance = sum(session_expense_lines.mapped("balance"))
+        self.assertGreater(
+            session_expense_balance,
+            0,
+            "Session closing should have a debit entry in expense account",
+        )
+
+        order.action_pos_order_invoice()
+
+        reversal_move = self.env["account.move"].search([("reversed_pos_order_id", "=", order.id)])
+        self.assertEqual(len(reversal_move), 1, "Should create one reversal move")
+
+        reversal_expense_lines = reversal_move.line_ids.filtered(lambda l: l.account_id == expense_account)
+        reversal_expense_balance = sum(reversal_expense_lines.mapped("balance"))
+        self.assertLess(
+            reversal_expense_balance,
+            0,
+            "Reversal move should have a credit entry (negative balance) in expense account "
+            "to properly reverse the session closing debit entry. "
+            f"Got {reversal_expense_balance}, but expected negative value. ",
+        )
