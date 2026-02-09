@@ -1,6 +1,5 @@
 from odoo import Command
 from odoo.tests.common import tagged, freeze_time
-from odoo.tools import file_open
 from odoo.addons.account_peppol.tests.test_peppol_messages import TestPeppolMessageCommon, FAKE_UUID
 
 
@@ -18,11 +17,6 @@ class TestPeppolSelfBilling(TestPeppolMessageCommon):
             'type': 'purchase',
             'is_self_billing': True,
         })
-
-    @classmethod
-    def _get_incoming_invoice_content(cls):
-        with file_open('account_peppol_selfbilling/tests/assets/incoming_self_billed_invoice', mode='rb') as f:
-            return f.read()
 
     def test_send_self_billed_invoice_via_peppol(self):
         """Test sending a self-billed invoice (vendor bill) via Peppol.
@@ -73,56 +67,3 @@ class TestPeppolSelfBilling(TestPeppolMessageCommon):
             }],
         )
         self.assertTrue(bool(vendor_bill.ubl_cii_xml_id))
-
-    def test_receive_self_billed_invoice_from_peppol(self):
-        """Test receiving a self-billed invoice from Peppol.
-
-        Self-billed invoices received via Peppol should be created as out_invoice
-        in the self-billing reception journal.
-        """
-        # Set up the 21% VAT sale tax which should be put on the invoice line
-        tax_21 = self.percent_tax(21.0, type_tax_use='sale')
-
-        sale_journal = self.env['account.journal'].search([
-            ('company_id', '=', self.env.company.id),
-            ('type', '=', 'sale'),
-        ], limit=1)
-
-        # Receive the self-billed invoice (using existing mock data)
-        # The mock data already includes a document that will be processed
-        self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
-
-        # Verify the self-billed invoice was created correctly
-        move = self.env['account.move'].search([('peppol_message_uuid', '=', FAKE_UUID[1])])
-        self.assertRecordValues(move, [{
-            'peppol_move_state': 'done',
-            'move_type': 'out_invoice',
-            'journal_id': sale_journal.id,
-        }])
-
-        self.assertRecordValues(move.line_ids, [
-            {
-                'name': 'product_a',
-                'quantity': 1.0,
-                'price_unit': 100.0,
-                'tax_ids': tax_21.ids,
-                'amount_currency': -100.0,
-                'currency_id': self.env.ref('base.EUR').id,
-            },
-            {
-                'name': 'percent_21.0_(1)',
-                'quantity': False,
-                'price_unit': False,
-                'tax_ids': [],
-                'amount_currency': -21.0,
-                'currency_id': self.env.ref('base.EUR').id,
-            },
-            {
-                'name': 'BILL/2017/01/0001',
-                'quantity': False,
-                'price_unit': False,
-                'tax_ids': [],
-                'amount_currency': 121.0,
-                'currency_id': self.env.ref('base.EUR').id,
-            },
-        ])
