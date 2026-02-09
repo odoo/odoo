@@ -239,6 +239,8 @@ class StockMove(models.Model):
         """ Returns the COGS unit price to value this stock move
         quantity should be given in product uom """
 
+        if len(self.product_id) > 1:
+            return 0
         total_qty = sum(m._get_valued_qty() for m in self)
         if not total_qty:
             return 0
