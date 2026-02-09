@@ -99,6 +99,10 @@ registry.category("web_tour.tours").add("course_review_modification", {
             trigger:
                 "#chatterRoot:shadow .o-mail-Message:contains(Second review) .o_website_rating_static[title='3 stars on 5']",
         },
+        // If it fails here, it means that empty messages are also being fetched.
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Chatter .o-mail-Message:count(1)",
+        },
         {
             trigger: "span:contains(Edit Review)",
             run: "click",

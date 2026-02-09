@@ -93,8 +93,13 @@ class PortalThreadController(ThreadController):
         }
 
     def _get_non_empty_message_domain(self):
-        return Domain(
-            "body", "not in", [False, '<span class="o-mail-Message-edited"></span>']
+        return (
+            Domain("body", "!=", False)
+            & Domain(
+                "body",
+                "not like",
+                '<span class="o-mail-Message-edited" data-o-datetime="%"></span>',
+            )
         ) | Domain("attachment_ids", "!=", False)
 
     def _setup_portal_message_fetch_extra_domain(self, data) -> Domain:
