@@ -3,19 +3,26 @@ odoo.define("@odoo/owl", [], function () {
 
     // COMPATIBILITY LAYER ------------------------------------------------------
 
+    const { proxy, useEffect } = owl;
     // useState
     // owl.useState = owl.proxy;
 
     // reactive
-    // owl.reactive = function(value, cb) {
-    //     if (cb) {
-    //         // depreciation warning => probably require manual code update
-    //         console.warn("reactive is deprecated");
-    //         useEffect(cb());
-    //     }
-    //     return proxy(value);
-    // }
+    owl.reactive = function(value, cb) {
+        if (cb) {
+            // depreciation warning => probably require manual code update
+            // console.warn("reactive is deprecated");
+            // let called = false;
+            // useEffect(() => {
+            //     cb()
+            // });
+        }
+        return proxy(value);
+    }
 
+    owl.validate = function(value, schema) {
+        // todo: reimplement some parts of owl 2 validation code here
+    }
     // class EnvPlugin extends Plugin {
     // env = {};
     // }
