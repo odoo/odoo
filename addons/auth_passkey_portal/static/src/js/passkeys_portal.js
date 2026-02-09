@@ -24,7 +24,7 @@ export class PortalPasskey extends Interaction {
 
     async onRename() {
         this.services.dialog.add(InputConfirmationDialog, {
-            title: _t("Passkeys"),
+            title: _t("Rename Passkey"),
             body: renderToMarkup("auth_passkey_portal.rename", { oldname: this.name }),
             confirmLabel: _t("Rename"),
             confirm: async ({ inputEl }) => {

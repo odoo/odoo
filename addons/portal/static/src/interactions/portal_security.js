@@ -71,7 +71,7 @@ export class PortalSecurity extends Interaction {
                 // Remove `'Custom Date'` selection for portal user
                 duration_selection: duration.selection.filter((option) => option[0] !== "-1"),
             }),
-            confirmLabel: _t("Confirm"),
+            confirmLabel: _t("Create Key"),
             size: 'md',
             confirm: async ({ inputEl }) => {
                 const formData = Object.fromEntries(new FormData(inputEl.closest("form")));
@@ -97,6 +97,7 @@ export class PortalSecurity extends Interaction {
                         title: _t("API Key Ready"),
                         body: renderToMarkup("portal.keyshow", { key: res.context.default_key }),
                         confirmLabel: _t("Close"),
+                        size: 'md',
                     },
                     {
                         onClose: () => {
@@ -166,7 +167,7 @@ export async function handleCheckIdentity(wrapped, ormService, dialogService) {
         return new Promise((resolve) => {
             ormService.write("res.users.identitycheck", [checkId], {auth_method: 'password'});
             dialogService.add(InputConfirmationDialog, {
-                title: _t("Security Control"),
+                title: _t("Identity Verification"),
                 body: renderToMarkup("portal.identitycheck"),
                 confirmLabel: _t("Confirm Password"),
                 size: 'md',

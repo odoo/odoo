@@ -452,16 +452,30 @@ img, .media_iframe_video, .o_image {
 
 .o_portal_security_body {
     section {
-        margin-top: map-get($spacers, 5);
-        border-top: $border-width solid $border-color;
-        padding-top: map-get($spacers, 4);
+        &:where(:not([name="portal_change_password"])) {
+            margin-top: map-get($spacers, 5);
+            border-top: $border-width solid $border-color;
+            padding-top: map-get($spacers, 5);
+        }
 
         form.oe_reset_password_form {
             max-width: initial;
             margin: initial;
         }
-        label, button {
-            white-space: nowrap;
+        .oe_reset_password_form_grid {
+            --columns: 1;
+            --gap: #{map-get($spacers, 1)};
+            grid-template-columns: 1fr;
+
+            @include media-breakpoint-up(lg) {
+                --columns: 2;
+                --gap: #{map-get($spacers, 3)} #{map-get($spacers, 5)};
+                grid-template-columns: auto 1fr;
+
+                label {
+                    text-align: right;
+                }
+            }
         }
     }
     section[name="portal_deactivate_account"] {

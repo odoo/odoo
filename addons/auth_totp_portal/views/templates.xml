@@ -11,15 +11,16 @@
                 <t t-out="env.ref('auth_totp.view_totp_wizard').sudo().get_combined_arch()"/>
             </div>
             <section>
-                <h4>
-                    Two-factor authentication
-                    <a href="https://www.odoo.com/documentation/latest/applications/general/auth/2fa.html" target="_blank">
-                        <i title="Documentation" class="fa fa-fw o_button_icon fa-info-circle"></i>
+                <h2 class="h4">Two-factor authentication</h2>
+                <p class="text-muted small">Two-factor authentication adds an extra layer of security by requiring a special code
+                    each time you log in.
+                    <a title="Read More about Two-factor authentication" href="https://www.odoo.com/documentation/latest/applications/general/auth/2fa.html" target="_blank">
+                        Read more
                     </a>
-                </h4>
+                </p>
                 <t t-if="not user_id.totp_enabled">
-                    <div class="alert alert-secondary" role="status">
-                        <i class="fa fa-warning"/>
+                    <div class="alert alert-warning" role="status">
+                        <i class="fa fa-warning text-warning-emphasis" aria-hidden="true"/>
                         Two-factor authentication not enabled
                     </div>
                     <button type="button" class="btn btn-light" id="auth_totp_portal_enable">
@@ -27,13 +28,15 @@
                     </button>
                 </t>
                 <t t-else="">
-                    <span class="text-success">
-                        <i class="fa fa-check-circle"/>
-                        Two-factor authentication enabled
-                    </span>
-                    <button type="button" class="btn btn-link" id="auth_totp_portal_disable">
-                        (Disable two-factor authentication)
-                    </button>
+                    <div class="d-flex flex-wrap align-items-center border rounded p-2 px-lg-3 gap-2" role="status">
+                        <div class="d-flex align-items-center">
+                            <i class="fa fa-check-circle text-success fa-2x me-2" aria-hidden="true"/>
+                            <span>2FA authentication Enabled</span>
+                        </div>
+                        <button type="button" class="btn btn-warning ms-auto" id="auth_totp_portal_disable">
+                            Disable
+                        </button>
+                    </div>
                     <t t-if="len(user_id.totp_trusted_device_ids)">
                         <table class="table o_main_table">
                             <thead>

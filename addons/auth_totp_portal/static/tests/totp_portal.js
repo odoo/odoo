@@ -22,11 +22,11 @@ registry.category("web_tour.tours").add('totportal_tour_setup', {
     content: "Check the wizard has opened",
     trigger: '.o_auth_totp_enable_2FA',
 }, {
-    content: "Get secret from collapsed div",
-    trigger: 'a:contains("Cannot scan it?")',
+    content: "Get secret from input",
+    trigger: '.o_field_copy button:contains("Copy")',
 },
 {
-    trigger: `span[name="secret"]:hidden`,
+    trigger: `span[name="secret"]`,
     async run(helpers) {
         const secret = this.anchor.textContent;
         const token = await rpc("/totphook", {
@@ -41,7 +41,7 @@ registry.category("web_tour.tours").add('totportal_tour_setup', {
     expectUnloadPage: true,
 }, {
     content: "Check that the button has changed",
-    trigger: 'button:contains(Disable two-factor authentication)',
+    trigger: 'button:contains(Disable)',
 }]});
 
 registry.category("web_tour.tours").add('totportal_login_enabled', {
@@ -91,6 +91,10 @@ registry.category("web_tour.tours").add('totportal_login_enabled', {
 },{
     content: "Open totp wizard",
     trigger: 'button#auth_totp_portal_disable',
+    run: "click",
+}, {
+    content: "Confirm",
+    trigger: "button:contains(Yes, Disable 2FA)",
     run: "click",
 }, {
     content: "Check that we have to enter enhanced security mode",

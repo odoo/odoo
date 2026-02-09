@@ -2,31 +2,36 @@
     <template id="passkeys_portal_hook" name="Passkeys Portal hook" inherit_id="portal.portal_my_security">
         <xpath expr="//section[@name='portal_revoke_all_devices_popup']" position="before">
             <section name="portal_passkey_management">
-                <h4>
+                <h2 class="h4">
                     Passkeys
-                </h4>
-                <div>
-                    <table class="table">
+                </h2>
+                <p class="text-muted small">Passkeys are a simple and secure way to authenticate using biometrics, a hardware key, or PIN.</p>
+                <div t-if="user_id.auth_passkey_key_ids" class="table-responsive">
+                    <table class="table table-hover small">
                         <thead>
-                            <tr>
-                                <th>Name</th>
+                            <tr class="text-nowrap">
+                                <th classs="w-100">Name</th>
                                 <th>Created</th>
                                 <th>Last Used</th>
-                                <th/>
                                 <th/>
                             </tr>
                         </thead>
                         <tbody>
                             <t t-foreach="user_id.auth_passkey_key_ids" t-as="key">
-                                <tr class="o_passkey_portal_entry" t-att-id="key.id">
-                                    <td><span t-field="key.name" class="o_passkey_name"/></td>
-                                    <td><span t-field="key.create_date" t-options='{"widget": "datetime", "format": "short"}'/></td>
-                                    <td><span t-field="key.write_date" t-options='{"widget": "datetime", "format": "short"}'/></td>
+                                <tr class="o_passkey_portal_entry text-nowrap" t-att-id="key.id">
                                     <td>
-                                        <i class="fa fa-pencil o_passkey_portal_rename" type="button"/>
+                                        <span t-field="key.name" t-att-title="key.name" class="o_passkey_name text-wrap"/>
                                     </td>
                                     <td>
-                                        <i class="fa fa-trash text-danger o_passkey_portal_delete" type="button"/>
+                                        <time t-field="key.create_date" t-att-title="key.create_date" t-att-datetime="key.create_date" t-options='{"widget": "datetime", "format": "short"}'/>
+                                    </td>
+                                    <td>
+                                        <time t-field="key.write_date" t-att-title="key.write_date" t-att-datetime="key.write_date" t-options='{"widget": "datetime", "format": "short"}'/>
+                                    </td>
+                                    <td class="w-0 text-end">
+                                        <a class="o_passkey_portal_rename" role="button" t-attf-title='Rename passkey "{{key.name}}"'>Rename</a>
+                                        <span class="border-start mx-1" aria-hidden="true"/>
+                                        <a class="link-danger o_passkey_portal_delete" role="button" t-attf-title='Delete passkey "{{key.name}}"'>Delete</a>
                                     </td>
                                 </tr>
                             </t>
@@ -34,7 +39,7 @@
                     </table>
                 </div>
                 <button type="button" class="btn btn-light mt-1" id="portal_passkey_add">
-                    Add Passkey
+                    <span class="fs-5 lh-1" aria-hidden="true">+</span> Create a Passkey
                 </button>
             </section>
         </xpath>
