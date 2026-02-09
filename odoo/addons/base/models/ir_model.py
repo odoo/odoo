@@ -1803,10 +1803,23 @@ class IrModelFieldsSelection(models.Model):
         self.ensure_one()
         Model = self.env[self.field_id.model]
         Model.flush_model([self.field_id.name])
-        query = 'SELECT id FROM "{table}" WHERE "{field}"=%s'.format(
-            table=Model._table, field=self.field_id.name,
-        )
-        self.env.cr.execute(query, [self.value])
+        # Detect column type
+        self.env.cr.execute("""
+            SELECT data_type 
+            FROM information_schema.columns 
+            WHERE table_name=%s AND column_name=%s
+        """, (Model._table, self.field_id.name))
+        col_type = self.env.cr.fetchone()[0]
+        # Choose comparison depending on data type
+        if col_type in ("json", "jsonb"):
+            operator = "%s::jsonb"
+            value = Json(self.value)
+        else:
+            operator = "%s"
+            value = self.value
+        query = 'SELECT id FROM "{table}" WHERE "{field}" = ' + operator
+        query = query.format(table=Model._table, field=self.field_id.name)
+        self.env.cr.execute(query, [value])
         return Model.browse(r[0] for r in self.env.cr.fetchall())
 
 
@@ -2569,6 +2582,10 @@ class IrModelData(models.Model):
         # of records being cascade-deleted or tables being dropped just above
         for data in self.browse(undeletable_ids).exists():
             record = self.env[data.model].browse(data.res_id)
+            table_name = record._table
+            if not sql.table_exists(self.env.cr, table_name):
+                _logger.debug("Skipping record %s because table %s does not exist", data, table_name)
+                continue
             try:
                 with self.env.cr.savepoint():
                     if record.exists():
