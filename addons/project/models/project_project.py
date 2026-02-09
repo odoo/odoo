@@ -139,7 +139,7 @@ class ProjectProject(models.Model):
              "- Edit: Same as above, with access to all tasks.\n\n"
              "Other Rules:\n"
              "- Internal users can open a task from a direct link, even without project access.\n"
-             "- Project admins have access to private projects, even if not followers.\n")
+             "- System admins have access to private projects, even if not followers.\n")
     privacy_visibility_warning = fields.Char('Privacy Visibility Warning', compute='_compute_privacy_visibility_warning', export_string_translation=False)
     access_instruction_message = fields.Char('Access Instruction Message', compute='_compute_access_instruction_message', export_string_translation=False)
     date_start = fields.Date(string='Start Date', copy=False)
@@ -1228,10 +1228,15 @@ class ProjectProject(models.Model):
         Unsubscribe non-internal users from the project and tasks if the project privacy visibility
         goes from 'portal' to a different value.
         If the privacy visibility is set to 'portal', subscribe back project and tasks partners.
+        Add current user as follower if visibility is 'followers' or 'invited_users'.
         """
         for project in self:
             if project.privacy_visibility == new_visibility:
                 continue
+            if new_visibility in ['followers', 'invited_users']:
+                current_partner = self.env.user.partner_id
+                if current_partner not in project.message_partner_ids:
+                    project.message_subscribe(partner_ids=[current_partner.id])
             if new_visibility in ['invited_users', 'portal']:
                 project.message_subscribe(partner_ids=project.partner_id.ids)
                 for task in project.task_ids.filtered('partner_id'):

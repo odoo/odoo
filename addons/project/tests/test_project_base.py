@@ -175,6 +175,7 @@ class TestProjectBase(TestProjectCommon):
     def test_search_favorite_order(self):
         """ Test the search method, ordering by favorite projects.
         """
+        self.project_goats.privacy_visibility = 'employees'
         self.project_goats.favorite_user_ids += self.user_projectmanager
         self.env.cr.flush()
 
