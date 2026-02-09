@@ -992,7 +992,7 @@ class PosOrder(models.Model):
                 product_accounts = stock_move.product_id._get_product_accounts()
                 expense_account = product_accounts['expense']
                 stock_account = product_accounts['stock_valuation']
-                balance = -sum(stock_move.mapped('value'))
+                balance = stock_move.value if stock_move.is_out else -stock_move.value
                 aml_vals_list_per_nature['stock'].append({
                     'name': _("Stock variation for %s", stock_move.product_id.name),
                     'account_id': expense_account.id,
