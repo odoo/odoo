@@ -321,6 +321,21 @@ def upgrade_usechildsubenv(file_manager, log_info, log_error):
         file_manager.print_progress(fileno, len(js_files))
 
 
+def upgrade_useref(file_manager, log_info, log_error):
+    """Sub-task: Migrate useRef, ignoring comments."""
+    js_files = JSTooling.get_js_files(file_manager)
+
+    for fileno, file in enumerate(js_files, start=1):
+        try:
+            if not JSTooling.has_active_usage(file.content, 'useRef'):
+                continue
+            file.content = JSTooling.remove_import(file.content, 'useRef', '@odoo/owl')
+            file.content = JSTooling.add_import(file.content, 'useRef', '@web/owl2/utils')
+        except Exception as e:  # noqa: BLE001
+            log_error(file.path, e)
+        file_manager.print_progress(fileno, len(js_files))
+
+
 def upgrade(file_manager) -> str:
     """Main upgrade_code entry point."""
     collector = MigrationCollector(file_manager)
@@ -332,5 +347,6 @@ def upgrade(file_manager) -> str:
     collector.run_sub("Migrating useEnv", upgrade_useenv)
     collector.run_sub("Migrating useSubEnv", upgrade_usesubenv)
     collector.run_sub("Migrating useChildSubEnv", upgrade_usechildsubenv)
+    collector.run_sub("Migrating useRef", upgrade_useref)
 
     collector.finalize()
