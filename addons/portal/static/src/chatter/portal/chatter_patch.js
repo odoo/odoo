@@ -1,8 +1,8 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 
 import { patch } from "@web/core/utils/patch";
-import { useRef, onWillPatch } from "@odoo/owl";
+import { onWillPatch } from "@odoo/owl";
 
 patch(Chatter.prototype, {
     setup() {

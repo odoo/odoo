@@ -1,3 +1,4 @@
+import { useRef } from "@web/owl2/utils";
 /* global BarcodeDetector */
 
 import { browser } from "@web/core/browser/browser";
@@ -5,7 +6,7 @@ import { delay } from "@web/core/utils/concurrency";
 import { loadJS } from "@web/core/assets";
 import { isVideoElementReady, buildZXingBarcodeDetector } from "./ZXingBarcodeDetector";
 import { CropOverlay } from "./crop_overlay";
-import { Component, onMounted, onWillStart, onWillUnmount, status, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, status, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { pick } from "@web/core/utils/objects";
 

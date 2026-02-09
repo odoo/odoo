@@ -1,5 +1,5 @@
-import { useSubEnv } from "@web/owl2/utils";
-import { Component, onMounted, useRef, xml } from "@odoo/owl";
+import { useRef, useSubEnv } from "@web/owl2/utils";
+import { Component, onMounted, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import {

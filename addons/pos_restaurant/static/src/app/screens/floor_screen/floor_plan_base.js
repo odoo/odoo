@@ -1,4 +1,5 @@
-import { Component, useRef, useState } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, useState } from "@odoo/owl";
 import { useFloorPlanStore } from "@pos_restaurant/app/hooks/floor_plan_hook";
 
 export const ELEM_ID_PREFIX = "fpe-";

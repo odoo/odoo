@@ -1,4 +1,5 @@
-import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, useExternalListener, useState } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { loadEmoji, useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";

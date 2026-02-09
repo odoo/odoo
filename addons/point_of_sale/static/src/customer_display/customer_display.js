@@ -1,5 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, whenReady, useRef } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, whenReady } from "@odoo/owl";
 import { OdooLogo } from "@point_of_sale/app/components/odoo_logo/odoo_logo";
 import { useSingleDialog } from "@point_of_sale/customer_display/utils";
 import { MainComponentsContainer } from "@web/core/main_components_container";

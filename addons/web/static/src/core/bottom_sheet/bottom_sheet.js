@@ -1,9 +1,10 @@
+import { useRef } from "@web/owl2/utils";
 /**
  * BottomSheet
  *
  * @class
  */
-import { Component, useState, useRef, onMounted } from "@odoo/owl";
+import { Component, useState, onMounted } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useBackButton, useForwardRefToParent } from "@web/core/utils/hooks";
 import { useThrottleForAnimation } from "@web/core/utils/timing";

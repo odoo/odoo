@@ -1,3 +1,4 @@
+import { useRef } from "@web/owl2/utils";
 import {
     activateCropper,
     loadImage,
@@ -8,7 +9,6 @@ import { IMAGE_SHAPES } from "./image_plugin";
 import { _t } from "@web/core/l10n/translation";
 import {
     Component,
-    useRef,
     onMounted,
     onWillDestroy,
     markup,

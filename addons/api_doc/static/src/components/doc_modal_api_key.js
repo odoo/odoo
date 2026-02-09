@@ -1,4 +1,5 @@
-import { Component, useExternalListener, useRef } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, useExternalListener } from "@odoo/owl";
 
 export class ApiKeyModal extends Component {
     static template = "web.DocApiKeyModal";

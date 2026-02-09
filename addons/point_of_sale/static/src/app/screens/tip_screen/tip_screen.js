@@ -1,9 +1,10 @@
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { Component, useRef, onMounted } from "@odoo/owl";
+import { Component, onMounted } from "@odoo/owl";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { TipReceipt } from "@point_of_sale/app/components/tip_receipt/tip_receipt";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";

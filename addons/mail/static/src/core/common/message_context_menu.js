@@ -1,4 +1,5 @@
-import { Component, useRef } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { useForwardRefToParent, useService } from "@web/core/utils/hooks";
 import { ActionList } from "./action_list";
 import { useMessageActions } from "./message_actions";

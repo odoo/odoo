@@ -1,5 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, useRef } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
 
 export class KanbanDropdownMenuWrapper extends Component {

@@ -1,8 +1,7 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { localization } from "@web/core/l10n/localization";
 import { isIOS } from "@web/core/browser/feature_detection";
 
-import { useRef } from "@odoo/owl";
 
 function onKeydown(ev) {
     const decimalPoint = localization.decimalPoint;

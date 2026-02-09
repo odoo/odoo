@@ -1,4 +1,4 @@
-import { useComponent, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import {
     Component,
@@ -7,7 +7,6 @@ import {
     onWillStart,
     onWillUnmount,
     status,
-    useRef,
     useState,
 } from "@odoo/owl";
 import { LazyComponent, loadBundle } from "@web/core/assets";

@@ -1,9 +1,10 @@
+import { useRef } from "@web/owl2/utils";
 import { parseEmail } from "@mail/utils/common/format";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useService } from "@web/core/utils/hooks";
 import { isEmail } from "@web/core/utils/strings";
 
-import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
+import { Component, useExternalListener, useState } from "@odoo/owl";
 /**
  * This class represents the popover opened when we detect that one of our recipients is missing an email
  * address in the RecipientsInput. It allows the user to correct this error and update the partner

@@ -1,6 +1,7 @@
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 
-import { Component, useRef, useState, useExternalListener } from "@odoo/owl";
+import { Component, useState, useExternalListener } from "@odoo/owl";
 
 export class ColorList extends Component {
     static COLORS = [

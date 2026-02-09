@@ -1,6 +1,7 @@
+import { useRef } from "@web/owl2/utils";
 import { useSelection } from "@mail/utils/common/hooks";
 
-import { Component, useRef } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { useAutofocus, useService } from "@web/core/utils/hooks";

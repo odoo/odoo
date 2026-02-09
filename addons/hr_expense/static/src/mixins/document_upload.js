@@ -1,8 +1,8 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
 import { useBus, useRefListener, useService } from '@web/core/utils/hooks';
-import { useRef, useState } from "@odoo/owl";
+import { useState } from "@odoo/owl";
 
 export const ExpenseDocumentDropZone = (T) => class ExpenseDocumentDropZone extends T {
     static props = [

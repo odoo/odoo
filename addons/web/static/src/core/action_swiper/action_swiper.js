@@ -1,9 +1,10 @@
+import { useRef } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { localization } from "@web/core/l10n/localization";
 import { clamp } from "@web/core/utils/numbers";
 import { hasTouch } from "@web/core/browser/feature_detection";
 
-import { Component, onMounted, onWillUnmount, useRef } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount } from "@odoo/owl";
 
 const isScrollSwipable = (scrollables) => ({
     left: !scrollables.filter((e) => e.scrollLeft !== 0).length,

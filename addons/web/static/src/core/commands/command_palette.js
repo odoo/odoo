@@ -1,3 +1,4 @@
+import { useRef } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
@@ -14,7 +15,6 @@ import {
     onWillStart,
     onWillDestroy,
     EventBus,
-    useRef,
     useState,
     markRaw,
     useExternalListener,

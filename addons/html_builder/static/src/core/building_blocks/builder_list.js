@@ -1,3 +1,4 @@
+import { useRef } from "@web/owl2/utils";
 import { BuilderComponent } from "@html_builder/core/building_blocks/builder_component";
 import { BuilderListDialog } from "@html_builder/core/building_blocks/builder_list_dialog";
 import {
@@ -6,7 +7,7 @@ import {
     useInputBuilderComponent,
 } from "@html_builder/core/utils";
 import { isSmallInteger } from "@html_builder/utils/utils";
-import { Component, onWillUpdateProps, useRef } from "@odoo/owl";
+import { Component, onWillUpdateProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useSortable } from "@web/core/utils/sortable_owl";

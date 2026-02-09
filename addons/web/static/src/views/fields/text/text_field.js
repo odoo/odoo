@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useAutoresize } from "@web/core/utils/autoresize";
@@ -9,7 +9,7 @@ import { parseInteger } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 import { TranslationButton } from "../translation_button";
 
-import { Component, useExternalListener, useRef } from "@odoo/owl";
+import { Component, useExternalListener } from "@odoo/owl";
 
 export class TextField extends Component {
     static template = "web.TextField";

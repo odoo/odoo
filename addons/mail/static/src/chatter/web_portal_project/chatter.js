@@ -1,9 +1,9 @@
-import { useChildSubEnv } from "@web/owl2/utils";
+import { useChildSubEnv, useRef } from "@web/owl2/utils";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { useMessageScrolling } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, onWillUpdateProps, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillUpdateProps, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { router } from "@web/core/browser/router";

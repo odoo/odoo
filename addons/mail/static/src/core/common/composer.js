@@ -1,4 +1,4 @@
-import { useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
@@ -21,7 +21,6 @@ import {
     markup,
     onMounted,
     onWillUnmount,
-    useRef,
     useState,
     useExternalListener,
     toRaw,

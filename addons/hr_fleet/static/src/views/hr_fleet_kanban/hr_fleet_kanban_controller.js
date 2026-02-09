@@ -1,6 +1,6 @@
+import { useRef } from "@web/owl2/utils";
 import { KanbanController } from "@web/views/kanban/kanban_controller";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { useRef } from "@odoo/owl";
 
 export class HrFleetKanbanController extends KanbanController {
     setup() {

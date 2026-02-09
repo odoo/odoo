@@ -1,4 +1,5 @@
-import { Component, useRef, onPatched } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onPatched } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";

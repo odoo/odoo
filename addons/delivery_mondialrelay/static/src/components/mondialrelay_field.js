@@ -1,11 +1,11 @@
-import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
+import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { loadJS } from "@web/core/assets";
 
 // temporary for OnNoResultReturned bug
 import { ThirdPartyScriptError } from "@web/core/errors/error_service";
 const errorHandlerRegistry = registry.category("error_handlers");
-import { Component, useRef, useState, xml } from "@odoo/owl";
+import { Component, useState, xml } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 const MONDIALRELAY_SCRIPT_URL = "https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js"

@@ -1,3 +1,4 @@
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { Dialog } from '@web/core/dialog/dialog';
@@ -5,7 +6,7 @@ import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { parseInteger  } from "@web/views/fields/parsers";
 import { getId } from "@web/model/relational_model/utils";
-import { Component, useRef, onMounted, onWillStart } from "@odoo/owl";
+import { Component, onMounted, onWillStart } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { user } from "@web/core/user";
 

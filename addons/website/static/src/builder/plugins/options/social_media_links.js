@@ -1,5 +1,6 @@
+import { useRef } from "@web/owl2/utils";
 import { useDomState, BaseOptionComponent } from "@html_builder/core/utils";
-import { onWillStart, useRef, useState } from "@odoo/owl";
+import { onWillStart, useState } from "@odoo/owl";
 import { useSortable } from "@web/core/utils/sortable_owl";
 
 export class SocialMediaLinks extends BaseOptionComponent {

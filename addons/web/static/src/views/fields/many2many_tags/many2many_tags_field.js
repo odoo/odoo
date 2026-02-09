@@ -1,3 +1,4 @@
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { ColorList } from "@web/core/colorlist/colorlist";
@@ -18,7 +19,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
 
-import { Component, useRef } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 
 class Many2ManyTagsFieldColorListPopover extends Component {

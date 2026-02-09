@@ -1,3 +1,4 @@
+import { useRef } from "@web/owl2/utils";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
 import {
@@ -10,7 +11,7 @@ import { uniqueId } from "@web/core/utils/functions";
 import { clamp } from "@web/core/utils/numbers";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 
-import { Component, onMounted, onWillUpdateProps, useExternalListener, useRef } from "@odoo/owl";
+import { Component, onMounted, onWillUpdateProps, useExternalListener } from "@odoo/owl";
 
 const ARROW_KEYS = ["arrowup", "arrowdown", "arrowleft", "arrowright"];
 const SLIDER_KEYS = [...ARROW_KEYS, "pageup", "pagedown", "home", "end"];

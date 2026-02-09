@@ -1,4 +1,4 @@
-import { useRef } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
 import { useNavigation } from "../navigation/navigation";
 
 /**

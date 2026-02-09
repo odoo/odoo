@@ -1,8 +1,9 @@
+import { useRef } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { range } from "@web/core/utils/numbers";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import { Component, useRef } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 class VerificationCodeWidget extends Component {
     static props = {

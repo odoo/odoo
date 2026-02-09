@@ -1,4 +1,4 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useRef, useSubEnv } from "@web/owl2/utils";
 import { Editor } from "@html_editor/editor";
 import {
     Component,
@@ -9,7 +9,6 @@ import {
     onWillUnmount,
     onWillUpdateProps,
     status,
-    useRef,
     useState,
 } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";

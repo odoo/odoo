@@ -1,4 +1,5 @@
-import { Component, onMounted, useRef, useState } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, useState } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 
 export class TextInputPopup extends Component {

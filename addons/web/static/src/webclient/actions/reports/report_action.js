@@ -1,11 +1,11 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useRef, useSubEnv } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { useSetupAction } from "@web/search/action_hook";
 import { Layout } from "@web/search/layout";
 import { getDefaultConfig } from "@web/views/view";
 import { useEnrichWithActionLinks } from "@web/webclient/actions/reports/report_hook";
 
-import { Component, useRef } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 /**
  * Most of the time reports are printed as pdfs.

@@ -1,4 +1,5 @@
-import { Component, useState, onMounted, useRef, onWillUnmount } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, useState, onMounted, onWillUnmount } from "@odoo/owl";
 import { BuilderComponent } from "./builder_component";
 import { BuilderRow } from "./builder_row";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";

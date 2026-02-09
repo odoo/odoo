@@ -1,4 +1,5 @@
-import { Component, useRef, onMounted, useExternalListener, useState } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, useExternalListener, useState } from "@odoo/owl";
 import { useDebounced } from "@web/core/utils/timing";
 import { search } from "@api_doc/utils/doc_model_search";
 

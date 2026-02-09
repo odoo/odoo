@@ -1,11 +1,11 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { PageDependencies } from "@website/components/dialog/page_properties";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { UrlField, urlField } from "@web/views/fields/url/url_field";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { debounce } from "@web/core/utils/timing";
-import { Component, useRef } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { charField, CharField } from "@web/views/fields/char/char_field";
 
 /**

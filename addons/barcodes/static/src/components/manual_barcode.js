@@ -1,5 +1,6 @@
+import { useRef } from "@web/owl2/utils";
 import { BarcodeDialog } from "@web/core/barcode/barcode_dialog";
-import { Component, onMounted, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, useState } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
 
