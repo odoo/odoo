@@ -7,6 +7,8 @@ import {
     filterChangeByCategories,
 } from "@point_of_sale/app/models/utils/order_change";
 import { prepareRoundingVals } from "../accounting/utils";
+import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { localization } from "@web/core/l10n/localization";
 const { DateTime } = luxon;
 
 definePosModels();
@@ -645,5 +647,55 @@ describe("pos_store.js", () => {
         // Should be autovalidated
         order.isRefundInProcess = () => false;
         expect(await store.autoValidateOrder(order)).toBe("test_validated");
+    });
+
+    test("tip scenario with different decimal separators", async () => {
+        const store = await setupPosEnv();
+        const numberBuffer = getService("number_buffer");
+        const order = store.addNewOrder();
+
+        const fakeState = { buffer: "", toStartOver: false, lastSet: false };
+        numberBuffer.bufferHolderStack.push({
+            component: {},
+            state: fakeState,
+            config: { decimalPoint: false },
+        });
+
+        patchWithCleanup(localization, { decimalPoint: ".", thousandsSep: "," });
+        numberBuffer._setUp();
+        expect(numberBuffer.decimalPoint).toBe(".");
+
+        localization.decimalPoint = ",";
+        localization.thousandsSep = ".";
+        numberBuffer._setUp();
+
+        expect(numberBuffer.decimalPoint).toBe(",");
+
+        for (const key of ["1", ",", "5", "0"]) {
+            numberBuffer._updateBuffer(key);
+        }
+        expect(numberBuffer.get()).toBe("1,50");
+        expect(numberBuffer.getFloat()).toBe(1.5);
+
+        store.setOrder(order);
+        await store.setTip(numberBuffer.getFloat());
+        expect(order.is_tipped).toBe(true);
+        expect(order.tip_amount).toBe(1.5);
+
+        fakeState.buffer = "";
+        localization.decimalPoint = ".";
+        localization.thousandsSep = ",";
+        numberBuffer._setUp();
+        expect(numberBuffer.decimalPoint).toBe(".");
+
+        for (const key of ["2", ".", "5"]) {
+            numberBuffer._updateBuffer(key);
+        }
+        expect(numberBuffer.get()).toBe("2.5");
+        expect(numberBuffer.getFloat()).toBe(2.5);
+
+        store.setOrder(order);
+        await store.setTip(numberBuffer.getFloat());
+        expect(order.tip_amount).toBe(2.5);
     });
 });
