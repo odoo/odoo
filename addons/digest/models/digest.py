@@ -410,8 +410,10 @@ class Digest(models.Model):
         """
         start, end, companies = self._get_kpi_compute_parameters()
 
+        company_field = 'company_ids' if 'company_ids' in self.env[model]._fields else 'company_id'
+
         base_domain = [
-            ('company_id', 'in', companies.ids),
+            (company_field, 'in', companies.ids),
             (date_field, '>=', start),
             (date_field, '<', end),
         ]
@@ -421,7 +423,7 @@ class Digest(models.Model):
 
         values = self.env[model]._read_group(
             domain=base_domain,
-            groupby=['company_id'],
+            groupby=[company_field],
             aggregates=[f'{sum_field}:sum'] if sum_field else ['__count'],
         )
 
