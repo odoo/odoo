@@ -927,7 +927,7 @@ table.table_desc tr td {
     border-radius: 0;
 }
 
-.o_full_screen_height {
+@mixin o_full_screen_height {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -936,14 +936,24 @@ table.table_desc tr td {
     // Arc browser does not support this correctly at the moment.
     min-height: 100svh !important;
 }
+
+.o_full_screen_height {
+    @include o_full_screen_height;
+}
+
+.o_three_quarter_height {
+    @include o_full_screen_height;
+    min-height: 75vh !important;
+}
+
 .o_half_screen_height {
-    @extend .o_full_screen_height;
+    @include o_full_screen_height;
     min-height: 55vh !important;
 }
 
 // TODO remove cover_full and cover_mid classes (kept for compatibility for now)
 .cover_full {
-    @extend .o_full_screen_height;
+    @include o_full_screen_height;
 }
 .cover_mid {
     @extend .o_half_screen_height;
