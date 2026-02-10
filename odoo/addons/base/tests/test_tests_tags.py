@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase, tagged, BaseCase
+from odoo.tests.common import TransactionCase, tagged, BaseCase, CrossModule
 from odoo.tests.tag_selector import TagsSelector
 
 
@@ -221,7 +221,6 @@ class TestSelector(TransactionCase):
         tags = TagsSelector('/module.method')
         self.assertEqual({('standard', 'module', None, 'method', None), }, tags.include)  # all in module
 
-
 @tagged('nodatabase')
 class TestSelectorSelection(TransactionCase):
     def test_selector_selection(self):
@@ -379,6 +378,44 @@ class TestSelectorSelection(TransactionCase):
         tags = TagsSelector(__file__)
         self.assertTrue(tags.check(no_tags_obj), 'Test should its absolute file path')
 
+    def test_selector_cross_module_selection(self):
+        class TestLintingCrossModule(TransactionCase, CrossModule):
+            def test_linting(self, modules):
+                pass
+
+        tags = TagsSelector('/base:TestLintingCrossModule', available_modules=['base', 'mail', 'web'])
+        instance = TestLintingCrossModule('test_linting')
+        self.assertTrue(tags.check(instance), "The cross module test should be selected by its class and module")
+        self.assertEqual(instance._test_modules, ['base'])
+
+        tags = TagsSelector(':TestLintingCrossModule', available_modules=['base', 'mail', 'web'])
+        self.assertTrue(tags.check(instance), "The cross module test should be selected by its class")
+        self.assertEqual(instance._test_modules, ['base', 'mail', 'web'])
+
+        tags = TagsSelector('/mail:TestLintingCrossModule', available_modules=['base', 'mail', 'web'])
+        self.assertTrue(tags.check(instance), "The cross module test should be selected by its class and another module")
+        self.assertEqual(instance._test_modules, ['mail'])
+
+        tags = TagsSelector('/mail', available_modules=['base', 'mail', 'web'])
+        self.assertTrue(tags.check(instance), "The cross module test should be selected any module")
+        self.assertEqual(instance._test_modules, ['mail'])
+
+        tags = TagsSelector('/mail,-:TestLintingCrossModule', available_modules=['base', 'mail', 'web'])
+        self.assertFalse(tags.check(instance), "The cross module test should not be selected if explicilty blacklisted by its class")
+
+        self.assertEqual(instance.__module__.split('.')[2], 'base', "Ensure that module is define in base for following checks")
+
+        tags = TagsSelector(':TestLintingCrossModule,-/base', available_modules=['base', 'mail', 'web'])
+        self.assertTrue(tags.check(instance), "The cross module test should be selected by its class even when declaring module is blacklisted")
+        self.assertEqual(instance._test_modules, ['mail', 'web'])
+
+        tags = TagsSelector(':TestLintingCrossModule,-/base,-/web,-/mail ', available_modules=['base', 'mail', 'web'])
+        self.assertFalse(tags.check(instance), "The cross module test should not be selected by its class if the module list is empty")
+
+        tags = TagsSelector(':TestLintingCrossModule,-/base,-/web.test_linting,-/mail.test_other ', available_modules=['base', 'mail', 'web'])
+        self.assertTrue(tags.check(instance), "The cross module test should be selected for mail")
+        self.assertEqual(instance._test_modules, ['mail'])
+
     def test_selector_parser_parameters(self):
         tags = ','.join([
             '/base:FakeClassA[failfast=0,filter=-livechat]',
@@ -387,12 +424,27 @@ class TestSelectorSelection(TransactionCase):
             '-/base:FakeClassA[arg1,arg2]',
         ])
         tags = TagsSelector(tags)
+
         class FakeClassA(TransactionCase):
             pass
 
         fc = FakeClassA()
         tags.check(fc)
         self.assertEqual(fc._test_params, [('+', 'failfast=0,filter=-livechat'), ('-', 'arg1,arg2')])
+
+    def test_selector_parser_cross_module_parameters(self):
+        tags = ','.join([
+            ':FakeClassA[@web/test]',
+            '-/web:FakeClassA[@web/test/x]',
+        ])
+        tags = TagsSelector(tags, available_modules=['base', 'mail', 'web'])
+
+        class FakeClassA(TransactionCase, CrossModule):
+            pass
+
+        fc = FakeClassA()
+        tags.check(fc)
+        self.assertEqual(fc._test_params, [('+', '@web/test'), ('-', '@web/test/x')])
 
     def test_negative_parameters_translate(self):
         tags = TagsSelector('.test_negative_parameters_translate')
@@ -423,5 +475,5 @@ class TestTestClass(BaseCase):
     def test_canonical_tag(self):
         self.assertEqual(self.canonical_tag, '/base/tests/test_tests_tags.py:TestTestClass.test_canonical_tag')
 
-    def get_log_metadata(self):
+    def get_log_metadata(self, _log):
         self.assertEqual(self.log_metadata['canonical_tag'], '/base/tests/test_tests_tags.py:TestTestClass.test_canonical_tag')

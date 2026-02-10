@@ -933,6 +933,20 @@ class BaseCase(case.TestCase):
                 additional_tags.append('is_query_count')
         return additional_tags
 
+
+class CrossModule(case.TestCase):
+    _cross_module = True
+    _test_modules = []
+
+    def _callTestMethod(self, method):
+        method(self._test_modules)
+
+    def _get_canonical_tags_params(self, log=None):
+        result = super()._get_canonical_tags_params(log)
+        result['module'] = None
+        return result
+
+
 class Like:
     """
         A string-like object comparable to other strings but where the substring
