@@ -1823,9 +1823,13 @@ class HrEmployee(models.Model):
                     ('date_end', '>=', start),
             ])
         for version in versions:
-            date_end = version.date_end or stop
+            date_start = max(version.date_start, start)
+            date_end = min(version.date_end or stop, stop)
+            if date_end < start or date_start > stop or date_start > date_end:
+                # not overlapping, this can happen if we check contract versions
+                continue
             version_periods_by_employee[version.employee_id].append(
-                (max(version.date_start, start), min(date_end, stop), version[field] if field else version),
+                (date_start, date_end, version[field] if field else version),
             )
         return version_periods_by_employee
 
