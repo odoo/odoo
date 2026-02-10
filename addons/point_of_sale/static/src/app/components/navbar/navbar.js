@@ -89,6 +89,7 @@ export class Navbar extends Component {
             title: _t("LNA Permission status"),
             body: this.pos.lnaState.message,
             size: "sm",
+            backdrop: true,
         });
     }
 

@@ -46,6 +46,7 @@ patch(ConfirmationDialog.prototype, {
 Object.assign(confirmationDialogProps, {
     getPayload: t.function().optional(),
     showReloadButton: t.boolean().optional(false),
+    backdrop: t.boolean().optional(false),
 });
 
 Object.assign(alertDialogProps, {
