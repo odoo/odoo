@@ -23,7 +23,7 @@
                                 <polyline id="check" stroke="#FFFFFF" stroke-width="5.5" points="41 70 56 85 92 49" />
                             </g>
                         </svg>
-                        <t t-if="confirmedOrder.preset_id?.use_timing">
+                        <t t-if="confirmedOrder.preset_id?.use_timing and selfOrder.config.self_ordering_service_mode !== 'table'">
                             <t t-set="slotDate" t-value="confirmedOrder.preset_id.slotPrefix(confirmedOrder.preset_time) or confirmedOrder.preset_id.formatDate(confirmedOrder.preset_time)"/>
                             <h1 class="mb-0">Order for
                                 <t t-if="slotDate"><t t-esc="slotDate"/>, </t>

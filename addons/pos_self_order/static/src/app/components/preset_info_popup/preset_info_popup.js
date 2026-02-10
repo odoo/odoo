@@ -1,19 +1,21 @@
 import { Component, onWillStart, useState } from "@odoo/owl";
-import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { rpc } from "@web/core/network/rpc";
 import { isValidEmail } from "@point_of_sale/utils";
+import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 
 const { DateTime } = luxon;
 export class PresetInfoPopup extends Component {
     static template = "pos_self_order.PresetInfoPopup";
-    static props = { callback: Function };
+    static components = { Dialog };
+    static props = {
+        close: Function,
+        getPayload: Function,
+    };
 
     setup() {
-        this.notification = useService("notification");
-        this.selfOrder = useSelfOrder();
+        this.selfOrder = useService("self_order");
         this.state = useState({
-            selectedSlot: null,
             selectedPartnerId: null,
             name: "",
             email: "",
@@ -55,14 +57,8 @@ export class PresetInfoPopup extends Component {
         } else {
             this.selfOrder.currentOrder.floating_order_name = this.state.name;
         }
-
-        if (this.preset.needsSlot && this.state.selectedSlot) {
-            this.selfOrder.currentOrder.preset_time = DateTime.fromSQL(this.state.selectedSlot)
-                .toUTC()
-                .toFormat("yyyy-MM-dd HH:mm:ss");
-        }
-
-        this.props.callback(this.state);
+        this.props.getPayload(this.state);
+        this.props.close();
     }
 
     selectExistingPartner(event) {
@@ -86,7 +82,7 @@ export class PresetInfoPopup extends Component {
     }
 
     close() {
-        this.props.callback(false);
+        this.props.close();
     }
 
     get preset() {
@@ -118,7 +114,6 @@ export class PresetInfoPopup extends Component {
             (this.state.stateId || !this.states.length) &&
             this.state.zip;
         return (
-            (!this.preset.needsSlot || DateTime.fromSQL(this.state.selectedSlot).isValid) &&
             (!this.preset.needsName || this.state.name) &&
             (!this.preset.needsEmail || isValidEmail(this.state.email)) &&
             (!this.preset.needsPartner || partnerInfo) &&

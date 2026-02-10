@@ -77,6 +77,7 @@
             'web/static/lib/bootstrap/js/dist/scrollspy.js',
             'html_editor/static/src/scss/base_style.scss',
             'html_editor/static/src/scss/html_editor.common.scss',
+            "point_of_sale/static/src/app/utils/make_awaitable_dialog.js",
             "point_of_sale/static/src/app/components/numpad/*",
             "point_of_sale/static/src/app/components/product_card/*",
             "point_of_sale/static/src/app/components/order_display/*",
