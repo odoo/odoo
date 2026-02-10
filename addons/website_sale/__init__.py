@@ -35,12 +35,11 @@ def _post_init_hook(env):  # noqa: RUF067
     )
 
 
-def uninstall_hook(env):  # noqa: RUF067
-    """Need to reenable the `product` pricelist multi-company rule that were
-    disabled to be 'overridden' for multi-website purpose.
-    """
-    pl_rule = env.ref("product.product_pricelist_comp_rule", raise_if_not_found=False)
-    pl_item_rule = env.ref("product.product_pricelist_item_comp_rule", raise_if_not_found=False)
-    multi_company_rules = pl_rule or env["ir.rule"]
-    multi_company_rules += pl_item_rule or env["ir.rule"]
-    multi_company_rules.write({"active": True})
+def uninstall_hook(env):
+    ''' Need to reenable the `product` pricelist multi-company rule that were
+        disabled to be 'overridden' for multi-website purpose
+    '''
+    if access := env.ref('product.product_pricelist_comp_rule', raise_if_not_found=False):
+        access.active = True
+    if access := env.ref('product.product_pricelist_item_comp_rule', raise_if_not_found=False):
+        access.active = True

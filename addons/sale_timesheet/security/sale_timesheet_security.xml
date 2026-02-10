@@ -7,11 +7,11 @@
         rules for the account.analytic.line defined in timesheet will be apply.
      -->
 
-    <record id="account.account_analytic_line_rule_billing_user" model="ir.rule">
+    <record id="account.account_analytic_line_rule_billing_user" model="ir.access">
         <field name="active" eval="False"/>
     </record>
 
-    <record id="account.account_analytic_line_rule_readonly_user" model="ir.rule">
+    <record id="account.account_analytic_line_rule_readonly_user" model="ir.access">
         <field name="active" eval="False"/>
     </record>
 
