@@ -26,6 +26,8 @@ class Base(models.AbstractModel):
             return super().get_base_url()
         self.ensure_one()
 
+        if self.env.context.get('use_config_parameter_domain'):
+            return super().get_base_url()
         if self._name == 'website':
             # Note that website_1.company_id.website_id might not be website_1
             return self.domain or super().get_base_url()
