@@ -74,7 +74,7 @@ class AnalyticMixin(models.AbstractModel):
         # Don't use this override when account_report_analytic_groupby is truly in the context
         # Indeed, when account_report_analytic_groupby is in the context it means that `analytic_distribution`
         # doesn't have the same format and the table is a temporary one, see _prepare_lines_for_analytic_groupby
-        if field_expr != 'analytic_distribution' or self.env.context.get('account_report_analytic_groupby'):
+        if field_expr != 'analytic_distribution' or self.env.context.get('account_report_analytic_groupby') or (operator in ('in', 'not in') and False in value):
             return super()._condition_to_sql(alias, field_expr, operator, value, query)
 
         def search_value(value: str, exact: bool):
