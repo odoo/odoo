@@ -15,6 +15,7 @@ from .website_transfer_utils import (
     MENU_PAYLOAD_FIELDS,
     PAGE_PAYLOAD_FIELDS,
     VIEW_PAYLOAD_FIELDS,
+    WEBSITE_REWRITE_PAYLOAD_FIELDS,
     compute_payload_checksum,
     extract_payload_values,
 )
@@ -113,6 +114,7 @@ class WebsiteImportWizard(models.TransientModel):
         views,
         menus,
         attachments,
+        website_rewrites,
         website_settings=None,
         controller_pages=None,
         assets=None,
@@ -122,6 +124,7 @@ class WebsiteImportWizard(models.TransientModel):
             "views.json": views,
             "menus.json": menus,
             "attachments.json": attachments,
+            "website_rewrites.json": website_rewrites,
         }
         optional_files = {
             "website_settings.json": website_settings,
@@ -162,7 +165,6 @@ class WebsiteImportWizard(models.TransientModel):
     def _validate_attachments(self, archive, attachments):
         if not attachments:
             return
-        attachment_model = self.env["ir.attachment"]
         for item in attachments:
             file_path = item.get("file_path")
             if not file_path:
@@ -172,7 +174,7 @@ class WebsiteImportWizard(models.TransientModel):
             except KeyError as e:
                 raise UserError(_("Missing attachment file: %s", file_path)) from e
             checksum = item.get("checksum")
-            if not checksum or attachment_model._compute_checksum(content) != checksum:
+            if not checksum or self.env["ir.attachment"]._compute_checksum(content) != checksum:
                 raise UserError(_("Invalid attachment checksum: %s", file_path))
 
     def _prepare_target_website(self, website):
@@ -234,7 +236,6 @@ class WebsiteImportWizard(models.TransientModel):
                 })
 
     def _import_views(self, views, website):
-        view_model = self.env["ir.ui.view"]
         pending = {view["id"]: view for view in views}
         view_map = {}
         while pending:
@@ -258,7 +259,7 @@ class WebsiteImportWizard(models.TransientModel):
                 values = extract_payload_values(
                     view,
                     VIEW_PAYLOAD_FIELDS,
-                    skip=("inherit_id", "website_id"),
+                    ("inherit_id"),
                 )
                 values.update({
                     "inherit_id": new_inherit_id,
@@ -268,7 +269,7 @@ class WebsiteImportWizard(models.TransientModel):
                 ready.append((view_id, values))
             if not ready:
                 raise UserError(_("Failed to resolve view inheritance during import."))
-            new_views = view_model.create([values for _, values in ready])
+            new_views = self.env["ir.ui.view"].create([values for _, values in ready])
             for (view_id, _), new_view in zip(ready, new_views):
                 view_map[view_id] = new_view.id
                 pending.pop(view_id)
@@ -300,7 +301,7 @@ class WebsiteImportWizard(models.TransientModel):
             values = extract_payload_values(
                 page,
                 PAGE_PAYLOAD_FIELDS,
-                skip=("parent_id", "view_id", "website_id"),
+                ("parent_id", "view_id", "website_id"),
             )
             values["view_id"] = new_view_id
             values_list.append(values)
@@ -318,7 +319,6 @@ class WebsiteImportWizard(models.TransientModel):
         return page_map
 
     def _import_controller_pages(self, controller_pages, view_map):
-        controller_page_model = self.env["website.controller.page"]
         controller_page_map = {}
         values_list = []
         for controller_page in controller_pages:
@@ -334,7 +334,7 @@ class WebsiteImportWizard(models.TransientModel):
             values = extract_payload_values(
                 controller_page,
                 CONTROLLER_PAGE_PAYLOAD_FIELDS,
-                skip=("view_id", "record_view_id"),
+                ("view_id", "record_view_id"),
             )
             values.update({
                 "view_id": new_view_id,
@@ -342,7 +342,7 @@ class WebsiteImportWizard(models.TransientModel):
             })
             values_list.append(values)
         if values_list:
-            new_controller_pages = controller_page_model.create(values_list)
+            new_controller_pages = self.env["website.controller.page"].create(values_list)
             for controller_page, new_controller_page in zip(controller_pages, new_controller_pages):
                 controller_page_map[controller_page["id"]] = new_controller_page.id
         return controller_page_map
@@ -355,7 +355,6 @@ class WebsiteImportWizard(models.TransientModel):
         return fallback or menus
 
     def _import_menus(self, menus, website, page_map, controller_page_map, source_website_id):
-        menu_model = self.env["website.menu"]
         menus = self._select_menus(menus, source_website_id)
         menu_map = {}
         pending = {menu["id"]: menu for menu in menus}
@@ -368,7 +367,7 @@ class WebsiteImportWizard(models.TransientModel):
                 values = extract_payload_values(
                     menu,
                     MENU_PAYLOAD_FIELDS,
-                    skip=("page_id", "parent_id", "website_id"),
+                    ("page_id", "parent_id", "website_id"),
                 )
                 values.update({
                     "page_id": page_map.get(menu.get("page_id"), False),
@@ -379,11 +378,11 @@ class WebsiteImportWizard(models.TransientModel):
                 ready.append((menu_id, values))
             if not ready:
                 raise UserError(_("Failed to resolve menu hierarchy during import."))
-            new_menus = menu_model.create([values for _, values in ready])
+            new_menus = self.env["website.menu"].create([values for _, values in ready])
             for (menu_id, _), new_menu in zip(ready, new_menus):
                 menu_map[menu_id] = new_menu.id
                 pending.pop(menu_id)
-        created_menus = menu_model.browse(menu_map.values())
+        created_menus = self.env["website.menu"].browse(menu_map.values())
         top_menus = created_menus.filtered(lambda menu: not menu.parent_id)
         if len(top_menus) > 1:
             root_menu = top_menus.filtered(
@@ -416,7 +415,6 @@ class WebsiteImportWizard(models.TransientModel):
         return arch
 
     def _import_attachments(self, archive, attachments, website, view_map, page_map, controller_page_map, menu_map):
-        attachment_model = self.env["ir.attachment"]
         attachment_map = {}
         dedupe_map = {}
         pending_dedupe = {}
@@ -456,7 +454,7 @@ class WebsiteImportWizard(models.TransientModel):
             values = extract_payload_values(
                 item,
                 ATTACHMENT_PAYLOAD_FIELDS,
-                skip=("res_id", "website_id"),
+                ("res_id"),
             )
             values.update({
                 "res_model": res_model,
@@ -470,7 +468,7 @@ class WebsiteImportWizard(models.TransientModel):
             if checksum and name:
                 pending_dedupe[dedupe_key] = len(values_list) - 1
         if values_list:
-            new_attachments = attachment_model.create(values_list)
+            new_attachments = self.env["ir.attachment"].create(values_list)
             for item, attachment, dedupe_key in zip(items_to_create, new_attachments, dedupe_keys):
                 attachment_map[item["id"]] = attachment.id
                 if dedupe_key:
@@ -493,18 +491,30 @@ class WebsiteImportWizard(models.TransientModel):
     def _import_assets(self, assets, website):
         if not assets:
             return
-        asset_model = self.env["ir.asset"].with_context(active_test=False)
         values_list = []
         for asset in assets:
             values = extract_payload_values(
                 asset,
                 ASSET_PAYLOAD_FIELDS,
-                skip=("website_id",),
             )
             values["website_id"] = website.id
             values_list.append(values)
         if values_list:
-            asset_model.create(values_list)
+            self.env["ir.asset"].with_context(active_test=False).create(values_list)
+
+    def _import_website_rewrites(self, website_rewrites, website):
+        if not website_rewrites:
+            return
+        values_list = []
+        for rewrite in website_rewrites:
+            values = extract_payload_values(
+                rewrite,
+                WEBSITE_REWRITE_PAYLOAD_FIELDS,
+            )
+            values["website_id"] = website.id
+            values_list.append(values)
+        if values_list:
+            self.env["website.rewrite"].create(values_list)
 
     def _finalize_import(self):
         self.env.registry.clear_cache('templates')
@@ -545,6 +555,7 @@ class WebsiteImportWizard(models.TransientModel):
                 "assets.json",
                 [],
             )
+            website_rewrites_payload = self._read_archive_json(archive, "website_rewrites.json")
             menus_payload = self._read_archive_json(archive, "menus.json")
             attachments = self._read_archive_json(archive, "attachments.json")
             self._validate_manifest(manifest)
@@ -554,6 +565,7 @@ class WebsiteImportWizard(models.TransientModel):
                 views_payload,
                 menus_payload,
                 attachments,
+                website_rewrites_payload,
                 website_settings=website_settings_payload,
                 controller_pages=controller_pages_payload,
                 assets=assets_payload,
@@ -603,6 +615,10 @@ class WebsiteImportWizard(models.TransientModel):
                 menu_map,
             )
             self._import_assets(assets_payload, website)
+            self._import_website_rewrites(
+                website_rewrites_payload,
+                website,
+            )
             self._finalize_import()
             summary = self._build_import_summary(website, view_map, page_map, menu_map, attachment_map)
             summary_wizard = self.env["website.import.summary.wizard"].create({

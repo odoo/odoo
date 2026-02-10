@@ -43,7 +43,6 @@ VIEW_PAYLOAD_FIELDS = (
     "inherit_id",
     "mode",
     "priority",
-    "website_id",
     "active",
     "track",
     "visibility",
@@ -62,7 +61,6 @@ MENU_PAYLOAD_FIELDS = (
     "controller_page_id",
     "parent_id",
     "website_id",
-    "sequence",
     "new_window",
     "is_mega_menu",
     "mega_menu_content",
@@ -78,7 +76,6 @@ ATTACHMENT_PAYLOAD_FIELDS = (
     "public",
     "res_model",
     "res_id",
-    "website_id",
 )
 
 ASSET_PAYLOAD_FIELDS = (
@@ -88,9 +85,15 @@ ASSET_PAYLOAD_FIELDS = (
     "path",
     "target",
     "active",
-    "sequence",
-    "website_id",
     "key",
+)
+
+WEBSITE_REWRITE_PAYLOAD_FIELDS = (
+    "name",
+    "active",
+    "url_from",
+    "url_to",
+    "redirect_type",
 )
 
 
@@ -106,9 +109,8 @@ def serialize_record(record, field_names):
 
 def extract_payload_values(payload, field_names, skip=None):
     values = {}
-    skip = set(skip or ())
     for field_name in field_names:
-        if field_name in skip:
+        if skip and field_name in skip:
             continue
         values[field_name] = payload.get(field_name)
     return values

@@ -13,6 +13,7 @@ from .website_transfer_utils import (
     MENU_PAYLOAD_FIELDS,
     PAGE_PAYLOAD_FIELDS,
     VIEW_PAYLOAD_FIELDS,
+    WEBSITE_REWRITE_PAYLOAD_FIELDS,
     compute_payload_checksum,
     serialize_record,
 )
@@ -23,9 +24,8 @@ class WebsiteExportWizard(models.TransientModel):
     _description = "Website Export Wizard"
 
     def _get_page_domain(self):
-        website_id = self.website_id.id if self.website_id else False
         return [
-            ("website_id", "in", [website_id, False]),
+            ("website_id", "in", [self.website_id.id, False]),
             ("key", "not ilike", "%_debug_page_view%"),
         ]
 
@@ -46,6 +46,7 @@ class WebsiteExportWizard(models.TransientModel):
     )
     page_ids = fields.Many2many("website.page", string="Pages")
     include_assets = fields.Boolean(string="Include Assets", default=True)
+    include_website_rewrites = fields.Boolean(string="Include Website Rewrites", default=True)
     export_file = fields.Binary(string="Export File", readonly=True)
     export_filename = fields.Char(string="Export Filename", readonly=True)
 
@@ -63,8 +64,7 @@ class WebsiteExportWizard(models.TransientModel):
         return self.page_ids
 
     def _get_controller_page_domain(self):
-        website_id = self.website_id.id if self.website_id else False
-        return [("website_id", "in", [website_id, False])]
+        return [("website_id", "in", [self.website_id.id, False])]
 
     def _get_controller_pages_to_export(self):
         return self.env["website.controller.page"].search(self._get_controller_page_domain())
@@ -100,6 +100,12 @@ class WebsiteExportWizard(models.TransientModel):
             ("website_id", "=", self.website_id.id),
         ])
         return self._serialize_records(assets, ASSET_PAYLOAD_FIELDS)
+
+    def _collect_website_rewrites(self):
+        rewrites = self.env["website.rewrite"].search([
+            ("website_id", "in", [self.website_id.id, False]),
+        ])
+        return self._serialize_records(rewrites, WEBSITE_REWRITE_PAYLOAD_FIELDS)
 
     def _collect_asset_attachments(self, assets):
         attachment_ids = set()
@@ -196,6 +202,7 @@ class WebsiteExportWizard(models.TransientModel):
         )
         views |= self._get_extra_views_to_export(views)
         assets = self._collect_assets()
+        website_rewrites = self._collect_website_rewrites() if self.include_website_rewrites else []
         menus = self._collect_menus(pages)
         attachments = self._collect_attachments(views, menus) if self.include_assets else []
         if self.include_assets and assets:
@@ -214,6 +221,7 @@ class WebsiteExportWizard(models.TransientModel):
             "controller_pages": self._collect_controller_pages(controller_pages),
             "views": self._collect_views(views),
             "assets": assets,
+            "website_rewrites": website_rewrites,
             "menus": menus,
             "attachments": attachments,
         }
@@ -258,6 +266,7 @@ class WebsiteExportWizard(models.TransientModel):
                     "controller_pages.json": payload["controller_pages"],
                     "views.json": payload["views"],
                     "assets.json": payload["assets"],
+                    "website_rewrites.json": payload["website_rewrites"],
                     "menus.json": payload["menus"],
                     "attachments.json": attachments,
                 }
