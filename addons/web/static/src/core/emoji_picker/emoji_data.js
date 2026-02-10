@@ -8223,6 +8223,7 @@ const _getEmojisData3 = () => `{
     ],
     "name": "` + _t("sauropod") + `",
     "shortcodes": [
+        ":dinosaur:",
         ":sauropod:"
     ]
 },
@@ -8236,6 +8237,7 @@ const _getEmojisData3 = () => `{
     ],
     "name": "` + _t("T-Rex") + `",
     "shortcodes": [
+        ":dinosaur:",
         ":T-Rex:"
     ]
 },
@@ -12198,6 +12200,7 @@ const _getEmojisData5 = () => `{
     ],
     "name": "` + _t("police car light") + `",
     "shortcodes": [
+        ":rotating_light",
         ":police_car_light:"
     ]
 },
