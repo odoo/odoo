@@ -235,3 +235,12 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             {'debit': 90.0, 'credit': 0.0},
             {'debit': 0.0, 'credit': 90.0},
         ])
+
+    def test_purchase_order_analytic_distribution_search_is_set(self):
+        self.assertFalse(self.env['purchase.order.line'].search([('analytic_distribution', '=', False)]))
+        self.purchase_order.order_line[0].write({'analytic_distribution': False})
+        self.assertEqual(
+            self.env['purchase.order.line'].search([('analytic_distribution', '=', False)]),
+            self.purchase_order.order_line[0],
+            ""
+        )
