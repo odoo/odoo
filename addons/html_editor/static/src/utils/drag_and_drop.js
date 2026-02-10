@@ -81,7 +81,12 @@ export function useNativeDraggable(hookParams, initialParams) {
         state: draggableState,
         update: (newParams) => {
             Object.assign(currentParams, newParams);
-            setupFunctions.forEach((depsFn, setupFn) => setupFn(...depsFn()));
+            setupFunctions.forEach((depsFn, setupFn) => {
+                const cleanUp = setupFn(...depsFn());
+                if (cleanUp) {
+                    cleanupFunctions.push(cleanUp);
+                }
+            });
         },
         destroy: () => {
             cleanupFunctions.forEach((cleanupFn) => cleanupFn());
