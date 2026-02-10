@@ -67,7 +67,7 @@ patch(PaymentScreen.prototype, {
     async _postPushOrderResolve(order, order_server_ids) {
         if (this.pos.config.is_spanish) {
             const invoiceName = await this.pos.data.call("pos.order", "get_invoice_name", [
-                order_server_ids,
+                order.id,
             ]);
             order.invoice_name = invoiceName;
         }
