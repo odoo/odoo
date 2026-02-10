@@ -3,6 +3,7 @@ import {
     click,
     contains,
     defineMailModels,
+    editInput,
     insertText,
     openFormView,
     patchUiSize,
@@ -51,8 +52,8 @@ test("Search in chatter", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
-    await insertText(".o_searchview_input", "empty");
-    triggerHotkey("Enter");
+    await contains(".o-mail-SearchMessageInput .o_searchview_input");
+    await editInput(document.body, ".o_searchview_input", "empty");
     await contains(".o-mail-SearchMessageResult .o-mail-Message");
     await click(".o-mail-MessageCard-jump");
     await contains(".o-mail-Message.o-highlighted .o-mail-Message-content:text('not empty')");

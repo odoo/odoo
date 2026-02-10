@@ -202,10 +202,6 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             run: "edit text.txt",
         },
         {
-            trigger: "button[aria-label='Search button']",
-            run: "click",
-        },
-        {
             trigger: `.o-mail-SearchMessagesPanel ${editedMessageSelector} .o-mail-AttachmentContainer:contains("text.txt")`,
         },
     ],

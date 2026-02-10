@@ -2,8 +2,8 @@ import {
     click,
     contains,
     defineMailModels,
+    editInput,
     insertText,
-    listenStoreFetch,
     openDiscuss,
     patchUiSize,
     scroll,
@@ -11,7 +11,6 @@ import {
     start,
     startServer,
     triggerHotkey,
-    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { expect, mockTouch, mockUserAgent, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
@@ -79,8 +78,8 @@ test("Search a message", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await click("button[title='Search Messages']");
-    await insertText(".o_searchview_input", "message");
-    triggerHotkey("Enter");
+    await contains(".o-mail-SearchMessageInput .o_searchview_input");
+    await editInput(document.body, ".o_searchview_input", "message");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
     expect(".o_searchview_input").toHaveValue("message");
     await click("i[aria-label='Clear Search']");
@@ -284,49 +283,6 @@ test("Scrolling to the bottom should load more searched message", async () => {
     // give enough time to useVisible to potentially load more (unexpected) messages
     await tick();
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message", { count: 60 });
-});
-
-test.tags("desktop");
-test("Editing the searched term should not edit the current searched term", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    for (let i = 0; i < 60; i++) {
-        pyEnv["mail.message"].create({
-            author_id: serverState.partnerId,
-            body: "This is a message",
-            attachment_ids: [],
-            message_type: "comment",
-            model: "discuss.channel",
-            res_id: channelId,
-        });
-    }
-    listenStoreFetch("/discuss/channel/messages", { logParams: ["/discuss/channel/messages"] });
-    await start();
-    await openDiscuss(channelId);
-    await waitStoreFetch([
-        [
-            "/discuss/channel/messages",
-            { channel_id: channelId, fetch_params: { limit: 60, around: 0 } },
-        ],
-    ]);
-    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
-    await click("[title='Search Messages']");
-    await insertText(".o_searchview_input", "message");
-    triggerHotkey("Enter");
-    await waitStoreFetch([
-        [
-            "/discuss/channel/messages",
-            { channel_id: channelId, fetch_params: { search_term: "message", before: false } },
-        ],
-    ]);
-    await insertText(".o_searchview_input", "test");
-    await scroll(".o-mail-SearchMessagesPanel .o-mail-ActionPanel", "bottom");
-    await waitStoreFetch([
-        [
-            "/discuss/channel/messages",
-            { channel_id: channelId, fetch_params: { search_term: "message", before: 31 } },
-        ],
-    ]);
 });
 
 test.tags("desktop");

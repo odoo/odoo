@@ -27,7 +27,7 @@ export class SearchMessageInput extends Component {
 
     setup() {
         super.setup();
-        this.state = useState({ searchTerm: "", searchedTerm: "" });
+        this.state = useState({ searchTerm: "" });
         useAutofocus();
         useExternalListener(
             browser,
@@ -44,31 +44,30 @@ export class SearchMessageInput extends Component {
     search() {
         this.props.messageSearch.searchTerm = this.state.searchTerm;
         this.props.messageSearch.search();
-        this.state.searchedTerm = this.state.searchTerm;
     }
 
     clear() {
         this.state.searchTerm = "";
-        this.state.searchedTerm = this.state.searchTerm;
         this.props.messageSearch.clear();
+    }
+
+    onClickClose() {
+        this.clear();
         this.props.closeSearch?.();
     }
 
-    onClickClearSearch() {
-        this.state.searchTerm = "";
-        this.state.searchedTerm = "";
-        this.props.messageSearch.clear();
-    }
-
-    onKeydownSearch(ev) {
-        if (ev.key !== "Enter") {
+    onInputSearch(ev) {
+        if (!this.state.searchTerm) {
+            return this.clear();
+        }
+        if (
+            this.state.searchTerm.startsWith(this.props.messageSearch.searchTerm) &&
+            this.props.messageSearch.searched &&
+            this.props.messageSearch.count === 0
+        ) {
             return;
         }
-        if (!this.state.searchTerm) {
-            this.clear();
-        } else {
-            this.search();
-        }
+        this.search();
     }
 
     /** @param {SearchFilter} searchFilter */

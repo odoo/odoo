@@ -106,7 +106,7 @@ export function useMessageSearch(thread) {
             this.searching = false;
             this.searchTerm = undefined;
         },
-        /** @type {true | false | undefined} */
+        /** @type {Boolean | undefined} */
         is_notification: undefined,
         loadMore: false,
         /** @type {import('@mail/core/common/message_model').Message[]} */
