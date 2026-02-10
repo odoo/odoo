@@ -336,6 +336,20 @@ class TestCRMLead(TestCrmCommon):
             self.assertEqual(lead.meeting_display_label, 'No Meeting')
 
     @users('user_sales_manager')
+    def test_crm_lead_meeting_display_fields_with_timezone(self):
+        self.env.user.tz = "America/Grand_Turk"
+        lead = self.env['crm.lead'].create({'name': 'Lead With Meetings'})
+        self.env['calendar.event'].create([{
+            'name': 'Meeting 1 of Lead',
+            'opportunity_id': lead.id,
+            'start': '2022-07-12 01:00:00',
+            'stop': '2022-07-12 01:30:00',
+        }])
+
+        with freeze_time('2022-07-13 11:00:00'):
+            self.assertEqual(lead.meeting_display_date, fields.Date.from_string("2022-07-11"))
+
+    @users('user_sales_manager')
     def test_crm_lead_partner_sync(self):
         lead, partner = self.lead_1.with_user(self.env.user), self.contact_2
         partner_email, partner_phone = self.contact_2.email, self.contact_2.phone
