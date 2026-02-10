@@ -4,6 +4,15 @@ from odoo import _, api, fields, models
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
+    l10n_tr_nilvera_customer_alias_id = fields.Many2one(
+        comodel_name='l10n_tr.nilvera.alias',
+        string="eInvoice Alias",
+        compute='_compute_nilvera_customer_alias_id',
+        domain="[('partner_id', '=', id)]",
+        copy=False,
+        store=True,
+        readonly=False,
+    )
     l10n_tr_tax_office_id = fields.Many2one("l10n_tr_nilvera_einvoice.tax.office", string="Turkish Tax Office")
 
     @api.depends('l10n_tr_tax_office_id')
@@ -15,6 +24,14 @@ class ResPartner(models.Model):
         for partner in tr_partners_with_tax_office:
             if not partner.env.context.get("formatted_display_name"):
                 partner.display_name = (f"{partner.display_name}\n{partner.l10n_tr_tax_office_id.name}")
+
+    @api.depends('l10n_tr_nilvera_customer_alias_ids', 'l10n_tr_nilvera_customer_status')
+    def _compute_nilvera_customer_alias_id(self):
+        for record in self:
+            if record.l10n_tr_nilvera_customer_status == 'einvoice' and not record.l10n_tr_nilvera_customer_alias_id:
+                record.l10n_tr_nilvera_customer_alias_id = record.l10n_tr_nilvera_customer_alias_ids[:1]
+            elif record.l10n_tr_nilvera_customer_status == 'earchive':
+                record.l10n_tr_nilvera_customer_alias_id = False
 
     def _get_tax_office_missing_message(self):
         # OVERRIDE
