@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import * as PosLoyalty from "@pos_loyalty/../tests/tours/PosLoyaltyTourMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as SelectionPopup from "@point_of_sale/../tests/tours/helpers/SelectionPopupTourMethods";
@@ -581,5 +582,40 @@ registry.category("web_tour.tours").add("test_points_update_after_global_discoun
             PosLoyalty.pointsTotalIs(192),
             PosLoyalty.orderTotalIs("92"),
             PosLoyalty.finalizeOrder("Bank", "92"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_number_buffer_popup", {
+    test: true,
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+
+            ProductScreen.clickHomeCategory(),
+
+            ProductScreen.addOrderline("Whiteboard Pen", "2"),
+            ProductScreen.selectedOrderlineHas("Whiteboard Pen", "2.0", "6.40"),
+            ProductScreen.totalAmountIs("3.52"),
+            {
+                content: "click Enter Code button",
+                trigger: '.control-buttons .control-button span:contains("Enter Code")',
+            },
+            {
+                content: "Click modal header",
+                trigger: ".popup.popup-textinput .modal-header",
+                run: "click",
+            },
+            {
+                content: "Simulate keyboard input",
+                trigger: "body",
+                run() {
+                    const ev = new KeyboardEvent("keyup", { key: "3"});
+                    window.dispatchEvent(ev);
+                },
+            },
+            Chrome.confirmPopup(),
+            ProductScreen.selectedOrderlineHas("Whiteboard Pen", "2.0"),
+            ProductScreen.totalAmountIs("3.52"),
+            Chrome.endTour(),
         ].flat(),
 });

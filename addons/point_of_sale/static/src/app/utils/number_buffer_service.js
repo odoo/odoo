@@ -61,11 +61,12 @@ class NumberBuffer extends EventBus {
         super();
         this.setup(...arguments);
     }
-    setup({ sound, localization }) {
+    setup({ sound, localization, popup }) {
         this.isReset = false;
         this.bufferHolderStack = [];
         this.sound = sound;
         this.defaultDecimalPoint = localization.decimalPoint;
+        this.popup = popup;
         window.addEventListener("keyup", this._onKeyboardInput.bind(this));
     }
     /**
@@ -161,6 +162,10 @@ class NumberBuffer extends EventBus {
             : 0;
     }
     _onKeyboardInput(event) {
+        const popups = this.popup ? Object.values(this.popup.popups) : [];
+        if (popups.length && !popups.some((popup) => popup.component.name === "NumberPopup")) {
+            return;
+        }
         return (
             this._currentBufferHolder &&
             this._bufferEvents(this._onInput((event) => event.key))(event)
@@ -319,7 +324,7 @@ class NumberBuffer extends EventBus {
 export const numberBufferService = {
     dependencies: NumberBuffer.serviceDependencies,
     start(env, deps) {
-        return new NumberBuffer(deps);
+        return new NumberBuffer({ ...deps, popup: env.services.popup });
     },
 };
 
