@@ -2881,7 +2881,10 @@ class MrpProduction(models.Model):
             return True
         ope_str = merge and _('merged') or _('split')
         if any(production.state not in ('draft', 'confirmed') for production in self):
-            raise UserError(_("Only manufacturing orders in either a draft or confirmed state can be %s.", ope_str))
+            if ope_str == 'split':
+                raise UserError(self.env._("Standard split option only availabe for draft and confirmed manufacturing orders.\n"
+                                  "To split an ongoing production, you must change the manufacturing order demand quantity."))
+            raise UserError(_("Only manufacturing orders in either a draft or confirmed state can be merged"))
         if any(not production.bom_id for production in self):
             raise UserError(_("Only manufacturing orders with a Bill of Materials can be %s.", ope_str))
         if split:
