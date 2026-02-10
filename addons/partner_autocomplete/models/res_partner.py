@@ -188,6 +188,7 @@ class ResPartner(models.Model):
         }, timeout=timeout)
         return self._process_enriched_response(response, error)
 
+    # TODO remove in master
     def iap_partner_autocomplete_add_tags(self, unspsc_codes):
         """Called by JS to create the activity tags from the UNSPSC codes"""
         self.ensure_one()
@@ -222,3 +223,32 @@ class ResPartner(models.Model):
                 node.attrib['widget'] = 'field_partner_autocomplete'
 
         return arch, view
+
+    def enrich_company_message_post(self, data):
+        """
+         Post a chatter note containing company enrichment data received from IAP
+        """
+        template = self.env.ref('iap_mail.enrich_company_by_dnb', raise_if_not_found=False)
+        if not template:
+            return
+        company = {
+            'phone': self.phone,
+            'name': self.name,
+            'email': self.email,
+            'company_type': data.get('entity_type', ''),
+            'vat': self.vat or self.company_registry,
+            'website': self.website,
+            'logo': self.image_1920,
+            'street': self.street,
+            'street2': self.street2,
+            'zip_code': self.zip,
+            'city': self.city,
+            'country': self.country_id.name,
+            'state': self.state_id.code,
+            'tags': data.get('unspsc_codes', ''),
+        }
+        self.message_post_with_source(
+            'iap_mail.enrich_company_by_dnb',
+            render_values=company,
+            subtype_xmlid='mail.mt_note',
+        )
