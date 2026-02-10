@@ -133,7 +133,7 @@ def load_module_graph(
 
     # register, instantiate and initialize models for each modules
     t0 = time.time()
-    loading_extra_query_count = odoo.sql_db.sql_counter
+    loading_sql_counter_start = odoo.sql_db.sql_counter
     loading_cursor_query_count = env.cr.sql_log_count
 
     models_updated = set()
@@ -146,8 +146,9 @@ def load_module_graph(
             continue
 
         module_t0 = time.time()
+        module_process_t0 = time.process_time()
         module_cursor_query_count = env.cr.sql_log_count
-        module_extra_query_count = odoo.sql_db.sql_counter
+        sql_counter_start = odoo.sql_db.sql_counter
 
         update_operation = (
             'install' if package.state == 'to install' else
@@ -265,7 +266,11 @@ def load_module_graph(
             module.env.flush_all()
             module.env.cr.commit()
 
+        module_loading_time = time.time() - module_t0
+        module_loading_process_time = time.process_time() - module_process_t0
+
         test_time = 0.0
+        test_process_time = 0.0
         test_queries = 0
         test_results = None
 
@@ -279,29 +284,34 @@ def load_module_graph(
                 registry.check_null_constraints(env.cr)
                 # Python tests
                 tests_t0, tests_q0 = time.time(), odoo.sql_db.sql_counter
+                tests_process_t0 = time.process_time()
                 test_results = loader.run_suite(suite, global_report=report)
                 assert report is not None, "Missing report during tests"
                 report.update(test_results)
                 test_time = time.time() - tests_t0
+                test_process_time = time.process_time() - tests_process_t0
                 test_queries = odoo.sql_db.sql_counter - tests_q0
 
                 # tests may have reset the environment
                 module = env['ir.module.module'].browse(module_id)
 
-
-        extra_queries = odoo.sql_db.sql_counter - module_extra_query_count - test_queries
-        extras = []
-        if test_queries:
-            extras.append(f'+{test_queries} test')
-        if extra_queries:
-            extras.append(f'+{extra_queries} other')
-        _logger.log(
-            module_log_level, "Module %s loaded in %.2fs%s, %s queries%s",
-            module_name, time.time() - module_t0,
-            f' (incl. {test_time:.2f}s test)' if test_time else '',
-            env.cr.sql_log_count - module_cursor_query_count,
-            f' ({", ".join(extras)})' if extras else ''
-        )
+        if _logger.isEnabledFor(module_log_level):
+            loading_queries = env.cr.sql_log_count - module_cursor_query_count
+            total_queries = odoo.sql_db.sql_counter - sql_counter_start
+            extra_queries = total_queries - test_queries - loading_queries
+            extras = []
+            if test_queries:
+                extras.append(f'+{test_queries} test')
+            if extra_queries:
+                extras.append(f'+{extra_queries} other')
+            loading_time = f'{module_loading_time:,.2f}s'
+            extra_time = f' ({test_time:.2f}s test)' if test_time else ''
+            query_count = f'{loading_queries} queries'
+            extra_queries = f' ({", ".join(extras)})' if extras else ''
+            process_time = f'{module_loading_process_time:,.2f}s'
+            extra_process_time = f' ({test_process_time:.2f}s test)' if test_process_time else ''
+            message = f"Module {module_name} loaded in {loading_time}{extra_time}, {query_count}{extra_queries} (process: {process_time}{extra_process_time})"
+            _logger.log(module_log_level, message)
         if test_results and not test_results.wasSuccessful():
             _logger.error(
                 "Module %s: %d failures, %d errors of %d tests",
@@ -309,11 +319,12 @@ def load_module_graph(
                 test_results.testsRun
             )
 
+    env_query_count = env.cr.sql_log_count - loading_cursor_query_count
     _logger.runbot("%s modules loaded in %.2fs, %s queries (+%s extra)",
                    len(graph),
                    time.time() - t0,
-                   env.cr.sql_log_count - loading_cursor_query_count,
-                   odoo.sql_db.sql_counter - loading_extra_query_count)  # extra queries: testes, notify, any other closed cursor
+                   env_query_count,
+                   odoo.sql_db.sql_counter - loading_sql_counter_start - env_query_count)  # extra queries: tests, notify, any other closed cursor
 
 
 def _check_module_names(cr: BaseCursor, module_names: Iterable[str]) -> None:
