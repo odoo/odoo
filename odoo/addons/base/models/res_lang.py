@@ -188,6 +188,7 @@ class ResLang(models.CachedModel):
         if not self.search_count([]):
             _logger.error("No language is active.")
 
+    @api.model
     def _activate_lang(self, code):
         """ Activate languages
         :param code: code of the language to activate
@@ -198,6 +199,7 @@ class ResLang(models.CachedModel):
             lang.active = True
         return lang
 
+    @api.model
     def _activate_and_install_lang(self, code):
         """ Activate languages and update their translations
         :param code: code of the language to activate
@@ -208,6 +210,7 @@ class ResLang(models.CachedModel):
             lang.action_unarchive()
         return lang
 
+    @api.model
     def _create_lang(self, lang, lang_name=None):
         """ Create the given language and make it active. """
         # create the language with locale information
@@ -270,7 +273,7 @@ class ResLang(models.CachedModel):
             'grouping': fix_grouping(conv.get('grouping')),
         }
         try:
-            return self.create(lang_info)
+            return self.sudo().create(lang_info)
         finally:
             tools.translate.resetlocale()
 
