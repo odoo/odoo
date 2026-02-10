@@ -5,7 +5,7 @@ import datetime
 import os.path
 from zoneinfo import ZoneInfo
 
-from odoo.tests.common import tagged, BaseCase, TransactionCase
+from odoo.tests.common import tagged, BaseCase, TransactionCase, freeze_time
 from odoo.tools import config, misc, urls
 from odoo.tools.mail import validate_url
 from odoo.tools.misc import file_open, file_path, merge_sequences, remove_accents
@@ -70,6 +70,7 @@ class TestFormatLangDate(TransactionCase):
         self.assertEqual(misc.format_time(self.env, False, time_format=t_medium), '')
         self.assertEqual(misc.format_time(self.env, None, time_format=t_medium), '')
 
+    @freeze_time('2017-01-31')
     def test_01_code_and_format(self):
         date_str = '2017-01-31'
         lang = self.env['res.lang']
