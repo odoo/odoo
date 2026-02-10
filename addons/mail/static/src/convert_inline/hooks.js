@@ -34,7 +34,7 @@ export function useEmailHtmlConverter({ Plugins, bundles, targetRef, isVisible }
         referenceIframe.style.setProperty("min-width", `${width}px`, "important");
         referenceIframe.style.setProperty("min-height", `${height}px`, "important");
         if (converter) {
-            converter.updateLayoutDimensions({ width, height });
+            converter.onLayoutDimensionsUpdate({ width, height });
         }
     };
     const cleanupEmailHtmlConversion = () => {

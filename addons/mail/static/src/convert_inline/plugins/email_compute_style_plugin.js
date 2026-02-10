@@ -44,7 +44,7 @@ export class EmailComputeStylePlugin extends BasePlugin {
             "vertical-align",
             "width",
         ],
-        update_layout_dimensions_handlers: this.updateLayoutDimensions.bind(this),
+        update_layout_dimensions_handlers: this.onUpdateLayoutDimensions.bind(this),
     };
 
     setup() {
@@ -80,9 +80,11 @@ export class EmailComputeStylePlugin extends BasePlugin {
         }
     }
 
-    updateLayoutDimensions({ width }) {
+    onUpdateLayoutDimensions({ width }) {
         this.dimensionsKey = `${width}`;
-        this.computedStylesMap.set(this.dimensionsKey, new WeakMap());
+        if (!this.computedStylesMap.has(this.dimensionsKey)) {
+            this.computedStylesMap.set(this.dimensionsKey, new WeakMap());
+        }
     }
 
     cachedComputedStyleProxyHandler(element) {

@@ -1,4 +1,4 @@
-// import { getCSSRules, toInline } from "@mail/views/web/fields/html_mail_field/convert_inline";
+import { getCSSRules, toInline } from "@mail/views/web/fields/html_mail_field/convert_inline";
 import { PluginManager } from "@html_editor/plugin_manager";
 
 export class EmailHtmlConverter extends PluginManager {
@@ -17,17 +17,18 @@ export class EmailHtmlConverter extends PluginManager {
         this.config.updateLayoutDimensions();
         this.isReady = true;
 
-        const inlineTemplate = await this.htmlConversion();
-        if (!inlineTemplate) {
-            return null;
-        }
+        // const inlineTemplate = await this.htmlConversion();
+        // if (!inlineTemplate) {
+        //     return null;
+        // }
 
         // Old toInline
         // TODO EGGMAIL: adapt usage, use plugin instead of old method
-        // const cssRules = getCSSRules(this.config.referenceDocument);
-        // await toInline(this.config.reference, cssRules);
+        const cssRules = getCSSRules(this.config.referenceDocument);
+        await toInline(this.config.reference, cssRules);
+        return this.config.reference.innerHTML;
 
-        return inlineTemplate.innerHTML;
+        // return inlineTemplate.innerHTML;
     }
 
     getEmailTemplate() {
@@ -55,7 +56,7 @@ export class EmailHtmlConverter extends PluginManager {
         return emailTemplate;
     }
 
-    updateLayoutDimensions({ width, height }) {
+    onLayoutDimensionsUpdate({ width, height }) {
         this.dispatchTo("update_layout_dimensions_handlers", { width, height });
     }
 }
