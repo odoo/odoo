@@ -66,6 +66,8 @@ class Environment(Mapping[str, "BaseModel"]):
         # determine transaction object
         transaction = cr.transaction
         if transaction is None:
+            if cr._closing:
+                _logger.error("The cursor is being closed, but starts a new transaction", stack_info=True)
             transaction = cr.transaction = Transaction(Registry(cr.dbname))
 
         # if env already exists, return it
@@ -773,7 +775,16 @@ class Transaction:
         """ Context for committing the connection. """
         assert not self._state_stack__, "Pending savepoints not released, cannot commit!"
         yield
-        self.clear()
+
+        env = self.default_env or next(iter(self.envs), None)
+        cr = env.cr if env is not None else None
+        if cr is None or not cr._closing or cr.postcommit:
+            # if not closing or if we have some postcommit to execute,
+            # reset the cursor entirely
+            self.reset()
+        else:
+            # we are closing the cursor, just a quick clean-up
+            self.clear()
 
     @contextmanager
     def rollbacking(self):
@@ -781,6 +792,10 @@ class Transaction:
         assert not self._state_stack__, "Pending savepoints not released, cannot rollback!"
         yield
         self.restore_state()
+
+    def _free_resources(self) -> None:
+        """ Free resources used by the transaction."""
+        self.default_env = None  # break the cyclic reference
 
     def save_state(self):
         """ Save the current state of the transaction for future restore. """
@@ -801,7 +816,10 @@ class Transaction:
         if self._state_stack__:
             state = self._state_stack__[-1]
             self.default_env = state.default_env
-        if self.registry.registry_sequence != self._registry_sequence:
+
+        env = self.default_env or next(iter(self.envs), None)
+        cr = env.cr if env is not None else None
+        if (cr is None or not cr._closing or cr.postrollback) and self.registry.registry_sequence != self._registry_sequence:
             # registry changed, reset the transaction
             self.reset()
             return
