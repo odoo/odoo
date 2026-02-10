@@ -11,6 +11,7 @@ import werkzeug.wrappers
 import werkzeug.wsgi
 from werkzeug.urls import iri_to_uri
 
+import odoo
 from odoo.tools.translate import JAVASCRIPT_TRANSLATION_COMMENT
 from odoo.tools.misc import file_open
 from odoo import http
@@ -55,6 +56,13 @@ def ensure_db(redirect='/web/database/selector', db=None):
     # If the db is taken out of a query parameter, it will be checked against
     # `http.db_filter()` in order to ensure it's legit and thus avoid db
     # forgering that could lead to xss attacks.
+    # When list_db is disabled and a default db is configured, redirect to login instead of selector
+    if redirect == '/web/database/selector' and not odoo.tools.config['list_db']:
+        configured_db = odoo.tools.config.get('db_name')
+        if configured_db and len(configured_db) > 0:
+            default_db = configured_db[0]
+            if default_db and default_db in http.db_filter([default_db]):
+                redirect = f'/web/login?db={default_db}'
     if db is None:
         db = request.params.get('db') and request.params.get('db').strip()
 
@@ -88,9 +96,13 @@ def ensure_db(redirect='/web/database/selector', db=None):
         if len(all_dbs) == 1:
             db = all_dbs[0]
 
-    # if no db can be found til here, send to the database selector
-    # the database selector will redirect to database manager if needed
+    # if no db can be found til here, send to the database selector or login
+    # when list_db is disabled and a default db is configured, go to login instead
     if not db:
+        if not odoo.tools.config['list_db'] and odoo.tools.config.get('db_name'):
+            default_db = odoo.tools.config['db_name'][0] if odoo.tools.config['db_name'] else None
+            if default_db and default_db in http.db_filter([default_db]):
+                redirect = f'/web/login?db={default_db}'
         werkzeug.exceptions.abort(request.redirect(redirect, 303))
 
     # always switch the session to the computed db

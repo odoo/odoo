@@ -58,12 +58,20 @@ class Database(http.Controller):
 
     @http.route('/web/database/selector', type='http', auth="none")
     def selector(self, **kw):
+        if not odoo.tools.config['list_db'] and odoo.tools.config.get('db_name'):
+            default_db = odoo.tools.config['db_name'][0]
+            if default_db and default_db in http.db_filter([default_db]):
+                return request.redirect(f'/web/login?db={default_db}', 303)
         if request.db:
             request.env.cr.close()
         return self._render_template(manage=False)
 
     @http.route('/web/database/manager', type='http', auth="none")
     def manager(self, **kw):
+        if not odoo.tools.config['list_db'] and odoo.tools.config.get('db_name'):
+            default_db = odoo.tools.config['db_name'][0]
+            if default_db and default_db in http.db_filter([default_db]):
+                return request.redirect(f'/web/login?db={default_db}', 303)
         if request.db:
             request.env.cr.close()
         return self._render_template()

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Server action for Import so view validation does not require action_import on model -->
+    <record id="action_import_npi_result" model="ir.actions.server">
+        <field name="name">Import NPI Result to External Provider</field>
+        <field name="model_id" ref="model_npi_optometrist_result"/>
+        <field name="state">code</field>
+        <field name="code"><![CDATA[action = False
+if "external.provider" not in env.registry.models:
+    action = {"type": "ir.actions.client", "tag": "display_notification", "params": {"title": "Restart required", "message": "Please fully stop and restart the Odoo server, then try Import again.", "type": "warning", "sticky": True}}
+else:
+    ExternalProvider = env["external.provider"]
+    iter_records = records if records else ([record] if record else [])
+    for rec in iter_records:
+        existing = ExternalProvider.search([("npi", "=", rec.npi_number or "")], limit=1)
+        if not existing:
+            name_with_credential = rec.name or ""
+            if rec.credential:
+                name_with_credential = (rec.name or "") + " " + (rec.credential or "")
+            phone_val = rec.telephone_number or ""
+            ExternalProvider.create({
+                "name": name_with_credential,
+                "phone": phone_val,
+                "email": "",
+                "city": (rec.city or "").strip(),
+                "state": (rec.state or "").strip(),
+                "npi": rec.npi_number or "",
+                "company": "",
+                "license": "",
+                "taxonomy": (rec.taxonomy_code or rec.taxonomy_desc or ""),
+            })
+        action = {
+            "type": "ir.actions.act_window",
+            "name": "External Provider",
+            "res_model": "external.provider",
+            "view_mode": "list,form",
+            "target": "current",
+        }]]></field>
+    </record>
+
+    <!-- Form when clicking a doctor: Import or Cancel only -->
+    <record id="view_npi_optometrist_result_form" model="ir.ui.view">
+        <field name="name">npi.optometrist.result.form</field>
+        <field name="model">npi.optometrist.result</field>
+        <field name="arch" type="xml">
+            <form string="Import Provider" create="false" edit="false" delete="false">
+                <sheet>
+                    <group>
+                        <group string="Provider Info">
+                            <field name="name"/>
+                            <field name="credential"/>
+                            <field name="npi_number"/>
+                            <field name="taxonomy_desc"/>
+                            <field name="taxonomy_code"/>
+                        </group>
+                        <group string="Address">
+                            <field name="address_1"/>
+                            <field name="address_2"/>
+                            <field name="city"/>
+                            <field name="state"/>
+                            <field name="postal_code"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="npi_optometrist_search.action_import_npi_result" string="Import" type="action" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_npi_optometrist_result_tree" model="ir.ui.view">
+        <field name="name">npi.optometrist.result.list</field>
+        <field name="model">npi.optometrist.result</field>
+        <field name="arch" type="xml">
+            <list string="Eye Care Providers">
+                <field name="taxonomy_desc" string="Provider Type"/>
+                <field name="npi_number"/>
+                <field name="name"/>
+                <field name="credential"/>
+                <field name="city"/>
+                <field name="state"/>
+                <field name="postal_code"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_npi_optometrist_result_kanban" model="ir.ui.view">
+        <field name="name">npi.optometrist.result.kanban</field>
+        <field name="model">npi.optometrist.result</field>
+        <field name="arch" type="xml">
+            <kanban string="Eye Care Providers" create="false" delete="false" edit="false">
+                <field name="taxonomy_desc"/>
+                <field name="npi_number"/>
+                <field name="name"/>
+                <field name="credential"/>
+                <field name="address_1"/>
+                <field name="city"/>
+                <field name="state"/>
+                <field name="postal_code"/>
+                <field name="taxonomy_desc"/>
+                <templates>
+                    <t t-name="card" class="o_kanban_card">
+                        <div class="oe_kanban_content">
+                            <div class="o_kanban_record_top">
+                                <span class="badge text-bg-secondary mb-1"><field name="taxonomy_desc"/></span>
+                                <strong class="o_kanban_record_title d-block"><field name="name"/></strong>
+                                <span t-if="record.credential.raw_value" class="text-muted">(<field name="credential"/>)</span>
+                            </div>
+                            <div class="o_kanban_record_body mt-2">
+                                <div><i class="fa fa-id-card me-1"/> NPI: <field name="npi_number"/></div>
+                                <div t-if="record.address_1.raw_value"><i class="fa fa-map-marker me-1"/><field name="address_1"/></div>
+                                <div t-if="record.city.raw_value or record.state.raw_value">
+                                    <field name="city"/><t t-if="record.state.raw_value">, </t><field name="state"/><t t-if="record.postal_code.raw_value"> </t><field name="postal_code"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_npi_optometrist_search_form" model="ir.ui.view">
+        <field name="name">npi.optometrist.search.form</field>
+        <field name="model">npi.optometrist.search</field>
+        <field name="arch" type="xml">
+            <form string="Search Eye Care Providers">
+                <sheet>
+                    <group>
+                        <group string="Search Criteria">
+                            <field name="first_name" placeholder="e.g., John or Jo*"/>
+                            <field name="last_name" placeholder="e.g., Smith or Sm*"/>
+                            <field name="state" placeholder="e.g., CA, UT"/>
+                            <field name="city"/>
+                            <field name="postal_code"/>
+                            <field name="limit"/>
+                        </group>
+                        <group string="Info">
+                            <div class="alert alert-info" role="alert">
+                                <p>Searches the NPPES NPI Registry for <strong>optometrists and ophthalmologists</strong>.</p>
+                                <p>Use * for wildcard (e.g., last_name="Smi*").</p>
+                                <p>Enter at least one criterion: name, state, city, or postal code.</p>
+                            </div>
+                        </group>
+                    </group>
+                    <notebook invisible="not result_ids">
+                        <page string="Results" name="results">
+                            <field name="result_ids" nolabel="1">
+                                <kanban string="Eye Care Providers" create="false" delete="false" edit="false">
+                                    <field name="taxonomy_desc"/>
+                                    <field name="npi_number"/>
+                                    <field name="name"/>
+                                    <field name="credential"/>
+                                    <field name="address_1"/>
+                                    <field name="city"/>
+                                    <field name="state"/>
+                                    <field name="postal_code"/>
+                                    <templates>
+                                        <t t-name="card" class="o_kanban_card">
+                                            <div class="oe_kanban_content">
+                                                <div class="o_kanban_record_top">
+                                                    <span class="badge text-bg-secondary mb-1"><field name="taxonomy_desc"/></span>
+                                                    <strong class="o_kanban_record_title d-block"><field name="name"/></strong>
+                                                    <span t-if="record.credential.raw_value" class="text-muted">(<field name="credential"/>)</span>
+                                                </div>
+                                                <div class="o_kanban_record_body mt-2">
+                                                    <div><i class="fa fa-id-card me-1"/> NPI: <field name="npi_number"/></div>
+                                                    <div t-if="record.address_1.raw_value"><i class="fa fa-map-marker me-1"/><field name="address_1"/></div>
+                                                    <div t-if="record.city.raw_value or record.state.raw_value">
+                                                        <field name="city"/><t t-if="record.state.raw_value">, </t><field name="state"/><t t-if="record.postal_code.raw_value"> </t><field name="postal_code"/>
+                                                    </div>
+                                                    <div t-if="record.taxonomy_desc.raw_value" class="text-muted small mt-1"><field name="taxonomy_desc"/></div>
+                                                </div>
+                                                <div class="mt-2">
+                                                    <button name="npi_optometrist_search.action_import_npi_result" type="action" class="btn btn-primary btn-sm">Import</button>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="action_search" string="Search" type="object" class="btn-primary"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_npi_optometrist_search" model="ir.actions.act_window">
+        <field name="name">Search Optometrists &amp; Ophthalmologists</field>
+        <field name="res_model">npi.optometrist.search</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Standalone app - NPI Registry -->
+    <menuitem id="menu_npi_optometrist_root"
+        name="NPI Registry"
+        sequence="100"/>
+
+    <menuitem id="menu_npi_optometrist_search"
+        name="Search Optometrists &amp; Ophthalmologists"
+        parent="menu_npi_optometrist_root"
+        action="action_npi_optometrist_search"
+        sequence="10"/>
+
+</odoo>

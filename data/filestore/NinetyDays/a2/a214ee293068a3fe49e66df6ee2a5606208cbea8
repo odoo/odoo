@@ -1,0 +1,126 @@
+
+/* /web/static/src/module_loader.js */
+(function(odoo){"use strict";if(odoo.loader){return;}
+class ModuleLoader{bus=new EventTarget();checkErrorProm=null;factories=new Map();failed=new Set();jobs=new Set();modules=new Map();constructor(root){this.root=root;const strDebug=new URLSearchParams(location.search).get("debug");this.debug=Boolean(strDebug&&strDebug!=="0");}
+addJob(name){this.jobs.add(name);this.startModules();}
+define(name,deps,factory,lazy=false){if(typeof name!=="string"){throw new Error(`Module name should be a string, got: ${String(name)}`);}
+if(!Array.isArray(deps)){throw new Error(`Module dependencies should be a list of strings, got: ${String(deps)}`);}
+if(typeof factory!=="function"){throw new Error(`Module factory should be a function, got: ${String(factory)}`);}
+if(this.factories.has(name)){return;}
+this.factories.set(name,{deps,fn:factory,ignoreMissingDeps:globalThis.__odooIgnoreMissingDependencies,});if(!lazy){this.addJob(name);this.checkErrorProm||=Promise.resolve().then(()=>{this.checkErrorProm=null;this.reportErrors(this.findErrors());});}}
+findErrors(moduleNames){const findCycle=(currentModuleNames,visited)=>{for(const name of currentModuleNames||[]){if(visited.has(name)){const cycleModuleNames=[...visited,name];return cycleModuleNames.slice(cycleModuleNames.indexOf(name)).map((j)=>`"${j}"`).join(" => ");}
+const cycle=findCycle(dependencyGraph[name],new Set(visited).add(name));if(cycle){return cycle;}}
+return null;};moduleNames||=this.jobs;const dependencyGraph=Object.create(null);const missing=new Set();const unloaded=new Set();for(const moduleName of moduleNames){const{deps,ignoreMissingDeps}=this.factories.get(moduleName);dependencyGraph[moduleName]=deps;if(ignoreMissingDeps){continue;}
+unloaded.add(moduleName);for(const dep of deps){if(!this.factories.has(dep)){missing.add(dep);}}}
+const cycle=findCycle(moduleNames,new Set());const errors={};if(cycle){errors.cycle=cycle;}
+if(this.failed.size){errors.failed=this.failed;}
+if(missing.size){errors.missing=missing;}
+if(unloaded.size){errors.unloaded=unloaded;}
+return errors;}
+findJob(){for(const job of this.jobs){if(this.factories.get(job).deps.every((dep)=>this.modules.has(dep))){return job;}}
+return null;}
+async reportErrors(errors){if(!Object.keys(errors).length){return;}
+if(errors.failed){console.error("The following modules failed to load because of an error:",[...errors.failed,]);}
+if(errors.missing){console.error("The following modules are needed by other modules but have not been defined, they may not be present in the correct asset bundle:",[...errors.missing]);}
+if(errors.cycle){console.error("The following modules could not be loaded because they form a dependency cycle:",errors.cycle);}
+if(errors.unloaded){console.error("The following modules could not be loaded because they have unmet dependencies, this is a secondary error which is likely caused by one of the above problems:",[...errors.unloaded]);}
+const document=this.root?.ownerDocument||globalThis.document;if(document.readyState==="loading"){await new Promise((resolve)=>document.addEventListener("DOMContentLoaded",resolve));}
+if(this.debug){const style=document.createElement("style");style.className="o_module_error_banner";style.textContent=`
+                    body::before {
+                        font-weight: bold;
+                        content: "An error occurred while loading javascript modules, you may find more information in the devtools console";
+                        position: fixed;
+                        left: 0;
+                        bottom: 0;
+                        z-index: 100000000000;
+                        background-color: #C00;
+                        color: #DDD;
+                    }
+                `;document.head.appendChild(style);}}
+startModules(){let job;while((job=this.findJob())){this.startModule(job);}}
+startModule(name){const require=(dependency)=>this.modules.get(dependency);this.jobs.delete(name);const factory=this.factories.get(name);let module=null;try{module=factory.fn(require);}catch(error){this.failed.add(name);throw new Error(`Error while loading "${name}":\n${error}`);}
+this.modules.set(name,module);this.bus.dispatchEvent(new CustomEvent("module-started",{detail:{moduleName:name,module},}));return module;}}
+const loader=new ModuleLoader();odoo.define=loader.define.bind(loader);odoo.loader=loader;if(odoo.debug&&!loader.debug){odoo.debug="";}})((globalThis.odoo||={}));;
+
+/* /bus/static/src/workers/base_worker.js */
+odoo.define('@bus/workers/base_worker',[],function(require){'use strict';let __exports={};const BaseWorker=__exports.BaseWorker=class BaseWorker{constructor(name){this.name=name;this.client=null;}
+handleMessage(event){const{action}=event.data;if(action==="BASE:INIT"){if(this.name.includes("shared")){event.target.postMessage({type:"BASE:INITIALIZED"});}else{(this.client||globalThis).postMessage({type:"BASE:INITIALIZED"});}}}}
+return __exports;});;
+
+/* /bus/static/src/workers/bus_worker_script.js */
+odoo.define('@bus/workers/bus_worker_script',['@bus/workers/base_worker','@bus/workers/election_worker','@bus/workers/websocket_worker'],function(require){'use strict';let __exports={};const{BaseWorker}=require("@bus/workers/base_worker");const{ElectionWorker}=require("@bus/workers/election_worker");const{WebsocketWorker}=require("@bus/workers/websocket_worker");(function(){const baseWorker=new BaseWorker(self.name);const websocketWorker=new WebsocketWorker(self.name);const electionWorker=new ElectionWorker();if(self.name.includes("shared")){onconnect=(ev)=>{const client=ev.ports[0];client.addEventListener("message",(ev)=>{baseWorker.handleMessage(ev);electionWorker.handleMessage(ev);});websocketWorker.registerClient(client);client.start();};}else{self.addEventListener("message",(ev)=>baseWorker.handleMessage(ev));websocketWorker.registerClient(self);}})();return __exports;});;
+
+/* /bus/static/src/workers/bus_worker_utils.js */
+odoo.define('@bus/workers/bus_worker_utils',[],function(require){'use strict';let __exports={};__exports.debounce=debounce;function debounce(func,wait,immediate){let timeout;return function(){const context=this;const args=arguments;function later(){timeout=null;if(!immediate){func.apply(context,args);}}
+const callNow=immediate&&!timeout;clearTimeout(timeout);timeout=setTimeout(later,wait);if(callNow){func.apply(context,args);}};}
+const Deferred=__exports.Deferred=class Deferred extends Promise{constructor(){let resolve;let reject;const prom=new Promise((res,rej)=>{resolve=res;reject=rej;});return Object.assign(prom,{resolve,reject});}}
+const Logger=__exports.Logger=class Logger{static LOG_TTL=24*60*60*1000;static gcInterval=null;static instances=[];_db;static async gcOutdatedLogs(){const threshold=Date.now()-Logger.LOG_TTL;for(const logger of this.instances){try{await logger._ensureDatabaseAvailable();await new Promise((res,rej)=>{const transaction=logger._db.transaction("logs","readwrite");const store=transaction.objectStore("logs");const req=store.index("timestamp").openCursor(IDBKeyRange.upperBound(threshold));req.onsuccess=(event)=>{const cursor=event.target.result;if(cursor){cursor.delete();cursor.continue();}};req.onerror=(e)=>rej(e.target.error);transaction.oncomplete=res;transaction.onerror=(e)=>rej(e.target.error);});}catch(error){console.error(`Failed to clear logs for logger "${logger._name}":`,error);}}}
+constructor(name){this._name=name;Logger.instances.push(this);Logger.gcOutdatedLogs();clearInterval(Logger.gcInterval);Logger.gcInterval=setInterval(()=>Logger.gcOutdatedLogs(),Logger.LOG_TTL);}
+async _ensureDatabaseAvailable(){if(this._db){return;}
+return new Promise((res,rej)=>{const request=indexedDB.open(this._name,1);request.onsuccess=(event)=>{this._db=event.target.result;res();};request.onupgradeneeded=(event)=>{if(!event.target.result.objectStoreNames.contains("logs")){const store=event.target.result.createObjectStore("logs",{autoIncrement:true,});store.createIndex("timestamp","timestamp",{unique:false});}};request.onerror=rej;});}
+async log(message){await this._ensureDatabaseAvailable();const transaction=this._db.transaction("logs","readwrite");const store=transaction.objectStore("logs");const addRequest=store.add({timestamp:Date.now(),message});return new Promise((res,rej)=>{addRequest.onsuccess=res;addRequest.onerror=rej;});}
+async getLogs(){await Logger.gcOutdatedLogs();await this._ensureDatabaseAvailable();const transaction=this._db.transaction("logs","readonly");const store=transaction.objectStore("logs");const request=store.getAll();return new Promise((res,rej)=>{request.onsuccess=(ev)=>res(ev.target.result.map(({message})=>message));request.onerror=rej;});}}
+return __exports;});;
+
+/* /bus/static/src/workers/election_worker.js */
+odoo.define('@bus/workers/election_worker',['@bus/workers/bus_worker_utils'],function(require){'use strict';let __exports={};const{Deferred}=require("@bus/workers/bus_worker_utils");const ElectionWorker=__exports.ElectionWorker=class ElectionWorker{MAIN_TAB_TIMEOUT_PERIOD=3000;candidates=new Set();electionDeferred=null;heartbeatRequestInterval=null;lastHeartbeat=Date.now();masterReplyDeferred=null;masterTab=null;constructor(){setInterval(()=>{if(Date.now()-this.lastHeartbeat>this.MAIN_TAB_TIMEOUT_PERIOD){this.startElection();}},this.MAIN_TAB_TIMEOUT_PERIOD);}
+requestHeartbeat(messagePort){if(messagePort){messagePort.postMessage({type:"ELECTION:HEARTBEAT_REQUEST"});return;}
+for(const candidate of this.candidates){candidate.postMessage({type:"ELECTION:HEARTBEAT_REQUEST"});}}
+async ensureMasterPresence(){this.masterReplyDeferred??=new Deferred();if(this.masterTab){this.requestHeartbeat(this.masterTab);}else{this.startElection();}
+await this.masterReplyDeferred;}
+startElection(){clearInterval(this.heartbeatRequestInterval);this.masterTab?.postMessage({type:"ELECTION:UNASSIGN_MASTER"});this.masterTab=null;this.electionDeferred??=new Deferred();this.requestHeartbeat();}
+finishElection(messagePort){this.masterTab=messagePort;messagePort.postMessage({type:"ELECTION:ASSIGN_MASTER"});this.electionDeferred.resolve();this.electionDeferred=null;this.heartbeatRequestInterval=setInterval(()=>this.requestHeartbeat(this.masterTab),this.MAIN_TAB_TIMEOUT_PERIOD/2);}
+async handleMessage(event){const{action}=event.data;if(!action?.startsWith("ELECTION:")){return;}
+switch(action){case"ELECTION:REGISTER":this.candidates.add(event.target);await this.electionDeferred;if(!this.masterTab){this.startElection();}
+break;case"ELECTION:UNREGISTER":this.candidates.delete(event.target);if(this.masterTab===event.target){this.startElection();}
+break;case"ELECTION:IS_MASTER?":await this.ensureMasterPresence();event.target.postMessage({type:"ELECTION:IS_MASTER_RESPONSE",data:{answer:this.masterTab===event.target},});break;case"ELECTION:HEARTBEAT":if(this.electionDeferred){this.finishElection(event.target);}
+if(this.masterTab===event.target){this.lastHeartbeat=Date.now();this.masterReplyDeferred?.resolve();this.masterReplyDeferred=null;}
+break;default:console.warn("Unknown message action:",action);}}}
+return __exports;});;
+
+/* /bus/static/src/workers/websocket_worker.js */
+odoo.define('@bus/workers/websocket_worker',['@bus/workers/bus_worker_utils'],function(require){'use strict';let __exports={};const{debounce,Deferred,Logger}=require("@bus/workers/bus_worker_utils");const WEBSOCKET_CLOSE_CODES=__exports.WEBSOCKET_CLOSE_CODES=Object.freeze({CLEAN:1000,GOING_AWAY:1001,PROTOCOL_ERROR:1002,INCORRECT_DATA:1003,ABNORMAL_CLOSURE:1006,INCONSISTENT_DATA:1007,MESSAGE_VIOLATING_POLICY:1008,MESSAGE_TOO_BIG:1009,EXTENSION_NEGOTIATION_FAILED:1010,SERVER_ERROR:1011,RESTART:1012,TRY_LATER:1013,BAD_GATEWAY:1014,SESSION_EXPIRED:4001,KEEP_ALIVE_TIMEOUT:4002,RECONNECTING:4003,CLOSING_HANDSHAKE_ABORTED:4004,});const WORKER_STATE=__exports.WORKER_STATE=Object.freeze({CONNECTED:"CONNECTED",DISCONNECTED:"DISCONNECTED",IDLE:"IDLE",CONNECTING:"CONNECTING",});const MAXIMUM_RECONNECT_DELAY=60000;const UUID=Date.now().toString(36)+Math.random().toString(36).substring(2);const logger=new Logger("bus_websocket_worker");const WebsocketWorker=__exports.WebsocketWorker=class WebsocketWorker{INITIAL_RECONNECT_DELAY=1000;RECONNECT_JITTER=1000;CONNECTION_CHECK_DELAY=60_000;constructor(name){this.name=name;this.newestStartTs=undefined;this.websocketURL="";this.currentUID=null;this.currentDB=null;this.isWaitingForNewUID=true;this.channelsByClient=new Map();this.connectRetryDelay=this.INITIAL_RECONNECT_DELAY;this.connectTimeout=null;this.debugModeByClient=new Map();this.isDebug=false;this.active=true;this.state=WORKER_STATE.IDLE;this.isReconnecting=false;this.lastChannelSubscription=null;this.loggingEnabled=null;this.firstSubscribeDeferred=new Deferred();this.lastNotificationId=0;this.messageWaitQueue=[];this._forceUpdateChannels=debounce(this._forceUpdateChannels,300);this._debouncedUpdateChannels=debounce(this._updateChannels,300);this._debouncedSendToServer=debounce(this._sendToServer,300);this._onWebsocketClose=this._onWebsocketClose.bind(this);this._onWebsocketError=this._onWebsocketError.bind(this);this._onWebsocketMessage=this._onWebsocketMessage.bind(this);this._onWebsocketOpen=this._onWebsocketOpen.bind(this);globalThis.addEventListener("error",({error})=>{const params=error instanceof Error?[error.constructor.name,error.stack]:[error];this._logDebug("Unhandled error",...params);});globalThis.addEventListener("unhandledrejection",({reason})=>{const params=reason instanceof Error?[reason.constructor.name,reason.stack]:[reason];this._logDebug("Unhandled rejection",params);});}
+broadcast(type,data){this._logDebug("broadcast",type,data);for(const client of this.channelsByClient.keys()){client.postMessage({type,data:data?JSON.parse(JSON.stringify(data)):undefined});}}
+registerClient(messagePort){messagePort.addEventListener("message",(ev)=>{this._onClientMessage(messagePort,ev.data);});this.channelsByClient.set(messagePort,[]);}
+sendToClient(client,type,data){if(type!=="BUS:PROVIDE_LOGS"){this._logDebug("sendToClient",type,data);}
+client.postMessage({type,data:data?JSON.parse(JSON.stringify(data)):undefined});}
+_onClientMessage(client,{action,data}){this._logDebug("_onClientMessage",action,data);switch(action){case"BUS:SEND":{if(data["event_name"]==="update_presence"){this._debouncedSendToServer(data);}else{this._sendToServer(data);}
+return;}
+case"BUS:START":return this._start();case"BUS:STOP":return this._stop();case"BUS:LEAVE":return this._unregisterClient(client);case"BUS:ADD_CHANNEL":return this._addChannel(client,data);case"BUS:DELETE_CHANNEL":return this._deleteChannel(client,data);case"BUS:FORCE_UPDATE_CHANNELS":return this._forceUpdateChannels();case"BUS:SET_LOGGING_ENABLED":this.loggingEnabled=data;break;case"BUS:REQUEST_LOGS":logger.getLogs().then((logs)=>{const workerInfo={UUID,active:this.active,channels:[...new Set([].concat.apply([],[...this.channelsByClient.values()])),].sort(),db:this.currentDB,is_reconnecting:this.isReconnecting,last_subscription:this.lastChannelSubscription,name:this.name,number_of_clients:this.channelsByClient.size,reconnect_delay:this.connectRetryDelay,uid:this.currentUID,websocket_url:this.websocketURL,};this.sendToClient(client,"BUS:PROVIDE_LOGS",{workerInfo,logs});});break;case"BUS:INITIALIZE_CONNECTION":return this._initializeConnection(client,data);}}
+_addChannel(client,channel){this.channelsByClient.get(client).push(channel);this._debouncedUpdateChannels();}
+_deleteChannel(client,channel){const clientChannels=this.channelsByClient.get(client);if(!clientChannels){return;}
+const channelIndex=clientChannels.indexOf(channel);if(channelIndex!==-1){clientChannels.splice(channelIndex,1);this._debouncedUpdateChannels();}}
+_forceUpdateChannels(){this._updateChannels({force:true});}
+_unregisterClient(client){this.channelsByClient.delete(client);this.debugModeByClient.delete(client);this.isDebug=[...this.debugModeByClient.values()].some(Boolean);this._debouncedUpdateChannels();}
+_initializeConnection(client,{db,debug,lastNotificationId,uid,websocketURL,startTs}){if(this.newestStartTs&&this.newestStartTs>startTs){this.debugModeByClient.set(client,debug);this.isDebug=[...this.debugModeByClient.values()].some(Boolean);this.sendToClient(client,"BUS:WORKER_STATE_UPDATED",this.state);this.sendToClient(client,"BUS:INITIALIZED");return;}
+this.newestStartTs=startTs;this.websocketURL=websocketURL;this.lastNotificationId=lastNotificationId;this.debugModeByClient.set(client,debug);this.isDebug=[...this.debugModeByClient.values()].some(Boolean);const isCurrentUserKnown=uid!==undefined;if(this.isWaitingForNewUID&&isCurrentUserKnown){this.isWaitingForNewUID=false;this.currentUID=uid;}
+this.currentDB||=db;if((this.currentUID!==uid&&isCurrentUserKnown)||(db&&this.currentDB!==db)){this.currentUID=uid;this.currentDB=db||this.currentDB;if(this.websocket){this.websocket.close(WEBSOCKET_CLOSE_CODES.CLEAN);}
+this.channelsByClient.forEach((_,key)=>this.channelsByClient.set(key,[]));}
+this.sendToClient(client,"BUS:WORKER_STATE_UPDATED",this.state);this.sendToClient(client,"BUS:INITIALIZED");if(!this.active){this.sendToClient(client,"BUS:OUTDATED");}}
+_isWebsocketConnected(){return this.websocket&&this.websocket.readyState===1;}
+_isWebsocketConnecting(){return this.websocket&&this.websocket.readyState===0;}
+_isWebsocketClosing(){return this.websocket&&this.websocket.readyState===2;}
+_onWebsocketClose({code,reason}){clearInterval(this._connectionCheckInterval);this._logDebug("_onWebsocketClose",code,reason);this._updateState(WORKER_STATE.DISCONNECTED);this.lastChannelSubscription=null;this.firstSubscribeDeferred=new Deferred();if(this.isReconnecting){return;}
+this.broadcast("BUS:DISCONNECT",{code,reason});if(code===WEBSOCKET_CLOSE_CODES.CLEAN){if(reason==="OUTDATED_VERSION"){console.warn("Worker deactivated due to an outdated version.");this.active=false;this.broadcast("BUS:OUTDATED");}
+return;}
+this.broadcast("BUS:RECONNECTING",{closeCode:code});this.isReconnecting=true;if([WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT,WEBSOCKET_CLOSE_CODES.CLOSING_HANDSHAKE_ABORTED,].includes(code)){this.connectRetryDelay=0;}
+if(code===WEBSOCKET_CLOSE_CODES.SESSION_EXPIRED){this.isWaitingForNewUID=true;}
+this._retryConnectionWithDelay();}
+_onWebsocketError(){this._logDebug("_onWebsocketError");this._retryConnectionWithDelay();}
+_onWebsocketMessage(messageEv){this._restartConnectionCheckInterval();const notifications=JSON.parse(messageEv.data);this._logDebug("_onWebsocketMessage",notifications);this.lastNotificationId=notifications[notifications.length-1].id;this.broadcast("BUS:NOTIFICATION",notifications);}
+async _logDebug(title,...args){if(this.loggingEnabled){try{await logger.log({dt:new Date().toISOString(),event:title,args,worker:UUID,});}catch(e){console.error(e);}}}
+_onWebsocketOpen(){this._logDebug("_onWebsocketOpen");this._updateState(WORKER_STATE.CONNECTED);this.broadcast(this.isReconnecting?"BUS:RECONNECT":"BUS:CONNECT");this._debouncedUpdateChannels();this.connectRetryDelay=this.INITIAL_RECONNECT_DELAY;this.connectTimeout=null;this.isReconnecting=false;this.firstSubscribeDeferred.then(()=>{if(!this.websocket){return;}
+this.messageWaitQueue.forEach((msg)=>this.websocket.send(msg));this.messageWaitQueue=[];});this._restartConnectionCheckInterval();}
+_restartConnectionCheckInterval(){clearInterval(this._connectionCheckInterval);this._connectionCheckInterval=setInterval(()=>{if(this._isWebsocketConnected()){this.websocket.send(new Uint8Array([0x00]));this._logDebug("connection_checked");}},this.CONNECTION_CHECK_DELAY);}
+_retryConnectionWithDelay(){this.connectRetryDelay=Math.min(this.connectRetryDelay*1.5,MAXIMUM_RECONNECT_DELAY)+
+this.RECONNECT_JITTER*Math.random();this._logDebug("_retryConnectionWithDelay",this.connectRetryDelay);this.connectTimeout=setTimeout(this._start.bind(this),this.connectRetryDelay);}
+_sendToServer(message){this._logDebug("_sendToServer",message);const payload=JSON.stringify(message);if(!this._isWebsocketConnected()){if(message["event_name"]==="subscribe"){this.messageWaitQueue=this.messageWaitQueue.filter((msg)=>JSON.parse(msg).event_name!=="subscribe");this.messageWaitQueue.unshift(payload);}else{this.messageWaitQueue.push(payload);}}else{if(message["event_name"]==="subscribe"){this.websocket.send(payload);}else{this.firstSubscribeDeferred.then(()=>this.websocket.send(payload));}
+this._restartConnectionCheckInterval();}}
+_removeWebsocketListeners(){this.websocket?.removeEventListener("open",this._onWebsocketOpen);this.websocket?.removeEventListener("message",this._onWebsocketMessage);this.websocket?.removeEventListener("error",this._onWebsocketError);this.websocket?.removeEventListener("close",this._onWebsocketClose);}
+_start(){this._logDebug("_start");if(!this.active||this._isWebsocketConnected()||this._isWebsocketConnecting()){return;}
+this._removeWebsocketListeners();if(this._isWebsocketClosing()){this._onWebsocketClose(new CloseEvent("close",{code:WEBSOCKET_CLOSE_CODES.CLOSING_HANDSHAKE_ABORTED}));this.websocket=null;return;}
+this._updateState(WORKER_STATE.CONNECTING);this.websocket=new WebSocket(this.websocketURL);this.websocket.addEventListener("open",this._onWebsocketOpen);this.websocket.addEventListener("error",this._onWebsocketError);this.websocket.addEventListener("message",this._onWebsocketMessage);this.websocket.addEventListener("close",this._onWebsocketClose);}
+_stop(){this._logDebug("_stop");clearTimeout(this.connectTimeout);this.connectRetryDelay=this.INITIAL_RECONNECT_DELAY;this.isReconnecting=false;this.lastChannelSubscription=null;const shouldBroadcastClose=this.websocket&&this.websocket.readyState!==WebSocket.CLOSED;this.websocket?.close();this._removeWebsocketListeners();this.websocket=null;if(shouldBroadcastClose){this.broadcast("BUS:DISCONNECT",{code:WEBSOCKET_CLOSE_CODES.CLEAN});}}
+_updateChannels({force=false}={}){const allTabsChannels=[...new Set([].concat.apply([],[...this.channelsByClient.values()])),].sort();const allTabsChannelsString=JSON.stringify(allTabsChannels);const shouldUpdateChannelSubscription=allTabsChannelsString!==this.lastChannelSubscription;if(force||shouldUpdateChannelSubscription){this.lastChannelSubscription=allTabsChannelsString;this._sendToServer({event_name:"subscribe",data:{channels:allTabsChannels,last:this.lastNotificationId},});this.firstSubscribeDeferred.resolve();}}
+_updateState(newState){this.state=newState;this.broadcast("BUS:WORKER_STATE_UPDATED",newState);}}
+return __exports;});

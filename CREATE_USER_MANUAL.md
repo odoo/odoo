@@ -33,8 +33,8 @@ cd "C:\Program Files\PostgreSQL\16\bin"
 6. In the **Definition** tab:
    - Password: `odoo`
 7. In the **Privileges** tab:
-   - ✅ Check **Can login?**
-   - ✅ Check **Create databases**
+   - Check **Can login?**
+   - Check **Create databases**
 8. Click **Save**
 
 ---

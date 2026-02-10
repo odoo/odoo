@@ -1,124 +1,64 @@
-# Odoo Setup Completion Guide
+# Odoo Setup Guide
 
-## Current Status
-- ✅ Odoo source code is present
-- ✅ `setup.py` is configured
-- ✅ `requirements.txt` exists with all dependencies
-- ✅ Python dependencies installed (with compatible versions for Python 3.14)
-- ✅ Odoo package installed
-- ✅ Configuration file (`odoo.conf`) created
-- ✅ Data directory created
-- ❌ PostgreSQL database server not installed/configured
-- ⚠️ Python version: 3.14.2 (Odoo officially supports 3.10-3.13, but works with 3.14)
+## Status
 
-## Steps to Complete Setup
+- Odoo source, setup.py, requirements.txt present
+- Dependencies installed; odoo.conf and data directory created
+- PostgreSQL must be installed and configured separately (see POSTGRESQL_SETUP.md or RUN_ODOO.md)
 
-### 1. Python Version (Recommended)
-Odoo officially supports Python 3.10 through 3.13. You currently have Python 3.14.2, which may work but is outside the supported range. Consider:
-- Installing Python 3.13 (recommended) or 3.12
-- Using a virtual environment with the supported version
+Python: Odoo supports 3.10–3.13. Python 3.14 may work but is unsupported. Prefer 3.13 or 3.12.
 
-### 2. Install PostgreSQL Database Server
-Odoo requires PostgreSQL 13 or higher.
+## Steps
 
-**Windows Installation:**
-- Download from: https://www.postgresql.org/download/windows/
-- Install PostgreSQL 13+ with default settings
-- Note the postgres user password you set during installation
-- Ensure PostgreSQL service is running
-- See `POSTGRESQL_SETUP.md` for detailed instructions
+### 1. Install PostgreSQL
 
-**Verify installation:**
-```powershell
-psql --version
-```
+- Download: https://www.postgresql.org/download/windows/
+- Install PostgreSQL 13+ with defaults. Remember the postgres password.
+- Ensure the PostgreSQL service is running. Create an `odoo` user (see POSTGRESQL_SETUP.md).
 
-**Note:** After installing PostgreSQL, update `odoo.conf` with your database credentials.
+### 2. Python dependencies
 
-### 3. ✅ Python Dependencies (COMPLETED)
-Install all required packages from `requirements.txt`:
+Already done if you ran:
 
 ```powershell
-# Option 1: Using pip directly
 pip install -r requirements.txt
-
-# Option 2: Using setup.py (installs Odoo as a package)
+# or
 pip install -e .
-
-# Option 3: Install in a virtual environment (recommended)
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-pip install -r requirements.txt
 ```
 
-**Note:** Some packages may require compilation on Windows. You may need:
-- Microsoft Visual C++ Build Tools
-- Or use pre-compiled wheels from: https://www.lfd.uci.edu/~gohlke/pythonlibs/
+For a clean environment: `python -m venv venv`, activate, then `pip install -r requirements.txt`.
 
-### 4. ✅ Configuration File (COMPLETED)
-The `odoo.conf` file has been created in the project root.
+### 3. Configuration
 
-**Important:** After installing PostgreSQL, update these settings in `odoo.conf`:
-- `db_user`: Your PostgreSQL username
-- `db_password`: Your PostgreSQL password
+Update `odoo.conf` with database credentials:
 
-### 5. Initialize the Database
-Create and initialize your first Odoo database:
+- `db_user`: PostgreSQL username (e.g. odoo or postgres)
+- `db_password`: PostgreSQL password
+
+### 4. Initialize database
 
 ```powershell
 python odoo-bin -c odoo.conf -d your_database_name --stop-after-init -i base
 ```
 
-This will:
-- Create a new PostgreSQL database
-- Install the base Odoo module
-- Set up the initial database structure
+Creates the database and installs the base module.
 
-### 6. Start Odoo Server
-Run Odoo:
+### 5. Start Odoo
 
 ```powershell
 python odoo-bin -c odoo.conf
-```
-
-Or with a specific database:
-
-```powershell
+# or with a database name:
 python odoo-bin -c odoo.conf -d your_database_name
 ```
 
-Access Odoo at: `http://localhost:8069`
-
-### 7. First Login
-- Default username: `admin`
-- Default password: `admin` (change immediately!)
-
-## Configuration File Template
-
-See `odoo.conf.example` for a complete configuration template.
+Open http://localhost:8069. Login: `admin` / `admin`. Change after first login.
 
 ## Troubleshooting
 
-### Common Issues:
+**PostgreSQL connection:** Check service is running and db_host, db_port, db_user, db_password in odoo.conf. User needs permission to create databases.
 
-1. **PostgreSQL Connection Error**
-   - Verify PostgreSQL service is running
-   - Check `db_host`, `db_port`, `db_user`, and `db_password` in config
-   - Ensure PostgreSQL user has permission to create databases
+**Missing dependencies:** Some packages may need Visual C++ Build Tools or pre-built wheels on Windows.
 
-2. **Missing Dependencies**
-   - Some packages (like `psycopg2`, `lxml`, `Pillow`) may need compilation
-   - Use pre-compiled wheels or install Visual C++ Build Tools
+**Port in use:** Change `http_port` in odoo.conf (default 8069) or stop the process using it.
 
-3. **Port Already in Use**
-   - Change `http_port` in `odoo.conf` (default is 8069)
-   - Or stop the process using port 8069
-
-4. **Python Version Issues**
-   - Use Python 3.10-3.13 for best compatibility
-   - Check `odoo/release.py` for exact version requirements
-
-## Additional Resources
-
-- Official Documentation: https://www.odoo.com/documentation/master/administration/install/install.html
-- Developer Setup: https://www.odoo.com/documentation/master/developer/tutorials/setup_guide.html
+**Python version:** Use 3.10–3.13 for best compatibility.

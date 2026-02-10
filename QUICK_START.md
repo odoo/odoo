@@ -1,78 +1,46 @@
-# Quick Start Guide - Odoo is Starting!
+# Quick Start
 
-## 🚀 Server Status
+## Start Odoo
 
-Odoo server has been started! It may take 30-60 seconds to fully initialize, especially on the first run.
+From the project folder:
 
-## 🌐 Access Odoo
-
-**Open your browser and go to:**
-```
-http://localhost:8069
-```
-
-## 🔐 First Login
-
-When you first access Odoo, you'll see either:
-1. **Database Manager** - Create or select a database
-2. **Login Screen** - If database is already initialized
-
-**Default Credentials:**
-- **Email/Username:** `admin`
-- **Password:** `admin` ⚠️ **Change this immediately after first login!**
-
-## 📋 What to Do Next
-
-1. **Wait for the page to load** (may take 30-60 seconds on first start)
-2. **If you see Database Manager:**
-   - Database name: `mycompany` (or create a new one)
-   - Master password: `admin`
-   - Click "Create Database" or "Select Database"
-3. **If you see Login Screen:**
-   - Enter username: `admin`
-   - Enter password: `admin`
-4. **After logging in:**
-   - Change the admin password immediately
-   - Complete the setup wizard
-   - Start configuring your Odoo instance!
-
-## 🛑 Stop the Server
-
-To stop Odoo server, run:
 ```powershell
-Get-Process python | Where-Object {$_.CommandLine -like '*odoo*'} | Stop-Process
+python odoo-bin -c odoo.conf
 ```
 
-Or find the Python process running Odoo and end it from Task Manager.
+Open: http://localhost:8069
 
-## 🔄 Start Again Later
+Default login: `admin` / `admin`. Change after first login.
 
-To start Odoo again:
+## First time
+
+If you see the database manager:
+
+- Create a database (e.g. name: `mycompany`, master password from `odoo.conf`)
+- Or select an existing database
+
+If you see the login screen, use `admin` / `admin`.
+
+## Stop Odoo
+
+In the terminal: Ctrl+C.
+
+Or in Task Manager, end the Python process running Odoo.
+
+## Start again later
+
 ```powershell
 cd C:\Neumont\2ndYear\3rdQuarter\ServiceBasedSoftwareArch\odoo
 python odoo-bin -c odoo.conf -d mycompany
 ```
 
-Or run it in the background:
-```powershell
-Start-Process python -ArgumentList "odoo-bin", "-c", "odoo.conf", "-d", "mycompany"
-```
+## Troubleshooting
 
-## ⚠️ Troubleshooting
+**Page does not load**  
+Wait a bit on first start. Check Python is running and `odoo.log` for errors.
 
-### Page Won't Load
-- Wait a bit longer (first start takes time)
-- Check if Python process is running
-- Check `odoo.log` for errors
+**Database error**  
+PostgreSQL must be running: `Get-Service postgresql-x64-16`. Check `odoo.conf` database settings.
 
-### Database Error
-- Verify PostgreSQL is running: `Get-Service postgresql-x64-16`
-- Check `odoo.conf` has correct database settings
-
-### Port Already in Use
-- Change `http_port` in `odoo.conf` to another port (e.g., 8070)
-- Or stop the process using port 8069
-
-## ✅ Setup Complete!
-
-Your Odoo installation is ready! Enjoy using Odoo! 🎉
+**Port in use**  
+Change `http_port` in `odoo.conf` (e.g. 8070) or stop the process on 8069.
