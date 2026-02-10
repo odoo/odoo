@@ -57,7 +57,6 @@ chartRegistry.add("odoo_bar", {
 });
 
 function createOdooChartRuntime(chart, getters) {
-    const background = chart.background || "#FFFFFF";
     const { datasets, labels } = chart.dataSource.getData();
     const definition = chart.getDefinition();
 
@@ -95,11 +94,12 @@ function createOdooChartRuntime(chart, getters) {
                     changeTypeToSpreadsheetChart(definition),
                     chartData
                 ),
+                background: { color: chart.background },
             },
             onHover: onOdooChartItemHover(),
             onClick: onOdooChartItemClick(getters, chart),
         },
     };
 
-    return { background, chartJsConfig: config };
+    return { chartJsConfig: config };
 }

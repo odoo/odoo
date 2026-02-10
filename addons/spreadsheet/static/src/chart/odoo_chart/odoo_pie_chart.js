@@ -46,7 +46,6 @@ chartRegistry.add("odoo_pie", {
 });
 
 function createOdooChartRuntime(chart, getters) {
-    const background = chart.background || "#FFFFFF";
     const { datasets, labels } = chart.dataSource.getData();
     const definition = chart.getDefinition();
     definition.dataSets = datasets.map(() => ({ trend: definition.trend }));
@@ -75,11 +74,12 @@ function createOdooChartRuntime(chart, getters) {
                     changeTypeToSpreadsheetChart(definition),
                     chartData
                 ),
+                background: { color: chart.background },
             },
             onHover: onOdooChartItemHover(),
             onClick: onOdooChartItemClick(getters, chart),
         },
     };
 
-    return { background, chartJsConfig: config };
+    return { chartJsConfig: config };
 }

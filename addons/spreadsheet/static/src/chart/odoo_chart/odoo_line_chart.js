@@ -63,7 +63,6 @@ chartRegistry.add("odoo_line", {
 });
 
 function createOdooChartRuntime(chart, getters) {
-    const background = chart.background || "#FFFFFF";
     let { datasets, labels } = chart.dataSource.getData();
     datasets = computeCumulatedDatasets(chart, datasets);
 
@@ -105,13 +104,14 @@ function createOdooChartRuntime(chart, getters) {
                     changeTypeToSpreadsheetChart(definition),
                     chartData
                 ),
+                background: { color: chart.background },
             },
             onHover: onOdooChartItemHover(),
             onClick: onOdooChartItemClick(getters, chart),
         },
     };
 
-    return { background, chartJsConfig: config };
+    return { chartJsConfig: config };
 }
 
 function computeCumulatedDatasets(chart, datasets) {
