@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
+import { registry } from "@web/core/registry";
 import {
     click,
     editInput,
@@ -12,8 +13,10 @@ import {
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { loadJS } from "@web/core/assets";
 
-let target;
+const serviceRegistry = registry.category("services");
 
+let target;
+let makeViewParams;
 async function editInputNoChangeEvent(input, value) {
     // Note: we can't use editInput as it triggers the 'change' event which will close the autocomplete dropdown
     input.value = value;
@@ -66,121 +69,145 @@ QUnit.module('partner_autocomplete', {
     },
     beforeEach() {
         target = getFixture();
-
+        makeViewParams = {
+            serverData: {
+                models: {
+                    'res.partner': {
+                        fields: {
+                            company_type: {
+                                string: "Company Type",
+                                type: "selection",
+                                selection: [["company", "Company"], ["individual", "Individual"]],
+                                searchable: true
+                            },
+                            name: {string: "Name", type: "char", searchable: true},
+                            parent_id: {string: "Company", type: "many2one", relation: "res.partner", searchable: true},
+                            website: {string: "Website", type: "char", searchable: true},
+                            email: {string: "Email", type: "char", searchable: true},
+                            image_1920: {string: "Image", type: "binary", searchable: true},
+                            phone: {string: "Phone", type: "char", searchable: true},
+                            street: {string: "Street", type: "char", searchable: true},
+                            street2: {string: "Street2", type: "char", searchable: true},
+                            city: {string: "City", type: "char", searchable: true},
+                            zip: {string: "Zip", type: "char", searchable: true},
+                            state_id: {string: "State", type: "many2one", relation: "res.country.state", searchable: true},
+                            country_id: {string: "Country", type: "many2one", relation: "res.country", searchable: true},
+                            comment: {string: "Comment", type: "char", searchable: true},
+                            vat: {string: "Vat", type: "char", searchable: true},
+                            is_company: {string: "Is company", type: "bool", searchable: true},
+                        },
+                        records: [],
+                        onchanges: {
+                            company_type: (obj) => {
+                                obj.is_company = obj.company_type === 'company';
+                            },
+                        },
+                    },
+                    'res.country': {
+                        fields: {
+                            display_name: {string: "Name", type: "char", searchable: true},
+                        },
+                        records: [{
+                            id: 1,
+                            display_name: 'Belgium',
+                        }],
+                    },
+                    'res.country.state': {
+                        fields: {
+                            name: {string: "Name", type: "char", searchable: true},
+                        },
+                        records: [{
+                            id: 1,
+                            name: 'Walloon Brabant',
+                        }],
+                    },
+                },
+            },
+            resModel: "res.partner",
+            type: "form",
+            arch:
+                `<form>
+                    <field name="company_type"/>
+                    <field name="name" widget="field_partner_autocomplete"/>
+                    <field name="parent_id" widget="res_partner_many2one" placeholder="Company Name..."/>
+                    <field name="website"/>
+                    <field name="image_1920" widget="image"/>
+                    <field name="email"/>
+                    <field name="phone"/>
+                    <field name="street"/>
+                    <field name="street2"/>
+                    <field name="city"/>
+                    <field name="state_id"/>
+                    <field name="zip"/>
+                    <field name="country_id"/>
+                    <field name="vat" widget="field_partner_autocomplete"/>
+                </form>`,
+            async mockRPC(route, args) {
+                if (route === "/web/dataset/call_kw/res.partner/autocomplete_by_name" || route === "/web/dataset/call_kw/res.partner/autocomplete_by_vat") {
+                    return Promise.resolve(iapSuggestions);
+                }
+                else if (route === "/web/dataset/call_kw/res.partner/enrich_by_duns") {
+                    return Promise.resolve({
+                        "name": iapSuggestions.filter((sugg) => sugg.duns === args.args[0])[0].name,
+                        "vat": "BE0477472701",
+                        "duns": "372441183",
+                        "city": "Ramillies",
+                        "zip": "1367",
+                        "street": "Chaussée de Namur 40",
+                        "street2": false,
+                        "email": "hello@odoo.com",
+                        "phone": "3281813700",
+                        "website": "www.odoo.com",
+                        "domain": "odoo.com",
+                        "country_id": {
+                            "id": 1,
+                            "name": "Belgium"
+                        },
+                        "state_id": {
+                            "id": 1,
+                            "name": "Walloon Brabant"
+                        },
+                    });
+                }
+                else if (route.startsWith("https://autocomplete.clearbit.com/v1/companies/suggest")) {
+                    return Promise.resolve(clearbitSuggestions)
+                }
+                else if (route === '/web/dataset/call_kw/res.partner/enrich_company_message_post'){
+                    return true;
+                }
+            }
+        }
         // Make autocomplete input instantaneous
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
         });
 
         setupViewRegistries();
+        const fakeHTTPService = {
+            start() {
+                return {
+                    get: (route) => {
+                        return Promise.resolve([
+                            {
+                                "name": "Odoo",
+                                "domain": "odoo.com",
+                            },
+                            {
+                                "name": "MyCompany",
+                                "domain": "mycompany.com",
+                            },
+                            {
+                                "name": "YourCompany",
+                                "domain": "yourcompany.com",
+                            },
+                        ]);
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("http", fakeHTTPService);
     },
 }, function () {
-
-    const makeViewParams = {
-        serverData: {
-            models: {
-                'res.partner': {
-                    fields: {
-                        company_type: {
-                            string: "Company Type",
-                            type: "selection",
-                            selection: [["company", "Company"], ["individual", "Individual"]],
-                            searchable: true
-                        },
-                        name: {string: "Name", type: "char", searchable: true},
-                        parent_id: {string: "Company", type: "many2one", relation: "res.partner", searchable: true},
-                        website: {string: "Website", type: "char", searchable: true},
-                        email: {string: "Email", type: "char", searchable: true},
-                        image_1920: {string: "Image", type: "binary", searchable: true},
-                        phone: {string: "Phone", type: "char", searchable: true},
-                        street: {string: "Street", type: "char", searchable: true},
-                        street2: {string: "Street2", type: "char", searchable: true},
-                        city: {string: "City", type: "char", searchable: true},
-                        zip: {string: "Zip", type: "char", searchable: true},
-                        state_id: {string: "State", type: "many2one", relation: "res.country.state", searchable: true},
-                        country_id: {string: "Country", type: "many2one", relation: "res.country", searchable: true},
-                        comment: {string: "Comment", type: "char", searchable: true},
-                        vat: {string: "Vat", type: "char", searchable: true},
-                        is_company: {string: "Is company", type: "bool", searchable: true},
-                    },
-                    records: [],
-                    onchanges: {
-                        company_type: (obj) => {
-                            obj.is_company = obj.company_type === 'company';
-                        },
-                    },
-                },
-                'res.country': {
-                    fields: {
-                        display_name: {string: "Name", type: "char", searchable: true},
-                    },
-                    records: [{
-                        id: 1,
-                        display_name: 'Belgium',
-                    }],
-                },
-                'res.country.state': {
-                    fields: {
-                        name: {string: "Name", type: "char", searchable: true},
-                    },
-                    records: [{
-                        id: 1,
-                        name: 'Walloon Brabant',
-                    }],
-                },
-            },
-        },
-        resModel: "res.partner",
-        type: "form",
-        arch:
-            `<form>
-                <field name="company_type"/>
-                <field name="name" widget="field_partner_autocomplete"/>
-                <field name="parent_id" widget="res_partner_many2one" placeholder="Company Name..."/>
-                <field name="website"/>
-                <field name="image_1920" widget="image"/>
-                <field name="email"/>
-                <field name="phone"/>
-                <field name="street"/>
-                <field name="street2"/>
-                <field name="city"/>
-                <field name="state_id"/>
-                <field name="zip"/>
-                <field name="country_id"/>
-                <field name="vat" widget="field_partner_autocomplete"/>
-            </form>`,
-        async mockRPC(route, args) {
-            if (route === "/web/dataset/call_kw/res.partner/autocomplete_by_name" || route === "/web/dataset/call_kw/res.partner/autocomplete_by_vat") {
-                return Promise.resolve(iapSuggestions);
-            }
-            else if (route === "/web/dataset/call_kw/res.partner/enrich_by_duns") {
-                return Promise.resolve({
-                    "name": iapSuggestions.filter((sugg) => sugg.duns === args.args[0])[0].name,
-                    "vat": "BE0477472701",
-                    "duns": "372441183",
-                    "city": "Ramillies",
-                    "zip": "1367",
-                    "street": "Chaussée de Namur 40",
-                    "street2": false,
-                    "email": "hello@odoo.com",
-                    "phone": "3281813700",
-                    "website": "www.odoo.com",
-                    "domain": "odoo.com",
-                    "country_id": {
-                        "id": 1,
-                        "name": "Belgium"
-                    },
-                    "state_id": {
-                        "id": 1,
-                        "name": "Walloon Brabant"
-                    },
-                });
-            }
-            else if (route.startsWith("https://autocomplete.clearbit.com/v1/companies/suggest")) {
-                return Promise.resolve(clearbitSuggestions)
-            }
-        }
-    }
 
     QUnit.test("Partner autocomplete : Company type = Individual", async function (assert) {
         assert.expect(13);
