@@ -15,7 +15,7 @@ export class MentionPlugin extends Plugin {
     setup() {
         this.mentionList = this.dependencies.overlay.createOverlay(MentionList, {
             hasAutofocus: true,
-            className: "popover",
+            className: "popover o-mail-MentionPlugin-overlay",
         });
     }
 

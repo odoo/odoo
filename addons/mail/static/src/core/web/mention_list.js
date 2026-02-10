@@ -81,22 +81,25 @@ export class MentionList extends Component {
         };
         switch (this.props.type) {
             case "partner":
-                this.state.options.forEach((option) => {
-                    props.options.push({
-                        label: option.name,
-                        partner: option,
-                    });
+                props.optionTemplate = "mail.Composer.suggestionPartner";
+                props.options = this.state.options.map((suggestion) => {
+                    return {
+                        label: suggestion.name,
+                        partner: suggestion,
+                        classList: "o-mail-Composer-suggestion",
+                    };
                 });
                 break;
-            case "channel": {
-                this.state.options.forEach((option) => {
-                    props.options.push({
-                        label: option.name,
-                        channel: option,
-                    });
+            case "channel":
+                props.optionTemplate = "mail.Composer.suggestionThread";
+                props.options = this.state.options.map((suggestion) => {
+                    return {
+                        label: suggestion.displayName,
+                        thread: suggestion,
+                        classList: "o-mail-Composer-suggestion",
+                    };
                 });
                 break;
-            }
         }
         return props;
     }
