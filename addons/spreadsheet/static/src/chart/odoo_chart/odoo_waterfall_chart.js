@@ -64,7 +64,6 @@ chartRegistry.add("odoo_waterfall", {
 });
 
 function createOdooChartRuntime(chart, getters) {
-    const background = chart.background || "#FFFFFF";
     const { datasets, labels } = chart.dataSource.getData();
 
     const definition = chart.getDefinition();
@@ -94,11 +93,12 @@ function createOdooChartRuntime(chart, getters) {
                     chartData
                 ),
                 waterfallLinesPlugin: { showConnectorLines: definition.showConnectorLines },
+                background: { color: chart.background },
             },
             onHover: onOdooChartItemHover(),
             onClick: onWaterfallOdooChartItemClick(getters, chart),
         },
     };
 
-    return { background, chartJsConfig: config };
+    return { chartJsConfig: config };
 }

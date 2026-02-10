@@ -49,7 +49,6 @@ chartRegistry.add("odoo_treemap", {
 });
 
 function createOdooChartRuntime(chart, getters) {
-    const background = chart.background || "#FFFFFF";
     const { datasets, labels } = chart.dataSource.getHierarchicalData();
 
     const definition = chart.getDefinition();
@@ -74,11 +73,12 @@ function createOdooChartRuntime(chart, getters) {
                 title: getChartTitle(definition, getters),
                 legend: { display: false },
                 tooltip: getTreeMapChartTooltip(definition, chartData),
+                background: { color: chart.background },
             },
             onHover: onOdooChartItemHover(),
             onClick: onTreemapOdooChartItemClick(getters, chart),
         },
     };
 
-    return { background, chartJsConfig: config };
+    return { chartJsConfig: config };
 }
