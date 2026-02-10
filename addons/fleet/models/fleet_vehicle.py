@@ -421,7 +421,7 @@ class FleetVehicle(models.Model):
                 ('res_id', 'in', self.ids),
                 ('note', 'ilike', _('Review driver change')),
                 ('user_id', 'in', self.manager_id.ids or [self.env.user.id])
-            ]).action_cancel()
+            ]).unlink()
             for vehicle in self:
                 vehicle.activity_schedule(
                     'mail.mail_activity_data_todo',

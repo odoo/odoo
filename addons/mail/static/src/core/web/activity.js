@@ -100,13 +100,6 @@ export class Activity extends Component {
         this.props.onActivityChanged(thread);
     }
 
-    async unlink() {
-        const thread = this.thread;
-        this.props.activity.remove();
-        await this.env.services.orm.unlink("mail.activity", [this.props.activity.id]);
-        this.props.onActivityChanged(thread);
-    }
-
     get thread() {
         return this.env.services["mail.store"]["mail.thread"].insert({
             model: this.props.activity.res_model,

@@ -9,6 +9,9 @@
             <button t-if="props.activity.calendar_event_id" class="btn btn-link p-0 me-3" t-on-click="onClickReschedule">
                 <i class="fa fa-calendar"/> Reschedule
             </button>
+            <button t-if="props.activity.calendar_event_id" class="btn btn-link btn-danger p-0" t-on-click="unlink">
+                <i class="fa fa-trash"/> Delete
+            </button>
         </xpath>
     </t>
 

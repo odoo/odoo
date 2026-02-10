@@ -44,7 +44,7 @@ test("activity click on Reschedule", async () => {
     await contains(".o_calendar_view");
 });
 
-test("Can cancel activity linked to an event", async () => {
+test("Can delete activity linked to an event", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Milan Kundera" });
     const activityTypeId = pyEnv["mail.activity.type"].create({
@@ -70,6 +70,6 @@ test("Can cancel activity linked to an event", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Activity .btn", { text: "Cancel" });
+    await click(".o-mail-Activity .btn", { text: "Delete" });
     await contains(".o-mail-Activity", { count: 0 });
 });
