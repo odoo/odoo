@@ -162,6 +162,15 @@ export class ResetCropAction extends BuilderAction {
         const newDataset = Object.fromEntries(
             cropperDataFieldsWithAspectRatio.map((field) => [field, undefined])
         );
+        if (img.dataset.originalSrc) {
+            // Restore the original image source:
+            return () =>
+                this.dependencies.imagePostProcess.updateImageAttributes(
+                    img,
+                    img.dataset.originalSrc,
+                    newDataset
+                );
+        }
         return this.dependencies.imagePostProcess.processImage({ img, newDataset });
     }
     apply({ loadResult: updateImageAttributes }) {
