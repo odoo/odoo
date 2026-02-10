@@ -74,8 +74,15 @@
                                                 t-att-href="website._get_contact_us_url(combination_info['display_name'])"
                                                 class="o_wsale_product_btn_primary btn btn-primary"
                                             >
-                                                <i class="fa fa-fw fa-envelope o_not-animable me-2" role="presentation"/>
-                                                Contact Us
+                                                <span class="d-inline-flex align-items-baseline">
+                                                    <i
+                                                        class="fa fa-fw fa-envelope o_not-animable"
+                                                        role="presentation"
+                                                    />
+                                                    <span class="o_label small ms-1">
+                                                        Contact Us
+                                                    </span>
+                                                </span>
                                             </a>
                                             <button
                                                 t-else=""
@@ -87,8 +94,15 @@
                                                 t-att-data-ptav-ids="json.dumps(product_variant.product_template_attribute_value_ids.ids)"
                                                 t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
                                             >
-                                                <i class="fa fa-fw fa-shopping-cart o_not-animable me-2" role="presentation"/>
-                                                Add to Cart
+                                                <span class="d-inline-flex align-items-baseline">
+                                                    <i
+                                                        class="fa fa-fw fa-shopping-cart o_not-animable"
+                                                        role="presentation"
+                                                    />
+                                                    <span class="o_label small ms-1">
+                                                        Add to Cart
+                                                    </span>
+                                                </span>
                                             </button>
                                             <t t-if="is_view_active('website_sale.add_to_compare')">
                                                 <button
