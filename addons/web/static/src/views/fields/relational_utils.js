@@ -219,6 +219,7 @@ export class Many2XAutocomplete extends Component {
         searchMoreLimit: { type: Number, optional: true },
         searchThreshold: { type: Number, optional: true },
         setInputFloats: { type: Function, optional: true },
+        preventMemoization: { type: Boolean, optional: true },
         slots: { optional: true },
         specification: { type: Object, optional: true },
         update: Function,
@@ -378,6 +379,7 @@ export class Many2XAutocomplete extends Component {
         const domain = this.props.getDomain();
         const context = this.props.context;
         if (
+            !this.props.preventMemoization &&
             this.previousSearch &&
             deepEqual(this.previousSearch.domain, domain) &&
             deepEqual(this.previousSearch.context, context)
