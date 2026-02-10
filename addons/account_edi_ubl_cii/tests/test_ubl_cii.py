@@ -509,6 +509,52 @@ class TestAccountEdiUblCii(TestUblCiiCommon):
             code = xml_tree.find('.//ram:SpecifiedTradeSettlementPaymentMeans/ram:TypeCode', self.namespaces)
             self.assertEqual(code.text, '59')
 
+    def test_import_discount_3(self):
+        """
+        This test ensures that the subtotal and the sum of prices and charges are compared
+        correctly and there's no regression on floating point issues when the price is 0.0
+        """
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 0,
+                }),
+            ],
+        })
+        my_invoice_raw = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
+        my_invoice_root = etree.fromstring(my_invoice_raw)
+        modifying_xpath = """
+            <xpath expr="(//*[local-name()='InvoiceLine']/*[local-name()='LineExtensionAmount'])" position="replace">
+                <LineExtensionAmount currencyID="EUR">0.30</LineExtensionAmount>
+            </xpath>
+            <xpath expr="(//*[local-name()='InvoiceLine']/*[local-name()='LineExtensionAmount'])" position="after">
+                <AllowanceCharge>
+                    <ChargeIndicator>true</ChargeIndicator>
+                    <AllowanceChargeReason>FREIGHT</AllowanceChargeReason>
+                    <Amount currencyID="EUR">0.20</Amount>
+                </AllowanceCharge>
+                <AllowanceCharge>
+                    <ChargeIndicator>true</ChargeIndicator>
+                    <AllowanceChargeReason>FUEL SURCHARGE</AllowanceChargeReason>
+                    <Amount currencyID="EUR">0.10</Amount>
+                </AllowanceCharge>
+            </xpath>"""
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': etree.tostring(self.with_applied_xpath(my_invoice_root, modifying_xpath)),
+            'name': 'test_invoice.xml',
+        })
+
+        imported_invoice = self._import_as_attachment_on(attachment=xml_attachment, journal=self.company_data["default_journal_sale"])
+        self.assertRecordValues(imported_invoice.invoice_line_ids, [
+            {'name': self.product_a.name, 'price_subtotal': 0.00},
+            {'name': ' FREIGHT', 'price_subtotal': 0.20},
+            {'name': ' FUEL SURCHARGE', 'price_subtotal': 0.10},
+        ])
+
     def test_oin_code(self):
         partner = self.partner_a
         partner.peppol_endpoint = '00000000001020304050'
