@@ -208,6 +208,7 @@ export const many2XAutocompleteProps = {
     searchMoreLabel: t.string().optional(),
     searchMoreLimit: t.number().optional(1000),
     searchThreshold: t.number().optional(0),
+    preventMemoization: t.boolean().optional(),
     setInputFloats: t.function().optional(() => () => {}),
     slots: t.any().optional(),
     specification: t.object().optional({}),
@@ -360,6 +361,7 @@ export class Many2XAutocomplete extends Component {
         const domain = this.props.getDomain();
         const context = this.props.context;
         if (
+            !this.props.preventMemoization &&
             this.previousSearch &&
             deepEqual(this.previousSearch.domain, domain) &&
             deepEqual(this.previousSearch.context, context)
