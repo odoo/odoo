@@ -8,15 +8,13 @@ export const chartOdooLinkPlugin = {
     afterEvent(chart, { event }, { env, chartId }) {
         const odooLink = env?.model.getters.getChartOdooLink(chartId);
         const isDashboard = env?.model.getters.isDashboard();
-        event.native.target.style.cursor = odooLink && isDashboard ? "pointer" : "";
+        if (!odooLink || !isDashboard) {
+            return;
+        }
+        event.native.target.style.cursor = "pointer";
 
         const middleClick = isChartJSMiddleClick(event);
-        if (
-            (event.type !== "click" && !middleClick) ||
-            !chartId ||
-            !isDashboard ||
-            event.native.defaultPrevented
-        ) {
+        if ((event.type !== "click" && !middleClick) || event.native.defaultPrevented) {
             return;
         }
         navigateToOdoolinkFromChart(env, chartId, middleClick);
