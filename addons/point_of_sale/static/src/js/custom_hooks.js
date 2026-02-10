@@ -133,6 +133,7 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
             return ![decimalPoint, '-'].includes(inputValue) && floatRegex.test(inputValue);
         }
         function handleCashInputChange(event) {
+            event.target.value = event.target.value.replace(".", decimalPoint)
             let inputValue = (event.target.value || "").trim();
 
             // Check if the current input value is a valid float
