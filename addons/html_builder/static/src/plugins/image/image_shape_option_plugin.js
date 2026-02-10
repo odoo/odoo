@@ -176,7 +176,7 @@ export class ImageShapeOptionPlugin extends Plugin {
             // The togglable ratio is squared by default.
             const shouldBeSquared =
                 this.imageShapes[shapeId].togglableRatio && !img.dataset.aspectRatio;
-            if (shouldBeSquared && !shouldPreventGifTransformation(data)) {
+            if (shouldBeSquared && isNewShape && !shouldPreventGifTransformation(data)) {
                 newDataset.aspectRatio = "1/1";
             }
         }

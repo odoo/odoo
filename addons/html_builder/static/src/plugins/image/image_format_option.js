@@ -22,7 +22,7 @@ export class ImageFormatOption extends BaseOptionComponent {
                 this.computeMaxDisplayWidth.bind(this)
             );
             const hasSrc = !!getImageSrc(editingElement);
-            const mimetype = getMimetype(editingElement);
+            const mimetype = editingElement.dataset.formatMimetype || getMimetype(editingElement);
             const compressionUnsupported =
                 mimetype === "image/webp" && this.webpCompressionUnuspported();
             return {
