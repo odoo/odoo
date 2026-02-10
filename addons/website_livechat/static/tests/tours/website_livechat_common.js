@@ -121,7 +121,7 @@ export const close = [
 export const goodRating = [
     {
         content: "Choose Good Rating",
-        trigger: `.o-livechat-root:shadow img[src*=rating][alt="5"]`,
+        trigger: `.o-livechat-root:shadow img[src*=rating][alt="3"]`,
         run: "click",
     },
 ];
@@ -129,7 +129,7 @@ export const goodRating = [
 export const okRating = [
     {
         content: "Choose ok Rating",
-        trigger: `.o-livechat-root:shadow img[src*=rating][alt="3"]`,
+        trigger: `.o-livechat-root:shadow img[src*=rating][alt="2"]`,
         run: "click",
     },
 ];

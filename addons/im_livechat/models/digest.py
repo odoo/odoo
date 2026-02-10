@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons.im_livechat.models.discuss_channel import RATING_HAPPY, RATING_UNHAPPY
 
 
 class DigestDigest(models.Model):
@@ -16,16 +17,27 @@ class DigestDigest(models.Model):
 
     def _compute_kpi_livechat_rating_value(self):
         self._raise_if_not_member_of('im_livechat.im_livechat_group_manager')
-        channels = self.env['discuss.channel'].search([('channel_type', '=', 'livechat')])
         start, end, __ = self._get_kpi_compute_parameters()
         domain = [
-            ('create_date', '>=', start),
-            ('create_date', '<', end),
+            ("channel_type", "=", "livechat"),
+            ("livechat_rating", ">=", RATING_UNHAPPY),
+            ("livechat_end_dt", ">=", start),
+            ("livechat_end_dt", "<", end),
         ]
-        ratings = channels.rating_get_grades(domain)
+        ratings_data = self.env["discuss.channel"]._read_group(
+            domain,
+            ["livechat_rating"],
+            ["__count"],
+        )
+        total_count = 0
+        happy_count = 0
+        for rating, count in ratings_data:
+            if rating == RATING_HAPPY:
+                happy_count += count
+            total_count += count
         self.kpi_livechat_rating_value = (
-            ratings['great'] * 100 / sum(ratings.values())
-            if sum(ratings.values()) else 0
+            happy_count * 100 / total_count
+            if total_count else 0
         )
 
     def _compute_kpi_livechat_conversations_value(self):

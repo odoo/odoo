@@ -198,16 +198,7 @@
                 eval="obj().search([('partner_id', '=', ref('base.partner_admin')), ('channel_id', '=', ref('support_bot_session_1_demo'))]).ids"/>
             <value eval="{'call_history_ids': [ref('support_bot_session_1_call_1')]}"/>
         </function>
-        <record id="support_bot_session_1_rating" model="rating.rating">
-            <field name="access_token">BOT_SESSION_1</field>
-            <field name="res_id" ref="support_bot_session_1_demo"/>
-            <field name="res_model_id" ref="mail.model_discuss_channel"/>
-            <field name="message_id" ref="support_bot_session_1_rating_message"/>
-            <field name="rated_partner_id" ref="base.partner_admin"/>
-            <field eval="False" name="partner_id"/>
-            <field eval="True" name="consumed"/>
-        </record>
         <function model="discuss.channel" name="_apply_livechat_feedback"
-            eval="[ref('im_livechat.support_bot_session_1_demo')], 5, 'Bon travail'"/>
+            eval="[ref('im_livechat.support_bot_session_1_demo')], 3, 'Bon travail'"/>
     </data>
 </odoo>

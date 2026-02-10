@@ -102,30 +102,16 @@ registerRoute("/im_livechat/feedback", feedback);
 async function feedback(request) {
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
-    /** @type {import("mock_models").RatingRating} */
-    const RatingRating = this.env["rating.rating"];
 
     const { channel_id, rate, reason } = await parseRequestParams(request);
-    let [channel] = DiscussChannel.search_read([["id", "=", channel_id]]);
+    const [channel] = DiscussChannel.search_read([["id", "=", channel_id]]);
     if (!channel) {
         return false;
     }
-    const values = {
-        rating: rate,
-        consumed: true,
-        feedback: reason,
-        is_internal: false,
-        res_id: channel.id,
-        res_model: "discuss.channel",
-        rated_partner_id: channel.channel_partner_ids[0],
-    };
-    if (channel.rating_ids.length === 0) {
-        RatingRating.create(values);
-    } else {
-        RatingRating.write([channel.rating_ids[0]], values);
-    }
-    [channel] = DiscussChannel.search_read([["id", "=", channel_id]]);
-    return channel.rating_ids[0];
+    DiscussChannel.write([channel_id], {
+        livechat_rating: rate,
+        livechat_rating_feedback: reason,
+    });
 }
 
 registerRoute("/im_livechat/init", livechat_init);

@@ -10,6 +10,7 @@ from odoo import api, Command, fields, models, release, _
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
 from odoo.addons.bus.websocket import WebsocketConnectionHandler
+from odoo.addons.im_livechat.models.discuss_channel import RATING_HAPPY, RATING_UNHAPPY
 from odoo.addons.mail.tools.discuss import Store
 
 BUFFER_TIME = 120  # Time in seconds between two sessions assigned to the same operator. Not enforced if the operator is the best suited.
@@ -23,7 +24,6 @@ class Im_LivechatChannel(models.Model):
     """
 
     _name = 'im_livechat.channel'
-    _inherit = ['rating.parent.mixin']
     _description = 'Livechat Channel'
     _rating_satisfaction_days = 14  # include only last 14 days to compute satisfaction
 
@@ -70,6 +70,8 @@ class Im_LivechatChannel(models.Model):
     )
     script_external = fields.Html('Script (external)', compute='_compute_script_external', store=False, readonly=True, sanitize=False)
     nbr_channel = fields.Integer('Number of conversation', compute='_compute_nbr_channel', store=False, readonly=True)
+    rating_percentage_satisfaction = fields.Float("Rating Satisfaction", compute="_compute_rating_percentage_satisfaction")
+    rating_count = fields.Integer(string='# Ratings', compute="_compute_rating_percentage_satisfaction")
 
     # relationnal fields
     user_ids = fields.Many2many('res.users', 'im_livechat_channel_im_user', 'channel_id', 'user_id', string='Agents', default=_default_user_ids)
@@ -246,6 +248,39 @@ class Im_LivechatChannel(models.Model):
         channel_count = {livechat_channel.id: count for livechat_channel, count in data}
         for record in self:
             record.nbr_channel = channel_count.get(record.id, 0)
+
+    @api.depends("channel_ids.livechat_rating")
+    def _compute_rating_percentage_satisfaction(self):
+        read_group_data = (
+            self.env["discuss.channel"]
+            ._read_group(
+                [
+                    Domain("livechat_channel_id", "in", self.ids)
+                    & Domain("livechat_rating", ">=", RATING_UNHAPPY)
+                    & (
+                        Domain(
+                            "livechat_end_dt",
+                            ">=",
+                            fields.Datetime.now() - timedelta(days=self._rating_satisfaction_days),
+                        )
+                        | Domain("livechat_end_dt", "=", False)
+                    )
+                ],
+                ["livechat_channel_id", "livechat_rating"],
+                ["__count"],
+            )
+        )
+        channel_data = defaultdict(lambda: [0, 0])
+        for parent_id, rating, count in read_group_data:
+            if rating == RATING_HAPPY:
+                channel_data[parent_id.id][1] += count
+            channel_data[parent_id.id][0] += count
+        for channel in self:
+            rating_count, happy_count = channel_data.get(channel.id, (0, 0))
+            channel.rating_count = rating_count
+            channel.rating_percentage_satisfaction = (
+                happy_count * 100 / rating_count if rating_count else 0
+            )
 
     # --------------------------
     # Action Methods

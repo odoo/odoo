@@ -111,15 +111,6 @@
             <field eval="datetime.now() - timedelta(days=1, seconds=-60)" name="date"/>
             <field eval="datetime.now() - timedelta(days=1, seconds=-60)" name="create_date"/>
         </record>
-        <record id="livechat_channel_session_10_rating" model="rating.rating">
-            <field name="access_token">LIVECHAT_10</field>
-            <field name="res_model_id" ref="mail.model_discuss_channel"/>
-            <field name="message_id" ref="im_livechat.livechat_channel_session_10_rating_message"/>
-            <field name="rated_partner_id" ref="base.partner_admin"/>
-            <field name="partner_id" ref="base.partner_admin"/>
-            <field name="create_date" eval="datetime.now() - timedelta(days=1, seconds=-53)"/>
-            <field name="res_id" ref="im_livechat.livechat_channel_session_10"/>
-        </record>
         <function model="discuss.channel" name="_apply_livechat_feedback"
             eval="([ref('im_livechat.livechat_channel_session_10')], 1, 'Pas satisfait')"/>
     </data>
