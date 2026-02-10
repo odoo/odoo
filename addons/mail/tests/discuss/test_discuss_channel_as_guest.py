@@ -35,6 +35,12 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         internal_member = self.channel.channel_member_ids.filtered(lambda m: internal_user.partner_id == m.partner_id)
         internal_member._rtc_join_call()
 
+        self.channel.message_post(
+            body="Hello @Internal Luigi",
+            message_type="comment",
+            partner_ids=[internal_user.partner_id.id],
+            subtype_xmlid="mail.mt_comment",
+        )
         self.group = self.env['discuss.channel']._create_group(partners_to=(internal_user + portal_user).partner_id.ids, name="Test group")
         self.group._add_members(guests=guest)
         self.tour = "discuss_channel_public_tour.js"
