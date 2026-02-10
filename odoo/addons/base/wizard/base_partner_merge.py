@@ -370,15 +370,29 @@ class MergePartnerAutomatic(models.TransientModel):
             :param dst_partner: record of destination res.partner
         """
         all_src_accounts = src_partners.bank_ids
+        to_move = self.env['res.partner.bank']
 
         for src_account in all_src_accounts:
-            duplicate_account = dst_partner.bank_ids.filtered(lambda a: a.sanitized_acc_number == src_account.sanitized_acc_number)
+            duplicate_account = (dst_partner.bank_ids | to_move).filtered(lambda a: a.sanitized_acc_number == src_account.sanitized_acc_number)
             if duplicate_account:
                 self._update_foreign_keys_generic('res.partner.bank', src_account, duplicate_account)
                 self._update_reference_fields_generic('res.partner.bank', src_account, duplicate_account)
                 src_account.unlink()
             else:
-                src_account.write({'partner_id': dst_partner.id})
+                to_move |= src_account
+        if to_move:
+            self._cr.execute(SQL("""
+                UPDATE
+                    res_partner_bank
+                SET
+                    partner_id = %(partner_id)s
+                WHERE
+                    id IN %(bank_ids)s
+                """,
+                partner_id=dst_partner.id,
+                bank_ids=tuple(to_move.ids),
+                ))
+            self.env.add_to_compute(to_move._fields['acc_holder_name'], to_move)
 
     def _merge(self, partner_ids, dst_partner=None, extra_checks=True):
         """ private implementation of merge partner
