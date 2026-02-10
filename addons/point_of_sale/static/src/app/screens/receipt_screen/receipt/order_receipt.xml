@@ -44,14 +44,14 @@
                     <span class="label-total">Total</span>
                     <span t-out="order.currencyDisplayPriceIncl" class="pos-receipt-right-align font-monospace"/>
                 </div>
-                <t t-if="order.appliedRounding">
+                <t t-if="order.orderIsRounded">
                     <div class="pos-receipt-amount receipt-rounding">
                         <span class="label-rounding">Rounding</span>
                         <span t-out='formatCurrency(order.appliedRounding)' class="pos-receipt-right-align font-monospace"/>
                     </div>
                     <div class="pos-receipt-amount receipt-to-pay">
                         To Pay
-                        <span t-out='formatCurrency(order.totalDue)' class="pos-receipt-right-align font-monospace"/>
+                        <span t-out='formatCurrency(order.priceIncl + order.appliedRounding)' class="pos-receipt-right-align font-monospace"/>
                     </div>
                 </t>
 
