@@ -74,7 +74,7 @@ class StockRule(models.Model):
 
     def _filter_warehouse_routes(self, product, warehouses, route):
         if any(rule.action == 'manufacture' for rule in route.rule_ids):
-            if any(bom.type == 'normal' for bom in product.bom_ids):
+            if any(bom.type == 'normal' for bom in product.sudo().bom_ids):
                 return super()._filter_warehouse_routes(product, warehouses, route)
             return False
         return super()._filter_warehouse_routes(product, warehouses, route)
