@@ -77,6 +77,7 @@
         'views/snippets/s_hr.xml',
         'views/snippets/s_closer_look.xml',
         'views/snippets/s_facebook_page.xml',
+        'views/snippets/s_whatsapp.xml',
         'views/snippets/s_image_gallery.xml',
         'views/snippets/s_countdown.xml',
         'views/snippets/s_product_catalog.xml',

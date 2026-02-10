@@ -1,0 +1,111 @@
+.s_whatsapp {
+    z-index: 1000;
+    right: 25px;
+    left: auto;
+    margin-bottom: 10px;
+    &:has(.wa-fab.o_pos_left) {
+        right: auto;
+        left: 25px;
+        .chatbox {
+            right: auto;
+            left: 0;
+        }
+    }
+    &:not(.no_icon_color) {
+        .wa-fab {
+            color: white;
+            background: #25D366;
+        }
+    }
+    .wa-fab {
+        cursor: pointer;
+        font-size: x-large;
+        width: 50px;
+        height: 50px;
+        &.fa-2x {
+            font-size: xx-large;
+            width: 70px;
+            height: 70px;
+        }
+        &.fa-3x {
+            font-size: xxx-large;
+            width: 80px;
+            height: 80px;
+        }
+    }
+    .notification-badge {
+        inset: -8% 12% auto auto;
+        transform: translate(50%, 50%);
+        width: 25%;
+        height: 25%;
+        border: 2px solid white;
+    }
+    .chatbox {
+        width: 300px;
+        bottom: 100%;
+        left: auto;
+        right: 0;
+        .header {
+            background: #075E54;
+            img {
+                max-width: none;
+                height: 40px;
+                width: 40px;
+            }
+        }
+        .wa-messages {
+            background: #ECE5DD;
+        }
+        .wa-input-box {
+            display: flex;
+            border-color:#ccc;
+            .wa-user-message {
+                field-sizing: content;
+                resize: none;
+                min-height: 2.5rem;
+                max-height: 6rem;
+                overflow-y: auto;
+            }
+            .wa-send {
+                background: #25D366;
+                &:hover {
+                    background: #1ebe5c;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+                }
+            }
+        }
+        .wa-cta-box {
+            display: none;
+            border-color:#ccc;
+            .wa-cta-btn {
+                background: #25D366;
+                font-size: 17px;
+                transition: all 0.2s ease-in-out;
+                &:hover {
+                    background: #1ebe5c;
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+                }
+            }
+        }
+    }
+    // Toggle between input box and CTA button
+    &.o_cta_mode {
+        .wa-input-box {
+            display: none;
+        }
+        .wa-cta-box {
+            display: flex;
+        }
+    }
+}
+
+body.editor_enable .s_whatsapp {
+    .wa-send {
+        pointer-events: none;
+    }
+    .wa-user-message {
+        caret-color: transparent;
+        cursor: pointer;
+    }
+}

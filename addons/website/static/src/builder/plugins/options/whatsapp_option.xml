@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.WhatsappOption">
+    <t t-if="!state.whatsappNumber">
+        <div class="alert alert-info">
+            <span t-out="'A Contact Number is essential, as WhatsApp chat redirection depends on a valid number.'"/>
+        </div>
+    </t>
+    <BuilderRow label.translate="Name">
+        <BuilderTextInput dataAttributeAction="'agentName'" action="'agentName'" default.translate="Jane Doe"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Description">
+        <BuilderTextInput dataAttributeAction="'agentDescription'" default.translate="Online" action="'agentDescription'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Contact Number">
+        <BuilderTextInput action="'whatsappNumber'" default="state.whatsappNumber"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Avatar">
+        <BuilderButton
+            action="'replaceMedia'"
+            applyTo="'.wa-agent-img'"
+            title.translate="Replace Media"
+            className="'flex-grow-1'"
+            type="'success'"
+            preview="false"
+            label.translate="Replace"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Default Message">
+        <BuilderTextInput dataAttributeAction="'defaultMessage'" action="'defaultMessage'" default.translate="Hi there 👋 how can I help you?"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Show on">
+        <BuilderSelect action="'moveBlock'" preview="false" actionParam="'.s_whatsapp'">
+            <BuilderSelectItem actionValue="'currentPage'">This page</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'allPages'">All pages</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Show CTA">
+        <BuilderCheckbox classAction="'o_cta_mode'" action="'toggleChatBox'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Show Notification">
+        <BuilderCheckbox applyTo="'.notification-badge'" classAction="'d-none'" inverseAction="true"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Position">
+        <BuilderButtonGroup applyTo="'.wa-fab'">
+            <BuilderButton title.translate="Left" classAction="'o_pos_left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
+            <BuilderButton title.translate="Right" classAction="'o_pos_right'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+    <BuilderRow label.translate="Layout">
+        <BuilderSelect applyTo="'.wa-fab'">
+            <BuilderSelectItem classAction="'rounded-circle'">Disk</BuilderSelectItem>
+            <BuilderSelectItem classAction="'rounded-empty-circle'">Circle</BuilderSelectItem>
+            <BuilderSelectItem classAction="'rounded'">Square</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Size">
+        <BuilderSelect applyTo="'.wa-fab'">
+            <BuilderSelectItem classAction="''">Small</BuilderSelectItem>
+            <BuilderSelectItem classAction="'fa-2x'">Medium</BuilderSelectItem>
+            <BuilderSelectItem classAction="'fa-3x'">Big</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Color">
+        <BuilderCheckbox classAction="'no_icon_color'" inverseAction="true"/>
+    </BuilderRow>
+</t>
+
+</templates>

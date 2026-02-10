@@ -388,7 +388,8 @@ export class BuilderOptionsPlugin extends Plugin {
         const isAloneInColumn = parentEl?.children.length === 1 && parentEl.matches(".row > div");
         const isInnerSnippet = this.config.snippetModel.isInnerContent(el);
         const keepOptions = this.delegateTo("keep_overlay_options", el);
-        if (isInnerSnippet && isAloneInColumn && !keepOptions) {
+        const removeOptions = this.delegateTo("remove_overlay_options", el);
+        if ((isInnerSnippet && isAloneInColumn && !keepOptions) || removeOptions) {
             return false;
         }
 
