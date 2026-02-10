@@ -36,6 +36,7 @@
             <t t-if="!state.collapsed">
                 <div class="o_calendar_filter_items d-flex flex-column gap-1">
                     <t t-foreach="getSortedFilters()" t-as="filter" t-key="filter.value">
+                        <!-- TODO DYNAMIC TCALL -->
                         <t t-set="filterId" t-value="nextFilterId"/>
                         <t t-call="{{ constructor.subTemplates.filter }}"/>
                     </t>
