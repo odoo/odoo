@@ -104,6 +104,12 @@ export class DisableSnippetsPlugin extends Plugin {
         // Disable the groups containing only disabled snippets.
         if (!areGroupsDisabled) {
             snippetGroups.forEach((snippetGroup) => {
+                // Do not mark uninstalled groups as disabled (unless all
+                // groups are disabled).
+                if (snippetGroup.isInstallable) {
+                    snippetGroup.isDisabled = false;
+                    return;
+                }
                 if (snippetGroup.groupName !== "custom") {
                     snippetGroup.isDisabled = !snippets.find(
                         (snippet) =>
