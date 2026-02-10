@@ -138,11 +138,14 @@ class SaleOrder(models.Model):
 
     signature = fields.Image(
         string="Signature",
-        copy=False, attachment=True, max_width=1024, max_height=1024)
-    signed_by = fields.Char(
-        string="Signed By", copy=False)
-    signed_on = fields.Datetime(
-        string="Signed On", copy=False)
+        copy=False,
+        attachment=True,
+        max_width=1024,
+        max_height=1024,
+        store=False
+    )
+    signed_by = fields.Char(string="Signed By", copy=False, store=False)
+    signed_on = fields.Datetime(string="Signed On", copy=False, store=False)
 
     validity_date = fields.Date(
         string="Expiration",

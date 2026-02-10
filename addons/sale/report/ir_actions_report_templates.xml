@@ -329,7 +329,9 @@
             </div>
             <div class="oe_structure"></div>
 
-            <div t-if="not doc.signature" class="oe_structure"></div>
+            <div t-if="not doc.signature or not doc.env.context.get('sale_include_signature')"
+                class="oe_structure"
+            />
             <div t-else="" class="mt-4 ml64 mr4" name="signature">
                 <div class="offset-8">
                     <strong>Signature</strong>
