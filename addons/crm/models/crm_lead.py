@@ -989,6 +989,10 @@ class CrmLead(models.Model):
         team_id = self.env.context.get('default_team_id')
         team_ids = self.env.user.crm_team_ids._ids if self.env.context.get('show_user_team_stages') else ()
         team_ids += (team_id,) if team_id else ()
+        # Only consider and display the stages available for the current team switcher selection.
+        team_switcher_selected_teams = self.env.context.get("team_switcher_selected_teams")
+        if team_switcher_selected_teams:
+            team_ids = tuple(tid for tid in team_ids if tid in team_switcher_selected_teams)
         search_domain = ['|', ('id', 'in', stages.ids), ('team_ids', '=', False)]
         if team_ids:
             search_domain = ['|', ('id', 'in', stages.ids), '|', ('team_ids', '=', False), ('team_ids', 'in', team_ids)]
