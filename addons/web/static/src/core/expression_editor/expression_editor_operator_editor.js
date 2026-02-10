@@ -17,5 +17,11 @@ const EXPRESSION_VALID_OPERATORS = [
 
 export function getExpressionDisplayedOperators(fieldDef) {
     const operators = getDomainDisplayedOperators(fieldDef);
-    return operators.filter((operator) => EXPRESSION_VALID_OPERATORS.includes(operator));
+    const validOperators = Object.fromEntries(EXPRESSION_VALID_OPERATORS.map((o) => [o, true]));
+    if (["char", "html", "text"].includes(fieldDef?.type)) {
+        for (const op of ["ilike", "not ilike"]) {
+            validOperators[op] = true;
+        }
+    }
+    return operators.filter((operator) => validOperators[operator]);
 }

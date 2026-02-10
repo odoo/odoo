@@ -40,6 +40,7 @@ import { ExpressionEditor } from "@web/core/expression_editor/expression_editor"
 
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import { pick } from "@web/core/utils/objects";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 
 const SELECTORS = {
     ...treeEditorSELECTORS,
@@ -703,4 +704,62 @@ test(`datetime: "in range" operator`, async () => {
             `
         ),
     ]);
+});
+
+test("expression for char field support 'contains'", async () => {
+    let expression;
+    function update(_expression) {
+        expect.step(_expression);
+        expression = _expression;
+    }
+
+    await makeExpressionEditor({ expression: "name", update });
+    expect(getOperatorOptions()).toEqual([
+        label("="),
+        label("!="),
+        label("ilike"),
+        label("not ilike"),
+        label("set"),
+        label("not set"),
+    ]);
+    await selectOperator("ilike");
+    await editValue('some"String');
+    expect(".o_tree_editor_complex_condition").toHaveCount(0);
+    expect.verifySteps([
+        `"".lower() in (name or "").lower()`,
+        `"some\\"String".lower() in (name or "").lower()`,
+    ]);
+
+    // Sanity check: field value must not be true
+    expect(() => evaluateBooleanExpr(expression, { name: true })).toThrow(
+        "Can not evaluate python expression"
+    );
+
+    expect(evaluateBooleanExpr(expression, { name: false })).toBe(false);
+    expect(evaluateBooleanExpr(expression, { name: `aSoMe"StRinGb` })).toBe(true);
+    expect(evaluateBooleanExpr(expression, { name: `aSoMeStRinGb` })).toBe(false);
+
+    await selectOperator("not ilike");
+
+    expect(getOperatorOptions()).toEqual([
+        label("="),
+        label("!="),
+        label("ilike"),
+        label("not ilike"),
+        label("set"),
+        label("not set"),
+    ]);
+    expect(getCurrentOperator()).toBe("does not contain");
+
+    expect(".o_tree_editor_complex_condition").toHaveCount(0);
+
+    expect.verifySteps([`"some\\"String".lower() not in (name or "").lower()`]);
+    expect(evaluateBooleanExpr(expression, { name: false })).toBe(true);
+    expect(evaluateBooleanExpr(expression, { name: `aSoMe"StRinGb` })).toBe(false);
+    expect(evaluateBooleanExpr(expression, { name: `aSoMeStRinGb` })).toBe(true);
+});
+
+test("limited 'contains' support -- expr in expr", async () => {
+    await makeExpressionEditor({ expression: `display_name.lower() in (name or "").lower()` });
+    expect(".o_tree_editor_complex_condition").toHaveCount(1);
 });
