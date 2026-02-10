@@ -1,6 +1,13 @@
 import { formatAST, parseExpr } from "@web/core/py_js/py";
 import { isNot, isValidPath, not } from "./ast_utils";
-import { addChild, complexCondition, condition, connector, toValue } from "./condition_tree";
+import {
+    addChild,
+    complexCondition,
+    condition,
+    connector,
+    toValue,
+    expressionContainsString,
+} from "./condition_tree";
 import { COMPARATORS } from "./operators";
 
 const EXCHANGE = {
@@ -45,6 +52,11 @@ function _getConditionFromComparator(ast, options) {
     let operator = ast.op;
     if (operator === "==") {
         operator = "=";
+    }
+
+    const isIlike = expressionContainsString.unpackAst(ast);
+    if (isIlike && expressionContainsString.isPathSupported(isIlike.path, options.getFieldDef)) {
+        return condition(isIlike.path, isIlike.operator, isIlike.value, isIlike.negate);
     }
 
     let left = ast.left;

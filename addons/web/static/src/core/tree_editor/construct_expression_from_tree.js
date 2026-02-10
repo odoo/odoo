@@ -1,6 +1,6 @@
 import { formatAST } from "@web/core/py_js/py";
 import { isValidPath, not } from "./ast_utils";
-import { Expression, astFromValue, isTree } from "./condition_tree";
+import { Expression, astFromValue, isTree, expressionContainsString } from "./condition_tree";
 import { COMPARATORS, TERM_OPERATORS_NEGATION } from "./operators";
 
 function getNormalizedCondition(condition) {
@@ -70,6 +70,12 @@ function _constructExpressionFromTree(tree, options, isRoot = false) {
 
     if (path instanceof Expression && operator === "=" && value === 1) {
         return path.toString();
+    }
+    if ( // we can assume that negate = false here: "ilike" and "not ilike" have negation defined
+        ["ilike", "not ilike"].includes(operator) &&
+        expressionContainsString.isPathSupported(path, options.getFieldDef)
+    ) {
+        return expressionContainsString.toString(path, value, operator);
     }
 
     const op = operator === "=" ? "==" : operator; // do something about is ?
