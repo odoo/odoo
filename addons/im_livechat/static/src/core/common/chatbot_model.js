@@ -132,8 +132,7 @@ export class Chatbot extends Record {
 
     get completed() {
         return (
-            (this.currentStep?.isLast &&
-                (!this.currentStep.expectAnswer || this.currentStep?.completed)) ||
+            this.currentStep?.isLast ||
             this.currentStep?.operatorFound ||
             this.channel_id.livechat_end_dt
         );
@@ -158,8 +157,7 @@ export class Chatbot extends Record {
                 data_id: dataRequest.id,
             });
             await dataRequest._resultResolvers.promise;
-            if (!dataRequest.chatbot_step) {
-                this.currentStep.isLast = true;
+            if (this.currentStep.isLast) {
                 return;
             }
             this.steps.push(dataRequest.chatbot_step);
