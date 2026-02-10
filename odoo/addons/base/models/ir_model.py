@@ -1785,6 +1785,10 @@ class IrModelFieldsSelection(models.Model):
             if not field or not field.store or not Model._auto:
                 continue
 
+            # Field changed its type, skip it.
+            if field.type not in ('selection', 'reference'):
+                continue
+
             ondelete = (field.ondelete or {}).get(selection.value)
             # special case for custom fields
             if ondelete is None and field.manual and not field.required:
