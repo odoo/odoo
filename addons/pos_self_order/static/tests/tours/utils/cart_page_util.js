@@ -17,21 +17,31 @@ export function selectTable(table) {
     return [
         {
             content: `Select table ${table}`,
-            trigger: `.self_order_popup_table select`,
-            run: (helpers) => {
-                // The default select (run: select 3) doesn't work here
-                const options = document.querySelectorAll(".self_order_popup_table option");
-                const targetOption = Array.from(options).find((option) =>
-                    option.textContent.includes(table)
-                );
-                const optionValue = targetOption.value;
-                helpers.anchor.value = optionValue;
-                helpers.anchor.dispatchEvent(new Event("change"));
-            },
+            trigger: `.self_order_pills_selection_popup .option-item:contains("${table}")`,
+            run: "click",
         },
         {
             content: `Click on 'Confirm' button`,
-            trigger: `.self_order_popup_table .btn:contains('Continue with table ${table}')`,
+            trigger: `.self_order_pills_selection_popup .btn-primary:contains('Confirm')`,
+            run: "click",
+        },
+    ];
+}
+
+export function selectTimeSlot() {
+    return [
+        {
+            content: `Wait for time slot popup to appear`,
+            trigger: `.self_order_pills_selection_popup`,
+        },
+        {
+            content: `Select first available time slot`,
+            trigger: `.self_order_pills_selection_popup .option-item:first`,
+            run: "click",
+        },
+        {
+            content: `Click on 'Confirm' button`,
+            trigger: `.self_order_pills_selection_popup .btn-primary:contains('Confirm')`,
             run: "click",
         },
     ];

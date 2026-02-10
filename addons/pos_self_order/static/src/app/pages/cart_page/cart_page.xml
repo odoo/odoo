@@ -102,7 +102,5 @@
             </div>
             <OrderWidget t-if="this.selfOrder.ordering" action.bind="pay" removeTopClasses="true"/>
         </div>
-        <PopupTable t-if="this.state.selectTable" selectTable.bind="selectTable" />
-        <PresetInfoPopup t-if="this.state.fillInformations" callback.bind="proceedInfos" />
     </t>
 </templates>

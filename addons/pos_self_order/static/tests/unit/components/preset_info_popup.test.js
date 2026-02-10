@@ -14,7 +14,9 @@ test("validSelection", async () => {
     const order = await getFilledSelfOrder(store);
     const preset = models["pos.preset"].get(10);
     order.preset_id = preset;
-    const comp = await mountWithCleanup(PresetInfoPopup, { props: { callback: () => {} } });
+    const comp = await mountWithCleanup(PresetInfoPopup, {
+        props: { close: () => {}, getPayload: () => {} },
+    });
     // none
     preset.identification = "none";
     expect(Boolean(comp.validSelection)).toBe(true);
@@ -27,11 +29,6 @@ test("validSelection", async () => {
     preset.mail_template_id = 21;
     expect(comp.validSelection).toBeEmpty();
     comp.state.email = "good.person@odoo.com";
-    expect(Boolean(comp.validSelection)).toBe(true);
-    // slots
-    preset.use_timing = true;
-    expect(comp.validSelection).toBeEmpty();
-    comp.state.selectedSlot = "2025-07-30 14:25:21";
     expect(Boolean(comp.validSelection)).toBe(true);
     // Partner
     preset.identification = "address";

@@ -1,0 +1,37 @@
+.self_order_pills_selection_popup_dialog {
+    border-radius: 35px 35px 0 0 !important;
+    bottom: 0;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+}
+
+/* On small screens (576px - 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+    .self_order_pills_selection_popup_dialog {
+        max-height: 75vh;
+    }
+
+    .self_order_pills_selection_popup {
+        max-height: 70vh;
+    }
+}
+
+/* On medium screens (≥768px) */
+@media (min-width: 768px) {
+    .self_order_pills_selection_popup_dialog {
+        border-radius: 35px !important;
+        bottom: 20%;
+        max-height: 75vh;
+    }
+
+    .self_order_pills_selection_popup {
+        max-height: 70vh;
+    }
+}
