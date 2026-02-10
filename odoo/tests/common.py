@@ -958,6 +958,8 @@ class TransactionCase(BaseCase):
         cls.addClassCleanup(reset_changes)
 
         def signal_changes():
+            if not cls.registry.registry_invalidated and not cls.registry.cache_invalidated:
+                return  # avoid useless log if nothing changed after http request
             if not cls.registry.ready:
                 _logger.info('Skipping signal changes during tests')
                 return
