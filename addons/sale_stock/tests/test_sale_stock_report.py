@@ -165,9 +165,6 @@ class TestSaleStockReports(TestReportsCommon):
             'name': 'Other Salesman',
             'login': 'other',
             'group_ids': [
-                # Issue: when 'mrp' is installed but 'sale_mrp' isn't yet, this
-                # group is not enough to get report values, since 'sale_mrp'
-                # adds the missing access rights to that group.
                 Command.link(self.env.ref('sales_team.group_sale_salesman').id),
             ],
         })
