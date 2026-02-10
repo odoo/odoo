@@ -722,14 +722,17 @@ pre {
     background-image: none !important;
 }
 
-.o_full_screen_height {
+@mixin o_full_screen_height {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     min-height: 100vh !important;
 }
+.o_full_screen_height {
+    @include o_full_screen_height;
+}
 .o_half_screen_height {
-    @extend .o_full_screen_height;
+    @include o_full_screen_height;
     min-height: 55vh !important;
 }
 

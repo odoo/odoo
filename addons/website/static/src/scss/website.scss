@@ -782,13 +782,6 @@ font[class*='bg-'] {
         box-sizing: content-box;
     }
 }
-// Smaller container
-.o_container_small {
-    @extend .container;
-    @include media-breakpoint-up(lg) {
-        max-width: map-get($container-max-widths, md);
-    }
-}
 
 // Buttons
 .btn {
@@ -957,36 +950,16 @@ table.table_desc tr td {
     border-radius: 0;
 }
 
-@mixin o_full_screen_height {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    min-height: 100vh !important;
+.o_full_screen_height {
+    @include o_full_screen_height;
     // See JS: this is overridden for multiple reasons, including the fact that
     // Arc browser does not support this correctly at the moment.
     min-height: 100svh !important;
 }
 
-.o_full_screen_height {
-    @include o_full_screen_height;
-}
-
 .o_three_quarter_height {
     @include o_full_screen_height;
     min-height: 75vh !important;
-}
-
-.o_half_screen_height {
-    @include o_full_screen_height;
-    min-height: 55vh !important;
-}
-
-// TODO remove cover_full and cover_mid classes (kept for compatibility for now)
-.cover_full {
-    @include o_full_screen_height;
-}
-.cover_mid {
-    @extend .o_half_screen_height;
 }
 
 // Allows custom border radius without contents overflowing.
