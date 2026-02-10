@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="point_of_sale.LocalPrinterSelector">
+        <AutoComplete
+            id="'local_printer_autocomplete'"
+            value="state.value"
+            sources="sources"
+            placeholder.translate="Select a device"
+            dropdown="true"
+            autoSelect="true"
+            onInput.bind="onInput"
+            onBlur.bind="onBlur"
+        >
+            <t t-set-slot="printer_option" t-slot-scope="props">
+                    <span t-esc="props.label"/>
+                    <span class="ms-4 text-muted" t-esc="props.data.device_type"/>
+                    <span class="ms-4 text-muted" t-esc="props.data.communication_protocol"/>
+            </t>
+        </AutoComplete>
+    </t>
+</templates>

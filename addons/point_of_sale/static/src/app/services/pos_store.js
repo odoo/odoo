@@ -45,6 +45,7 @@ import { logPosMessage } from "../utils/pretty_console_log";
 import { initLNA } from "../utils/init_lna";
 import { uuid } from "@web/core/utils/strings";
 import { GeneratePrinterData } from "../utils/generate_printer_data";
+import { OdooLocalPrinter } from "@point_of_sale/app/utils/printer/local_printer";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -1275,6 +1276,8 @@ export class PosStore extends WithLazyGetterTrap {
     createPrinter(config) {
         if (config.printer_type === "epson_epos") {
             return new EpsonPrinter({ printer: config });
+        } else if (config.printer_type === "local") {
+            return new OdooLocalPrinter({ printer: config });
         }
     }
     async _loadFonts() {

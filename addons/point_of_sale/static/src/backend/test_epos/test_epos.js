@@ -50,7 +50,7 @@ export class TestEPos extends Component {
             const response = await this.orm.read(
                 "pos.printer",
                 [printer_id],
-                ["epson_printer_ip", "name", "printer_type"]
+                ["epson_printer_ip", "name", "printer_type", "local_printer_data"]
             );
             return response[0];
         } else {
@@ -60,6 +60,7 @@ export class TestEPos extends Component {
                 name: data.name,
                 epson_printer_ip: data.epson_printer_ip,
                 printer_type: data.printer_type,
+                local_printer_data: data.local_printer_data,
             };
         }
     }
@@ -140,6 +141,29 @@ export class TestEPos extends Component {
                     )}`,
                     { type: "danger" }
                 );
+            }
+        } else if (printer.printer_type === "local") {
+            if (!window.OdooNativeApp) {
+                this.notification.add(_t("Local printer is only available in the desktop app."), {
+                    type: "warning",
+                });
+                return;
+            }
+
+            try {
+                const response = await window.action({
+                    action: "print_status_receipt",
+                    device: JSON.parse(JSON.stringify(printer.local_printer_data)),
+                });
+
+                if (!response?.status) {
+                    this.notification.add(
+                        _t("Failed to print a test receipt on the local printer."),
+                        { type: "danger" }
+                    );
+                }
+            } catch {
+                this.notification.add(_t("Cannot reach the local printer."), { type: "danger" });
             }
         }
     }
