@@ -1778,7 +1778,176 @@ class StockPicking(models.Model):
 
         return _explore(self.env['stock.picking'], self.env['stock.move'], moves)
 
+<<<<<<< e3825bece9007c9eaddb1200b4c893cdd36ba64e
     def action_put_in_pack(self):
+||||||| bc46c9783ab00222b86cd951ff7f732b0212bdee
+    def _pre_put_in_pack_hook(self, move_line_ids):
+        return self._check_destinations(move_line_ids)
+
+    def _check_destinations(self, move_line_ids):
+        if len(move_line_ids.mapped('location_dest_id')) > 1:
+            view_id = self.env.ref('stock.stock_package_destination_form_view').id
+            wiz = self.env['stock.package.destination'].create({
+                'picking_id': self.id,
+                'location_dest_id': move_line_ids[0].location_dest_id.id,
+            })
+            return {
+                'name': _('Choose destination location'),
+                'view_mode': 'form',
+                'res_model': 'stock.package.destination',
+                'view_id': view_id,
+                'views': [(view_id, 'form')],
+                'type': 'ir.actions.act_window',
+                'res_id': wiz.id,
+                'target': 'new',
+                'context': {
+                    'move_lines_to_pack_ids': move_line_ids.ids,
+                }
+            }
+        else:
+            return {}
+
+    def _put_in_pack(self, move_line_ids):
+        package = self.env['stock.quant.package'].create({})
+        package_type = move_line_ids.move_id.product_packaging_id.package_type_id
+        if len(package_type) == 1:
+            package.package_type_id = package_type
+        if len(move_line_ids) == 1:
+            default_dest_location = move_line_ids._get_default_dest_location()
+            move_line_ids.location_dest_id = default_dest_location._get_putaway_strategy(
+                product=move_line_ids.product_id,
+                quantity=move_line_ids.quantity,
+                package=package)
+        move_line_ids.write({
+            'result_package_id': package.id,
+        })
+        if len(self) == 1:
+            self.env['stock.package_level'].with_context(from_put_in_pack=True).create({
+                'package_id': package.id,
+                'picking_id': self.id,
+                'location_id': False,
+                'location_dest_id': move_line_ids.location_dest_id.id,
+                'move_line_ids': [(6, 0, move_line_ids.ids)],
+                'company_id': self.company_id.id,
+            })
+        return package
+
+    def _post_put_in_pack_hook(self, package_id):
+        if package_id and self.picking_type_id.auto_print_package_label:
+            if self.picking_type_id.package_label_to_print == 'pdf':
+                action = self.env.ref("stock.action_report_quant_package_barcode_small").report_action(package_id.id, config=False)
+            elif self.picking_type_id.package_label_to_print == 'zpl':
+                action = self.env.ref("stock.label_package_template").report_action(package_id.id, config=False)
+            if action:
+                action.update({'close_on_report_download': True})
+                clean_action(action, self.env)
+                return action
+        return package_id
+
+    def _package_move_lines(self, batch_pack=False, move_lines_to_pack=False):
+        # in theory, the picking_type should always be the same (i.e. for batch transfers),
+        # but customizations may bypass it and cause unexpected behavior so we avoid allowing those situations
+        if len(self.picking_type_id) > 1:
+            raise UserError(_("You cannot pack products into the same package when they are from different transfers with different operation types."))
+        quantity_move_line_ids = self.move_line_ids.filtered(
+            lambda ml:
+                float_compare(ml.quantity, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0 and
+                not ml.result_package_id
+        )
+        move_line_ids = quantity_move_line_ids.filtered(lambda ml: ml.picked)
+        if not move_line_ids:
+            move_line_ids = quantity_move_line_ids
+        if move_lines_to_pack:
+            move_line_ids = move_line_ids & move_lines_to_pack
+        return move_line_ids
+
+    def action_put_in_pack(self, move_lines_to_pack=False):
+=======
+    def _pre_put_in_pack_hook(self, move_line_ids):
+        return self._check_destinations(move_line_ids)
+
+    def _check_destinations(self, move_line_ids):
+        if len(move_line_ids.mapped('location_dest_id')) > 1:
+            view_id = self.env.ref('stock.stock_package_destination_form_view').id
+            wiz = self.env['stock.package.destination'].create({
+                'picking_id': self.id,
+                'location_dest_id': move_line_ids[0].location_dest_id.id,
+            })
+            return {
+                'name': _('Choose destination location'),
+                'view_mode': 'form',
+                'res_model': 'stock.package.destination',
+                'view_id': view_id,
+                'views': [(view_id, 'form')],
+                'type': 'ir.actions.act_window',
+                'res_id': wiz.id,
+                'target': 'new',
+                'context': {
+                    'move_lines_to_pack_ids': move_line_ids.ids,
+                }
+            }
+        else:
+            return {}
+
+    def _put_in_pack(self, move_line_ids):
+        package = self._get_put_in_pack_package()
+        package_type = move_line_ids.move_id.product_packaging_id.package_type_id
+        if len(package_type) == 1:
+            package.package_type_id = package_type
+        if len(move_line_ids) == 1:
+            default_dest_location = move_line_ids._get_default_dest_location()
+            move_line_ids.location_dest_id = default_dest_location._get_putaway_strategy(
+                product=move_line_ids.product_id,
+                quantity=move_line_ids.quantity,
+                package=package)
+        move_line_ids.write({
+            'result_package_id': package.id,
+        })
+        if len(self) == 1:
+            self.env['stock.package_level'].with_context(from_put_in_pack=True).create({
+                'package_id': package.id,
+                'picking_id': self.id,
+                'location_id': False,
+                'location_dest_id': move_line_ids.location_dest_id.id,
+                'move_line_ids': [(6, 0, move_line_ids.ids)],
+                'company_id': self.company_id.id,
+            })
+        return package
+
+    def _get_put_in_pack_package(self):
+        return self.env['stock.quant.package'].create({})
+
+    def _post_put_in_pack_hook(self, package_id):
+        if package_id and self.picking_type_id.auto_print_package_label:
+            if self.picking_type_id.package_label_to_print == 'pdf':
+                action = self.env.ref("stock.action_report_quant_package_barcode_small").report_action(package_id.id, config=False)
+            elif self.picking_type_id.package_label_to_print == 'zpl':
+                action = self.env.ref("stock.label_package_template").report_action(package_id.id, config=False)
+            if action:
+                action.update({'close_on_report_download': True})
+                clean_action(action, self.env)
+                return action
+        return package_id
+
+    def _package_move_lines(self, batch_pack=False, move_lines_to_pack=False):
+        # in theory, the picking_type should always be the same (i.e. for batch transfers),
+        # but customizations may bypass it and cause unexpected behavior so we avoid allowing those situations
+        if len(self.picking_type_id) > 1:
+            raise UserError(_("You cannot pack products into the same package when they are from different transfers with different operation types."))
+        quantity_move_line_ids = self.move_line_ids.filtered(
+            lambda ml:
+                float_compare(ml.quantity, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0 and
+                not ml.result_package_id
+        )
+        move_line_ids = quantity_move_line_ids.filtered(lambda ml: ml.picked)
+        if not move_line_ids:
+            move_line_ids = quantity_move_line_ids
+        if move_lines_to_pack:
+            move_line_ids = move_line_ids & move_lines_to_pack
+        return move_line_ids
+
+    def action_put_in_pack(self, move_lines_to_pack=False):
+>>>>>>> 2a301d333f8f736a7e4de980c1a5c3e2203b64cc
         self.ensure_one()
         if self.env.context.get('sml_specific_default'):
             self = self.with_context(clean_context(self.env.context))
