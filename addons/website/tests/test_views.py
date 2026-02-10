@@ -1206,21 +1206,16 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         # multiwebsite specific
         v1.with_context(website_id=1).write({'name': 'Extension Specific'})
 
-        registry = View.env.registry
-        original_registry_ready = registry.ready
-        registry.ready = True
+        self.patch(self.registry, 'ready', True)
 
-        try:
-            # Simulate module install
-            View._load_records([dict(xml_id='website.extension2_view', values={
-                'name': ' ---',
-                'mode': 'extension',
-                'inherit_id': v1.id,
-                'arch': '<ooo position="replace"><p>EXTENSION</p></ooo>',
-                'key': 'website.extension2_view',
-            })])
-        finally:
-            registry.ready = original_registry_ready
+        # Simulate module install
+        View._load_records([dict(xml_id='website.extension2_view', values={
+            'name': ' ---',
+            'mode': 'extension',
+            'inherit_id': v1.id,
+            'arch': '<ooo position="replace"><p>EXTENSION</p></ooo>',
+            'key': 'website.extension2_view',
+        })])
 
     def test_specific_view_translation(self):
         self.env['res.lang']._activate_lang('fr_BE')

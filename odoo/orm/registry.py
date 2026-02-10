@@ -217,7 +217,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     cls.registries[db_name] = registry  # pylint: disable=unsupported-assignment-operation
                     upgrade_modules = install_modules = reinit_modules = ()
                 else:
-                    raise Exception('Failed to load registry after %d attempts' % retries)
+                    raise Exception(f'Failed to load registry after {retries} attempts')  # noqa: TRY301
             except Exception:
                 reset_modules_state(db_name)
                 raise
@@ -229,6 +229,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
             raise
 
         del registry.loaded_xmlids
+        del registry._force_upgrade_scripts
         del registry._reinit_modules
         del registry._models_to_check
 
