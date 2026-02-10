@@ -32,12 +32,9 @@ class StockValuationReport(models.AbstractModel):
             date = fields.Date.from_string(date)
         if date == fields.Date.today():
             date = False
-        if not date:
-            inventory_data = company.stock_value()
-            accounting_data = company.stock_accounting_value()
-        else:
-            inventory_data = company.stock_value(at_date=date)
-            accounting_data = company.stock_accounting_value(at_date=date)
+
+        inventory_data = company.stock_value(at_date=date)
+        accounting_data = company.stock_accounting_value(at_date=date)
 
         accounts = inventory_data.keys() | accounting_data.keys()
         account_ids = {acc.id for acc in accounts}
@@ -77,7 +74,8 @@ class StockValuationReport(models.AbstractModel):
             date, location_domain=[('usage', '=', 'inventory')],
         )
         stock_valuation_account_vals = company.with_context(inventory_data=inventory_data)._get_stock_valuation_account_vals(
-            accounts_by_product, date, company._get_location_valuation_vals(date))
+            accounts_by_product, date, company._get_location_valuation_vals(date)
+        )
 
         report_data = {
             'company_id': company.id,
