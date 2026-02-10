@@ -51,7 +51,7 @@ Object.defineProperty(renderToString, "app", {
 function render(template, context = {}) {
     const app = renderToString.app;
     const templateFn = app.getTemplate(template);
-    const bdom = templateFn(context, {});
+    const bdom = templateFn({ this: context }, {});
     const div = document.createElement("div");
     blockDom.mount(bdom, div);
     return div;
