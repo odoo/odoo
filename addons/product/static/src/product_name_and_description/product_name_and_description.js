@@ -122,6 +122,7 @@ export class ProductNameAndDescriptionField extends Component {
             ...p,
             canOpen: !this.props.readonly || this.isProductClickable,
             placeholder: _t("Search a product"),
+            preventMemoization: true,
             value,
         };
     }
