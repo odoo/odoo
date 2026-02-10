@@ -44,7 +44,6 @@ chartRegistry.add("odoo_geo", {
 });
 
 function createOdooChartRuntime(chart, getters) {
-    const background = chart.background || "#FFFFFF";
     const { datasets, labels } = chart.dataSource.getData();
 
     const definition = chart.getDefinition();
@@ -72,11 +71,12 @@ function createOdooChartRuntime(chart, getters) {
                 title: getChartTitle(definition, getters),
                 tooltip: getGeoChartTooltip(definition, chartData),
                 legend: { display: false },
+                background: { color: chart.background },
             },
             onHover: onGeoOdooChartItemHover(),
             onClick: onGeoOdooChartItemClick(getters, chart),
         },
     };
 
-    return { background, chartJsConfig: config };
+    return { chartJsConfig: config };
 }
