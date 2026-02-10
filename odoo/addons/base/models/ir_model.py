@@ -2442,7 +2442,8 @@ class IrModelData(models.Model):
                 raise
 
         # update loaded_xmlids
-        self.pool.loaded_xmlids.update("%s.%s" % row[:2] for row in rows)
+        if not self.pool.ready:
+            self.pool.loaded_xmlids.update("%s.%s" % row[:2] for row in rows)
 
         if any(row[2] == 'res.groups' for row in rows):
             self.env.registry.clear_cache('groups')
@@ -2483,7 +2484,7 @@ class IrModelData(models.Model):
             corresponding record.
         """
         record = self.env.ref(xml_id, raise_if_not_found=False)
-        if record:
+        if record and not self.pool.ready:
             self.pool.loaded_xmlids.add(xml_id)
         return record
 
@@ -2675,6 +2676,7 @@ class IrModelData(models.Model):
         and a module in ir_model_data and noupdate set to false, but not
         present in self.pool.loaded_xmlids.
         """
+        assert not self.env.registry.ready
         if not modules or tools.config.get('import_partial'):
             return True
 

@@ -217,6 +217,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
             del cls.registries[db_name]     # pylint: disable=unsupported-delete-operation
             raise
 
+        del registry.loaded_xmlids
         del registry._reinit_modules
 
         # load_modules() above can replace the registry by calling
@@ -249,6 +250,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self.__caches: dict[str, LRU] = {cache_name: LRU(cache_size) for cache_name, cache_size in _REGISTRY_CACHES.items()}
 
         # update context during loading modules
+        self.loaded_xmlids: set[str] = set()           # loaded xmlids for IrModelData._process_end()
         self._force_upgrade_scripts: set[str] = set()  # force the execution of the upgrade script for these modules
         self._reinit_modules: set[str] = set()  # modules to reinitialize
 
@@ -256,7 +258,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self._init_modules: set[str] = set()         # modules have been initialized
         self.updated_modules: list[str] = []         # installed/updated modules
         self.uninstalling_modules: set[str] = set()  # modules being uninstalled
-        self.loaded_xmlids: set[str] = set()
 
         self.db_name = db_name
         self._db: Connection = sql_db.db_connect(db_name, readonly=False)
