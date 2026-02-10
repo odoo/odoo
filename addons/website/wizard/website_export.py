@@ -74,6 +74,7 @@ class WebsiteExportWizard(models.TransientModel):
         return []
 
     def _get_extra_views_to_export(self, views):
+        """Collect additional website qweb views that are not linked through pages."""
         extra_views = self.env["ir.ui.view"].search([
             ("website_id", "=", self.website_id.id),
             ("type", "=", "qweb"),
@@ -192,6 +193,7 @@ class WebsiteExportWizard(models.TransientModel):
         return f"website_export_{safe_name}_{timestamp}.zip"
 
     def _collect_export_data(self):
+        """Build the full export payload from website records."""
         self.ensure_one()
         pages = self._get_pages_to_export()
         controller_pages = self._get_controller_pages_to_export()
@@ -241,6 +243,7 @@ class WebsiteExportWizard(models.TransientModel):
         }
 
     def _write_export_zip(self, payload):
+        """Write payload json files and binaries to a zip archive."""
         attachments = payload["attachments"]
         attachment_map = {}
         if attachments:
@@ -280,6 +283,7 @@ class WebsiteExportWizard(models.TransientModel):
             return buffer.getvalue()
 
     def action_export(self):
+        """Generate and return the downloadable website export file."""
         self.ensure_one()
         payload = self._collect_export_data()
         archive = self._write_export_zip(payload)

@@ -67,6 +67,7 @@ class WebsiteImportWizard(models.TransientModel):
             return
 
     def _open_import_archive(self):
+        """Decode, open, and validate the uploaded import archive."""
         if not self.import_file:
             raise UserError(_("Please upload an export file."))
         try:
@@ -119,6 +120,7 @@ class WebsiteImportWizard(models.TransientModel):
         controller_pages=None,
         assets=None,
     ):
+        """Rebuild the payload file mapping used for checksum validation."""
         payload_files = {
             "pages.json": pages,
             "views.json": views,
@@ -236,6 +238,7 @@ class WebsiteImportWizard(models.TransientModel):
                 })
 
     def _import_views(self, views, website):
+        """Import views while resolving inherit dependencies in creation order."""
         pending = {view["id"]: view for view in views}
         view_map = {}
         while pending:
@@ -288,6 +291,7 @@ class WebsiteImportWizard(models.TransientModel):
         return pages_by_url
 
     def _import_pages(self, pages, view_map, source_website_id):
+        """Import pages and remap their related views and hierarchy."""
         page_model = self.env["website.page"]
         pages_by_url = self._select_pages(pages, source_website_id)
         created_by_url = {}
@@ -355,6 +359,7 @@ class WebsiteImportWizard(models.TransientModel):
         return fallback or menus
 
     def _import_menus(self, menus, website, page_map, controller_page_map, source_website_id):
+        """Import menus and rebuild parent/page/controller relations."""
         menus = self._select_menus(menus, source_website_id)
         menu_map = {}
         pending = {menu["id"]: menu for menu in menus}
@@ -531,6 +536,7 @@ class WebsiteImportWizard(models.TransientModel):
         }
 
     def action_import(self):
+        """Run the full website import flow from archive validation to summary."""
         self.ensure_one()
         with self._open_import_archive() as archive:
             manifest = self._read_archive_json(archive, "manifest.json")
