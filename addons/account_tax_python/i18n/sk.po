@@ -5,13 +5,13 @@
 # Translators:
 # Wil Odoo, 2024
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2025-12-31 13:13+0000\n"
+"PO-Revision-Date: 2026-02-07 10:45+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-18/"
 "account_tax_python/sk/>\n"
@@ -58,11 +58,17 @@ msgid ""
 ":param quantity: float\n"
 ":param product: A object representing the product\n"
 msgstr ""
+"Vypočítajte výšku dane.\n"
+"\n"
+":param base: float, suma, na ktorú sa daň uplatňuje\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: Objekt reprezentujúci produkt\n"
 
 #. module: account_tax_python
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
 msgid "Custom Formula"
-msgstr ""
+msgstr "Vlastný vzorec"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula
@@ -72,7 +78,7 @@ msgstr "Vzorec"
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__formula_decoded_info
 msgid "Formula Decoded Info"
-msgstr ""
+msgstr "Dekódované informácie vzorca"
 
 #. module: account_tax_python
 #. odoo-python

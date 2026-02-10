@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-01-01 13:42+0000\n"
+"POT-Creation-Date: 2026-02-05 18:38+0000\n"
+"PO-Revision-Date: 2026-02-07 18:00+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/"
 "spreadsheet/hi/>\n"
@@ -569,6 +569,12 @@ msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/actions/spreadsheet_download_action.js:0
+msgid "Access Error"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Access to the clipboard denied by the browser. Please enable clipboard "
@@ -809,7 +815,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Alignment"
-msgstr ""
+msgstr "अलाइनमेंट"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -919,6 +925,9 @@ msgid ""
 "A$1), 3 is row relative and column absolute (e.g. $A1), and 4 is row and "
 "column relative (e.g. A1)."
 msgstr ""
+"यह इंडिकेटर बताता है कि रेफरेंस रो/कॉलम एब्सोल्यूट (स्थिर) है या नहीं. 1: रो और कॉलम दोनों स्थिर ($A$1). "
+"2: रो स्थिर और कॉलम रिलेटिव (A$1). 3: रो रिलेटिव और कॉलम स्थिर ($A1). 4: रो और कॉलम दोनों रिलेटिव "
+"(A1)।"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2988,8 +2997,6 @@ msgid "Doughnut"
 msgstr ""
 
 #. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/public_readonly_app/public_readonly.js:0
 #: model_terms:ir.ui.view,arch_db:spreadsheet.public_spreadsheet_layout
 msgid "Download"
 msgstr "डाउनलोड"
@@ -5334,6 +5341,10 @@ msgid ""
 "returned from the last row or column in the array. If search_key is not "
 "found, a non-exact match may be returned."
 msgstr ""
+"इस फ़ंक्शन का उपयोग करने का एक तरीका search_key को खोजने के लिए एक सॉर्ट की गई रो या कॉलम "
+"search_array देना है, जिसके साथ result_range का दूसरा तर्क होता है. दूसरा तरीका इन दोनों तर्कों को "
+"एक search_array में मिलाना है जहां पहली रो या कॉलम को खोजा जाता है और एरे की अंतिम रो या कॉलम से मान लौटाया"
+" जाता है. यदि search_key नहीं मिलता है, तो एक गैर-सटीक मिलान वापस किया जा सकता है।"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11164,6 +11175,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You cannot create overlapping tables."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/actions/spreadsheet_download_action.js:0
+msgid ""
+"You don't have the rights to export data. Please contact an Administrator."
 msgstr ""
 
 #. module: spreadsheet

@@ -10,15 +10,15 @@
 # Wil Odoo, 2025
 # Manon Rondou, 2025
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Bren Driesen <brdri@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-01-28 14:51+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"POT-Creation-Date: 2026-02-05 18:38+0000\n"
+"PO-Revision-Date: 2026-02-07 18:00+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-18/"
 "spreadsheet/nl/>\n"
 "Language: nl\n"
@@ -613,6 +613,12 @@ msgstr "Absolute waarde"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Absolute value of a number."
 msgstr "Absolute waarde van een getal."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/actions/spreadsheet_download_action.js:0
+msgid "Access Error"
+msgstr "Toegangsfout"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3169,8 +3175,6 @@ msgid "Doughnut"
 msgstr "Donut"
 
 #. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/public_readonly_app/public_readonly.js:0
 #: model_terms:ir.ui.view,arch_db:spreadsheet.public_spreadsheet_layout
 msgid "Download"
 msgstr "Downloaden"
@@ -3741,6 +3745,8 @@ msgstr ""
 msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a boolean."
 msgstr ""
+"Functie [[FUNCTION_NAME]] verwacht numerieke waarden voor %s, maar kreeg een "
+"booleaanse waarde."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3748,6 +3754,8 @@ msgstr ""
 msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a string."
 msgstr ""
+"Functie [[FUNCTION_NAME]] verwacht numerieke waarden voor %s, maar kreeg een "
+"tekenreeks."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3756,6 +3764,8 @@ msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got an empty "
 "value."
 msgstr ""
+"Functie [[FUNCTION_NAME]] verwacht numerieke waarden voor %s, maar kreeg een "
+"lege waarde."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8076,6 +8086,8 @@ msgid ""
 "The first and second arguments of [[FUNCTION_NAME]] must be non-empty "
 "matrices."
 msgstr ""
+"Het eerste en tweede argument van [[FUNCTION_NAME]] moeten niet-lege "
+"matrices zijn."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8379,7 +8391,7 @@ msgstr "De future_value (%s) moet strikt positief zijn."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The header row of a table can't be moved."
-msgstr ""
+msgstr "De koprij van een tabel kan niet worden verplaatst."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11228,7 +11240,7 @@ msgstr "Waardewijziging van sleutelwaarde"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Value for parameter %s is missing in [[FUNCTION_NAME]]."
-msgstr ""
+msgstr "De waarde voor de parameter %s ontbreekt in [[FUNCTION_NAME]]."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11799,6 +11811,15 @@ msgstr "Je kunt geen overlappende tabellen maken."
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/actions/spreadsheet_download_action.js:0
+msgid ""
+"You don't have the rights to export data. Please contact an Administrator."
+msgstr ""
+"Je hebt geen rechten om gegevens te exporteren. Neem contact op met een "
+"beheerder."
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "[[FUNCTION_NAME]] evaluates to an out of bounds range."
 msgstr "[[FUNCTION_NAME]] evalueert tot een bereik buiten het bereik."
@@ -11829,6 +11850,8 @@ msgid ""
 "[[FUNCTION_NAME]] expects the provided values of %(argName)s to be a non-"
 "empty matrix."
 msgstr ""
+"[[FUNCTION_NAME]] verwacht dat de opgegeven waarden van %(argName)s een niet-"
+"lege matrix zijn."
 
 #. module: spreadsheet
 #. odoo-javascript

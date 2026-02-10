@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-01-01 13:42+0000\n"
+"PO-Revision-Date: 2026-02-07 10:38+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/survey/hi/>"
 "\n"
@@ -261,6 +261,42 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
+"family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <!-- We use the logo of the company that created the survey "
+"(to handle multi company cases) -->\n"
+"                <a href=\"/\"><img t-if="
+"\"not object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src="
+"\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style"
+"=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    सर्टिफ़िकेशन: <t t-out=\"object.survey_id.display_name or ''\""
+">फ़ीडबैक फ़ॉर्म</t>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style="
+"\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>नमस्ते <span t-out="
+"\"object.partner_id.name or 'participant'\">प्रतिभागी</span></p>\n"
+"                <p>\n"
+"                    कृपया अपना अटैच किया गया\n"
+"                        <strong t-out=\"object.survey_id.display_name or ''\""
+">Furniture Creation</strong>\n"
+"                    सर्टिफिकेट पाएं\n"
+"                </p>\n"
+"                <p><strong t-out=\"object.scoring_percentage\"/>% स्कोर के साथ "
+"परीक्षा पास करने पर आपको बधाई!</p>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_user_input_invite
@@ -2089,7 +2125,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_3_choice_2
 msgid "Height"
-msgstr ""
+msgstr "लंबाई"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -3333,7 +3369,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__mail_server_id
 msgid "Outgoing mail server"
-msgstr ""
+msgstr "आउटगोइंग मेल सर्वर"
 
 #. module: survey
 #. odoo-javascript
@@ -3628,7 +3664,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_question__question_type
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__question_type
 msgid "Question Type"
-msgstr ""
+msgstr "सवाल के प्रकार"
 
 #. module: survey
 #. odoo-python
@@ -3854,7 +3890,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__scale
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Scale"
-msgstr ""
+msgstr "स्केल"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scale_max_label
@@ -4029,7 +4065,7 @@ msgstr "ईमेल भेजें"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Send by Email"
-msgstr ""
+msgstr "ईमेल के ज़रिए भेजें"
 
 #. module: survey
 #: model:mail.template,description:survey.mail_template_certification
@@ -4313,7 +4349,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__suggested_answer_id
 msgid "Suggested answer"
-msgstr ""
+msgstr "सुझाया गया जवाब"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_answer_value_not_empty
@@ -4518,7 +4554,7 @@ msgstr "टेक्स्ट"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_char_box
 msgid "Text answer"
-msgstr ""
+msgstr "टेक्स्ट के जवाब"
 
 #. module: survey
 #. odoo-python
@@ -4957,6 +4993,7 @@ msgstr ""
 #: code:addons/survey/wizard/survey_invite.py:0
 msgid "Unable to post message, please configure the sender's email address."
 msgstr ""
+"मैसेज नहीं भेजा जा सका, कृपया सेंडर (भेजने वाले) का ईमेल एड्रेस सेट करें।"
 
 #. module: survey
 #. odoo-javascript
@@ -5013,7 +5050,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Use template"
-msgstr ""
+msgstr "टेम्प्लेट इस्तेमाल करें"
 
 #. module: survey
 #. odoo-javascript
