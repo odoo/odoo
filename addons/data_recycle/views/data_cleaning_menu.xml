@@ -19,16 +19,24 @@
             parent="menu_data_cleaning_root"
             sequence="100"/>
 
-            <menuitem
+            <!-- <menuitem
                 id="menu_data_cleaning_config_rules"
                 name="Rules"
                 parent="menu_data_cleaning_config"
+                sequence="1"/> -->
+
+            <menuitem
+                id="menu_data_cleaning_unified"
+                name="Model Rules"
+                parent="menu_data_cleaning_config"
+                action="action_data_cleaning_unified"
                 sequence="1"/>
 
-                <menuitem
+                <!-- <menuitem
                     id="menu_data_cleaning_config_rules_recycle"
                     name="Recycle Records"
                     parent="menu_data_cleaning_config_rules"
                     action="action_data_recycle_config"
-                    sequence="10"/>
+                    active="False"
+                    sequence="10"/> -->
 </odoo>

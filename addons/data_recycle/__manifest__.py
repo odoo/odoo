@@ -11,6 +11,7 @@
         'data/ir_cron_data.xml',
         'views/data_recycle_model_views.xml',
         'views/data_recycle_record_views.xml',
+        'views/data_cleaning_unified_views.xml',
         'views/data_cleaning_menu.xml',
         'views/data_recycle_templates.xml',
         'security/ir.model.access.csv',
@@ -18,8 +19,8 @@
     'application': True,
     'assets': {
         'web.assets_backend': [
-            'data_recycle/static/src/views/*.js',
-            'data_recycle/static/src/views/*.xml',
+            'data_recycle/static/src/views/**/*.js',
+            'data_recycle/static/src/views/**/*.xml',
         ],
     },
     'author': 'Odoo S.A.',
