@@ -262,6 +262,7 @@ class AccountMoveSend(models.AbstractModel):
                         if invoice.message_main_attachment_id in new_message.attachment_ids:
                             invoice.message_main_attachment_id = None
                         self.env.cr.execute("UPDATE ir_attachment SET res_id = NULL WHERE id IN %s", [tuple(new_message.attachment_ids.ids)])
+                        new_message.attachment_ids.invalidate_recordset(['res_id', 'res_model'], flush=False)
                         new_message.attachment_ids.write({
                             'res_model': new_message._name,
                             'res_id': new_message.id,
