@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
+from odoo.fields import Domain
 
 
 class HrAttendanceOvertimeRuleset(models.Model):
@@ -35,16 +36,8 @@ class HrAttendanceOvertimeRuleset(models.Model):
     version_ids = fields.One2many('hr.version', 'ruleset_id')
     versions_count = fields.Integer(compute="_compute_versions_count")
 
-    def _get_current_versions_domain(self):
-        today = fields.Date.today()
-        return [
-            ("ruleset_id", "in", self.ids),
-            ("contract_date_start", "<=", today),
-            "|",
-                ("contract_date_end", "=", False),
-                ("contract_date_end", ">=", today),
-            ('employee_id', '!=', False),
-        ]
+    def _get_versions_with_current_ruleset_domain(self):
+        return Domain.AND([[("ruleset_id", "in", self.ids)], self.env["hr.version"]._get_current_versions_domain()])
 
     def _compute_rules_count(self):
         for ruleset in self:
@@ -52,7 +45,7 @@ class HrAttendanceOvertimeRuleset(models.Model):
 
     def _compute_versions_count(self):
         count_by_ruleset = dict(self.env['hr.version']._read_group(
-                domain=self._get_current_versions_domain(),
+                domain=self._get_versions_with_current_ruleset_domain(),
                 groupby=['ruleset_id'],
                 aggregates=['__count'],
             ))
@@ -75,9 +68,18 @@ class HrAttendanceOvertimeRuleset(models.Model):
 
     def action_show_versions(self):
         self.ensure_one()
+
+        ctx = {'default_ruleset_id': self.id}
+
+        if not self.versions_count:
+            action = self.env['ir.actions.act_window']._for_xml_id('hr_attendance.hr_version_list_view_add')
+            action['domain'] = self.env["hr.version"]._get_current_versions_domain()
+            action['context'] = ctx
+            return action
+
         action = self.env['ir.actions.act_window']._for_xml_id('hr_attendance.hr_version_list_view')
-        action['domain'] = self._get_current_versions_domain()
-        action['context'] = {'default_ruleset_id': self.id}
+        action['domain'] = self._get_versions_with_current_ruleset_domain()
+        action['context'] = ctx
         return action
 
     def copy_data(self, default=None):
