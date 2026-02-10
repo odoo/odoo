@@ -1017,8 +1017,11 @@ class StockMoveLine(models.Model):
                 'target': 'new'
             }
 
+    def _get_put_in_pack_package(self):
+        return self.env['stock.quant.package'].create({})
+
     def _put_in_pack(self):
-        package = self.env['stock.quant.package'].create({})
+        package = self._get_put_in_pack_package()
         package_type = self.move_id.packaging_uom_id.package_type_id
         if len(package_type) == 1:
             package.package_type_id = package_type
