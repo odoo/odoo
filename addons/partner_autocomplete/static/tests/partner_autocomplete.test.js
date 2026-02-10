@@ -124,6 +124,7 @@ onRpc("res.partner", "enrich_by_duns", ({ args }) => ({
     },
 }));
 onRpc("/v1/companies/suggest", () => clearbitSuggestions);
+onRpc("enrich_company_message_post", () => true);
 
 before(() => loadJS("/partner_autocomplete/static/lib/jsvat.js"));
 

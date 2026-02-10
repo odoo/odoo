@@ -164,26 +164,6 @@ class ResPartner(models.Model):
         }, timeout=timeout)
         return self._process_enriched_response(response, error)
 
-    def iap_partner_autocomplete_get_tag_ids(self, unspsc_codes):
-        """Called by JS to create the activity tags from the UNSPSC codes"""
-        # If the UNSPSC module is installed, we might have a translation, so let's use it
-        if self.env['ir.module.module']._get('product_unspsc').state == 'installed':
-            tag_names = self.env['product.unspsc.code']\
-                            .with_context(active_test=False)\
-                            .search([('code', 'in', [unspsc_code for unspsc_code, __ in unspsc_codes])])\
-                            .mapped('name')
-        # If it's not, then we use the default English name provided by DnB
-        else:
-            tag_names = [unspsc_name for __, unspsc_name in unspsc_codes]
-
-        tag_ids = self.env['res.partner.category']
-        for tag_name in tag_names:
-            if existing_tag := self.env['res.partner.category'].search([('name', '=', tag_name)]):
-                tag_ids |= existing_tag
-            else:
-                tag_ids |= self.env['res.partner.category'].create({'name': tag_name})
-        return tag_ids.ids
-
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
         arch, view = super()._get_view(view_id, view_type, **options)
@@ -193,3 +173,32 @@ class ResPartner(models.Model):
                 node.set('widget', 'field_partner_autocomplete')
 
         return arch, view
+
+    def enrich_company_message_post(self, data):
+        """
+         Post a chatter note containing company enrichment data received from IAP
+        """
+        template = self.env.ref('iap_mail.enrich_company_by_dnb', raise_if_not_found=False)
+        if not template:
+            return
+        company = {
+            'phone': self.phone,
+            'name': self.name,
+            'email': self.email,
+            'company_type': data.get('entity_type', ''),
+            'vat': self.vat or self.company_registry,
+            'website': self.website,
+            'logo': self.image_1920,
+            'street': self.street,
+            'street2': self.street2,
+            'zip_code': self.zip,
+            'city': self.city,
+            'country': self.country_id.name,
+            'state': self.state_id.code,
+            'tags': data.get('unspsc_codes', ''),
+        }
+        self.message_post_with_source(
+            'iap_mail.enrich_company_by_dnb',
+            render_values=company,
+            subtype_xmlid='mail.mt_note',
+        )
