@@ -568,10 +568,16 @@ class HrVersion(models.Model):
                 if version.contract_date_start \
                 else version.date_version
 
-            next_version = self.env['hr.version'].search([
-                ('employee_id', 'in', version.employee_id.ids),
-                ('date_version', '>', version.date_version)], limit=1)
-            date_version_end = next_version.date_version + relativedelta(days=-1) if next_version else False
+        all_versions = self.search_fetch([
+            ('employee_id', 'in', self.employee_id.ids),
+            ('date_version', '>', min(self.mapped('date_start'), default=date.today())),
+        ], ['employee_id', 'date_version'], order='date_version').grouped('employee_id')
+        for version in self:
+            date_version_end = False
+            if next_versions := all_versions.get(version.employee_id):
+                date_version_end = next((d for d in next_versions.mapped('date_version') if d > version.date_version), None)
+                if date_version_end:
+                    date_version_end -= relativedelta(days=1)
 
             if date_version_end and version.contract_date_end:
                 version.date_end = min(date_version_end, version.contract_date_end)
