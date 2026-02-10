@@ -5077,3 +5077,27 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             1050.0,
             msg="Price should be recomputed when tax inclusion rate changes (10% -> 5%)"
         )
+
+    def test_line_name_description(self):
+        """ Test line name is updated after product change """
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2017-01-01',
+            'date': '2017-01-01',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'name': 'test line',
+                'price_unit': 100.0,
+                'quantity': 1,
+            })],
+        })
+
+        move_form = Form(invoice)
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.product_id = self.product_a
+        move_form.save()
+
+        self.assertRecordValues(invoice.invoice_line_ids, [{
+            'product_id': self.product_a.id,
+            'name': 'product_a',
+        }])
