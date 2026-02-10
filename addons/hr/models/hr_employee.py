@@ -1819,10 +1819,11 @@ class HrEmployee(models.Model):
             employee.barcode = '041'+"".join(choice(digits) for i in range(9))
 
     def _get_resources_per_tz(self, date=None):
-        resources_per_tz = defaultdict(lambda: self.env['resource.resource'])
-        for employee in self:
-            resources_per_tz[ZoneInfo(employee._get_tz(date=date))] |= employee.resource_id
-        return dict(resources_per_tz)
+        employee_per_tz = self.grouped(lambda e: ZoneInfo(e._get_tz(date=date)))
+        return {
+            tz: employees.resource_id
+            for tz, employees in employee_per_tz.items()
+        }
 
     def _get_tz(self, date=None):
         self.ensure_one()
@@ -1929,9 +1930,13 @@ class HrEmployee(models.Model):
                     ('date_end', '>=', start),
             ])
         for version in versions:
-            date_end = version.date_end or stop
+            date_start = max(version.date_start, start)
+            date_end = min(version.date_end or stop, stop)
+            if date_end < start or date_start > stop or date_start > date_end:
+                # not overlapping, this can happen if we check contract versions
+                continue
             version_periods_by_employee[version.employee_id].append(
-                (max(version.date_start, start), min(date_end, stop), version[field] if field else version),
+                (date_start, date_end, version[field] if field else version),
             )
         return version_periods_by_employee
 

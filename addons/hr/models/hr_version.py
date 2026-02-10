@@ -634,10 +634,11 @@ class HrVersion(models.Model):
         return self.tz or self.employee_id.user_partner_id.tz or self.employee_id.company_id.tz or 'UTC'
 
     def _get_resources_per_tz(self):
-        resources_per_tz = defaultdict(lambda: self.env['resource.resource'])
-        for version in self:
-            resources_per_tz[ZoneInfo(version._get_tz())] |= version.employee_id.resource_id
-        return dict(resources_per_tz)
+        version_per_tz = self.grouped(lambda e: ZoneInfo(e._get_tz()))
+        return {
+            tz: versions.employee_id.resource_id
+            for tz, versions in version_per_tz.items()
+        }
 
     def action_open_version(self):
         self.ensure_one()
