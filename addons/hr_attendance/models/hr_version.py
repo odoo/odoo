@@ -23,6 +23,12 @@ class HrVersion(models.Model):
          default=lambda self: self.env.ref('hr_attendance.hr_attendance_default_ruleset', raise_if_not_found=False),
     )
 
+    has_ruleset_id = fields.Boolean(compute="_compute_has_ruleset_id", groups="hr.group_hr_user")
+
+    @api.depends("ruleset_id")
+    def _compute_has_ruleset_id(self):
+        self.has_ruleset_id = self.ruleset_id
+
     @api.model
     def _get_versions_by_employee_and_date(self, employee_dates):
         # for `employee_dates` a dict[employee] -> dates
@@ -52,21 +58,33 @@ class HrVersion(models.Model):
 
     def action_open_version_selector(self):
         action = self.env['ir.actions.act_window']._for_xml_id('hr_attendance.hr_version_list_view_add')
-        today = fields.Date.today()
-        action['domain'] = [
-            ("ruleset_id", "=", False),
-            ("contract_date_start", "<=", today),
-            "|",
-            ("contract_date_end", "=", False),
-            ("contract_date_end", ">=", today),
-            ("employee_id", "!=", False),
-        ]
-        action['context'] = {'default_ruleset_id': self.env.context.get('default_ruleset_id', False)}
+        ruleset_id = self.env.context.get('default_ruleset_id', False)
+        action['domain'] = [("ruleset_id", "!=", ruleset_id)] + self.env["hr.version"]._get_current_versions_domain()
+        self.env["hr.version"]._get_current_versions_domain()
+        action['context'] = {'default_ruleset_id': ruleset_id}
         return action
 
     def action_unassign_ruleset(self):
         self.ruleset_id = False
 
     def action_assign_ruleset(self):
-        if ruleset_id := self.env.context.get('default_ruleset_id', False):
-            self.ruleset_id = ruleset_id
+        ruleset_id = self.env.context.get('default_ruleset_id', False)
+        if not ruleset_id:
+            return None
+
+        if any(record.ruleset_id for record in self):
+            return {
+                'name': 'Overwrite Ruleset?',
+                'type': 'ir.actions.act_window',
+                'res_model': 'ruleset.overwrite.confirmation.wizard',
+                'view_mode': 'form',
+                'target': 'new',
+                'context': {
+                    **self.env.context,
+                    'active_ids': self.ids,
+                    'ruleset_id': ruleset_id,
+                },
+            }
+
+        self.ruleset_id = ruleset_id
+        return None
