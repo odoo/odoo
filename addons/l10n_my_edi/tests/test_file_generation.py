@@ -648,7 +648,7 @@ class L10nMyEDITestFileGeneration(L10nMyEDITestFileGenerationCommon):
         """
         Ensure the original document id is present in the reversed document.
         """
-        bill = self.init_invoice('in_invoice', products=self.product_a, post=True)
+        bill = self.init_invoice('in_invoice', products=self.product_a, taxes=self.company_data['default_tax_purchase'], post=True)
         bill.ref = 'BILL-123'
         myinvois_document = bill._create_myinvois_document()
         bill_file, errors = myinvois_document._myinvois_generate_xml_file()
@@ -686,7 +686,7 @@ class L10nMyEDITestFileGeneration(L10nMyEDITestFileGenerationCommon):
         Ensure the original document id is present in the reversed document even if bill reference has changed after
         sending.
         """
-        bill = self.init_invoice('in_invoice', products=self.product_a, post=True)
+        bill = self.init_invoice('in_invoice', products=self.product_a, taxes=self.company_data['default_tax_purchase'], post=True)
 
         # Set reference before generating e-invoice
         bill.ref = 'Initial Reference'
