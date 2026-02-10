@@ -83,11 +83,9 @@ class TestCursor(Cursor):
         self._cnx._check_savepoint()
         return super().execute(*args, **kwargs)
 
-    def close(self):
-        if self._closed:
-            return
+    def _close(self):
         try:
-            super().close()
+            super()._close()
         finally:
             tos = self._cursors_stack.pop()
             if tos is not self:
@@ -104,7 +102,8 @@ class TestCursor(Cursor):
         super().rollback()
         # rollback again to release the savepoint that may be created during
         # reset of the registry (after the rollback) which may perform queries
-        self._cnx.rollback()
+        if not self.closed:
+            self._cnx.rollback()
 
     def now(self) -> datetime:
         """ Return the transaction's timestamp ``datetime.now()``. """
