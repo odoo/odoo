@@ -131,3 +131,71 @@ class TestSubcontractingLandedCosts(TestMrpSubcontractingCommon):
         # confirm the landed cost
         stock_landed_cost.button_validate()
         self.assertEqual(stock_landed_cost.state, "done")
+
+    def test_subcontracting_landed_cost_pro_rata_product_out(self):
+        """
+            This test verifies that the account move line created after the validation
+            of a landed cost applied to a subcontracted product take into account the pro
+            rata of the products still in stock.
+        """
+        product_category_all = self.env.ref('product.product_category_goods')
+        self._setup_category_stock_journals()
+        product_category_all.property_cost_method = 'average'
+        product_category_all.property_valuation = 'real_time'
+        self.finished.categ_id = product_category_all
+
+        # create and confirm PO
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [(0, 0, {
+                'name': self.finished.name,
+                'product_id': self.finished.id,
+                'product_qty': 10,
+                'product_uom_id': self.finished.uom_id.id,
+                'price_unit': 10,
+            })],
+        })
+        po.button_confirm()
+
+        # validate move
+        receipt = po.picking_ids[0]
+        receipt.button_validate()
+
+        # simulate only partial quantity remaining
+        mo = receipt._get_subcontract_production()
+        mo.move_finished_ids.stock_valuation_layer_ids.remaining_qty = 7
+
+        # create a landed cost for the incoming picking
+        default_vals = self.env['stock.landed.cost'].default_get(list(self.env['stock.landed.cost'].fields_get()))
+        freight_charges = self.env['product.product'].create({
+            'name': 'Freight Charges',
+            'categ_id': self.product_category.id,
+        })
+        default_vals.update({
+            'picking_ids': [receipt.id],
+            'cost_lines': [(0, 0, {
+                'product_id': freight_charges.id,
+                'name': 'equal split',
+                'split_method': 'equal',
+                'price_unit': 10,
+            })],
+        })
+        stock_landed_cost = self.env['stock.landed.cost'].create(default_vals)
+
+        # compute the landed cost using compute button
+        stock_landed_cost.compute_landed_cost()
+        stock_landed_cost.button_validate()
+
+        # check the amls created
+        stock_in_acc_id = product_category_all.property_stock_account_input_categ_id.id
+        stock_out_acc_id = product_category_all.property_stock_account_output_categ_id.id
+        stock_valu_acc_id = product_category_all.property_stock_valuation_account_id.id
+        expense_acc_id = product_category_all.property_account_expense_categ_id.id
+        self.assertRecordValues(stock_landed_cost.account_move_id.line_ids, [
+            {'account_id': stock_valu_acc_id,   'product_id': self.finished.id,    'debit': 10.0,  'credit': 0.0},
+            {'account_id': stock_in_acc_id,     'product_id': self.finished.id,    'debit': 0.0,   'credit': 10.0},
+            {'account_id': stock_out_acc_id,    'product_id': self.finished.id,    'debit': 3.0,   'credit': 0.0},
+            {'account_id': stock_valu_acc_id,   'product_id': self.finished.id,    'debit': 0.0,   'credit': 3.0},
+            {'account_id': expense_acc_id,    'product_id': self.finished.id,    'debit': 3.0,  'credit': 0.0},
+            {'account_id': stock_out_acc_id,   'product_id': self.finished.id,    'debit': 0.0,   'credit': 3.0},
+        ])

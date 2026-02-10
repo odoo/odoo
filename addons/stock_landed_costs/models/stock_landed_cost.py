@@ -182,7 +182,7 @@ class StockLandedCost(models.Model):
                 # `remaining_qty` is negative if the move is out and delivered proudcts that were not
                 # in stock.
                 qty_out = 0
-                if line.move_id._is_in():
+                if line.move_id._is_in_or_sbc_in():
                     qty_out = line.move_id.quantity - remaining_qty
                 elif line.move_id._is_out():
                     qty_out = line.move_id.quantity

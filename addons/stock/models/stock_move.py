@@ -2630,3 +2630,6 @@ Please change the quantity done or the rounding precision in your settings.""",
         """ Overridden in stock_picking_batch to return the moves of the batch
         """
         return self.env['stock.move']
+
+    def _is_in_or_sbc_in(self):
+        return self._is_in()

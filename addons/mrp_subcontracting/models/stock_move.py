@@ -360,3 +360,6 @@ class StockMove(models.Model):
                 and self.origin_returned_move_id.is_subcontract
                 and self.location_dest_id.id == subcontracting_location.id
         )
+
+    def _is_in_or_sbc_in(self):
+        return super()._is_in() or self.is_subcontract
