@@ -374,6 +374,7 @@ class AccountEdiXmlCII(models.AbstractModel):
             'allowance_charge_reason_code': './{*}ReasonCode',
             'line_total_amount': './{*}SpecifiedLineTradeSettlement/{*}SpecifiedTradeSettlementLineMonetarySummation/{*}LineTotalAmount',
             'name': [
+                './ram:SpecifiedTradeProduct/ram:Description',
                 './ram:SpecifiedTradeProduct/ram:Name',
             ],
             'product': {
