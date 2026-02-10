@@ -955,6 +955,7 @@ class Website(Home):
                         "alt": alt or "",
                         "decorative": False,
                         "updated": False,
+                        "source_sha": sha256((alt or "").encode()).hexdigest(),
                         "res_model": model['model'],
                         "res_id": model['id'],
                         "id": f"{model['model']}-{model['id']}-{index}",
@@ -966,12 +967,23 @@ class Website(Home):
     def update_alt_images(self, imgs):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise werkzeug.exceptions.Forbidden()
+        current_lang = request.env.context.get('lang')
         for img in imgs:
             record = request.env[img['res_model']].browse(img['res_id'])
+            base_lang = record._get_base_lang()
             if not record.has_access('write'):
                 continue
-            img['field'] = 'arch_db' if img['field'] == 'arch' else img['field']
-            tree = html.fromstring(str(record[img['field']]))
+            field_name = 'arch_db' if img['field'] == 'arch' else img['field']
+            if current_lang != base_lang:
+                translations = {current_lang: {img['source_sha']: img['alt']}}
+                record._update_field_translations(
+                    field_name,
+                    translations,
+                    digest=lambda old_term: sha256(old_term.encode()).hexdigest(),
+                    source_lang=base_lang
+                )
+                continue
+            tree = html.fromstring(str(record[field_name]))
             modified = False
             for index, element in enumerate(tree.xpath('//img')):
                 imgId = f"{img['res_model']}-{img['res_id']}-{index!s}"
@@ -985,7 +997,7 @@ class Website(Home):
                     modified = True
             if modified:
                 new_html_content = html.tostring(tree, encoding='unicode', method='html')
-                record.write({img['field']: new_html_content})
+                record.write({field_name: new_html_content})
 
     @http.route(['/website/update_broken_links'], type='jsonrpc', auth="user", website=True)
     def update_broken_links(self, links):
