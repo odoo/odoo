@@ -432,7 +432,4 @@ class ResourceResource(models.Model):
         return work_hours
 
     def _get_resources_per_tz(self):
-        resources_per_tz = defaultdict(lambda: self.env['resource.resource'])
-        for resource in self:
-            resources_per_tz[ZoneInfo(resource.tz)] |= resource
-        return dict(resources_per_tz)
+        return self.grouped(lambda r: ZoneInfo(r.tz))
