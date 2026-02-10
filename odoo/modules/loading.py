@@ -110,7 +110,6 @@ def load_module_graph(
     graph: ModuleGraph,
     update_module: bool = False,
     report: OdooTestResult | None = None,
-    models_to_check: OrderedSet[str] | None = None,
     install_demo: bool = True,
 ) -> None:
     """ Load, upgrade and install not loaded module nodes in the ``graph`` for ``env.registry``
@@ -119,12 +118,8 @@ def load_module_graph(
        :param graph: graph of module nodes to load
        :param update_module: whether to update modules or not
        :param report:
-       :param set models_to_check:
        :param install_demo: whether to attempt installing demo data for newly installed modules
     """
-    if models_to_check is None:
-        models_to_check = OrderedSet()
-
     registry = env.registry
     assert isinstance(env.cr, odoo.sql_db.Cursor), "Need for a real Cursor to load modules"
     migrations = MigrationManager(env.cr, graph)
@@ -182,7 +177,7 @@ def load_module_graph(
         if update_operation:
             model_names = registry.descendants(model_names, '_inherit', '_inherits')
             models_updated |= model_names
-            models_to_check -= model_names
+            registry._models_to_check -= model_names
             registry._setup_models__(env.cr, [])  # incremental setup
             registry.init_models(env.cr, model_names, {'module': package.name}, update_operation == 'install')
         elif update_module and package.state != 'to remove':
@@ -192,11 +187,11 @@ def load_module_graph(
             # e.g. adding required=True to an existing field, but the schema has not been
             # updated by this module because it's not marked as 'to upgrade/to install'.
             model_names = registry.descendants(model_names, '_inherit', '_inherits')
-            models_to_check |= model_names & models_updated
+            registry._models_to_check |= model_names & models_updated
         elif update_module and package.state == 'to remove':
             # For all model extented (with _inherit) in the package to uninstall, we need to
             # update ir.model / ir.model.fields along side not-null SQL constrains.
-            models_to_check |= model_names
+            registry._models_to_check |= model_names
 
         if update_operation:
             # Can't put this line out of the loop: ir.module.module will be
@@ -338,7 +333,6 @@ def load_modules(
     install_modules: Collection[str] = (),
     reinit_modules: Collection[str] = (),
     new_db_demo: bool = False,
-    models_to_check: OrderedSet[str] | None = None,
 ) -> None:
     """ Load the modules for a registry object that has just been created.  This
         function is part of Registry.new() and should not be used anywhere else.
@@ -350,8 +344,6 @@ def load_modules(
         :param reinit_modules: A collection of module names to reinitialize.
         :param new_db_demo: Whether to install demo data for new database. Defaults to ``False``
     """
-    if models_to_check is None:
-        models_to_check = OrderedSet()
 
     initialize_sys_path()
 
@@ -400,7 +392,6 @@ def load_modules(
             graph,
             update_module=update_module,
             report=report,
-            models_to_check=models_to_check,
             install_demo=new_db_demo,
         )
 
@@ -456,7 +447,7 @@ def load_modules(
             updated_modules_count = len(registry.updated_modules)
             load_module_graph(
                 env, graph, update_module=update_module,
-                report=report, models_to_check=models_to_check)
+                report=report)
             if len(registry.updated_modules) == updated_modules_count:
                 break
 
@@ -540,13 +531,8 @@ def load_modules(
 
                 Module = env['ir.module.module']
                 Module.browse(modules_to_remove.values()).module_uninstall()
-                # Recursive reload, should only happen once, because there should be no
-                # modules to remove next time
-                cr.commit()
+                registry.loaded = False
                 _logger.info('Reloading registry once more after uninstalling modules')
-                registry = Registry.new(
-                    cr.dbname, update_module=update_module, models_to_check=models_to_check,
-                )
                 return
 
         # STEP 5.5: Verify extended fields on every model
@@ -559,11 +545,11 @@ def load_modules(
         if update_module:
             # We need to fix custom fields for which we have dropped the not-null constraint.
             cr.execute("""SELECT DISTINCT model FROM ir_model_fields WHERE state = 'manual'""")
-            models_to_check.update(model_name for model_name, in cr.fetchall() if model_name in registry)
-        if models_to_check:
+            registry._models_to_check.update(model_name for model_name, in cr.fetchall() if model_name in registry)
+        if registry._models_to_check:
             # Doesn't check models that didn't exist anymore, it might happen during uninstallation
-            models_to_check = [model for model in models_to_check if model in registry]
-            registry.init_models(cr, models_to_check, {'models_to_check': True, 'update_custom_fields': True})
+            registry._models_to_check = OrderedSet(model for model in registry._models_to_check if model in registry)
+            registry.init_models(cr, registry._models_to_check, {'models_to_check': True, 'update_custom_fields': True})
 
         # STEP 6: verify custom views on every model
         if update_module:

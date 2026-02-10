@@ -137,7 +137,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
         upgrade_modules: Collection[str] = (),
         reinit_modules: Collection[str] = (),
         new_db_demo: bool | None = None,
-        models_to_check: set[str] | None = None,
     ) -> Registry:
         """Create and return a new registry for the given database name.
 
@@ -161,17 +160,18 @@ class Registry(Mapping[str, type["BaseModel"]]):
         :param new_db_demo: Whether to install demo data for the new database. If set to ``None``, the value will be
           determined by the ``config['with_demo']``. Defaults to ``None``
         """
+        if (registry := cls.registries.get(db_name)) and not registry.ready:
+            raise Exception('Registry for database %s can not be loaded recursively' % db_name)
+
         t0 = time.time()
         registry: Registry = object.__new__(cls)
         registry.init(db_name)
-        registry.new = registry.init = registry.registries = None  # type: ignore
         first_registry = not cls.registries
 
         # Initializing a registry will call general code which will in
         # turn call Registry() to obtain the registry being initialized.
         # Make it available in the registries dictionary then remove it
         # if an exception is raised.
-        cls.delete(db_name)
         cls.registries[db_name] = registry  # pylint: disable=unsupported-assignment-operation
         try:
             registry.setup_signaling()
@@ -198,15 +198,26 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     new_db_demo = config['with_demo']
                 if first_registry and not update_module:
                     exit_stack.enter_context(gc.disabling_gc())
-                load_modules(
-                    registry,
-                    update_module=update_module,
-                    upgrade_modules=upgrade_modules,
-                    install_modules=install_modules,
-                    reinit_modules=reinit_modules,
-                    new_db_demo=new_db_demo,
-                    models_to_check=models_to_check,
-                )
+                retries = 5 if update_module else 1
+                for _ in range(retries):
+                    # load_modules multiple times in case there are modules to be uninstalled
+                    load_modules(
+                        registry,
+                        update_module=update_module,
+                        upgrade_modules=upgrade_modules,
+                        install_modules=install_modules,
+                        reinit_modules=reinit_modules,
+                        new_db_demo=new_db_demo,
+                    )
+                    if registry.loaded:
+                        break
+                    models_to_check = registry._models_to_check
+                    registry = object.__new__(cls)
+                    registry.init(db_name, models_to_check=models_to_check)
+                    cls.registries[db_name] = registry  # pylint: disable=unsupported-assignment-operation
+                    upgrade_modules = install_modules = reinit_modules = ()
+                else:
+                    raise Exception('Failed to load registry after %d attempts' % retries)
             except Exception:
                 reset_modules_state(db_name)
                 raise
@@ -219,6 +230,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         del registry.loaded_xmlids
         del registry._reinit_modules
+        del registry._models_to_check
 
         # load_modules() above can replace the registry by calling
         # indirectly new() again (when modules have to be uninstalled).
@@ -232,7 +244,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         _logger.info("Registry loaded in %.3fs", time.time() - t0)
         return registry
 
-    def init(self, db_name: str) -> None:
+    def init(self, db_name: str, models_to_check: OrderedSet[str] | None = None) -> None:
         self.loaded = False
         self.ready = False
 
@@ -253,6 +265,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self.loaded_xmlids: set[str] = set()           # loaded xmlids for IrModelData._process_end()
         self._force_upgrade_scripts: set[str] = set()  # force the execution of the upgrade script for these modules
         self._reinit_modules: set[str] = set()  # modules to reinitialize
+        self._models_to_check: OrderedSet[str] = models_to_check or OrderedSet()
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules: set[str] = set()         # modules have been initialized
@@ -306,6 +319,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         self.unaccent = _unaccent if self.has_unaccent else lambda x: x  # type: ignore
         self.unaccent_python = remove_accents if self.has_unaccent else lambda x: x
+
+        self.new = self.init = self.registries = None  # type: ignore
 
     @classmethod
     @locked
