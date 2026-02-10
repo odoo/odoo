@@ -364,7 +364,7 @@ class IrUiView(models.Model):
         # update should not be considered as `arch_updated`, as this is not a
         # user made change.
         test_mode = modules.module.current_test
-        if not (test_mode or self.pool._init):
+        if not (test_mode or not self.pool.ready):
             return super().write(vals)
         no_arch_updated_views = other_views = self.env['ir.ui.view']
         for record in self:

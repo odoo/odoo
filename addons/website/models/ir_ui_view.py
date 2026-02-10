@@ -229,7 +229,7 @@ class IrUiView(models.Model):
                     view.with_context(website_id=w.id).write({'name': view.name})
 
         specific_views = self.env['ir.ui.view']
-        if self and self.pool._init:
+        if self and not self.pool.ready:
             for view in self.filtered(lambda view: not view.website_id):
                 specific_views += view._get_specific_views()
 

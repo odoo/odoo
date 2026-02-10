@@ -122,7 +122,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
             except KeyError:
                 return cls.new(db_name)
 
-    _init: bool  # whether init needs to be done
     ready: bool  # whether everything is set up
     loaded: bool  # whether all modules are loaded
     models: dict[str, type[BaseModel]]
@@ -225,7 +224,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
         # Yeah, crazy.
         registry = cls.registries[db_name]  # pylint: disable=unsubscriptable-object
 
-        registry._init = False
         registry.ready = True
         registry.registry_invalidated = bool(update_module)
         registry.signal_changes()
@@ -234,7 +232,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
         return registry
 
     def init(self, db_name: str) -> None:
-        self._init = True
         self.loaded = False
         self.ready = False
 

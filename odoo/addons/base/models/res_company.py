@@ -31,7 +31,7 @@ class ResCompany(models.CachedModel):
             return base64.b64encode(file.read())
 
     def _default_currency_id(self):
-        if self.env.registry._init and not (set(self._cached_data_fields) <= table_columns(self.env.cr, self._table).keys()):
+        if not self.env.registry.ready and not (set(self._cached_data_fields) <= table_columns(self.env.cr, self._table).keys()):
             # The database is being initialized, _init_column calls and tries to
             # access the cache.
             return None
@@ -240,7 +240,7 @@ class ResCompany(models.CachedModel):
         uninstalled_modules = self.uninstalled_l10n_module_ids
         is_ready_and_not_test = (
             not tools.config['test_enable']
-            and (self.env.registry.ready or not self.env.registry._init)
+            and self.env.registry.ready
             and not modules.module.current_test
             and not self.env.context.get('install_mode')  # due to savepoint when importing the file
         )
