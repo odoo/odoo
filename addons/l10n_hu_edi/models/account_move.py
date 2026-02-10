@@ -831,7 +831,12 @@ class AccountMove(models.Model):
             if bank_account.acc_type == 'iban':
                 return normalize_iban(bank_account.acc_number)
             else:
-                return bank_account.acc_number
+                bban = re.sub(r'[\D]', '', bank_account.acc_number or '')
+                if len(bban) == 16:
+                    return "%s-%s" % (bban[:8], bban[8:])
+                elif len(bban) == 24:
+                    return "%s-%s-%s" % (bban[:8], bban[8:16], bban[16:24])
+            return bank_account.acc_number
 
         supplier = self.company_id.partner_id
         customer = self.partner_id.commercial_partner_id
@@ -889,7 +894,7 @@ class AccountMove(models.Model):
                 'lineNumberReference': base_invoice != self and line_number,
                 'lineExpressionIndicator': line.product_id and line.product_uom_id,
                 'lineNatureIndicator': {False: 'OTHER', 'service': 'SERVICE'}.get(line.product_id.type, 'PRODUCT'),
-                'lineDescription': line.name.replace('\n', ' '),
+                'lineDescription': line.name.replace('\n', ' ')[:512],
             }
 
             if 'is_downpayment' in line and line.is_downpayment:
