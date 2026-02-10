@@ -119,7 +119,7 @@
                                 </t>
                             </div>
                         </t>
-                        <t t-if="this.props.isRefundOrder and line.payment_method_id.use_payment_terminal and !line.payment_status">
+                        <t t-if="this.props.isRefundOrder and line.payment_method_id.payment_terminal and !line.payment_status">
                             <div class="button send_refund_request highlight text-bg-primary p-4 text-center"
                                 role="button"
                                 title="Send Refund Request"
