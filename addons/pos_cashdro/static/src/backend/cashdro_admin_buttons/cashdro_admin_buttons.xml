@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="pos_cashdro.CashdroAdminButtons">
+        <div class="d-flex gap-2 mt-3">
+            <button type="button"
+                class="btn btn-secondary"
+                t-on-click.stop="downloadLogs"
+            >
+                Download Logs
+            </button>
+            <button type="button"
+                class="btn btn-secondary"
+                t-on-click.stop="openDiagnosticsPage"
+            >
+                Open Diagnostics Page
+            </button>
+        </div>
+    </t>
+
+</templates>

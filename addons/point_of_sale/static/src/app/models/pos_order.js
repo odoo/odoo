@@ -559,7 +559,7 @@ export class PosOrder extends PosOrderAccounting {
         return (
             this.isRefund &&
             this.payment_ids.some(
-                (pl) => pl.payment_method_id.use_payment_terminal && pl.payment_status !== "done"
+                (pl) => pl.payment_method_id.payment_terminal && pl.payment_status !== "done"
             )
         );
     }
