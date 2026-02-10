@@ -817,6 +817,48 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             ]
         })
 
+    def test_mixed_epd_global_rounding(self):
+        """
+            Ensure the early payment discount journal item is computed by rounding globally.
+        """
+        tax_15 = self.percent_tax(15.0)
+
+        early_pay_1_percents_7_days = self.env['account.payment.term'].create({
+            'name': '1% discount if paid within 7 days',
+            'company_id': self.company_data['company'].id,
+            'early_pay_discount_computation': 'mixed',
+            'discount_percentage': 1,
+            'discount_days': 7,
+            'early_discount': True,
+            'line_ids': [Command.create({
+                'value': 'percent',
+                'nb_days': 0,
+                'value_amount': 100,
+            })]
+        })
+
+        invoice = self._create_invoice(
+            date='2022-02-01',
+            invoice_payment_term_id=early_pay_1_percents_7_days,
+            invoice_line_ids=[
+                self._prepare_invoice_line(price_unit=4.76, tax_ids=tax_15)
+                for _ in range(4)
+            ],
+        )
+        self.assertRecordValues(invoice.line_ids, [
+            {'display_type': 'product', 'balance': -4.76},
+            {'display_type': 'product', 'balance': -4.76},
+            {'display_type': 'product', 'balance': -4.76},
+            {'display_type': 'product', 'balance': -4.76},
+            {'display_type': 'epd', 'balance': 0.19},
+            {'display_type': 'epd', 'balance': -0.19},
+            {'display_type': 'tax', 'balance': -2.81},
+            {'display_type': 'payment_term', 'balance': 21.85},
+        ])
+        [term_vals] = invoice.needed_terms.values()
+        discount = term_vals['balance'] - term_vals['discount_balance']
+        self.assertAlmostEqual(discount, 0.19)
+
     def test_register_payment_batch_with_discount_and_without_discount(self):
         """
         Test that a batch payment, that is
