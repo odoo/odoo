@@ -12,6 +12,7 @@
                     <field name="is_multiple_currency" column_invisible="True"/>
                     <field name="product_has_cost" column_invisible="True"/>
                     <field name="selectable_payment_method_line_ids" column_invisible="True"/>
+                    <field name="is_paid_by_company_match_bill" column_invisible="True"/>
 
                     <!--  Always Shown start -->
                     <field name="employee_id" widget="many2one_avatar_employee" readonly="not is_editable"/>
@@ -41,7 +42,7 @@
                     <field name="quantity" optional="hide" readonly="not is_editable or not product_has_cost"/>
                     <field name="tax_ids" optional="hide" widget="many2many_tax_tags"
                            groups="account.group_account_invoice,account.group_account_readonly"
-                           readonly="not is_editable or not product_has_cost"/>
+                           readonly="not is_editable or not product_has_cost or is_paid_by_company_match_bill"/>
                     <field name="tax_amount" sum="Total Taxes" readonly="True"
                            optional="hide" groups="account.group_account_invoice,account.group_account_readonly"/>
                     <field name="nb_attachment" widget="nb_attachment" nolabel="1" readonly="True"/>
@@ -241,7 +242,7 @@
                                 <field name="tax_ids"
                                        force_save="1"
                                        widget="many2many_tax_tags"
-                                       readonly="not is_editable"
+                                       readonly="not is_editable or is_paid_by_company_match_bill"
                                        options="{'no_create': True}"/>
                             </div>
                             <field name="employee_id" groups="!hr.group_hr_user"
@@ -263,10 +264,19 @@
                             <field name="manager_id" widget="many2one_avatar_user" readonly="state != 'draft'" placeholder="Auto-validation"/>
                             <field name="department_id" invisible="1" readonly="not is_editable"
                                    context="{'default_company_id': company_id}"/>
-                            <field name="vendor_id" invisible="payment_mode != 'company_account'"/>
+                            <field name="vendor_id" invisible="payment_mode != 'company_account'" readonly="not is_editable"/>
+                            <field name="is_paid_by_company_match_bill" widget="boolean_radio" invisible="payment_mode != 'company_account'"
+                                   options="{'no_label_element_id': 'direct_expense', 'yes_label_element_id': 'match_bill'}"
+                                   readonly="not is_editable" groups="account.group_account_readonly" class="w-auto" />
+                            <template id="direct_expense">No (Direct Expense)</template>
+                            <template id="match_bill">Yes (Match to Bill)</template>
                             <field name="account_id" options="{'no_create': True}"
                                    domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('company_ids', 'parent_of', company_id)]"
-                                   groups="account.group_account_readonly" readonly="not is_editable"
+                                   groups="account.group_account_readonly" readonly="not is_editable" invisible="is_paid_by_company_match_bill"
+                                   context="{'default_company_id': company_id}"/>
+                            <field name="account_id" options="{'no_create': True}"
+                                   domain="[('account_type', '=', 'liability_payable'), ('company_ids', 'parent_of', company_id)]"
+                                   groups="account.group_account_readonly" readonly="not is_editable" invisible=" not is_paid_by_company_match_bill"
                                    context="{'default_company_id': company_id}"/>
                             <field name="payment_method_line_id"
                                    options="{'no_open': True, 'no_create': True}"

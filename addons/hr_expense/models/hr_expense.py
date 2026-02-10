@@ -1,16 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import re
-
-from markupsafe import Markup
 import logging
-import werkzeug
-
-from odoo import api, fields, Command, models, _
-from odoo.exceptions import RedirectWarning, UserError, ValidationError
-from odoo.tools import clean_context, email_normalize, float_repr, float_round, is_html_empty, format_amount, format_date
+import re
 from datetime import timedelta
 
+import werkzeug
+from markupsafe import Markup
+
+from odoo import Command, _, api, fields, models
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
+from odoo.tools import clean_context, email_normalize, float_repr, float_round, format_amount, format_date, is_html_empty
 
 _logger = logging.getLogger(__name__)
 
@@ -252,13 +251,15 @@ class HrExpense(models.Model):
         tracking=True,
     )
     vendor_id = fields.Many2one(comodel_name='res.partner', string="Vendor")
+    is_paid_by_company_match_bill = fields.Boolean(string="Existing bill")
     account_id = fields.Many2one(
         comodel_name='account.account',
         string="Account",
         compute='_compute_account_id', precompute=True, store=True, readonly=False,
         check_company=True,
-        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card'))]",
-        help="An expense account is expected",
+        domain="[('account_type', 'not in', ('asset_receivable', 'asset_cash', 'liability_credit_card'))]",
+        help="An expense account is expected for employee paid expenses and company paid expenses without a matched bill.\n"
+             "For company paid expenses with a matched bill, the account needs to be the payable account of the bill.",
     )
     tax_ids = fields.Many2many(
         comodel_name='account.tax',
@@ -578,12 +579,18 @@ class HrExpense(models.Model):
             expense.currency_rate = expense.total_amount / expense.total_amount_currency if expense.total_amount_currency else 1.0
             expense.price_unit = expense.total_amount / expense.quantity if expense.quantity else expense.total_amount
 
-    @api.depends('product_id', 'company_id')
+    @api.depends('product_id', 'company_id', 'is_paid_by_company_match_bill')
     def _compute_tax_ids(self):
-        for _expense in self.filtered('company_id'):   # Avoid a traceback, the field is required anyway
-            expense = _expense.with_company(_expense.company_id)
+        for expense_ in self.filtered('company_id'):  # Avoid a traceback, the field is required anyway
+            expense = expense_.with_company(expense_.company_id)
             # taxes only from the same company
-            expense.tax_ids = expense.product_id.supplier_taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(expense.company_id))
+            if expense.is_paid_by_company_match_bill:
+                expense.tax_ids = False
+            else:
+                taxes = expense.product_id.supplier_taxes_id.filtered_domain(
+                    self.env['account.tax']._check_company_domain(expense.company_id)
+                )
+                expense.tax_ids = taxes
 
     @api.depends('total_amount_currency', 'tax_ids')
     def _compute_tax_amount_currency(self):
@@ -687,16 +694,28 @@ class HrExpense(models.Model):
                     ('journal_id.active', '=', True),
                 ])
 
-    @api.depends('product_id', 'company_id')
+    @api.onchange('payment_mode')
+    def _onchange_is_paid_by_company_match_bill(self):
+        for expense in self:
+            if expense.payment_mode == 'own_account':
+                expense.is_paid_by_company_match_bill = False
+            else:
+                expense.is_paid_by_company_match_bill = expense.is_paid_by_company_match_bill
+
+    @api.depends('product_id', 'company_id', 'vendor_id', 'is_paid_by_company_match_bill')
     def _compute_account_id(self):
         for _expense in self:
             expense = _expense.with_company(_expense.company_id)
-            if not expense.product_id:
-                expense.account_id = _expense.company_id.expense_account_id
-                continue
-            account = expense.product_id.product_tmpl_id._get_product_accounts()['expense']
-            if account:
+            account = expense.product_id and expense.product_id.product_tmpl_id._get_product_accounts()['expense']
+            if expense.is_paid_by_company_match_bill:
+                # "Regular" supplier account, the product account line will be in the matched bill
+                account = (
+                    self.vendor_id.commercial_partner_id.property_account_payable_id
+                    or self.env['ir.default']._get('res.partner', 'property_account_payable_id', company_id=expense.company_id)
+                )
                 expense.account_id = account
+            else:
+                expense.account_id = account or expense.company_id.expense_account_id
 
     @api.depends('company_id')
     def _compute_employee_id(self):
@@ -825,7 +844,15 @@ class HrExpense(models.Model):
         if any(field in vals for field in {'is_editable', 'can_approve', 'can_refuse'}):
             raise UserError(_("You cannot edit the security fields of an expense manually"))
 
-        if any(field in vals for field in {'tax_ids', 'analytic_distribution', 'account_id', 'manager_id'}):
+        restricted_fields = {
+            'analytic_distribution',
+            'account_id',
+            'is_paid_by_company_match_bill',
+            'manager_id',
+            'tax_ids',
+            'vendor_id',
+        }
+        if any(field in vals for field in restricted_fields):
             if any((not expense.is_editable and not self.env.su) for expense in self):
                 raise UserError(_(
                     "Uh-oh! You can’t edit this expense.\n\n"
@@ -1771,14 +1798,19 @@ class HrExpense(models.Model):
         3. expense account of the company
         4. expense account on the purchase journal for employee expense
         """
+        self.ensure_one()
 
         # expense account of the expense itself
         account = self.account_id
         if account:
             return account
 
-        # expense account of the product then the product category
-        if self.product_id:
+        if self.is_paid_by_company_match_bill:
+            account = (
+                self.vendor_id.commercial_partner_id.property_account_payable_id
+                or self.env['ir.default']._get('res.partner', 'property_account_payable_id', company_id=self.company_id)
+            )
+        elif self.product_id:  # expense account of the product then the product category
             account = self.product_id.product_tmpl_id._get_product_accounts()['expense']
         else:
             account = self.env.company.expense_account_id
