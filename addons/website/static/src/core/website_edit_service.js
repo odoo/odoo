@@ -293,12 +293,12 @@ export const websiteEditService = {
             callShared,
         };
 
-        window.parent.document.addEventListener("edit_page", (ev) => {
+        const handleEditPage = (ev) => {
             stop(ev.detail.iframeDocument);
-        });
+        };
 
         // Transfer the iframe website_edit service to the EditInteractionPlugin
-        window.parent.document.addEventListener("edit_interaction_plugin_loaded", (ev) => {
+        const handlePluginLoaded = (ev) => {
             ev.currentTarget.dispatchEvent(
                 new CustomEvent("transfer_website_edit_service", {
                     detail: {
@@ -309,6 +309,22 @@ export const websiteEditService = {
             Object.assign(shared, ev.shared);
             historyCallbacks.ignoreDOMMutations = shared.history.ignoreDOMMutations;
             setupIgnoreDOMMutations(shared.history.ignoreDOMMutations);
+        };
+
+        window.parent.document.addEventListener("edit_page", handleEditPage);
+        window.parent.document.addEventListener(
+            "edit_interaction_plugin_loaded",
+            handlePluginLoaded
+        );
+
+        // Clean up parent document listeners when iframe unloads to prevent
+        // stale handlers from serving an outdated service to new plugins.
+        window.addEventListener("beforeunload", () => {
+            window.parent.document.removeEventListener("edit_page", handleEditPage);
+            window.parent.document.removeEventListener(
+                "edit_interaction_plugin_loaded",
+                handlePluginLoaded
+            );
         });
 
         return websiteEditService;
