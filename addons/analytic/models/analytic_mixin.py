@@ -74,7 +74,7 @@ class AnalyticMixin(models.AbstractModel):
         # Don't use this override when account_report_analytic_groupby is truly in the context
         # Indeed, when account_report_analytic_groupby is in the context it means that `analytic_distribution`
         # doesn't have the same format and the table is a temporary one, see _prepare_lines_for_analytic_groupby
-        if field_expr != 'analytic_distribution' or self.env.context.get('account_report_analytic_groupby'):
+        if field_expr != 'analytic_distribution' or self.env.context.get('account_report_analytic_groupby') or (isinstance(value, bool) and operator in ('=', '!=')):
             return super()._condition_to_sql(alias, field_expr, operator, value, query)
 
         def search_value(value: str, exact: bool):
@@ -98,11 +98,6 @@ class AnalyticMixin(models.AbstractModel):
         if not ids:
             # not ids found, just call super with an empty list
             return super()._condition_to_sql(alias, field_expr, operator, ids, query)
-
-        if isinstance(value, int) and operator in ('=', '!='):
-            value = [value]
-            operator = 'in' if operator == '=' else 'not in'
-
         # keys can be comma-separated ids, we will split those into an array and then make an array comparison with the list of ids to check
         analytic_accounts_query = self._query_analytic_accounts()
         ids = [str(id_) for id_ in ids if id_]  # list of ids -> list of string
