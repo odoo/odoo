@@ -11,12 +11,11 @@ export class PageBreadcrumb extends Interaction {
         const updatePageBreadcrumbOnResize = this.protectSyncAfterAsync(
             this.updatePageBreadcrumbOnResize.bind(this)
         );
-        this.headerObserver = new ResizeObserver(updatePageBreadcrumbOnResize);
-        this.headerObserver.observe(this.headerEl);
-    }
-
-    destroy() {
-        this.headerObserver.disconnect();
+        if (this.headerEl) {
+            this.headerObserver = new ResizeObserver(updatePageBreadcrumbOnResize);
+            this.headerObserver.observe(this.headerEl);
+            this.registerCleanup(() => this.headerObserver.disconnect());
+        }
     }
 
     /**
