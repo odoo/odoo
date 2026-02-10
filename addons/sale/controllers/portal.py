@@ -376,6 +376,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             request
             .env["ir.actions.report"]
             .sudo()
+            .with_context(sale_include_signature=True)
             ._render_qweb_pdf("sale.action_report_saleorder", [order_sudo.id])[0]
         )
 
