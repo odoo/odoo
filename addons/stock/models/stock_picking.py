@@ -1789,7 +1789,7 @@ class Picking(models.Model):
             return {}
 
     def _put_in_pack(self, move_line_ids):
-        package = self.env['stock.quant.package'].create({})
+        package = self._get_put_in_pack_package()
         package_type = move_line_ids.move_id.product_packaging_id.package_type_id
         if len(package_type) == 1:
             package.package_type_id = package_type
@@ -1812,6 +1812,9 @@ class Picking(models.Model):
                 'company_id': self.company_id.id,
             })
         return package
+
+    def _get_put_in_pack_package(self):
+        return self.env['stock.quant.package'].create({})
 
     def _post_put_in_pack_hook(self, package_id):
         if package_id and self.picking_type_id.auto_print_package_label:
