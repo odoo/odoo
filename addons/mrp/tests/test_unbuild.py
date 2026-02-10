@@ -1122,3 +1122,46 @@ class TestUnbuild(TestMrpCommon):
                     {'product_id': self.product_2.id, 'quantity': 24, 'state': 'done'},  # Wood
                     {'product_id': self.product_1.id, 'quantity': 48, 'state': 'done'},  # Courage
                 ])
+
+    def test_unbuild_more_than_manufactured(self):
+        mo, bom, p_final, p1, p2 = self.generate_mo()
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 100)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
+        mo.action_assign()
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 5.0
+        mo = mo_form.save()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done', "Production order should be in done state.")
+
+        # Check quantity in stock before unbuild.
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location), 5, 'You should have the 5 final product in stock')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p1, self.stock_location), 80, 'You should have 80 products in stock')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p2, self.stock_location), 0, 'You should have consumed all the 5 product in stock')
+
+        # ---------------------------------------------------
+        #       unbuild
+        # ---------------------------------------------------
+
+        x = Form(self.env['mrp.unbuild'])
+        x.product_id = p_final
+        x.bom_id = bom
+        unbuild = x.save()
+
+        unbuild.mo_id = mo.id
+        unbuild.product_qty = 7
+        unbuild.action_unbuild()
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location, allow_negative=True), -2, 'You should have consumed 3 final product in stock')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p1, self.stock_location), 108, 'You should have 80 products in stock')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p2, self.stock_location), 7, 'You should have consumed all the 5 product in stock')
+
+        moves = self.env['stock.move.line'].search([
+            ('reference', '=', unbuild.name)
+        ])
+
+        for move in moves:
+            self.assertEqual(move.state, 'done')
