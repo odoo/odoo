@@ -30,7 +30,7 @@ registry.category("web_tour.tours").add("test_base_automation", {
         },
         {
             content: "Select model contact",
-            trigger: ".dropdown-menu li a:contains(Contact):not(:has(.fa-spin))",
+            trigger: ".dropdown-menu li button:contains(Contact):not(:has(.fa-spin))",
             run: "click",
         },
         {
@@ -105,7 +105,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
         },
         {
             trigger:
-                ".dropdown-menu li a:contains(test_base_automation.project):not(:has(.fa-spin))",
+                ".dropdown-menu li button:contains(test_base_automation.project):not(:has(.fa-spin))",
             run: "click",
         },
         {
@@ -148,7 +148,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             run: "edit test",
         },
         {
-            trigger: ".dropdown-menu li a:contains(test):not(:has(.fa-spin))",
+            trigger: ".dropdown-menu li button:contains(test):not(:has(.fa-spin))",
             run: "click",
         },
         {
@@ -223,7 +223,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             run: "edit High",
         },
         {
-            trigger: ".dropdown-menu li a:contains(High):not(:has(.fa-spin))",
+            trigger: ".dropdown-menu li button:contains(High):not(:has(.fa-spin))",
             run: "click",
         },
         {
@@ -455,7 +455,7 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
             run: "edit base.automation.line.test",
         },
         {
-            trigger: ".dropdown-menu li a:contains(Automated Rule Line Test)",
+            trigger: ".dropdown-menu li button:contains(Automated Rule Line Test)",
             run: "click",
         },
         {
@@ -481,7 +481,7 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
             run: "edit test_base_automation.project",
         },
         {
-            trigger: ".dropdown-menu li a:contains(test_base_automation.project)",
+            trigger: ".dropdown-menu li button:contains(test_base_automation.project)",
             run: "click",
         },
         {
@@ -523,7 +523,7 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
             run: "edit test_base_automation.project",
         },
         {
-            trigger: ".dropdown-menu li a:contains(test_base_automation.project)",
+            trigger: ".dropdown-menu li button:contains(test_base_automation.project)",
             run: "click",
         },
         {
@@ -544,7 +544,7 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
         },
         {
             trigger:
-                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(a .fa-spin)",
+                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(button .fa-spin)",
             run() {
                 assertEqual(this.anchor.innerText, "test stage\nSearch more...");
             },
@@ -568,7 +568,7 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
         },
         {
             trigger:
-                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(a .fa-spin)",
+                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(button .fa-spin)",
             run() {
                 assertEqual(this.anchor.innerText, "test tag\nSearch more...");
             },
@@ -591,7 +591,7 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
             run: "edit base.automation.lead.test",
         },
         {
-            trigger: ".dropdown-menu li a:contains(Automated Rule Test)",
+            trigger: ".dropdown-menu li button:contains(Automated Rule Test)",
             run: "click",
         },
         {
@@ -614,7 +614,7 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
             run: "edit base.automation.lead.thread.test",
         },
         {
-            trigger: ".dropdown-menu li a:contains(Threaded Lead Test)",
+            trigger: ".dropdown-menu li button:contains(Threaded Lead Test)",
             run: "click",
         },
         {
@@ -658,7 +658,7 @@ registry.category("web_tour.tours").add("base_automation.on_change_rule_creation
             run: "edit ir.ui.view",
         },
         {
-            trigger: ".ui-menu-item > a:text(View)",
+            trigger: ".ui-menu-item > button:text(View)",
             run: "click",
         },
         {
@@ -675,7 +675,7 @@ registry.category("web_tour.tours").add("base_automation.on_change_rule_creation
             run: "edit Active",
         },
         {
-            trigger: ".ui-menu-item > a:text(Active)",
+            trigger: ".ui-menu-item > button:text(Active)",
             run: "click",
         },
         ...stepUtils.saveForm(),

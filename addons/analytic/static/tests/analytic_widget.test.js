@@ -98,7 +98,7 @@ test("Analytic dynamic multi-edit", async () => {
     await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one").click();
     await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one input").edit("Brussels", {confirm: false});
     await runAllTimers();
-    await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one .o_input_dropdown a").click();
+    await contains(".analytic_distribution_popup tbody tr:first .o_field_many2one .o_input_dropdown button").click();
     await contains(".o_list_renderer").click();  // close the widget
     // we don't change the value until it's saved
     expect(".o_list_table tbody tr:nth-child(1) .o_field_analytic_distribution .o_tag_badge_text").toHaveText("Los Angeles");

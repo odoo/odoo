@@ -19,7 +19,7 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     content: 'Select the user portal as collaborator to the "Project Sharing" project.',
     run: "edit Georges",
 }, {
-    trigger: '.ui-autocomplete a.dropdown-item:contains("Georges")',
+    trigger: '.ui-autocomplete button.dropdown-item:contains("Georges")',
     run: "click",
 }, {
     trigger: '.modal div[name="collaborator_ids"] div[name="access_mode"] input',

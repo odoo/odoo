@@ -736,7 +736,7 @@ test("autocomplete scrolls when moving with arrows", async () => {
     expect(".o-autocomplete--dropdown-item").toHaveCount(5);
     expect(isScrollable(dropdownSelector)).toBe(true, { message: "dropdown should be scrollable" });
     // First element focused and visible (dropdown is not scrolled yet).
-    expect(".o-autocomplete--dropdown-item:first-child a").toHaveClass("ui-state-active");
+    expect(".o-autocomplete--dropdown-item:first-child button").toHaveClass("ui-state-active");
     expect(isInViewWithinScrollableY(activeItemSelector)).toBe(true, { message: msgInView });
     // Navigate with the arrow keys. Go to the last item.
     expect(isInViewWithinScrollableY(".o-autocomplete--dropdown-item:contains('Up')")).toBe(false, {

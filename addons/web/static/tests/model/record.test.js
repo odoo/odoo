@@ -359,7 +359,7 @@ test(`handles many2one fields: value is an object`, async () => {
     await runAllTimers();
     expect.verifySteps(["/web/dataset/call_kw/bar/web_name_search"]);
 
-    await contains(`.o-autocomplete--dropdown-item a:eq(0)`).click();
+    await contains(`.o-autocomplete--dropdown-item button:eq(0)`).click();
     expect.verifySteps(["record changed"]);
     expect(`.o_field_many2one_selection input`).toHaveValue("abc");
 });
@@ -419,7 +419,7 @@ test(`handles many2one fields: value is a pair id, display_name`, async () => {
     await runAllTimers();
     expect.verifySteps(["/web/dataset/call_kw/bar/web_name_search"]);
 
-    await contains(`.o-autocomplete--dropdown-item a:eq(0)`).click();
+    await contains(`.o-autocomplete--dropdown-item button:eq(0)`).click();
     expect.verifySteps(["record changed"]);
     expect(`.o_field_many2one_selection input`).toHaveValue("abc");
 });

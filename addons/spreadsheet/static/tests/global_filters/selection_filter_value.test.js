@@ -34,11 +34,11 @@ test("basic selection filter value", async function () {
     });
     expect.verifySteps([]);
     await contains("input").click();
-    const options = getFixture().querySelectorAll(".o-autocomplete a");
+    const options = getFixture().querySelectorAll(".o-autocomplete button");
     expect(options.length).toBe(2);
     expect(options[0].textContent).toBe("A");
     expect(options[1].textContent).toBe("B");
-    await contains("a:first").click();
+    await contains("button:first").click();
     expect.verifySteps(["onValueChanged"]);
 });
 
@@ -51,7 +51,7 @@ test("Autocomplete only provide values that are not selected", async function ()
         onValueChanged: () => {},
     });
     await contains("input").click();
-    const options = getFixture().querySelectorAll(".o-autocomplete a");
+    const options = getFixture().querySelectorAll(".o-autocomplete button");
     expect(options.length).toBe(1);
     expect(options[0].textContent).toBe("B");
 });

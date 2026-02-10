@@ -22,7 +22,7 @@ registry.category("web_tour.tours").add('test_repair_without_product_in_parts', 
     // this could be done by modifying any other field.
     {
         content: "Select partner",
-        trigger: ".ui-menu-item > a:contains('A Partner')",
+        trigger: ".ui-menu-item > button:contains('A Partner')",
         run: "click",
     },
     {
@@ -32,7 +32,7 @@ registry.category("web_tour.tours").add('test_repair_without_product_in_parts', 
     },
     {
         content: "Select a product",
-        trigger:".ui-menu-item > a:contains('[1234] A Product')",
+        trigger:".ui-menu-item > button:contains('[1234] A Product')",
         run: "click",
     },
     {

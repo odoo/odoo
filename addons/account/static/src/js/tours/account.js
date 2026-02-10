@@ -52,7 +52,7 @@ registry.category("web_tour.tours").add('account_tour', {
     },
     {
         isActive: ["auto"],
-        trigger: `body${accountTourSteps.draftInvoiceSelector} .o_m2o_dropdown_option a:contains('Create')`,
+        trigger: `body${accountTourSteps.draftInvoiceSelector} .o_m2o_dropdown_option button:contains('Create')`,
         content: _t("Select first partner"),
         run: "click",
     },
@@ -81,7 +81,7 @@ registry.category("web_tour.tours").add('account_tour', {
     },
     {
         isActive: ["auto"],
-        trigger: `.o_form_view_container${accountTourSteps.draftInvoiceSelector} div[name=invoice_line_ids] div[name=product_id] .o_m2o_dropdown_option_create a:contains(create)`,
+        trigger: `.o_form_view_container${accountTourSteps.draftInvoiceSelector} div[name=invoice_line_ids] div[name=product_id] .o_m2o_dropdown_option_create button:contains(create)`,
         content: _t("Create the product."),
         run: "click",
     },

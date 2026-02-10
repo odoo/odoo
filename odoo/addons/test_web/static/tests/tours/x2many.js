@@ -30,7 +30,7 @@
         run: "edit test",
     }, {
         content: "click on 'Create and Edit...'",
-        trigger: '.o_field_widget[name=moderator] .o-autocomplete--dropdown-menu .o_m2o_dropdown_option_create_edit a',
+        trigger: '.o_field_widget[name=moderator] .o-autocomplete--dropdown-menu .o_m2o_dropdown_option_create_edit button',
         run: "click",
     },
     {
@@ -453,7 +453,7 @@
         run: "edit Test",
     }, {
         content: "add a tag",
-        trigger: '.o_field_widget[name="categories"] .o-autocomplete--dropdown-menu li a:first',
+        trigger: '.o_field_widget[name="categories"] .o-autocomplete--dropdown-menu li button:first',
         run: "click",
     }, { // remove record
         content: "delete the last item in the editable list",

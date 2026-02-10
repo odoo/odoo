@@ -24,7 +24,7 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
             run: "click",
         },
         {
-            trigger: ".ui-autocomplete .ui-menu-item a:contains('Sick Time Off')",
+            trigger: ".ui-autocomplete .ui-menu-item button:contains('Sick Time Off')",
             tooltipPosition: "right",
             run: "click",
         },

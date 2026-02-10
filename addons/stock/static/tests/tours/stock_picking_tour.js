@@ -10,7 +10,7 @@ registry.category("web_tour.tours").add('test_generate_serial_1', {  steps: () =
         run: "edit Serial",
     },
     {
-        trigger: ".ui-menu-item > a:contains('Product Serial')",
+        trigger: ".ui-menu-item > button:contains('Product Serial')",
         run: "click",
     },
     {
@@ -105,7 +105,7 @@ registry.category("web_tour.tours").add('test_generate_serial_2', {  steps: () =
         run: "edit Lot",
     },
     {
-        trigger: ".ui-menu-item > a:contains('Product Lot 1')",
+        trigger: ".ui-menu-item > button:contains('Product Lot 1')",
         run: "click",
     },
     {
@@ -246,7 +246,7 @@ registry.category('web_tour.tours').add('test_inventory_adjustment_apply_all', {
         run: "edit Product 1",
     },
     {
-        trigger: '.ui-menu-item > a:contains("Product 1")',
+        trigger: '.ui-menu-item > button:contains("Product 1")',
         run: "click",
     },
     {
@@ -267,7 +267,7 @@ registry.category('web_tour.tours').add('test_inventory_adjustment_apply_all', {
         run: "edit Product 2",
     },
     {
-        trigger: '.ui-menu-item > a:contains("Product 2")',
+        trigger: '.ui-menu-item > button:contains("Product 2")',
         run: "click",
     },
     {

@@ -1645,7 +1645,7 @@ test("many2one field on record with falsy display_name", async () => {
 
     await contains(".o-autocomplete--input").click();
 
-    expect("a.dropdown-item:first").toHaveText("Unnamed", {
+    expect("button.dropdown-item:first").toHaveText("Unnamed", {
         message: "should have a Unnamed as fallback of many2one display_name",
     });
 });

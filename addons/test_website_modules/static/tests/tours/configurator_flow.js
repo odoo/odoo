@@ -39,7 +39,7 @@ registry.category("web_tour.tours").add("configurator_flow", {
         },
         {
             content: "select a website industry from the autocomplete",
-            trigger: ".o_configurator_industry ul li a",
+            trigger: ".o_configurator_industry ul li button",
             run: "click",
         },
         {

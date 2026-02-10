@@ -168,7 +168,7 @@ registry.category("web_tour.tours").add('project_tour', {
 },
 {
     isActive: ["desktop", "auto"],
-    trigger: "a.dropdown-item[id*='user_ids'] span",
+    trigger: "button.dropdown-item[id*='user_ids'] span",
     content: _t("Select an assignee from the menu"),
     run: "click",
 },

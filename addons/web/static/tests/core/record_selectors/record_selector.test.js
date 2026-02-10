@@ -180,7 +180,7 @@ test("Support virtual record in props and custom quickCreate", async () => {
     await contains(".o-autocomplete--input").edit("I do not exist yet", { confirm: false });
     await runAllTimers();
 
-    await contains(".o_m2o_dropdown_option a:contains(Create I do not exist yet)").click();
+    await contains(".o_m2o_dropdown_option button:contains(Create I do not exist yet)").click();
     await waitFor(".o-autocomplete--input:value(I do not exist yet)");
     expect(virtualRecord).toEqual({
         id: false,

@@ -125,7 +125,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
 },
 {
     isActive: ["auto"],
-    trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
+    trigger: ".ui-autocomplete > li > button:not(:has(i.fa))",
     run: "click",
 }, {
     trigger: '.o_field_widget[name="name"] textarea',
@@ -156,7 +156,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     content: 'Create a new project that will be set to the task',
     run: "edit Project test 1",
 }, {
-    trigger: '.o_todo_conversion_form_view .o_field_many2one[name=project_id] li.o_m2o_dropdown_option_create a',
+    trigger: '.o_todo_conversion_form_view .o_field_many2one[name=project_id] li.o_m2o_dropdown_option_create button',
     content: 'Create the new project',
     run: "click",
 }, {

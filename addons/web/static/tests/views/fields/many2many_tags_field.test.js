@@ -258,9 +258,9 @@ test("Many2ManyTagsField with color: rendering and edition on desktop", async ()
     expect(`.dropdown-item .fw-bold`).toHaveCount(2);
     expect(queryAllTexts`.dropdown-item .fw-bold`).toEqual(["gold", "silver"]);
     expect(".o-autocomplete--dropdown-menu li").toHaveCount(4);
-    expect(".o-autocomplete--dropdown-menu li a:eq(2)").toHaveText("red");
+    expect(".o-autocomplete--dropdown-menu li button:eq(2)").toHaveText("red");
 
-    await contains(".o-autocomplete--dropdown-menu li a:eq(2)").click();
+    await contains(".o-autocomplete--dropdown-menu li button:eq(2)").click();
     expect(".o_field_many2many_tags .badge").toHaveCount(3);
     expect(".o_field_many2many_tags .badge .o_tag_badge_text:eq(2)").toHaveText("red");
     expect(".badge:eq(2)").toHaveClass("o_tag_color_8");
@@ -423,7 +423,7 @@ test("Many2ManyTagsField view a domain on desktop", async () => {
 
     expect(".o-autocomplete--dropdown-menu li").toHaveCount(3);
 
-    expect(".o-autocomplete--dropdown-menu li a:eq(0)").toHaveText("gold");
+    expect(".o-autocomplete--dropdown-menu li button:eq(0)").toHaveText("gold");
 
     await clickFieldDropdownItem("timmy", "silver");
 
@@ -502,7 +502,7 @@ test("use binary field as the domain on desktop", async () => {
         "silver",
         "Search more...",
     ]);
-    expect(".o-autocomplete--dropdown-menu li a:eq(0)").toHaveText("gold");
+    expect(".o-autocomplete--dropdown-menu li button:eq(0)").toHaveText("gold");
 
     await clickFieldDropdownItem("timmy", "silver");
 
@@ -564,13 +564,13 @@ test("Domain: allow python code domain in fieldInfo on desktop", async () => {
     // foo set => only silver (id=5) selectable
     await clickFieldDropdown("timmy");
     expect(".o-autocomplete--dropdown-menu li").toHaveCount(2);
-    expect(".o-autocomplete--dropdown-menu li a:eq(0)").toHaveText("silver");
+    expect(".o-autocomplete--dropdown-menu li button:eq(0)").toHaveText("silver");
 
     // set foo = "" => only gold (id=2) selectable
     await contains("[name=foo] input").clear();
     await clickFieldDropdown("timmy");
     expect(".o-autocomplete--dropdown-menu li").toHaveCount(2);
-    expect(".o-autocomplete--dropdown-menu li a:eq(0)").toHaveText("gold");
+    expect(".o-autocomplete--dropdown-menu li button:eq(0)").toHaveText("gold");
 });
 
 test.tags("desktop");
@@ -1303,7 +1303,7 @@ test("Many2ManyTagsField: conditional create/delete attrs on desktop", async () 
     // only Search more option should be available
     expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(1);
     expect(
-        ".o-autocomplete.dropdown li.o_m2o_dropdown_option a:contains(Search more...)"
+        ".o-autocomplete.dropdown li.o_m2o_dropdown_option button:contains(Search more...)"
     ).toHaveCount(1);
 
     await clickFieldDropdownItem("partner_ids", "Search more...");
@@ -1318,7 +1318,7 @@ test("Many2ManyTagsField: conditional create/delete attrs on desktop", async () 
 
     // only Search more option should be available
     expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option").toHaveCount(1);
-    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option a:contains(Search more)").toHaveCount(
+    expect(".o-autocomplete.dropdown li.o_m2o_dropdown_option button:contains(Search more)").toHaveCount(
         1
     );
 });
@@ -1846,19 +1846,19 @@ test("Many2ManyTagsField selected records still pickable and not duplicable on d
     // Check that records are correctly displayed in the dropdown
     await contains("div[name='turtles']").click();
     await contains("input[id=turtles_0]").click();
-    expect(`${"a.dropdown-item"}:eq(0)`).toHaveText("leonardo");
+    expect(`${"button.dropdown-item"}:eq(0)`).toHaveText("leonardo");
 
     // Check that selecting a record adds the corresponding tag
-    await contains(`${"a.dropdown-item"}:eq(0)`).click();
+    await contains(`${"button.dropdown-item"}:eq(0)`).click();
     expect(".o_tag").toHaveCount(1);
     expect(".o_tag:eq(0)").toHaveText("leonardo");
 
     // Check that a selected record is still shown in the dropdown
     await contains("input[id=turtles_0]").click();
-    expect(`${"a.dropdown-item"}:eq(0)`).toHaveText("leonardo");
+    expect(`${"button.dropdown-item"}:eq(0)`).toHaveText("leonardo");
 
     // Check that selecting an already selected record doesn't duplicate it
-    await contains(`${"a.dropdown-item"}:eq(0)`).click();
+    await contains(`${"button.dropdown-item"}:eq(0)`).click();
     expect(".o_tag").toHaveCount(1);
 
     // Check that deleting a record which was selected twice doens't leave one occurence

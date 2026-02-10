@@ -2022,7 +2022,7 @@ export class ListRenderer extends Component {
         const focusableEls = getTabableElements(cell).filter(
             (el) =>
                 el === document.activeElement ||
-                ["INPUT", "BUTTON", "TEXTAREA"].includes(el.tagName)
+                (["INPUT", "BUTTON", "TEXTAREA"].includes(el.tagName) && !el.classList.contains("dropdown-item"))
         );
         const index = focusableEls.indexOf(document.activeElement);
         return (

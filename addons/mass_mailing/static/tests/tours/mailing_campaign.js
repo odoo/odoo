@@ -48,7 +48,7 @@ registry.category('web_tour.tours').add('mailing_campaign', {
         },
         {
             content: 'Pick "Newsletter" option',
-            trigger: '.o_input_dropdown a:contains(Newsletter)',
+            trigger: '.o_input_dropdown button:contains(Newsletter)',
             run: "click",
         },
         ...stepUtils.saveForm(),

@@ -160,7 +160,7 @@ registry.category("web_tour.tours").add("mail_template_dynamic_field_tour", {
         },
         {
             content: 'Select "Push Notification Device" model',
-            trigger: 'a.dropdown-item:contains("Push Notification Device")',
+            trigger: 'button.dropdown-item:contains("Push Notification Device")',
             run: "click",
         },
         {

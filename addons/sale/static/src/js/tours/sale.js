@@ -41,7 +41,7 @@ registry.category("web_tour.tours").add("sale_tour", {
         },
         {
             isActive: ["auto"],
-            trigger: ".ui-menu-item > a:contains('Agrolait')",
+            trigger: ".ui-menu-item > button:contains('Agrolait')",
             run: "click",
         },
         {
@@ -64,7 +64,7 @@ registry.category("web_tour.tours").add("sale_tour", {
         },
         {
             isActive: ["auto"],
-            trigger: "a:contains('DESK0001')",
+            trigger: "button:contains('DESK0001')",
             run: "click",
         },
         {

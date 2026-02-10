@@ -27,7 +27,7 @@ registry.category("web_tour.tours").add('create_expense_no_employee_access_tour'
     },
     {
         content: "Select test expense employee",
-        trigger: 'a.dropdown-item:contains(expense_employee)',
+        trigger: 'button.dropdown-item:contains(expense_employee)',
         run: 'click',
     },
     {

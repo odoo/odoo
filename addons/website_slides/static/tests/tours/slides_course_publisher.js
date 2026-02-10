@@ -29,7 +29,7 @@ registerWebsitePreviewTour('course_publisher', {
     run: "edit Gard",
 }, {
     content: 'eLearning: select gardener tag',
-    trigger: ".modal .ui-autocomplete a:contains(Gardener)",
+    trigger: ".modal .ui-autocomplete button:contains(Gardener)",
     run: "click",
 }, {
     content: 'eLearning: set description',

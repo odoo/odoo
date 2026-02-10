@@ -179,7 +179,7 @@ test("Manage expertises from channel info list", async () => {
     await openDiscuss(channelId);
     await contains(".o-livechat-ChannelInfoList .o_tag", { text: "pricing" });
     await insertText(".o-livechat-ExpertiseTagsAutocomplete input", "events");
-    await click("a", { text: 'Create "events"' });
+    await click("button", { text: 'Create "events"' });
     await contains(".o-livechat-ChannelInfoList .o_tag", { text: "events" });
     await click(".o-livechat-ExpertiseTagsAutocomplete input");
     await press("Backspace");
@@ -187,7 +187,7 @@ test("Manage expertises from channel info list", async () => {
     await press("Backspace");
     await contains(".o-livechat-ChannelInfoList .o_tag", { text: "pricing", count: 0 });
     await contains(".o-livechat-ExpertiseTagsAutocomplete input[placeholder='Add expertise']");
-    await click("a", { text: "events" });
+    await click("button", { text: "events" });
     await contains(".o-livechat-ChannelInfoList .o_tag", { text: "events" });
 });
 
