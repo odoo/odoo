@@ -49,8 +49,8 @@ function scrollToSnippet(snippetId) {
 registerWebsitePreviewTour(
     "snippet_popup_and_animations",
     {
-        // Remove this key to get warning should not have any "characterData", "remove"
-        // or "add" mutations in current step when you update the selection
+        // Remove this key to make the tour fail with error:
+        // "The scroll animation in the modal did not start properly"
         undeterministicTour_doNotCopy: true,
         url: "/",
         edition: true,
@@ -122,7 +122,7 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            trigger: ":iframe:not(:has(.o_loading_screen))",
+            trigger: ".o_website_preview :iframe:not(:has(.o_loading_screen))",
         },
         clickOnElement("3rd columns", ":iframe .s_popup .s_three_columns .row > :last-child"),
         ...setOnScrollAnim(),
