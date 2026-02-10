@@ -37,7 +37,8 @@
         <field name="implied_ids" eval="[(4, ref('hr_recruitment.group_applicant_cv_display'))]"/>
     </record>
 
-    <record id="hr.access_hr_job_user" model="ir.model.access">
+    <!-- Interviewer Access Rules -->
+    <record id="hr.access_hr_job_user" model="ir.access">
         <field name="active" eval="False"/>
     </record>
 
