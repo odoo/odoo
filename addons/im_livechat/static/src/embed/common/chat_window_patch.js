@@ -20,7 +20,11 @@ patch(ChatWindow.prototype, {
 
     async close() {
         const chatWindow = toRaw(this.props.chatWindow);
-        if (chatWindow.thread.id > 0 && !this.livechatState.showCloseConfirmation) {
+        if (
+            chatWindow.thread.id > 0 &&
+            chatWindow.thread.livechat_active &&
+            !this.livechatState.showCloseConfirmation
+        ) {
             this.state.actionsDisabled = true;
             this.livechatState.showCloseConfirmation = true;
         } else {
