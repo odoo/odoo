@@ -6,7 +6,7 @@ patch(OrderPaymentValidation.prototype, {
         const invoiceName = await this.pos.data.call(
             "pos.order",
             "l10n_es_edi_verifactu_get_invoice_name",
-            [order_server_ids]
+            [order.id]
         );
         order.invoice_name = invoiceName;
 
