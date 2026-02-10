@@ -453,3 +453,17 @@ class TestVNEDI(AccountTestInvoicingCommon):
              patch('odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove._l10n_vn_edi_fetch_invoice_xml_file_data', return_value=xml_response), \
              patch('odoo.addons.l10n_vn_edi_viettel.models.account_move._l10n_vn_edi_send_request', return_value=(request_response, None)):
             self.env['account.move.send.wizard'].with_context(active_model=invoice._name, active_ids=invoice.ids).create({}).action_send_and_print()
+
+    @freeze_time('2024-01-01')
+    def test_decimal_rounding(self):
+        """ Test that taxAmount are correctly rounded in the JSON data. """
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            amounts=[1000.25],
+            taxes=self.tax_sale_a,
+            currency=self.other_currency,
+            post=True,
+        )
+        json_values = invoice._l10n_vn_edi_generate_invoice_json()
+        itemInfo = json_values['itemInfo'][0]
+        self.assertEqual(itemInfo['taxAmount'], 100.03, "Tax amount should be correctly rounded to 2 decimals.")

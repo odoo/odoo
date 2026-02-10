@@ -430,7 +430,7 @@ export function insertSnippet(snippet, { position = "bottom", ignoreLoading = fa
 
     if (!ignoreLoading) {
         insertSnippetSteps.push({
-            trigger: ":iframe:not(:has(.o_loading_screen))",
+            trigger: ".o_website_preview :iframe:not(:has(.o_loading_screen))",
         });
     }
 
@@ -729,6 +729,12 @@ export function selectFullText(elementName, selector) {
             range.selectNodeContents(this.anchor);
             selection.removeAllRanges();
             selection.addRange(range);
+            this.anchor.closest(".odoo-editor-editable").dispatchEvent(
+                new MouseEvent("pointerup", {
+                    bubbles: true,
+                    cancelable: true,
+                })
+            );
         },
     };
 }

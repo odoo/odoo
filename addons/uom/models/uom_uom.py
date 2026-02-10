@@ -182,6 +182,8 @@ class UomUom(models.Model):
         """
         self.ensure_one()
         packaging_qty = self._compute_quantity(1, uom_id)
+        if self == uom_id:
+            return product_qty
         # We do not use the modulo operator to check if qty is a mltiple of q. Indeed the quantity
         # per package might be a float, leading to incorrect results. For example:
         # 8 % 1.6 = 1.5999999999999996

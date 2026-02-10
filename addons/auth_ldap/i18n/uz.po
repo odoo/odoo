@@ -1,0 +1,362 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* auth_ldap
+#
+#
+# Translated by:
+# Deepvision - info@deepvision.uz | +998 77-093-0007
+# Amon Olimov - amon.bars@gmail.com
+# Jonibek Yorqulov - j.yorqulov@deepvision.uz
+# Mirzohidkhon Ulugkhujaev ulugkhujayevmirzohidxon@gmail.com
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"PO-Revision-Date: 2025-02-20 10:02+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
+#, fuzzy
+msgid ""
+"    Filter used to look up user accounts in the LDAP database. It is an    "
+"arbitrary LDAP filter in string representation. Any `%s` placeholder    will "
+"be replaced by the login (identifier) provided by the user, the filter    "
+"should contain at least one such placeholder.\n"
+"\n"
+"    The filter must result in exactly one (1) result, otherwise the login "
+"will    be considered invalid.\n"
+"\n"
+"    Example (actual attributes depend on LDAP server and setup):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    or\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
+msgstr ""
+"LDAP ma'lumotlar bazasida foydalanuvchi hisoblarini qidirish uchun "
+"ishlatiladigan filtr. Bu satr ko‘rinishidagi ixtiyoriy LDAP filtridir. Har "
+"qanday '%s' to‘ldiruvchisi foydalanuvchi tomonidan kiritilgan login "
+"(identifikator) bilan almashtiriladi, filtr kamida bitta shunday "
+"to‘ldiruvchini o‘z ichiga olishi shart.      Filtr natijasi aynan bitta (1) "
+"bo‘lishi kerak, aks holda login yaroqsiz hisoblanadi.      Misol (haqiqiy "
+"atributlar LDAP serveri va sozlamalariga bog‘liq): (&(objectCategory=person)"
+"(objectClass=user)(sAMAccountName=%s)) yoki (|(mail=%s)(uid=%s))"
+
+#. module: auth_ldap
+#. odoo-python
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
+#, fuzzy
+msgid "An error occurred: %(error)s"
+msgstr "Xatolik yuz berdi: %(error)s"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
+#, fuzzy
+msgid ""
+"Automatically create local user accounts for new users authenticating via "
+"LDAP"
+msgstr ""
+"LDAP orqali autentifikatsiya qiluvchi yangi foydalanuvchilar uchun mahalliy "
+"foydalanuvchi hisoblarini avtomatik yaratish"
+
+#. module: auth_ldap
+#. odoo-python
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
+#, fuzzy
+msgid "Cannot contact LDAP server at %(server)s:%(port)d"
+msgstr ""
+"%(server)s:%(port)d manzilida joylashgan LDAP serveriga ulanib bo‘lmadi"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company
+#, fuzzy
+msgid "Companies"
+msgstr "Kompaniyalar"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__company
+#, fuzzy
+msgid "Company"
+msgstr "Kompaniya"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company_ldap
+#, fuzzy
+msgid "Company LDAP configuration"
+msgstr "Kompaniya LDAP sozlamalari"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_config_settings
+#, fuzzy
+msgid "Config Settings"
+msgstr "Konfiguratsiya sozlamalari"
+
+#. module: auth_ldap
+#. odoo-python
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
+#, fuzzy
+msgid "Connection Test Failed!"
+msgstr "Ulanish sinovi muvaffaqiyatsiz yakunlandi!"
+
+#. module: auth_ldap
+#. odoo-python
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
+#, fuzzy
+msgid "Connection Test Successful!"
+msgstr "Ulanish sinovi muvaffaqiyatli yakunlandi!"
+
+#. module: auth_ldap
+#. odoo-python
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
+#, fuzzy
+msgid "Connection to LDAP server at %(server)s:%(port)d timed out"
+msgstr ""
+"%(server)s:%(port)d manzilida joylashgan LDAP serveriga ulanish vaqti tugadi"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
+#, fuzzy
+msgid "Create User"
+msgstr "Foydalanuvchi yaratish"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_uid
+#, fuzzy
+msgid "Created by"
+msgstr "Yaratuvchi"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_date
+#, fuzzy
+msgid "Created on"
+msgstr "Yaratilgan sana"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_base
+#, fuzzy
+msgid ""
+"DN of the user search scope: all descendants of this base will be searched "
+"for users."
+msgstr ""
+"Foydalanuvchi qidiruv doirasining DN: ushbu asos ostidagi barcha elementlar "
+"foydalanuvchilarni qidirish uchun tekshiriladi."
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_users__display_name
+#, fuzzy
+msgid "Display Name"
+msgstr "Ko‘rsatiladigan nom"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_users__id
+#, fuzzy
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_ldap
+#. odoo-python
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
+#, fuzzy
+msgid "Invalid credentials for bind DN %(binddn)s"
+msgstr "%(binddn)s bog‘lanish DN uchun noto‘g‘ri hisob ma'lumotlari"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#, fuzzy
+msgid "LDAP Configuration"
+msgstr "LDAP sozlamalari"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__ldaps
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__ldaps
+#, fuzzy
+msgid "LDAP Parameters"
+msgstr "LDAP parametrlari"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
+#, fuzzy
+msgid "LDAP Server"
+msgstr "LDAP serveri"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
+#, fuzzy
+msgid "LDAP Server address"
+msgstr "LDAP server manzili"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server_port
+#, fuzzy
+msgid "LDAP Server port"
+msgstr "LDAP server porti"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
+#, fuzzy
+msgid "LDAP base"
+msgstr "LDAP asosi"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_binddn
+#, fuzzy
+msgid "LDAP binddn"
+msgstr "LDAP bog‘lanish DN"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_filter
+#, fuzzy
+msgid "LDAP filter"
+msgstr "LDAP filtri"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_password
+#, fuzzy
+msgid "LDAP password"
+msgstr "LDAP paroli"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
+#, fuzzy
+msgid "Last Updated by"
+msgstr "Oxirgi yangilovchi"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_date
+#, fuzzy
+msgid "Last Updated on"
+msgstr "Oxirgi yangilangan sana"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#, fuzzy
+msgid "Login Information"
+msgstr "Kirish ma'lumotlari"
+
+#. module: auth_ldap
+#. odoo-python
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
+#, fuzzy
+msgid "No local user found for LDAP login and not configured to create one"
+msgstr ""
+"LDAP logini uchun mahalliy foydalanuvchi topilmadi va uni yaratish uchun "
+"sozlanmagan"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#, fuzzy
+msgid "Process Parameter"
+msgstr "Jarayon parametri"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
+#, fuzzy
+msgid ""
+"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
+"option requires a server with STARTTLS enabled, otherwise all authentication "
+"attempts will fail."
+msgstr ""
+"LDAP serveriga ulanishda xavfsiz TLS/SSL shifrlashni so‘rash. Bu parametr "
+"STARTTLS yoqilgan serverni talab qiladi, aks holda barcha autentifikatsiya "
+"urinishlari muvaffaqiyatsiz tugaydi."
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
+#, fuzzy
+msgid "Sequence"
+msgstr "Ketma-ketlik"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#, fuzzy
+msgid "Server Information"
+msgstr "Server haqida ma'lumot"
+
+#. module: auth_ldap
+#: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
+#, fuzzy
+msgid "Setup your LDAP Server"
+msgstr "LDAP serveringizni sozlang"
+
+#. module: auth_ldap
+#. odoo-python
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
+#, fuzzy
+msgid "Successfully connected to LDAP server at %(server)s:%(port)d"
+msgstr ""
+"%(server)s:%(port)d manzilida joylashgan LDAP serveriga muvaffaqiyatli ulandi"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
+#, fuzzy
+msgid "Template User"
+msgstr "Namuna foydalanuvchi"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#, fuzzy
+msgid "Test Connection"
+msgstr "Ulanishni sinash"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
+#, fuzzy
+msgid ""
+"The password of the user account on the LDAP server that is used to query "
+"the directory."
+msgstr ""
+"Katalogni so‘rash uchun ishlatiladigan LDAP serveridagi foydalanuvchi "
+"hisobining paroli."
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
+#, fuzzy
+msgid ""
+"The user account on the LDAP server that is used to query the directory. "
+"Leave empty to connect anonymously."
+msgstr ""
+"Katalogni so‘rash uchun ishlatiladigan LDAP serveridagi foydalanuvchi "
+"hisobi. Anonim ulanish uchun bo‘sh qoldiring."
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
+#, fuzzy
+msgid "Use TLS"
+msgstr "TLS ishlatish"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_users
+#, fuzzy
+msgid "User"
+msgstr "Foydalanuvchi"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#, fuzzy
+msgid "User Information"
+msgstr "Foydalanuvchi haqida ma'lumot"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
+#, fuzzy
+msgid "User to copy when creating new users"
+msgstr "Yangi foydalanuvchilar yaratishda nusxalanadigan foydalanuvchi"

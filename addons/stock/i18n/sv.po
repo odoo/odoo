@@ -22,13 +22,14 @@
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# symbiotech <symbiotech3@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-30 18:36+0000\n"
-"PO-Revision-Date: 2025-11-08 21:57+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-02-06 18:35+0000\n"
+"PO-Revision-Date: 2026-01-05 08:57+0000\n"
+"Last-Translator: symbiotech <symbiotech3@gmail.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/stock/sv/"
 ">\n"
 "Language: sv\n"
@@ -36,7 +37,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock
 #. odoo-python
@@ -855,8 +856,8 @@ msgstr "<strong>Kontakt</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Customer Address</strong>"
-msgstr "<strong>Kundens adress</strong>"
+msgid "<strong>Customer</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -866,6 +867,11 @@ msgstr "<strong>Levererad</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivery Address</strong>"
 msgstr ""
 
 #. module: stock
@@ -1283,7 +1289,6 @@ msgstr "Alla flyttar"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/views/search/stock_report_search_panel.xml:0
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "All Warehouses"
 msgstr "Alla lager"
 
@@ -2010,6 +2015,11 @@ msgstr "Välj Etikett Layout"
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Choose Type of Labels To Print"
 msgstr "Välj typ av etiketter som ska skrivas ut"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
+msgid "Choose Warehouses"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__inventory_datetime
@@ -3130,7 +3140,7 @@ msgid ""
 "order, etc."
 msgstr ""
 "Beroende på vilka moduler som är installerade kommer detta låta er att "
-"justera produktens rutt: om den kommer att köpas, tillverkas, fyllas på på "
+"justera produktens rutt: om den kommer att köpas, tillverkas, fyllas på "
 "beställning, mm."
 
 #. module: stock
@@ -6154,7 +6164,7 @@ msgstr "Noter"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Nothing to check the availability for."
-msgstr "Ingenting att att kontrollera tillgängligheten för."
+msgstr "Ingenting att kontrollera tillgängligheten för."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__11
@@ -8516,6 +8526,11 @@ msgid "Sample data"
 msgstr "Provuppgifter"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid "Save"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0
 msgid "Save the product form before updating the Quantity On Hand."
@@ -9797,7 +9812,7 @@ msgid ""
 "needed by default,\n"
 "            if it should show the customer."
 msgstr ""
-"Med operationstypssystemet kan du tilldela varje lageroperation en\n"
+"Med operationstypssystemet kan du tilldela varje lageroperation\n"
 "            en specifik typ som kommer att ändra dess vyer i enlighet med "
 "detta.\n"
 "            På operationstypen kan du t.ex. ange om packning behövs som "
@@ -10837,6 +10852,7 @@ msgstr "Leverantörsplatser"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_package_history_list
 msgid "View"
 msgstr "Visa"
 
@@ -11179,7 +11195,7 @@ msgid ""
 "rule.Otherwise, it takes it from the picking type."
 msgstr ""
 "När den är inställd på True kommer destinationsplatsen för stock.move att "
-"vara regeln. Annars tar den den från plockningstypen."
+"vara regeln. Annars tar den från plockningstypen."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -12079,6 +12095,9 @@ msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Leveransorder (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid "<strong>Customer Address</strong>"
+#~ msgstr "<strong>Kundens adress</strong>"
 
 #~ msgid "If ticked, you will be able to select entire packages to move"
 #~ msgstr "Om du kryssar i den kan du välja hela paket som ska flyttas"

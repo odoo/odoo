@@ -62,6 +62,7 @@ export class HeaderStandard extends BaseHeader {
         if (this.atTop == reachHeaderBottom) {
             this.el.classList.add("o_transformed_not_affixed");
         }
+        this.el.style.transition = this.atTop == reachHeaderBottom ? "none" : "";
         this.atTop = !reachHeaderBottom;
 
         reachTransitionPoint

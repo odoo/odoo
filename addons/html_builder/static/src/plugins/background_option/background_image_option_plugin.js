@@ -164,6 +164,10 @@ export class SelectFilterColorAction extends StyleAction {
         // Find the filter element.
         let filterEl = editingElement.querySelector(":scope > .o_we_bg_filter");
 
+        // If no value is provided, use the current one if any.
+        if (filterEl && value === undefined) {
+            value = filterEl.style.backgroundImage;
+        }
         // If the filter would be transparent, remove it / don't create it.
         const rgba = value && convertCSSColorToRgba(value);
         if (!value || (rgba && rgba.opacity < 0.001)) {

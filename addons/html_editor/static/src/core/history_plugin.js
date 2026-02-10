@@ -1517,7 +1517,20 @@ export class HistoryPlugin extends Plugin {
             }
             applied = true;
             const stepIndex = this.steps.findLastIndex((item) => item === step);
-            this.restoreToStep(stepIndex);
+            const lastRevertedStep = this.restoreToStep(stepIndex);
+            if (lastRevertedStep?.selection && !draftMutations.length) {
+                selectionToRestore.setCursor((cursor) => {
+                    const anchorNode = this.nodeMap.getNode(
+                        lastRevertedStep.selection.anchorNodeId
+                    );
+                    const focusNode = this.nodeMap.getNode(lastRevertedStep.selection.focusNodeId);
+                    cursor.anchor.node = anchorNode;
+                    cursor.anchor.offset = lastRevertedStep.selection.anchorOffset;
+
+                    cursor.focus.node = focusNode;
+                    cursor.focus.offset = lastRevertedStep.selection.focusOffset;
+                });
+            }
             // Apply draft mutations to recover the same currentStep state
             // as before.
             this.applyMutations(draftMutations, { forNewStep: true });
@@ -1635,6 +1648,7 @@ export class HistoryPlugin extends Plugin {
      * steps's state to "discarded".
      *
      * @param {Number} stepIndex
+     * @returns {HistoryStep}
      */
     restoreToStep(stepIndex) {
         // Discard current draft.
@@ -1676,6 +1690,7 @@ export class HistoryPlugin extends Plugin {
         // Register resulting mutations as a new "restore" step (prevent undo).
         this.dispatchContentUpdated();
         this.addStep({ type: "restore" });
+        return lastRevertedStep;
     }
 
     setStepExtra(key, value) {

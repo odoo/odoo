@@ -25,6 +25,20 @@ test("Typing '1. ' at the start of existing text should create a numbered list",
     expect(getContent(el)).toBe(`<ol><li>[]abc</li></ol>`);
 });
 
+test("typing '1. ' should keep cursor inside formatting element when creating a list", async () => {
+    const { el, editor } = await setupEditor("<p><strong><u>[]</u></strong></p>");
+    await insertText(editor, "1. ");
+    expect(getContent(el)).toBe(
+        unformat(
+            `<ol>
+                <li o-we-hint-text="List" class="o-we-hint">
+                    <strong><u data-oe-zws-empty-inline="">[]\u200b</u></strong>
+                </li>
+            </ol>`
+        )
+    );
+});
+
 test("should convert simple number list into bullet list", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>");
     await insertText(editor, "1. ");

@@ -7,14 +7,14 @@
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Bren Driesen <brdri@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-30 18:36+0000\n"
-"PO-Revision-Date: 2025-12-02 14:48+0000\n"
+"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"PO-Revision-Date: 2026-01-07 18:05+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "hr_recruitment/nl/>\n"
@@ -164,8 +164,8 @@ msgstr ""
 "    Bedankt voor je sollicitatie voor de functie\n"
 "    \"<a t-att-href=\"hasattr(object.job_id, 'website_url') and "
 "object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-"
-"out=\"object.job_id.name or ''\">Experienced Developer</strong></a>\" bij "
-"<strong t-out=\"object.company_id.name or ''\">YourCompany</strong>.\n"
+"out=\"object.job_id.name or ''\">Ervaren ontwikkelaar</strong></a>\" bij "
+"<strong t-out=\"object.company_id.name or ''\">JouwBedrijf</strong>.\n"
 "    <br/><br/>\n"
 "    We nemen binnenkort contact met je op.\n"
 "\n"
@@ -175,7 +175,7 @@ msgstr ""
 "style=\"background-color: {{object.company_id.email_secondary_color or "
 "'#875A7B'}}; text-decoration: none; color: "
 "{{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px "
-"8px 16px; border-radius: 5px;\">Jobomschrijving</a>\n"
+"8px 16px; border-radius: 5px;\">Functieomschrijving</a>\n"
 "    </div>\n"
 "\n"
 "    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: "
@@ -187,7 +187,7 @@ msgstr ""
 "            <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</"
 "strong><br/>\n"
 "            <span>E-mail: <t t-out=\"object.user_id.email or "
-"''\">admin@yourcompany.example.com</t></span><br/>\n"
+"''\">admin@yourcompany.voorbeeld.com</t></span><br/>\n"
 "            <span>Telefoon: <t t-out=\"object.user_id.phone or ''\">+1 "
 "650-123-4567</t></span>\n"
 "        </p>\n"
@@ -241,7 +241,7 @@ msgstr ""
 "    <br/>\n"
 "    <t t-if=\"object.job_id.address_id.country_id.name\">\n"
 "        <t t-out=\"object.job_id.address_id.country_id.name or "
-"''\">Argentina</t><br/>\n"
+"''\">Argentinië</t><br/>\n"
 "        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
 "object.job_id.address_id.country_id.name)\"/>\n"
 "    </t>\n"
@@ -308,7 +308,7 @@ msgstr ""
 "     over het hoofd hebben gezien of als je meer inzicht wilt \n"
 "    in onze beslissing, aarzel dan niet om op deze e-mail te reageren.\n"
 "    <br/><br/>\n"
-"    We bewaren je cv in onze databank en nemen contact\n"
+"    We bewaren je cv in onze database en nemen contact\n"
 "     met je op zodra er een functie vrijkomt\n"
 "     die beter aansluit bij je vaardigheden en ervaring.\n"
 "    <br/><br/>\n"
@@ -521,7 +521,7 @@ msgstr ""
 "style=\"background-color: {{object.company_id.email_secondary_color or "
 "'#875A7B'}}; text-decoration: none; color: "
 "{{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px "
-"8px 16px; border-radius: 5px;\">Jobomschrijving</a>\n"
+"8px 16px; border-radius: 5px;\">Functieomschrijving</a>\n"
 "        </div>\n"
 "\n"
 "        <t t-if=\"object.user_id\">\n"
@@ -2063,7 +2063,7 @@ msgid ""
 "applicant is set to the stage."
 msgstr ""
 "Indien aangevinkt en de sollicitant komt in deze fase, wordt een bericht "
-"verstuurt naar de sollicitant, gebruik makende van de de sjabloon."
+"verstuurt naar de sollicitant, gebruik makende van de sjabloon."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_bounced_content
@@ -2249,7 +2249,7 @@ msgstr "Functie locatie"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Job Page"
-msgstr "Jobpagina"
+msgstr "Vacaturepagina"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job_platform
@@ -4119,7 +4119,7 @@ msgstr "id"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "in<br/>progress"
-msgstr ""
+msgstr "in<br/>behandeling"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban

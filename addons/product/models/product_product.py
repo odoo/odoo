@@ -22,12 +22,12 @@ class ProductProduct(models.Model):
     # price_extra: catalog extra value only, sum of variant extra attributes
     price_extra = fields.Float(
         'Variant Price Extra', compute='_compute_product_price_extra',
-        digits='Product Price',
+        min_display_digits='Product Price',
         help="This is the sum of the extra price of all attributes")
     # lst_price: catalog value + extra, context dependent (uom)
     lst_price = fields.Float(
         'Sales Price', compute='_compute_product_lst_price',
-        digits='Product Price', inverse='_set_product_lst_price',
+        min_display_digits='Product Price', inverse='_set_product_lst_price',
         help="The sale price is managed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.")
 
     default_code = fields.Char('Internal Reference', index=True)
@@ -52,7 +52,7 @@ class ProductProduct(models.Model):
 
     standard_price = fields.Float(
         'Cost', company_dependent=True,
-        digits='Product Price',
+        min_display_digits='Product Price',
         groups="base.group_user",
         help="""Value of the product (automatically computed in AVCO).
         Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
@@ -557,7 +557,7 @@ class ProductProduct(models.Model):
         return super()._search(domain, *args, **kwargs)
 
     @api.depends('name', 'default_code', 'product_tmpl_id')
-    @api.depends_context('display_default_code', 'seller_id', 'company_id', 'partner_id', 'formatted_display_name')
+    @api.depends_context('display_default_code', 'seller_id', 'company_id', 'partner_id', 'formatted_display_name', 'lang')
     def _compute_display_name(self):
 
         def get_display_name(name, code):

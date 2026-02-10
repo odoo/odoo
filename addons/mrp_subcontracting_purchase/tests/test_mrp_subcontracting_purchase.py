@@ -336,6 +336,72 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         price_diff_line = invoice.line_ids.filtered(lambda m: m.account_id == stock_price_diff_acc_id)
         self.assertEqual(price_diff_line.credit, 20)
 
+    def test_subcontracting_multi_currency_price_diff(self):
+        """ Ensure the price difference lines are computed correctly when the company
+            currency and invoice currency differ
+        """
+        currency_grp = self.env.ref('base.group_multi_currency')
+        self.env.user.write({'group_ids': [(4, currency_grp.id)]})
+
+        self.env.company.anglo_saxon_accounting = True
+        product_category_all = self.product_category
+        product_category_all.property_cost_method = 'standard'
+        product_category_all.property_valuation = 'real_time'
+        self._setup_category_stock_journals()
+
+        stock_price_diff_acc_id = self.env['account.account'].create({
+            'name': 'default_account_stock_price_diff',
+            'code': 'STOCKDIFF',
+            'reconcile': True,
+            'account_type': 'asset_current',
+        })
+        product_category_all.property_price_difference_account_id = stock_price_diff_acc_id
+
+        self.comp1.standard_price = 10.0
+        self.comp2.standard_price = 20.0
+        self.finished.standard_price = 100
+
+        mock_currency = self.env['res.currency'].create({
+            'name': 'MOCK',
+            'symbol': 'MC',
+        })
+        self.env['res.currency.rate'].create({
+            'name': '2023-01-01',
+            'company_rate': 2.0,
+            'currency_id': mock_currency.id,
+            'company_id': self.env.company.id,
+        })
+
+        # Create a PO for 1 finished product.
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.subcontractor_partner1
+        po_form.currency_id = mock_currency
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.finished
+            po_line.product_qty = 1
+            # Ideally, 100 - 10 - 20 = 70 USD
+            # We will create a price diff of 10 USD
+            # 60 USD * 2 = 120 MC
+            po_line.price_unit = 120
+        po = po_form.save()
+        po.button_confirm()
+
+        action = po.action_view_picking()
+        final_picking = self.env[action['res_model']].browse(action['res_id'])
+        final_picking.move_ids.quantity = 1
+        final_picking.move_ids.picked = True
+        final_picking.button_validate()
+
+        action = po.action_create_invoice()
+        invoice = self.env['account.move'].browse(action['res_id'])
+        invoice.invoice_date = Date.today()
+        invoice.invoice_line_ids.quantity = 1
+        invoice.action_post()
+
+        # price diff line should be 100 - 60 - 10 - 20
+        price_diff_line = invoice.line_ids.filtered(lambda m: m.account_id == stock_price_diff_acc_id)
+        self.assertEqual(price_diff_line.credit, 10)
+
     def test_subcontract_product_price_change(self):
         """ Create a PO for subcontracted product, receive the product (finish MO),
             create vendor bill and edit the product price, confirm the bill.
@@ -884,3 +950,46 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         with Form(mo) as production_form:
             production_form.date_start = original_mo_start_date
         self.assertEqual(mo.date_start, original_mo_start_date)
+
+    def test_create_invoice_with_subcontracted_tracked_products(self):
+        """ Ensure that invoice creation doesn't trigger an error
+        with subcontracted tracked products."""
+        todo_nb = 5
+        self.finished2.tracking = 'serial'
+        self.finished2.purchase_method = 'purchase'
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [(0, 0, {
+                'product_id': self.finished2.id,
+                'product_qty': todo_nb,
+                'price_unit': 50,
+            })],
+        })
+
+        po.button_confirm()
+        picking_receipt = po.picking_ids
+        picking_receipt.do_unreserve()
+
+        serials_finished = []
+        for i in range(todo_nb):
+            serials_finished.append(self.env['stock.lot'].create({
+                'name': 'serial_fin_%s' % i,
+                'product_id': self.finished2.id,
+            }))
+
+        action = picking_receipt.move_ids.action_show_details()
+        with Form(picking_receipt.move_ids.with_context(action['context']), view=action['view_id']) as move_form:
+            for serial in serials_finished:
+                with move_form.move_line_ids.new() as move_line:
+                    move_line.lot_id = serial
+                    move_line.picked = True
+                    move_line.quantity = 1
+            move_form.save()
+
+        picking_receipt.move_ids.picked = True
+        picking_receipt.button_validate()
+        self.assertEqual(picking_receipt.state, 'done')
+
+        po.action_create_invoice()
+        invoice = po.invoice_ids
+        self.assertTrue(invoice)

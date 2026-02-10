@@ -32,7 +32,7 @@ export class ProjectTaskTemplateDropdown extends Component {
         },
     };
     static defaultProps = {
-        hotkey: "r",
+        hotkey: "c",
         projectId: null,
     };
 

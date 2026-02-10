@@ -492,6 +492,13 @@ class TestPartnerAddressCompany(TransactionCase):
         self.assertFalse(ct1_1.vat)
         self.assertEqual(inv_1.street, 'Invoice Child Street', 'Should take parent address')
         self.assertFalse(inv_1.vat)
+        # test it also works with default_parent_id value in context
+        # also ensure it works directly on a non-empty recordset
+        inv_2 = (ct1_1 | inv_1).with_context(default_parent_id=inv.id).create({
+            'name': 'Address, Child of Invoice',
+        })
+        self.assertEqual(inv_2.street, 'Invoice Child Street', 'Should take parent address')
+        self.assertFalse(inv_2.vat)
 
         # sync P1 with parent, check address is update + other fields in write kept
         ct1_phone = '+320455999999'

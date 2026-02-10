@@ -46,8 +46,8 @@ class HrWorkEntry(models.Model):
         default=lambda self: self.env.company)
     conflict = fields.Boolean('Conflicts', compute='_compute_conflict', store=True)  # Used to show conflicting work entries first
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', store=True)
-    country_id = fields.Many2one('res.country', related='employee_id.company_id.country_id')
     amount_rate = fields.Float("Pay rate")
+    country_id = fields.Many2one('res.country', related='employee_id.company_id.country_id', search='_search_country_id')
 
     # FROM 7s by query to 2ms (with 2.6 millions entries)
     _contract_date_start_stop_idx = models.Index("(version_id, date) WHERE state IN ('draft', 'validated')")
@@ -93,17 +93,9 @@ class HrWorkEntry(models.Model):
     @api.model
     def _set_current_contract(self, vals):
         if not vals.get('version_id') and vals.get('date') and vals.get('employee_id'):
-            contract_start = fields.Datetime.to_datetime(vals.get('date'))
-            contract_end = contract_start
             employee = self.env['hr.employee'].browse(vals.get('employee_id'))
-            contracts = employee._get_versions_with_contract_overlap_with_period(contract_start, contract_end)
-            if not contracts:
-                raise ValidationError(_(
-                    "%(employee)s does not have a contract on %(date)s.",
-                    employee=employee.name,
-                    date=contract_start,
-                ))
-            return dict(vals, version_id=contracts[0].id)
+            active_version = employee._get_version(vals['date'])
+            return dict(vals, version_id=active_version.id)
         return vals
 
     @api.model
@@ -339,3 +331,6 @@ class HrWorkEntry(models.Model):
         if len(self.env.companies.country_id.ids) > 1:
             return [('country_id', '=', False)]
         return ['|', ('country_id', '=', False), ('country_id', 'in', self.env.companies.country_id.ids)]
+
+    def _search_country_id(self, operator, value):
+        return [('employee_id.company_id.partner_id.country_id', operator, value)]

@@ -7,14 +7,14 @@
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Bren Driesen <brdri@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-30 18:37+0000\n"
-"PO-Revision-Date: 2025-11-27 09:02+0000\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-01-27 10:10+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "product_expiry/nl/>\n"
@@ -89,12 +89,12 @@ msgstr "Waarschuwingsdatum bereikt"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
 msgid "Alert Lots"
-msgstr ""
+msgstr "Partijen met waarschuwing"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
 msgid "Alert from"
-msgstr ""
+msgstr "Waarschuwing van"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_quant__available_quantity
@@ -113,15 +113,15 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
-"Beschikbare hoeveelheid (berekend als Voorraad - gereserveerde hoeveelheid - "
-"te verwijderen hoeveelheid)\n"
+"Beschikbare hoeveelheid (berekend als Aanwezige voorraad - gereserveerde "
+"hoeveelheid - te verwijderen hoeveelheid)\n"
 "In de context van één voorraadlocatie omvat dit de goederen die in deze "
 "locatie of in een van de onderliggende locaties zijn opgeslagen.\n"
 "In de context van één magazijn omvat dit de goederen die zijn opgeslagen in "
-"de voorraadlocatie van dat magazijn of in een van de onderliggende "
-"locaties.\n"
+"de voorraadlocatie van dat magazijn of in een van de onderliggende locaties."
+"\n"
 "In andere gevallen omvat dit de goederen die zijn opgeslagen in elke "
-"voorraadlocatie van het type intern."
+"voorraadlocatie van het type 'intern'."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
@@ -137,7 +137,7 @@ msgstr "Houdbaarheidsdatum"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
 msgid "Best before"
-msgstr ""
+msgstr "Ten minste houdbaar tot"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__use_date
@@ -266,7 +266,7 @@ msgstr "Vervallen partij(en)"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
 msgid "Expired Lots"
-msgstr ""
+msgstr "Vervallen partijen"
 
 #. module: product_expiry
 #. odoo-javascript
@@ -296,20 +296,19 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
-"Verwachte hoeveelheid (berekend als Voorraad - uitgaand + inkomend - te "
-"verwijderen hoeveelheid)\n"
-"In de context van één voorraadlocatie omvat dit de goederen die in deze "
-"locatie of in een van de onderliggende locaties zijn opgeslagen.\n"
-"In de context van één magazijn omvat dit de goederen die zijn opgeslagen in "
-"de voorraadlocatie van dat magazijn of in een van de onderliggende "
-"locaties.\n"
-"In andere gevallen omvat dit de goederen die zijn opgeslagen in elke "
-"voorraadlocatie van het type intern."
+"Voorspelde hoeveelheid (berekend als Aanwezige voorraad - Uitgaande + "
+"Inkomende - Te verwijderen hoeveelheid)\n"
+"In een context met één voorraadlocatie omvat dit goederen opgeslagen in deze "
+"locatie of in een van de onderliggende locaties.\n"
+"In een context met één magazijn omvat dit goederen opgeslagen in de "
+"voorraadlocatie van dit magazijn of in een van de onderliggende locaties.\n"
+"Anders omvat dit goederen opgeslagen in elke voorraadlocatie van het type "
+"'intern'."
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__virtual_available
 msgid "Forecasted Quantity"
-msgstr "Verwachte aantal"
+msgstr "Voorspelde aantal"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__free_qty

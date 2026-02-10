@@ -19,8 +19,24 @@ import {
 import { _t } from "@web/core/l10n/translation";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { getMimetype } from "@html_editor/utils/image";
+import { withSequence } from "@html_editor/utils/resource";
+import { deepCopy, deepMerge } from "@web/core/utils/objects";
 
 /**
+ * @typedef {Object.<string, {
+ *   label?: string,
+ *   subgroups: Object.<string, {
+ *     label?: string,
+ *     shapes: Object.<string, {
+ *       selectLabel?: string,
+ *       animated?: boolean,
+ *       transform?: boolean,
+ *       isTechnical?: boolean,
+ *       togglableRatio?: boolean,
+ *     }>,
+ *   }>,
+ * }>} ImageShapeGroups
+ * @typedef {((shapeGroups: ImageShapeGroups) => ImageShapeGroups | void)[]} image_shape_groups_providers
  * @typedef {((dataset: DOMStringMap) => string)[]} default_shape_handlers
  * @typedef {((
  *     svg: SVGElement,
@@ -73,6 +89,7 @@ export class ImageShapeOptionPlugin extends Plugin {
         process_image_warmup_handlers: this.processImageWarmup.bind(this),
         process_image_post_handlers: this.processImagePost.bind(this),
         hover_effect_allowed_predicates: (el) => this.canHaveHoverEffect(el),
+        image_shape_groups_providers: withSequence(0, () => deepCopy(imageShapeDefinitions)),
     };
     setup() {
         this.shapeSvgTextCache = {};
@@ -395,7 +412,17 @@ export class ImageShapeOptionPlugin extends Plugin {
         return this.imageShapes[shape].togglableRatio;
     }
     getImageShapeGroups() {
-        return imageShapeDefinitions;
+        if (!this.imageShapeGroups) {
+            const shapeGroups = {};
+            for (const provider of this.getResource("image_shape_groups_providers")) {
+                const providedGroups = provider(shapeGroups);
+                if (providedGroups) {
+                    Object.assign(shapeGroups, deepMerge(shapeGroups, providedGroups));
+                }
+            }
+            this.imageShapeGroups = shapeGroups;
+        }
+        return this.imageShapeGroups;
     }
     makeImageShapes() {
         const entries = Object.values(this.getImageShapeGroups())

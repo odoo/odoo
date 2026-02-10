@@ -103,6 +103,32 @@ class TestActivityRights(TestActivityCommon):
                 # document access -> ok bypass
                 activity.write({'summary': 'Caramba caramba'})
 
+    def test_activity_security_user_access_customized(self):
+        """ Test '_mail_get_operation_for_mail_message_operation' support when scheduling activities. """
+        access_open, access_ro, access_locked = self.env['mail.test.access.custo'].with_user(self.user_admin).create([
+            {'name': 'Open'},
+            {'name': 'Open RO', 'is_readonly': True},
+            {'name': 'Locked', 'is_locked': True},
+        ])
+        # sanity checks on rule implementation
+        (access_open + access_ro + access_locked).with_user(self.user_employee).check_access('read')
+        access_open.with_user(self.user_employee).check_access('write')
+        with self.assertRaises(exceptions.AccessError):
+            (access_ro + access_locked).with_user(self.user_employee).check_access('write')
+
+        # '_mail_get_operation_for_mail_message_operation' allows to post, hence posting activities
+        access_open.with_user(self.user_employee).activity_schedule(
+            'test_mail.mail_act_test_todo_generic',
+        )
+        access_ro.with_user(self.user_employee).activity_schedule(
+            'test_mail.mail_act_test_todo_generic',
+        )
+
+        with self.assertRaises(exceptions.AccessError):
+            access_locked.with_user(self.user_employee).activity_schedule(
+                'test_mail.mail_act_test_todo_generic',
+            )
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_security_user_noaccess_automated(self):
         def _employee_crash(records, operation):
@@ -379,73 +405,219 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.test_lead_records = cls.env['mail.test.lead'].create([
+        cls.test_lead_records = cls.env['mail.test.multi.company.with.activity'].create([
             {'name': 'Test Lead 1'},
             {'name': 'Test Lead 2'},
+            {'name': 'Test Lead 3 (to remove)'},
+            {'name': 'Test Lead 4 (Company2)', 'company_id': cls.company_2.id},
         ])
+        cls.deleted_record = cls.test_lead_records[2]
         cls.dt_reference = datetime(2024, 1, 15, 8, 0, 0)
+
+        # remove potential demo data on admin, to make test deterministic
+        cls.env['mail.activity'].search([('user_id', '=', cls.user_admin.id)]).unlink()
 
         # records and leads and free activities
         # have 1 record (or activity) for today, one for tomorrow
-        for record, summary, dt in (
-            (cls.test_record, "Summary Today'", cls.dt_reference),
-            (cls.test_record_2, "Summary Tomorrow'", cls.dt_reference + timedelta(days=1)),
-            (cls.test_lead_records[0], "Summary Today'", cls.dt_reference),
-            (cls.test_lead_records[1], "Summary Tomorrow'", cls.dt_reference + timedelta(days=1)),
+        cls.test_activities = cls.env['mail.activity']
+        for record, summary, dt, creator in (
+            (cls.test_record, "Summary Today'", cls.dt_reference, cls.user_employee),
+            (cls.test_record_2, "Summary Tomorrow'", cls.dt_reference + timedelta(days=1), cls.user_employee),
+            (cls.test_lead_records[0], "Summary Today'", cls.dt_reference, cls.user_employee),
+            (cls.test_lead_records[1], "Summary Tomorrow'", cls.dt_reference + timedelta(days=1), cls.user_employee),
+            (cls.test_lead_records[2], "Summary Tomorrow'", cls.dt_reference + timedelta(days=1), cls.user_employee),
+            (cls.test_lead_records[3], "Summary Tomorrow'", cls.dt_reference + timedelta(days=1), cls.user_admin),
         ):
-            record.with_user(cls.user_employee).activity_schedule(
+            cls.test_activities += record.with_user(creator).activity_schedule(
                 "test_mail.mail_act_test_todo_generic",
                 date_deadline=dt.date(),
                 summary=summary,
                 user_id=cls.user_employee.id,
             )
-        for dt in (cls.dt_reference, cls.dt_reference + timedelta(days=1)):
-            cls.env['mail.activity'].with_user(cls.user_employee).create({
+
+        cls.test_lead_activities = cls.test_activities[2:]
+        cls.test_activities_removed = cls.deleted_record.activity_ids
+        cls.test_activities_company_2 = cls.test_lead_records[3].activity_ids
+
+        # add atttachments on lead-like test records
+        cls.lead_act_attachments = cls.env['ir.attachment'].create(
+            cls._generate_attachments_data(1, 'mail.activity', cls.test_lead_activities[-4]) +
+            cls._generate_attachments_data(1, 'mail.activity', cls.test_lead_activities[-3]) +
+            cls._generate_attachments_data(1, 'mail.activity', cls.test_lead_activities[-2]) +
+            cls._generate_attachments_data(1, 'mail.activity', cls.test_lead_activities[-1])
+        )
+
+        # free (no model) activities
+        cls.test_activities_free = cls.env['mail.activity'].with_user(cls.user_employee).create([
+            {
                 'date_deadline': dt,
                 'summary': "Summary",
                 'user_id': cls.user_employee.id,
-            })
+            }
+            for dt in (cls.dt_reference, cls.dt_reference + timedelta(days=1))
+        ])
+
+        # In the mean time, some FK deletes the record where the message is
+        # scheduled, skipping its unlink() override
+        cls.env.cr.execute(
+            f"DELETE FROM {cls.test_lead_records._table} WHERE id = %s", (cls.deleted_record.id,)
+        )
+
+        cls.env.invalidate_all()
 
     @users("employee")
     def test_systray_activities_for_various_records(self):
-        """Check that activities made on archived or not archived records, to
-        check they are shown in the systray activities."""
-        # archive record 1, add activities
+        """Check that activities made on archived or not archived records, as
+        well as on removed record, to check systray activities behavior and
+        robustness. """
+        # archive record 1
         self.test_record.action_archive()
+        self.assertTrue(self.test_activities[0].exists(), 'Archiving record keeps activities')
 
         self.authenticate(self.user_employee.login, self.user_employee.login)
         with freeze_time(self.dt_reference):
-            data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["systray_get_activities"]})
-        for model_name, msg, exp_total, exp_today, exp_planned, exp_overdue in [
-            ('mail.activity', 'Free activities', 1, 1, 1, 0),
-            (self.test_record._name, 'Archiving does not remove activities', 1, 1, 1, 0),
-            (self.test_lead_records._name, 'Planned do not count in total', 1, 1, 1, 0),
+            groups_data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["systray_get_activities"]}).get('Store', {}).get('activityGroups', [])
+        self.assertEqual(len(groups_data), 3, 'Should have activities for 2 test models + generic for non accessible')
+
+        for model_name, msg, (exp_total, exp_today, exp_planned, exp_overdue), exp_domain in [
+            ('mail.activity', '2 free + 2 linked to 1', (1, 1, 3, 0), []),
+            (self.test_record._name, 'Archived keeps activities', (1, 1, 1, 0), [['active', 'in', [True, False]]]),
+            (self.test_lead_records._name, 'Planned do not count in total', (1, 1, 1, 0), []),
         ]:
             with self.subTest(model_name=model_name, msg=msg):
-                total_count = sum(
-                    record["total_count"] for record in data["Store"]["activityGroups"]
-                    if record.get("model") == model_name
-                )
-                today_count = sum(
-                    record["today_count"] for record in data["Store"]["activityGroups"]
-                    if record.get("model") == model_name
-                )
-                planned_count = sum(
-                    record["planned_count"] for record in data["Store"]["activityGroups"]
-                    if record.get("model") == model_name
-                )
-                overdue_count = sum(
-                    record["overdue_count"] for record in data["Store"]["activityGroups"]
-                    if record.get("model") == model_name
-                )
-                self.assertEqual(total_count, exp_total)
-                self.assertEqual(today_count, exp_today)
-                self.assertEqual(planned_count, exp_planned)
-                self.assertEqual(overdue_count, exp_overdue)
-        self.assertEqual(
-            data["Store"]["activityCounter"], 3,
-            '1 from lead (today), 1 from free (today), 1 from activity-test-model'
+                group_values = next(values for values in groups_data if values['model'] == model_name)
+                self.assertEqual(group_values['total_count'], exp_total)
+                self.assertEqual(group_values['today_count'], exp_today)
+                self.assertEqual(group_values['planned_count'], exp_planned)
+                self.assertEqual(group_values['overdue_count'], exp_overdue)
+                self.assertEqual(group_values['domain'], exp_domain)
+
+        # check search results with removed records
+        self.env.invalidate_all()
+        test_with_removed = self.env['mail.activity'].sudo().search([
+            ('id', 'in', self.test_activities.ids),
+            ('res_model', '=', self.test_lead_records._name),
+        ])
+        self.assertEqual(len(test_with_removed), 4, 'Without ACL check, activities linked to removed records are kept')
+
+        self.env.invalidate_all()
+        test_with_removed_as_admin = self.env['mail.activity'].with_user(self.user_admin).search([
+            ('id', 'in', self.test_activities.ids),
+            ('res_model', '=', self.test_lead_records._name),
+        ])
+        self.assertEqual(len(test_with_removed_as_admin), 3, 'With ACL check, activities linked to removed records are not kept is not assigned to the user')
+
+        self.env.invalidate_all()
+        self.assertFalse(
+            self.test_activities_removed.with_user(self.user_admin).has_access('read'),
+            'No access to an activity linked to someone and whose record has been removed '
+            '(considered as no access to record); and should not crash (no MissingError)'
         )
+        with self.assertRaises(exceptions.AccessError):  # should not raise a MissingError
+            self.test_activities_removed.with_user(self.user_admin).read(['summary'])
+
+        self.env.invalidate_all()
+        test_with_removed = self.env['mail.activity'].search([
+            ('id', 'in', self.test_activities.ids),
+            ('res_model', '=', self.test_lead_records._name),
+        ])
+        self.assertEqual(len(test_with_removed), 4, 'Even with ACL check, activities linked to removed records are kept if assigned to the user (see odoo/odoo#112126)')
+
+        # if not assigned -> should filter out
+        self.env.invalidate_all()
+        self.test_activities_removed.write({'user_id': self.user_admin.id})
+        test_with_removed = self.env['mail.activity'].search([
+            ('id', 'in', self.test_activities.ids),
+            ('res_model', '=', self.test_lead_records._name),
+        ])
+        self.assertEqual(len(test_with_removed), 3, 'With ACL check, activities linked to removed records are not kept if assigned to the another user')
+        self.test_activities_removed.write({'user_id': self.user_employee.id})
+
+        # be sure activities on removed records do not crash when managed, and that
+        # lost attachments are removed as well
+        self.env.invalidate_all()
+        lead_activities = self.test_lead_activities.with_user(self.user_employee)
+        lead_act_attachments = self.lead_act_attachments.with_user(self.user_employee)
+        self.assertEqual(len(lead_activities), 4, 'Simulate UI where activities are still displayed even if record removed')
+        self.assertEqual(len(lead_act_attachments), 4, 'Simulate UI where activities are still displayed even if record removed')
+        messages, _next_activities = lead_activities._action_done()
+        self.assertEqual(len(messages), 3, 'Should have posted one message / live record')
+        self.assertEqual(lead_activities.exists(), lead_activities - self.test_activities_removed, 'Mark done should unlink activities linked to removed records')
+        self.assertEqual(lead_activities.exists().mapped('active'), [False] * 3)
+        self.assertEqual(
+            set(lead_act_attachments.exists().mapped('res_id')), set(messages.ids),
+            'Mark done should clean up attachments linked to removed record, and linked other attachments to messages')
+        self.assertEqual(
+            set(lead_act_attachments.exists().mapped('res_model')), set(['mail.message'] * 2))
+
+    @users("employee")
+    def test_systray_activities_multi_company(self):
+        """ Explicitly check MC support, as well as allowed_company_ids, that
+        limits visible records in a given session, should impact systray activities. """
+        self.user_employee.write({'company_ids': [(4, self.company_2.id)]})
+
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        with freeze_time(self.dt_reference):
+            groups_data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["systray_get_activities"]}).get('Store', {}).get('activityGroups', [])
+
+        for model_name, msg, (exp_total, exp_today, exp_planned, exp_overdue) in [
+            ('mail.activity', 'Non accessible: deleted', (1, 1, 2, 0)),
+            (self.test_record._name, 'Archiving removes activities', (1, 1, 1, 0)),
+            (self.test_lead_records._name, 'Accessible (MC with all companies)', (1, 1, 2, 0)),
+        ]:
+            with self.subTest(model_name=model_name, msg=msg):
+                group_values = next(values for values in groups_data if values['model'] == model_name)
+                self.assertEqual(group_values['total_count'], exp_total)
+                self.assertEqual(group_values['today_count'], exp_today)
+                self.assertEqual(group_values['planned_count'], exp_planned)
+                self.assertEqual(group_values['overdue_count'], exp_overdue)
+                if model_name == 'mail.activity':  # for mail.activity, there is a key with activities we can check
+                    self.assertEqual(sorted(group_values['activity_ids']), sorted((self.test_activities_removed + self.test_activities_free).ids))
+
+        # when allowed companies restrict visible records, linked activities are
+        # removed from systray, considering you have to log into the right company
+        # to see them (change in 18+)
+        with freeze_time(self.dt_reference):
+            groups_data = self.make_jsonrpc_request("/mail/data", {
+                "fetch_params": ["systray_get_activities"],
+                "context": {"allowed_company_ids": self.company_admin.ids},
+            }).get('Store', {}).get('activityGroups', [])
+
+        for model_name, msg, (exp_total, exp_today, exp_planned, exp_overdue) in [
+            ('mail.activity', 'Non accessible: deleted (MC ignored, stripped out like inaccessible records)', (1, 1, 2, 0)),
+            (self.test_record._name, 'Archiving removes activities', (1, 1, 1, 0)),
+            (self.test_lead_records._name, 'Accessible', (1, 1, 1, 0)),
+        ]:
+            with self.subTest(model_name=model_name, msg=msg):
+                group_values = next(values for values in groups_data if values['model'] == model_name)
+                self.assertEqual(group_values['total_count'], exp_total)
+                self.assertEqual(group_values['today_count'], exp_today)
+                self.assertEqual(group_values['planned_count'], exp_planned)
+                self.assertEqual(group_values['overdue_count'], exp_overdue)
+                if model_name == 'mail.activity':  # for mail.activity, there is a key with activities we can check
+                    self.assertEqual(sorted(group_values['activity_ids']), sorted((self.test_activities_removed + self.test_activities_free).ids))
+
+        # now not having accessible to company 2 records: tread like forbidden
+        self.user_employee.write({'company_ids': [(3, self.company_2.id)]})
+        with freeze_time(self.dt_reference):
+            groups_data = self.make_jsonrpc_request("/mail/data", {
+                "fetch_params": ["systray_get_activities"],
+                "context": {"allowed_company_ids": self.company_admin.ids},
+            }).get('Store', {}).get('activityGroups', [])
+
+        for model_name, msg, (exp_total, exp_today, exp_planned, exp_overdue) in [
+            ('mail.activity', 'Non accessible: deleted + company error managed like forbidden record', (1, 1, 3, 0)),
+            (self.test_record._name, 'Archiving removes activities', (1, 1, 1, 0)),
+            (self.test_lead_records._name, 'Accessible', (1, 1, 1, 0)),
+        ]:
+            with self.subTest(model_name=model_name, msg=msg):
+                group_values = next(values for values in groups_data if values['model'] == model_name)
+                self.assertEqual(group_values['total_count'], exp_total)
+                self.assertEqual(group_values['today_count'], exp_today)
+                self.assertEqual(group_values['planned_count'], exp_planned)
+                self.assertEqual(group_values['overdue_count'], exp_overdue)
+                if model_name == 'mail.activity':  # for mail.activity, there is a key with activities we can check
+                    self.assertEqual(sorted(group_values['activity_ids']), sorted((self.test_activities_removed + self.test_activities_company_2 + self.test_activities_free).ids))
 
 
 @tests.tagged('mail_activity')

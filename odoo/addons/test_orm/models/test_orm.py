@@ -1624,6 +1624,26 @@ class TestOrmModel_Selection_Required_For_Write_Override(models.Model):  # noqa:
         return super().write(vals)
 
 
+class SelectionCompanyDependent(models.Model):
+    _name = 'test_orm.model_selection_company_dependent'
+    _description = "Model with a company dependent selection field"
+
+    my_selection = fields.Selection([
+        ('manual', "Manual"),
+        ('auto', "Automatic"),
+    ], company_dependent=True)
+
+
+# pylint: disable=E0102
+class SelectionCompanyDependent(models.Model):  # noqa: F811
+    _inherit = 'test_orm.model_selection_company_dependent'
+    _description = "Model with a company dependent selection field extension without ondelete"
+
+    my_selection = fields.Selection(selection_add=[
+        ('semi_auto', "Semi-Automatic"),
+    ])
+
+
 # Special classes to ensure the correct usage of a shared cache amongst users.
 
 

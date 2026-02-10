@@ -205,6 +205,39 @@ describe("addToCart", () => {
         expect(child1.qty).toBe(2);
         expect(child2.qty).toBe(2);
     });
+
+    test("With pricelist acting on variants", async () => {
+        const store = await setupSelfPosEnv();
+        const productTemplate = store.models["product.template"].get(19);
+
+        store.addToCart(productTemplate, 1, "", [1]);
+        store.addToCart(productTemplate, 1, "", [2]);
+
+        expect(store.currentOrder.lines[0].price_unit).toBe(10);
+        expect(store.currentOrder.lines[1].price_unit).toBe(15);
+
+        store.currentOrder.removeOrderline(store.currentOrder.lines[0]);
+        store.currentOrder.removeOrderline(store.currentOrder.lines[0]);
+        expect(store.currentOrder.lines).toHaveLength(0);
+
+        const pricelist = store.models["product.pricelist"].get(4);
+        store.config.pricelist_id = pricelist;
+
+        store.addToCart(productTemplate, 1, "", [1]);
+        store.addToCart(productTemplate, 1, "", [2]);
+        expect(store.currentOrder.lines[0].price_unit).toBe(15);
+        expect(store.currentOrder.lines[1].price_unit).toBe(20);
+    });
+
+    test("With price_extra for attribute create_variant='no_variant'", async () => {
+        const store = await setupSelfPosEnv();
+        const productTemplate = store.models["product.template"].get(20);
+
+        store.addToCart(productTemplate, 1, "", [3]);
+        store.addToCart(productTemplate, 1, "", [4]);
+        expect(store.currentOrder.lines[0].price_unit).toBe(200);
+        expect(store.currentOrder.lines[1].price_unit).toBe(210);
+    });
 });
 
 test("sendDraftOrderToServer", async () => {
@@ -226,6 +259,16 @@ test("sendDraftOrderToServer", async () => {
     expect(store.currentOrder.id).toBe(syncOrder.id);
     // no other order should be created
     expect(store.models["pos.order"].length).toBe(1);
+});
+
+test("sendDraftOrderToServer updateLastOrderChange", async () => {
+    const store = await setupSelfPosEnv();
+    const order = await getFilledSelfOrder(store);
+
+    const product1 = store.models["product.template"].get(8);
+    await store.addToCart(product1, 1, "");
+    await store.sendDraftOrderToServer();
+    expect(Object.keys(order.last_order_preparation_change.lines)).toHaveLength(3);
 });
 
 describe("setOrderPrices", () => {
@@ -304,4 +347,32 @@ test("cancelBackendOrder", async () => {
 
     expect(order.state).toBe("cancel");
     expect(store.router.activeSlot).toBe("default");
+});
+
+test("resetCategorySelection", async () => {
+    const store = await setupSelfPosEnv();
+    store.computeAvailableCategories();
+    const [ctg1, ctg2] = store.availableCategories.slice(0, 2);
+
+    // Kiosk Mode
+    store.config.self_ordering_mode = "kiosk";
+    expect(store.currentCategory.id).toBe(ctg1.id);
+    store.currentCategory = ctg2;
+    expect(store.currentCategory.id).toBe(ctg2.id);
+    store.resetCategorySelection();
+    expect(store.currentCategory.id).toBe(ctg1.id);
+
+    // Mobile Mode
+    store.config.self_ordering_mode = "mobile";
+    store.currentCategory = ctg2;
+    expect(store.currentCategory.id).toBe(ctg2.id);
+    store.resetCategorySelection();
+    expect(store.currentCategory.id).toBe(ctg2.id);
+
+    // On Order Confirmation
+    await getFilledSelfOrder(store);
+    store.config.self_ordering_mode = "kiosk";
+    expect(store.currentCategory.id).toBe(ctg2.id);
+    await store.confirmOrder();
+    expect(store.currentCategory.id).toBe(ctg1.id);
 });

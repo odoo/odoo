@@ -3809,6 +3809,17 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.state, 'confirmed')
         self.assertEqual(len(mo.workorder_ids), 2)
 
+    def test_unlink_update_workcenter_productivity(self):
+        """ Test that workcenter_productivity entries for deleted work order has end date set
+        """
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_3
+        mo = mo_form.save()
+        mo.workorder_ids[0].button_start()
+        time_log = mo.workorder_ids[0].time_ids[0]
+        mo.workorder_ids[0].unlink()
+        self.assertIsNot(time_log.date_end, False)
+
     def test_consumption_action_set_qty_and_validate(self):
         """
         Check `To Consume` and `Consumed` qty are correctly updated to match the consumption warning values
@@ -4869,6 +4880,14 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(fields.Datetime.now(), production.workorder_ids.date_start)
         self.assertEqual(fields.Datetime.now() + timedelta(hours=6), production.workorder_ids.date_finished, "The time difference should be 6 hours: 6 for the shift and 0 for the lunch pause")
 
+        production.workorder_ids.workcenter_id = self.workcenter_2.id
+        workcenter_5.time_efficiency = 50
+        self.assertEqual(production.workorder_ids.date_finished, fields.Datetime.now() + timedelta(hours=7), "The time difference should be 7 hours: 6 for the shift and 1 for the lunch pause")
+        production.workorder_ids.workcenter_id = workcenter_5
+        self.assertEqual(production.workorder_ids.date_finished, fields.Datetime.now() + timedelta(hours=12), "The time difference should be 12 hours: 6 / 0.5 for the shift and 0 for the lunch pause")
+        production.workorder_ids.workcenter_id = self.workcenter_2.id
+        self.assertEqual(production.workorder_ids.date_finished, fields.Datetime.now() + timedelta(hours=7), "The time difference should be 7 hours: 6 for the shift and 1 for the lunch pause")
+
     def test_compute_tracked_time_3(self):
         """
         Checks that the expected duration calculation is correct when the BoM has a different UoM than the product.
@@ -5399,3 +5418,48 @@ class TestTourMrpOrder(HttpCase):
         self.assertEqual(mo.move_raw_ids.move_line_ids.quantity, 7)
         self.assertEqual(mo.move_byproduct_ids.quantity, 7)
         self.assertEqual(len(mo.move_byproduct_ids.move_line_ids), 1)
+
+    def test_mrp_multi_step_draft_mo_creates_component_transfer(self):
+        '''
+        Ensure a transfer to pre-prod is created for components even when the MO
+        is in draft.
+        '''
+        # Enable storage locations
+        self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
+        # Set WH manufacture to 2-step
+        warehouse = self.env.ref('stock.warehouse0')
+        warehouse.manufacture_steps = 'pbm'
+        component, final_product = self.env['product.product'].create([{
+            'name': name,
+            'is_storable': True,
+        } for name in ['Wooden Leg', 'Table']])
+        mo = self.env['mrp.production'].create({
+            'product_id': final_product.id,
+            'product_uom_qty': 1.0,
+            'warehouse_id': warehouse.id,
+        })
+        self.assertEqual(len(mo.move_raw_ids), 0)
+        self.assertEqual(mo.state, 'draft')
+
+        self.authenticate('admin', 'admin')
+        self.opener.post(
+            url=self.base_url() + '/product/catalog/update_order_line_info',
+            json={
+                "params": {
+                    'res_model': 'mrp.production',
+                    'order_id': mo.id,
+                    'product_id': component.id,
+                    'quantity': 2,
+                    'child_field': 'move_raw_ids',
+                },
+            },
+        )
+
+        self.assertEqual(len(mo.move_raw_ids), 1)
+
+        mo.action_confirm()
+        component_transfer = self.env['stock.move'].search([
+            ('product_id', '=', component.id),
+            ('location_dest_id', '=', warehouse.pbm_loc_id.id)
+        ])
+        self.assertEqual(component_transfer.product_uom_qty, 2)

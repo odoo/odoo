@@ -25,7 +25,7 @@ export class HeaderFadeOut extends BaseHeaderSpecial {
         this.isVisible = false;
         // We want to translate the header after the transition is complete
         this.fadeTimeout = this.waitForTimeout(
-            () => (this.el.style.transform = "translate(0, -100%)"),
+            () => (this.transformValue = "translate(0, -100%)"),
             400
         );
         this.adaptToHeaderChangeLoop(1);

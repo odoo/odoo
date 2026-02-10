@@ -90,7 +90,7 @@ class HrAttendanceOvertimeLine(models.Model):
 
     def _linked_attendances(self):
         return self.env['hr.attendance'].search([
-            ('date', 'in', self.mapped('date')),
+            ('check_in', 'in', self.mapped('time_start')),
             ('employee_id', 'in', self.employee_id.ids),
         ])
 

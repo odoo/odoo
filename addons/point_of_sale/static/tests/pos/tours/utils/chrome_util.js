@@ -193,11 +193,18 @@ export function clickOrders() {
 export function clickPresetTimingSlot() {
     return { trigger: ".pos-leftheader .preset-time-btn", run: "click" };
 }
-export function presetTimingSlotIs(hour) {
-    return { trigger: `.pos-leftheader .preset-time-btn:contains('${hour}')` };
-}
 export function selectPresetTimingSlotHour(hour) {
-    return { trigger: `.modal button:contains('${hour}')`, run: "click" };
+    return [
+        {
+            content: `Click on the slot hour ${hour} in the modal`,
+            trigger: `.modal:has(.modal-header:contains(select a preset)) button:contains('${hour}')`,
+            run: "click",
+        },
+        {
+            content: `Wait the slot hour ${hour} is set and loading is done (to avoid currency error)`,
+            trigger: `body:not(:has(.modal)):not(:has(.oe_status .fa-spin)) .pos-leftheader .preset-time-btn:contains(${hour})`,
+        },
+    ];
 }
 export function presetTimingSlotHourNotExists(hour) {
     return { trigger: negate(`.modal button:visible:contains('${hour}')`) };
@@ -270,6 +277,51 @@ export function clickOnScanButton() {
         run: "click",
     };
 }
+
+export function ClickOnCustomerDisplayButton() {
+    return {
+        content: "Click on the customer display button inside the burger menu",
+        trigger: "span i.fa-desktop",
+        run: "click",
+    };
+}
+export function CustomerDisplayHasThisDeviceButton() {
+    return {
+        isActive: ["desktop"],
+        content: "Check that the customer display popup has a 'This device' button",
+        trigger: ".o_dialog .modal-body .container .btn-primary:contains('This device')",
+    };
+}
+export function CustomerDisplayHasQRButton() {
+    return {
+        isActive: ["desktop"],
+        content: "Check that the customer display popup has a 'Display QR' button",
+        trigger: ".o_dialog .modal-body .container .btn-secondary:contains('Display QR')",
+    };
+}
+export function ClickCustomerDisplayThisDeviceButton() {
+    return {
+        isActive: ["desktop"],
+        content: "Check that the customer display popup has a 'This device' button",
+        trigger: ".btn-primary:contains('This device')",
+        run: "click",
+    };
+}
+export function ClickCustomerDisplayQRButton() {
+    return {
+        isActive: ["desktop"],
+        content: "Check that the customer display popup has a 'Display QR' button",
+        trigger: ".btn-secondary:contains('Display QR')",
+        run: "click",
+    };
+}
+export function CustomerDisplayQRIsDisplayed() {
+    return {
+        isActive: ["desktop"],
+        content: "Check that the QR code is displayed on screen",
+        trigger: ".o-overlay-item .modal .modal-body img.square",
+    };
+}
 export function freezeDateTime(millis) {
     return [
         {
@@ -279,6 +331,35 @@ export function freezeDateTime(millis) {
             },
         },
     ];
+}
+
+const originalNow = DateTime.now;
+
+export function withTimeFreeze(millis, steps) {
+    return [
+        {
+            content: `Freeze time to ${millis}`,
+            trigger: "body",
+            run: () => {
+                sessionStorage.setItem("pos_test_frozen_time", millis);
+                DateTime.now = () => DateTime.fromMillis(millis);
+            },
+        },
+        ...steps,
+        {
+            content: "Unfreeze time",
+            trigger: "body",
+            run: () => {
+                sessionStorage.removeItem("pos_test_frozen_time");
+                DateTime.now = originalNow;
+            },
+        },
+    ].flat();
+}
+
+if (sessionStorage.getItem("pos_test_frozen_time")) {
+    const millis = parseInt(sessionStorage.getItem("pos_test_frozen_time"));
+    DateTime.now = () => DateTime.fromMillis(millis);
 }
 
 export function selectPresetDateButton(formattedDate) {

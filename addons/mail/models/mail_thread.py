@@ -819,13 +819,13 @@ class MailThread(models.AbstractModel):
                 bounced_record._message_receive_bounce(bounced_email, bounced_partner)
 
             if bounced_message and (bounced_email or bounced_partner):
-                self.env['mail.notification'].sudo().search(Domain(
-                    'mail_message_id', '=', bounced_message.id
-                ) & Domain.OR([
-                    Domain('res_partner_id', 'in', bounced_partner.ids) if bounced_partner else [],
-                    Domain('mail_email_address', '=', bounced_email) if bounced_email else [],
-                ]),
-                ).write({
+                domain = Domain('mail_message_id', '=', bounced_message.id)
+                sub_domains = []
+                if bounced_partner:
+                    sub_domains.append(Domain('res_partner_id', 'in', bounced_partner.ids))
+                if bounced_email:
+                    sub_domains.append(Domain('mail_email_address', '=', bounced_email))
+                self.env['mail.notification'].sudo().search(domain & Domain.OR(sub_domains)).write({
                     'failure_reason': html2plaintext(message_dict.get('body') or ''),
                     'failure_type': 'mail_bounce',
                     'notification_status': 'bounce',
@@ -1636,6 +1636,9 @@ class MailThread(models.AbstractModel):
                     break
                 if part.get_content_type() == 'binary/octet-stream':
                     _logger.warning("Message containing an unexpected Content-Type 'binary/octet-stream', assuming 'application/octet-stream'")
+                    part.replace_header('Content-Type', 'application/octet-stream')
+                if part.get_content_type() == '*/*':
+                    _logger.warning("Message containing an unexpected Content-Type '*/*', assuming 'application/octet-stream'")
                     part.replace_header('Content-Type', 'application/octet-stream')
                 if part.get_content_type() == 'multipart/alternative':
                     alternative = True
@@ -5001,7 +5004,7 @@ class MailThread(models.AbstractModel):
             if is_request and store.target.is_current_user(self.env):
                 res["hasReadAccess"] = thread.sudo(False).has_access("read")
                 res["hasWriteAccess"] = thread.sudo(False).has_access("write")
-                res["canPostOnReadonly"] = self._mail_post_access == "read"
+                res["canPostOnReadonly"] = self._mail_get_operation_for_mail_message_operation('create').get(self) == "read"
             if (
                "activities" in request_list
                 and isinstance(self.env[self._name], self.env.registry["mail.activity.mixin"])

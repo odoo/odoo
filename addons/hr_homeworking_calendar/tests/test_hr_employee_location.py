@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from freezegun import freeze_time
 
 from odoo.addons.hr_homeworking_calendar.tests.common import TestHrHomeworkingCommon
 
@@ -106,3 +107,16 @@ class TestHrHomeworkingHrEmployeeLocation(TestHrHomeworkingCommon):
 
         # exception should be deleted
         self.assertEqual(len(created_worklocations), 0, 'should have deleted the worklocation record')
+
+    def test_get_views_replace_hw_location_by_date(self):
+        view = self.env["ir.ui.view"].create({
+            "arch": """<list><field name="work_location_name" /></list>""",
+            "model": "hr.employee",
+            "type": "list",
+        })
+        # Wednesday January 28 2026
+        with freeze_time("2026-01-28"):
+            got_view = self.env["hr.employee"].get_views([(view.id, "list")])
+        self.assertTrue("work_location_name" in got_view["models"]["hr.employee"]["fields"])
+        self.assertTrue("wednesday_location_id" in got_view["models"]["hr.employee"]["fields"])
+        self.assertEqual(got_view["views"]["list"]["arch"], """<list><field name="wednesday_location_id"/></list>""")

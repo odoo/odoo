@@ -128,6 +128,7 @@ export class BlockTab extends Component {
             {
                 withLoadingEffect: false,
                 shouldInterceptClick: true,
+                canTimeout: false,
             }
         );
     }
@@ -258,6 +259,7 @@ export class BlockTab extends Component {
                 );
                 this.shared.operation.next(async () => await dragAndDropProm, {
                     withLoadingEffect: false,
+                    canTimeout: false,
                 });
                 const restoreDragSavePoint = this.shared.history.makeSavePoint();
                 this.cancelDragAndDrop = () => {
@@ -448,6 +450,7 @@ export class BlockTab extends Component {
                             {
                                 withLoadingEffect: false,
                                 shouldInterceptClick: true,
+                                canTimeout: false,
                             }
                         );
                     }
@@ -477,6 +480,15 @@ export class BlockTab extends Component {
             if (cancel) {
                 this.cancelDragAndDrop();
                 return;
+            }
+            // Update `snippetEl` (and `draggedEl` of `dragState`) if it was
+            // replaced in the handler.
+            if (this.dragState.replacedSnippetEl) {
+                if (this.dragState.draggedEl === snippetEl) {
+                    this.dragState.draggedEl = this.dragState.replacedSnippetEl;
+                }
+                snippetEl = this.dragState.replacedSnippetEl;
+                delete this.dragState.replacedSnippetEl;
             }
         }
         this.env.editor.config.updateInvisibleElementsPanel();

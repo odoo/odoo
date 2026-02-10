@@ -826,6 +826,9 @@ class SaleOrder(models.Model):
             warnings = OrderedSet()
             if partner_msg := order.partner_id.sale_warn_msg:
                 warnings.add((order.partner_id.name or order.partner_id.display_name) + ' - ' + partner_msg)
+            if partner_parent_msg := order.partner_id.parent_id.sale_warn_msg:
+                parent = order.partner_id.parent_id
+                warnings.add((parent.name or parent.display_name) + ' - ' + partner_parent_msg)
             for line in order.order_line:
                 if product_msg := line.sale_line_warn_msg:
                     warnings.add(line.product_id.display_name + ' - ' + product_msg)
@@ -914,7 +917,7 @@ class SaleOrder(models.Model):
 
     @api.onchange('pricelist_id')
     def _onchange_pricelist_id_show_update_prices(self):
-        self.show_update_pricelist = bool(self.order_line)
+        self.show_update_pricelist = bool(self.order_line and self._origin.pricelist_id != self.pricelist_id)
 
     @api.onchange('prepayment_percent')
     def _onchange_prepayment_percent(self):
@@ -924,6 +927,8 @@ class SaleOrder(models.Model):
     @api.onchange('order_line')
     def _onchange_order_line(self):
         for index, line in enumerate(self.order_line):
+            if line.display_type == 'line_subsection' and not line.parent_id:
+                line.display_type = 'line_section'
             combo_item_lines = line._get_linked_lines().filtered('combo_item_id')
             if line.product_template_id.type != 'combo':
                 if combo_item_lines:

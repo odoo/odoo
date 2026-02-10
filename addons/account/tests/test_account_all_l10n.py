@@ -50,7 +50,9 @@ def test_all_l10n(env):
     # Install the requirements
     _logger.info('Installing all l10n modules')
     l10n_mods = env['ir.module.module'].search([
+        '|',
         ('name', '=like', 'l10n_%'),
+        ('name', '=like', 'test_l10n_%'),
         ('state', '=', 'uninstalled'),
     ])
     with patch.object(AccountChartTemplate, 'try_loading', try_loading_patch),\

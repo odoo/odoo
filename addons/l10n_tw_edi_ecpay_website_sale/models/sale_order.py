@@ -11,7 +11,7 @@ class SaleOrder(models.Model):
     l10n_tw_edi_carrier_type = fields.Selection(
         string="Carrier Type",
         selection=[
-            ("1", "ECpay e-invoice carrier"),
+            ("1", "Member Account"),
             ("2", "Citizen Digital Certificate"),
             ("3", "Mobile Barcode"),
             ("4", "EasyCard"),

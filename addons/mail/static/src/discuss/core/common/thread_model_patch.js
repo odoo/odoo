@@ -283,7 +283,7 @@ const threadPatch = {
     },
     /** @returns {import("models").ChannelMember} */
     computeCorrespondent() {
-        if (this.channel_type === "channel") {
+        if (["channel", "group"].includes(this.channel_type)) {
             return undefined;
         }
         const correspondents = this.correspondents;
@@ -485,6 +485,7 @@ const threadPatch = {
             const command = commandRegistry.get(firstWord, false);
             if (
                 command &&
+                (!command.condition || command.condition({ store: this.store, thread: this })) &&
                 (!command.channel_types || command.channel_types.includes(this.channel_type))
             ) {
                 await this.executeCommand(command, textContent);

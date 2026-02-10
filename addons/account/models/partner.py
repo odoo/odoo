@@ -279,7 +279,14 @@ class AccountFiscalPosition(models.Model):
         return all_auto_apply_fpos._get_first_matching_fpos(delivery)
 
     def action_open_related_taxes(self):
-        return self.tax_ids._get_records_action(name=_("%s taxes", self.display_name))
+        list_view = self.env.ref('account.account_tax_fiscal_position_view_tree', raise_if_not_found=False)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._("%s taxes", self.display_name),
+            'res_model': 'account.tax',
+            'views': [(list_view.id if list_view else False, 'list'), (False, 'form')],
+            'domain': [('id', 'in', self.tax_ids.ids)],
+        }
 
     def action_create_foreign_taxes(self):
         self.ensure_one()
@@ -603,14 +610,14 @@ class ResPartner(models.Model):
         comodel_name='account.payment.method.line',
         check_company=True,
         company_dependent=True,
-        domain=lambda self: [('payment_type', '=', 'outbound'), ('company_id', 'parent_of', self.env.company.id)],
+        domain=lambda self: [('journal_id.active', '=', True), ('payment_type', '=', 'outbound'), ('company_id', 'parent_of', self.env.company.id)],
     )
 
     property_inbound_payment_method_line_id = fields.Many2one(
         comodel_name='account.payment.method.line',
         check_company=True,
         company_dependent=True,
-        domain=lambda self: [('payment_type', '=', 'inbound'), ('company_id', 'parent_of', self.env.company.id)],
+        domain=lambda self: [('journal_id.active', '=', True), ('payment_type', '=', 'inbound'), ('company_id', 'parent_of', self.env.company.id)],
     )
 
     def _compute_bank_count(self):
@@ -880,8 +887,8 @@ class ResPartner(models.Model):
         if not vat:
             return None
 
-        # Sometimes, the vat is specified with some whitespaces.
-        normalized_vat = vat.replace(' ', '')
+        # Sometimes, the vat is specified with some whitespaces or dots.
+        normalized_vat = vat.replace(' ', '').replace('.', '')
         country_prefix = re.match('^[a-zA-Z]{2}|^', vat).group()
 
         partner = self.env['res.partner'].search(extra_domain + [('vat', 'in', (normalized_vat, vat))], limit=2)

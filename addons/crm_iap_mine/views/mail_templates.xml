@@ -3,6 +3,48 @@
 <odoo>
     <template id="enrich_company" inherit_id="iap_mail.enrich_company">
         <xpath expr="//div[hasclass('o_partner_autocomplete_enrich_info')]" position="inside">
+            <div class="col-sm-12 row m-0 p-0">
+                <div t-if="vat" class="d-flex my-1 p-0 col-sm-3">
+                    <i class="fa fa-fw me-2 fa-solid fa-id-card text-primary"/>
+                    <b>Tax ID</b>
+                </div>
+                <div t-if="vat" class="my-1 col-sm-9" t-out="vat" />
+                <div t-if="country" class="d-flex my-1 p-0 col-sm-3">
+                    <i class="fa fa-fw me-2 fa-address-book text-primary"/>
+                    <b>Address</b>
+                </div>
+                <div class="my-1 col-sm-9">
+                    <div class="o_address_format">
+                        <div t-if="zip_code">
+                            <div t-if="street" class="o_address_street" t-out="street"/>
+                            <div t-if="street2"  class="o_address_street" t-out="street2"/>
+                            <div>
+                                <span t-if="city" t-out="city"/>
+                                <span t-if="zip_code" t-out="zip_code"/>
+                                <span t-if="state" t-out="state"/>
+                                <span t-if="state_name" t-out="state_name"/>
+                            </div>
+                            <div t-if="country" class="o_address_country" t-out="country"/>
+                        </div>
+                    </div>
+                </div>
+                <div t-if="website" class="d-flex my-1 p-0 col-sm-3">
+                    <i class="fa fa-fw me-2 fa-globe text-primary"/>
+                    <b>Website</b>
+                </div>
+                <div t-if="website" class="col-sm-9">
+                    <a target="_blank" t-attf-href="https://{{website}}" t-out="website" style="font-weight:normal; padding: 2px 0px; margin: 1px 0px; border-radius: 13px; display: inline-block;"/>
+                </div>
+                <div t-if="unspsc_codes" class="d-flex my-1 p-0 col-sm-3">
+                    <i class="fa fa-fw me-2 fa-cube text-primary"/>
+                    <b>Industries</b>
+                </div>
+                 <div t-if="unspsc_codes" class="col-sm-9">
+                    <t t-foreach="unspsc_codes" t-as="tag_item">
+                        <label t-out="tag_item[1]" class="o_tag o_tag_color_7"  style="font-weight:normal; padding: 2px 10px; margin: 1px 0px; border-radius: 13px; display: inline-block;"/>
+                    </t>
+                </div>
+            </div>
             <t t-if="people_data">
                 <t t-set="hasPhoneNumbers" t-value="any([people['phone'] for people in people_data])"/>
                 <div style="font-size:16px; margin: 9px 0;">

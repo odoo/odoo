@@ -236,7 +236,7 @@ class ResCompany(models.Model):
         for account in accounts:
             account_variation = account.account_stock_variation_id
             if not account_variation:
-                account_variation = self.env.company.expense_account_id
+                account_variation = self.expense_account_id
             if not account_variation:
                 continue
             balance = inventory_data.get(account, 0) - accounting_data.get(account, 0)
@@ -336,7 +336,7 @@ class ResCompany(models.Model):
         if not closing:
             return False
         am_state_field = self.env['ir.model.fields'].search([('model', '=', 'account.move'), ('name', '=', 'state')], limit=1)
-        state_tracking = closing.message_ids.tracking_value_ids.filtered(lambda t: t.field_id == am_state_field).sorted('id')
+        state_tracking = closing.message_ids.sudo().tracking_value_ids.filtered(lambda t: t.field_id == am_state_field).sorted('id')
         return state_tracking[-1:].create_date or fields.Datetime.to_datetime(closing.date)
 
     def _save_closing_id(self, move_id):

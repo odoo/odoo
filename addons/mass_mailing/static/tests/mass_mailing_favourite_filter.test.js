@@ -94,7 +94,7 @@ class Partner extends models.Model {
 
     _records = [
         { id: 1, name: "Azure Interior" },
-        { id: 2, name: "Deco Addict" },
+        { id: 2, name: "Acme Corporation" },
         { id: 3, name: "Marc Demo" },
     ];
 }

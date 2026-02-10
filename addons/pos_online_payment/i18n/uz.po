@@ -1,0 +1,669 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_online_payment
+#
+#
+# Translated by:
+# Deepvision - info@deepvision.uz | +998 77-093-0007
+# Amon Olimov - amon.bars@gmail.com
+# Jonibek Yorqulov - j.yorqulov@deepvision.uz
+# Mirzohidkhon Ulugkhujaev ulugkhujayevmirzohidxon@gmail.com
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-10-08 18:38+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+#, fuzzy
+msgid "<strong>Error:</strong> The currency is missing or invalid."
+msgstr "<strong>Xato:</strong> Valyuta ko‘rsatilmagan yoki noto‘g‘ri."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+#, fuzzy
+msgid "<strong>Error:</strong> There was a problem during the payment process."
+msgstr "<strong>Xato:</strong> To‘lov jarayonida muammo yuzaga keldi."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_config.py:0
+#, fuzzy
+msgid "A POS config cannot have more than one online payment method."
+msgstr ""
+"POS konfiguratsiyasida bittadan ortiq onlayn to‘lov usuli bo‘lishi mumkin "
+"emas."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, fuzzy
+msgid "A payment option must be specified."
+msgstr "To‘lov usuli ko‘rsatilishi shart."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, fuzzy
+msgid "A validation payment cannot be used for a Point of Sale online payment."
+msgstr ""
+"Tasdiqlash to‘lovini Savdo nuqtasi onlayn to‘lovi uchun ishlatib bo‘lmaydi."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+#, fuzzy
+msgid "All available providers"
+msgstr "Barcha mavjud provayderlar"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+#, fuzzy
+msgid ""
+"All payment providers configured for an online payment method must use the "
+"same currency as the Sales Journal, or the company currency if that is not "
+"set, of the POS config."
+msgstr ""
+"POS konfiguratsiyasida onlayn to‘lov usuli uchun sozlangan barcha to‘lov "
+"provayderlari Savdo jurnali valyutasi yoki, agar u belgilanmagan bo‘lsa, "
+"kompaniya valyutasidan foydalanishi shart."
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__online_payment_provider_ids
+#, fuzzy
+msgid "Allowed Providers"
+msgstr "Ruxsat etilgan provayderlar"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+#, fuzzy
+msgid "Amount"
+msgstr "Miqdor"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
+#, fuzzy
+msgid "Amount:"
+msgstr "Miqdor:"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+#, fuzzy
+msgid "Cancel payment"
+msgstr "To‘lovni bekor qilish"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#, fuzzy
+msgid "Cannot create a POS online payment without an accounting payment."
+msgstr "Buxgalteriya to‘lovisiz POS onlayn to‘lovini yaratib bo‘lmaydi."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#, fuzzy
+msgid ""
+"Cannot create a POS payment with a not online payment method and an online "
+"accounting payment."
+msgstr ""
+"Onlayn bo‘lmagan to‘lov usuli va onlayn buxgalteriya to‘lovi bilan POS "
+"to‘lovni yaratib bo‘lmaydi."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment.py:0
+#, fuzzy
+msgid "Cannot edit a POS online payment essential data."
+msgstr "POS onlayn to‘lovning asosiy ma'lumotlarini o‘zgartirib bo‘lmaydi."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+#, fuzzy
+msgid ""
+"Could not create an online payment method (company_id=%(company_id)d, "
+"pos_config_id=%(pos_config_id)d)"
+msgstr ""
+"Onlayn to‘lov usulini yaratib bo‘lmadi (company_id=%(company_id)d, "
+"pos_config_id=%(pos_config_id)d)"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_account_payment__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__display_name
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__display_name
+#, fuzzy
+msgid "Display Name"
+msgstr "Ko‘rsatiladigan nom"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__has_an_online_payment_provider
+#, fuzzy
+msgid "Has An Online Payment Provider"
+msgstr "Onlayn to‘lov provayderi mavjud"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_account_payment__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_payment_transaction__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__id
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_session__id
+#, fuzzy
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
+#, fuzzy
+msgid "Invalid online payment"
+msgstr "Noto‘g‘ri onlayn to‘lov"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
+#, fuzzy
+msgid "Invalid online payments"
+msgstr "Noto‘g‘ri onlayn to‘lovlar"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
+#, fuzzy
+msgid "Invoice could not be generated"
+msgstr "Hisob-faktura yaratilmadi"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__next_online_payment_amount
+#, fuzzy
+msgid "Next online payment amount to pay"
+msgstr "To‘lanishi kerak bo‘lgan keyingi onlayn to‘lov miqdori"
+
+#. module: pos_online_payment
+#: model:ir.model.fields.selection,name:pos_online_payment.selection__pos_payment_method__type__online
+#, fuzzy
+msgid "Online"
+msgstr "Onlayn"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__is_online_payment
+#, fuzzy
+msgid "Online Payment"
+msgstr "Onlayn to‘lov"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__online_payment_method_id
+#, fuzzy
+msgid "Online Payment Method"
+msgstr "Onlayn to‘lov usuli"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
+#, fuzzy
+msgid "Online accounting payment"
+msgstr "Onlayn buxgalteriya to‘lovi"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
+#, fuzzy
+msgid "Online payment unavailable"
+msgstr "Onlayn to‘lov mavjud emas"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
+#, fuzzy
+msgid "Online payments cannot have a negative amount (%s: %s)."
+msgstr "Onlayn to‘lovlar manfiy summaga ega bo‘lishi mumkin emas (%s: %s)."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+#, fuzzy
+msgid "Order ID"
+msgstr "Buyurtma ID"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+#, fuzzy
+msgid "Order ID:"
+msgstr "Buyurtma ID:"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+#, fuzzy
+msgid "Order Reference"
+msgstr "Buyurtma ma'lumotnomasi"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
+#, fuzzy
+msgid "Order reference:"
+msgstr "Buyurtma raqami:"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
+#, fuzzy
+msgid "Order saving issue"
+msgstr "Buyurtmani saqlashda muammo yuzaga keldi"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/account_payment.py:0
+#: code:addons/pos_online_payment/models/payment_transaction.py:0
+#: model:ir.model.fields,field_description:pos_online_payment.field_account_payment__pos_order_id
+#: model:ir.model.fields,field_description:pos_online_payment.field_payment_transaction__pos_order_id
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.payment_transaction_form
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.view_account_payment_form_inherit_pos_online_payment
+#, fuzzy
+msgid "POS Order"
+msgstr "POS buyurtma"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+#, fuzzy
+msgid "Payment"
+msgstr "To‘lov"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+#, fuzzy
+msgid "Payment Confirmation"
+msgstr "To‘lovni tasdiqlash"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+#, fuzzy
+msgid "Payment Providers"
+msgstr "To‘lov provayderlari"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_payment_transaction
+#, fuzzy
+msgid "Payment Transaction"
+msgstr "To‘lov operatsiyasi"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_account_payment
+#, fuzzy
+msgid "Payments"
+msgstr "To‘lovlar"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_config
+#, fuzzy
+msgid "Point of Sale Configuration"
+msgstr "Savdo nuqtasi sozlamalari"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_order
+#, fuzzy
+msgid "Point of Sale Orders"
+msgstr "Savdo nuqtasi buyurtmalari"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_payment_method
+#, fuzzy
+msgid "Point of Sale Payment Methods"
+msgstr "Savdo nuqtasi to‘lov usullari"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_payment
+#, fuzzy
+msgid "Point of Sale Payments"
+msgstr "Savdo nuqtasi to‘lovlari"
+
+#. module: pos_online_payment
+#: model:ir.model,name:pos_online_payment.model_pos_session
+#, fuzzy
+msgid "Point of Sale Session"
+msgstr "Savdo nuqtasi seansi"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+#, fuzzy
+msgid "Processed by"
+msgstr "Qayta ishlagan:"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
+#, fuzzy
+msgid "QR Code to pay"
+msgstr "To‘lash uchun QR kod"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
+#, fuzzy
+msgid "Scan the QR code to pay"
+msgstr "To‘lash uchun QR kodni skanerlang"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/components/popups/online_payment_popup/online_payment_popup.xml:0
+#, fuzzy
+msgid "Scan to pay"
+msgstr "To‘lash uchun skanerlang"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
+#, fuzzy
+msgid "Server error"
+msgstr "Server xatosi"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_payment_method.py:0
+msgid "The %s already has one online payment."
+msgstr ""
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/payment_transaction.py:0
+#, fuzzy
+msgid "The POS online payment (tx.id=%d) could not be saved correctly"
+msgstr "POS onlayn to‘lovi (tx.id=%d) to‘g‘ri saqlanmadi"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/payment_transaction.py:0
+#, fuzzy
+msgid ""
+"The POS online payment (tx.id=%d) could not be saved correctly because the "
+"online payment method could not be found"
+msgstr ""
+"POS onlayn to‘lovi (tx.id=%d) onlayn to‘lov usuli topilmaganligi sababli "
+"to‘g‘ri saqlanmadi"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, fuzzy
+msgid "The POS session is not opened."
+msgstr "POS seansi ochilmagan."
+
+#. module: pos_online_payment
+#: model:ir.model.fields,help:pos_online_payment.field_payment_transaction__pos_order_id
+#, fuzzy
+msgid "The Point of Sale order linked to the payment transaction"
+msgstr "To‘lov tranzaksiyasiga bog‘langan Sotuv nuqtasi buyurtmasi"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,help:pos_online_payment.field_account_payment__pos_order_id
+#, fuzzy
+msgid "The Point of Sale order linked to this payment"
+msgstr "Ushbu to‘lovga bog‘langan Sotuv nuqtasi buyurtmasi"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
+#, fuzzy
+msgid "The QR Code for paying could not be generated."
+msgstr "To‘lov uchun QR kod yaratib bo‘lmadi."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, fuzzy
+msgid "The amount to pay has changed. Please refresh the page."
+msgstr "To‘lov summasi o‘zgargan. Iltimos, sahifani yangilang."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, fuzzy
+msgid "The currency is invalid."
+msgstr "Valyuta noto‘g‘ri."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
+#, fuzzy
+msgid "The invoice could not be generated."
+msgstr "Hisob-faktura yaratib bo‘lmadi."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, fuzzy
+msgid "The order has been cancelled."
+msgstr "Buyurtma bekor qilindi."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
+#, fuzzy
+msgid "The order has not been saved correctly on the server."
+msgstr "Buyurtma serverda to‘g‘ri saqlanmadi."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_session.py:0
+#, fuzzy
+msgid "The partner of the POS online payment (id=%d) could not be found"
+msgstr "POS onlayn to‘lovining hamkori (id=%d) topilmadi"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, fuzzy
+msgid "The payment provider is invalid."
+msgstr "To‘lov provayderi noto‘g‘ri."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, fuzzy
+msgid ""
+"The payment should either be direct, with redirection, or made by a token."
+msgstr ""
+"To‘lov to‘g‘ridan-to‘g‘ri, qayta yo‘naltirish orqali yoki token bilan amalga "
+"oshirilishi kerak."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, fuzzy
+msgid "The payment token is invalid."
+msgstr "To‘lov tokeni noto‘g‘ri."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/payment_transaction.py:0
+#, fuzzy
+msgid "The payment transaction (%d) has a negative amount."
+msgstr "To‘lov tranzaksiyasi (%d) manfiy summaga ega."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, fuzzy
+msgid "The provided order or access token is invalid."
+msgstr "Taqdim etilgan buyurtma yoki kirish tokeni noto‘g‘ri."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, fuzzy
+msgid "The provided partner_id is different than expected."
+msgstr "Taqdim etilgan hamkor_id kutilganidan farq qiladi."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
+#, fuzzy
+msgid "The saved order could not be retrieved."
+msgstr "Saqlangan buyurtmani olishning iloji bo‘lmadi."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
+#, fuzzy
+msgid ""
+"The total amount of remaining online payments to execute (%s) doesn't "
+"correspond to the remaining unpaid amount of the order (%s)."
+msgstr ""
+"Bajarilishi kerak bo‘lgan qolgan onlayn to‘lovlarning umumiy miqdori (%s) "
+"buyurtmaning to‘lanmagan qolgan miqdoriga (%s) mos kelmaydi."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
+#, fuzzy
+msgid "There are online payments that were missing in your view."
+msgstr "Ko‘rib chiqishingizda yetishmayotgan onlayn to‘lovlar mavjud."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
+#, fuzzy
+msgid ""
+"There is a problem with the server. The order online payment status cannot "
+"be retrieved."
+msgstr ""
+"Server bilan muammo yuz berdi. Buyurtmaning onlayn to‘lov holatini olishning "
+"iloji bo‘lmadi."
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
+#, fuzzy
+msgid ""
+"There is a problem with the server. The order online payment status cannot "
+"be retrieved. Are you sure there is no online payment for this order ?"
+msgstr ""
+"Server bilan muammo yuz berdi. Buyurtmaning onlayn to‘lov holatini olishning "
+"iloji bo‘lmadi. Ushbu buyurtma uchun onlayn to‘lov yo‘qligiga ishonchingiz "
+"komilmi?"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, fuzzy
+msgid ""
+"There is no online payment method configured for this Point of Sale order."
+msgstr ""
+"Ushbu Sotuv nuqtasi buyurtmasi uchun sozlangan onlayn to‘lov usuli mavjud "
+"emas."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, fuzzy
+msgid "There is nothing to pay for this order."
+msgstr "Bu buyurtma uchun to‘lanadigan hech narsa yo‘q."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+#, fuzzy
+msgid "There is nothing to pay."
+msgstr "To‘lanadigan hech narsa yo‘q."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
+#, fuzzy
+msgid "To Pay"
+msgstr "To‘lash"
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/models/pos_config.py:0
+#, fuzzy
+msgid ""
+"To use an online payment method in a POS config, it must have at least one "
+"published payment provider supporting the currency of that POS config."
+msgstr ""
+"POS konfiguratsiyasida onlayn to‘lov usulidan foydalanish uchun, unda ushbu "
+"POS konfiguratsiyasining valyutasini qo‘llab-quvvatlaydigan kamida bitta "
+"e'lon qilingan to‘lov provayderi bo‘lishi kerak."
+
+#. module: pos_online_payment
+#. odoo-python
+#: code:addons/pos_online_payment/controllers/payment_portal.py:0
+#, fuzzy
+msgid "Tokenization is not available for logged out customers."
+msgstr "Tizimdan chiqqan mijozlar uchun tokenlashtirish mavjud emas."
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+#, fuzzy
+msgid "Transaction Reference"
+msgstr "Tranzaksiya ma'lumotnomasi"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
+#, fuzzy
+msgid "Try again"
+msgstr "Qayta urinib ko‘ring"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__type
+#, fuzzy
+msgid "Type"
+msgstr "Tur"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
+#, fuzzy
+msgid "Updated online payments"
+msgstr "Yangilangan onlayn to‘lovlar"
+
+#. module: pos_online_payment
+#: model:ir.model.fields,help:pos_online_payment.field_pos_payment_method__is_online_payment
+#, fuzzy
+msgid ""
+"Use this payment method for online payments (payments made on a web page "
+"with online payment providers)"
+msgstr ""
+"Onlayn to‘lovlar uchun ushbu to‘lov usulidan foydalaning (veb-sahifada "
+"onlayn to‘lov provayderlari bilan amalga oshiriladigan to‘lovlar)"
+
+#. module: pos_online_payment
+#. odoo-javascript
+#: code:addons/pos_online_payment/static/src/app/utils/order_payment_validation.js:0
+#, fuzzy
+msgid "Yes"
+msgstr "Ha"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+#, fuzzy
+msgid "You have not activated any"
+msgstr "Siz hech qanday"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+#, fuzzy
+msgid "payment provider"
+msgstr "to‘lov provayderini"
+
+#. module: pos_online_payment
+#: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
+#, fuzzy
+msgid "to allow online payments."
+msgstr "onlayn to‘lovlarga ruxsat berish uchun faollashtirmagansiz."

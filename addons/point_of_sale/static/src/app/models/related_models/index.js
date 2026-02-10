@@ -1,6 +1,5 @@
 import { uuidv4 } from "@point_of_sale/utils";
 import { TrapDisabler } from "@point_of_sale/proxy_trap";
-import { createLazyGetter } from "@point_of_sale/lazy_getter";
 import { RecordStore } from "./record_store";
 import {
     RELATION_TYPES,
@@ -18,7 +17,7 @@ import {
 } from "./utils";
 import { Base } from "./base";
 import { processModelDefs } from "./model_defs";
-import { computeBackLinks, createExtraField, processModelClasses } from "./model_classes";
+import { createExtraField, processModelClasses } from "./model_classes";
 import { ormSerialization } from "./serialization";
 
 const AVAILABLE_EVENT = ["create", "update", "delete"];
@@ -38,6 +37,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         return processedModelDefs[model];
     }
     const disabler = new TrapDisabler();
+
+    // A cache for the backlink indexed maps: Map<RelationName, Map<ParentId, Record[]>>
+    const backlinkIndexes = new Map();
 
     /**
      * A model (e.g. pos.order) points to an instance of this class.
@@ -529,8 +531,52 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             if (!field) {
                 return undefined;
             }
-            createLazyGetter(record, link, computeBackLinks(field));
-            return record[link];
+            const relation = field.relation;
+            const inverseField = field.inverse_name;
+            const backLinkKey = this.name + field.name;
+            if (!backlinkIndexes.has(backLinkKey)) {
+                const recordsMap = record[STORE_SYMBOL].getRecordsMap(relation, "id");
+
+                const index = new Map();
+                for (const relRecord of recordsMap.values()) {
+                    const parentId = relRecord[RAW_SYMBOL][inverseField];
+                    const parentIds = parentId instanceof Set ? parentId : [parentId];
+
+                    for (const id of parentIds) {
+                        if (!id) {
+                            continue;
+                        }
+                        if (!index.has(id)) {
+                            index.set(id, []);
+                        }
+                        index.get(id).push(relRecord);
+                    }
+                }
+                backlinkIndexes.set(backLinkKey, index);
+
+                const unsubscribers = [];
+                unsubscribers.push(
+                    record.model.addEventListener("delete", (data) => {
+                        index.delete(data.id);
+                    })
+                );
+
+                const cleanup = () => {
+                    backlinkIndexes.delete(backLinkKey);
+                    for (const unsubscribe of unsubscribers) {
+                        unsubscribe?.();
+                    }
+                    unsubscribers.length = 0;
+                };
+
+                const relationModel = record.models[relation];
+                for (const operation of ["update", "create", "delete"]) {
+                    unsubscribers.push(relationModel.addEventListener(operation, cleanup));
+                }
+            }
+
+            const currentIndex = backlinkIndexes.get(backLinkKey);
+            return currentIndex.get(record.id) || [];
         }
 
         serializeForORM(record, opts = {}) {

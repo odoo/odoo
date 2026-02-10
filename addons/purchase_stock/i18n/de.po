@@ -7,14 +7,14 @@
 # Felix Schubert <felix.schubert@go-erp.com>, 2022
 # Larissa Manderfeld, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-30 18:36+0000\n"
-"PO-Revision-Date: 2025-12-22 09:20+0000\n"
+"POT-Creation-Date: 2026-01-30 18:36+0000\n"
+"PO-Revision-Date: 2026-02-02 13:43+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "purchase_stock/de/>\n"
@@ -308,7 +308,8 @@ msgstr "Tage bis Einkauf"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__group_rfq
 #: model:ir.model.fields,help:purchase_stock.field_res_users__group_rfq
 msgid ""
-"Define if RFQ should be grouped         together based on expected arrival.\n"
+"Define if RFQ should be grouped         together based on expected arrival, "
+"except for dropship operations.\n"
 "         On Order: Replenishment needs will be grouped together except for "
 "MTO.\n"
 "         Daily: Replenishment needs will be grouped if the expected arrival "
@@ -317,16 +318,15 @@ msgid ""
 "is the same week or week day\n"
 "         Always: Replenishment needs will always be grouped."
 msgstr ""
-"Legen Sie fest, ob Angebotsanfragen basierend         auf der "
-"voraussichtlichen Ankunft gruppiert werden sollen.\n"
-"         Bei Auftrag: Der Auffüllbedarf wird mit Ausnahme von "
-"Auftragsfertigungen gruppiert.\n"
-"         Täglich: Der Auffüllbedarf wird gruppiert, wenn das "
-"voraussichtliche Eintreffen am selben Tag erfolgt.\n"
-"         Wöchentlich: Der Auffüllbedarf wird gruppiert, wenn das "
-"voraussichtliche Eintreffen in derselben Woche oder an demselben Wochentag "
-"erfolgt.\n"
-"         Immer: Der Auffüllbedarf wird stets gruppiert."
+"Legen Sie fest, ob Angebotsnfragen basierend auf dem erwarteten Eintreffen "
+"gruppiert werden sollen, mit Ausnahme von Direktlieferungen.\n"
+"Bei Bestellung: Der Auffüllbedarf wird gruppiert, mit Ausnahme von "
+"Auftragsfertigung.\n"
+"Täglich: Der Auffüllbedarf wird gruppiert, wenn das erwartete Eintreffen am "
+"selben Tag erfolgt.\n"
+"Wöchentlich: Der Auffüllbedarf wird gruppiert, wenn das erwartete Eintreffen "
+"in derselben Woche oder an demselben Wochentag erfolgt.\n"
+"Immer: Der Auffüllbedarf wird immer gruppiert."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__delay_pass
@@ -698,7 +698,7 @@ msgstr "Am"
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_rfq__default
 msgid "On Order"
-msgstr "Bei Auftrag"
+msgstr "Bei Bestellung"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
@@ -1344,6 +1344,28 @@ msgstr "bestellt statt"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "this product should be manually replenished."
 msgstr "Dieses Produkt sollte manuell aufgefüllt werden."
+
+#~ msgid ""
+#~ "Define if RFQ should be grouped         together based on expected "
+#~ "arrival.\n"
+#~ "         On Order: Replenishment needs will be grouped together except "
+#~ "for MTO.\n"
+#~ "         Daily: Replenishment needs will be grouped if the expected "
+#~ "arrival is the same day\n"
+#~ "         Weekly: Replenishment needs will be grouped if the expected "
+#~ "arrival is the same week or week day\n"
+#~ "         Always: Replenishment needs will always be grouped."
+#~ msgstr ""
+#~ "Legen Sie fest, ob Angebotsanfragen basierend         auf der "
+#~ "voraussichtlichen Ankunft gruppiert werden sollen.\n"
+#~ "         Bei Auftrag: Der Auffüllbedarf wird mit Ausnahme von "
+#~ "Auftragsfertigungen gruppiert.\n"
+#~ "         Täglich: Der Auffüllbedarf wird gruppiert, wenn das "
+#~ "voraussichtliche Eintreffen am selben Tag erfolgt.\n"
+#~ "         Wöchentlich: Der Auffüllbedarf wird gruppiert, wenn das "
+#~ "voraussichtliche Eintreffen in derselben Woche oder an demselben "
+#~ "Wochentag erfolgt.\n"
+#~ "         Immer: Der Auffüllbedarf wird stets gruppiert."
 
 #~ msgid "<span class=\"text-info fw-bold fs-5 me-1\">units</span>"
 #~ msgstr "<span class=\"text-info fw-bold fs-5 me-1\">Einheiten</span>"

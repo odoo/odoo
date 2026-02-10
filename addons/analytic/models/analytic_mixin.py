@@ -6,6 +6,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL, Query, unique
 from odoo.tools.float_utils import float_compare, float_round
+from odoo.tools.sql import table_exists
 
 
 class AnalyticMixin(models.AbstractModel):
@@ -30,11 +31,7 @@ class AnalyticMixin(models.AbstractModel):
 
     def init(self):
         # Add a gin index for json search on the keys, on the models that actually have a table
-        query = ''' SELECT table_name
-                    FROM information_schema.tables
-                    WHERE table_name=%s '''
-        self.env.cr.execute(query, [self._table])
-        if self.env.cr.dictfetchone() and self._fields['analytic_distribution'].store:
+        if table_exists(self.env.cr, self._table) and self._fields['analytic_distribution'].store:
             query = fr"""
                 CREATE INDEX IF NOT EXISTS {self._table}_analytic_distribution_accounts_gin_index
                                         ON {self._table} USING gin(regexp_split_to_array(jsonb_path_query_array(analytic_distribution, '$.keyvalue()."key"')::text, '\D+'));
@@ -67,6 +64,14 @@ class AnalyticMixin(models.AbstractModel):
             rec.distribution_analytic_account_ids = self.env['account.analytic.account'].browse(ids)
 
     def _search_distribution_analytic_account_ids(self, operator, value):
+        if operator in ('any', 'not any', 'any!', 'not any!'):
+            if isinstance(value, Domain):
+                value = self.env['account.analytic.account'].search(value).ids
+            elif isinstance(value, Query):
+                value = value.get_result_ids()
+            else:
+                return NotImplemented
+            operator = 'in' if operator in ('any', 'any!') else 'not in'
         return [('analytic_distribution', operator, value)]
 
     def _compute_analytic_distribution(self):

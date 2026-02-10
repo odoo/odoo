@@ -150,6 +150,7 @@ class DocController(http.Controller):
                 # sorted(..., key=partial(sort_key_method, modules, type(Model))),
             }
             for ir_model in self.env['ir.model'].sudo().search([])
+            if ir_model.model in self.env
             if (Model := self.env[ir_model.model]).has_access('read')
         ]
         return modules, models
@@ -366,8 +367,12 @@ def parse_signature(method) -> Signature:
         break
 
     # replace BaseModel and such by list[int], see /json/2
-    if isign.return_annotation in (Self, 'Self', models.BaseModel, models.Model):
-        isign = isign.replace(return_annotation=list[int])
+    if isign.return_annotation in (
+        Self, 'Self',
+        models.BaseModel, 'models.BaseModel',
+        models.Model, 'models.Model'
+    ):
+        isign = isign.replace(return_annotation='list[int]')
 
     # parse the signature
     parameters = {
@@ -473,6 +478,8 @@ def stringify_annotation(annotation) -> str | None:
         return None
     if isinstance(annotation, str):
         return annotation
+    if hasattr(annotation, '__origin__'):
+        return str(annotation)
     if isinstance(annotation, type):
         return annotation.__name__
     return str(annotation)

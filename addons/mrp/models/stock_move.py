@@ -317,7 +317,7 @@ class StockMove(models.Model):
         for move in self:
             if move.product_uom.compare(move.product_uom_qty - old_qties.get(move.id, 0), 0) < 0\
                     and move.procure_method == 'make_to_order'\
-                    and all(m.state == 'done' for m in move.move_orig_ids):
+                    and move.move_orig_ids and all(m.state == 'done' for m in move.move_orig_ids):
                 continue
             if move.product_uom.compare(move.product_uom_qty, 0) > 0:
                 if move._should_bypass_reservation() \
@@ -327,8 +327,9 @@ class StockMove(models.Model):
 
             if move.procure_method == 'make_to_order' or move.rule_id.procure_method == 'mts_else_mto':
                 procurement_qty = move.product_uom_qty - old_qties.get(move.id, 0)
-                possible_reduceable_qty = -sum(move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.product_uom_qty).mapped('product_uom_qty'))
-                procurement_qty = max(procurement_qty, possible_reduceable_qty)
+                if move.move_orig_ids:
+                    possible_reduceable_qty = -sum(move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.product_uom_qty).mapped('product_uom_qty'))
+                    procurement_qty = max(procurement_qty, possible_reduceable_qty)
                 values = move._prepare_procurement_values()
                 procurements.append(self.env['stock.rule'].Procurement(
                     move.product_id, procurement_qty, move.product_uom,
@@ -575,8 +576,13 @@ class StockMove(models.Model):
                 qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit / kit_bom.product_qty, bom_line.product_id.uom_id, round=False)
                 if not qty_per_kit:
                     continue
-                incoming_qty = sum(bom_line_moves.filtered(filters['incoming_moves']).mapped(get_qty))
-                outgoing_qty = sum(bom_line_moves.filtered(filters['outgoing_moves']).mapped(get_qty))
+                # Due to multi-step only the last move of each chain should be considered
+                incoming_moves = bom_line_moves.filtered(filters['incoming_moves'])
+                final_incoming_moves = incoming_moves - incoming_moves.move_orig_ids
+                incoming_qty = sum(final_incoming_moves.mapped(get_qty))
+                outgoing_moves = bom_line_moves.filtered(filters['outgoing_moves'])
+                final_outgoing_moves = outgoing_moves - outgoing_moves.move_orig_ids
+                outgoing_qty = sum(final_outgoing_moves.mapped(get_qty))
                 qty_processed = incoming_qty - outgoing_qty
                 # We compute a ratio to know how many kits we can produce with this quantity of that specific component
                 qty_ratios.append(bom_line.product_id.uom_id.round(qty_processed / qty_per_kit))

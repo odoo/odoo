@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import uuid
+from json.decoder import JSONDecodeError
 from pprint import pformat
 
 import requests
@@ -802,7 +803,10 @@ class PaymentProvider(models.Model):
         try:
             response.raise_for_status()
         except requests.exceptions.HTTPError:
-            error_msg = self._parse_response_error(response)
+            try:
+                error_msg = self._parse_response_error(response)
+            except JSONDecodeError:  # The provider failed to parse plain text.
+                error_msg = response.text
             raise ValidationError(_("The payment provider rejected the request.\n%s", error_msg))
         return self._parse_response_content(response, **kwargs)
 

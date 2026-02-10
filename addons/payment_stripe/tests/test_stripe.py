@@ -87,6 +87,26 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             self._make_json_request(url, data=self.payment_data)
         self.assertEqual(tx.state, 'done')
 
+    def test_validate_amount_succeeds_for_special_currencies(self):
+        for currency_code in const.CURRENCY_DECIMALS:
+            currency = self._enable_currency(currency_code)
+            tx = self._create_transaction(
+                'dummy',
+                operation='online_direct',
+                amount=15,
+                currency_id=currency.id,
+                reference=f'test_{currency_code}'
+            )
+            data = self.payment_data['data']
+            with patch(
+                'odoo.addons.payment_stripe.models.payment_transaction.PaymentTransaction'
+                '._stripe_create_customer',
+                return_value={'id': 'cus_1234567890ABCDE'},
+            ):
+                data['payment_intent'] = tx._stripe_prepare_payment_intent_payload()
+            tx._validate_amount(data)
+            self.assertNotEqual(tx.state, 'error')
+
     def test_extract_token_values_maps_fields_correctly(self):
         tx = self._create_transaction('direct')
         payment_data = {
@@ -145,6 +165,20 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         ):
             self._make_json_request(url, data=self.payment_data)
             self.assertEqual(signature_check_mock.call_count, 1)
+
+    @mute_logger('odoo.addons.payment_stripe.controllers.main')
+    @mute_logger('odoo.addons.payment_stripe.models.payment_transaction')
+    def test_webhook_notification_skips_signature_verification_for_missing_transactions(self):
+        """ Test that the webhook ignores signature verification for unknown transactions (e.g. POS). """
+        url = self._build_url(StripeController._webhook_url)
+        payload = dict(self.payment_data)
+        payload['data']['object']['description'] = None
+
+        with patch(
+            'odoo.addons.payment_stripe.controllers.main.StripeController._verify_signature'
+        ) as signature_check_mock:
+            self._make_json_request(url, data=payload)
+            self.assertEqual(signature_check_mock.call_count, 0)
 
     @mute_logger('odoo.addons.payment_stripe.controllers.main')
     def test_return_from_tokenization_request(self):
@@ -218,3 +252,18 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             call_args = mock.call_args.kwargs['json']['params']['payload'].keys()
             for payload_param in ('account', 'return_url', 'refresh_url', 'type'):
                 self.assertIn(payload_param, call_args)
+
+    def test_stripe_validate_amount_uses_payment_minor_unit(self):
+        """
+        Test that the payment's minor unit precision is used to validate the amount, not the custom
+        currency rounding that customers may have configured.
+        """
+        self.amount = 20076
+        self.currency.rounding = 0.001
+        tx = self._create_transaction(
+            'dummy', operation='online_direct', tokenize=True, amount=200.769
+        )
+        data = self.payment_data['data']
+        data['payment_intent'] = self._mock_payment_intent_request()
+        tx._validate_amount(data)
+        self.assertNotEqual(tx.state, 'error')

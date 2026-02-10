@@ -127,6 +127,8 @@ class IrModuleModule(models.Model):
         values['latest_version'] = terp.version
         if self.env.context.get('data_module'):
             values['module_type'] = 'industries'
+        if with_demo:
+            values['demo'] = True
 
         unmet_dependencies = set(terp.get('depends', [])).difference(installed_mods)
 
@@ -494,7 +496,7 @@ class IrModuleModule(models.Model):
         import requests  # noqa: PLC0415
         try:
             resp = requests.post(
-                f"{APPS_URL}/loempia/listindustrycategory",
+                f"{APPS_URL}/loempia/listindustrycategory/{major_version}",
                 json={'params': {}},
                 timeout=5.0,
             )

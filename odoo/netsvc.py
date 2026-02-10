@@ -53,7 +53,7 @@ class PostgreSQLHandler(logging.Handler):
         self._support_metadata = False
         if tools.config['log_db'] != '%d':
             with contextlib.suppress(Exception), tools.mute_logger('odoo.sql_db'), sql_db.db_connect(tools.config['log_db'], allow_uri=True).cursor() as cr:
-                cr.execute("""SELECT 1 FROM information_schema.columns WHERE table_name='ir_logging' and column_name='metadata'""")
+                cr.execute("""SELECT 1 FROM information_schema.columns WHERE table_name='ir_logging' and column_name='metadata' AND table_schema = current_schema""")
                 self._support_metadata = bool(cr.fetchone())
 
     def emit(self, record):

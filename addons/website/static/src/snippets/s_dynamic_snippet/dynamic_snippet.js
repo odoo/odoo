@@ -19,6 +19,16 @@ export class DynamicSnippet extends Interaction {
             "t-on-click": this.callToAction,
         },
         _window: { "t-on-resize": this.throttled(this.render) },
+        _root: {
+            "t-att-class": () => ({
+                // Compatibility code: A dynamic snippet may end up with one,
+                // several, or all of these classes as a default visibility one.
+                o_dynamic_empty: !this.isVisible,
+                s_dynamic_empty: !this.isVisible,
+                o_dynamic_snippet_empty: !this.isVisible,
+                o_dynamic_snippet_loading: !this.data.length,
+            }),
+        },
         ".missing_option_warning": {
             "t-att-class": () => ({
                 "d-none": !!this.data.length,
@@ -151,8 +161,10 @@ export class DynamicSnippet extends Interaction {
 
     render() {
         if (this.data.length > 0 || this.withSample) {
+            this.toggleVisibility(true);
             this.prepareContent();
         } else {
+            this.toggleVisibility(false);
             this.renderedContentNode = document.createDocumentFragment();
         }
         this.renderContent();
@@ -166,7 +178,6 @@ export class DynamicSnippet extends Interaction {
         const templateAreaEl = this.el.querySelector(".dynamic_snippet_template");
         this.services["public.interactions"].stopInteractions(templateAreaEl);
         templateAreaEl.replaceChildren(this.renderedContentNode);
-        this.el.classList.remove("o_dynamic_snippet_empty");
         // TODO this is probably not the only public widget which creates DOM
         // which should be attached to another public widget. Maybe a generic
         // method could be added to properly do this operation of DOM addition.
@@ -185,6 +196,13 @@ export class DynamicSnippet extends Interaction {
                 }
             });
         }, 0);
+    }
+
+    /**
+     * @param {Boolean} visible
+     */
+    toggleVisibility(visible) {
+        this.isVisible = visible;
     }
 
     /**

@@ -3,6 +3,7 @@ from base64 import b64encode
 from contextlib import contextmanager
 from requests import PreparedRequest, Response, Session
 from unittest.mock import patch
+from urllib import parse
 
 from odoo import Command
 from odoo.exceptions import UserError
@@ -146,24 +147,61 @@ class TestNemhandelMessage(TestAccountMoveSendCommon):
     def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
         response = Response()
         response.status_code = 200
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0088%3A5798009811512'):
-            response._content = b"""<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0088:5798009811512</id:ParticipantIdentifier>'
-            '<smp:ServiceMetadataReferenceCollection><smp:ServiceMetadataReference href="http://smp-demo.nemhandel.dk/iso6523-actorid-upis%3A%3A0088%3A5798009811512/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23OIOUBL-2.1%3A%3A2.1"/>'
-            '</smp:ServiceMetadataReferenceCollection></smp:ServiceGroup>"""
-            return response
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0184%3A12345674'):
-            response.status_code = 404
-            return response
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0184%3A12345666'):
-            response._content = b"""<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0184:12345666</id:ParticipantIdentifier>
-            '<smp:ServiceMetadataReferenceCollection><smp:ServiceMetadataReference href="http://smp-demo.nemhandel.dk/iso6523-actorid-upis%3A%3A0184%3A12345666/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23OIOUBL-2.1%3A%3A2.1"/>'
-            '</smp:ServiceMetadataReferenceCollection></smp:ServiceGroup>"""
-            return response
-        if r.url.endswith('iso6523-actorid-upis%3A%3A0184%3A16356706'):
-            response._content = b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0184:16356706</id:ParticipantIdentifier></smp:ServiceGroup>'
-            return response
+        if r.path_url.startswith('/api/peppol/1/lookup'):
+            nemhandel_identifier = parse.parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0].lower()
+            url_quoted_nemhandel_identifier = parse.quote_plus(nemhandel_identifier)
+            if nemhandel_identifier.endswith('5798009811512'):
+                response.status_code = 200
+                response.json = lambda: {
+                    "result": {
+                        'identifier': nemhandel_identifier,
+                        'smp_base_url': "https://smp-demo.nemhandel.dk",
+                        'ttl': 60,
+                        'service_group_url': f'http:///smp-demo.nemhandel.dk/iso6523-actorid-upis%3A%3A{url_quoted_nemhandel_identifier}',
+                        'services': [
+                            {
+                                "href": f"https://smp-demo.nemhandel.dk/iso6523-actorid-upis%3A%3A{url_quoted_nemhandel_identifier}/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3ACreditNote-2%3A%3ACreditNote%23%23OIOUBL-2.1%3A%3A2.1",
+                                "document_id": "busdox-docid-qns::urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##OIOUBL-2.1::2.1",
+                            },
+                        ],
+                    },
+                }
+                return response
+            if nemhandel_identifier.endswith('12345674'):
+                response.status_code = 404
+                response.json = lambda: {"error": {"code": "NOT_FOUND", "message": "no naptr record", "retryable": False}}
+                return response
+            if nemhandel_identifier.endswith('12345666'):
+                response.status_code = 200
+                response.json = lambda: {
+                    "result": {
+                        'identifier': nemhandel_identifier,
+                        'smp_base_url': "https://smp-demo.nemhandel.dk",
+                        'ttl': 60,
+                        'service_group_url': f'http:///smp-demo.nemhandel.dk/iso6523-actorid-upis%3A%3A{url_quoted_nemhandel_identifier}',
+                        'services': [
+                            {
+                                "href": f"https://smp-demo.nemhandel.dk/iso6523-actorid-upis%3A%3A{url_quoted_nemhandel_identifier}/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3ACreditNote-2%3A%3ACreditNote%23%23OIOUBL-2.1%3A%3A2.1",
+                                "document_id": "busdox-docid-qns::urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##OIOUBL-2.1::2.1",
+                            },
+                        ],
+                    },
+                }
+                return response
+            if nemhandel_identifier.endswith('16356706'):
+                response.status_code = 200
+                response.json = lambda: {
+                    "result": {
+                        'identifier': nemhandel_identifier,
+                        'smp_base_url': "https://smp-demo.nemhandel.dk",
+                        'ttl': 60,
+                        'service_group_url': f'http:///smp-demo.nemhandel.dk/iso6523-actorid-upis%3A%3A{url_quoted_nemhandel_identifier}',
+                        'services': [],
+                    },
+                }
+                return response
 
-        url = r.path_url
+        url = r.path_url.lower()
         body = json.loads(r.body)
         if url == '/api/nemhandel/1/send_document':
             if not body['params']['documents']:
@@ -307,7 +345,6 @@ class TestNemhandelMessage(TestAccountMoveSendCommon):
                 'nemhandel_identifier_value': False,
             }],
         )
-
         new_partner.write({
             'nemhandel_identifier_type': '0088',
             'nemhandel_identifier_value': '5798009811512',

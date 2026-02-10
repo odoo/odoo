@@ -1,5 +1,5 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { getContent } from "./_helpers/selection";
+import { getContent, setSelection } from "./_helpers/selection";
 import { animationFrame, click, press, queryOne, waitFor } from "@odoo/hoot-dom";
 import { insertText, splitBlock } from "./_helpers/user_actions";
 import {
@@ -185,6 +185,31 @@ test("inserting a code block in an empty paragraph with a style placeholder acti
     });
 });
 
+test("inserting text and undo after an empty code block activates the syntax highlighting plugin with an empty textarea", async () => {
+    await testEditorWithHighlightedContent({
+        contentBefore: "<p><br>[]</p>",
+        stepFunction: async (editor) => {
+            await insertPre(editor);
+            await compareHighlightedContent(
+                getContent(editor.editable),
+                '<p data-selection-placeholder=""><br></p>' +
+                    highlightedPre({ value: "", textareaRange: 0 }) +
+                    '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
+                editor
+            );
+            const p = document.querySelector("p");
+            setSelection({ anchorNode: p, anchorOffset: 0 });
+            await insertText(editor, "a");
+            await pressAndWait(["ctrl", "z"]);
+        },
+        contentAfterEdit:
+            `<p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>` +
+            highlightedPre({ value: "" }) +
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
+        contentAfter: `[]<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext"><br></pre>`,
+    });
+});
+
 test("changing languages in a code block changes its highlighting", async () => {
     await testEditorWithHighlightedContent({
         contentBefore: "<pre>some code</pre>",
@@ -225,6 +250,23 @@ test("should fill an empty pre", async () => {
             highlightedPre({ value: "", textareaRange: 0 }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>', // Note: the BR is outside the highlight.
         contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext"><br></pre>[]`,
+    });
+});
+
+test("should convert empty codeblock into base container on backspace", async () => {
+    await testEditorWithHighlightedContent({
+        contentBefore: "<pre></pre>",
+        contentBeforeEdit:
+            '<p data-selection-placeholder=""><br></p>' +
+            highlightedPre({ value: "" }) +
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
+        stepFunction: async () => {
+            const textarea = queryOne("textarea");
+            await click(textarea);
+            await pressAndWait("Backspace");
+        },
+        contentAfterEdit: `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+        contentAfter: `<p>[]<br></p>`,
     });
 });
 
@@ -1141,8 +1183,75 @@ test("restore paragraph from code block", async () => {
         stepFunction: async () => {
             await click(".o_code_toolbar span.fa-paragraph");
         },
-        contentAfterEdit: '<div class="o-paragraph">[]abc</div>',
-        contentAfter: `<div>[]abc</div>`,
+        contentAfterEdit: "<p>[]abc</p>",
+        contentAfter: `<p>[]abc</p>`,
         config: configWithEmbeddings,
     });
+});
+
+test("should keep textarea focused when changing code block language", async () => {
+    const { editor } = await setupEditor(`<pre>ab</pre>`, {
+        config: configWithEmbeddings,
+    });
+
+    await compareHighlightedContent(
+        getContent(editor.editable),
+        unformat(
+            `<p data-selection-placeholder=""><br></p>
+            ${highlightedPre({ value: "ab" })}
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        ),
+        "Initial code block is highlighted",
+        editor
+    );
+
+    // Focus the textarea inside the code block
+    const textarea = editor.document.querySelector("textarea");
+    await click(textarea);
+    expect(editor.document.activeElement).toBe(textarea);
+    const from = "Plain Text";
+    const to = "Javascript";
+    // Wait until the language selector button is available in the toolbar
+    await waitFor(`.o_code_toolbar button[name='language'][title='${from}']`);
+    const dropdownButton = document.querySelector(
+        `.o_code_toolbar button[name='language'][title='${from}']`
+    );
+    // Explicitly focus the dropdown button before opening it
+    dropdownButton.focus();
+    await click(dropdownButton);
+    // Language selector dropdown should open.
+    await waitFor(`.o_language_selector .o-dropdown-item[name='${to}']`);
+    await click(`.o_language_selector .o-dropdown-item[name='${to}']`);
+    // Code Toolbar should show the new language name.
+    await waitFor(`.o_code_toolbar button[name='language'][title='${to}']`);
+    // Ensure focus is restored to the textarea after the dropdown closes
+    expect(document.activeElement).toBe(textarea);
+});
+
+test("should keep textarea focused after copying code content", async () => {
+    const { editor } = await setupEditor(`<pre>ab</pre>`, {
+        config: configWithEmbeddings,
+    });
+    await compareHighlightedContent(
+        getContent(editor.editable),
+        unformat(
+            `<p data-selection-placeholder=""><br></p>
+            ${highlightedPre({ value: "ab" })}
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        ),
+        "Initial code block is highlighted",
+        editor
+    );
+
+    // Focus the textarea inside the code block
+    const textarea = editor.document.querySelector("textarea");
+    await click(textarea);
+    expect(editor.document.activeElement).toBe(textarea);
+
+    // Wait for the code toolbar and trigger the copy action
+    await waitFor(".o_code_toolbar");
+    await click(".o_code_toolbar .o_clipboard_button");
+
+    // Ensure focus remains on the textarea after copying
+    expect(document.activeElement).toBe(textarea);
 });

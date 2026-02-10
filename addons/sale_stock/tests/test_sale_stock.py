@@ -7,6 +7,7 @@ from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_c
 from odoo.addons.sale_stock.tests.common import TestSaleStockCommon
 from odoo.exceptions import RedirectWarning, UserError
 from odoo.tests import Form, tagged
+from odoo.tests.common import new_test_user
 
 
 @tagged('post_install', '-at_install')
@@ -2288,6 +2289,44 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         so.action_confirm()
         self.assertEqual(so.picking_ids.move_ids.description_picking, 'No variant: extra\nDeliver with care')
 
+    def test_move_description_uses_custom_attribute_values(self):
+        """
+        Check that the move description of prodcut variants uses
+        the custom attribute values as expected.
+        """
+        self.env['res.lang']._activate_lang('fr_FR')
+        product = self.new_product
+        product.with_context(lang='fr_FR').name = "French Sofa"
+        self.partner_b.lang = 'fr_FR'
+        attribute_line = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': self.product_template_sofa.id,
+            'attribute_id': self.no_variant_attribute.id,
+            'value_ids': [
+                Command.set([self.no_variant_attribute.value_ids[0].id])
+            ],
+        })
+        order_line_vals = {
+            'product_id': product.id,
+            'product_custom_attribute_value_ids': [
+                Command.create({
+                    'custom_product_template_attribute_value_id':
+                        attribute_line.product_template_value_ids.id,
+                    'custom_value': 'Best',
+                })
+            ]
+        }
+        sale_orders = self.env['sale.order'].create([
+            {
+                'partner_id': partner.id,
+                'order_line': [Command.create(order_line_vals)],
+            } for partner in [self.partner_a, self.partner_b]
+        ])
+        sale_orders.action_confirm()
+        self.assertEqual(
+            sale_orders.picking_ids.move_ids.mapped('description_picking'),
+            ['No variant: extra: Best', 'No variant: extra: Best\nFrench Sofa']
+        )
+
     def test_multicompany_transit_with_one_company_for_user(self):
         """ Check that the inter-company transit location is created when
         user has only one allowed company. """
@@ -2567,3 +2606,65 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         delivery.sale_id = sale_order
         self.assertEqual(delivery.reference_ids.sale_ids, sale_order)
         self.assertEqual(delivery.move_ids.reference_ids, delivery.reference_ids)
+
+    def test_sale_partner_propagation_3_step_pull(self):
+        """
+        Check that the customer of an SO is propageted to all moves of the
+        pull chain in multi-step deliveries.
+        """
+        # delivery_route = self.warehouse_3_steps_pull.delivery_route_id
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'warehouse_id':  self.warehouse_3_steps_pull.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+            })]
+        })
+        sale_order.action_confirm()
+        self.assertRecordValues(sale_order.picking_ids.sorted(lambda p: p.picking_type_id.name)[::-1], [
+            {'partner_id': self.partner_a.id, 'picking_type_id': self.warehouse_3_steps_pull.pick_type_id.id},
+            {'partner_id': self.partner_a.id, 'picking_type_id': self.warehouse_3_steps_pull.pack_type_id.id},
+            {'partner_id': self.partner_a.id, 'picking_type_id': self.warehouse_3_steps_pull.out_type_id.id},
+        ])
+
+    def test_compute_sale_order_count_with_stock_user(self):
+        """Test that `sale_order_count` only counts sale orders
+        accessible to the current stock user.
+
+        A stock user can compute `sale_order_count` for a serial number,
+        but the result only includes sale orders that the user has
+        read access to (i.e. their own sale orders in this scenario).
+        """
+        user = new_test_user(self.env, login='fgh',
+                             groups='base.group_user,stock.group_stock_user, sales_team.group_sale_salesman')
+        self.new_product.tracking = 'lot'
+        lot = self.env['stock.lot'].create({
+            'name': 'SN001',
+            'product_id': self.new_product.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.new_product, self.company_data['default_warehouse'].lot_stock_id, 2, lot_id=lot)
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.new_product.id,
+                'product_uom_qty': 1.0,
+            })],
+        })
+        sale_order.action_confirm()
+        sale_order.picking_ids.button_validate()
+        self.assertEqual(sale_order.picking_ids.state, 'done')
+        self.assertEqual(lot.with_user(user).sale_order_count, 0)
+        sale_order_2 = self.env['sale.order'].with_user(user).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.new_product.id,
+                'product_uom_qty': 1.0,
+            })],
+        })
+        sale_order_2.action_confirm()
+        sale_order_2.picking_ids.button_validate()
+        self.assertEqual(sale_order_2.picking_ids.state, 'done')
+        lot.invalidate_recordset()
+        self.assertEqual(lot.with_user(user).sale_order_count, 1)
+        self.assertEqual(lot.with_user(user).sale_order_ids, sale_order_2)

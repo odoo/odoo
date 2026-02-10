@@ -65,6 +65,7 @@ export class SetGalleryElementPositionAction extends BuilderAction {
             : "GalleryImageList";
 
         // Get the items to reorder.
+        activeItemEl = activeItemEl.closest("a") || activeItemEl;
         const itemEls = [];
         for (const getGalleryItems of this.getResource("get_gallery_items_handlers")) {
             itemEls.push(...getGalleryItems(activeItemEl, optionName));

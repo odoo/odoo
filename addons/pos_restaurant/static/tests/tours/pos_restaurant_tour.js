@@ -13,6 +13,7 @@ import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
+import { delay } from "@web/core/utils/concurrency";
 import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
 import * as PreparationReceipt from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
 import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
@@ -262,6 +263,11 @@ registry.category("web_tour.tours").add("test_pos_restaurant_course", {
             // Check empty course gets remove after fire course.
             ProductScreen.clickCourseButton(),
             ProductScreen.selectCourseLine("Course 2"),
+            {
+                content: "Wait atleast 1 sec so that courses have different fired_date timestamps",
+                trigger: "body",
+                run: async () => await delay(1000),
+            },
             ProductScreen.fireCourseButton(),
             Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
@@ -454,7 +460,6 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
             ProductScreen.selectPreset("Eat in", "Takeaway"),
             Chrome.presetTimingSlotHourNotExists("09:00"),
             Chrome.selectPresetTimingSlotHour("12:00"),
-            Chrome.presetTimingSlotIs("12:00"),
             checkPreparationTicketData([{ name: "Water", qty: 1 }], {
                 visibleInDom: ["12:00", "Takeaway"],
                 invisibleInDom: ["colorIndex"],
@@ -610,14 +615,17 @@ registry.category("web_tour.tours").add("test_preset_delivery_restaurant", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+            Dialog.isNot(),
             FloorScreen.clickTable("2"),
             ProductScreen.clickCustomer("Partner Full"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickControlButton("Cancel Order"),
-            Dialog.cancel(),
+            Dialog.cancel({ title: "Existing orderlines" }),
+            Dialog.isNot(),
             ProductScreen.isShown(),
             ProductScreen.clickControlButton("Cancel Order"),
-            Dialog.confirm(),
+            Dialog.confirm("ok"),
+            Dialog.isNot(),
             FloorScreen.hasTable("2"),
         ].flat(),
 });
@@ -631,10 +639,9 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.selectPreset("Eat in", "Takeaway"),
             TextInputPopup.inputText("John"),
-            Dialog.confirm(),
+            Dialog.confirm("apply"),
             Chrome.presetTimingSlotHourNotExists("09:00"),
             Chrome.selectPresetTimingSlotHour("12:00"),
-            Chrome.presetTimingSlotIs("12:00"),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("4"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
@@ -651,6 +658,7 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
             Chrome.selectPresetDateButton("06/16/2025"),
             Chrome.presetTimingSlotHourExists("09:00"),
             Chrome.selectPresetTimingSlotHour("11:00"),
+            Dialog.isNot(),
             Chrome.clickOrders(),
             TicketScreen.nthRowContains(3, "06/16/2025", false),
         ].flat(),
@@ -665,14 +673,19 @@ registry.category("web_tour.tours").add("test_open_register_with_preset_takeaway
             FloorScreen.clickTable("5"),
             Chrome.presetTimingSlotHourNotExists("09:00"),
             Chrome.selectPresetTimingSlotHour("12:20"),
-            Chrome.presetTimingSlotIs("12:20"),
+            Chrome.waitRequest(),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickControlButton("Cancel Order"),
-            Dialog.cancel(),
+            Dialog.cancel({ title: "Existing orderlines" }),
+            Dialog.isNot({ title: "Existing orderlines" }),
             ProductScreen.clickControlButton("Cancel Order"),
-            Dialog.confirm(),
+            Dialog.confirm("ok"),
+            Dialog.isNot({ title: "Existing orderlines" }),
             FloorScreen.isShown(),
-            Chrome.endTour(),
+            Chrome.clickOrders(),
+            {
+                trigger: ".orders:contains(no orders found)",
+            },
         ].flat(),
 });
 
@@ -721,10 +734,10 @@ registry.category("web_tour.tours").add("test_customer_alone_saved", {
             Chrome.clickOrders(),
             Chrome.clickRegister(),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Deco Addict"),
+            ProductScreen.clickCustomer("Acme Corporation"),
             Chrome.clickOrders(),
             Chrome.clickRegister(),
-            ProductScreen.customerIsSelected("Deco Addict"),
+            ProductScreen.customerIsSelected("Acme Corporation"),
         ].flat(),
 });
 
@@ -1031,7 +1044,7 @@ registry.category("web_tour.tours").add("test_sync_set_partner", {
             Chrome.waitRequest(), // Wait for sync request
             assertCurrentOrderDirty(false),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Deco Addict"),
+            ProductScreen.clickCustomer("Acme Corporation"),
             assertCurrentOrderDirty(true),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
@@ -1191,7 +1204,7 @@ registry.category("web_tour.tours").add("test_name_preset_skip_screen", {
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Deco Addict"),
+            ProductScreen.clickCustomer("Acme Corporation"),
             ProductScreen.clickPayButton(false),
             ProductScreen.discardOrderWarningDialog(),
             PaymentScreen.clickPaymentMethod("Cash"),

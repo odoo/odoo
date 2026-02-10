@@ -874,7 +874,7 @@ registry.category("web_tour.tours").add("test_draft_orders_not_syncing", {
             ProductScreen.orderIsEmpty(),
             ProductScreen.clickDisplayedProduct("Desk Pad"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Deco Addict"),
+            ProductScreen.clickCustomer("Acme Corporation"),
             Chrome.createFloatingOrder(),
             ProductScreen.clickDisplayedProduct("Desk Pad"),
             ProductScreen.clickPayButton(),
@@ -932,6 +932,14 @@ registry.category("web_tour.tours").add("test_product_long_press", {
             Dialog.confirm("Open Register"),
             ProductScreen.longPressProduct("Test Product"),
             Dialog.is(),
+            {
+                content: "Check that VAT label is present in the product details popup",
+                trigger: ".section-financials .vat-label:contains('VAT')",
+            },
+            {
+                content: "Check that VAT value is correct in the product details popup",
+                trigger: ".section-financials .vat-value:contains('$ 15.00 (Parent Tax)')",
+            },
             Chrome.endTour(),
         ].flat(),
 });
@@ -1039,7 +1047,6 @@ registry.category("web_tour.tours").add("test_preset_timing_retail", {
             PartnerList.clickPartner("A simple PoS man!"),
             Chrome.presetTimingSlotHourNotExists("09:00"),
             Chrome.selectPresetTimingSlotHour("15:00"),
-            Chrome.presetTimingSlotIs("15:00"),
             Chrome.createFloatingOrder(),
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
             Chrome.clickOrders(),

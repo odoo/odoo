@@ -82,7 +82,7 @@ class PurchaseOrder(models.Model):
                 name += '\n' + product_lang.description_purchase
 
             # Compute taxes
-            taxes_ids = fpos.map_tax(line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == requisition.company_id)).ids
+            taxes_ids = fpos.map_tax(line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id in requisition.company_id.parent_ids)).ids
 
             product_qty = line.product_qty if requisition.requisition_type == 'purchase_template' else 0
             # Create PO line

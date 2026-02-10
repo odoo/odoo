@@ -35,6 +35,7 @@ class PosPaymentMethod(models.Model):
         domain=['|', '&', ('type', '=', 'cash'), ('pos_payment_method_ids', '=', False), ('type', '=', 'bank')],
         ondelete='restrict',
         index='btree_not_null',
+        check_company=True,
         help='Leave empty to use the receivable account of customer.\n'
              'Defines the journal where to book the accumulated payments (or individual payment if Identify Customer is true) after closing the session.\n'
              'For cash journal, we directly write to the default account in the journal via statement lines.\n'

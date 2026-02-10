@@ -192,6 +192,71 @@ class TestHrAttendanceUndertime(HttpCase):
         self.assertAlmostEqual(overtime.duration, 1)
         self.assertAlmostEqual(self.employee.total_overtime, 1)
 
+    def test_simple_undertime_multiple_rules(self):
+        """ Checks that only the least consequent undertime of the rules is considered."""
+        ruleset = self.env['hr.attendance.overtime.ruleset'].with_company(self.company).create({
+            'name': 'Ruleset schedule quantity',
+            'rule_ids': [Command.create({
+                    'name': 'Rule schedule quantity',
+                    'base_off': 'quantity',
+                    'expected_hours_from_contract': False,
+                    'expected_hours': 8.0,
+                    'quantity_period': 'day',
+                }),
+                Command.create({
+                    'name': 'Rule schedule quantity',
+                    'base_off': 'quantity',
+                    'expected_hours_from_contract': False,
+                    'expected_hours': 10.0,
+                    'quantity_period': 'day',
+                })],
+        })
+        self.employee.ruleset_id = ruleset
+
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 4, 13, 0),
+            'check_out': datetime(2021, 1, 4, 18, 0),
+        })
+
+        self.assertEqual(attendance.overtime_hours, -3.0)
+        overtime = attendance._linked_overtimes()
+        self.assertEqual(len(overtime), 1, 'Only one overtime record should be created')
+        self.assertEqual(overtime.duration, -3.0)
+
+    def test_simple_undertime_multiple_rules_on_several_periods(self):
+        """Whatever the period type, only the least consequent undertime of the rules is considered.
+        """
+        ruleset = self.env['hr.attendance.overtime.ruleset'].with_company(self.company).create({
+            'name': 'Ruleset schedule quantity',
+            'rule_ids': [Command.create({
+                    'name': 'Rule schedule quantity',
+                    'base_off': 'quantity',
+                    'expected_hours_from_contract': False,
+                    'expected_hours': 8.0,
+                    'quantity_period': 'day',
+                }),
+                Command.create({
+                    'name': 'Rule schedule quantity',
+                    'base_off': 'quantity',
+                    'expected_hours_from_contract': False,
+                    'expected_hours': 40.0,
+                    'quantity_period': 'week',
+                })],
+        })
+        self.employee.ruleset_id = ruleset
+
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 4, 13, 0),
+            'check_out': datetime(2021, 1, 4, 18, 0),
+        })
+
+        self.assertEqual(attendance.overtime_hours, -3.0)
+        overtime = attendance._linked_overtimes()
+        self.assertEqual(len(overtime), 1, 'Only one overtime record should be created')
+        self.assertEqual(overtime.duration, -3.0)
+
     def test_undertime_change_employee(self):
         attendance = self.env['hr.attendance'].create({
             'employee_id': self.employee.id,

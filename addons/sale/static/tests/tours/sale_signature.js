@@ -17,6 +17,20 @@ registry.category("web_tour.tours").add('sale_signature', {
         run: "click",
     },
     {
+        content: "clear the signature name",
+        trigger: '.modal .o_web_sign_name_and_signature input',
+        run: "clear",
+    },
+    {
+        content: "check submit is disabled when name is empty",
+        trigger: '.modal .o_portal_sign_submit:disabled',
+    },
+    {
+        content: "reset signature name",
+        trigger: '.modal .o_web_sign_name_and_signature input',
+        run: "fill Joel Willis",
+    },
+    {
         content: "check submit is enabled",
         trigger: '.o_portal_sign_submit:enabled',
     },
@@ -61,6 +75,10 @@ registry.category("web_tour.tours").add('sale_signature', {
 
 registry.category("web_tour.tours").add("sale_signature_without_name", {
     steps: () => [
+        {
+            content: "Wait for interactions to load",
+            trigger: `body[is-ready=true], :iframe body[is-ready=true]`,
+        },
         {
             content: "Sign & Pay",
             trigger:

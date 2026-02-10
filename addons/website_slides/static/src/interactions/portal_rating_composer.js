@@ -6,24 +6,19 @@ patch(RatingPopupComposer.prototype, {
     updateOptions(data) {
         super.updateOptions(...arguments);
         this.options.force_submit_url =
-            data.force_submit_url ||
-            (this.options.default_message_id && "/mail/message/update_content");
+            this.options.default_message_id && "/mail/message/update_content";
     },
 
     reloadRatingPopupComposer() {
+        super.reloadRatingPopupComposer(...arguments);
         if (this.options.res_model !== "slide.channel") {
-            return super.reloadRatingPopupComposer(...arguments);
+            return;
         }
         const reviewEl = document.querySelector("#review-tab");
         if (reviewEl) {
             reviewEl.textContent = this.rating_count
                 ? _t("Reviews (%s)", this.rating_count)
                 : _t("Reviews");
-        }
-        const editedMessage = this.options["mail.message"]?.[0];
-        // Only update the modal when editing the logged user message
-        if (!editedMessage || this.options.partner_id === editedMessage.author_id) {
-            return super.reloadRatingPopupComposer(...arguments);
         }
     },
 });

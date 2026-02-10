@@ -63,6 +63,7 @@ export const popoverService = {
                     env: options.env,
                     onRemove: options.onClose,
                     rootId: target.getRootNode()?.host?.id,
+                    sequence: options.sequence,
                 }
             );
 

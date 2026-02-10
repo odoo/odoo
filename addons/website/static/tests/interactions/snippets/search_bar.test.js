@@ -37,10 +37,10 @@ function supportAutocomplete() {
         expect(json.params.term).toBe("xyz");
         expect(json.params.order).toBe("test desc");
         expect(json.params.limit).toBe(3);
-        expect(json.params.options.displayImage).toBe("false");
-        expect(json.params.options.displayDescription).toBe("false");
-        expect(json.params.options.displayExtraLink).toBe("true");
-        expect(json.params.options.displayDetail).toBe("false");
+        expect(json.params.options.displayImage).toBe(false);
+        expect(json.params.options.displayDescription).toBe(false);
+        expect(json.params.options.displayExtraLink).toBe(true);
+        expect(json.params.options.displayDetail).toBe(false);
         return {
             results: [
                 {

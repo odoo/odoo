@@ -163,7 +163,7 @@
                         </group>
                         <field name="user_id" widget="many2one_avatar_user"/>
                     </group>
-                    <field name="note" class="oe-bordered-editor embedded-editor-height-4" placeholder="Log a note..."/>
+                    <field name="note" class="oe-bordered-editor embedded-editor-height-4" placeholder="Log a note..." widget="html_mail" />
                     <footer>
                         <field name="id" invisible="1"/>
                         <button id="mail_activity_schedule" string="Schedule" close="1" name="action_close_dialog" type="object" class="btn-primary"

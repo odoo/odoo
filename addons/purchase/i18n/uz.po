@@ -1,0 +1,4403 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* purchase
+#
+#
+# Translated by:
+# Deepvision - info@deepvision.uz | +998 77-093-0007
+# Amon Olimov - amon.bars@gmail.com
+# Jonibek Yorqulov - j.yorqulov@deepvision.uz
+# Mirzohidkhon Ulugkhujaev ulugkhujayevmirzohidxon@gmail.com
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"PO-Revision-Date: 2025-10-08 18:37+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: purchase
+#: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
+#, fuzzy
+msgid ""
+"\n"
+"                (object.state in ('draft', 'sent') and 'Request for "
+"Quotation - %s' % (object.name) or\n"
+"                'Purchase Order - %s' % (object.name))"
+msgstr ""
+"(object.state 'loyiha' yoki 'yuborilgan' bo‘lsa, 'Narx so‘rovi - %s' % "
+"(object.name) yoki 'Xarid buyurtmasi - %s' % (object.name))"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_bill_count
+#, fuzzy
+msgid "# Vendor Bills"
+msgstr "# ta yetkazib beruvchi hisobi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__nbr_lines
+#, fuzzy
+msgid "# of Lines"
+msgstr "# ta satr"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "%(product)s from %(original_receipt_date)s to %(new_receipt_date)s"
+msgstr "%(product)s %(original_receipt_date)s dan %(new_receipt_date)s gacha"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "%s modified receipt dates for the following products:"
+msgstr "%s quyidagi mahsulotlar uchun qabul qilish sanalarini o‘zgartirdi:"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
+#, fuzzy
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
+
+#. module: purchase
+#: model:ir.actions.report,print_report_name:purchase.report_purchase_quotation
+#, fuzzy
+msgid "'Request for Quotation - %s' % (object.name)"
+msgstr "'Narx so‘rovi - %s' % (object.name)"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
+msgid ""
+", it's 100% free! You'll save time creating beautiful quotations and track "
+"sales."
+msgstr ""
+", bu mutlaqo bepul! Siz chiroyli narx takliflarini yaratishda vaqt tejaysiz "
+"va sotuvlarni kuzatib borasiz."
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.track_po_line_qty_received_template
+#: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
+#, fuzzy
+msgid "-&gt;"
+msgstr "-&gt;"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
+msgid "3-way matching"
+msgstr "Uch tomonlama moslashtirish"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_account_3way_match
+#, fuzzy
+msgid "3-way matching: purchases, receptions and bills"
+msgstr "Uch tomonlama moslashtirish: xaridlar, qabullar va hisob-kitoblar"
+
+#. module: purchase
+#: model:mail.template,body_html:purchase.email_template_edi_purchase_reminder
+#, fuzzy
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Here is a reminder that the delivery of the purchase order <span "
+"style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref "
+"or ''\">REF_XXX</t>)</span>\n"
+"        </t>\n"
+"        is expected for \n"
+"        <t t-if=\"object.date_planned\">\n"
+"            <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"        </t>\n"
+"         <t t-else=\"\">\n"
+"            <span style=\"font-weight:bold;\">undefined</span>.\n"
+"        </t>\n"
+"        Could you please confirm it will be delivered on time?\n"
+"        <br/><br/>\n"
+"        <a t-att-href=\"object.get_acknowledge_url()\" target=\"_blank\" "
+"style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-"
+"color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Acknowledge</a>\n"
+"        <br/><br/>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>"
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\"> <p style=\"margin: 0px; padding: "
+"0px; font-size: 13px;\"> Hurmatli <t t-out=\"object.partner_id.name or "
+"''\">Brandon Freeman</t> <t t-if=\"object.partner_id.parent_id\"> (<t t-"
+"out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>) </t> <br/"
+"><br/> Ushbu xat orqali sizga <span style=\"font-weight:bold;\" t-"
+"out=\"object.name or ''\">P00015</span> raqamli xarid buyurtmasining <t t-"
+"if=\"object.partner_ref\"> <span style=\"font-weight:bold;\">(<t t-"
+"out=\"object.partner_ref or ''\">REF_XXX</t>)</span> </t> yetkazib berish "
+"muddati <t t-if=\"object.date_planned\"> <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span> </t> <t t-"
+"else=\"\"> <span style=\"font-weight:bold;\">aniqlanmagan sana</span> </t> "
+"ekanligini eslatib o‘tmoqchimiz.         Iltimos, buyurtma o‘z vaqtida "
+"yetkazib beriladimi, tasdiqlashingiz mumkinmi?         <br/><br/> <a t-att-"
+"href=\"object.get_acknowledge_url()\" target=\"_blank\" style=\"padding: 5px "
+"10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; "
+"border: 1px solid #875A7B; border-radius: 3px\"> Tasdiqlash</a> <br/><br/> "
+"<t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-"
+"container=\"1\"> <br/><br/> <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"object.user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div> </t> <br/><br/> </p> </div>         "
+
+#. module: purchase
+#: model:mail.template,body_html:purchase.email_template_edi_purchase_done
+#, fuzzy
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Here is in attachment a purchase order <span style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>\n"
+"        </t>\n"
+"        amounting in <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span>\n"
+"        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
+"        <br/><br/>\n"
+"        <t t-if=\"object.date_planned\">\n"
+"            The receipt is expected for <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <br/><br/>\n"
+"            Could you please acknowledge the receipt of this order?\n"
+"            <br/><br/>\n"
+"            <a t-att-href=\"object.get_acknowledge_url()\" target=\"_blank\" "
+"style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-"
+"color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"                Acknowledge</a>\n"
+"        </t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>"
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hurmatli <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</"
+"t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Ushbu xatga ilova qilingan <span style=\"font-weight:bold;\" t-"
+"out=\"object.name or ''\">P00015</span> raqamli xarid buyurtmasi\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            havola raqami: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>\n"
+"        </t>\n"
+"        <t t-out=\"object.company_id.name or ''\">YourCompany</t> tomonidan "
+"yuborilgan bo‘lib, umumiy summasi <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</span> ni tashkil etadi. <br/><br/>\n"
+"        <t t-if=\"object.date_planned\">\n"
+"            Tovarlarni qabul qilish sanasi <span style=\"font-weight:bold;\" "
+"t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span> deb "
+"belgilangan.\n"
+"            <br/><br/>\n"
+"            Iltimos, ushbu buyurtmani olganiingizni tasdiqlay olasizmi?\n"
+"            <br/><br/>\n"
+"            <a t-att-href=\"object.get_acknowledge_url()\" target=\"_blank\" "
+"style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-"
+"color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"                Tasdiqlash\n"
+"            </a>\n"
+"        </t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>"
+
+#. module: purchase
+#: model:mail.template,body_html:purchase.email_template_edi_purchase
+#, fuzzy
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Here is in attachment a request for quotation <span style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>\n"
+"        </t>\n"
+"        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        If you have any questions, please do not hesitate to contact us.\n"
+"        <br/><br/>\n"
+"        Best regards,\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\"> <p style=\"margin: 0px; padding: "
+"0px; font-size: 13px;\"> Hurmatli <t t-out=\"object.partner_id.name or "
+"''\">Brandon Freeman</t> <t t-if=\"object.partner_id.parent_id\"> (<t t-"
+"out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>) </t> <br/"
+"><br/> Ilovada <span style=\"font-weight:bold;\" t-out=\"object.name or "
+"''\">P00015</span> raqamli narx so‘rovi <t t-if=\"object.partner_ref\"> "
+"quyidagi havola bilan: <t t-out=\"object.partner_ref or ''\">REF_XXX</t> </"
+"t> <t t-out=\"object.company_id.name or ''\">YourCompany</t> tomonidan "
+"yuborilmoqda.         <br/><br/> Savollaringiz bo‘lsa, bizga murojaat "
+"qilishdan tortinmang.         <br/><br/> Hurmat bilan, <t t-if=\"not "
+"is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\"> "
+"<br/><br/> <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div> </t> </p> </div>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
+msgid "<i class=\"fa fa-fw fa-check\"/>Paid"
+msgstr "<i class=\"fa fa-fw fa-check\"/>To‘langan"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
+msgid "<i class=\"fa fa-fw fa-check\"/>Reversed"
+msgstr "<i class=\"fa fa-fw fa-check\"/>Qaytarilgan"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
+msgid "<i class=\"fa fa-fw fa-clock-o\"/>Waiting Payment"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/>To‘lov kutilmoqda"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+#, fuzzy
+msgid ""
+"<i class=\"fa fa-fw fa-file-text\" role=\"img\" aria-label=\"Waiting for "
+"Bill\" title=\"Waiting for Bill\"/><span class=\"d-none d-md-inline\"> "
+"Waiting for Bill</span>"
+msgstr ""
+"<i class=\"fa fa-fw fa-file-text\" role=\"img\" aria-label=\"Hisob "
+"kutilmoqda\" title=\"Hisob kutilmoqda\"/><span class=\"d-none d-md-inline\"> "
+"Hisob kutilmoqda</span>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+#, fuzzy
+msgid ""
+"<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"Cancelled\" "
+"title=\"Cancelled\"/><span class=\"d-none d-md-inline\"> Cancelled</span>"
+msgstr ""
+"<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"Bekor qilingan\" "
+"title=\"Bekor qilingan\"/><span class=\"d-none d-md-inline\"> Bekor "
+"qilingan</span>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid ""
+"<i class=\"fa fa-lock\"/>\n"
+"                        Locked"
+msgstr "<i class=\"fa fa-lock\"/> Qulflangan"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
+msgid "<i class=\"fa fa-print me-1\"/>Download / Print"
+msgstr "<i class=\"fa fa-print me-1\"/>Yuklab olish / Chop etish"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+#, fuzzy
+msgid ""
+"<span class=\"d-none d-md-inline\">Confirmation Date</span>\n"
+"                          <span class=\"d-block d-md-none\">Confirmation</"
+"span>"
+msgstr ""
+"<span class=\"d-none d-md-inline\">Tasdiqlash sanasi</span> <span class=\"d-"
+"block d-md-none\">Tasdiqlash</span>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+#, fuzzy
+msgid ""
+"<span class=\"d-none d-md-inline\">Purchase Order #</span>\n"
+"                          <span class=\"d-block d-md-none\">Ref.</span>"
+msgstr ""
+"<span class=\"d-none d-md-inline\">Xarid buyurtma raqami</span> <span "
+"class=\"d-block d-md-none\">Havola</span>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
+#, fuzzy
+msgid ""
+"<span class=\"d-none d-md-inline\">Request for Quotation #</span>\n"
+"                        <span class=\"d-block d-md-none\">Ref.</span>"
+msgstr ""
+"<span class=\"d-none d-md-inline\">Narx so‘rovi #</span> <span class=\"d-"
+"block d-md-none\">Havola</span>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid ""
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
+"\">Request for Quotation </span>\n"
+"                        <span class=\"o_form_label\" invisible=\"state in "
+"('draft', 'sent')\">Purchase Order </span>"
+msgstr ""
+"<span class=\"o_form_label\" invisible=\"state not in ('draft','sent')"
+"\">Narx so‘rovi </span> <span class=\"o_form_label\" invisible=\"state in "
+"('draft','sent')\">Xarid buyurtmasi </span>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "<span class=\"o_stat_text\">Bill Matching</span>"
+msgstr "<span class=\"o_stat_text\">Hisob-kitob moslashtirish</span>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "<span class=\"o_stat_text\">Price Comparison</span>"
+msgstr "<span class=\"o_stat_text\">Narxlarni taqqoslash</span>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
+#, fuzzy
+msgid "<span class=\"o_stat_text\">Purchase Matching</span>"
+msgstr "<span class=\"o_stat_text\">Xarid moslashtirish</span>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
+#, fuzzy
+msgid "<span class=\"o_stat_text\">Purchased</span>"
+msgstr "<span class=\"o_stat_text\">Xarid qilingan</span>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
+#, fuzzy
+msgid "<span> day(s) before</span>"
+msgstr "<span> kun oldin</span>"
+
+#. module: purchase
+#: model_terms:web_tour.tour,rainbow_man_message:purchase.purchase_tour
+#, fuzzy
+msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
+msgstr ""
+"<span><b>Barakalla!</b> Siz ushbu sayohatning barcha bosqichlarini "
+"muvaffaqiyatli yakunladingiz.</span>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
+msgid "<span>Amount</span>"
+msgstr "<span>Summa</span>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "<span>Ask confirmation</span>"
+msgstr "<span>Tasdiqlashni so‘rash</span>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
+msgid "<span>Taxes</span>"
+msgstr "<span>Soliqlar</span>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "<span>Warning: this order might be a duplicate of</span>"
+msgstr "<span>Ogohlantirish: bu buyurtma takroriy bo‘lishi mumkin</span>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
+msgid "<strong class=\"d-block mb-1\">From:</strong>"
+msgstr "<strong class=\"d-block mb-1\">Kimdan:</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
+msgid "<strong class=\"d-block mb-1\">Invoices</strong>"
+msgstr "<strong class=\"d-block mb-1\">Hisob-fakturalar</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+#, fuzzy
+msgid "<strong class=\"d-block mt-3\">Shipping address</strong>"
+msgstr "<strong class=\"d-block mt-3\">Yetkazib berish manzili</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#, fuzzy
+msgid "<strong class=\"mr16\">Subtotal</strong>"
+msgstr "<strong class=\"mr16\">Oraliq jami</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#, fuzzy
+msgid "<strong>Amount</strong>"
+msgstr "<strong>Summa</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#, fuzzy
+msgid "<strong>Buyer</strong>"
+msgstr "<strong>Xaridor</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
+msgid "<strong>Confirmation Date:</strong>"
+msgstr "<strong>Tasdiqlangan sana:</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+#, fuzzy
+msgid "<strong>Description</strong>"
+msgstr "<strong>Tavsif</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#, fuzzy
+msgid "<strong>Disc.</strong>"
+msgstr "<strong>Chegirma</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#, fuzzy
+msgid "<strong>Expected Arrival:</strong>"
+msgstr "<strong>Kutilayotgan yetib kelish sanasi:</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+#, fuzzy
+msgid "<strong>Expected Date</strong>"
+msgstr "<strong>Kutilayotgan sana</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#, fuzzy
+msgid "<strong>Order Date:</strong>"
+msgstr "<strong>Buyurtma sanasi:</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#, fuzzy
+msgid "<strong>Order Deadline:</strong>"
+msgstr "<strong>Buyurtma muddati:</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#, fuzzy
+msgid "<strong>Payment Terms: </strong>"
+msgstr "<strong>To‘lov shartlari: </strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+#, fuzzy
+msgid "<strong>Qty</strong>"
+msgstr "<strong>Miqdor</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
+msgid "<strong>Receipt Date:</strong>"
+msgstr "<strong>Qabul qilingan sana:</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
+msgid "<strong>Request For Quotation Date:</strong>"
+msgstr "<strong>Narx so‘rovi sanasi:</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+#, fuzzy
+msgid "<strong>Requested Ship Date:</strong>"
+msgstr "<strong>So‘ralgan jo‘natish sanasi:</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#, fuzzy
+msgid "<strong>Taxes</strong>"
+msgstr "<strong>Soliqlar</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
+#, fuzzy
+msgid "<strong>The ordered quantity has been updated.</strong>"
+msgstr "<strong>Buyurtma qilingan miqdor yangilandi.</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.track_po_line_qty_received_template
+#, fuzzy
+msgid "<strong>The received quantity has been updated.</strong>"
+msgstr "<strong>Qabul qilingan miqdor yangilandi.</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#, fuzzy
+msgid "<strong>Unit Price</strong>"
+msgstr "<strong>Birlik narxi</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#, fuzzy
+msgid "<strong>Your Order Reference</strong>"
+msgstr "<strong>Sizning buyurtma raqamingiz</strong>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
+msgid ""
+"A blanket purchase order is a purchase agreement between a buyer and a "
+"supplier to deliver goods or services to the buyer at a preset price for a "
+"period of time."
+msgstr ""
+"Umumiy xarid buyurtmasi - bu xaridor va yetkazib beruvchi o‘rtasidagi ma'lum "
+"vaqt davomida belgilangan narxda tovarlar yoki xizmatlarni yetkazib berishga "
+"oid kelishuv hisoblanadi."
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "A sample email has been sent to %s."
+msgstr "%s manziliga namuna xat yuborildi."
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_warning_purchase
+#, fuzzy
+msgid "A warning can be set on a product or a customer (Purchase)"
+msgstr ""
+"Ogohlantirish mahsulotga yoki mijozga (Xarid bo‘yicha) o‘rnatilishi mumkin"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__access_warning
+#, fuzzy
+msgid "Access warning"
+msgstr "Kirish ogohlantirishi"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__qty_received_method
+#, fuzzy
+msgid ""
+"According to product configuration, the received quantity can be "
+"automatically computed by mechanism:\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
+msgstr ""
+"Mahsulot konfiguratsiyasiga ko‘ra, qabul qilingan miqdor quyidagi "
+"mexanizmlar orqali avtomatik hisoblanishi mumkin: - Qo‘lda: miqdor satrda "
+"qo‘lda kiritiladi - Zaxira harakatlari: miqdor tasdiqlangan jo‘natmalardan "
+"olinadi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__account_move_id
+#, fuzzy
+msgid "Account Move"
+msgstr "Buxgalteriya o‘tkazmasi"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_accrued_expense_entry
+#, fuzzy
+msgid "Accrued Expense Entry"
+msgstr "Hisoblangan xarajat yozuvi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Acknowledge"
+msgstr "Tasdiqlash"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__acknowledged
+#, fuzzy
+msgid "Acknowledged"
+msgstr "Tasdiqlangan"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
+#, fuzzy
+msgid "Action Needed"
+msgstr "Harakat talab etiladi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_ids
+#, fuzzy
+msgid "Activities"
+msgstr "Faoliyatlar"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#, fuzzy
+msgid "Activities of"
+msgstr "Kimningdir faoliyatlari"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_exception_decoration
+#, fuzzy
+msgid "Activity Exception Decoration"
+msgstr "Faoliyat istisnosini ko‘rsatish"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_state
+#, fuzzy
+msgid "Activity State"
+msgstr "Faoliyat holati"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_type_icon
+#, fuzzy
+msgid "Activity Type Icon"
+msgstr "Faoliyat turi belgisi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#, fuzzy
+msgid "Activity type"
+msgstr "Faoliyat turi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
+#, fuzzy
+msgid "Add Down Payment"
+msgstr "Boshlang‘ich to‘lovni qo‘shish"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
+#, fuzzy
+msgid "Add Products"
+msgstr "Mahsulotlar qo‘shish"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Add a note"
+msgstr "Izoh qo‘shish"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Add a product"
+msgstr "Mahsulot qo‘shish"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Add a section"
+msgstr "Bo‘lim qo‘shish"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
+msgid "Add several variants to the purchase order from a grid"
+msgstr "Jadvaldan xarid buyurtmasiga bir nechta variantlarni qo‘shish"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
+#, fuzzy
+msgid "Add some products or services to your quotation."
+msgstr "Taklifingizga ba'zi mahsulot yoki xizmatlarni qo‘shing"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#, fuzzy
+msgid "Add to PO"
+msgstr "Xarid buyurtmasiga qo‘shish"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_bill_line_match.py:0
+#, fuzzy
+msgid "Add to Purchase Order"
+msgstr "Xarid buyurtmasiga qo‘shish"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.mail_followers_edit_action_from_purchase
+#, fuzzy
+msgid "Add/Remove Followers"
+msgstr "Kuzatuvchilarni qo‘shish/olib tashlash"
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_purchase_manager
+#, fuzzy
+msgid "Administrator"
+msgstr "Administrator"
+
+#. module: purchase
+#. odoo-javascript
+#. odoo-python
+#: code:addons/purchase/controllers/portal.py:0
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
+msgid "All"
+msgstr "Hammasi"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
+msgid "All Days to Order"
+msgstr "Barcha buyurtma kunlari"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
+msgid "All Draft RFQs"
+msgstr "Barcha qoralama so‘rovlar"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
+msgid "All Late RFQs"
+msgstr "Barcha kechikkan so‘rovlar"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
+msgid "All Late Receipt POs"
+msgstr "Barcha kechikkan qabul qilish buyurtmalari"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
+msgid "All Not Acknowledged POs"
+msgstr "Barcha tasdiqlanmagan xarid buyurtmalari"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
+msgid "All Sent RFQs"
+msgstr "Barcha yuborilgan so‘rovlar"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
+#, fuzzy
+msgid "Allow automatically send email to remind your vendor the receipt date"
+msgstr ""
+"Yetkazib beruvchiga qabul qilish sanasini eslatish uchun avtomatik xabar "
+"yuborishga ruxsat berish"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
+#, fuzzy
+msgid "Allow to edit purchase orders"
+msgstr "Xarid buyurtmalarini tahrirlashga ruxsat berish"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__allowed_uom_ids
+#, fuzzy
+msgid "Allowed Uom"
+msgstr "Ruxsat etilgan o‘lchov birligi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__aml_id
+#, fuzzy
+msgid "Aml"
+msgstr "Buxgalteriya yozuvi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__amount
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__amount_to_invoice_at_date
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Amount"
+msgstr "Miqdor"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_report__delay_pass
+#, fuzzy
+msgid ""
+"Amount of time between date planned and order by date for each purchase "
+"order line."
+msgstr ""
+"Har bir xarid buyurtmasi satri uchun rejalashtirilgan sana va buyurtma "
+"sanasi orasidagi vaqt oralig‘i"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_report__delay
+#, fuzzy
+msgid "Amount of time between purchase approval and order by date."
+msgstr "Xaridni tasdiqlash va buyurtma sanasi orasidagi vaqt oralig‘i"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_account_analytic_account
+#, fuzzy
+msgid "Analytic Account"
+msgstr "Tahliliy hisob"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_distribution
+#, fuzzy
+msgid "Analytic Distribution"
+msgstr "Analitik taqsimot"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_account_analytic_applicability
+#, fuzzy
+msgid "Analytic Plan's Applicabilities"
+msgstr "Analitik rejaning qo‘llanilishi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_precision
+#, fuzzy
+msgid "Analytic Precision"
+msgstr "Analitik aniqlik"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Approve Order"
+msgstr "Buyurtmani tasdiqlash"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
+#, fuzzy
+msgid "Are you sure you want to cancel the selected RFQs/Orders?"
+msgstr ""
+"Tanlangan so‘rov/buyurtmalarni bekor qilishni xohlayotganingizga "
+"ishonchingiz komilmi?"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/product.py:0
+#, fuzzy
+msgid ""
+"As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
+"been used for this product, the change of unit of measure can not be done.If "
+"you want to change it, please archive the product and create a new one."
+msgstr ""
+"Bu mahsulot uchun %(uom)s dan boshqa o‘lchov birliklari (masalan: %"
+"(problem_uom)s) ishlatilgani sababli, o‘lchov birligini o‘zgartirib "
+"bo‘lmaydi. Agar o‘zgartirmoqchi bo‘lsangiz, mahsulotni arxivlang va "
+"yangisini yarating"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
+#, fuzzy
+msgid "Attachment Count"
+msgstr "Ilovalar soni"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_template_attribute_value_ids
+#, fuzzy
+msgid "Attribute Values"
+msgstr "Atribut qiymatlari"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_attribute_action
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
+msgid "Attributes"
+msgstr "Atributlar"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
+#, fuzzy
+msgid "Auto-Complete"
+msgstr "Avtomatik to‘ldirish"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_vendor_bill_id
+#: model:ir.model.fields,field_description:purchase.field_account_move__purchase_vendor_bill_id
+#, fuzzy
+msgid "Auto-complete"
+msgstr "Avtomatik to‘ldirish"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_id
+#: model:ir.model.fields,help:purchase.field_account_move__purchase_id
+#, fuzzy
+msgid "Auto-complete from a past purchase order."
+msgstr "Oldingi xarid buyurtmasidan avtomatik to‘ldirish"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_vendor_bill_id
+#: model:ir.model.fields,help:purchase.field_account_move__purchase_vendor_bill_id
+#, fuzzy
+msgid "Auto-complete from a previous bill, refund, or purchase order."
+msgstr ""
+"Oldingi hisob-kitob, qaytarim yoki xarid buyurtmasidan avtomatik to‘ldirish."
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
+msgid "Automatically lock confirmed orders to prevent editing"
+msgstr ""
+"Tahrirlashning oldini olish uchun tasdiqlangan buyurtmalarni avtomatik "
+"qulflash"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
+msgid "Automatically remind the receipt date to your vendors"
+msgstr ""
+"Yetkazib beruvchilarga qabul qilish sanasini avtomatik ravishda eslatish"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_res_partner__receipt_reminder_email
+#: model:ir.model.fields,help:purchase.field_res_users__receipt_reminder_email
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid ""
+"Automatically send a confirmation email to the vendor X days before the "
+"expected receipt date, asking him to confirm the exact date."
+msgstr ""
+"Kutilayotgan qabul qilish sanasidan X kun oldin yetkazib beruvchiga "
+"avtomatik ravishda tasdiqlash xatini yuborish va undan aniq sanani "
+"tasdiqlashni so‘rash."
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
+#, fuzzy
+msgid "Average Cost"
+msgstr "O‘rtacha narx"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_count
+#, fuzzy
+msgid "Bill Count"
+msgstr "Hisob-fakturalar soni"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__invoice_lines
+#, fuzzy
+msgid "Bill Lines"
+msgstr "Hisob-faktura qatorlari"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "Bill Matching"
+msgstr "Hisob-fakturani moslashtirish"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_bill_to_po_wizard
+#, fuzzy
+msgid "Bill to Purchase Order"
+msgstr "Xarid buyurtmasi uchun hisob-faktura"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced_at_date
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Billed"
+msgstr "Hisobga olingan"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__billed_amount_untaxed
+#, fuzzy
+msgid "Billed Amount Untaxed"
+msgstr "Soliqsiz hisoblangan summa"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
+#, fuzzy
+msgid "Billed Qty"
+msgstr "Hisobga olingan miqdor"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Billed Quantity"
+msgstr "Hisobga olingan miqdor"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
+#, fuzzy
+msgid "Billed Quantity:"
+msgstr "Hisobga olingan miqdor:"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_status
+#, fuzzy
+msgid "Billing Status"
+msgstr "To‘lov holati"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_ids
+#, fuzzy
+msgid "Bills"
+msgstr "Hisob-fakturalar"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#, fuzzy
+msgid "Bills Received"
+msgstr "Qabul qilingan hisob-fakturalar"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__user_id
+#: model:ir.model.fields,field_description:purchase.field_res_partner__buyer_id
+#: model:ir.model.fields,field_description:purchase.field_res_users__buyer_id
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#, fuzzy
+msgid "Buyer"
+msgstr "Xaridor"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_calendar
+#, fuzzy
+msgid "Calendar View"
+msgstr "Taqvim ko‘rinishi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
+#, fuzzy
+msgid "Cancel"
+msgstr "Bekor qilish"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/controllers/portal.py:0
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__cancel
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__cancel
+#, fuzzy
+msgid "Cancelled"
+msgstr "Bekor qilingan"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#, fuzzy
+msgid "Cancelled Purchase Order #"
+msgstr "Bekor qilingan xarid buyurtmasi #"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order_line.py:0
+#, fuzzy
+msgid "Cannot delete a purchase order line which is in state “%s”."
+msgstr "\"%s\" holatidagi xarid buyurtmasi qatorini o‘chirib bo‘lmaydi."
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Catalog"
+msgstr "Katalog"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
+#, fuzzy
+msgid "Categories"
+msgstr "Toifalar"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
+msgid "Close"
+msgstr "Yopish"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__commercial_partner_id
+#, fuzzy
+msgid "Commercial Entity"
+msgstr "Tijorat tashkiloti"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
+msgid "Communication history"
+msgstr "Muloqot tarixi"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_res_company
+#, fuzzy
+msgid "Companies"
+msgstr "Kompaniyalar"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__company_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__company_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__company_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__company_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__company_id
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#, fuzzy
+msgid "Company"
+msgstr "Kompaniya"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__company_currency_id
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__company_currency_id
+#, fuzzy
+msgid "Company Currency"
+msgstr "Kompaniya valyutasi"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "Compose Email"
+msgstr "Xat yozish"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_res_config_settings
+#, fuzzy
+msgid "Config Settings"
+msgstr "Sozlamalarni moslash"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_config
+#, fuzzy
+msgid "Configuration"
+msgstr "Konfiguratsiya"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Confirm Order"
+msgstr "Buyurtmani tasdiqlash"
+
+#. module: purchase
+#: model:ir.actions.server,name:purchase.action_confirm_rfqs
+#, fuzzy
+msgid "Confirm RFQ"
+msgstr "Narx so‘rovini tasdiqlash"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__one_step
+#, fuzzy
+msgid "Confirm purchase orders in one step"
+msgstr "Xarid buyurtmalarini bir bosqichda tasdiqlash"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
+#, fuzzy
+msgid "Confirm your purchase."
+msgstr "Xaridingizni tasdiqlang."
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__date_approve
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_approve
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__date_approve
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#, fuzzy
+msgid "Confirmation Date"
+msgstr "Tasdiqlash sanasi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#, fuzzy
+msgid "Confirmation Date Last Year"
+msgstr "O‘tgan yilgi tasdiqlash sanasi"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__lock
+#, fuzzy
+msgid "Confirmed purchase orders are not editable"
+msgstr "Tasdiqlangan xarid buyurtmalarini tahrirlash mumkin emas"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
+msgid "Connect with your software!"
+msgstr "Dasturingiz bilan bog‘laning!"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+#, fuzzy
+msgid "Connect your software"
+msgstr "Dasturingizni ulang"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_res_partner
+#, fuzzy
+msgid "Contact"
+msgstr "Aloqa"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_product__purchase_method
+#: model:ir.model.fields,field_description:purchase.field_product_template__purchase_method
+#, fuzzy
+msgid "Control Policy"
+msgstr "Nazorat siyosati"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
+msgid "Copy"
+msgstr "Nusxalash"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__country_code
+#, fuzzy
+msgid "Country code"
+msgstr "Mamlakat kodi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
+#, fuzzy
+msgid "Create Bills"
+msgstr "Hisob-fakturalar yaratish"
+
+#. module: purchase
+#: model:ir.model,website_form_label:purchase.model_res_partner
+#, fuzzy
+msgid "Create a Customer"
+msgstr "Mijoz yaratish"
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.product_product_action
+#, fuzzy
+msgid "Create a new product variant"
+msgstr "Yangi mahsulot variantini yaratish"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
+#, fuzzy
+msgid "Create a product"
+msgstr "Mahsulot yaratish"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__create_uid
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__create_uid
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__create_uid
+#, fuzzy
+msgid "Created by"
+msgstr "Yaratuvchi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__create_date
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__create_date
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__create_date
+#, fuzzy
+msgid "Created on"
+msgstr "Yaratilgan sana"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__currency_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__currency_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__currency_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__currency_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__currency_id
+#, fuzzy
+msgid "Currency"
+msgstr "Valyuta"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__currency_rate
+#, fuzzy
+msgid "Currency Rate"
+msgstr "Valyuta kursi"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__access_url
+#, fuzzy
+msgid "Customer Portal URL"
+msgstr "Mijozlar portali URL manzili"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__date
+#, fuzzy
+msgid "Date"
+msgstr "Sana"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__date_calendar_start
+#, fuzzy
+msgid "Date Calendar Start"
+msgstr "Taqvim boshlanish sanasi"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "Date Updated"
+msgstr "Yangilangan sana"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
+msgid "Date:"
+msgstr "Sana:"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__reminder_date_before_receipt
+#: model:ir.model.fields,field_description:purchase.field_res_partner__reminder_date_before_receipt
+#: model:ir.model.fields,field_description:purchase.field_res_users__reminder_date_before_receipt
+#, fuzzy
+msgid "Days Before Receipt"
+msgstr "Qabul qilishdan oldingi kunlar"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__delay
+#, fuzzy
+msgid "Days to Confirm"
+msgstr "Tasdiqlash uchun kunlar"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
+msgid "Days to Order"
+msgstr "Buyurtma berish uchun kunlar"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__delay_pass
+#, fuzzy
+msgid "Days to Receive"
+msgstr "Qabul qilish uchun kunlar"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__company_price_include
+#, fuzzy
+msgid "Default Sales Price Include"
+msgstr "Standart sotuv narxini o‘z ichiga olish"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__company_price_include
+#, fuzzy
+msgid ""
+"Default on whether the sales price used on the product and invoices with "
+"this Company includes its taxes."
+msgstr ""
+"Ushbu kompaniya bilan mahsulot va hisob-fakturalarda qo‘llaniladigan sotuv "
+"narxiga soliqlar kiritilishi bo‘yicha standart sozlama."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_bill_line_match__product_uom_id
+#, fuzzy
+msgid "Default unit of measure used for all stock operations."
+msgstr ""
+"Barcha omborxona operatsiyalari uchun ishlatiladigan standart o‘lchov "
+"birligi."
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Define your terms and conditions ..."
+msgstr "Shartlar va qoidalaringizni belgilang..."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__date_planned
+#, fuzzy
+msgid ""
+"Delivery date expected from vendor. This date respectively defaults to "
+"vendor pricelist lead time then today's date."
+msgstr ""
+"Yetkazib beruvchidan kutilayotgan yetkazib berish sanasi. Bu sana avval "
+"yetkazib beruvchi narxlar ro‘yxatidagi yetkazib berish muddatiga, keyin esa "
+"bugungi sanaga asoslanadi."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__date_planned
+#, fuzzy
+msgid ""
+"Delivery date promised by vendor. This date is used to determine expected "
+"arrival of products."
+msgstr ""
+"Yetkazib beruvchi tomonidan va'da qilingan yetkazib berish sanasi. Bu sana "
+"mahsulotlarning kutilayotgan kelish vaqtini aniqlash uchun ishlatiladi."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__date_order
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__date_order
+#, fuzzy
+msgid ""
+"Depicts the date within which the Quotation should be confirmed and "
+"converted into a purchase order."
+msgstr ""
+"Narx taklifining tasdiqlanishi va xarid buyurtmasiga aylantirilishi kerak "
+"bo‘lgan muddatni bildiradi."
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__name
+#, fuzzy
+msgid "Description"
+msgstr "Tavsif"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
+msgid "Disc.%"
+msgstr "Cheg.%"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__discount
+#, fuzzy
+msgid "Discount (%)"
+msgstr "Chegirma (%)"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Discount:"
+msgstr "Chegirma:"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_analytic_account__display_name
+#: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__display_name
+#: model:ir.model.fields,field_description:purchase.field_account_move__display_name
+#: model:ir.model.fields,field_description:purchase.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:purchase.field_account_tax__display_name
+#: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__display_name
+#: model:ir.model.fields,field_description:purchase.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:purchase.field_product_product__display_name
+#: model:ir.model.fields,field_description:purchase.field_product_supplierinfo__display_name
+#: model:ir.model.fields,field_description:purchase.field_product_template__display_name
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__display_name
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__display_name
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__display_name
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__display_name
+#: model:ir.model.fields,field_description:purchase.field_res_company__display_name
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:purchase.field_res_partner__display_name
+#, fuzzy
+msgid "Display Name"
+msgstr "Ko‘rsatiladigan nom"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__display_type
+#, fuzzy
+msgid "Display Type"
+msgstr "Ko‘rsatish turi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__distribution_analytic_account_ids
+#, fuzzy
+msgid "Distribution Analytic Account"
+msgstr "Taqsimot tahliliy hisobi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__business_domain
+#, fuzzy
+msgid "Domain"
+msgstr "Domen"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation_amount
+#, fuzzy
+msgid "Double validation amount"
+msgstr "Ikki bosqichli tasdiqlash summasi"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/wizard/bill_to_po_wizard.py:0
+#, fuzzy
+msgid "Down Payment (ref: %(ref)s)"
+msgstr "Boshlang‘ich to‘lov (havola: %(ref)s)"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "Down Payments"
+msgstr "Boshlang‘ich to‘lovlar"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__draft
+#, fuzzy
+msgid "Draft RFQ"
+msgstr "Narx so‘rovi loyihasi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
+msgid ""
+"Drag and drop the request for quotation PDF file into your list of "
+"quotations in Odoo. Enjoy the automation!"
+msgstr ""
+"Narx so‘rovi PDF faylini Odoo‘dagi narx takliflari ro‘yxatiga sudrab "
+"tashlang. Avtomatlashtirish qulayligidan bahramand bo‘ling!"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__dest_address_id
+#, fuzzy
+msgid "Dropship Address"
+msgstr "Bevosita yetkazib berish manzili"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Duplicated Documents"
+msgstr "Takrorlangan hujjatlar"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__duplicated_order_ids
+#, fuzzy
+msgid "Duplicated Order"
+msgstr "Takrorlangan buyurtma"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_planned
+#, fuzzy
+msgid "Expected Arrival"
+msgstr "Kutilayotgan kelish vaqti"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order_line.py:0
+#, fuzzy
+msgid "Extra line with %s "
+msgstr "%s bilan qo‘shimcha qator"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__fiscal_position_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__fiscal_position_id
+#, fuzzy
+msgid "Fiscal Position"
+msgstr "Soliq holati"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
+#, fuzzy
+msgid "Follow orders you have to fulfill"
+msgstr "Bajarishingiz kerak bo‘lgan buyurtmalarni kuzatib boring"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
+#, fuzzy
+msgid "Follow your Requests for Quotation"
+msgstr "Narx so‘rovlaringizni kuzatib boring"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_follower_ids
+#, fuzzy
+msgid "Followers"
+msgstr "Kuzatuvchilar"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_partner_ids
+#, fuzzy
+msgid "Followers (Partners)"
+msgstr "Kuzatuvchilar (Hamkorlar)"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__activity_type_icon
+#, fuzzy
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font Awesome belgisi, masalan fa-tasks"
+
+#. module: purchase
+#: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_non_accountable_null_fields
+#, fuzzy
+msgid "Forbidden values on non-accountable purchase order line"
+msgstr "Hisobga olinmaydigan xarid buyurtmasi qatoridagi taqiqlangan qiymatlar"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/account_invoice.py:0
+#, fuzzy
+msgid "From %s"
+msgstr "%s dan"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/account_invoice.py:0
+#, fuzzy
+msgid "From Electronic Document"
+msgstr "Elektron hujjatdan"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__invoiced
+#, fuzzy
+msgid "Fully Billed"
+msgstr "To‘liq hisob-kitob qilingan"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#, fuzzy
+msgid "Future Activities"
+msgstr "Kelgusi faoliyatlar"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "Generated Orders"
+msgstr "Yaratilgan buyurtmalar"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__two_step
+#, fuzzy
+msgid "Get 2 levels of approvals to confirm a purchase order"
+msgstr "Xarid buyurtmasini tasdiqlash uchun ikki bosqichli tasdiqlashni oling"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
+msgid "Get warnings in orders for products or vendors"
+msgstr ""
+"Mahsulotlar yoki sotuvchilar uchun buyurtmalarda ogohlantirishlar oling"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__product_type
+#, fuzzy
+msgid ""
+"Goods are tangible materials and merchandise you provide.\n"
+"A service is a non-material product you provide."
+msgstr ""
+"Tovarlar - siz taqdim etadigan moddiy materiallar va mahsulotlar. Xizmat esa "
+"- siz ko‘rsatadigan nomoddiy mahsulot."
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__weight
+#, fuzzy
+msgid "Gross Weight"
+msgstr "Brutto og‘irlik"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__has_message
+#, fuzzy
+msgid "Has Message"
+msgstr "Xabar mavjud"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
+#, fuzzy
+msgid "Hide cancelled lines"
+msgstr "Bekor qilingan qatorlarni yashirish"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_analytic_account__id
+#: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__id
+#: model:ir.model.fields,field_description:purchase.field_account_move__id
+#: model:ir.model.fields,field_description:purchase.field_account_move_line__id
+#: model:ir.model.fields,field_description:purchase.field_account_tax__id
+#: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__id
+#: model:ir.model.fields,field_description:purchase.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:purchase.field_product_product__id
+#: model:ir.model.fields,field_description:purchase.field_product_supplierinfo__id
+#: model:ir.model.fields,field_description:purchase.field_product_template__id
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__id
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__id
+#: model:ir.model.fields,field_description:purchase.field_res_company__id
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__id
+#: model:ir.model.fields,field_description:purchase.field_res_partner__id
+#, fuzzy
+msgid "ID"
+msgstr "ID"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_exception_icon
+#, fuzzy
+msgid "Icon"
+msgstr "Belgi"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__activity_exception_icon
+#, fuzzy
+msgid "Icon to indicate an exception activity."
+msgstr "Istisno faoliyatini ko‘rsatuvchi belgi."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction
+#, fuzzy
+msgid "If checked, new messages require your attention."
+msgstr "Agar belgilansa, yangi xabarlar e'tiboringizni talab qiladi."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_has_sms_error
+#, fuzzy
+msgid "If checked, some messages have a delivery error."
+msgstr "Agar belgilansa, ba'zi xabarlarda yetkazib berish xatosi mavjud."
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
+msgid ""
+"If enabled, activates 3-way matching on vendor bills : the items must be "
+"received in order to pay the invoice."
+msgstr ""
+"Agar yoqilsa, sotuvchi hisob-kitoblarida uch tomonlama moslikni "
+"faollashtiradi: to‘lovni amalga oshirish uchun mahsulotlar qabul qilingan "
+"bo‘lishi kerak."
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
+msgid ""
+"If installed, the product variants will be added to purchase orders through "
+"a grid entry."
+msgstr ""
+"Agar o‘rnatilgan bo‘lsa, mahsulot variantlari jadval orqali xarid "
+"buyurtmalariga qo‘shiladi."
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/product.py:0
+#, fuzzy
+msgid "Import Template for Products"
+msgstr "Mahsulotlar uchun import andozasi"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "Import Template for Requests for Quotation"
+msgstr "Narx so‘rovlari uchun import andozasi"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "In order to delete a purchase order, you must cancel it first."
+msgstr "Xarid buyurtmasini o‘chirish uchun avval uni bekor qilishingiz kerak."
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid ""
+"In selected purchase order to merge these details must be same\n"
+"Vendor, currency, destination, dropship address and agreement"
+msgstr ""
+"Tanlangan xarid buyurtmalarini birlashtirish uchun quyidagilar bir xil "
+"bo‘lishi kerak: sotuvchi, valyuta, manzil, yetkazib berish manzili va "
+"shartnoma"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_view_search_catalog
+#, fuzzy
+msgid "In the Order"
+msgstr "Buyurtmada"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__incoterm_id
+#, fuzzy
+msgid "Incoterm"
+msgstr "Inkoterm"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
+#, fuzzy
+msgid "Indicate the product quantity you want to order."
+msgstr "Buyurtma qilmoqchi bo‘lgan mahsulot miqdorini ko‘rsating."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_warning_text
+#: model:ir.model.fields,help:purchase.field_account_move__purchase_warning_text
+#: model:ir.model.fields,help:purchase.field_purchase_order__purchase_warning_text
+#, fuzzy
+msgid "Internal warning for the partner or the products as set by the user."
+msgstr ""
+"Foydalanuvchi tomonidan belgilangan hamkor yoki mahsulotlar uchun ichki "
+"ogohlantirish."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__incoterm_id
+#, fuzzy
+msgid ""
+"International Commercial Terms are a series of predefined commercial terms "
+"used in international transactions."
+msgstr ""
+"Xalqaro tijorat shartlari xalqaro bitimlarda qo‘llaniladigan oldindan "
+"belgilangan tijorat atamalarining to‘plamidir."
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Invoices and Incoming Shipments"
+msgstr "Hisob-fakturalar va kiruvchi jo‘natmalar"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
+msgid "Invoicing"
+msgstr "Hisob-faktura"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_move_line__is_downpayment
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__is_downpayment
+#, fuzzy
+msgid "Is Downpayment"
+msgstr "Boshlang‘ich to‘lov"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_is_follower
+#, fuzzy
+msgid "Is Follower"
+msgstr "Kuzatuvchimi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_product__is_in_purchase_order
+#, fuzzy
+msgid "Is In Purchase Order"
+msgstr "Xarid buyurtmasida mavjud"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__is_late
+#, fuzzy
+msgid "Is Late"
+msgstr "Kechikkan"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__is_purchase_matched
+#: model:ir.model.fields,field_description:purchase.field_account_move__is_purchase_matched
+#, fuzzy
+msgid "Is Purchase Matched"
+msgstr "Xarid moslashuvi"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__acknowledged
+#, fuzzy
+msgid ""
+"It indicates that the vendor has acknowledged the receipt of the purchase "
+"order."
+msgstr "Bu sotuvchi xarid buyurtmasini olganligini tasdiqlaganini ko‘rsatadi."
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_account_move
+#, fuzzy
+msgid "Journal Entry"
+msgstr "Buxgalteriya yozuvi"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_account_move_line
+#, fuzzy
+msgid "Journal Item"
+msgstr "Buxgalteriya yozuvi bandi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__write_uid
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__write_uid
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__write_uid
+#, fuzzy
+msgid "Last Updated by"
+msgstr "Oxirgi yangilagan"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__write_date
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__write_date
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__write_date
+#, fuzzy
+msgid "Last Updated on"
+msgstr "Oxirgi yangilangan sana"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#, fuzzy
+msgid "Late"
+msgstr "Kechikkan"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#, fuzzy
+msgid "Late Activities"
+msgstr "Kechikkan faoliyatlar"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
+msgid "Late RFQ"
+msgstr "Kechikkan narx so‘rovi"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
+msgid "Late Receipt"
+msgstr "Kechikkan qabul"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#, fuzzy
+msgid "Late Receipts"
+msgstr "Kechikkan qabullar"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
+#, fuzzy
+msgid "Let's create your first request for quotation."
+msgstr "Keling, birinchi narx so‘rovingizni yarataylik."
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
+#, fuzzy
+msgid ""
+"Let's try the Purchase app to manage the flow from purchase to reception and "
+"invoice control."
+msgstr ""
+"Xariddan qabul qilish va hisob-faktura nazoratigacha bo‘lgan jarayonni "
+"boshqarish uchun Xarid ilovasini sinab ko‘raylik."
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation
+#, fuzzy
+msgid "Levels of Approvals"
+msgstr "Tasdiqlash bosqichlari"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation
+#, fuzzy
+msgid "Levels of Approvals *"
+msgstr "Tasdiqlash bosqichlari *"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_amount_untaxed
+#, fuzzy
+msgid "Line Amount Untaxed"
+msgstr "Soliqsiz qator summasi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_qty
+#, fuzzy
+msgid "Line Qty"
+msgstr "Qator miqdori"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_uom_id
+#, fuzzy
+msgid "Line Uom"
+msgstr "Qator o‘lchov birligi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Lock"
+msgstr "Qulflash"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__lock_confirmed_po
+#, fuzzy
+msgid "Lock Confirmed Orders"
+msgstr "Tasdiqlangan buyurtmalarni qulflash"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__locked
+#, fuzzy
+msgid "Locked"
+msgstr "Qulflangan"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__locked
+#, fuzzy
+msgid "Locked Purchase Orders cannot be modified."
+msgstr "Qulflangan xarid buyurtmalarini o‘zgartirish mumkin emas."
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
+msgid ""
+"Make sure you only pay bills for which you received the goods you ordered"
+msgstr ""
+"Faqat siz buyurtma qilgan va qabul qilgan tovarlar uchun to‘lovlarni amalga "
+"oshirishingizga ishonch hosil qiling"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
+msgid "Manage blanket orders and purchase templates"
+msgstr "Umumiy buyurtmalar va xarid shablonlarini boshqarish"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__qty_received_method__manual
+#, fuzzy
+msgid "Manual"
+msgstr "Qo‘llanma"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
+#, fuzzy
+msgid "Manual Invoices"
+msgstr "Qo‘lda kiritilgan hisob-fakturalar"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_manual
+#, fuzzy
+msgid "Manual Received Qty"
+msgstr "Qo‘lda qabul qilingan miqdor"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#, fuzzy
+msgid "Match"
+msgstr "Moslashtirish"
+
+#. module: purchase
+#: model:ir.actions.server,name:purchase.action_merger
+#, fuzzy
+msgid "Merge RFQs"
+msgstr "Narx so‘rovlarini birlashtirish"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "Merged RFQs"
+msgstr "Birlashtirilgan narx so‘rovlari"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
+#, fuzzy
+msgid "Message Delivery error"
+msgstr "Xabar yetkazib berishda xatolik"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_warn_msg
+#: model:ir.model.fields,field_description:purchase.field_res_users__purchase_warn_msg
+#, fuzzy
+msgid "Message for Purchase Order"
+msgstr "Xarid buyurtmasi uchun xabar"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_product__purchase_line_warn_msg
+#: model:ir.model.fields,field_description:purchase.field_product_template__purchase_line_warn_msg
+#, fuzzy
+msgid "Message for Purchase Order Line"
+msgstr "Xarid buyurtmasi qatori uchun xabar"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_ids
+#, fuzzy
+msgid "Messages"
+msgstr "Xabarlar"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation_amount
+#, fuzzy
+msgid "Minimum Amount"
+msgstr "Minimal miqdor"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_res_company__po_double_validation_amount
+#: model:ir.model.fields,help:purchase.field_res_config_settings__po_double_validation_amount
+#, fuzzy
+msgid "Minimum amount for which a double validation is required"
+msgstr "Ikki marta tasdiqlash talab qilinadigan minimal miqdor"
+
+#. module: purchase
+#: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_accountable_required_fields
+#, fuzzy
+msgid "Missing required fields on accountable purchase order line."
+msgstr "Hisobdor xarid buyurtmasi qatorida zarur maydonlar mavjud emas."
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
+msgid "My"
+msgstr "Mening"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#, fuzzy
+msgid "My Activities"
+msgstr "Mening faoliyatlarim"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__my_activity_date_deadline
+#, fuzzy
+msgid "My Activity Deadline"
+msgstr "Mening faoliyatim muddati"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
+msgid "My Days to Order"
+msgstr "Mening buyurtma kunlarim"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
+msgid "My Draft RFQs"
+msgstr "Mening qoralama narx so‘rovlarim"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
+msgid "My Late RFQs"
+msgstr "Mening kechikkan narx so‘rovlarim"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
+msgid "My Late Receipt POs"
+msgstr "Mening kechikkan qabul qilish buyurtmalarim"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
+msgid "My Not Acknowledged POs"
+msgstr "Mening tasdiqlanmagan xarid buyurtmalarim"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#, fuzzy
+msgid "My Orders"
+msgstr "Mening buyurtmalarim"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#, fuzzy
+msgid "My Purchases"
+msgstr "Mening xaridlarim"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
+msgid "My Waiting RFQs"
+msgstr "Mening kutilayotgan narx so‘rovlarim"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/controllers/portal.py:0
+#, fuzzy
+msgid "Name"
+msgstr "Nomi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Name, TIN, Email, or Reference"
+msgstr "Ism, STIR, elektron pochta yoki ma'lumotnoma"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#, fuzzy
+msgid "New"
+msgstr "Yangi"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/controllers/portal.py:0
+#, fuzzy
+msgid "Newest"
+msgstr "Eng yangi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
+#, fuzzy
+msgid "Next Activity"
+msgstr "Keyingi faoliyat"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_calendar_event_id
+#, fuzzy
+msgid "Next Activity Calendar Event"
+msgstr "Keyingi taqvim hodisasi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_date_deadline
+#, fuzzy
+msgid "Next Activity Deadline"
+msgstr "Keyingi faoliyat muddati"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_summary
+#, fuzzy
+msgid "Next Activity Summary"
+msgstr "Keyingi faoliyat qisqacha mazmuni"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_type_id
+#, fuzzy
+msgid "Next Activity Type"
+msgstr "Keyingi faoliyat turi"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
+#, fuzzy
+msgid "No Products for the selected Vendor."
+msgstr "Tanlangan yetkazib beruvchi uchun mahsulotlar mavjud emas."
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
+#, fuzzy
+msgid "No Purchase Analysis"
+msgstr "Xarid tahlili yo‘q"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "No attachment was provided"
+msgstr "Hech qanday ilova taqdim etilmagan"
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
+#, fuzzy
+msgid "No product found. Let's create one!"
+msgstr "Hech qanday mahsulot topilmadi. Keling, yangi mahsulot yaratamiz!"
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
+#, fuzzy
+msgid "No purchase order found. Let's create one!"
+msgstr "Xarid buyurtmasi topilmadi. Keling, yangi buyurtma yaratamiz!"
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.action_purchase_history
+#, fuzzy
+msgid "No purchase order were made for this product yet!"
+msgstr "Ushbu mahsulot uchun hali xarid buyurtmasi amalga oshirilmagan!"
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
+#, fuzzy
+msgid "No request for quotation found. Let's create one!"
+msgstr "Narx so‘rovi topilmadi. Keling, yangi so‘rov yaratamiz!"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__0
+#, fuzzy
+msgid "Normal"
+msgstr "Oddiy"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#, fuzzy
+msgid "Not Acknowledged"
+msgstr "Tasdiqlanmagan"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
+msgid "Not using Odoo?"
+msgstr "Odoo ishlatilmayaptimi?"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_note
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Note"
+msgstr "Izoh"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Notes"
+msgstr "Izohlar"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__no
+#, fuzzy
+msgid "Nothing to Bill"
+msgstr "To‘lanadigan hisob-faktura yo‘q"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction_counter
+#, fuzzy
+msgid "Number of Actions"
+msgstr "Harakatlar soni"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_res_partner__reminder_date_before_receipt
+#: model:ir.model.fields,help:purchase.field_res_users__reminder_date_before_receipt
+#, fuzzy
+msgid "Number of days to send reminder email before the promised receipt date"
+msgstr ""
+"Va'da qilingan qabul qilish sanasidan oldin eslatma xatini yuborish uchun "
+"kunlar soni"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error_counter
+#, fuzzy
+msgid "Number of errors"
+msgstr "Xatolar soni"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction_counter
+#, fuzzy
+msgid "Number of messages requiring action"
+msgstr "Harakat talab qiladigan xabarlar soni"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error_counter
+#, fuzzy
+msgid "Number of messages with delivery error"
+msgstr "Yetkazib berishda xato bo‘lgan xabarlar soni"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
+msgid "Odoo"
+msgstr "Odoo"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_method__purchase
+#, fuzzy
+msgid "On ordered quantities"
+msgstr "Buyurtma qilingan miqdorlar bo‘yicha"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_product_product__purchase_method
+#: model:ir.model.fields,help:purchase.field_product_template__purchase_method
+#, fuzzy
+msgid ""
+"On ordered quantities: Control bills based on ordered quantities.\n"
+"On received quantities: Control bills based on received quantities."
+msgstr ""
+"Buyurtma qilingan miqdorlar bo‘yicha: Hisoblarni buyurtma qilingan miqdorlar "
+"asosida nazorat qilish. Qabul qilingan miqdorlar bo‘yicha: Hisoblarni qabul "
+"qilingan miqdorlar asosida nazorat qilish."
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_method__receive
+#, fuzzy
+msgid "On received quantities"
+msgstr "Qabul qilingan miqdorlar bo‘yicha"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
+#, fuzzy
+msgid ""
+"Once you get the price from the vendor, you can complete the purchase order "
+"with the right price."
+msgstr ""
+"Yetkazib beruvchidan narxni olgandan so‘ng, xarid buyurtmasini to‘g‘ri narx "
+"bilan to‘ldirishingiz mumkin."
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
+#, fuzzy
+msgid ""
+"Once you ordered your products to your supplier, confirm your request for "
+"quotation and it will turn into a purchase order."
+msgstr ""
+"Mahsulotlaringizni yetkazib beruvchiga buyurtma qilganingizdan so‘ng, narx "
+"so‘rovingizni tasdiqlang va u xarid buyurtmasiga aylanadi."
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__order_id
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#, fuzzy
+msgid "Order"
+msgstr "Buyurtma"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_order
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__date_order
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#, fuzzy
+msgid "Order Date"
+msgstr "Buyurtma sanasi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
+#, fuzzy
+msgid "Order Date: Last 365 Days"
+msgstr "Buyurtma sanasi: Oxirgi 365 kun"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__date_order
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
+#, fuzzy
+msgid "Order Deadline"
+msgstr "Buyurtma muddati"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__order_line
+#, fuzzy
+msgid "Order Lines"
+msgstr "Buyurtma satrlari"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__name
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__order_id
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
+#, fuzzy
+msgid "Order Reference"
+msgstr "Buyurtma raqami"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
+#, fuzzy
+msgid "Ordered Quantity:"
+msgstr "Buyurtma qilingan miqdor:"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
+msgid "Orders"
+msgstr "Buyurtmalar"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "Order due %(date)s"
+msgstr "%(date)s sanasida muddati tugaydigan buyurtma"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Other Information"
+msgstr "Qo‘shimcha ma'lumotlar"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
+#, fuzzy
+msgid "Our Orders"
+msgstr "Bizning buyurtmalarimiz"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__parent_id
+#, fuzzy
+msgid "Parent Section Line"
+msgstr "Asosiy bo‘lim satri"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__partner_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__partner_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__partner_id
+#, fuzzy
+msgid "Partner"
+msgstr "Hamkor"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__country_id
+#, fuzzy
+msgid "Partner Country"
+msgstr "Hamkor mamlakati"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__payment_term_id
+#, fuzzy
+msgid "Payment Terms"
+msgstr "To‘lov shartlari"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
+msgid "Payment terms"
+msgstr "To‘lov shartlari"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid ""
+"Please select at least two purchase orders with state RFQ and RFQ sent to "
+"merge."
+msgstr ""
+"Birlashtirish uchun kamida ikkita xarid buyurtmasini tanlang, ularning "
+"holati RFQ va yuborilgan RFQ bo‘lishi kerak."
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_bill_line_match.py:0
+#, fuzzy
+msgid "Please select bill lines with the same vendor."
+msgstr "Bir xil yetkazib beruvchiga tegishli hisob-kitob satrlarini tanlang."
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__pol_id
+#, fuzzy
+msgid "Pol"
+msgstr "Pol"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__access_url
+#, fuzzy
+msgid "Portal Access URL"
+msgstr "Portal kirish URL manzili"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Preview the reminder email by sending it to yourself."
+msgstr "Eslatma xatini o‘zingizga yuborish orqali oldindan ko‘rib chiqing."
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#, fuzzy
+msgid "Price"
+msgstr "Narx"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
+msgid "Pricing"
+msgstr "Narxlash"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Print"
+msgstr "Chop etish"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__priority
+#, fuzzy
+msgid "Priority"
+msgstr "Muhimlik darajasi"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_product_template
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__product_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__product_id
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#, fuzzy
+msgid "Product"
+msgstr "Mahsulot"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__category_id
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#, fuzzy
+msgid "Product Category"
+msgstr "Mahsulot toifasi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#, fuzzy
+msgid "Product Description"
+msgstr "Mahsulot tavsifi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__product_tmpl_id
+#, fuzzy
+msgid "Product Template"
+msgstr "Mahsulot andozasi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_type
+#, fuzzy
+msgid "Product Type"
+msgstr "Mahsulot turi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_price
+#, fuzzy
+msgid "Product Uom Price"
+msgstr "Mahsulot o‘lchov birligi narxi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_qty
+#, fuzzy
+msgid "Product Uom Qty"
+msgstr "Mahsulot o‘lchov birligi miqdori"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_product_product
+#, fuzzy
+msgid "Product Variant"
+msgstr "Mahsulot varianti"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.product_product_action
+#: model:ir.ui.menu,name:purchase.product_product_menu
+#, fuzzy
+msgid "Product Variants"
+msgstr "Mahsulot variantlari"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_no_variant_attribute_value_ids
+#, fuzzy
+msgid "Product attribute values that do not create variants"
+msgstr "Variant yaratmaydigan mahsulot xususiyatlari qiymatlari"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.product_normal_action_puchased
+#: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
+#: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_products
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
+msgid "Products"
+msgstr "Mahsulotlar"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_res_company__po_double_validation
+#: model:ir.model.fields,help:purchase.field_res_config_settings__po_double_validation
+#, fuzzy
+msgid "Provide a double validation mechanism for purchases"
+msgstr "Xaridlar uchun ikki bosqichli tasdiqlash mexanizmini ta'minlash"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_root
+#: model:ir.ui.menu,name:purchase.purchase_report
+#: model:res.groups.privilege,name:purchase.res_groups_privilege_purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_template_search_view_purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
+msgid "Purchase"
+msgstr "Xarid"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_requisition
+#, fuzzy
+msgid "Purchase Agreements"
+msgstr "Xarid shartnomalari"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__purchase_amount_untaxed
+#, fuzzy
+msgid "Purchase Amount Untaxed"
+msgstr "Soliqlarsiz xarid summasi"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_graph
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_pivot
+#, fuzzy
+msgid "Purchase Analysis"
+msgstr "Xarid tahlili"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#, fuzzy
+msgid "Purchase Bill Lines"
+msgstr "Xarid hisob-faktura qatorlari"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "Purchase Comparison for %s"
+msgstr "%s uchun xaridlar taqqoslash"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+#, fuzzy
+msgid "Purchase Description"
+msgstr "Xarid tavsifi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_product_matrix
+#, fuzzy
+msgid "Purchase Grid Entry"
+msgstr "Xarid jadvaliga kiritish"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/product.py:0
+#, fuzzy
+msgid "Purchase History for %s"
+msgstr "%s uchun xaridlar tarixi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_warn_msg
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__purchase_line_warn_msg
+msgid "Purchase Line Warn Msg"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_bill_line_match
+#, fuzzy
+msgid "Purchase Line and Vendor Bill line matching view"
+msgstr ""
+"Xarid qatori va yetkazib beruvchi hisob-faktura qatori mosligi ko‘rinishi"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/account_invoice.py:0
+#, fuzzy
+msgid "Purchase Matching"
+msgstr "Xarid moslashtirish"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/controllers/portal.py:0
+#: code:addons/purchase/models/purchase_order.py:0
+#: model:ir.actions.report,name:purchase.action_report_purchase_order
+#: model:ir.model,name:purchase.model_purchase_order
+#: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_id
+#: model:ir.model.fields,field_description:purchase.field_account_move__purchase_id
+#: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_order_id
+#: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__purchase_order_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__purchase_order_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__purchase_order_id
+#: model:ir.model.fields.selection,name:purchase.selection__account_analytic_applicability__business_domain__purchase_order
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_graph
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_pivot
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_activity
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
+#, fuzzy
+msgid "Purchase Order"
+msgstr "Xarid buyurtmasi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#, fuzzy
+msgid "Purchase Order #"
+msgstr "Xarid buyurtmasi raqami"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
+#, fuzzy
+msgid "Purchase Order Approval"
+msgstr "Xarid buyurtmasini tasdiqlash"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_analytic_account__purchase_order_count
+#: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_order_count
+#: model:ir.model.fields,field_description:purchase.field_account_move__purchase_order_count
+#: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_order_count
+#: model:ir.model.fields,field_description:purchase.field_res_users__purchase_order_count
+#, fuzzy
+msgid "Purchase Order Count"
+msgstr "Xarid buyurtmalari soni"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_history
+#: model:ir.model,name:purchase.model_purchase_order_line
+#: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
+#, fuzzy
+msgid "Purchase Order Line"
+msgstr "Xarid buyurtmasi qatori"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_tree
+#, fuzzy
+msgid "Purchase Order Lines"
+msgstr "Xarid buyurtmasi qatorlari"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__lock_confirmed_po
+#: model:ir.model.fields,field_description:purchase.field_res_company__po_lock
+#, fuzzy
+msgid "Purchase Order Modification"
+msgstr "Xarid buyurtmasini o‘zgartirish"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_lock
+#, fuzzy
+msgid "Purchase Order Modification *"
+msgstr "Xarid buyurtmasini o‘zgartirish *"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__lock_confirmed_po
+#: model:ir.model.fields,help:purchase.field_res_company__po_lock
+#: model:ir.model.fields,help:purchase.field_res_config_settings__po_lock
+#, fuzzy
+msgid ""
+"Purchase Order Modification used when you want to purchase order editable "
+"after confirm"
+msgstr ""
+"Tasdiqlangandan so‘ng xarid buyurtmasini tahrirlash uchun foydalaniladigan "
+"xarid buyurtmasi o‘zgartirishi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_order_name
+#: model:ir.model.fields,field_description:purchase.field_account_move__purchase_order_name
+#, fuzzy
+msgid "Purchase Order Name"
+msgstr "Xarid buyurtmasi nomi"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/analytic_account.py:0
+#: model:ir.actions.act_window,name:purchase.purchase_form_action
+#: model:ir.ui.menu,name:purchase.menu_purchase_form_action
+#: model_terms:ir.ui.view,arch_db:purchase.account_analytic_account_view_form_purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_menu_purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#, fuzzy
+msgid "Purchase Orders"
+msgstr "Xarid buyurtmalari"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_report
+#, fuzzy
+msgid "Purchase Report"
+msgstr "Xarid hisoboti"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_warning_text
+#: model:ir.model.fields,field_description:purchase.field_account_move__purchase_warning_text
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__purchase_warning_text
+#, fuzzy
+msgid "Purchase Warning"
+msgstr "Xarid ogohlantirishi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_warning_purchase
+#, fuzzy
+msgid "Purchase Warnings"
+msgstr "Xarid ogohlantirishlari"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#, fuzzy
+msgid "Purchase orders that have been invoiced."
+msgstr "Hisob-faktura qilingan xarid buyurtmalari"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#, fuzzy
+msgid "Purchase orders that include lines not invoiced."
+msgstr ""
+"Hisob-faktura qilinmagan qatorlarni o‘z ichiga olgan xarid buyurtmalari"
+
+#. module: purchase
+#: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
+#, fuzzy
+msgid "Purchase reminder"
+msgstr "Xarid eslatmasi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
+msgid "Purchase variants of a product using attributes (size, color, etc.)"
+msgstr ""
+"Mahsulotning xususiyatlarini (o‘lcham, rang va boshqalar) ishlatib "
+"variantlarini xarid qilish"
+
+#. module: purchase
+#: model:mail.template,name:purchase.email_template_edi_purchase_done
+#, fuzzy
+msgid "Purchase: Purchase Order"
+msgstr "Xarid: Xarid buyurtmasi"
+
+#. module: purchase
+#: model:mail.template,name:purchase.email_template_edi_purchase
+#, fuzzy
+msgid "Purchase: Request For Quotation"
+msgstr "Xarid: Narx so‘rovi"
+
+#. module: purchase
+#: model:mail.template,name:purchase.email_template_edi_purchase_reminder
+#, fuzzy
+msgid "Purchase: Vendor Reminder"
+msgstr "Xarid: Yetkazib beruvchiga eslatma"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_product__purchased_product_qty
+#: model:ir.model.fields,field_description:purchase.field_product_template__purchased_product_qty
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#, fuzzy
+msgid "Purchased"
+msgstr "Xarid qilingan"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
+#, fuzzy
+msgid "Purchased in the last 365 days"
+msgstr "So‘nggi 365 kun ichida xarid qilingan"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/res_partner.py:0
+#: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
+#: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
+#, fuzzy
+msgid "Purchases"
+msgstr "Xaridlar"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_bill_union
+#, fuzzy
+msgid "Purchases & Bills Union"
+msgstr "Xaridlar va hisob-fakturalar birlashmasi"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__dest_address_id
+#, fuzzy
+msgid ""
+"Put an address if you want to deliver directly from the vendor to the "
+"customer. Otherwise, keep empty to deliver to your own company."
+msgstr ""
+"Agar yetkazib beruvchidan to‘g‘ridan-to‘g‘ri mijozga yetkazib bermoqchi "
+"bo‘lsangiz, manzilni kiriting. Aks holda, o‘z kompaniyangizga yetkazib "
+"berish uchun bo‘sh qoldiring."
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_billed
+#, fuzzy
+msgid "Qty Billed"
+msgstr "Hisoblangan miqdor"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__qty_invoiced
+#, fuzzy
+msgid "Qty Invoiced"
+msgstr "Hisob-faktura qilingan miqdor"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_ordered
+#, fuzzy
+msgid "Qty Ordered"
+msgstr "Buyurtma qilingan miqdor"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_received
+#, fuzzy
+msgid "Qty Received"
+msgstr "Qabul qilingan miqdor"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_to_be_billed
+#, fuzzy
+msgid "Qty to be Billed"
+msgstr "Hisoblanishi kerak bo‘lgan miqdor"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__qty_to_invoice
+#, fuzzy
+msgid "Qty to invoice"
+msgstr "Hisob-faktura qilinishi kerak bo‘lgan miqdor"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_qty
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
+msgid "Quantity"
+msgstr "Miqdor"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Quantity:"
+msgstr "Miqdor:"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__draft
+#, fuzzy
+msgid "RFQ"
+msgstr "Narx so‘rovi"
+
+#. module: purchase
+#: model:mail.message.subtype,name:purchase.mt_rfq_approved
+#, fuzzy
+msgid "RFQ Approved"
+msgstr "Narx so‘rovi tasdiqlandi"
+
+#. module: purchase
+#: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
+#, fuzzy
+msgid "RFQ Confirmed"
+msgstr "Narx so‘rovi tasdiqlangan"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__sent
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__sent
+#: model:mail.message.subtype,name:purchase.mt_rfq_sent
+#, fuzzy
+msgid "RFQ Sent"
+msgstr "Narx so‘rovi yuborildi"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "RFQ merged with %(oldest_rfq_name)s and %(cancelled_rfq)s"
+msgstr ""
+"Narx so‘rovi %(oldest_rfq_name)s va %(cancelled_rfq)s bilan birlashtirildi"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "RFQ merged with %s"
+msgstr "Narx so‘rovi %s bilan birlashtirildi"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
+#, fuzzy
+msgid "RFQs and Purchases"
+msgstr "Narx so‘rovlari va xaridlar"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__rating_ids
+#, fuzzy
+msgid "Ratings"
+msgstr "Reytinglar"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
+msgid "Read the documentation"
+msgstr "Hujjatlarni o‘qish"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_send_reminder
+#: model:ir.model.fields,field_description:purchase.field_res_partner__receipt_reminder_email
+#: model:ir.model.fields,field_description:purchase.field_res_users__receipt_reminder_email
+#, fuzzy
+msgid "Receipt Reminder"
+msgstr "Kvitansiya eslatmasi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__receipt_reminder_email
+#, fuzzy
+msgid "Receipt Reminder Email"
+msgstr "Kvitansiya eslatma xati"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_at_date
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Received"
+msgstr "Qabul qilindi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received
+#, fuzzy
+msgid "Received Qty"
+msgstr "Qabul qilingan miqdor"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_method
+#, fuzzy
+msgid "Received Qty Method"
+msgstr "Qabul qilingan miqdor usuli"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Received Quantity"
+msgstr "Olingan miqdor"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.track_po_line_qty_received_template
+#: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
+#, fuzzy
+msgid "Received Quantity:"
+msgstr "Olingan miqdor:"
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
+#, fuzzy
+msgid "Record a new vendor bill"
+msgstr "Yangi ta'minotchi hisob-fakturasini kiritish"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__reference
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__name
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
+#, fuzzy
+msgid "Reference"
+msgstr "Havola"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_tree
+#, fuzzy
+msgid "Reference Document"
+msgstr "Hujjat havolasi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__product_uom_id
+#, fuzzy
+msgid "Reference Unit of Measure"
+msgstr "Standart o‘lchov birligi"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__origin
+#, fuzzy
+msgid ""
+"Reference of the document that generated this purchase order request (e.g. a "
+"sales order)"
+msgstr ""
+"Ushbu xarid buyurtmasi so‘rovini yaratgan hujjat havolasi (masalan, sotish "
+"buyurtmasi)"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__partner_ref
+#, fuzzy
+msgid ""
+"Reference of the sales order or bid sent by the vendor. It's used to do the "
+"matching when you receive the products as this reference is usually written "
+"on the delivery order sent by your vendor."
+msgstr ""
+"Ta'minotchi tomonidan yuborilgan sotish buyurtmasi yoki taklif havolasi. U "
+"mahsulotlarni qabul qilganingizda moslashtirish uchun ishlatiladi, chunki bu "
+"havola odatda ta'minotchingiz yuborgan yetkazib berish buyurtmasida "
+"ko‘rsatiladi."
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_ir_actions_report
+#, fuzzy
+msgid "Report Action"
+msgstr "Hisobot harakati"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.purchase_report_main
+#, fuzzy
+msgid "Reporting"
+msgstr "Hisobot berish"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#: model:ir.actions.report,name:purchase.report_purchase_quotation
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+#, fuzzy
+msgid "Request for Quotation"
+msgstr "Narx so‘rovi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#, fuzzy
+msgid "Request for Quotation #"
+msgstr "Narx so‘rovi №"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
+msgid "Request managers to approve orders above a minimum amount"
+msgstr ""
+"Menejerlardan minimal miqdordan yuqori buyurtmalarni tasdiqlashni so‘rash"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
+#, fuzzy
+msgid "Requests For Quotation"
+msgstr "Narx so‘rovlari"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_rfq_form
+#: model:ir.actions.act_window,name:purchase.purchase_rfq
+#: model:ir.ui.menu,name:purchase.menu_purchase_rfq
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_menu_purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#, fuzzy
+msgid "Requests for Quotation"
+msgstr "Narx so‘rovlari"
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
+#, fuzzy
+msgid ""
+"Requests for quotation are documents that will be sent to your suppliers to "
+"request prices for different products you consider buying.\n"
+"                Once an agreement has been found with the supplier, they "
+"will be confirmed and turned into purchase orders."
+msgstr ""
+"Narx so‘rovlari - bu siz sotib olishni rejalashtirgan turli xil mahsulotlar "
+"uchun narxlarni so‘rash maqsadida ta'minotchilaringizga yuboriladigan "
+"hujjatlardir. Ta'minotchi bilan kelishuvga erishilgach, ular tasdiqlanadi va "
+"xarid buyurtmalariga aylantiriladi."
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
+#, fuzzy
+msgid "Responsible User"
+msgstr "Mas'ul foydalanuvchi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_sms_error
+#, fuzzy
+msgid "SMS Delivery error"
+msgstr "SMS yuborishda xatolik"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
+msgid "Scheduled Date"
+msgstr "Rejalashtirilgan sana"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#, fuzzy
+msgid "Search Purchase Order"
+msgstr "Xarid buyurtmasini qidirish"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
+#, fuzzy
+msgid "Search Reference Document"
+msgstr "Havola hujjatini qidirish"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
+#, fuzzy
+msgid "Search a vendor name, or create one on the fly."
+msgstr "Ta'minotchi nomini qidiring yoki yangi nom yarating."
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_section
+#, fuzzy
+msgid "Section"
+msgstr "Bo‘lim"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Section Name (eg. Products, Services)"
+msgstr "Bo‘lim nomi (masalan, mahsulotlar, xizmatlar)"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__access_token
+#, fuzzy
+msgid "Security Token"
+msgstr "Xavfsizlik belgisi"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_bill_line_match.py:0
+#, fuzzy
+msgid "Select Vendor Bill lines to add to a Purchase Order"
+msgstr ""
+"Xarid buyurtmasiga qo‘shish uchun ta'minotchi hisob-fakturasi qatorlarini "
+"tanlash"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
+#, fuzzy
+msgid "Select a product, or create a new one on the fly."
+msgstr "Mahsulotni tanlang yoki yangi mahsulot yarating."
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
+#, fuzzy
+msgid "Select a purchase document"
+msgstr "Xarid hujjatini tanlash"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__selected_seller_id
+#, fuzzy
+msgid "Selected Seller"
+msgstr "Tanlangan sotuvchi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
+msgid "Sell and purchase products in different units of measure or packagings"
+msgstr ""
+"Mahsulotlarni turli o‘lchov birliklarida yoki qadoqlarda sotish va sotib "
+"olish"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Send PO"
+msgstr "XB yuborish"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Send RFQ"
+msgstr "NS yuborish"
+
+#. module: purchase
+#: model:ir.actions.server,name:purchase.action_purchase_send_reminder
+#, fuzzy
+msgid "Send Reminder"
+msgstr "Eslatma yuborish"
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_send_reminder
+#, fuzzy
+msgid "Send an automatic reminder email to confirm delivery"
+msgstr "Yetkazib berishni tasdiqlash uchun avtomatik eslatma xati yuborish"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/js/tours/purchase.js:0
+#, fuzzy
+msgid "Send the request for quotation to your vendor."
+msgstr "Narx so‘rovini ta'minotchingizga yuboring."
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#, fuzzy
+msgid "Sent"
+msgstr "Yuborildi"
+
+#. module: purchase
+#: model:mail.template,description:purchase.email_template_edi_purchase
+#, fuzzy
+msgid "Sent manually to vendor to request a quotation"
+msgstr "Narx so‘rash uchun ta'minotchiga qo‘lda yuborildi"
+
+#. module: purchase
+#: model:mail.template,description:purchase.email_template_edi_purchase_done
+#, fuzzy
+msgid "Sent to vendor with the purchase order in attachment"
+msgstr "Xarid buyurtmasi ilova qilingan holda ta'minotchiga yuborildi"
+
+#. module: purchase
+#: model:mail.template,description:purchase.email_template_edi_purchase_reminder
+#, fuzzy
+msgid ""
+"Sent to vendors before expected arrival, based on the purchase order setting"
+msgstr ""
+"Kutilayotgan yetib kelishdan oldin ta'minotchilarga yuborildi, xarid "
+"buyurtmasi sozlamasiga asosan"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__sequence
+#, fuzzy
+msgid "Sequence"
+msgstr "Ketma-ketlik"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Set to Draft"
+msgstr "Qoralama holatiga o‘tkazish"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_configuration
+#: model:ir.ui.menu,name:purchase.menu_purchase_general_settings
+#, fuzzy
+msgid "Settings"
+msgstr "Sozlamalar"
+
+#. module: purchase
+#: model:ir.actions.server,name:purchase.model_purchase_order_action_share
+#, fuzzy
+msgid "Share"
+msgstr "Ulashish"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__show_comparison
+#, fuzzy
+msgid "Show Comparison"
+msgstr "Taqqoslashni ko‘rsatish"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#, fuzzy
+msgid "Show all records whose next activity date is past"
+msgstr "Keyingi faoliyat sanasi o‘tgan barcha yozuvlarni ko‘rsatish"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid ""
+"Some order lines are missing a product, you need to correct them before "
+"going further."
+msgstr ""
+"Ba'zi buyurtma qatorlarida mahsulot ko‘rsatilmagan, davom etishdan oldin "
+"ularni to‘g‘rilashingiz kerak."
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__reference
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__origin
+#, fuzzy
+msgid "Source"
+msgstr "Manba"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#, fuzzy
+msgid "Starred"
+msgstr "Yulduzli"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
+msgid "Start on Odoo"
+msgstr "Odoo‘da boshlash"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__state
+#, fuzzy
+msgid "State"
+msgstr "Holat"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__state
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__state
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__state
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#, fuzzy
+msgid "Status"
+msgstr "Status"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__activity_state
+#, fuzzy
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Faoliyatlar asosidagi holat Kechikkan: Muddati o‘tib ketgan Bugungi: "
+"Faoliyat sanasi bugun Rejalashtirilgan: Kelgusi faoliyatlar."
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_subsection
+#, fuzzy
+msgid "Subsection"
+msgstr "Kichik bo‘lim"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Subsection Name"
+msgstr "Kichik bo‘lim nomi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_subtotal
+#, fuzzy
+msgid "Subtotal"
+msgstr "Oraliq jami"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
+#, fuzzy
+msgid "Sum of Qty Billed"
+msgstr "Hisoblangan miqdorlar yig‘indisi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
+#, fuzzy
+msgid "Sum of Qty Ordered"
+msgstr "Buyurtma qilingan miqdorlar yig‘indisi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
+#, fuzzy
+msgid "Sum of Qty Received"
+msgstr "Qabul qilingan miqdorlar yig‘indisi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
+#, fuzzy
+msgid "Sum of Total"
+msgstr "Umumiy yig‘indi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
+#, fuzzy
+msgid "Sum of Untaxed Total"
+msgstr "Soliqsiz umumiy summa"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_partner__property_purchase_currency_id
+#: model:ir.model.fields,field_description:purchase.field_res_users__property_purchase_currency_id
+#, fuzzy
+msgid "Supplier Currency"
+msgstr "Yetkazib beruvchi valyutasi"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_product_supplierinfo
+#, fuzzy
+msgid "Supplier Pricelist"
+msgstr "Yetkazib beruvchi narxlar ro‘yxati"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_account_tax
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_tax
+#, fuzzy
+msgid "Tax"
+msgstr "Soliq"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_country_id
+#, fuzzy
+msgid "Tax Country"
+msgstr "Soliq mamlakati"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_totals
+#, fuzzy
+msgid "Tax Totals"
+msgstr "Soliqlar jami"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_calculation_rounding_method
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__tax_calculation_rounding_method
+#, fuzzy
+msgid "Tax calculation rounding method"
+msgstr "Soliqni hisoblashda yaxlitlash usuli"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Tax excl.:"
+msgstr "Soliqsiz:"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Tax incl.:"
+msgstr "Soliq bilan:"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_tax
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__tax_ids
+#, fuzzy
+msgid "Taxes"
+msgstr "Soliqlar"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__technical_price_unit
+#, fuzzy
+msgid "Technical Price Unit"
+msgstr "Texnik narx birligi"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__display_type
+#, fuzzy
+msgid "Technical field for UX purpose."
+msgstr "Foydalanuvchi tajribasi uchun texnik maydon."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__technical_price_unit
+#, fuzzy
+msgid "Technical field for price computation"
+msgstr "Narxni hisoblash uchun texnik maydon"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__tax_country_id
+#, fuzzy
+msgid ""
+"Technical field to filter the available taxes depending on the fiscal "
+"country and fiscal position."
+msgstr ""
+"Fiskal mamlakat va fiskal holatga qarab mavjud soliqlarni saralash uchun "
+"texnik maydon."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__selected_seller_id
+#, fuzzy
+msgid "Technical field to get the vendor pricelist used to generate this line"
+msgstr ""
+"Ushbu qatorni yaratish uchun ishlatilgan yetkazib beruvchi narxlar "
+"ro‘yxatini olish uchun texnik maydon"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
+msgid "Terms &amp; Conditions"
+msgstr "Shartlar va qoidalar"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__note
+#, fuzzy
+msgid "Terms and Conditions"
+msgstr "Shartlar va qoidalar"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__country_code
+#, fuzzy
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"Ikki belgili ISO mamlakat kodi.  Tezkor qidiruv uchun bu maydondan "
+"foydalanishingiz mumkin."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__price_unit_product_uom
+msgid "The Price of one unit of the product's Unit of Measure"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
+#, fuzzy
+msgid ""
+"The request for quotation is the first step of the purchases flow. Once\n"
+"                    converted into a purchase order, you will be able to "
+"control the receipt\n"
+"                    of the products and the vendor bill."
+msgstr ""
+"Narx so‘rovi xaridlar jarayonining birinchi bosqichidir. Xarid buyurtmasiga "
+"aylantirilgandan so‘ng, mahsulotlarni qabul qilish va yetkazib beruvchi "
+"hisobini nazorat qilish imkoniyatiga ega bo‘lasiz."
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+#, fuzzy
+msgid "There are currently no purchase orders for your account."
+msgstr "Hozirda hisobingizda xarid buyurtmalari mavjud emas."
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
+#, fuzzy
+msgid "There are currently no requests for quotation for your account."
+msgstr "Hozirda hisobingiz uchun narx so‘rovlari mavjud emas."
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/wizard/bill_to_po_wizard.py:0
+#, fuzzy
+msgid ""
+"There are no products to add to the Purchase Order. Are these Down Payments?"
+msgstr ""
+"Xarid buyurtmasiga qo‘shiladigan mahsulotlar yo‘q. Bular boshlang‘ich "
+"to‘lovlarmi?"
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
+#, fuzzy
+msgid ""
+"This analysis allows you to easily check and analyse your company purchase "
+"history and performance.\n"
+"                You can track your negotiation performance, the delivery "
+"performance of your vendors, etc"
+msgstr ""
+"Ushbu tahlil kompaniyangizning xarid tarixi va samaradorligini oson "
+"tekshirish va tahlil qilish imkonini beradi. Siz muzokaralar "
+"samaradorligingizni, yetkazib beruvchilaringizning yetkazib berish "
+"ko‘rsatkichlarini va boshqalarni kuzatib borishingiz mumkin."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_res_partner__property_purchase_currency_id
+#: model:ir.model.fields,help:purchase.field_res_users__property_purchase_currency_id
+#, fuzzy
+msgid "This currency will be used for purchases from the current partner"
+msgstr "Bu valyuta joriy hamkordan xaridlar uchun ishlatiladi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+#, fuzzy
+msgid "This note is added to purchase orders."
+msgstr "Bu eslatma xarid buyurtmalariga qo‘shiladi."
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/account_invoice.py:0
+#, fuzzy
+msgid "This vendor bill has been created from: "
+msgstr "Bu yetkazib beruvchi hisobi quyidagidan yaratilgan:"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/account_invoice.py:0
+#, fuzzy
+msgid "This vendor bill has been modified from: "
+msgstr "Bu yetkazib beruvchi hisobi quyidagidan o‘zgartirilgan:"
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
+#, fuzzy
+msgid "This vendor has no purchase order. Create a new RfQ"
+msgstr ""
+"Bu yetkazib beruvchida xarid buyurtmasi yo‘q. Yangi narx so‘rovi yaratish"
+
+#. module: purchase
+#: model:digest.tip,name:purchase.digest_tip_purchase_0
+#: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_0
+#, fuzzy
+msgid "Tip: How to keep late receipts under control?"
+msgstr "Maslahat: Kechikkan qabullarni qanday nazorat qilish mumkin?"
+
+#. module: purchase
+#: model:digest.tip,name:purchase.digest_tip_purchase_1
+#: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
+#, fuzzy
+msgid "Tip: Never miss a purchase order"
+msgstr "Maslahat: Hech qachon xarid buyurtmasini o‘tkazib yubormang"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__to_approve
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__to_approve
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#, fuzzy
+msgid "To Approve"
+msgstr "Tasdiqlash uchun"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice
+#, fuzzy
+msgid "To Invoice Quantity"
+msgstr "Hisob-faktura uchun miqdor"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#, fuzzy
+msgid "Today Activities"
+msgstr "Bugungi faoliyatlar"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/controllers/portal.py:0
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_total
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_total
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__price_total
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+#, fuzzy
+msgid "Total"
+msgstr "Jami"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#, fuzzy
+msgid "Total Billed"
+msgstr "Jami hisoblangan"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#, fuzzy
+msgid "Total Purchased"
+msgstr "Jami xarid qilingan"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_history_pivot
+#, fuzzy
+msgid "Total Qty purchased"
+msgstr "Jami sotib olingan miqdor"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_qty
+#, fuzzy
+msgid "Total Quantity"
+msgstr "Umumiy miqdor"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
+#, fuzzy
+msgid "Total Untaxed"
+msgstr "Jami soliqsiz"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
+#, fuzzy
+msgid "Total Untaxed amount"
+msgstr "Jami soliqsiz summa"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
+#, fuzzy
+msgid "Total amount"
+msgstr "Umumiy summa"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_total_cc
+#, fuzzy
+msgid "Total in currency"
+msgstr "Valyutadagi jami summa"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_history_pivot
+#, fuzzy
+msgid "Total purchased amount"
+msgstr "Jami xarid qilingan summa"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
+#, fuzzy
+msgid "Try removing the top filter to broaden your search"
+msgstr ""
+"Qidiruvingizni kengaytirish uchun yuqoridagi filtrni olib tashlashga harakat "
+"qiling"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__activity_exception_decoration
+#, fuzzy
+msgid "Type of the exception activity on record."
+msgstr "Hisobdagi istisno faoliyat turi"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid ""
+"Unable to cancel purchase order(s): %s. You must first cancel their related "
+"vendor bills."
+msgstr ""
+"Xarid buyurtmasi(lari)ni bekor qilib bo‘lmadi: %s. Avval ularning tegishli "
+"yetkazib beruvchi hisob-fakturalarini bekor qilishingiz kerak"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+msgid "Unable to cancel purchase order(s): %s. You must first unlock them."
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_id
+#, fuzzy
+msgid "Unit"
+msgstr "Birlik"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
+msgid "Unit Price"
+msgstr "Birlik narxi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit_discounted
+#, fuzzy
+msgid "Unit Price (Discounted)"
+msgstr "Birlik narxi (chegirmali)"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit_product_uom
+msgid "Unit Price Product UoM"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Unit Price:"
+msgstr "Birlik narxi:"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
+msgid "Units & Packagings"
+msgstr "Birliklar va qadoqlash"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "Unlock"
+msgstr "Qulfni ochish"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+msgid "Unsupported operator"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
+#, fuzzy
+msgid "Untaxed"
+msgstr "Soliqsiz"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_untaxed
+#, fuzzy
+msgid "Untaxed Amount"
+msgstr "Soliqsiz summa"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__untaxed_total
+#, fuzzy
+msgid "Untaxed Total"
+msgstr "Soliqsiz jami"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/components/purchase_file_uploader/purchase_file_uploader.xml:0
+#, fuzzy
+msgid "Upload Bill"
+msgstr "Hisob-fakturani yuklash"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__1
+#, fuzzy
+msgid "Urgent"
+msgstr "Shoshilinch"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
+msgid ""
+"Use the above REST URL to get structured data of the purchase order in UBL "
+"format."
+msgstr ""
+"Xarid buyurtmasining tuzilgan ma'lumotlarini UBL formatida olish uchun "
+"yuqoridagi REST URL manzilidan foydalaning"
+
+#. module: purchase
+#: model:res.groups,name:purchase.group_purchase_user
+#, fuzzy
+msgid "User"
+msgstr "Foydalanuvchi"
+
+#. module: purchase
+#. odoo-javascript
+#: code:addons/purchase/static/src/components/purchase_file_uploader/purchase_file_uploader.js:0
+#, fuzzy
+msgid "Validation Error"
+msgstr "Tasdiqlash xatosi"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
+msgid "Variant Grid Entry"
+msgstr "Variantlar jadvali yozuvi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__partner_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_id
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__partner_id
+#: model_terms:ir.ui.view,arch_db:purchase.product_template_search_view_purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_view_search_catalog
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_tree
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#, fuzzy
+msgid "Vendor"
+msgstr "Yetkazib beruvchi"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__vendor_bill_id
+#, fuzzy
+msgid "Vendor Bill"
+msgstr "Yetkazib beruvchi hisob-fakturasi"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_bill_line_match.py:0
+#, fuzzy
+msgid "Vendor Bill lines can only be added to one Purchase Order."
+msgstr ""
+"Yetkazib beruvchi hisob-fakturasi qatorlarini faqat bitta Xarid buyurtmasiga "
+"qo‘shish mumkin"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
+#, fuzzy
+msgid "Vendor Bills"
+msgstr "Yetkazib beruvchi hisob-fakturaları"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#, fuzzy
+msgid "Vendor Country"
+msgstr "Yetkazib beruvchi mamlakati"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
+#, fuzzy
+msgid "Vendor Pricelists"
+msgstr "Yetkazib beruvchi narxlari"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_ref
+#, fuzzy
+msgid "Vendor Reference"
+msgstr "Yetkazib beruvchi havolasi"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_supplier_name
+#, fuzzy
+msgid "Vendors"
+msgstr "Yetkazib beruvchilar"
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
+#, fuzzy
+msgid ""
+"Vendors bills can be pre-generated based on purchase\n"
+"                    orders or receipts. This allows you to control bills\n"
+"                    you receive from your vendor according to the draft\n"
+"                    document in Odoo."
+msgstr ""
+"Yetkazib beruvchilarning hisob-fakturaları xarid buyurtmalari yoki "
+"qabulxonalar asosida oldindan yaratilishi mumkin. Bu sizga Odoo‘dagi "
+"qoralama hujjatga muvofiq yetkazib beruvchingizdan oladigan hisob-"
+"fakturalarni nazorat qilish imkonini beradi"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "View"
+msgstr "Ko‘rish"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
+msgid "View Details"
+msgstr "Tafsilotlarni ko‘rish"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "View Order"
+msgstr "Buyurtmani ko‘rish"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "View Quotation"
+msgstr "Narx taklifini ko‘rish"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_report__volume
+#, fuzzy
+msgid "Volume"
+msgstr "Hajm"
+
+#. module: purchase
+#: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__to_invoice
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#, fuzzy
+msgid "Waiting Bills"
+msgstr "Kutilayotgan hisob-fakturalar"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
+msgid "Want to import this document in Odoo?"
+msgstr "Ushbu hujjatni Odoo‘ga import qilmoqchimisiz?"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+#, fuzzy
+msgid "Warning on Purchase Orders"
+msgstr "Xarid buyurtmalari bo‘yicha ogohlantirish"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
+#, fuzzy
+msgid "Warning on Purchase Orders and Bills"
+msgstr "Xarid buyurtmalari va hisob-fakturalar bo‘yicha ogohlantirish"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#, fuzzy
+msgid "Warnings"
+msgstr "Ogohlantirishlar"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__website_message_ids
+#, fuzzy
+msgid "Website Messages"
+msgstr "Veb-sayt xabarlari"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__website_message_ids
+#, fuzzy
+msgid "Website communication history"
+msgstr "Veb-saytning aloqa tarixi"
+
+#. module: purchase
+#: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_0
+#, fuzzy
+msgid ""
+"When creating a purchase order, have a look at the vendor's <i>On Time "
+"Delivery</i> rate: the percentage of products shipped on time. If it is too "
+"low, activate the <i>automated reminders</i>. A few days before the due "
+"shipment, Odoo will send the vendor an email to ask confirmation of shipment "
+"dates and keep you informed in case of any delays. To get the vendor's "
+"performance statistics, click on the OTD rate."
+msgstr ""
+"Xarid buyurtmasini yaratishda yetkazib beruvchining <i>O‘z vaqtida yetkazib "
+"berish</i> ko‘rsatkichiga e'tibor bering: o‘z vaqtida jo‘natilgan "
+"mahsulotlar foizi. Agar u juda past bo‘lsa, <i>avtomatik eslatmalarni</i> "
+"faollashtiring. Belgilangan jo‘natish sanasidan bir necha kun oldin Odoo "
+"yetkazib beruvchiga jo‘natish sanasini tasdiqlash uchun elektron xat "
+"yuboradi va har qanday kechikishlar haqida sizni xabardor qiladi. Yetkazib "
+"beruvchining samaradorlik statistikasini olish uchun OVY (o‘z vaqtida "
+"yetkazib berish) ko‘rsatkichini bosing"
+
+#. module: purchase
+#: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
+#, fuzzy
+msgid ""
+"When sending a purchase order by email, Odoo asks the vendor to acknowledge "
+"the reception of the order. When the vendor acknowledges the order by "
+"clicking on a button in the email, the information is added on the purchase "
+"order. Use filters to track orders that have not been acknowledged."
+msgstr ""
+"Xarid buyurtmasini elektron pochta orqali yuborishda, Odoo yetkazib "
+"beruvchidan buyurtma qabul qilinganligini tasdiqlashni so‘raydi. Yetkazib "
+"beruvchi elektron xatdagi tugmani bosish orqali buyurtmani tasdiqlaganida, "
+"ma'lumot xarid buyurtmasiga qo‘shiladi. Tasdiqlanmagan buyurtmalarni "
+"kuzatish uchun filtrlardan foydalaning"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
+#, fuzzy
+msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
+msgstr ""
+"Yetkazib beruvchini uning nomi, STIR, elektron pochtasi yoki ichki havolasi "
+"orqali topishingiz mumkin"
+
+#. module: purchase
+#. odoo-javascript
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#: code:addons/purchase/static/src/components/purchase_file_uploader/purchase_file_uploader.js:0
+#, fuzzy
+msgid "You can only upload a bill for a single vendor at a time."
+msgstr ""
+"Bir vaqtda faqat bitta sotuvchi uchun hisob-fakturani yuklashingiz mumkin."
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order_line.py:0
+#, fuzzy
+msgid ""
+"You cannot change the type of a purchase order line. Instead you should "
+"delete the current line and create a new line of the proper type."
+msgstr ""
+"Xarid buyurtmasi qatorining turini o‘zgartira olmaysiz. Buning o‘rniga joriy "
+"qatorni o‘chirib, kerakli turdagi yangi qator yaratishingiz lozim."
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
+msgid "You don't use a good CRM software?"
+msgstr "Yaxshi CRM dasturiy ta'minotidan foydalanmayapsizmi?"
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.product_product_action
+#, fuzzy
+msgid ""
+"You must define a product for everything you sell or purchase,\n"
+"                whether it's a storable product, a consumable or a service."
+msgstr ""
+"Sotadigan yoki xarid qiladigan har qanday narsangiz uchun, u saqlanadigan "
+"mahsulot, iste'mol qilinadigan mahsulot yoki xizmat bo‘lishidan qat'i nazar, "
+"mahsulot belgilashingiz shart."
+
+#. module: purchase
+#: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
+#, fuzzy
+msgid ""
+"You must define a product for everything you sell or purchase,\n"
+"            whether it's a storable product, a consumable or a service."
+msgstr ""
+"Sotadigan yoki xarid qiladigan har qanday narsangiz uchun, u saqlanadigan "
+"mahsulot, iste'mol qilinadigan mahsulot yoki xizmat bo‘lishidan qat'i nazar, "
+"mahsulot belgilashingiz shart."
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_bill_line_match.py:0
+#, fuzzy
+msgid ""
+"You must select at least one Purchase Order line to match or create bill."
+msgstr ""
+"Hisob-fakturani moslashtirish yoki yaratish uchun kamida bitta Xarid "
+"buyurtmasi qatorini tanlashingiz kerak."
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid ""
+"Your quotation contains products from company %(product_company)s whereas "
+"your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from "
+"other companies (%(bad_products)s)."
+msgstr ""
+"Kotirovkangizda %(product_company)s kompaniyasining mahsulotlari mavjud, "
+"ammo kotirovkangiz %(quote_company)s kompaniyasiga tegishli.   Iltimos, "
+"kotirovkangiz kompaniyasini o‘zgartiring yoki boshqa kompaniyalarning "
+"mahsulotlarini (%(bad_products)s) olib tashlang."
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
+msgid "day(s) before"
+msgstr "kun oldin"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
+#, fuzzy
+msgid "e.g. There is a newer version of this product."
+msgstr "masalan, Ushbu mahsulotning yangiroq versiyasi mavjud."
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
+#, fuzzy
+msgid "e.g. This vendor is on vacation until the end of August."
+msgstr "masalan, Ushbu sotuvchi avgust oyining oxirigacha ta'tilda."
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
+#, fuzzy
+msgid "or create new"
+msgstr "yoki yangisini yaratish"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/account_invoice.py:0
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "partner_id"
+msgstr "hamkor_id"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "res_id"
+msgstr "res_id"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
+msgid "res_model_id"
+msgstr "res_model_id"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/controllers/portal.py:0
+#, fuzzy
+msgid "state"
+msgstr "holat"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+#, fuzzy
+msgid "to create quotes automatically."
+msgstr "avtomatik ravishda kotirovkalar yaratish uchun."
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
+msgid "to learn all the ways to connect your software with"
+msgstr "dasturiy ta'minotingizni ulashning barcha usullarini o‘rganish uchun"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+#, fuzzy
+msgid "with"
+msgstr "bilan"
+
+#. module: purchase
+#: model:mail.template,subject:purchase.email_template_edi_purchase
+#: model:mail.template,subject:purchase.email_template_edi_purchase_done
+#: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
+#, fuzzy
+msgid "{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})"
+msgstr ""
+"{{ object.company_id.name }} buyurtmasi (Havola {{ object.name or 'mavjud "
+"emas' }})"

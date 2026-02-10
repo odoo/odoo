@@ -3119,6 +3119,7 @@ class BaseModel(metaclass=MetaModel):
             """ SELECT a.attname, a.attnotnull
                   FROM pg_class c, pg_attribute a
                  WHERE c.relname=%s
+                   AND c.relnamespace = current_schema::regnamespace
                    AND c.oid=a.attrelid
                    AND a.attisdropped=%s
                    AND pg_catalog.format_type(a.atttypid, a.atttypmod) NOT IN ('cid', 'tid', 'oid', 'xid')
@@ -3409,6 +3410,8 @@ class BaseModel(metaclass=MetaModel):
         if self.env.user._has_group('base.group_no_one'):
             if field.groups == NO_ACCESS:
                 allowed_groups_msg = _("always forbidden")
+            elif not field.groups:
+                allowed_groups_msg = _("custom field access rules")
             else:
                 groups_list = [self.env.ref(g) for g in field.groups.split(',')]
                 groups = self.env['res.groups'].union(*groups_list).sorted('id')
@@ -5378,7 +5381,10 @@ class BaseModel(metaclass=MetaModel):
         # add order and limits
         if order:
             query.order = self._order_to_sql(order, query)
-        if limit is not None:
+
+        # In RPC, None is not available; False is used instead to mean "no limit"
+        # Note: True is kept for backward-compatibility (treated as 1)
+        if limit is not None and limit is not False:
             query.limit = limit
         if offset is not None:
             query.offset = offset
@@ -7115,6 +7121,7 @@ def get_columns_from_sql_diagnostics(cr, diagnostics, *, check_registry=False) -
         JOIN pg_class t ON t.oid = conrelid
         WHERE conname = %s
             AND t.relname = %s
+            AND t.relnamespace = current_schema::regnamespace
     """, diagnostics.constraint_name, diagnostics.table_name))
     columns = cr.fetchone()
     return columns[0] if columns else []

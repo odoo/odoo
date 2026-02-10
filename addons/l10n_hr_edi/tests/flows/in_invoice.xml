@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Utf-8" standalone="no"?><Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:hrextac="urn:hzn.hr:schema:xsd:HRExtensionAggregateComponents-1">
+<?xml version="1.0" encoding="Utf-8" standalone="no"?><Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:hrextac="urn:mfin.gov.hr:schema:xsd:HRExtensionAggregateComponents-1">
   <ext:UBLExtensions>
     <ext:UBLExtension>
       <ext:ExtensionContent>
@@ -181,7 +181,8 @@ PhFY/lSNktJsHzsRUaqzfVdRkHRFe/sBHG2YCnEuWSOO9wHWtky7Vc4=</xades:EncapsulatedTime
             </hrextac:HRTaxSubtotal>
           </hrextac:HRTaxTotal>
           <hrextac:HRLegalMonetaryTotal>
-            <hrextac:HRTaxExclusiveAmount currencyID="EUR">47.00</hrextac:HRTaxExclusiveAmount>
+            <cbc:TaxExclusiveAmount currencyID="EUR">47.00</cbc:TaxExclusiveAmount>
+            <hrextac:OutOfScopeOfVATAmount currencyID="EUR">0.00</hrextac:OutOfScopeOfVATAmount>
           </hrextac:HRLegalMonetaryTotal>
         </hrextac:HRFISK20Data>
       </ext:ExtensionContent>

@@ -1040,7 +1040,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             {
                 **self.product_line_vals_1,
                 'quantity': 0.1,
-                'price_unit': 0.05,
+                'price_unit': 0.045,
                 'price_subtotal': 0.005,
                 'price_total': 0.006,
                 'currency_id': self.other_currency.id,
@@ -1051,7 +1051,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 **self.product_line_vals_2,
                 'currency_id': self.other_currency.id,
                 'amount_currency': 160.0,
-                'debit': 53.34,
+                'debit': 53.33,
             },
             {
                 **self.tax_line_vals_1,
@@ -1069,7 +1069,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 **self.term_line_vals_1,
                 'currency_id': self.other_currency.id,
                 'amount_currency': -208.006,
-                'credit': 69.34,
+                'credit': 69.33,
                 'date_maturity': fields.Date.from_string('2016-01-01'),
             },
         ], {
@@ -1089,11 +1089,11 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             {
                 **self.product_line_vals_1,
                 'quantity': 0.1,
-                'price_unit': 0.05,
-                'price_subtotal': 0.01,
-                'price_total': 0.01,
-                'amount_currency': 0.01,
-                'debit': 0.01,
+                'price_unit': 0.045,
+                'price_subtotal': 0.0,
+                'price_total': 0.0,
+                'amount_currency': 0.0,
+                'debit': 0.0,
             },
             self.product_line_vals_2,
             {
@@ -1104,17 +1104,17 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             self.tax_line_vals_2,
             {
                 **self.term_line_vals_1,
-                'amount_currency': -208.01,
-                'credit': 208.01,
+                'amount_currency': -208.0,
+                'credit': 208.0,
                 'date_maturity': fields.Date.from_string('2016-01-01'),
             },
         ], {
             **self.move_vals,
             'currency_id': self.company_data['currency'].id,
             'date': fields.Date.from_string('2016-01-01'),
-            'amount_untaxed': 160.01,
+            'amount_untaxed': 160.0,
             'amount_tax': 48.0,
-            'amount_total': 208.01,
+            'amount_total': 208.0,
         })
 
     def test_in_invoice_onchange_past_invoice_1(self):
@@ -1188,7 +1188,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': False,
+                'name': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
                 'amount_currency': 1128.0,
                 'debit': 1128.0,
                 'credit': 0.0,
@@ -1312,7 +1312,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             },
             {
                 **self.term_line_vals_1,
-                'name': False,
+                'name': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
                 'amount_currency': 1128.0,
                 'currency_id': self.other_currency.id,
                 'debit': 564.0,
@@ -2426,22 +2426,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             if reverse_move.state == 'draft':
                 reverse_move.action_post()
 
-        def create_statement_line(move, amount):
-            statement_line = self.env['account.bank.statement.line'].create({
-                'payment_ref': 'ref',
-                'journal_id': self.company_data['default_journal_bank'].id,
-                'amount': amount,
-                'date': '2020-01-10',
-            })
-            _st_liquidity_lines, st_suspense_lines, _st_other_lines = statement_line\
-                .with_context(skip_account_move_synchronization=True)\
-                ._seek_for_lines()
-            line = move.line_ids.filtered(lambda line: line.account_type in ('asset_receivable', 'liability_payable'))
-
-            st_suspense_lines.account_id = line.account_id
-            (st_suspense_lines + line).reconcile()
-            assert_partial(st_suspense_lines, line)
-
         move = create_move(move_type, amount)
         line = move.line_ids.filtered(lambda line: line.account_type in ('asset_receivable', 'liability_payable'))
         for counterpart_move_type, counterpart_amount in counterpart_values_list:
@@ -2450,7 +2434,8 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             elif counterpart_move_type == 'reverse':
                 create_reverse(move, counterpart_amount)
             elif counterpart_move_type == 'statement_line':
-                create_statement_line(move, counterpart_amount)
+                reconciliation_info = self.pay_with_statement_line(move, self.company_data['default_journal_bank'].id, '2020-01-10', counterpart_amount)
+                assert_partial(reconciliation_info['statement_line_reconciled'], reconciliation_info['move_reconciled'])
             else:
                 counterpart_move = create_move(counterpart_move_type, counterpart_amount, account=line.account_id)
                 counterpart_line = counterpart_move.line_ids.filtered(lambda x: x.account_id == line.account_id)
@@ -2633,6 +2618,15 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         move_form.save()
         self.assertEqual(invoice.currency_id, chf,
                          "Changing to a journal with a set currency should change invoice currency")
+
+    def test_onchange_ref(self):
+        """
+        Ensure that updating the ref field updates the payment term line name when payment reference is empty.
+        """
+        payment_term_line = self.invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term')
+        with Form(self.invoice) as move_form:
+            move_form.ref = 'temp'
+        self.assertEqual(payment_term_line.name, 'temp')
 
     def test_taxes_onchange_product_uom_and_price_unit(self):
         """

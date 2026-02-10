@@ -55,3 +55,15 @@ export function addOptionalProduct(productName, quantity, configurable) {
         return step;
     }
 }
+
+export function checkImage(productName, shouldHaveImage = false) {
+    const baseSelector = `.modal .optional-product-line:has(.product-name:contains("${productName}"))`;
+    const trigger = shouldHaveImage
+        ? `${baseSelector}:has(img.product-img)`
+        : `${baseSelector}:not(:has(img.product-img))`;
+
+    return {
+        content: `Check image visibility for optional product "${productName}"`,
+        trigger,
+    };
+}

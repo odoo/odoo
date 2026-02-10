@@ -58,7 +58,7 @@
 
     <t t-name="im_livechat.LivechatChannelInfoList.info_links">
         <div t-if="templateParams.info_records.length" class="d-flex flex-column bg-inherit gap-1">
-            <h3 class="pt-3" t-out="templateParams.title"/>
+            <h6 class="pt-3" t-out="templateParams.title"/>
             <t t-foreach="templateParams.info_records" t-as="record" t-key="record.localId">
                 <a
                     class="btn btn-sm btn-secondary d-flex align-items-center justify-content-start gap-1 px-3 py-1 rounded-3"

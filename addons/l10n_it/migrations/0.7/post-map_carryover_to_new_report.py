@@ -50,7 +50,7 @@ def migrate(cr, version):
     carryover_origin_info = cr.fetchall()
     old2new_origin = {old_origin: new_origin for old_origin, new_origin in carryover_origin_info}
     data_to_insert = [
-        (code2expression_id[report_line_code], old2new_origin[carryover_origin_report_line_id], *other_external_vals)
+        (code2expression_id[report_line_code], old2new_origin.get(carryover_origin_report_line_id, carryover_origin_report_line_id), *other_external_vals)
         for report_id, _, report_line_code, carryover_origin_report_line_id, *other_external_vals in report_info
         if report_id == vat_report_id
     ]

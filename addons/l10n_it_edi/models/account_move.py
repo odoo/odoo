@@ -1446,9 +1446,9 @@ class AccountMove(models.Model):
                 ))
                 message_to_log.append(message)
 
-            # Numbering attributed by the transmitter
-            if progressive_id := get_text(tree, '//ProgressivoInvio'):
-                self.payment_reference = progressive_id
+            # Payment code
+            if payment_code := get_text(tree, './/DettaglioPagamento[1]/CodicePagamento'):
+                self.payment_reference = payment_code
 
             # Document Number
             if number := get_text(tree, './/DatiGeneraliDocumento//Numero'):
@@ -1556,11 +1556,13 @@ class AccountMove(models.Model):
                     message_to_log += self._l10n_it_edi_import_line(element, move_line, extra_info)
 
             for element in tree.xpath('.//Allegati'):
-                self.l10n_it_edi_attachment_name = get_text(element, './/NomeAttachment')
-                self.l10n_it_edi_attachment_file = b64decode(get_text(element, './/Attachment'))
+                raw_name = get_text(element, './/NomeAttachment') or ''
+                raw_ext = get_text(element, './/FormatoAttachment') or ''
+                self.l10n_it_edi_attachment_name = f"{raw_name}.{raw_ext}" if raw_ext else raw_name
+                self.l10n_it_edi_attachment_file = get_text(element, './/Attachment')
                 self.sudo().message_post(
                     body=(_("Attachment from XML")),
-                    attachments=[(self.l10n_it_edi_attachment_name, self.l10n_it_edi_attachment_file)],
+                    attachments=[(self.l10n_it_edi_attachment_name, b64decode(self.l10n_it_edi_attachment_file))],
                 )
 
             global_enasarco_lines = []
