@@ -393,3 +393,59 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         time_off.with_user(SUPERUSER_ID)._action_validate()
 
         self.assertEqual(time_off.state, 'validate', "The time off for a fully flexible employee should be validated")
+
+    def test_timesheet_generation_with_past_contract_timeoff(self):
+        """
+        Test that timesheets are correctly generated for time off requests that with past contracts.
+        """
+        # Define attendance lines for the standard 35h/week to prevent auto-generating the default 8h/day schedule.
+        attendance_lines = []
+        for i in range(5):
+            attendance_lines.extend([
+                (0, 0, {'name': 'Morning', 'dayofweek': str(i), 'hour_from': 8.0, 'hour_to': 12.0, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Afternoon', 'dayofweek': str(i), 'hour_from': 13.0, 'hour_to': 16.0, 'day_period': 'afternoon'}),
+            ])
+        standard_35h_calendar = self.env['resource.calendar'].create({
+            'name': 'Standard 35h/week',
+            'hours_per_day': 7,
+            'attendance_ids': attendance_lines,
+            'flexible_hours': False,
+        })
+        self.env['hr.version'].create([
+            {
+                'name': 'Past Contract 40h',
+                'employee_id': self.empl_employee.id,
+                'resource_calendar_id': self.employee_working_calendar.id,
+                'contract_date_start': '2025-01-01',
+                'contract_date_end': '2025-12-31',
+                'date_version': '2025-01-01',
+            }, {
+                'name': 'Current Contract 35h',
+                'employee_id': self.empl_employee.id,
+                'resource_calendar_id': standard_35h_calendar.id,
+                'contract_date_start': '2026-01-01',
+                'date_version': '2026-01-01',
+            },
+        ])
+        self.empl_employee.resource_calendar_id = standard_35h_calendar.id
+        past_leave, current_leave = self.env['hr.leave'].sudo().create([
+            {
+                'name': "leave with past contract",
+                'holiday_status_id': self.hr_leave_type_with_ts.id,
+                'employee_id': self.empl_employee.id,
+                'request_date_from': datetime(2025, 12, 29, 8, 0),
+                'request_date_to': datetime(2025, 12, 29, 17, 0),
+            }, {
+                'name': "leave with current contract",
+                'holiday_status_id': self.hr_leave_type_with_ts.id,
+                'employee_id': self.empl_employee.id,
+                'request_date_from': datetime(2026, 2, 2, 8, 0),
+                'request_date_to': datetime(2026, 2, 2, 17, 0),
+            },
+        ])
+        (past_leave | current_leave).with_user(SUPERUSER_ID).action_approve()
+
+        self.assertTrue(len(past_leave.timesheet_ids), 1)
+        self.assertTrue(len(current_leave.timesheet_ids), 1)
+        self.assertEqual(past_leave.timesheet_ids.unit_amount, 8, "The timesheet for the past contract should have 8 hours")
+        self.assertEqual(current_leave.timesheet_ids.unit_amount, 7, "The timesheet for the Current contract should have 7 hours")
