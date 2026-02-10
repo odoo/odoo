@@ -224,6 +224,8 @@ class MrpUnbuild(models.Model):
                     needed_quantity -= taken_quantity
                     qty_already_used[move_line] += taken_quantity
                     unbuild_move_line._apply_putaway_strategy()
+            if move in produce_moves and float_compare(needed_quantity, 0, precision_rounding=move.product_uom.rounding) > 0:
+                move.quantity += needed_quantity
 
         (finished_moves | consume_moves | produce_moves).picked = True
         finished_moves._action_done()
