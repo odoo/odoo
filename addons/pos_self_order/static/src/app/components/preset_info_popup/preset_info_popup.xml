@@ -11,6 +11,19 @@
                     <button class="btn-close" aria-label="close" t-on-click="close"/>
                 </div>
                 <div class="d-flex flex-column gap-3 overflow-y-auto overflow-x-hidden flex-grow-1">
+                    <!-- <select t-if="preset.needsSlot" class="slot-select form-select form-select-lg" t-model="state.selectedSlot">
+                        <option value="">
+                            Choose your time
+                        </option>
+                        <t t-foreach="slots" t-as="slot" t-key="slot_index">
+                            <option t-att-value="slot[0]" t-esc="formatDate(slot[0])" disabled="1" />
+                            <option t-foreach="Object.values(slot[1])"
+                                t-as="s" t-key="s_index"
+                                t-if="!s.isFull"
+                                t-att-value="s.datetime.toFormat('yyyy-MM-dd HH:mm:ss')"
+                                t-esc="s.datetime.toFormat('HH:mm')" />
+                        </t>
+                    </select> -->
                     <select t-if="preset.needsPartner and existingPartners.length"
                         class="partner-select form-select form-select-lg"
                         t-on-change="selectExistingPartner"
@@ -34,51 +47,27 @@
                         placeholder="Email"
                         t-model="state.email"
                         t-att-disabled="partnerIsSelected" />
-                    <t t-if="preset.needsName || preset.needsPartner">
-                        <input type="text"
-                            class="form-control form-control-lg"
-                            placeholder="Phone"
-                            t-model="state.phone"
-                            t-att-disabled="partnerIsSelected"/>
-                        <p t-if="!checkPhoneFormat()" class="text-danger">Enter a valid phone number starting with the country code (e.g. +32)</p>
-                    </t>
+                    <input t-if="preset.needsName || preset.needsPartner"
+                        type="text"
+                        class="form-control form-control-lg"
+                        placeholder="Phone"
+                        t-model="state.phone"
+                        t-att-disabled="partnerIsSelected"/>
+                    <p t-if="!checkPhoneFormat()" class="text-danger">Enter a valid phone number starting with the country code (e.g. +32)</p>
                     <t t-if="preset.needsPartner">
-                        <select class="partner-select form-select form-select-lg" t-model="state.countryId" t-att-disabled="partnerIsSelected">
-                            <option value="">
-                                Select a country
-                            </option>
-                            <t t-foreach="this.countries" t-as="country" t-key="country.id">
-                                <option t-att-value="country.id" t-esc="country.name" />
-                            </t>
-                        </select>
-                        <div class="d-flex gap-3">
-                            <input type="text"
-                                class="form-control form-control-lg w-75"
-                                placeholder="Street and Number"
-                                t-model="state.street"
-                                t-att-disabled="partnerIsSelected"/>
-                            <input
-                                type="text"
-                                class="form-control form-control-lg w-25"
-                                placeholder="Zip"
-                                t-model="state.zip"
-                                t-att-disabled="partnerIsSelected"/>
+                        <div t-if="state.validationError" class="alert alert-danger d-flex align-items-center justify-content-between">
+                            <span t-esc="state.validationError.message" />
+                            <button
+                                t-if="state.validationError.type === 'delivery' and takeoutPreset"
+                                type="button"
+                                class="btn btn-light btn-sm"
+                                t-on-click="selectTakeoutPreset"
+                            >
+                                Takeout
+                            </button>
                         </div>
-                        <div class="d-flex gap-3">
-                            <t t-set="availableState" t-value="this.states" />
-                            <select t-if="availableState.length" class="partner-select form-select form-select-lg" t-model="state.stateId" t-att-disabled="partnerIsSelected">
-                                <option value="">
-                                    Select a state
-                                </option>
-                                <t t-foreach="availableState" t-as="state" t-key="state.id">
-                                    <option t-att-value="state.id" t-esc="state.name" />
-                                </t>
-                            </select>
-                            <input type="text"
-                                class="form-control form-control-lg"
-                                placeholder="City"
-                                t-model="state.city"
-                                t-att-disabled="partnerIsSelected"/>
+                        <div t-att-class="state.validationError?.type === 'delivery' ? 'border border-danger rounded p-2' : ''">
+                            <AddressAutoComplete t-props="addressAutoCompleteProps" />
                         </div>
                     </t>
                 </div>
@@ -89,8 +78,14 @@
                     </button>
                     <button class="btn btn-primary flex-grow-1 ms-1"
                         t-on-click="setInformations"
-                        t-att-disabled="!this.validSelection">
-                        Continue
+                        t-att-disabled="!this.validSelection || state.isSubmitting">
+                        <t t-if="state.isSubmitting">
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
+                            Validating...
+                        </t>
+                        <t t-elif="this.validSelection">
+                            Continue
+                        </t>
                     </button>
                 </div>
             </div>

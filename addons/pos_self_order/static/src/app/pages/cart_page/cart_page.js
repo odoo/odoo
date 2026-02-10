@@ -319,6 +319,8 @@ export class CartPage extends Component {
             this.selfOrder.removeLine(line);
             if (this.lines.length === 0) {
                 this.router.navigate("product_list");
+            } else if (this.selfOrder.currentOrder?.preset_id?.service_at === "delivery") {
+                this.selfOrder.ensureDeliveryLine("delivery");
             }
         };
         const card = event?.target.closest(".product-cart-item");
@@ -348,6 +350,8 @@ export class CartPage extends Component {
 
         if (line.qty <= 0) {
             this.removeLine(line);
+        } else if (this.selfOrder.currentOrder?.preset_id?.service_at === "delivery") {
+            this.selfOrder.ensureDeliveryLine("delivery");
         }
     }
 
