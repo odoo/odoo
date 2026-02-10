@@ -1,4 +1,5 @@
 import { browser } from "@web/core/browser/browser";
+import { registry } from "@web/core/registry";
 import {
     click,
     editInput,
@@ -10,8 +11,10 @@ import {
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { loadJS } from "@web/core/assets";
 
-let target;
+const serviceRegistry = registry.category("services");
 
+let target;
+let makeViewParams;
 async function editInputNoChangeEvent(input, value) {
     // Note: we can't use editInput as it triggers the 'change' event which will close the autocomplete dropdown
     input.value = value;
@@ -64,17 +67,7 @@ QUnit.module('partner_autocomplete', {
     },
     beforeEach() {
         target = getFixture();
-
-        // Make autocomplete input instantaneous
-        patchWithCleanup(browser, {
-            setTimeout: (fn) => fn(),
-        });
-
-        setupViewRegistries();
-    },
-}, function () {
-
-    const makeViewParams = {
+        makeViewParams = {
         serverData: {
             models: {
                 'res.partner': {
@@ -173,13 +166,47 @@ QUnit.module('partner_autocomplete', {
                         "id": 1,
                         "name": "Walloon Brabant"
                     },
-                });
-            }
-            else if (route.startsWith("https://autocomplete.clearbit.com/v1/companies/suggest")) {
-                return Promise.resolve(clearbitSuggestions)
+                    });
+                }
+                else if (route.startsWith("https://autocomplete.clearbit.com/v1/companies/suggest")) {
+                    return Promise.resolve(clearbitSuggestions)
+                }
+                else if (route === '/web/dataset/call_kw/res.partner/enrich_company_message_post'){
+                    return true;
+                }
             }
         }
-    }
+        // Make autocomplete input instantaneous
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
+
+        setupViewRegistries();
+        const fakeHTTPService = {
+            start() {
+                return {
+                    get: (route) => {
+                        return Promise.resolve([
+                            {
+                                "name": "Odoo",
+                                "domain": "odoo.com",
+                            },
+                            {
+                                "name": "MyCompany",
+                                "domain": "mycompany.com",
+                            },
+                            {
+                                "name": "YourCompany",
+                                "domain": "yourcompany.com",
+                            },
+                        ]);
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("http", fakeHTTPService);
+    },
+}, function () {
 
     QUnit.test("Partner autocomplete : Company type = Individual", async function (assert) {
         assert.expect(12);
