@@ -96,7 +96,7 @@ export function usePartnerAutocomplete() {
     function getCreateData(company, fieldsToKeep) {
         return enrichCompany(company).then((companyData) => {
             // Fetch additional company info via Autocomplete Enrichment API
-
+            let isEnrichAccessible = false;
             if (companyData.error) {
                 if (companyData.error_message === 'Insufficient Credit') {
                     notifyNoCredits();
@@ -112,9 +112,13 @@ export function usePartnerAutocomplete() {
                     ...companyData,
                 };
             }
+            else {
+                isEnrichAccessible = true;
+            }
             return {
                 company: companyData,
                 logo: companyData.logo || false,
+                isEnrichAccessible,
             };
         })
     }
