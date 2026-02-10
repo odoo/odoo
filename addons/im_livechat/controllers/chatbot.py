@@ -70,9 +70,24 @@ class LivechatChatbotScriptController(http.Controller):
         if not next_step:
             # sudo - discuss.channel: marking the channel as closed as part of the chat bot flow
             discuss_channel.sudo().livechat_end_dt = fields.Datetime.now()
+            step_message = next(
+                # sudo - chatbot.message.id: visitor can access chat bot messages.
+                m.mail_message_id for m in discuss_channel.sudo().chatbot_message_ids
+                if m.script_step_id == current_step
+                and m.mail_message_id.author_id == chatbot.operator_partner_id
+            )
+            store.add_model_values(
+                "ChatbotStep",
+                lambda res: (
+                    res.attr("id", (current_step.id, step_message.id)),
+                    res.attr("scriptStep", current_step.id),
+                    res.attr("message", step_message.id),
+                    res.attr("isLast", True),
+                ),
+            )
             store.resolve_data_request()
             store.bus_send()
-            return None
+            return store.get_result()
         # sudo: discuss.channel - updating current step on the channel is allowed
         discuss_channel.sudo().chatbot_current_step_id = next_step.id
         step_data = next_step._process_step(discuss_channel)
@@ -86,7 +101,6 @@ class LivechatChatbotScriptController(http.Controller):
             {
                 **chatbot_next_step,
                 "id": (next_step.id, posted_message.id),
-                "isLast": next_step._is_last_step(discuss_channel),
                 "operatorFound": next_step.step_type == "forward_operator"
                 and bool(step_data.get("agent")),
             },
