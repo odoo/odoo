@@ -49,6 +49,7 @@ class AccountMoveLine(models.Model):
         string="GSTR Section",
         index="btree_not_null",
     )
+    l10n_in_pan_entity_id = fields.Many2one(related="partner_id.l10n_in_pan_entity_id")
 
     # withholding related fields
     l10n_in_withhold_tax_amount = fields.Monetary(string="TDS Tax Amount", compute='_compute_l10n_in_withhold_tax_amount')
