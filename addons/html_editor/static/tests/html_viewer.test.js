@@ -66,3 +66,40 @@ test(`copy from HtmlViewer must support application/vnd.odoo.odoo-editor`, async
         clipboardData.getData("text/html")
     );
 });
+
+test(`copy from HtmlViewer should copy all the selection`, async () => {
+    await mountWithCleanup(WebClient);
+
+    registry.category("main_components").add("mycomponent", {
+        Component: HtmlViewer,
+        props: {
+            config: {
+                value: markup(`
+                    <table class="table table-bordered o_table">
+                        <tbody>
+                            <tr style="height: 49.1875px;">
+                                <td style="background-color: rgba(214, 239, 214, 0.6); color: rgb(55, 65, 81);">
+                                    <p>A</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            },
+        },
+    });
+    await animationFrame();
+    const tableParent = (await waitFor("table")).parentElement;
+    const range = new Range();
+    range.setStart(tableParent, 0);
+    range.setEnd(tableParent, 1);
+    getSelection().addRange(range);
+    await animationFrame();
+    const clipboardData = new DataTransfer();
+    tableParent.dispatchEvent(new ClipboardEvent("copy", { bubbles: true, clipboardData }));
+
+    expect(clipboardData.getData("text/html")).toInclude("table");
+    expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
+        clipboardData.getData("text/html")
+    );
+});
