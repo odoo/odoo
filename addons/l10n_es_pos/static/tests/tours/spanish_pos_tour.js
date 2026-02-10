@@ -4,6 +4,7 @@ import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
+import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import { registry } from "@web/core/registry";
 import { checkSimplifiedInvoiceNumber, checkCompanyState, pay } from "./utils/receipt_util";
 
@@ -23,6 +24,14 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
             ProductScreen.addOrderline("Desk Pad", "1", SIMPLIFIED_INVOICE_LIMIT - 1),
             pay(),
             checkSimplifiedInvoiceNumber("0002"),
+            ReceiptScreen.clickNextOrder(),
+
+            //Refund
+            Chrome.clickOrders(),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.selectOrder("0001"),
+            TicketScreen.confirmRefund(),
+            pay(),
             ReceiptScreen.clickNextOrder(),
 
             ProductScreen.addOrderline("Desk Pad", "1", SIMPLIFIED_INVOICE_LIMIT + 1),

@@ -40,7 +40,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         num_of_simp_invoices = self.env['account.move'].search_count([('journal_id', '=', simp.id), ('l10n_es_is_simplified', '=', True)])
         num_of_regular_invoices = get_number_of_regular_invoices() - initial_number_of_regular_invoices
         self.assertEqual(num_of_simp_invoices, 3)
-        self.assertEqual(num_of_regular_invoices, 1)
+        self.assertEqual(num_of_regular_invoices, 2)
 
     def test_l10n_es_pos_reconcile(self):
         if not self.env["ir.module.module"].search([("name", "=", "pos_settle_due"), ("state", "=", "installed")]):
