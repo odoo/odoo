@@ -29,6 +29,8 @@
 
     const RamOrdering = {
     cart: [],
+    serverTotals: null,
+    paymentProviders: [],
     currentConfig: null,
     currentScreen: 'items', // 'items', 'checkout', 'success'
 
@@ -58,6 +60,7 @@
             }
         }
         
+        this.fetchPaymentProviders();
         this.loadOrderHistory();
         this.bindEvents();
         this.updateUI();
@@ -178,16 +181,38 @@
     // --- Core Cart Logic ---
 
     addToCart(item) {
-        // Simple deduplication only for items with NO variations
-        if (!item.attribute_value_ids && !item.combo_line_ids) {
-            const existing = this.cart.find(i => i.product_id === item.product_id && !i.attribute_value_ids);
-            if (existing) {
-                existing.qty += 1;
-                this.saveCart();
-                this.updateUI();
-                this.showToast(`Updated ${item.name}`);
-                return;
-            }
+        this.serverTotals = null; // Reset server totals on cart change
+        
+        // Deep deduplication check
+        const isSameSelection = (a, b) => {
+            if (a.length !== b.length) return false;
+            // distinct values match? (arrays of ids)
+            const sortedA = [...a].sort();
+            const sortedB = [...b].sort();
+            return sortedA.every((val, index) => val === sortedB[index]);
+        };
+
+        const isSameCombo = (a, b) => {
+             if (a.length !== b.length) return false;
+             // complex objects: {combo_id, combo_item_id, ...}
+             // unique signature check
+             const sig = (arr) => arr.map(x => `${x.combo_id}-${x.combo_item_id}`).sort().join('|');
+             return sig(a) === sig(b);
+        };
+
+        const existing = this.cart.find(i => 
+            i.product_id === item.product_id &&
+            isSameSelection(i.attribute_value_ids || [], item.attribute_value_ids || []) &&
+            isSameCombo(i.combo_line_ids || [], item.combo_line_ids || []) &&
+            (i.note || '') === (item.note || '')
+        );
+
+        if (existing) {
+            existing.qty += 1;
+            this.saveCart();
+            this.updateUI();
+            this.showToast(`Updated ${item.name}`);
+            return;
         }
 
         this.cart.push(item);
@@ -199,6 +224,7 @@
     },
 
     updateItemQty(index, delta) {
+        this.serverTotals = null;
         const item = this.cart[index];
         if (!item) return;
         item.qty += delta;
@@ -211,6 +237,7 @@
     },
 
     removeItem(index) {
+        this.serverTotals = null;
         this.cart.splice(index, 1);
         this.saveCart();
         this.updateUI();
@@ -551,16 +578,52 @@
             }, 1000);
             return;
         }
+        if (screenName === 'checkout') {
+            await this.calculateDraftTotals();
+        }
         this.currentScreen = screenName;
         document.querySelectorAll(".ram-cart-screen").forEach(s => s.classList.add("d-none"));
         const target = document.getElementById(`ram_cart_screen_${screenName}`);
         if (target) target.classList.remove("d-none");
     },
 
+    async calculateDraftTotals() {
+        try {
+            // Show some loading state on the total price if needed
+            document.querySelectorAll(".ram-cart-total-price").forEach(el => el.innerHTML = '<i class="fa fa-spinner fa-spin"></i>');
+            
+            const lines = this.cart.map(i => ({
+                product_id: i.product_id,
+                qty: i.qty,
+                price_unit: i.price, // Important for custom configured prices
+                note: i.note
+            }));
+
+            const result = await callOdooAPI("/ram/order/draft", { order_data: { lines: lines } });
+            if (result && !result.error && !result.code) {
+                this.serverTotals = {
+                    amount_total: result.amount_total,
+                    amount_tax: result.amount_tax,
+                };
+                console.log("✅ Server Totals Applied:", this.serverTotals);
+                this.updateUI();
+            } else {
+                console.error("Draft API Error:", result);
+                // Fallback to local logic implicitly by not setting serverTotals
+                this.serverTotals = null;
+                this.updateUI(); // Re-render local
+            }
+        } catch (e) {
+            console.error("Draft Calculation Failed:", e);
+            this.serverTotals = null;
+            this.updateUI();
+        }
+    },
+
     updateUI() {
         const totalItems = this.cart.reduce((sum, i) => sum + i.qty, 0);
-        const totalPrice = this.cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
-        const totalTax = this.cart.reduce((sum, i) => sum + ((i.tax_amount || 0) * i.qty), 0);
+        const totalPrice = this.serverTotals ? this.serverTotals.amount_total : this.cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+        const totalTax = this.serverTotals ? this.serverTotals.amount_tax : this.cart.reduce((sum, i) => sum + ((i.tax_amount || 0) * i.qty), 0);
 
         document.querySelectorAll(".ram-cart-count").forEach(el => el.textContent = totalItems);
         document.querySelectorAll(".ram-cart-total-price").forEach(el => el.textContent = totalPrice.toFixed(2));
@@ -592,6 +655,7 @@
                             <button class="ram-cart-qty-btn js_ram_cart_plus" data-index="${idx}">+</button>
                         </div>
                         ${item.variation_summary ? `<div class="small text-muted">${item.variation_summary}</div>` : ''}
+                        ${item.note ? `<div class="small text-info fst-italic">Note: ${item.note}</div>` : ''}
                     </div>
                     <div class="text-end">
                         <div class="fw-bold">${this.formatPrice(item.price * item.qty)}</div>
@@ -622,28 +686,29 @@
             alert("Name, Phone, and Email are required.");
             return;
         }
-
-        // Validate Card Details if Online
-        if (paymentValue === 'online') {
-            const cardNum = document.querySelector('#ram_card_form input[placeholder*="XXXX"]').value.replace(/\s/g, '');
-            const cardExpiry = document.querySelector('#ram_card_form input[placeholder="MM/YY"]').value.trim();
-            
-            if (cardNum.length < 13) {
-                alert("Please enter a valid card number.");
-                return;
-            }
-            
-            // Regex for MM/YY
-            const expiryRegex = /^(0[1-9]|1[0-2])\/([0-9]{2})$/;
-            if (!expiryRegex.test(cardExpiry)) {
-                alert("Please enter a valid expiry date in MM/YY format (e.g. 12/25).");
-                return;
-            }
+        
+        // --- NEW PAYMENT FLOW ---
+        // If payment method is an integer, it's a provider ID -> Online Payment
+        // If it is 'counter' or 'cod', it's manual.
+        
+        if (paymentValue !== 'counter' && paymentValue !== 'cod') {
+             // Online Payment Flow
+             const providerId = parseInt(paymentValue);
+             if (providerId) {
+                  this.initiateOnlinePayment(providerId, name, phone, email, street, city, document.getElementById("ram_order_zip").value.trim());
+                  return; 
+             }
+        }
+        
+        // Legacy/Offline Flow check (no card form validation needed for counter)
+        if (paymentValue === 'online_legacy') { // Old mock logic check
+             // ... kept for fallback or removed? Removing mock validation.
         }
 
         const btn = document.getElementById("js_ram_submit_order");
         const originalText = btn.innerHTML;
         btn.disabled = true;
+
         btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Processing...';
 
         const orderData = {
@@ -682,12 +747,100 @@
                 this.saveCart();
                 this.updateUI();
                 this.renderOrderHistory();
-                document.getElementById("ram_success_ref").textContent = result.pos_reference;
-                this.switchScreen('success');
+                
+                if (result.unique_uuid) {
+                    window.location.href = '/ram/order/status/' + result.unique_uuid;
+                } else {
+                    document.getElementById("ram_success_ref").textContent = result.pos_reference;
+                    this.switchScreen('success');
+                }
             }
         } catch (e) {
             alert("Network error. Please try again.");
         } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    },
+
+    async fetchPaymentProviders() {
+        try {
+            const providers = await callOdooAPI("/ram/payment/providers");
+            this.paymentProviders = providers || [];
+            this.renderPaymentMethods();
+        } catch (e) {
+            console.error("Failed to fetch providers:", e);
+        }
+    },
+
+    renderPaymentMethods() {
+        const container = document.getElementById("ram_payment_methods_container");
+        if (!container) return; // Must be added to XML
+        
+        let html = `
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="radio" name="ram_payment" id="pay_counter" value="counter" checked>
+                <label class="form-check-label" for="pay_counter">
+                    💵 Pay at Counter
+                </label>
+            </div>
+        `;
+        
+        this.paymentProviders.forEach(p => {
+             html += `
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="ram_payment" id="pay_provider_${p.id}" value="${p.id}">
+                    <label class="form-check-label d-flex align-items-center" for="pay_provider_${p.id}">
+                        ${p.image_url ? `<img src="${p.image_url}" style="height:24px; margin-right:8px;"/>` : ''}
+                        ${p.name}
+                    </label>
+                </div>
+             `;
+        });
+        
+        container.innerHTML = html;
+        
+        // Hide/Remove old card form if it exists
+        const oldForm = document.getElementById("ram_card_form");
+        if (oldForm) oldForm.classList.add("d-none");
+    },
+    
+    async initiateOnlinePayment(providerId, name, phone, email, street, city, zip) {
+        // 1. Get Exact Amount
+        await this.calculateDraftTotals(); 
+        const amount = this.serverTotals ? this.serverTotals.amount_total : this.cart.reduce((s, i) => s + (i.price*i.qty), 0);
+        
+        if (amount <= 0) {
+            alert("Cart is empty or free.");
+            return;
+        }
+        
+        const btn = document.getElementById("js_ram_submit_order");
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Redirecting to Payment...';
+
+        try {
+            // New Flow: Get Signed URL for Odoo Payment Page
+            const result = await callOdooAPI("/ram/payment/get_url", { 
+                amount: amount,
+                currency_id: this.currentConfig?.currency_id || false 
+            });
+            
+            if (result.error) throw new Error(result.error);
+            if (result.url) {
+                // Save customer details in case we need them (though backend uses partner)
+                this.saveCustomerDetails({name, phone, email, address: street + " " + city});
+                
+                // Redirect
+                window.location.href = result.url;
+            } else {
+                throw new Error("Failed to generate payment URL.");
+            }
+
+        } catch (e) {
+            console.error("Payment Init Failed:", e);
+            alert("Payment Initialization Failed: " + e.message);
             btn.disabled = false;
             btn.innerHTML = originalText;
         }

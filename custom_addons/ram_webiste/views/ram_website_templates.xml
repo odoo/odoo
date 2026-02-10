@@ -714,42 +714,29 @@
                                 </div>
 
                                 <div class="ram-payment-section mt-5">
-                                    <h4 class="mb-3">Payment</h4>
-                                    <div class="ram-payment-options">
-                                        <!-- "Pay at Counter" disabled for now (Delivery primary) -->
-                                        <!--
-                                        <div class="form-check ram-payment-option">
-                                            <input class="form-check-input" type="radio" name="ram_payment" id="pay_counter" value="counter"/>
-                                            <label class="form-check-label" for="pay_counter">
-                                                <strong>Pay at Counter</strong>
-                                                <small class="d-block text-muted">Cash or Card upon pickup/delivery</small>
-                                            </label>
+                                    <h4 class="mb-3">Payment Methods</h4>
+                                    <div class="ram-payment-options" id="ram_payment_methods_container">
+                                        <!-- Rendered by JS -->
+                                        <div class="text-center py-3">
+                                            <i class="fa fa-spinner fa-spin"/> Loading options...
                                         </div>
-                                        -->
-                                        
-                                        <div class="form-check ram-payment-option active">
-                                            <input class="form-check-input" type="radio" name="ram_payment" id="pay_online" value="online" checked="checked"/>
-                                            <label class="form-check-label" for="pay_online">
-                                                <strong>Online Payment (Card)</strong>
-                                                <small class="d-block text-muted">Secure payment via Stripe/Card</small>
-                                            </label>
+                                    </div>
+                                    
+                                    <!-- Fallback / Legacy Card Form (Hidden by default, JS might use fields if needed for direct providers) -->
+                                    <div id="ram_card_form" class="ram-card-form mt-4 p-3 rounded d-none" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                                        <p class="small text-muted mb-2">Secure Card Payment</p>
+                                        <div class="mb-3">
+                                            <label class="small text-muted mb-1">Card Number</label>
+                                            <input type="text" class="form-control form-control-sm" placeholder="XXXX XXXX XXXX XXXX" maxlength="19"/>
                                         </div>
-
-                                        <!-- Card Input Simulation -->
-                                        <div id="ram_card_form" class="ram-card-form mt-4 p-3 rounded" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
-                                            <div class="mb-3">
-                                                <label class="small text-muted mb-1">Card Number</label>
-                                                <input type="text" class="form-control form-control-sm" placeholder="XXXX XXXX XXXX XXXX" maxlength="19"/>
+                                        <div class="row g-2">
+                                            <div class="col-6">
+                                                <label class="small text-muted mb-1">Expiry</label>
+                                                <input type="text" class="form-control form-control-sm" placeholder="MM/YY" maxlength="5"/>
                                             </div>
-                                            <div class="row g-2">
-                                                <div class="col-6">
-                                                    <label class="small text-muted mb-1">Expiry</label>
-                                                    <input type="text" class="form-control form-control-sm" placeholder="MM/YY" maxlength="5"/>
-                                                </div>
-                                                <div class="col-6">
-                                                    <label class="small text-muted mb-1">CVV</label>
-                                                    <input type="password" class="form-control form-control-sm" placeholder="***" maxlength="3"/>
-                                                </div>
+                                            <div class="col-6">
+                                                <label class="small text-muted mb-1">CVV</label>
+                                                <input type="password" class="form-control form-control-sm" placeholder="***" maxlength="3"/>
                                             </div>
                                         </div>
                                     </div>
@@ -779,5 +766,245 @@
                 </div>
             </t>
         </xpath>
+    </template>
+    <template id="ram_order_list_page" name="My Orders">
+        <t t-call="website.layout">
+            <div id="wrap" class="bg-light min-vh-100 py-5">
+                <div class="container" style="max-width: 900px;">
+                    <h3 class="mb-4">My Orders</h3>
+                    
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0 align-middle">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th class="border-0 py-3 ps-4">Order Ref</th>
+                                            <th class="border-0 py-3">Date</th>
+                                            <th class="border-0 py-3">Total</th>
+                                            <th class="border-0 py-3">Status</th>
+                                            <th class="border-0 py-3 text-end pe-4">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="orders" t-as="o">
+                                            <tr style="cursor: pointer;" t-att-onclick="'window.location.href=\'/ram/order/status/' + str(o.unique_uuid) + '\''">
+                                                <td class="ps-4 fw-bold" t-esc="o.pos_reference or o.name"/>
+                                                <td><span t-field="o.date_order" t-options='{"widget": "datetime", "format": "MMM d, yyyy h:mm a"}'/></td>
+                                                <td class="fw-bold">
+                                                    <span t-esc="o.amount_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                </td>
+                                                <td>
+                                                    <span t-if="o.delivery_status == 'received'" class="badge bg-secondary">Received</span>
+                                                    <span t-if="o.delivery_status == 'preparing'" class="badge bg-warning text-dark">Preparing</span>
+                                                    <span t-if="o.delivery_status == 'ready'" class="badge bg-info text-dark">Ready</span>
+                                                    <span t-if="o.delivery_status == 'on_the_way'" class="badge bg-primary">On the Way</span>
+                                                    <span t-if="o.delivery_status == 'delivered'" class="badge bg-success">Delivered</span>
+                                                    <span t-if="o.delivery_status == 'cancelled'" class="badge bg-danger">Cancelled</span>
+                                                </td>
+                                                <td class="text-end pe-4">
+                                                    <a t-attf-href="/ram/order/status/#{o.unique_uuid}" class="btn btn-sm btn-outline-primary">
+                                                        View
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <tr t-if="not orders">
+                                            <td colspan="5" class="text-center py-5 text-muted">
+                                                <i class="fa fa-shopping-basket fa-3x mb-3 text-light"/>
+                                                <p>No orders found.</p>
+                                                <a href="/ram" class="btn btn-primary mt-2">Start Ordering</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="ram_order_status_page" name="Order Status">
+        <t t-call="website.layout">
+            <div id="wrap" class="ram-order-status-wrap bg-light min-vh-100 py-5">
+                <div class="container" style="max-width: 800px;">
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body p-4 text-center">
+                            <h5 class="text-muted mb-2">Order Status</h5>
+                            <h2 class="mb-4" t-esc="order.name"/>
+                            
+                            <!-- Status Steps -->
+                            <div class="ram-status-steps d-flex justify-content-between position-relative mb-5 mt-5">
+                                <div class="position-absolute top-50 start-0 w-100 bg-secondary opacity-25" style="height: 4px; transform: translateY(-50%); z-index: 0;"></div>
+                                <div t-attf-class="position-absolute top-50 start-0 bg-primary transition-width" style="height: 4px; transform: translateY(-50%); z-index: 1; transition: width 0.5s;" id="ram_status_bar" data-width="0%"></div>
+                                
+                                <t t-set="statuses" t-value="['received', 'preparing', 'ready', 'delivered']"/>
+                                <t t-foreach="statuses" t-as="st">
+                                    <div t-attf-class="ram-status-point position-relative z-2 bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 40px; height: 40px;" t-att-data-status="st">
+                                        <i t-if="st == 'received'" class="fa fa-file-text-o text-muted"/>
+                                        <i t-if="st == 'preparing'" class="fa fa-fire text-muted"/>
+                                        <i t-if="st == 'ready'" class="fa fa-shopping-bag text-muted"/>
+                                        <i t-if="st == 'delivered'" class="fa fa-check text-muted"/>
+                                    </div>
+                                </t>
+                            </div>
+                            
+                             <h3 id="ram_status_text" class="text-primary mb-3">Checking status...</h3>
+                             <p class="text-muted">Your order is being processed.</p>
+                             
+                             <div class="alert alert-info d-flex align-items-center justify-content-center gap-2 mt-4" t-if="order.is_api_order and order.state == 'draft'">
+                                <i class="fa fa-info-circle"/> Waiting for payment confirmation...
+                             </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Order Items -->
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white border-0 py-3">
+                            <h5 class="mb-0">Order Details</h5>
+                        </div>
+                        <div class="list-group list-group-flush">
+                            <t t-foreach="order.lines" t-as="line">
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="fw-bold" t-esc="int(line.qty)"/> x <span t-esc="line.full_product_name"/>
+                                        <div class="small text-muted" t-if="line.customer_note">
+                                            Note: <span t-esc="line.customer_note"/>
+                                        </div>
+                                    </div>
+                                    <span t-esc="line.price_subtotal_incl" t-options="{'widget': 'monetary', 'display_currency': order.currency_id}"/>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="card-footer bg-white d-flex justify-content-between py-3">
+                            <strong>Total</strong>
+                            <strong t-esc="order.amount_total" t-options="{'widget': 'monetary', 'display_currency': order.currency_id}"/>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <a href="/ram" class="btn btn-outline-primary">Back to Menu</a>
+                    </div>
+                </div>
+            </div>
+            
+            <script type="text/javascript">
+                document.addEventListener('DOMContentLoaded', function() {
+                    const orderUuid = "<t t-esc="order.unique_uuid"/>";
+                    const statusText = document.getElementById('ram_status_text');
+                    const statusBar = document.getElementById('ram_status_bar');
+                    const points = document.querySelectorAll('.ram-status-point');
+                    
+                    function updateStatus() {
+                        fetch('/ram/order/status/poll', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({
+                                jsonrpc: '2.0',
+                                method: 'call',
+                                params: { uuid: orderUuid },
+                                id: Date.now()
+                            })
+                        })
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.result) {
+                                const st = data.result.delivery_status;
+                                let progress = 0;
+                                let label = "Received";
+                                
+                                points.forEach(p => {
+                                    const ps = p.getAttribute('data-status');
+                                    const i = p.querySelector('i');
+                                    p.classList.remove('bg-primary', 'text-white');
+                                    if(i) i.classList.remove('text-white');
+                                    if(i) i.classList.add('text-muted');
+                                });
+
+                                if (st === 'received') { progress = 0; label = "Order Received"; }
+                                if (st === 'preparing') { progress = 33; label = "Preparing in Kitchen"; }
+                                if (st === 'ready') { progress = 66; label = "Ready for Pickup"; }
+                                if (st === 'on_the_way') { progress = 80; label = "On the Way"; }
+                                if (st === 'delivered') { progress = 100; label = "Delivered"; }
+                                
+                                statusBar.style.width = progress + '%';
+                                statusText.textContent = label;
+                                
+                                // Highlight active/past points
+                                const stages = ['received', 'preparing', 'ready', 'delivered'];
+                                const currentIndex = stages.indexOf(st === 'on_the_way' ? 'ready' : st);
+                                
+                                stages.forEach((s, idx) => {
+                                    if (idx &lt;= currentIndex) {
+                                        const p = document.querySelector(`.ram-status-point[data-status="${s}"]`);
+                                        if(p) {
+                                            p.classList.add('bg-primary', 'text-white');
+                                            p.classList.remove('bg-white');
+                                            const i = p.querySelector('i');
+                                            if(i) {
+                                                i.classList.remove('text-muted');
+                                                i.classList.add('text-white');
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        })
+                        .catch(e => console.error(e));
+                    }
+                    
+                    setInterval(updateStatus, 5000);
+                    updateStatus(); // run immediately
+                });
+            </script>
+        </t>
+    </template>
+    
+    <template id="ram_payment_confirm_auto_redirect" inherit_id="payment.confirm">
+        <xpath expr="//div[has-class('o_payment_k_confirm_tx_status')]" position="after">
+             <t t-if="tx.reference and tx.reference.startswith('RAM-WEB')">
+                 <div class="alert alert-info mt-3 text-center">
+                     <p>Payment confirmed. Finalizing your order...</p>
+                     <i class="fa fa-spinner fa-spin fa-2x"></i>
+                     <span id="ram_redirect_ref" t-att-data-ref="tx.reference" class="d-none"/>
+                 </div>
+                 <script>
+                     setTimeout(function() {
+                         var ref = document.getElementById('ram_redirect_ref').dataset.ref;
+                         window.location.href = '/ram/payment/finalize?reference=' + ref;
+                     }, 1500);
+                 </script>
+             </t>
+        </xpath>
+    </template>
+
+    <template id="ram_order_success_page" name="Order Success">
+        <t t-call="website.layout">
+            <div id="wrap" class="bg-light min-vh-100 d-flex align-items-center justify-content-center">
+                <div class="text-center p-5 card shadow-sm border-0" style="max-width: 600px; width: 100%;">
+                    <div class="mb-4 text-success">
+                        <i class="fa fa-check-circle fa-5x"></i>
+                    </div>
+                    <h2 class="mb-3">Order Placed Successfully!</h2>
+                    <p class="text-muted mb-4">
+                        Thank you for your order. Your order ID is <strong class="text-dark"><t t-esc="order.pos_reference"/></strong>.
+                    </p>
+                    
+                    <div class="d-grid gap-3">
+                        <a t-attf-href="/ram/order/status/#{order.unique_uuid}" class="btn btn-primary btn-lg">
+                            Track Order Status
+                        </a>
+                         <a href="/ram/orders" class="btn btn-outline-secondary">
+                            View My Orders
+                        </a>
+                        <a href="/ram" class="btn btn-link text-decoration-none text-muted">
+                            Continue Shopping
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </t>
     </template>
 </odoo>

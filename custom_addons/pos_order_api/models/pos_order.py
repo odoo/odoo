@@ -135,6 +135,16 @@ class PosOrder(models.Model):
 
         amount_total = total_paid # In POS, paid usually equals total
         
+        # --- SIMULATION MODE ---
+        if order_data.get('simulate'):
+             return {
+                 'amount_total': amount_total,
+                 'amount_tax': total_tax,
+                 'lines': [l[2] for l in lines_data], # Extract dict from (0,0, {..})
+                 'currency_symbol': session.currency_id.symbol,
+                 'partner_id': order_data.get('partner_id'),
+             }
+
         # Override with provided total if minor rounding diffs (optional safety)
         if order_data.get('amount_paid'):
             # simple validation?

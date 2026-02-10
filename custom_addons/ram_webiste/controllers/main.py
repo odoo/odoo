@@ -248,6 +248,83 @@ class RamWebsiteController(http.Controller):
             "country_id": partner.country_id.id,
         }
 
+    @http.route('/ram/orders', type='http', auth='user', website=True)
+    def ram_order_list_page(self, **kwargs):
+        partner = request.env.user.partner_id
+        orders = request.env['pos.order'].sudo().search([
+            ('partner_id', '=', partner.id),
+            ('amount_total', '>', 0) # Optional: filter empty/failed
+        ], order='date_order desc')
+        
+        return request.render('ram_webiste.ram_order_list_page', {
+            'orders': orders,
+        })
+
+    @http.route('/ram/order/status/<string:uuid>', type='http', auth='public', website=True)
+    def ram_order_status_page(self, uuid, **kwargs):
+        order = request.env['pos.order'].sudo().search([('unique_uuid', '=', uuid)], limit=1)
+        if not order:
+            return request.render('website.404')
+            
+        return request.render('ram_webiste.ram_order_status_page', {
+            'order': order,
+        })
+        
+    @http.route('/ram/order/status/poll', type='json', auth='public')
+    def ram_order_status_poll(self, uuid):
+         order = request.env['pos.order'].sudo().search([('unique_uuid', '=', uuid)], limit=1)
+         if not order:
+             return {'error': 'Not found'}
+             
+         return {
+             'id': order.id,
+             'state': order.state, # draft, paid, done, invoiced, cancel
+             'delivery_status': order.delivery_status, # received, preparing, ready, on_the_way, delivered
+             'is_paid': order.state in ['paid', 'done', 'invoiced'],
+         }
+
+    @http.route(
+        ["/ram/order/draft"],
+        type="jsonrpc",
+        auth="public",
+        methods=["POST"],
+        website=True,
+        csrf=True,
+    )
+    def ram_order_draft(self, **kwargs):
+        """
+        Simulate an order to get exact pricing and tax details from POS logic.
+        Does NOT create a persistent order.
+        """
+        order_data = kwargs.get('order_data')
+        if not order_data:
+            order_data = kwargs
+
+        # 1. Verify POS session (Same logic as submit)
+        session = request.env['pos.session'].sudo().search([
+            ('state', '=', 'opened'),
+            ('delivery_active', '=', True),
+            ('config_id.accept_remote_orders', '=', True)
+        ], limit=1)
+
+        if not session:
+            return {'error': _("Ordering unavailable. No active session.")}
+
+        # 2. Partner Resolution
+        # Use current user's partner if available, else standard behavior
+        if not request.env.user._is_public():
+            order_data['partner_id'] = request.env.user.partner_id.id
+
+        # 3. Set Flag
+        order_data['simulate'] = True
+        order_data['session_id'] = session.id
+        
+        # 4. Call API
+        try:
+            return request.env['pos.order'].sudo().create_api_order(order_data)
+        except Exception as e:
+            return {'error': str(e)}
+
     @http.route(
         ["/ram/order/submit"],
         type="jsonrpc",
@@ -380,6 +457,7 @@ class RamWebsiteController(http.Controller):
                 'state': order.state,
                 'amount_total': order.amount_total,
                 'amount_tax': order.amount_tax,
+                'unique_uuid': order.unique_uuid, # Added for status page redirect
                 'invoice_id': order.account_move.id if order.account_move else False,
                 'invoice_url': f"/my/invoices/{order.account_move.id}?access_token={order.account_move._portal_ensure_token()}" if order.account_move else False
             }

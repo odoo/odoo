@@ -9,6 +9,7 @@
         "website",
         "point_of_sale",
         "crm",
+        "payment",
     ],
     "data": [
         "security/ram_webiste_security.xml",
