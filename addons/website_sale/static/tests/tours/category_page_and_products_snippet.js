@@ -5,9 +5,6 @@ import { clickOnSave, clickOnEditAndWaitEditMode, registerWebsitePreviewTour } f
 registerWebsitePreviewTour(
     'website_sale.category_page_and_products_snippet_edition',
     {
-        // Remove this key to get warning should not have any "characterData", "remove"
-        // or "add" mutations in current step when you update the selection
-        undeterministicTour_doNotCopy: true,
         url: '/shop',
     },
     () => [
@@ -35,7 +32,7 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            trigger: ":iframe:not(:has(.o_loading_screen))",
+            trigger: ".o_website_preview :iframe:not(:has(.o_loading_screen))",
         },
         {
             content: "Click on the product snippet to show its options",

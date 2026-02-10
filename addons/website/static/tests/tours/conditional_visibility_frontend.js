@@ -1,9 +1,6 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("conditional_visibility_2", {
-    // Remove this key to get warning should not have any "characterData", "remove"
-    // or "add" mutations in current step when you update the selection
-    undeterministicTour_doNotCopy: true,
     url: "/?utm_medium=Email",
     steps: () => [
         {

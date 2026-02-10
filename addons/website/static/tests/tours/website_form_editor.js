@@ -1150,9 +1150,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_form_editable_content",
     {
-        // Remove this key to get warning should not have any "characterData", "remove"
-        // or "add" mutations in current step when you update the selection
-        undeterministicTour_doNotCopy: true,
         url: "/",
         edition: true,
     },
@@ -1265,9 +1262,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "website_form_duplicate_field_ids",
     {
-        // Remove this key to get warning should not have any "characterData", "remove"
-        // or "add" mutations in current step when you update the selection
-        undeterministicTour_doNotCopy: true,
         url: "/",
         edition: true,
     },

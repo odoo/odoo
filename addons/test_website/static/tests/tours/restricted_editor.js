@@ -120,8 +120,8 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     "test_restricted_editor_test_admin",
     {
-        // Remove this key to get warning should not have any "characterData", "remove"
-        // or "add" mutations in current step when you update the selection
+        // Remove this key to make the tour fail with error:
+        // "Element has not been found." at step "Open Edit menu"
         undeterministicTour_doNotCopy: true,
         url: "/",
     },

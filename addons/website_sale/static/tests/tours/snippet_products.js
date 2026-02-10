@@ -12,9 +12,6 @@ const productsSnippet = { id: "s_dynamic_snippet_products", name: "Products", gr
 registerWebsitePreviewTour(
     'website_sale.snippet_products',
     {
-        // Remove this key to get warning should not have any "characterData", "remove"
-        // or "add" mutations in current step when you update the selection
-        undeterministicTour_doNotCopy: true,
         url: '/',
         edition: true,
     },
@@ -35,9 +32,6 @@ registerWebsitePreviewTour(
 registerWebsitePreviewTour(
     'website_sale.products_snippet_recently_viewed',
     {
-        // Remove this key to get warning should not have any "characterData", "remove"
-        // or "add" mutations in current step when you update the selection
-        undeterministicTour_doNotCopy: true,
         url: '/',
         edition: true,
     },
