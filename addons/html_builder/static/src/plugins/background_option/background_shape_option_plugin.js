@@ -39,6 +39,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             FlipShapeAction,
             SetBgAnimationSpeedAction,
             BackgroundShapeColorAction,
+            RangeSelectionAction,
         },
         background_shape_groups_providers: withSequence(0, () =>
             deepCopy(backgroundShapesDefinition)
@@ -737,6 +738,25 @@ class FlipShapeAction extends BaseAnimationAction {
         const selector = `.o_we_flip_${axis}`;
         const hasFlipClass = !!editingElement.querySelector(`:scope > .o_we_shape${selector}`);
         return hasFlipClass || this.getShapeData(editingElement).flip.includes(axis);
+    }
+}
+class RangeSelectionAction extends BaseAnimationAction {
+    static id = "rangeSelection";
+    apply({ editingElement, params: { mainParam: values }, value }) {
+        for (const c of values) {
+            editingElement.classList.remove(c);
+        }
+        if (value) {
+            editingElement.classList.add(value);
+        }
+    }
+    getValue({ editingElement, params: { mainParam: values } }) {
+        for (const c of values) {
+            if (editingElement.classList.contains(c)) {
+                return values.indexOf(c) + 1;
+            }
+        }
+        return 0;
     }
 }
 class SetBgAnimationSpeedAction extends BaseAnimationAction {

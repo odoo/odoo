@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderRangeSelect">
+    <BuilderComponent>
+        <div
+            t-attf-class="o-hb-rangeselect d-flex flex-row flex-nowrap align-items-center {{ props.withNumberInput ? 'me-2' : '' }}"
+            t-att-data-action-id="info.actionId"
+            t-att-data-action-param="info.actionParam"
+            t-att-data-action-value="info.actionValue"
+            t-att-data-class-action="info.classAction"
+            t-att-data-style-action="info.styleAction"
+            t-att-data-style-action-value="info.styleActionValue"
+            t-att-data-attribute-action="info.attributeAction"
+            t-att-data-attribute-action-value="info.attributeActionValue">
+            <input
+                type="range"
+                class="o-hb-rangeselectInput"
+                t-ref="inputRefRange"
+                step="1"
+                min="0"
+                t-att-style="'--steps: ' + props.values.length + ';'"
+                t-att-max="props.values.length - 1"
+                t-att-class="className"
+                t-att-value="inputValueRange"
+                t-on-change="onChangeRange"
+                t-on-input="onInputRange"
+                t-on-keydown="onKeydownRange"
+            />
+        </div>
+    </BuilderComponent>
+</t>
+
+</templates>

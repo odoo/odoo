@@ -15,6 +15,7 @@ export class ScrollButtonOption extends BaseOptionComponent {
                     ? _t("Min-Height")
                     : _t("Height"),
             heightFieldEnabled: editingElement.dataset.snippet === "s_image_gallery",
+            scrollDownButtonDisabled: editingElement.matches("footer section"),
         }));
     }
 
