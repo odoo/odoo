@@ -823,6 +823,13 @@ class TestMailAliasMixin(TestMailAliasCommon):
         })
         self.assertEqual(rec.alias_id.alias_domain_id, self.mail_alias_domain_c2, "Should use the provided alias domain in priority")
 
+        # check reply-to uses primary alias_id over alphabetically first alias
+        record.alias_id.sudo().copy({
+            'alias_name': 'aaa-alias-first-in-alphabetical-order'
+        })
+        reply_to = record._notify_get_reply_to()[record.id]
+        self.assertIn(record.alias_id.alias_full_name, reply_to)
+
     @users('erp_manager')
     def test_alias_mixin_alias_email(self):
         """ Test 'alias_email' mixin field computation and search capability """
