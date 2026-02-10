@@ -49,7 +49,6 @@ chartRegistry.add("odoo_sunburst", {
 });
 
 function createOdooChartRuntime(chart, getters) {
-    const background = chart.background || "#FFFFFF";
     const { datasets, labels } = chart.dataSource.getHierarchicalData();
 
     const definition = chart.getDefinition();
@@ -77,11 +76,12 @@ function createOdooChartRuntime(chart, getters) {
                 tooltip: getSunburstChartTooltip(definition, chartData),
                 sunburstLabelsPlugin: getSunburstShowValues(definition, chartData),
                 sunburstHoverPlugin: { enabled: true },
+                background: { color: chart.background },
             },
             onHover: onOdooChartItemHover(),
             onClick: onSunburstOdooChartItemClick(getters, chart),
         },
     };
 
-    return { background, chartJsConfig: config };
+    return { chartJsConfig: config };
 }

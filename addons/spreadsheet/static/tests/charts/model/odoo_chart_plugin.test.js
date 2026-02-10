@@ -33,6 +33,7 @@ import {
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { setGlobalFilterValue } from "../../helpers/commands";
 
+const { chartRegistry } = spreadsheet.registries;
 const { toZone } = spreadsheet.helpers;
 
 const cumulativeDateServerData = getBasicServerData();
@@ -1827,4 +1828,38 @@ test("filtering on 'day' doesn't change to hour if not datetime", async () => {
         value: { type: "relative", period: "today" },
     });
     expect(model.getters.getChartDefinition(chartId).metaData.groupBy).toEqual(["date:day"]);
+});
+
+test("Odoo charts can have a background color", async () => {
+    const searchParams = { comparison: null, context: {}, domain: [], groupBy: [], orderBy: [] };
+    const metaData = {
+        groupBy: ["name", "bar"],
+        measure: "probability",
+        order: null,
+        resModel: "partner",
+    };
+
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_bar",
+        modelConfig: { external: { geoJsonService: { getAvailableRegions: () => [] } } },
+        definition: { type: "odoo_bar", metaData, searchParams, id: "42", background: "#FF00FF" },
+    });
+    await waitForDataLoaded(model);
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+
+    const chartTypes = chartRegistry.getKeys().filter((type) => type.startsWith("odoo_"));
+
+    for (const type of chartTypes) {
+        model.dispatch("UPDATE_CHART", {
+            definition: { ...model.getters.getChartDefinition(chartId), type },
+            chartId,
+            figureId: model.getters.getFigureIdFromChartId(chartId),
+            sheetId,
+        });
+        const updatedRuntime = model.getters.getChartRuntime(chartId);
+        expect(updatedRuntime?.chartJsConfig?.options?.plugins?.background?.color).toEqual(
+            "#FF00FF"
+        );
+    }
 });
