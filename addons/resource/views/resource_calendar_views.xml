@@ -82,22 +82,6 @@
                     </group>
                     <notebook>
                         <page string="Working Hours" name="working_hours" invisible="two_weeks_calendar">
-                            <group>
-                                <group>
-                                    <label for="hours_per_day" string="Avg"/>
-                                    <div class="d-flex">
-                                        <field name="hours_per_day" nolabel="1" style="width: 6ch;" widget="float_time" readonly="1"/>
-                                        <span class="ms-2">hours/day</span>
-                                    </div>
-                                </group>
-                                <group>
-                                    <label for="hours_per_week" string="Total"/>
-                                    <div class="d-flex">
-                                        <field name="hours_per_week" nolabel="1" style="width: 6ch;" widget="float_time" readonly="1"/>
-                                        <span class="ms-2">hours/week</span>
-                                    </div>
-                                </group>
-                            </group>
                             <field name="attendance_ids"/>
                         </page>
                         <page string="Week 1 Working Hours" name="working_hours" invisible="not two_weeks_calendar">
