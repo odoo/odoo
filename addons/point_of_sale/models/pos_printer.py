@@ -37,7 +37,8 @@ class PosPrinter(models.Model):
         default='epson_epos',
         selection=[
             ('epson_epos', 'IP address'),
-        ]
+            ('local', 'Local Printer'),
+        ],
     )
     use_type = fields.Selection(selection=[
         ('preparation', "Preparation"),
@@ -53,6 +54,7 @@ class PosPrinter(models.Model):
         ),
     )
     use_lna = fields.Boolean(string="Use Local Network Access")
+    local_printer_data = fields.Json(string='Local Printer Data', help="Stores local printer identification and metadata (vendor_id, product_id, name, etc.)")
 
     def copy_data(self, default=None):
         default = dict(default or {}, pos_config_ids=[(5, 0, 0)], epson_printer_ip="0.0.0.0")
@@ -68,7 +70,7 @@ class PosPrinter(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'name', 'product_categories_ids', 'printer_type', 'use_type', 'use_lna', 'epson_printer_ip']
+        return ['id', 'name', 'product_categories_ids', 'printer_type', 'use_type', 'use_lna', 'epson_printer_ip', 'local_printer_data']
 
     @api.constrains('epson_printer_ip')
     def _constrains_epson_printer_ip(self):

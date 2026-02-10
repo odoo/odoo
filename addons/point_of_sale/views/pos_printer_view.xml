@@ -15,8 +15,10 @@
                     <group>
                         <group>
                             <field name="use_type" widget="radio" options="{'horizontal': True}" class="pb-1"/>
+                            <field name="printer_type" widget="radio" options="{'horizontal': True}" class="pb-1"/>
+                            <field name="local_printer_data" widget="local_printer_selector" invisible="printer_type != 'local'" required="printer_type == 'local'"/>
                             <field name="epson_printer_ip" invisible="printer_type != 'epson_epos'" placeholder="10.100.50.87" required="printer_type == 'epson_epos'"/>
-                            <field name="use_lna"/>
+                            <field name="use_lna" invisible="printer_type == 'local'"/>
                             <field name="product_categories_ids" invisible="use_type != 'preparation'" widget="many2many_tags" required="use_type == 'preparation'"/>
                         </group>
                     </group>
