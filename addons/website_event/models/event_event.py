@@ -134,13 +134,15 @@ class EventEvent(models.Model):
         if self:
             base_domain = Domain('event_id', 'in', self.ids) & base_domain
 
-        visitor_domain = Domain.TRUE
+        visitor_domain = Domain.FALSE
         partner_id = self.env.user.partner_id
         if current_visitor:
             visitor_domain = Domain('visitor_id', '=', current_visitor.id)
             partner_id = current_visitor.partner_id
         if partner_id:
             visitor_domain |= Domain('partner_id', '=', partner_id.id)
+        if visitor_domain.is_false():
+            return self.env['event.event']
 
         registrations_events = self.env['event.registration'].sudo()._read_group(
             visitor_domain & base_domain,
