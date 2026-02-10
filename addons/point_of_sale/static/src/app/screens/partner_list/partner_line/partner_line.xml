@@ -27,8 +27,8 @@
                     <div class="mb-1" t-if="props.partner.phone">
                         <i class="fa fa-fw fa-phone me-2" /><t t-esc="props.partner.phone" />
                     </div>
-                    <div t-if="props.partner.email" class="email-field mb-1">
-                        <i class="fa fa-fw fa-paper-plane-o me-2" /><t t-esc="props.partner.email" />
+                    <div t-if="props.partner.email" class="email-field mb-1 d-flex align-items-start">
+                        <i class="fa fa-fw fa-paper-plane-o me-2 lh-base flex-shrink-0" /><t t-esc="props.partner.email" />
                     </div>
                 </div>
                 <div class="p-1">
@@ -46,15 +46,15 @@
                     <b t-esc="props.partner.name or ''" />
                     <div class="company-field text-bg-muted" t-esc="props.partner.parent_name or ''" />
                 </td>
-                <td>
+                <td class="text-break w-25">
                     <div class="partner-line-adress" t-if="props.partner.pos_contact_address" t-esc="props.partner.pos_contact_address" />
                 </td>
-                <td class="partner-line-email ">
+                <td class="partner-line-email w-100">
                     <div t-if="props.partner.phone">
                         <i class="fa fa-fw fa-phone me-2"/><t t-esc="props.partner.phone"/>
                     </div>
-                    <div t-if="props.partner.email" class="email-field">
-                        <i class="fa fa-fw fa-paper-plane-o me-2"/><t t-esc="props.partner.email" />
+                    <div t-if="props.partner.email" class="email-field d-flex align-items-start">
+                        <i class="fa fa-fw fa-paper-plane-o me-2 lh-base flex-shrink-0"/><span class="text-break" t-esc="props.partner.email" />
                     </div>
                 </td>
                 <!-- FIXME: this should be in pos_settle_due, not here -->
