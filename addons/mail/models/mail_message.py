@@ -1269,7 +1269,7 @@ class MailMessage(models.Model):
             def needaction(message):
                 # sudo: mail.message - checking whether there is a notification for the current user is acceptable
                 return not message.env.user._is_public() and bool(
-                    message.notification_ids.filtered(
+                    message.sudo().notification_ids.filtered(
                         lambda n: not n.is_read
                         and n.res_partner_id == message.env.user.partner_id,
                     ),
