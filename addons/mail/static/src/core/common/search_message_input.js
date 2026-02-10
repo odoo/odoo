@@ -43,31 +43,29 @@ export class SearchMessageInput extends Component {
     search() {
         this.props.messageSearch.searchTerm = this.state.searchTerm;
         this.props.messageSearch.search();
-        this.state.searchedTerm = this.state.searchTerm;
     }
 
     clear() {
         this.state.searchTerm = "";
         this.state.searchedTerm = this.state.searchTerm;
         this.props.messageSearch.clear();
+    }
+
+    onClickClose() {
+        this.clear();
         this.props.closeSearch?.();
     }
 
     onClickClearSearch() {
         this.state.searchTerm = "";
-        this.state.searchedTerm = "";
         this.props.messageSearch.clear();
     }
 
-    onKeydownSearch(ev) {
-        if (ev.key !== "Enter") {
-            return;
-        }
+    onInputSearch(ev) {
         if (!this.state.searchTerm) {
-            this.clear();
-        } else {
-            this.search();
+            return this.clear();
         }
+        this.search();
     }
 
     /** @param {SearchFilter} searchFilter */
