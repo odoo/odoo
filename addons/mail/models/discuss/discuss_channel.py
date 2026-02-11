@@ -652,11 +652,7 @@ class DiscussChannel(models.Model):
                     payload["invited_by_user_id"] = self.env.user.id
                 member._bus_send("discuss.channel/joined", payload)
                 if channel.channel_type != "channel" and post_joined_message:
-                    notification = (
-                        _("joined the channel")
-                        if member.is_self
-                        else _("invited %s to the channel", member._get_html_link(for_persona=True))
-                    )
+                    notification = member.channel_id._get_member_join_notification(member)
                     member.channel_id.message_post(
                         author_id=inviting_partner.id or None,
                         body=Markup('<div class="o_mail_notification" data-oe-type="channel-joined">%s</div>') % notification,
@@ -682,6 +678,11 @@ class DiscussChannel(models.Model):
                     # sudo: discuss.channel.rtc.session - current user can invite new members in call
                     current_channel_member.sudo()._rtc_invite_members(member_ids=new_members.ids)
         return all_new_members
+
+    def _get_member_join_notification(self, member):
+        if member.is_self:
+            return self.env._("joined the channel")
+        return self.env._("invited %s to the channel", member._get_html_link(for_persona=True))
 
     def invite_by_email(self, emails):
         """

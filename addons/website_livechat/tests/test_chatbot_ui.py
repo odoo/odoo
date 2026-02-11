@@ -128,7 +128,7 @@ class TestLivechatChatbotUI(TestLivechatChatbotUICommon):
             ("I will transfer you to a human", operator, False),
             (
                 'invited <a href="#" data-oe-model="res.partner" data-oe-id="'
-                f'{operator_member.partner_id.id}">@El Deboulonnator</a> to the channel',
+                f'{operator_member.partner_id.id}">@El Deboulonnator</a> to the conversation',
                 self.chatbot_script.operator_partner_id,
                 False,
             ),

@@ -756,6 +756,13 @@ class DiscussChannel(models.Model):
                 channel.sudo().livechat_status = "in_progress"
         return all_new_members
 
+    def _get_member_join_notification(self, member):
+        if self.channel_type == "livechat":
+            if member.is_self:
+                return self.env._("joined the conversation")
+            return self.env._("invited %s to the conversation", member._get_html_link(for_persona=True))
+        return super()._get_member_join_notification(member)
+
     def _message_post_after_hook(self, message, msg_vals):
         """
         This method is called just before _notify_thread() method which is sending the message data.
