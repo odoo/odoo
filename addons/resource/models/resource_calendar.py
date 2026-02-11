@@ -47,7 +47,7 @@ class ResourceCalendar(models.Model):
     active = fields.Boolean("Active", default=True,
                             help="If the active field is set to false, it will allow you to hide the Working Time without removing it.")
     attendance_ids = fields.One2many(
-        'resource.calendar.attendance', 'calendar_id', 'Working Time',
+        'resource.calendar.attendance', 'calendar_id', 'Working Time', precompute=True,
         compute='_compute_attendance_ids', store=True, readonly=False, copy=True)
     attendance_ids_1st_week = fields.One2many('resource.calendar.attendance', 'calendar_id', 'Working Time 1st Week',
         compute="_compute_two_weeks_attendance", inverse="_inverse_two_weeks_calendar")
@@ -86,38 +86,24 @@ class ResourceCalendar(models.Model):
         ('variable', 'Variable')],
         string='Calendar Type', default='fixed', required=True)
 
-    @api.constrains('attendance_ids')
+    @api.constrains('attendance_ids.date', 'schedule_type')
     def _check_attendance_ids(self):
-        for calendar in self:
-            if calendar.attendance_ids:
-                first_attendance_has_date = calendar.attendance_ids[0].date
-                if len(calendar.attendance_ids) != len(calendar.attendance_ids.filtered(lambda a: bool(a.date) == first_attendance_has_date)):
-                    raise ValidationError(self.env._("You cannot have attendances based on weekday and date in the same calendar"))
+        if self.attendance_ids.filtered(lambda a: bool(a.date) if a.calendar_id.schedule_type == "fixed" else not a.date):
+            raise ValidationError(self.env._("You cannot have attendances based on weekday and date in the same calendar"))
 
     # --------------------------------------------------
     # Compute Methods
     # --------------------------------------------------
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if 'attendance_ids' not in vals or not vals.get('attendance_ids', []):
-                company_id = vals.get('company_id', self.env.company.id)
-                company = self.env['res.company'].browse(company_id)
-                if 'schedule_type' not in vals or vals['schedule_type'] == 'fixed':
-                    if company.resource_calendar_id and company.resource_calendar_id.schedule_type == "fixed":
-                        vals["attendance_ids"] = self._get_default_attendance_ids(company)
-                    else:
-                        vals["attendance_ids"] = self._get_default_attendance_ids()
-        return super().create(vals_list)
-
     def write(self, vals):
-        if 'schedule_type' in vals:
-            for calendar in self:
-                if calendar.schedule_type != vals['schedule_type']:
-                    if 'attendance_ids' not in vals:
-                        vals['attendance_ids'] = [(5, 0, 0)]
+        vals['attendance_ids'] = [
+            *vals.get('attendance_ids', []),
+            *[Command.delete(a.id) for a in self._attendances_to_unlink(vals.get("schedule_type"))]
+        ]
         return super().write(vals)
+
+    def _attendances_to_unlink(self, next_schedule_type=None):
+        return self.attendance_ids.filtered(lambda a: bool(a.date) if next_schedule_type or a.calendar_id.schedule_type == "fixed" else not a.date)
 
     @api.depends('hours_per_week', 'company_id.resource_calendar_id.hours_per_week')
     def _compute_full_time_required_hours(self):
@@ -127,13 +113,17 @@ class ResourceCalendar(models.Model):
     @api.depends('company_id', 'schedule_type')
     def _compute_attendance_ids(self):
         for calendar in self:
-            if not calendar._origin or (calendar._origin.company_id == calendar.company_id and calendar._origin.schedule_type == calendar.schedule_type):
+            if calendar._origin.company_id == calendar.company_id and calendar._origin.schedule_type == calendar.schedule_type:
+                # Origin pareil schedul type et fixed  à fix
                 continue
             company_calendar = calendar.company_id.resource_calendar_id
-            if company_calendar and company_calendar.schedule_type == calendar.schedule_type == "fixed":
+            if company_calendar and company_calendar.schedule_type == calendar.schedule_type == "fixed" or calendar.schedule_type == "fixed":
                 calendar.update({
-                    'attendance_ids': [(5, 0, 0)] + [
-                        (0, 0, attendance._copy_attendance_vals()) for attendance in company_calendar.attendance_ids],
+                    'attendance_ids': [(5, 0, 0)] + calendar._get_default_attendance_ids(calendar.company_id),
+                })
+            elif calendar.schedule_type == "variable":
+                calendar.update({
+                    'attendance_ids': [Command.delete(a.id) for a in calendar._attendances_to_unlink()],
                 })
 
     @api.depends('company_id')
