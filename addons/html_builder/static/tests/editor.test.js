@@ -1,6 +1,7 @@
-import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
+import { dummyBase64Img, setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
+import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import { insertText, pasteHtml } from "@html_editor/../tests/_helpers/user_actions";
 import { FontPlugin } from "@html_editor/main/font/font_plugin";
 import { isTextNode } from "@html_editor/utils/dom_info";
@@ -14,7 +15,7 @@ import {
     waitForNone,
 } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 
@@ -152,6 +153,43 @@ test("should apply default table classes on paste", async () => {
     });
     pasteHtml(editor, `<table><tr><td>1234</td></tr></table>`);
     expect(editor.document.querySelector("table")).toHaveClass("table table-bordered");
+});
+
+test("Reset transform button should appear after transforming image", async () => {
+    onRpc("/html_editor/get_image_info", async () => ({}));
+
+    const { getEditor } = await setupHTMLBuilder(`
+        <section>
+            <div class="o_not_editable">
+                <img style="width: 20%;" class="o_editable_media" src="${dummyBase64Img}"/>
+            </div>
+        </section>
+    `);
+    const editor = getEditor();
+    const img = editor.editable.querySelector("img");
+    await click(img);
+    await expectElementCount("[data-action-id=transformImage]", 1);
+    await animationFrame();
+    await click("[data-action-id=transformImage]");
+    await expectElementCount(".transfo-container", 1);
+    const rotateBtn = queryOne(".transfo-controls .fa-repeat");
+    const btnRect = rotateBtn.getBoundingClientRect(rotateBtn);
+    await manuallyDispatchProgrammaticEvent(rotateBtn, "mousedown", {
+        clientX: btnRect.left + 5,
+        clientY: btnRect.top + 5,
+    });
+    await manuallyDispatchProgrammaticEvent(rotateBtn, "mousemove", {
+        clientX: btnRect.left + 50,
+        clientY: btnRect.top + 50,
+    });
+    await manuallyDispatchProgrammaticEvent(rotateBtn, "mouseup", {
+        clientX: btnRect.left + 50,
+        clientY: btnRect.top + 50,
+    });
+    expect(img.style.transform).not.toEqual("");
+    await expectElementCount("[data-action-id=resetTransformImage]", 1);
+    await click("button.fa-undo");
+    expect(img.style.transform).toEqual("");
 });
 
 describe("toolbar dropdowns", () => {
