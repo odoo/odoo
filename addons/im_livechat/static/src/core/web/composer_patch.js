@@ -9,7 +9,7 @@ const composerPatch = {
         super.onKeydown(ev);
         if (
             ev.key === "Tab" &&
-            this.thread?.channel.channel_type === "livechat" &&
+            this.thread?.channel?.channel_type === "livechat" &&
             !this.props.composer.composerText
         ) {
             const threadChanged = this.store.goToOldestUnreadLivechatThread();
