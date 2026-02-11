@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="hr_work_entry.WorkEntryDashboard">
+        <div class="o_work_entry_dashboard" t-if="hasCounters">
+            <div class="o_work_entry_dashboard_cards">
+                <t t-foreach="state.counters" t-as="counter" t-key="counter.id">
+                    <div class="o_work_entry_card py-3">
+                        <strong class="o_work_entry_name"><t t-esc="counter.name"/></strong>
+                        <span class="o_work_entry_duration">
+                            <span t-att-class="counter.hasCap and counter.used > counter.cap ? 'text-danger' : ''">
+                                <t t-esc="counter.usedStr"/>
+                            </span>
+                            <t t-if="counter.hasCap">
+                                <span class="text-muted"> / <t t-esc="counter.capStr"/></span>
+                            </t>
+                        </span>
+                        <span class="text-uppercase o_work_entry_details p-1">
+                            <t t-esc="counter.periodLabel"/>
+                        </span>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>
