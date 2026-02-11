@@ -38,7 +38,7 @@ export class ImageTransformation extends Component {
         editable: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
         image: { validate: (p) => p.tagName === "IMG" },
         destroy: { type: Function },
-        onChange: { type: Function },
+        onChange: { type: Function, optional: true },
         onApply: { type: Function, optional: true },
         onComponentMounted: { type: Function, optional: true },
     };
@@ -239,7 +239,7 @@ export class ImageTransformation extends Component {
         }
         this.transfo.active = null;
         this.props.onApply?.();
-        this.props.onChange();
+        this.props.onChange?.();
     }
 
     mouseDown(ev) {
