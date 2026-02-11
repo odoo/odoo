@@ -1,14 +1,17 @@
-/**To load on the fly*/
 @media print {
-    html,
-    body,
-    html .o_web_client {
-        height: auto;
-    }
-    .o-spreadsheet {
-        height: auto !important;
-        .o-scrollbar {
-            display: none;
+    html:has(.o-spreadsheet) {
+        &,
+        body {
+            /* Needed to override knowledge global print style ... */
+            height: 100% !important;
+        }
+
+        .o_action_manager {
+            height: 100% !important;
+
+            .o_spreadsheet_container {
+                overflow: visible !important;
+            }
         }
     }
 }

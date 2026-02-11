@@ -19,7 +19,7 @@
             "spreadsheet_dashboard/static/src/bundle/**/*.js",
             "spreadsheet_dashboard/static/src/bundle/**/*.xml",
         ],
-        'spreadsheet.assets_print': [
+        'web.assets_web_print': [
             'spreadsheet_dashboard/static/src/print_assets/**/*',
         ],
         "web.assets_backend": [
