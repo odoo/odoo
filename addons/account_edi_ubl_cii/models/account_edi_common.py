@@ -393,14 +393,11 @@ class AccountEdiCommon(models.AbstractModel):
                 invoice.partner_id.vat = vat
 
     def _import_retrieve_and_fill_partner_bank_details(self, invoice, bank_details):
-        """ Retrieve the bank account, if no matching bank account is found, create it
-        """
         bank_details = list(set(map(sanitize_account_number, bank_details)))
         body = _("The following bank account numbers got retrieved during the import : %s", ", ".join(bank_details))
         invoice.with_context(no_new_invoice=True).message_post(body=body)
 
     def _import_fill_invoice_allowance_charge(self, tree, invoice, qty_factor):
-
         logs = []
         if '{urn:oasis:names:specification:ubl:schema:xsd' in tree.tag:
             is_ubl = True

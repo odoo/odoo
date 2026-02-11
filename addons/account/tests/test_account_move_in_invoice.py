@@ -1150,6 +1150,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         bank1 = self.env['res.partner.bank'].create({
             'acc_number': 'BE43798822936101',
             'partner_id': self.company_data['company'].partner_id.id,
+            'allow_out_payment': True,
         })
 
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({

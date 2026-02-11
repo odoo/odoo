@@ -202,3 +202,10 @@ class ResPartner(models.Model):
     def _peppol_eas_endpoint_depends(self):
         # extends account_edi_ubl_cii
         return super()._peppol_eas_endpoint_depends() + ['l10n_it_codice_fiscale']
+
+    def create_company(self):
+        res = super().create_company()
+        if res:
+            it_values = self._update_fields_values(('l10n_it_codice_fiscale', 'l10n_it_pa_index'))
+            self.parent_id.update(it_values)
+        return res
