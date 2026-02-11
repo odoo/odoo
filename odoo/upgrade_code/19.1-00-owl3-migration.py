@@ -3,6 +3,7 @@ import re
 
 EXCLUDED_PATH = (
     'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
+    'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml',
     'iot_drivers/static/src/',
     'web/static/src/owl2',
 )
@@ -351,6 +352,39 @@ def upgrade_usestate(file_manager, log_info, log_error):
         file_manager.print_progress(fileno, len(js_files))
 
 
+def upgrade_tportal(file_manager, log_info, log_error):
+    """Sub-task: Migrate t-portal, ignoring comments."""
+    path_pattern = re.compile('|'.join(EXCLUDED_PATH))
+    files = [
+        file for file in file_manager
+        if '/static/src/' in file.path._str
+        and file.path.suffix in ['.xml', '.js']
+        and not re.search(path_pattern, file.path._str)
+    ]
+    if not files:
+        return
+
+    reg_t_portal = re.compile(r"\bt-portal(?=\s*=\s*['\"])")
+
+    for fileno, file in enumerate(files, start=1):
+        try:
+            content = file.path.read_text(encoding='utf-8')
+        except UnicodeDecodeError as e:
+            log_error(file.path, f'Upgrade_code: skipping non-utf8 file({e})')
+            continue
+
+        if 't-portal' not in content:
+            continue
+
+        try:
+            content = reg_t_portal.sub('t-custom-portal', content)
+            file.content = content
+        except Exception as e:  # noqa: BLE001
+            log_error(file.path, e)
+
+        file_manager.print_progress(fileno, len(files))
+
+
 def upgrade(file_manager) -> str:
     """Main upgrade_code entry point."""
     collector = MigrationCollector(file_manager)
@@ -364,5 +398,6 @@ def upgrade(file_manager) -> str:
     collector.run_sub("Migrating useChildSubEnv", upgrade_usechildsubenv)
     collector.run_sub("Migrating useRef", upgrade_useref)
     collector.run_sub("Migrating useState", upgrade_usestate)
+    collector.run_sub("Migrating t-portal", upgrade_tportal)
 
     collector.finalize()
