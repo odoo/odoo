@@ -243,40 +243,42 @@ patch(ProductScreen.prototype, {
                     { simpleChoice: {}, textAnswer: {} }
                 );
                 // This will throw an error on creation if not possible (python constraint)
-                this.pos.models["event.registration"].create({
+                const event_registration = this.pos.models["event.registration"].create({
                     ...userData,
                     event_id: event,
                     event_ticket_id: ticket,
                     event_slot_id: slotSelected,
                     pos_order_line_id: line,
                     partner_id: this.pos.getOrder().partner_id,
-                    registration_answer_ids: Object.entries({
-                        ...textAnswer,
-                        ...globalTextAnswer,
-                    }).map(([questionId, answer]) => [
-                        "create",
-                        {
-                            question_id: this.pos.models["event.question"].get(
-                                parseInt(questionId)
-                            ),
-                            value_text_box: answer,
-                        },
-                    ]),
-                    registration_answer_choice_ids: Object.entries({
-                        ...simpleChoice,
-                        ...globalSimpleChoice,
-                    }).map(([questionId, answer]) => [
-                        "create",
-                        {
-                            question_id: this.pos.models["event.question"].get(
-                                parseInt(questionId)
-                            ),
-                            value_answer_id: this.pos.models["event.question.answer"].get(
-                                parseInt(answer)
-                            ),
-                        },
-                    ]),
                 });
+
+                const registration_answer_ids = Object.entries({
+                    ...textAnswer,
+                    ...globalTextAnswer,
+                }).map(([questionId, answer]) => ({
+                    question_id: this.pos.models["event.question"].get(parseInt(questionId)),
+                    value_text_box: answer,
+                }));
+
+                for (const answer of registration_answer_ids) {
+                    const record = this.pos.models["event.registration.answer"].create(answer);
+                    event_registration.update({ registration_answer_ids: [["link", record]] });
+                }
+
+                const registration_answer_choice_ids = Object.entries({
+                    ...simpleChoice,
+                    ...globalSimpleChoice,
+                }).map(([questionId, answer]) => ({
+                    question_id: this.pos.models["event.question"].get(parseInt(questionId)),
+                    value_answer_id: this.pos.models["event.question.answer"].get(parseInt(answer)),
+                }));
+
+                for (const answer of registration_answer_choice_ids) {
+                    const record = this.pos.models["event.registration.answer"].create(answer);
+                    event_registration.update({
+                        registration_answer_choice_ids: [["link", record]],
+                    });
+                }
             }
         }
     },
