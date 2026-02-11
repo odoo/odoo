@@ -17,7 +17,7 @@ function setFormActionToCreateOpportunity() {
         {
             content: "Open action select",
             trigger:
-                ".o-snippets-menu [data-container-title='Block'] [data-label='Action'] .dropdown-toggle",
+                ".o-snippets-menu [data-container-title='Form'] [data-label='Action'] .dropdown-toggle",
             run: "click",
         },
         {
@@ -120,7 +120,7 @@ registerWebsitePreviewTour(
         {
             content: "Open Sales Team select",
             trigger:
-                ".o-snippets-menu [data-container-title='Block'] [data-label='Sales Team'] .dropdown-toggle",
+                ".o-snippets-menu [data-container-title='Form'] [data-label='Sales Team'] .dropdown-toggle",
             run: "click",
         },
         {
