@@ -148,6 +148,8 @@ class IrUiView(models.Model):
 
         # 1. Get translations
         records_from.flush_model([name_field_from])
+        records_from = records_from.with_context(check_translations=True)
+        record_to = record_to.with_context(check_translations=True)
         existing_translation_dictionary = field_to.get_translation_dictionary(
             record_to[name_field_to],
             {lang: record_to.with_context(prefetch_langs=True, lang=lang)[name_field_to] for lang in langs if lang != lang_env}
@@ -178,7 +180,7 @@ class IrUiView(models.Model):
         }
         field_to._update_cache(record_to.with_context(prefetch_langs=True), new_value, dirty=True)
         # Call `write` to trigger compute etc (`modified()`)
-        record_to[name_field_to] = new_value[lang_env]
+        record_to.with_context(check_translations=False)[name_field_to] = new_value[lang_env]
 
     @api.model
     def _find_available_name(self, name, used_names):
