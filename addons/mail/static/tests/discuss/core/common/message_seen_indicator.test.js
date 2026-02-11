@@ -454,3 +454,37 @@ test("Show seen indicator on message with only attachment", async () => {
     await contains(".o-mail-MessageSeenIndicator");
     await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 2 });
 });
+
+test("show seen indicator on previous message when last message is notification", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    const [, notificationMessageId] = pyEnv["mail.message"].create([
+        {
+            author_id: serverState.partnerId,
+            body: "<p>Hello</p>",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            author_id: serverState.partnerId,
+            body: "<p>Call started</p>",
+            message_type: "notification",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
+    pyEnv["discuss.channel.member"].write(memberIds, { seen_message_id: notificationMessageId });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-MessageSeenIndicator");
+    await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 2 });
+});

@@ -409,10 +409,11 @@ export class DiscussChannel extends Record {
             // starts from most recent persistent messages to find early
             for (let i = this.persistentMessages.length - 1; i >= 0; i--) {
                 const message = this.persistentMessages[i];
-                if (!message.isSelfAuthored) {
-                    continue;
-                }
-                if (message.id > this.lastMessageSeenByAllId) {
+                if (
+                    !message.isSelfAuthored ||
+                    message.isNotification ||
+                    message.id > this.lastMessageSeenByAllId
+                ) {
                     continue;
                 }
                 res = message;
