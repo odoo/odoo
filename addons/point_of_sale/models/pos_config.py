@@ -169,8 +169,8 @@ class PosConfig(models.Model):
     current_user_id = fields.Many2one('res.users', string='Current Session Responsible', compute='_compute_current_session_user')
     other_devices = fields.Boolean(string="Other Devices", help="Connect devices to your PoS without an IoT Box.")
     preparation_devices = fields.Boolean(string="Preparation devices", help="Connect preparation printers to print to the bar, kitchen,...")
-    rounding_method = fields.Many2one('account.cash.rounding', string="Cash rounding")
-    cash_rounding = fields.Boolean(string="Cash Rounding")
+    rounding_method = fields.Many2one('account.cash.rounding', string="Rounding Method")
+    cash_rounding = fields.Boolean(string="Total Rounding")
     only_round_cash_method = fields.Boolean(string="Only apply rounding on cash")
     has_active_session = fields.Boolean(compute='_compute_current_session')
     manual_discount = fields.Boolean(string="Line Discounts", default=True)
@@ -450,7 +450,7 @@ class PosConfig(models.Model):
                         selection_value = val
                         break
                 raise ValidationError(_(
-                    "The cash rounding strategy of the point of sale %(pos)s must be: '%(value)s'",
+                    "The rounding strategy of the point of sale %(pos)s must be: '%(value)s'",
                     pos=config.name,
                     value=selection_value,
                 ))

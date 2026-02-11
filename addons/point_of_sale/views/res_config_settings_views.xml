@@ -87,7 +87,7 @@
                                 <setting string="Automatically validate order" help="Automatically validates orders paid with a payment terminal.">
                                     <field name="pos_auto_validate_terminal_payment"/>
                                 </setting>
-                                <setting string="Cash Rounding" invisible="use_kiosk_mode" documentation="/applications/sales/point_of_sale/pricing/cash_rounding.html" help="Define the smallest coinage of the currency used to pay by cash">
+                                <setting string="Total Rounding" invisible="use_kiosk_mode" documentation="/applications/sales/point_of_sale/pricing/cash_rounding.html" help="Define the smallest coinage of the currency used to pay by cash">
                                     <field name="pos_cash_rounding" readonly="pos_has_active_session"/>
                                     <div class="content-group mt16" invisible="not pos_cash_rounding">
                                         <div class="row mt16">
@@ -97,13 +97,13 @@
                                         <div class="row mt16">
                                             <div class="col">
                                                 <field name="pos_only_round_cash_method" readonly="pos_has_active_session"/>
-                                                <label string="Only on cash methods" for="pos_only_round_cash_method" class="o_light_label" />
+                                                <label string="Apply only on cash methods" for="pos_only_round_cash_method" class="o_light_label" />
                                             </div>
                                         </div>
                                     </div>
                                     <div class="mt8">
                                         <button name="%(account.rounding_list_action)d" icon="oi-arrow-right"
-                                                type="action" string="Cash Roundings" class="btn-link"
+                                                type="action" string="Roundings" class="btn-link"
                                                 invisible="not group_cash_rounding"/>
                                     </div>
                                 </setting>
