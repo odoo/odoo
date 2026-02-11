@@ -207,7 +207,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                         "markup",
                         (
                             '<div class="o_mail_notification" data-oe-type="channel-joined">invited <a href="#" data-oe-model="res.partner" data-oe-id="'
-                            f'{self.partner_employee.id}">@Ernest Employee</a> to the channel</div>'
+                            f'{self.partner_employee.id}">@Ernest Employee</a> to the conversation</div>'
                         ),
                     ],
                     # thread not renamed yet at this step
