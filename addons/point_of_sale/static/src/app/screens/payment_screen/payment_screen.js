@@ -228,7 +228,7 @@ export class PaymentScreen extends Component {
 
         this.dialog.add(NumberPopup, {
             title: tip.amount > 0 ? _t("Change Tip") : _t("Add Tip"),
-            startingValue: tip.value || amount,
+            startingValue: String(tip.value || amount || 0),
             startingType: tip.type || "fixed",
             types: [
                 { name: "fixed", symbol: this.pos.currency.symbol },
@@ -238,7 +238,7 @@ export class PaymentScreen extends Component {
                 this.onNewTip({ newValue, type, currentTipAmount: tip.amount, change }),
             formatDisplayedValue: (value, type) => {
                 if (type === "fixed") {
-                    return this.env.utils.formatCurrency(value, this.pos.currency);
+                    return this.env.utils.formatCurrency(parseFloat(value), this.pos.currency);
                 }
                 if (type === "percent") {
                     return `${value} %`;
