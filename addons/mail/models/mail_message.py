@@ -407,6 +407,8 @@ class MailMessage(models.Model):
             forbidden_doc_ids = set()
             try:
                 operation_result = records._check_access(record_operation)
+                if operation_result:
+                    records -= operation_result[0]
                 # Check that records really exist;
                 # lengthy way of checking first in cache and avoiding exists() call.
                 # see test_record_unlinked_orphan_activities
