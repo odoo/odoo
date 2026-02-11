@@ -248,6 +248,21 @@ test("Chat bubble preview works on author as email address", async () => {
     await contains(".o-mail-ChatBubble-preview:has(:text('md@oilcompany.fr: Some email message'))");
 });
 
+test("Chat bubble previews must retain any existing formatting", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["discuss.channel"].create({ name: "test channel" });
+    pyEnv["mail.message"].create({
+        body: "<p><strong><em>Formatted Text</em></strong></p>",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: partnerId,
+    });
+    setupChatHub({ folded: [partnerId] });
+    await start();
+    await hover(".o-mail-ChatBubble");
+    await contains(".o-mail-ChatBubble-preview p strong em:text('Formatted Text')");
+});
+
 test("chat bubbles are synced between tabs", async () => {
     const pyEnv = await startServer();
     const marcPartnerId = pyEnv["res.partner"].create({ name: "Marc" });

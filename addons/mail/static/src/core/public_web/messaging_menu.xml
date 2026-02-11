@@ -28,7 +28,7 @@
                         <t t-esc="message?.authorName or ''"/>
                     </t>
                     <t t-set-slot="body">
-                        <span t-out="message?.previewText" t-att-class="{ 'opacity-75': message?.isEmpty }"/>
+                        <span class="o-mail-messagePreview" t-out="message?.previewText" t-att-class="{ 'opacity-75': message?.isEmpty }"/>
                     </t>
                 </NotificationItem>
                 <t t-set="itemIndex" t-value="itemIndex + 1"/>
@@ -62,7 +62,7 @@
                         <t t-if="message?.hasOnlyAttachments">
                             <t t-out="message.previewText" />
                         </t>
-                        <span t-else="" t-out="message?.previewText" t-att-class="{ 'opacity-75': message?.isEmpty }"/>
+                        <span class="o-mail-messagePreview" t-else="" t-out="message?.previewText" t-att-class="{ 'opacity-75': message?.isEmpty }"/>
                     </t>
                     <t t-set-slot="icon">
                         <CountryFlag t-if="thread.channel?.showCorrespondentCountry" country="thread.channel.correspondentCountry" class="'o-mail-NotificationItem-country position-absolute border shadow-sm'"/>

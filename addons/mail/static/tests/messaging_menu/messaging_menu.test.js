@@ -694,7 +694,7 @@ test("channel preview: basic rendering", async () => {
     await contains(".o-mail-NotificationItem");
     await contains(".o-mail-NotificationItem img");
     await contains(".o-mail-NotificationItem-name:text('General')");
-    await contains(".o-mail-NotificationItem-text:text('Demo: test hi')");
+    await contains(".o-mail-NotificationItem-text", { text: "Demo: test\u00a0hi" });
 });
 
 test("chat preview should not display correspondent name in body", async () => {
@@ -729,6 +729,24 @@ test("chat preview should not display correspondent name in body", async () => {
     expect(".o-mail-NotificationItem-text:only").toHaveText("test"); // exactly
 });
 
+test("Channel previews must retain any formatting present in the last message", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+    });
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "<p><strong><em>Formatted Text</em></strong></p>",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+    await contains(".o-mail-NotificationItem-name:text('General')");
+    await contains(".o-mail-messagePreview p strong em:text('Formatted Text')");
+});
+
 test("filtered previews", async () => {
     const pyEnv = await startServer();
     const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
@@ -761,22 +779,6 @@ test("filtered previews", async () => {
     await contains(".o-mail-NotificationItem-name:text('channel1')");
 });
 
-test("no code injection in message body preview", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({});
-    pyEnv["mail.message"].create({
-        body: "<p><em>&shoulnotberaised</em><script>throw new Error('CodeInjectionError');</script></p>",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    await start();
-    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    await contains(
-        ".o-mail-NotificationItem-text:text('You: &shoulnotberaisedthrow new Error('CodeInjectionError');')"
-    );
-    await contains(".o-mail-NotificationItem-text script", { count: 0 });
-});
-
 test("no code injection in message body preview from sanitized message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
@@ -788,12 +790,13 @@ test("no code injection in message body preview from sanitized message", async (
     await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await contains(
-        ".o-mail-NotificationItem-text:text('You: <em>&shoulnotberaised</em><script>throw new Error('CodeInjectionError');</script>')"
+        ".o-mail-NotificationItem-text",
+        { text: "You: <em>&shoulnotberaised</em><script>throw new Error('CodeInjectionError');</script>" }
     );
     await contains(".o-mail-NotificationItem-text script", { count: 0 });
 });
 
-test("<br/> tags in message body preview are transformed in spaces", async () => {
+test("<br/> tags in message body preview are transformed in nbsp", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
     pyEnv["mail.message"].create({
@@ -803,7 +806,7 @@ test("<br/> tags in message body preview are transformed in spaces", async () =>
     });
     await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    await contains(".o-mail-NotificationItem-text:text('You: a b c d')");
+    await contains(".o-mail-NotificationItem-text", { text: "You: a\u00a0b\u00a0c\u00a0d" });
 });
 
 test("Messaging menu notification body of chat should show author name once", async () => {

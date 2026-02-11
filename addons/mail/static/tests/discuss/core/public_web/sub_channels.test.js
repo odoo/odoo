@@ -376,3 +376,23 @@ test("can mention all group chat members inside its sub-thread", async () => {
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion", { count: 2 });
 });
+
+test("Subchannel last-message preview should preserve text formatting", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const subChannel = pyEnv["discuss.channel"].create({
+        name: "New Thread",
+        parent_channel_id: channelId,
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+    });
+    pyEnv["mail.message"].create({
+        body: "<p><strong><em>Formatted Text</em></strong></p>",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: subChannel,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[name='show-threads']");
+    await contains(".o-mail-SubChannelPreview-lastMessage p strong em:text('Formatted Text')");
+});

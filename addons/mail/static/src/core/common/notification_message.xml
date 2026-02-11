@@ -8,7 +8,7 @@
                 <span class="text-muted" t-esc="callInformation"/>
             </t>
             <t t-elif="['channel_rename', 'thread_deletion'].includes(message.notificationType)">
-                <span class="text-muted" t-out="message.inlineBody"/>
+                <span class="text-muted" t-out="message.notificationBody"/>
             </t>
             <t t-else="">
                 <span class="o-mail-NotificationMessage-author d-inline text-muted" t-if="message.authorName and !message.richBody.includes(htmlEscape(message.authorName))" t-esc="message.authorName"/> <span class="text-muted" t-out="message.richBody"/>

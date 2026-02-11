@@ -8,6 +8,7 @@ import {
     generateEmojisOnHtml,
     getNonEditableMentions,
     htmlToTextContentInline,
+    normalizeBrAndBlocks,
 } from "@mail/utils/common/format";
 
 import { browser } from "@web/core/browser/browser";
@@ -418,7 +419,29 @@ export class Message extends Record {
         return false;
     }
 
-    inlineBody = fields.Html("", {
+    notificationBody = fields.Html("", {
+        /** @this {import("models").Message} */
+        compute() {
+            switch (this.notificationType) {
+                case "call":
+                    return _t("%(caller)s started a call", { caller: this.authorName });
+                case "thread_deletion":
+                    return _t('%(user)s deleted the thread "%(thread_name)s"', {
+                        user: this.authorName,
+                        thread_name: decorateEmojis(htmlToTextContentInline(this.body)),
+                    });
+                case "channel_rename":
+                    const name = htmlToTextContentInline(this.body);
+                    const params = { user: this.authorName, name: markup`<b>${name}</b>` };
+                    return this.thread?.channel?.parent_channel_id
+                        ? _t("%(user)s changed the thread name to %(name)s", params)
+                        : _t("%(user)s changed the channel name to %(name)s", params);
+            }
+            return htmlToTextContentInline(this.body);
+        },
+    });
+
+    richInlineBody = fields.Html("", {
         /** @this {import("models").Message} */
         compute() {
             if (this.poll) {
@@ -428,29 +451,13 @@ export class Message extends Record {
                 }
                 return markup`<i class="fa fa-fw o-me-0_5 oi oi-view-cohort"></i>${text}`;
             }
-            if (this.notificationType === "call") {
-                return _t("%(caller)s started a call", { caller: this.authorName });
-            }
-            if (this.notificationType === "thread_deletion") {
-                return _t('%(user)s deleted the thread "%(thread_name)s"', {
-                    user: this.authorName,
-                    thread_name: decorateEmojis(htmlToTextContentInline(this.body)),
-                });
-            }
-            if (this.notificationType === "channel_rename") {
-                const name = htmlToTextContentInline(this.body);
-                const params = { user: this.authorName, name: markup`<b>${name}</b>` };
-                return this.thread?.channel?.parent_channel_id
-                    ? _t("%(user)s changed the thread name to %(name)s", params)
-                    : _t("%(user)s changed the channel name to %(name)s", params);
-            }
             if (this.isEmpty) {
                 return _t("This message has been removed");
             }
             if (!this.body) {
                 return "";
             }
-            return decorateEmojis(htmlToTextContentInline(this.body));
+            return normalizeBrAndBlocks(this.richBody);
         },
     });
 
@@ -496,7 +503,7 @@ export class Message extends Record {
         compute() {
             let messageBody = "";
             if (!this.hasOnlyAttachments) {
-                return this.inlineBody || this.subtype_id?.description;
+                return this.richInlineBody || this.subtype_id?.description;
             }
             const attachments = this.attachment_ids;
             switch (attachments.length) {
