@@ -22,6 +22,8 @@ import {
 import { dummyBase64Img } from "@html_builder/../tests/helpers";
 import { testImg } from "./image_test_helpers";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
+import { IconSelector } from "@html_editor/main/media/media_dialog/icon_selector";
+import { ImageSelector } from "@html_editor/main/media/media_dialog/image_selector";
 
 defineWebsiteModels();
 
@@ -311,4 +313,68 @@ test("Save image with correct parameter", async () => {
         </div>`);
     await contains(".o-snippets-top-actions button:contains(Save)").click();
     await expect.waitForSteps(["modify_image"]);
+});
+
+test("Replacing an icon with an image removes incompatible icon styles and attributes", async () => {
+    onRpc("ir.attachment", "search_read", () => [
+        {
+            id: 1,
+            name: "logo",
+            mimetype: "image/png",
+            image_src: "/web/static/img/logo2.png",
+            access_token: false,
+            public: true,
+        },
+    ]);
+
+    // Identify icon styles that are not compatible with images
+    const incompatibleIconStyles = IconSelector.mediaSpecificStyles.filter(
+        (style) => !ImageSelector.mediaSpecificStyles.includes(style)
+    );
+
+    // Build inline style string dynamically
+    const iconInlineStyle = incompatibleIconStyles.map((style) => `${style}: none;`).join(" ");
+
+    // Border styling (compatible by both elements), so it will not be removed
+    const sharedStyling =
+        "border-color: rgb(255, 0, 255) !important; " + "border-style: dotted !important;";
+
+    const iconExtraClasses = IconSelector.mediaExtraClasses;
+
+    // For regex-based classes, define representative static values manually
+    const regexClassExamples = {
+        "/^text-\\S+$/": "text-primary",
+        "/^bg-\\S+$/": "bg-success",
+        "/^fa-\\S+$/": "fa-heart",
+        "/^o_cc\\d*$/": "o_cc1",
+    };
+
+    const iconClasses = iconExtraClasses.map((cls) => {
+        if (typeof cls === "string") {
+            return cls;
+        }
+        const key = cls.toString();
+        return regexClassExamples[key];
+    });
+    // Include base icon-specific classes (e.g., 'fa')
+    iconClasses.push(...IconSelector.mediaSpecificClasses);
+
+    const iconAndImageCommonClasses = iconClasses.filter((cls) =>
+        ImageSelector.mediaExtraClasses.includes(cls)
+    );
+
+    const iconHTML = `<i class="${iconClasses.join(
+        " "
+    )}" style="${iconInlineStyle} ${sharedStyling}" contenteditable="false"/>`;
+    await setupWebsiteBuilder(iconHTML);
+
+    expect(".modal-content").toHaveCount(0);
+    await dblclick(":iframe .fa-heart");
+    await animationFrame();
+    expect(".modal-content").toHaveCount(1);
+    await contains("a.nav-link:contains(Images)").click();
+    await contains(".o_select_media_dialog [title='logo']").click();
+    await waitFor(":iframe .o_we_custom_image");
+    expect(":iframe img.o_we_custom_image").toHaveClass(iconAndImageCommonClasses);
+    expect(":iframe img.o_we_custom_image").toHaveAttribute("style", sharedStyling);
 });
