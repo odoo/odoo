@@ -37,3 +37,43 @@ test("drop beside dropzone inserts the snippet", async () => {
     </div>
 </section>`);
 });
+
+test("excludeParent correctly disables dropzones", async () => {
+    const snippetContent = [
+        `<div name="button" data-oe-snippet-id="123">
+            <a class="btn btn-primary" href="#" data-snippet="s_button">Button</a>
+        </div>`,
+    ];
+    const dropzoneSelectors = [
+        {
+            selector: "a",
+            dropNear: "strong",
+            excludeParent: ".drop_disabled",
+        },
+    ];
+    const { contentEl } = await setupHTMLBuilder(
+        `<p class="drop_enabled">
+            <strong>Can drop an 'a' element as a sibling here </strong>
+        </p>
+        <p class="drop_disabled">
+            <strong>Can't drop an 'a' element as a sibling here </strong>
+        </p>`,
+        {
+            snippetContent,
+            dropzoneSelectors,
+        }
+    );
+    const { moveTo, drop } = await contains(
+        ".o-snippets-menu #snippet_content .o_snippet_thumbnail[data-snippet='s_button']"
+    ).drag();
+
+    // .drop_disabled element shouldn't have any dropzones
+    expect(":iframe .drop_disabled .oe_drop_zone").toHaveCount(0);
+    expect(":iframe .drop_enabled .oe_drop_zone").toHaveCount(2);
+
+    await moveTo(contentEl.querySelector(".drop_disabled"));
+    await drop();
+    // should drop it inside the drop_enabled element
+    expect(":iframe .drop_disabled a.btn").toHaveCount(0);
+    expect(":iframe .drop_enabled a.btn").toHaveCount(1);
+});
