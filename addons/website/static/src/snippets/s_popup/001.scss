@@ -24,10 +24,9 @@
     .s_popup_size_full {
         padding: 0 !important;
         max-width: 100%;
+        margin : 0 10px;
 
         > .modal-content {
-            // Use the backdrop color as background-color
-            background-color: transparent;
             box-shadow: none;
             border-radius: 0;
         }
@@ -35,9 +34,9 @@
 
     // Position option
     .modal-dialog {
-        margin: 0 0 0 auto;
         min-height: 100%;
         &:not(.s_popup_size_full) {
+            margin: 0 0 0 auto;
             padding: $spacer !important;
         }
     }
@@ -46,7 +45,9 @@
     }
     .s_popup_middle .modal-dialog {
         align-items: center;
-        margin-right: auto;
+        &:not(.s_popup_size_full) {
+            margin-right: auto;
+        }
     }
     .s_popup_bottom .modal-dialog {
         align-items: flex-end;
