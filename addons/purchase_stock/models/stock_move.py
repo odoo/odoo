@@ -181,7 +181,7 @@ class StockMove(models.Model):
                 continue
             if move.product_id != self.product_id:
                 continue
-            if move.date > self.date or (move.date == self.date and move.id > self.id):
+            if move.date > self.date or (move.date == self.date and move.id >= self.id):
                 continue
             if move.is_in or move.is_dropship:
                 other_candidates_qty += move._get_valued_qty()
