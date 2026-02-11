@@ -11,6 +11,7 @@
         .carousel-control-prev {
             aspect-ratio: var(--o-wsale-card-thumb-aspect-ratio, 1/1);
             width: var(--o-wsale-dynamic-snippet-col-size) !important;
+            --o-wsale-dynamic-snippet-control-scale: 0.2;
             transform: scaleX(.2);
             bottom: auto;
             isolation: isolate;
@@ -81,10 +82,10 @@
     @include media-breakpoint-up(md) {
         // Prevented horizontal overflow of control buttons.
         .carousel-control-prev {
-            transform: translateX(50%); 
+            transform: translateX(50%) scaleX(var(--o-wsale-dynamic-snippet-control-scale, 1));
         }
         .carousel-control-next {
-            transform: translateX(-50%); 
+            transform: translateX(-50%) scaleX(var(--o-wsale-dynamic-snippet-control-scale, 1));
         }
     }
 }
