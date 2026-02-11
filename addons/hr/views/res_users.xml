@@ -87,7 +87,7 @@
                 <xpath expr="//page[@name='calendar']" position="after">
                     <page name="private_information" string="Private">
                         <group>
-                            <group string="Private Information">
+                            <group string="Private Address &amp; Contact">
                                 <field name="employee_ids" invisible="1"/>
                                 <label for="private_street" string="Private Address"/>
                                 <div class="o_address_format">
@@ -104,6 +104,31 @@
                             <group string="Emergency Contact">
                                 <field name="emergency_contact" string="Contact Name" placeholder="e.g. John Doe"/>
                                 <field name="emergency_phone" string="Contact Phone" widget="phone"/>
+                            </group>
+                            <group string="Family" name="hr_family_group">
+                                <field name="marital"/>
+                                <field name="spouse_complete_name" invisible="marital not in ['married', 'cohabitant']"/>
+                                <field name="spouse_birthdate" invisible="marital not in ['married', 'cohabitant']"/>
+                                <field name="children"/>
+                            </group>
+                            <group string="Personal Information" name="hr_personal_information">
+                                <field name="legal_name"/>
+                                <label for="birthday"/>
+                                <div class="o_row" name="div_birthday">
+                                    <field name="birthday" class="o_hr_narrow_field"/>
+                                    <span invisible="not birthday">
+                                        <label for="birthday_public_display"
+                                               class="fw-bold text-900 form-check-label ms-3"/>
+                                        <field name="birthday_public_display" class="ms-3"/>
+                                    </span>
+                                </div>
+                                <label for="place_of_birth"/>
+                                <div class="o_row" name="birth_location">
+                                    <field name="place_of_birth" class="oe_inline o_hr_narrow_field" nolabel="1" placeholder="City"/>
+                                    <div class="mx-3 flex-grow-0">─</div>
+                                    <field name="country_of_birth" class="oe_inline o_hr_narrow_field" nolabel="1" placeholder="Country"/>
+                                </div>
+                                <field name="sex" string="Gender"/>
                             </group>
                         </group>
                     </page>

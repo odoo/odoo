@@ -115,6 +115,20 @@ class ResUsers(models.Model):
     employee_count = fields.Integer(compute='_compute_employee_count')
     employee_resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Employee's Working Hours", readonly=True)
     bank_account_ids = field_employee(fields.Many2many, 'bank_account_ids', comodel_name='res.partner.bank')
+    marital = field_employee(fields.Selection, 'marital', string="Marital Status", user_writeable=True,
+        selection=lambda self: self.env["hr.employee"]._fields["marital"]._description_selection(self.env))
+    spouse_complete_name = field_employee(fields.Char, 'spouse_complete_name', string="Spouse Legal Name", user_writeable=True)
+    spouse_birthdate = field_employee(fields.Date, 'spouse_birthdate', user_writeable=True)
+    children = field_employee(fields.Integer, 'children', string="Dependent Children", user_writeable=True)
+    legal_name = field_employee(fields.Char, 'legal_name', user_writeable=True,
+        help="The employee's official name as per government-issued or legal documents.")
+    birthday = field_employee(fields.Date, 'birthday', user_writeable=True)
+    birthday_public_display = field_employee(fields.Boolean, 'birthday_public_display', string="Show to all employees", user_writeable=True)
+    place_of_birth = field_employee(fields.Char, 'place_of_birth', user_writeable=True)
+    country_of_birth = field_employee(fields.Many2one, 'country_of_birth', comodel_name='res.country', user_writeable=True)
+    sex = field_employee(fields.Selection, 'sex', user_writeable=True,
+        selection=lambda self: self.env["hr.employee"]._fields["sex"]._description_selection(self.env),
+        help="This is the legal sex as recognized by the state, used for official and statutory purposes.")
 
     create_employee = fields.Boolean(store=False, default=False, copy=False, string="Technical field, whether to create an employee")
     create_employee_id = fields.Many2one('hr.employee', store=False, copy=False, string="Technical field, bind user to this employee on create")

@@ -9,7 +9,7 @@ from odoo.fields import Domain
 from odoo.tests import Form, users, new_test_user, HttpCase, tagged, TransactionCase
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tools import mute_logger
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, AccessError
 from psycopg2.errors import NotNullViolation
 
 
@@ -720,6 +720,71 @@ class TestHrEmployee(TestHrCommon):
                 self.assertEqual(employees.ids, [archived_emp.id])
             if presence_state == 'out_of_working_hour':
                 self.assertEqual(employees.ids, [out_working_emp.id])
+
+    def test_employee_can_edit_proxy_fields_on_own_user(self):
+        user = new_test_user(
+            self.env,
+            login='emp_test',
+            groups='base.group_user',
+        )
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee Test',
+            'user_id': user.id,
+        })
+
+        user_env = user.with_user(user)
+
+        vals = {
+            'legal_name': 'Legal Name Self',
+            'children': 2,
+            'birthday': date(1990, 1, 1),
+            'birthday_public_display': True,
+            'place_of_birth': 'Brussels',
+            'country_of_birth': self.env.ref('base.be').id,
+            'marital': 'married',
+            'spouse_complete_name': 'Alex Test',
+            'spouse_birthdate': date(1991, 2, 3),
+            'sex': 'male',
+        }
+        user_env.write(vals)
+
+        self.assertEqual(user_env.legal_name, vals['legal_name'])
+        self.assertEqual(user_env.children, vals['children'])
+        self.assertEqual(user_env.birthday, vals['birthday'])
+        self.assertEqual(user_env.birthday_public_display, vals['birthday_public_display'])
+        self.assertEqual(user_env.place_of_birth, vals['place_of_birth'])
+        self.assertEqual(user_env.country_of_birth.id, vals['country_of_birth'])
+        self.assertEqual(user_env.marital, vals['marital'])
+        self.assertEqual(user_env.spouse_complete_name, vals['spouse_complete_name'])
+        self.assertEqual(user_env.spouse_birthdate, vals['spouse_birthdate'])
+        self.assertEqual(user_env.sex, vals['sex'])
+
+        self.assertEqual(employee.legal_name, vals['legal_name'])
+        self.assertEqual(employee.children, vals['children'])
+        self.assertEqual(employee.birthday, vals['birthday'])
+        self.assertEqual(employee.birthday_public_display, vals['birthday_public_display'])
+        self.assertEqual(employee.place_of_birth, vals['place_of_birth'])
+        self.assertEqual(employee.country_of_birth.id, vals['country_of_birth'])
+        self.assertEqual(employee.marital, vals['marital'])
+        self.assertEqual(employee.spouse_complete_name, vals['spouse_complete_name'])
+        self.assertEqual(employee.spouse_birthdate, vals['spouse_birthdate'])
+        self.assertEqual(employee.sex, vals['sex'])
+
+    def test_employee_cannot_edit_others_proxy_fields(self):
+        user1 = new_test_user(self.env, login='emp_u1', groups='base.group_user')
+        user2 = new_test_user(self.env, login='emp_u2', groups='base.group_user')
+
+        emp1 = self.env['hr.employee'].create({'name': 'Emp 1', 'user_id': user1.id})
+        self.env['hr.employee'].create({'name': 'Emp 2', 'user_id': user2.id})
+
+        with self.assertRaises(AccessError):
+            user1.with_user(user2).write({
+                'legal_name': 'Hacked',
+                'children': 99,
+            })
+
+        self.assertNotEqual(emp1.sudo().legal_name, 'Hacked')
+        self.assertNotEqual(emp1.sudo().children, 99)
 
 
 @tagged('-at_install', 'post_install')
