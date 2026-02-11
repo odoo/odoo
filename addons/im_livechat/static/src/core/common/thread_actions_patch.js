@@ -9,6 +9,8 @@ patch(ThreadAction.prototype, {
             "restart",
             "call-settings",
             "meeting-chat",
+            "leave",
+            "notification-settings",
         ];
         if (
             channel?.channel_type === "livechat" &&

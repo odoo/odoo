@@ -14,7 +14,7 @@
                 <span t-elif="member.rtcSession?.is_deaf" class="p-1 fa fa-deaf opacity-75"/>
                 <span t-if="member.rtcSession?.raisingHand" class="p-1 fa fa-hand-paper-o"/>
             </span>
-            <div class="o-discuss-ChannelMember-actions" t-att-class="{
+            <div t-if="actions.actions.length" class="o-discuss-ChannelMember-actions" t-att-class="{
                 'd-none': !showingActions.isOpen and !store.useMobileView,
                 'd-flex': showingActions.isOpen or store.useMobileView,
             }">

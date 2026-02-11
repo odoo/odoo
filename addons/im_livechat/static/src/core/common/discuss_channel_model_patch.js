@@ -129,7 +129,7 @@ const discussChannelPatch = {
         if (this.self_member_id?.livechat_member_type === "visitor") {
             return false;
         }
-        return super.showImStatus;
+        return (this.channel_type === "livechat" && this.correspondent) || super.showImStatus;
     },
     get allow_invite_by_email() {
         return this.channel_type === "livechat" || super.allow_invite_by_email;

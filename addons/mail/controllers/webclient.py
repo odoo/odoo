@@ -54,7 +54,7 @@ class WebclientController(ThreadController):
     @classmethod
     def _process_request_for_all(self, store: Store, name, params):
         if name == "init_messaging":
-            if not request.env.user._is_public():
+            if request.env.user._is_internal():
                 # sudo: bus.bus: reading non-sensitive last id
                 bus_last_id = request.env["bus.bus"].sudo()._bus_last_id()
                 store.add_global_values(
