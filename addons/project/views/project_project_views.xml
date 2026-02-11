@@ -93,7 +93,7 @@
                                     <!-- Always display the whole alias in edit mode. It depends in read only -->
                                     <!-- Need to add alias_id in view for getting alias_domain_id by default -->
                                     <field name="alias_id" invisible="1"/>
-                                    <label for="alias_name" string="Email Alias" invisible="is_template"/>
+                                    <label for="alias_name" string="Project's Email" invisible="is_template"/>
                                     <field name="alias_email" widget="email" readonly="1" nolabel="1" groups="!project.group_project_manager" invisible="is_template"/>
                                     <div class="row" groups="project.group_project_manager" invisible="is_template">
                                         <div class="d-flex col-10 p-0">
