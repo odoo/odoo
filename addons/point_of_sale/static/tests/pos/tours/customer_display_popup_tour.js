@@ -33,5 +33,10 @@ registry.category("web_tour.tours").add("customer_display_shows_qr_popup", {
                     }
                 },
             },
+            {
+                isActive: ["mobile"],
+                content: "Check that the Qr popup has close button",
+                trigger: ".o-overlay-item .modal .modal-body button.button.btn-secondary",
+            },
         ].flat(),
 });
