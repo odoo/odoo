@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 from dateutil.rrule import DAILY, rrule
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import float_compare
 from odoo.tools.date_utils import float_to_time, localized, to_timezone
@@ -85,6 +85,14 @@ class ResourceCalendar(models.Model):
         ('fixed', 'Fixed'),
         ('variable', 'Variable')],
         string='Calendar Type', default='fixed', required=True)
+
+    @api.constrains('attendance_ids')
+    def _check_attendance_ids(self):
+        for calendar in self:
+            if calendar.attendance_ids:
+                first_attendance_has_date = calendar.attendance_ids[0].date
+                if len(calendar.attendance_ids) != len(calendar.attendance_ids.filtered(lambda a: bool(a.date) == first_attendance_has_date)):
+                    raise ValidationError(self.env._("You cannot have attendances based on weekday and date in the same calendar"))
 
     # --------------------------------------------------
     # Compute Methods

@@ -15,26 +15,31 @@ export class ScheduleTypeConfirmRadioField extends RadioField {
      * @override
      */
     async onChange(value) {
-        const isCalendarReferenced = this.props.record.resId
-            ? await this.orm.call("resource.calendar", "is_calendar_referenced", [
-                  [this.props.record.resId],
-              ])
-            : null;
-        if (isCalendarReferenced) {
-            this.dialog.add(ConfirmationDialog, {
-                title: "Calendar Type Change",
-                body: _t(
-                    "Are you sure? This calendar is already used.\nAll the attendances will be deleted for this calendar"
-                ),
-                confirmLabel: _t("Continue"),
-                confirm: () => {
-                    super.onChange(...arguments);
-                    this.props.record.save();
-                },
-                cancel: () => this.props.record.load(),
-            });
-        } else {
+        if (!this.props.record.resId) {
             super.onChange(...arguments);
+            this.props.record.save();
+        } else {
+            const isCalendarReferenced = await this.orm.call(
+                "resource.calendar",
+                "is_calendar_referenced",
+                [[this.props.record.resId]]
+            );
+            if (isCalendarReferenced) {
+                this.dialog.add(ConfirmationDialog, {
+                    title: "Calendar Type Change",
+                    body: _t(
+                        "Are you sure? This calendar is already used.\nAll the attendances will be deleted for this calendar"
+                    ),
+                    confirmLabel: _t("Continue"),
+                    confirm: () => {
+                        super.onChange(...arguments);
+                        this.props.record.save();
+                    },
+                    cancel: () => this.props.record.load(),
+                });
+            } else {
+                super.onChange(...arguments);
+            }
         }
     }
 }

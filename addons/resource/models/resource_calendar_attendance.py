@@ -79,10 +79,6 @@ class ResourceCalendarAttendance(models.Model):
         for (att_calendar, att_date, att_dayofweek), attendances in self.grouped(lambda a: (a.calendar_id, a.date, a.dayofweek)).items():
             intervals_attendances = []
             duration_per_date = defaultdict(float)
-            if att_calendar.schedule_type == 'fixed' and att_date:
-                raise ValidationError(self.env._("You cannot set a date specific attendance on a fixed schedule type calendar."))
-            if att_calendar.schedule_type == 'variable' and not att_date:
-                raise ValidationError(self.env._("You cannot set a weekday specific attendance on a variable schedule type calendar."))
             for attendance in att_by_date_overlappable[att_calendar, att_date] or att_by_weekday_overlappable[att_calendar, att_dayofweek]:
                 if attendance.duration_hours <= 0 or attendance.duration_hours > 24:
                     raise ValidationError(self.env._("Attendance duration must be between 0 and 24 hours"))
