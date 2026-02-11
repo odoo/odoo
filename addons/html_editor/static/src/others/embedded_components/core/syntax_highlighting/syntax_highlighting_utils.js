@@ -46,10 +46,20 @@ export const newlinesToLineBreaks = (element, doc = element.ownerDocument || doc
  */
 export const getPreValue = (pre) => {
     // Trailing br gives \n in innerText but should not be visible.
-    const trailingBrs = pre.innerHTML.match(/(<br>)+$/)?.length || 0;
-    return pre.innerText
-        .slice(0, pre.innerText.length - (trailingBrs > 1 ? trailingBrs - 1 : trailingBrs))
-        .replace(/[\u200B\uFEFF]/g, "");
+    const html = pre.innerHTML;
+    const hasTrailingBr = /<br\s*\/?>$/i.test(html);
+    let text = html
+        .replace(/<br\s*\/?>/gi, "\n")
+        .replace(/<[^>]+>|[\u200B\uFEFF]/g, "")
+        .replace(
+            /&(amp|lt|gt|#x27|quot|#x60);/g,
+            (_, entity) =>
+                ({ amp: "&", lt: "<", gt: ">", "#x27": "'", quot: '"', "#x60": "`" }[entity])
+        );
+    if (hasTrailingBr && text.endsWith("\n")) {
+        text = text.slice(0, -1);
+    }
+    return text;
 };
 
 /**
