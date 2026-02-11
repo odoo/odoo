@@ -12,7 +12,7 @@ registry.category("web_tour.tours").add("time_off_request_calendar_view", {
         },
         {
             content: "Click on the first Thursday of the year",
-            trigger: ".fc-daygrid-day.fc-day-thu .fc-daygrid-day-number",
+            trigger: ".fc-daygrid-day.fc-day-thu:not(.fc-day-disabled) .fc-daygrid-day-number",
             run: "click",
         },
         {
