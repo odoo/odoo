@@ -29,11 +29,8 @@ class DigestDigest(models.Model):
     def _get_kpi_custom_settings(self, company, user):
         res = super()._get_kpi_custom_settings(company, user)
         menu_id = self.env.ref('crm.crm_menu_root').id
-        res['kpi_action']['kpi_crm_opportunities_won'] = f'crm.crm_lead_action_pipeline?menu_id={menu_id}'
-        if user.has_group('crm.group_use_lead'):
-            res['kpi_action']['kpi_crm_lead_created'] = f'crm.crm_lead_all_leads?menu_id={menu_id}'
-        else:
-            res['kpi_action']['kpi_crm_lead_created'] = f'crm.crm_lead_action_pipeline?menu_id={menu_id}'
+        res['kpi_action']['kpi_crm_opportunities_won'] = f'crm.action_crm_opportunity_report_won?menu_id={menu_id}'
+        res['kpi_action']['kpi_crm_lead_created'] = f'crm.action_crm_lead_report_active_leads?menu_id={menu_id}'
         res['kpi_sequence']['kpi_crm_lead_created'] = 4550
         res['kpi_sequence']['kpi_crm_opportunities_won'] = 4555
         return res

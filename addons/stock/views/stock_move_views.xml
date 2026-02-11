@@ -410,6 +410,7 @@
                     <filter string="Scrapped" name="scrapped" domain="[('is_scrap', '=', True)]" invisible="context.get('from_scrap_menu')"/>
                     <separator/>
                     <filter string="Date" name="today" date="date" help="Scheduled or processing date"/>
+                    <filter string="Last Month" name="filter_last_month" domain="[('picking_id.date_done', '&gt;=', '-1m'), ('picking_id.date_done', '&lt;', 'now')]" invisible="1"/>
                     <group>
                         <filter string="Product" name="by_product" domain="[]"  context="{'group_by': 'product_id'}"/>
                         <filter string="Operation Type" name="groupby_picking_type_id" domain="[]"  context="{'group_by': 'picking_type_id'}"/>
@@ -445,7 +446,7 @@
         </record>
 
         <record id="stock_move_action_incoming" model="ir.actions.act_window">
-            <field name="name">Stock Moves (receipts)</field>
+            <field name="name">Receipts</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_id" ref="view_move_tree"/>
@@ -453,7 +454,8 @@
             <field name="context">{
                 'search_default_done': 1,
                 'search_default_groupby_location_id': 2,
-                'search_default_incoming': 3
+                'search_default_incoming': 3,
+                'search_default_filter_last_month': 1,
             }</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -467,7 +469,7 @@
         </record>
 
         <record id="stock_move_action_outgoing" model="ir.actions.act_window">
-            <field name="name">Stock Moves (deliveries)</field>
+            <field name="name">Deliveries</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_id" ref="view_move_tree"/>
@@ -475,7 +477,8 @@
             <field name="context">{
                 'search_default_done': 1,
                 'search_default_groupby_location_id': 2,
-                'search_default_outgoing': 3
+                'search_default_outgoing': 3,
+                'search_default_filter_last_month': 1,
             }</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
