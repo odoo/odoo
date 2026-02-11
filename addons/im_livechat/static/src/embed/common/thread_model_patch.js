@@ -53,7 +53,6 @@ patch(Thread.prototype, {
          * @type {Deferred}
          */
         this.readyToSwapDeferred = new Deferred();
-        this.chatbot = fields.One("Chatbot");
         this.livechat_active = false;
         this._toggleChatbot = fields.Attr(false, {
             compute() {
