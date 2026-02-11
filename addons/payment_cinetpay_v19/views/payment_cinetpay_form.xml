@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<template id="cinetpay_express_checkout_form">
+    <div name="o_cinetpay_express_checkout_container"
+         t-attf-id="o_cinetpay_express_checkout_container_{{order.id}}"
+         t-att-data-order-id="order.id"
+         t-att-data-order-reference="order.name"
+         t-att-data-amount-total="amount_total"
+         t-att-data-cinetpay-site-id="env['ir.config_parameter'].sudo().get_param('cinetpay.site_id')"
+         t-att-data-cinetpay-apikey="env['ir.config_parameter'].sudo().get_param('cinetpay.apikey')"
+         class="w-100 mt-2"
+    />
+</template>
+</odoo>
