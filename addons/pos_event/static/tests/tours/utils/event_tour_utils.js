@@ -63,7 +63,7 @@ export function eventRemainingSeat(name, seats) {
     return [
         {
             content: `check remaining seats for ${name}`,
-            trigger: `article:contains('${name}'):contains('${seats} left')`,
+            trigger: `article:contains('${name}'):contains('${seats} seats')`,
             run: "click",
         },
     ];

@@ -6,7 +6,10 @@ const { DateTime } = luxon;
 
 patch(ProductCard.prototype, {
     get displayRemainingSeats() {
-        return Boolean(this.props.product.event_id);
+        return (
+            Boolean(this.props.product.event_id) &&
+            (this.isEventMultiSlot || this.totalTicketSeats > 0)
+        );
     },
     get isEventMultiSlot() {
         return Boolean(this.props.product.event_id) && this.props.product.event_id.is_multi_slots;
