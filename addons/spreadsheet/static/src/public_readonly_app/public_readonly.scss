@@ -37,15 +37,19 @@ $filter-panel-width: 300px;
   }
 }
 
+.o-public-spreadsheet:has(.o-spreadsheet-print) {
+  .o-public-spreadsheet-filter-button,
+  .o-public-spreadsheet-filters {
+    display: none !important;
+  }
+}
+
 
 @media print {
+  .o-public-spreadsheet {
+    height: 100% !important;
+  }
   #spreadsheet-mount-anchor {
     overflow: unset;
-  }
-  .o-public-spreadsheet-filter-button {
-    display: none;
-  }
-  .o-public-spreadsheet header {
-    display: none !important;
   }
 }

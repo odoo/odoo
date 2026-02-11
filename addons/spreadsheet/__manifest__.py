@@ -28,7 +28,7 @@
             ('remove', 'spreadsheet/static/src/assets_backend/**/*'),
             ('remove', 'spreadsheet/static/src/public_readonly_app/**/*'),
         ],
-        'spreadsheet.assets_print': [
+        'web.assets_web_print': [
             'spreadsheet/static/src/print_assets/**/*',
         ],
         'spreadsheet.public_spreadsheet': [

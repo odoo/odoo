@@ -11,7 +11,7 @@
     </t>
     <t t-call="web.layout" head="head">
         <div class="d-flex flex-column justify-content vh-100 o-public-spreadsheet">
-            <header class="container-fluid p-0 d-flex align-items-center justify-content-between border-bottom">
+            <header class="container-fluid p-0 d-flex align-items-center justify-content-between border-bottom d-print-none">
                 <div t-out="spreadsheet_name" class="text-primary fw-bold ps-3"/>
                 <div class="fst-italic flex-fill ps-3">
                     <t t-if="is_frozen">Frozen and copied on <span t-field="share.create_date"/></t>

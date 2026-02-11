@@ -8,7 +8,6 @@ import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { Spreadsheet, Model, registries } from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";
-import { useSpreadsheetPrint } from "../hooks";
 
 registries.topbarMenuRegistry.addChild("download_public_excel", ["file"], {
     name: _t("Download"),
@@ -41,7 +40,6 @@ export class PublicReadonlySpreadsheet extends Component {
                 }),
             canDownloadExcel: () => Boolean(this.props.downloadExcelUrl),
         });
-        useSpreadsheetPrint(() => this.model);
         onWillStart(this.createModel.bind(this));
     }
 
