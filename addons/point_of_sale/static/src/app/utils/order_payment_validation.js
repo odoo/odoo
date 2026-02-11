@@ -200,11 +200,9 @@ export default class OrderPaymentValidation {
     async afterOrderValidation() {
         // Always show the next screen regardless of error since pos has to
         // continue working even offline.
-        if (!this.pos.config.module_pos_restaurant) {
-            this.pos.checkPreparationStateAndSentOrderInPreparation(this.order, {
-                orderDone: true,
-            });
-        }
+        this.pos.checkPreparationStateAndSentOrderInPreparation(this.order, {
+            orderDone: true,
+        });
 
         if (this.order.nb_print === 0 && this.pos.config.iface_print_auto) {
             const invoiced_finalized = this.order.isToInvoice() ? this.order.finalized : true;
