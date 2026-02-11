@@ -3,17 +3,9 @@ import functools
 import io
 import json
 import logging
-import os
-import re
-import subprocess
-import tempfile
 import typing
-import unittest
 from ast import literal_eval
 from collections import OrderedDict
-from contextlib import ExitStack, closing
-from itertools import islice
-from urllib.parse import urlparse
 
 import lxml.html
 import requests
@@ -24,9 +16,7 @@ from PIL import Image, ImageFile
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.http import request
-from odoo.http.session import session_store, update_session_token
-from odoo.tools import config, is_html_empty, parse_version, split_every
+from odoo.tools import is_html_empty
 from odoo.tools.barcode import (
     check_barcode_encoding,
     createBarcodeDrawing,
@@ -40,123 +30,6 @@ from odoo.tools.safe_eval import safe_eval, time
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 _logger = logging.getLogger(__name__)
-
-
-def _run_wkhtmltopdf(args):
-    """
-    Runs the given arguments against the wkhtmltopdf binary.
-
-    Returns:
-        The process
-    """
-    bin_path = _wkhtml().bin
-    return subprocess.run(
-        [bin_path, *args],
-        capture_output=True,
-        encoding='utf-8',
-        check=False,
-    )
-
-
-def _split_table(tree, max_rows):
-    """
-    Walks through the etree and splits tables with more than max_rows rows into
-    multiple tables with max_rows rows.
-
-    This function is needed because wkhtmltopdf has a exponential processing
-    time growth when processing tables with many rows. This function is a
-    workaround for this problem.
-
-    :param tree: The etree to process
-    :param max_rows: The maximum number of rows per table
-    """
-    for table in list(tree.iter('table')):
-        prev = table
-        for rows in islice(split_every(max_rows, table), 1, None):
-            sibling = etree.Element('table', attrib=table.attrib)
-            sibling.extend(rows)
-            prev.addnext(sibling)
-            prev = sibling
-
-
-class WkhtmlInfo(typing.NamedTuple):
-    state: typing.Literal['install', 'ok']
-    dpi_zoom_ratio: bool
-    bin: str
-    version: str
-    is_patched_qt: bool
-    wkhtmltoimage_bin: str
-    wkhtmltoimage_version: tuple[str, ...] | None
-
-
-@functools.cache
-def _wkhtml() -> WkhtmlInfo:
-    state = 'install'
-    bin_path = 'wkhtmltopdf'
-    version = ''
-    is_patched_qt = False
-    dpi_zoom_ratio = False
-    try:
-        bin_path = find_in_path('wkhtmltopdf')
-        process = subprocess.Popen(
-            [bin_path, '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
-        )
-    except OSError:
-        _logger.info('You need Wkhtmltopdf to print a pdf version of the reports.')
-    else:
-        _logger.info('Will use the Wkhtmltopdf binary at %s', bin_path)
-        out, _err = process.communicate()
-        version = out.decode('ascii')
-        if '(with patched qt)' in version:
-            is_patched_qt = True
-        match = re.search(r'([0-9.]+)', version)
-        if match:
-            version = match.group(0)
-            if parse_version(version) < parse_version('0.12.0'):
-                _logger.info('Upgrade Wkhtmltopdf to (at least) 0.12.0')
-                state = 'upgrade'
-            else:
-                state = 'ok'
-            if parse_version(version) >= parse_version('0.12.2'):
-                dpi_zoom_ratio = True
-
-            if config['workers'] == 1:
-                _logger.info('You need to start Odoo with at least two workers to print a pdf version of the reports.')
-                state = 'workers'
-        else:
-            _logger.info('Wkhtmltopdf seems to be broken.')
-            state = 'broken'
-
-    wkhtmltoimage_version = None
-    image_bin_path = 'wkhtmltoimage'
-    try:
-        image_bin_path = find_in_path('wkhtmltoimage')
-        process = subprocess.Popen(
-            [image_bin_path, '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
-        )
-    except OSError:
-        _logger.info('You need Wkhtmltoimage to generate images from html.')
-    else:
-        _logger.info('Will use the Wkhtmltoimage binary at %s', image_bin_path)
-        out, _err = process.communicate()
-        match = re.search(rb'([0-9.]+)', out)
-        if match:
-            wkhtmltoimage_version = parse_version(match.group(0).decode('ascii'))
-            if config['workers'] == 1:
-                _logger.info('You need to start Odoo with at least two workers to convert images to html.')
-        else:
-            _logger.info('Wkhtmltoimage seems to be broken.')
-
-    return WkhtmlInfo(
-        state=state,
-        dpi_zoom_ratio=dpi_zoom_ratio,
-        bin=bin_path,
-        version=version,
-        is_patched_qt=is_patched_qt,
-        wkhtmltoimage_bin=image_bin_path,
-        wkhtmltoimage_version=wkhtmltoimage_version,
-    )
-
 
 class IrActionsReport(models.Model):
     _name = 'ir.actions.report'
@@ -175,7 +48,7 @@ class IrActionsReport(models.Model):
         ('qweb-html', 'HTML'),
         ('qweb-pdf', 'PDF'),
         ('qweb-text', 'Text'),
-    ], required=True, default='qweb-pdf',
+    ], required=True, default='qweb-html',
     help='The type of the report that will be rendered, each one having its own'
         ' rendering method. HTML means the report will be opened directly in your'
         ' browser PDF means the report will be rendered using Wkhtmltopdf and'
@@ -277,17 +150,19 @@ class IrActionsReport(models.Model):
         ], limit=1)
 
     @api.model
-    def get_wkhtmltopdf_state(self):
-        '''Get the current state of wkhtmltopdf: install, ok, upgrade, workers or broken.
-        * install: Starting state.
-        * upgrade: The binary is an older version (< 0.12.0).
-        * ok: A binary was found with a recent version (>= 0.12.0).
+    def get_pdf_engine_state(self, engine_name=None) -> typing.Literal['ok', 'upgrade', 'workers', 'broken', 'install']:
+        """
+        Returns the requested engine status.
+        The state of the pdf engine: install, ok, upgrade, workers or broken.
+        * ok: A binary was found with a recent version.
+        * upgrade: The binary is an older version.
         * workers: Not enough workers found to perform the pdf rendering process (< 2 workers).
         * broken: A binary was found but not responding.
 
-        :return: wkhtmltopdf_state
-        '''
-        return _wkhtml().state
+        * install: Starting state.
+        :return: state
+        """
+        return 'install'
 
     def get_paperformat(self):
         return self.paperformat_id or self.env.company.paperformat_id
@@ -301,88 +176,6 @@ class IrActionsReport(models.Model):
     def _get_report_url(self, layout=None):
         report_url = self.env['ir.config_parameter'].sudo().get_str('report.url')
         return report_url or (layout or self._get_layout() or self).get_base_url()
-
-    @api.model
-    def _build_wkhtmltopdf_args(
-            self,
-            paperformat_id,
-            landscape,
-            specific_paperformat_args=None,
-            set_viewport_size=False):
-        '''Build arguments understandable by wkhtmltopdf bin.
-
-        :param paperformat_id: A report.paperformat record.
-        :param landscape: Force the report orientation to be landscape.
-        :param specific_paperformat_args: A dictionary containing prioritized wkhtmltopdf arguments.
-        :param set_viewport_size: Enable a viewport sized '1024x1280' or '1280x1024' depending of landscape arg.
-        :return: A list of string representing the wkhtmltopdf process command args.
-        '''
-        if landscape is None and specific_paperformat_args and specific_paperformat_args.get('data-report-landscape'):
-            landscape = specific_paperformat_args.get('data-report-landscape')
-
-        command_args = ['--disable-local-file-access']
-        if set_viewport_size:
-            command_args.extend(['--viewport-size', landscape and '1024x1280' or '1280x1024'])
-
-        # Less verbose error messages
-        command_args.extend(['--quiet'])
-
-        # Build paperformat args
-        if paperformat_id:
-            if paperformat_id.format and paperformat_id.format != 'custom':
-                command_args.extend(['--page-size', paperformat_id.format])
-
-            if paperformat_id.page_height and paperformat_id.page_width and paperformat_id.format == 'custom':
-                command_args.extend(['--page-width', str(paperformat_id.page_width) + 'mm'])
-                command_args.extend(['--page-height', str(paperformat_id.page_height) + 'mm'])
-
-            if specific_paperformat_args and 'data-report-margin-top' in specific_paperformat_args:
-                command_args.extend(['--margin-top', str(specific_paperformat_args['data-report-margin-top'])])
-            else:
-                command_args.extend(['--margin-top', str(paperformat_id.margin_top)])
-
-            dpi = None
-            if specific_paperformat_args and specific_paperformat_args.get('data-report-dpi'):
-                dpi = int(specific_paperformat_args['data-report-dpi'])
-            elif paperformat_id.dpi:
-                if os.name == 'nt' and int(paperformat_id.dpi) <= 95:
-                    _logger.info("Generating PDF on Windows platform require DPI >= 96. Using 96 instead.")
-                    dpi = 96
-                else:
-                    dpi = paperformat_id.dpi
-            if dpi:
-                command_args.extend(['--dpi', str(dpi)])
-                if _wkhtml().dpi_zoom_ratio:
-                    command_args.extend(['--zoom', str(96.0 / dpi)])
-
-            if specific_paperformat_args and 'data-report-header-spacing' in specific_paperformat_args:
-                command_args.extend(['--header-spacing', str(specific_paperformat_args['data-report-header-spacing'])])
-            elif paperformat_id.header_spacing:
-                command_args.extend(['--header-spacing', str(paperformat_id.header_spacing)])
-
-            command_args.extend(['--margin-left', str(paperformat_id.margin_left)])
-
-            if specific_paperformat_args and 'data-report-margin-bottom' in specific_paperformat_args:
-                command_args.extend(['--margin-bottom', str(specific_paperformat_args['data-report-margin-bottom'])])
-            else:
-                command_args.extend(['--margin-bottom', str(paperformat_id.margin_bottom)])
-
-            command_args.extend(['--margin-right', str(paperformat_id.margin_right)])
-            if not landscape and paperformat_id.orientation:
-                command_args.extend(['--orientation', str(paperformat_id.orientation)])
-            if paperformat_id.header_line:
-                command_args.extend(['--header-line'])
-            if paperformat_id.disable_shrinking:
-                command_args.extend(['--disable-smart-shrinking'])
-
-        # Add extra time to allow the page to render
-        delay = self.env['ir.config_parameter'].sudo().get_int('report.print_delay') or 1000
-        command_args.extend(['--javascript-delay', str(delay)])
-
-        if landscape:
-            command_args.extend(['--orientation', 'landscape'])
-
-        return command_args
 
     def _prepare_html(self, html, report_model=False):
         '''Divide and recreate the header/footer html by merging all found in html.
@@ -801,7 +594,7 @@ class IrActionsReport(models.Model):
         for stream in streams:
             try:
                 reader = PdfFileReader(stream)
-                writer.append_pages_from_reader(reader)
+                writer.appendPagesFromReader(reader)
             except (PdfReadError, TypeError, NotImplementedError, ValueError) as e:
                 handle_error(error=e, error_stream=stream)
         result_stream = io.BytesIO()
@@ -921,10 +714,10 @@ class IrActionsReport(models.Model):
             # pages one by one.
             html_ids_wo_none = [x for x in html_ids if x]
             reader = PdfFileReader(pdf_content_stream)
-            if len(reader.pages) == len(res_ids_wo_stream):
-                for i, p in enumerate(reader.pages):
+            if reader.numPages == len(res_ids_wo_stream):
+                for i in range(reader.numPages):
                     attachment_writer = PdfFileWriter()
-                    attachment_writer.add_page(p)
+                    attachment_writer.addPage(reader.getPage(i))
                     stream = io.BytesIO()
                     attachment_writer.write(stream)
                     collected_streams[res_ids_wo_stream[i]]['stream'] = stream
@@ -963,10 +756,10 @@ class IrActionsReport(models.Model):
                 if has_same_number_of_outlines and has_top_level_heading:
                     # Split the PDF according to outlines.
                     for i, num in enumerate(outlines_pages):
-                        to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else len(reader.pages)
+                        to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else reader.numPages
                         attachment_writer = PdfFileWriter()
-                        for p in reader.pages[num:to]:
-                            attachment_writer.add_page(p)
+                        for j in range(num, to):
+                            attachment_writer.addPage(reader.getPage(j))
                         stream = io.BytesIO()
                         attachment_writer.write(stream)
                         collected_streams[res_ids_wo_stream[i]]['stream'] = stream

@@ -87,6 +87,7 @@ class ResCompany(models.CachedModel):
     primary_color = fields.Char()
     secondary_color = fields.Char()
     color = fields.Integer(compute='_compute_color', inverse='_inverse_color')
+    report_rendering_engine = fields.Selection([('html', 'HTML')], default='html', string='Report Rendering Engine', required=True)
     uninstalled_l10n_module_ids = fields.Many2many('ir.module.module', compute='_compute_uninstalled_l10n_module_ids')
 
     _name_uniq = models.Constraint(

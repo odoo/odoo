@@ -19,7 +19,8 @@ from ..engine import (
 
 from odoo import api, models, fields, modules, tools, _
 from odoo.exceptions import UserError
-from odoo.http import request, root
+from odoo.http import request
+from odoo.http.router import root
 from odoo.service import security
 from odoo.tools import parse_version
 
