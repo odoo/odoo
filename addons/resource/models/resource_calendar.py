@@ -93,7 +93,7 @@ class ResourceCalendar(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if 'attendance_ids' not in vals:
+            if 'attendance_ids' not in vals or not vals.get('attendance_ids', []):
                 company_id = vals.get('company_id', self.env.company.id)
                 company = self.env['res.company'].browse(company_id)
                 if 'schedule_type' not in vals or vals['schedule_type'] == 'fixed':
