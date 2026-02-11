@@ -20,7 +20,7 @@
 </t>
 
 <t t-name="web.Many2XAutocomplete" >
-    <div class="o_input_dropdown" t-ref="autocomplete_container">
+    <div class="o_input_dropdown" t-custom-ref="autocomplete_container">
         <input t-if="env.isSmall and props.dropdown"
             type="text"
             t-att-id="props.id"

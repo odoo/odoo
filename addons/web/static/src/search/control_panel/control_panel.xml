@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ControlPanel">
-        <div class="o_control_panel d-flex flex-column gap-3 px-3 pt-2 pb-3" t-ref="root" data-command-category="actions">
+        <div class="o_control_panel d-flex flex-column gap-3 px-3 pt-2 pb-3" t-custom-ref="root" data-command-category="actions">
             <Transition t-if="!env.isSmall" visible="state.embeddedInfos.showEmbedded" name="'o-fade'" t-slot-scope="transition" leaveDuration="500">
                 <div class="o_embedded_actions d-flex flex-wrap w-100 align-items-center justify-content-center gap-2" t-att-class="transition.className">
                     <t t-foreach="state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
@@ -150,7 +150,7 @@
                 <AccordionItem class="'o_save_current_view'" description.translate="Save View">
                     <div class="px-2 py-2">
                         <input type="text"
-                            t-ref="newActionNameRef"
+                            t-custom-ref="newActionNameRef"
                             class="o_input mb-2"
                             t-model.trim="state.embeddedInfos.newActionName"
                         />

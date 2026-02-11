@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.OfflineSearchBar">
-        <div t-if="this.visibilityState.showSearchBar" class="o_offline_search_bar input-group" role="search" t-ref="root">
+        <div t-if="this.visibilityState.showSearchBar" class="o_offline_search_bar input-group" role="search" t-custom-ref="root">
             <Dropdown
                 state="this.searchBarDropdownState"
                 disabled="this.isSearchMenuDisabled"
@@ -30,7 +30,7 @@
                                 placeholder="Search..."
                                 role="searchbox"
                                 t-att-disabled="this.isSearchMenuDisabled"
-                                t-ref="autofocus"
+                                t-custom-ref="autofocus"
                                 t-on-input="onSearchInput"
                                 t-on-compositionend="onCompositionEnd"
                             />

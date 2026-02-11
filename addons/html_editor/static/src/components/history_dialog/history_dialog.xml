@@ -41,7 +41,7 @@
                             <div class="text-center w-100 pb-2 pt-0 px-0 fw-bolder">No history</div>
                         </t>
 
-                        <ul t-else="" class="list-group w-100" role="listbox" t-ref="listbox" >
+                        <ul t-else="" class="list-group w-100" role="listbox" t-custom-ref="listbox" >
                             <t t-foreach="state.revisionsData" t-as="rev" t-key="rev.revision_id">
                                 <li t-att-data-revision-id="rev.revision_id"
                                     t-attf-title="Submitted by #{rev.create_user_name} on #{this.getRevisionFullDate(rev)}"

@@ -6,12 +6,12 @@
         <div
             class="o_list_renderer o_renderer table-responsive"
             tabindex="-1"
-            t-ref="root"
+            t-custom-ref="root"
         >
             <t t-if="showNoContentHelper">
                 <ActionHelper noContentHelp="props.noContentHelp"/>
             </t>
-            <table t-attf-class="o_list_table table table-sm table-hover position-relative mb-0 {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped table-striped'}}" t-ref="table">
+            <table t-attf-class="o_list_table table table-sm table-hover position-relative mb-0 {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped table-striped'}}" t-custom-ref="table">
                 <thead>
                     <tr>
                         <th t-if="hasSelectors" class="o_list_record_selector o_list_controller align-middle pe-1 cursor-pointer" tabindex="-1" t-on-keydown="(ev) => this.onCellKeydown(ev)" t-on-click.stop="toggleSelection">
@@ -106,7 +106,7 @@
                                 <input type="text"
                                     class="form-control bg-view o_list_group_input"
                                     t-attf-placeholder="{{ this.props.list.groupByField.string }}..."
-                                    t-ref="groupInput"
+                                    t-custom-ref="groupInput"
                                     t-on-keydown="(ev) => this.onGroupInputKeydown(ev)"
                                 />
                                 <button class="btn btn-primary o_list_group_confirm" type="button" t-on-click="addNewGroup">

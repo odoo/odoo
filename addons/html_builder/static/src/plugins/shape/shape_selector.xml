@@ -3,7 +3,7 @@
 
 <t t-name="html_builder.shapeSelector">
     <header class="o_pager_nav d-flex flex-column flex-wrap flex-shrink-0 mh-100">
-        <div class="o-hb-select-pager-tab-container d-flex" t-ref="tabs">
+        <div class="o-hb-select-pager-tab-container d-flex" t-custom-ref="tabs">
             <t t-foreach="Object.entries(this.props.shapeGroups)" t-as="group" t-key="group_index">
                 <button type="button" class="o-hb-select-pager-tab p-0 text-uppercase" t-att-class="{ 'active': state.activeGroup === group[0] }" t-on-click="() => this.scrollToShapes(group[0])" t-att-data-group-id="group[0]">
                     <span class="w-100" t-out="group[1].label"/>
@@ -11,7 +11,7 @@
             </t>
         </div>
     </header>
-    <div class="o_pager_container" t-ref="root" t-on-scroll="onScroll">
+    <div class="o_pager_container" t-custom-ref="root" t-on-scroll="onScroll">
         <t t-foreach="Object.entries(this.props.shapeGroups)" t-as="group" t-key="group_index">
             <div t-att-data-shape-group-id="group[0]">
                 <t t-foreach="Object.entries(group[1].subgroups)" t-as="subgroup" t-key="subgroup_index">

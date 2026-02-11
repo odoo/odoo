@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ModelFieldSelectorPopover">
-        <div class="o_model_field_selector_popover d-flex flex-column" tabindex="-1" t-ref="root" t-on-keydown="onInputKeydown">
+        <div class="o_model_field_selector_popover d-flex flex-column" tabindex="-1" t-custom-ref="root" t-on-keydown="onInputKeydown">
             <div class="border-bottom p-2 text-dark fw-bolder">
                 <div class="d-flex justify-content-between align-items-center">
                     <t t-if="state.page.previousPage">

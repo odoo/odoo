@@ -82,14 +82,14 @@
         t-if="state.subTable"
         class="o-doc-sub-table overflow-auto position-fixed bg-1 p-1 shadow border z-index-1 rounded"
         t-att-style="state.subTableStyle"
-        t-ref="subTableRef"
+        t-custom-ref="subTableRef"
     >
         <DocTable data="state.subTable"/>
     </div>
     <div
         class="o-doc-dynamic-tooltip"
         t-att-style="state.tooltipStyle"
-        t-ref="tooltipRef"
+        t-custom-ref="tooltipRef"
     >
         <t t-out="state.tooltipContent"/>
     </div>

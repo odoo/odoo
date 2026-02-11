@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
     <t t-name="barcodes.BarcodeInput">
         <div class="input-group">
-            <input id="manual_barcode" t-model="state.barcode" type="text" name="barcode"
-                    class="form-control" t-ref="manualBarcode"
+            <input id="manual_barcode" t-custom-model="state.barcode" type="text" name="barcode"
+                    class="form-control" t-custom-ref="manualBarcode"
                     t-att-placeholder="props.placeholder" t-on-keydown="_onKeydown"/>
             <button class="input-group-text" t-att-disabled="!state.barcode"
                     t-on-click.prevent="(ev) => this.props.onSubmit(state.barcode)">

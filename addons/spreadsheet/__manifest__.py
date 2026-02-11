@@ -55,6 +55,7 @@
             'web/static/lib/luxon/luxon.js',
             'web/static/src/libs/luxon.js',
             'web/static/lib/owl/odoo_module.js',
+            'web/static/src/owl2/utils.js',
             'web/static/src/core/utils/**/*.js',
             'web/static/src/core/browser/browser.js',
             'web/static/src/core/browser/feature_detection.js',

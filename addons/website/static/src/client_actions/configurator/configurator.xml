@@ -55,7 +55,7 @@
                                         t-on-click="() => this.selectWebsiteType(type.id)"
                                         class="dropdown-item o_change_website_type"
                                         role="menuitem"
-                                        t-ref="{{type.id === 1 ? 'autofocus' : type.name}}">
+                                        t-custom-ref="{{type.id === 1 ? 'autofocus' : type.name}}">
                                     <t t-esc="type.label"/>
                                 </button>
                             </t>
@@ -65,7 +65,7 @@
                 </div>
                 <div t-if="state.selectedType" class="o_configurator_typing_text d-inline d-md-flex align-items-center o_configurator_industry mb-md-2 mb-lg-4 o_configurator_show">
                     <!-- Use t-set in order to be able to translate, if put in the attribute directly then export POT file will not exist this text-->
-                    <label class="o_configurator_industry_wrapper me-2" t-ref="industrySelection">
+                    <label class="o_configurator_industry_wrapper me-2" t-custom-ref="industrySelection">
                         <AutoComplete
                             placeholder.translate="Restaurant, Hair Salon, Clothing Store,..."
                             value="state.selectedIndustry?.label ?? ''"
@@ -104,7 +104,7 @@
                                 <button t-on-click="() => this.selectWebsitePurpose(type.id)"
                                         class="dropdown-item o_change_website_purpose"
                                         role="menuitem"
-                                        t-ref="{{type.id === 1 ? 'purposeSelection' : type.name}}">
+                                        t-custom-ref="{{type.id === 1 ? 'purposeSelection' : type.name}}">
                                     <t t-esc="type.label"/>
                                 </button>
                             </t>
@@ -126,7 +126,7 @@
                         <b>Detect</b> from Logo</div>
                     <div class="d-flex flex-column flex-grow-1 py-4">
                         <button t-on-click="uploadLogo" t-attf-class="o_configurator_logo_upload position-relative btn btn-link rounded bg-100 overflow-hidden d-flex flex-grow-1 justify-content-center align-items-center text-decoration-none {{state.logo? 'h-50' : ''}}">
-                            <input type="file" class="logo_selection_input" t-on-change="changeLogo" style="display:none" name="logo_selection" t-ref="logoSelectionInput" accept="image/*"/>
+                            <input type="file" class="logo_selection_input" t-on-change="changeLogo" style="display:none" name="logo_selection" t-custom-ref="logoSelectionInput" accept="image/*"/>
                             <div class="h3 o_configurator_logo_button text-center">
                                 <i t-attf-class="fa fa-cloud-upload {{state.logo? 'fa-4x' : 'fa-6x'}}"></i>
                                 <div class="text-center">Upload <span t-if="state.logo">a new image</span>
@@ -234,7 +234,7 @@
                                 <div class="theme_preview border rounded position-relative w-100 small o_configurator_show_fast">
                                     <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
                                     <!-- Force LTR to prevent SVG issues in RTL languages -->
-                                    <div class="theme_svg_container rounded overflow-hidden" t-ref="ThemePreview2" dir="ltr"/>
+                                    <div class="theme_svg_container rounded overflow-hidden" t-custom-ref="ThemePreview2" dir="ltr"/>
                                     <button class="o_btn_reset button_area" t-on-click="() => this.chooseTheme(state.getThemeName(1))"/>
                                 </div>
                             </t>
@@ -244,7 +244,7 @@
                                 <div class="theme_preview border rounded position-relative w-100 o_configurator_show">
                                     <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
                                     <!-- Force LTR to prevent SVG issues in RTL languages -->
-                                    <div class="theme_svg_container rounded overflow-hidden" t-ref="ThemePreview1" dir="ltr"/>
+                                    <div class="theme_svg_container rounded overflow-hidden" t-custom-ref="ThemePreview1" dir="ltr"/>
                                     <button class="o_btn_reset button_area" t-on-click="() => this.chooseTheme(state.getThemeName(0))"/>
                                 </div>
                             </t>
@@ -254,7 +254,7 @@
                                 <div class="theme_preview border rounded position-relative w-100 small o_configurator_show_fast">
                                     <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
                                     <!-- Force LTR to prevent SVG issues in RTL languages -->
-                                    <div class="theme_svg_container rounded overflow-hidden" t-ref="ThemePreview3" dir="ltr"/>
+                                    <div class="theme_svg_container rounded overflow-hidden" t-custom-ref="ThemePreview3" dir="ltr"/>
                                     <button class="o_btn_reset button_area" t-on-click="() => this.chooseTheme(state.getThemeName(2))"/>
                                 </div>
                             </t>
@@ -262,7 +262,7 @@
                     </div>
                     <t t-if="showViewMoreThemesButton">
                         <p style="text-align: center;">
-                            <button class="btn btn-primary btn-lg px-4 py-2 center-block" t-on-click="getMoreThemes" t-ref="extraThemesButton">View more themes</button>
+                            <button class="btn btn-primary btn-lg px-4 py-2 center-block" t-on-click="getMoreThemes" t-custom-ref="extraThemesButton">View more themes</button>
                         </p>
                     </t>
                     <t t-elif="state.extraThemes.length" t-foreach="Array(Math.ceil(state.extraThemes.length/3))" t-as="nbrExtraRow" t-key="nbrExtraRow_index">
@@ -275,7 +275,7 @@
                                         <div class="theme_preview border rounded position-relative w-100 small o_configurator_show_fast">
                                             <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
                                             <!-- Force LTR to prevent SVG issues in RTL languages -->
-                                            <div class="theme_svg_container rounded overflow-hidden" t-ref="ExtraThemePreview{{extraThemeId}}" dir="ltr"/>
+                                            <div class="theme_svg_container rounded overflow-hidden" t-custom-ref="ExtraThemePreview{{extraThemeId}}" dir="ltr"/>
                                             <button class="o_btn_reset button_area" t-on-click="() => this.chooseTheme(extraThemeName)"/>
                                         </div>
                                     </t>

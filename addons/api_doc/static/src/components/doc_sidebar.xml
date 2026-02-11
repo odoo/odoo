@@ -6,7 +6,7 @@
         <div class="pe-4 pb-4">
             <input t-on-input="onSearchInput" class="w-100" placeholder="Search for models..."/>
         </div>
-        <div class="o-doc-sidebar-content h-100 flex-fill d-flex flex-nowrap flex-column gap-1" t-ref="containerRef">
+        <div class="o-doc-sidebar-content h-100 flex-fill d-flex flex-nowrap flex-column gap-1" t-custom-ref="containerRef">
             <t t-foreach="filteredAddons" t-as="addon" t-key="addon.name">
                 <div
                     class="position-sticky o-doc-sidebar-header top-0 d-flex flex-nowrap w-100 cursor-pointer text-capitalize user-select-none"

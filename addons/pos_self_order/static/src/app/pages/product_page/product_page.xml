@@ -16,13 +16,13 @@
             </div>
 
             <!-- Scroll -->
-            <div class="d-flex flex-column overflow-y-auto h-100 position-relative" t-ref="scrollContainer">
+            <div class="d-flex flex-column overflow-y-auto h-100 position-relative" t-custom-ref="scrollContainer">
                <div class="flex-grow-1">
                     <div class="py-3 text-bg-primary">
                         <div class="container o_self_container ">
                              <!-- Name & Image -->
                             <div class="d-flex flex-column align-items-center">
-                                <h1 class="mt-kiosk-p-3 mb-3 " t-esc="product.name" t-ref="productName"/>
+                                <h1 class="mt-kiosk-p-3 mb-3 " t-esc="product.name" t-custom-ref="productName"/>
                                 <div class="o_self_product_image ratio ratio-1x1 rounded-4 w-70 w-m-50 ">
                                     <img class="rounded-4" t-attf-src="/web/image/product.template/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
                                 </div>

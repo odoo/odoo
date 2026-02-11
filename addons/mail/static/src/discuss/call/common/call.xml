@@ -12,7 +12,7 @@
             'o-hasVideo': channel.videoCount > 0,
             'o-selfInCall': isActiveCall,
             'border-bottom': !isActiveCall,
-        }" t-ref="root">
+        }" t-custom-ref="root">
             <div class="o-discuss-Call-main d-flex flex-column align-items-center justify-content-center position-relative overflow-auto o-scrollbar-thin" t-on-mouseleave="onMouseleaveMain">
                 <BlurPerformanceWarning t-if="store.settings.blurPerformanceWarning"/>
                 <div
@@ -21,7 +21,7 @@
                     t-attf-style="--height:{{state.tileHeight}}px; --width:{{state.tileWidth}}px;"
                     t-on-click="() => this.showOverlay()"
                     t-on-mousemove="onMousemoveMain"
-                    t-ref="grid"
+                    t-custom-ref="grid"
                 >
                     <CallParticipantCard t-foreach="visibleMainCards.slice(0,6)" t-as="cardData" t-key="cardData.key"
                         cardData="cardData"

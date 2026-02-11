@@ -8,8 +8,8 @@
                 Title
             </label>
             <div class="col-md-9">
-                <input type="text" t-on-input="onTitleInput" t-model="state.name"
-                    class="form-control" t-att-class="{ 'is-invalid': state.invalidName }" t-ref="autofocus"/>
+                <input type="text" t-on-input="onTitleInput" t-custom-model="state.name"
+                    class="form-control" t-att-class="{ 'is-invalid': state.invalidName }" t-custom-ref="autofocus"/>
             </div>
         </div>
         <div t-if="!props.isMegaMenu" class="mb-3 row">
@@ -18,8 +18,8 @@
             </label>
             <div class="col-md-9">
                 <div class="position-relative" t-att-class="{ 'o_page_not_found': state.pageNotFound }">
-                    <input id="url_input" t-on-input="onUrlInput" t-ref="url-input" type="text"
-                        t-model="state.url" class="form-control" t-att-class="{ 'is-invalid': state.invalidUrl }"/>
+                    <input id="url_input" t-on-input="onUrlInput" t-custom-ref="url-input" type="text"
+                        t-custom-model="state.url" class="form-control" t-att-class="{ 'is-invalid': state.invalidUrl }"/>
                     <i t-if="state.pageNotFound and !state.invalidUrl"
                         class="fa fa-info-circle text-warning position-absolute top-50 end-0 translate-middle-y me-2"
                         data-tooltip="Page not found" data-tooltip-position="top" data-tooltip-delay="0">
@@ -64,7 +64,7 @@
 
 <t t-name="website.EditMenuDialog">
     <WebsiteDialog close="props.close" title.translate="Edit Menu" primaryTitle.translate="Save" primaryClick="() => this.onClickSave()">
-        <ul t-ref="menu-editor" class="oe_menu_editor list-unstyled">
+        <ul t-custom-ref="menu-editor" class="oe_menu_editor list-unstyled">
             <t t-foreach="state.rootMenu.children" t-as="menu" t-key="menu.fields['id']">
                 <MenuRow menu="menu" edit="(id) => this.editMenu(id)" delete="(id) => this.deleteMenu(id)" createPage="(id) => this.createPage(id)"/>
             </t>

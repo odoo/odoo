@@ -3,7 +3,7 @@
 
     <t t-name="web.JournalDashboardGraphField">
         <div class="o_dashboard_graph" t-att-class="props.className" t-attf-class="o_graph_{{ props.graphType }}chart">
-            <canvas t-ref="canvas"/>
+            <canvas t-custom-ref="canvas"/>
         </div>
     </t>
 

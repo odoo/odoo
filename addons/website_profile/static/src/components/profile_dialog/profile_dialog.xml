@@ -7,7 +7,7 @@
                 <div class="col-12 col-sm-3 mb-3">
                     <div class="card o_card_people">
                         <div class="card-body">
-                            <img class="o_wforum_avatar_img w-100 mb-3" t-ref="profileImg" t-attf-src="/web/image/res.users/#{user.id}/avatar_128"/>
+                            <img class="o_wforum_avatar_img w-100 mb-3" t-custom-ref="profileImg" t-attf-src="/web/image/res.users/#{user.id}/avatar_128"/>
                             <div class="d-flex justify-content-center gap-1">
                                 <FileUploader onUploaded.bind="onUploadProfileImg" acceptedFileExtensions="'image/*'">
                                     <t t-set-slot="toggler">
@@ -23,7 +23,7 @@
                             </div>
                             <div class="my-3 mb-0 pt-2 border-top" t-if="isEditingMyProfile">
                                 <label class="text-primary fw-bold" for="website_profile_profile_dialog_user_website_published">Public Profile</label>
-                                <input type="checkbox" class="float-end mt8" name="website_published" id="website_profile_profile_dialog_user_website_published" t-model="user.website_published"/>
+                                <input type="checkbox" class="float-end mt8" name="website_published" id="website_profile_profile_dialog_user_website_published" t-custom-model="user.website_published"/>
                             </div>
                         </div>
                     </div>
@@ -33,25 +33,25 @@
                         <div class="mb-3 col-12">
                             <label class="text-primary mb-1 d-block fw-bold" for="website_profile_profile_dialog_user_name">Name</label>
                             <input type="text" t-attf-class="form-control #{state.nameHasError ? 'is-invalid': ''}" name="name" id="website_profile_profile_dialog_user_name" required="True"
-                                t-model="user.name" t-ref="name"/>
+                                t-custom-model="user.name" t-custom-ref="name"/>
                         </div>
 
                         <div class="mb-3 col-6">
                             <label class="mb-1 text-primary fw-bold" for="website_profile_profile_dialog_user_website">Website</label>
-                            <input type="text" class="form-control" name="website" id="website_profile_profile_dialog_user_website" t-model="user.website"/>
+                            <input type="text" class="form-control" name="website" id="website_profile_profile_dialog_user_website" t-custom-model="user.website"/>
                         </div>
                         <div class="mb-3 col-6">
                             <label class="mb-1 text-primary fw-bold" for="website_profile_profile_dialog_user_email">Email</label>
-                            <input type="email" t-attf-class="form-control #{state.emailHasError ? 'is-invalid': ''}" name="email" id="website_profile_profile_dialog_user_email" required="True" t-model="user.email"/>
+                            <input type="email" t-attf-class="form-control #{state.emailHasError ? 'is-invalid': ''}" name="email" id="website_profile_profile_dialog_user_email" required="True" t-custom-model="user.email"/>
                         </div>
                         <div class="mb-3 col-6">
                             <label class="mb-1 text-primary fw-bold" for="website_profile_profile_dialog_user_city">City</label>
-                            <input type="text" class="form-control" name="city" id="website_profile_profile_dialog_user_city" t-model="user.city"/>
+                            <input type="text" class="form-control" name="city" id="website_profile_profile_dialog_user_city" t-custom-model="user.city"/>
                         </div>
                         <div class="mb-3 col-6">
                             <label class="mb-1 text-primary fw-bold" for="website_profile_profile_dialog_user_country">Country</label>
                             <div>
-                                <select name="country" class="form-control" id="website_profile_profile_dialog_user_country" t-model="user.country_id" t-att-disabled="!props.canEditCountry">
+                                <select name="country" class="form-control" id="website_profile_profile_dialog_user_country" t-custom-model="user.country_id" t-att-disabled="!props.canEditCountry">
                                     <option>Country...</option>
                                     <option t-foreach="countries" t-as="country"
                                         t-key="country.id" t-att-value="country.id" t-out="country.name"/>

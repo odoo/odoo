@@ -8,8 +8,8 @@
                     class="form-control form-control-lg mx-auto"
                     type="text"
                     autocomplete="off"
-                    t-model="state.inputValue"
-                    t-ref="input"
+                    t-custom-model="state.inputValue"
+                    t-custom-ref="input"
                     t-on-keydown="onKeydownGiftCardCode"
                     t-att-placeholder="props.placeholder"
                     t-att-style="state.error ? 'border-color: red;' : ''" />
@@ -25,8 +25,8 @@
                             class="form-control form-control-lg"
                             type="number"
                             t-att-disabled="state.lockGiftCardFields || state.loading"
-                            t-model="state.amountValue"
-                            t-ref="amountInput"
+                            t-custom-model="state.amountValue"
+                            t-custom-ref="amountInput"
                             placeholder="Enter amount"
                             t-att-style="state.amountError ? 'border-color: red;' : ''"/>
                     </div>

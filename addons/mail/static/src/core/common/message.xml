@@ -14,7 +14,7 @@
                 t-on-contextmenu="onContextMenu"
                 t-on-mouseenter="onMouseenter"
                 t-on-mouseleave="onMouseleave"
-                t-ref="root"
+                t-custom-ref="root"
                 t-if="message.exists()"
             >
                 <MessageContextMenu anchorRef="rightClickAnchor" dropdownState="rightClickDropdownState" message="message" thread="props.thread"/>
@@ -36,7 +36,7 @@
                             <t t-elif="message.starred" t-call="mail.Message.sidebarStarred"/>
                         </t>
                     </div>
-                    <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': isEditing }" t-ref="messageContent">
+                    <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': isEditing }" t-custom-ref="messageContent">
                         <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !message.isNote, 'pe-2': props.asCard and isMobileOS }" name="header">
                             <span t-if="message.authorName and shouldDisplayAuthorName" class="o-mail-Message-author smaller" t-att-class="getAuthorAttClass()">
                                 <strong class="me-1 o-fw-600" t-esc="message.authorName"/>
@@ -110,12 +110,12 @@
                                                             'o-rounded-bubble': props.squashed,
                                                             'align-self-start o-rounded-end-bubble o-rounded-bottom-bubble': !isEditing and !message.isNote and !props.squashed,
                                                             'flex-grow-1': isEditing,
-                                                            }" t-ref="body">
+                                                            }" t-custom-ref="body">
                                                     <i t-if="message.isEmpty" class="text-muted opacity-75" t-out="message.inlineBody"/>
                                                     <Composer t-elif="isEditing" autofocus="true" composer="message.composer" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="'compact'" sidebar="false"/>
                                                     <t t-else="">
                                                         <em t-if="message.subject and !message.isSubjectSimilarToThreadName and !message.isSubjectDefault" class="d-block text-muted smaller">Subject: <t t-out="props.messageSearch?.highlight(message.subject) ?? message.subject"/></em>
-                                                        <div class="overflow-x-auto" t-if="message.message_type and message.message_type.includes('email')" t-ref="shadowBody"/>
+                                                        <div class="overflow-x-auto" t-if="message.message_type and message.message_type.includes('email')" t-custom-ref="shadowBody"/>
                                                         <t t-elif="message.showTranslation" t-out="message.richTranslationValue"/>
                                                         <div class="o-mail-Message-richBody overflow-x-auto" t-elif="message.hasTextContent and message.richBody and !message.linkPreviewSquash" t-out="props.messageSearch?.highlight(message.richBody) ?? message.richBody"/>
                                                         <p class="fst-italic text-muted small" t-if="message.showTranslation">

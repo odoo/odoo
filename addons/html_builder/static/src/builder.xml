@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.Builder">
-    <div class="h-100 o-snippets-menu d-flex flex-column" t-ref="builder_sidebar">
+    <div class="h-100 o-snippets-menu d-flex flex-column" t-custom-ref="builder_sidebar">
         <div class="o-snippets-top-actions d-flex justify-content-between flex-shrink-0 p-2">
             <div class="d-flex gap-1">
                 <button type="button" t-on-click="() => this.undo()" class="o-hb-btn btn fa fa-undo" t-att-disabled="!state.canUndo"/>

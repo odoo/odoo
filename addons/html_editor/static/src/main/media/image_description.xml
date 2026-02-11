@@ -8,9 +8,9 @@
     <t t-name="html_editor.ImageDescriptionPopover">
         <div class="o-we-image-description-popover p-3">
             <input
-                t-ref="description"
+                t-custom-ref="description"
                 type="text"
-                t-model="this.state.description"
+                t-custom-model="this.state.description"
                 placeholder="Description"
                 title="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...)."
                 name="description"
@@ -18,7 +18,7 @@
             />
             <input
                 type="text"
-                t-model="this.state.tooltip"
+                t-custom-model="this.state.tooltip"
                 placeholder="Tooltip"
                 title="'Title tag' is shown as a tooltip when you hover the picture."
                 name="tooltip"

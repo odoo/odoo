@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="web.DateTimeField">
         <t t-set="showSeparator" t-value="shouldShowSeparator()" />
-        <div class="d-flex gap-2 align-items-center" t-ref="root">
+        <div class="d-flex gap-2 align-items-center" t-custom-ref="root">
             <!-- Start date -->
             <t t-if="props.readonly">
                 <span t-if="!isEmpty(startDateField)" class="text-truncate" t-esc="getFormattedValue(0)" t-att-data-tooltip="getFormattedValue(0, true)"/>
@@ -10,7 +10,7 @@
             <t t-elif="isRange(values) or isRequired(startDateField) or !isEmpty(startDateField) or startDateField === props.name">
                 <t t-if="picker.activeInput !== startDateField and values[0]">
                     <button 
-                        t-ref="start-date" 
+                        t-custom-ref="start-date" 
                         t-att-data-tooltip="getFormattedValue(0, true)"
                         t-att-id="showSeparator ? props.endDateField and props.id : props.id"
                         t-on-focus="() => picker.activeInput = startDateField"
@@ -21,7 +21,7 @@
                 </t>
                 <t t-else="">
                     <input
-                        t-ref="start-date"
+                        t-custom-ref="start-date"
                         type="text"
                         t-att-id="showSeparator ? props.endDateField and props.id : props.id"
                         t-att-class="'o_input cursor-pointer user-select-none' + (props.warnFuture and isDateInTheFuture(0) ? 'text-danger' : '')"
@@ -49,7 +49,7 @@
                 <t t-elif="isRange(values) or isRequired(endDateField) or !isEmpty(endDateField) or (isEmpty(startDateField) and endDateField === props.name)">
                     <t t-if="picker.activeInput !== endDateField and values[1]">
                         <button 
-                            t-ref="end-date" 
+                            t-custom-ref="end-date" 
                             t-att-data-tooltip="getFormattedValue(1, true)"
                             t-on-focus="() => picker.activeInput = endDateField" 
                             t-att-id="props.startDateField and props.id"
@@ -60,7 +60,7 @@
                     </t>
                     <t t-else="">
                         <input
-                            t-ref="end-date"
+                            t-custom-ref="end-date"
                             type="text"
                             t-att-id="props.startDateField and props.id"
                             t-att-class="'o_input cursor-pointer user-select-none' + (props.warnFuture and isDateInTheFuture(1) ? 'text-danger' : '')"

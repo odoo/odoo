@@ -3,7 +3,7 @@
 
 <t t-name="mail.MessageContextMenu">
     <Dropdown state="props.dropdownState" manual="true" menuClass="store.discussDropdownMenuClass(this)" position="'right-start'">
-        <span class="d-flex position-fixed z-1" t-ref="anchorRef"/>
+        <span class="d-flex position-fixed z-1" t-custom-ref="anchorRef"/>
         <t t-set-slot="content">
             <ActionList actions="messageActions.actions" dropdown="true"/>
         </t>

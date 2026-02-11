@@ -13,7 +13,7 @@
         <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-middle'" menuClass="'o-mail-DiscussSidebar-floatingMenu px-2 mx-2 my-2 min-w-0 ' + store.discussDropdownMenuClass(this)" manual="true">
             <t t-call="mail.Mailbox.main"/>
             <t t-set-slot="content">
-                <div class="overflow-hidden" t-ref="floating">
+                <div class="overflow-hidden" t-custom-ref="floating">
                     <span class="text-muted user-select-none" t-esc="mailbox.display_name"/>
                 </div>
             </t>
@@ -34,7 +34,7 @@
             style="line-height: 1.65;"
             t-att-data-mailbox-id="mailbox.id"
             t-on-click="(ev) => this.openThread(ev)"
-            t-ref="root"
+            t-custom-ref="root"
         >
             <ThreadIcon className="'bg-inherit opacity-75 justify-content-center ' + (store.discuss.isSidebarCompact ? '' : 'o-ms-1_5 me-2 pt-1')" thread="mailbox" size="store.discuss.isSidebarCompact ? 'large' : 'medium'"/>
             <t t-if="!store.discuss.isSidebarCompact">

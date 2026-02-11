@@ -67,7 +67,7 @@
                 </div>
             </div>
             <t t-set-slot="footer">
-                <button t-att-disabled="!button.enabled" t-ref="continueButton" class="btn btn-primary" t-on-click="() => this.onRegistrationConfirm()">Continue</button>
+                <button t-att-disabled="!button.enabled" t-custom-ref="continueButton" class="btn btn-primary" t-on-click="() => this.onRegistrationConfirm()">Continue</button>
                 <button id="print_button" class="btn btn-primary" t-on-click="() => this.onRegistrationPrintPdf()">Print</button>
                 <button class="btn btn-secondary" t-on-click="() => this.onRegistrationView()">Edit</button>
             </t>

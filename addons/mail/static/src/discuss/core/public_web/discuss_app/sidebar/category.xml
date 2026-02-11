@@ -4,8 +4,8 @@
         <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu p-1 mx-2 my-0 min-w-0 ' + store.discussDropdownMenuClass(this)" manual="true">
             <t t-call="mail.DiscussSidebarCategory.main"/>
             <t t-set-slot="content">
-                <div class="overflow-hidden d-flex flex-column" t-ref="floating">
-                    <span class="fw-bold text-uppercase o-xsmaller user-select-none text-muted" t-ref="floatingCategoryName" t-esc="category.name"/>
+                <div class="overflow-hidden d-flex flex-column" t-custom-ref="floating">
+                    <span class="fw-bold text-uppercase o-xsmaller user-select-none text-muted" t-custom-ref="floatingCategoryName" t-esc="category.name"/>
                     <t t-call="mail.DiscussSidebarCategory.actions"/>
                 </div>
             </t>
@@ -21,7 +21,7 @@
     </t>
 
     <t t-name="mail.DiscussSidebarCategory.main">
-        <div class="o-mail-DiscussSidebarCategory position-relative d-flex align-items-center rounded opacity-trigger-hover" t-att-class="{ 'mx-2 my-1 ps-1 position-relative': store.discuss.isSidebarCompact, 'mt-1 mx-2 o-ps-1_5 pe-1': !store.discuss.isSidebarCompact }" t-attf-class="#{category.extraClass}" name="header" t-ref="root">
+        <div class="o-mail-DiscussSidebarCategory position-relative d-flex align-items-center rounded opacity-trigger-hover" t-att-class="{ 'mx-2 my-1 ps-1 position-relative': store.discuss.isSidebarCompact, 'mt-1 mx-2 o-ps-1_5 pe-1': !store.discuss.isSidebarCompact }" t-attf-class="#{category.extraClass}" name="header" t-custom-ref="root">
             <button t-att-disabled="isToggleFoldDisabled" class="o-mail-DiscussSidebarCategory-toggler btn btn-link text-reset flex-grow-1 d-flex p-0 text-start" t-att-class="{ 'align-items-baseline o-gap-0_5': !store.discuss.isSidebarCompact, 'align-items-center justify-content-center border-0 o-compact gap-1': store.discuss.isSidebarCompact }" t-on-click="() => this.toggle()" name="toggler">
                 <t t-if="store.discuss.isSidebarCompact">
                     <i class="o-mail-DiscussSidebarCategory-chevronCompact position-absolute fa-fw o-xxsmaller o-mt-0_5" t-att-class="{

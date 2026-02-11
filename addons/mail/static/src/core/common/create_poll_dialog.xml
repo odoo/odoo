@@ -6,7 +6,7 @@
         <div class="w-100 mb-3">
             <label class="w-100">
                 <span class="d-inline-block mb-2 fw-bold">Question</span>
-                <input type="text" name="poll_question" t-model="state.question" class="form-control rounded" placeholder="What question do you want to ask?" t-ref="question"/>
+                <input type="text" name="poll_question" t-custom-model="state.question" class="form-control rounded" placeholder="What question do you want to ask?" t-custom-ref="question"/>
                 <div t-if="questionMissing" class="text-danger form-text ms-1">The question cannot be empty.</div>
             </label>
         </div>
@@ -19,11 +19,11 @@
         <div class="d-flex justify-content-between gap-3">
             <label class="d-flex align-items-center">
                 <span class="fw-bold me-2">Allow multiple options</span>
-                <input type="checkbox" name="poll_allow_multiple_options" t-model="state.allowMultipleOptions"/>
+                <input type="checkbox" name="poll_allow_multiple_options" t-custom-model="state.allowMultipleOptions"/>
             </label>
             <label class="d-flex align-items-center">
                 <span class="fw-bold me-2">Duration</span>
-                <select class="form-select" name="poll_duration" style="width: fit-content;" t-model="state.duration">
+                <select class="form-select" name="poll_duration" style="width: fit-content;" t-custom-model="state.duration">
                     <option value="10">10 minutes</option>
                     <option value="60">1 hour</option>
                     <option value="240">4 hours</option>

@@ -7,7 +7,7 @@
                     <div class="input-group ms-1 my-2">
                         <div class="form-control d-flex align-items-center p-0 bg-view" role="search" aria-autocomplete="list">
                             <div class="o_searchview d-flex flex-grow-1 flex-wrap gap-1 h-100 border-end-0">
-                                <input t-ref="search" t-model="state.searchTerm" type="text" class="o_searchview_input rounded flex-grow-1 w-auto border-0 px-2 bg-view" t-on-keydown="onKeydownSearch" placeholder="Search by name"/>
+                                <input t-custom-ref="search" t-custom-model="state.searchTerm" type="text" class="o_searchview_input rounded flex-grow-1 w-auto border-0 px-2 bg-view" t-on-keydown="onKeydownSearch" placeholder="Search by name"/>
                             </div>
                         </div>
                         <button class="btn btn-outline-secondary px-2 py-1" aria-label="Search button" t-on-click="search">
@@ -27,7 +27,7 @@
                 </div>
                 <div class="d-flex flex-column flex-grow-1 gap-2">
                     <SubChannelPreview t-foreach="state.subChannels" t-as="channel" t-key="channel.localId" channel="channel" onClick="() => this.onClickSubChannel(channel)"/>
-                    <span class="pt-1" t-ref="load-more"/>
+                    <span class="pt-1" t-custom-ref="load-more"/>
                 </div>
             </div>
         </ActionPanel>

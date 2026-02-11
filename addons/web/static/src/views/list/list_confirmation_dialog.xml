@@ -71,7 +71,7 @@
                 </div>
             </main>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="_confirm" t-ref="autofocus">
+                <button class="btn btn-primary" t-on-click="_confirm" t-custom-ref="autofocus">
                 Update
                 </button>
                 <button t-if="props.cancel" class="btn btn-secondary" t-on-click="_cancel">

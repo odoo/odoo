@@ -4,7 +4,7 @@
     <t t-name="discuss.CallInvitation">
         <div class="o-discuss-CallInvitation align-self-center o-rounded-bubble overflow-hidden shadow-sm" t-att-class="{'o-preview-open': state.showCameraPreview, 'o-chat': props.channel.channel_type === 'chat', 'border border-light': !store.isOdooWhiteTheme}">
             <div class="d-flex flex-colum d-flex flex-column">
-                <div class="o-discuss-CallInvitation-main" t-ref="root">
+                <div class="o-discuss-CallInvitation-main" t-custom-ref="root">
                     <div class="ms-1 position-relative d-flex justify-content-between p-2">
                         <div class="d-flex align-items-center" style="min-width: 0;">
                             <div class="o-mail-CallInvitation-avatar flex-shrink-0 cursor-pointer d-flex align-items-center justify-content-center rounded-circle overflow-hidden" t-att-class="{'bg-primary': !inviter}" t-on-click="() => props.channel.open({ focus: true })" t-att-title="avatarTitle">

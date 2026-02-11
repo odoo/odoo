@@ -9,11 +9,11 @@
         t-att-placeholder="props.placeholder"
         t-att-disabled="!props.enabled"
         t-att-title="state.value"
-        t-model="state.value"
+        t-custom-model="state.value"
         t-on-keydown="onKeydownInput"
         t-on-focus="() => this.state.isFocused = true"
         t-on-blur="onBlurInput"
-        t-ref="input"
+        t-custom-ref="input"
         type="text"
     />
 </t>

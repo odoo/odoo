@@ -104,7 +104,7 @@
                     </div>
                     <div class="closing-notes-container d-flex flex-column flex-grow-1 align-items-start">
                         <label class="form-label" for="closingNotes">Closing note</label>
-                        <textarea class="closing-notes form-control" style="height: 60px" rows="7" id="closingNotes" placeholder="Add a closing note..." t-model="state.notes"/>
+                        <textarea class="closing-notes form-control" style="height: 60px" rows="7" id="closingNotes" placeholder="Add a closing note..." t-custom-model="state.notes"/>
                     </div>
                 </div>
                 <div class="mt-3" t-if="orderForNextDays > 0">

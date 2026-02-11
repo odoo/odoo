@@ -8,7 +8,7 @@
                     <div class="input-group-text"><i class="fa fa-key"/></div>
                     <input type="text" class="form-control" id="api_key_input"
                             t-att-class="{ 'is-invalid': state.apiKeyValidation and !state.apiKeyValidation.isValid and state.apiKeyValidation.message }"
-                            t-model="state.apiKey"
+                            t-custom-model="state.apiKey"
                             placeholder="BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"/>
                 </div>
                 <small t-if="state.apiKeyValidation and !state.apiKeyValidation.isValid and state.apiKeyValidation.message" id="api_key_help" class="text-danger">

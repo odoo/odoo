@@ -14,7 +14,7 @@
                     <select t-if="preset.needsPartner and existingPartners.length"
                         class="partner-select form-select form-select-lg"
                         t-on-change="selectExistingPartner"
-                        t-model="state.selectedPartnerId">
+                        t-custom-model="state.selectedPartnerId">
                         <option value="">
                             Select your address
                         </option>
@@ -26,24 +26,24 @@
                         type="text"
                         class="form-control form-control-lg"
                         placeholder="Name"
-                        t-model="state.name"
+                        t-custom-model="state.name"
                         t-att-disabled="partnerIsSelected" />
                     <input t-if="preset.needsEmail || preset.needsPartner"
                         type="text"
                         class="form-control form-control-lg"
                         placeholder="Email"
-                        t-model="state.email"
+                        t-custom-model="state.email"
                         t-att-disabled="partnerIsSelected" />
                     <t t-if="preset.needsName || preset.needsPartner">
                         <input type="text"
                             class="form-control form-control-lg"
                             placeholder="Phone"
-                            t-model="state.phone"
+                            t-custom-model="state.phone"
                             t-att-disabled="partnerIsSelected"/>
                         <p t-if="!checkPhoneFormat()" class="text-danger">Enter a valid phone number starting with the country code (e.g. +32)</p>
                     </t>
                     <t t-if="preset.needsPartner">
-                        <select class="partner-select form-select form-select-lg" t-model="state.countryId" t-att-disabled="partnerIsSelected">
+                        <select class="partner-select form-select form-select-lg" t-custom-model="state.countryId" t-att-disabled="partnerIsSelected">
                             <option value="">
                                 Select a country
                             </option>
@@ -55,18 +55,18 @@
                             <input type="text"
                                 class="form-control form-control-lg w-75"
                                 placeholder="Street and Number"
-                                t-model="state.street"
+                                t-custom-model="state.street"
                                 t-att-disabled="partnerIsSelected"/>
                             <input
                                 type="text"
                                 class="form-control form-control-lg w-25"
                                 placeholder="Zip"
-                                t-model="state.zip"
+                                t-custom-model="state.zip"
                                 t-att-disabled="partnerIsSelected"/>
                         </div>
                         <div class="d-flex gap-3">
                             <t t-set="availableState" t-value="this.states" />
-                            <select t-if="availableState.length" class="partner-select form-select form-select-lg" t-model="state.stateId" t-att-disabled="partnerIsSelected">
+                            <select t-if="availableState.length" class="partner-select form-select form-select-lg" t-custom-model="state.stateId" t-att-disabled="partnerIsSelected">
                                 <option value="">
                                     Select a state
                                 </option>
@@ -77,7 +77,7 @@
                             <input type="text"
                                 class="form-control form-control-lg"
                                 placeholder="City"
-                                t-model="state.city"
+                                t-custom-model="state.city"
                                 t-att-disabled="partnerIsSelected"/>
                         </div>
                     </t>

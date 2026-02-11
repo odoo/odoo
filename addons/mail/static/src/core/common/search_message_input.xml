@@ -5,7 +5,7 @@
             <div class="input-group">
                 <div class="o_searchview form-control d-flex align-items-center bg-view p-0" role="search" aria-autocomplete="list">
                     <div class="o_searchview_input_container d-flex align-items-center flex-grow-1 flex-wrap gap-1 h-100">
-                        <input type="text" class="o_searchview_input flex-grow-1 w-auto border-0 rounded-start ps-2 bg-view" accesskey="Q" t-att-placeholder="inputPlaceholder" t-model="state.searchTerm" t-on-keydown="onKeydownSearch" t-ref="autofocus" role="searchbox"/>
+                        <input type="text" class="o_searchview_input flex-grow-1 w-auto border-0 rounded-start ps-2 bg-view" accesskey="Q" t-att-placeholder="inputPlaceholder" t-custom-model="state.searchTerm" t-on-keydown="onKeydownSearch" t-ref="autofocus" role="searchbox"/>
                         <i class="fa fa-fw fa-times-circle me-2 opacity-50 opacity-100-hover" t-att-class="{ 'invisible': !state.searchedTerm }" role="img" aria-label="Clear Search" title="Clear Search" t-on-click="() => this.onClickClearSearch()"/>
                     </div>
                 </div>

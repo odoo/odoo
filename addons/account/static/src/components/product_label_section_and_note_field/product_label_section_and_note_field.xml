@@ -11,7 +11,7 @@
                     t-att-class="sectionAndNoteClasses"
                     t-att-readonly="sectionAndNoteIsReadonly"
                     t-att-value="label"
-                    t-ref="labelNodeRef"
+                    t-custom-ref="labelNodeRef"
                     t-key="props.readonly"
                 />
             </t>
@@ -23,7 +23,7 @@
                     t-att-class="sectionAndNoteClasses"
                     t-att-readonly="sectionAndNoteIsReadonly"
                     t-att-value="label"
-                    t-ref="labelNodeRef"
+                    t-custom-ref="labelNodeRef"
                     t-key="props.readonly"
                 />
             </t>
@@ -54,7 +54,7 @@
                     type="text"
                     t-att-class="{ ...sectionAndNoteClasses, 'd-none': !(columnIsProductAndLabel.value and (label or labelVisibility.value)) }"
                     t-att-value="label"
-                    t-ref="labelNodeRef"
+                    t-custom-ref="labelNodeRef"
                 />
             </t>
             <t t-if="isPrintMode.value">

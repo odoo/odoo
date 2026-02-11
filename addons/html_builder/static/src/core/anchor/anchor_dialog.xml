@@ -6,7 +6,7 @@
         <div class="mb-3 row">
             <label class="col-form-label col-md-3" for="anchorName">Choose an anchor name</label>
             <div class="col-md-9">
-                <input t-ref="anchor-input" type="text" class="form-control" id="anchorName"
+                <input t-custom-ref="anchor-input" type="text" class="form-control" id="anchorName"
                        t-att-class="{'is-invalid': !state.isValid}"
                        t-attf-value="#{props.currentAnchorName}" placeholder="Anchor name"/>
                 <div class="invalid-feedback">

@@ -85,7 +85,7 @@
     </t>
 
     <t t-name="web.SearchBar">
-        <div t-if="visibilityState.showSearchBar" class="o_cp_searchview d-flex input-group" role="search" t-ref="root">
+        <div t-if="visibilityState.showSearchBar" class="o_cp_searchview d-flex input-group" role="search" t-custom-ref="root">
             <Dropdown
                 state="inputDropdownState"
                 manual="true"
@@ -108,14 +108,14 @@
                             role="img"
                         />
                     </button>
-                    <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1 mw-100" t-ref="facetContainerRef">
+                    <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1 mw-100" t-custom-ref="facetContainerRef">
                         <t t-call="web.SearchBar.Facets"/>
                         <input type="text"
                             class="o_searchview_input o_input d-print-none flex-grow-1 w-auto border-0"
                             accesskey="Q"
                             placeholder="Search..."
                             role="searchbox"
-                            t-ref="autofocus"
+                            t-custom-ref="autofocus"
                             t-on-click="onSearchClick"
                             t-on-input="onSearchInput"
                             t-on-compositionend="onCompositionEnd"

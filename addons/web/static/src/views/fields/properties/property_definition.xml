@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.PropertyDefinition">
-        <div class="o_field_property_definition o_field_widget o_form_view d-block" t-ref="propertyDefinition">
+        <div class="o_field_property_definition o_field_widget o_form_view d-block" t-custom-ref="propertyDefinition">
             <div t-if="env.isSmall" class="d-flex justify-content-between px-3 border-bottom">
                 <button class="btn oi oi-arrow-left my-2" t-on-click="() => this.props.close()"/>
                 <button
@@ -23,7 +23,7 @@
                         required=""
                         placeholder="Property Name"
                         autocomplete="off"
-                        t-model="state.propertyDefinition.string"
+                        t-custom-model="state.propertyDefinition.string"
                         t-on-change="onPropertyLabelChange"
                         t-on-keypress="onPropertyLabelKeypress"
                     />
@@ -153,7 +153,7 @@
                             type="text"
                             placeholder=""
                             autocomplete="off"
-                            t-model="state.propertyDefinition.suffix"
+                            t-custom-model="state.propertyDefinition.suffix"
                             t-on-change="onSuffixChange"
                         />
                     </div>

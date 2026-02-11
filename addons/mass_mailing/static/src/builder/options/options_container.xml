@@ -1,8 +1,8 @@
 <templates xml:space="preserve">
     <t t-name="mass_mailing.OptionsContainer" t-inherit="html_builder.OptionsContainer">
-        <xpath expr="//div[@t-ref='content']" position="replace">
+        <xpath expr="//div[@t-custom-ref='content']" position="replace">
             <t t-if="versionState.isUpToDate">
-                <div class="we-bg-options-container pb-3" t-ref="content">
+                <div class="we-bg-options-container pb-3" t-custom-ref="content">
                     <t t-foreach="props.options" t-as="OptionClass" t-key="OptionClass.name + '-' + OptionClass.template">
                         <BuilderContext applyTo="OptionClass.applyTo" t-if="hasAccess(OptionClass.groups)">
                             <t t-component="OptionClass"></t>

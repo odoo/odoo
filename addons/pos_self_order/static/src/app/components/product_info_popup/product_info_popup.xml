@@ -11,7 +11,7 @@
                         </div>
                         <t t-set="product" t-value="props.productTemplate"/>
 
-                        <div class="modal-body px-3 px-sm-4 pt-0" t-ref="scrollContainer">
+                        <div class="modal-body px-3 px-sm-4 pt-0" t-custom-ref="scrollContainer">
                             <h2 t-esc="product.name" class="mb-3"/>
                             <div t-if="product.public_description" >
                                 <t t-out="product.productDescriptionMarkup"/>

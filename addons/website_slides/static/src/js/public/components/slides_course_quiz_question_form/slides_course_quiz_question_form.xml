@@ -4,12 +4,12 @@
     <t t-name="slide.quiz.question.input">
         <div
             t-attf-class="o_wsildes_quiz_question_input mt-3 #{!props.update ? 'col' : ''}">
-            <form class="mb-3" t-ref="form">
+            <form class="mb-3" t-custom-ref="form">
                 <div class="o_wslides_quiz_question row align-items-center me-0 mb-2">
                     <div class="input-group">
-                        <span class="input-group-text o_wslides_quiz_question_sequence" t-ref="sequence"><t t-out="props.question.sequence"/></span>
+                        <span class="input-group-text o_wslides_quiz_question_sequence" t-custom-ref="sequence"><t t-out="props.question.sequence"/></span>
                         <input type="text" name="question-name" class="form-control col-11" placeholder='e.g. "Which animal cannot fly?"'
-                            t-model="props.question.text" t-ref="input"/>
+                            t-custom-model="props.question.text" t-custom-ref="input"/>
                     </div>
                 </div>
                 <div class="text-muted mb-2">
@@ -37,7 +37,7 @@
                 <div class="row align-items-center">
                     <div class="col-9 p-0">
                         <div class="input-group">
-                            <input type="text" class="o_wslides_js_quiz_answer_value form-control" t-attf-placeholder='e.g. "{{answer.placeholder || "another animal"}}"' t-model="answer.text"/>
+                            <input type="text" class="o_wslides_js_quiz_answer_value form-control" t-attf-placeholder='e.g. "{{answer.placeholder || "another animal"}}"' t-custom-model="answer.text"/>
                             <div class="input-group-text">
                                 <a class="o_wslides_js_quiz_is_correct" title="This is the correct answer">
                                     <label class="my-0">
@@ -62,7 +62,7 @@
                 </div>
                 <div class="o_wslides_js_quiz_answer_comment row align-items-center d-none">
                     <div class="col-8 offset-1 p-0">
-                        <input t-model="answer.comment" type="text" class="form-control mt-1" placeholder="This is the correct answer, congratulations"/>
+                        <input t-custom-model="answer.comment" type="text" class="form-control mt-1" placeholder="This is the correct answer, congratulations"/>
                     </div>
                     <i
                         class="o_wslides_js_quiz_icon o_wslides_js_quiz_remove_answer_comment fa fa-lg fa-trash-o p-2 text-muted col-auto"

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ProgressBarField">
-        <div class="o_progressbar w-100 d-flex align-items-center" t-ref="numpadDecimal">
+        <div class="o_progressbar w-100 d-flex align-items-center" t-custom-ref="numpadDecimal">
             <div t-if="props.title" class="o_progressbar_title text-nowrap pe-1"><t t-esc="props.title"/></div>
             <div class="o_progress align-middle overflow-hidden" aria-valuemin="0" t-att-aria-valuemax="this.maxValue" t-att-aria-valuenow="this.currentValue">
                 <div t-attf-class="{{ progressBarColorClass }} h-100" t-att-style="'width: min(' + 100 * this.currentValue / this.maxValue + '%, 100%)'"></div>
@@ -11,7 +11,7 @@
                 <t t-if="isPercentage">
                     <input
                         t-if="isEditable and props.isCurrentValueEditable"
-                        t-ref="currentValue"
+                        t-custom-ref="currentValue"
                         class="o_input h-100 text-center"
                         type="text"
                         inputmode="decimal"
@@ -26,7 +26,7 @@
                 <t t-else="">
                     <input
                         t-if="isEditable and props.isCurrentValueEditable"
-                        t-ref="currentValue"
+                        t-custom-ref="currentValue"
                         class="o_input h-100 text-center"
                         type="text"
                         inputmode="decimal"
@@ -38,7 +38,7 @@
                     /
                     <input
                         t-if="isEditable and props.isMaxValueEditable"
-                        t-ref="maxValue"
+                        t-custom-ref="maxValue"
                         class="o_input h-100 text-center"
                         type="text"
                         inputmode="decimal"

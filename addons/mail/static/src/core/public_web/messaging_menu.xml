@@ -9,7 +9,7 @@
     <div t-att-class="`${discussSystray.contentClass} o-mail-MessagingMenu ${ui.isSmall ? 'o-small' : ''}`">
         <t name="before-content"/>
         <DiscussContent t-if="['inbox', 'starred'].includes(store.discuss.activeTab) and ui.isSmall"/>
-        <div t-else="" class="o-mail-MessagingMenu-list d-flex flex-column overflow-auto o-scrollbar-thin flex-grow-1 list-group list-group-flush o-scrollbar-thin" t-ref="notification-list">
+        <div t-else="" class="o-mail-MessagingMenu-list d-flex flex-column overflow-auto o-scrollbar-thin flex-grow-1 list-group list-group-flush o-scrollbar-thin" t-custom-ref="notification-list">
             <t t-set="itemIndex" t-value="0"/>
             <t t-foreach="visibleStandaloneMessages" name="standaloneInboxMessages" t-as="message" t-key="message.id">
                 <NotificationItem

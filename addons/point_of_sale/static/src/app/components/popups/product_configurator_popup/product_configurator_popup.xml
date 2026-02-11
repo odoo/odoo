@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.RadioProductAttribute">
-        <div class="configurator_radio" t-ref="root">
+        <div class="configurator_radio" t-custom-ref="root">
             <div class="d-flex flex-wrap gap-3 align-items-center">
                 <t t-foreach="props.attribute.values()" t-as="value" t-key="value.id">
                     <div class="attribute-name-cell form-check">
@@ -32,7 +32,7 @@
     </t>
 
     <t t-name="point_of_sale.PillsProductAttribute">
-        <div class="configurator_radio" t-ref="root">
+        <div class="configurator_radio" t-custom-ref="root">
             <div class="d-flex flex-wrap gap-2">
                 <t t-foreach="props.attribute.values()" t-as="value" t-key="value.id">
                     <div class="attribute-name-cell">
@@ -193,7 +193,7 @@
     <t t-name="point_of_sale.ProductConfiguratorPopup">
         <Dialog title="title">
             <ProductInfoBanner t-if="showInfoBanner" productTemplate="props.productTemplate" product="this.product" />
-            <div t-ref="input-area">
+            <div t-custom-ref="input-area">
                 <div t-if="isArchivedCombination()" class="alert alert-warning mt-3">
                     <span>This option or combination of options is not available</span>
                 </div>

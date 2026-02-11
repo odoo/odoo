@@ -28,7 +28,7 @@
             </div>
             <div class="opening-notes-container d-flex flex-column align-items-start">
                 <label class="form-label" for="openingNotes">Opening note</label>
-                <textarea class="opening-notes form-control" id="openingNotes" rows="4" t-model="state.notes" placeholder="Add an opening note..." />
+                <textarea class="opening-notes form-control" id="openingNotes" rows="4" t-custom-model="state.notes" placeholder="Add an opening note..." />
             </div>
             <t t-set-slot="footer">
                 <button class="button btn btn-lg btn-primary"

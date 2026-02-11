@@ -3,7 +3,7 @@
 
     <t t-name="point_of_sale.TipScreen">
         <div class="tip-screen screen h-100 bg-100">
-            <div class="pos-receipt-container text-center" t-ref="pos-receipt-container"/>
+            <div class="pos-receipt-container text-center" t-custom-ref="pos-receipt-container"/>
             <div class="screen-content d-flex flex-column h-100">
                 <div class="top-content d-flex align-items-center p-2 border-bottom text-center">
                     <button class="button btn btn-lg btn-outline-primary" t-on-click="goPreviousScreen">
@@ -45,7 +45,7 @@
                         <div class="custom-amount-form d-flex">
                             <div class="input-group input-group-lg">
                                 <span class="input-group-text bg-secondary">Tip Amount</span>
-                                <input type="text" class="item form-control fs-1" aria-label="Username" t-model="state.inputTipAmount" t-att-data-amount="state.inputTipAmount"/>
+                                <input type="text" class="item form-control fs-1" aria-label="Username" t-custom-model="state.inputTipAmount" t-att-data-amount="state.inputTipAmount"/>
                                 <span class="input-group-text">
                                     <div class="currency">
                                         <t t-esc="pos.currency.symbol" />

@@ -1,6 +1,6 @@
 <templates id="template">
     <div t-name="mass_mailing.ThemeSelector" class="o_mail_theme_selector">
-        <div t-ref="themeSelectorWrapper" class="o_mailing_template_preview_wrapper d-inline-block w-100">
+        <div t-custom-ref="themeSelectorWrapper" class="o_mailing_template_preview_wrapper d-inline-block w-100">
             <div class="o_mail_templates_grid w-100">
                 <div t-foreach="simpleThemes.values()" t-as="theme" t-key="theme_index" role="menuitem" class="cursor-pointer dropdown-item px-4"
                     t-on-click="() => this.onSelectTheme(theme)" t-att-data-name="theme.name">

@@ -2,10 +2,10 @@
 
     <t t-name="html_editor.linkPopover">
         <div class="o-we-linkpopover d-flex bg-light overflow-auto shadow" t-on-keydown="onKeydown" role="dialog" aria-modal="true" aria-label="Link Popover">
-            <div t-if="state.editing" class="container-fluid d-flex vertical-center p-2" t-ref="editing-wrapper">
+            <div t-if="state.editing" class="container-fluid d-flex vertical-center p-2" t-custom-ref="editing-wrapper">
                 <div t-if="state.isImage" class="col p-2 o_link_popover_container">
                     <div class="input-group mb-1">
-                        <input name="o_linkpopover_url_img" t-ref="url" class="o_we_href_input_link border-dark-subtle form-control form-control-sm" t-model="state.url" title="URL" placeholder="Type your URL"
+                        <input name="o_linkpopover_url_img" t-custom-ref="url" class="o_we_href_input_link border-dark-subtle form-control form-control-sm" t-custom-model="state.url" title="URL" placeholder="Type your URL"
                             t-on-keydown="onKeydownEnter"/>
                         <button class="o_we_apply_link btn btn-sm btn-primary" t-att-class="{'mx-1': state.type ===  ''}" t-on-click="onClickApply">Apply</button>
                     </div>
@@ -46,18 +46,18 @@
                 <t t-else="">
                     <div class="col p-2 o_link_popover_container">
                         <div class="input-group mb-2" t-att-class="{'d-none': !state.showLabel}">
-                            <input t-ref="label"
+                            <input t-custom-ref="label"
                                 class="o_we_label_link border-dark-subtle form-control form-control-sm"
-                                t-model="state.label"
+                                t-custom-model="state.label"
                                 title="Label"
                                 placeholder="Add a label for your link"
                                 t-on-input="onChange"/>
                         </div>
                         <div class="input-group mb-2">
-                            <input t-ref="url"
+                            <input t-custom-ref="url"
                                 name="o_linkpopover_url"
                                 class="o_we_href_input_link border-dark-subtle form-control form-control-sm"
-                                t-model="state.url"
+                                t-custom-model="state.url"
                                 title="URL"
                                 placeholder="e.g. https://www.odoo.com"
                                 t-on-keydown="onKeydownEnter"
@@ -94,11 +94,11 @@
                             </Dropdown>
                         </div>
                         <div t-if="state.type !== 'link'" class="input-group mb-2">
-                            <select name="link_style_size" class="form-select form-select-sm border-dark-subtle" t-model="state.buttonSize" t-on-change="onChange" aria-label="Select button size">
+                            <select name="link_style_size" class="form-select form-select-sm border-dark-subtle" t-custom-model="state.buttonSize" t-on-change="onChange" aria-label="Select button size">
                                 <option t-foreach="this.buttonSizesData" t-as="buttonSizesData" t-key="buttonSizesData.size" t-att-value="buttonSizesData.size"
                                     t-att-selected="state.buttonSize === buttonSizesData.size" t-out="buttonSizesData.label"/>
                             </select>
-                            <select name="link_style_shape" class="form-select form-select-sm link-style border-dark-subtle" t-model="state.buttonShape" t-on-change="onChange" aria-label="Select button shape">
+                            <select name="link_style_shape" class="form-select form-select-sm link-style border-dark-subtle" t-custom-model="state.buttonShape" t-on-change="onChange" aria-label="Select button shape">
                                 <option t-foreach="this.buttonShapeData" t-as="buttonShapeData" t-key="buttonShapeData.shape" t-att-value="buttonShapeData.shape"
                                     t-att-selected="state.buttonShape === buttonShapeData.shape" t-out="buttonShapeData.label"/>
                             </select>
@@ -107,29 +107,29 @@
                         <t t-if="state.type === 'custom'">
                             <div class="d-flex mb-1 custom-text-color">
                                 <label>Text Color</label>
-                                <button class="o_we_color_preview custom-text-picker me-3" t-att-data-color="this.customTextColorState.selectedColor" t-ref="customTextColorButton"
+                                <button class="o_we_color_preview custom-text-picker me-3" t-att-data-color="this.customTextColorState.selectedColor" t-custom-ref="customTextColorButton"
                                         t-attf-style="background-color: {{this.props.formatColor(this.customTextColorState.selectedColor)}}"/>
                                 <label>Fill Color</label>
-                                <button class="o_we_color_preview custom-fill-picker" t-att-data-color="this.customFillColorState.selectedColor" t-ref="customFillColorButton"
+                                <button class="o_we_color_preview custom-fill-picker" t-att-data-color="this.customFillColorState.selectedColor" t-custom-ref="customFillColorButton"
                                         t-attf-style="{{this.customFillColorState.selectedColor?.includes('gradient') ? 'background-image' : 'background-color'}}: {{this.props.formatColor(this.customFillColorState.selectedColor)}}" />
                             </div>
                             <div class="d-flex mb-1 custom-border align-items-center">
                                 <label class="flex-shrink-0">Border</label>
                                 <div class="input-group me-1">
                                     <input type="number" min="0"
-                                        class="form-control form-control-sm custom-border-size flex-grow-0" t-model="state.customBorderSize"
+                                        class="form-control form-control-sm custom-border-size flex-grow-0" t-custom-model="state.customBorderSize"
                                         placeholder="Border Size" t-on-keydown="onKeydownEnter" t-on-input="onInput"/>
                                     <span class="input-group-text">px</span>
                                 </div>
                                 <div class="d-flex align-items-center" t-if="state.customBorderSize > 0">
-                                    <select name="link_style_border" class="form-select form-select-sm custom-border-style me-1" t-model="state.customBorderStyle" t-on-change="onChange">
+                                    <select name="link_style_border" class="form-select form-select-sm custom-border-style me-1" t-custom-model="state.customBorderStyle" t-on-change="onChange">
                                         <t t-foreach="this.borderData" t-as="borderData" t-key="borderData.style">
                                             <option t-att-value="borderData.style" t-att-selected="state.customBorderStyle === borderData.style">
                                                 <span t-esc="borderData.label"/>
                                             </option>
                                         </t>
                                     </select>
-                                    <button class="o_we_color_preview custom-border-picker" t-att-data-color="this.customBorderColorState.selectedColor" t-ref="customBorderColorButton"
+                                    <button class="o_we_color_preview custom-border-picker" t-att-data-color="this.customBorderColorState.selectedColor" t-custom-ref="customBorderColorButton"
                                         t-attf-style="background-color: {{this.props.formatColor(this.customBorderColorState.selectedColor)}}" />
                                 </div>
                             </div>

@@ -18,12 +18,12 @@
             t-on-click="onClick"
             t-on-mousedown="onMouseDown"
             t-on-touchmove="onTouchMove"
-            t-ref="root"
+            t-custom-ref="root"
         >
             <!-- card -->
             <t t-if="!props.isSidebarItem and props.cardData.type === 'screen' and rtc.screenTrack and !rtc.screenTrack.enabled">
                 <div class="o-text-white display-5 gap-3">
-                    <button class="pe-auto bg-transparent o-text-white border-0 opacity-25 opacity-75-hover" t-ref="resumeStream" t-on-click.stop="() => (this.rtc.screenTrack.enabled = true)">
+                    <button class="pe-auto bg-transparent o-text-white border-0 opacity-25 opacity-75-hover" t-custom-ref="resumeStream" t-on-click.stop="() => (this.rtc.screenTrack.enabled = true)">
                         <i class="fa fa-fw" t-att-class="{ 'fa-play-circle-o': resumeStreamHover.isHover, 'fa-pause-circle-o': !resumeStreamHover.isHover }"/> <span><t t-if="resumeStreamHover.isHover">Resume stream</t><t t-else="">Stream paused</t></span>
                     </button>
                 </div>

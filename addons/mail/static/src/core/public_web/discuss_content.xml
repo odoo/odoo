@@ -3,8 +3,8 @@
 
 <t t-name="mail.DiscussContent">
     <t t-set="partitionedActions" t-value="threadActions.partition"/>
-    <div class="o-mail-DiscussContent d-flex flex-column h-100 w-100 overflow-auto o-scrollbar-thin" t-ref="root">
-        <div class="o-mail-DiscussContent-header ps-3 d-flex flex-shrink-0 align-items-center border-bottom border-dark o-border-opacity-15 gap-1 z-1 flex-grow-0" t-ref="header" t-att-class="{ 'py-1': !state.correspondentLocalDateTimeFormatted }">
+    <div class="o-mail-DiscussContent d-flex flex-column h-100 w-100 overflow-auto o-scrollbar-thin" t-custom-ref="root">
+        <div class="o-mail-DiscussContent-header ps-3 d-flex flex-shrink-0 align-items-center border-bottom border-dark o-border-opacity-15 gap-1 z-1 flex-grow-0" t-custom-ref="header" t-att-class="{ 'py-1': !state.correspondentLocalDateTimeFormatted }">
             <t t-if="thread">
                 <div t-if="showThreadAvatar" class="o-mail-DiscussContent-threadAvatar position-relative align-self-center align-items-center bg-inherit">
                     <DiscussAvatar thread="thread" size="26"/>
@@ -63,9 +63,9 @@
                 </div>
             </t>
         </div>
-        <div class="o-mail-DiscussContent-main d-flex overflow-hidden flex-grow-1" t-ref="main">
+        <div class="o-mail-DiscussContent-main d-flex overflow-hidden flex-grow-1" t-custom-ref="main">
             <t t-if="ui.isSmall" t-call="mail.Discuss.loading"/>
-            <div class="o-mail-DiscussContent-core overflow-auto o-scrollbar-thin d-flex flex-grow-1 w-100" t-ref="core">
+            <div class="o-mail-DiscussContent-core overflow-auto o-scrollbar-thin d-flex flex-grow-1 w-100" t-custom-ref="core">
                 <t name="core-content">
                     <t t-if="thread">
                         <div t-if="!ui.isSmall or !threadActions.activeAction?.actionPanelComponentCondition" class="d-flex flex-column flex-grow-1 bg-inherit">

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CalendarController">
-        <div t-att-class="className" t-ref="root">
+        <div t-att-class="className" t-custom-ref="root">
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="props.display">
                 <t t-set-slot="control-panel-additional-actions">
                     <CogMenu/>

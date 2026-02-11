@@ -52,7 +52,7 @@
 
     <t t-name="im_livechat.LivechatStatusSelection">
     <t t-set="livechatThread" t-value="templateParams.livechatThread"/>
-        <div class="o-livechat-LivechatStatusSelection list-group" t-ref="livechat-status-selection">
+        <div class="o-livechat-LivechatStatusSelection list-group" t-custom-ref="livechat-status-selection">
             <t t-foreach="store.livechatStatusButtons" t-as="btn" t-key="btn.status">
                 <t t-set="isBtnActive" t-value="livechatThread.channel.livechat_status === btn.status"/>
                 <button

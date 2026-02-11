@@ -3,14 +3,14 @@
 
 <t t-name="web.DocSearchModal">
     <div class="modal-bg d-flex flex-nowrap justify-content-center align-items-center">
-        <div class="modal p-2 d-flex flew-nowrap flex-column mb-2" style="height: 40rem; width: 40rem" t-ref="modalRef">
+        <div class="modal p-2 d-flex flew-nowrap flex-column mb-2" style="height: 40rem; width: 40rem" t-custom-ref="modalRef">
             <input
                 class="mb-2"
                 type="text"
                 autocorrect="off"
                 placeholder="Find anything..."
                 t-on-input="onInput"
-                t-ref="seachRef"
+                t-custom-ref="seachRef"
             />
 
             <div class="d-flex flex-nowrap mb-2 align-items-center">
@@ -30,7 +30,7 @@
                 </div>
             </div>
 
-            <div class="d-flex flex-nowrap flex-column w-100 overflow-auto flex-grow" t-ref="scrollRef" t-on-scroll="(ev) => this.onScroll(ev.target)">
+            <div class="d-flex flex-nowrap flex-column w-100 overflow-auto flex-grow" t-custom-ref="scrollRef" t-on-scroll="(ev) => this.onScroll(ev.target)">
                 <div class="overflow-hidden" t-att-style="`min-height: ${this.state.scrollHeight}px`">
                     <div t-att-style="`transform: translateY(${this.state.scrollOffsetY}px)`">
                         <button

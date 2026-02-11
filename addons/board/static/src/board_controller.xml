@@ -29,7 +29,7 @@
                 </t>
             </Dropdown>
         </div>
-        <div class="o-dashboard-layout flex-grow-1" t-attf-class="o-dashboard-layout-{{board.layout}}" t-ref="main">
+        <div class="o-dashboard-layout flex-grow-1" t-attf-class="o-dashboard-layout-{{board.layout}}" t-custom-ref="main">
             <t t-foreach="board.columns" t-as="column" t-key="column_index">
                 <div t-if="column_index lt board.colNumber" class="o-dashboard-column h-100" t-att-data-idx="column_index">
                     <t t-foreach="column.actions" t-as="action" t-key="action.id">

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.floor_plan">
-        <div t-ref="container" class="o_fp_canvas floor-map w-100 h-100 overflow-auto position-relative" t-attf-style="{{getContainerStyle()}}">
+        <div t-custom-ref="container" class="o_fp_canvas floor-map w-100 h-100 overflow-auto position-relative" t-attf-style="{{getContainerStyle()}}">
             <t t-if="floorPlanStore.isEmpty()">
                 <div  class="empty-floor d-flex align-items-center justify-content-center h-100" >
                     <div class="text-center">
@@ -19,7 +19,7 @@
                 </div>
             </t>
             <t t-else="">
-                <div t-ref="canvas" class="o_fp_canvas_inner position-relative" t-attf-style="{{getCanvasStyles()}}">
+                <div t-custom-ref="canvas" class="o_fp_canvas_inner position-relative" t-attf-style="{{getCanvasStyles()}}">
                       <t t-foreach="getFloorDecorElements()" t-as="element" t-key="element.uuid">
                          <t t-call="pos_restaurant.floor_screen_element"/>
                      </t>

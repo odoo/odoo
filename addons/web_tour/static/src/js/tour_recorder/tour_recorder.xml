@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="web_tour.TourRecorder">
-    <div t-ref="tour_recorder" class="d-flex position-fixed ms-2 mb-2 p-1 rounded bg-primary shadow-sm o_tour_recorder" t-attf-style="left: {{state.position.x}}px; bottom: {{state.position.y}}px;">
+    <div t-custom-ref="tour_recorder" class="d-flex position-fixed ms-2 mb-2 p-1 rounded bg-primary shadow-sm o_tour_recorder" t-attf-style="left: {{state.position.x}}px; bottom: {{state.position.y}}px;">
         <div class="d-flex align-items-center">
             <div class="bg-primary text-secondary o_tour_recorder_handler px-1" style="cursor: grab;">
                 <span class="oi oi-draggable"/>

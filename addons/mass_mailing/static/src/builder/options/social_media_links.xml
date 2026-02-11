@@ -10,7 +10,7 @@
         </BuilderSelect>
         <span t-else="" t-out="this.companies[0].name"/>
     </BuilderRow>
-    <div t-ref="root">
+    <div t-custom-ref="root">
         <BuilderRow t-foreach="this.medias" t-as="media" t-key="media">
             <button class="btn o_drag_handle ps-1" t-att-data-sortable-platform="media">
                 <i class="oi oi-draggable"/>

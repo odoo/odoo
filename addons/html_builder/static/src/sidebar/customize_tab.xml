@@ -10,7 +10,7 @@
             </div>
         </t>
         <t t-else="">
-            <div t-ref="content" class="d-flex flex-column h-100">
+            <div t-custom-ref="content" class="d-flex flex-column h-100">
                 <CustomizeComponent t-if="this.customizeComponent.component"
                     editingElements="this.customizeComponent.editingEls"
                     comp="this.customizeComponent.component"

@@ -9,7 +9,7 @@
                             <h2 class="modal-title fw-bolder">Categories</h2>
                             <button type="button" class="btn-close" t-on-click.stop="() => this.props.close()"></button>
                         </div>
-                        <div class="modal-body p-0" t-ref="scrollContainer">
+                        <div class="modal-body p-0" t-custom-ref="scrollContainer">
                             <t t-foreach="this.props.categories" t-as="category" t-key="category.id">
                                   <div class="p-3 fw-bold fs-3 cursor-pointer text-nowrap d-flex align-items-center "
                                     t-on-click=" ()=> this.selectCategory(category)"  t-att-class="{'border-bottom': !category_last}"  >
