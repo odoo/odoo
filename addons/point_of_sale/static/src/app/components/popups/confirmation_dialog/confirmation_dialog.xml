@@ -5,7 +5,7 @@
       <attribute name="contentClass">'o_confirmation_dialog ' + (props.contentClass || '')</attribute>
     </xpath>
     <xpath expr="//t[@t-set-slot='footer']" position="inside">
-      <button t-if="props.showReloadButton" class="btn btn-secondary" t-on-click="_reloadData">
+      <button t-if="this.props.showReloadButton" class="btn btn-secondary" t-on-click="this._reloadData">
         Reload Data
       </button>
     </xpath>
@@ -16,7 +16,7 @@
       <attribute name="contentClass">'o_alert_dialog ' + (props.contentClass || '')</attribute>
     </xpath>
     <xpath expr="//t[@t-set-slot='footer']" position="inside">
-      <button t-if="props.showReloadButton" class="btn btn-secondary" t-on-click="_reloadData">
+      <button t-if="this.props.showReloadButton" class="btn btn-secondary" t-on-click="this._reloadData">
         Reload Data
       </button>
     </xpath>

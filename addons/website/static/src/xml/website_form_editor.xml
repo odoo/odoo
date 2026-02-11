@@ -24,12 +24,12 @@
     <!-- Generic Field Layout -->
     <!-- Changes made here needs to be reflected in the different Form view (Contact Us, Jobs, ...) -->
     <t t-name="website.form_field">
-        <div t-attf-class="s_website_form_field mb-3 #{field.formatInfo.col or 'col-12'} #{field.formatInfo.offset} #{field.custom and 's_website_form_custom' or ''} #{(field.required and 's_website_form_required' or '') or (field.modelRequired and 's_website_form_model_required' or '')} #{field.hidden and 's_website_form_field_hidden' or ''} #{field.dnone and 's_website_form_dnone' or ''}"
-            t-att-data-type="field.type"
+        <div t-attf-class="s_website_form_field mb-3 #{this.field.formatInfo.col or 'col-12'} #{this.field.formatInfo.offset} #{this.field.custom and 's_website_form_custom' or ''} #{(this.field.required and 's_website_form_required' or '') or (this.field.modelRequired and 's_website_form_model_required' or '')} #{this.field.hidden and 's_website_form_field_hidden' or ''} #{this.field.dnone and 's_website_form_dnone' or ''}"
+            t-att-data-type="this.field.type"
             data-name="Field"
-            t-att-data-translated-name="defaultName">
-            <div t-if="field.formatInfo.labelPosition !== 'none' and field.formatInfo.labelPosition !== 'top'" class="row s_col_no_resize s_col_no_bgcolor">
-                <label t-attf-class="#{!field.isCheck and 'col-form-label' or ''} col-sm-auto s_website_form_label #{field.formatInfo.labelPosition === 'right' and 'text-end' or ''}" t-attf-style="width: #{field.formatInfo.labelWidth or '200px'}" t-att-for="field.id">
+            t-att-data-translated-name="this.defaultName">
+            <div t-if="this.field.formatInfo.labelPosition !== 'none' and this.field.formatInfo.labelPosition !== 'top'" class="row s_col_no_resize s_col_no_bgcolor">
+                <label t-attf-class="#{!this.field.isCheck and 'col-form-label' or ''} col-sm-auto s_website_form_label #{this.field.formatInfo.labelPosition === 'right' and 'text-end' or ''}" t-attf-style="width: #{this.field.formatInfo.labelWidth or '200px'}" t-att-for="this.field.id">
                      <t t-call="website.form_label_content"/>
                 </label>
                 <div class="col-sm">
@@ -38,7 +38,7 @@
                 </div>
             </div>
             <t t-else="">
-                <label t-attf-class="s_website_form_label #{field.formatInfo.labelPosition === 'none' and 'd-none' or ''}" t-attf-style="width: #{field.formatInfo.labelWidth or '200px'}" t-att-for="field.id">
+                <label t-attf-class="s_website_form_label #{this.field.formatInfo.labelPosition === 'none' and 'd-none' or ''}" t-attf-style="width: #{this.field.formatInfo.labelWidth or '200px'}" t-att-for="this.field.id">
                      <t t-call="website.form_label_content"/>
                 </label>
                 <t t-out="0"/>
@@ -48,12 +48,12 @@
     </t>
 
     <t t-name="website.form_label_content">
-        <span class="s_website_form_label_content" t-out="field.string"/>
-        <t t-if="field.required or field.modelRequired">
-            <span class="s_website_form_mark" t-if="field.formatInfo.requiredMark" t-out="' ' + field.formatInfo.mark"/>
+        <span class="s_website_form_label_content" t-out="this.field.string"/>
+        <t t-if="this.field.required or this.field.modelRequired">
+            <span class="s_website_form_mark" t-if="this.field.formatInfo.requiredMark" t-out="' ' + this.field.formatInfo.mark"/>
         </t>
         <t t-else="">
-            <span class="s_website_form_mark" t-if="field.formatInfo.optionalMark" t-out="' ' + field.formatInfo.mark"/>
+            <span class="s_website_form_mark" t-if="this.field.formatInfo.optionalMark" t-out="' ' + this.field.formatInfo.mark"/>
         </t>
     </t>
 
@@ -70,8 +70,8 @@
             form descriptions as the behavior is kinda weird (but it mainly does
             not make sense to try and change it over there anyway).
         -->
-        <div t-if="default_description" class="s_website_form_field_description small form-text text-muted" contenteditable="true">
-            <t t-out="default_description"/>
+        <div t-if="this.default_description" class="s_website_form_field_description small form-text text-muted" contenteditable="true">
+            <t t-out="this.default_description"/>
         </div>
     </t>
 
@@ -81,9 +81,9 @@
             <input
                 type="hidden"
                 class="form-control s_website_form_input"
-                t-att-name="field.name"
-                t-attf-value="#{field.value}"
-                t-att-id="field.id"
+                t-att-name="this.field.name"
+                t-attf-value="#{this.field.value}"
+                t-att-id="this.field.id"
             />
         </t>
     </t>
@@ -92,14 +92,14 @@
     <t t-name="website.form_field_char">
         <t t-call="website.form_field">
             <input
-                t-att-type="field.inputType || 'text'"
+                t-att-type="this.field.inputType || 'text'"
                 class="form-control s_website_form_input"
-                t-att-name="field.name"
-                t-att-required="field.required || field.modelRequired || None"
-                t-attf-value="#{field.value}"
-                t-att-data-fill-with="field.fillWith"
-                t-att-placeholder="field.placeholder"
-                t-att-id="field.id"
+                t-att-name="this.field.name"
+                t-att-required="this.field.required || this.field.modelRequired || this.None"
+                t-attf-value="#{this.field.value}"
+                t-att-data-fill-with="this.field.fillWith"
+                t-att-placeholder="this.field.placeholder"
+                t-att-id="this.field.id"
             />
         </t>
     </t>
@@ -124,12 +124,12 @@
         <t t-call="website.form_field">
             <textarea
                 class="form-control s_website_form_input"
-                t-att-name="field.name"
-                t-att-required="field.required || field.modelRequired || None"
-                t-att-placeholder="field.placeholder"
-                t-att-id="field.id"
-                t-att-rows="field.rows || 3"
-                t-out="field.value"
+                t-att-name="this.field.name"
+                t-att-required="this.field.required || this.field.modelRequired || this.None"
+                t-att-placeholder="this.field.placeholder"
+                t-att-id="this.field.id"
+                t-att-rows="this.field.rows || 3"
+                t-out="this.field.value"
             />
         </t>
     </t>
@@ -149,12 +149,12 @@
             <input
                 type="number"
                 class="form-control s_website_form_input"
-                t-att-name="field.name"
+                t-att-name="this.field.name"
                 step="1"
-                t-att-required="field.required || field.modelRequired || None"
-                t-attf-value="#{field.value}"
-                t-att-placeholder="field.placeholder"
-                t-att-id="field.id"
+                t-att-required="this.field.required || this.field.modelRequired || this.None"
+                t-attf-value="#{this.field.value}"
+                t-att-placeholder="this.field.placeholder"
+                t-att-id="this.field.id"
             />
         </t>
     </t>
@@ -165,12 +165,12 @@
             <input
                 type="number"
                 class="form-control s_website_form_input"
-                t-att-name="field.name"
+                t-att-name="this.field.name"
                 step="any"
-                t-att-required="field.required || field.modelRequired || None"
-                t-attf-value="#{field.value}"
-                t-att-placeholder="field.placeholder"
-                t-att-id="field.id"
+                t-att-required="this.field.required || this.field.modelRequired || this.None"
+                t-attf-value="#{this.field.value}"
+                t-att-placeholder="this.field.placeholder"
+                t-att-id="this.field.id"
             />
         </t>
     </t>
@@ -182,11 +182,11 @@
                 <input
                         type="text"
                         class="form-control datetimepicker-input s_website_form_input"
-                        t-att-name="field.name"
-                        t-att-required="field.required || field.modelRequired || None"
-                        t-attf-value="#{field.value}"
-                        t-att-placeholder="field.placeholder"
-                        t-att-id="field.id"
+                        t-att-name="this.field.name"
+                        t-att-required="this.field.required || this.field.modelRequired || this.None"
+                        t-attf-value="#{this.field.value}"
+                        t-att-placeholder="this.field.placeholder"
+                        t-att-id="this.field.id"
                 />
                 <div class="input-group-text o_input_group_date_icon"><i class="fa fa-calendar"></i></div>
             </div>
@@ -200,11 +200,11 @@
                 <input
                         type="text"
                         class="form-control datetimepicker-input s_website_form_input"
-                        t-att-name="field.name"
-                        t-att-required="field.required || field.modelRequired || None"
-                        t-attf-value="#{field.value}"
-                        t-att-placeholder="field.placeholder"
-                        t-att-id="field.id"
+                        t-att-name="this.field.name"
+                        t-att-required="this.field.required || this.field.modelRequired || this.None"
+                        t-attf-value="#{this.field.value}"
+                        t-att-placeholder="this.field.placeholder"
+                        t-att-id="this.field.id"
                 />
                 <div class="input-group-text o_input_group_date_icon"><i class="fa fa-calendar"></i></div>
             </div>
@@ -219,10 +219,10 @@
                     type="checkbox"
                     value="Yes"
                     class="s_website_form_input form-check-input"
-                    t-att-name="field.name"
+                    t-att-name="this.field.name"
                     t-att="{checked: field.value and 'checked' or None}"
-                    t-att-required="field.required || field.modelRequired || None"
-                    t-att-id="field.id"
+                    t-att-required="this.field.required || this.field.modelRequired || this.None"
+                    t-att-id="this.field.id"
                 />
             </div>
         </t>
@@ -231,18 +231,18 @@
     <!-- Selection Field -->
     <t t-name="website.form_field_selection">
         <t t-call="website.form_field">
-            <t t-if="!field.records">
+            <t t-if="!this.field.records">
                 <input
                     class="s_website_form_input"
-                    t-att-name="field.name"
+                    t-att-name="this.field.name"
                     t-att-value="undefined"
-                    t-att-required="field.required || field.modelRequired || None"
+                    t-att-required="this.field.required || this.field.modelRequired || this.None"
                     placeholder="No matching record!"
                     disabled=""
                 />
             </t>
-            <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" t-att-data-name="field.name" t-att-data-display="field.formatInfo.multiPosition">
-                <t t-foreach="field.records" t-as="record" t-key="record_index">
+            <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" t-att-data-name="this.field.name" t-att-data-display="this.field.formatInfo.multiPosition">
+                <t t-foreach="this.field.records" t-as="record" t-key="this.record_index">
                     <t t-call="website.form_radio"/>
                 </t>
             </div>
@@ -251,20 +251,20 @@
 
     <!-- Radio -->
     <t t-name="website.form_radio">
-        <t t-set="recordId" t-value="field.id + record_index"/>
-        <div t-attf-class="radio col-12 #{field.formatInfo.multiPosition === 'horizontal' and 'col-lg-4 col-md-6' or ''}">
+        <t t-set="recordId" t-value="this.field.id + this.record_index"/>
+        <div t-attf-class="radio col-12 #{this.field.formatInfo.multiPosition === 'horizontal' and 'col-lg-4 col-md-6' or ''}">
             <div class="form-check">
                 <input
                     type="radio"
                     class="s_website_form_input form-check-input"
                     t-att-id="recordId"
-                    t-att-name="field.name"
+                    t-att-name="this.field.name"
                     t-att="{checked: record.selected and 'checked' or None}"
-                    t-att-value="record.id"
-                    t-att-required="field.required || field.modelRequired || None"
+                    t-att-value="this.record.id"
+                    t-att-required="this.field.required || this.field.modelRequired || this.None"
                 />
                 <label class="form-check-label s_website_form_check_label" t-att-for="recordId">
-                    <t t-out="record.display_name"/>
+                    <t t-out="this.record.display_name"/>
                 </label>
             </div>
         </div>
@@ -273,27 +273,27 @@
     <!-- Many2One Field -->
     <t t-name="website.form_field_many2one">
         <!-- Binary one2many -->
-        <t t-if="field.relation === 'ir.attachment'">
+        <t t-if="this.field.relation === 'ir.attachment'">
             <t t-call="website.form_field_binary"/>
         </t>
         <!-- Generic one2many -->
-        <t t-if="field.relation !== 'ir.attachment'">
+        <t t-if="this.field.relation !== 'ir.attachment'">
             <t t-call="website.form_field">
-                <t t-if="!field.records || field.records.length === 0">
+                <t t-if="!this.field.records || this.field.records.length === 0">
                     <input
                         class="form-control s_website_form_input"
-                        t-att-name="field.name"
+                        t-att-name="this.field.name"
                         t-att-value="undefined"
-                        t-att-required="field.required || field.modelRequired || None"
+                        t-att-required="this.field.required || this.field.modelRequired || this.None"
                         placeholder="No matching record!"
                         disabled=""
                     />
                 </t>
-                <select t-else="" class="form-select s_website_form_input" t-att-name="field.name"
-                    t-att-required="field.required || field.modelRequired || None" t-att-id="field.id"
-                    t-attf-data-link-state-to-country="{{ field.name == 'state_id' and field.linkStateToCountry ? 'true' : 'false' }}">
-                    <t t-foreach="field.records" t-as="record" t-key="record_index">
-                        <option t-out="record.display_name" t-att-id="field.id + record_index" t-att-value="record.id"
+                <select t-else="" class="form-select s_website_form_input" t-att-name="this.field.name"
+                    t-att-required="this.field.required || this.field.modelRequired || this.None" t-att-id="this.field.id"
+                    t-attf-data-link-state-to-country="{{ this.field.name == 'state_id' and this.field.linkStateToCountry ? 'true' : 'false' }}">
+                    <t t-foreach="this.field.records" t-as="record" t-key="this.record_index">
+                        <option t-out="this.record.display_name" t-att-id="this.field.id + record_index" t-att-value="record.id"
                             t-att="{
                                 selected: record.selected and 'selected' or None,
                                 'data-country-id': field.name == 'state_id' and (record.country_id and record.country_id[0]) or None
@@ -307,27 +307,27 @@
     <!-- One2Many Field -->
     <t t-name="website.form_field_one2many">
         <!-- Binary one2many -->
-        <t t-if="field.relation === 'ir.attachment'">
+        <t t-if="this.field.relation === 'ir.attachment'">
             <t t-call="website.form_field_binary">
                 <t t-set="multiple" t-value="1"/>
             </t>
         </t>
         <!-- Generic one2many -->
-        <t t-if="field.relation !== 'ir.attachment'">
+        <t t-if="this.field.relation !== 'ir.attachment'">
             <t t-call="website.form_field">
-                <t t-if="!field.records || field.records.length === 0">
+                <t t-if="!this.field.records || this.field.records.length === 0">
                     <input
                         class="form-control s_website_form_input"
-                        t-att-name="field.name"
+                        t-att-name="this.field.name"
                         t-att-value="undefined"
-                        t-att-required="field.required || field.modelRequired || None"
+                        t-att-required="this.field.required || this.field.modelRequired || this.None"
                         placeholder="No matching record!"
                         disabled=""
                     />
                 </t>
                 <t t-else="">
-	                <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" t-att-data-name="field.name" t-att-data-display="field.formatInfo.multiPosition">
-	                    <t t-foreach="field.records" t-as="record" t-key="record_index">
+	                <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" t-att-data-name="this.field.name" t-att-data-display="this.field.formatInfo.multiPosition">
+	                    <t t-foreach="this.field.records" t-as="record" t-key="this.record_index">
 	                        <t t-call="website.form_checkbox"/>
 	                    </t>
 	                </div>
@@ -338,20 +338,20 @@
 
     <!-- Checkbox -->
     <t t-name="website.form_checkbox">
-        <t t-set="recordId" t-value="field.id + record_index"/>
-        <div t-attf-class="checkbox col-12 #{field.formatInfo.multiPosition === 'horizontal' and 'col-lg-4 col-md-6' or ''}">
+        <t t-set="recordId" t-value="this.field.id + this.record_index"/>
+        <div t-attf-class="checkbox col-12 #{this.field.formatInfo.multiPosition === 'horizontal' and 'col-lg-4 col-md-6' or ''}">
             <div class="form-check">
                 <input
                     type="checkbox"
                     class="s_website_form_input form-check-input"
                     t-att-id="recordId"
-                    t-att-name="field.name"
+                    t-att-name="this.field.name"
                     t-att="{checked: record.selected and 'checked' or None}"
-                    t-att-value="record.id"
-                    t-att-required="field.required || field.modelRequired || None"
+                    t-att-value="this.record.id"
+                    t-att-required="this.field.required || this.field.modelRequired || this.None"
                 />
                 <label class="form-check-label s_website_form_check_label" t-att-for="recordId">
-                    <t t-out="record.display_name"/>
+                    <t t-out="this.record.display_name"/>
                 </label>
             </div>
         </div>
@@ -368,12 +368,12 @@
             <input
                 type="file"
                 class="form-control s_website_form_input"
-                t-att-name="field.name"
-                t-att-required="field.required || field.modelRequired || None"
+                t-att-name="this.field.name"
+                t-att-required="this.field.required || this.field.modelRequired || this.None"
                 t-att="field.maxFilesNumber > 1 and {'multiple': ''} or {}"
-                t-att-id="field.id"
-                t-att-data-max-files-number="field.maxFilesNumber or '1'"
-                t-att-data-max-file-size="field.maxFileSize or '64'"
+                t-att-id="this.field.id"
+                t-att-data-max-files-number="this.field.maxFilesNumber or '1'"
+                t-att-data-max-file-size="this.field.maxFileSize or '64'"
             />
         </t>
     </t>

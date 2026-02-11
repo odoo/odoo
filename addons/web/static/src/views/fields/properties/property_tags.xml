@@ -2,14 +2,14 @@
 <templates xml:space="preserve">
     <t t-name="web.PropertyTags">
         <!-- Copy many2many tags style without duplicating all the CSS -->
-        <div t-attf-class="o_field_property_tag o_field_widget o_field_many2many_tags d-flex {{props.readonly ? 'readonly' : ''}}" t-ref="propertyTags">
-            <t t-foreach="tagListItems" t-as="tag" t-key="tag.id">
+        <div t-attf-class="o_field_property_tag o_field_widget o_field_many2many_tags d-flex {{this.props.readonly ? 'readonly' : ''}}" t-ref="propertyTags">
+            <t t-foreach="this.tagListItems" t-as="tag" t-key="this.tag.id">
                 <BadgeTag color="tag.color" text="tag.text" onDelete="tag.onDelete" onClick="tag.onClick"/>
             </t>
             <div
-                t-if="!props.readonly"
+                t-if="!this.props.readonly"
                 class="o_field_property_dropdown_menu o_input_dropdown">
-                <AutoComplete id="props.id" value="''" sources="autocompleteSources" resetOnSelect="true" inputDebounceDelay="0"/>
+                <AutoComplete id="this.props.id" value="''" sources="this.autocompleteSources" resetOnSelect="true" inputDebounceDelay="0"/>
                 <span class="o_dropdown_button" />
             </div>
         </div>
@@ -17,12 +17,12 @@
     <t t-name="web.PropertyTagsColorListPopover">
         <div class="o_tag_popover m-2">
             <ColorList
-                colors="props.colors"
+                colors="this.props.colors"
                 forceExpanded="true"
-                onColorSelected.bind="(id) => props.switchTagColor(id, props.tag)"/>
+                onColorSelected.bind="(id) => this.props.switchTagColor(id, this.props.tag)"/>
         </div>
     </t>
     <t t-name="web.PropertyTagsField">
-        <PropertyTags t-props="propertyTagsProps"/>
+        <PropertyTags t-props="this.propertyTagsProps"/>
     </t>
 </templates>

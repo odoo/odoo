@@ -2,74 +2,74 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Chatter">
-    <div t-if="state.thread" class="o-mail-Chatter w-100 h-100 flex-grow-1 d-flex flex-column bg-inherit" t-att-class="{ 'overflow-auto o-scrollbar-thin': props.isChatterAside, 'o-chatter-disabled': props.threadId === false }" t-on-scroll="onScrollDebounced" t-ref="root">
-        <div class="o-mail-Chatter-top d-print-none position-sticky top-0" t-att-class="{ 'shadow-sm': state.isTopStickyPinned }" t-ref="top">
+    <div t-if="this.state.thread" class="o-mail-Chatter w-100 h-100 flex-grow-1 d-flex flex-column bg-inherit" t-att-class="{ 'overflow-auto o-scrollbar-thin': this.props.isChatterAside, 'o-chatter-disabled': this.props.threadId === false }" t-on-scroll="this.onScrollDebounced" t-ref="root">
+        <div class="o-mail-Chatter-top d-print-none position-sticky top-0" t-att-class="{ 'shadow-sm': this.state.isTopStickyPinned }" t-ref="top">
             <div class="o-mail-Chatter-topbar d-flex flex-shrink-0 flex-grow-0 overflow-x-auto o-gap-0_5">
-                <div t-if="state.isSearchOpen" class="flex-grow-1">
-                    <SearchMessageInput closeSearch.bind="closeSearch" messageSearch="messageSearch" thread="state.thread"/>
+                <div t-if="this.state.isSearchOpen" class="flex-grow-1">
+                    <SearchMessageInput closeSearch.bind="this.closeSearch" messageSearch="this.messageSearch" thread="this.state.thread"/>
                 </div>
                 <div t-else="" class="d-flex gap-1">
                     <button class="o-mail-Chatter-sendMessage btn text-nowrap my-2" t-att-class="{
-                        'btn-primary': state.composerType !== 'note',
-                        'btn-secondary': state.composerType === 'note',
-                        'active': state.composerType === 'message',
-                    }" t-att-disabled="!state.thread.canPostMessage and props.threadId" data-hotkey="m" t-on-click="() => this.toggleComposer('message')">
+                        'btn-primary': this.state.composerType !== 'note',
+                        'btn-secondary': this.state.composerType === 'note',
+                        'active': this.state.composerType === 'message',
+                    }" t-att-disabled="!this.state.thread.canPostMessage and this.props.threadId" data-hotkey="m" t-on-click="() => this.toggleComposer('message')">
                         Send message
                     </button>
                     <button class="o-mail-Chatter-logNote btn text-nowrap my-2" t-att-class="{
-                        'btn-primary active': state.composerType === 'note',
-                        'btn-secondary': state.composerType !== 'note',
-                    }" t-att-disabled="!state.thread.canPostMessage and props.threadId and props.threadId" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
+                        'btn-primary active': this.state.composerType === 'note',
+                        'btn-secondary': this.state.composerType !== 'note',
+                    }" t-att-disabled="!this.state.thread.canPostMessage and this.props.threadId and this.props.threadId" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
                         Log note
                     </button>
-                    <button t-if="props.has_activities" class="o-mail-Chatter-activity btn btn-secondary text-nowrap my-2"
-                            t-att-disabled="!state.thread.canPostMessage and props.threadId"
-                            data-hotkey="shift+a" t-on-click="scheduleActivity">
+                    <button t-if="this.props.has_activities" class="o-mail-Chatter-activity btn btn-secondary text-nowrap my-2"
+                            t-att-disabled="!this.state.thread.canPostMessage and this.props.threadId"
+                            data-hotkey="shift+a" t-on-click="this.scheduleActivity">
                         <span>Activity</span>
                     </button>
                 </div>
                 <span class="o-mail-Chatter-topbarGrow flex-grow-1 pe-2"/>
-                <button class="btn btn-link text-action px-1" aria-label="Search Messages" title="Search Messages" t-on-click="onClickSearch">
+                <button class="btn btn-link text-action px-1" aria-label="Search Messages" title="Search Messages" t-on-click="this.onClickSearch">
                     <i class="oi oi-search fa-fw" role="img"/>
                 </button>
-                <button t-if="hasPinnedMessages" class="btn btn-link text-action p-1" aria-label="Pinned Messages" title="Pinned Messages" t-on-click="onClickPinnedMessages">
+                <button t-if="this.hasPinnedMessages" class="btn btn-link text-action p-1" aria-label="Pinned Messages" title="Pinned Messages" t-on-click="this.onClickPinnedMessages">
                     <i class="fa fa-fw fa-thumb-tack" role="img"/>
                 </button>
-                <button t-if="props.hasAttachmentPreview and state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action px-1" t-on-click="popoutAttachment">
+                <button t-if="this.props.hasAttachmentPreview and this.state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action px-1" t-on-click="this.popoutAttachment">
                     <i class="fa fa-window-restore fa-fw" aria-hidden="Pop out Attachments" title="Pop out Attachments"/>
                 </button>
-                <FileUploader t-if="attachments.length === 0" fileUploadClass="'o-mail-Chatter-fileUploader'" multiUpload="true" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
+                <FileUploader t-if="this.attachments.length === 0" fileUploadClass="'o-mail-Chatter-fileUploader'" multiUpload="true" onUploaded.bind="this.onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
                     <t t-set-slot="toggler">
                         <t t-call="mail.Chatter.attachFiles"/>
                     </t>
                 </FileUploader>
                 <t t-else="" t-call="mail.Chatter.attachFiles"/>
                 <div class="o-mail-Followers d-flex">
-                    <Dropdown position="'bottom-end'" menuClass="'o-mail-Followers-dropdown ' + store.discussDropdownMenuClass(this)" state="followerListDropdown">
-                        <button t-att-class="'o-mail-Followers-button btn btn-link d-flex align-items-center text-action px-1 my-2 ' + (state.thread.selfFollower ? 'active' : '')" t-att-disabled="isDisabled" t-att-title="followerButtonLabel">
-                            <i class="fa fa-fw" role="img" t-attf-class="{{ state.thread.selfFollower ? 'fa-user' : 'fa-user-o' }}"/>
-                            <i t-if="state.thread.id and state.thread.followersCount === undefined" class="fa fa-circle-o-notch fa-spin"/>
-                            <sup t-else="" class="o-mail-Followers-counter" t-esc="state.thread.followersCount ?? 0"/>
+                    <Dropdown position="'bottom-end'" menuClass="'o-mail-Followers-dropdown ' + this.store.discussDropdownMenuClass(this)" state="this.followerListDropdown">
+                        <button t-att-class="'o-mail-Followers-button btn btn-link d-flex align-items-center text-action px-1 my-2 ' + (this.state.thread.selfFollower ? 'active' : '')" t-att-disabled="this.isDisabled" t-att-title="this.followerButtonLabel">
+                            <i class="fa fa-fw" role="img" t-attf-class="{{ this.state.thread.selfFollower ? 'fa-user' : 'fa-user-o' }}"/>
+                            <i t-if="this.state.thread.id and this.state.thread.followersCount === undefined" class="fa fa-circle-o-notch fa-spin"/>
+                            <sup t-else="" class="o-mail-Followers-counter" t-esc="this.state.thread.followersCount ?? 0"/>
                         </button>
                         <t t-set-slot="content">
-                            <FollowerList onAddFollowers.bind="onAddFollowers" onFollowerChanged.bind="onFollowerChanged" thread="state.thread" dropdown="followerListDropdown"/>
+                            <FollowerList onAddFollowers.bind="this.onAddFollowers" onFollowerChanged.bind="this.onFollowerChanged" thread="this.state.thread" dropdown="this.followerListDropdown"/>
                         </t>
                     </Dropdown>
                 </div>
             </div>
-            <t t-if="state.composerType">
-                <t t-if="state.composerType === 'message'">
+            <t t-if="this.state.composerType">
+                <t t-if="this.state.composerType === 'message'">
                     <div class="d-flex py-1 ps-3">
                         <span class="flex-shrink-0 text-end fw-bold px-2" style="width:46px">To: </span>
-                        <RecipientsInput thread="state.thread"/>
+                        <RecipientsInput thread="this.state.thread"/>
                     </div>
                 </t>
-                <Composer composer="state.thread.composer" autofocus="true" className="state.composerType === 'message' ? '' : 'pt-4'" mode="'extended'" onPostCallback.bind="onPostCallback" onCloseFullComposerCallback.bind="onCloseFullComposerCallback" dropzoneRef="rootRef" type="state.composerType" t-key="props.threadId"/>
+                <Composer composer="this.state.thread.composer" autofocus="true" className="this.state.composerType === 'message' ? '' : 'pt-4'" mode="'extended'" onPostCallback.bind="this.onPostCallback" onCloseFullComposerCallback.bind="this.onCloseFullComposerCallback" dropzoneRef="this.rootRef" type="this.state.composerType" t-key="this.props.threadId"/>
             </t>
         </div>
         <div class="o-mail-Chatter-content d-flex flex-column flex-grow-1 bg-inherit">
             <t>
-                <div t-if="state.isAttachmentBoxOpened" class="o-mail-AttachmentBox position-relative">
+                <div t-if="this.state.isAttachmentBoxOpened" class="o-mail-AttachmentBox position-relative">
                     <div class="d-flex align-items-center">
                         <hr class="flex-grow-1"/>
                         <span class="p-3 fw-bold">
@@ -79,12 +79,12 @@
                     </div>
                     <div class="d-flex flex-column">
                         <AttachmentList
-                            attachments="attachments"
-                            unlinkAttachment.bind="unlinkAttachment"
+                            attachments="this.attachments"
+                            unlinkAttachment.bind="this.unlinkAttachment"
                         />
-                        <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
+                        <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded.bind="this.onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
                             <t t-set-slot="toggler">
-                                <button class="btn btn-link px-1" type="button" t-att-disabled="!state.thread.canPostMessage">
+                                <button class="btn btn-link px-1" type="button" t-att-disabled="!this.state.thread.canPostMessage">
                                     <i class="fa fa-plus-square"/>
                                     Attach files
                                 </button>
@@ -92,24 +92,24 @@
                         </FileUploader>
                     </div>
                 </div>
-                <div t-if="state.showPinnedMessages and hasPinnedMessages" class="o-mail-pinnedMessages bg-inherit">
+                <div t-if="this.state.showPinnedMessages and this.hasPinnedMessages" class="o-mail-pinnedMessages bg-inherit">
                     <div class="d-flex align-items-center">
                         <hr class="flex-grow-1"/>
                         <span class="p-3 fw-bold">Pinned Messages</span>
                         <hr class="flex-grow-1"/>
                     </div>
                     <div class="d-flex flex-column">
-                        <MessageCardList messages="state.thread.pinnedMessages" thread="state.thread" mode="'pin'"/>
+                        <MessageCardList messages="this.state.thread.pinnedMessages" thread="this.state.thread" mode="'pin'"/>
                     </div>
                 </div>
-                <t t-if="props.has_activities and activities.length and !messageSearch.searching and !messageSearch.searched">
+                <t t-if="this.props.has_activities and this.activities.length and !this.messageSearch.searching and !this.messageSearch.searched">
                     <t t-call="mail.ActivityList"/>
                 </t>
-                <t t-if="scheduledMessages.length">
+                <t t-if="this.scheduledMessages.length">
                     <t t-call="mail.ScheduledMessagesList"/>
                 </t>
-                <SearchMessageResult t-if="messageSearch.searching or messageSearch.searched" thread="state.thread"  messageSearch="messageSearch" onClickJump.bind="closeSearch"/>
-                <Thread t-else="" thread="state.thread" t-key="state.thread.localId" order="'desc'" scrollRef="rootRef" jumpPresent="state.jumpThreadPresent"/>
+                <SearchMessageResult t-if="this.messageSearch.searching or this.messageSearch.searched" thread="this.state.thread"  messageSearch="this.messageSearch" onClickJump.bind="this.closeSearch"/>
+                <Thread t-else="" thread="this.state.thread" t-key="this.state.thread.localId" order="'desc'" scrollRef="this.rootRef" jumpPresent="this.state.jumpThreadPresent"/>
             </t>
         </div>
     </div>
@@ -117,18 +117,18 @@
 
 <t t-name="mail.ActivityList">
     <div class="o-mail-ActivityList">
-        <div class="d-flex pt-2 px-2 cursor-pointer fw-bolder" t-on-click="toggleActivities">
+        <div class="d-flex pt-2 px-2 cursor-pointer fw-bolder" t-on-click="this.toggleActivities">
             <hr class="flex-grow-1 fs-3"/>
             <div class="d-flex align-items-center px-3">
-                <i class="fa fa-fw" t-att-class="state.showActivities ? 'fa-caret-down' : 'fa-caret-right'"/>
+                <i class="fa fa-fw" t-att-class="this.state.showActivities ? 'fa-caret-down' : 'fa-caret-right'"/>
                 Planned Activities
-                <span t-if="!state.showActivities" class="badge rounded-pill ms-2 text-bg-success"><t t-esc="activities.length"/></span>
+                <span t-if="!this.state.showActivities" class="badge rounded-pill ms-2 text-bg-success"><t t-esc="this.activities.length"/></span>
             </div>
             <hr class="flex-grow-1 fe-3"/>
         </div>
-        <t t-if="state.showActivities">
-            <t t-foreach="activities" t-as="activity" t-key="activity.id">
-                <Activity activity="activity" onActivityChanged.bind="onActivityChanged" reloadParentView.bind="reloadParentView"/>
+        <t t-if="this.state.showActivities">
+            <t t-foreach="this.activities" t-as="activity" t-key="this.activity.id">
+                <Activity activity="activity" onActivityChanged.bind="this.onActivityChanged" reloadParentView.bind="this.reloadParentView"/>
             </t>
         </t>
     </div>
@@ -136,29 +136,29 @@
 
 <t t-name="mail.ScheduledMessagesList">
     <div class="o-mail-ScheduledMessagesList">
-        <div class="d-flex pt-2 cursor-pointer fw-bolder" t-on-click="toggleScheduledMessages">
+        <div class="d-flex pt-2 cursor-pointer fw-bolder" t-on-click="this.toggleScheduledMessages">
             <hr class="flex-grow-1 fs-3"/>
             <div class="d-flex align-items-center px-3">
-                <i class="fa fa-fw" t-att-class="state.showScheduledMessages ? 'fa-caret-down' : 'fa-caret-right'"/>
+                <i class="fa fa-fw" t-att-class="this.state.showScheduledMessages ? 'fa-caret-down' : 'fa-caret-right'"/>
                 Scheduled Messages
-                <span t-if="!state.showScheduledMessages" class="badge rounded-pill ms-2 text-bg-success" t-out="scheduledMessages.length"/>
+                <span t-if="!this.state.showScheduledMessages" class="badge rounded-pill ms-2 text-bg-success" t-out="this.scheduledMessages.length"/>
             </div>
             <hr class="flex-grow-1 fe-3"/>
         </div>
-        <div t-if="state.showScheduledMessages">
-            <t t-foreach="scheduledMessages" t-as="scheduledMessage" t-key="scheduledMessage.id">
-                <ScheduledMessage scheduledMessage="scheduledMessage" onScheduledMessageChanged.bind="onScheduledMessageChanged"/>
+        <div t-if="this.state.showScheduledMessages">
+            <t t-foreach="this.scheduledMessages" t-as="scheduledMessage" t-key="this.scheduledMessage.id">
+                <ScheduledMessage scheduledMessage="scheduledMessage" onScheduledMessageChanged.bind="this.onScheduledMessageChanged"/>
             </t>
         </div>
     </div>
 </t>
 
 <t t-name="mail.Chatter.attachFiles">
-    <button class="o-mail-Chatter-attachFiles btn btn-link text-action px-1 d-flex align-items-center" aria-label="Attach files" t-on-click="onClickAddAttachments"
-            t-att-disabled="state.isSearchOpen || (!state.thread.canPostMessage and attachments.length === 0)">
+    <button class="o-mail-Chatter-attachFiles btn btn-link text-action px-1 d-flex align-items-center" aria-label="Attach files" t-on-click="this.onClickAddAttachments"
+            t-att-disabled="this.state.isSearchOpen || (!this.state.thread.canPostMessage and this.attachments.length === 0)">
         <i class="fa fa-paperclip fa-lg fa-fw"/>
-        <sup t-if="attachments.length > 0" t-esc="attachments.length"/>
-        <i t-if="!state.thread.areAttachmentsLoaded and state.thread.isLoadingAttachments and state.showAttachmentLoading" class="fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>
+        <sup t-if="this.attachments.length > 0" t-esc="this.attachments.length"/>
+        <i t-if="!this.state.thread.areAttachmentsLoaded and this.state.thread.isLoadingAttachments and this.state.showAttachmentLoading" class="fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>
     </button>
 </t>
 

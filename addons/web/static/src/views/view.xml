@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
   <t t-name="web.View">
-      <WithSearch t-props="withSearchProps" t-slot-scope="search">
-        <t t-component="Controller"
-          t-on-click="handleActionLinks"
-          t-props="componentProps"
+      <WithSearch t-props="this.withSearchProps" t-slot-scope="search">
+        <t t-component="this.Controller"
+          t-on-click="this.handleActionLinks"
+          t-props="this.componentProps"
           context="search.context"
           domain="search.domain"
           groupBy="search.groupBy"

@@ -3,14 +3,14 @@
         <table class="o_matrix_input_table table table-sm table-striped table-hover table-bordered cursor-default mb-0 h-100">
             <thead class="border-0">
                 <tr class="border-0 h-100">
-                    <t t-foreach="header" t-as="column_header" t-key="column_header_index">
+                    <t t-foreach="this.header" t-as="column_header" t-key="this.column_header_index">
                         <th class="border-0"
                             t-attf-class="{{column_header_first?'o_matrix_ps':''}} {{column_header_last?'o_matrix_pe':''}}">
                             <div class="d-flex flex-column justify-content-start h-100"
                                  t-attf-class="{{column_header_first?'align-items-start':'align-items-end'}}">
-                                <span t-esc="column_header.name"/>
+                                <span t-esc="this.column_header.name"/>
                                 <t t-call="product_matrix.extra_price">
-                                    <t t-set="cell" t-value="column_header"/>
+                                    <t t-set="cell" t-value="this.column_header"/>
                                 </t>
                             </div>
                         </th>
@@ -18,8 +18,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr t-foreach="rows" t-as="row" t-key="row_index" class="border-1 border-end-0 border-start-0">
-                    <t t-foreach="row" t-as="cell" t-key="cell_index">
+                <tr t-foreach="this.rows" t-as="row" t-key="this.row_index" class="border-1 border-end-0 border-start-0">
+                    <t t-foreach="this.row" t-as="cell" t-key="this.cell_index">
                         <th t-if="cell.name"
                             class="border-0"
                             t-attf-class="{{cell_first?'o_matrix_ps o_matrix_pe':''}} {{cell_last?'o_matrix_pe':''}}">
@@ -61,7 +61,7 @@
             accurate to display it.
             -->
         <span class="variant_price_extra" style="white-space: nowrap;">
-            <t t-out="format(cell)"/>
+            <t t-out="this.format(cell)"/>
         </span>
     </span>
 </template>

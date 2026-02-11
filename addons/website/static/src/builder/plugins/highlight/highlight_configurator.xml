@@ -7,13 +7,13 @@
             <label for="highlightPicker" class="text-nowrap text-truncate">Highlight</label>
         </div>
         <div class="hb-row-content d-flex">
-            <button id="highlightPicker" title="highlightPicker" class="o-hb-btn btn btn-secondary" t-on-click="openHighlightPicker">
+            <button id="highlightPicker" title="highlightPicker" class="o-hb-btn btn btn-secondary" t-on-click="this.openHighlightPicker">
                 <t t-if="this.state.highlightId === 'multiple'">
                     <span class="mx-3 d-inline-block"></span>
                 </t>
                 <t t-else="" t-out="this.highlightIdToName[this.state.highlightId]"/>
             </button>
-            <button class="btn btn-sm btn-light fa fa-trash" title="Reset" t-on-click="deleteHighlight"/>
+            <button class="btn btn-sm btn-light fa fa-trash" title="Reset" t-on-click="this.deleteHighlight"/>
         </div>
     </div>
 
@@ -22,7 +22,7 @@
             <label for="colorButton" class="text-nowrap text-truncate">Color</label>
         </div>
         <div class="hb-row-content d-flex">
-            <button id="colorButton" title="color" class="o_we_color_preview" t-attf-style="background-color:{{this.state.color}}" t-on-click="openColorPicker">
+            <button id="colorButton" title="color" class="o_we_color_preview" t-attf-style="background-color:{{this.state.color}}" t-on-click="this.openColorPicker">
             </button>
         </div>
     </div>
@@ -33,7 +33,7 @@
         </div>
         <div class="hb-row-content d-flex">
             <div class="d-flex flex-row flex-nowrap align-items-center o-hb-input-field-number justify-content-end">
-                <input type="number" id="thicknessInput" class="o-hb-input-base o-hb-input-number text-end" t-att-value="this.state.thickness" t-on-input="onThicknessChange"/>
+                <input type="number" id="thicknessInput" class="o-hb-input-base o-hb-input-number text-end" t-att-value="this.state.thickness" t-on-input="this.onThicknessChange"/>
                 <span class="o-hb-input-field-unit">px</span>
             </div>
         </div>

@@ -17,7 +17,7 @@
                     views: ['website_customer.opt_tag_list'],
                 }"/>
         </BuilderRow>
-        <BuilderRow label.translate="Show Map" t-if="hasGoogleMapsApiKey">
+        <BuilderRow label.translate="Show Map" t-if="this.hasGoogleMapsApiKey">
             <BuilderCheckbox action="'websiteConfig'" actionParam="{
                     views: ['website_customer.opt_country'],
                 }"/>

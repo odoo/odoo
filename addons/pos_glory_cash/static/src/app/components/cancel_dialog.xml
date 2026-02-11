@@ -3,12 +3,12 @@
 
     <t t-name="pos_glory_cash.CancelDialog">
         <Dialog size="'sm'" title.translate="Cash machine error">
-            <p t-out="props.message" class="text-prewrap"/>
+            <p t-out="this.props.message" class="text-prewrap"/>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="() => { props.cancel(); props.close(); }">
+                <button class="btn btn-primary" t-on-click="() => { this.props.cancel(); this.props.close(); }">
                     Cancel Operation
                 </button>
-                <button class="btn btn-secondary" t-on-click="() => props.close()">
+                <button class="btn btn-secondary" t-on-click="() => this.props.close()">
                     Close
                 </button>
             </t>

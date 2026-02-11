@@ -18,28 +18,28 @@
                 <t t-if="this.env.searchModel.searchMenuTypes.has('filter')">
                     <div class="o_dropdown_container o_filter_menu w-100 w-lg-auto h-100 px-3 mb-4 mb-lg-0 border-end">
                         <div class="px-3 fs-5 mb-2">
-                            <i class="me-2 text-primary" t-att-class="facet_icons.filter"/>
+                            <i class="me-2 text-primary" t-att-class="this.facet_icons.filter"/>
                             <h5 class="o_dropdown_title d-inline">Filters</h5>
                         </div>
                         <t t-set="currentGroup" t-value="null"/>
-                        <t t-foreach="filterItems" t-as="item" t-key="item.id">
-                            <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
+                        <t t-foreach="this.filterItems" t-as="item" t-key="item.id">
+                            <t t-if="this.currentGroup !== null and this.currentGroup !== item.groupNumber">
                                 <div class="dropdown-divider" role="separator"/>
                             </t>
                             <t t-if="item.options">
                                 <AccordionItem class="'text-truncate'" description="item.description" selected="item.isActive">
                                     <t t-set="subGroup" t-value="null"/>
-                                    <t t-foreach="item.options" t-as="option" t-key="option.id">
-                                        <t t-if="subGroup !== null and subGroup !== option.groupNumber">
+                                    <t t-foreach="item.options" t-as="option" t-key="this.option.id">
+                                        <t t-if="this.subGroup !== null and this.subGroup !== this.option.groupNumber">
                                             <div class="dropdown-divider" role="separator"/>
                                         </t>
                                         <CheckboxItem class="{ o_item_option: true, selected: option.isActive }"
-                                                            t-esc="option.description"
+                                                            t-esc="this.option.description"
                                                             checked="option.isActive"
                                                             closingMode="'none'"
                                                             onSelected="() => this.onFilterSelected({ itemId: item.id, optionId: option.id })"
                                         />
-                                        <t t-set="subGroup" t-value="option.groupNumber"/>
+                                        <t t-set="subGroup" t-value="this.option.groupNumber"/>
                                     </t>
                                 </AccordionItem>
                             </t>
@@ -54,42 +54,42 @@
                             </t>
                             <t t-set="currentGroup" t-value="item.groupNumber"/>
                         </t>
-                        <t t-if="filterItems.length">
+                        <t t-if="this.filterItems.length">
                             <div role="separator" class="dropdown-divider"/>
                         </t>
-                        <DropdownItem class="'o_menu_item o_add_custom_filter'" onSelected.bind="onAddCustomFilterClick">Custom Filter...</DropdownItem>
+                        <DropdownItem class="'o_menu_item o_add_custom_filter'" onSelected.bind="this.onAddCustomFilterClick">Custom Filter...</DropdownItem>
                     </div>
                 </t>
                 <!-- GroupBy -->
                 <t t-if="this.env.searchModel.searchMenuTypes.has('groupBy')">
                     <div class="o_dropdown_container o_group_by_menu w-100 w-lg-auto h-100 px-3 mb-4 mb-lg-0 border-end">
                         <div class="px-3 fs-5 mb-2">
-                            <i class="me-2 text-action" t-att-class="facet_icons.groupBy"/>
+                            <i class="me-2 text-action" t-att-class="this.facet_icons.groupBy"/>
                             <h5 class="o_dropdown_title d-inline">Group By</h5>
                         </div>
                         <t t-set="currentGroup" t-value="null"/>
-                        <t t-foreach="groupByItems" t-as="item" t-key="item.id">
-                            <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
+                        <t t-foreach="this.groupByItems" t-as="item" t-key="item.id">
+                            <t t-if="this.currentGroup !== null and this.currentGroup !== item.groupNumber">
                                 <div class="dropdown-divider" role="separator"/>
                             </t>
                             <t t-if="item.fieldType === 'properties'">
-                                <PropertiesGroupByItem item="item" onGroup.bind="onGroupBySelected"/>
+                                <PropertiesGroupByItem item="item" onGroup.bind="this.onGroupBySelected"/>
                             </t>
                             <t t-elif="item.options">
                                 <AccordionItem class="'text-truncate'" description="item.description" selected="item.isActive">
                                     <t t-set="subGroup" t-value="null"/>
-                                    <t t-foreach="item.options" t-as="option" t-key="option.id">
-                                        <t t-if="subGroup !== null and subGroup !== option.groupNumber">
+                                    <t t-foreach="item.options" t-as="option" t-key="this.option.id">
+                                        <t t-if="this.subGroup !== null and this.subGroup !== this.option.groupNumber">
                                             <div class="dropdown-divider" role="separator"/>
                                         </t>
                                         <CheckboxItem class="{ o_item_option: true, selected: option.isActive }"
                                                             checked="option.isActive ? true : false"
                                                             closingMode="'none'"
-                                                            t-esc="option.description"
+                                                            t-esc="this.option.description"
                                                             attrs="{ title: option.description.length > 15 ? option.description : ''}"
                                                             onSelected="() => this.onGroupBySelected({ itemId: item.id, optionId: option.id})"
                                         />
-                                        <t t-set="subGroup" t-value="option.groupNumber"/>
+                                        <t t-set="subGroup" t-value="this.option.groupNumber"/>
                                     </t>
                                 </AccordionItem>
                             </t>
@@ -104,35 +104,35 @@
                             </t>
                             <t t-set="currentGroup" t-value="item.groupNumber"/>
                         </t>
-                        <t t-if="!hideCustomGroupBy and fields.length">
-                            <div t-if="groupByItems.length" role="separator" class="dropdown-divider"/>
-                            <CustomGroupByItem fields="fields" onAddCustomGroup.bind="onAddCustomGroup"/>
+                        <t t-if="!this.hideCustomGroupBy and this.fields.length">
+                            <div t-if="this.groupByItems.length" role="separator" class="dropdown-divider"/>
+                            <CustomGroupByItem fields="this.fields" onAddCustomGroup.bind="this.onAddCustomGroup"/>
                         </t>
                     </div>
                 </t>
                 <!-- Favorite -->
                 <t t-if="this.env.searchModel.searchMenuTypes.has('favorite')">
                     <div class="o_dropdown_container o_favorite_menu w-100 w-lg-auto h-100 px-3">
-                        <t t-set="sharedFavoritesItems" t-value="sharedFavorites" />
-                        <t t-set="favoriteItems" t-value="favorites" />
+                        <t t-set="sharedFavoritesItems" t-value="this.sharedFavorites" />
+                        <t t-set="favoriteItems" t-value="this.favorites" />
                         <div class="px-3 fs-5 mb-2">
-                            <i class="me-2 text-favourite" t-att-class="facet_icons.favorite"/>
+                            <i class="me-2 text-favourite" t-att-class="this.facet_icons.favorite"/>
                             <h5 class="o_dropdown_title d-inline">Favorites</h5>
                         </div>
-                        <t t-foreach="favoriteItems" t-as="item" t-key="item.id">
+                        <t t-foreach="this.favoriteItems" t-as="item" t-key="item.id">
                             <t t-call="web.SearchBarMenu.FavoriteItem" />
                         </t>
-                        <t t-if="favoriteItems.length">
+                        <t t-if="this.favoriteItems.length">
                             <div role="separator" class="dropdown-divider"/>
                         </t>
-                        <t t-foreach="sharedFavoritesItems" t-as="item" t-key="item.id">
+                        <t t-foreach="this.sharedFavoritesItems" t-as="item" t-key="item.id">
                             <t t-call="web.SearchBarMenu.FavoriteItem" />
                         </t>
                         <DropdownItem t-if="!this.state.sharedFavoritesExpanded" class="'o_menu_item o_expand_shared_favorites'" closingMode="'none'" onSelected.bind="() => this.state.sharedFavoritesExpanded = true">More...</DropdownItem>
-                        <div t-if="sharedFavoritesItems.length" role="separator" class="dropdown-divider"/>
+                        <div t-if="this.sharedFavoritesItems.length" role="separator" class="dropdown-divider"/>
                         <t t-set="currentGroup" t-value="null"/>
-                        <t t-foreach="otherItems" t-as="item" t-key="item.key">
-                            <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
+                        <t t-foreach="this.otherItems" t-as="item" t-key="item.key">
+                            <t t-if="this.currentGroup !== null and this.currentGroup !== item.groupNumber">
                                 <div role="separator" class="dropdown-divider"/>
                             </t>
                             <t t-component="item.Component"/>

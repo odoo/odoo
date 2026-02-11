@@ -2,20 +2,20 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="web.IntegerField">
-        <span t-if="props.readonly" t-esc="formattedValue" />
+        <span t-if="this.props.readonly" t-esc="this.formattedValue" />
         <input 
             t-else="" 
             t-ref="numpadDecimal" 
-            t-on-focusin="onFocusIn" 
-            t-on-focusout="onFocusOut" 
-            t-att-id="props.id" 
-            t-att-min="props.min"
-            t-att-max="props.max"
-            t-att-type="props.inputType" 
+            t-on-focusin="this.onFocusIn" 
+            t-on-focusout="this.onFocusOut" 
+            t-att-id="this.props.id" 
+            t-att-min="this.props.min"
+            t-att-max="this.props.max"
+            t-att-type="this.props.inputType" 
             inputmode="numeric" 
             class="o_input" 
             autocomplete="off"
-            t-att-step="props.step" />
+            t-att-step="this.props.step" />
     </t>
 
 </templates>

@@ -4,32 +4,32 @@
     <div t-name="mrp.BomOverviewComponent" class="o_action o_mrp_overview">
 
         <BomOverviewControlPanel
-            bomQuantity="state.bomQuantity"
-            uomName="uomName"
-            variants="variants"
-            data="state.bomData"
-            showOptions="state.showOptions"
-            showVariants="showVariants"
-            currentWarehouse="state.currentWarehouse"
-            warehouses="warehouses"
-            print.bind="onClickPrint"
-            changeWarehouse.bind="onChangeWarehouse"
-            changeVariant.bind="onChangeVariant"
-            changeBomQuantity.bind="onChangeBomQuantity"
-            changeMode.bind="onChangeMode"
-            precision="state.precision"
-            foldable="state.foldable"
-            allFolded="state.allFolded"
+            bomQuantity="this.state.bomQuantity"
+            uomName="this.uomName"
+            variants="this.variants"
+            data="this.state.bomData"
+            showOptions="this.state.showOptions"
+            showVariants="this.showVariants"
+            currentWarehouse="this.state.currentWarehouse"
+            warehouses="this.warehouses"
+            print.bind="this.onClickPrint"
+            changeWarehouse.bind="this.onChangeWarehouse"
+            changeVariant.bind="this.onChangeVariant"
+            changeBomQuantity.bind="this.onChangeBomQuantity"
+            changeMode.bind="this.onChangeMode"
+            precision="this.state.precision"
+            foldable="this.state.foldable"
+            allFolded="this.state.allFolded"
             />
 
         <BomOverviewTable
-            uomName="uomName"
-            showOptions="state.showOptions"
-            currentWarehouseId="state.currentWarehouse.id"
-            data="state.bomData"
-            precision="state.precision"
-            bomQuantity="state.bomQuantity"
-            changeFolded.bind="onChangeFolded"/>
+            uomName="this.uomName"
+            showOptions="this.state.showOptions"
+            currentWarehouseId="this.state.currentWarehouse.id"
+            data="this.state.bomData"
+            precision="this.state.precision"
+            bomQuantity="this.state.bomQuantity"
+            changeFolded.bind="this.onChangeFolded"/>
     </div>
 
 </templates>

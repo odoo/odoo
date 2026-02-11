@@ -15,7 +15,7 @@
 
         <div t-ref="root" position="inside">
             <div class="ms-3 d-flex flex-row gap-1">
-                <t t-foreach="favoritesWorkEntries" t-as="workEntryType" t-key="workEntryType.id">
+                <t t-foreach="this.favoritesWorkEntries" t-as="workEntryType" t-key="workEntryType.id">
                     <button t-if="workEntryType.shortcut_behavior === 'replace'"
                             class="small btn btn-secondary rounded-1"
                             t-attf-class="o_gantt_color_#{workEntryType.color}"

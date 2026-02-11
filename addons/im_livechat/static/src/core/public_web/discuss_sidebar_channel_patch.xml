@@ -2,25 +2,25 @@
 <templates>
     <t t-inherit="mail.DiscussSidebarChannel.main" t-inherit-mode="extension">
         <xpath expr="//*[@t-ref='displayName']" position="before">
-            <CountryFlag t-if="channel.showCorrespondentCountry" country="channel.correspondentCountry" class="'o-mail-DiscussSidebarChannel-country'"/>
+            <CountryFlag t-if="this.channel.showCorrespondentCountry" country="this.channel.correspondentCountry" class="'o-mail-DiscussSidebarChannel-country'"/>
         </xpath>
         <xpath expr="//*[@t-ref='displayNameAdditionalContent']" position="inside">
-            <span t-if="channel.livechat_lang_id" class="fw-normal small text-uppercase" t-out="channel.livechat_lang_id.baseCode" t-att-title="channel.livechat_lang_id.name"/>
-            <t t-if="channel.livechat_status === 'need_help'">
-                <i t-if="channel.matchesSelfExpertise" class="fa fa-star o-mail-starred" role="image" title="Relevant to your expertise"/>
-                <span t-if="helpState.text" class="o-livechat-LookingForHelp-timer text-muted fw-normal smaller" t-esc="helpState.text"/>
+            <span t-if="this.channel.livechat_lang_id" class="fw-normal small text-uppercase" t-out="this.channel.livechat_lang_id.baseCode" t-att-title="this.channel.livechat_lang_id.name"/>
+            <t t-if="this.channel.livechat_status === 'need_help'">
+                <i t-if="this.channel.matchesSelfExpertise" class="fa fa-star o-mail-starred" role="image" title="Relevant to your expertise"/>
+                <span t-if="this.helpState.text" class="o-livechat-LookingForHelp-timer text-muted fw-normal smaller" t-esc="this.helpState.text"/>
             </t>
         </xpath>
         <xpath expr="//*[hasclass('o-mail-DiscussSidebarChannel-itemName')]" position="inside">
-            <div t-if="channel.livechat_status === 'need_help' and channel.description" t-att-title="channel.description" class="text-muted text-truncate smaller" t-esc="channel.description"/>
+            <div t-if="this.channel.livechat_status === 'need_help' and this.channel.description" t-att-title="this.channel.description" class="text-muted text-truncate smaller" t-esc="this.channel.description"/>
         </xpath>
     </t>
     <t t-inherit="mail.DiscussSidebarChannel" t-inherit-mode="extension">
         <xpath expr="//*[hasclass('o-mail-DiscussSidebarChannel-floatingName')]" position="after">
-            <div t-if="channel.livechat_status === 'need_help' and channel.description" t-att-title="channel.description" class="text-muted text-truncate smaller px-2 pb-1" t-esc="channel.description"/>
+            <div t-if="this.channel.livechat_status === 'need_help' and this.channel.description" t-att-title="this.channel.description" class="text-muted text-truncate smaller px-2 pb-1" t-esc="this.channel.description"/>
             <div class="d-flex align-items-baseline gap-1 px-2 pb-2">
-                <CountryFlag t-if="channel.showCorrespondentCountry" country="channel.correspondentCountry" class="'o-mail-DiscussSidebarChannel-country my-auto'"/>
-                <span t-if="channel.livechat_lang_id" t-out="channel.livechat_lang_id.name" class="fw-normal small"/>
+                <CountryFlag t-if="this.channel.showCorrespondentCountry" country="this.channel.correspondentCountry" class="'o-mail-DiscussSidebarChannel-country my-auto'"/>
+                <span t-if="this.channel.livechat_lang_id" t-out="this.channel.livechat_lang_id.name" class="fw-normal small"/>
             </div>
         </xpath>
     </t>

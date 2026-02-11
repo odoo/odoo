@@ -1,10 +1,10 @@
 <templates id="template" xml:space="preserve">
 <t t-name="html_editor.MediaDialog">
-    <Dialog contentClass="contentClass"
-        size="size"
-        title="title"
-        modalRef="modalRef">
-        <Notebook pages="notebookPages" onPageUpdate.bind="onTabChange" defaultPage="state.activeTab"/>
+    <Dialog contentClass="this.contentClass"
+        size="this.size"
+        title="this.title"
+        modalRef="this.modalRef">
+        <Notebook pages="this.notebookPages" onPageUpdate.bind="this.onTabChange" defaultPage="this.state.activeTab"/>
         <t t-set-slot="footer">
             <button class="btn btn-primary" t-on-click="() => this.save()" t-ref="add-button" data-hotkey="q">Add</button>
             <button class="btn btn-secondary" t-on-click="() => this.props.close()" data-hotkey="x">Discard</button>

@@ -7,7 +7,7 @@
                 <button
                     t-ref="datetime-picker-target-version"
                     title="New Employee Record"
-                    t-on-click="onClickDateTimePickerBtn"
+                    t-on-click="this.onClickDateTimePickerBtn"
                     class="btn btn-primary">
                     <i class="fa fa-plus"/>
                 </button>
@@ -20,7 +20,7 @@
                     t-ref="after"
                     type="button"
                     class="btn btn-secondary dropdown-toggle o_arrow_button o_first"
-                    t-att-disabled="props.isDisabled"
+                    t-att-disabled="this.props.isDisabled"
                     aria-label="More..."
                 >
                     ...
@@ -34,7 +34,7 @@
                     t-ref="before"
                     type="button"
                     class="btn btn-secondary dropdown-toggle o_arrow_button o_last"
-                    t-att-disabled="props.isDisabled"
+                    t-att-disabled="this.props.isDisabled"
                     aria-label="More..."
                 >
                     ...
@@ -42,8 +42,8 @@
             </div>
         </button>
 
-        <t t-foreach="items.inline" position="replace">
-            <t t-foreach="items.inline" t-as="item" t-key="item.value">
+        <t t-foreach="this.items.inline" position="replace">
+            <t t-foreach="this.items.inline" t-as="item" t-key="item.value">
                 <div class="o_arrow_button_wrapper"
                         t-att-data-tooltip="item.toolTip">
                     <button
@@ -54,7 +54,7 @@
                             o_arrow_button_current: item.isSelected,
                             o_last: item_last,
                         }"
-                        t-att-disabled="props.isDisabled || item.isSelected"
+                        t-att-disabled="this.props.isDisabled || item.isSelected"
                         role="radio"
                         t-att-aria-checked="item.isSelected.toString()"
                         t-att-aria-current="item.isSelected and 'step'"
@@ -62,7 +62,7 @@
                         t-esc="item.label"
                         t-on-click="() => this.selectItem(item)"/>
                     <div
-                        t-if="displayContractLines"
+                        t-if="this.displayContractLines"
                         t-att-class="{
                             o_first: item_first,
                             o_last: item_last,

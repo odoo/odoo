@@ -2,21 +2,21 @@
 <templates xml:space="preserve">
 
     <t t-name="account_reports.AccountReviewStateSelectionBadgeField">
-        <t t-if="this.editableOptions.includes(value)">
+        <t t-if="this.editableOptions.includes(this.value)">
             <Dropdown>
-                <button t-attf-class="btn {{ this.getDropdownButtonDecoration(value) }} d-flex justify-content-center align-items-center rounded-pill o_account_review_state_selection_badge_button {{ this.additionalClassName }}">
-                    <div t-esc="display || '&#8203;'"/>
+                <button t-attf-class="btn {{ this.getDropdownButtonDecoration(this.value) }} d-flex justify-content-center align-items-center rounded-pill o_account_review_state_selection_badge_button {{ this.additionalClassName }}">
+                    <div t-esc="this.display || '​'"/>
                 </button>
                 <t t-set-slot="content">
                     <t t-if="this.editableOptions.includes(false)">
                         <DropdownItem
                             class="'o_account_review_state_selection_badge_dropdown_item'"
-                            t-if="!required || !value"
+                            t-if="!this.required || !this.value"
                             t-esc="this.props.placeholder || ''"
                             onSelected="() => this.onChange(false)"
                         />
                     </t>
-                    <t t-foreach="options" t-as="option" t-key="option[0]">
+                    <t t-foreach="this.options" t-as="option" t-key="option[0]">
                         <t t-if="this.editableOptions.includes(option[0])">
                             <DropdownItem
                                 class="'d-flex text-black align-items-center o_account_review_state_selection_badge_dropdown_item'"
@@ -36,10 +36,10 @@
                 t-on-click="(ev) => ev.stopPropagation()"
             >
                 <button
-                    t-attf-class="btn {{ this.getDropdownButtonDecoration(value) }} d-flex justify-content-center align-items-center rounded-pill o_account_review_state_selection_badge_button {{ this.additionalClassName }}"
+                    t-attf-class="btn {{ this.getDropdownButtonDecoration(this.value) }} d-flex justify-content-center align-items-center rounded-pill o_account_review_state_selection_badge_button {{ this.additionalClassName }}"
                     t-att-disabled="true"
                 >
-                    <div t-esc="display || '&#8203;'"/>
+                    <div t-esc="this.display || '​'"/>
                 </button>
             </div>
         </t>

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.SearchBar.Facets">
-        <t t-foreach="env.searchModel.facets" t-as="facet" t-key="facet_index">
+        <t t-foreach="this.env.searchModel.facets" t-as="facet" t-key="this.facet_index">
             <div class="o_searchview_facet position-relative d-inline-flex align-items-stretch rounded-2 bg-200 text-nowrap opacity-trigger-hover mw-100"
                 t-att-class="{o_facet_with_domain: facet.domain }"
                 role="listitem"
@@ -18,22 +18,22 @@
                     t-att-role="facet.domain ? 'button' : 'img'"
                     t-att-class="{
                         'text-bg-action': facet.type == 'groupBy',
-                        'btn': facet.type == 'groupBy' and env.searchModel.canOrderByCount,
+                        'btn': facet.type == 'groupBy' and this.env.searchModel.canOrderByCount,
                         'btn btn-primary': facet.type == 'field' || facet.type == 'filter',
                         'btn btn-favourite': facet.type == 'favorite'
                     }"
                     >
-                    <i t-if="facet.icon" class="small fa-fw" t-att-class="facet.icon" role="image"/>
-                    <small t-else="" class="px-1" t-esc="facet.title"/>
+                    <i t-if="this.facet.icon" class="small fa-fw" t-att-class="facet.icon" role="image"/>
+                    <small t-else="" class="px-1" t-esc="this.facet.title"/>
 
                     <!-- Editable facets' overlay -->
-                    <span t-if="facet.domain"
+                    <span t-if="this.facet.domain"
                         class="position-absolute start-0 top-0 bottom-0 end-0 bg-inherit opacity-0 opacity-100-hover"
                         t-att-class="{'px-2 transition-base': !facet.icon}"
                         >
                         <i class="fa fa-fw fa-pencil"/>
                     </span>
-                    <span t-if="env.searchModel.canOrderByCount and facet.type === 'groupBy' and !env.searchModel.orderByCount"
+                    <span t-if="this.env.searchModel.canOrderByCount and this.facet.type === 'groupBy' and !this.env.searchModel.orderByCount"
                         class="position-absolute start-0 top-0 bottom-0 end-0 bg-inherit opacity-0 opacity-100-hover"
                         t-att-class="{'px-2 transition-base': !facet.icon}"
                         >
@@ -42,9 +42,9 @@
                 </div>
 
                 <div class="o_facet_values position-relative d-flex flex-wrap align-items-center ps-2 rounded-end-2 text-wrap overflow-hidden">
-                    <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
-                        <em t-if="!facetValue_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-esc="facet.separator"/>
-                        <small class="o_facet_value text-truncate" t-esc="facetValue" t-att-title="facet.tooltip or facetValue"/>
+                    <t t-foreach="this.facet.values" t-as="facetValue" t-key="this.facetValue_index">
+                        <em t-if="!this.facetValue_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-esc="this.facet.separator"/>
+                        <small class="o_facet_value text-truncate" t-esc="this.facetValue" t-att-title="facet.tooltip or facetValue"/>
                     </t>
                     <button class="o_facet_remove oi oi-close btn btn-link py-0 px-2 text-danger d-print-none"
                         aria-label="Remove"
@@ -57,14 +57,14 @@
     </t>
 
     <t t-name="web.SearchBar.QuickSearchItems">
-        <t t-foreach="items" t-as="item" t-key="item.id">
+        <t t-foreach="this.items" t-as="item" t-key="this.item.id">
             <DropdownItem
                 class="{ o_indent: item.isChild }"
                 attrs="{ id: item.id }"
                 onSelected="() => this.selectItem(item)"
                 closingMode="'none'"
             >
-                <t t-if="item.isParent">
+                <t t-if="this.item.isParent">
                     <a t-att-class="{ o_expand: true, 'ms-4': item.isFieldProperty}"
                         href="#"
                         t-on-click.stop.prevent="() => this.toggleItem(item, !item.isExpanded)"
@@ -73,28 +73,28 @@
                     </a>
                 </t>
                 <a href="#" t-on-click.prevent="" t-att-class="{'ps-3 pe-2 text-truncate': item.isFieldProperty }" t-att-title="item.title">
-                    <t t-if="item.isAddCustomFilterButton"><span class="text-action">Custom Filter...</span></t>
-                    <t t-elif="item.loadMore"><span class="text-action"><t t-esc="item.label"/></span></t>
-                    <t t-elif="item.isChild">
-                        <t t-esc="item.label"/>
+                    <t t-if="this.item.isAddCustomFilterButton"><span class="text-action">Custom Filter...</span></t>
+                    <t t-elif="this.item.loadMore"><span class="text-action"><t t-esc="this.item.label"/></span></t>
+                    <t t-elif="this.item.isChild">
+                        <t t-esc="this.item.label"/>
                     </t>
-                    <t t-elif="!item.isFieldProperty" > Search </t> <b t-esc="item.searchItemDescription"/> <t t-if="item.preposition"> <t t-esc="item.preposition"/>: <b class="fst-italic text-primary" t-esc="item.label"/> </t>
+                    <t t-elif="!this.item.isFieldProperty" > Search </t> <b t-esc="this.item.searchItemDescription"/> <t t-if="this.item.preposition"> <t t-esc="this.item.preposition"/>: <b class="fst-italic text-primary" t-esc="this.item.label"/> </t>
                 </a>
             </DropdownItem>
         </t>
     </t>
 
     <t t-name="web.SearchBar">
-        <div t-if="visibilityState.showSearchBar" class="o_cp_searchview d-flex input-group" role="search" t-ref="root">
+        <div t-if="this.visibilityState.showSearchBar" class="o_cp_searchview d-flex input-group" role="search" t-ref="root">
             <Dropdown
-                state="inputDropdownState"
+                state="this.inputDropdownState"
                 manual="true"
                 noClasses="true"
                 position="'bottom-fit'"
                 menuClass="'o_searchview_autocomplete'"
-                navigationOptions="inputDropdownNavOptions"
-                onStateChanged.bind="onInputDropdownChanged"
-                menuRef="menuRef"
+                navigationOptions="this.inputDropdownNavOptions"
+                onStateChanged.bind="this.onInputDropdownChanged"
+                menuRef="this.menuRef"
                 bottomSheet="false"
             >
                 <div class="o_searchview form-control d-print-contents d-flex align-items-center py-1 border-end-0"
@@ -116,9 +116,9 @@
                             placeholder="Search..."
                             role="searchbox"
                             t-ref="autofocus"
-                            t-on-click="onSearchClick"
-                            t-on-input="onSearchInput"
-                            t-on-compositionend="onCompositionEnd"
+                            t-on-click="this.onSearchClick"
+                            t-on-input="this.onSearchInput"
+                            t-on-compositionend="this.onCompositionEnd"
                         />
                     </div>
                 </div>
@@ -126,7 +126,7 @@
                     <t t-call="web.SearchBar.QuickSearchItems"/>
                 </t>
             </Dropdown>
-            <SearchBarMenu dropdownState="searchBarDropdownState">
+            <SearchBarMenu dropdownState="this.searchBarDropdownState">
                 <t t-slot="search-bar-additional-menu"/>
             </SearchBarMenu>
         </div>

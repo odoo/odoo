@@ -2,11 +2,11 @@
 <templates id="template" xml:space="preserve">
      <t t-name="purchase_stock.ForecastedDetails" t-inherit="stock.ForecastedDetails" t-inherit-mode="extension">
          <xpath expr="//tr[@name='draft_picking_in']" position="after">
-            <tr t-if="currentProduct.draft_purchase_qty.in" name="draft_po_in"
-            t-attf-class="#{currentProduct.draft_purchase_orders_matched and 'table-info'} #{multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
+            <tr t-if="this.currentProduct.draft_purchase_qty.in" name="draft_po_in"
+            t-attf-class="#{this.currentProduct.draft_purchase_orders_matched and 'table-info'} #{this.multipleProducts and 'collapse show' or ''} collapseGroup_#{this.line.product.id}">
                 <td/>
                 <td>Requests for quotation :
-                    <t t-foreach="currentProduct.draft_purchase_orders" t-as="purchase_order" t-key="purchase_order_index">
+                    <t t-foreach="this.currentProduct.draft_purchase_orders" t-as="purchase_order" t-key="purchase_order_index">
                         <t t-if="purchase_order_index > 0"> | </t>
                         <a t-attf-href="#" t-out="purchase_order.name"
                             class="fw-bold"
@@ -14,7 +14,7 @@
                     </t>
                 </td>
                 <td class="text-end text-success">
-                    <t t-out="_formatFloat(currentProduct.draft_purchase_qty.in)"/> <t t-out="line.uom_id.display_name"/>
+                    <t t-out="this._formatFloat(this.currentProduct.draft_purchase_qty.in)"/> <t t-out="this.line.uom_id.display_name"/>
                 </td>
             </tr>
         </xpath>

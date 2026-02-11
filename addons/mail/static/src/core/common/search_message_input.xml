@@ -5,21 +5,21 @@
             <div class="input-group">
                 <div class="o_searchview form-control d-flex align-items-center bg-view p-0" role="search" aria-autocomplete="list">
                     <div class="o_searchview_input_container d-flex align-items-center flex-grow-1 flex-wrap gap-1 h-100">
-                        <input type="text" class="o_searchview_input flex-grow-1 w-auto border-0 rounded-start ps-2 bg-view" accesskey="Q" t-att-placeholder="inputPlaceholder" t-model="state.searchTerm" t-on-keydown="onKeydownSearch" t-ref="autofocus" role="searchbox"/>
-                        <i class="fa fa-fw fa-times-circle me-2 opacity-50 opacity-100-hover" t-att-class="{ 'invisible': !state.searchedTerm }" role="img" aria-label="Clear Search" title="Clear Search" t-on-click="() => this.onClickClearSearch()"/>
+                        <input type="text" class="o_searchview_input flex-grow-1 w-auto border-0 rounded-start ps-2 bg-view" accesskey="Q" t-att-placeholder="this.inputPlaceholder" t-model="this.state.searchTerm" t-on-keydown="this.onKeydownSearch" t-ref="autofocus" role="searchbox"/>
+                        <i class="fa fa-fw fa-times-circle me-2 opacity-50 opacity-100-hover" t-att-class="{ 'invisible': !this.state.searchedTerm }" role="img" aria-label="Clear Search" title="Clear Search" t-on-click="() => this.onClickClearSearch()"/>
                     </div>
                 </div>
-                <button class="btn" t-att-class="state.searchedTerm === state.searchTerm ? 'btn-outline-secondary' : 'btn-secondary'" t-on-click="() => this.search()" aria-label="Search button">
-                    <i t-if="!props.messageSearch.searching" class="o_searchview_icon oi oi-search" role="img" aria-label="Search Messages" title="Search Messages"/>
+                <button class="btn" t-att-class="this.state.searchedTerm === this.state.searchTerm ? 'btn-outline-secondary' : 'btn-secondary'" t-on-click="() => this.search()" aria-label="Search button">
+                    <i t-if="!this.props.messageSearch.searching" class="o_searchview_icon oi oi-search" role="img" aria-label="Search Messages" title="Search Messages"/>
                     <i t-else="" class="fa fa-circle-o-notch fa-spin" aria-label="Search in progress" title="Search in progress"/>
                 </button>
             </div>
-            <Dropdown t-if="env.inChatter">
+            <Dropdown t-if="this.env.inChatter">
                 <button class="btn btn-outline-secondary ms-3" aria-label="Filter Messages" title="Filter Messages">
                     <i class="fa fa-filter" role="img"/>
                 </button>
                 <t t-set-slot="content">
-                    <t t-foreach="searchFilters" t-as="searchFilter" t-key="searchFilter.label">
+                    <t t-foreach="this.searchFilters" t-as="searchFilter" t-key="searchFilter.label">
                         <DropdownItem onSelected="() => this.onChangeSearchFilter(searchFilter)">
                             <input type="radio" class="form-check-input ms-0 me-2" t-att-checked="searchFilter.is_notification === this.props.messageSearch.is_notification" value="searchFilter.label"/>
                             <t t-esc="searchFilter.name"/>
@@ -27,7 +27,7 @@
                     </t>
                 </t>
             </Dropdown>
-            <button t-if="env.inChatter" class="btn btn-outline-secondary ms-3" t-on-click="() => this.clear()" aria-label="Close button">
+            <button t-if="this.env.inChatter" class="btn btn-outline-secondary ms-3" t-on-click="() => this.clear()" aria-label="Close button">
                 <i class="o_searchview_icon oi oi-close cursor-pointer" role="img" aria-label="Close search" title="Close"/>
             </button>
         </div>

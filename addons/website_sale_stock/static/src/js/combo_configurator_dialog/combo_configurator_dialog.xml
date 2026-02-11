@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-inherit="sale.ComboConfiguratorDialog" t-inherit-mode="extension">
-        <ProductCard position="attributes">
+        <ProductCard position="this.attributes">
             <attribute name="quantity">state.quantity</attribute>
         </ProductCard>
-        <QuantityButtons position="attributes">
+        <QuantityButtons position="this.attributes">
             <attribute name="isPlusButtonDisabled">
                 !isComboQuantityAllowed(state.quantity + 1)
             </attribute>

@@ -4,29 +4,29 @@
         <!-- Replace the element found using the css selector by the content of the portalled
              template.  -->
         <t t-portal="`#product-${props.productId}-price`">
-            <span t-if="showPrice" t-out="price" class="o_product_catalog_price fw-bold me-4"/>
-            <span t-if="props.code" t-out="props.code" class="text-muted"/>
+            <span t-if="this.showPrice" t-out="this.price" class="o_product_catalog_price fw-bold me-4"/>
+            <span t-if="this.props.code" t-out="this.props.code" class="text-muted"/>
         </t>
         <div 
-            t-if="props.readOnly and props.warning"
+            t-if="this.props.readOnly and this.props.warning"
             class="text-danger text-truncate my-2 pt-3 border-top">
-            <i class="fa fa-warning" t-att-title="props.warning"/>
+            <i class="fa fa-warning" t-att-title="this.props.warning"/>
             <span 
                 class="px-1" 
-                t-att-title="props.warning"
-                t-out="props.warning"/>
+                t-att-title="this.props.warning"
+                t-out="this.props.warning"/>
         </div>
-        <span t-elif="props.readOnly" class="m-2 pt-3 border-top" t-out="props.warning">
+        <span t-elif="this.props.readOnly" class="m-2 pt-3 border-top" t-out="this.props.warning">
             You can't edit this product in the catalog.
         </span>
         <div t-else="" class="d-flex justify-content-end align-items-center m-2">
-            <div t-if="isInOrder()"
+            <div t-if="this.isInOrder()"
                 class="o_product_catalog_quantity o_product_catalog_cancel_global_click input-group flex-nowrap mw-75">
                 <button
                     class="btn btn-primary border"
                     t-on-click.stop="this.env.decreaseQuantity"
-                    t-att-disabled="disableRemove"
-                    t-att-data-tooltip="disabledButtonTooltip"
+                    t-att-disabled="this.disableRemove"
+                    t-att-data-tooltip="this.disabledButtonTooltip"
                     aria-label="Decrease quantity"
                 >
                     <i class="oi oi-minus" aria-hidden="true"/>
@@ -35,14 +35,14 @@
                     class="form-control text-bg-view flex-grow-0 flex-shrink-0 text-center"
                     name="product_catalog_quantity_input"
                     type="number"
-                    t-att-value="quantity"
+                    t-att-value="this.quantity"
                     t-on-change="this.env.setQuantity"
-                    t-on-focus="_onFocus"
+                    t-on-focus="this._onFocus"
                 />
                 <span
                     t-if="this.env.displayUoM"
                     class="input-group-text d-block rounded-0 text-truncate cursor-default"
-                    t-out="props.uomDisplayName" t-att-title="props.uomDisplayName"
+                    t-out="this.props.uomDisplayName" t-att-title="this.props.uomDisplayName"
                 />
                 <button
                     class="btn btn-primary border"
@@ -52,17 +52,17 @@
                     <i class="oi oi-plus" aria-hidden="true"/>
                 </button>
             </div>
-            <t t-elif="props.warning">
-                <i class="fa fa-warning text-warning" t-att-title="props.warning"/>
+            <t t-elif="this.props.warning">
+                <i class="fa fa-warning text-warning" t-att-title="this.props.warning"/>
                 <span 
                     class="text-truncate text-warning px-1" 
-                    t-att-title="props.warning"
-                    t-out="props.warning"/>
+                    t-att-title="this.props.warning"
+                    t-out="this.props.warning"/>
             </t>
             <div 
                 class="ms-auto o_product_catalog_buttons o_product_catalog_cancel_global_click"
                 style="min-width: max-content;">
-                <button t-if="!isInOrder()"
+                <button t-if="!this.isInOrder()"
                         t-on-click.stop="() => this.env.addProduct()"
                         class="btn btn-secondary">
                     <i class="fa fa-shopping-cart"/>
@@ -70,7 +70,7 @@
                 </button>
                 <div t-else="" class="o_tooltip_div_remove" t-att-data-tooltip="this.disabledButtonTooltip">
                     <button t-on-click.stop="this.env.removeProduct"
-                            t-att-disabled="disableRemove"
+                            t-att-disabled="this.disableRemove"
                             class="btn btn-light border">
                         <i class="fa fa-trash"/>
                         Remove

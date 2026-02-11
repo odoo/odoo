@@ -6,11 +6,11 @@
             <attribute name="t-if">!hideListView</attribute>
         </section>
         <button id="submit_location_small" position="after">
-            <div t-if="taxRecomputationWarning" class="alert alert-warning mt-3">
-                <span t-out="taxRecomputationWarning"/>
+            <div t-if="this.taxRecomputationWarning" class="alert alert-warning mt-3">
+                <span t-out="this.taxRecomputationWarning"/>
             </div>
         </button>
-        <MapContainer position="attributes">
+        <MapContainer position="this.attributes">
             <attribute name="taxRecomputationWarning">taxRecomputationWarning</attribute>
         </MapContainer>
     </t>
@@ -19,25 +19,25 @@
         <input id="o_location_selector_search" position="before">
             <!-- Country selector -->
             <SelectMenu
-                t-if="isClickAndCollect"
-                choices="state.countries"
-                searchable="state.countries.length > 10"
+                t-if="this.isClickAndCollect"
+                choices="this.state.countries"
+                searchable="this.state.countries.length > 10"
                 required="true"
-                onSelect.bind="setSelectedCountry"
+                onSelect.bind="this.setSelectedCountry"
                 class="'rounded-end-0 border-0'"
                 togglerClass="'h-100 border-0 rounded-end-0 ps-2 pe-0'"
                 menuClass="'o_location_selector_country_selector'"
-                disabled="state.countries.length == 1"
+                disabled="this.state.countries.length == 1"
             >
                 <img
-                    t-att-src="state.selectedCountryData.image_url"
+                    t-att-src="this.state.selectedCountryData.image_url"
                     class="me-2"
                     style="height: auto; width: 1.5rem;"
-                    t-att-alt="state.selectedCountryData.name"
-                    t-att-title="state.selectedCountryData.name"
+                    t-att-alt="this.state.selectedCountryData.name"
+                    t-att-title="this.state.selectedCountryData.name"
                 />
                 <span class="visually-hidden">
-                    Selected country: <span aria-live="polite" t-out="state.selectedCountryData.name"/>
+                    Selected country: <span aria-live="polite" t-out="this.state.selectedCountryData.name"/>
                 </span>
                 <t t-set-slot="choice" t-slot-scope="choice">
                     <span class="d-flex align-items-center text-truncate">

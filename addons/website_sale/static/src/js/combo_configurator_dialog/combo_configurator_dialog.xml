@@ -22,7 +22,7 @@
                 class="btn btn-primary w-100 w-lg-auto"
                 t-if="this.props.isFrontend and !this.props.options.isBuyNow"
                 t-on-click="() => this.confirm({goToCart: false})"
-                t-att-disabled="!areAllCombosSelected"
+                t-att-disabled="!this.areAllCombosSelected"
             >
                 <i class="fa fa-shopping-cart me-2"/>
                 Add to Cart
@@ -32,7 +32,7 @@
                 class="btn btn-outline-primary w-100 w-lg-auto"
                 t-if="this.props.isFrontend"
                 t-on-click="() => this.confirm({goToCart: true})"
-                t-att-disabled="!areAllCombosSelected"
+                t-att-disabled="!this.areAllCombosSelected"
             >
                 Go to Checkout
                 <i class="fa fa-angle-right ms-2"/>

@@ -31,7 +31,7 @@
         <BuilderCheckbox classAction="'no_icon_color'" id="'no_icon_color_opt'" inverseAction="true"/>
     </BuilderRow>
 
-    <BuilderRow label.translate="Custom Color" t-if="!isActiveItem('no_icon_color_opt')">
+    <BuilderRow label.translate="Custom Color" t-if="!this.isActiveItem('no_icon_color_opt')">
         <BuilderColorPicker styleAction="'color'" noTransparency="true" enabledTabs="['solid', 'custom']" applyTo="'.fa'"/>
     </BuilderRow>
     <BuilderRow label.translate="Background Color">

@@ -1,9 +1,9 @@
 <templates id="template" xml:space="preserve">
     <t t-name="web_unsplash.UnsplashError">
         <div class="alert alert-info w-100">
-            <h4><t t-esc="props.title"/></h4>
-            <p><t t-esc="props.subtitle"/></p>
-            <UnsplashCredentials t-if="props.showCredentials" submitCredentials="props.submitCredentials" hasCredentialsError="props.hasCredentialsError"/>
+            <h4><t t-esc="this.props.title"/></h4>
+            <p><t t-esc="this.props.subtitle"/></p>
+            <UnsplashCredentials t-if="this.props.showCredentials" submitCredentials="this.props.submitCredentials" hasCredentialsError="this.props.hasCredentialsError"/>
         </div>
     </t>
 </templates>

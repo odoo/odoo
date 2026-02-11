@@ -2,32 +2,32 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ThreadIcon">
-        <t t-set="class" t-value="'o-mail-ThreadIcon d-flex ' + props.className + ' ' + attClassObjectToString({
-            'fa-lg': props.size === 'lg' or props.size === 'large',
-            'o-xsmaller': props.size === 'sm' or props.size === 'small',
+        <t t-set="class" t-value="'o-mail-ThreadIcon d-flex ' + this.props.className + ' ' + this.attClassObjectToString({
+            'fa-lg': this.props.size === 'lg' or this.props.size === 'large',
+            'o-xsmaller': this.props.size === 'sm' or this.props.size === 'small',
         })"/>
         <t t-set="attr" t-value="{ 'class': class }"/>
         <t name="extra"/>
-        <t t-if="channel?.channel_type === 'channel'">
-            <div t-if="!channel.group_public_id" class="fa fa-globe o-fs-small" t-att="attr" title="Public Channel"/>
+        <t t-if="this.channel?.channel_type === 'channel'">
+            <div t-if="!this.channel.group_public_id" class="fa fa-globe o-fs-small" t-att="attr" title="Public Channel"/>
         </t>
-        <t t-elif="channel?.channel_type === 'group'">
+        <t t-elif="this.channel?.channel_type === 'group'">
             <t name="group"/>
         </t>
-        <t t-elif="channel?.channel_type?.includes('chat') and correspondent">
+        <t t-elif="this.channel?.channel_type?.includes('chat') and this.correspondent">
             <t name="chat">
                 <t name="chat_static">
-                    <ImStatus t-if="correspondent.im_status" className="class" member="correspondent" size="props.size" typing="props.typing"/>
+                    <ImStatus t-if="this.correspondent.im_status" className="class" member="this.correspondent" size="this.props.size" typing="this.props.typing"/>
                     <div t-else="" class="d-flex rounded-circle bg-inherit">
-                        <i class="fa-fw" t-att="attr" t-attf-class="#{ defaultChatIcon.class }" t-att-title="defaultChatIcon.title"/>
+                        <i class="fa-fw" t-att="attr" t-attf-class="#{ this.defaultChatIcon.class }" t-att-title="this.defaultChatIcon.title"/>
                     </div>
                 </t>
             </t>
         </t>
-        <t t-elif="props.thread.model === 'mail.box'">
-            <div t-if="props.thread.id === 'inbox'" class="fa fa-fw fa-inbox" t-att="attr"/>
-            <div t-elif="props.thread.id === 'starred'" class="fa fa-fw fa-star-o" t-att="attr"/>
-            <div t-elif="props.thread.id === 'history'" class="fa fa-fw fa-history" t-att="attr"/>
+        <t t-elif="this.props.thread.model === 'mail.box'">
+            <div t-if="this.props.thread.id === 'inbox'" class="fa fa-fw fa-inbox" t-att="attr"/>
+            <div t-elif="this.props.thread.id === 'starred'" class="fa fa-fw fa-star-o" t-att="attr"/>
+            <div t-elif="this.props.thread.id === 'history'" class="fa fa-fw fa-history" t-att="attr"/>
         </t>
     </t>
 

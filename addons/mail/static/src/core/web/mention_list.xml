@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
     <t t-name="mail.Wysiwyg.mentionLink">
         <a
-            t-att-href="href"
-            t-att-class="option.partner ? 'o_mail_redirect' : 'o_channel_redirect'"
-            t-att-data-oe-id="option.partner ? option.partner.id : option.channel.id"
-            t-att-data-oe-model="option.partner ? 'res.partner' : 'discuss.channel'"
+            t-att-href="this.href"
+            t-att-class="this.option.partner ? 'o_mail_redirect' : 'o_channel_redirect'"
+            t-att-data-oe-id="this.option.partner ? this.option.partner.id : this.option.channel.id"
+            t-att-data-oe-model="this.option.partner ? 'res.partner' : 'discuss.channel'"
             target="_blank"
             data-oe-protected="true"
             contenteditable="false"
@@ -14,9 +14,9 @@
 
     <t t-name="mail.MentionList">
         <div class="search d-flex">
-            <input type="text" class="form-control border-0 flex-grow-1 rounded-end-0" t-ref="autofocus" t-att-placeholder="placeholder" t-model="state.searchTerm" t-on-keydown="onKeydown"/>
+            <input type="text" class="form-control border-0 flex-grow-1 rounded-end-0" t-ref="autofocus" t-att-placeholder="this.placeholder" t-model="this.state.searchTerm" t-on-keydown="this.onKeydown"/>
             <i class="oi oi-search p-2 fs-5 rounded-end" title="Search..." role="img" aria-label="Search..."/>
         </div>
-        <NavigableList class="'o-mail-MentionList-suggestionList'" t-props="navigableListProps"/>
+        <NavigableList class="'o-mail-MentionList-suggestionList'" t-props="this.navigableListProps"/>
     </t>
 </templates>

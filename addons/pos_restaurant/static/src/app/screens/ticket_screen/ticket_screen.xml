@@ -3,7 +3,7 @@
 
     <t t-name="pos_restaurant.TicketScreen" t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension">
          <xpath expr="//div[@id='order-tags']" position="after">
-            <t t-set="tableTag" t-value="getTableTag(order)"/>
+            <t t-set="tableTag" t-value="this.getTableTag(this.order)"/>
             <div t-if="tableTag" t-attf-class="badge rounded o_colorlist_item_color_1 ms-1" style="font-size: 0.75rem !important;">
                 Table <t t-esc="tableTag" />
             </div>

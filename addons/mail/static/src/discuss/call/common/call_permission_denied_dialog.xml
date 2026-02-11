@@ -2,19 +2,19 @@
 <templates xml:space="preserve">
     <t t-name="discuss.CallPermissionDeniedDialog">
         <Dialog title="''" size="'md'" contentClass="'o-discuss-CallPermissionDeniedDialog'">
-            <div class="d-flex align-items-center justify-content-between gap-4" t-att-class="ui.isSmall ? 'flex-column': 'flex-row pb-2'">
-                <div t-att-class="ui.isSmall ? 'w-100': 'w-50'">
+            <div class="d-flex align-items-center justify-content-between gap-4" t-att-class="this.ui.isSmall ? 'flex-column': 'flex-row pb-2'">
+                <div t-att-class="this.ui.isSmall ? 'w-100': 'w-50'">
                     <t t-call="discuss.CallPermissionDeniedDialog.illustrationAnimated"/>
                 </div>
                 <div class="d-flex flex-column gap-3">
-                    <h2 class="mb-0" t-out="title" />
-                    <ol class="ps-3 fs-6 d-flex flex-column gap-2 text-muted" t-attf-style="width: {{ ui.isSmall ? '100%' : '85%' }};">
+                    <h2 class="mb-0" t-out="this.title" />
+                    <ol class="ps-3 fs-6 d-flex flex-column gap-2 text-muted" t-attf-style="width: {{ this.ui.isSmall ? '100%' : '85%' }};">
                         <li>
                             Click the
                             <t t-call="discuss.CallPermissionDeniedDialog.slidersIcon"/>
                             page info icon in your browser's address bar
                         </li>
-                        <li t-out="stepTwoText"/>
+                        <li t-out="this.stepTwoText"/>
                     </ol>
                 </div>
             </div>
@@ -22,7 +22,7 @@
     </t>
 
     <t t-name="discuss.CallPermissionDeniedDialog.illustrationAnimated">
-        <svg class="o-discuss-CallPermissionDeniedDialog-illustrationAnimated" role="img" aria-label="Permissions Toggle - Animated illustration" width="100%" height="auto" viewBox="0 0 264 250" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="o-discuss-CallPermissionDeniedDialog-illustrationAnimated" role="img" aria-label="Permissions Toggle - Animated illustration" width="100%" height="auto" viewBox="0 0 264 250" fill="none">
             <title>Permissions Toggle</title>
             <description>Animated illustration showing toggles for camera and microphone permissions</description>
             <g>

@@ -1,15 +1,15 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.ImageToolbarDropdown">
-        <Dropdown menuClass="`${props.name}_selector`" menuRef="menuRef">
-            <button t-att-title="props.title" class="btn btn-light">
-                <t t-if="props.icon" t-call="{{props.icon}}"/>
-                <t t-elif="state &amp;&amp; state.displayName" t-esc="state.displayName"/>
-                <t t-else="" t-esc="props.title"/>
+        <Dropdown menuClass="`${props.name}_selector`" menuRef="this.menuRef">
+            <button t-att-title="this.props.title" class="btn btn-light">
+                <t t-if="this.props.icon" t-call="{{this.props.icon}}"/>
+                <t t-elif="this.state &amp;&amp; this.state.displayName" t-esc="this.state.displayName"/>
+                <t t-else="" t-esc="this.props.title"/>
             </button>
             <t t-set-slot="content">
-                <t t-foreach="items" t-as="item" t-key="item_index">
+                <t t-foreach="this.items" t-as="item" t-key="this.item_index">
                     <DropdownItem class="'user-select-none'" onSelected="() => this.onSelected(item)">
-                        <t t-esc="item.name"/>
+                        <t t-esc="this.item.name"/>
                     </DropdownItem>
                 </t>
             </t>

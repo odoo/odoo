@@ -9,19 +9,19 @@
                 type="text"
                 autocorrect="off"
                 placeholder="Find anything..."
-                t-on-input="onInput"
+                t-on-input="this.onInput"
                 t-ref="seachRef"
             />
 
             <div class="d-flex flex-nowrap mb-2 align-items-center">
                 <div
-                    t-foreach="state.activeFilters"
+                    t-foreach="this.state.activeFilters"
                     t-as="filter"
                     t-key="filter"
                     class="d-flex flex-nowrap ms-2 align-items-center cursor-pointer btn o-doc-modal-checkbox"
                     t-on-click="() => this.onFilterClick(filter)"
                 >
-                    <input class="me-2" type="checkbox" t-att-id="filter" t-att-checked="state.activeFilters[filter]"/>
+                    <input class="me-2" type="checkbox" t-att-id="filter" t-att-checked="this.state.activeFilters[filter]"/>
                     <label class="text-truncate" t-att-for="filter" t-out="filter" t-on-click.prevent=""></label>
                 </div>
                 <div class="text-muted ms-2 me-2">
@@ -34,7 +34,7 @@
                 <div class="overflow-hidden" t-att-style="`min-height: ${this.state.scrollHeight}px`">
                     <div t-att-style="`transform: translateY(${this.state.scrollOffsetY}px)`">
                         <button
-                            t-foreach="state.results"
+                            t-foreach="this.state.results"
                             t-as="result"
                             t-key="result_index + result.type + '/' + result.label + '/' + result.path"
                             class="btn mb-2 text-start w-100 d-flex flex-nowrap flex-row o-doc-modal-checkbox justify-content-between"

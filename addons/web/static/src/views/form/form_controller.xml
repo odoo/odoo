@@ -2,65 +2,65 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FormView">
-        <div t-att-class="className" t-ref="root">
+        <div t-att-class="this.className" t-ref="root">
             <div class="o_form_view_container">
-                <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
+                <Layout className="this.model.useSampleModel ? 'o_view_sample_data' : ''" display="this.display">
                     <t t-set-slot="control-panel-buttons">
-                        <t t-if="env.inDialog">
-                            <t t-if="footerArchInfo">
-                                <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="footerArchInfo">
+                        <t t-if="this.env.inDialog">
+                            <t t-if="this.footerArchInfo">
+                                <t t-component="this.props.Renderer" record="this.model.root" Compiler="this.props.Compiler" archInfo="this.footerArchInfo">
                                     <t t-set-slot="default_buttons">
-                                        <t t-call="{{ props.buttonDialogTemplate }}"/>
+                                        <t t-call="{{ this.props.buttonDialogTemplate }}"/>
                                     </t>
                                 </t>
                             </t>
-                            <t t-else="" t-call="{{ props.buttonDialogTemplate }}"/>
+                            <t t-else="" t-call="{{ this.props.buttonDialogTemplate }}"/>
                         </t>
-                        <t t-else="" t-call="{{ props.buttonTemplate }}"/>
+                        <t t-else="" t-call="{{ this.props.buttonTemplate }}"/>
                     </t>
 
                     <t t-set-slot="control-panel-actions">
-                        <t t-if="!env.isSmall and buttonBoxTemplate">
-                            <t t-call="{{ buttonBoxTemplate }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this, props: { ...this.props, record: this.model.root } }) }"/>
+                        <t t-if="!this.env.isSmall and this.buttonBoxTemplate">
+                            <t t-call="{{ this.buttonBoxTemplate }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this, props: { ...this.props, record: this.model.root } }) }"/>
                         </t>
                     </t>
 
                     <t t-set-slot="control-panel-additional-actions">
                         <CogMenu t-props="this.cogMenuProps" />
-                        <t t-if="env.isSmall and buttonBoxTemplate">
-                            <t t-call="{{ buttonBoxTemplate }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this, props: { ...this.props, record: this.model.root } }) }"/>
+                        <t t-if="this.env.isSmall and this.buttonBoxTemplate">
+                            <t t-call="{{ this.buttonBoxTemplate }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this, props: { ...this.props, record: this.model.root } }) }"/>
                         </t>
                     </t>
 
                     <t t-set-slot="control-panel-status-indicator">
-                        <t t-if="canEdit">
-                            <FormStatusIndicator model="model" discard.bind="discard" save.bind="saveButtonClicked" />
+                        <t t-if="this.canEdit">
+                            <FormStatusIndicator model="this.model" discard.bind="this.discard" save.bind="this.saveButtonClicked" />
                         </t>
                     </t>
 
-                    <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" readonly="props.readonly" archInfo="archInfo" translateAlert="translateAlert" onNotebookPageChange.bind="onNotebookPageChange" activeNotebookPages="props.state and props.state.activeNotebookPages"/>
+                    <t t-component="this.props.Renderer" record="this.model.root" Compiler="this.props.Compiler" readonly="this.props.readonly" archInfo="this.archInfo" translateAlert="this.translateAlert" onNotebookPageChange.bind="this.onNotebookPageChange" activeNotebookPages="this.props.state and this.props.state.activeNotebookPages"/>
                 </Layout>
             </div>
         </div>
     </t>
 
     <t t-name="web.FormView.DialogButtons">
-        <button t-if="model.root.isInEdition" type="button" class="btn btn-primary o_form_button_save" data-hotkey="s" t-on-click.stop="() => this.saveButtonClicked({closable: true})">
+        <button t-if="this.model.root.isInEdition" type="button" class="btn btn-primary o_form_button_save" data-hotkey="s" t-on-click.stop="() => this.saveButtonClicked({closable: true})">
             Save
         </button>
-        <button t-if="model.root.isInEdition" type="button" class="btn btn-secondary o_form_button_cancel" data-hotkey="j" t-on-click.stop="discard">
+        <button t-if="this.model.root.isInEdition" type="button" class="btn btn-secondary o_form_button_cancel" data-hotkey="j" t-on-click.stop="this.discard">
             Discard
         </button>
-        <button t-if="model.root.isInEdition and props.removeRecord" class="btn btn-secondary o_form_button_remove" t-on-click="props.removeRecord" data-hotkey="x">
+        <button t-if="this.model.root.isInEdition and this.props.removeRecord" class="btn btn-secondary o_form_button_remove" t-on-click="this.props.removeRecord" data-hotkey="x">
             Remove
         </button>
-        <button t-if="!model.root.isInEdition and canCreate" type="button" class="btn btn-secondary o_form_button_create" data-hotkey="c" t-on-click.stop="create">
+        <button t-if="!this.model.root.isInEdition and this.canCreate" type="button" class="btn btn-secondary o_form_button_create" data-hotkey="c" t-on-click.stop="this.create">
             New
         </button>
     </t>
 
     <t t-name="web.FormView.Buttons">
-        <button t-if="canCreate" type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-on-click.stop="create">New</button>
+        <button t-if="this.canCreate" type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-on-click.stop="this.create">New</button>
     </t>
 
     <t t-name="web.DefaultButtonsSlot">

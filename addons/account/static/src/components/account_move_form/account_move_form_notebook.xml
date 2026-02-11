@@ -3,7 +3,7 @@
 <templates xml:space="preserve">
     <t t-name="account.AccountMoveFormNotebook" t-inherit="web.Notebook" t-inherit-mode="primary">
         <xpath expr="//button[@class='nav-link']" position="attributes">
-            <attribute name="t-on-click">() => this.changeTabTo(navItem[0])</attribute>
+            <attribute name="t-on-click">() =&gt; this.changeTabTo(this.navItem[0])</attribute>
             <attribute name="tabindex">-1</attribute>
         </xpath>
     </t>

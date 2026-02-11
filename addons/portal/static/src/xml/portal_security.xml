@@ -25,9 +25,9 @@
                 Give a duration for the key's validity
             </h3>
             <select name="duration" class="form-control">
-                <option t-foreach="duration_selection" t-as="duration" t-key="duration[0]"
+                <option t-foreach="this.duration_selection" t-as="duration" t-key="this.duration[0]"
                     t-att-id="`duration_${duration[0]}`"
-                    t-esc="duration[1]"
+                    t-esc="this.duration[1]"
                     t-att-value="duration[0]"/>
             </select>
             <p>
@@ -42,7 +42,7 @@
                 Here is your new API key, use it instead of a password for RPC access.
                 Your login is still necessary for interactive usage.
             </p>
-            <p><code><span t-out="key"/></code></p>
+            <p><code><span t-out="this.key"/></code></p>
             <p class="alert alert-warning" role="alert">
                 <strong>Important:</strong>
                 The key cannot be retrieved later and provides <b>full access</b>

@@ -4,10 +4,10 @@
         t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true" t-ref="root"
         t-on-mouseenter="this.onMouseEnter">
         <div class="px-1 mb-1 pt-2 d-flex">
-            <t t-if="isMobileOS">
+            <t t-if="this.isMobileOS">
                 <Dropdown>
                     <button class="btn btn-light d-flex justify-content-between w-100 border border-dark">
-                        <span class="px-1" t-esc="state.activeTab"/>
+                        <span class="px-1" t-esc="this.state.activeTab"/>
                         <i class="fa fa-caret-down ms-2"/>
                     </button>
                     <t t-set-slot="content">
@@ -22,22 +22,22 @@
             </t>
             <t t-else="">
                 <t t-foreach="this.tabs" t-as="tab" t-key="tab.id">
-                    <button t-attf-class="btn btn-sm text-truncate btn-tab #{tab.id}-tab #{ isDarkTheme ? 'btn-secondary' : 'btn-light'} #{state.activeTab === tab.id ? 'active' : ''}"
+                    <button t-attf-class="btn btn-sm text-truncate btn-tab #{tab.id}-tab #{ this.isDarkTheme ? 'btn-secondary' : 'btn-light'} #{this.state.activeTab === tab.id ? 'active' : ''}"
                         t-on-click="() => this.setTab(tab.id)">
                         <t t-out="tab.name" />
                     </button>
                 </t>
             </t>
             <div class="flex-grow-1" />
-            <button t-attf-class="btn btn-sm fa fa-trash #{ isDarkTheme ? 'btn-secondary' : 'btn-light'}"
+            <button t-attf-class="btn btn-sm fa fa-trash #{ this.isDarkTheme ? 'btn-secondary' : 'btn-light'}"
                     title="Reset"
-                    t-on-click="onColorApply"
-                    t-on-mouseover="onColorHover"
-                    t-on-mouseout="onColorHoverOut"
-                    t-on-focusin="onColorFocusin"
-                    t-on-focusout="onColorFocusout"/>
+                    t-on-click="this.onColorApply"
+                    t-on-mouseover="this.onColorHover"
+                    t-on-mouseout="this.onColorHoverOut"
+                    t-on-focusin="this.onColorFocusin"
+                    t-on-focusout="this.onColorFocusout"/>
         </div>
-        <t t-set="activeTab" t-value="this.tabs.find((tab) => state.activeTab === tab.id)" />
+        <t t-set="activeTab" t-value="this.tabs.find((tab) => this.state.activeTab === tab.id)" />
         <t t-component="activeTab.component" t-props="{
             applyColor: this.applyColor.bind(this),
             onColorClick: this.onColorApply.bind(this),

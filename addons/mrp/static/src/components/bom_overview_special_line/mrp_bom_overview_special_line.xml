@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <tr t-name="mrp.BomOverviewSpecialLine" t-on-click="props.toggleFolded" >
+    <tr t-name="mrp.BomOverviewSpecialLine" t-on-click="this.props.toggleFolded" >
         <td name="td_mrp_bom">
-            <span t-attf-style="margin-left: {{ data.level * 20 }}px"/>
+            <span t-attf-style="margin-left: {{ this.data.level * 20 }}px"/>
             <t t-set="title_fold">Fold</t>
             <t t-set="title_unfold">Unfold</t>
-            <span t-if="hasFoldButton" t-attf-class="o_mrp_bom_{{ props.isFolded ? 'unfoldable' : 'foldable' }} btn btn-light ps-0 py-0" t-att-aria-label="props.isFolded ? title_unfold : title_fold" t-att-title="props.isFolded ? title_unfold : title_fold">
-                <i t-attf-class="fa fa-fw fa-caret-{{ props.isFolded ? 'right' : 'down' }}" role="img"/>
-                <t t-if="props.type == 'operations'">Operations</t>
-                <t t-elif="props.type == 'byproducts'">By-Products</t>
+            <span t-if="this.hasFoldButton" t-attf-class="o_mrp_bom_{{ this.props.isFolded ? 'unfoldable' : 'foldable' }} btn btn-light ps-0 py-0" t-att-aria-label="this.props.isFolded ? title_unfold : title_fold" t-att-title="this.props.isFolded ? title_unfold : title_fold">
+                <i t-attf-class="fa fa-fw fa-caret-{{ this.props.isFolded ? 'right' : 'down' }}" role="img"/>
+                <t t-if="this.props.type == 'operations'">Operations</t>
+                <t t-elif="this.props.type == 'byproducts'">By-Products</t>
             </span>
         </td>
         <td name="quantity" class="text-end">
-            <span t-if="props.type == 'operations'" t-esc="formatFloatTime(data.operations_time)"/>
-            <span t-elif="props.type == 'byproducts'" t-esc="formatFloat(data.byproducts_total, {'digits': [false, precision]})"/>
+            <span t-if="this.props.type == 'operations'" t-esc="this.formatFloatTime(this.data.operations_time)"/>
+            <span t-elif="this.props.type == 'byproducts'" t-esc="this.formatFloat(this.data.byproducts_total, {'digits': [false, this.precision]})"/>
         </td>
-        <td name="uom" t-if="showUom" class="text-start">
-            <span t-if="props.type == 'operations'">Minutes</span>
+        <td name="uom" t-if="this.showUom" class="text-start">
+            <span t-if="this.props.type == 'operations'">Minutes</span>
         </td>
-        <td name="free_to_use" t-if="forecastMode"/>
-        <td name="status" t-if="forecastMode"/>
-        <td name="lead_time" t-if="forecastMode"/>
-        <td name="route" t-if="forecastMode"/>
-        <td name="bom_cost" class="text-end" t-attf-colspan="{{ forecastMode ? 1 : 2 }}">
-            <span t-if="props.type == 'operations'" t-esc="formatMonetary(data.operations_cost)"/>
-            <span t-elif="props.type == 'byproducts'" t-esc="formatMonetary(data.byproducts_cost)"/>
+        <td name="free_to_use" t-if="this.forecastMode"/>
+        <td name="status" t-if="this.forecastMode"/>
+        <td name="lead_time" t-if="this.forecastMode"/>
+        <td name="route" t-if="this.forecastMode"/>
+        <td name="bom_cost" class="text-end" t-attf-colspan="{{ this.forecastMode ? 1 : 2 }}">
+            <span t-if="this.props.type == 'operations'" t-esc="this.formatMonetary(this.data.operations_cost)"/>
+            <span t-elif="this.props.type == 'byproducts'" t-esc="this.formatMonetary(this.data.byproducts_cost)"/>
         </td>
-        <td t-if="showAttachments"/>
+        <td t-if="this.showAttachments"/>
     </tr>
 
 </templates>

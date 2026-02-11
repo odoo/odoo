@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.LabelSelectionField">
-        <span t-attf-class="badge rounded-pill text-bg-{{className}} " t-esc="string" t-att-raw-value="props.record.data[props.name]"/>
+        <span t-attf-class="badge rounded-pill text-bg-{{this.className}} " t-esc="this.string" t-att-raw-value="this.props.record.data[this.props.name]"/>
     </t>
 
 </templates>

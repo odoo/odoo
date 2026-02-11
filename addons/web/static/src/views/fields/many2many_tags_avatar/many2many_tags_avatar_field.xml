@@ -4,32 +4,32 @@
     <t t-name="web.Many2ManyTagsAvatarField">
         <div
             class="many2many_tags_avatar_field_container o_field_tags d-inline-flex flex-wrap mw-100 gap-1"
-            t-att-class="{'o_tags_input o_input': !props.readonly}"
+            t-att-class="{'o_tags_input o_input': !this.props.readonly}"
             t-ref="many2ManyTagsField"
         >
             <t t-if="this.canDisplayQuickAssignAvatar">
                 <a class="o_quick_assign fa o_m2m_avatar btn-link d-flex align-items-center text-dark" href="#" role="button" tabindex="0" t-attf-class="{{ this.tags.length ? 'fa-pencil' : 'fa-user-plus' }}" t-att-data-tooltip="this.assignBtnTooltip" t-att-aria-label="this.assignBtnTooltip" t-on-click.stop.prevent="this.openPopover"/>
             </t>
             <TagsList t-props="this.tagsListProps" t-slot-scope="tag">
-                <Tag t-props="tag.props"/>
+                <Tag t-props="this.tag.props"/>
             </TagsList>
-            <div t-if="showM2OSelectionField" class="o_field_many2many_selection d-inline-flex w-100" t-ref="autoComplete">
+            <div t-if="this.showM2OSelectionField" class="o_field_many2many_selection d-inline-flex w-100" t-ref="autoComplete">
                 <Many2XAutocomplete
-                    id="props.id"
-                    placeholder="tags.length ? '' : props.placeholder"
-                    resModel="relation"
+                    id="this.props.id"
+                    placeholder="this.tags.length ? '' : this.props.placeholder"
+                    resModel="this.relation"
                     autoSelect="true"
-                    fieldString="string"
-                    activeActions="activeActions"
-                    update="update"
-                    quickCreate="activeActions.create ? quickCreate : null"
-                    context="props.context"
-                    getDomain.bind="getDomain"
+                    fieldString="this.string"
+                    activeActions="this.activeActions"
+                    update="this.update"
+                    quickCreate="this.activeActions.create ? this.quickCreate : null"
+                    context="this.props.context"
+                    getDomain.bind="this.getDomain"
                     isToMany="true"
-                    specification="specification"
+                    specification="this.specification"
                 >
                     <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
-                        <t t-call="{{ constructor.optionTemplate }}"/>
+                        <t t-call="{{ this.constructor.optionTemplate }}"/>
                     </t>
                 </Many2XAutocomplete>
             </div>
@@ -38,9 +38,9 @@
 
     <t t-name="web.Many2ManyTagsAvatarField.option">
         <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
-            <img t-if="autoCompleteItemScope.record.id" class="rounded me-1"
-                t-attf-src="/web/image/{{relation}}/{{autoCompleteItemScope.record.id}}/avatar_128"/>
-            <span t-att-class="{ 'fw-bold': isSelected(autoCompleteItemScope.record) }" t-out="autoCompleteItemScope.label"/>
+            <img t-if="this.autoCompleteItemScope.record.id" class="rounded me-1"
+                t-attf-src="/web/image/{{this.relation}}/{{this.autoCompleteItemScope.record.id}}/avatar_128"/>
+            <span t-att-class="{ 'fw-bold': this.isSelected(this.autoCompleteItemScope.record) }" t-out="this.autoCompleteItemScope.label"/>
         </span>
     </t>
 
@@ -51,7 +51,7 @@
         <xpath expr="//div[hasclass('o_field_many2many_selection')]" position="attributes">
             <attribute name="class" add="w-100" separator=" " />
         </xpath>
-        <Many2XAutocomplete position="attributes">
+        <Many2XAutocomplete position="this.attributes">
             <attribute name="dropdown">false</attribute>
             <attribute name="placeholder">props.placeholder</attribute>
             <attribute name="autofocus">true</attribute>

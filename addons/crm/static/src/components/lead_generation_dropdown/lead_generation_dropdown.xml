@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="crm.lead_generation_dropdown">
-        <Dropdown manual="true" state="dropdown" menuClass="'o_lead_mining_menu_choices d-grid grid column-gap-2 row-gap-0 px-2'">
-            <button t-on-click="toggleDropdown" accesskey="c" class="o-dropdown-caret btn-secondary btn">Generate Leads</button>
+        <Dropdown manual="true" state="this.dropdown" menuClass="'o_lead_mining_menu_choices d-grid grid column-gap-2 row-gap-0 px-2'">
+            <button t-on-click="this.toggleDropdown" accesskey="c" class="o-dropdown-caret btn-secondary btn">Generate Leads</button>
             <t t-set-slot="content">
-                <t t-set="colClass" t-value="'g-col-' + (sortedDropdownContentElements.length > 3 ? 6 : 12)"/>
-                <t t-foreach="sortedDropdownContentElements" t-as="element" t-key="element.moduleXmlId">
+                <t t-set="colClass" t-value="'g-col-' + (this.sortedDropdownContentElements.length > 3 ? 6 : 12)"/>
+                <t t-foreach="this.sortedDropdownContentElements" t-as="element" t-key="element.moduleXmlId">
                     <DropdownItem tag="'button'"
                                   class="`o_lead_mining_element rounded ${colClass} p-0`"
                                   closingMode="'none'"
-                                  attrs="Object.assign({}, newPageAttrs, {
+                                  attrs="Object.assign({}, this.newPageAttrs, {
                                     'aria-label': element.title,
                                     'data-module-xml-id': element.moduleXmlId,
                                   })"

@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
 
     <t t-name="web.PdfViewerField">
-        <t t-if="!props.readonly">
+        <t t-if="!this.props.readonly">
             <div class="o_form_pdf_controls d-flex gap-1">
-                <t t-if="props.record.data[props.name]">
+                <t t-if="this.props.record.data[this.props.name]">
                     <FileUploader
                         acceptedFileExtensions="'.pdf'"
-                        onUploaded.bind="onFileUploaded"
+                        onUploaded.bind="this.onFileUploaded"
                     >
                         <t t-set-slot="toggler">
                             <button
@@ -20,13 +20,13 @@
                                 class="btn btn-secondary fa fa-download"
                                 data-tooltip="Download"
                                 aria-label="Download"
-                                t-on-click="onFileDownload"
+                                t-on-click="this.onFileDownload"
                             />
                         <button
                             class="btn btn-secondary fa fa-trash o_clear_file_button"
                             data-tooltip="Clear"
                             aria-label="Clear"
-                            t-on-click="onFileRemove"
+                            t-on-click="this.onFileRemove"
                         />
                     </FileUploader>
                 </t>
@@ -34,7 +34,7 @@
                     <label class="o_select_file_button btn btn-primary">
                         <FileUploader
                             acceptedFileExtensions="'.pdf'"
-                            onUploaded.bind="onFileUploaded"
+                            onUploaded.bind="this.onFileUploaded"
                         >
                             <t t-set-slot="toggler">
                                 Upload your file
@@ -44,12 +44,12 @@
                 </t>
             </div>
         </t>
-        <t t-if="props.record.data[props.name]">
+        <t t-if="this.props.record.data[this.props.name]">
             <iframe class="o_pdfview_iframe"
                 alt="PDF file"
-                t-att-src="url"
-                t-att-name="props.name"
-                t-on-error="onLoadFailed"
+                t-att-src="this.url"
+                t-att-name="this.props.name"
+                t-on-error="this.onLoadFailed"
                 t-ref="iframeViewerPdf"
             />
         </t>

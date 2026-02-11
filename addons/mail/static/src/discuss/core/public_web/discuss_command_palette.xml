@@ -2,37 +2,37 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.DiscussCommand">
-        <div class="o-mail-DiscussCommand o_command_default d-flex align-items-center ps-3 pe-4" t-att-class="{ 'o-uiSmall': ui.isSmall }">
-            <i t-if="props.channel" class="fa-fw opacity-75 text-muted me-2" t-att-class="props.channel.parent_channel_id ? 'fa fa-comments-o' : props.channel.discussAppCategory?.icon ?? 'oi oi-user opacity-0'"/>
-            <i t-elif="props.persona" class="oi fa-fw oi-user opacity-75 text-muted me-2"/>
-            <DiscussAvatar t-if="props.channel or props.persona" channel="props.channel" persona="props.persona" size="ui.isSmall ? 32 : 26" className="'me-2'"/>
-            <span class="o-mail-DiscussCommand-nameContainer pe-1 text-ellipsis d-flex align-items-center fw-bold" t-att-class="{ 'o-action': props.action }">
-                <t t-if="props.channel?.parent_channel_id">
-                    <span class="text-truncate flex-shrink-0 opacity-75 mw-50 small" t-esc="props.channel?.parent_channel_id.displayName"/>
+        <div class="o-mail-DiscussCommand o_command_default d-flex align-items-center ps-3 pe-4" t-att-class="{ 'o-uiSmall': this.ui.isSmall }">
+            <i t-if="this.props.channel" class="fa-fw opacity-75 text-muted me-2" t-att-class="this.props.channel.parent_channel_id ? 'fa fa-comments-o' : this.props.channel.discussAppCategory?.icon ?? 'oi oi-user opacity-0'"/>
+            <i t-elif="this.props.persona" class="oi fa-fw oi-user opacity-75 text-muted me-2"/>
+            <DiscussAvatar t-if="this.props.channel or this.props.persona" channel="this.props.channel" persona="this.props.persona" size="this.ui.isSmall ? 32 : 26" className="'me-2'"/>
+            <span class="o-mail-DiscussCommand-nameContainer pe-1 text-ellipsis d-flex align-items-center fw-bold" t-att-class="{ 'o-action': this.props.action }">
+                <t t-if="this.props.channel?.parent_channel_id">
+                    <span class="text-truncate flex-shrink-0 opacity-75 mw-50 small" t-esc="this.props.channel?.parent_channel_id.displayName"/>
                     <i class="oi oi-chevron-right o-xsmaller mx-1"/>
                 </t>
                 <t t-slot="name" />
             </span>
-            <span t-if="props.persona and props.persona.email" class="text-truncate text-muted smaller opacity-75" t-out="'- ' + props.persona.email" t-att-title="props.persona.email"/>
-            <i t-if="props.action?.icon" class="o-mail-DiscussCommand-actionIcon fa fa-fw opacity-75 o-action" t-attf-class="{{ props.action.icon }}"/>
-            <span t-if="props.action?.searchValueSuffix" class="o-action fw-bold" t-esc="props.searchValue"/>
+            <span t-if="this.props.persona and this.props.persona.email" class="text-truncate text-muted smaller opacity-75" t-out="'- ' + this.props.persona.email" t-att-title="this.props.persona.email"/>
+            <i t-if="this.props.action?.icon" class="o-mail-DiscussCommand-actionIcon fa fa-fw opacity-75 o-action" t-attf-class="{{ this.props.action.icon }}"/>
+            <span t-if="this.props.action?.searchValueSuffix" class="o-action fw-bold" t-esc="this.props.searchValue"/>
             <span class="flex-grow-1"/>
-            <div t-if="props.counter > 0">
-                <span t-attf-class="badge rounded-pill o-discuss-badge ms-3 me-1 fw-bold shadow-sm" t-esc="props.counter"/>
+            <div t-if="this.props.counter > 0">
+                <span t-attf-class="badge rounded-pill o-discuss-badge ms-3 me-1 fw-bold shadow-sm" t-esc="this.props.counter"/>
             </div>
         </div>
     </t>
 
     <t t-name="mail.CreateChannelDialog">
         <Dialog size="'sm'" title.translate="New Channel" contentClass="'o-mail-CreateChannelDialog'" bodyClass="'py-0'">
-            <div class="d-flex flex-column" t-on-keydown="onKeydown">
+            <div class="d-flex flex-column" t-on-keydown="this.onKeydown">
                 <span class="ms-1 text-uppercase text-muted o-xsmaller opacity-75"><i class="fa fa-hashtag"/> Channel name</span>
-                <input type="text" class="form-control" t-att-class="{ 'is-invalid': state.isInvalid }" placeholder="Channel name" t-model="state.name" tabindex="1"/>
+                <input type="text" class="form-control" t-att-class="{ 'is-invalid': this.state.isInvalid }" placeholder="Channel name" t-model="this.state.name" tabindex="1"/>
                 <div class="invalid-feedback">Channel must have a name.</div>
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-primary me-2" t-att-disabled="!state.name or state.name.trim().length === 0" t-on-click="onClickConfirm">Create Channel</button>
-                <button class="btn btn-secondary me-2" t-on-click="props.close">Discard</button>
+                <button class="btn btn-primary me-2" t-att-disabled="!this.state.name or this.state.name.trim().length === 0" t-on-click="this.onClickConfirm">Create Channel</button>
+                <button class="btn btn-secondary me-2" t-on-click="this.props.close">Discard</button>
             </t>
         </Dialog>
     </t>
@@ -43,11 +43,11 @@
             <div class="d-flex align-items-center px-0 mb-1 gap-1">
                 <span class="ms-2 my-1 text-uppercase text-muted o-xsmaller opacity-75"><i class="oi oi-user-plus"/> Invite people</span>
             </div>
-            <ChannelInvitation state="invitePeopleState"/>
+            <ChannelInvitation state="this.invitePeopleState"/>
         </div>
         <t t-set-slot="footer">
-            <button class="btn btn-primary me-2" t-on-click="onClickConfirm" t-esc="createText"/>
-            <button class="btn btn-secondary me-2" t-on-click="props.close">Discard</button>
+            <button class="btn btn-primary me-2" t-on-click="this.onClickConfirm" t-esc="this.createText"/>
+            <button class="btn btn-secondary me-2" t-on-click="this.props.close">Discard</button>
         </t>
     </Dialog>
 </t>

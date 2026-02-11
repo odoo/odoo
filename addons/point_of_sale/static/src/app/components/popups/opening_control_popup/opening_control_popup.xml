@@ -7,34 +7,34 @@
                     Opening Control
                 </h4>
             </t>
-            <div class="mb-3" t-if="orderCount > 0">
+            <div class="mb-3" t-if="this.orderCount > 0">
                 <label class="form-label">Orders status</label>
                 <div class="alert alert-info" role="alert">
-                    You still have <span t-esc="orderCount" /> open orders for the next few days.
+                    You still have <span t-esc="this.orderCount" /> open orders for the next few days.
                 </div>
             </div>
             <div class="opening-cash-section mb-3" t-if="this.cashMethodCount">
                 <label class="form-label">Opening cash</label>
-                <div t-att-class="{ 'w-50': !ui.isSmall }" class="cash-input-sub-section d-flex gap-1">
-                    <Input tModel="[state, 'openingCash']"
-                        isValid.bind="env.utils.isValidFloat"
-                        callback.bind="handleInputChange"
+                <div t-att-class="{ 'w-50': !this.ui.isSmall }" class="cash-input-sub-section d-flex gap-1">
+                    <Input tModel="[this.state, 'openingCash']"
+                        isValid.bind="this.env.utils.isValidFloat"
+                        callback.bind="this.handleInputChange"
                         autofocus="true"
                         placeholder.translate="Opening Balance Eg: 123"/>
-                    <div class="button icon btn btn-secondary btn-lg lh-lg" t-on-click="openDetailsPopup">
+                    <div class="button icon btn btn-secondary btn-lg lh-lg" t-on-click="this.openDetailsPopup">
                         <i class="fa fa-money" role="img" title="Open the money details popup"/>
                     </div>
                 </div>
             </div>
             <div class="opening-notes-container d-flex flex-column align-items-start">
                 <label class="form-label" for="openingNotes">Opening note</label>
-                <textarea class="opening-notes form-control" id="openingNotes" rows="4" t-model="state.notes" placeholder="Add an opening note..." />
+                <textarea class="opening-notes form-control" id="openingNotes" rows="4" t-model="this.state.notes" placeholder="Add an opening note..." />
             </div>
             <t t-set-slot="footer">
                 <button class="button btn btn-lg btn-primary"
                 t-if="!(this.pos.cashier._role === 'minimal')"
-                    t-on-click="confirm"
-                    t-att-disabled="!env.utils.isValidFloat(state.openingCash)">
+                    t-on-click="this.confirm"
+                    t-att-disabled="!this.env.utils.isValidFloat(this.state.openingCash)">
                     Open Register
                 </button>
                 <button class="backend-button button btn btn-lg btn-secondary"

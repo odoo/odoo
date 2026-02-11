@@ -4,16 +4,16 @@
     <t t-name="web.DebugMenu">
         <div class="o_debug_manager">
             <Dropdown
-                beforeOpen.bind="loadGroupedItems"
+                beforeOpen.bind="this.loadGroupedItems"
                 position="'bottom-end'"
             >
                 <button t-att-class="`o-dropdown--narrow ${env.inDialog?'btn btn-link':''}`">
                     <i class="fa fa-bug" role="img" aria-label="Open developer tools"/>
                 </button>
                 <t t-set-slot="content">
-                    <t t-foreach="sectionEntries" t-as="entry" t-key="entry[0]">
+                    <t t-foreach="this.sectionEntries" t-as="entry" t-key="entry[0]">
                         <div class="dropdown-menu_group dropdown-header">
-                            <t t-esc="getSectionLabel(entry[0])"/>
+                            <t t-esc="this.getSectionLabel(entry[0])"/>
                         </div>
                         <t t-foreach="entry[1]" t-as="element" t-key="element_index">
                             <DropdownItem

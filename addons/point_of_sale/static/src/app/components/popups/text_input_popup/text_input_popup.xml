@@ -2,8 +2,8 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.TextInputPopup">
-        <Dialog size="props.size" title="props.title">
-            <t t-foreach="props.buttons" t-as="button" t-key="button_index" id="buttons">
+        <Dialog size="this.props.size" title="this.props.title">
+            <t t-foreach="this.props.buttons" t-as="button" t-key="button_index" id="buttons">
                 <button t-on-click="() => this.buttonClick(button)"
                     type="button"
                     class="btn me-2 mb-2 toggle-button "
@@ -11,10 +11,10 @@
                     <t t-esc="button.label"/>
                 </button>
             </t>
-            <textarea t-att-rows="props.rows" class="form-control form-control-lg mx-auto" type="text" t-model="state.inputValue" t-ref="input" t-att-placeholder="props.placeholder" t-on-keydown="onKeydown" />
+            <textarea t-att-rows="this.props.rows" class="form-control form-control-lg mx-auto" type="text" t-model="this.state.inputValue" t-ref="input" t-att-placeholder="this.props.placeholder" t-on-keydown="this.onKeydown" />
             <t t-set-slot="footer">
-                <button class="btn btn-primary btn-lg lh-lg" t-on-click="confirm">Apply</button>
-                <button class="btn btn-secondary btn-lg lh-lg" t-on-click="close">Discard</button>
+                <button class="btn btn-primary btn-lg lh-lg" t-on-click="this.confirm">Apply</button>
+                <button class="btn btn-secondary btn-lg lh-lg" t-on-click="this.close">Discard</button>
             </t>
         </Dialog>
     </t>

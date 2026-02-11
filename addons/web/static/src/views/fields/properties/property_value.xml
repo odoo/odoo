@@ -10,43 +10,43 @@
     </t>
 
     <t t-name="web.PropertyValue">
-        <t t-if="props.readonly and !['boolean', 'many2one', 'many2many', 'tags', 'html', 'signature'].includes(props.type)">
-            <span t-if="displayValue" t-out="displayValue"/>
+        <t t-if="this.props.readonly and !['boolean', 'many2one', 'many2many', 'tags', 'html', 'signature'].includes(this.props.type)">
+            <span t-if="this.displayValue" t-out="this.displayValue"/>
         </t>
         <t t-else="">
-            <t t-if="props.type === 'boolean'">
+            <t t-if="this.props.type === 'boolean'">
                 <CheckBox
-                    id="props.id"
-                    value="propertyValue"
-                    disabled="props.readonly"
-                    onChange.bind="onValueChange"
+                    id="this.props.id"
+                    value="this.propertyValue"
+                    disabled="this.props.readonly"
+                    onChange.bind="this.onValueChange"
                 />
             </t>
-            <t t-elif="['date', 'datetime'].includes(props.type)">
+            <t t-elif="['date', 'datetime'].includes(this.props.type)">
                 <DateTimeInput
-                    id="props.id"
-                    type="props.type"
-                    value="propertyValue"
-                    onChange.bind="onValueChange"
+                    id="this.props.id"
+                    type="this.props.type"
+                    value="this.propertyValue"
+                    onChange.bind="this.onValueChange"
                 />
             </t>
-            <t t-elif="props.type === 'integer'">
+            <t t-elif="this.props.type === 'integer'">
                 <input
-                    t-att-id="props.id"
+                    t-att-id="this.props.id"
                     class="o_input o_field_property_input"
                     type="text"
                     autocomplete="off"
-                    t-att-value="displayValue"
+                    t-att-value="this.displayValue"
                     t-on-change="(event) => this.onValueChange(event.target.value)"
                 />
             </t>
-            <t t-elif="props.type === 'float'">
+            <t t-elif="this.props.type === 'float'">
                 <input
-                    t-att-id="props.id"
+                    t-att-id="this.props.id"
                     class="o_input o_field_property_input"
                     type="text"
                     autocomplete="off"
-                    t-att-value="displayValue"
+                    t-att-value="this.displayValue"
                     t-on-change="(event) => this.onValueChange(event.target.value)"
                 />
             </t>
@@ -54,111 +54,111 @@
                 <div class="text-nowrap d-inline-flex w-100 align-items-baseline position-relative">
                     <span class="o_input position-absolute pe-none d-flex w-100">
                         <span t-if="this.currency?.position === 'before'" t-out="this.currency.symbol + this.nbsp"/>
-                        <span class="opacity-0 d-inline-block overflow-hidden mw-100 o_monetary_ghost_value" t-out="displayValue"/>
+                        <span class="opacity-0 d-inline-block overflow-hidden mw-100 o_monetary_ghost_value" t-out="this.displayValue"/>
                         <span t-if="this.currency?.position === 'after'" t-out="this.nbsp + this.currency.symbol"/>
                     </span>
                     <span class="opacity-0" t-if="this.currency?.position === 'before'" t-out="this.currency.symbol + this.nbsp"/>
                     <input
-                        t-att-id="props.id"
+                        t-att-id="this.props.id"
                         class="o_input o_field_property_input flex-grow-1 flex-shrink-1"
                         type="text"
                         autocomplete="off"
-                        t-att-value="displayValue"
+                        t-att-value="this.displayValue"
                         t-on-change="(event) => this.onValueChange(event.target.value)"
                     />
                     <span class="opacity-0" t-if="this.currency?.position === 'after'" t-out="this.nbsp + this.currency.symbol"/>
                 </div>
             </t>
-            <t t-elif="props.type === 'selection'">
+            <t t-elif="this.props.type === 'selection'">
                 <select class="o_input" t-on-change="event => this.onValueChange(event.target.value)"
-                    t-att-id="props.id">
+                    t-att-id="this.props.id">
                     <option t-att-value="false" />
-                    <t t-foreach="props.selection || []" t-as="option" t-key="option[0]">
+                    <t t-foreach="this.props.selection || []" t-as="option" t-key="this.option[0]">
                         <option
-                            t-att-selected="option[0] === propertyValue"
+                            t-att-selected="option[0] === this.propertyValue"
                             t-att-value="option[0]"
-                            t-out="option[1]"
+                            t-out="this.option[1]"
                         />
                     </t>
                 </select>
             </t>
-            <t t-elif="props.type === 'tags'">
+            <t t-elif="this.props.type === 'tags'">
                 <PropertyTags
-                    id="props.id"
-                    selectedTags="propertyValue"
-                    tags="props.tags || []"
+                    id="this.props.id"
+                    selectedTags="this.propertyValue"
+                    tags="this.props.tags || []"
                     deleteAction="'value'"
-                    readonly="props.readonly"
-                    canChangeTags="props.canChangeDefinition"
-                    onValueChange.bind="onValueChange"
-                    onTagsChange.bind="props.onTagsChange"/>
+                    readonly="this.props.readonly"
+                    canChangeTags="this.props.canChangeDefinition"
+                    onValueChange.bind="this.onValueChange"
+                    onTagsChange.bind="this.props.onTagsChange"/>
             </t>
             <div
-                t-elif="props.type === 'many2one'"
+                t-elif="this.props.type === 'many2one'"
                 class="o_field_property_many2one_value d-flex flex-row align-items-center"
-                t-att-class="{'avatar': showAvatar}">
-                <t t-if="props.comodel">
-                    <t t-set="hasAccess" t-value="!propertyValue || propertyValue.display_name"/>
-                    <img t-if="showAvatar and propertyValue.id and hasAccess"
-                        t-attf-src="/web/image/{{props.comodel}}/{{propertyValue.id}}/avatar_128"
+                t-att-class="{'avatar': this.showAvatar}">
+                <t t-if="this.props.comodel">
+                    <t t-set="hasAccess" t-value="!this.propertyValue || this.propertyValue.display_name"/>
+                    <img t-if="this.showAvatar and this.propertyValue.id and this.hasAccess"
+                        t-attf-src="/web/image/{{this.props.comodel}}/{{this.propertyValue.id}}/avatar_128"
                         class="o_avatar rounded me-1"/>
-                    <t t-if="props.readonly || !hasAccess">
+                    <t t-if="this.props.readonly || !this.hasAccess">
                         <a
-                            t-if="clickableRelational || !hasAccess"
-                            t-attf-class="o_form_uri {{propertyValue and propertyValue.display_name ? '' : 'disabled'}}"
-                            t-att-href="propertyValue.id ? `#id=${propertyValue.id}&amp;model=${props.comodel}` : '#'"
-                            t-on-click.prevent="onMany2oneClick">
-                            <t t-if="hasAccess" t-out="propertyValue.display_name"/>
+                            t-if="this.clickableRelational || !this.hasAccess"
+                            t-attf-class="o_form_uri {{this.propertyValue and this.propertyValue.display_name ? '' : 'disabled'}}"
+                            t-att-href="this.propertyValue.id ? `#id=${propertyValue.id}&amp;model=${props.comodel}` : '#'"
+                            t-on-click.prevent="this.onMany2oneClick">
+                            <t t-if="this.hasAccess" t-out="this.propertyValue.display_name"/>
                             <t t-else="">No Access</t>
                         </a>
                         <span
                             t-else=""
-                            t-out="propertyValue and propertyValue.display_name || ''" />
+                            t-out="this.propertyValue and this.propertyValue.display_name || ''" />
                     </t>
                     <t t-else="">
-                        <Many2One t-key="props.id + '_' + props.comodel + '_' + props.string" cssClass="'w-100'" id="this.props.id" value="this.propertyValue" relation="this.props.comodel" update.bind="(val) => this.onValueChange([val])" string="this.props.string" context="this.props.context" domain="() => this.propertyDomain" canCreate="true" canCreateEdit="true" canWrite="true" canOpen="!this.props.readonly and this.hasAccess" openRecordAction.bind="this.onExternalLinkClick"/>
+                        <Many2One t-key="this.props.id + '_' + this.props.comodel + '_' + this.props.string" cssClass="'w-100'" id="this.props.id" value="this.propertyValue" relation="this.props.comodel" update.bind="(val) => this.onValueChange([val])" string="this.props.string" context="this.props.context" domain="() => this.propertyDomain" canCreate="true" canCreateEdit="true" canWrite="true" canOpen="!this.props.readonly and this.hasAccess" openRecordAction.bind="this.onExternalLinkClick"/>
                     </t>
                 </t>
             </div>
-            <t t-elif="props.type === 'many2many'">
-                <div t-if="props.comodel" class="o_field_property_many2many_value d-flex flex-wrap flex-row gap-1 ms-0 pe-1 w-100 "
-                    t-attf-class="o_field_widget o_field_many2many_tags {{showAvatar ? 'avatar' : ''}} {{props.readonly ? 'readonly' : ''}}">
+            <t t-elif="this.props.type === 'many2many'">
+                <div t-if="this.props.comodel" class="o_field_property_many2many_value d-flex flex-wrap flex-row gap-1 ms-0 pe-1 w-100 "
+                    t-attf-class="o_field_widget o_field_many2many_tags {{this.showAvatar ? 'avatar' : ''}} {{this.props.readonly ? 'readonly' : ''}}">
                     <!-- Copy many2many tags style without duplicating all CSS -->
-                    <t t-foreach="propertyValue" t-as="tag" t-key="tag.id">
-                        <PropertyValueTag t-props="tag.props"/>
+                    <t t-foreach="this.propertyValue" t-as="tag" t-key="this.tag.id">
+                        <PropertyValueTag t-props="this.tag.props"/>
                     </t>
                     <Many2XAutocomplete
-                        t-if="!props.readonly"
-                        t-key="props.id + '_' + props.comodel + '_' + props.string"
-                        id="props.id"
-                        resModel="props.comodel"
+                        t-if="!this.props.readonly"
+                        t-key="this.props.id + '_' + this.props.comodel + '_' + this.props.string"
+                        id="this.props.id"
+                        resModel="this.props.comodel"
                         autoSelect="true"
-                        fieldString="props.string"
-                        update.bind="onValueChange"
-                        context="props.context"
-                        getDomain.bind="() => propertyDomain"
+                        fieldString="this.props.string"
+                        update.bind="this.onValueChange"
+                        context="this.props.context"
+                        getDomain.bind="() => this.propertyDomain"
                         quickCreate="(name) => this.onValueChange([{ display_name: name }])"
                         activeActions="{ create: true, createEdit: true, write: true }"
                         isToMany="true"
                     />
                 </div>
             </t>
-            <t t-elif="props.type === 'text'">
+            <t t-elif="this.props.type === 'text'">
                 <PropertyText
-                    value="propertyValue || ''"
+                    value="this.propertyValue || ''"
                     updateProperty="(event) => this.onValueChange(event.target.value)"
                 />
             </t>
-            <t t-elif="props.type === 'signature'">
+            <t t-elif="this.props.type === 'signature'">
                 <SignatureViewer url="this.propertyValue" update.bind="this.onValueChange"/>
             </t>
             <t t-else="">
                 <input
                     class="o_input"
-                    t-att-id="props.id"
+                    t-att-id="this.props.id"
                     type="text"
                     autocomplete="off"
-                    t-att-value="propertyValue || ''"
+                    t-att-value="this.propertyValue || ''"
                     t-on-change="(event) => this.onValueChange(event.target.value)"
                 />
             </t>

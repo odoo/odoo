@@ -4,31 +4,31 @@
     <t t-name="web.Many2ManyTagsField">
         <div
             class="o_field_tags d-inline-flex flex-wrap gap-1 mw-100"
-            t-att-class="{'o_tags_input o_input': !props.readonly}"
+            t-att-class="{'o_tags_input o_input': !this.props.readonly}"
             t-ref="many2ManyTagsField"
         >
             <TagsList t-props="this.tagsListProps" t-slot-scope="tag">
-                <Tag t-props="tag.props"/>
+                <Tag t-props="this.tag.props"/>
             </TagsList>
-            <div t-if="showM2OSelectionField" class="o_field_many2many_selection d-inline-flex w-100" t-ref="autoComplete">
+            <div t-if="this.showM2OSelectionField" class="o_field_many2many_selection d-inline-flex w-100" t-ref="autoComplete">
                 <Many2XAutocomplete
-                    id="props.id"
-                    placeholder="tags.length ? '' : props.placeholder"
-                    resModel="relation"
+                    id="this.props.id"
+                    placeholder="this.tags.length ? '' : this.props.placeholder"
+                    resModel="this.relation"
                     autoSelect="true"
-                    fieldString="string"
-                    activeActions="activeActions"
-                    update="update"
-                    quickCreate="activeActions.create ? quickCreate : null"
-                    context="props.context"
-                    getDomain.bind="getDomain"
+                    fieldString="this.string"
+                    activeActions="this.activeActions"
+                    update="this.update"
+                    quickCreate="this.activeActions.create ? this.quickCreate : null"
+                    context="this.props.context"
+                    getDomain.bind="this.getDomain"
                     isToMany="true"
-                    nameCreateField="props.nameCreateField"
-                    searchThreshold="props.searchThreshold"
+                    nameCreateField="this.props.nameCreateField"
+                    searchThreshold="this.props.searchThreshold"
                 >
                     <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
-                        <span t-att-class="{ 'fw-bold': isSelected(autoCompleteItemScope.record) }">
-                            <span t-out="autoCompleteItemScope.label"/>
+                        <span t-att-class="{ 'fw-bold': this.isSelected(autoCompleteItemScope.record) }">
+                            <span t-out="this.autoCompleteItemScope.label"/>
                         </span>
                     </t>
                 </Many2XAutocomplete>
@@ -38,8 +38,8 @@
 
     <t t-name="web.Many2ManyTagsFieldColorListPopover">
         <div class="o_tag_popover m-2">
-            <ColorList colors="props.colors" forceExpanded="true" selectedColor="props.tag.colorIndex" onColorSelected="(id) => props.switchTagColor(id, props.tag)"/>
-            <CheckBox className="'pt-2'" value="props.tag.colorIndex === 0" onChange.alike="(isChecked) => props.onTagVisibilityChange(isChecked, props.tag)">Hide in Kanban</CheckBox>
+            <ColorList colors="this.props.colors" forceExpanded="true" selectedColor="this.props.tag.colorIndex" onColorSelected="(id) => this.props.switchTagColor(id, this.props.tag)"/>
+            <CheckBox className="'pt-2'" value="this.props.tag.colorIndex === 0" onChange.alike="(isChecked) => this.props.onTagVisibilityChange(isChecked, this.props.tag)">Hide in Kanban</CheckBox>
         </div>
     </t>
 

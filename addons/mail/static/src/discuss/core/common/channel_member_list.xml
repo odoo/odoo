@@ -2,28 +2,28 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.ChannelMemberList">
-        <ActionPanel title.translate="Members" minWidth="200" initialWidth="env.inMeetingView ? 400 : 250" icon="'oi oi-users'">
+        <ActionPanel title.translate="Members" minWidth="200" initialWidth="this.env.inMeetingView ? 400 : 250" icon="'oi oi-users'">
             <button name="inviteButton" t-on-click="() => this.openInviteDialog()" class="btn btn-sm btn-secondary mt-2 d-flex align-items-center justify-content-center gap-1 rounded-3" title="Invite People"><i class="oi oi-user-plus"/><span>Invite People</span></button>
-            <t t-if="props.channel.onlineMembers.length > 0">
+            <t t-if="this.props.channel.onlineMembers.length > 0">
                 <t t-call="discuss.ChannelMemberList.section">
-                    <t t-set="sectionName" t-value="onlineSectionText"/>
+                    <t t-set="sectionName" t-value="this.onlineSectionText"/>
                 </t>
                 <div class="d-flex flex-column bg-inherit gap-1">
-                    <ChannelMember t-foreach="props.channel.onlineMembers" t-as="member" t-key="member.id" member="member"/>
+                    <ChannelMember t-foreach="this.props.channel.onlineMembers" t-as="member" t-key="this.member.id" member="member"/>
                 </div>
             </t>
-            <t name="offlineMembers" t-if="props.channel.offlineMembers.length > 0">
+            <t name="offlineMembers" t-if="this.props.channel.offlineMembers.length > 0">
                 <t t-call="discuss.ChannelMemberList.section">
-                    <t t-set="sectionName" t-value="offlineSectionText"/>
+                    <t t-set="sectionName" t-value="this.offlineSectionText"/>
                 </t>
                 <div class="d-flex flex-column bg-inherit gap-1">
-                    <ChannelMember t-foreach="props.channel.offlineMembers" t-as="member" t-key="member.id" member="member"/>
+                    <ChannelMember t-foreach="this.props.channel.offlineMembers" t-as="member" t-key="this.member.id" member="member"/>
                 </div>
             </t>
-            <span t-if="props.channel.unknownMembersCount === 1" class="mx-2 mt-2">And 1 other member.</span>
-            <span t-if="props.channel.unknownMembersCount > 1" class="mx-2 mt-2">And <t t-esc="props.channel.unknownMembersCount"/> other members.</span>
-            <div t-if="!props.channel.areAllMembersLoaded" class="mx-2 my-1">
-                <button class="btn btn-secondary" title="Load more" t-on-click.stop="() => props.channel.fetchChannelMembers()">Load more</button>
+            <span t-if="this.props.channel.unknownMembersCount === 1" class="mx-2 mt-2">And 1 other member.</span>
+            <span t-if="this.props.channel.unknownMembersCount > 1" class="mx-2 mt-2">And <t t-esc="this.props.channel.unknownMembersCount"/> other members.</span>
+            <div t-if="!this.props.channel.areAllMembersLoaded" class="mx-2 my-1">
+                <button class="btn btn-secondary" title="Load more" t-on-click.stop="() => this.props.channel.fetchChannelMembers()">Load more</button>
             </div>
         </ActionPanel>
     </t>

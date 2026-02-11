@@ -4,7 +4,7 @@
 <t t-name="html_builder.BuilderColorPicker">
     <BuilderComponent>
         <ColorPickerButton
-            title="props.title"
+            title="this.props.title"
             style="this.getSelectedColorStyle()"
             tooltip="this.props.tooltip or this.props.title"
             colorPickerConfig="this.colorPickerConfig"
@@ -14,11 +14,11 @@
 
 <t t-name="html_builder.ColorPickerButton">
     <button
-        t-att-title="props.title"
+        t-att-title="this.props.title"
         class="o_we_color_preview"
         t-ref="colorButton"
-        t-att-style="props.style"
-        t-att-data-tooltip="props.tooltip"
+        t-att-style="this.props.style"
+        t-att-data-tooltip="this.props.tooltip"
     />
 </t>
 

@@ -10,7 +10,7 @@
         <BuilderButton
             title.translate="Company Logo"
             className="'flex-grow-1'"
-            actionParam="websiteLogoParams"
+            actionParam="this.websiteLogoParams"
             iconImg="'/website/static/src/img/snippets_options/header_extra_element_logo.svg'"
         />
         <BuilderButton
@@ -42,7 +42,7 @@
                 resetViewArch: true,
             }"
         />
-        <t t-set="language_ids" t-value="env.services.website.currentWebsite.language_ids || []"/>
+        <t t-set="language_ids" t-value="this.env.services.website.currentWebsite.language_ids || []"/>
         <BuilderButton t-if="language_ids.length > 1"
             title.translate="Language Selector"
             className="'fa fa-flag flex-grow-1'"

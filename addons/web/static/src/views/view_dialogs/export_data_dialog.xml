@@ -3,25 +3,25 @@
 
     <t t-name="web.DeleteExportListDialog">
         <Dialog title.translate="Confirmation" size="'md'">
-            <div t-esc="props.text" />
+            <div t-esc="this.props.text" />
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="onDelete">Delete</button>
-                <button class="btn btn-secondary" t-on-click="() => props.close()">Discard</button>
+                <button class="btn btn-primary" t-on-click="this.onDelete">Delete</button>
+                <button class="btn btn-secondary" t-on-click="() => this.props.close()">Discard</button>
             </t>
         </Dialog>
     </t>
 
     <t t-name="web.ExportDataItem">
-        <div t-att-data-field_id="props.field.id" t-attf-class="o_export_tree_item cursor-pointer position-relative ps-4 {{ state.subfields.length ? 'o_expanded mb-2' : '' }} {{ props.field.parent ? '' : 'pe-3'}}" role="treeitem" t-on-click.stop="() => this.toggleItem(props.field.id, true)" t-on-dblclick="() => this.onDoubleClick(props.field.id)">
-            <div t-attf-class="o_tree_column d-flex align-items-center {{ props.field.required ? 'fw-bolder' : ''}}">
-                <span t-if="props.isFieldExpandable(props.field.id)" t-attf-class="ms-n3 float-start o_expand_parent small oi {{ state.subfields.length ? 'oi-chevron-down' : 'oi-chevron-right' }}" role="img" aria-label="Show sub-fields" title="Show sub-fields" />
-                <span t-if="props.isDebug and props.field.id" class="overflow-hidden w-100" t-esc="`${props.field.string} (${props.field.id})`" />
-                <span t-else="" class="overflow-hidden w-100" t-esc="props.field.string" />
-                <span title="Select field" t-attf-class="fa fa-plus float-end m-1 o_add_field {{ isFieldSelected(props.field.id) ? 'o_inactive opacity-25' : '' }}" t-on-click.stop="(ev) => !this.isFieldSelected(this.props.field.id) and this.props.onAdd(this.props.field.id)" />
+        <div t-att-data-field_id="this.props.field.id" t-attf-class="o_export_tree_item cursor-pointer position-relative ps-4 {{ this.state.subfields.length ? 'o_expanded mb-2' : '' }} {{ this.props.field.parent ? '' : 'pe-3'}}" role="treeitem" t-on-click.stop="() => this.toggleItem(this.props.field.id, true)" t-on-dblclick="() => this.onDoubleClick(this.props.field.id)">
+            <div t-attf-class="o_tree_column d-flex align-items-center {{ this.props.field.required ? 'fw-bolder' : ''}}">
+                <span t-if="this.props.isFieldExpandable(this.props.field.id)" t-attf-class="ms-n3 float-start o_expand_parent small oi {{ this.state.subfields.length ? 'oi-chevron-down' : 'oi-chevron-right' }}" role="img" aria-label="Show sub-fields" title="Show sub-fields" />
+                <span t-if="this.props.isDebug and this.props.field.id" class="overflow-hidden w-100" t-esc="`${props.field.string} (${props.field.id})`" />
+                <span t-else="" class="overflow-hidden w-100" t-esc="this.props.field.string" />
+                <span title="Select field" t-attf-class="fa fa-plus float-end m-1 o_add_field {{ this.isFieldSelected(this.props.field.id) ? 'o_inactive opacity-25' : '' }}" t-on-click.stop="(ev) => !this.isFieldSelected(this.props.field.id) and this.props.onAdd(this.props.field.id)" />
             </div>
-                <t t-foreach="state.subfields" t-as="field" t-key="field.id">
+                <t t-foreach="this.state.subfields" t-as="field" t-key="this.field.id">
                     <ExportDataItem
-                        t-props="props"
+                        t-props="this.props"
                         field="field"
                     />
                 </t>
@@ -33,25 +33,25 @@
             <div class="row w-100">
                 <div class="o_left_panel col-12 col-md-6 h-100 d-flex flex-column flex-nowrap">
                     <div class="o_import_compat">
-                        <CheckBox className="'o_import_compat'" id="'o-update-data'" value="isCompatible" onChange.bind="onToggleCompatibleExport">
+                        <CheckBox className="'o_import_compat'" id="'o-update-data'" value="this.isCompatible" onChange.bind="this.onToggleCompatibleExport">
                             I want to update data (import-compatible export)
                         </CheckBox>
                     </div>
                     <h4 class="mt-3">Available fields</h4>
-                    <input t-ref="search" type="search" class="form-control mb-3 o_export_search_input" id="o-export-search-filter" placeholder="Search" t-on-input="onSearch" />
+                    <input t-ref="search" type="search" class="form-control mb-3 o_export_search_input" id="o-export-search-filter" placeholder="Search" t-on-input="this.onSearch" />
                     <div class="o_left_field_panel h-100 overflow-auto border">
                         <div class="o_field_tree_structure">
-                            <t t-if="fieldsAvailable">
-                                <t t-foreach="rootFields" t-as="field" t-key="field.id + '_' + state.search.length + '_' + isCompatible">
+                            <t t-if="this.fieldsAvailable">
+                                <t t-foreach="this.rootFields" t-as="field" t-key="this.field.id + '_' + this.state.search.length + '_' + this.isCompatible">
                                     <ExportDataItem
-                                        exportList="state.exportList"
+                                        exportList="this.state.exportList"
                                         field="field"
-                                        filterSubfields.bind="filterSubfields"
-                                        isFieldExpandable.bind="isFieldExpandable"
-                                        isDebug="isDebug"
-                                        isExpanded="state.search.length > 0"
-                                        loadFields.bind="loadFields"
-                                        onAdd.bind="onAddItemExportList"
+                                        filterSubfields.bind="this.filterSubfields"
+                                        isFieldExpandable.bind="this.isFieldExpandable"
+                                        isDebug="this.isDebug"
+                                        isExpanded="this.state.search.length > 0"
+                                        loadFields.bind="this.loadFields"
+                                        onAdd.bind="this.onAddItemExportList"
                                     />
                                 </t>
                             </t>
@@ -59,13 +59,13 @@
                         </div>
                     </div>
                 </div>
-                <div t-attf-class="o_right_panel col-12 col-md-6 {{ state.isSmall ? 'h-50' : 'h-100' }} d-flex flex-column flex-nowrap mt-3 mt-md-0">
+                <div t-attf-class="o_right_panel col-12 col-md-6 {{ this.state.isSmall ? 'h-50' : 'h-100' }} d-flex flex-column flex-nowrap mt-3 mt-md-0">
                     <div class="o_export_format">
                         <strong>Export Format:</strong>
-                        <t t-foreach="availableFormats" t-as="format" t-key="format.tag">
+                        <t t-foreach="this.availableFormats" t-as="format" t-key="this.format.tag">
                             <div class="radio form-check-inline ps-5">
-                                <input t-att-id="'o_radio' + format.tag" type="radio" t-att-checked="format.tag === availableFormats[state.selectedFormat].tag" name="o_export_format_name" t-att-value="format.tag" class="form-check-input" t-on-change="setFormat" />
-                                <label class="form-check-label ms-1" t-att-for="'o_radio' + format.tag" t-esc="format.label" />
+                                <input t-att-id="'o_radio' + format.tag" type="radio" t-att-checked="format.tag === this.availableFormats[this.state.selectedFormat].tag" name="o_export_format_name" t-att-value="format.tag" class="form-check-input" t-on-change="this.setFormat" />
+                                <label class="form-check-label ms-1" t-att-for="'o_radio' + format.tag" t-esc="this.format.label" />
                             </div>
                         </t>
                     </div>
@@ -74,30 +74,30 @@
                     </div>
                     <div class="o_exported_lists">
                         <div class="input-group mb-3">
-                            <t t-if="state.templateId === 'new_template'">
+                            <t t-if="this.state.templateId === 'new_template'">
                                 <label class="pt-2 mb-0 fw-bold">Save as: </label>
-                                <input t-ref="exportList" class="form-control ms-4 o_save_list_name" t-att-placeholder="newTemplateText" />
+                                <input t-ref="exportList" class="form-control ms-4 o_save_list_name" t-att-placeholder="this.newTemplateText" />
                             </t>
                             <t t-else="">
                                 <label class="pt-2 mb-0 fw-bold">Template: </label>
-                                <select class="form-select ms-4 o_exported_lists_select" t-on-change="onChangeExportList">
+                                <select class="form-select ms-4 o_exported_lists_select" t-on-change="this.onChangeExportList">
                                     <option />
-                                    <t t-foreach="templates" t-as="template" t-key="template.id">
-                                        <option t-att-value="template.id" t-esc="template.name or 'undefined'" t-att-selected="state.templateId === template.id" />
+                                    <t t-foreach="this.templates" t-as="template" t-key="this.template.id">
+                                        <option t-att-value="template.id" t-esc="this.template.name or 'undefined'" t-att-selected="this.state.templateId === template.id" />
                                     </t>
                                     <option class="fst-italic" value="new_template">New template </option>
                                 </select>
                             </t>
-                            <t t-if="state.isEditingTemplate">
-                                <button t-if="state.templateId === 'new_template'" type="button" class="btn btn-secondary ms-1 o_save_list_btn" t-on-click.stop="onSaveExportTemplate">
+                            <t t-if="this.state.isEditingTemplate">
+                                <button t-if="this.state.templateId === 'new_template'" type="button" class="btn btn-secondary ms-1 o_save_list_btn" t-on-click.stop="this.onSaveExportTemplate">
                                     <i class="fa fa-floppy-o" />
                                 </button>
-                                <button type="button" class="btn btn-secondary ms-1 o_cancel_list_btn" t-on-click.stop="onCancelExportTemplate">
-                                    <i t-attf-class="fa {{ state.templateId === 'new_template' ? 'fa-times' : 'fa-undo' }}" />
+                                <button type="button" class="btn btn-secondary ms-1 o_cancel_list_btn" t-on-click.stop="this.onCancelExportTemplate">
+                                    <i t-attf-class="fa {{ this.state.templateId === 'new_template' ? 'fa-times' : 'fa-undo' }}" />
                                 </button>
                             </t>
                             <t t-else="">
-                                <button t-if="state.templateId" type="button" class="btn btn-secondary ms-1 o_delete_exported_list" t-on-click.stop="onDeleteExportTemplate">
+                                <button t-if="this.state.templateId" type="button" class="btn btn-secondary ms-1 o_delete_exported_list" t-on-click.stop="this.onDeleteExportTemplate">
                                     <i class="fa fa-trash" />
                                 </button>
                             </t>
@@ -105,11 +105,11 @@
                     </div>
                     <div class="o_right_field_panel h-100 px-2 overflow-auto border">
                         <ul class="o_fields_list list-unstyled" t-ref="draggable">
-                            <t t-foreach="state.exportList" t-as="field" t-key="field.id">
-                                <li t-attf-class="o_export_field d-inline-block w-100 {{ state.isSmall ? '' : 'o_export_field_sortable' }}" t-att-data-field_id="field.id">
-                                    <span t-if="!state.isSmall" class="fa fa-sort o_sort_field mx-1" t-attf-style="opacity:{{ state.exportList.length === 1 ? 0 : 1 }}" />
-                                    <span t-esc="isDebug and field.id ? `${field.string} (${field.id})` : field.string" />
-                                    <span class="fa fa-trash m-1 pe-2 float-end o_remove_field cursor-pointer" t-att-title="removeFieldText" t-on-click.stop="() => this.onRemoveItemExportList(field.id)" />
+                            <t t-foreach="this.state.exportList" t-as="field" t-key="this.field.id">
+                                <li t-attf-class="o_export_field d-inline-block w-100 {{ this.state.isSmall ? '' : 'o_export_field_sortable' }}" t-att-data-field_id="field.id">
+                                    <span t-if="!this.state.isSmall" class="fa fa-sort o_sort_field mx-1" t-attf-style="opacity:{{ this.state.exportList.length === 1 ? 0 : 1 }}" />
+                                    <span t-esc="this.isDebug and this.field.id ? `${field.string} (${field.id})` : this.field.string" />
+                                    <span class="fa fa-trash m-1 pe-2 float-end o_remove_field cursor-pointer" t-att-title="this.removeFieldText" t-on-click.stop="() => this.onRemoveItemExportList(field.id)" />
                                 </li>
                             </t>
                         </ul>
@@ -117,8 +117,8 @@
                 </div>
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-primary o_select_button" data-hotkey="v" t-on-click.stop="onClickExportButton" t-att-disabled="state.disabled">Export</button>
-                <button class="btn o_form_button_cancel" t-att-class="(props.disableMultipleSelection &amp;&amp; props.noCreate) ? 'btn-primary' : 'btn-secondary'" data-hotkey="z" t-on-click.stop="props.close">Close</button>
+                <button class="btn btn-primary o_select_button" data-hotkey="v" t-on-click.stop="this.onClickExportButton" t-att-disabled="this.state.disabled">Export</button>
+                <button class="btn o_form_button_cancel" t-att-class="(this.props.disableMultipleSelection &amp;&amp; this.props.noCreate) ? 'btn-primary' : 'btn-secondary'" data-hotkey="z" t-on-click.stop="this.props.close">Close</button>
             </t>
         </Dialog>
     </t>

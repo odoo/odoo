@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-inherit="web.FormView" t-inherit-mode="extension">
-        <xpath expr="//Layout/t[@t-component='props.Renderer']" position="attributes">
-            <attribute name="saveRecord">() => this.save()</attribute>
+        <xpath expr="//Layout/t[@t-component='this.props.Renderer']" position="attributes">
+            <attribute name="saveRecord">() =&gt; this.save()</attribute>
         </xpath>
     </t>
 

@@ -4,7 +4,7 @@
         <td class="o_sale_product_configurator_img pb-3 ps-0 pe-2 pe-lg-0">
             <img
                 class="w-100 border rounded"
-                t-att-src="imageUrl"
+                t-att-src="this.imageUrl"
                 alt="Product Image"
             />
         </td>
@@ -23,15 +23,15 @@
                     <div
                         t-foreach="this.props.selectedComboItems"
                         t-as="comboItem"
-                        t-key="comboItem_index"
-                        t-out="comboItem.name"
+                        t-key="this.comboItem_index"
+                        t-out="this.comboItem.name"
                     />
                 </div>
             </div>
-            <t t-foreach="this.props.attribute_lines" t-as="ptal" t-key="ptal.id">
+            <t t-foreach="this.props.attribute_lines" t-as="ptal" t-key="this.ptal.id">
                 <PTAL
-                    t-if="shouldShowPtal(ptal)"
-                    t-props="ptal"
+                    t-if="this.shouldShowPtal(this.ptal)"
+                    t-props="this.ptal"
                     productTmplId="this.props.product_tmpl_id"
                 />
             </t>
@@ -45,28 +45,28 @@
                 class="o_sale_product_configurator_qty d-flex d-sm-table-cell align-items-center justify-content-between flex-wrap w-sm-25 py-3 px-0 text-sm-end"
             >
                 <div
-                    t-if="env.showPrice"
+                    t-if="this.env.showPrice"
                     class="d-flex flex-sm-column flex-md-row flex-wrap gap-1 align-items-baseline align-items-sm-end align-items-md-baseline justify-content-start justify-content-sm-end"
                 >
                     <t t-call="sale.product_price" name="sale_product_configurator_price"/>
                 </div>
-                <t t-set="isComboProduct" t-value="isMainProduct &amp;&amp; this.props.selectedComboItems.length"/>
-                <t t-if="env.showQuantity &amp;&amp; !isComboProduct">
+                <t t-set="isComboProduct" t-value="this.isMainProduct &amp;&amp; this.props.selectedComboItems.length"/>
+                <t t-if="this.env.showQuantity &amp;&amp; !this.isComboProduct">
                     <QuantityButtons
                         quantity="this.props.quantity"
                         setQuantity="quantity => this.env.setQuantity(this.props.product_tmpl_id, quantity)"
-                        isMinusButtonDisabled="this.props.quantity === 1 &amp;&amp; isMainProduct"
+                        isMinusButtonDisabled="this.props.quantity === 1 &amp;&amp; this.isMainProduct"
                     />
                 </t>
                 <span
-                    t-elif="env.showQuantity &amp;&amp; isComboProduct"
+                    t-elif="this.env.showQuantity &amp;&amp; this.isComboProduct"
                     t-out="this.props.quantity"
                     class="h5"
                 />
                 <a
                     class="d-block mt-2 w-100 text-end"
                     role="button"
-                    t-if="!isMainProduct"
+                    t-if="!this.isMainProduct"
                     t-on-click="() => this.env.removeProduct(this.props.product_tmpl_id)"
                 >
                     Remove
@@ -79,7 +79,7 @@
                 class="o_sale_product_configurator_price d-flex d-sm-table-cell align-items-center justify-content-between p-0 pb-3 text-sm-end"
             >
                 <div
-                    t-if="env.showPrice"
+                    t-if="this.env.showPrice"
                     class="d-flex flex-sm-column flex-md-row flex-wrap gap-1 align-items-baseline align-items-sm-end align-items-md-baseline justify-content-start justify-content-sm-end"
                 >
                     <t t-call="sale.product_price" name="sale_product_configurator_optional_price"/>
@@ -101,26 +101,26 @@
         <span
             name="sale_product_configurator_formatted_price"
             class="h5 text-nowrap fw-bold text-end h6 mb-0 mb-md-2 d-block"
-            t-out="getFormattedPrice()"
+            t-out="this.getFormattedPrice()"
         />
         <div t-if="this.props.price_info" t-out="this.props.price_info" class="text-muted"/>
     </t>
 
     <t t-name="sale.uom_selector">
         <div class="d-flex gap-2 flex-column align-items-start justify-content-start mb-2 small">
-            <label t-out="UoMTitle" class="fw-bold me-3"/>
+            <label t-out="this.UoMTitle" class="fw-bold me-3"/>
             <ul class="list-unstyled d-flex flex-column flex-lg-row gap-2 flex-grow-1 mb-0">
                 <li
                     t-foreach="this.props.available_uoms"
                     t-as="uom"
                     t-key="`${this.props.product_tmpl_id}-${uom.id}`"
-                    t-att-class="{'active': uom.id == props.uom.id}"
+                    t-att-class="{'active': uom.id == this.props.uom.id}"
                     class="o_sale_product_configurator_uom_choice"
                 >
                     <label
                         class="btn btn-outline-secondary"
                         t-attf-for="{{this.props.product_tmpl_id}}-{{uom.id}}-input"
-                        t-out="uom.display_name"
+                        t-out="this.uom.display_name"
                     />
                     <input
                         class="btn-check"
@@ -128,8 +128,8 @@
                         t-attf-id="{{this.props.product_tmpl_id}}-{{uom.id}}-input"
                         t-att-value="uom.id"
                         t-attf-name="uom-{{this.props.product_tmpl_id}}"
-                        t-att-checked="uom.id == props.uom.id"
-                        t-on-change="selectUoM"
+                        t-att-checked="uom.id == this.props.uom.id"
+                        t-on-change="this.selectUoM"
                     />
                 </li>
             </ul>

@@ -2,13 +2,13 @@
 <templates xml:space="preserve">
 
     <t t-name="web.X2ManyField">
-        <div t-att-class="className">
+        <div t-att-class="this.className">
             <div class="o_x2m_control_panel d-empty-none mt-1 mb-4">
-                <t t-if="displayControlPanelButtons">
+                <t t-if="this.displayControlPanelButtons">
                     <div class="o_cp_buttons gap-1" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
-                        <t t-foreach="controls" t-as="control" t-key="control_index">
+                        <t t-foreach="this.controls" t-as="control" t-key="control_index">
                             <button
-                                t-if="control.type === 'create' and !evalInvisible(control.invisible)"
+                                t-if="control.type === 'create' and !this.evalInvisible(control.invisible)"
                                 type="button"
                                 class="btn btn-secondary"
                                 t-att-class="control.class"
@@ -17,23 +17,23 @@
                                 <t t-esc="control.string"/>
                             </button>
                             <ViewButton
-                                t-if="control.type === 'button' and !evalInvisible(control.invisible)"
+                                t-if="control.type === 'button' and !this.evalInvisible(control.invisible)"
                                 className="`${control.className}`"
                                 clickParams="control.clickParams"
                                 icon="control.icon"
-                                record="props.record.data[props.name]"
+                                record="this.props.record.data[this.props.name]"
                                 string="control.string"
                                 title="control.title"
                             />
                         </t>
                     </div>
                 </t>
-                <div t-if="props.record.data[props.name].count > props.record.data[props.name].limit" class="o_cp_pager" role="search">
-                    <Pager t-props="pagerProps"/>
+                <div t-if="this.props.record.data[this.props.name].count > this.props.record.data[this.props.name].limit" class="o_cp_pager" role="search">
+                    <Pager t-props="this.pagerProps"/>
                 </div>
             </div>
-            <ListRenderer t-if="props.viewMode === 'list'" t-props="this.rendererProps" />
-            <KanbanRenderer t-elif="props.viewMode" t-props="this.rendererProps" />
+            <ListRenderer t-if="this.props.viewMode === 'list'" t-props="this.rendererProps" />
+            <KanbanRenderer t-elif="this.props.viewMode" t-props="this.rendererProps" />
         </div>
     </t>
 

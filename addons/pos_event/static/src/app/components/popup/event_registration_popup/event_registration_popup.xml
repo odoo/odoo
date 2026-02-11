@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_event.QuestionInputs">
-        <div t-foreach="questions" t-as="question" t-key="question.id" class="global_question input-group mt-3">
+        <div t-foreach="this.questions" t-as="question" t-key="this.question.id" class="global_question input-group mt-3">
             <span class="input-group-text">
-                <t t-esc="question.title"/>
-                <span t-if="question.is_mandatory_answer" class="text-danger">*</span>
+                <t t-esc="this.question.title"/>
+                <span t-if="this.question.is_mandatory_answer" class="text-danger">*</span>
             </span>
-            <select t-if="question.question_type === 'simple_choice'" t-model="stateObject[question.id]" class="form-select">
+            <select t-if="this.question.question_type === 'simple_choice'" t-model="this.stateObject[this.question.id]" class="form-select">
                 <option value="">--- Select ---</option>
-                <option t-foreach="question.answer_ids" t-as="choice" t-key="choice.id" t-att-value="choice.id">
-                    <t t-esc="choice.name"/>
+                <option t-foreach="this.question.answer_ids" t-as="choice" t-key="this.choice.id" t-att-value="choice.id">
+                    <t t-esc="this.choice.name"/>
                 </option>
             </select>
-            <input t-else="" t-model="stateObject[question.id]" class="form-control flex-grow-1"/>
+            <input t-else="" t-model="this.stateObject[this.question.id]" class="form-control flex-grow-1"/>
         </div>
     </t>
     <t t-name="pos_event.EventRegistrationPopup">
@@ -28,22 +28,22 @@
                     <t t-call="pos_event.QuestionInputs" />
                 </div>
                 <t t-if="this.questionsByRegistration.length">
-                    <div t-foreach="this.dataInQty" t-as="data" t-key="data_index" class="ticket_question mb-4">
+                    <div t-foreach="this.dataInQty" t-as="data" t-key="this.data_index" class="ticket_question mb-4">
                         <div>
                             <span class="fs-3">
-                                Ticket #<t t-esc="data_index + 1" /> for <t t-esc="this.state.byRegistration[data_index].ticket_id.name" />
+                                Ticket #<t t-esc="this.data_index + 1" /> for <t t-esc="this.state.byRegistration[this.data_index].ticket_id.name" />
                             </span>
                             <hr class="hr mt-1" />
                         </div>
                         <t t-set="questions" t-value="this.questionsByRegistration"/>
-                        <t t-set="stateObject" t-value="this.state.byRegistration[data_index].questions"/>
+                        <t t-set="stateObject" t-value="this.state.byRegistration[this.data_index].questions"/>
                         <t t-call="pos_event.QuestionInputs" />
                     </div>
                 </t>
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-secondary" t-on-click="close">Discard</button>
-                <button class="btn btn-primary" t-on-click="confirm">Confirm</button>
+                <button class="btn btn-secondary" t-on-click="this.close">Discard</button>
+                <button class="btn btn-primary" t-on-click="this.confirm">Confirm</button>
             </t>
         </Dialog>
     </t>

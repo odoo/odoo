@@ -2,23 +2,23 @@
 <templates xml:space="preserve">
     <t t-name="barcodes.BarcodeInput">
         <div class="input-group">
-            <input id="manual_barcode" t-model="state.barcode" type="text" name="barcode"
+            <input id="manual_barcode" t-model="this.state.barcode" type="text" name="barcode"
                     class="form-control" t-ref="manualBarcode"
-                    t-att-placeholder="props.placeholder" t-on-keydown="_onKeydown"/>
-            <button class="input-group-text" t-att-disabled="!state.barcode"
-                    t-on-click.prevent="(ev) => this.props.onSubmit(state.barcode)">
+                    t-att-placeholder="this.props.placeholder" t-on-keydown="this._onKeydown"/>
+            <button class="input-group-text" t-att-disabled="!this.state.barcode"
+                    t-on-click.prevent="(ev) => this.props.onSubmit(this.state.barcode)">
                 Apply
             </button>
         </div>
     </t>
 
     <t t-name="barcodes.ManualBarcodeScanner" t-inherit="web.BarcodeDialog" t-inherit-mode="primary">
-        <Dialog position="attributes">
+        <Dialog position="this.attributes">
             <attribute name="footer">true</attribute>
         </Dialog>
-        <Dialog position="inside">
+        <Dialog position="this.inside">
             <t t-set-slot="footer">
-                <BarcodeInput onSubmit="props.onResult" placeholder="props.placeholder"/>
+                <BarcodeInput onSubmit="this.props.onResult" placeholder="this.props.placeholder"/>
             </t>
         </Dialog>
     </t>

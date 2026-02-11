@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
 <t t-name="web.DocModel">
-    <div t-if="!state.error" class="o-doc-model position-relative d-flex flex-nowrap flex-fill flex-column p-3">
+    <div t-if="!this.state.error" class="o-doc-model position-relative d-flex flex-nowrap flex-fill flex-column p-3">
         <h2 class="w-100 mb-2 mt-2" t-out="this.state.model?.name ?? ''"></h2>
-        <DocTable data="state.modelData"/>
+        <DocTable data="this.state.modelData"/>
 
         <h3 class="mt-3 mb-2" id="fields">Fields</h3>
         <DocLoadingIndicator
@@ -20,24 +20,24 @@
             class="'o-fade-in position-relative'"
         >
             <DocMethod
-                t-foreach="state.methods"
+                t-foreach="this.state.methods"
                 t-as="method"
                 t-key="method.model + '/' + method.name"
-                t-if="isModuleActive(method.module)"
+                t-if="this.isModuleActive(method.module)"
                 method="method"
-                class="modelStore.activeMethod === method.name ? 'o-doc-active' : ''"
+                class="this.modelStore.activeMethod === method.name ? 'o-doc-active' : ''"
             />
         </DocLoadingIndicator>
         <div style="min-height: 30vh"/>
     </div>
 
-    <aside t-if="!ui.isSmall and !state.error" class="o-doc-model-aside overflow-auto position-sticky d-block flex-fill bg-default pt-2 pb-2 ps-3 pe-3 border-start">
+    <aside t-if="!this.ui.isSmall and !this.state.error" class="o-doc-model-aside overflow-auto position-sticky d-block flex-fill bg-default pt-2 pb-2 ps-3 pe-3 border-start">
         <div
             class="d-flex flex-nowrap w-100 cursor-pointer text-capitalize align-items-center"
             t-on-click="() => this.state.showModulesFilter = !this.state.showModulesFilter"
             role="button"
         >
-            <div class="icon-btn ps-1" role="button" t-att-class="{ o_collapsed: !state.showModulesFilter}">
+            <div class="icon-btn ps-1" role="button" t-att-class="{ o_collapsed: !this.state.showModulesFilter}">
                 <i class="fa fa-angle-right" aria-hidden="true"></i>
             </div>
             <h3 class="ms-2">Modules</h3>
@@ -52,24 +52,24 @@
                 </a>
             </span>
             <div
-                t-foreach="state.modules"
+                t-foreach="this.state.modules"
                 t-as="module"
                 t-key="module"
                 class="d-flex flex-nowrap align-items-center mb-2 cursor-pointer btn o-doc-module-checks"
                 t-on-click="() => this.setActiveModules([module], !this.state.activeModules[module])"
             >
-                <input class="me-1" type="checkbox" t-att-id="module" t-att-checked="state.activeModules[module]"/>
+                <input class="me-1" type="checkbox" t-att-id="module" t-att-checked="this.state.activeModules[module]"/>
                 <label class="text-truncate" t-att-for="module" t-out="module" t-on-click.prevent=""></label>
             </div>
         </t>
 
         <h3 class="mt-2">On This Page</h3>
         <a
-            t-foreach="state.methods"
+            t-foreach="this.state.methods"
             t-as="method"
             t-key="method.model + '/' + method.name"
             t-out="method.name"
-            t-if="isModuleActive(method.module)"
+            t-if="this.isModuleActive(method.module)"
             t-att-href="'#' + method.name"
             class="d-block w-100 text-truncate"
         >
@@ -77,13 +77,13 @@
     </aside>
 
     <div
-        t-if="state.error and !modelStore.activeModel"
+        t-if="this.state.error and !this.modelStore.activeModel"
         class="d-flex flex-nowrap align-items-center justify-content-center w-100 h-100"
     >
         <DocErrorDialog
-            name="modelStore.error.name"
-            status="modelStore.error.status"
-            traceback="modelStore.error.traceback"
+            name="this.modelStore.error.name"
+            status="this.modelStore.error.status"
+            traceback="this.modelStore.error.traceback"
         />
     </div>
 </t>

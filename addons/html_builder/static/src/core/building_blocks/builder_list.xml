@@ -5,27 +5,27 @@
     <BuilderComponent>
         <div class="w-100 p-2 py-0">
             <t t-set="isMany2X" t-value="this.allRecords and this.allRecords.length"/>
-            <t t-if="state.value?.length > 2">
+            <t t-if="this.state.value?.length > 2">
                 <div class="o_we_table_wrapper">
                     <table t-ref="table">
-                        <t t-set="items" t-value="formatRawValue(state.value)"/>
+                        <t t-set="items" t-value="this.formatRawValue(this.state.value)"/>
                         <t t-foreach="items" t-as="item" t-key="item._id">
                             <tr class="o_row_draggable" t-att-data-id="item._id">
-                                <td t-if="props.sortable" class="o_handle_cell w-0">
+                                <td t-if="this.props.sortable" class="o_handle_cell w-0">
                                     <button type="button" class="btn">
                                         <i class="fa fa-fw fa-arrows" aria-hidden="true"/>
                                         <span class="visually-hidden">Drag and sort field</span>
                                     </button>
                                 </td>
-                                <t t-foreach="Object.entries(props.itemShape).filter(([key,_]) => !props.hiddenProperties.includes(key))" t-as="entry" t-key="entry[0]">
-                                    <td t-att-class="props.columnWidth[entry[0]] || ''">
+                                <t t-foreach="Object.entries(this.props.itemShape).filter(([key,_]) => !this.props.hiddenProperties.includes(key))" t-as="entry" t-key="entry[0]">
+                                    <td t-att-class="this.props.columnWidth[entry[0]] || ''">
                                         <t t-if="entry[1].endsWith('boolean')">
                                             <div class="o-hb-checkbox o-checkbox form-check o_field_boolean o_boolean_toggle form-switch">
                                                 <input type="checkbox" class="form-check-input"
                                                     t-att-name="entry[0]"
                                                     t-att-checked="item[entry[0]]"
                                                     t-att-data-id="item._id"
-                                                    t-on-click="onChange"
+                                                    t-on-click="this.onChange"
                                                 />
                                             </div>
                                         </t>
@@ -35,16 +35,16 @@
                                                     t-att-name="entry[0]"
                                                     t-att-value="item[entry[0]]"
                                                     t-att-data-id="item._id"
-                                                    t-att-disabled="isMany2X || !props.isEditable"
-                                                    t-on-input="onInput"
-                                                    t-on-change="onChange"
+                                                    t-att-disabled="isMany2X || !this.props.isEditable"
+                                                    t-on-input="this.onInput"
+                                                    t-on-change="this.onChange"
                                             />
                                         </t>
                                     </td>
                                 </t>
                                 <td>
                                     <button type="button" class="btn text-danger builder_list_remove_item"
-                                            t-if="props.isEditable and !(this.props.forbidLastItemRemoval and (items.length === 1))"
+                                            t-if="this.props.isEditable and !(this.props.forbidLastItemRemoval and (items.length === 1))"
                                             t-on-click="() => this.deleteItem(item._id)">
                                         <i class="fa fa-fw fa-minus" aria-hidden="true"/>
                                         <span class="visually-hidden">Delete item</span>
@@ -68,20 +68,20 @@
                                 togglerClass="'o-hb-selectMany2X-toggle btn-secondary'"
                                 disabled="!excludedRecords.length"
                             >
-                                <t t-out="props.addItemTitle"/>
+                                <t t-out="this.props.addItemTitle"/>
                             </SelectMenu>
                         </div>
-                        <button type="button" class="btn btn-lg btn-secondary fa fa-refresh" title="Update the list with all records and sort it alphabetically" t-on-click="updateRecords"/>
-                        <button type="button" class="btn btn-lg btn-secondary fa fa-gear" title="Open the record list manager" t-on-click="openRecordsDialog"/>
+                        <button type="button" class="btn btn-lg btn-secondary fa fa-refresh" title="Update the list with all records and sort it alphabetically" t-on-click="this.updateRecords"/>
+                        <button type="button" class="btn btn-lg btn-secondary fa fa-gear" title="Open the record list manager" t-on-click="this.openRecordsDialog"/>
                     </div>
                 </div>
             </div>
             <t t-else="">
                 <div class="text-end mt-1">
-                    <button t-if="props.isEditable" type="button"
+                    <button t-if="this.props.isEditable" type="button"
                             class="builder_list_add_item o-hb-btn btn btn-success px-3"
                             t-on-click="() => this.addItem()">
-                        <t t-out="props.addItemTitle"/>
+                        <t t-out="this.props.addItemTitle"/>
                     </button>
                 </div>
             </t>

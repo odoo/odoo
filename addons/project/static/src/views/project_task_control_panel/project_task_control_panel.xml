@@ -3,17 +3,17 @@
 
     <t t-name="project.ProjectTaskControlPanel" t-inherit="web.ControlPanel">
         <xpath expr="//button[@name='embedded_actions']" position="replace">
-            <t t-if="showTaskOptions and !env.isSmall or env.isSmall and !state.embeddedInfos.embeddedActions?.length">
+            <t t-if="this.showTaskOptions and !this.env.isSmall or this.env.isSmall and !this.state.embeddedInfos.embeddedActions?.length">
                 <Dropdown>
-                    <button class="btn btn-secondary" t-att-title="taskOptionsTitle">
+                    <button class="btn btn-secondary" t-att-title="this.taskOptionsTitle">
                         <i class="fa fa-sliders"/>
                     </button>
                     <t t-set-slot="content">
-                        <DropdownItem onSelected="() => this.onClickShowSubtasks()" class="state.showSubtasks ? 'selected' : ''">
+                        <DropdownItem onSelected="() => this.onClickShowSubtasks()" class="this.state.showSubtasks ? 'selected' : ''">
                             Show Sub-Tasks
                         </DropdownItem>
-                        <DropdownItem t-if="state.embeddedInfos.embeddedActions?.length and !env.isSmall"
-                            class="state.embeddedInfos.showEmbedded ? 'selected' : ''"
+                        <DropdownItem t-if="this.state.embeddedInfos.embeddedActions?.length and !this.env.isSmall"
+                            class="this.state.embeddedInfos.showEmbedded ? 'selected' : ''"
                             onSelected="() => this.onClickShowEmbedded()"
                         >
                             Top Menu
@@ -22,13 +22,13 @@
                 </Dropdown>
             </t>
         </xpath>
-         <xpath expr="//t[@t-if='state.embeddedInfos.embeddedActions?.length and env.isSmall']" position="replace">
+         <xpath expr="//t[@t-if='this.state.embeddedInfos.embeddedActions?.length and this.env.isSmall']" position="replace">
             <t t-call="project.MobileCombinedActionsDropdown"/>
         </xpath>
     </t>
 
    <t t-name="project.MobileCombinedActionsDropdown">
-        <t t-if="env.isSmall and state.embeddedInfos.embeddedActions?.length">
+        <t t-if="this.env.isSmall and this.state.embeddedInfos.embeddedActions?.length">
             <Dropdown menuClass="'o_combined_mobile_dropdown'">
                 <button class="btn btn-secondary">
                     <i class="fa fa-sliders" />
@@ -36,18 +36,18 @@
                 <t t-set-slot="content">
                     <DropdownItem
                         onSelected="() => this.onClickShowSubtasks()"
-                        class="state.showSubtasks ? 'selected' : ''"
+                        class="this.state.showSubtasks ? 'selected' : ''"
                     >
                         Show Sub-Tasks
                     </DropdownItem>
                     <div role="separator" class="dropdown-divider"/>
-                    <t t-if="state.embeddedInfos.embeddedActions?.length">
-                        <t t-foreach="state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
+                    <t t-if="this.state.embeddedInfos.embeddedActions?.length">
+                        <t t-foreach="this.state.embeddedInfos.embeddedActions" t-as="action" t-key="this.action.id">
                             <DropdownItem
                                 class="this.getDropdownClass(action)"
                                 onSelected="() => this.onEmbeddedActionClick(action)"
                             >
-                                <span t-out="action.name" />
+                                <span t-out="this.action.name" />
                             </DropdownItem>
                         </t>
                     </t>

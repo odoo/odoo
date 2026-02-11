@@ -10,7 +10,7 @@
                     <div class="o_searchview form-control d-flex align-items-center py-1" role="search" aria-autocomplete="list">
                         <i class="o_searchview_icon oi oi-search me-2" role="img" aria-label="Search..." title="Search..." />
                         <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1">
-                            <input type="text" class="o_searchview_input o_input flex-grow-1 w-auto border-0" accesskey="Q" placeholder="Search..." role="searchbox" t-model="searchState.value" t-ref="autofocus"/>
+                            <input type="text" class="o_searchview_input o_input flex-grow-1 w-auto border-0" accesskey="Q" placeholder="Search..." role="searchbox" t-model="this.searchState.value" t-ref="autofocus"/>
                         </div>
                     </div>
                 </div>
@@ -18,19 +18,19 @@
         </xpath>
         <xpath expr="//Layout/t[@t-set-slot='control-panel-buttons']" position="replace">
             <t t-set-slot="control-panel-buttons">
-                <t t-call="{{ props.buttonDialogTemplate }}"/>
+                <t t-call="{{ this.props.buttonDialogTemplate }}"/>
             </t>
         </xpath>
         <xpath expr="//Layout/t[@t-set-slot='control-panel-status-indicator']" position="replace">
             <t t-set-slot="control-panel-status-indicator">
-                <span t-if="model.root.dirty" class="text-muted ms-2 o_dirty_warning">Unsaved changes</span>
+                <span t-if="this.model.root.dirty" class="text-muted ms-2 o_dirty_warning">Unsaved changes</span>
             </t>
         </xpath>
         <xpath expr="//Layout/t[@t-set-slot='control-panel-additional-actions']" position="replace"/>
-        <xpath expr="//Layout/t[@t-component='props.Renderer']" position="attributes">
+        <xpath expr="//Layout/t[@t-component='this.props.Renderer']" position="attributes">
             <attribute name="initialApp">initialApp</attribute>
         </xpath>
-        <xpath expr="//Layout/t[@t-component='props.Renderer']" position="inside">
+        <xpath expr="//Layout/t[@t-component='this.props.Renderer']" position="inside">
             <t t-set-slot="NoContentHelper" isVisible="state.displayNoContent">
                 <t t-call="web.NoContentHelper">
                     <t t-set="title">No settings found</t>

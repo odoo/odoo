@@ -17,7 +17,7 @@
             <BuilderRow t-if="this.entries.length" label.translate="Cards Design">
                     Global options for all inner cards.
             </BuilderRow>
-        <t t-foreach="this.entries" t-as="entry" t-key="entry.id">
+        <t t-foreach="this.entries" t-as="entry" t-key="this.entry.id">
             <BuilderRow label="entry.name" level="1">
                 <BuilderCheckbox action="'cardVisibilityOption'" actionValue="entry.id"/>
             </BuilderRow>

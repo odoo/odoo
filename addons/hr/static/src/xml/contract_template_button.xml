@@ -4,7 +4,7 @@
         <button 
             type="button" 
             class="btn btn-link p-0 text-start"
-            t-on-click="onSelectTemplate"
+            t-on-click="this.onSelectTemplate"
             t-ref="templateButton"
             title="Load Contract Template"
         >
@@ -15,21 +15,21 @@
     <t t-name="hr.TemplateSelectionPopover">
         <div class="p-3" style="min-width: 350px;">
             <div class="mb-3">
-                <Many2One t-props="many2oneProps"/>
+                <Many2One t-props="this.many2oneProps"/>
             </div>
             <div class="d-flex gap-2">
                 <button 
                     type="button" 
                     class="btn btn-primary btn-sm" 
-                    t-on-click="onConfirm" 
-                    t-att-disabled="!state.selectedTemplate"
+                    t-on-click="this.onConfirm" 
+                    t-att-disabled="!this.state.selectedTemplate"
                 >
                     Load Template
                 </button>
                 <button 
                     type="button" 
                     class="btn btn-secondary btn-sm" 
-                    t-on-click="props.close"
+                    t-on-click="this.props.close"
                 >
                     Discard
                 </button>

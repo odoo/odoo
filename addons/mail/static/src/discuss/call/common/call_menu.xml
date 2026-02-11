@@ -2,29 +2,29 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.CallMenu">
-        <div class="dropdown" t-attf-class="{{ className }}" t-ref="root">
-            <button t-if="rtc.channel" class="user-select-none dropdown-toggle o-no-caret o-dropdown--narrow px-0 rounded-2" t-att-title="buttonTitle" t-on-click="rtc.channel.open">
-                <div class="o-discuss-CallMenu-buttonContent d-flex align-items-center btn-group rounded-2" t-att-class="{ 'o-is-talking': rtc.selfSession?.isActuallyTalking, 'o-isOdooCommunity': !isEnterprise }">
+        <div class="dropdown" t-attf-class="{{ this.className }}" t-ref="root">
+            <button t-if="this.rtc.channel" class="user-select-none dropdown-toggle o-no-caret o-dropdown--narrow px-0 rounded-2" t-att-title="this.buttonTitle" t-on-click="this.rtc.channel.open">
+                <div class="o-discuss-CallMenu-buttonContent d-flex align-items-center btn-group rounded-2" t-att-class="{ 'o-is-talking': this.rtc.selfSession?.isActuallyTalking, 'o-isOdooCommunity': !this.isEnterprise }">
                     <small class="o-discuss-CallMenu-animationContainer d-flex position-absolute o-xsmaller bg-inherit o-p-0_5 rounded-circle m-n2 z-2">
-                        <i class="fa fa-volume-up o-discuss-inCallIconColor bg-inherit rounded-circle o-discuss-CallMenu-animation" t-att-class="{ 'o-isOdooCommunity': !isEnterprise }"/>
+                        <i class="fa fa-volume-up o-discuss-inCallIconColor bg-inherit rounded-circle o-discuss-CallMenu-animation" t-att-class="{ 'o-isOdooCommunity': !this.isEnterprise }"/>
                     </small>
                     <div class="o-discuss-CallMenu-channelInfo text-truncate btn btn-group-item border-0 m-0 p-0 d-flex align-items-center gap-1 o-ps-1_5 pe-1 rounded-2 rounded-end-0 align-self-stretch bg-inherit opacity-75 opacity-100-hover" role="button" title="Open Conversation">
                         <span class="position-relative small bg-inherit">
-                            <img class="rounded-2 object-fit-cover" t-att-src="rtc.channel.avatarUrl" alt="Thread Image" style="width: 20px; height: 20px"/>
+                            <img class="rounded-2 object-fit-cover" t-att-src="this.rtc.channel.avatarUrl" alt="Thread Image" style="width: 20px; height: 20px"/>
                         </span>
-                        <span class="text-truncate small pe-1" t-esc="rtc.channel.displayName"/>
+                        <span class="text-truncate small pe-1" t-esc="this.rtc.channel.displayName"/>
                     </div>
                     <span class="o-rounded-bubble h-100 py-2 border-end border-dark border-opacity-25"/>
-                    <Dropdown state="dropdownState">
-                        <button class="o-discuss-CallMenu-dropdownMore btn btn-group-item border-0 m-0 pe-1 o-ps-0_5 rounded-2 rounded-start-0 opacity-100-hover text-body" t-att-class="{ 'opacity-75 bg-transparent': !dropdownState.isOpen and !lastSelfAction?.tags.includes('WARNING_BADGE'), 'opacity-100': dropdownState.isOpen or lastSelfAction?.tags.includes('WARNING_BADGE') }" title="Select Actions">
-                            <i class="fa fa-fw o-fs-small" t-attf-class="{{ icon }}" t-att-class="lastSelfActionAttClass"/>
-                            <i class="oi oi-chevron-down o-xxsmaller opacity-75" t-att-class="{ 'mt-2': lastSelfAction?.tags.includes('WARNING_BADGE') }"/>
-                            <span t-if="lastSelfAction?.tags.includes('WARNING_BADGE')" class="o-discuss-CallMenu-warningBadge fw-bolder badge p-0 rounded-circle d-flex justify-content-center align-items-center o-discuss-warningBadge position-absolute bg-warning" style="aspect-ratio: 1; font-size: 0.6rem;">
-                                <i t-if="lastSelfAction?.badgeIcon" t-att-class="lastSelfAction.badgeIcon"/><span t-elif="lastSelfAction.badgeText" t-esc="lastSelfAction.badgeText"/>
+                    <Dropdown state="this.dropdownState">
+                        <button class="o-discuss-CallMenu-dropdownMore btn btn-group-item border-0 m-0 pe-1 o-ps-0_5 rounded-2 rounded-start-0 opacity-100-hover text-body" t-att-class="{ 'opacity-75 bg-transparent': !this.dropdownState.isOpen and !this.lastSelfAction?.tags.includes('WARNING_BADGE'), 'opacity-100': this.dropdownState.isOpen or this.lastSelfAction?.tags.includes('WARNING_BADGE') }" title="Select Actions">
+                            <i class="fa fa-fw o-fs-small" t-attf-class="{{ this.icon }}" t-att-class="this.lastSelfActionAttClass"/>
+                            <i class="oi oi-chevron-down o-xxsmaller opacity-75" t-att-class="{ 'mt-2': this.lastSelfAction?.tags.includes('WARNING_BADGE') }"/>
+                            <span t-if="this.lastSelfAction?.tags.includes('WARNING_BADGE')" class="o-discuss-CallMenu-warningBadge fw-bolder badge p-0 rounded-circle d-flex justify-content-center align-items-center o-discuss-warningBadge position-absolute bg-warning" style="aspect-ratio: 1; font-size: 0.6rem;">
+                                <i t-if="this.lastSelfAction?.badgeIcon" t-att-class="this.lastSelfAction.badgeIcon"/><span t-elif="this.lastSelfAction.badgeText" t-esc="this.lastSelfAction.badgeText"/>
                             </span>
                         </button>
                         <t t-set-slot="content">
-                            <ActionList actions="callActions.actions" dropdown="true"/>
+                            <ActionList actions="this.callActions.actions" dropdown="true"/>
                         </t>
                     </Dropdown>
                 </div>

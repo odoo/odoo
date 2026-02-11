@@ -5,14 +5,14 @@
     <t t-name="purchase.PurchaseProductField" t-inherit="account.ProductLabelSectionAndNoteField" t-inherit-mode="primary">
         <xpath expr="//Many2One" position="after">
             <button
-                t-if="!props.readonly and isConfigurableTemplate"
+                t-if="!this.props.readonly and this.isConfigurableTemplate"
                 type="button"
                 class="btn btn-link fa fa-pencil px-2"
                 tabindex="-1"
                 draggable="false"
-                t-att-aria-label="configurationButtonHelp"
-                t-att-data-tooltip="configurationButtonHelp"
-                t-on-click="onEditConfiguration"/>
+                t-att-aria-label="this.configurationButtonHelp"
+                t-att-data-tooltip="this.configurationButtonHelp"
+                t-on-click="this.onEditConfiguration"/>
         </xpath>
     </t>
 

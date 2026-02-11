@@ -4,30 +4,30 @@
 <t t-name="web.DocTable">
     <div class="overflow-auto w-100 p-1">
         <table class="o-doc-table rounded bg-1 w-100">
-            <tr t-if="props.data.headers" class="bg-1">
+            <tr t-if="this.props.data.headers" class="bg-1">
                 <th
-                    t-foreach="props.data.headers"
+                    t-foreach="this.props.data.headers"
                     t-as="header"
                     t-key="header_index"
                     t-on-click="() => this.onRowHeaderClick(header_index)"
                     class="position-relative text-nowrap text-start cursor-pointer user-select-none pt-1 pb-1 ps-2"
-                    t-attf-style="width: {{ 100 / props.data.headers.length }}%"
+                    t-attf-style="width: {{ 100 / this.props.data.headers.length }}%"
                 >
                     <span class="me-2" t-out="header"></span>
                     <i
-                        t-att-class="getSortIcon(header_index)"
+                        t-att-class="this.getSortIcon(header_index)"
                         aria-hidden="true"
                     ></i>
                 </th>
             </tr>
 
             <tr
-                t-foreach="items"
+                t-foreach="this.items"
                 t-as="rows"
                 t-key="rows_index"
                 class="bg-1"
-                t-att-class="{ 'o-doc-active': rows_index === props.activeIndex }"
-                t-att-id="getId(rows)"
+                t-att-class="{ 'o-doc-active': rows_index === this.props.activeIndex }"
+                t-att-id="this.getId(rows)"
             >
                 <td
                     t-foreach="rows"
@@ -51,7 +51,7 @@
                             t-on-mouseleave="() => this.hideDynamicTooltip()"
                         ></i>
                     </t>
-                    <t t-else="" t-tag="getTag(row)" t-att-class="getClass(row)" t-out="getValue(row)"/>
+                    <t t-else="" t-tag="this.getTag(row)" t-att-class="this.getClass(row)" t-out="this.getValue(row)"/>
 
                     <a
                         t-if="row.relation"
@@ -68,8 +68,8 @@
                 </td>
             </tr>
 
-            <tr t-if="items.length === 0 and props.data.headers" class="bg-1">
-                <td t-foreach="props.data.headers" t-as="row" t-key="row_index" t-attf-style="width: {{ 100 / props.data.headers.length }}%" class="text-start text-muted">
+            <tr t-if="this.items.length === 0 and this.props.data.headers" class="bg-1">
+                <td t-foreach="this.props.data.headers" t-as="row" t-key="row_index" t-attf-style="width: {{ 100 / this.props.data.headers.length }}%" class="text-start text-muted">
                     <t t-if="row_index === 0">
                         No Data
                     </t>
@@ -79,19 +79,19 @@
     </div>
 
     <div
-        t-if="state.subTable"
+        t-if="this.state.subTable"
         class="o-doc-sub-table overflow-auto position-fixed bg-1 p-1 shadow border z-index-1 rounded"
-        t-att-style="state.subTableStyle"
+        t-att-style="this.state.subTableStyle"
         t-ref="subTableRef"
     >
-        <DocTable data="state.subTable"/>
+        <DocTable data="this.state.subTable"/>
     </div>
     <div
         class="o-doc-dynamic-tooltip"
-        t-att-style="state.tooltipStyle"
+        t-att-style="this.state.tooltipStyle"
         t-ref="tooltipRef"
     >
-        <t t-out="state.tooltipContent"/>
+        <t t-out="this.state.tooltipContent"/>
     </div>
 </t>
 

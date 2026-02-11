@@ -5,30 +5,30 @@
 <div class="d-flex flex-column bg-view flex-grow-1 p-3">
     <div class="p-2">
         <div class="mb-5">
-            <t t-if="state.step === STEP.RATING">
+            <t t-if="this.state.step === this.STEP.RATING">
                 <p class="text-center fs-6 mb-4">Did we correctly answer your question?</p>
                 <div class="d-flex justify-content-center">
-                    <img role="button" class="mx-3 opacity-50 opacity-100-hover" t-att-class="{ 'opacity-100': state.rating === RATING.GOOD }" t-att-src="url(`/rating/static/src/img/rating_${RATING.GOOD}.png`)" t-att-alt="RATING.GOOD" t-on-click="() => this.select(RATING.GOOD)"/>
-                    <img role="button" class="mx-3 opacity-50 opacity-100-hover" t-att-class="{ 'opacity-100': state.rating === RATING.OK }" t-att-src="url(`/rating/static/src/img/rating_${RATING.OK}.png`)" t-att-alt="RATING.OK"  t-on-click="() => this.select(RATING.OK)"/>
-                    <img role="button" class="mx-3 opacity-50 opacity-100-hover" t-att-class="{ 'opacity-100': state.rating === RATING.BAD }" t-att-src="url(`/rating/static/src/img/rating_${RATING.BAD}.png`)" t-att-alt="RATING.BAD" t-on-click="() => this.select(RATING.BAD)"/>
+                    <img role="button" class="mx-3 opacity-50 opacity-100-hover" t-att-class="{ 'opacity-100': this.state.rating === this.RATING.GOOD }" t-att-src="this.url(`/rating/static/src/img/rating_${RATING.GOOD}.png`)" t-att-alt="this.RATING.GOOD" t-on-click="() => this.select(this.RATING.GOOD)"/>
+                    <img role="button" class="mx-3 opacity-50 opacity-100-hover" t-att-class="{ 'opacity-100': this.state.rating === this.RATING.OK }" t-att-src="this.url(`/rating/static/src/img/rating_${RATING.OK}.png`)" t-att-alt="this.RATING.OK"  t-on-click="() => this.select(this.RATING.OK)"/>
+                    <img role="button" class="mx-3 opacity-50 opacity-100-hover" t-att-class="{ 'opacity-100': this.state.rating === this.RATING.BAD }" t-att-src="this.url(`/rating/static/src/img/rating_${RATING.BAD}.png`)" t-att-alt="this.RATING.BAD" t-on-click="() => this.select(this.RATING.BAD)"/>
                 </div>
             </t>
             <t t-else="">
                 <p class="text-center fs-5 fw-bold mb-4">Thank you for your feedback</p>
             </t>
         </div>
-        <div t-if="state.rating and state.step === STEP.RATING" class="d-flex flex-column mb-5">
-            <textarea t-model="state.feedback" class="form-control my-2" placeholder="Explain your note"/>
-            <button class="btn btn-primary align-self-end" t-on-click="onClickSendFeedback">Send</button>
+        <div t-if="this.state.rating and this.state.step === this.STEP.RATING" class="d-flex flex-column mb-5">
+            <textarea t-model="this.state.feedback" class="form-control my-2" placeholder="Explain your note"/>
+            <button class="btn btn-primary align-self-end" t-on-click="this.onClickSendFeedback">Send</button>
         </div>
-        <label class="mb-5 w-100" t-if="store.self_user?.share === false">
+        <label class="mb-5 w-100" t-if="this.store.self_user?.share === false">
             Receive a copy of this conversation
-            <TranscriptSender thread="props.thread" disableOnSend="true"/>
+            <TranscriptSender thread="this.props.thread" disableOnSend="true"/>
         </label>
         <div class="d-flex gap-2 justify-content-center">
-            <button class="btn btn-outline-secondary" t-on-click="props.onClickClose">Close</button>
-            <button t-if="allowNewSession" class="btn btn-outline-secondary" t-on-click="props.onClickNewSession">New Session</button>
-            <a t-if="store.can_download_transcript" class="btn btn-outline-secondary" title="Download a copy of this conversation" target="_blank" t-att-href="props.thread.transcriptUrl"><i class="fa fa-download"/></a>
+            <button class="btn btn-outline-secondary" t-on-click="this.props.onClickClose">Close</button>
+            <button t-if="this.allowNewSession" class="btn btn-outline-secondary" t-on-click="this.props.onClickNewSession">New Session</button>
+            <a t-if="this.store.can_download_transcript" class="btn btn-outline-secondary" title="Download a copy of this conversation" target="_blank" t-att-href="this.props.thread.transcriptUrl"><i class="fa fa-download"/></a>
         </div>
     </div>
 </div>

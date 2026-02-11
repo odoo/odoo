@@ -1,17 +1,17 @@
 <templates>
     <t t-name="html_editor.EmbeddedToggleBlockBlueprint">
         <div data-embedded="toggleBlock"
-            data-oe-protected="true" contenteditable="false" t-att-data-embedded-props="embeddedProps">
+            data-oe-protected="true" contenteditable="false" t-att-data-embedded-props="this.embeddedProps">
             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
-                <t t-if="initialText">
-                    <t t-tag="baseContainerNodeName" t-att="baseContainerAttributes" t-out="initialText"/>
+                <t t-if="this.initialText">
+                    <t t-tag="this.baseContainerNodeName" t-att="baseContainerAttributes" t-out="this.initialText"/>
                 </t>
                 <t t-else="">
-                    <t t-tag="baseContainerNodeName" t-att="baseContainerAttributes"><br/></t>
+                    <t t-tag="this.baseContainerNodeName" t-att="baseContainerAttributes"><br/></t>
                 </t>
             </div>
             <div data-embedded-editable="content" data-oe-protected="false" contenteditable="true">
-                <t t-tag="baseContainerNodeName" t-att="baseContainerAttributes"><br/></t>
+                <t t-tag="this.baseContainerNodeName" t-att="baseContainerAttributes"><br/></t>
             </div>
         </div>
     </t>

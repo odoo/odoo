@@ -4,14 +4,14 @@
     <WebsiteDialog close.bind="this.props.close"
         title.translate="Translate Selection Option"
         primaryTitle.translate="Save"
-        primaryClick.bind="addStepAndClose"
+        primaryClick.bind="this.addStepAndClose"
         secondaryTitle.translate="Discard">
         <t t-foreach="this.optionEls" t-as="optionEl" t-key="optionEl_index">
             <input
                 type="text" class="form-control my-3"
                 t-att-data-index="optionEl_index"
                 t-att-value="optionEl.textContent or ''"
-                t-on-change="onInputChange"
+                t-on-change="this.onInputChange"
             />
         </t>
     </WebsiteDialog>

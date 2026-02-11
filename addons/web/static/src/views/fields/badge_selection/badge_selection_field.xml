@@ -3,15 +3,15 @@
 
     <t t-name="web.BadgeSelectionField">
         <div class="d-flex flex-wrap gap-1">
-            <t t-if="props.readonly">
-                <span t-esc="string" t-att-raw-value="value" />
+            <t t-if="this.props.readonly">
+                <span t-esc="this.string" t-att-raw-value="this.value" />
             </t>
             <t t-else="">
-                <t t-foreach="options" t-as="option" t-key="option[0]">
+                <t t-foreach="this.options" t-as="option" t-key="option[0]">
                     <span
                         class="o_selection_badge btn btn-secondary mb-1"
-                        t-att-class="{ 'active': value === option[0], 'btn-sm': props.size === 'sm', 'btn-lg': props.size === 'lg' }"
-                        t-att-value="stringify(option[0])"
+                        t-att-class="{ 'active': this.value === option[0], 'btn-sm': this.props.size === 'sm', 'btn-lg': this.props.size === 'lg' }"
+                        t-att-value="this.stringify(option[0])"
                         t-esc="option[1]"
                         t-on-click="() => this.onChange(option[0])"
                     />

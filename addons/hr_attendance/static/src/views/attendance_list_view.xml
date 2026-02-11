@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <t t-name="hr_attendance.AttendanceListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
-        <ActionHelper position="replace"/>
+        <ActionHelper position="this.replace"/>
         <table position="after">
-            <t t-if="showNoContentHelper">
-                <AttendanceActionHelper noContentHelp="props.noContentHelp"/>
+            <t t-if="this.showNoContentHelper">
+                <AttendanceActionHelper noContentHelp="this.props.noContentHelp"/>
             </t>
         </table>
     </t>

@@ -4,34 +4,34 @@
 <!-- Search Bar autocomplete item -->
 <div t-name="website.s_searchbar.autocomplete"
     class="o_dropdown_menu show position-absolute w-100">
-    <t t-if="fuzzySearch and results.length">
+    <t t-if="this.fuzzySearch and this.results.length">
         <span class="dropdown-item-text">
-            <span class="text-muted">No results found for '<t t-out="search"/>'. Showing results for '<a href="#" class="s_searchbar_fuzzy_submit" t-out="fuzzySearch"/>'.</span>
+            <span class="text-muted">No results found for '<t t-out="this.search"/>'. Showing results for '<a href="#" class="s_searchbar_fuzzy_submit" t-out="this.fuzzySearch"/>'.</span>
         </span>
     </t>
-    <t t-elif="!results.length">
+    <t t-elif="!this.results.length">
         <span class="dropdown-item-text">
             <span class="text-muted">No results found. Please try another search.</span>
         </span>
     </t>
-    <a t-foreach="results" t-as="result" t-key="result_index"
+    <a t-foreach="this.results" t-as="result" t-key="result_index"
         t-att-href="result['website_url']" class="dropdown-item p-2 text-wrap">
         <div class="d-flex align-items-center flex-wrap o_search_result_item">
-            <t t-if="widget.displayImage">
+            <t t-if="this.widget.displayImage">
                 <img t-if="result['image_url']" t-att-src="result['image_url']" class="flex-shrink-0 o_image_64_contain"/>
                 <i t-else="" t-attf-class="o_image_64_contain text-center pt16 fa #{result['_fa']}" style="font-size: 34px;"/>
             </t>
             <div class="o_search_result_item_detail px-3">
-                <t t-set="description" t-value="parts['description'] and widget.displayDescription and result['description']"/>
-                <t t-set="extra_link" t-value="parts['extra_link'] and widget.displayExtraLink and result['extra_link_url'] and result['extra_link']"/>
-                <t t-set="extra_link_html" t-value="parts['extra_link'] and widget.displayExtraLink and !result['extra_link_url'] and result['extra_link']"/>
+                <t t-set="description" t-value="this.parts['description'] and this.widget.displayDescription and result['description']"/>
+                <t t-set="extra_link" t-value="this.parts['extra_link'] and this.widget.displayExtraLink and result['extra_link_url'] and result['extra_link']"/>
+                <t t-set="extra_link_html" t-value="this.parts['extra_link'] and this.widget.displayExtraLink and !result['extra_link_url'] and result['extra_link']"/>
                 <div t-attf-class="h6 fw-bold #{description ? '' : 'mb-0'}" t-out="result['name']"/>
                 <p t-if="description" class="mb-0" t-out="description"/>
                 <button t-if="extra_link" class="extra_link btn btn-link btn-sm" t-att-data-target="result['extra_link_url']" t-out="extra_link"/>
                 <t t-if="extra_link_html" t-out="extra_link_html"/>
                 <div t-if="result['tags']" t-out="result['tags']" class="my-2"/>
             </div>
-            <div t-if="parts['detail'] and widget.displayDetail" class="flex-shrink-0 ms-auto">
+            <div t-if="this.parts['detail'] and this.widget.displayDetail" class="flex-shrink-0 ms-auto">
                 <t t-if="result['detail_strike']">
                     <span class="text-muted text-nowrap" style="text-decoration: line-through;">
                         <t t-out="result['detail_strike']"/>
@@ -48,7 +48,7 @@
             </div>
         </div>
     </a>
-    <t t-if="hasMoreResults">
+    <t t-if="this.hasMoreResults">
         <button type="submit" class="dropdown-item text-center text-primary-emphasis">All results</button>
     </t>
 </div>

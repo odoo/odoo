@@ -2,18 +2,18 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FileUploader">
-        <t t-if="state.isUploading and props.showUploadingText">Uploading...</t>
-        <span t-else="" t-on-click.prevent="onSelectFileButtonClick" style="display:contents">
+        <t t-if="this.state.isUploading and this.props.showUploadingText">Uploading...</t>
+        <span t-else="" t-on-click.prevent="this.onSelectFileButtonClick" style="display:contents">
             <t t-slot="toggler"/>
         </span>
         <t t-slot="default"/>
         <input
             type="file"
-            t-att-name="props.inputName"
+            t-att-name="this.props.inputName"
             t-ref="fileInput"
-            t-attf-class="o_input_file d-none {{ props.fileUploadClass or '' }}"
-            t-att-multiple="props.multiUpload ? 'multiple' : false" t-att-accept="props.acceptedFileExtensions or '*'"
-            t-on-change="onFileChange"
+            t-attf-class="o_input_file d-none {{ this.props.fileUploadClass or '' }}"
+            t-att-multiple="this.props.multiUpload ? 'multiple' : false" t-att-accept="this.props.acceptedFileExtensions or '*'"
+            t-on-change="this.onFileChange"
         />
     </t>
 

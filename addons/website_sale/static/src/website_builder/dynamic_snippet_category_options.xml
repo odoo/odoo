@@ -5,9 +5,9 @@
         name="Category List"
         t-inherit="website.DynamicSnippetOption"
     >
-        <BuilderRow id="template_opt_row" position="replace"/>
-        <BuilderRow id="number_of_records_opt_row" position="replace"/>
-        <BuilderRow id="filter_opt_row" position="replace">
+        <BuilderRow id="this.template_opt_row" position="this.replace"/>
+        <BuilderRow id="this.number_of_records_opt_row" position="this.replace"/>
+        <BuilderRow id="this.filter_opt_row" position="this.replace">
             <BuilderRow label.translate="Columns">
                 <BuilderRange dataAttributeAction="'columns'" min="2" max="5"/>
             </BuilderRow>
@@ -47,12 +47,12 @@
                     <t
                         t-foreach="this.categories"
                         t-as="category"
-                        t-key="category.id"
+                        t-key="this.category.id"
                     >
                         <BuilderSelectItem
                             dataAttributeActionValue="`${category.id}`"
                             label="category.name"
-                            t-out="category.name"
+                            t-out="this.category.name"
                         />
                     </t>
                 </BuilderSelect>
@@ -72,7 +72,7 @@
                 />
             </BuilderRow>
             <BuilderRow
-                t-if="isActiveItem('clickable_items_opt')"
+                t-if="this.isActiveItem('clickable_items_opt')"
                 label.translate="Arrows"
                 level="1"
             >
@@ -82,7 +82,7 @@
                 />
             </BuilderRow>
             <BuilderRow
-                t-if="isActiveItem('clickable_items_opt')"
+                t-if="this.isActiveItem('clickable_items_opt')"
                 label.translate="Darken overlay"
                 level="1"
             >
@@ -91,7 +91,7 @@
                     inverseAction="true"
                 />
             </BuilderRow>
-            <BuilderRow label.translate="Button" t-if="!isActiveItem('clickable_items_opt')">
+            <BuilderRow label.translate="Button" t-if="!this.isActiveItem('clickable_items_opt')">
                 <BuilderTextInput dataAttributeAction="'button'"/>
             </BuilderRow>
             <BuilderContext>

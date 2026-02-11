@@ -2,41 +2,41 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.MessagingMenu">
-    <t t-if="env.inDiscussApp" t-call="mail.MessagingMenu.content"/>
+    <t t-if="this.env.inDiscussApp" t-call="mail.MessagingMenu.content"/>
 </t>
 
 <t t-name="mail.MessagingMenu.content">
     <div t-att-class="`${discussSystray.contentClass} o-mail-MessagingMenu ${ui.isSmall ? 'o-small' : ''}`">
         <t name="before-content"/>
-        <DiscussContent t-if="['inbox', 'starred'].includes(store.discuss.activeTab) and ui.isSmall"/>
+        <DiscussContent t-if="['inbox', 'starred'].includes(this.store.discuss.activeTab) and this.ui.isSmall"/>
         <div t-else="" class="o-mail-MessagingMenu-list d-flex flex-column overflow-auto o-scrollbar-thin flex-grow-1 list-group list-group-flush o-scrollbar-thin" t-ref="notification-list">
             <t t-set="itemIndex" t-value="0"/>
-            <t t-foreach="visibleStandaloneMessages" name="standaloneInboxMessages" t-as="message" t-key="message.id">
+            <t t-foreach="this.visibleStandaloneMessages" name="standaloneInboxMessages" t-as="message" t-key="this.message.id">
                 <NotificationItem
-                    isActive="state.activeIndex === itemIndex"
+                    isActive="this.state.activeIndex === itemIndex"
                     datetime="message?.datetime"
-                    iconSrc="store.DEFAULT_AVATAR"
+                    iconSrc="this.store.DEFAULT_AVATAR"
                     important="true"
                     hasMarkAsReadButton="1"
                     muted="0"
                     onClick="(isMarkAsRead) => this.onClickInboxMsg(isMarkAsRead, message)"
-                    onSwipeRight="hasTouch() ? { action: () => message.setDone(), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"
+                    onSwipeRight="this.hasTouch() ? { action: () => message.setDone(), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"
                     nameMaxLine="1"
                     textMaxLine="2"
                 >
                     <t t-set-slot="name">
-                        <t t-esc="message?.authorName or ''"/>
+                        <t t-esc="this.message?.authorName or ''"/>
                     </t>
                     <t t-set-slot="body">
-                        <span t-out="message?.previewText" t-att-class="{ 'opacity-75': message?.isEmpty }"/>
+                        <span t-out="this.message?.previewText" t-att-class="{ 'opacity-75': message?.isEmpty }"/>
                     </t>
                 </NotificationItem>
-                <t t-set="itemIndex" t-value="itemIndex + 1"/>
+                <t t-set="itemIndex" t-value="this.itemIndex + 1"/>
             </t>
-            <t t-foreach="threads" name="threads" t-as="thread" t-key="thread.localId">
-                <t t-set="message" t-value="thread.channel?.isChatChannel or (thread.channel?.channel_type === 'channel' and thread.needactionMessages.length === 0) ? thread.newestPersistentOfAllMessage : thread.needactionMessages.at(-1)"/>
+            <t t-foreach="this.threads" name="threads" t-as="thread" t-key="this.thread.localId">
+                <t t-set="message" t-value="this.thread.channel?.isChatChannel or (this.thread.channel?.channel_type === 'channel' and this.thread.needactionMessages.length === 0) ? this.thread.newestPersistentOfAllMessage : this.thread.needactionMessages.at(-1)"/>
                 <NotificationItem
-                    isActive="state.activeIndex === itemIndex"
+                    isActive="this.state.activeIndex === itemIndex"
                     counter="thread.needactionCounter"
                     datetime="message?.datetime"
                     iconSrc="thread.avatarUrl"
@@ -44,47 +44,47 @@
                     hasMarkAsReadButton="thread.isUnread"
                     muted="thread.channel?.self_member_id?.mute_until_dt ? 2 : !thread.isUnread ? 1 : 0"
                     onClick="(isMarkAsRead) => this.onClickThread(isMarkAsRead, thread, message)"
-                    onSwipeRight="hasTouch() and thread.isUnread ? { action: () => this.markAsRead(thread), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"
-                    onSwipeLeft="onSwipeLeftThreadNotification(thread)"
+                    onSwipeRight="this.hasTouch() and thread.isUnread ? { action: () => this.markAsRead(thread), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"
+                    onSwipeLeft="this.onSwipeLeftThreadNotification(thread)"
                     nameMaxLine="1"
                     textMaxLine="2"
                     thread="thread"
                 >
                     <t t-set-slot="name">
-                        <div t-if="thread.parent_channel_id" class="d-flex align-items-center">
-                            <span class="text-truncate flex-shrink-0 opacity-75 mw-50" t-esc="thread.parent_channel_id.displayName"/>
+                        <div t-if="this.thread.parent_channel_id" class="d-flex align-items-center">
+                            <span class="text-truncate flex-shrink-0 opacity-75 mw-50" t-esc="this.thread.parent_channel_id.displayName"/>
                             <i class="oi oi-chevron-right o-xsmaller mx-1"/>
-                            <span class="text-truncate min-w-0" t-esc="thread.channel.displayName"/>
+                            <span class="text-truncate min-w-0" t-esc="this.thread.channel.displayName"/>
                         </div>
-                        <t t-else=""><Priority t-if="thread.priority" thread="thread"/> <t t-esc="thread.displayName"/></t>
+                        <t t-else=""><Priority t-if="this.thread.priority" thread="thread"/> <t t-esc="this.thread.displayName"/></t>
                     </t>
                     <t t-set-slot="body">
-                        <t t-if="message?.hasOnlyAttachments">
-                            <t t-out="message.previewText" />
+                        <t t-if="this.message?.hasOnlyAttachments">
+                            <t t-out="this.message.previewText" />
                         </t>
-                        <span t-else="" t-out="message?.previewText" t-att-class="{ 'opacity-75': message?.isEmpty }"/>
+                        <span t-else="" t-out="this.message?.previewText" t-att-class="{ 'opacity-75': message?.isEmpty }"/>
                     </t>
                     <t t-set-slot="icon">
-                        <CountryFlag t-if="thread.channel?.showCorrespondentCountry" country="thread.channel.correspondentCountry" class="'o-mail-NotificationItem-country position-absolute border shadow-sm'"/>
+                        <CountryFlag t-if="this.thread.channel?.showCorrespondentCountry" country="thread.channel.correspondentCountry" class="'o-mail-NotificationItem-country position-absolute border shadow-sm'"/>
                     </t>
                 </NotificationItem>
-                <t t-set="itemIndex" t-value="itemIndex + 1"/>
+                <t t-set="itemIndex" t-value="this.itemIndex + 1"/>
             </t>
-            <t t-if="store.channels.status === 'fetching'">
+            <t t-if="this.store.channels.status === 'fetching'">
                 <div class="d-flex align-items-center justify-content-center gap-2 py-4 px-2"><span class="o-visible-short-delay"><i class="fa fa-circle-o-notch fa-spin me-1"/> Loading…</span></div>
             </t>
         </div>
     </div>
-    <nav t-if="ui.isSmall" t-attf-class="o-mail-MessagingMenu-navbar d-flex flex-shrink-0 border-top w-100 p-2 gap-2 o-mail-MessagingMenu-navbar-with-{{tabs.length}}-elements {{ tabs.length > 4 ? 'overflow-x-scroll' : '' }}">
-        <button t-foreach="tabs" t-key="tab.id" t-as="tab" class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center flex-grow-1 flex-shrink-1 p-1 bg-transparent position-relative border-0" t-att-class="{
-            'active': store.discuss.activeTab === tab.id,
-            'pb-4': isIosPwa,
-            'pb-2': !isIosPwa,
+    <nav t-if="this.ui.isSmall" t-attf-class="o-mail-MessagingMenu-navbar d-flex flex-shrink-0 border-top w-100 p-2 gap-2 o-mail-MessagingMenu-navbar-with-{{this.tabs.length}}-elements {{ this.tabs.length > 4 ? 'overflow-x-scroll' : '' }}">
+        <button t-foreach="this.tabs" t-key="this.tab.id" t-as="tab" class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center flex-grow-1 flex-shrink-1 p-1 bg-transparent position-relative border-0" t-att-class="{
+            'active': this.store.discuss.activeTab === tab.id,
+            'pb-4': this.isIosPwa,
+            'pb-2': !this.isIosPwa,
         }" t-on-click="() => this.onClickNavTab(tab.id)" t-att-aria-label="tab.label">
-            <i t-attf-class="o-mail-MessagingMenu-tabIcon {{ store.discuss.activeTab === tab.id and tab.activeIcon ? tab.activeIcon : tab.icon }} rounded-pill mx-auto p-2 fs-5" />
-            <span class="o-xsmaller" t-esc="tab.label" />
-            <span t-if="tab.counter" class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabCounter overflow-visible d-inline-block" t-att-class="{ 'o-starred': tab.id === 'starred' }" t-esc="tab.counter"/>
-            <span t-elif="tab.channelHasUnread" class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabUnread overflow-visible d-inline-block ms-2"><i class="fa fa-circle"/></span>
+            <i t-attf-class="o-mail-MessagingMenu-tabIcon {{ this.store.discuss.activeTab === tab.id and tab.activeIcon ? tab.activeIcon : tab.icon }} rounded-pill mx-auto p-2 fs-5" />
+            <span class="o-xsmaller" t-esc="this.tab.label" />
+            <span t-if="this.tab.counter" class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabCounter overflow-visible d-inline-block" t-att-class="{ 'o-starred': tab.id === 'starred' }" t-esc="this.tab.counter"/>
+            <span t-elif="this.tab.channelHasUnread" class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabUnread overflow-visible d-inline-block ms-2"><i class="fa fa-circle"/></span>
         </button>
     </nav>
 </t>

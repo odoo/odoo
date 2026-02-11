@@ -2,39 +2,39 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.ActionpadWidget" t-inherit="point_of_sale.ActionpadWidget" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('actionpad')]//button[hasclass('mobile-more-button')]" position="before">
-            <button t-if="pos.config.module_pos_restaurant and !this.currentOrder.isRefund"
+            <button t-if="this.pos.config.module_pos_restaurant and !this.currentOrder.isRefund"
                     class="btn btn-secondary btn-lg flex-shrink-0 border-0" t-on-click="()=>this.pos.addCourse()">
                 <span>Course</span>
             </button>
         </xpath>
         <xpath expr="//div[hasclass('validation')]" position="attributes">
-            <attribute name="t-if">this.swapButton or props.showActionButton</attribute>
+            <attribute name="t-if">this.swapButton or this.props.showActionButton</attribute>
         </xpath>
         <xpath expr="//div[hasclass('validation')]//button[hasclass('pay-order-button')]" position="attributes">
             <attribute name="t-if">!this.swapButton</attribute>
         </xpath>
         <!-- Replace the payment button by the order button -->
         <xpath expr="//div[hasclass('validation')]" position="before">
-            <div t-if="this.swapButton and currentOrder" class="d-flex gap-2 flex-fill">
-                <BackButton t-if="pos.showBackButton() and pos.config.module_pos_restaurant" class="{'col-3': showFastPaymentMethods}" onClick="() => pos.onClickBackButton()"/>
+            <div t-if="this.swapButton and this.currentOrder" class="d-flex gap-2 flex-fill">
+                <BackButton t-if="this.pos.showBackButton() and this.pos.config.module_pos_restaurant" class="{'col-3': this.showFastPaymentMethods}" onClick="() => this.pos.onClickBackButton()"/>
                 <button
                     class="submit-order h-100 button btn btn-lg d-flex align-items-center w-50 flex-fill position-relative px-3 highlight btn-primary justify-content-between"
-                    t-on-click="() => doSubmitOrder.call()"
+                    t-on-click="() => this.doSubmitOrder.call()"
                     t-if="!this.currentOrder.isDirectSale and this.displayCategoryCount.length"
-                    t-att-disabled="doSubmitOrder.status === 'loading'"
+                    t-att-disabled="this.doSubmitOrder.status === 'loading'"
                 >
-                    <div t-if="!(ui.isSmall or displayCategoryCount.length > 2) or (!displayCategoryCount.length and ui.isSmall)" class="text-truncate text-start">Send</div>
-                    <div t-attf-class="{{ !(displayCategoryCount.length > 2) ? 'd-flex flex-column align-items-end gap-1' : 'row row-cols-2 g-1 gx-2' }} {{ isCategoryCountOverflow ? 'mt-n3' : ''}}">
-                        <t t-if="displayCategoryCount.length">
-                            <t t-foreach="displayCategoryCount" t-as="categoryCountLine"  t-key="categoryCountLine_index">
-                                <div class="d-flex align-items-center justify-content-between small" t-att-class="{ 'gap-2' : !(displayCategoryCount.length > 2) }">
+                    <div t-if="!(this.ui.isSmall or this.displayCategoryCount.length > 2) or (!this.displayCategoryCount.length and this.ui.isSmall)" class="text-truncate text-start">Send</div>
+                    <div t-attf-class="{{ !(this.displayCategoryCount.length > 2) ? 'd-flex flex-column align-items-end gap-1' : 'row row-cols-2 g-1 gx-2' }} {{ this.isCategoryCountOverflow ? 'mt-n3' : ''}}">
+                        <t t-if="this.displayCategoryCount.length">
+                            <t t-foreach="this.displayCategoryCount" t-as="categoryCountLine"  t-key="categoryCountLine_index">
+                                <div class="d-flex align-items-center justify-content-between small" t-att-class="{ 'gap-2' : !(this.displayCategoryCount.length > 2) }">
                                     <div class="flex-grow-1"/>
                                     <label class="product-category-label px-2"><t t-esc="categoryCountLine.name"/></label>
                                     <label class="rounded px-2 py-0" style="background-color:rgba(0, 0, 0, 0.3);"><t t-esc="this.env.utils.formatProductQty(categoryCountLine.count, false)"/></label>
                                 </div>
                             </t>
                         </t>
-                        <t t-if="isCategoryCountOverflow">
+                        <t t-if="this.isCategoryCountOverflow">
                             <div class="position-absolute bottom-0 start-50 translate-middle-x">...</div>
                         </t>
                     </div>
@@ -48,9 +48,9 @@
                 </button>
                 <button
                     class="button w-50 btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
-                    t-on-click="() => doReprintOrder.call()"
-                    t-elif="!ui.isSmall and this.pos.kitchenPrinters.length and this.currentOrder.uiState.lastPrints.length"
-                    t-att-disabled="doReprintOrder.status === 'loading'">
+                    t-on-click="() => this.doReprintOrder.call()"
+                    t-elif="!this.ui.isSmall and this.pos.kitchenPrinters.length and this.currentOrder.uiState.lastPrints.length"
+                    t-att-disabled="this.doReprintOrder.status === 'loading'">
                     Reprint
                 </button>
                 <button
@@ -90,8 +90,8 @@
                         <span>Plan</span>
                     </button>
                 </t>
-                <button t-if="!currentOrder.isEmpty() and this.pos.numpadMode != 'table'"
-                    t-on-click="() => pos.pay()" 
+                <button t-if="!this.currentOrder.isEmpty() and this.pos.numpadMode != 'table'"
+                    t-on-click="() => this.pos.pay()" 
                     class="button pay-order-button pay-order-button-restaurant btn btn-lg w-50"
                     t-attf-class="{{ this.highlightPay ? 'highlight btn-primary' : 'btn-secondary' }}"
                 >

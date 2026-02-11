@@ -6,7 +6,7 @@
         <BuilderRow label.translate="Top Banner">
             <BuilderCheckbox id="'blog_cover_opt'" actionParam="{views: ['website_blog.opt_blog_cover_post']}"/>
         </BuilderRow>
-        <BuilderRow label.translate="Full-Width" t-if="isActiveItem('blog_cover_opt')" level="1">
+        <BuilderRow label.translate="Full-Width" t-if="this.isActiveItem('blog_cover_opt')" level="1">
             <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_cover_post_fullwidth_design']}"/>
         </BuilderRow>
         <BuilderRow label.translate="Layout">
@@ -24,7 +24,7 @@
         <BuilderRow label.translate="Sidebar">
             <BuilderCheckbox id="'blog_posts_sidebar_opt'" actionParam="{views: ['website_blog.opt_blog_sidebar_show']}"/>
         </BuilderRow>
-        <t t-if="isActiveItem('blog_posts_sidebar_opt')">
+        <t t-if="this.isActiveItem('blog_posts_sidebar_opt')">
             <BuilderRow label.translate="Archives" level="1">
                 <BuilderCheckbox actionParam="{views: ['website_blog.opt_sidebar_blog_index_archives']}"/>
             </BuilderRow>

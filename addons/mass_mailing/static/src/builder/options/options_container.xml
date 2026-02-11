@@ -1,10 +1,10 @@
 <templates xml:space="preserve">
     <t t-name="mass_mailing.OptionsContainer" t-inherit="html_builder.OptionsContainer">
         <xpath expr="//div[@t-ref='content']" position="replace">
-            <t t-if="versionState.isUpToDate">
+            <t t-if="this.versionState.isUpToDate">
                 <div class="we-bg-options-container pb-3" t-ref="content">
-                    <t t-foreach="props.options" t-as="OptionClass" t-key="OptionClass.name + '-' + OptionClass.template">
-                        <BuilderContext applyTo="OptionClass.applyTo" t-if="hasAccess(OptionClass.groups)">
+                    <t t-foreach="this.props.options" t-as="OptionClass" t-key="OptionClass.name + '-' + OptionClass.template">
+                        <BuilderContext applyTo="OptionClass.applyTo" t-if="this.hasAccess(OptionClass.groups)">
                             <t t-component="OptionClass"></t>
                         </BuilderContext>
                     </t>

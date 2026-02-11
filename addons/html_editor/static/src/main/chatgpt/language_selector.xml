@@ -1,19 +1,19 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.LanguageSelector">
-        <t t-if="state.languages.length === 1">
+        <t t-if="this.state.languages.length === 1">
             <t t-call="html_editor.translateButton">
-                <t t-set="onClick" t-value="() => this.onSelected(state.languages[0][1])"/>
+                <t t-set="onClick" t-value="() => this.onSelected(this.state.languages[0][1])"/>
             </t>
         </t>
-        <Dropdown t-else="" menuRef="menuRef">
+        <Dropdown t-else="" menuRef="this.menuRef">
             <t t-call="html_editor.translateButton">
                 <t t-set="onClick" t-value="() => {}"/>
             </t>
             <t t-set-slot="content">
                 <div data-prevent-closing-overlay="true">
-                    <t t-foreach="state.languages" t-as="language" t-key="language[0]">
+                    <t t-foreach="this.state.languages" t-as="language" t-key="this.language[0]">
                         <DropdownItem class="'user-select-none'" onSelected="() => this.onSelected(language[1])">
-                            <div class="lang" t-esc="language[1]"/>
+                            <div class="lang" t-esc="this.language[1]"/>
                         </DropdownItem>
                     </t>
                 </div>
@@ -22,10 +22,10 @@
     </t>
 
     <t t-name="html_editor.translateButton">
-        <button class="btn btn-light" name="translate" t-att-title="props.title"
-            t-att-disabled="props.isDisabled" t-on-click="onClick">
+        <button class="btn btn-light" name="translate" t-att-title="this.props.title"
+            t-att-disabled="this.props.isDisabled" t-on-click="onClick">
             <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-            <svg class="oe-language-icon d-flex" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="oe-language-icon d-flex" version="1.1" id="Layer_1"
                 viewBox="796 796 200 200" enable-background="new 796 796 200 200" xml:space="preserve">
             <g>
                 <path d="M973.166,818.5H818.833c-12.591,0-22.833,10.243-22.833,22.833v109.333c0,12.59,10.243,22.833,22.833,22.833h154.333

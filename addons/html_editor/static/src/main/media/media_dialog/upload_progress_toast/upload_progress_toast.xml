@@ -3,36 +3,36 @@
     <span class="o_notification_illustration d-flex align-items-center justify-content-center flex-shrink-0 rounded-1 bg-200 bg-opacity-50">
         <span
             class="o_image w-50 user-select-none"
-            t-att-title="props.name" t-att-data-mimetype="props.mimetype"/>
+            t-att-title="this.props.name" t-att-data-mimetype="this.props.mimetype"/>
     </span>
     <div class="w-100 overflow-hidden">
         <span class="d-flex align-items-baseline gap-1">
-            <small class="flex-grow-1 text-truncate" t-esc="props.name"/>
-            <span class="o_notification_size text-nowrap text-600" t-esc="props.size"/>
+            <small class="flex-grow-1 text-truncate" t-esc="this.props.name"/>
+            <span class="o_notification_size text-nowrap text-600" t-esc="this.props.size"/>
         </span>
         <div class="progress mt-1 w-100">
-            <div t-attf-class="progress-bar progress-bar-animated {{props.uploaded ? 'bg-success' : 'bg-info'}}" role="progressbar" t-attf-style="width: {{this.progress}}%;" aria-label="Progress bar"></div>
+            <div t-attf-class="progress-bar progress-bar-animated {{this.props.uploaded ? 'bg-success' : 'bg-info'}}" role="progressbar" t-attf-style="width: {{this.progress}}%;" aria-label="Progress bar"></div>
         </div>
-        <small t-if="props.hasError" class="text-danger fw-bold" t-esc="errorMessage"/>
+        <small t-if="this.props.hasError" class="text-danger fw-bold" t-esc="this.errorMessage"/>
     </div>
     <div class="o_notification_indicator d-flex align-items-center justify-content-center pt-2">
-        <t t-if="!props.hasError and !props.uploaded">
+        <t t-if="!this.props.hasError and !this.props.uploaded">
             <i class="fa fa-circle-o-notch fa-spin fs-4"/>
-            <span class="fa fa-trash cursor-pointer fs-4 p-1 mx-1" t-on-click="props.cancelUpload" title="Cancel Upload"/>
+            <span class="fa fa-trash cursor-pointer fs-4 p-1 mx-1" t-on-click="this.props.cancelUpload" title="Cancel Upload"/>
         </t>
-        <span t-if="props.uploaded" class="o_notification_indicator_success d-flex align-items-center justify-content-center p-1 rounded-5 text-bg-success smaller">
+        <span t-if="this.props.uploaded" class="o_notification_indicator_success d-flex align-items-center justify-content-center p-1 rounded-5 text-bg-success smaller">
             <i class="fa fa-check"/>
         </span>
-        <i t-if="props.hasError" class="fa fa-exclamation-triangle fs-4 text-danger"/>
+        <i t-if="this.props.hasError" class="fa fa-exclamation-triangle fs-4 text-danger"/>
     </div>
 </t>
 
 <t t-name="html_editor.UploadProgressToast">
     <div class="editor_notification_manager o_notification_manager o_upload_progress_toast">
-        <div t-if="state.isVisible" class="o_notification show fade mb-2 border p-1 bg-white rounded shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
+        <div t-if="this.state.isVisible" class="o_notification show fade mb-2 border p-1 bg-white rounded shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="editor_notification_body o_notification_body ps-2 py-2">
                 <div class="me-auto o_notification_content d-flex flex-column gap-3 p-1">
-                    <div t-foreach="state.files" t-as="file" t-key="file" class="o_we_progressbar d-flex align-items-center gap-2">
+                    <div t-foreach="this.state.files" t-as="file" t-key="this.file" class="o_we_progressbar d-flex align-items-center gap-2">
                         <ProgressBar progress="file_value.progress"
                             errorMessage="file_value.errorMessage"
                             hasError="file_value.hasError"

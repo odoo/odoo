@@ -1,10 +1,10 @@
 <templates>
 
     <t t-name="event_booth_checkbox_list">
-        <div t-foreach="event_booth_ids" t-as="booth" t-key="booth_index" class="form-check">
+        <div t-foreach="this.event_booth_ids" t-as="booth" t-key="this.booth_index" class="form-check">
             <input type="checkbox" name="event_booth_ids" t-attf-id="booth_#{booth.id}"
-                t-att-value="booth.id" t-att-checked="selected_booth_ids.includes(booth.id) or None" class="form-check-input me-2"/>
-            <label t-out="booth.name" t-attf-for="booth_#{booth.id}"/>
+                t-att-value="booth.id" t-att-checked="this.selected_booth_ids.includes(booth.id) or this.None" class="form-check-input me-2"/>
+            <label t-out="this.booth.name" t-attf-for="booth_#{booth.id}"/>
         </div>
     </t>
 
@@ -13,18 +13,18 @@
             <div class="row my-3">
                 <div class="col-12">
                     <h4>Booth Registration completed!</h4>
-                    <h5 class="text-muted" t-out="event_name"/>
+                    <h5 class="text-muted" t-out="this.event_name"/>
                 </div>
             </div>
             <div class="d-flex flex-column">
-                <span t-if="contact.name" t-out="contact.name" class="fw-bold"/>
-                <span t-if="contact.email">
+                <span t-if="this.contact.name" t-out="this.contact.name" class="fw-bold"/>
+                <span t-if="this.contact.email">
                     <i class="fa fa-fw fa-envelope me-2"/>
-                    <t t-out="contact.email"/>
+                    <t t-out="this.contact.email"/>
                 </span>
-                <span t-if="contact.phone">
+                <span t-if="this.contact.phone">
                     <i class="fa fa-fw fa-phone me-2"/>
-                    <t t-out="contact.phone"/>
+                    <t t-out="this.contact.phone"/>
                 </span>
             </div>
         </div>

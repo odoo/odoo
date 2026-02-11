@@ -2,9 +2,9 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_loyalty.CustomerDisplay" t-inherit="point_of_sale.CustomerDisplay" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o_customer_display_total')]" position="after">
-            <t t-if="order and order.amount and !order.finalized and order.loyaltyData">
+            <t t-if="this.order and this.order.amount and !this.order.finalized and this.order.loyaltyData">
                 <div class="border-top px-4 py-2 bg-white">
-                    <t t-foreach="order.loyaltyData or []" t-as="_loyaltyStat" t-key="_loyaltyStat.couponId">
+                    <t t-foreach="this.order.loyaltyData or []" t-as="_loyaltyStat" t-key="_loyaltyStat.couponId">
                         <div
                             t-if="_loyaltyStat.points.won or _loyaltyStat.points.spent"
                             class="d-flex justify-content-between align-items-center py-1 flex-wrap"

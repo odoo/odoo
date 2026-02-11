@@ -2,14 +2,14 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="website.WebsiteDashboardMain">
-    <div class="o_dashboards" t-att-class="{'has_plausible': state.dashboards.plausible_share_url}">
-        <Layout display="display">
+    <div class="o_dashboards" t-att-class="{'has_plausible': this.state.dashboards.plausible_share_url}">
+        <Layout display="this.display">
             <t t-set-slot="control-panel-navigation-additional">
                 <div class="btn-group d-none d-md-inline-block float-end" style="margin-right: 20px;">
-                    <t t-foreach="state.websites" t-as="website" t-key="website.id">
+                    <t t-foreach="this.state.websites" t-as="website" t-key="this.website.id">
                         <button class="btn btn-secondary text-truncate js_website" style="max-width: 200px;" t-att-class="{'active': website.selected}"
                                 t-on-click="() => this.state.website = website.id">
-                            <t t-esc="website.name"/>
+                            <t t-esc="this.website.name"/>
                         </button>
                     </t>
                 </div>
@@ -29,11 +29,11 @@
 </t>
 
 <t t-name="website.plausible_content">
-    <div class="row o_dashboard_visits" t-if="state.groups.website_designer">
-        <div t-if="state.dashboards.plausible_share_url" class="col-12">
+    <div class="row o_dashboard_visits" t-if="this.state.groups.website_designer">
+        <div t-if="this.state.dashboards.plausible_share_url" class="col-12">
             <div class="container">
                 <div class="ratio ratio-1x1">
-                    <iframe t-att-src="state.dashboards.plausible_share_url" class="embed-responsive-item" frameborder="0" loading="lazy"/>
+                    <iframe t-att-src="this.state.dashboards.plausible_share_url" class="embed-responsive-item" frameborder="0" loading="lazy"/>
                 </div>
             </div>
         </div>

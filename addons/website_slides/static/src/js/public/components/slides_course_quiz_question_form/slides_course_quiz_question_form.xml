@@ -3,45 +3,45 @@
 
     <t t-name="slide.quiz.question.input">
         <div
-            t-attf-class="o_wsildes_quiz_question_input mt-3 #{!props.update ? 'col' : ''}">
+            t-attf-class="o_wsildes_quiz_question_input mt-3 #{!this.props.update ? 'col' : ''}">
             <form class="mb-3" t-ref="form">
                 <div class="o_wslides_quiz_question row align-items-center me-0 mb-2">
                     <div class="input-group">
-                        <span class="input-group-text o_wslides_quiz_question_sequence" t-ref="sequence"><t t-out="props.question.sequence"/></span>
+                        <span class="input-group-text o_wslides_quiz_question_sequence" t-ref="sequence"><t t-out="this.props.question.sequence"/></span>
                         <input type="text" name="question-name" class="form-control col-11" placeholder='e.g. "Which animal cannot fly?"'
-                            t-model="props.question.text" t-ref="input"/>
+                            t-model="this.props.question.text" t-ref="input"/>
                     </div>
                 </div>
                 <div class="text-muted mb-2">
                     <span>Select the correct answer below:</span>
                 </div>
                 <div class="list-group">
-                    <t t-foreach="state.answerLines" t-as="answer" t-key="answer.id">
+                    <t t-foreach="this.state.answerLines" t-as="answer" t-key="this.answer.id">
                         <t t-call="slide.quiz.answer.line"/>
                     </t>
                 </div>
             </form>
             <div>
                 <t t-call="slide.quiz.buttons"/>
-                <div class="ms-2 text-danger o_wslides_js_quiz_validation_error" t-att-class="{ 'd-none': !state.error }">
+                <div class="ms-2 text-danger o_wslides_js_quiz_validation_error" t-att-class="{ 'd-none': !this.state.error }">
                     <i class="fa fa-close me-1"/>
-                    <span class="o_wslides_js_quiz_validation_error_text"><t t-out="state.error || ''" /></span>
+                    <span class="o_wslides_js_quiz_validation_error_text"><t t-out="this.state.error || ''" /></span>
                 </div>
             </div>
         </div>
     </t>
 
     <t t-name="slide.quiz.answer.line">
-        <div class="o_wslides_js_quiz_answer row align-items-center mb-1" t-attf-data-answer-id="#{answer.id || ''}" >
+        <div class="o_wslides_js_quiz_answer row align-items-center mb-1" t-attf-data-answer-id="#{this.answer.id || ''}" >
             <div class="col ms-3 ms-md-5">
                 <div class="row align-items-center">
                     <div class="col-9 p-0">
                         <div class="input-group">
-                            <input type="text" class="o_wslides_js_quiz_answer_value form-control" t-attf-placeholder='e.g. "{{answer.placeholder || "another animal"}}"' t-model="answer.text"/>
+                            <input type="text" class="o_wslides_js_quiz_answer_value form-control" t-attf-placeholder='e.g. "{{this.answer.placeholder || "another animal"}}"' t-model="this.answer.text"/>
                             <div class="input-group-text">
                                 <a class="o_wslides_js_quiz_is_correct" title="This is the correct answer">
                                     <label class="my-0">
-                                        <input class="d-none" type="radio" name="radio" t-att-checked="answer.isCorrect" t-on-change="(event) => this.onIsCorrectClick(answer, event.currentTarget.checked)" />
+                                        <input class="d-none" type="radio" name="radio" t-att-checked="this.answer.isCorrect" t-on-change="(event) => this.onIsCorrectClick(this.answer, event.currentTarget.checked)" />
                                         <i class="o_wslides_js_quiz_icon fa fa-lg fa-check-circle-o text-muted" />
                                     </label>
                                 </a>
@@ -49,25 +49,25 @@
                         </div>
                     </div>
                     <i
-                        t-attf-class="o_wslides_js_quiz_icon o_wslides_js_quiz_comment_answer fa fa-lg fa-info-circle col-auto p-md-2 py-2 ps-2 pe-1 #{answer.comment.trim() !== '' ? 'text-primary' : 'text-muted'}"
-                        t-on-click="onToggleAnswerLineCommentClick" title="Add comment on this answer" />
+                        t-attf-class="o_wslides_js_quiz_icon o_wslides_js_quiz_comment_answer fa fa-lg fa-info-circle col-auto p-md-2 py-2 ps-2 pe-1 #{this.answer.comment.trim() !== '' ? 'text-primary' : 'text-muted'}"
+                        t-on-click="this.onToggleAnswerLineCommentClick" title="Add comment on this answer" />
                     <i
                         class="o_wslides_js_quiz_icon o_wslides_js_quiz_add_answer fa fa-lg fa-plus-circle col-auto p-md-2 py-2 px-1 text-muted"
                         title="Add an answer below this one"
-                        t-on-click="() => this.onAddAnswerLineClick(answer)"/>
+                        t-on-click="() => this.onAddAnswerLineClick(this.answer)"/>
                     <i
                         class="o_wslides_js_quiz_icon o_wslides_js_quiz_remove_answer fa fa-lg fa-trash-o col-auto p-md-2 py-2 px-1 text-muted"
                         title="Remove this answer"
-                        t-on-click="() => this.onRemoveAnswerLineClick(answer)"/>
+                        t-on-click="() => this.onRemoveAnswerLineClick(this.answer)"/>
                 </div>
                 <div class="o_wslides_js_quiz_answer_comment row align-items-center d-none">
                     <div class="col-8 offset-1 p-0">
-                        <input t-model="answer.comment" type="text" class="form-control mt-1" placeholder="This is the correct answer, congratulations"/>
+                        <input t-model="this.answer.comment" type="text" class="form-control mt-1" placeholder="This is the correct answer, congratulations"/>
                     </div>
                     <i
                         class="o_wslides_js_quiz_icon o_wslides_js_quiz_remove_answer_comment fa fa-lg fa-trash-o p-2 text-muted col-auto"
                         title="Remove the answer comment"
-                        t-on-click="(event) => this.onRemoveAnswerLineCommentClick(event, answer)"/>
+                        t-on-click="(event) => this.onRemoveAnswerLineCommentClick(event, this.answer)"/>
                 </div>
             </div>
         </div>
@@ -75,14 +75,14 @@
 
     <t t-name="slide.quiz.buttons">
         <a
-            t-on-click="onValidateQuestionClick"
+            t-on-click="this.onValidateQuestionClick"
             class="o_wslides_js_quiz_validate_question btn btn-primary text-white border me-1"
             role="button">
-            <span t-if="props.update">Update</span>
+            <span t-if="this.props.update">Update</span>
             <span t-else="">Save</span>
         </a>
         <a
-            t-on-click="onCancelValidationClick"
+            t-on-click="this.onCancelValidationClick"
             class="o_wslides_js_quiz_cancel_question btn btn-light border"
             role="button">
             <span>Cancel</span>

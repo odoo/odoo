@@ -2,39 +2,39 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ListRenderer">
-        <t t-set="_canSelectRecord" t-value="canSelectRecord"/>
+        <t t-set="_canSelectRecord" t-value="this.canSelectRecord"/>
         <div
             class="o_list_renderer o_renderer table-responsive"
             tabindex="-1"
             t-ref="root"
         >
-            <t t-if="showNoContentHelper">
-                <ActionHelper noContentHelp="props.noContentHelp"/>
+            <t t-if="this.showNoContentHelper">
+                <ActionHelper noContentHelp="this.props.noContentHelp"/>
             </t>
-            <table t-attf-class="o_list_table table table-sm table-hover position-relative mb-0 {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped table-striped'}}" t-ref="table">
+            <table t-attf-class="o_list_table table table-sm table-hover position-relative mb-0 {{this.props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped table-striped'}}" t-ref="table">
                 <thead>
                     <tr>
-                        <th t-if="hasSelectors" class="o_list_record_selector o_list_controller align-middle pe-1 cursor-pointer" tabindex="-1" t-on-keydown="(ev) => this.onCellKeydown(ev)" t-on-click.stop="toggleSelection">
-                            <CheckBox disabled="!_canSelectRecord" value="selectAll" className="'d-flex m-0'" onChange.bind="toggleSelection"/>
+                        <th t-if="this.hasSelectors" class="o_list_record_selector o_list_controller align-middle pe-1 cursor-pointer" tabindex="-1" t-on-keydown="(ev) => this.onCellKeydown(ev)" t-on-click.stop="this.toggleSelection">
+                            <CheckBox disabled="!_canSelectRecord" value="this.selectAll" className="'d-flex m-0'" onChange.bind="this.toggleSelection"/>
                         </th>
-                        <t t-foreach="columns" t-as="column" t-key="column.id">
-                            <th t-if="column.type === 'field'"
+                        <t t-foreach="this.columns" t-as="column" t-key="this.column.id">
+                            <th t-if="this.column.type === 'field'"
                                 t-att-data-name="column.name"
-                                t-att-class="getColumnClass(column) + ' opacity-trigger-hover w-print-auto'"
-                                t-on-pointerup="onColumnTitleMouseUp"
+                                t-att-class="this.getColumnClass(column) + ' opacity-trigger-hover w-print-auto'"
+                                t-on-pointerup="this.onColumnTitleMouseUp"
                                 t-on-click="() => this.onClickSortColumn(column)"
                                 t-on-keydown="(ev) => this.onCellKeydown(ev)"
                                 data-tooltip-delay="1000"
                                 tabindex="-1">
-                                <t t-if="column.hasLabel and column.widget !== 'handle'">
-                                <t t-set="isNumeric" t-value="isNumericColumn(column)"/>
+                                <t t-if="this.column.hasLabel and this.column.widget !== 'handle'">
+                                <t t-set="isNumeric" t-value="this.isNumericColumn(this.column)"/>
                                     <div class="d-flex align-items-center"
-                                        t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : 'web.ListHeaderTooltip'"
-                                        t-att-data-tooltip-info="makeTooltip(column)">
+                                        t-att-data-tooltip-template="this.isDebugMode ? 'web.FieldTooltip' : 'web.ListHeaderTooltip'"
+                                        t-att-data-tooltip-info="this.makeTooltip(column)">
                                         <span class="d-block min-w-0 text-truncate flex-grow-1 flex-shrink-1" t-att-class="isNumeric ? 'o_list_number_th' : ''"
-                                              t-esc="column.label"/>
+                                              t-esc="this.column.label"/>
                                         <div class="o_list_header_label_spacer"/>
-                                        <i class="o_list_sortable_icon" t-att-class="getSortableIconClass(column)"/>
+                                        <i class="o_list_sortable_icon" t-att-class="this.getSortableIconClass(column)"/>
                                     </div>
                                     <span
                                           class="o_resize position-absolute top-0 end-0 bottom-0 ps-1 bg-black-25 opacity-0 opacity-50-hover z-1"
@@ -44,34 +44,34 @@
                             </th>
                             <th t-else="" t-on-keydown="(ev) => this.onCellKeydown(ev)" t-att-class="{'o_list_button w-print-0 p-print-0': column.type === 'button_group'}"/>
                         </t>
-                        <th t-if="hasOpenFormViewColumn" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_open_form_view w-print-0 p-print-0"/>
-                        <th t-if="hasActionsColumn" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_controller o_list_actions_header w-print-0 p-print-0 position-sticky end-0 z-2">
-                            <div t-if="displayOptionalFields or hasOptionalOpenFormViewColumn" class="o_optional_columns_dropdown d-print-none text-center border-top-0">
-                                <Dropdown position="'bottom-end'" menuRef="optionalColumnsDropdownRef" onOpened.bind="onOptionalColumnsDropdownOpened">
+                        <th t-if="this.hasOpenFormViewColumn" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_open_form_view w-print-0 p-print-0"/>
+                        <th t-if="this.hasActionsColumn" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_controller o_list_actions_header w-print-0 p-print-0 position-sticky end-0 z-2">
+                            <div t-if="this.displayOptionalFields or this.hasOptionalOpenFormViewColumn" class="o_optional_columns_dropdown d-print-none text-center border-top-0">
+                                <Dropdown position="'bottom-end'" menuRef="this.optionalColumnsDropdownRef" onOpened.bind="this.onOptionalColumnsDropdownOpened">
                                     <button class="btn p-0" tabindex="-1" data-available-offline="">
                                         <i class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"/>
                                     </button>
 
                                     <t t-set-slot="content">
-                                        <t t-foreach="optionalFieldGroups" t-as="group" t-key="group_index">
-                                            <div t-if="!group_first" role="separator" class="dropdown-divider"/>
-                                            <DropdownItem t-if="group.displayName" closingMode="'none'" onSelected="() => this.toggleOptionalFieldGroup(group.id)">
-                                                <div class="fw-bold" t-esc="group.displayName"/>
+                                        <t t-foreach="this.optionalFieldGroups" t-as="group" t-key="this.group_index">
+                                            <div t-if="!this.group_first" role="separator" class="dropdown-divider"/>
+                                            <DropdownItem t-if="this.group.displayName" closingMode="'none'" onSelected="() => this.toggleOptionalFieldGroup(group.id)">
+                                                <div class="fw-bold" t-esc="this.group.displayName"/>
                                             </DropdownItem>
-                                            <t t-foreach="group.optionalFields" t-as="field" t-key="field_index">
+                                            <t t-foreach="this.group.optionalFields" t-as="field" t-key="this.field_index">
                                                 <DropdownItem closingMode="'none'" onSelected="() => this.toggleOptionalField(field.name)">
                                                     <CheckBox
                                                         onChange="() => this.toggleOptionalField(field.name)"
                                                         value="field.value"
                                                         name="field.name"
                                                     >
-                                                        <span class="d-flex align-items-center"><span class="text-truncate" t-esc="field.label"/><span class="ps-1" t-if="env.debug" t-esc="' (' + field.name + ')'" /></span>
+                                                        <span class="d-flex align-items-center"><span class="text-truncate" t-esc="this.field.label"/><span class="ps-1" t-if="this.env.debug" t-esc="' (' + this.field.name + ')'" /></span>
                                                     </CheckBox>
                                                 </DropdownItem>
                                             </t>
                                         </t>
-                                        <div t-if="hasOptionalOpenFormViewColumn" role="separator" class="dropdown-divider"/>
-                                        <DropdownItem t-if="hasOptionalOpenFormViewColumn" closingMode="'none'" onSelected="() => this.toggleDebugOpenView()">
+                                        <div t-if="this.hasOptionalOpenFormViewColumn" role="separator" class="dropdown-divider"/>
+                                        <DropdownItem t-if="this.hasOptionalOpenFormViewColumn" closingMode="'none'" onSelected="() => this.toggleDebugOpenView()">
                                             <CheckBox
                                                 onChange="() => this.toggleDebugOpenView()"
                                                 value="this.debugOpenView"
@@ -87,29 +87,29 @@
                     </tr>
                 </thead>
                 <tbody class="ui-sortable">
-                    <t t-call="{{ constructor.rowsTemplate }}">
-                        <t t-set="list" t-value="props.list"/>
+                    <t t-call="{{ this.constructor.rowsTemplate }}">
+                        <t t-set="list" t-value="this.props.list"/>
                     </t>
                 </tbody>
-                <tfoot t-on-click="() => props.list.leaveEditMode()" class="o_list_footer cursor-default" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}">
+                <tfoot t-on-click="() => this.props.list.leaveEditMode()" class="o_list_footer cursor-default" t-att-class="{o_sample_data_disabled: this.props.list.model.useSampleModel}">
                     <tr>
-                        <t t-set="groupNameCellColspan" t-value="getGroupNameCellColSpan()"/>
-                        <td t-if="groupNameCellColspan > 0" t-att-colspan="groupNameCellColspan">
+                        <t t-set="groupNameCellColspan" t-value="this.getGroupNameCellColSpan()"/>
+                        <td t-if="this.groupNameCellColspan > 0" t-att-colspan="groupNameCellColspan">
                             <button
-                                t-if="props.list.isGrouped and canCreateGroup and !state.showGroupInput"
+                                t-if="this.props.list.isGrouped and this.canCreateGroup and !this.state.showGroupInput"
                                 class="btn btn-link o_list_group_add d-print-none"
                                 t-on-click.stop.prevent="() => this.state.showGroupInput = true"
                             >
                                 Add a <t t-out="this.props.list.groupByField.string"/>
                             </button>
-                            <div t-elif="state.showGroupInput" class="input-group mb-1">
+                            <div t-elif="this.state.showGroupInput" class="input-group mb-1">
                                 <input type="text"
                                     class="form-control bg-view o_list_group_input"
                                     t-attf-placeholder="{{ this.props.list.groupByField.string }}..."
                                     t-ref="groupInput"
                                     t-on-keydown="(ev) => this.onGroupInputKeydown(ev)"
                                 />
-                                <button class="btn btn-primary o_list_group_confirm" type="button" t-on-click="addNewGroup">
+                                <button class="btn btn-primary o_list_group_confirm" type="button" t-on-click="this.addNewGroup">
                                     <i class="fa fa-check"/>
                                 </button>
                                 <button class="btn btn-danger o_list_group_cancel" type="button" t-on-click="() => this.state.showGroupInput = false">
@@ -117,19 +117,19 @@
                                 </button>
                             </div>
                         </td>
-                        <td t-foreach="getAggregateColumns()" t-as="column" t-key="column.id" t-att-class="{'o_list_number': column.type === 'field'}">
-                            <span t-if="column.type === 'field' and aggregates[column.name]" t-att-data-tooltip="aggregates[column.name].help">
-                                <t t-esc="aggregates[column.name].value"/>
+                        <td t-foreach="this.getAggregateColumns()" t-as="column" t-key="this.column.id" t-att-class="{'o_list_number': column.type === 'field'}">
+                            <span t-if="this.column.type === 'field' and this.aggregates[this.column.name]" t-att-data-tooltip="this.aggregates[column.name].help">
+                                <t t-esc="this.aggregates[this.column.name].value"/>
                                 <sup
-                                    t-if="aggregates[column.name].multiCurrency"
+                                    t-if="this.aggregates[this.column.name].multiCurrency"
                                     class="p-1 fw-bolder text-info"
-                                    t-on-mouseover.stop="(ev) => this.openMultiCurrencyPopover(ev, aggregates[column.name].rawValue, column.name)"
-                                    t-on-touchstart.stop="(ev) => this.openMultiCurrencyPopover(ev, aggregates[column.name].rawValue, column.name)"
+                                    t-on-mouseover.stop="(ev) => this.openMultiCurrencyPopover(ev, this.aggregates[column.name].rawValue, column.name)"
+                                    t-on-touchstart.stop="(ev) => this.openMultiCurrencyPopover(ev, this.aggregates[column.name].rawValue, column.name)"
                                 >?</sup>
                             </span>
                         </td>
-                        <td t-if="hasOpenFormViewColumn" class="w-print-0 p-print-0"/>
-                        <td t-if="displayOptionalFields or activeActions.onDelete" class="w-print-0 p-print-0" />
+                        <td t-if="this.hasOpenFormViewColumn" class="w-print-0 p-print-0"/>
+                        <td t-if="this.displayOptionalFields or this.activeActions.onDelete" class="w-print-0 p-print-0" />
                     </tr>
                 </tfoot>
             </table>
@@ -137,56 +137,56 @@
     </t>
 
     <t t-name="web.ListRenderer.Rows">
-        <t t-if="!list.isGrouped">
-            <t t-foreach="list.records" t-as="record" t-key="record.id">
-                <t t-call="{{ constructor.recordRowTemplate }}"/>
+        <t t-if="!this.list.isGrouped">
+            <t t-foreach="this.list.records" t-as="record" t-key="this.record.id">
+                <t t-call="{{ this.constructor.recordRowTemplate }}"/>
             </t>
-            <tr t-if="displayRowCreates" class="d-print-none">
-                <td t-if="withHandleColumn"/>
-                <td t-att-colspan="withHandleColumn ? nbCols - 1 : nbCols"
+            <tr t-if="this.displayRowCreates" class="d-print-none">
+                <td t-if="this.withHandleColumn"/>
+                <td t-att-colspan="this.withHandleColumn ? this.nbCols - 1 : this.nbCols"
                     class="o_field_x2many_list_row_add"
                     t-on-keydown="(ev) => this.onCellKeydown(ev, null)"
                 >
-                    <t t-foreach="controls" t-as="control" t-key="control_index">
+                    <t t-foreach="this.controls" t-as="control" t-key="this.control_index">
                         <button
-                            t-if="control.type === 'create' and !evalColumnInvisible(control.invisible)"
+                            t-if="this.control.type === 'create' and !this.evalColumnInvisible(this.control.invisible)"
                             t-attf-class="btn btn-link #{control_index !== 0 ? 'ml16' : ''}"
-                            t-att-tabindex="props.list.editedRecord ? '-1' : '0'"
+                            t-att-tabindex="this.props.list.editedRecord ? '-1' : '0'"
                             t-on-click.stop.prevent="() => this.add({ context: control.context })"
                         >
-                            <t t-esc="control.string"/>
+                            <t t-esc="this.control.string"/>
                         </button>
                         <ViewButton
-                            t-if="control.type === 'button' and !evalColumnInvisible(control.invisible)"
+                            t-if="this.control.type === 'button' and !this.evalColumnInvisible(this.control.invisible)"
                             className="`${control.className} ${control_index !== 0 ? 'ml16' : ''}`"
                             clickParams="control.clickParams"
                             icon="control.icon"
-                            record="props.list"
+                            record="this.props.list"
                             string="control.string"
                             title="control.title"
-                            tabindex="props.list.editedRecord ? '-1' : '0'"
+                            tabindex="this.props.list.editedRecord ? '-1' : '0'"
                         />
                     </t>
                 </td>
             </tr>
-            <t t-if="!props.list.isGrouped and !props.noContentHelp">
-                <tr t-foreach="getEmptyRowIds" t-as="emptyRowId" t-key="emptyRowId">
-                    <td t-att-colspan="nbCols">&#8203;</td>
+            <t t-if="!this.props.list.isGrouped and !this.props.noContentHelp">
+                <tr t-foreach="this.getEmptyRowIds" t-as="emptyRowId" t-key="this.emptyRowId">
+                    <td t-att-colspan="this.nbCols">​</td>
                 </tr>
             </t>
         </t>
         <t t-else="">
-            <t t-foreach="list.groups" t-as="group" t-key="group.id">
-                <t t-call="{{ constructor.groupRowTemplate }}"/>
-                <t t-if="!group.isFolded">
-                    <t t-call="{{ constructor.rowsTemplate }}">
-                        <t t-set="list" t-value="group.list"/>
-                        <t t-set="groupId" t-value="group.id"/>
+            <t t-foreach="this.list.groups" t-as="group" t-key="this.group.id">
+                <t t-call="{{ this.constructor.groupRowTemplate }}"/>
+                <t t-if="!this.group.isFolded">
+                    <t t-call="{{ this.constructor.rowsTemplate }}">
+                        <t t-set="list" t-value="this.group.list"/>
+                        <t t-set="groupId" t-value="this.group.id"/>
                     </t>
-                    <tr t-if="!group.list.isGrouped and props.editable and canCreate">
-                        <td t-if="hasSelectors"/>
+                    <tr t-if="!this.group.list.isGrouped and this.props.editable and this.canCreate">
+                        <td t-if="this.hasSelectors"/>
                         <td
-                            t-att-colspan="hasSelectors ?  nbCols - 1 : nbCols"
+                            t-att-colspan="this.hasSelectors ?  this.nbCols - 1 : this.nbCols"
                             class="o_group_field_row_add"
                         >
                             <a href="#"
@@ -204,29 +204,29 @@
     </t>
 
     <t t-name="web.ListRenderer.GroupRow">
-        <tr t-attf-class="{{group.count > 0 ? 'o_group_has_content' : ''}} o_group_header {{!group.isFolded ? 'o_group_open' : ''}} cursor-pointer {{ canResequenceRows and group_index > 0 ? 'o_row_draggable' : '' }} {{state.altKeyMode ? 'o_multi_group_expand_available' : ''}}"
-            t-att-data-group-id="group.id"
-            t-on-click="(ev) => this.onGroupHeaderClicked(ev, group)"
+        <tr t-attf-class="{{this.group.count > 0 ? 'o_group_has_content' : ''}} o_group_header {{!this.group.isFolded ? 'o_group_open' : ''}} cursor-pointer {{ this.canResequenceRows and this.group_index > 0 ? 'o_row_draggable' : '' }} {{this.state.altKeyMode ? 'o_multi_group_expand_available' : ''}}"
+            t-att-data-group-id="this.group.id"
+            t-on-click="(ev) => this.onGroupHeaderClicked(ev, this.group)"
         >
-            <th t-on-keydown="(ev) => this.onCellKeydown(ev, group)"
+            <th t-on-keydown="(ev) => this.onCellKeydown(ev, this.group)"
                 tabindex="-1"
-                t-attf-class="o_group_name fs-6 fw-bold {{!group.isFolded ? 'text-black' : 'text-body'}}"
-                t-att-colspan="getGroupNameCellColSpan(group)">
-                <div t-if="state.altKeyMode" class="o_multi_group_expand_tooltip d-none position-absolute rounded-3 p-1 start-50 top-50 fw-normal">
-                    <t t-if="group.isFolded">Click to expand all groups</t>
+                t-attf-class="o_group_name fs-6 fw-bold {{!this.group.isFolded ? 'text-black' : 'text-body'}}"
+                t-att-colspan="this.getGroupNameCellColSpan(this.group)">
+                <div t-if="this.state.altKeyMode" class="o_multi_group_expand_tooltip d-none position-absolute rounded-3 p-1 start-50 top-50 fw-normal">
+                    <t t-if="this.group.isFolded">Click to expand all groups</t>
                     <t t-else="">Click to collapse all groups</t>
                 </div>
                 <div class="d-flex align-items-center">
-                    <span t-attf-class="o_group_caret fa fa-fw {{group.isFolded ? 'fa-caret-right' : 'fa-caret-down' }} me-1"
-                        t-attf-style="--o-list-group-level: {{getGroupLevel(group)}}"/>
+                    <span t-attf-class="o_group_caret fa fa-fw {{this.group.isFolded ? 'fa-caret-right' : 'fa-caret-down' }} me-1"
+                        t-attf-style="--o-list-group-level: {{this.getGroupLevel(this.group)}}"/>
                     <span class="fw-normal">
-                        <t t-out="odoomark(group.displayName)"/>
+                        <t t-out="this.odoomark(this.group.displayName)"/>
                     </span>
-                    <div t-if="(groupByButtons[group.groupByField.name] and !group.isFolded and group.record.resId)" class="o_group_buttons">
-                        <t t-foreach="groupByButtons[group.groupByField.name]" t-as="button" t-key="button.id">
-                            <t t-if="!evalInvisible(button.invisible, group.record)">
-                                <t t-if="button.clickParams.type === 'edit'">
-                                    <button class="btn btn-secondary" t-on-click.stop="() => this.editGroupRecord(group)" tabindex="-1">
+                    <div t-if="(this.groupByButtons[this.group.groupByField.name] and !this.group.isFolded and this.group.record.resId)" class="o_group_buttons">
+                        <t t-foreach="this.groupByButtons[this.group.groupByField.name]" t-as="button" t-key="this.button.id">
+                            <t t-if="!this.evalInvisible(this.button.invisible, this.group.record)">
+                                <t t-if="this.button.clickParams.type === 'edit'">
+                                    <button class="btn btn-secondary" t-on-click.stop="() => this.editGroupRecord(this.group)" tabindex="-1">
                                         View
                                     </button>
                                 </t>
@@ -235,7 +235,7 @@
                                         className="button.className"
                                         clickParams="button.clickParams"
                                         icon="button.icon"
-                                        record="group.record"
+                                        record="this.group.record"
                                         string="button.string"
                                         title="button.title"
                                         tabindex="'-1'"
@@ -245,22 +245,22 @@
                         </t>
                     </div>
                     <div class="d-flex align-items-center ms-auto gap-2">
-                        <t t-if="!showGroupPager(group)" class="m-1">
-                            <span><t t-esc="group.count"/></span>
+                        <t t-if="!this.showGroupPager(this.group)" class="m-1">
+                            <span><t t-esc="this.group.count"/></span>
                         </t>
-                        <div t-att-class="showGroupPager(group) ? '' : 'o_pager_hidden'" t-on-click.stop="">
-                            <Pager t-props="getGroupPagerProps(group)"/>
+                        <div t-att-class="this.showGroupPager(this.group) ? '' : 'o_pager_hidden'" t-on-click.stop="">
+                            <Pager t-props="this.getGroupPagerProps(this.group)"/>
                         </div>
                     </div>
                 </div>
             </th>
-            <td t-on-keydown="(ev) => this.onCellKeydown(ev, group)" t-foreach="getAggregateColumns(group)" t-as="column" t-key="column.id" t-att-class="{'o_list_number': column.type === 'field'}">
-                <t t-if="column.type === 'field'">
-                    <t t-set="groupAggregate" t-value="formatGroupAggregate(group, column)"/>
+            <td t-on-keydown="(ev) => this.onCellKeydown(ev, this.group)" t-foreach="this.getAggregateColumns(this.group)" t-as="column" t-key="this.column.id" t-att-class="{'o_list_number': column.type === 'field'}">
+                <t t-if="this.column.type === 'field'">
+                    <t t-set="groupAggregate" t-value="this.formatGroupAggregate(this.group, this.column)"/>
                     <span class="fw-bold" t-att-data-tooltip="groupAggregate.help">
-                        <t t-esc="groupAggregate.value"/>
+                        <t t-esc="this.groupAggregate.value"/>
                         <sup
-                            t-if="groupAggregate.multiCurrency"
+                            t-if="this.groupAggregate.multiCurrency"
                             class="p-1 fw-bolder text-info"
                             t-on-mouseover.stop="(ev) => this.openMultiCurrencyPopover(ev, groupAggregate.rawValue, column.name)"
                             t-on-touchstart.stop="(ev) => this.openMultiCurrencyPopover(ev, groupAggregate.rawValue, column.name)"
@@ -268,78 +268,78 @@
                     </span>
                 </t>
             </td>
-            <t t-set="groupPagerColspan" t-value="getGroupPagerCellColspan(group)"/>
-            <th t-on-keydown="(ev) => this.onCellKeydown(ev, group)" t-if="groupPagerColspan > 0" t-att-colspan="groupPagerColspan"/>
-            <th class="p-0" t-on-keydown="(ev) => this.onCellKeydown(ev, group)">
-                <GroupConfigMenu t-if="showGroupConfigMenu(group)" t-props="getGroupConfigMenuProps(group)"/>
+            <t t-set="groupPagerColspan" t-value="this.getGroupPagerCellColspan(this.group)"/>
+            <th t-on-keydown="(ev) => this.onCellKeydown(ev, this.group)" t-if="this.groupPagerColspan > 0" t-att-colspan="groupPagerColspan"/>
+            <th class="p-0" t-on-keydown="(ev) => this.onCellKeydown(ev, this.group)">
+                <GroupConfigMenu t-if="this.showGroupConfigMenu(this.group)" t-props="this.getGroupConfigMenuProps(this.group)"/>
             </th>
         </tr>
     </t>
 
     <t t-name="web.ListRenderer.RecordRow">
         <tr class="o_data_row"
-            t-att-class="getRowClass(record)"
-            t-att-data-id="record.id"
-            t-att-data-group-id="groupId"
-            t-on-click.capture="(ev) => this.onClickCapture(record, ev)"
+            t-att-class="this.getRowClass(this.record)"
+            t-att-data-id="this.record.id"
+            t-att-data-group-id="this.groupId"
+            t-on-click.capture="(ev) => this.onClickCapture(this.record, ev)"
             t-on-mouseover.capture="(ev) => this.ignoreEventInSelectionMode(ev)"
             t-on-mouseout.capture="(ev) => this.ignoreEventInSelectionMode(ev)"
             t-on-mouseenter.capture="(ev) => this.ignoreEventInSelectionMode(ev)"
-            t-on-touchstart="(ev) => this.onRowTouchStart(record, ev)"
-            t-on-touchend="() => this.onRowTouchEnd(record)"
-            t-on-touchmove="() => this.onRowTouchMove(record)"
+            t-on-touchstart="(ev) => this.onRowTouchStart(this.record, ev)"
+            t-on-touchend="() => this.onRowTouchEnd(this.record)"
+            t-on-touchmove="() => this.onRowTouchMove(this.record)"
         >
-            <td t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)" t-if="hasSelectors" class="o_list_record_selector user-select-none" t-on-click.stop="() => this.toggleRecordSelection(record)" tabindex="-1">
-                <CheckBox disabled="!_canSelectRecord" value="record.selected" onChange.alike="() => this.toggleRecordSelection(record)" />
+            <td t-on-keydown="(ev) => this.onCellKeydown(ev, this.group, this.record)" t-if="this.hasSelectors" class="o_list_record_selector user-select-none" t-on-click.stop="() => this.toggleRecordSelection(this.record)" tabindex="-1">
+                <CheckBox disabled="!this._canSelectRecord" value="this.record.selected" onChange.alike="() => this.toggleRecordSelection(this.record)" />
             </td>
-            <t t-foreach="getColumns(record)" t-as="column" t-key="column.id">
-                <t t-if="column.type === 'field'">
-                    <t t-set="isInvisible" t-value="evalInvisible(column.invisible, record) or !(column.name in record.data)"/>
-                    <td t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
+            <t t-foreach="this.getColumns(this.record)" t-as="column" t-key="this.column.id">
+                <t t-if="this.column.type === 'field'">
+                    <t t-set="isInvisible" t-value="this.evalInvisible(this.column.invisible, this.record) or !(this.column.name in this.record.data)"/>
+                    <td t-on-keydown="(ev) => this.onCellKeydown(ev, this.group, this.record)"
                         class="o_data_cell cursor-pointer"
-                        t-att-class="this.getCellClass(column, record)"
+                        t-att-class="this.getCellClass(column, this.record)"
                         t-att-name="column.name"
                         t-att-colspan="column.colspan"
-                        t-att-data-tooltip="!isInvisible ? getCellTitle(column, record) : false"
+                        t-att-data-tooltip="!isInvisible ? this.getCellTitle(column, this.record) : false"
                         data-tooltip-delay="1000"
                         t-custom-click="(ev, isMiddleClick) => this.onCellClicked(record, column, ev, isMiddleClick)"
                         tabindex="-1">
-                        <t t-if="!isInvisible">
-                            <t t-if="canUseFormatter(column, record)" t-out="getFormattedValue(column, record)"/>
-                            <Field t-else="" name="column.name" record="record" type="column.widget" class="getFieldClass(column)" fieldInfo="column" t-props="getFieldProps(record, column)"/>
+                        <t t-if="!this.isInvisible">
+                            <t t-if="this.canUseFormatter(this.column, this.record)" t-out="this.getFormattedValue(this.column, this.record)"/>
+                            <Field t-else="" name="column.name" record="this.record" type="column.widget" class="this.getFieldClass(column)" fieldInfo="column" t-props="this.getFieldProps(this.record, this.column)"/>
                         </t>
                     </td>
                 </t>
-                <t t-if="column.type === 'button_group'">
-                    <td t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell w-print-0 p-print-0 cursor-pointer" t-att-class="this.getCellClass(column, record)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)" tabindex="-1">
+                <t t-if="this.column.type === 'button_group'">
+                    <td t-on-keydown="(ev) => this.onCellKeydown(ev, this.group, this.record)" class="o_data_cell w-print-0 p-print-0 cursor-pointer" t-att-class="this.getCellClass(column, this.record)" t-on-click="(ev) => this.onButtonCellClicked(this.record, column, ev)" tabindex="-1">
                         <div class="d-flex flex-wrap gap-1">
-                            <t t-foreach="column.buttons" t-as="button" t-key="button.id">
-                                <ViewButton t-if="!evalInvisible(button.invisible, record)"
+                            <t t-foreach="this.column.buttons" t-as="button" t-key="this.button.id">
+                                <ViewButton t-if="!this.evalInvisible(this.button.invisible, this.record)"
                                     className="button.className"
                                     clickParams="button.clickParams"
                                     defaultRank="button.defaultRank"
                                     disabled="button.disabled"
                                     icon="button.icon"
-                                    record="record"
+                                    record="this.record"
                                     string="button.string"
                                     title="button.title"
-                                    tabindex="editedRecord ? '-1' : '0'"
-                                    onClick="isX2Many and record.isNew ? displaySaveNotification.bind(this) : ''"
+                                    tabindex="this.editedRecord ? '-1' : '0'"
+                                    onClick="this.isX2Many and this.record.isNew ? this.displaySaveNotification.bind(this) : ''"
                                 />
                             </t>
                         </div>
                     </td>
                 </t>
-                <t t-if="column.type === 'widget'">
-                    <td class="o_data_cell" t-att-class="this.getCellClass(column, record)">
-                        <Widget t-props="column.props" record="record"/>
+                <t t-if="this.column.type === 'widget'">
+                    <td class="o_data_cell" t-att-class="this.getCellClass(column, this.record)">
+                        <Widget t-props="this.column.props" record="this.record"/>
                     </td>
                 </t>
             </t>
 
-            <t t-if="hasOpenFormViewColumn">
+            <t t-if="this.hasOpenFormViewColumn">
                 <td class="o_list_record_open_form_view w-print-0 p-print-0 text-center"
-                    t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
+                    t-on-keydown="(ev) => this.onCellKeydown(ev, this.group, this.record)"
                     t-custom-click.stop="(ev, newWindow) => props.onOpenFormView(record, { force: true, newWindow })"
                     tabindex="-1"
                 >
@@ -351,21 +351,21 @@
                 </td>
             </t>
 
-            <t t-set="useUnlink" t-value="'unlink' in activeActions" />
-            <t t-set="hasX2ManyAction" t-value="isX2Many and (useUnlink ? activeActions.unlink : activeActions.delete)" />
-            <t t-if="displayOptionalFields or props.list.isGrouped or hasX2ManyAction">
-                <t t-if="hasX2ManyAction">
-                    <t t-set="hasDeleteButton" t-value="this.displayDeleteIcon(record)"/>
+            <t t-set="useUnlink" t-value="'unlink' in this.activeActions" />
+            <t t-set="hasX2ManyAction" t-value="this.isX2Many and (this.useUnlink ? this.activeActions.unlink : this.activeActions.delete)" />
+            <t t-if="this.displayOptionalFields or this.props.list.isGrouped or this.hasX2ManyAction">
+                <t t-if="this.hasX2ManyAction">
+                    <t t-set="hasDeleteButton" t-value="this.displayDeleteIcon(this.record)"/>
                     <td class="o_list_record_remove w-print-0 p-print-0 text-center"
-                        t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
-                        t-on-click.stop="hasDeleteButton ? (ev) => this.onRemoveCellClicked(record, ev) : () => {}"
+                        t-on-keydown="(ev) => this.onCellKeydown(ev, this.group, this.record)"
+                        t-on-click.stop="hasDeleteButton ? (ev) => this.onRemoveCellClicked(this.record, ev) : () => {}"
                         tabindex="-1"
                     >
                         <button class="fa d-print-none"
-                            t-if="hasDeleteButton"
+                            t-if="this.hasDeleteButton"
                             t-att-class="{
-                                'fa-trash-o': !useUnlink and activeActions.delete,
-                                'fa-times': useUnlink and activeActions.unlink,
+                                'fa-trash-o': !useUnlink and this.activeActions.delete,
+                                'fa-times': useUnlink and this.activeActions.unlink,
                             }"
                             name="delete"
                             aria-label="Delete row"
@@ -379,8 +379,8 @@
     </t>
 
     <t t-name="web.ListHeaderTooltip">
-        <t t-esc="field.label"/>
-        <div t-if="field.help" class="mt-2" t-esc="field.help"/>
+        <t t-esc="this.field.label"/>
+        <div t-if="this.field.help" class="mt-2" t-esc="this.field.help"/>
     </t>
 
 </templates>

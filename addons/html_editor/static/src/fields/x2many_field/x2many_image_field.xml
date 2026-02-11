@@ -3,21 +3,21 @@
 <templates>
     <t t-name="html_editor.ImageField" t-inherit="web.ImageField" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('position-relative')]//div" position="replace">
-            <div t-attf-class="position-absolute d-flex justify-content-between w-100 bottom-0 opacity-0 opacity-100-hover {{isMobile ? 'o_mobile_controls' : ''}}" aria-atomic="true" t-att-style="sizeStyle">
+            <div t-attf-class="position-absolute d-flex justify-content-between w-100 bottom-0 opacity-0 opacity-100-hover {{this.isMobile ? 'o_mobile_controls' : ''}}" aria-atomic="true" t-att-style="this.sizeStyle">
                 <button
-                    t-if="props.record.data[props.name] and state.isValid"
+                    t-if="this.props.record.data[this.props.name] and this.state.isValid"
                     class="o_select_file_button btn btn-light border-0 rounded-circle m-1 p-1"
                     data-tooltip="Edit"
                     aria-label="Edit"
-                    t-on-click.prevent.stop="onFileEdit">
+                    t-on-click.prevent.stop="this.onFileEdit">
                     <i class="fa fa-pencil fa-fw"/>
                 </button>
                 <button
-                    t-if="props.record.data[props.name] and state.isValid"
+                    t-if="this.props.record.data[this.props.name] and this.state.isValid"
                     class="o_clear_file_button btn btn-light border-0 rounded-circle m-1 p-1"
                     data-tooltip="Clear"
                     aria-label="Clear"
-                    t-on-click.prevent.stop="onFileRemove">
+                    t-on-click.prevent.stop="this.onFileRemove">
                     <i class="fa fa-trash-o fa-fw"/>
                 </button>
             </div>

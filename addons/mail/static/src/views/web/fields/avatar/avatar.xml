@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Avatar">
-        <div class="o-mail-Avatar o_avatar d-flex align-items-center" t-att-class="props.cssClass">
-            <img t-attf-class="rounded {{props.noSpacing ? '' : 'me-2'}}"
-                t-attf-src="/web/image/{{props.resModel}}/{{props.resId}}/avatar_128"
-                t-on-click.stop.prevent="onClickAvatar"
+        <div class="o-mail-Avatar o_avatar d-flex align-items-center" t-att-class="this.props.cssClass">
+            <img t-attf-class="rounded {{this.props.noSpacing ? '' : 'me-2'}}"
+                t-attf-src="/web/image/{{this.props.resModel}}/{{this.props.resId}}/avatar_128"
+                t-on-click.stop.prevent="this.onClickAvatar"
             />
-            <span t-if="props.displayName" class="text-truncate w-0 flex-grow-1" t-esc="props.displayName"/>
+            <span t-if="this.props.displayName" class="text-truncate w-0 flex-grow-1" t-esc="this.props.displayName"/>
         </div>
     </t>
 

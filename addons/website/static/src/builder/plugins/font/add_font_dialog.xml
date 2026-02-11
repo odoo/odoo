@@ -3,11 +3,11 @@
 
 <t t-name="website.dialog.addFont.singlePreview">
     <div class="row">
-        <label class="col-12" t-attf-style="font-weight: {{previewWeight}};" t-out="previewLabel"/>
+        <label class="col-12" t-attf-style="font-weight: {{previewWeight}};" t-out="this.previewLabel"/>
     </div>
     <div class="mb-3 row">
-        <div class="col-11 offset-1" t-attf-style="font-family: '{{previewFontName}}';">
-            <input t-if="previewFontName" class="w-100 border-0 bg-transparent" t-model="state.previewText" t-attf-style="font-weight: {{previewWeight}};"/>
+        <div class="col-11 offset-1" t-attf-style="font-family: '{{this.previewFontName}}';">
+            <input t-if="this.previewFontName" class="w-100 border-0 bg-transparent" t-model="this.state.previewText" t-attf-style="font-weight: {{previewWeight}};"/>
             <input t-else="" class="w-100 border-0 bg-transparent" readonly="1" t-attf-style="font-weight: {{previewWeight}};"/>
         </div>
     </div>
@@ -15,7 +15,7 @@
 <t t-name="website.dialog.addFont.preview">
     <div class="mb-3 row text-center">
         <label class="col-12">
-            <t t-if="previewFontName">Preview of <t t-out="previewFontName"/></t>
+            <t t-if="this.previewFontName">Preview of <t t-out="this.previewFontName"/></t>
             <t t-else="">Preview</t>
         </label>
     </div>
@@ -44,7 +44,7 @@
                     </div>
                     <div class="col-form-label col-md-8 o_field_widget">
                         <div class="o_input_dropdown">
-                            <GoogleFontAutoComplete value="state.googleFontFamily" placeholder.translate="Select a Google Font..." sources="getGoogleFontList"/>
+                            <GoogleFontAutoComplete value="this.state.googleFontFamily" placeholder.translate="Select a Google Font..." sources="this.getGoogleFontList"/>
                             <span class="o_dropdown_button" />
                         </div>
                     </div>
@@ -54,8 +54,8 @@
                             <a target="_blank" href="https://www.odoo.com/forum/help-1/how-to-use-google-fonts-and-respecting-german-requirements-214049">?</a>
                         </sup>
                     </label>
-                    <label class="o_switch col-form-label col-md-8" t-att-class="{'o_switch_disabled': !state.googleFontFamily}" for="google_font_serve">
-                        <input type="checkbox" checked="checked" class="visually-hidden" t-att-disabled="!state.googleFontFamily" id="google_font_serve" t-model="state.googleServe"/>
+                    <label class="o_switch col-form-label col-md-8" t-att-class="{'o_switch_disabled': !this.state.googleFontFamily}" for="google_font_serve">
+                        <input type="checkbox" checked="checked" class="visually-hidden" t-att-disabled="!this.state.googleFontFamily" id="google_font_serve" t-model="this.state.googleServe"/>
                         <span/>
                     </label>
                 </div>
@@ -69,7 +69,7 @@
                     <div class="col-md-8">
                         <input t-ref="fileInput" type="file" class="form-control s_website_form_input" name="Custom Font"
                             id="upload_font" accept=".woff, .woff2, .ttf, .zip, .otf, font/*"
-                            t-on-change="onUploadChange"
+                            t-on-change="this.onUploadChange"
                         />
                     </div>
                 </div>
@@ -77,23 +77,23 @@
             <div class="col-lg-5" style="border-left: var(--gray-300) solid 1px;">
                 <!-- Preview -->
                 <t t-call="website.dialog.addFont.preview">
-                    <t t-if="state.googleFontFamily">
-                        <t t-set="previewFontName" t-value="state.googleFontFamily"/>
+                    <t t-if="this.state.googleFontFamily">
+                        <t t-set="previewFontName" t-value="this.state.googleFontFamily"/>
                     </t>
-                    <t t-elif="state.uploadedFonts.length">
-                        <t t-set="previewFontName" t-value="state.uploadedFontName"/>
+                    <t t-elif="this.state.uploadedFonts.length">
+                        <t t-set="previewFontName" t-value="this.state.uploadedFontName"/>
                     </t>
                 </t>
             </div>
         </div>
         <t t-set-slot="footer">
-            <button class="btn btn-primary" t-att-disabled="state.loading" t-on-click="onClickSave">
-                <t t-if="state.loading">
+            <button class="btn btn-primary" t-att-disabled="this.state.loading" t-on-click="this.onClickSave">
+                <t t-if="this.state.loading">
                     <i class="fa fa-icon fa-icon"/>
                 </t>
                 Save and Reload
             </button>
-            <button class="btn btn-secondary" t-on-click="onClickCancel">Discard</button>
+            <button class="btn btn-secondary" t-on-click="this.onClickCancel">Discard</button>
         </t>
     </Dialog>
 </t>

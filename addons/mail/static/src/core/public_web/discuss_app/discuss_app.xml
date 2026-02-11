@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Discuss">
-    <div class="o-mail-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'flex-column align-items-center': ui.isSmall, 'border-top border-dark o-border-opacity-15': !ui.isSmall }" t-att-data-active="store.discuss.isActive" t-ref="root">
-        <DiscussSidebar t-if="!ui.isSmall and props.hasSidebar"/>
-        <DiscussContent t-if="!ui.isSmall" thread="props.thread"/>
-        <MessagingMenu t-if="ui.isSmall"/>
+    <div class="o-mail-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'flex-column align-items-center': this.ui.isSmall, 'border-top border-dark o-border-opacity-15': !this.ui.isSmall }" t-att-data-active="this.store.discuss.isActive" t-ref="root">
+        <DiscussSidebar t-if="!this.ui.isSmall and this.props.hasSidebar"/>
+        <DiscussContent t-if="!this.ui.isSmall" thread="this.props.thread"/>
+        <MessagingMenu t-if="this.ui.isSmall"/>
     </div>
 </t>
 
@@ -13,12 +13,12 @@
     <button class="btn btn-secondary flex-grow-1 p-2"
         t-att-class="{
             'active o-active shadow-none': mailbox.discussAppAsThread,
-        }" t-on-click="mailbox.setAsDiscussThread" t-esc="mailbox.display_name"
+        }" t-on-click="mailbox.setAsDiscussThread" t-esc="this.mailbox.display_name"
     />
 </t>
 
 <t t-name="mail.Discuss.loading">
-    <div t-if="store.channels.status === 'fetching'" class="d-flex flex-grow-1 align-items-center justify-content-center h-100 w-100 o-pointer-events-none">
+    <div t-if="this.store.channels.status === 'fetching'" class="d-flex flex-grow-1 align-items-center justify-content-center h-100 w-100 o-pointer-events-none">
         <h4 class="text-muted opacity-50 o-visible-short-delay"><b><i class="o-mail-Discuss-mobileLoading fa fa-circle-o-notch fa-spin"/></b></h4>
     </div>
 </t>

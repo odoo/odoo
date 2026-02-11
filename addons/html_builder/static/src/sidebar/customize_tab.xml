@@ -17,7 +17,7 @@
                     compProps="this.customizeComponent.props"/>
                 <t t-else="" t-foreach="currentOptionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
                     <OptionsContainer
-                        snippetModel="props.snippetModel"
+                        snippetModel="this.props.snippetModel"
                         editingElement="optionsContainer.element"
                         options="optionsContainer.options"
                         containerTitle="optionsContainer.containerTitle"

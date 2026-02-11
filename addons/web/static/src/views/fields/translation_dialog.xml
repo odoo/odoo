@@ -2,29 +2,29 @@
 <templates xml:space="preserve">
 
     <t t-name="web.TranslationDialog">
-        <Dialog title="title">
+        <Dialog title="this.title">
             <div class="o_translation_dialog">
-                <t t-foreach="terms" t-as="term" t-key="term.id">
+                <t t-foreach="this.terms" t-as="term" t-key="term.id">
                     <div class="row">
                         <div
                             class="col-12"
-                            t-att-class="{ o_language_current: term.lang === user.lang }"
-                            t-attf-class="col-lg-{{ props.showSource ? 2 : 3 }}"
+                            t-att-class="{ o_language_current: term.lang === this.user.lang }"
+                            t-attf-class="col-lg-{{ this.props.showSource ? 2 : 3 }}"
                         >
                             <t t-esc="term.langName" />
                         </div>
-                        <t t-if="props.showSource">
+                        <t t-if="this.props.showSource">
                             <div class="col-12 col-lg-3 source">
                                 <t t-esc="term.source" />
                             </div>
                         </t>
-                        <div class="col-12 translation" t-attf-class="col-lg-{{ props.showSource ? 7 : 9 }}">
-                            <t t-if="props.isText">
+                        <div class="col-12 translation" t-attf-class="col-lg-{{ this.props.showSource ? 7 : 9 }}">
+                            <t t-if="this.props.isText">
                                 <textarea
                                     class="o_field_text o_field_translate o_field_widget o_input"
                                     t-att-value="term.value"
                                     t-att-data-id="term.id"
-                                    t-att-rows="props.showSource ? 2 : 5"
+                                    t-att-rows="this.props.showSource ? 2 : 5"
                                     t-on-change="(ev) => this.updatedTerms[term.id] = ev.target.value"
                                 />
                             </t>
@@ -42,8 +42,8 @@
                 </t>
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="onSave">Save</button>
-                <button class="btn" t-on-click="props.close">Discard</button>
+                <button class="btn btn-primary" t-on-click="this.onSave">Save</button>
+                <button class="btn" t-on-click="this.props.close">Discard</button>
             </t>
         </Dialog>
     </t>

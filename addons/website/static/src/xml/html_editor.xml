@@ -12,28 +12,28 @@
     <div t-att-class="{
         'fw-bold text-capitalize p-2': option.data.isCategory,
     }">
-        <t t-if="option.data.icon">
+        <t t-if="this.option.data.icon">
             <img t-att-src="option.data.icon" width="24px" height="24px" class="me-2 rounded"/>
         </t>
-        <t t-out="option.label"/>
+        <t t-out="this.option.label"/>
     </div>
 </t>
 
 <t t-name="website.InputURLAutoComplete">
     <AutoCompleteInLinkPopover
-        sources="sources"
-        value="state.url"
-        input="urlRef"
+        sources="this.sources"
+        value="this.state.url"
+        input="this.urlRef"
         dropdown="true"
         autofocus="true"
         placeholder.translate="Enter URL, /page, or #anchor"
         inputClass="'o_we_href_input_link border-dark-subtle form-control form-control-sm'"
-        t-on-keydown="onKeydownEnter"
-        updateValue.bind="updateValue"
+        t-on-keydown="this.onKeydownEnter"
+        updateValue.bind="this.updateValue"
     >
         <t t-set-slot="urlOption" t-slot-scope="urlOptionScope">
             <t t-call="website.AutoCompleteItem">
-                <t t-set="option" t-value="urlOptionScope"/>
+                <t t-set="option" t-value="this.urlOptionScope"/>
             </t>
         </t>
     </AutoCompleteInLinkPopover>
@@ -47,7 +47,7 @@
         <t t-call="website.InputURLAutoComplete"/>
     </xpath>
     <xpath expr="//a[hasclass('o_we_url_link')]" position="attributes">
-        <attribute name="t-on-click">onClickForcePreviewMode</attribute>
+        <attribute name="t-on-click">this.onClickForcePreviewMode</attribute>
     </xpath>
 </t>
 

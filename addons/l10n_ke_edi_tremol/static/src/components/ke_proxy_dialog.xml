@@ -8,27 +8,27 @@
                 </h4>
             </t>
             <t t-set-slot="default">
-                <div t-att-class="{'alert alert-danger': state.error}">
-                    <p t-esc="state.message"/>
-                    <t t-if="!state.error">
+                <div t-att-class="{'alert alert-danger': this.state.error}">
+                    <p t-esc="this.state.message"/>
+                    <t t-if="!this.state.error">
                         <div t-attf-class="o_progressbar align-items-center w-100 d-flex">
                             <div class="o_progress w-100 flex-fill"
                                  aria-valuemin="0"
-                                 t-att-aria-valuemax="props.invoices.length"
-                                 t-att-aria-valuenow="state.successfullySent">
+                                 t-att-aria-valuemax="this.props.invoices.length"
+                                 t-att-aria-valuenow="this.state.successfullySent">
                                 <div class="bg-primary h-100"
-                                     t-att-style="'width: min(' + 100 * state.successfullySent / props.invoices.length + '%, 100%)'"/>
+                                     t-att-style="'width: min(' + 100 * this.state.successfullySent / this.props.invoices.length + '%, 100%)'"/>
                             </div>
                             <div class="o_progressbar_value flex-shrink-0 ms-2"
-                                 t-esc="state.successfullySent + ' / ' + props.invoices.length"/>
+                                 t-esc="this.state.successfullySent + ' / ' + this.props.invoices.length"/>
                         </div>
                     </t>
                 </div>
             </t>
             <t t-set-slot="footer">
-                <button t-if="state.error"
+                <button t-if="this.state.error"
                         class="btn btn-primary o-default-button"
-                        t-on-click="props.close">
+                        t-on-click="this.props.close">
                     OK
                 </button>
             </t>

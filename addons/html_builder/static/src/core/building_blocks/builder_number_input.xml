@@ -4,23 +4,23 @@
 <t t-name="html_builder.BuilderNumberInput">
     <BuilderComponent>
         <BuilderNumberInputBase
-            t-props="textInputBaseProps"
-            inputRef="inputRef"
-            value="displayValue"
+            t-props="this.textInputBaseProps"
+            inputRef="this.inputRef"
+            value="this.displayValue"
             classes="'o-hb-input-field-number justify-content-end'"
-            inputClasses="props.inputClasses ? `o-hb-input-number text-end ${props.inputClasses}` : 'o-hb-input-number text-end'"
-            commit="commit"
-            preview="preview"
-            clampValue.bind="clampValue"
-            onKeydownArrow.bind="onKeydownArrow"
-            onInput.bind="onInput"
-            onChange.bind="onChange"
-            composable="props.composable"
-            min="props.min"
-            max="props.max"
-            step="props.step"
+            inputClasses="this.props.inputClasses ? `o-hb-input-number text-end ${props.inputClasses}` : 'o-hb-input-number text-end'"
+            commit="this.commit"
+            preview="this.preview"
+            clampValue.bind="this.clampValue"
+            onKeydownArrow.bind="this.onKeydownArrow"
+            onInput.bind="this.onInput"
+            onChange.bind="this.onChange"
+            composable="this.props.composable"
+            min="this.props.min"
+            max="this.props.max"
+            step="this.props.step"
             >
-            <span class="o-hb-input-field-unit" t-out="props.unit" t-if="!props.placeholder or state.showUnit"/>
+            <span class="o-hb-input-field-unit" t-out="this.props.unit" t-if="!this.props.placeholder or this.state.showUnit"/>
         </BuilderNumberInputBase>
     </BuilderComponent>
 </t>

@@ -5,12 +5,12 @@
             t-ref="propertyDefinitionSelection">
             <div class="w-100">
                 <div
-                    t-foreach="optionsVisible" t-as="option" t-key="option[0]"
+                    t-foreach="this.optionsVisible" t-as="option" t-key="option[0]"
                     class="o_field_property_selection_option d-flex flex-row align-items-center justify-content-between mb-2 rounded"
                     t-att-option-name="option[0]">
-                    <i t-if="!props.readonly and props.canChangeDefinition"
+                    <i t-if="!this.props.readonly and this.props.canChangeDefinition"
                         class="o_field_property_selection_drag oi oi-draggable ui-sortable-handle me-2 text-center"/>
-                    <span t-if="props.readonly" t-out="option[1]"/>
+                    <span t-if="this.props.readonly" t-out="option[1]"/>
                     <input
                         t-else=""
                         class="o_input me-3"
@@ -25,10 +25,10 @@
                         class="btn btn-link m-0 p-0 text-muted fs-5"
                         title="Select Default"
                         t-on-click="() => this.onOptionSetDefault(option_index)">
-                        <i t-att-class="option[0] === props.default ? 'fa fa-star align-bottom' : 'fa fa-star-o align-bottom'"/>
+                        <i t-att-class="option[0] === this.props.default ? 'fa fa-star align-bottom' : 'fa fa-star-o align-bottom'"/>
                     </button>
                     <button
-                        t-if="!props.readonly"
+                        t-if="!this.props.readonly"
                         class="btn btn-link link-danger ms-2 p-0 fs-5"
                         title="Remove Property"
                         t-on-click="() => this.onOptionDelete(option_index)">
@@ -36,7 +36,7 @@
                     </button>
                 </div>
                 <button
-                    t-if="!props.readonly"
+                    t-if="!this.props.readonly"
                     class="btn btn-link btn-sm"
                     t-on-click="() => this.onOptionCreate(this.options.length)"
                     t-ref="addButton">

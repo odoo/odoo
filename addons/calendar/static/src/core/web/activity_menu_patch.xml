@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.ActivityMenu" t-inherit-mode="extension">
         <xpath expr="//*[@name='activityTitle']" position="after">
-            <div t-if="group.type === 'meeting'">
+            <div t-if="this.group.type === 'meeting'">
                 <t t-set="is_next_meeting" t-value="true"/>
-                <t t-foreach="group.meetings" t-as="meeting" t-key="meeting.id">
+                <t t-foreach="this.group.meetings" t-as="meeting" t-key="meeting.id">
                     <div class="o-calendar-meeting d-flex px-2">
                         <span class="flex-grow-1 text-truncate" t-att-class="!meeting.allday and is_next_meeting ? 'fw-bold' : ''" t-esc="meeting.name"/>
                         <span t-if="meeting.formattedStart">

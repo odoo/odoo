@@ -2,51 +2,51 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CalendarYearPopover">
-        <t t-if="env.isSmall">
-            <Dialog title="dialogTitle">
-                <t t-call="{{ constructor.subTemplates.body }}" />
+        <t t-if="this.env.isSmall">
+            <Dialog title="this.dialogTitle">
+                <t t-call="{{ this.constructor.subTemplates.body }}" />
                 <t t-set-slot="footer">
-                    <t t-call="{{ constructor.subTemplates.footer }}" />
+                    <t t-call="{{ this.constructor.subTemplates.footer }}" />
                 </t>
             </Dialog>
         </t>
         <t t-else="">
-            <t t-call="{{ constructor.subTemplates.popover }}" />
+            <t t-call="{{ this.constructor.subTemplates.popover }}" />
         </t>
     </t>
 
     <t t-name="web.CalendarYearPopover.popover">
         <div class="position-absolute" style="top: .75rem; right: 1rem;">
-            <span class="o_cw_popover_close" t-on-click.stop="() => props.close()">
+            <span class="o_cw_popover_close" t-on-click.stop="() => this.props.close()">
                 <i class="fc-close fc-icon fc-icon-x" />
             </span>
         </div>
         <div class="o_cw_body popover-body d-flex flex-column gap-2">
-            <t t-call="{{ constructor.subTemplates.body }}" />
-            <t t-if="props.model.canCreate">
-                <t t-call="{{ constructor.subTemplates.footer }}" />
+            <t t-call="{{ this.constructor.subTemplates.body }}" />
+            <t t-if="this.props.model.canCreate">
+                <t t-call="{{ this.constructor.subTemplates.footer }}" />
             </t>
         </div>
     </t>
 
     <t t-name="web.CalendarYearPopover.body">
-        <div t-foreach="recordGroups" t-as="recordGroup" t-key="recordGroup.title">
-            <h5 t-out="recordGroup.title" />
-            <t t-foreach="recordGroup.records" t-as="record" t-key="record.id">
-                <t t-call="{{ constructor.subTemplates.record }}" />
+        <div t-foreach="this.recordGroups" t-as="recordGroup" t-key="this.recordGroup.title">
+            <h5 t-out="this.recordGroup.title" />
+            <t t-foreach="this.recordGroup.records" t-as="record" t-key="this.record.id">
+                <t t-call="{{ this.constructor.subTemplates.record }}" />
             </t>
         </div>
     </t>
 
     <t t-name="web.CalendarYearPopover.footer">
-        <t t-if="props.model.canCreate">
-            <a href="#" class="btn-link o_cw_popover_create" t-on-click.prevent="onCreateButtonClick">
+        <t t-if="this.props.model.canCreate">
+            <a href="#" class="btn-link o_cw_popover_create" t-on-click.prevent="this.onCreateButtonClick">
                 <i class="fa fa-plus" />
                 Create
             </a>
         </t>
         <t t-else="">
-            <button class="btn btn-primary o-default-button" t-on-click="props.close">
+            <button class="btn btn-primary o-default-button" t-on-click="this.props.close">
                 <t>Ok</t>
             </button>
         </t>
@@ -55,16 +55,16 @@
     <t t-name="web.CalendarYearPopover.record">
         <a
             href="#"
-            t-on-click.prevent="() => this.onRecordClick(record)"
-            t-attf-style="{{ getRecordStyle(record) }}"
-            t-attf-class="o_cw_popover_link d-flex align-items-center gap-1 {{ getRecordClass(record) }} {{record.startHour ? 'o_event_dot' : 'o_event_allday'}}"
-            t-att-data-id="record.id"
-            t-att-data-title="record.title"
+            t-on-click.prevent="() => this.onRecordClick(this.record)"
+            t-attf-style="{{ this.getRecordStyle(this.record) }}"
+            t-attf-class="o_cw_popover_link d-flex align-items-center gap-1 {{ this.getRecordClass(this.record) }} {{this.record.startHour ? 'o_event_dot' : 'o_event_allday'}}"
+            t-att-data-id="this.record.id"
+            t-att-data-title="this.record.title"
         >
-            <span t-if="record.startHour"><t t-out="record.startHour" /></span>
+            <span t-if="this.record.startHour"><t t-out="this.record.startHour" /></span>
             <span>
-                <i area-hidden="true" t-if="record.titleIcon" t-attf-class="me-2 {{record.titleIcon}}"/>
-                <t t-esc="record.title"/>
+                <i area-hidden="true" t-if="this.record.titleIcon" t-attf-class="me-2 {{this.record.titleIcon}}"/>
+                <t t-esc="this.record.title"/>
             </span>
         </a>
     </t>

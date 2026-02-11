@@ -1,13 +1,13 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="html_editor.VideoOption">
-    <div class="mb-1" t-attf-class="{{ showStartAtInput ? 'd-flex align-items-start gap-2 cursor-pointer' : ''}}">
-        <Switch value="!!props.value" onChange="props.onChangeOption"
-            label="props.label" description="props.description"
+    <div class="mb-1" t-attf-class="{{ this.showStartAtInput ? 'd-flex align-items-start gap-2 cursor-pointer' : ''}}">
+        <Switch value="!!this.props.value" onChange="this.props.onChangeOption"
+            label="this.props.label" description="this.props.description"
             extraClasses="'d-flex align-items-start cursor-pointer flex-shrink-0'"
         />
-        <t t-if="showStartAtInput">
-            <input type="text" placeholder="MM:SS" class="o_input w-lg-auto" t-att-value="props.value" t-on-input="props.onChangeStartAt"/>
+        <t t-if="this.showStartAtInput">
+            <input type="text" placeholder="MM:SS" class="o_input w-lg-auto" t-att-value="this.props.value" t-on-input="this.props.onChangeStartAt"/>
         </t>
     </div>
 </t>
@@ -29,21 +29,21 @@
                 <div class="text-start">
                     <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b>, <b><i>Facebook</i></b> and <b><i>Instagram</i></b> videos</small>
                 </div>
-                <textarea t-ref="autofocus" t-model="state.urlInput" class="form-control" id="o_video_text" placeholder="Copy-paste your URL or embed code here" t-on-input="onChangeUrl" t-att-class="{ 'is-valid': state.urlInput and !this.state.errorMessage, 'is-invalid': state.urlInput and this.state.errorMessage }"/>
+                <textarea t-ref="autofocus" t-model="this.state.urlInput" class="form-control" id="o_video_text" placeholder="Copy-paste your URL or embed code here" t-on-input="this.onChangeUrl" t-att-class="{ 'is-valid': this.state.urlInput and !this.state.errorMessage, 'is-invalid': this.state.urlInput and this.state.errorMessage }"/>
             </div>
-            <div t-if="shownOptions.length" class="o_video_dialog_options">
-                <VideoOption t-foreach="shownOptions" t-as="option" t-key="option.id"
+            <div t-if="this.shownOptions.length" class="o_video_dialog_options">
+                <VideoOption t-foreach="this.shownOptions" t-as="option" t-key="this.option.id"
                     name="option.id"
-                    value="value"
+                    value="this.value"
                     onChangeOption="() => this.onChangeOption(option.id)"
                     onChangeStartAt="(ev) => this.onChangeStartAt(ev, option.id)"
                     label="option.label"
                     description="option.description"/>
             </div>
-            <t t-if="state.vimeoPreviews.length">
+            <t t-if="this.state.vimeoPreviews.length">
                 <span class="fw-bold">Suggestions</span>
                 <div id="video-suggestion" class="mt-4 d-flex flex-wrap mh-75 overflow-auto">
-                    <t t-foreach="state.vimeoPreviews" t-as="vimeoPreview" t-key="vimeoPreview.id">
+                    <t t-foreach="this.state.vimeoPreviews" t-as="vimeoPreview" t-key="this.vimeoPreview.id">
                         <div class="o_sample_video w-25 mh-100 cursor-pointer" t-on-click="() => this.onClickSuggestion(vimeoPreview.src)">
                             <img class="mw-100 mh-100 p-1" t-att-src="vimeoPreview.thumbnailSrc"/>
                         </div>

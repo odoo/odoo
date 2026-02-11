@@ -3,36 +3,36 @@
 
 <t t-name="html_builder.BuilderNumberInputBase">
     <div class="d-flex flex-row flex-nowrap w-100 align-items-center"
-        t-attf-class="{{ props.classes + ( props.prefix ? ' o-hb-input-base' : '' ) }}"
-        t-att-data-action-id="info.actionId"
-        t-att-data-action-param="info.actionParam"
-        t-att-data-action-value="info.actionValue"
-        t-att-data-class-action="info.classAction"
-        t-att-data-style-action="info.styleAction"
-        t-att-data-style-action-value="info.styleActionValue"
-        t-att-data-attribute-action="info.attributeAction"
-        t-att-data-attribute-action-value="info.attributeActionValue">
-        <span t-if="props.prefix" class="o-hb-input-prefix" t-out="props.prefix"/>
-        <i t-if="props.prefixIcon" role="img" t-att-class="'o-hb-input-prefix ' + props.prefixIcon"/> 
+        t-attf-class="{{ this.props.classes + ( this.props.prefix ? ' o-hb-input-base' : '' ) }}"
+        t-att-data-action-id="this.info.actionId"
+        t-att-data-action-param="this.info.actionParam"
+        t-att-data-action-value="this.info.actionValue"
+        t-att-data-class-action="this.info.classAction"
+        t-att-data-style-action="this.info.styleAction"
+        t-att-data-style-action-value="this.info.styleActionValue"
+        t-att-data-attribute-action="this.info.attributeAction"
+        t-att-data-attribute-action-value="this.info.attributeActionValue">
+        <span t-if="this.props.prefix" class="o-hb-input-prefix" t-out="this.props.prefix"/>
+        <i t-if="this.props.prefixIcon" role="img" t-att-class="'o-hb-input-prefix ' + this.props.prefixIcon"/> 
         <input
             t-ref="inputRef"
-            t-att-type="props.composable ? 'text' : 'number'"
-            t-att-autocomplete="props.composable ? 'chrome-off' : undefined"
-            t-attf-class="{{ props.inputClasses + ( props.prefix ? ' o-hb-input-transparent ' : ' o-hb-input-base ' ) }}"
-            t-att-placeholder="props.placeholder"
-            t-att-data-tooltip="props.tooltip"
-            t-att-aria-label="props.tooltip"
-            t-att-title="props.title"
-            t-on-change="onChange"
-            t-on-input="onInput"
-            t-on-focus="onFocus"
-            t-on-keydown="onKeydown"
-            t-on-beforeinput="onBeforeInput"
-            t-att-value="state.value"
-            t-att-style="props.style"
-            t-att-min="!props.composable and props.min"
-            t-att-max="!props.composable and props.max"
-            t-att-step="!props.composable and props.step"
+            t-att-type="this.props.composable ? 'text' : 'number'"
+            t-att-autocomplete="this.props.composable ? 'chrome-off' : undefined"
+            t-attf-class="{{ this.props.inputClasses + ( this.props.prefix ? ' o-hb-input-transparent ' : ' o-hb-input-base ' ) }}"
+            t-att-placeholder="this.props.placeholder"
+            t-att-data-tooltip="this.props.tooltip"
+            t-att-aria-label="this.props.tooltip"
+            t-att-title="this.props.title"
+            t-on-change="this.onChange"
+            t-on-input="this.onInput"
+            t-on-focus="this.onFocus"
+            t-on-keydown="this.onKeydown"
+            t-on-beforeinput="this.onBeforeInput"
+            t-att-value="this.state.value"
+            t-att-style="this.props.style"
+            t-att-min="!this.props.composable and this.props.min"
+            t-att-max="!this.props.composable and this.props.max"
+            t-att-step="!this.props.composable and this.props.step"
         />
         <t t-slot="default"/>
     </div>

@@ -3,7 +3,7 @@
 <t t-name="mass_mailing.DesignTab">
     <div class="o_design_tab h-100">
         <div t-ref="content" class="d-flex flex-column h-100">
-            <t t-foreach="optionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
+            <t t-foreach="this.optionsContainers" t-as="optionsContainer" t-key="this.optionsContainer.id">
                 <!-- TODO EGGMAIL (check theme_tab.xml todo) Define a more basic kind of options container -->
                 <OptionsContainer
                     snippetModel="optionsContainer.snippetModel"
@@ -53,17 +53,17 @@
     <t t-call="mass_mailing.DesignTextOption">
         <t t-set="label">Heading 1</t>
         <t t-set="prefix" t-value="`--h1-`"/>
-        <t t-set="marginPrefix" t-value="prefix"/>
+        <t t-set="marginPrefix" t-value="this.prefix"/>
     </t>
     <t t-call="mass_mailing.DesignTextOption">
         <t t-set="label">Heading 2</t>
         <t t-set="prefix" t-value="`--h2-`"/>
-        <t t-set="marginPrefix" t-value="prefix"/>
+        <t t-set="marginPrefix" t-value="this.prefix"/>
     </t>
     <t t-call="mass_mailing.DesignTextOption">
         <t t-set="label">Heading 3</t>
         <t t-set="prefix" t-value="`--h3-`"/>
-        <t t-set="marginPrefix" t-value="prefix"/>
+        <t t-set="marginPrefix" t-value="this.prefix"/>
     </t>
 </t>
 
@@ -97,7 +97,7 @@
             <BuilderColorPicker noTransparency="true" title.translate="Text Color" enabledTabs="['solid', 'custom']"
                 actionParam="{ variable: `${prefix}color` }"/>
         </BuilderRow>
-        <BuilderRow t-if="marginPrefix" label.translate="Margin" level="1">
+        <BuilderRow t-if="this.marginPrefix" label.translate="Margin" level="1">
             <BuilderNumberInput title.translate="Bottom" unit="'px'" saveUnit="'px'" actionParam="{ variable: `${marginPrefix}margin-bottom` }" default="0"/>
         </BuilderRow>
         <BuilderRow>

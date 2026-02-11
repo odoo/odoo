@@ -3,125 +3,125 @@
 
     <t t-name="web.KanbanRenderer">
         <div class="o_kanban_renderer o_renderer d-flex user-select-none"
-            t-attf-class="{{ props.list.isGrouped ? 'o_kanban_grouped align-content-stretch' : 'o_kanban_ungrouped align-content-start flex-wrap justify-content-start' }}"
+            t-attf-class="{{ this.props.list.isGrouped ? 'o_kanban_grouped align-content-stretch' : 'o_kanban_ungrouped align-content-start flex-wrap justify-content-start' }}"
             t-ref="root"
         >
-            <t t-foreach="getGroupsOrRecords()" t-as="groupOrRecord" t-key="groupOrRecord.key">
-                <t t-if="groupOrRecord.group">
-                    <t t-set="group" t-value="groupOrRecord.group" />
-                    <t t-set="isGroupProcessing" t-value="isProcessing(group.id)" />
+            <t t-foreach="this.getGroupsOrRecords()" t-as="groupOrRecord" t-key="this.groupOrRecord.key">
+                <t t-if="this.groupOrRecord.group">
+                    <t t-set="group" t-value="this.groupOrRecord.group" />
+                    <t t-set="isGroupProcessing" t-value="this.isProcessing(this.group.id)" />
                     <div class="o_kanban_group"
-                        t-att-class="getGroupClasses(group, isGroupProcessing)"
-                        t-attf-class="{{ !env.isSmall and group.isFolded ? 'opacity-trigger-hover' : '' }}"
+                        t-att-class="this.getGroupClasses(group, isGroupProcessing)"
+                        t-attf-class="{{ !this.env.isSmall and group.isFolded ? 'opacity-trigger-hover' : '' }}"
                         t-att-data-id="group.id"
                         t-on-click="(ev) => this.onGroupClick(group, ev)"
                     >
                         <KanbanHeader
-                            activeActions="props.archInfo.activeActions"
-                            canQuickCreate="props.canQuickCreate"
+                            activeActions="this.props.archInfo.activeActions"
+                            canQuickCreate="this.props.canQuickCreate"
                             deleteGroup="(group) => this.deleteGroup(group)"
-                            dialogClose="dialogClose"
+                            dialogClose="this.dialogClose"
                             group="group"
-                            list="props.list"
-                            quickCreateState="props.quickCreateState"
-                            scrollTop="props.scrollTop"
-                            tooltipInfo="props.archInfo.tooltipInfo"
-                            progressBarState="props.progressBarState"
+                            list="this.props.list"
+                            quickCreateState="this.props.quickCreateState"
+                            scrollTop="this.props.scrollTop"
+                            tooltipInfo="this.props.archInfo.tooltipInfo"
+                            progressBarState="this.props.progressBarState"
                         />
-                        <t t-if="!group.isFolded">
-                            <t t-if="group.id === props.quickCreateState.id">
+                        <t t-if="!this.group.isFolded">
+                            <t t-if="this.group.id === this.props.quickCreateState.id">
                                 <KanbanRecordQuickCreate
-                                    quickCreateState="props.quickCreateState"
+                                    quickCreateState="this.props.quickCreateState"
                                     onValidate="(record, mode) => this.validateQuickCreate(record, mode, group)"
                                     resModel="group.resModel"
                                     context="group.context"
                                 />
                             </t>
-                            <t t-foreach="group.list.records" t-as="record" t-key="record.id">
+                            <t t-foreach="this.group.list.records" t-as="record" t-key="this.record.id">
                                 <KanbanRecord
-                                    archInfo="props.archInfo"
-                                    Compiler="props.Compiler"
-                                    canResequence="!isGroupProcessing and !isProcessing(record.id) and canResequenceRecords"
-                                    forceGlobalClick="props.forceGlobalClick"
+                                    archInfo="this.props.archInfo"
+                                    Compiler="this.props.Compiler"
+                                    canResequence="!isGroupProcessing and !this.isProcessing(record.id) and this.canResequenceRecords"
+                                    forceGlobalClick="this.props.forceGlobalClick"
                                     group="group"
-                                    groupByField="props.list.groupByField"
-                                    getSelection.bind="getSelection"
-                                    toggleSelection.bind="toggleSelection"
-                                    deleteRecord="props.deleteRecord"
-                                    archiveRecord.bind="archiveRecord"
-                                    openRecord="props.openRecord"
-                                    readonly="props.readonly"
+                                    groupByField="this.props.list.groupByField"
+                                    getSelection.bind="this.getSelection"
+                                    toggleSelection.bind="this.toggleSelection"
+                                    deleteRecord="this.props.deleteRecord"
+                                    archiveRecord.bind="this.archiveRecord"
+                                    openRecord="this.props.openRecord"
+                                    readonly="this.props.readonly"
                                     record="record"
-                                    progressBarState="props.progressBarState"
-                                    selectionAvailable="state.selectionAvailable"
+                                    progressBarState="this.props.progressBarState"
+                                    selectionAvailable="this.state.selectionAvailable"
                                 />
                             </t>
-                            <t t-set="unloadedCount" t-value="getGroupUnloadedCount(group)" />
-                            <div t-if="unloadedCount > 0" class="o_kanban_load_more" t-key="unloadedCount">
-                                <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() => this.loadMore(group)">Load more... (<t t-out="unloadedCount"/> remaining)</button>
+                            <t t-set="unloadedCount" t-value="this.getGroupUnloadedCount(this.group)" />
+                            <div t-if="this.unloadedCount > 0" class="o_kanban_load_more" t-key="this.unloadedCount">
+                                <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() => this.loadMore(group)">Load more... (<t t-out="this.unloadedCount"/> remaining)</button>
                             </div>
                         </t>
-                        <t t-elif="env.isSmall">
-                            <t t-set="unloadedCount" t-value="getGroupUnloadedCount(group)" />
-                            <div t-if="unloadedCount > 0" class="o_kanban_load_more">
-                                <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() => this.toggleGroup(group)">Load more... (<t t-out="unloadedCount"/> remaining)</button>
+                        <t t-elif="this.env.isSmall">
+                            <t t-set="unloadedCount" t-value="this.getGroupUnloadedCount(this.group)" />
+                            <div t-if="this.unloadedCount > 0" class="o_kanban_load_more">
+                                <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() => this.toggleGroup(group)">Load more... (<t t-out="this.unloadedCount"/> remaining)</button>
                             </div>
                         </t>
                     </div>
                 </t>
                 <t t-else="">
                     <KanbanRecord
-                        archInfo="props.archInfo"
-                        Compiler="props.Compiler"
-                        canResequence="!isProcessing(groupOrRecord.record.id) and canResequenceRecords"
-                        forceGlobalClick="props.forceGlobalClick"
-                        groupByField="props.list.groupByField"
-                        getSelection.bind="getSelection"
-                        toggleSelection.bind="toggleSelection"
-                        deleteRecord="props.deleteRecord"
+                        archInfo="this.props.archInfo"
+                        Compiler="this.props.Compiler"
+                        canResequence="!this.isProcessing(groupOrRecord.record.id) and this.canResequenceRecords"
+                        forceGlobalClick="this.props.forceGlobalClick"
+                        groupByField="this.props.list.groupByField"
+                        getSelection.bind="this.getSelection"
+                        toggleSelection.bind="this.toggleSelection"
+                        deleteRecord="this.props.deleteRecord"
                         archiveRecord="(record, active) => this.archiveRecord(record, active)"
-                        openRecord="props.openRecord"
-                        readonly="props.readonly"
+                        openRecord="this.props.openRecord"
+                        readonly="this.props.readonly"
                         record="groupOrRecord.record"
-                        selectionAvailable="state.selectionAvailable"
+                        selectionAvailable="this.state.selectionAvailable"
                     />
                 </t>
             </t>
-            <t t-if="props.list.isGrouped">
-                <t t-if="canCreateGroup()">
+            <t t-if="this.props.list.isGrouped">
+                <t t-if="this.canCreateGroup()">
                     <KanbanColumnQuickCreate
-                        folded="state.columnQuickCreateIsFolded"
-                        onFoldChange="folded => state.columnQuickCreateIsFolded = folded"
-                        onValidate="props.list.createGroup.bind(props.list)"
-                        groupByField="props.list.groupByField"
+                        folded="this.state.columnQuickCreateIsFolded"
+                        onFoldChange="folded => this.state.columnQuickCreateIsFolded = folded"
+                        onValidate="this.props.list.createGroup.bind(this.props.list)"
+                        groupByField="this.props.list.groupByField"
                     />
-                    <div t-if="props.list.groups.length === 0" class="o_view_nocontent o_kanban_group_nocontent">
+                    <div t-if="this.props.list.groups.length === 0" class="o_view_nocontent o_kanban_group_nocontent">
                         <div class="o_nocontent_help">
                             <p class="o_view_nocontent_smiling_face">
-                                No <t t-out="props.list.groupByField.string.toLowerCase()"/> yet, let's create some!
+                                No <t t-out="this.props.list.groupByField.string.toLowerCase()"/> yet, let's create some!
                             </p>
-                            <p t-if="canShowExamples">
-                                Lack of inspiration? <button type="button" class="btn btn-link o_kanban_examples p-0" t-on-click="showExamples">See examples</button>
+                            <p t-if="this.canShowExamples">
+                                Lack of inspiration? <button type="button" class="btn btn-link o_kanban_examples p-0" t-on-click="this.showExamples">See examples</button>
                             </p>
                         </div>
                     </div>
                 </t>
             </t>
             <t t-else="">
-                <button t-if="props.addLabel" class="o_kanban_record o-kanban-button-new btn btn-link d-print-none py-4" accesskey="shift+c" t-on-click.stop.prevent="() => props.onAdd()">
-                    <t t-out="props.addLabel" />
+                <button t-if="this.props.addLabel" class="o_kanban_record o-kanban-button-new btn btn-link d-print-none py-4" accesskey="shift+c" t-on-click.stop.prevent="() => this.props.onAdd()">
+                    <t t-out="this.props.addLabel" />
                 </button>
                 <!-- kanban ghost cards are used to properly space last elements. -->
-                <div t-foreach="[,,,,,,]" t-as="i" t-key="i_index" class="o_kanban_record o_kanban_ghost flex-grow-1 flex-md-shrink-1 flex-shrink-0 my-0" />
+                <div t-foreach="[,,,,,,]" t-as="i" t-key="this.i_index" class="o_kanban_record o_kanban_ghost flex-grow-1 flex-md-shrink-1 flex-shrink-0 my-0" />
             </t>
-	    <t t-if="showNoContentHelper">
-			<ActionHelper noContentHelp="props.noContentHelp"/>
+	    <t t-if="this.showNoContentHelper">
+			<ActionHelper noContentHelp="this.props.noContentHelp"/>
 	    </t>
         </div>
     </t>
 
     <t t-name="web.KanbanDropdownMenuWrapper">
-        <div t-on-click="onClick" style="display:contents" t-ref="rootRef">
+        <div t-on-click="this.onClick" style="display:contents" t-ref="rootRef">
             <t t-slot="default"/>
         </div>
     </t>

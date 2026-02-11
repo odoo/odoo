@@ -2,14 +2,14 @@
 <templates xml:space="preserve">
     <t t-name="web.CropOverlay">
         <div t-ref="crop-container"
-             t-on-mousedown="pointerDown" t-on-touchstart="pointerDown"
-             t-on-mousemove="pointerMove" t-on-touchmove="pointerMove"
-             t-on-mouseup="pointerUp" t-on-touchend="pointerUp"
+             t-on-mousedown="this.pointerDown" t-on-touchstart="this.pointerDown"
+             t-on-mousemove="this.pointerMove" t-on-touchmove="this.pointerMove"
+             t-on-mouseup="this.pointerUp" t-on-touchend="this.pointerUp"
              class="d-grid align-content-center justify-content-center h-100 o_crop_container"
         >
             <t t-slot="default"/>
-            <t t-if="props.isReady">
-                <div class="o_crop_overlay" t-att-class="{'o_crop_overlay_ios': isIOS}"/>
+            <t t-if="this.props.isReady">
+                <div class="o_crop_overlay" t-att-class="{'o_crop_overlay_ios': this.isIOS}"/>
                 <img class="o_crop_icon" src="/web/static/img/transform.svg" draggable="false"/>
             </t>
         </div>

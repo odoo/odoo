@@ -3,24 +3,24 @@
     <t t-name="pos_restaurant.FloorScreen">
         <div class="floor-screen screen h-100 position-relative d-flex flex-column flex-nowrap m-0 bg-view text-start overflow-hidden">
             <div class="position-relative w-100 p-2 border-bottom z-2">
-                <div class="o_fp_toolbar d-flex flex-row justify-content-between gap-1" t-on-transitionend="onToolbarTransitionEnd">
+                <div class="o_fp_toolbar d-flex flex-row justify-content-between gap-1" t-on-transitionend="this.onToolbarTransitionEnd">
                     <button class="new-order btn btn-lg lh-lg" t-attf-class="{{ this.pos.getOrder()?.isDirectSale ? 'btn-secondary' : 'btn-primary'}}"
                             t-on-click="() => this.clickNewOrder()">
                         <t t-if="this.pos.getOrder()?.isDirectSale">
                             <i class="fa fa-angle-double-left fa-fw" role="img" aria-label="Back" title="Back"/>
-                            <span t-if="!ui.isSmall" class="ms-1">Back</span>
+                            <span t-if="!this.ui.isSmall" class="ms-1">Back</span>
                         </t>
                         <t t-else="">
                             <i class="fa fa-plus fa-fw" role="img" aria-label="New Order" title="New Order"/>
-                            <span t-if="!ui.isSmall" class="ms-1">New Order</span>
+                            <span t-if="!this.ui.isSmall" class="ms-1">New Order</span>
                         </t>
                     </button>
 
                     <!-- Center Side Div -->
                     <div class="floor-selector d-flex gap-1 overflow-auto">
-                        <t t-if="floorPlanStore.floors.length > 1" t-foreach="floorPlanStore.floors" t-as="floor" t-key="floor.uuid">
+                        <t t-if="this.floorPlanStore.floors.length > 1" t-foreach="this.floorPlanStore.floors" t-as="floor" t-key="floor.uuid">
                             <button class="button button-floor btn btn-outline-secondary btn-lg px-3 lh-lg text-nowrap text-body"
-                                    t-att-class="{'active': floor === floorPlanStore.selectedFloor}"
+                                    t-att-class="{'active': floor === this.floorPlanStore.selectedFloor}"
                                     t-on-click="() => this.selectFloor(floor.uuid)">
                                 <t t-esc="floor.name" />
                             </button>
@@ -29,7 +29,7 @@
 
                     <!-- Right Side Div -->
                     <div class="right-buttons d-flex gap-1 pe-0">
-                         <button t-if="this.pos.showEditPlanButton and !ui.isSmall" class="btn btn-secondary btn-lg lh-lg" title="Edit Floor Plan" t-on-click="()=>this.startFloorPlanEditing()">
+                         <button t-if="this.pos.showEditPlanButton and !this.ui.isSmall" class="btn btn-secondary btn-lg lh-lg" title="Edit Floor Plan" t-on-click="()=>this.startFloorPlanEditing()">
                              <i class="fa fa-fw fa-pencil-square-o"/>
                          </button>
                         <button class="button-table-selector btn btn-secondary btn-lg lh-lg" t-on-click="() => this.toggleTableSelector()">
@@ -38,11 +38,11 @@
 
                     </div>
                 </div>
-                <FloorEditorToolBar actionHandler="()=> this.getFloorPlanEditorActionHandler()" t-if="floorPlanStore.isEditToolbarVisible()" />
+                <FloorEditorToolBar actionHandler="()=> this.getFloorPlanEditorActionHandler()" t-if="this.floorPlanStore.isEditToolbarVisible()" />
             </div>
 
             <div class="overflow-hidden flex-grow-1 flex-shrink-1 flex-basis-0 w-auto position-relative">
-                <FloorPlan t-if="!isEditMode()"/>
+                <FloorPlan t-if="!this.isEditMode()"/>
                 <FloorPlanEditor t-else="" initActionHandler="(handler)=>this.initFloorPlanEditorActionHandler(handler)"/>
             </div>
             <NumpadDropdown/>

@@ -2,27 +2,27 @@
 <templates xml:space="preserve">
 
 <t t-name="web.Form.OuterGroup">
-    <div class="o_group row align-items-start" t-attf-class="{{ allClasses }}" t-att-style="props.style">
-        <t t-slot="title" t-if="props.slots and props.slots.title" />
-        <t t-foreach="getItems()" t-as="item" t-key="item_index">
-            <span class="o_newline" t-if="item.newline" />
+    <div class="o_group row align-items-start" t-attf-class="{{ this.allClasses }}" t-att-style="this.props.style">
+        <t t-slot="title" t-if="this.props.slots and this.props.slots.title" />
+        <t t-foreach="this.getItems()" t-as="item" t-key="this.item_index">
+            <span class="o_newline" t-if="this.item.newline" />
             <t t-slot="{{ item.name }}" className="item.colspan !== props.maxCols ? 'col-lg-' + item.size : ''"/>
         </t>
     </div>
 </t>
 
 <t t-name="web.Form.InnerGroup">
-    <div t-attf-class="{{ allClasses }}" class="o_inner_group grid" t-att-style="props.style">
-        <div t-if="props.slots and props.slots.title" t-attf-class="g-col-sm-{{ props.maxCols }}">
+    <div t-attf-class="{{ this.allClasses }}" class="o_inner_group grid" t-att-style="this.props.style">
+        <div t-if="this.props.slots and this.props.slots.title" t-attf-class="g-col-sm-{{ this.props.maxCols }}">
             <t t-slot="title" />
         </div>
-        <t t-foreach="getRows()" t-as="row" t-key="row_index" t-if="row.isVisible">
-            <t t-foreach="row" t-as="cell" t-key="cell_index">
-                <t t-set="marginOnSmallScreen" t-value="cell_last ? 'mb-3 mb-sm-0' : ''"/>
-                <t t-if="cell.subType === 'item_component'">
+        <t t-foreach="this.getRows()" t-as="row" t-key="this.row_index" t-if="this.row.isVisible">
+            <t t-foreach="this.row" t-as="cell" t-key="this.cell_index">
+                <t t-set="marginOnSmallScreen" t-value="this.cell_last ? 'mb-3 mb-sm-0' : ''"/>
+                <t t-if="this.cell.subType === 'item_component'">
                     <t t-call="web.Form.InnerGroup.ItemComponent">
-                        <t t-set="cell" t-value="cell" />
-                        <t t-set="marginOnSmallScreen" t-value="marginOnSmallScreen" />
+                        <t t-set="cell" t-value="this.cell" />
+                        <t t-set="marginOnSmallScreen" t-value="this.marginOnSmallScreen" />
                     </t>
                 </t>
 
@@ -31,7 +31,7 @@
                         class="o_cell o_cell_custom"
                         t-attf-style="{{ cell.itemSpan > 1 ? '--o-grid-column-span: ' + cell.itemSpan + ';' : '' }}"
                         t-attf-class="{{ cell.subType === 'label' ? 'o_wrap_label text-break text-900' : null }} {{ marginOnSmallScreen }}"
-                        t-if="cell.isVisible">
+                        t-if="this.cell.isVisible">
                         <t t-slot="{{ cell.name }}" />
                     </div>
                 </t>
@@ -42,9 +42,9 @@
 </t>
 
 <t t-name="web.Form.InnerGroup.ItemComponent">
-    <t t-if="cell.props.fieldInfo.field.component.name !== 'BooleanField'">
+    <t t-if="this.cell.props.fieldInfo.field.component.name !== 'BooleanField'">
         <div class="o_cell o_wrap_label text-break text-900">
-            <t t-component="cell.Component" t-if="cell.isVisible" t-props="cell.props"/>
+            <t t-component="this.cell.Component" t-if="this.cell.isVisible" t-props="this.cell.props"/>
         </div>
         <div
         class="o_cell o_wrap_input text-break"
@@ -56,7 +56,7 @@
     <t t-else="">
         <div class="o_wrap_field_boolean d-flex d-sm-contents" t-attf-class="{{ marginOnSmallScreen }}">
             <div class="o_cell o_wrap_label flex-sm-grow-0 text-break text-900">
-                <t t-component="cell.Component" t-if="cell.isVisible" t-props="cell.props"/>
+                <t t-component="this.cell.Component" t-if="this.cell.isVisible" t-props="this.cell.props"/>
             </div>
             <div class="o_cell o_wrap_input order-first flex-sm-grow-0 order-sm-0"
                 t-attf-style="{{ cell.itemSpan -1 > 1 ? 'grid-column: span ' + (cell.itemSpan -1) + ';' : '' }}">

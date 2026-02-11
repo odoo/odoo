@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.DiscussAvatar">
-        <svg t-att-width="props.size" t-att-height="props.size" viewBox="0 0 32 32" class="overflow-visible">
-            <mask t-att-id="uniqueId" width="32" height="32">
+        <svg t-att-width="this.props.size" t-att-height="this.props.size" viewBox="0 0 32 32" class="overflow-visible">
+            <mask t-att-id="this.uniqueId" width="32" height="32">
                 <rect x="0" y="0" height="32" width="32" fill="white"/>
-                <rect t-if="showIcon" color="black" t-att-x="isTyping ? 15 : 19" y="19" t-att-width="isTyping ? 24 : 16" t-att-height="isTyping ? 15 : 16" rx="8" ry="8"/>
+                <rect t-if="this.showIcon" color="black" t-att-x="this.isTyping ? 15 : 19" y="19" t-att-width="this.isTyping ? 24 : 16" t-att-height="this.isTyping ? 15 : 16" rx="8" ry="8"/>
             </mask>
-            <foreignObject x="0" y="0" width="32" height="32" t-att-mask="'url(#' + uniqueId + ')'">
+            <foreignObject x="0" y="0" width="32" height="32" t-att-mask="'url(#' + this.uniqueId + ')'">
                 <t t-call="mail.DiscussAvatar.avatarImg"/> <!-- FIXME: owl doesn't like and load immediate <img> below <foreignObject>, hence t-call shenanigans -->
             </foreignObject>
-            <g t-if="showIcon" t-att-transform="'translate(' + (isTyping ? 16 : 21) + ', 20)'">
+            <g t-if="this.showIcon" t-att-transform="'translate(' + (this.isTyping ? 16 : 21) + ', 20)'">
                 <svg width="25" height="15" viewBox="0 0 25 15">
                     <foreignObject x="0" y="0" width="25" height="15">
-                        <ThreadIcon t-if="thread" thread="thread" typing="props.typing"/>
-                        <ImStatus t-elif="props.member" member="props.member" className="'d-flex'" size="'md'" typing="props.typing"/>
-                        <ImStatus t-elif="props.persona" persona="props.persona" typing="props.typing"/>
+                        <ThreadIcon t-if="this.thread" thread="this.thread" typing="this.props.typing"/>
+                        <ImStatus t-elif="this.props.member" member="this.props.member" className="'d-flex'" size="'md'" typing="this.props.typing"/>
+                        <ImStatus t-elif="this.props.persona" persona="this.props.persona" typing="this.props.typing"/>
                     </foreignObject>
                 </svg>
             </g>
@@ -22,8 +22,8 @@
     </t>
 
     <t t-name="mail.DiscussAvatar.avatarImg">
-        <img t-if="thread" class="w-100 h-100 object-fit-cover" t-att-class="{ [props.imgRoundedClass]: props.imgRoundedClass, 'rounded-2': !props.imgRoundedClass }" t-att-src="thread.channel?.parent_channel_id?.avatarUrl ?? thread.channel?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
-        <img t-elif="props.member" alt="" class="w-100 h-100 object-fit-cover" t-att-class="{ [props.imgRoundedClass]: props.imgRoundedClass, 'rounded-3': !props.imgRoundedClass }" t-att-src="props.member.avatarUrl"/>
-        <img t-elif="props.persona" alt="" class="w-100 h-100 object-fit-cover" t-att-class="{ [props.imgRoundedClass]: props.imgRoundedClass, 'rounded': !props.imgRoundedClass }" t-att-src="props.persona.avatarUrl"/>
+        <img t-if="this.thread" class="w-100 h-100 object-fit-cover" t-att-class="{ [this.props.imgRoundedClass]: this.props.imgRoundedClass, 'rounded-2': !this.props.imgRoundedClass }" t-att-src="this.thread.channel?.parent_channel_id?.avatarUrl ?? this.thread.channel?.avatarUrl ?? this.thread.avatarUrl" alt="Thread Image"/>
+        <img t-elif="this.props.member" alt="" class="w-100 h-100 object-fit-cover" t-att-class="{ [this.props.imgRoundedClass]: this.props.imgRoundedClass, 'rounded-3': !this.props.imgRoundedClass }" t-att-src="this.props.member.avatarUrl"/>
+        <img t-elif="this.props.persona" alt="" class="w-100 h-100 object-fit-cover" t-att-class="{ [this.props.imgRoundedClass]: this.props.imgRoundedClass, 'rounded': !this.props.imgRoundedClass }" t-att-src="this.props.persona.avatarUrl"/>
     </t>
 </templates>

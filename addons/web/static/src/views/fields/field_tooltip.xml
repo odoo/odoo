@@ -3,79 +3,79 @@
 
     <t t-name="web.FieldTooltip">
 
-        <p t-if="field.help" class="o-tooltip--help" role="tooltip">
-            <t t-esc="field.help"/>
+        <p t-if="this.field.help" class="o-tooltip--help" role="tooltip">
+            <t t-esc="this.field.help"/>
         </p>
 
-        <ul class="o-tooltip--technical" t-if="debug" role="tooltip">
-            <li data-item="label" t-if="field and field.label">
+        <ul class="o-tooltip--technical" t-if="this.debug" role="tooltip">
+            <li data-item="label" t-if="this.field and this.field.label">
                 <span class="o-tooltip--technical--title">Label:</span>
-                <t t-esc="field.label"/>
+                <t t-esc="this.field.label"/>
             </li>
-            <li data-item="field" t-if="field and field.name">
+            <li data-item="field" t-if="this.field and this.field.name">
                 <span class="o-tooltip--technical--title">Field:</span>
-                <t t-esc="field.name"/>
+                <t t-esc="this.field.name"/>
             </li>
-            <li data-item="object" t-if="resModel">
+            <li data-item="object" t-if="this.resModel">
                 <span class="o-tooltip--technical--title">Model:</span>
-                <t t-esc="resModel"/>
+                <t t-esc="this.resModel"/>
             </li>
-            <t t-if="field">
-                <li t-if="field.type" data-item="type" >
+            <t t-if="this.field">
+                <li t-if="this.field.type" data-item="type" >
                     <span class="o-tooltip--technical--title">Type:</span>
-                    <t t-esc="field.type"/>
+                    <t t-esc="this.field.type"/>
                 </li>
-                <li t-if="field.model_field" data-item="model_field">
+                <li t-if="this.field.model_field" data-item="model_field">
                     <span class="o-tooltip--technical--title">Model field:</span>
-                    <t t-esc="field.model_field"/>
+                    <t t-esc="this.field.model_field"/>
                 </li>
-                <li t-if="field.widget" data-item="widget">
+                <li t-if="this.field.widget" data-item="widget">
                     <span class="o-tooltip--technical--title">Widget:</span>
-                    <t t-if="field.widgetDescription" t-esc="field.widgetDescription"/>
-                    <t t-if="field.widget">
-                        (<t t-esc="field.widget"/>)
+                    <t t-if="this.field.widgetDescription" t-esc="this.field.widgetDescription"/>
+                    <t t-if="this.field.widget">
+                        (<t t-esc="this.field.widget"/>)
                     </t>
                 </li>
-                <li t-if="field.context" data-item="context">
+                <li t-if="this.field.context" data-item="context">
                     <span class="o-tooltip--technical--title">Context:</span>
-                    <t t-esc="field.context"/>
+                    <t t-esc="this.field.context"/>
                 </li>
-                <li t-if="field.domain" data-item="domain">
+                <li t-if="this.field.domain" data-item="domain">
                     <span class="o-tooltip--technical--title">Domain:</span>
-                    <t t-esc="field.domain.length === 0 ? '[]' : field.domain"/>
+                    <t t-esc="this.field.domain.length === 0 ? '[]' : this.field.domain"/>
                 </li>
-                <li t-if="field.invisible" data-item="invisible">
+                <li t-if="this.field.invisible" data-item="invisible">
                     <span class="o-tooltip--technical--title">Invisible:</span>
-                    <t t-esc="field.invisible"/>
+                    <t t-esc="this.field.invisible"/>
                 </li>
-                <li t-if="field.column_invisible" data-item="column_invisible">
+                <li t-if="this.field.column_invisible" data-item="column_invisible">
                     <span class="o-tooltip--technical--title">Column invisible:</span>
-                    <t t-esc="field.column_invisible"/>
+                    <t t-esc="this.field.column_invisible"/>
                 </li>
-                <li t-if="field.required" data-item="required">
+                <li t-if="this.field.required" data-item="required">
                     <span class="o-tooltip--technical--title">Required:</span>
-                    <t t-esc="field.required"/>
+                    <t t-esc="this.field.required"/>
                 </li>
-                <li t-if="field.readonly" data-item="readonly">
+                <li t-if="this.field.readonly" data-item="readonly">
                     <span class="o-tooltip--technical--title">Readonly:</span>
-                    <t t-esc="field.readonly"/>
+                    <t t-esc="this.field.readonly"/>
                 </li>
-                <li t-if="field.default" data-item="default">
+                <li t-if="this.field.default" data-item="default">
                     <span class="o-tooltip--technical--title">Default:</span>
-                    <t t-esc="field.default"/>
+                    <t t-esc="this.field.default"/>
                 </li>
-                <li t-if="field.changeDefault" data-item="changeDefault">
+                <li t-if="this.field.changeDefault" data-item="changeDefault">
                     <span class="o-tooltip--technical--title">Change default:</span>
                     Yes
                 </li>
-                <li t-if="field.relation" data-item="relation">
+                <li t-if="this.field.relation" data-item="relation">
                     <span class="o-tooltip--technical--title">Relation:</span>
-                    <t t-esc="field.relation"/>
+                    <t t-esc="this.field.relation"/>
                 </li>
-                <li t-if="field.selection" data-item="selection">
+                <li t-if="this.field.selection" data-item="selection">
                     <span class="o-tooltip--technical--title">Selection:</span>
                     <ul class="o-tooltip--technical">
-                        <li t-foreach="field.selection" t-as="option" t-key="option_index">
+                        <li t-foreach="this.field.selection" t-as="option" t-key="option_index">
                             [<t t-esc="option[0]"/>]
                             <t t-if="option[1]"> - </t>
                             <t t-esc="option[1]"/>

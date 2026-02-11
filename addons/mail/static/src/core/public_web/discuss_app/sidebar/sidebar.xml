@@ -2,21 +2,21 @@
 <templates xml:space="preserve">
     <t t-name="mail.DiscussSidebar">
         <div class="o-mail-DiscussSidebar-resizablePanelContainer h-100 d-flex">
-            <ResizablePanel handleSide="'end'" initialWidth="store.discuss.isSidebarCompact ? store.discuss.COMPACT_SIDEBAR_WIDTH : store.discuss.INSPECTOR_WIDTH" minWidth="60" onResize.bind="onResize">
-                <div class="o-mail-DiscussSidebar d-flex d-print-none flex-column overflow-auto o-scrollbar-thin flex-shrink-0 h-100 border-end border-dark o-border-opacity-15 z-1 o-mail-discussSidebarBgColor o-gap-0_5" t-att-class="{ 'o-compact': store.discuss.isSidebarCompact }">
+            <ResizablePanel handleSide="'end'" initialWidth="this.store.discuss.isSidebarCompact ? this.store.discuss.COMPACT_SIDEBAR_WIDTH : this.store.discuss.INSPECTOR_WIDTH" minWidth="60" onResize.bind="this.onResize">
+                <div class="o-mail-DiscussSidebar d-flex d-print-none flex-column overflow-auto o-scrollbar-thin flex-shrink-0 h-100 border-end border-dark o-border-opacity-15 z-1 o-mail-discussSidebarBgColor o-gap-0_5" t-att-class="{ 'o-compact': this.store.discuss.isSidebarCompact }">
                     <DiscussSearch class="{
                         'position-sticky top-0 z-2 o-mail-discussSidebarBgColor': true,
-                        'pt-2 o-pb-0_5 o-mb-0_5': !store.inPublicPage and store.discuss.isSidebarCompact,
-                        'py-2': !store.inPublicPage and !store.discuss.isSidebarCompact,
-                        'pt-2 o-px-2_5': store.inPublicPage,
-                        'flex-column': store.discuss.isSidebarCompact and !ui.isSmall,
-                        'o-px-2_5': !store.discuss.isSidebarCompact or ui.isSmall,
+                        'pt-2 o-pb-0_5 o-mb-0_5': !this.store.inPublicPage and this.store.discuss.isSidebarCompact,
+                        'py-2': !this.store.inPublicPage and !this.store.discuss.isSidebarCompact,
+                        'pt-2 o-px-2_5': this.store.inPublicPage,
+                        'flex-column': this.store.discuss.isSidebarCompact and !this.ui.isSmall,
+                        'o-px-2_5': !this.store.discuss.isSidebarCompact or this.ui.isSmall,
                     }"/>
-                    <t t-foreach="discussSidebarItems" t-as="item" t-key="item_index" t-component="item"/>
+                    <t t-foreach="this.discussSidebarItems" t-as="item" t-key="this.item_index" t-component="this.item"/>
                     <t t-set="VIEW_HIDDEN_CONVERSATIONS">View hidden conversations</t>
-                    <button t-if="store.has_unpinned_channels" class="btn btn-secondary btn-sm border-0 mb-1 opacity-100-hover rounded-3 d-flex align-items-center justify-content-center" t-att-class="{ 'p-2 mx-2 mt-1 opacity-75': store.discuss.isSidebarCompact, 'mx-4 mt-2 opacity-50': !store.discuss.isSidebarCompact }" t-on-click="onClickViewHiddenConversations" t-att-title="store.discuss.isSidebarCompact ? VIEW_HIDDEN_CONVERSATIONS : undefined">
-                        <i class="fa fa-eye-slash" t-att-class="{ 'fa-lg': store.discuss.isSidebarCompact, 'me-2': !store.discuss.isSidebarCompact }"/>
-                        <span t-if="!store.discuss.isSidebarCompact" class="text-truncate" t-esc="VIEW_HIDDEN_CONVERSATIONS"/>
+                    <button t-if="this.store.has_unpinned_channels" class="btn btn-secondary btn-sm border-0 mb-1 opacity-100-hover rounded-3 d-flex align-items-center justify-content-center" t-att-class="{ 'p-2 mx-2 mt-1 opacity-75': this.store.discuss.isSidebarCompact, 'mx-4 mt-2 opacity-50': !this.store.discuss.isSidebarCompact }" t-on-click="this.onClickViewHiddenConversations" t-att-title="this.store.discuss.isSidebarCompact ? VIEW_HIDDEN_CONVERSATIONS : undefined">
+                        <i class="fa fa-eye-slash" t-att-class="{ 'fa-lg': this.store.discuss.isSidebarCompact, 'me-2': !this.store.discuss.isSidebarCompact }"/>
+                        <span t-if="!this.store.discuss.isSidebarCompact" class="text-truncate" t-esc="this.VIEW_HIDDEN_CONVERSATIONS"/>
                     </button>
                 </div>
             </ResizablePanel>
@@ -24,6 +24,6 @@
     </t>
 
     <t t-name="mail.DiscussSidebar.unreadIndicator">
-        <span class="o-mail-DiscussSidebar-unreadIndicator position-absolute" t-att-class="{ 'o-compact': store.discuss.isSidebarCompact }" title="Thread has unread messages"><i class="fa fa-circle smaller"/></span>
+        <span class="o-mail-DiscussSidebar-unreadIndicator position-absolute" t-att-class="{ 'o-compact': this.store.discuss.isSidebarCompact }" title="Thread has unread messages"><i class="fa fa-circle smaller"/></span>
     </t>
 </templates>

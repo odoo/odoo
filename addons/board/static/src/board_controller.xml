@@ -3,7 +3,7 @@
 
     <t t-name="board.BoardView">
         <div class="o_dashboard d-flex flex-column">
-            <t t-if="board.isEmpty">
+            <t t-if="this.board.isEmpty">
                 <t t-call="board.NoContent"/>
             </t>
             <t t-else="">
@@ -13,34 +13,34 @@
     </t>
 
     <t t-name="board.Content">
-        <div t-if="!env.isSmall" class="o-dashboard-header d-flex justify-content-end">
+        <div t-if="!this.env.isSmall" class="o-dashboard-header d-flex justify-content-end">
             <Dropdown>
                 <button class="btn btn-secondary m-2 p-2">
-                    <img t-attf-src="/board/static/img/layout_{{board.layout}}.png" width="16" height="16" alt=""/>
+                    <img t-attf-src="/board/static/img/layout_{{this.board.layout}}.png" width="16" height="16" alt=""/>
                     Change Layout
                 </button>
                 <t t-set-slot="content">
-                    <t t-foreach="'1 1-1 1-1-1 1-2 2-1'.split(' ')" t-as="layout" t-key="layout">
+                    <t t-foreach="'1 1-1 1-1-1 1-2 2-1'.split(' ')" t-as="layout" t-key="this.layout">
                         <DropdownItem onSelected="() => this.selectLayout(layout)">
                             <img t-attf-src="/board/static/img/layout_{{layout}}.png" alt=""/>
-                            <i t-if="layout == board.layout" class="fa fa-check fa-lg text-success" aria-label='Layout' role="img" title="Layout"/>
+                            <i t-if="this.layout == this.board.layout" class="fa fa-check fa-lg text-success" aria-label='Layout' role="img" title="Layout"/>
                         </DropdownItem>
                     </t>
                 </t>
             </Dropdown>
         </div>
-        <div class="o-dashboard-layout flex-grow-1" t-attf-class="o-dashboard-layout-{{board.layout}}" t-ref="main">
-            <t t-foreach="board.columns" t-as="column" t-key="column_index">
-                <div t-if="column_index lt board.colNumber" class="o-dashboard-column h-100" t-att-data-idx="column_index">
-                    <t t-foreach="column.actions" t-as="action" t-key="action.id">
+        <div class="o-dashboard-layout flex-grow-1" t-attf-class="o-dashboard-layout-{{this.board.layout}}" t-ref="main">
+            <t t-foreach="this.board.columns" t-as="column" t-key="this.column_index">
+                <div t-if="this.column_index lt this.board.colNumber" class="o-dashboard-column h-100" t-att-data-idx="column_index">
+                    <t t-foreach="this.column.actions" t-as="action" t-key="this.action.id">
                         <div class="o-dashboard-action mx-3 my-1 bg-view border" t-att-data-idx="action_index">
                             <h3 t-attf-class="o-dashboard-action-header {{action.title ? '' : 'oe_header_empty'}} p-2 m-2">
-                                <span> <t t-esc="action.title"/> </span>
-                                <span t-if="!env.isSmall" class="btn float-end p-1 text-muted" t-on-click="() => this.closeAction(column, action)"><i class="fa fa-close"/></span>
-                                <span class="btn float-end p-1 text-muted" t-if="!action.isFolded" t-on-click="() => this.toggleAction(action, !env.isSmall)"><i class="fa fa-window-minimize"/></span>
-                                <span class="btn float-end p-1 text-muted" t-if="action.isFolded"  t-on-click="() => this.toggleAction(action, !env.isSmall)"><i class="fa fa-window-maximize"/></span>
+                                <span> <t t-esc="this.action.title"/> </span>
+                                <span t-if="!this.env.isSmall" class="btn float-end p-1 text-muted" t-on-click="() => this.closeAction(column, action)"><i class="fa fa-close"/></span>
+                                <span class="btn float-end p-1 text-muted" t-if="!this.action.isFolded" t-on-click="() => this.toggleAction(action, !this.env.isSmall)"><i class="fa fa-window-minimize"/></span>
+                                <span class="btn float-end p-1 text-muted" t-if="this.action.isFolded"  t-on-click="() => this.toggleAction(action, !this.env.isSmall)"><i class="fa fa-window-maximize"/></span>
                             </h3>
-                            <BoardAction t-if="!action.isFolded" action="action" />
+                            <BoardAction t-if="!this.action.isFolded" action="action" />
                         </div>
                     </t>
                 </div>
@@ -68,10 +68,10 @@
     </t>
 
     <t t-name="board.arch">
-        <form t-att-string="title">
-            <board t-att-style="layout">
-                <column t-foreach="columns" t-as="column" t-key="column_index">
-                    <t t-foreach="column.actions" t-as="action" t-key="action_index">
+        <form t-att-string="this.title">
+            <board t-att-style="this.layout">
+                <column t-foreach="this.columns" t-as="column" t-key="this.column_index">
+                    <t t-foreach="this.column.actions" t-as="action" t-key="this.action_index">
                         <action
                             t-att-name="action.actionId"
                             t-att-string="action.title"

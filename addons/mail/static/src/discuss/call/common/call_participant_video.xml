@@ -2,13 +2,13 @@
 <templates xml:space="preserve">
     <t t-name="discuss.CallParticipantVideo">
         <video class="h-100 cursor-pointer"
-            t-att-class="{ 'o-inset rounded-1': props.inset, 'rounded-3': !props.session.eq(props.session.channel?.activeRtcSession) }"
-            t-att-type="props.type"
-            t-att-data-facing-mode="store.settings.cameraFacingMode"
+            t-att-class="{ 'o-inset rounded-1': this.props.inset, 'rounded-3': !this.props.session.eq(this.props.session.channel?.activeRtcSession) }"
+            t-att-type="this.props.type"
+            t-att-data-facing-mode="this.store.settings.cameraFacingMode"
             playsinline="true"
             autoplay="true"
             muted="true"
-            t-on-loadedmetadata="onVideoLoadedMetaData"
+            t-on-loadedmetadata="this.onVideoLoadedMetaData"
             t-ref="root"
         />
     </t>

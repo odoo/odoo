@@ -18,7 +18,7 @@
                             <t t-call="web.OfflineSearchBar.Facets">
                                 <t t-set="facets" t-value="this.currentSearch.facets"/>
                             </t>
-                            <div t-if="this.canRemoveSearch()" class="o_searchview_facet d-print-none rounded-2 bg-200 px-1 cursor-pointer" data-tooltip="Clear search" t-on-click.stop="onRemoveSearch">
+                            <div t-if="this.canRemoveSearch()" class="o_searchview_facet d-print-none rounded-2 bg-200 px-1 cursor-pointer" data-tooltip="Clear search" t-on-click.stop="this.onRemoveSearch">
                                 <i class="oi oi-close small"/>
                             </div>
                             <div t-elif="this.currentSearch.facets.length" class="o_searchview_facet d-print-none rounded-2 bg-200 px-1 opacity-50" data-tooltip="Can't remove that search">
@@ -31,8 +31,8 @@
                                 role="searchbox"
                                 t-att-disabled="this.isSearchMenuDisabled"
                                 t-ref="autofocus"
-                                t-on-input="onSearchInput"
-                                t-on-compositionend="onCompositionEnd"
+                                t-on-input="this.onSearchInput"
+                                t-on-compositionend="this.onCompositionEnd"
                             />
                         </div>
                     </div>
@@ -45,8 +45,8 @@
                     />
                 </div>
                 <t t-set-slot="content">
-                    <DropdownItem t-foreach="state.searches.slice(0, state.limit)" t-as="search" t-key="search_index"
-                        t-if="search.facets.length"
+                    <DropdownItem t-foreach="this.state.searches.slice(0, this.state.limit)" t-as="search" t-key="this.search_index"
+                        t-if="this.search.facets.length"
                         onSelected="() => this.onSelect(search)"
                         class="{
                             'd-flex': true,
@@ -54,12 +54,12 @@
                             'fw-bolder': search.key === this.currentSearch.key
                         }">
                         <t t-call="web.OfflineSearchBar.Facets">
-                            <t t-set="facets" t-value="search.facets"/>
+                            <t t-set="facets" t-value="this.search.facets"/>
                         </t>
                     </DropdownItem>
-                    <DropdownItem t-if="state.searches.length > state.limit"
+                    <DropdownItem t-if="this.state.searches.length > this.state.limit"
                         closingMode="'none'"
-                        onSelected.bind="onShowMoreSearches">
+                        onSelected.bind="this.onShowMoreSearches">
                         <button class="btn btn-link p-0" data-available-offline="">More...</button>
                     </DropdownItem>
                 </t>
@@ -68,7 +68,7 @@
     </t>
 
     <t t-name="web.OfflineSearchBar.Facets">
-        <t t-foreach="facets" t-as="facet" t-key="facet_index">
+        <t t-foreach="facets" t-as="facet" t-key="this.facet_index">
             <div class="o_searchview_facet d-inline-flex align-items-stretch rounded-2 bg-200 text-nowrap mw-100"
                 role="listitem"
                 aria-label="search"
@@ -82,13 +82,13 @@
                         'text-bg-favourite': facet.type == 'favorite'
                     }"
                     >
-                    <i t-if="facet.icon" class="small fa-fw" t-att-class="facet.icon" role="image"/>
-                    <small t-else="" class="px-1" t-esc="facet.title"/>
+                    <i t-if="this.facet.icon" class="small fa-fw" t-att-class="facet.icon" role="image"/>
+                    <small t-else="" class="px-1" t-esc="this.facet.title"/>
                 </div>
                 <div class="o_facet_values d-flex flex-wrap align-items-center px-2 rounded-end-2 text-wrap overflow-hidden">
-                    <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
-                        <em t-if="!facetValue_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-esc="facet.separator"/>
-                        <small class="o_facet_value text-truncate" t-esc="facetValue" t-att-title="facet.tooltip or facetValue"/>
+                    <t t-foreach="this.facet.values" t-as="facetValue" t-key="this.facetValue_index">
+                        <em t-if="!this.facetValue_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-esc="this.facet.separator"/>
+                        <small class="o_facet_value text-truncate" t-esc="this.facetValue" t-att-title="facet.tooltip or facetValue"/>
                     </t>
                 </div>
             </div>

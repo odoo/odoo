@@ -4,8 +4,8 @@
         <xpath expr="//textarea" position="replace">
             <div class="d-flex flex-column-reverse align-content-center">
                 <ListContainer
-                    t-if="items"
-                    items="items"
+                    t-if="this.items"
+                    items="this.items"
                     t-slot-scope="scope"
                     class="'mb-3 h-100'"
                     forceSmall="false"
@@ -19,7 +19,7 @@
                         />
                     </div>
                 </ListContainer>
-                <textarea t-att-rows="props.rows" class="h-100 flex-grow-1 form-control form-control-lg mx-auto" type="text" t-model="state.inputValue" t-ref="input" t-att-placeholder="props.placeholder" t-on-keydown="onKeydown" />
+                <textarea t-att-rows="this.props.rows" class="h-100 flex-grow-1 form-control form-control-lg mx-auto" type="text" t-model="this.state.inputValue" t-ref="input" t-att-placeholder="this.props.placeholder" t-on-keydown="this.onKeydown" />
             </div>
         </xpath>
         <xpath expr="//button[hasclass('btn-primary')]" position="attributes">

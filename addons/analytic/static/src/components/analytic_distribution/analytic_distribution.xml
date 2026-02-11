@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
 
     <t t-name="analytic.AnalyticDistribution">
-        <div class="o_field_tags d-inline-flex flex-wrap mw-100" t-att-class="{'o_tags_input o_input': !props.readonly}" t-ref="analyticDistribution" t-on-keydown="onWidgetKeydown">
-            <t t-foreach="planSummaryTags()" t-as="tag" t-key="tag.id">
+        <div class="o_field_tags d-inline-flex flex-wrap mw-100" t-att-class="{'o_tags_input o_input': !this.props.readonly}" t-ref="analyticDistribution" t-on-keydown="this.onWidgetKeydown">
+            <t t-foreach="this.planSummaryTags()" t-as="tag" t-key="this.tag.id">
                 <BadgeTag color="tag.color" text="tag.text" onClick="tag.onClick"/>
             </t>
-            <div t-if="!props.readonly" class="o_input_dropdown d-inline-flex w-100" tabindex="0" t-ref="mainElement" t-on-focus="onMainElementFocus" t-on-click="onMainElementFocus">
-                <span class="analytic_distribution_placeholder"><t t-if="!state.formattedData.length" t-esc="props.placeholder"/></span>
+            <div t-if="!this.props.readonly" class="o_input_dropdown d-inline-flex w-100" tabindex="0" t-ref="mainElement" t-on-focus="this.onMainElementFocus" t-on-click="this.onMainElementFocus">
+                <span class="analytic_distribution_placeholder"><t t-if="!this.state.formattedData.length" t-esc="this.props.placeholder"/></span>
                 <span class="o_dropdown_button" />
                 <t t-call="analytic.AnalyticDistributionPopup"/>
             </div>
@@ -15,12 +15,12 @@
     </t>
 
     <t t-name="analytic.AnalyticDistributionPopup">
-        <div class="popover analytic_distribution_popup dropdown-menu o-dropdown--menu show rounded py-0 overflow-x-hidden" t-if="state.showDropdown" t-ref="analyticDropdown">
+        <div class="popover analytic_distribution_popup dropdown-menu o-dropdown--menu show rounded py-0 overflow-x-hidden" t-if="this.state.showDropdown" t-ref="analyticDropdown">
             <div class="popover-header sticky-top">
                 <div class="d-flex">
                     <div class="h5 mt-2 me-auto">
                         Analytic
-                        <span t-if="allowSave" class="btn btn-link" t-on-click="onSaveNew" title="Save as new analytic distribution model">New Model</span>
+                        <span t-if="this.allowSave" class="btn btn-link" t-on-click="this.onSaveNew" title="Save as new analytic distribution model">New Model</span>
                     </div>
                     <div class="popupButtons">
                         <span class="btn o_button" t-on-click.stop="() => this.closeAnalyticEditor()" title="Close"><span class="fa fa-close"/></span>
@@ -28,31 +28,31 @@
                 </div>
             </div>
             <div class="popover-body p-2 table-responsive" style="max-width: 100vw;">
-                <span t-if="!allPlans.length">No analytic plans found</span>
+                <span t-if="!this.allPlans.length">No analytic plans found</span>
                 <table t-else="" class="o_list_table table table-sm table-hover o_analytic_table mb-2 table-striped">
-                    <t t-set="totals" t-value="planTotals()"/>
+                    <t t-set="totals" t-value="this.planTotals()"/>
                     <thead>
                         <tr class="border-bottom">
-                            <th t-foreach="allPlans" t-as="plan" t-key="plan.id">
-                                <t t-if="props.multi_edit">
-                                    <a t-if="state.update_plan[plan.column_name]" t-on-click="() => state.update_plan[plan.column_name] = false" href="#">Don't update</a>
-                                    <a t-else="" t-on-click="() => state.update_plan[plan.column_name] = true" href="#">Update</a>
+                            <th t-foreach="this.allPlans" t-as="plan" t-key="this.plan.id">
+                                <t t-if="this.props.multi_edit">
+                                    <a t-if="this.state.update_plan[this.plan.column_name]" t-on-click="() => this.state.update_plan[plan.column_name] = false" href="#">Don't update</a>
+                                    <a t-else="" t-on-click="() => this.state.update_plan[plan.column_name] = true" href="#">Update</a>
                                     <br/>
                                 </t>
-                                <span t-out="plan.name"/>
-                                <t t-if="state.update_plan[plan.column_name]">(<span t-att-class="totals[plan.id].class" t-out="totals[plan.id].formattedValue"/>)</t>
+                                <span t-out="this.plan.name"/>
+                                <t t-if="this.state.update_plan[this.plan.column_name]">(<span t-att-class="totals[plan.id].class" t-out="this.totals[this.plan.id].formattedValue"/>)</t>
                             </th>
                             <th class="numeric_column_width">Percentage</th>
-                            <th t-if="valueColumnEnabled" class="numeric_column_width" t-out="props.record.fields[props.amount_field].string"/>
+                            <th t-if="this.valueColumnEnabled" class="numeric_column_width" t-out="this.props.record.fields[this.props.amount_field].string"/>
                             <th class="deleteColumn w-20px"/>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr t-foreach="state.formattedData" t-as="line" t-key="line.id" t-att-id="line_index" t-att-name="'line_' + line_index">
-                            <Record t-props="recordProps(line)" t-slot-scope="data">
-                                <t t-foreach="Object.keys(data.record.fields).filter((f) => f.startsWith('x_plan') || f == 'account_id')" t-as="field" t-key="field">
-                                    <td t-att-style="state.update_plan[field] ? '' : '--table-bg-state: var(--table-hover-bg);'">
-                                        <Field t-if="state.update_plan[field]"
+                        <tr t-foreach="this.state.formattedData" t-as="line" t-key="this.line.id" t-att-id="line_index" t-att-name="'line_' + line_index">
+                            <Record t-props="this.recordProps(this.line)" t-slot-scope="data">
+                                <t t-foreach="Object.keys(this.data.record.fields).filter((f) => f.startsWith('x_plan') || f == 'account_id')" t-as="field" t-key="this.field">
+                                    <td t-att-style="this.state.update_plan[field] ? '' : '--table-bg-state: var(--table-hover-bg);'">
+                                        <Field t-if="this.state.update_plan[this.field]"
                                                id="field"
                                                name="field"
                                                record="data.record"
@@ -66,8 +66,8 @@
                                 <td class="numeric_column_width">
                                     <Field id="'percentage'" name="'percentage'" record="data.record"/>
                                 </td>
-                                <td t-if="valueColumnEnabled" class="numeric_column_width">
-                                    <Field id="props.amount_field" name="props.amount_field" record="data.record"/>
+                                <td t-if="this.valueColumnEnabled" class="numeric_column_width">
+                                    <Field id="this.props.amount_field" name="this.props.amount_field" record="data.record"/>
                                 </td>
                                 <td class="w-20px">
                                     <span class="fa fa-trash-o cursor-pointer" t-on-click.stop="() => this.deleteLine(line_index)"/>
@@ -75,7 +75,7 @@
                             </Record>
                         </tr>
                         <tr>
-                            <td t-on-click.stop.prevent="addLine" class="o_field_x2many_list_row_add" t-att-colspan="allPlans.length + 2 + valueColumnEnabled">
+                            <td t-on-click.stop.prevent="this.addLine" class="o_field_x2many_list_row_add" t-att-colspan="this.allPlans.length + 2 + this.valueColumnEnabled">
                                 <a href="#" t-ref="addLineButton" tabindex="0">Add a Line</a>
                             </td>
                         </tr>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.OrderSummary">
-		<OrderDisplay order="currentOrder" t-slot-scope="scope">
+		<OrderDisplay order="this.currentOrder" t-slot-scope="scope">
 			<t t-set="line" t-value="scope.line" />
 			<Orderline line="line"
 				onClick="(ev, duration) => this.clickLine(ev, line)"
@@ -14,8 +14,8 @@
 				</t>
 			</Orderline>
 			<t t-set-slot="details">
-				<div t-if="isComboApplicable" class="combo-proposition d-flex justify-content-between align-items-center p-2 pb-0 ms-1">
-					<t t-esc="bestComboName"/>
+				<div t-if="this.isComboApplicable" class="combo-proposition d-flex justify-content-between align-items-center p-2 pb-0 ms-1">
+					<t t-esc="this.bestComboName"/>
 					<button class="button btn btn-primary" t-on-click="() => this.applyBestCombo()">
 						<t t-if="this.state.potentialCombos.length > 1">Choose</t>
 						<t t-else="">Apply</t>

@@ -3,7 +3,7 @@
 
 <t t-name="website.base_popup_options">
     <!-- For the cookies popup, only display this for popup mode. -->
-    <BuilderRow label.translate="Position" t-if="!isCookiesOption or isActiveItem('layout_popup_opt')">
+    <BuilderRow label.translate="Position" t-if="!this.isCookiesOption or this.isActiveItem('layout_popup_opt')">
         <BuilderSelect>
             <BuilderSelectItem classAction="'s_popup_top'">Top</BuilderSelectItem>
             <BuilderSelectItem classAction="'s_popup_middle'">Middle</BuilderSelectItem>
@@ -21,7 +21,7 @@
     </BuilderRow>
     <BuilderRow label.translate="Backdrop">
         <BuilderCheckbox id="'popup_backdrop_opt'" action="'setBackdrop'" preview="false"/>
-        <BuilderColorPicker t-if="isActiveItem('popup_backdrop_opt')" styleAction="'background-color'" enabledTabs="['solid', 'custom']"/>
+        <BuilderColorPicker t-if="this.isActiveItem('popup_backdrop_opt')" styleAction="'background-color'" enabledTabs="['solid', 'custom']"/>
     </BuilderRow>
 </t>
 
@@ -38,10 +38,10 @@
         </BuilderSelect>
     </BuilderRow>
     <BuilderRow level="1" label.translate="Delay">
-        <BuilderNumberInput t-if="isActiveItem('show_delay')"
+        <BuilderNumberInput t-if="this.isActiveItem('show_delay')"
                 action="'setPopupDelay'" unit="'s'" saveUnit="''"/>
     </BuilderRow>
-    <BuilderRow label.translate="Hide For" t-if="!isActiveItem('onclick_opt')">
+    <BuilderRow label.translate="Hide For" t-if="!this.isActiveItem('onclick_opt')">
         <BuilderNumberInput tooltip.translate="Once the user closes the popup, it won't be shown again for that period of time."
                 inputClasses="'o_we_large'"
                 dataAttributeAction="'consentsDuration'"

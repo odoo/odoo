@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="crm.ForecastKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
-        <KanbanColumnQuickCreate position="replace">
-            <t t-if="isGroupedByForecastField()">
+        <KanbanColumnQuickCreate position="this.replace">
+            <t t-if="this.isGroupedByForecastField()">
                 <ForecastKanbanColumnQuickCreate
                     folded="true"
                     onFoldChange="() => {}"
-                    onValidate.bind="addForecastColumn"
-                    groupByField="props.list.groupByField"
+                    onValidate.bind="this.addForecastColumn"
+                    groupByField="this.props.list.groupByField"
                 />
             </t>
             <t t-else="">$0</t>

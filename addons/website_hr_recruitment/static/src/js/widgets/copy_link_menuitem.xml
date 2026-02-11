@@ -3,9 +3,9 @@
 
     <t t-name="website_hr_recruitment.CopyJobLinkButton">
         <CopyButtonJob
-            content="props.record.data[props.name]"
-            copyText="copyText"
-            successText="successText"/>
+            content="this.props.record.data[this.props.name]"
+            copyText="this.copyText"
+            successText="this.successText"/>
     </t>
 
     <t t-name="website_hr_recruitment.CopyButtonJob">
@@ -13,8 +13,8 @@
             t-ref="button"
             role="button"
             class="oe_kanban_action"
-            t-on-click.stop="onClick">
-            <span t-esc="props.copyText"/>
+            t-on-click.stop="this.onClick">
+            <span t-esc="this.props.copyText"/>
         </a>
     </t>
 </templates>

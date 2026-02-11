@@ -3,9 +3,9 @@
 
     <t t-name="hr_recruitment.RecruitmentCopyClipboardCharField">
         <div class="d-flex">
-            <span t-esc="props.displayedValue"></span>
-            <GenerateContentAndCopyButton t-if="props.contentGenerationFunctionName" className="copyButtonClassName" disabled="props.record.isNew" contentGenerationFunction="contentGenerationFunction" icon="copyButtonIcon" successText="successText"/>
-            <GenerateContentAndCopyButton t-else="" className="copyButtonClassName" content="props.record.data[props.name]" icon="copyButtonIcon" successText="successText"/>
+            <span t-esc="this.props.displayedValue"></span>
+            <GenerateContentAndCopyButton t-if="this.props.contentGenerationFunctionName" className="this.copyButtonClassName" disabled="this.props.record.isNew" contentGenerationFunction="this.contentGenerationFunction" icon="this.copyButtonIcon" successText="this.successText"/>
+            <GenerateContentAndCopyButton t-else="" className="this.copyButtonClassName" content="this.props.record.data[this.props.name]" icon="this.copyButtonIcon" successText="this.successText"/>
         </div>
     </t>
 </templates>

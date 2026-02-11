@@ -2,16 +2,16 @@
 <templates xml:space="preserve">
     <t t-name="ImportAction">
         <div t-ref="root" class="h-100 d-flex flex-column">
-            <Layout className="'o_import_action d-flex h-100 overflow-auto'" display="display">
+            <Layout className="'o_import_action d-flex h-100 overflow-auto'" display="this.display">
                 <t t-set-slot="control-panel-buttons">
-                    <t t-if="isPreviewing">
-                        <t t-if="!state.isTested">
+                    <t t-if="this.isPreviewing">
+                        <t t-if="!this.state.isTested">
                             <button type="button" class="btn btn-primary" t-on-click="() => this.handleImport(true)">Test</button>
-                            <button t-if="!state.isPaused" type="button" class="btn btn-secondary" t-on-click="() => this.handleImport(false)">Import</button>
+                            <button t-if="!this.state.isPaused" type="button" class="btn btn-secondary" t-on-click="() => this.handleImport(false)">Import</button>
                             <button t-else="" type="button" class="btn btn-secondary" t-on-click="() => this.handleImport(false)">Resume</button>
                         </t>
                         <t t-else="">
-                            <button t-if="!state.isPaused" type="button" class="btn btn-primary" t-on-click="() => this.handleImport(false)">Import</button>
+                            <button t-if="!this.state.isPaused" type="button" class="btn btn-primary" t-on-click="() => this.handleImport(false)">Import</button>
                             <button t-else="" type="button" class="btn btn-primary" t-on-click="() => this.handleImport(false)">Resume</button>
                             <button type="button" class="btn btn-secondary" t-on-click="() => this.handleImport(true)">Test</button>
                         </t>
@@ -19,36 +19,36 @@
                     <FileInput
                         acceptedFileExtensions="'.csv, .xls, .xlsx, .xlsm, .ods'"
                         onUpload.bind="(data, files) => this.handleFilesUpload(files)"
-                        resId="model.id"
+                        resId="this.model.id"
                         resModel="this.resModel"
                         route="this.uploadFilesRoute"
                     >
-                        <button t-if="isPreviewing" type="button" class="btn btn-secondary">Load Data File</button>
+                        <button t-if="this.isPreviewing" type="button" class="btn btn-secondary">Load Data File</button>
                         <button t-else="" type="button" class="btn btn-primary o_import_file">Upload Data File</button>
                     </FileInput>
-                    <button t-on-click="cancel" type="button" class="btn btn-secondary">Discard</button>
+                    <button t-on-click="this.cancel" type="button" class="btn btn-secondary">Discard</button>
                 </t>
-                <t t-if="isPreviewing">
+                <t t-if="this.isPreviewing">
                     <ImportDataSidepanel
-                        filename="state.filename"
-                        options="importOptions"
-                        formattingOptions="formattingOptions"
-                        importTemplates="importTemplates"
-                        isBatched="isBatched"
-                        onOptionChanged.bind="onOptionChanged"
-                        onReload.bind="reload"
-                        hasBinaryFields="hasBinaryFields"
-                        binaryFilesParams="model.binaryFilesParams"
-                        onBinaryFilesParamsChanged.bind="(name, value) => model.onBinaryFilesParamsChanged(name, value)"
+                        filename="this.state.filename"
+                        options="this.importOptions"
+                        formattingOptions="this.formattingOptions"
+                        importTemplates="this.importTemplates"
+                        isBatched="this.isBatched"
+                        onOptionChanged.bind="this.onOptionChanged"
+                        onReload.bind="this.reload"
+                        hasBinaryFields="this.hasBinaryFields"
+                        binaryFilesParams="this.model.binaryFilesParams"
+                        onBinaryFilesParamsChanged.bind="(name, value) => this.model.onBinaryFilesParamsChanged(name, value)"
                     />
                     <ImportDataContent
-                        columns="model.columns"
-                        onFieldChanged.bind="onFieldChanged"
-                        onOptionChanged.bind="onOptionChanged"
-                        options="importOptions"
-                        isFieldSet.bind="isFieldSet"
-                        previewError="state.previewError"
-                        importMessages="model.importMessages"
+                        columns="this.model.columns"
+                        onFieldChanged.bind="this.onFieldChanged"
+                        onOptionChanged.bind="this.onOptionChanged"
+                        options="this.importOptions"
+                        isFieldSet.bind="this.isFieldSet"
+                        previewError="this.state.previewError"
+                        importMessages="this.model.importMessages"
                     />
                 </t>
                 <div t-else="" class="o_view_nocontent">
@@ -63,7 +63,7 @@
                         <div class="mt16 mb4">
                             Need Help? <DocumentationLink path="'/applications/general/export_import_data.html'" label.translate="Import FAQ"/>
                         </div>
-                        <div t-foreach="importTemplates" t-as="template" t-key="template.template">
+                        <div t-foreach="this.importTemplates" t-as="template" t-key="template.template">
                             <a class="btn btn-outline-primary my8" t-att-href="template.template" aria-label="Download" data-tooltip="Download">
                                 <i class="fa fa-download"/> <span><t t-esc="template.label"/></span>
                             </a>

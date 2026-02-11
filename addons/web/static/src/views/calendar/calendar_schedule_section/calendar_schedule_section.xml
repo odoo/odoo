@@ -3,16 +3,16 @@
 
     <t t-name="web.CalendarScheduleSection">
         <div class="d-flex align-items-center cursor-pointer mt-3 mb-2" t-on-click="() => this.state.collapsed = !this.state.collapsed">
-            <h5 t-out="toScheduleString" class="flex-grow-1 m-0"/>
+            <h5 t-out="this.toScheduleString" class="flex-grow-1 m-0"/>
             <i
                 class="fa"
-                t-attf-class="fa-caret-{{ state.collapsed ? 'left' : 'down' }}"
+                t-attf-class="fa-caret-{{ this.state.collapsed ? 'left' : 'down' }}"
             />
         </div>
         <div t-ref="eventsToSchedule" class="d-flex flex-column" t-att-class="{ 'd-none': this.state.collapsed }">
             <div 
                 class="align-items-center cursor-pointer o_event_to_schedule_draggable py-1"
-                t-foreach="props.model.data.eventsToSchedule.records"
+                t-foreach="this.props.model.data.eventsToSchedule.records"
                 t-as="event"
                 t-key="event.id"
                 t-att-data-res-id="event.id" 
@@ -22,7 +22,7 @@
                 <span class="ps-1 text-truncate" t-out="event.display_name" t-att-title="event.display_name"/>
             </div>
         </div>
-        <button t-if="displayLoadMoreButton" class="btn btn-link" t-on-click="() => this.props.model.loadMoreEventsToSchedule()">
+        <button t-if="this.displayLoadMoreButton" class="btn btn-link" t-on-click="() => this.props.model.loadMoreEventsToSchedule()">
             Load More
         </button>
     </t>

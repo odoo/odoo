@@ -4,15 +4,15 @@
         <xpath expr="//div[@id='left_grid_top']" position="replace">
         <div class="g-col-6 p-0" title="OTD">
             <div class="purchase-dashboard-card o_no_hover p-1 p-lg-2 bg-100 text-center text-truncate text-wrap"
-                 t-attf-class="o_purchase_dashboard_card_{{ multiuser ? 'top' : 'sole' }}">
-                <div class="fs-2" t-out="purchaseData['global']['otd']"/>OTD
+                 t-attf-class="o_purchase_dashboard_card_{{ this.multiuser ? 'top' : 'sole' }}">
+                <div class="fs-2" t-out="this.purchaseData['global']['otd']"/>OTD
             </div>
         </div>
         </xpath>
         <xpath expr="//div[@id='left_grid_bottom']" position="replace">
-        <div t-if="multiuser" class="g-col-6 p-0" title="OTD">
+        <div t-if="this.multiuser" class="g-col-6 p-0" title="OTD">
             <div class="o_purchase_dashboard_card_bottom purchase-dashboard-card o_no_hover p-1 p-lg-2 bg-100 text-center text-truncate text-wrap">
-                <div t-out="purchaseData['my']['otd']"/>
+                <div t-out="this.purchaseData['my']['otd']"/>
             </div>
         </div>
         </xpath>

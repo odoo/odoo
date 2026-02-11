@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="mail.RottingColumnProgress" t-inherit="web.ColumnProgress" t-inherit-mode="primary">
-        <AnimatedNumber position="before">
-            <t t-set="rottingAggregate" t-value="getRottingGroupCount(props.group)"/>
-            <div t-if="rottingAggregate.value > 0" t-on-click="onRottingIconClick"
+        <AnimatedNumber position="this.before">
+            <t t-set="rottingAggregate" t-value="this.getRottingGroupCount(this.props.group)"/>
+            <div t-if="rottingAggregate.value > 0" t-on-click="this.onRottingIconClick"
                 t-attf-class="badge rounded-pill text-bg-danger ms-3 {{ this.rottingFilterAvailable ? 'cursor-pointer' : 'cursor-default' }}"
                 t-att-title="rottingAggregate.title">
                     <b t-out="rottingAggregate.value"/>

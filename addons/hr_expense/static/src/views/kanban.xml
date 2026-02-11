@@ -5,7 +5,7 @@
             <attribute name="class" add="position-relative h-auto" separator=" "/>
         </xpath>
         <xpath expr="//div[hasclass('o_kanban_renderer')]" position="before">
-            <div t-if="dragState.showDragZone" class="o_dropzone">
+            <div t-if="this.dragState.showDragZone" class="o_dropzone">
                 <i class="fa fa-upload fa-10x"></i>
             </div>
         </xpath>
@@ -19,18 +19,18 @@
 
     <t t-name="hr_expense.KanbanView.Buttons" t-inherit="web.KanbanView.Buttons" t-inherit-mode="primary">
         <xpath expr="//button[hasclass('o-kanban-button-new')]" position="before">
-            <input type="file" name="ufile" class="d-none" t-ref="fileInput" multiple="1" accept="*" t-on-change="onChangeFileInput" />
-            <button t-if="!env.isSmall" type="button" class="o_button_upload_expense btn btn-primary" t-on-click.prevent="uploadDocument">
+            <input type="file" name="ufile" class="d-none" t-ref="fileInput" multiple="1" accept="*" t-on-change="this.onChangeFileInput" />
+            <button t-if="!this.env.isSmall" type="button" class="o_button_upload_expense btn btn-primary" t-on-click.prevent="this.uploadDocument">
                 Upload
             </button>
-            <button t-if="env.isSmall" type="button" class="o_button_upload_expense btn btn-primary me-1" t-on-click.prevent="uploadDocument">
+            <button t-if="this.env.isSmall" type="button" class="o_button_upload_expense btn btn-primary me-1" t-on-click.prevent="this.uploadDocument">
                 Scan
             </button>
         </xpath>
     </t>
 
     <t t-name="hr_expense.KanbanView" t-inherit="web.KanbanView" t-inherit-mode="primary">
-        <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
+        <xpath expr="//t[@t-component='this.props.Renderer']" position="attributes">
             <attribute name="uploadDocument.bind">uploadDocument</attribute>
         </xpath>
     </t>

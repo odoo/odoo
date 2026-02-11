@@ -9,14 +9,14 @@
                 extraClasses="'btn-secondary'"
                 fullHeight="true"
                 darkBackground="true">
-                <t t-out="state.shapeLabel"/>
+                <t t-out="this.state.shapeLabel"/>
                 <t t-set-slot="content" t-slot-scope="panel">
                     <ShapeSelector
                         onClose="panel.close"
                         shapeActionId="'setImageShape'"
                         buttonWrapperClassName="'o-hb-img-shape-btn'"
                         selectorTitle.translate="Shapes"
-                        shapeGroups="getFilteredGroups()"
+                        shapeGroups="this.getFilteredGroups()"
                     />
                 </t>
             </BuilderSlidingPanel>
@@ -27,7 +27,7 @@
                 preview="false"
                 icon="'oi-close'"
                 className="'btn-danger-color-hover border-start-0 rounded-start-0 m-0 py-0 flex-grow-0'"
-                t-if="state.hasShape"/>
+                t-if="this.state.hasShape"/>
         </div>
     </BuilderRow>
 

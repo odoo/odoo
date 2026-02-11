@@ -3,7 +3,7 @@
     <t t-inherit="mail.Discuss" t-inherit-mode="extension">
         <xpath expr="//*[@t-ref='root']" position="replace">
             <div class="h-100 d-flex flex-column">
-                <ControlPanel t-if="!ui.isSmall and env.config?.breadcrumbs?.length > 1"/>
+                <ControlPanel t-if="!this.ui.isSmall and this.env.config?.breadcrumbs?.length > 1"/>
                 <t>$0</t>
             </div>
         </xpath>

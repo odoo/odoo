@@ -2,18 +2,18 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.ThreadIcon" t-inherit-mode="extension">
         <xpath expr="//*[@name='group']" position="replace">
-            <t t-if="channel.hasOtherMembersTyping and props.typing" t-call="mail.ThreadIcon.typing"/>
+            <t t-if="this.channel.hasOtherMembersTyping and this.props.typing" t-call="mail.ThreadIcon.typing"/>
             <t t-else="">$0</t>
         </xpath>
         <xpath expr="//t[@name='chat']" position="replace">
-            <t t-if="channel.hasOtherMembersTyping and props.typing" t-call="mail.ThreadIcon.typing"/>
+            <t t-if="this.channel.hasOtherMembersTyping and this.props.typing" t-call="mail.ThreadIcon.typing"/>
             <t t-else="">$0</t>
         </xpath>
     </t>
     <t t-name="mail.ThreadIcon.typing">
         <div class="o-mail-ThreadIcon-typingContainer rounded-pill" t-att="attr">
             <div class="o-mail-ThreadIcon-typingBg bg-success rounded-pill">
-                <Typing channel="channel" size="['sm', 'smaller'].includes(props.size) ? 'sm' : 'md'" displayText="false" />
+                <Typing channel="this.channel" size="['sm', 'smaller'].includes(this.props.size) ? 'sm' : 'md'" displayText="false" />
             </div>
         </div>
     </t>

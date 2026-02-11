@@ -3,17 +3,15 @@
 
     <t t-name="pos_viva_com.PaymentScreenPaymentLines" t-inherit="point_of_sale.PaymentScreenPaymentLines" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('paymentline electronic_payment')]" position="before">
-            <t t-set="openInViva" t-value="this.vivaApp.isIntegrated(line)" />
+            <t t-set="openInViva" t-value="this.vivaApp.isIntegrated(this.line)" />
         </xpath>
         <xpath expr="//div[hasclass('paymentline electronic_payment')]" position="attributes">
-            <attribute name="t-att-class">
-                {'d-none' : openInViva}
-            </attribute>
+            <attribute name="t-att-class">{'d-none' : openInViva}            </attribute>
         </xpath>
         <xpath expr="//div[hasclass('paymentline electronic_payment')]"  position="after">
             <div t-if="openInViva" class="paymentline electronic_payment d-flex flex-column justify-content-center p-1">
                 <span><i class="fa fa-mobile me-2"/> Continue on the Viva app</span>
-                <button class="btn btn-outline-danger" t-on-click="() => this.vivaApp.resetIntegration(line)">
+                <button class="btn btn-outline-danger" t-on-click="() => this.vivaApp.resetIntegration(this.line)">
                     Reset Integration
                 </button>
             </div>

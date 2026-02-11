@@ -1,13 +1,13 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.Powerbox">
-        <div t-ref="root" class="o-we-powerbox py-2 bg-light overflow-auto my-1" style="width:300px;max-height:40vh;" t-on-mousedown.stop="" t-on-scroll="onScroll" >
-            <t t-foreach="commands" t-as="command" t-key="command_index">
-                <t t-if="showCategories and command.categoryId !== lastCategory">
+        <div t-ref="root" class="o-we-powerbox py-2 bg-light overflow-auto my-1" style="width:300px;max-height:40vh;" t-on-mousedown.stop="" t-on-scroll="this.onScroll" >
+            <t t-foreach="this.commands" t-as="command" t-key="command_index">
+                <t t-if="this.showCategories and command.categoryId !== lastCategory">
                     <div class="o-we-category mx-3 my-1 text-uppercase"><t t-esc="command.categoryName"/></div></t>
                     <t t-set="lastCategory" t-value="command.categoryId">
                 </t>
                 <div class="o-we-command d-flex align-items-center px-3 py-2 cursor-pointer"
-                    t-att-class="{active: command_index === currentIndex}"
+                    t-att-class="{active: command_index === this.currentIndex}"
                     t-on-mouseenter="() => this.onMouseEnter(command_index)"
                     t-on-mousedown="(ev) => ev.preventDefault()"
                     t-on-click="() => this.props.applyCommand(command)">

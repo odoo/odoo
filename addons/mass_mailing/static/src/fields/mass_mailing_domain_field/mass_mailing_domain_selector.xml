@@ -3,11 +3,11 @@
     <t t-name="mass_mailing.MassMailingDomainSelector" t-inherit="web.DomainSelector">
         <xpath expr="//CheckBox[@value='includeArchived']" position="replace">
             <CheckBox
-                t-if="props.resModel !== 'mailing.contact'"
-                value="!props.useExclusionList"
-                disabled="props.readonly"
+                t-if="this.props.resModel !== 'mailing.contact'"
+                value="!this.props.useExclusionList"
+                disabled="this.props.readonly"
                 className="'form-switch'"
-                onChange.bind="(value) => props.updateUseExclusionList(!value)"
+                onChange.bind="(value) => this.props.updateUseExclusionList(!value)"
             >
                 Include Blacklisted Recipients
             </CheckBox>

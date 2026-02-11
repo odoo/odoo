@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
 <t t-name="website.form_state_input_field">
-    <t t-foreach="optionsToRender" t-as="option" t-key="option_index">
+    <t t-foreach="this.optionsToRender" t-as="option" t-key="option_index">
         <option t-att-id="option.id" t-att-value="option.value"
             t-att-data-country-id="option.dataset.countryId" t-out="option.innerHTML"
-            t-attf-selected="{{option.value === selectedStateId ? 'selected' : undefined}}" />
+            t-attf-selected="{{option.value === this.selectedStateId ? 'selected' : undefined}}" />
     </t>
 </t>
 

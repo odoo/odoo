@@ -4,7 +4,7 @@
     <t t-name="point_of_sale.PrintPopup">
         <Dialog title="''" footer="false" size="'md'" contentClass="`print-popup ${!this.ui.isSmall? 'rounded-4' : ''}`" bodyClass="">
             <div class="print-popup-modal d-grid gap-2 py-3">
-                <button t-foreach="printList" t-as="item" t-key="item_index"
+                <button t-foreach="this.printList" t-as="item" t-key="item_index"
                         class="btn btn-lg py-3 rounded-3 d-flex gap-2 align-items-center justify-content-center"
                         t-att-class="item.isPrimary ? 'btn-primary' : 'btn-secondary'"
                         t-on-click="() => this.clickPrintButton(item)">

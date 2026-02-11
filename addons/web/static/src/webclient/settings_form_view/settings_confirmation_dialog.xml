@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.SettingsConfirmationDialog">
-        <Dialog size="'sm'" title="props.title" modalRef="modalRef">
-            <t t-esc="props.body" />
+        <Dialog size="'sm'" title="this.props.title" modalRef="this.modalRef">
+            <t t-esc="this.props.body" />
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="_confirm">
+                <button class="btn btn-primary" t-on-click="this._confirm">
                     Save
                 </button>
-                <button class="btn btn-secondary" t-on-click="_stayHere">
+                <button class="btn btn-secondary" t-on-click="this._stayHere">
                     Stay Here
                 </button>
-                <button class="btn btn-secondary" t-on-click="_cancel">
+                <button class="btn btn-secondary" t-on-click="this._cancel">
                     Discard
                 </button>
             </t>

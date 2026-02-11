@@ -3,16 +3,16 @@
 
     <t t-name="web.ImageUrlField">
         <img
-            t-if="props.record.data[props.name]"
+            t-if="this.props.record.data[this.props.name]"
             class="img img-fluid"
             alt="Image"
-            t-att-src="state.src"
-            t-att-border="props.readonly ? 0 : 1"
-            t-att-name="props.name"
-            t-att-height="props.height"
-            t-att-width="props.width"
-            t-att-style="sizeStyle"
-            t-on-error="onLoadFailed"
+            t-att-src="this.state.src"
+            t-att-border="this.props.readonly ? 0 : 1"
+            t-att-name="this.props.name"
+            t-att-height="this.props.height"
+            t-att-width="this.props.width"
+            t-att-style="this.sizeStyle"
+            t-on-error="this.onLoadFailed"
         />
     </t>
 

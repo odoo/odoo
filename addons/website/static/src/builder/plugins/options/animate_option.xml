@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.animateOnScrollInOut">
-    <BuilderButtonGroup t-if="isActiveItem('animation_on_scroll_opt')" preview="false" action="'forceAnimation'">
+    <BuilderButtonGroup t-if="this.isActiveItem('animation_on_scroll_opt')" preview="false" action="'forceAnimation'">
         <BuilderButton classAction="''">In</BuilderButton>
         <BuilderButton classAction="'o_animate_out'">Out</BuilderButton>
     </BuilderButtonGroup>
@@ -11,11 +11,11 @@
 <t t-name="website.AnimateOption">
     <t t-if="this.state.isOptionActive">
         <BuilderRow label.translate="Animation">
-            <BuilderSelect t-if="!this.isActiveItem('transform_image')" preview="false" dropdownClass="props.dropdownClass">
+            <BuilderSelect t-if="!this.isActiveItem('transform_image')" preview="false" dropdownClass="this.props.dropdownClass">
                 <BuilderSelectItem action="'setAnimationMode'" actionValue="''"
                             classAction="''"
                             id="'no_animation_opt'"
-                            t-if="!props.requireAnimation">None</BuilderSelectItem>
+                            t-if="!this.props.requireAnimation">None</BuilderSelectItem>
                 <BuilderSelectItem action="'setAnimationMode'" actionValue="'onAppearance'"
                             actionParam="{forceAnimation: true}"
                             classAction="'o_animate'"
@@ -24,46 +24,46 @@
                             classAction="'o_animate o_animate_on_scroll'"
                             actionParam="{forceAnimation: true}"
                             id="'animation_on_scroll_opt'"
-                            t-if="!state.isLimitedEffect">On Scroll</BuilderSelectItem>
+                            t-if="!this.state.isLimitedEffect">On Scroll</BuilderSelectItem>
                 <BuilderSelectItem action="'setAnimationMode'" actionValue="'onHover'"
                             classAction="'o_animate_on_hover'"
                             id="'animation_on_hover_opt'"
-                            t-if="state.canHover">On Hover</BuilderSelectItem>
+                            t-if="this.state.canHover">On Hover</BuilderSelectItem>
             </BuilderSelect>
-            <t t-if="!!props.slots?.animationRowTrailing" t-slot="animationRowTrailing"/>
+            <t t-if="!!this.props.slots?.animationRowTrailing" t-slot="animationRowTrailing"/>
             <t t-else="" t-call="website.animateOnScrollInOut"/> 
         </BuilderRow>
-        <BuilderRow label.translate="On Scroll" level="1" t-if="!!props.slots?.animationRowTrailing">
+        <BuilderRow label.translate="On Scroll" level="1" t-if="!!this.props.slots?.animationRowTrailing">
             <t t-call="website.animateOnScrollInOut"/>
         </BuilderRow>
         <BuilderRow label.translate="Effect" level="1">
-            <BuilderSelect id="'animation_effect_opt'" dropdownClass="props.dropdownClass"
-                t-if="state.hasAnimateClass and !this.isActiveItem('animation_on_hover_opt')"
+            <BuilderSelect id="'animation_effect_opt'" dropdownClass="this.props.dropdownClass"
+                t-if="this.state.hasAnimateClass and !this.isActiveItem('animation_on_hover_opt')"
                 action="'setAnimationEffect'" actionParam="''">
 
-                <t t-foreach="state.effectItems" t-as="item" t-key="item.className">
+                <t t-foreach="this.state.effectItems" t-as="item" t-key="this.item.className">
                     <BuilderSelectItem actionValue="item.className" actionParam="item.directionClass"
-                        t-out="item.label"
-                        t-if="!item.check || item.check()" />
+                        t-out="this.item.label"
+                        t-if="!this.item.check || this.item.check()" />
                 </t>
             </BuilderSelect>
         </BuilderRow>
-        <BuilderRow label.translate="Direction" level="1" t-if="state.hasAnimateClass and !state.isLimitedEffect">
-            <BuilderSelect id="'animation_direction_opt'" action="'forceAnimation'" dropdownClass="props.dropdownClass">
-                <t t-foreach="state.directionItems" t-as="item" t-key="item.className">
-                    <BuilderSelectItem classAction="item.className" t-out="item.label" />
+        <BuilderRow label.translate="Direction" level="1" t-if="this.state.hasAnimateClass and !this.state.isLimitedEffect">
+            <BuilderSelect id="'animation_direction_opt'" action="'forceAnimation'" dropdownClass="this.props.dropdownClass">
+                <t t-foreach="this.state.directionItems" t-as="item" t-key="this.item.className">
+                    <BuilderSelectItem classAction="item.className" t-out="this.item.label" />
                 </t>
             </BuilderSelect>
         </BuilderRow>
         <!-- Trigger -->
         <BuilderRow label.translate="Trigger" level="1">
-            <BuilderSelect t-if="this.isActiveItem('animation_on_appearance_opt') and !state.isInDropdown" dropdownClass="props.dropdownClass">
+            <BuilderSelect t-if="this.isActiveItem('animation_on_appearance_opt') and !this.state.isInDropdown" dropdownClass="this.props.dropdownClass">
                 <BuilderSelectItem classAction="''">First Time Only</BuilderSelectItem>
                 <BuilderSelectItem classAction="'o_animate_both_scroll'">Every Time</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
         <!-- Intensity -->
-        <BuilderRow label.translate="Intensity" tooltip.translate="Adjust how strong the animation effect is" level="1" t-if="state.showIntensity">
+        <BuilderRow label.translate="Intensity" tooltip.translate="Adjust how strong the animation effect is" level="1" t-if="this.state.showIntensity">
             <BuilderRange
                 action="'setAnimateIntensity'"
                 preview="false"
@@ -90,7 +90,7 @@
         </BuilderContext>
         <t t-if="this.isActiveItem('animation_on_hover_opt')">
             <BuilderRow label.translate="Effect" level="1">
-                <BuilderSelect action="'setHoverEffect'" actionParam="{}" dropdownClass="props.dropdownClass">
+                <BuilderSelect action="'setHoverEffect'" actionParam="{}" dropdownClass="this.props.dropdownClass">
                     <BuilderSelectItem actionValue="'overlay'" id="'hover_effect_overlay_opt'">Overlay</BuilderSelectItem>
                     <BuilderSelectItem actionValue="'image_zoom_in'" id="'hover_effect_zoom_in_opt'">Zoom In</BuilderSelectItem>
                     <BuilderSelectItem actionValue="'image_zoom_out'" id="'hover_effect_zoom_out_opt'">Zoom Out</BuilderSelectItem>

@@ -3,11 +3,11 @@
 
 
 <t t-name="html_builder.InvisibleElementsPanel">
-    <div class="o_we_invisible_el_panel d-contents" t-if="state.invisibleEntries.length">
+    <div class="o_we_invisible_el_panel d-contents" t-if="this.state.invisibleEntries.length">
         <div class="o_panel_header">
             Invisible Elements
         </div>
-        <t t-foreach="state.invisibleEntries" t-as="invisibleEntry" t-key="invisibleEntry_index">
+        <t t-foreach="this.state.invisibleEntries" t-as="invisibleEntry" t-key="this.invisibleEntry_index">
             <t t-call="html_builder.invisibleSnippetEntry" t-call-context="{'entry': invisibleEntry, 'toggleElementVisibility': toggleElementVisibility.bind(this)}"/>
         </t>
     </div>
@@ -15,13 +15,13 @@
 
 <t t-name="html_builder.invisibleSnippetEntry">
     <div class="o_we_invisible_entry d-flex py-1 align-items-center justify-content-between"
-        t-att-class="{'o_we_invisible_root_parent': entry.isRootParent, 'o_we_sublevel_1': entry.isDescendant}"
-        t-on-click="() => toggleElementVisibility(entry)">
-        <div class="o_title" t-out="entry.name"/>
-        <i class="fa ms-2" t-att-class="entry.isVisible ? 'fa-eye' : 'fa-eye-slash'"></i>
+        t-att-class="{'o_we_invisible_root_parent': this.entry.isRootParent, 'o_we_sublevel_1': this.entry.isDescendant}"
+        t-on-click="() => this.toggleElementVisibility(this.entry)">
+        <div class="o_title" t-out="this.entry.name"/>
+        <i class="fa ms-2" t-att-class="this.entry.isVisible ? 'fa-eye' : 'fa-eye-slash'"></i>
     </div>
-    <ul t-if="entry.isVisible and entry.children.length > 0">
-        <t t-foreach="entry.children" t-as="child" t-key="child_index">
+    <ul t-if="this.entry.isVisible and this.entry.children.length > 0">
+        <t t-foreach="this.entry.children" t-as="child" t-key="this.child_index">
             <li>
                 <t t-call="html_builder.invisibleSnippetEntry" t-call-context="{'entry': child, toggleElementVisibility}"/>
             </li>

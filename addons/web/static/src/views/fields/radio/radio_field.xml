@@ -4,17 +4,17 @@
     <t t-name="web.RadioField">
         <div
             role="radiogroup"
-            t-attf-class="o_{{ props.orientation }}"
-            t-att-aria-label="props.label"
+            t-attf-class="o_{{ this.props.orientation }}"
+            t-att-aria-label="this.props.label"
         >
-            <t t-foreach="items" t-as="item" t-key="item[0]">
+            <t t-foreach="this.items" t-as="item" t-key="item[0]">
                 <div class="form-check o_radio_item" aria-atomic="true">
                     <input
                         type="radio"
                         class="form-check-input o_radio_input"
-                        t-att-checked="item[0] === value"
-                        t-att-disabled="props.readonly"
-                        t-att-name="id"
+                        t-att-checked="item[0] === this.value"
+                        t-att-disabled="this.props.readonly"
+                        t-att-name="this.id"
                         t-att-data-value="item[0]"
                         t-att-data-index="item_index"
                         t-att-id="`${id}_${item[0]}`"

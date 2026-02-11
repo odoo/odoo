@@ -17,26 +17,26 @@
     <t t-name="website.s_dynamic_snippet.carousel.base">
         <div t-att-id="unique_id" t-attf-class="carousel slide #{extraCarouselClass || ''}"
              t-att-style="extraCarouselStyle"
-             t-att-data-bs-interval="interval" data-bs-ride="carousel">
+             t-att-data-bs-interval="this.interval" data-bs-ride="carousel">
             <!-- Content -->
-            <t t-set="slideSize" t-value="rowSize * rowPerSlide" />
-            <t t-set="slideIndexGenerator" t-value="Array(Math.ceil(data.length/slideSize))"/>
-            <t t-set="rowIndexGenerator" t-value="Array(rowPerSlide)"/>
-            <t t-set="colIndexGenerator" t-value="Array(rowSize)"/>
+            <t t-set="slideSize" t-value="this.rowSize * this.rowPerSlide" />
+            <t t-set="slideIndexGenerator" t-value="Array(Math.ceil(this.data.length/this.slideSize))"/>
+            <t t-set="rowIndexGenerator" t-value="Array(this.rowPerSlide)"/>
+            <t t-set="colIndexGenerator" t-value="Array(this.rowSize)"/>
             <div class="carousel-inner w-100 mx-auto" role="listbox"
                  aria-label="Carousel">
-                <t t-foreach="slideIndexGenerator" t-as="slideIndex" t-key="slideIndex_index">
-                    <t t-set="slideOffset" t-value="slideIndex_index * slideSize"/>
-                    <div t-attf-class="carousel-item #{extraClasses || ''} #{slideIndex_first ? 'active' : ''}" role="option">
-                        <t t-foreach="rowIndexGenerator" t-as="rowIndex" t-key="rowIndex_index">
-                            <t t-set="rowOffset" t-value="slideOffset + (rowIndex_index * rowSize)"/>
-                            <t t-if="rowOffset &lt; data.length">
+                <t t-foreach="this.slideIndexGenerator" t-as="slideIndex" t-key="this.slideIndex_index">
+                    <t t-set="slideOffset" t-value="this.slideIndex_index * this.slideSize"/>
+                    <div t-attf-class="carousel-item #{this.extraClasses || ''} #{slideIndex_first ? 'active' : ''}" role="option">
+                        <t t-foreach="this.rowIndexGenerator" t-as="rowIndex" t-key="this.rowIndex_index">
+                            <t t-set="rowOffset" t-value="this.slideOffset + (this.rowIndex_index * this.rowSize)"/>
+                            <t t-if="this.rowOffset &lt; this.data.length">
                                 <div t-attf-class="s_dynamic_snippet_row row g-3 #{extraRowClass || ''}">
-                                    <t t-foreach="colIndexGenerator" t-as="colIndex" t-key="colIndex_index">
-                                        <t t-set="itemIndex" t-value="rowOffset + colIndex_index"/>
-                                        <t t-if="itemIndex &lt; data.length">
+                                    <t t-foreach="this.colIndexGenerator" t-as="colIndex" t-key="this.colIndex_index">
+                                        <t t-set="itemIndex" t-value="this.rowOffset + this.colIndex_index"/>
+                                        <t t-if="this.itemIndex &lt; this.data.length">
                                             <div t-attf-class="#{colClass || ''}">
-                                                <t t-out="data[itemIndex]"/>
+                                                <t t-out="this.data[this.itemIndex]"/>
                                             </div>
                                         </t>
                                     </t>
@@ -47,10 +47,10 @@
                 </t>
             </div>
             <!-- Controls -->
-            <t t-if='slideIndexGenerator.length > minControlValue'>
+            <t t-if='this.slideIndexGenerator.length > this.minControlValue'>
                 <div class="s_dynamic_snippet_arrows d-flex gap-2 w-100 pe-none z-1">
                     <t t-call="website.s_dynamic_snippet.carousel.arrows">
-                        <t t-set="unique_id" t-value="unique_id" />
+                        <t t-set="unique_id" t-value="this.unique_id" />
                     </t>
                 </div>
             </t>
@@ -58,11 +58,11 @@
     </t>
     <t t-name="website.s_dynamic_snippet.carousel.page_scroll">
         <t t-call="website.s_dynamic_snippet.carousel.base">
-            <t t-set="rowSize" t-value="chunkSize"/>
+            <t t-set="rowSize" t-value="this.chunkSize"/>
             <t t-set="extraCarouselStyle"
-               t-value="'--o-carousel-chunk-size: ' + chunkSize"/>
+               t-value="'--o-carousel-chunk-size: ' + this.chunkSize"/>
             <t t-set="colClass"
-               t-value="'d-flex flex-grow-0 flex-shrink-0 col-' + Math.trunc(12 / rowSize).toString()"/>
+               t-value="'d-flex flex-grow-0 flex-shrink-0 col-' + Math.trunc(12 / this.rowSize).toString()"/>
             <t t-set="minControlValue" t-value="1"/>
         </t>
     </t>
@@ -71,14 +71,14 @@
             <t t-set="rowSize" t-value="1"/>
             <t t-set="extraCarouselClass" t-value="'o_carousel_multi_items'"/>
             <t t-set="extraCarouselStyle"
-               t-value="'--o-carousel-chunk-size: ' + chunkSize"/>
+               t-value="'--o-carousel-chunk-size: ' + this.chunkSize"/>
             <t t-set="extraRowClass" t-value="'h-100 mx-0 mt-0'"/>
             <t t-set="colClass" t-value="'d-flex flex-grow-1 flex-shrink-0 mt-0 px-0'"/>
-            <t t-set="minControlValue" t-value="chunkSize"/>
+            <t t-set="minControlValue" t-value="this.chunkSize"/>
         </t>
     </t>
     <t t-name="website.s_dynamic_snippet.carousel">
-        <t t-if="scrollMode === 'single'"
+        <t t-if="this.scrollMode === 'single'"
            t-call="website.s_dynamic_snippet.carousel.single_scroll"/>
         <t t-else="" t-call="website.s_dynamic_snippet.carousel.page_scroll"/>
     </t>

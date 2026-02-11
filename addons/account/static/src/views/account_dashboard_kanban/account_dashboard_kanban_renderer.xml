@@ -2,9 +2,9 @@
 
     <t t-name="account.DashboardKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
         <xpath expr="//div[@t-ref='root']" position="attributes">
-            <attribute name="t-on-dragenter.prevent">kanbanDragEnter</attribute>
-            <attribute name="t-on-dragleave">kanbanDragLeave</attribute>
-            <attribute name="t-on-drop.prevent">kanbanDragDrop</attribute>
+            <attribute name="t-on-dragenter.prevent">this.kanbanDragEnter</attribute>
+            <attribute name="t-on-dragleave">this.kanbanDragLeave</attribute>
+            <attribute name="t-on-drop.prevent">this.kanbanDragDrop</attribute>
             <attribute name="t-on-dragover.prevent">() =&gt; {}</attribute>
         </xpath>
     </t>

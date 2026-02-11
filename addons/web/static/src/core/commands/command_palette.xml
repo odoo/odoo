@@ -5,41 +5,41 @@
     <Dialog header="false" footer="false" size="'md'" withBodyPadding="false" contentClass="'o_command_palette'">
       <div t-ref="root">
         <div class="o_command_palette_search input-group mb-2 px-4 py-3 border-bottom">
-          <span t-if="state.namespace !== 'default'" class="o_namespace d-flex align-items-center me-1 fs-4 text-muted opacity-75" t-out="state.namespace"/>
-          <input class="form-control border-0 p-0" type="text" data-allow-hotkeys="true" t-att-value="state.searchValue" t-ref="autofocus" t-att-placeholder="state.placeholder" t-on-input="onSearchInput" t-on-keydown="onKeyDown"
+          <span t-if="this.state.namespace !== 'default'" class="o_namespace d-flex align-items-center me-1 fs-4 text-muted opacity-75" t-out="this.state.namespace"/>
+          <input class="form-control border-0 p-0" type="text" data-allow-hotkeys="true" t-att-value="this.state.searchValue" t-ref="autofocus" t-att-placeholder="this.state.placeholder" t-on-input="this.onSearchInput" t-on-keydown="this.onKeyDown"
               role="combobox"
-              t-attf-aria-activedescendant="o_command_{{state.commands.length ? state.commands.indexOf(state.selectedCommand) : 'empty'}}"
+              t-attf-aria-activedescendant="o_command_{{this.state.commands.length ? this.state.commands.indexOf(this.state.selectedCommand) : 'empty'}}"
               aria-expanded="true"
               aria-autocomplete="list"
               aria-haspopup="listbox"
           />
           <div class="input-group-text border-0 bg-transparent">
-              <i t-if="state.isLoading" title="Loading..." role="img" aria-label="Loading..." class="fa fa-circle-o-notch fa-spin"/>
-              <i t-else="" t-att-title="state.placeholder" role="img"  t-att-aria-label="state.placeholder" class="oi oi-search"/>
+              <i t-if="this.state.isLoading" title="Loading..." role="img" aria-label="Loading..." class="fa fa-circle-o-notch fa-spin"/>
+              <i t-else="" t-att-title="this.state.placeholder" role="img"  t-att-aria-label="this.state.placeholder" class="oi oi-search"/>
           </div>
         </div>
 
         <div t-ref="listbox" role="listbox" class="o_command_palette_listbox position-relative overflow-auto">
-          <div t-if="!state.commands.length" id="o_command_empty" role="option" aria-selected="true" class="o_command_palette_listbox_empty px-4 py-3 fst-italic" t-out="state.emptyMessage"/>
-          <t t-if="!isFuzzySearch" t-foreach="commandsByCategory" t-as="category" t-key="category.keyId">
+          <div t-if="!this.state.commands.length" id="o_command_empty" role="option" aria-selected="true" class="o_command_palette_listbox_empty px-4 py-3 fst-italic" t-out="this.state.emptyMessage"/>
+          <t t-if="!this.isFuzzySearch" t-foreach="this.commandsByCategory" t-as="category" t-key="category.keyId">
             <div class="o_command_category px-0">
               <span t-if="category.name" class="text-uppercase fw-bold px-3 text-muted smaller opacity-50" t-out="category.name"/>
               <t t-foreach="category.commands" t-as="command" t-key="command.keyId">
-                <t t-set="commandIndex" t-value="state.commands.indexOf(command)"/>
+                <t t-set="commandIndex" t-value="this.state.commands.indexOf(command)"/>
                 <div t-attf-id="o_command_{{commandIndex}}" class="o_command"
                   role="option"
-                  t-att-aria-selected="state.selectedCommand === command ? 'true' : 'false'"
-                  t-att-class="{ focused: state.selectedCommand === command }"
+                  t-att-aria-selected="this.state.selectedCommand === command ? 'true' : 'false'"
+                  t-att-class="{ focused: this.state.selectedCommand === command }"
                   t-on-click="(event) => this.onCommandClicked(event, commandIndex)"
                   t-on-mouseenter="() => this.onCommandMouseEnter(commandIndex)"
                   t-on-close="() => this.props.closeMe()">
                   <a t-att-href="command.href" t-att-class="command.className">
-                    <t t-component="command.Component || DefaultCommandItem" name="command.name" searchValue="state.searchValue" t-props="command.props" executeCommand="() => this.executeCommand(command)">
+                    <t t-component="command.Component || this.DefaultCommandItem" name="command.name" searchValue="this.state.searchValue" t-props="command.props" executeCommand="() => this.executeCommand(command)">
                       <t t-set-slot="name">
                         <span class="o_command_name text-ellipsis" t-att-title="command.name" t-out="command.text"/>
                       </t>
                       <t t-set-slot="focusMessage">
-                          <small t-if="!isMobileOS and command.href and state.selectedCommand === command" class="o_command_focus text-muted"><kbd><t t-if="isMacOS">CMD</t><t t-else="">CTRL</t></kbd>+<kbd>⏎</kbd><span class="ms-1">new tab</span></small>
+                          <small t-if="!this.isMobileOS and command.href and this.state.selectedCommand === command" class="o_command_focus text-muted"><kbd><t t-if="this.isMacOS">CMD</t><t t-else="">CTRL</t></kbd>+<kbd>⏎</kbd><span class="ms-1">new tab</span></small>
                       </t>
                     </t>
                   </a>
@@ -51,8 +51,8 @@
           </t>
         </div>
 
-        <div t-if="state.FooterComponent" class="o_command_palette_footer mt-2 px-4 py-2 border-top rounded-bottom bg-100 text-muted">
-          <t t-component="state.FooterComponent" switchNamespace="(namespace) => this.debounceSearch(namespace.concat(this.state.searchValue))"/>
+        <div t-if="this.state.FooterComponent" class="o_command_palette_footer mt-2 px-4 py-2 border-top rounded-bottom bg-100 text-muted">
+          <t t-component="this.state.FooterComponent" switchNamespace="(namespace) => this.debounceSearch(namespace.concat(this.state.searchValue))"/>
         </div>
       </div>
     </Dialog>

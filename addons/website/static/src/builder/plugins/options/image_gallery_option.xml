@@ -22,10 +22,10 @@
         <BuilderRange action="'setClassRange'" actionParam="['o_spc-none','o_spc-small','o_spc-medium','o_spc-big']" max="3"/>
     </BuilderRow>
 
-    <BuilderRow label.translate="Columns" t-if="isActiveItem('grid_mode_opt') || isActiveItem('masonry_mode_opt')">
+    <BuilderRow label.translate="Columns" t-if="this.isActiveItem('grid_mode_opt') || this.isActiveItem('masonry_mode_opt')">
         <BuilderSelect>
-            <t t-foreach="[1,2,3,4,6,12]" t-as="column" t-key="column">
-                <BuilderSelectItem action="'setImageGalleryColumns'" actionParam="column"><t t-esc="column"/></BuilderSelectItem>
+            <t t-foreach="[1,2,3,4,6,12]" t-as="column" t-key="this.column">
+                <BuilderSelectItem action="'setImageGalleryColumns'" actionParam="column"><t t-esc="this.column"/></BuilderSelectItem>
             </t>
         </BuilderSelect>
     </BuilderRow>
@@ -68,7 +68,7 @@
             </BuilderSelect>
         </BuilderRow>
 
-        <BuilderRow label.translate="Outline" level="2" t-if="isActiveItem('indicators_squared_opt') || isActiveItem('indicators_rounded_opt')">
+        <BuilderRow label.translate="Outline" level="2" t-if="this.isActiveItem('indicators_squared_opt') || this.isActiveItem('indicators_rounded_opt')">
             <BuilderCheckbox classAction="'s_image_gallery_indicators_outline'"/>
         </BuilderRow>
     </t>
@@ -92,7 +92,7 @@
             </BuilderSelect>
         </BuilderRow>
 
-        <t t-if="isActiveItem('auto_after_first_hover') || isActiveItem('auto_always')">
+        <t t-if="this.isActiveItem('auto_after_first_hover') || this.isActiveItem('auto_always')">
             <BuilderRow label.translate="Timespan" level="1">
                 <BuilderNumberInput dataAttributeAction="'bsInterval'"
                     default="10"
@@ -111,31 +111,31 @@
     </BuilderContext>
 </t>
 <t t-name="website.s_image_gallery_slideshow">
-    <div t-attf-id="#{id}" t-attf-class="carousel slide #{colorContrast}" t-att-data-bs-ride="ride" t-attf-data-bs-interval="#{interval}" style="margin: 0 12px;">
+    <div t-attf-id="#{this.id}" t-attf-class="carousel slide #{this.colorContrast}" t-att-data-bs-ride="this.ride" t-attf-data-bs-interval="#{this.interval}" style="margin: 0 12px;">
         <div class="carousel-inner">
-            <t t-foreach="images" t-as="image" t-key="image_index">
-                <div t-attf-class="carousel-item #{image_index == index and 'active' or ''}">
-                    <t t-if="!copyAttributes">
+            <t t-foreach="this.images" t-as="image" t-key="this.image_index">
+                <div t-attf-class="carousel-item #{image_index == this.index and 'active' or ''}">
+                    <t t-if="!this.copyAttributes">
                         <img class="img img-fluid d-block" t-att-src="image.getAttribute('src')" t-att-alt="image.alt" data-name="Image"/>
                     </t>
                     <t t-else="">
-                        <t t-set="imageAttributes" t-value="Object.fromEntries([...image.attributes].map(attr => [attr.name, attr.value]))"/>
+                        <t t-set="imageAttributes" t-value="Object.fromEntries([...this.image.attributes].map(attr => [attr.name, attr.value]))"/>
                         <img t-att="imageAttributes"/>
                     </t>
                 </div>
             </t>
         </div>
         <div class="o_carousel_controllers">
-            <button class="carousel-control-prev o_we_no_overlay o_not_editable" contenteditable="false" t-attf-data-bs-target="##{id}" data-bs-slide="prev" aria-label="Previous" title="Previous">
+            <button class="carousel-control-prev o_we_no_overlay o_not_editable" contenteditable="false" t-attf-data-bs-target="##{this.id}" data-bs-slide="prev" aria-label="Previous" title="Previous">
                 <span class="carousel-control-prev-icon" aria-hidden="true"/>
                 <span class="visually-hidden">Previous</span>
             </button>
             <div class="carousel-indicators s_image_gallery_indicators_bars">
-                <t t-foreach="images" t-as="image" t-key="image_index">
-                    <button type="button" aria-label="Carousel indicator" t-attf-data-bs-target="##{id}" t-att-data-bs-slide-to="image_index" t-att-class="image_index == index and 'active' or None" t-attf-style="background-image: url(#{image.getAttribute('src')})"/>
+                <t t-foreach="this.images" t-as="image" t-key="this.image_index">
+                    <button type="button" aria-label="Carousel indicator" t-attf-data-bs-target="##{this.id}" t-att-data-bs-slide-to="image_index" t-att-class="image_index == this.index and 'active' or this.None" t-attf-style="background-image: url(#{image.getAttribute('src')})"/>
                 </t>
             </div>
-            <button class="carousel-control-next o_we_no_overlay o_not_editable" contenteditable="false" t-attf-data-bs-target="##{id}" data-bs-slide="next" aria-label="Next" title="Next">
+            <button class="carousel-control-next o_we_no_overlay o_not_editable" contenteditable="false" t-attf-data-bs-target="##{this.id}" data-bs-slide="next" aria-label="Next" title="Next">
                 <span class="carousel-control-next-icon" aria-hidden="true"/>
                 <span class="visually-hidden">Next</span>
             </button>

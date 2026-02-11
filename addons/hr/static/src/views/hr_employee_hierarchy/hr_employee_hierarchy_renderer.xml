@@ -6,16 +6,16 @@
             <attribute name="class" add="flex-column align-items-center" separator=" "/>
         </xpath>
         <xpath expr="//div[hasclass('o_hierarchy_container')]" position="before">
-            <div t-if="employeesInCycleIds.length" class="my-custom-header alert alert-warning mb-2 w-100 text-center">
+            <div t-if="this.employeesInCycleIds.length" class="my-custom-header alert alert-warning mb-2 w-100 text-center">
                 Some employees are present in a loop.
-                Click <a class="cursor-pointer p-0" t-on-click.prevent="_displayEmployeesInCycle">here</a> to see those employees.
+                Click <a class="cursor-pointer p-0" t-on-click.prevent="this._displayEmployeesInCycle">here</a> to see those employees.
             </div>
         </xpath>
         <xpath expr="//div[hasclass('o_hierarchy_parent_node_container')]/span" position="replace">
             <Avatar
-                resModel="row.parentNode.model.resModel"
-                resId="row.parentNode.resId"
-                displayName="row.parentNode.data.display_name || row.parentNode.data.name"
+                resModel="this.row.parentNode.model.resModel"
+                resId="this.row.parentNode.resId"
+                displayName="this.row.parentNode.data.display_name || this.row.parentNode.data.name"
             />
         </xpath>
     </t>

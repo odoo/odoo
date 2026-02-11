@@ -8,11 +8,11 @@
                     <t t-if="this.ui.isSmall">
                         <div class="text-center position-relative pt-5 w-100">
                             <p class="popup-text w-100 position-absolute top-0 start-50 translate-middle-x">Scan QR</p>
-                            <img id="CustomerDisplayqrCode" t-att-src="getQrCode()" alt="Customer QR Code"
+                            <img id="CustomerDisplayqrCode" t-att-src="this.getQrCode()" alt="Customer QR Code"
                                 class="img-fluid mb-3 square w-100"/>
 
                             <div class="small mb-3">
-                                <t t-set="customerDisplayURL" t-value="props.customerDisplayURL"/>
+                                <t t-set="customerDisplayURL" t-value="this.props.customerDisplayURL"/>
                                 <a t-att-href="customerDisplayURL" target="_blank" t-esc="customerDisplayURL" />
                                 <CopyButton content="customerDisplayURL" className="'ms-2 btn-primary'" successText.translate="Link copied to clipboard" icon="'fa-clone'"/>
                             </div>
@@ -26,10 +26,10 @@
                             <p class="popup-text w-100">You can either use it on this device or scan the QR code to display it on another device</p>
                             <div class="d-flex justify-content-between">
                                 <div class="d-flex gap-3 flex-grow-1">
-                                    <button t-on-click="openOnThisDevice" class="btn btn-primary h1 mb-3 rounded-3">
+                                    <button t-on-click="this.openOnThisDevice" class="btn btn-primary h1 mb-3 rounded-3">
                                         This device 
                                     </button>
-                                    <button t-on-click="showQr" class="btn btn-secondary h1 mb-3 rounded-3">
+                                    <button t-on-click="this.showQr" class="btn btn-secondary h1 mb-3 rounded-3">
                                         Display QR
                                     </button>
                                 </div>

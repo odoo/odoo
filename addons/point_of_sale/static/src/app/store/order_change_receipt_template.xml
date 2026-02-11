@@ -5,17 +5,17 @@
         <div class="pos-receipt m-0 p-0 pt-5">
             <!-- Receipt Header -->
             <div class="receipt-header text-center">
-                <div class="pos-receipt-title preset-name" t-if="data.preset_name">
-                    <t t-esc="data.preset_name"/> <t t-if="data.preset_time">(<t t-esc="data.preset_time"/>)</t>
+                <div class="pos-receipt-title preset-name" t-if="this.data.preset_name">
+                    <t t-esc="this.data.preset_name"/> <t t-if="this.data.preset_time">(<t t-esc="this.data.preset_time"/>)</t>
                 </div>
                 <div class="o-employee-name" style="font-size: 78%;">
-                    <span><t t-esc="data.config_name"/> : <t t-esc="data.time"/></span><br/>
-                    <span t-if="data.employee_name">By: <t t-esc="data.employee_name"/></span>
+                    <span><t t-esc="this.data.config_name"/> : <t t-esc="this.data.time"/></span><br/>
+                    <span t-if="this.data.employee_name">By: <t t-esc="this.data.employee_name"/></span>
                 </div>
                 <span class="my-4" style="font-size: 150%;">
-                    <span>Order <strong><t t-esc="data.pos_reference"/></strong></span>
-                    <strong t-if="data.tracking_number" class="fw-light my-3">
-                        # <t t-esc="data.tracking_number"/>
+                    <span>Order <strong><t t-esc="this.data.pos_reference"/></strong></span>
+                    <strong t-if="this.data.tracking_number" class="fw-light my-3">
+                        # <t t-esc="this.data.tracking_number"/>
                     </strong>
                 </span>
             </div>
@@ -23,61 +23,61 @@
 
             <!-- Receipt Body -->
             <div class="pos-receipt-body pb-5">
-                <t t-set="hasDataChanges" t-value="data.changes.data?.length or data.changes.groupedData or data.changes.title" />
-                <div t-if="hasDataChanges" class="new-changes w-100">
+                <t t-set="hasDataChanges" t-value="this.data.changes.data?.length or this.data.changes.groupedData or this.data.changes.title" />
+                <div t-if="this.hasDataChanges" class="new-changes w-100">
                     <div class="pos-receipt-title text-center w-100">
-                        <strong t-esc="data.changes.title" />
-                        <t t-if="data.reprint">
+                        <strong t-esc="this.data.changes.title" />
+                        <t t-if="this.data.reprint">
                             (DUPLICATE !)
                         </t>
                     </div>
-                    <t t-if="data.changes.groupedData">
-                        <div t-foreach="data.changes.groupedData" t-as="group" t-key="group_index">
-                            <div style="border-bottom: 1px dashed black;" class="mb-2 pb-1 fw-bold " t-att-class="{'mt-1': !group_first}" t-esc="group.name" />
-                            <div t-foreach="group.data" t-as="line" class="ps-2" t-key="change_index">
+                    <t t-if="this.data.changes.groupedData">
+                        <div t-foreach="this.data.changes.groupedData" t-as="group" t-key="this.group_index">
+                            <div style="border-bottom: 1px dashed black;" class="mb-2 pb-1 fw-bold " t-att-class="{'mt-1': !group_first}" t-esc="this.group.name" />
+                            <div t-foreach="this.group.data" t-as="line" class="ps-2" t-key="this.change_index">
                                 <t t-call="point_of_sale.OrderChangeReceiptLine" />
                             </div>
                         </div>
                     </t>
                     <t t-else="">
-                        <div t-foreach="data.changes.data" t-as="line" t-key="change_index">
+                        <div t-foreach="this.data.changes.data" t-as="line" t-key="this.change_index">
                             <t t-call="point_of_sale.OrderChangeReceiptLine" />
                         </div>
                     </t>
                 </div>
-                <div t-if="data.internal_note and !hasDataChanges" class="new-changes w-100" t-att-class="{'mb-3': data.general_customer_note}">
+                <div t-if="this.data.internal_note and !this.hasDataChanges" class="new-changes w-100" t-att-class="{'mb-3': this.data.general_customer_note}">
                     <div class="pos-receipt-title text-center w-100">
                         <strong>INTERNAL NOTE</strong>
                     </div>
-                    <div class="text-center" style="font-size: 109%;" t-esc="data.internal_note" />
+                    <div class="text-center" style="font-size: 109%;" t-esc="this.data.internal_note" />
                 </div>
-                <div t-if="data.general_customer_note and !hasDataChanges" class="new-changes w-100">
+                <div t-if="this.data.general_customer_note and !this.hasDataChanges" class="new-changes w-100">
                     <div class="pos-receipt-title text-center w-100">
                         <strong>CUSTOMER NOTE</strong>
                     </div>
-                    <div class="text-center" style="font-size: 109%;" t-esc="data.general_customer_note" />
+                    <div class="text-center" style="font-size: 109%;" t-esc="this.data.general_customer_note" />
                 </div>
             </div>
         </div>
     </t>
 
     <t t-name="point_of_sale.OrderChangeReceiptLine">
-        <div t-attf-class="orderline #{line.combo_parent_uuid ? 'ms-5 px-2' : 'mx-1'}" style="font-size: 150%;">
+        <div t-attf-class="orderline #{this.line.combo_parent_uuid ? 'ms-5 px-2' : 'mx-1'}" style="font-size: 150%;">
             <div class="d-flex medium">
-                <span class="me-3" t-esc="line.quantity"/> <span class="product-name" t-esc="line.basic_name"/>
+                <span class="me-3" t-esc="this.line.quantity"/> <span class="product-name" t-esc="this.line.basic_name"/>
             </div>
-            <div t-if="line.attribute_value_names?.length" class="ms-5" style="font-size: 91%;">
-                <t t-foreach="line.attribute_value_names" t-as="name" t-key="name_index">
+            <div t-if="this.line.attribute_value_names?.length" class="ms-5" style="font-size: 91%;">
+                <t t-foreach="this.line.attribute_value_names" t-as="name" t-key="this.name_index">
                     <p class="p-0 m-0">
-                        - <t t-esc="name" />
+                        - <t t-esc="this.name" />
                     </p>
                 </t>
             </div>
-            <div t-if="line.note" class="fst-italic" style="font-size: 91%;">
-                <t t-esc="line.note.split('\n').join(', ')"/><br/>
+            <div t-if="this.line.note" class="fst-italic" style="font-size: 91%;">
+                <t t-esc="this.line.note.split('\n').join(', ')"/><br/>
             </div>
-            <div t-if="line.customer_note" class="fst-italic" style="font-size: 91%;">
-                <t t-esc="line.customer_note"/><br/>
+            <div t-if="this.line.customer_note" class="fst-italic" style="font-size: 91%;">
+                <t t-esc="this.line.customer_note"/><br/>
             </div>
         </div>
     </t>

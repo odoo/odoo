@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="discuss.ChannelMember">
-        <div class="o-discuss-ChannelMember d-flex align-items-center p-1 bg-inherit rounded-3" t-att-class="attClass" t-on-click.stop="(ev) => this.onClickAvatar(ev)">
-            <DiscussAvatar member="member"/>
+        <div class="o-discuss-ChannelMember d-flex align-items-center p-1 bg-inherit rounded-3" t-att-class="this.attClass" t-on-click.stop="(ev) => this.onClickAvatar(ev)">
+            <DiscussAvatar member="this.member"/>
             <div t-ref="displayName" class="d-flex overflow-hidden flex-column lh-sm">
-                <span class="ms-2 text-truncate text-muted fw-bold" t-esc="member.name" t-att-title="member.name"/>
+                <span class="ms-2 text-truncate text-muted fw-bold" t-esc="this.member.name" t-att-title="this.member.name"/>
             </div>
-            <i t-if="member.channel_role === 'owner'" class="ms-2 fa fa-star text-warning" role="img" title="Channel Owner" aria-label="Channel Owner"/>
-            <i t-if="member.channel_role === 'admin'" class="ms-2 fa fa-star text-primary" role="img" title="Channel Admin" aria-label="Channel Admin"/>
+            <i t-if="this.member.channel_role === 'owner'" class="ms-2 fa fa-star text-warning" role="img" title="Channel Owner" aria-label="Channel Owner"/>
+            <i t-if="this.member.channel_role === 'admin'" class="ms-2 fa fa-star text-primary" role="img" title="Channel Admin" aria-label="Channel Admin"/>
             <span class="ms-auto">
-                <span t-if="member.in(member.channel_id.invited_member_ids)" class="p-1 oi oi-user-plus opacity-75"/>
-                <span t-if="member.rtcSession?.is_muted and !member.rtcSession?.is_deaf" class="p-1 fa fa-microphone-slash opacity-75"/>
-                <span t-elif="member.rtcSession?.is_deaf" class="p-1 fa fa-deaf opacity-75"/>
-                <span t-if="member.rtcSession?.raisingHand" class="p-1 fa fa-hand-paper-o"/>
+                <span t-if="this.member.in(this.member.channel_id.invited_member_ids)" class="p-1 oi oi-user-plus opacity-75"/>
+                <span t-if="this.member.rtcSession?.is_muted and !this.member.rtcSession?.is_deaf" class="p-1 fa fa-microphone-slash opacity-75"/>
+                <span t-elif="this.member.rtcSession?.is_deaf" class="p-1 fa fa-deaf opacity-75"/>
+                <span t-if="this.member.rtcSession?.raisingHand" class="p-1 fa fa-hand-paper-o"/>
             </span>
             <div class="o-discuss-ChannelMember-actions" t-att-class="{
-                'd-none': !showingActions.isOpen and !store.useMobileView,
-                'd-flex': showingActions.isOpen or store.useMobileView,
+                'd-none': !this.showingActions.isOpen and !this.store.useMobileView,
+                'd-flex': this.showingActions.isOpen or this.store.useMobileView,
             }">
-                <Dropdown state="showingActions" position="'bottom-end'" menuClass="'my-1 ' + store.discussDropdownMenuClass(this)">
-                    <button class="btn btn-light rounded-circle d-flex o-p-0_5 align-items-center justify-content-center o-mail-discussSidebarBgColor border" t-att-class="{ 'o-showingActions': showingActions.isOpen }" title="Member Actions">
+                <Dropdown state="this.showingActions" position="'bottom-end'" menuClass="'my-1 ' + this.store.discussDropdownMenuClass(this)">
+                    <button class="btn btn-light rounded-circle d-flex o-p-0_5 align-items-center justify-content-center o-mail-discussSidebarBgColor border" t-att-class="{ 'o-showingActions': this.showingActions.isOpen }" title="Member Actions">
                         <i role="img" class="oi oi-fw oi-lg oi-ellipsis-h"/>
                     </button>
                     <t t-set-slot="content">
-                        <ActionList actions="actions.actions" dropdown="true"/>
+                        <ActionList actions="this.actions.actions" dropdown="true"/>
                     </t>
                 </Dropdown>
             </div>

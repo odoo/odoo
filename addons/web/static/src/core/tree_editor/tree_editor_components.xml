@@ -2,14 +2,14 @@
 <templates xml:space="preserve">
 
     <t t-name="web.TreeEditor.Input">
-        <input type="text" class="o_input" t-att-value="props.startEmpty ? '' : props.value" t-att-placeholder="props.placeholder" t-on-change="(ev) => props.update(ev.target.value)" />
+        <input type="text" class="o_input" t-att-value="this.props.startEmpty ? '' : this.props.value" t-att-placeholder="this.props.placeholder" t-on-change="(ev) => this.props.update(ev.target.value)" />
     </t>
 
     <t t-name="web.TreeEditor.Select">
-        <select class="o_input pe-3 text-truncate" t-on-change="(ev) => props.update(deserialize(ev.target.value))">
-            <option class="o_select_placeholder" t-if="props.addBlankOption" hidden="true" t-esc="props.placeholder ? props.placeholder : ''"/>
-            <t t-foreach="props.options" t-as="option" t-key="serialize(option[0])">
-                <option class="text-black" t-att-value="serialize(option[0])" t-att-selected="!props.addBlankOption and option[0] === props.value" t-esc="option[1]" />
+        <select class="o_input pe-3 text-truncate" t-on-change="(ev) => this.props.update(this.deserialize(ev.target.value))">
+            <option class="o_select_placeholder" t-if="this.props.addBlankOption" hidden="true" t-esc="this.props.placeholder ? this.props.placeholder : ''"/>
+            <t t-foreach="this.props.options" t-as="option" t-key="this.serialize(this.option[0])">
+                <option class="text-black" t-att-value="this.serialize(option[0])" t-att-selected="!this.props.addBlankOption and option[0] === this.props.value" t-esc="this.option[1]" />
             </t>
         </select>
     </t>
@@ -18,15 +18,15 @@
         <div class="d-flex align-items-center">
             <t t-call="web.TreeEditor.Editor">
                 <t t-set="_classes" t-value="'overflow-hidden flex-grow-1'"/>
-                <t t-set="info" t-value="props.editorInfo" />
-                <t t-set="value" t-value="props.value[0]" />
+                <t t-set="info" t-value="this.props.editorInfo" />
+                <t t-set="value" t-value="this.props.value[0]" />
                 <t t-set="update" t-value="(val) => this.update(0, val)" />
             </t>
             <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" />
             <t t-call="web.TreeEditor.Editor">
                 <t t-set="_classes" t-value="'overflow-hidden flex-grow-1'"/>
-                <t t-set="info" t-value="props.editorInfo" />
-                <t t-set="value" t-value="props.value[1]" />
+                <t t-set="info" t-value="this.props.editorInfo" />
+                <t t-set="value" t-value="this.props.value[1]" />
                 <t t-set="update" t-value="(val) => this.update(1, val)" />
             </t>
         </div>
@@ -36,15 +36,15 @@
         <div class="d-flex flex-column gap-2">
             <t t-call="web.TreeEditor.Editor">
                 <t t-set="_classes" t-value="'overflow-hidden flex-grow-1'"/>
-                <t t-set="info" t-value="props.valueTypeEditorInfo" />
-                <t t-set="value" t-value="props.value[1]" />
+                <t t-set="info" t-value="this.props.valueTypeEditorInfo" />
+                <t t-set="value" t-value="this.props.value[1]" />
                 <t t-set="update" t-value="(val) => this.updateValueType(val)" />
             </t>
-            <t t-if="props.value[1] === 'custom range'">
+            <t t-if="this.props.value[1] === 'custom range'">
                 <t t-call="web.TreeEditor.Editor">
                     <t t-set="_classes" t-value="'overflow-hidden flex-grow-1'"/>
-                    <t t-set="info" t-value="props.betweenEditorInfo" />
-                    <t t-set="value" t-value="props.value.slice(2)" />
+                    <t t-set="info" t-value="this.props.betweenEditorInfo" />
+                    <t t-set="value" t-value="this.props.value.slice(2)" />
                     <t t-set="update" t-value="(val) => this.updateValues(val)" />
                 </t>
             </t>
@@ -53,15 +53,15 @@
 
     <t t-name="web.TreeEditor.List">
         <div class="o_input d-flex flex-wrap gap-1">
-            <t t-foreach="tags" t-as="tag" t-key="tag_index">
-                <BadgeTag t-props="tag"/>
+            <t t-foreach="this.tags" t-as="tag" t-key="this.tag_index">
+                <BadgeTag t-props="this.tag"/>
             </t>
             <div class="flex-grow-1">
                 <t t-call="web.TreeEditor.Editor">
-                    <t t-set="info" t-value="props.editorInfo" />
-                    <t t-set="value" t-value="props.editorInfo.defaultValue()" />
+                    <t t-set="info" t-value="this.props.editorInfo" />
+                    <t t-set="value" t-value="this.props.editorInfo.defaultValue()" />
                     <t t-set="update" t-value="(val) => this.update(val)" />
-                    <t t-set="displayPlaceholder" t-value="!tags.length" />
+                    <t t-set="displayPlaceholder" t-value="!this.tags.length" />
                 </t>
             </div>
         </div>

@@ -3,7 +3,7 @@
     <t t-name="website_sale.ProductComparisonBottomBar">
         <div class="o_not_editable position-absolute top-0 start-0 bottom-0 end-0 d-flex align-items-end justify-content-end p-0 pe-none">
             <div
-                t-if="state.products.size"
+                t-if="this.state.products.size"
                 class="o_wsale_comparison_bottom_bar sticky-bottom flex-shrink-0 w-100 bg-body pe-auto"
                 name="comparison_bottom_bar"
             >
@@ -11,12 +11,12 @@
                     <div class="collapse d-xl-none" id="comparisonCollapse">
                         <ul class="list-group list-group-flush">
                             <li
-                                t-foreach="state.products.values()"
+                                t-foreach="this.state.products.values()"
                                 t-as="product"
-                                t-key="product.id"
+                                t-key="this.product.id"
                                 class="list-group-item d-flex align-items-start justify-content-between gap-2 px-0 py-3"
                             >
-                                <ProductRow t-props="product"/>
+                                <ProductRow t-props="this.product"/>
                             </li>
                         </ul>
                     </div>
@@ -34,13 +34,13 @@
                         </button>
                         <ul class="list-unstyled d-none d-xl-flex flex-grow-1 flex-shrink-1 gap-3 overflow-hidden me-auto mb-0">
                             <li
-                                t-foreach="state.products.values()"
+                                t-foreach="this.state.products.values()"
                                 t-as="product"
-                                t-key="product.id"
+                                t-key="this.product.id"
                                 class="flex-basis-25 overflow-hidden"
                                 t-att-class="{'border-end pe-3': !product_last}"
                             >
-                                <ProductRow t-props="product"/>
+                                <ProductRow t-props="this.product"/>
                             </li>
                         </ul>
 
@@ -55,18 +55,18 @@
 
     <t t-name="website_sale.ProductComparisonBottomBar.Actions">
         <a
-            t-att-href="comparisonUrl"
-            t-att-disabled="productCount lt 2"
+            t-att-href="this.comparisonUrl"
+            t-att-disabled="this.productCount lt 2"
             class="btn btn-primary flex-grow-1 flex-md-grow-0"
-            t-att-class="{ 'disabled': productCount lt 2 }"
+            t-att-class="{ 'disabled': this.productCount lt 2 }"
             role="button"
             title="Compare products"
         >
             Compare
-            <span t-if="productCount" t-out="productCount" class="badge ms-2"/>
+            <span t-if="this.productCount" t-out="this.productCount" class="badge ms-2"/>
         </a>
         <button
-            t-on-click="clearAllProducts"
+            t-on-click="this.clearAllProducts"
             class="btn btn-light d-none d-sm-block"
             aria-label="Remove all products from comparison"
         >

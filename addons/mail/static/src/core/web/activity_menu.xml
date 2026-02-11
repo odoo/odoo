@@ -2,18 +2,18 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.ActivityMenu">
-    <Dropdown position="'bottom-end'" state="dropdown" beforeOpen.bind="onBeforeOpen" menuClass="discussSystray.menuClass" bottomSheet="false">
+    <Dropdown position="'bottom-end'" state="this.dropdown" beforeOpen.bind="this.onBeforeOpen" menuClass="this.discussSystray.menuClass" bottomSheet="false">
         <button>
             <i class="fa fa-lg fa-clock-o" role="img" aria-label="Activities"></i>
-            <span t-if="store.activityCounter" class="o-mail-ActivityMenu-counter badge rounded-pill"><t t-esc="store.activityCounter"/></span>
+            <span t-if="this.store.activityCounter" class="o-mail-ActivityMenu-counter badge rounded-pill"><t t-esc="this.store.activityCounter"/></span>
         </button>
         <t t-set-slot="content">
             <div t-att-class="`${discussSystray.contentClass} o-mail-ActivityMenu`">
-                <div t-if="store.activityGroups.length === 0" class="o-mail-ActivityMenu-empty align-items-center text-muted p-2 opacity-50 d-flex justify-content-center">
+                <div t-if="this.store.activityGroups.length === 0" class="o-mail-ActivityMenu-empty align-items-center text-muted p-2 opacity-50 d-flex justify-content-center">
                     <span>Congratulations, you're done with your activities.</span>
                 </div>
                 <div class="d-flex flex-column list-group list-group-flush" name="activityGroups">
-                    <t t-foreach="store.activityGroups" t-as="group" t-key="group_index" name="activityGroupLoop">
+                    <t t-foreach="this.store.activityGroups" t-as="group" t-key="group_index" name="activityGroupLoop">
                         <div class="o-mail-ActivityGroup list-group-item list-group-item-action d-flex p-2 cursor-pointer"
                              t-att-data-model_name="group.model" t-custom-click="(ev, isMiddleClick) => this.openActivityGroup(group, undefined, isMiddleClick)">
                             <img alt="Activity" t-att-src="group.icon"/>

@@ -2,27 +2,27 @@
 <templates xml:space="preserve">
 
     <t t-name="web.Dialog">
-        <div class="o_dialog" t-att-id="id" t-att-class="{ o_inactive_modal: !data.isActive }">
+        <div class="o_dialog" t-att-id="this.id" t-att-class="{ o_inactive_modal: !this.data.isActive }">
             <div role="dialog" class="modal d-block"
                 tabindex="-1"
-                t-att-class="{ o_technical_modal: props.technical, o_modal_full: isFullscreen, o_inactive_modal: !data.isActive }"
-                t-attf-class="o_modal_design_{{ design }} {{ !props.withBodyPadding ? 'o_modal_no_body_padding': 'o_modal_body_padding' }}"
+                t-att-class="{ o_technical_modal: this.props.technical, o_modal_full: this.isFullscreen, o_inactive_modal: !this.data.isActive }"
+                t-attf-class="o_modal_design_{{ this.design }} {{ !this.props.withBodyPadding ? 'o_modal_no_body_padding': 'o_modal_body_padding' }}"
                 t-ref="modalRef"
                 >
-                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" t-attf-class="modal-{{ size }}">
-                    <div class="modal-content" t-att-class="props.contentClass" t-att-style="contentStyle">
-                        <header t-if="props.header" class="modal-header">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" t-attf-class="modal-{{ this.size }}">
+                    <div class="modal-content" t-att-class="this.props.contentClass" t-att-style="this.contentStyle">
+                        <header t-if="this.props.header" class="modal-header">
                             <t t-slot="header" close="data.close" isFullscreen="isFullscreen">
                                 <t t-call="web.Dialog.header">
-                                    <t t-set="fullscreen" t-value="isFullscreen"/>
-                                    <t t-set="onExpand" t-value="props.onExpand"/>
+                                    <t t-set="fullscreen" t-value="this.isFullscreen"/>
+                                    <t t-set="onExpand" t-value="this.props.onExpand"/>
                                 </t>
                             </t>
                         </header>
-                        <main class="modal-body" t-attf-class="{{ props.bodyClass }}">
+                        <main class="modal-body" t-attf-class="{{ this.props.bodyClass }}">
                             <t t-slot="default" close="() => this.data.close()" />
                         </main>
-                        <footer t-if="props.footer" class="modal-footer d-empty-none justify-content-around justify-content-md-start flex-wrap gap-2 w-100">
+                        <footer t-if="this.props.footer" class="modal-footer d-empty-none justify-content-around justify-content-md-start flex-wrap gap-2 w-100">
                             <t t-slot="footer" close="() => this.data.close()"/>
                         </footer>
                     </div>
@@ -36,13 +36,13 @@
             <button class="btn oi oi-arrow-left oi-large" aria-label="Close" tabindex="-1" t-on-click="dismiss" data-available-offline=""/>
         </t>
         <h4 class="modal-title text-wrap text-break fs-3 flex-grow-1" t-att-class="{ 'me-auto ms-3': fullscreen }">
-            <t t-esc="props.title"/>
+            <t t-esc="this.props.title"/>
         </h4>
         <t t-if="onExpand">
             <button type="button" class="fa fa-expand btn opacity-50 opacity-100-hover o_expand_button" aria-label="Expand" tabindex="-1" t-on-click="onExpand" data-available-offline=""/>
         </t>
         <t t-if="!fullscreen">
-            <button type="button" class="btn-close" title="Close" t-att-class="{'position-sm-absolute top-0 end-0': design == 'minimal' and !onExpand }" aria-label="Close" tabindex="-1" t-on-click="dismiss" data-available-offline=""/>
+            <button type="button" class="btn-close" title="Close" t-att-class="{'position-sm-absolute top-0 end-0': this.design == 'minimal' and !onExpand }" aria-label="Close" tabindex="-1" t-on-click="dismiss" data-available-offline=""/>
         </t>
     </t>
 </templates>

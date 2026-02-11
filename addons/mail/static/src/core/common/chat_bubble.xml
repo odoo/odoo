@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ChatBubble">
-        <div t-if="props.chatWindow?.channel" class="o-mail-ChatBubble position-relative" t-att-name="props.chatWindow.channel.displayName" t-att-class="{ 'o-bouncing': state.bouncing, 'o-active': state.isPopoverOpen, 'o-mobile': isMobileOS }" t-on-click="() => props.chatWindow.open({ focus: true })" t-on-animationend="() => state.bouncing = false" t-ref="root">
-            <span class="o-mail-ChatBubble-unreadIndicator position-absolute" t-att-class="{ 'opacity-0': !channel.isUnread or channel.importantCounter }"><i class="fa fa-circle"/></span>
-            <div t-if="channel.importantCounter > 0" class="o-mail-ChatBubble-counter position-absolute badge rounded-pill fw-bold o-discuss-badge shadow" t-out="channel.importantCounter"/>
-            <button t-if="!env.embedLivechat and !isMobileOS" class="o-mail-ChatBubble-close position-absolute shadow rounded-circle fw-bold bg-view" title="Close Chat Bubble" t-on-click.stop="() => this.props.chatWindow.requestClose()"><i class="oi oi-close"/></button>
-            <CountryFlag t-if="channel.showCorrespondentCountry" country="channel.correspondentCountry" class="'o-mail-ChatBubble-country position-absolute bottom-0 border shadow-sm'"/>
+        <div t-if="this.props.chatWindow?.channel" class="o-mail-ChatBubble position-relative" t-att-name="this.props.chatWindow.channel.displayName" t-att-class="{ 'o-bouncing': this.state.bouncing, 'o-active': this.state.isPopoverOpen, 'o-mobile': this.isMobileOS }" t-on-click="() => this.props.chatWindow.open({ focus: true })" t-on-animationend="() => this.state.bouncing = false" t-ref="root">
+            <span class="o-mail-ChatBubble-unreadIndicator position-absolute" t-att-class="{ 'opacity-0': !this.channel.isUnread or this.channel.importantCounter }"><i class="fa fa-circle"/></span>
+            <div t-if="this.channel.importantCounter > 0" class="o-mail-ChatBubble-counter position-absolute badge rounded-pill fw-bold o-discuss-badge shadow" t-out="this.channel.importantCounter"/>
+            <button t-if="!this.env.embedLivechat and !this.isMobileOS" class="o-mail-ChatBubble-close position-absolute shadow rounded-circle fw-bold bg-view" title="Close Chat Bubble" t-on-click.stop="() => this.props.chatWindow.requestClose()"><i class="oi oi-close"/></button>
+            <CountryFlag t-if="this.channel.showCorrespondentCountry" country="this.channel.correspondentCountry" class="'o-mail-ChatBubble-country position-absolute bottom-0 border shadow-sm'"/>
             <button class="o-mail-ChatHub-bubbleBtn btn shadow">
-                <DiscussAvatar channel="channel" size="42" imgRoundedClass="'rounded-circle'"/>
+                <DiscussAvatar channel="this.channel" size="42" imgRoundedClass="'rounded-circle'"/>
             </button>
         </div>
     </t>
 
     <t t-name="mail.ChatBubblePreview">
-        <div t-if="props.chatWindow?.channel" class="o-mail-ChatBubble-preview o-mail-ChatBubble-menu px-0 py-1 shadow-sm border border-secondary bg-100 o-rounded-bubble">
-            <div class="text-truncate base-fs fw-bolder mb-0 mx-2 px-1" t-esc="props.chatWindow.channel.displayName"/>
-            <t t-set="message" t-value="channel.newestPersistentOfAllMessage" />
-            <div t-if="previewText" class="text-truncate small mx-2 px-1 text-muted">
-                <MessageSeenIndicator t-if="message.showSeenIndicator(channel.thread)" message="message"/>
-                <t t-out="message.previewText" />
+        <div t-if="this.props.chatWindow?.channel" class="o-mail-ChatBubble-preview o-mail-ChatBubble-menu px-0 py-1 shadow-sm border border-secondary bg-100 o-rounded-bubble">
+            <div class="text-truncate base-fs fw-bolder mb-0 mx-2 px-1" t-esc="this.props.chatWindow.channel.displayName"/>
+            <t t-set="message" t-value="this.channel.newestPersistentOfAllMessage" />
+            <div t-if="this.previewText" class="text-truncate small mx-2 px-1 text-muted">
+                <MessageSeenIndicator t-if="this.message.showSeenIndicator(this.channel.thread)" message="message"/>
+                <t t-out="this.message.previewText" />
             </div>
         </div>
     </t>

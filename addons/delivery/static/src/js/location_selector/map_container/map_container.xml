@@ -12,17 +12,17 @@
                 t-else=""
                 class="d-flex justify-content-center align-items-center flex-grow-1 w-100 bg-200"
             >
-                <span t-out="errorMessage"/>
+                <span t-out="this.errorMessage"/>
             </div>
 
             <!-- Desktop infos -->
-            <div t-if="selectedLocation" class="d-none d-md-flex justify-content-between flex-column flex-lg-row gap-3 gap-lg-0 p-4">
+            <div t-if="this.selectedLocation" class="d-none d-md-flex justify-content-between flex-column flex-lg-row gap-3 gap-lg-0 p-4">
                 <div class="col-lg-5 d-flex flex-column justify-content-between">
                     <div class="d-flex gap-2">
                         <div class="d-flex flex-column flex-grow-1">
-                            <strong class="h5 fw-bold" t-out="selectedLocation.name"/>
-                            <small t-out="selectedLocation.street"/>
-                            <small t-out="this.getCityAndZipCode(selectedLocation)"/>
+                            <strong class="h5 fw-bold" t-out="this.selectedLocation.name"/>
+                            <small t-out="this.selectedLocation.street"/>
+                            <small t-out="this.getCityAndZipCode(this.selectedLocation)"/>
                         </div>
                     </div>
                     <!-- large screen and + -->
@@ -32,12 +32,12 @@
                         class="btn btn-primary d-none d-lg-block mt-3"
                         t-att-disabled="!this.props.selectedLocationId"
                         t-on-click="this.props.validateSelection"
-                        t-out="chooseLocationButtonLabel"/>
+                        t-out="this.chooseLocationButtonLabel"/>
                 </div>
 
                 <!-- Schedule -->
                 <LocationSchedule
-                    openingHours="selectedLocation.opening_hours"
+                    openingHours="this.selectedLocation.opening_hours"
                     wrapClass="'col-lg-7 flex-grow-1 flex-lg-grow-0 ps-lg-4'"
                 />
 
@@ -48,12 +48,12 @@
                     class="btn btn-primary d-block d-lg-none align-self-stretch ms-lg-4"
                     t-att-disabled="!this.props.selectedLocationId"
                     t-on-click="this.props.validateSelection"
-                    t-out="chooseLocationButtonLabel"/>
+                    t-out="this.chooseLocationButtonLabel"/>
             </div>
 
             <!-- Mobile infos -->
             <button
-                t-if="selectedLocation"
+                t-if="this.selectedLocation"
                 class="btn collapsed d-flex d-md-none gap-2 gap-lg-3 w-100 border-0 p-3 bg-transparent text-start"
                 type="button"
                 data-bs-target="#map_collapseHours"
@@ -63,21 +63,21 @@
             >
                 <span class="d-flex flex-column gap-1 w-100">
                     <span class="d-flex flex-column">
-                        <strong class="fw-bold" t-out="selectedLocation.name"/>
+                        <strong class="fw-bold" t-out="this.selectedLocation.name"/>
                         <small class="text-muted">
-                            <span t-out="selectedLocation.street"/>
-                            <span class="d-block" t-out="this.getCityAndZipCode(selectedLocation)"/>
+                            <span t-out="this.selectedLocation.street"/>
+                            <span class="d-block" t-out="this.getCityAndZipCode(this.selectedLocation)"/>
                         </small>
                     </span>
-                    <span t-attf-class="d-flex align-items-center gap-1 small fw-bold {{Object.keys(selectedLocation.opening_hours).length > 0 ? 'd-md-none' : 'd-none'}}">
+                    <span t-attf-class="d-flex align-items-center gap-1 small fw-bold {{Object.keys(this.selectedLocation.opening_hours).length > 0 ? 'd-md-none' : 'd-none'}}">
                         <i class="fa fa-clock-o" role="img"/>
-                        <t t-out="openingHoursLabel"/>
+                        <t t-out="this.openingHoursLabel"/>
                         <i class="o_location_selector_hours_caret fa fa-caret-up ms-auto transition-base"/>
                     </span>
 
                     <!-- Schedule -->
                     <span class="collapse" id="map_collapseHours">
-                        <LocationSchedule openingHours="selectedLocation.opening_hours"/>
+                        <LocationSchedule openingHours="this.selectedLocation.opening_hours"/>
                     </span>
                 </span>
             </button>

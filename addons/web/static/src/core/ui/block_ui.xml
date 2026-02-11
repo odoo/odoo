@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <templates>
 <t t-name="web.BlockUI">
-    <t t-if="state.blockState === BLOCK_STATES.UNBLOCKED">
+    <t t-if="this.state.blockState === this.BLOCK_STATES.UNBLOCKED">
         <div/>
     </t>
     <t t-else="">
-        <t t-set="visiblyBlocked" t-value="state.blockState === BLOCK_STATES.VISIBLY_BLOCKED"/>
+        <t t-set="visiblyBlocked" t-value="this.state.blockState === this.BLOCK_STATES.VISIBLY_BLOCKED"/>
         <div class="o_blockUI fixed-top d-flex justify-content-center align-items-center flex-column vh-100"
                 t-att-class="visiblyBlocked ? '' : 'o_blockUI_invisible'">
             <t t-if="visiblyBlocked">
@@ -13,8 +13,8 @@
                     <img src="/web/static/img/spin.svg" alt="Loading..."/>
                 </div>
                 <div class="o_message text-center px-4">
-                    <t t-esc="state.line1"/><br/>
-                    <t t-esc="state.line2"/>
+                    <t t-esc="this.state.line1"/><br/>
+                    <t t-esc="this.state.line2"/>
                 </div>
             </t>
         </div>

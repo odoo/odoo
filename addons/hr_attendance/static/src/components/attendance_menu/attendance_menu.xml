@@ -3,7 +3,7 @@
 
 <t t-name="hr_attendance.attendance_menu">
     <t t-if="this.state.isDisplayed">
-        <Dropdown position="'bottom-end'" beforeOpen.bind="searchReadEmployee" menuClass="`p-2 pb-3`" state="dropdown">
+        <Dropdown position="'bottom-end'" beforeOpen.bind="this.searchReadEmployee" menuClass="`p-2 pb-3`" state="this.dropdown">
             <button>
                 <i class="fa fa-circle" t-attf-class="text-{{ this.state.checkedIn ? 'success' : 'danger' }}" role="img" aria-label="Attendance"/>
             </button>

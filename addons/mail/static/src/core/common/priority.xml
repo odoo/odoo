@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.Priority">
-        <div class="d-inline" t-att-aria-label="label" t-att-title="label">
-            <span t-foreach="Array(maxStar)" t-as="star" t-key="star_index" class="fa" t-att-class="{'o-mail-priority-star fa-star': star_index + 1 lte priority, 'fa-star-o': star_index + 1 gt priority,}" />
+        <div class="d-inline" t-att-aria-label="this.label" t-att-title="this.label">
+            <span t-foreach="Array(this.maxStar)" t-as="star" t-key="star_index" class="fa" t-att-class="{'o-mail-priority-star fa-star': star_index + 1 lte this.priority, 'fa-star-o': star_index + 1 gt this.priority,}" />
         </div>
     </t>
 </templates>

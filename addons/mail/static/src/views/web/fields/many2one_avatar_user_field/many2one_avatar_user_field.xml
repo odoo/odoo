@@ -3,10 +3,10 @@
 
     <t t-name="mail.Many2OneAvatarUserField">
         <div class="d-flex align-items-center gap-1">
-            <t t-if="value !== false">
-                <Avatar cssClass="'o_m2o_avatar'" resModel="relation" resId="value.id" noSpacing="true"/>
+            <t t-if="this.value !== false">
+                <Avatar cssClass="'o_m2o_avatar'" resModel="this.relation" resId="this.value.id" noSpacing="true"/>
             </t>
-            <Many2OneAvatarUser t-props="m2oProps" cssClass="'w-100'">
+            <Many2OneAvatarUser t-props="this.m2oProps" cssClass="'w-100'">
                 <t t-set-slot="inviteTeammates" t-slot-scope="inviteTeammatesScope">
                     <div class="d-flex align-items-center">
                         <div class="o_icon d-flex align-items-center justify-content-center me-2">
@@ -17,7 +17,7 @@
                 </t>
                 <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
                     <div class="o_avatar_many2x_autocomplete d-flex align-items-center">
-                        <Avatar resModel="relation" resId="autoCompleteItemScope.record.id" canOpenPopover="false"/>
+                        <Avatar resModel="this.relation" resId="autoCompleteItemScope.record.id" canOpenPopover="false"/>
                         <span t-out="autoCompleteItemScope.label"/>
                     </div>
                 </t>

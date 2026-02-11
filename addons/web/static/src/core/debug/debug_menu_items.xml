@@ -12,15 +12,15 @@
                         </label>
                     </td>
                     <td class="oe_form_required">
-                        <select id="formview_default_fields" class="o_input" t-model="state.fieldToSet">
+                        <select id="formview_default_fields" class="o_input" t-model="this.state.fieldToSet">
                             <option value=""/>
-                            <option t-foreach="defaultFields" t-as="field" t-att-value="field.name" t-key="field.name">
-                                <t t-esc="field.string"/> = <t t-esc="field.displayed"/>
+                            <option t-foreach="this.defaultFields" t-as="field" t-att-value="field.name" t-key="this.field.name">
+                                <t t-esc="this.field.string"/> = <t t-esc="this.field.displayed"/>
                             </option>
                         </select>
                     </td>
                 </tr>
-                <tr t-if="conditions.length">
+                <tr t-if="this.conditions.length">
                     <td>
                         <label for="formview_default_conditions"
                             class="oe_label oe_align_right">
@@ -28,10 +28,10 @@
                         </label>
                     </td>
                     <td>
-                        <select id="formview_default_conditions" class="o_input" t-model="state.condition">
+                        <select id="formview_default_conditions" class="o_input" t-model="this.state.condition">
                             <option value=""/>
-                            <option t-foreach="conditions" t-as="cond" t-att-value="cond.name + '=' + cond.value" t-key="cond.name">
-                                <t t-esc="cond.string"/>=<t t-esc="cond.displayed"/>
+                            <option t-foreach="this.conditions" t-as="cond" t-att-value="cond.name + '=' + cond.value" t-key="this.cond.name">
+                                <t t-esc="this.cond.string"/>=<t t-esc="this.cond.displayed"/>
                             </option>
                         </select>
                     </td>
@@ -39,14 +39,14 @@
                 <tr>
                     <td colspan="2">
                         <input type="radio" id="formview_default_self"
-                            value="self" name="scope" t-model="state.scope"/>
+                            value="self" name="scope" t-model="this.state.scope"/>
                         <label for="formview_default_self" class="oe_label"
                             style="display: inline;">
                             Only you
                         </label>
                         <br/>
                         <input type="radio" id="formview_default_all"
-                            value="all" name="scope" t-model="state.scope"/>
+                            value="all" name="scope" t-model="this.state.scope"/>
                         <label for="formview_default_all" class="oe_label"
                             style="display: inline;">
                             All users
@@ -55,8 +55,8 @@
                 </tr>
             </table>
             <t t-set-slot="footer">
-                <button class="btn btn-secondary" t-on-click="props.close">Close</button>
-                <button class="btn btn-secondary" t-on-click="saveDefault">Save default</button>
+                <button class="btn btn-secondary" t-on-click="this.props.close">Close</button>
+                <button class="btn btn-secondary" t-on-click="this.saveDefault">Save default</button>
             </t>
         </Dialog>
     </t>
@@ -66,48 +66,48 @@
             <table class="table table-sm table-striped">
                 <tr>
                     <th>ID:</th>
-                    <td><t t-esc="state.id"/></td>
+                    <td><t t-esc="this.state.id"/></td>
                 </tr>
                 <tr>
                     <th>XML ID:</th>
                     <td>
-                        <t t-if='state.xmlids.length > 1'>
-                            <t t-foreach="state.xmlids" t-as="imd" t-key="imd['xmlid']">
+                        <t t-if='this.state.xmlids.length > 1'>
+                            <t t-foreach="this.state.xmlids" t-as="imd" t-key="this.imd['xmlid']">
                                 <div
-                                    t-att-class='"p-0 " + (imd["xmlid"] === state.xmlid ? "fw-bolder " : "") + (imd["noupdate"] === true ? "fst-italic " : "")'
-                                    t-esc="imd['xmlid']" />
+                                    t-att-class='&quot;p-0 " + (imd["xmlid"] === this.state.xmlid ? "fw-bolder " : "") + (imd["noupdate"] === true ? "fst-italic " : "")'
+                                    t-esc="this.imd['xmlid']" />
                             </t>
                         </t>
-                        <t t-elif="state.xmlid" t-esc="state.xmlid"/>
+                        <t t-elif="this.state.xmlid" t-esc="this.state.xmlid"/>
                         <t t-else="">
-                            / <a t-on-click="onClickCreateXmlid"> (create)</a>
+                            / <a t-on-click="this.onClickCreateXmlid"> (create)</a>
                         </t>
                     </td>
                 </tr>
                 <tr>
                     <th>No Update:</th>
                     <td>
-                        <t t-esc="state.noupdate"/>
-                        <t t-if="state.xmlid">
-                            <a t-on-click="toggleNoupdate"> (change)</a>
+                        <t t-esc="this.state.noupdate"/>
+                        <t t-if="this.state.xmlid">
+                            <a t-on-click="this.toggleNoupdate"> (change)</a>
                         </t>
                     </td>
                 </tr>
                 <tr>
                     <th>Creation User:</th>
-                    <td><t t-esc="state.creator"/></td>
+                    <td><t t-esc="this.state.creator"/></td>
                 </tr>
                 <tr>
                     <th>Creation Date:</th>
-                    <td><t t-esc="state.createDate"/></td>
+                    <td><t t-esc="this.state.createDate"/></td>
                 </tr>
                 <tr>
                     <th>Latest Modification by:</th>
-                    <td><t t-esc="state.lastModifiedBy"/></td>
+                    <td><t t-esc="this.state.lastModifiedBy"/></td>
                 </tr>
                 <tr>
                     <th>Latest Modification Date:</th>
-                    <td><t t-esc="state.writeDate"/></td>
+                    <td><t t-esc="this.state.writeDate"/></td>
                 </tr>
             </table>
         </Dialog>
@@ -115,9 +115,9 @@
 
     <t t-name="web.DebugMenu.GetViewDialog">
         <Dialog title.translate="Computed Arch">
-            <pre t-esc="props.arch"/>
+            <pre t-esc="this.props.arch"/>
             <t t-set-slot="footer">
-                <button class="btn btn-primary o-default-button" t-on-click="() => props.close()">Close</button>
+                <button class="btn btn-primary o-default-button" t-on-click="() => this.props.close()">Close</button>
             </t>
         </Dialog>
     </t>

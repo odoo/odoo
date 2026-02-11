@@ -5,8 +5,8 @@
             <attribute name="t-attf-class" add="table-borderless {{ !showTable ? 'd-none' : ''}}" remove="table-striped" separator=" "/>
         </xpath>
         <xpath expr="//table" position="after">
-            <t t-if="!showTable">
-                <button t-on-click="props.onAdd" class="btn btn-secondary ms-4 mt-3" t-if="isEditable">
+            <t t-if="!this.showTable">
+                <button t-on-click="this.props.onAdd" class="btn btn-secondary ms-4 mt-3" t-if="this.isEditable">
                     Create Resume Lines
                 </button>
             </t>
@@ -16,7 +16,7 @@
             <tr>
                 <th style="width: 32px; min-width: 32px;"></th>
                 <th class="w-100"></th>
-                <th t-if="isEditable" class="o_list_actions_header" style="width: 32px; min-width: 32px"></th>
+                <th t-if="this.isEditable" class="o_list_actions_header" style="width: 32px; min-width: 32px"></th>
             </tr>
         </xpath>
         <xpath expr="//div[@name='no_skills']" position="replace"/>
@@ -30,38 +30,38 @@
             <th></th>
         </xpath>
         <xpath expr="//button[@id='add_button']" position="attributes">
-            <attribute name="t-on-click">() => props.onAdd({ context: { default_line_type_id: skill_group[1].id }})</attribute>
+            <attribute name="t-on-click">() =&gt; this.props.onAdd({ context: { default_line_type_id: this.skill_group[1].id }})</attribute>
         </xpath>
     </t>
 
     <t t-name="hr_skills.ResumeListRenderer.RecordRow" t-inherit-mode="primary" t-inherit="web.ListRenderer.RecordRow">
-        <xpath expr="//t[@t-foreach='getColumns(record)']" position="replace">
-            <t t-set="data" t-value="record.data"/>
+        <xpath expr="//t[@t-foreach='this.getColumns(this.record)']" position="replace">
+            <t t-set="data" t-value="this.record.data"/>
             <td class="o_resume_timeline_cell position-relative pe-lg-2">
                 <div class="rounded-circle bg-info position-relative"/>
             </td>
-            <td class="o_data_cell pt-0" t-on-click="(ev) => this.onCellClicked(record, null, ev)">
-                <div t-attf-class="o_resume_line" t-att-data-id="id">
+            <td class="o_data_cell pt-0" t-on-click="(ev) => this.onCellClicked(this.record, null, ev)">
+                <div t-attf-class="o_resume_line" t-att-data-id="this.id">
                     <small class="o_resume_line_dates fw-bold">
-                        <t t-out="formatDate(data.date_start)"/>
-                        <t t-if="!data.is_course">
+                        <t t-out="this.formatDate(this.data.date_start)"/>
+                        <t t-if="!this.data.is_course">
                             -
-                            <t t-if="data.date_end" t-out="formatDate(data.date_end)"/>
+                            <t t-if="this.data.date_end" t-out="this.formatDate(this.data.date_end)"/>
                             <t t-else="">
                                 Current
                             </t>
                         </t>
-                        <t t-if="data.is_course &amp;&amp; data.duration > 0">
-                            (<t t-out="data.duration"/> hours)
+                        <t t-if="this.data.is_course &amp;&amp; this.data.duration > 0">
+                            (<t t-out="this.data.duration"/> hours)
                         </t>
                     </small>
                     <div class="d-flex align-items-center">
-                        <h4 class="o_resume_line_title mt-2 me-2" t-esc="data.name"/>
-                        <t t-if="data.is_course">
-                            <a id="external_link" t-if="data.external_url" t-attf-href="#{data.external_url}" target="_blank" class="ms-2 fa fa-external-link btn-secondary" style="font-size: 1rem;"/>
+                        <h4 class="o_resume_line_title mt-2 me-2" t-esc="this.data.name"/>
+                        <t t-if="this.data.is_course">
+                            <a id="external_link" t-if="this.data.external_url" t-attf-href="#{data.external_url}" target="_blank" class="ms-2 fa fa-external-link btn-secondary" style="font-size: 1rem;"/>
                         </t>
                     </div>
-                    <p t-if="data.description" class="o_resume_line_desc" t-out="data.description" t-ref="link-target-blank"/>
+                    <p t-if="this.data.description" class="o_resume_line_desc" t-out="this.data.description" t-ref="link-target-blank"/>
                 </div>
             </td>
         </xpath>

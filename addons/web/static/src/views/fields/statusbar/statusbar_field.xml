@@ -4,7 +4,7 @@
     <t t-name="web.StatusBarField.Dropdown">
         <t t-foreach="items" t-as="item" t-key="item.value">
             <DropdownItem
-                class="getDropdownItemClassNames(item)"
+                class="this.getDropdownItemClassNames(item)"
                 onSelected="() => this.selectItem(item)"
             >
                 <span t-esc="item.label" />
@@ -19,7 +19,7 @@
                     t-ref="after"
                     type="button"
                     class="btn btn-secondary dropdown-toggle o_arrow_button o_first"
-                    t-att-disabled="props.isDisabled"
+                    t-att-disabled="this.props.isDisabled"
                     aria-label="More..."
                 >
                     ...
@@ -39,7 +39,7 @@
                         o_arrow_button_current: item.isSelected,
                         o_last: item_last,
                     }"
-                    t-att-disabled="props.isDisabled || item.isSelected"
+                    t-att-disabled="this.props.isDisabled || item.isSelected"
                     role="radio"
                     t-att-aria-checked="item.isSelected.toString()"
                     t-att-aria-current="item.isSelected and 'step'"
@@ -53,7 +53,7 @@
                     t-ref="before"
                     type="button"
                     class="btn btn-secondary dropdown-toggle o_arrow_button o_last"
-                    t-att-disabled="props.isDisabled"
+                    t-att-disabled="this.props.isDisabled"
                     aria-label="More..."
                 >
                     ...
@@ -65,20 +65,20 @@
                 </t>
             </Dropdown>
             <Dropdown position="'bottom-end'">
-                <t t-set="allItems" t-value="getAllItems()" />
-                <t t-set="selectedIndex" t-value="allItems.findIndex((item) => item.isSelected)" />
+                <t t-set="allItems" t-value="this.getAllItems()" />
+                <t t-set="selectedIndex" t-value="this.allItems.findIndex((item) => item.isSelected)" />
                 <button
                     t-ref="dropdown" 
                     type="button" 
                     class="btn btn-secondary dropdown-toggle"
-                    t-att-class="{'o_arrow_button': env.isSmall, 'o_last': selectedIndex === 0 , 'o_first': selectedIndex === allItems.length - 1}"
-                    t-att-disabled="props.isDisabled"
+                    t-att-class="{'o_arrow_button': this.env.isSmall, 'o_last': selectedIndex === 0 , 'o_first': selectedIndex === allItems.length - 1}"
+                    t-att-disabled="this.props.isDisabled"
                 >
-                    <t t-out="getCurrentLabel()" />
+                    <t t-out="this.getCurrentLabel()" />
                 </button>
                 <t t-set-slot="content">
                     <t t-call="web.StatusBarField.Dropdown">
-                        <t t-set="items" t-value="getAllItems()" />
+                        <t t-set="items" t-value="this.getAllItems()" />
                     </t>
                 </t>
             </Dropdown>

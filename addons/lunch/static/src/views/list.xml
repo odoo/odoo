@@ -4,11 +4,11 @@
         <div class="o_lunch_content d-flex flex-column flex-md-row h-100 overflow-auto">
             <t t-call="lunch.WebListRenderer"/>
         </div>
-        <LunchDashboard openOrderLine.bind="openOrderLine"/>
+        <LunchDashboard openOrderLine.bind="this.openOrderLine"/>
     </t>
 
     <t t-name="lunch.WebListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary" owl="1">
-        <ActionHelper position="after">
+        <ActionHelper position="this.after">
             <t t-call="lunch.NoContentHelper"/>
         </ActionHelper>
     </t>

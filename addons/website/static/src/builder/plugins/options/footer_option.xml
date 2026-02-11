@@ -4,16 +4,16 @@
 <t t-name="website.FooterTemplateOption">
     <BuilderRow label.translate="Template">
         <BuilderSelect action="'websiteConfigFooter'">
-            <t t-foreach="footerTemplates" t-as="template" t-key="template.key">
-                <t t-component="template.Component" t-props="template.props"/>
+            <t t-foreach="this.footerTemplates" t-as="template" t-key="this.template.key">
+                <t t-component="this.template.Component" t-props="this.template.props"/>
             </t>
         </BuilderSelect>
     </BuilderRow>
 </t>
 
 <t t-name="website.FooterTemplateChoice">
-    <BuilderSelectItem title="props.title" actionParam="{ view: props.view, vars: { 'footer-template': props.varName } }">
-        <Image attrs="{ style: 'width: 100%;' }" src="props.imgSrc"/>
+    <BuilderSelectItem title="this.props.title" actionParam="{ view: this.props.view, vars: { 'footer-template': this.props.varName } }">
+        <Image attrs="{ style: 'width: 100%;' }" src="this.props.imgSrc"/>
     </BuilderSelectItem>
 </t>
 

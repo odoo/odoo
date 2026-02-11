@@ -2,81 +2,81 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Message">
-        <ActionSwiper onRightSwipe="onRightSwipe">
-            <t t-set="dummy" t-value="computeActions()"/>
+        <ActionSwiper onRightSwipe="this.onRightSwipe">
+            <t t-set="dummy" t-value="this.computeActions()"/>
             <div class="o-mail-Message position-relative rounded-0 bg-inherit"
-                t-att-data-starred="message.starred"
-                t-att-data-persistent="message.persistent"
-                t-att-class="attClass"
+                t-att-data-starred="this.message.starred"
+                t-att-data-persistent="this.message.persistent"
+                t-att-class="this.attClass"
                 role="group"
-                t-att-aria-label="messageTypeText"
-                t-on-click="onClick"
-                t-on-contextmenu="onContextMenu"
-                t-on-mouseenter="onMouseenter"
-                t-on-mouseleave="onMouseleave"
+                t-att-aria-label="this.messageTypeText"
+                t-on-click="this.onClick"
+                t-on-contextmenu="this.onContextMenu"
+                t-on-mouseenter="this.onMouseenter"
+                t-on-mouseleave="this.onMouseleave"
                 t-ref="root"
-                t-if="message.exists()"
+                t-if="this.message.exists()"
             >
-                <MessageContextMenu anchorRef="rightClickAnchor" dropdownState="rightClickDropdownState" message="message" thread="props.thread"/>
+                <MessageContextMenu anchorRef="this.rightClickAnchor" dropdownState="this.rightClickDropdownState" message="this.message" thread="this.props.thread"/>
                 <div class="o-mail-Message-jumpTarget position-absolute top-0 pe-none"/>
-                <div t-if="props.asCard and isMobileOS" class="position-absolute end-0 z-1 m-n2"><t t-call="mail.Message.actions"/></div>
+                <div t-if="this.props.asCard and this.isMobileOS" class="position-absolute end-0 z-1 m-n2"><t t-call="mail.Message.actions"/></div>
                 <div class="o-mail-Message-core position-relative d-flex flex-shrink-0 bg-inherit">
-                    <div class="o-mail-Message-sidebar d-flex flex-shrink-0 align-items-center flex-column bg-inherit" t-att-class="{ 'align-items-start': !isAlignedRight, 'o-inChatWindow': env.inChatWindow }">
-                        <t t-if="!props.squashed">
-                            <div class="o-mail-Message-avatarContainer position-relative bg-inherit rounded-3" t-att-class="getAvatarContainerAttClass()">
-                                <img class="o-mail-Message-avatar w-100 h-100 rounded-3" t-att-src="authorAvatarUrl" t-att-class="authorAvatarAttClass"/>
+                    <div class="o-mail-Message-sidebar d-flex flex-shrink-0 align-items-center flex-column bg-inherit" t-att-class="{ 'align-items-start': !this.isAlignedRight, 'o-inChatWindow': this.env.inChatWindow }">
+                        <t t-if="!this.props.squashed">
+                            <div class="o-mail-Message-avatarContainer position-relative bg-inherit rounded-3" t-att-class="this.getAvatarContainerAttClass()">
+                                <img class="o-mail-Message-avatar w-100 h-100 rounded-3" t-att-src="this.authorAvatarUrl" t-att-class="this.authorAvatarAttClass"/>
                             </div>
-                            <t t-if="message.starred" t-call="mail.Message.sidebarStarred"/>
+                            <t t-if="this.message.starred" t-call="mail.Message.sidebarStarred"/>
                         </t>
-                        <t t-elif="message.isPending" t-call="mail.Message.pendingStatus"/>
-                        <t t-elif="!message.is_transient">
-                            <small t-if="isActive and props.showDates" class="o-mail-Message-date o-xsmaller mt-2 text-center lh-1" t-att-title="message.datetimeMedium">
-                                <t t-esc="message.dateSimple"/>
+                        <t t-elif="this.message.isPending" t-call="mail.Message.pendingStatus"/>
+                        <t t-elif="!this.message.is_transient">
+                            <small t-if="this.isActive and this.props.showDates" class="o-mail-Message-date o-xsmaller mt-2 text-center lh-1" t-att-title="this.message.datetimeMedium">
+                                <t t-esc="this.message.dateSimple"/>
                             </small>
-                            <t t-elif="message.starred" t-call="mail.Message.sidebarStarred"/>
+                            <t t-elif="this.message.starred" t-call="mail.Message.sidebarStarred"/>
                         </t>
                     </div>
-                    <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': isEditing }" t-ref="messageContent">
-                        <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !message.isNote, 'pe-2': props.asCard and isMobileOS }" name="header">
-                            <span t-if="message.authorName and shouldDisplayAuthorName" class="o-mail-Message-author smaller" t-att-class="getAuthorAttClass()">
-                                <strong class="me-1 o-fw-600" t-esc="message.authorName"/>
+                    <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': this.isEditing }" t-ref="messageContent">
+                        <div t-if="!this.props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !this.message.isNote, 'pe-2': this.props.asCard and this.isMobileOS }" name="header">
+                            <span t-if="this.message.authorName and this.shouldDisplayAuthorName" class="o-mail-Message-author smaller" t-att-class="this.getAuthorAttClass()">
+                                <strong class="me-1 o-fw-600" t-esc="this.message.authorName"/>
                             </span>
-                            <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
-                            <t t-if="isAlignedRight and !message.bubbleColor and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
-                            <small t-if="!message.is_transient" class="o-mail-Message-date o-xsmaller" t-att-title="message.datetimeMedium">
-                                <t t-if="message.isPending" t-call="mail.Message.pendingStatus"/>
-                                <t t-else="" t-out="message.dateSimpleWithDay"/>
+                            <t t-if="!this.isAlignedRight" t-call="mail.Message.notification"/>
+                            <t t-if="this.isAlignedRight and !this.message.bubbleColor and !(this.props.asCard and this.isMobileOS)" t-call="mail.Message.actions"/>
+                            <small t-if="!this.message.is_transient" class="o-mail-Message-date o-xsmaller" t-att-title="this.message.datetimeMedium">
+                                <t t-if="this.message.isPending" t-call="mail.Message.pendingStatus"/>
+                                <t t-else="" t-out="this.message.dateSimpleWithDay"/>
                             </small>
-                            <small t-if="isPersistentMessageFromAnotherThread" t-on-click.prevent="openRecord" class="ms-1 text-500">
-                                <t t-if="message.channel_id">
-                                    (from <a t-att-href="message.resUrl"><t t-esc="message.thread.prefix"/><t t-esc="message.channel_id.displayName or message.default_subject"/></a>)
+                            <small t-if="this.isPersistentMessageFromAnotherThread" t-on-click.prevent="this.openRecord" class="ms-1 text-500">
+                                <t t-if="this.message.channel_id">
+                                    (from <a t-att-href="this.message.resUrl"><t t-esc="this.message.thread.prefix"/><t t-esc="this.message.channel_id.displayName or this.message.default_subject"/></a>)
                                 </t>
                                 <t t-else="">
                                     on
-                                    <Priority t-if="message.thread.priority" thread="message.thread"/>
-                                    <t t-out="nbsp"/><a t-if="message.thread.displayName" t-att-href="message.resUrl" t-esc="message.thread.displayName"/><em class="pe-1 text-decoration-line-through" t-else="">Deleted document</em>
+                                    <Priority t-if="this.message.thread.priority" thread="this.message.thread"/>
+                                    <t t-out="this.nbsp"/><a t-if="this.message.thread.displayName" t-att-href="this.message.resUrl" t-esc="this.message.thread.displayName"/><em class="pe-1 text-decoration-line-through" t-else="">Deleted document</em>
                                 </t>
                             </small>
-                            <div t-if="props.message.scheduledDatetime" t-att-class="{ 'ms-2': (env.inChatWindow and isAlignedRight) or (isPersistentMessageFromAnotherThread) }" t-att-title="props.message.scheduledDateSimple">
+                            <div t-if="this.props.message.scheduledDatetime" t-att-class="{ 'ms-2': (this.env.inChatWindow and this.isAlignedRight) or (this.isPersistentMessageFromAnotherThread) }" t-att-title="this.props.message.scheduledDateSimple">
                                 <span class="text-600 cursor-pointer">
                                     <i class="fa fa-calendar-o"/>
                                 </span>
                             </div>
-                            <t t-if="isAlignedRight" t-call="mail.Message.notification"/>
-                            <t t-if="!isAlignedRight and !message.bubbleColor and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
+                            <t t-if="this.isAlignedRight" t-call="mail.Message.notification"/>
+                            <t t-if="!this.isAlignedRight and !this.message.bubbleColor and !(this.props.asCard and this.isMobileOS)" t-call="mail.Message.actions"/>
                         </div>
-                        <div class="o-mail-Message-contentContainer position-relative d-flex" t-att-class="{ 'flex-row-reverse': isAlignedRight }">
-                            <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': isEditing, 'opacity-50': message.isPending, 'pt-1': message.isNote, 'o-mail-Message-pollContent flex-grow-1': message.poll }">
-                                <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': isEditing }">
-                                    <t t-set="showTextVisually" t-value="!message.linkPreviewSquash and (message.hasTextContent or message.subtype_id?.description or message.isEmpty)"/>
-                                    <t t-if="message.message_type === 'notification' and message.richBody" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
-                                    <t t-if="message.isEmpty or (message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_id?.description or isEditing or message.parent_id))">
-                                        <MessageLinkPreviewList t-if="!isEditing and message.linkPreviewSquash and !message.parent_id" messageLinkPreviews="message.message_link_preview_ids"/>
+                        <div class="o-mail-Message-contentContainer position-relative d-flex" t-att-class="{ 'flex-row-reverse': this.isAlignedRight }">
+                            <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': this.isEditing, 'opacity-50': this.message.isPending, 'pt-1': this.message.isNote, 'o-mail-Message-pollContent flex-grow-1': this.message.poll }">
+                                <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': this.isEditing }">
+                                    <t t-set="showTextVisually" t-value="!this.message.linkPreviewSquash and (this.message.hasTextContent or this.message.subtype_id?.description or this.message.isEmpty)"/>
+                                    <t t-if="this.message.message_type === 'notification' and this.message.richBody" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
+                                    <t t-if="this.message.isEmpty or (this.message.message_type !== 'notification' and !this.message.is_transient and (this.message.hasTextContent or this.message.subtype_id?.description or this.isEditing or this.message.parent_id))">
+                                        <MessageLinkPreviewList t-if="!this.isEditing and this.message.linkPreviewSquash and !this.message.parent_id" messageLinkPreviews="this.message.message_link_preview_ids"/>
                                         <t t-else="">
-                                            <div t-if="message.bubbleColor and !props.squashed" class="o-mail-Message-bubbleTail position-absolute d-flex" t-att-style="isAlignedRight ? 'right: -4px; transform: rotateY(180deg);' : 'left: -4px;'" t-att-class="{
-                                                'o-blue': message.bubbleColor === 'blue',
-                                                'o-green': message.bubbleColor === 'green',
-                                                'o-orange': message.bubbleColor === 'orange',
+                                            <div t-if="this.message.bubbleColor and !this.props.squashed" class="o-mail-Message-bubbleTail position-absolute d-flex" t-att-style="this.isAlignedRight ? 'right: -4px; transform: rotateY(180deg);' : 'left: -4px;'" t-att-class="{
+                                                'o-blue': this.message.bubbleColor === 'blue',
+                                                'o-green': this.message.bubbleColor === 'green',
+                                                'o-orange': this.message.bubbleColor === 'orange',
                                             }">
                                                 <svg viewBox="0 0 6 12" height="12" width="6" x="0px" y="0px">
                                                     <path class="o-mail-Message-bubbleTailBorder" fill="currentColor" d="M 0, 0 L 5, 9 V 0 z"/>
@@ -84,69 +84,69 @@
                                                 </svg>
                                             </div>
                                             <div class="position-relative overflow-x-auto overflow-y-hidden d-inline-block o-discuss-text-body" t-att-class="{
-                                                'w-100': isEditing,
-                                                'o-rounded-bubble': message.bubbleColor and props.squashed,
-                                                'o-rounded-bottom-bubble': message.bubbleColor and !props.squashed,
-                                                'o-rounded-start-bubble': message.bubbleColor and !props.squashed and isAlignedRight,
-                                                'o-rounded-end-bubble': message.bubbleColor and !props.squashed and !isAlignedRight,
+                                                'w-100': this.isEditing,
+                                                'o-rounded-bubble': this.message.bubbleColor and this.props.squashed,
+                                                'o-rounded-bottom-bubble': this.message.bubbleColor and !this.props.squashed,
+                                                'o-rounded-start-bubble': this.message.bubbleColor and !this.props.squashed and this.isAlignedRight,
+                                                'o-rounded-end-bubble': this.message.bubbleColor and !this.props.squashed and !this.isAlignedRight,
                                             }">
-                                                <div t-if="message.bubbleColor" class="o-mail-Message-bubble position-absolute top-0 start-0 w-100 h-100 border" t-att-class="{
-                                                    'o-rounded-bubble': props.squashed,
-                                                    'o-rounded-bottom-bubble': !props.squashed,
-                                                    'o-rounded-start-bubble': !props.squashed and isAlignedRight,
-                                                    'o-rounded-end-bubble': !props.squashed and !isAlignedRight,
-                                                    'o-blue': message.bubbleColor === 'blue',
-                                                    'o-green': message.bubbleColor === 'green',
-                                                    'o-orange': message.bubbleColor === 'orange',
+                                                <div t-if="this.message.bubbleColor" class="o-mail-Message-bubble position-absolute top-0 start-0 w-100 h-100 border" t-att-class="{
+                                                    'o-rounded-bubble': this.props.squashed,
+                                                    'o-rounded-bottom-bubble': !this.props.squashed,
+                                                    'o-rounded-start-bubble': !this.props.squashed and this.isAlignedRight,
+                                                    'o-rounded-end-bubble': !this.props.squashed and !this.isAlignedRight,
+                                                    'o-blue': this.message.bubbleColor === 'blue',
+                                                    'o-green': this.message.bubbleColor === 'green',
+                                                    'o-orange': this.message.bubbleColor === 'orange',
                                                 }"/>
-                                                <MessageInReply t-if="message.parent_id" class="'mx-2 p-1 pb-0 ' + (showTextVisually ? 'mt-1' : 'my-1')" message="message" onClick="props.onParentMessageClick"/>
+                                                <MessageInReply t-if="this.message.parent_id" class="'mx-2 p-1 pb-0 ' + (showTextVisually ? 'mt-1' : 'my-1')" message="this.message" onClick="this.props.onParentMessageClick"/>
                                                 <div class="position-relative text-break o-mail-Message-body" t-att-class="{
-                                                            'p-1': message.isNote,
-                                                            'fs-1': !isEditing and !env.inChatter and message.onlyEmojis,
-                                                            'mb-0': !message.isNote,
-                                                            'py-2': !message.isNote and !isEditing and showTextVisually,
-                                                            'pt-2 pb-1': !message.isNote and isEditing,
-                                                            'o-note': message.isNote,
-                                                            'o-rounded-bubble': props.squashed,
-                                                            'align-self-start o-rounded-end-bubble o-rounded-bottom-bubble': !isEditing and !message.isNote and !props.squashed,
-                                                            'flex-grow-1': isEditing,
+                                                            'p-1': this.message.isNote,
+                                                            'fs-1': !this.isEditing and !this.env.inChatter and this.message.onlyEmojis,
+                                                            'mb-0': !this.message.isNote,
+                                                            'py-2': !this.message.isNote and !this.isEditing and showTextVisually,
+                                                            'pt-2 pb-1': !this.message.isNote and this.isEditing,
+                                                            'o-note': this.message.isNote,
+                                                            'o-rounded-bubble': this.props.squashed,
+                                                            'align-self-start o-rounded-end-bubble o-rounded-bottom-bubble': !this.isEditing and !this.message.isNote and !this.props.squashed,
+                                                            'flex-grow-1': this.isEditing,
                                                             }" t-ref="body">
-                                                    <i t-if="message.isEmpty" class="text-muted opacity-75" t-out="message.inlineBody"/>
-                                                    <Composer t-elif="isEditing" autofocus="true" composer="message.composer" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="'compact'" sidebar="false"/>
+                                                    <i t-if="this.message.isEmpty" class="text-muted opacity-75" t-out="this.message.inlineBody"/>
+                                                    <Composer t-elif="this.isEditing" autofocus="true" composer="this.message.composer" onDiscardCallback.bind="this.exitEditMode" onPostCallback.bind="this.exitEditMode" mode="'compact'" sidebar="false"/>
                                                     <t t-else="">
-                                                        <em t-if="message.subject and !message.isSubjectSimilarToThreadName and !message.isSubjectDefault" class="d-block text-muted smaller">Subject: <t t-out="props.messageSearch?.highlight(message.subject) ?? message.subject"/></em>
-                                                        <div class="overflow-x-auto" t-if="message.message_type and message.message_type.includes('email')" t-ref="shadowBody"/>
-                                                        <t t-elif="message.showTranslation" t-out="message.richTranslationValue"/>
-                                                        <div class="o-mail-Message-richBody overflow-x-auto" t-elif="message.hasTextContent and message.richBody and !message.linkPreviewSquash" t-out="props.messageSearch?.highlight(message.richBody) ?? message.richBody"/>
-                                                        <p class="fst-italic text-muted small" t-if="message.showTranslation">
-                                                            <t t-if="message.translationSource" t-esc="translatedFromText"/>
+                                                        <em t-if="this.message.subject and !this.message.isSubjectSimilarToThreadName and !this.message.isSubjectDefault" class="d-block text-muted smaller">Subject: <t t-out="this.props.messageSearch?.highlight(this.message.subject) ?? this.message.subject"/></em>
+                                                        <div class="overflow-x-auto" t-if="this.message.message_type and this.message.message_type.includes('email')" t-ref="shadowBody"/>
+                                                        <t t-elif="this.message.showTranslation" t-out="this.message.richTranslationValue"/>
+                                                        <div class="o-mail-Message-richBody overflow-x-auto" t-elif="this.message.hasTextContent and this.message.richBody and !this.message.linkPreviewSquash" t-out="this.props.messageSearch?.highlight(this.message.richBody) ?? this.message.richBody"/>
+                                                        <p class="fst-italic text-muted small" t-if="this.message.showTranslation">
+                                                            <t t-if="this.message.translationSource" t-esc="this.translatedFromText"/>
                                                         </p>
-                                                        <p class="fst-italic text-muted small" t-if="message.translationErrors">
+                                                        <p class="fst-italic text-muted small" t-if="this.message.translationErrors">
                                                             <i class="text-danger fa fa-warning" role="img" aria-label="Translation Failure"/>
-                                                            <t t-if="message.translationErrors" t-esc="translationFailureText"/>
+                                                            <t t-if="this.message.translationErrors" t-esc="this.translationFailureText"/>
                                                         </p>
-                                                        <t t-if="showSubtypeDescription" t-out="props.messageSearch?.highlight(message.subtype_id?.description) ?? message.subtype_id?.description"/>
+                                                        <t t-if="this.showSubtypeDescription" t-out="this.props.messageSearch?.highlight(this.message.subtype_id?.description) ?? this.message.subtype_id?.description"/>
                                                     </t>
                                                 </div>
                                             </div>
                                         </t>
                                     </t>
-                                    <t t-if="message.bubbleColor and message.hasTextContent and !env.inChatWindow and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
-                                    <PollResult t-if="message.ended_poll_ids.length" poll="message.poll"/>
-                                    <Poll t-elif="message.poll" poll="message.poll"/>
+                                    <t t-if="this.message.bubbleColor and this.message.hasTextContent and !this.env.inChatWindow and !(this.props.asCard and this.isMobileOS)" t-call="mail.Message.actions"/>
+                                    <PollResult t-if="this.message.ended_poll_ids.length" poll="this.message.poll"/>
+                                    <Poll t-elif="this.message.poll" poll="this.message.poll"/>
                                 </div>
                                 <div class="position-relative">
                                     <AttachmentList
-                                        t-if="message.attachment_ids.length > 0"
-                                        attachments="message.attachment_ids.map((a) => a)"
-                                        unlinkAttachment.bind="onClickAttachmentUnlink"
-                                        messageSearch="props.messageSearch"/>
+                                        t-if="this.message.attachment_ids.length > 0"
+                                        attachments="this.message.attachment_ids.map((a) => a)"
+                                        unlinkAttachment.bind="this.onClickAttachmentUnlink"
+                                        messageSearch="this.props.messageSearch"/>
                                 </div>
-                                <MessageLinkPreviewList t-if="(message.message_link_preview_ids.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash) or (!isEditing and message.linkPreviewSquash and message.parent_id)" messageLinkPreviews="message.message_link_preview_ids"/>
+                                <MessageLinkPreviewList t-if="(this.message.message_link_preview_ids.length > 0 and this.store.hasLinkPreviewFeature and !this.message.linkPreviewSquash) or (!this.isEditing and this.message.linkPreviewSquash and this.message.parent_id)" messageLinkPreviews="this.message.message_link_preview_ids"/>
                             </div>
-                            <t t-if="message.bubbleColor and (!message.hasTextContent or env.inChatWindow) and !(props.asCard and isMobileOS)" t-call="mail.Message.actions"/>
+                            <t t-if="this.message.bubbleColor and (!this.message.hasTextContent or this.env.inChatWindow) and !(this.props.asCard and this.isMobileOS)" t-call="mail.Message.actions"/>
                         </div>
-                        <MessageReactions message="message" openReactionMenu="openReactionMenu" t-if="message.reactions.length"/>
+                        <MessageReactions message="this.message" openReactionMenu="this.openReactionMenu" t-if="this.message.reactions.length"/>
                         <t name="after-reactions"/>
                     </div>
                 </div>
@@ -155,38 +155,38 @@
     </t>
 
 <t t-name="mail.Message.edited">
-    <span class="o-xsmaller opacity-50" t-att-title="message.editedDatetimeMedium"> (edited)</span>
+    <span class="o-xsmaller opacity-50" t-att-title="this.message.editedDatetimeMedium"> (edited)</span>
 </t>
 
 <t t-name="mail.Message.actions">
-    <div t-if="props.hasActions and message.hasActions and !isEditing and !env.inChatter?.disabled" class="o-mail-Message-actions d-print-none d-flex align-items-start"
+    <div t-if="this.props.hasActions and this.message.hasActions and !this.isEditing and !this.env.inChatter?.disabled" class="o-mail-Message-actions d-print-none d-flex align-items-start"
         t-att-class="{
-            'start-0': isAlignedRight,
-            'mt-1': message.bubbleColor and !props.asCard and !isMobileOS,
-            'my-n2': !message.bubbleColor and !props.asCard and !isMobileOS,
-            'gap-1': isMobileOS,
-            'mx-1': !isMobileOS,
-            'invisible': !isActive and !isMobileOS,
-            'o-expanded': optionsDropdown.isOpen
+            'start-0': this.isAlignedRight,
+            'mt-1': this.message.bubbleColor and !this.props.asCard and !this.isMobileOS,
+            'my-n2': !this.message.bubbleColor and !this.props.asCard and !this.isMobileOS,
+            'gap-1': this.isMobileOS,
+            'mx-1': !this.isMobileOS,
+            'invisible': !this.isActive and !this.isMobileOS,
+            'o-expanded': this.optionsDropdown.isOpen
         }"
     >
-        <t t-if="isMobileOS">
-            <Dropdown state="optionsDropdown" menuClass="store.discussDropdownMenuClass(this)">
+        <t t-if="this.isMobileOS">
+            <Dropdown state="this.optionsDropdown" menuClass="this.store.discussDropdownMenuClass(this)">
                 <button class="d-none"/>
                 <t t-set-slot="content">
-                    <ActionList actions="messageActions.actions" dropdown="true"/>
+                    <ActionList actions="this.messageActions.actions" dropdown="true"/>
                 </t>
             </Dropdown>
         </t>
-        <t t-set="isReverse" t-value="env.inChatWindow and isAlignedRight"/>
-        <t t-if="isMobileOS and isReverse" t-call="mail.Message.emptyQuickAction"/>
+        <t t-set="isReverse" t-value="this.env.inChatWindow and this.isAlignedRight"/>
+        <t t-if="this.isMobileOS and this.isReverse" t-call="mail.Message.emptyQuickAction"/>
         <div class="d-flex rounded-1 overflow-hidden gap-1" t-att-class="{ 'flex-row-reverse': isReverse }">
-            <ActionList actions="actions" inline="true" fw="false"/>
-            <t t-foreach="Array(Math.max(quickActionCount - quickActions.length - 1, 0))" t-as="i" t-key="i_index">
+            <ActionList actions="this.actions" inline="true" fw="false"/>
+            <t t-foreach="Array(Math.max(this.quickActionCount - this.quickActions.length - 1, 0))" t-as="i" t-key="this.i_index">
                 <t t-call="mail.Message.emptyQuickAction"/>
             </t>
         </div>
-        <t t-if="isMobileOS and !isReverse" t-call="mail.Message.emptyQuickAction"/>
+        <t t-if="this.isMobileOS and !this.isReverse" t-call="mail.Message.emptyQuickAction"/>
     </div>
 </t>
 
@@ -197,42 +197,42 @@
 </t>
 
 <t t-name="mail.Message.notification">
-    <div t-if="message.thread?.eq(props.thread) and message.notification_ids.length > 0" class="mx-1">
-        <span class="o-mail-Message-notification cursor-pointer opacity-100-hover" t-att-class="message.failureNotifications.length > 0 ? 'text-danger opacity-75' : 'opacity-50'" role="button" tabindex="0" t-on-click="onClickNotification">
-            <i t-att-class="message.notification_ids[0].icon" role="img" aria-label="Delivery failure"/> <span class="fw-bold small" t-if="message.notification_ids[0].label" t-out="message.notification_ids[0].label"/>
+    <div t-if="this.message.thread?.eq(this.props.thread) and this.message.notification_ids.length > 0" class="mx-1">
+        <span class="o-mail-Message-notification cursor-pointer opacity-100-hover" t-att-class="this.message.failureNotifications.length > 0 ? 'text-danger opacity-75' : 'opacity-50'" role="button" tabindex="0" t-on-click="this.onClickNotification">
+            <i t-att-class="this.message.notification_ids[0].icon" role="img" aria-label="Delivery failure"/> <span class="fw-bold small" t-if="this.message.notification_ids[0].label" t-out="this.message.notification_ids[0].label"/>
         </span>
     </div>
-    <div t-elif="message.thread?.eq(props.thread) and (message.incoming_email_to?.length or message.incoming_email_cc?.length)" class="mx-1">
-        <span class="o-mail-Message-notification cursor-pointer" t-att-class="message.failureNotifications.length > 0 ? 'text-danger' : text-600" role="button" tabindex="0" t-on-click="onClickNotification">
+    <div t-elif="this.message.thread?.eq(this.props.thread) and (this.message.incoming_email_to?.length or this.message.incoming_email_cc?.length)" class="mx-1">
+        <span class="o-mail-Message-notification cursor-pointer" t-att-class="this.message.failureNotifications.length > 0 ? 'text-danger' : this.text-600" role="button" tabindex="0" t-on-click="this.onClickNotification">
             <i class="fa fa-envelope-o" role="img"/>
         </span>
     </div>
 </t>
 
 <t t-name="mail.Message.bodyAsNotification">
-    <div class="o-mail-Message-body text-break mb-0 w-100" t-att-class="{'o-note': message.message_type == 'notification'}">
-        <t t-out="props.messageSearch?.highlight(message.richBody) ?? message.richBody"/>
+    <div class="o-mail-Message-body text-break mb-0 w-100" t-att-class="{'o-note': this.message.message_type == 'notification'}">
+        <t t-out="this.props.messageSearch?.highlight(this.message.richBody) ?? this.message.richBody"/>
     </div>
 </t>
 
 <t t-name="mail.Message.pendingStatus">
-    <button t-if="message.postFailRedo" class="btn p-0" title="Failed to post the message. Click to retry" t-on-click="() => message.postFailRedo?.()"><i class="fa fa-fw fa-warning text-warning"/></button>
+    <button t-if="this.message.postFailRedo" class="btn p-0" title="Failed to post the message. Click to retry" t-on-click="() => this.message.postFailRedo?.()"><i class="fa fa-fw fa-warning text-warning"/></button>
     <span t-else="" class="o-mail-Message-pendingProgress"><i class="fa fa-fw fa-circle-o-notch fa-spin opacity-50"/></span>
 </t>
 
 <t t-name="mail.Message.mentionedChannelIcon">
-    <i t-att-class="icon"/>
+    <i t-att-class="this.icon"/>
 </t>
 
 <t t-name="mail.Message.sidebarStarred">
-    <small class="text-center lh-1 o-opacity-35" t-att-class="{ 'align-self-start ms-1': isAlignedRight, 'align-self-end me-1': !isAlignedRight, 'mt-2': props.squashed, 'mt-1': !props.squashed }" title="Starred message">
+    <small class="text-center lh-1 o-opacity-35" t-att-class="{ 'align-self-start ms-1': this.isAlignedRight, 'align-self-end me-1': !this.isAlignedRight, 'mt-2': this.props.squashed, 'mt-1': !this.props.squashed }" title="Starred message">
         <i class="fa fa-star o-mail-starred"/>
     </small>
 </t>
 
     <t t-name="mail.Message.messageLink">
         <span>
-            <span class="me-1" t-out="message.thread.displayName"/>
+            <span class="me-1" t-out="this.message.thread.displayName"/>
             <span class="fa fa-angle-right me-1" aria-hidden="true"/>
             <span class="fa fa-comment" aria-hidden="true"/>
         </span>

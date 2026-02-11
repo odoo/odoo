@@ -1,10 +1,10 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.GradientPicker">
-        <div class="d-flex flex-column" t-on-keydown="onKeydown">
+        <div class="d-flex flex-column" t-on-keydown="this.onKeydown">
 
             <div class="align-items-center d-flex justify-content-between my-3 o_type_row">
                 Type
-                <t t-if="isMobileOS">
+                <t t-if="this.isMobileOS">
                     <Dropdown>
                         <button class="btn btn-light d-flex justify-content-between w-100 ms-2 border border-dark rounded-0">
                             <span class="px-1" t-esc="this.state.type"/>
@@ -34,20 +34,20 @@
 
             <div t-if="this.state.type === 'radial'">
                 <div class="d-flex flex-column gap-1 mb-1 me-n1">
-                    <div class="d-flex align-items-center justify-content-between" t-on-mouseover="props.onColorPointerOver" t-on-mouseout="props.onColorPointerOut">
+                    <div class="d-flex align-items-center justify-content-between" t-on-mouseover="this.props.onColorPointerOver" t-on-mouseout="this.props.onColorPointerOut">
                         <div style="margin-right: auto;">
                             Size
                         </div>
-                        <button t-on-click="() => this.onSizeChange('closest-side')" t-att-data-color="getRadialGradient('closest-side')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'closest-side' ? `active` : ''}}" title="Extend to the closest side">
+                        <button t-on-click="() => this.onSizeChange('closest-side')" t-att-data-color="this.getRadialGradient('closest-side')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'closest-side' ? `active` : ''}}" title="Extend to the closest side">
                             <img src="/html_editor/static/src/img/gradient-closest-side.svg"/>
                         </button>
-                        <button t-on-click="() => this.onSizeChange('closest-corner')" t-att-data-color="getRadialGradient('closest-corner')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'closest-corner' ? `active` : ''}}" title="Extend to the closest corner">
+                        <button t-on-click="() => this.onSizeChange('closest-corner')" t-att-data-color="this.getRadialGradient('closest-corner')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'closest-corner' ? `active` : ''}}" title="Extend to the closest corner">
                             <img src="/html_editor/static/src/img/gradient-closest-corner.svg"/>
                         </button>
-                        <button t-on-click="() => this.onSizeChange('farthest-side')" t-att-data-color="getRadialGradient('farthest-side')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'farthest-side' ? `active` : ''}}" title="Extend to the farthest side">
+                        <button t-on-click="() => this.onSizeChange('farthest-side')" t-att-data-color="this.getRadialGradient('farthest-side')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'farthest-side' ? `active` : ''}}" title="Extend to the farthest side">
                             <img src="/html_editor/static/src/img/gradient-farthest-side.svg"/>
                         </button>
-                        <button t-on-click="() => this.onSizeChange('farthest-corner')" t-att-data-color="getRadialGradient('farthest-corner')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'farthest-corner' ? `active`: ''}}" title="Extend to the farthest corner">
+                        <button t-on-click="() => this.onSizeChange('farthest-corner')" t-att-data-color="this.getRadialGradient('farthest-corner')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'farthest-corner' ? `active`: ''}}" title="Extend to the farthest corner">
                             <img src="/html_editor/static/src/img/gradient-farthest-corner.svg"/>
                         </button>
                     </div>
@@ -60,7 +60,7 @@
                         <div class="d-flex justify-content-center align-items-center my-auto me-2 position-relative gradient-angle-knob"
                             t-ref="gradientAngleKnob"
                             t-attf-style="--angle: #{this.state.angle - 90}deg;"
-                            t-on-mousedown="onKnobMouseDown">
+                            t-on-mousedown="this.onKnobMouseDown">
                             <div class="position-absolute gradient-angle-thumb"></div>
                         </div>
                         <div class="o_color_gradient_input d-flex align-items-center">
@@ -70,7 +70,7 @@
                                 min="-360"
                                 max="360"
                                 t-att-value="this.state.angle"
-                                t-on-change="onAngleChange"
+                                t-on-change="this.onAngleChange"
                             />
                             <span>deg</span>
                         </div>
@@ -157,11 +157,11 @@
             </div>
 
             <ColorPicker
-                onColorSelect.bind="onColorChange"
-                onColorPreview.bind="onColorPreview"
+                onColorSelect.bind="this.onColorChange"
+                onColorPreview.bind="this.onColorPreview"
                 defaultColor="this.currentColorHex"
                 selectedColor="this.currentColorHex"
-                noTransparency="props.noTransparency"
+                noTransparency="this.props.noTransparency"
             />
         </div>
     </t>

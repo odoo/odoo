@@ -270,7 +270,7 @@ def upgrade_this(file_manager, log_info, log_error):
 
     web_files = [
         f for f in file_manager
-        if 'addons/web/static/src' in f.path._str
+        if 'static/src' in f.path._str
         and f.path.suffix == '.xml'
         and not any(f.path._str.endswith(p) for p in EXCLUDED_FILES)
     ]

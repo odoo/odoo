@@ -8,10 +8,10 @@
                     t-att-class="{
                         'border-0': category.isChildren and !this.isAncestorOrSelected(category), 
                         'opacity-75 border-0': !category.isChildren and !category.isSelected,
-                        'justify-content-center': ui.isSmall
+                        'justify-content-center': this.ui.isSmall
                     }"
                     class="category-button p-1 btn btn-light d-flex justify-content-center align-items-center rounded-3">
-                    <img t-if="category.imgSrc and !ui.isSmall" t-att-src="category.imgSrc"
+                    <img t-if="category.imgSrc and !this.ui.isSmall" t-att-src="category.imgSrc"
                         class="category-img-thumb h-100 rounded-3 object-fit-cover"
                         alt="Category"
                     />

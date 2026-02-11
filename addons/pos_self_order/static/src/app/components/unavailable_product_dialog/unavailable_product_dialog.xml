@@ -9,15 +9,15 @@
                 <p>
                     It seems that 
                     <strong class="text-danger">
-                        <t t-esc="props.productNames.join(', ')"/>
+                        <t t-esc="this.props.productNames.join(', ')"/>
                     </strong> 
-                    <t t-if="props.productNames.length > 1"> are</t>
+                    <t t-if="this.props.productNames.length > 1"> are</t>
                     <t t-else=""> is</t>
                     no longer available. Please go back and edit your order.
                 </p>
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="onConfirm">OK</button>
+                <button class="btn btn-primary" t-on-click="this.onConfirm">OK</button>
             </t>
         </Dialog>
     </t>

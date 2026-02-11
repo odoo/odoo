@@ -3,14 +3,14 @@
 
     <t t-name="account.ResequenceRenderer" >
             <t t-set="value" t-value="this.getValue()"/>
-            <table t-if="value.changeLines.length" class="table table-sm">
+            <table t-if="this.value.changeLines.length" class="table table-sm">
                 <thead><tr>
                     <th>Date</th>
                     <th>Before</th>
                     <th>After</th>
                 </tr></thead>
                 <tbody>
-                    <t t-foreach="value.changeLines" t-as="changeLine" t-key="changeLine.id">
+                    <t t-foreach="this.value.changeLines" t-as="changeLine" t-key="this.changeLine.id">
                         <ChangeLine changeLine="changeLine" ordering="value.ordering"/>
                     </t>
                 </tbody>
@@ -19,10 +19,10 @@
 
     <t t-name="account.ResequenceChangeLine">
         <tr>
-            <td t-out="props.changeLine.date"/>
-            <td t-out="props.changeLine.current_name"/>
-            <td t-if="props.ordering == 'keep'" t-out="props.changeLine.new_by_name" t-attf-class="{{ props.changeLine.new_by_name != props.changeLine.new_by_date ? 'animate' : ''}}"/>
-            <td t-else="" t-out="props.changeLine.new_by_date" t-attf-class="{{ props.changeLine.new_by_name != props.changeLine.new_by_date ? 'animate' : ''}}"/>
+            <td t-out="this.props.changeLine.date"/>
+            <td t-out="this.props.changeLine.current_name"/>
+            <td t-if="this.props.ordering == 'keep'" t-out="this.props.changeLine.new_by_name" t-attf-class="{{ this.props.changeLine.new_by_name != this.props.changeLine.new_by_date ? 'animate' : ''}}"/>
+            <td t-else="" t-out="this.props.changeLine.new_by_date" t-attf-class="{{ this.props.changeLine.new_by_name != this.props.changeLine.new_by_date ? 'animate' : ''}}"/>
         </tr>
     </t>
 </templates>

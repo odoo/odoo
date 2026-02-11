@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="mail.FollowerSubtypeDialog">
-        <Dialog t-if="props.follower.partner_id" bodyClass="'d-flex flex-column'" contentClass="'o-mail-FollowerSubtypeDialog'" size="'sm'" title="title">
+        <Dialog t-if="this.props.follower.partner_id" bodyClass="'d-flex flex-column'" contentClass="'o-mail-FollowerSubtypeDialog'" size="'sm'" title="this.title">
             <t t-set-slot="default">
                 <div
-                    t-foreach="state.subtypes"
+                    t-foreach="this.state.subtypes"
                     t-as="subtype"
                     t-key="subtype.id"
                     class="o-mail-FollowerSubtypeDialog-subtype"
@@ -17,10 +17,10 @@
                 </div>
             </t>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="onClickApply">
+                <button class="btn btn-primary" t-on-click="this.onClickApply">
                     Apply
                 </button>
-                <button class="btn btn-secondary" t-on-click="props.close">
+                <button class="btn btn-secondary" t-on-click="this.props.close">
                     Discard
                 </button>
             </t>

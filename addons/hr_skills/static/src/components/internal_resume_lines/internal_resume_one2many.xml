@@ -11,26 +11,26 @@
                     </tr>
                 </thead>
                 <tbody class="ui-sortable">
-                    <t t-if="internalResumeLines.length">
+                    <t t-if="this.internalResumeLines.length">
                         <tr class="o_group_has_content o_group_header o_resume_group_header">
                             <th tabindex="-1" class="o_group_name" colspan="2">
                                 <div class="d-flex align-items-center">
-                                    Experience - <t t-out="companyId"/>
+                                    Experience - <t t-out="this.companyId"/>
                                 </div>
                             </th>
                         </tr>
                     </t>
-                    <t t-foreach="internalResumeLines" t-as="record" t-key="record.id">
+                    <t t-foreach="this.internalResumeLines" t-as="record" t-key="record.id">
                         <tr class="o_data_row">
                             <td class="o_resume_timeline_cell position-relative pe-lg-2">
                                 <div class="rounded-circle bg-info position-relative"/>
                             </td>
                             <td class="o_data_cell pt-0">
-                                <div t-attf-class="o_resume_line" t-att-data-id="id">
+                                <div t-attf-class="o_resume_line" t-att-data-id="this.id">
                                     <small class="o_resume_line_dates fw-bold">
-                                        <t t-out="formatDate(record.date_start)"/>
+                                        <t t-out="this.formatDate(record.date_start)"/>
                                         -
-                                        <t t-if="record.date_end" t-out="formatDate(record.date_end)"/>
+                                        <t t-if="record.date_end" t-out="this.formatDate(record.date_end)"/>
                                         <t t-else="">
                                             Current
                                         </t>
@@ -42,7 +42,7 @@
                     </t>
                 </tbody>
             </table>
-            <t t-if="!haveResumeLines">
+            <t t-if="!this.haveResumeLines">
                 <div name="no_resume_line" class="ms-4 mt-3 text-muted fst-italic oe_inline">
                     <p>
                         There are no resume lines on this employee.

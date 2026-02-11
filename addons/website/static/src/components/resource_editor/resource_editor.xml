@@ -6,50 +6,50 @@
             <div class="o_resource_editor_title">
                 <div class="btn-group o_resource_editor_type_switcher">
                     <Dropdown>
-                        <button class="btn btn-info"><t t-esc="types[state.type]"/></button>
+                        <button class="btn btn-info"><t t-esc="this.types[this.state.type]"/></button>
                         <t t-set-slot="content">
-                            <t t-foreach="Object.keys(types)" t-as="type" t-key="type">
+                            <t t-foreach="Object.keys(this.types)" t-as="type" t-key="this.type">
                                 <DropdownItem onSelected="() => this.onFileTypeChange(type)">
-                                    <t t-esc="types[type]"/>
+                                    <t t-esc="this.types[this.type]"/>
                                 </DropdownItem>
                             </t>
                         </t>
                     </Dropdown>
                 </div>
-                <SelectMenu t-props="selectMenuProps" class="'o_resource_editor_resource_list'">
+                <SelectMenu t-props="this.selectMenuProps" class="'o_resource_editor_resource_list'">
                     <t t-call="website.ResourceEditor.ResourceLabel">
-                        <t t-set="resource" t-value="state.currentResource"/>
-                        <t t-set="label" t-value="state.type === 'xml' ? resource.name : resource.label"/>
+                        <t t-set="resource" t-value="this.state.currentResource"/>
+                        <t t-set="label" t-value="this.state.type === 'xml' ? resource.name : resource.label"/>
                     </t>
                     <t t-set-slot="choice" t-slot-scope="scope">
                         <t t-call="website.ResourceEditor.ResourceLabel">
-                            <t t-set="resource" t-value="state.resources[state.type][scope.data.value]"/>
-                            <t t-set="label" t-value="scope.data.label"/>
+                            <t t-set="resource" t-value="this.state.resources[this.state.type][this.scope.data.value]"/>
+                            <t t-set="label" t-value="this.scope.data.label"/>
                         </t>
                     </t>
                 </SelectMenu>
-                <label t-if="state.type === 'xml' and debug" class="o_resource_editor_filter">
+                <label t-if="this.state.type === 'xml' and this.debug" class="o_resource_editor_filter">
                     <div class="btn-group o_resource_editor_type_switcher">
                         <Dropdown>
                             <button class="btn btn-primary">Filter</button>
                             <t t-set-slot="content">
-                                <t t-foreach="Object.keys(xmlFilters)" t-as="filter" t-key="filter">
-                                    <CheckboxItem class="{ selected: state.xmlFilter === filter }" checked="state.xmlFilter === filter" onSelected="() => this.onFilterChange('xml', filter)">
-                                        <t t-esc="xmlFilters[filter]"/>
+                                <t t-foreach="Object.keys(this.xmlFilters)" t-as="filter" t-key="this.filter">
+                                    <CheckboxItem class="{ selected: this.state.xmlFilter === filter }" checked="this.state.xmlFilter === filter" onSelected="() => this.onFilterChange('xml', filter)">
+                                        <t t-esc="this.xmlFilters[this.filter]"/>
                                     </CheckboxItem>
                                 </t>
                             </t>
                         </Dropdown>
                     </div>
                 </label>
-                <label t-if="state.type === 'scss' and debug" class="o_resource_editor_filter">
+                <label t-if="this.state.type === 'scss' and this.debug" class="o_resource_editor_filter">
                     <div class="btn-group o_resource_editor_type_switcher">
                         <Dropdown>
                             <button class="btn btn-primary">Filter</button>
                             <t t-set-slot="content">
-                                <t t-foreach="Object.keys(scssFilters)" t-as="filter" t-key="filter">
-                                    <CheckboxItem class="{ selected: state.scssFilter === filter }" checked="state.scssFilter === filter" onSelected="() => this.onFilterChange('scss', filter)">
-                                        <t t-esc="scssFilters[filter]"/>
+                                <t t-foreach="Object.keys(this.scssFilters)" t-as="filter" t-key="this.filter">
+                                    <CheckboxItem class="{ selected: this.state.scssFilter === filter }" checked="this.state.scssFilter === filter" onSelected="() => this.onFilterChange('scss', filter)">
+                                        <t t-esc="this.scssFilters[this.filter]"/>
                                     </CheckboxItem>
                                 </t>
                             </t>
@@ -57,28 +57,28 @@
                     </div>
                 </label>
                 <div class="d-flex gap-2">
-                    <button class="btn btn-primary" t-on-click="onSave"><i t-if="state.saving" class="fa fa-circle-o-notch fa-spin mr8"/>Save</button>
+                    <button class="btn btn-primary" t-on-click="this.onSave"><i t-if="this.state.saving" class="fa fa-circle-o-notch fa-spin mr8"/>Save</button>
                     <button class="btn btn-secondary" t-on-click="this.props.close">Close</button>
                 </div>
             </div>
-            <div t-if="state.currentResource" id="resource-editor-id">
+            <div t-if="this.state.currentResource" id="resource-editor-id">
                 <div class="float-end">
-                    <button t-if="state.type !== 'xml' and isCustomResource(state.currentResource.url)" type="button" class="btn btn-sm btn-danger" t-on-click="onReset">
+                    <button t-if="this.state.type !== 'xml' and this.isCustomResource(this.state.currentResource.url)" type="button" class="btn btn-sm btn-danger" t-on-click="this.onReset">
                         <i class="fa fa-undo"/>
                         Reset
                     </button>
-                    <button t-if="state.type === 'xml'" type="button" class="btn btn-sm btn-link" t-on-click="onFormat">Format</button>
+                    <button t-if="this.state.type === 'xml'" type="button" class="btn btn-sm btn-link" t-on-click="this.onFormat">Format</button>
                 </div>
-                <span class="o_resource_editor_resource_info" t-esc="resourceInfo"/>
+                <span class="o_resource_editor_resource_info" t-esc="this.resourceInfo"/>
             </div>
-            <div t-if="state.currentResource" id="resource-editor" t-ref="editor">
+            <div t-if="this.state.currentResource" id="resource-editor" t-ref="editor">
                 <CodeEditor
                     class="'h-100'"
-                    value="state.currentResource.arch"
-                    sessionId="state.currentResource.id"
-                    mode="typeToCodeEditorModeMap[state.type]"
+                    value="this.state.currentResource.arch"
+                    sessionId="this.state.currentResource.id"
+                    mode="this.typeToCodeEditorModeMap[this.state.type]"
                     theme="'monokai'"
-                    onChange.bind="onEditorChange"/>
+                    onChange.bind="this.onEditorChange"/>
             </div>
         </div>
         <ResourceEditorWarningOverlay/>

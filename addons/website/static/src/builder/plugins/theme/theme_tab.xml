@@ -4,7 +4,7 @@
 <t t-name="website.ThemeTab">
     <div class="o_theme_tab h-100" role="tabpanel" aria-labelledby="theme-tab">
         <div t-ref="content" class="d-flex flex-column h-100">
-            <t t-foreach="optionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
+            <t t-foreach="this.optionsContainers" t-as="optionsContainer" t-key="this.optionsContainer.id">
                 <!-- TODO Define a more basic kind of options container -->
                 <OptionsContainer
                     snippetModel="optionsContainer.snippetModel"

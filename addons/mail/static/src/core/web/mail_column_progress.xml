@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="mail.ColumnProgress" t-inherit="web.ColumnProgress" t-inherit-mode="primary">
-        <AnimatedNumber position="after">
-            <t t-if="props.aggregateOn">
+        <AnimatedNumber position="this.after">
+            <t t-if="this.props.aggregateOn">
                 <span class="text-900 text-nowrap cursor-default"
-                     t-att-title="props.aggregateOn.title">
-                    /<span class="o_column_progress_aggregated_on" t-out="props.aggregateOn.value"/>
+                     t-att-title="this.props.aggregateOn.title">
+                    /<span class="o_column_progress_aggregated_on" t-out="this.props.aggregateOn.value"/>
                 </span>
             </t>
         </AnimatedNumber>

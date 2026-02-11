@@ -3,15 +3,15 @@
 <templates xml:space="preserve">
     <!-- Re-render lists form as no reload is done on portal page -->
     <t t-name="mass_mailing.portal.list_form_content">
-        <p t-if="listsMember.length">
+        <p t-if="this.listsMember.length">
             Choose your mailing subscriptions
         </p>
         <ul id="o_mailing_subscription_form_lists"
-            t-if="listsMember.length"
+            t-if="this.listsMember.length"
             class="list-group">
-            <li t-foreach="listsMember"
+            <li t-foreach="this.listsMember"
                 t-as="mailing_list"
-                t-key="mailing_list_key"
+                t-key="this.mailing_list_key"
                 class="list-group-item d-flex align-items-center">
                 <input type="checkbox"
                        name="mailing_list_ids"
@@ -19,9 +19,9 @@
                        t-att-value="mailing_list['id']"
                        t-att-checked="mailing_list['opt_out'] ? undefined : 'checked'"
                        t-att-title="mailing_list['name']"/>
-                <span class="ms-1" t-out="mailing_list['name']"/>
+                <span class="ms-1" t-out="this.mailing_list['name']"/>
                 <span class="o_mailing_list_unsubscribed ms-auto">
-                    <t t-if="mailing_list['opt_out']">
+                    <t t-if="this.mailing_list['opt_out']">
                         Not subscribed
                     </t>
                     <t t-else="">
@@ -30,21 +30,21 @@
                 </span>
             </li>
         </ul>
-        <p t-if="listsProposal.length">
+        <p t-if="this.listsProposal.length">
             You may also be interested in
         </p>
         <ul id="o_mailing_subscription_form_lists_additional"
-            t-if="listsProposal.length"
+            t-if="this.listsProposal.length"
             class="list-group">
-            <li t-foreach="listsProposal"
+            <li t-foreach="this.listsProposal"
                 t-as="mailing_list"
-                t-key="mailing_list_key"
+                t-key="this.mailing_list_key"
                 class="list-group-item">
                 <input type="checkbox"
                        name="mailing_list_ids"
                        t-att-value="mailing_list['id']"
                        t-att-title="mailing_list['name']"/>
-                <span class="ms-1" t-out="mailing_list['name']"/>
+                <span class="ms-1" t-out="this.mailing_list['name']"/>
             </li>
         </ul>
     </t>
@@ -53,7 +53,7 @@
     <t t-name="mass_mailing.portal.list_form_content_readonly">
         <p>
             Your email is currently <strong>in our block list</strong>.
-            <t t-if="listsOptin.length">
+            <t t-if="this.listsOptin.length">
                 You will not receive any news from those mailing lists you are a member of:
             </t>
             <t t-else="">
@@ -61,12 +61,12 @@
             </t>
         </p>
         <ul class="list-group mb-4"
-            t-if="listsOptin.length">
-            <t t-foreach="listsOptin"
+            t-if="this.listsOptin.length">
+            <t t-foreach="this.listsOptin"
                t-as="mailing_list"
-               t-key="mailing_list_key">
+               t-key="this.mailing_list_key">
                 <li class="list-group-item d-flex align-items-center">
-                    <strong t-out="mailing_list['name']"/>
+                    <strong t-out="this.mailing_list['name']"/>
                 </li>
             </t>
         </ul>
@@ -74,7 +74,7 @@
 
     <!-- Post action informative span -->
     <t t-name="mass_mailing.portal.list_form_update_info">
-        <t t-if="infoKey == 'subscription_updated'">
+        <t t-if="this.infoKey == 'subscription_updated'">
             <i class="fa fa-check me-1"/>
             <span>Membership updated</span>
         </t>

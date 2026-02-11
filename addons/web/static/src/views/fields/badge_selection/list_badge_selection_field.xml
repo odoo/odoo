@@ -2,13 +2,13 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ListBadgeSelectionField" t-inherit="web.BadgeSelectionField" t-inherit-mode="primary">
-        <xpath expr="//t[@t-if='props.readonly']/span[@t-esc='string']" position="attributes">
+        <xpath expr="//t[@t-if='this.props.readonly']/span[@t-esc='this.string']" position="attributes">
             <attribute name="class">badge rounded-pill</attribute>
-            <attribute name="t-att-class">getBadgeClassNames()</attribute>
+            <attribute name="t-att-class">this.getBadgeClassNames()</attribute>
         </xpath>
-        <xpath expr="//t[@t-if='props.readonly']/following-sibling::t[@t-else='']//span[@t-esc='option[1]']" position="attributes">
+        <xpath expr="//t[@t-if='this.props.readonly']/following-sibling::t[@t-else='']//span[@t-esc='this.option[1]']" position="attributes">
             <attribute name="class" separator=" " add="badge rounded-pill"/>
-            <attribute name="t-att-class">getBadgeClassNames(option)</attribute>
+            <attribute name="t-att-class">this.getBadgeClassNames(this.option)</attribute>
         </xpath>
     </t>
 

@@ -4,8 +4,8 @@
     <!-- Template for 'mailing_filter' widget, specific for mailing form view -->
     <t t-name="mass_mailing.MailingFilter">
         <div class="d-flex align-items-center gap-1">
-            <Many2One t-props="m2oProps" cssClass="'w-100'"/>
-            <t t-if="!props.readonly">
+            <Many2One t-props="this.m2oProps" cssClass="'w-100'"/>
+            <t t-if="!this.props.readonly">
                 <div class="o_mass_mailing_filter_container">
                     <div t-attf-class="o_mass_mailing_save_filter_container pt-1 {{ !this.filter.canSaveFilter ? 'd-none': '' }}">
                         <div class="o_mass_mailing_filter_dropdown">
@@ -22,8 +22,8 @@
                                     </div>
                                     <div class="d-inline-flex">
                                         <input t-ref="autofocus" type="text" class="o_mass_mailing_filter_name o_input w-auto ms-2"
-                                            placeholder='e.g. "VIP Customers"' t-on-keydown="onFilterNameInputKeydown"/>
-                                        <button class="btn btn-sm btn-primary o_mass_mailing_btn_save_filter mx-2" t-on-click="onSaveFilter">
+                                            placeholder='e.g. "VIP Customers"' t-on-keydown="this.onFilterNameInputKeydown"/>
+                                        <button class="btn btn-sm btn-primary o_mass_mailing_btn_save_filter mx-2" t-on-click="this.onSaveFilter">
                                             Add
                                         </button>
                                     </div>
@@ -31,7 +31,7 @@
                             </MailingFilterDropdown>
                         </div>
                     </div>
-                    <a t-attf-class="o_mass_mailing_remove_filter btn px-1 pt-1 pb-0 {{ !this.filter.canRemoveFilter ? 'd-none': '' }}" t-on-click="onRemoveFilter">
+                    <a t-attf-class="o_mass_mailing_remove_filter btn px-1 pt-1 pb-0 {{ !this.filter.canRemoveFilter ? 'd-none': '' }}" t-on-click="this.onRemoveFilter">
                         <i class="fa fa-trash px-3 py-1 align-bottom" title="Remove from Favorites"/>
                     </a>
                 </div>

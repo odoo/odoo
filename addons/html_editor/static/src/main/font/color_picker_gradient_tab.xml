@@ -1,10 +1,10 @@
 <templates xml:space="preserve">
 <t t-name="html_editor.ColorPickerGradientTab">
-    <t t-set="currentGradient" t-value="getCurrentGradientColor()" />
+    <t t-set="currentGradient" t-value="this.getCurrentGradientColor()" />
     <div class="o_colorpicker_sections p-2 d-grid gap-1" style="grid-template-columns: 1fr 1fr;"
-        t-on-click="props.onColorClick" t-on-mouseover="props.onColorPointerOver"
-        t-on-mouseout="props.onColorPointerOut" t-on-focusin="props.onFocusin" t-on-focusout="props.onFocusout">
-        <t t-set="gradientsWithOpacity" t-value="DEFAULT_GRADIENT_COLORS.map((gradient) => applyOpacityToGradient(gradient, props.defaultOpacity))" />
+        t-on-click="this.props.onColorClick" t-on-mouseover="this.props.onColorPointerOver"
+        t-on-mouseout="this.props.onColorPointerOut" t-on-focusin="this.props.onFocusin" t-on-focusout="this.props.onFocusout">
+        <t t-set="gradientsWithOpacity" t-value="this.DEFAULT_GRADIENT_COLORS.map((gradient) => this.applyOpacityToGradient(gradient, this.props.defaultOpacity))" />
         <t t-foreach="gradientsWithOpacity" t-as="gradient" t-key="gradient">
             <button class="w-100 m-0 o_color_button o_color_picker_button o_gradient_color_button btn p-0"
                 t-att-class="{'selected': currentGradient?.includes(gradient)}"
@@ -15,18 +15,18 @@
         <button t-attf-style="{{ currentGradient ? `background-image: ${currentGradient}` : '' }};"
             class="w-50 btn mb-2 o_custom_gradient_button o_color_picker_button"
             t-att-class="{'selected': currentGradient and !gradientsWithOpacity.includes(currentGradient)}"
-            t-att-data-color="currentGradient" t-on-click="toggleGradientPicker" title="Define a custom gradient">
+            t-att-data-color="currentGradient" t-on-click="this.toggleGradientPicker" title="Define a custom gradient">
             Custom
         </button>
-        <GradientPicker t-if="state.showGradientPicker"
-            onGradientChange.bind="props.applyColor"
-            onGradientPreview.bind="props.onColorPreview"
-            setOnCloseCallback.bind="props.setOnCloseCallback"
-            setOperationCallbacks.bind="props.setOperationCallbacks"
-            selectedGradient="getCurrentGradientColor()"
-            onColorPointerOver.bind="props.onColorPointerOver"
-            onColorPointerOut.bind="props.onColorPointerOut"
-            noTransparency="props.noTransparency"/>
+        <GradientPicker t-if="this.state.showGradientPicker"
+            onGradientChange.bind="this.props.applyColor"
+            onGradientPreview.bind="this.props.onColorPreview"
+            setOnCloseCallback.bind="this.props.setOnCloseCallback"
+            setOperationCallbacks.bind="this.props.setOperationCallbacks"
+            selectedGradient="this.getCurrentGradientColor()"
+            onColorPointerOver.bind="this.props.onColorPointerOver"
+            onColorPointerOut.bind="this.props.onColorPointerOut"
+            noTransparency="this.props.noTransparency"/>
     </div>
 </t>
 </templates>

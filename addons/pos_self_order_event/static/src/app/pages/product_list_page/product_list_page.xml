@@ -2,14 +2,14 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order_event.ProductListPage" t-inherit="pos_self_order.ProductListPage" t-inherit-mode="extension">
         <xpath expr="//span[hasclass('o-so-tabular-nums')]" position="replace">
-            <t t-if="product?.event_id">
-                <span class="o-so-tabular-nums fs-4 fw-bold text-primary" t-out="ticketAvailabilityText(product)"/>
+            <t t-if="this.product?.event_id">
+                <span class="o-so-tabular-nums fs-4 fw-bold text-primary" t-out="this.ticketAvailabilityText(this.product)"/>
             </t>
             <t t-else="">$0</t>
         </xpath>
         <xpath expr="//div[hasclass('product_img')]/img" position="replace">
-            <t t-if="product?.event_id">
-                <img class="object-fit-cover rounded-4" t-att-src="selfOrder.eventImageUrl(product.event_id)" loading="lazy" alt="Event Image"/>
+            <t t-if="this.product?.event_id">
+                <img class="object-fit-cover rounded-4" t-att-src="this.selfOrder.eventImageUrl(this.product.event_id)" loading="lazy" alt="Event Image"/>
             </t>
             <t t-else="">$0</t>
         </xpath>

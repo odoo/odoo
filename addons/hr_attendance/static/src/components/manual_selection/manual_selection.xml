@@ -15,22 +15,22 @@
                         <div class="d-flex flex-row align-items-center rounded-pill border flex-grow-1">
                             <i class="o_searchview_icon d-print-none oi oi-search m-2" aria-label="Search..." title="Search..."/>
                             <div class="o_searchview_input_container position-relative w-100">
-                                <input t-on-input="onSearchInput" type="text" class="d-print-none border-0" style="width: 95%;" placeholder="Search..."/>
+                                <input t-on-input="this.onSearchInput" type="text" class="d-print-none border-0" style="width: 95%;" placeholder="Search..."/>
                             </div>
                         </div>
                     </div>
                     <div class="p-2">
                         <Pager
-                            t-if="state.employeesData.count > state.limit"
-                            total="state.employeesData.count"
-                            offset="state.offset"
-                            limit="state.limit"
-                            onUpdate.bind="_onPagerChanged"/>
+                            t-if="this.state.employeesData.count > this.state.limit"
+                            total="this.state.employeesData.count"
+                            offset="this.state.offset"
+                            limit="this.state.limit"
+                            onUpdate.bind="this._onPagerChanged"/>
                     </div>
                 </div>
             </div>
             <div class="d-flex h-100 flex-column flex-md-row bg-300">
-                <t t-if="!env.isSmall">
+                <t t-if="!this.env.isSmall">
                     <div class="o_hr_kiosk_sidebar ps-2 py-2 overflow-auto">
                         <div class="list-group">
                             <a t-on-click="() => this.onDepartmentClick()" class="list-group-item py-3 list-group-item-action text-start">
@@ -48,7 +48,7 @@
                 <t t-else="">
                     <Dropdown>
                         <button class="btn btn-light m-2 me-auto align-self-start">
-                            <span id="departmentButton" ><i class="fa fa-users me-2"/><t t-esc="departmentName"/></span>
+                            <span id="departmentButton" ><i class="fa fa-users me-2"/><t t-esc="this.departmentName"/></span>
                             <i class="fa fa-caret-down ms-2"/>
                         </button>
                         <t t-set-slot="content">

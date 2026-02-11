@@ -2,41 +2,41 @@
 <templates xml:space="preserve">
 
     <t t-name="mrp.MoOverviewComponentsBlock">
-        <t t-foreach="props.components" t-as="component" t-key="component.summary.index">
+        <t t-foreach="this.props.components" t-as="component" t-key="component.summary.index">
             <MoOverviewLine
                 data="component.summary"
-                hasFoldButton="hasReplenishments(component)"
-                isFolded="state.fold[component.summary.index]"
-                showOptions="props.showOptions"
-                toggleFolded.bind="onToggleFolded"/>
+                hasFoldButton="this.hasReplenishments(component)"
+                isFolded="this.state.fold[component.summary.index]"
+                showOptions="this.props.showOptions"
+                toggleFolded.bind="this.onToggleFolded"/>
             <!-- Display Replenishment block -->
-            <t t-if="hasReplenishmentsBlock(component)" t-foreach="component.replenishments" t-as="replenishment" t-key="replenishment.summary.index">
+            <t t-if="this.hasReplenishmentsBlock(component)" t-foreach="component.replenishments" t-as="replenishment" t-key="replenishment.summary.index">
                 <MoOverviewLine
                     data="replenishment.summary"
-                    hasFoldButton="hasComponents(replenishment)"
-                    isFolded="state.fold[replenishment.summary.index]"
-                    showOptions="props.showOptions"
-                    toggleFolded.bind="onToggleFolded"/>
-                <t t-if="hasComponentsBlock(replenishment)">
+                    hasFoldButton="this.hasComponents(replenishment)"
+                    isFolded="this.state.fold[replenishment.summary.index]"
+                    showOptions="this.props.showOptions"
+                    toggleFolded.bind="this.onToggleFolded"/>
+                <t t-if="this.hasComponentsBlock(replenishment)">
                     <MoOverviewComponentsBlock
-                        unfoldAll="state.unfoldAll"
+                        unfoldAll="this.state.unfoldAll"
                         components="replenishment.components"
                         operations="replenishment.operations"
                         byproducts="replenishment.byproducts"
-                        showOptions="props.showOptions"/>
+                        showOptions="this.props.showOptions"/>
                 </t>
             </t>
         </t>
         <MoOverviewOperationsBlock
-            unfoldAll="state.unfoldAll"
-            summary="props.operations.summary"
-            operations="props.operations.details"
-            showOptions="props.showOptions"/>
+            unfoldAll="this.state.unfoldAll"
+            summary="this.props.operations.summary"
+            operations="this.props.operations.details"
+            showOptions="this.props.showOptions"/>
         <MoOverviewByproductsBlock
-            unfoldAll="state.unfoldAll"
-            summary="props.byproducts.summary"
-            byproducts="props.byproducts.details"
-            showOptions="props.showOptions"/>
+            unfoldAll="this.state.unfoldAll"
+            summary="this.props.byproducts.summary"
+            byproducts="this.props.byproducts.details"
+            showOptions="this.props.showOptions"/>
     </t>
 
 </templates>

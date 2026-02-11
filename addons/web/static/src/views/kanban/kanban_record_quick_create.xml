@@ -2,16 +2,16 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanRecordQuickCreate">
-        <KanbanQuickCreateController t-if="state.isLoaded" t-props="quickCreateProps" />
+        <KanbanQuickCreateController t-if="this.state.isLoaded" t-props="this.quickCreateProps" />
     </t>
 
     <t t-name="web.KanbanQuickCreateController">
         <div
             class="o_kanban_quick_create o_field_highlight shadow"
-            t-att-class="{ o_disabled: state.disabled, 'w-100 mx-0': props.listIsGrouped }"
+            t-att-class="{ o_disabled: this.state.disabled, 'w-100 mx-0': this.props.listIsGrouped }"
             t-ref="root"
         >
-            <t t-component="props.Renderer" class="'o_form_view o_xxs_form_view o_kanban_quick_create_form p-0'" record="model.root" Compiler="props.Compiler" archInfo="props.archInfo"/>
+            <t t-component="this.props.Renderer" class="'o_form_view o_xxs_form_view o_kanban_quick_create_form p-0'" record="this.model.root" Compiler="this.props.Compiler" archInfo="this.props.archInfo"/>
             <div class="d-flex flex-wrap justify-content-end gap-1">
                 <button class="btn btn-primary o_kanban_add me-1" t-on-click="() => this.validate('add')">
                     Add

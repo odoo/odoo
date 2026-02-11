@@ -2,13 +2,13 @@
     <div t-name="mass_mailing.ThemeSelector" class="o_mail_theme_selector">
         <div t-ref="themeSelectorWrapper" class="o_mailing_template_preview_wrapper d-inline-block w-100">
             <div class="o_mail_templates_grid w-100">
-                <div t-foreach="simpleThemes.values()" t-as="theme" t-key="theme_index" role="menuitem" class="cursor-pointer dropdown-item px-4"
+                <div t-foreach="this.simpleThemes.values()" t-as="theme" t-key="theme_index" role="menuitem" class="cursor-pointer dropdown-item px-4"
                     t-on-click="() => this.onSelectTheme(theme)" t-att-data-name="theme.name">
                     <div class="o_thumb small mb-2" t-attf-style="background-image: url(#{theme.imgPath}_small.png)"/>
                     <div class="o_thumb large mb-2" t-attf-style="background-image: url(#{theme.imgPath}_large.png)"/>
                     <h5 class="text-capitalize text-truncate" t-out="theme.title"/>
                 </div>
-                <div t-foreach="state.favoriteTemplates" t-as="template" t-key="template_index"
+                <div t-foreach="this.state.favoriteTemplates" t-as="template" t-key="template_index"
                     class="cursor-pointer dropdown-item px-4 o_mail_template_preview d-flex flex-column justify-content-between" role="menuitem"
                     t-on-click="() => this.onSelectFavorite(template.bodyArch)">
                     <!-- Template HTML preview -->
@@ -30,7 +30,7 @@
                         </div> 
                     </div>
                 </div>
-                <div t-foreach="commonThemes.values()" t-as="theme" t-key="theme_index" role="menuitem" class="cursor-pointer dropdown-item px-4"
+                <div t-foreach="this.commonThemes.values()" t-as="theme" t-key="theme_index" role="menuitem" class="cursor-pointer dropdown-item px-4"
                     t-on-click="() => this.onSelectTheme(theme)" t-att-data-name="theme.name">
                     <div class="o_thumb small mb-2" t-attf-style="background-image: url(#{theme.imgPath}_small.png)"/>
                     <div class="o_thumb large mb-2" t-attf-style="background-image: url(#{theme.imgPath}_large.png)"/>

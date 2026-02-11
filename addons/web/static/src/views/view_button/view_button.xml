@@ -2,84 +2,84 @@
 <templates xml:space="preserve">
 
   <t t-name="web.views.ViewButton">
-    <t t-tag="props.tag"
+    <t t-tag="this.props.tag"
         t-att="props.attrs"
-        t-att-id="props.id"
-        t-att-class="getClassName()"
-        t-att-disabled="disabled"
-        t-att-name="props.clickParams.name"
-        t-att-special="props.clickParams.special"
-        t-att-href="props.tag === 'a' and '#'"
-        t-att-style="props.style"
-        t-att-type="clickParams.type"
-        t-att-data-tooltip-template="hasBigTooltip ? 'views.ViewButtonTooltip' : false"
-        t-att-data-tooltip-info="hasBigTooltip ? tooltip : false"
-        t-att-data-tooltip="hasSmallToolTip ? props.title : false"
-        t-att-tabindex="props.tabindex"
+        t-att-id="this.props.id"
+        t-att-class="this.getClassName()"
+        t-att-disabled="this.disabled"
+        t-att-name="this.props.clickParams.name"
+        t-att-special="this.props.clickParams.special"
+        t-att-href="this.props.tag === 'a' and '#'"
+        t-att-style="this.props.style"
+        t-att-type="this.clickParams.type"
+        t-att-data-tooltip-template="this.hasBigTooltip ? 'views.ViewButtonTooltip' : false"
+        t-att-data-tooltip-info="this.hasBigTooltip ? this.tooltip : false"
+        t-att-data-tooltip="this.hasSmallToolTip ? this.props.title : false"
+        t-att-tabindex="this.props.tabindex"
         t-custom-click.stop="onClick"
     >
-      <t t-if="icon" t-tag="icon.tag" t-att-class="icon.class + (buttonLabel ? ' me-1' : '')" t-att-src="icon.src"/>
-      <t t-slot="contents"><span t-if="buttonLabel" t-esc="buttonLabel"/></t>
+      <t t-if="this.icon" t-tag="this.icon.tag" t-att-class="this.icon.class + (this.buttonLabel ? ' me-1' : '')" t-att-src="this.icon.src"/>
+      <t t-slot="contents"><span t-if="this.buttonLabel" t-esc="this.buttonLabel"/></t>
     </t>
   </t>
 
   <t t-name="views.ViewButtonTooltip">
-      <t t-if="debug || button.help">
-        <div class="o-tooltip--string" t-if="debug || button.string" role="tooltip">
-            <t t-if="debug">
+      <t t-if="this.debug || this.button.help">
+        <div class="o-tooltip--string" t-if="this.debug || this.button.string" role="tooltip">
+            <t t-if="this.debug">
                 Button
-                <t t-if="button.string">: </t>
-                <t t-if="!button.string"> (no string)</t>
+                <t t-if="this.button.string">: </t>
+                <t t-if="!this.button.string"> (no string)</t>
             </t>
-            <t t-esc="button.string"/>
+            <t t-esc="this.button.string"/>
         </div>
-        <p t-if="button.title" class="o-tooltip--help" role="tooltip">
-            <t t-esc="button.title"/>
+        <p t-if="this.button.title" class="o-tooltip--help" role="tooltip">
+            <t t-esc="this.button.title"/>
         </p>
-        <p t-if="button.help" class="o-tooltip--help" role="tooltip">
-            <t t-esc="button.help"/>
+        <p t-if="this.button.help" class="o-tooltip--help" role="tooltip">
+            <t t-esc="this.button.help"/>
         </p>
-        <ul t-if="debug" class="o-tooltip--technical" role="tooltip">
+        <ul t-if="this.debug" class="o-tooltip--technical" role="tooltip">
             <li data-item="object">
                 <span class="o-tooltip--technical--title">Object:</span>
-                <t t-esc="model"/>
+                <t t-esc="this.model"/>
             </li>
-            <li t-if="button.context" data-item="context">
+            <li t-if="this.button.context" data-item="context">
                 <span class="o-tooltip--technical--title">Context:</span>
-                <t t-esc="button.context || context"/>
+                <t t-esc="this.button.context || this.context"/>
             </li>
-            <li t-if="'invisible' in button" data-item="invisible">
+            <li t-if="'invisible' in this.button" data-item="invisible">
                 <span class="o-tooltip--technical--title">Invisible:</span>
-                <t t-esc="button.invisible"/>
+                <t t-esc="this.button.invisible"/>
             </li>
-            <li t-if="'column_invisible' in button" data-item="column_invisible">
+            <li t-if="'column_invisible' in this.button" data-item="column_invisible">
                 <span class="o-tooltip--technical--title">Column invisible:</span>
-                <t t-esc="button.column_invisible"/>
+                <t t-esc="this.button.column_invisible"/>
             </li>
-            <li t-if="'required' in button" data-item="required">
+            <li t-if="'required' in this.button" data-item="required">
                 <span class="o-tooltip--technical--title">Required:</span>
-                <t t-esc="button.required"/>
+                <t t-esc="this.button.required"/>
             </li>
-            <li t-if="'readonly' in button" data-item="readonly">
+            <li t-if="'readonly' in this.button" data-item="readonly">
                 <span class="o-tooltip--technical--title">Readonly:</span>
-                <t t-esc="button.readonly"/>
+                <t t-esc="this.button.readonly"/>
             </li>
-            <li t-if="button.special" data-item="special">
+            <li t-if="this.button.special" data-item="special">
                 <span class="o-tooltip--technical--title">Special:</span>
-                <t t-esc="button.special"/>
+                <t t-esc="this.button.special"/>
             </li>
-            <t t-set="button_type" t-value="button.type"/>
-            <li t-if="button_type" data-item="button_type">
+            <t t-set="button_type" t-value="this.button.type"/>
+            <li t-if="this.button_type" data-item="button_type">
                 <span class="o-tooltip--technical--title">Button Type:</span>
-                <t t-esc="button_type"/>
+                <t t-esc="this.button_type"/>
             </li>
-            <li t-if="button_type === 'object'" data-item="button_method">
+            <li t-if="this.button_type === 'object'" data-item="button_method">
                 <span class="o-tooltip--technical--title">Method:</span>
-                <t t-esc="button.name"/>
+                <t t-esc="this.button.name"/>
             </li>
-            <li t-if="button_type === 'action'" data-item="button_action">
+            <li t-if="this.button_type === 'action'" data-item="button_action">
                 <span class="o-tooltip--technical--title">Action ID:</span>
-                <t t-esc="button.name"/>
+                <t t-esc="this.button.name"/>
             </li>
         </ul>
       </t>

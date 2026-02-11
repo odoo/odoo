@@ -7,14 +7,14 @@
             <attribute name="productQuantity">this.props.record.data[this.props.quantityField]</attribute>
         </xpath>
         <xpath expr="//Many2XAutocomplete//span[@t-out]" position="replace">
-            <t t-if="autoCompleteItemScope.record?.relative_info">
+            <t t-if="this.autoCompleteItemScope.record?.relative_info">
                 <div class="uom_autocomplete_grid">
-                    <span t-out="autoCompleteItemScope.label"/>
-                    <div t-esc="autoCompleteItemScope.record.relative_info" class="text-muted"/>
+                    <span t-out="this.autoCompleteItemScope.label"/>
+                    <div t-esc="this.autoCompleteItemScope.record.relative_info" class="text-muted"/>
                 </div>
             </t>
             <t t-else="">
-                <span t-out="autoCompleteItemScope.label"/>
+                <span t-out="this.autoCompleteItemScope.label"/>
             </t>
         </xpath>
     </t>

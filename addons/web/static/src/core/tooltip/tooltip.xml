@@ -3,8 +3,8 @@
 
     <t t-name="web.Tooltip">
         <div class="o-tooltip tooltip-inner d-print-none text-start">
-            <t t-if="props.template" t-call="{{props.template}}" t-call-context="{ env, ...props.info }"/>
-            <span t-else="" t-esc="props.tooltip"/>
+            <t t-if="this.props.template" t-call="{{this.props.template}}" t-call-context="{ env, ...props.info }"/>
+            <span t-else="" t-esc="this.props.tooltip"/>
         </div>
     </t>
 

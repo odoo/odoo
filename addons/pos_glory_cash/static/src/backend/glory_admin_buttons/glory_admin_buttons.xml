@@ -2,24 +2,24 @@
 <templates xml:space="preserve">
 
     <t t-name="pos_glory_cash.GloryAdminButtons">
-        <p><b>Current cash machine status:</b> <t t-esc="status" /></p>
+        <p><b>Current cash machine status:</b> <t t-esc="this.status" /></p>
         <div class="d-flex gap-2 mt-3">
             <button type="button"
                 class="btn btn-primary"
-                t-on-click.stop="openAdminPage"
+                t-on-click.stop="this.openAdminPage"
             >
                 Open Admin Page
             </button>
             <button type="button"
                 class="btn btn-secondary"
-                t-on-click.stop="resetCashMachine"
-                t-att-disabled="state.resetInProgress"
+                t-on-click.stop="this.resetCashMachine"
+                t-att-disabled="this.state.resetInProgress"
             >
                 Reset Cash Machine
             </button>
             <button type="button"
                 class="btn btn-secondary"
-                t-on-click.stop="downloadLogs"
+                t-on-click.stop="this.downloadLogs"
             >
                 Download Logs
             </button>

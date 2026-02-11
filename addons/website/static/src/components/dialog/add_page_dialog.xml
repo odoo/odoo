@@ -5,25 +5,25 @@
         title.translate="New Page"
         primaryTitle.translate="Create"
         primaryClick="() => this.addPage()"
-        close="props.close">
+        close="this.props.close">
         <div class="row gy-4">
             <label class="col-form-label col-md-3">
                 Page Title
             </label>
             <div class="col-md-9">
-                <input type="text" t-model="state.name" class="form-control" required="required" t-ref="autofocus"/>
+                <input type="text" t-model="this.state.name" class="form-control" required="required" t-ref="autofocus"/>
             </div>
-            <Switch extraClasses="'offset-md-3 col-md-9 text-start'" label.translate="Add to menu" value="state.addMenu" onChange="(value) => this.onChangeAddMenu(value)"/>
+            <Switch extraClasses="'offset-md-3 col-md-9 text-start'" label.translate="Add to menu" value="this.state.addMenu" onChange="(value) => this.onChangeAddMenu(value)"/>
         </div>
     </WebsiteDialog>
 </t>
 
 <t t-name="website.AddPageTemplatePreviewWrapper">
-    <div t-ref="holder" class="o_page_template position-relative placeholder-glow mx-auto transition-base" t-att-class="{ 'mt-4': !props.firstRow }" t-att-data-configurator-page="props.template and props.template.is_from_configurator">
+    <div t-ref="holder" class="o_page_template position-relative placeholder-glow mx-auto transition-base" t-att-class="{ 'mt-4': !this.props.firstRow }" t-att-data-configurator-page="this.props.template and this.props.template.is_from_configurator">
         <div t-ref="preview" class="o_page_template_preview border border-white bg-white rounded" t-out="0" inert="inert"/>
-        <span class="placeholder position-absolute top-0 w-100 h-100 rounded" t-attf-style="animation-duration: #{props.animationDelay + 500}ms"/>
-        <button class="btn o_button_area position-absolute top-0 w-100 h-100 start-0 cursor-pointer rounded" t-on-click="select">
-            <div t-if="props.template and props.template.name" class="position-absolute start-0 bottom-100 w-100 fw-bold lh-1 pb-1 pe-none text-center o_page_name" t-out="props.template.name"/>
+        <span class="placeholder position-absolute top-0 w-100 h-100 rounded" t-attf-style="animation-duration: #{this.props.animationDelay + 500}ms"/>
+        <button class="btn o_button_area position-absolute top-0 w-100 h-100 start-0 cursor-pointer rounded" t-on-click="this.select">
+            <div t-if="this.props.template and this.props.template.name" class="position-absolute start-0 bottom-100 w-100 fw-bold lh-1 pb-1 pe-none text-center o_page_name" t-out="this.props.template.name"/>
         </button>
     </div>
 </t>
@@ -36,7 +36,7 @@
 
 <t t-name="website.AddPageTemplatePreviewDynamicMessage">
     <section class="o_new_page_snippet_preview container h2">
-        <div class="alert alert-info" t-out="message"/>
+        <div class="alert alert-info" t-out="this.message"/>
     </section>
 </t>
 
@@ -51,19 +51,19 @@
         <div class="row g-0">
             <div t-if="this.props.isCustom and !this.props.templates.length" class="col-12 alert alert-info d-flex">
                 <i class="fa fa-2x fa-info-circle me-3"/>
-                To add your page to this category, open the page properties: "Site -> Properties".<br/>
+                To add your page to this category, open the page properties: "Site -&gt; Properties".<br/>
                 Then enable the "Is a Template" option.
             </div>
-            <t t-foreach="[...this.columns.entries()]" t-as="column" t-key="column[0]">
+            <t t-foreach="[...this.columns.entries()]" t-as="column" t-key="this.column[0]">
                 <div class="col-lg-4 col-12">
-                    <t t-foreach="[...column[1].entries()]" t-as="template" t-key="template[0]">
-                        <AddPageTemplateBlank t-if="template[1].isBlank" firstRow="template_first"/>
+                    <t t-foreach="[...this.column[1].entries()]" t-as="template" t-key="this.template[0]">
+                        <AddPageTemplateBlank t-if="this.template[1].isBlank" firstRow="template_first"/>
                         <AddPageTemplatePreview t-else="" template="template[1]" firstRow="template_first"
                             animationDelay="(column_index * 500) + (template_index * 350)"
                             isCustom="this.props.isCustom"
                         />
                     </t>
-                    <t t-if="column[1].length === 0">
+                    <t t-if="this.column[1].length === 0">
                         <div class="o_page_template position-relative"/>
                     </t>
                 </div>
@@ -73,7 +73,7 @@
 </t>
 
 <t t-name="website.AddPageTemplates">
-    <div class="overflow-hidden w-100" t-att-class="{o_loading: state.loading}">
+    <div class="overflow-hidden w-100" t-att-class="{o_loading: this.state.loading}">
         <!-- Do not rely on Notebook to avoid pages from needing reload -->
         <div class="d-flex w-100 h-100 vertical flex-row">
             <aside class="border-end overflow-auto">
@@ -82,36 +82,36 @@
                     role="tablist"
                     aria-orientation="vertical"
                     aria-label="Page categories">
-                    <t t-foreach="state.pages" t-as="page" t-key="page.id">
+                    <t t-foreach="this.state.pages" t-as="page" t-key="this.page.id">
                         <button t-att-data-id="page.id"
                             t-on-click="() => this.onTabListBtnClick(page.id)"
-                            t-on-keydown="onTabListBtnKeydown"
+                            t-on-keydown="this.onTabListBtnKeydown"
                             class="list-group-item list-group-item-action p-3"
-                            t-att-class="{active: state.activePageId === page.id}"
+                            t-att-class="{active: this.state.activePageId === page.id}"
                             role="tab"
-                            t-att-tabindex="state.activePageId === page.id ? 0 : -1"
-                            t-att-aria-selected="state.activePageId === page.id ? 'true' : 'false'"
+                            t-att-tabindex="this.state.activePageId === page.id ? 0 : -1"
+                            t-att-aria-selected="this.state.activePageId === page.id ? 'true' : 'false'"
                             t-att-aria-controls="'pane_' + page.id"
-                            t-ref="{{state.activePageId === page.id ? 'autofocus' : page.id}}"
+                            t-ref="{{this.state.activePageId === page.id ? 'autofocus' : page.id}}"
                         >
-                            <span t-if="page.isPreloading" class="fa fa-spin fa-circle-o-notch me-1"/>
-                            <t t-out="page.title"/>
+                            <span t-if="this.page.isPreloading" class="fa fa-spin fa-circle-o-notch me-1"/>
+                            <t t-out="this.page.title"/>
                         </button>
                     </t>
                 </div>
             </aside>
             <div t-ref="panes" class="position-relative flex-grow-1 flex-shrink-1 bg-200">
-                <t t-foreach="state.pages" t-as="page" t-key="page.id">
+                <t t-foreach="this.state.pages" t-as="page" t-key="this.page.id">
                     <div t-att-data-id="page.id"
                         t-att-id="'pane_' + page.id"
                         class="o_website_page_templates_pane position-absolute top-0 start-0 w-100 h-100 overflow-y-scroll bg-200"
-                        t-att-class="{active: state.activePageId === page.id}"
+                        t-att-class="{active: this.state.activePageId === page.id}"
                         tabindex="-1"
                         role="tabpanel"
                         t-att-aria-label="page.id"
-                        t-att-inert="state.activePageId === page.id ? undefined : 'inert'"
+                        t-att-inert="this.state.activePageId === page.id ? undefined : 'inert'"
                     >
-                        <AddPageTemplatePreviews t-if="page_first or state.activePageId === page.id"
+                        <AddPageTemplatePreviews t-if="this.page_first or this.state.activePageId === this.page.id"
                             templates="page.props.templates" isCustom="page.props.is_custom"
                         />
                     </div>
@@ -128,10 +128,10 @@
         showFooter="false"
         footer="false"
         size="'xl'"
-        close="props.close">
+        close="this.props.close">
         <AddPageTemplates
             onTemplatePageChanged="name => this.onTemplatePageChanged(name)"
-            defaultTemplateId="props.defaultTemplateId"
+            defaultTemplateId="this.props.defaultTemplateId"
         />
     </WebsiteDialog>
 </t>

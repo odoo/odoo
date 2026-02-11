@@ -3,7 +3,7 @@
 
     <t t-name="product_expiry.ForecastedDetails" t-inherit="stock.ForecastedDetails" t-inherit-mode="extension">
         <xpath expr="//t[@name='freeStock_cell']" position="before">
-            <t name="expiredStock_cell" t-elif="line?.removal_date === -1">
+            <t name="expiredStock_cell" t-elif="this.line?.removal_date === -1">
                 <span class='text-warning'>Expired Stock</span>
             </t>
         </xpath>
@@ -11,12 +11,12 @@
             <attribute name="t-attf-class">#{line?.removal_date == -1 and 'text-warning'}</attribute>
         </xpath>
         <xpath expr="//td[@name='usedby_cell']" position="inside">
-            <t t-if="line.removal_date">
-                <t t-if="line.removal_date === -1">
+            <t t-if="this.line.removal_date">
+                <t t-if="this.line.removal_date === -1">
                     <span class="text-warning">To remove now</span>
                 </t>
                 <t t-else="">
-                    <span class="text-muted">To remove on <t t-out="line.removal_date"/></span>
+                    <span class="text-muted">To remove on <t t-out="this.line.removal_date"/></span>
                 </t>
             </t>
         </xpath>

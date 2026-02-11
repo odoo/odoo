@@ -2,23 +2,23 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanHeader">
-        <div class="o_kanban_header position-sticky top-0 z-1" t-ref="root" t-attf-class="{{ !env.isSmall and group.isFolded ? 'd-print-none pt-2' : 'py-2 pt-print-0' }}">
+        <div class="o_kanban_header position-sticky top-0 z-1" t-ref="root" t-attf-class="{{ !this.env.isSmall and this.group.isFolded ? 'd-print-none pt-2' : 'py-2 pt-print-0' }}">
             <div class="o_kanban_header_title position-relative d-flex lh-lg">
-                <div t-if="group.isFolded" class="o_column_title d-flex align-items-center pt-1 fs-4 lh-1 text-nowrap opacity-50 opacity-100-hover flex-grow-1 gap-1"
-                     t-on-mouseenter="onTitleMouseEnter" t-on-mouseleave="onTitleMouseLeave">
-                    <t t-out="odoomark(group.displayName)"></t>
-                    <span t-if="group.count > 0 and !props.list.model.useSampleModel" t-esc="'(' + group.count + ')'"/>
+                <div t-if="this.group.isFolded" class="o_column_title d-flex align-items-center pt-1 fs-4 lh-1 text-nowrap opacity-50 opacity-100-hover flex-grow-1 gap-1"
+                     t-on-mouseenter="this.onTitleMouseEnter" t-on-mouseleave="this.onTitleMouseLeave">
+                    <t t-out="this.odoomark(this.group.displayName)"></t>
+                    <span t-if="this.group.count > 0 and !this.props.list.model.useSampleModel" t-esc="'(' + this.group.count + ')'"/>
                 </div>
-                <div t-if="!group.isFolded"
+                <div t-if="!this.group.isFolded"
                     class="o_column_title flex-grow-1 min-w-0 mw-100 gap-1 d-flex fs-4 fw-bold align-top text-900"
-                      t-on-mouseenter="onTitleMouseEnter" t-on-mouseleave="onTitleMouseLeave"
+                      t-on-mouseenter="this.onTitleMouseEnter" t-on-mouseleave="this.onTitleMouseLeave"
                 >
-                    <span class="text-truncate" t-out="odoomark(group.displayName)"/>
-                    <span t-if="!progressBar and !props.list.model.useSampleModel" t-esc="'(' + group.count + ')'"/>
+                    <span class="text-truncate" t-out="this.odoomark(this.group.displayName)"/>
+                    <span t-if="!this.progressBar and !this.props.list.model.useSampleModel" t-esc="'(' + this.group.count + ')'"/>
                 </div>
-                <t t-if="env.isSmall or !group.isFolded">
-                    <GroupConfigMenu t-props="configMenuProps"/>
-                    <button t-if="canQuickCreate()" class="o_kanban_quick_add d-print-none btn pe-2 me-n2" t-on-click="() => this.quickCreate()">
+                <t t-if="this.env.isSmall or !this.group.isFolded">
+                    <GroupConfigMenu t-props="this.configMenuProps"/>
+                    <button t-if="this.canQuickCreate()" class="o_kanban_quick_add d-print-none btn pe-2 me-n2" t-on-click="() => this.quickCreate()">
                         <i class="fa fa-plus opacity-75 opacity-100-hover" role="img" aria-label="Quick add" title="Quick add"/>
                     </button>
                 </t>
@@ -27,19 +27,19 @@
                     <i class="fa fa-caret-right" role="img" aria-label="Unfold" title="Unfold" />
                 </button>
             </div>
-            <div t-if="(env.isSmall or !group.isFolded) and progressBar" class="o_kanban_counter position-relative d-flex align-items-center justify-content-between" t-att-class="{ 'opacity-25': !group.count }">
-                <ColumnProgress group="group" progressBar="progressBar" aggregate="groupAggregate" onBarClicked.bind="onBarClicked" />
+            <div t-if="(this.env.isSmall or !this.group.isFolded) and this.progressBar" class="o_kanban_counter position-relative d-flex align-items-center justify-content-between" t-att-class="{ 'opacity-25': !this.group.count }">
+                <ColumnProgress group="this.group" progressBar="this.progressBar" aggregate="this.groupAggregate" onBarClicked.bind="this.onBarClicked" />
             </div>
         </div>
     </t>
 
     <t t-name="web.KanbanGroupTooltip">
         <div class="o-tooltip text-prewrap px-2 py-1">
-            <t t-foreach="props.tooltip" t-as="entry" t-key="entry_index">
-                <t t-esc="entry.title"/>
+            <t t-foreach="this.props.tooltip" t-as="entry" t-key="this.entry_index">
+                <t t-esc="this.entry.title"/>
                 <br/>
-                <t t-esc="entry.value"/>
-                <br t-if="!tooltip_last"/>
+                <t t-esc="this.entry.value"/>
+                <br t-if="!this.tooltip_last"/>
             </t>
         </div>
     </t>

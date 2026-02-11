@@ -6,23 +6,23 @@
         <xpath expr="//div[hasclass('wrapper')]//button//i" position="attributes">
             <attribute name="t-attf-class">fa fa-#{state.displaySublines ? 'check-' : ''}square-o</attribute>
         </xpath>
-        <xpath expr="//t[@t-foreach='props.sublines']//StockValuationReportLine" position="replace">
-            <t t-if="line.lines">
+        <xpath expr="//t[@t-foreach='this.props.sublines']//StockValuationReportLine" position="replace">
+            <t t-if="this.line.lines">
                 <StockValuationReportToggleLine
-                    label="line.display_name"
-                    line="line"
-                    sublines="line.lines"
-                    level="props.level + 2"
-                    onClickMethod="props.onClickMethod || line.method"
-                    value="line.value"/>
+                    label="this.line.display_name"
+                    line="this.line"
+                    sublines="this.line.lines"
+                    level="this.props.level + 2"
+                    onClickMethod="this.props.onClickMethod || this.line.method"
+                    value="this.line.value"/>
             </t>
             <t t-else="">
                 <StockValuationReportLine
-                    label="line.display_name"
-                    line="line"
-                    level="props.level + 2"
-                    onClickMethod="props.onClickMethod || line.method"
-                    value="line.value"/>
+                    label="this.line.display_name"
+                    line="this.line"
+                    level="this.props.level + 2"
+                    onClickMethod="this.props.onClickMethod || this.line.method"
+                    value="this.line.value"/>
             </t>
         </xpath>
     </t>

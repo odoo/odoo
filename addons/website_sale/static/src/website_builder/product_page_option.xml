@@ -111,7 +111,7 @@
         <hr class="mx-2 mt-0 mb-2"/>
     </t>
 
-    <t t-if="domState.hasImages and !this.isActiveItem('opt_product_page_image_width_hide')">
+    <t t-if="this.domState.hasImages and !this.isActiveItem('opt_product_page_image_width_hide')">
 	    <BuilderRow label.translate="Main Image">
 	        <BuilderButton id="'o_wsale_replace_main_image'" type="'success'" className="'flex-grow-1'" preview="false"
 	            applyTo="'#product_detail_main'" action="'productReplaceMainImage'"
@@ -124,7 +124,7 @@
         <div class="pb-2"/> <!-- Spacer -->
     </t>
 
-    <t t-if="domState.multipleImages and !this.isActiveItem('opt_product_page_image_width_hide')">
+    <t t-if="this.domState.multipleImages and !this.isActiveItem('opt_product_page_image_width_hide')">
 	    <BuilderRow label.translate="Display" applyTo="'#product_detail_main'">
 	        <BuilderSelect action="'productPageImageLayout'" id="'o_wsale_image_layout'">
 	            <BuilderSelectItem actionValue="'carousel'">
@@ -142,26 +142,24 @@
     </t>
     <!-- Carousel config -->
     <t
-        t-if="domState.hasCarousel and domState.hasImages and domState.multipleImages and !this.isActiveItem('opt_product_page_image_width_hide')"
+        t-if="this.domState.hasCarousel and this.domState.hasImages and this.domState.multipleImages and !this.isActiveItem('opt_product_page_image_width_hide')"
     >
 	    <BuilderRow label.translate="Thumbnails" level="1">
 	        <BuilderButtonGroup action="'websiteConfig'" id="'o_wsale_thumbnail_pos'">
-	            <BuilderButton className="'fa fa-fw fa-long-arrow-left'" actionParam="{ views: ['website_sale.carousel_product_indicators_left'] }" title="Left"></BuilderButton>
-	            <BuilderButton className="'fa fa-fw fa-long-arrow-down'" actionParam="{ views: ['website_sale.carousel_product_indicators_bottom'] }" title="Bottom"></BuilderButton>
+	            <BuilderButton className="'fa fa-fw fa-long-arrow-left'" actionParam="{ views: ['website_sale.carousel_product_indicators_left'] }" title="this.Left"></BuilderButton>
+	            <BuilderButton className="'fa fa-fw fa-long-arrow-down'" actionParam="{ views: ['website_sale.carousel_product_indicators_bottom'] }" title="this.Bottom"></BuilderButton>
 	        </BuilderButtonGroup>
 	    </BuilderRow>
     </t>
     <!-- Grid config -->
     <t
-        t-if="domState.isGrid"
+        t-if="this.domState.isGrid"
     >
         <t
-            t-if="
-                domState.hasGrid and
-                domState.multipleImages and
+            t-if="this.domState.hasGrid and
+                this.domState.multipleImages and
                 !this.isActiveItem('opt_product_page_image_width_hide') and
-                !this.isActiveItem('opt_product_page_image_width_full')
-            "
+                !this.isActiveItem('opt_product_page_image_width_full')            "
         >
             <BuilderRow label.translate="Columns" level="1">
                 <BuilderSelect action="'productPageImageGridColumns'" id="'o_wsale_grid_columns'">
@@ -172,9 +170,7 @@
             </BuilderRow>
         </t>
 	    <BuilderRow
-            t-if="
-                domState.multipleImages and !this.isActiveItem('opt_product_page_image_width_hide')
-            "
+            t-if="this.domState.multipleImages and !this.isActiveItem('opt_product_page_image_width_hide')            "
             label.translate="Spacing"
             level="1"
         >
@@ -208,11 +204,9 @@
     </t>
     <BuilderRow
         label.translate="Roundness"
-        t-if="
-                (domState.hasImages and !this.isActiveItem('o_wsale_product_page_grid_gap_0')) and
-                !this.isActiveItem('opt_product_page_image_width_hide')
-            "
-        level="domState.multipleImages ? 1 : 0"
+        t-if="(this.domState.hasImages and !this.isActiveItem('o_wsale_product_page_grid_gap_0')) and
+                !this.isActiveItem('opt_product_page_image_width_hide')            "
+        level="this.domState.multipleImages ? 1 : 0"
     >
         <BuilderSelect
             action="'productPageRoundness'"
@@ -314,7 +308,7 @@
         </t>
     </BuilderRow>
 
-    <t t-if="domState.hasImages and !this.isActiveItem('opt_product_page_image_width_hide')">
+    <t t-if="this.domState.hasImages and !this.isActiveItem('opt_product_page_image_width_hide')">
 	    <BuilderRow label.translate="Zoom on click" level="1">
             <BuilderCheckbox
                 action="'websiteConfig'"
@@ -336,13 +330,13 @@
         />
         <t t-set="CtaBoxedViews" t-value="['website_sale.cta_wrapper_boxed']"/>
         <BuilderSelect action="'websiteConfig'" id="'o_wsale_product_cta_style'">
-            <BuilderSelectItem id="cta_default_opt" actionParam="{ views: [] }">
+            <BuilderSelectItem id="this.cta_default_opt" actionParam="{ views: [] }">
                 <em>Default</em>
             </BuilderSelectItem>
-            <BuilderSelectItem id="cta_boxed_opt" actionParam="{ views: CtaBoxedViews }">
+            <BuilderSelectItem id="this.cta_boxed_opt" actionParam="{ views: CtaBoxedViews }">
                 Boxed
             </BuilderSelectItem>
-            <BuilderSelectItem id="cta_large_opt" actionParam="{ views: CtaLargeViews }">
+            <BuilderSelectItem id="this.cta_large_opt" actionParam="{ views: CtaLargeViews }">
                 Large
             </BuilderSelectItem>
         </BuilderSelect>

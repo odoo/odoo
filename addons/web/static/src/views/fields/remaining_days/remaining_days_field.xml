@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.RemainingDaysField">
-        <t t-if="props.readonly">
+        <t t-if="this.props.readonly">
             <div
-                t-att-class="classNames"
-                t-att-title="numericValue"
+                t-att-class="this.classNames"
+                t-att-title="this.numericValue"
             >
-                <t t-esc="diffString"/>
+                <t t-esc="this.diffString"/>
             </div>
         </t>
         <t t-else="">
-            <DateTimeField t-props="dateTimeFieldProps" />
+            <DateTimeField t-props="this.dateTimeFieldProps" />
         </t>
     </t>
 </templates>

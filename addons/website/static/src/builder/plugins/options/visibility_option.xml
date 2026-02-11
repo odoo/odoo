@@ -17,14 +17,14 @@
 </t>
 
 <t t-name="website.snippet_options_conditional_visibility">
-    <BuilderRow label="option_name" level="1" t-if="isActiveItem('visibility_conditional')" preview="false">
+    <BuilderRow label="option_name" level="1" t-if="this.isActiveItem('visibility_conditional')" preview="false">
         <!-- isVisibilityCondition="true" ??? -->
         <BuilderSelect dataAttributeAction="attribute_rule">
             <BuilderSelectItem dataAttributeActionValue="null">Visible for</BuilderSelectItem>
             <BuilderSelectItem dataAttributeActionValue="'hide'">Hidden for</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label="' '" t-if="isActiveItem('visibility_conditional')" preview="false">
+    <BuilderRow label="' '" t-if="this.isActiveItem('visibility_conditional')" preview="false">
         <!-- allowDelete="true" fakem2m="true" -->
         <BuilderMany2Many
             model="model"
@@ -36,7 +36,7 @@
 </t>
 
 <t t-name="website.VisibilityOption">
-    <t t-set="language_ids" t-value="env.services.website.currentWebsite.language_ids || []"/>
+    <t t-set="language_ids" t-value="this.env.services.website.currentWebsite.language_ids || []"/>
 
     <t t-set="geoip_country_code" t-value="this.websiteSession.geoip_country_code"/>
     <BuilderRow label.translate="Visibility" expand="true" observeCollapseContent="true">
@@ -46,7 +46,7 @@
             <BuilderSelectItem dataAttributeActionValue="'conditional'" classAction="'o_snippet_invisible'" id="'visibility_conditional'">Conditionally</BuilderSelectItem>
         </BuilderSelect>
 	    <t t-set-slot="collapse">
-		    <t t-if="geoip_country_code">
+		    <t t-if="this.geoip_country_code">
 			    <t t-call="website.snippet_options_conditional_visibility">
 			        <t t-set="option_name">Country</t>
 			        <t t-set="attribute_rule" t-value="'visibilityValueCountryRule'"/>
@@ -55,13 +55,13 @@
 			        <t t-set="data_fields" t-value="['code']"/>
 			    </t>
 		    </t>
-		    <t t-if="language_ids.length > 1">
+		    <t t-if="this.language_ids.length > 1">
 			    <t t-call="website.snippet_options_conditional_visibility">
 			        <t t-set="option_name">Languages</t>
 			        <t t-set="attribute_rule" t-value="'visibilityValueLangRule'"/>
 			        <t t-set="save_attribute" t-value="'visibilityValueLang'"/>
 			        <t t-set="model" t-value="'res.lang'"/>
-			        <t t-set="domain" t-value="[['id', 'in', language_ids]]"/>
+			        <t t-set="domain" t-value="[['id', 'in', this.language_ids]]"/>
 			        <t t-set="data_fields" t-value="['code']"/>
 		        </t>
 		    </t>
@@ -83,7 +83,7 @@
 		        <t t-set="save_attribute" t-value="'visibilityValueUtmSource'"/>
 		        <t t-set="model" t-value="'utm.source'"/>
 		    </t>
-		    <BuilderRow label.translate="Users" level="1" t-if="isActiveItem('visibility_conditional')" preview="false">
+		    <BuilderRow label.translate="Users" level="1" t-if="this.isActiveItem('visibility_conditional')" preview="false">
 		        <BuilderSelect dataAttributeAction="'visibilityValueLogged'">
 		            <BuilderSelectItem dataAttributeActionValue="'[{&quot;id&quot;:1,&quot;value&quot;:&quot;true&quot;}]'">Visible for Logged In</BuilderSelectItem>
 		            <BuilderSelectItem dataAttributeActionValue="'[{&quot;id&quot;:2,&quot;value&quot;:&quot;false&quot;}]'">Visible for Logged Out</BuilderSelectItem>

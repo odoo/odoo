@@ -2,9 +2,9 @@
 
 <templates xml:space="preserve">
     <t t-name="sale.SaleListRenderer" t-inherit="account.FileUploadListRenderer" t-inherit-mode="primary">
-        <ActionHelper position="replace">
-            <t t-if="showNoContentHelper">
-                <SaleActionHelper noContentHelp="props.noContentHelp"/>
+        <ActionHelper position="this.replace">
+            <t t-if="this.showNoContentHelper">
+                <SaleActionHelper noContentHelp="this.props.noContentHelp"/>
             </t>
         </ActionHelper>
     </t>

@@ -8,13 +8,13 @@
                 <span t-elif="this.fetchStock.status === 'error'">N/A</span>
                 <i t-else="" class="fa fa-fw fa-spin fa-circle-o-notch" aria-hidden="true" />
             </div>
-            <AccordionItem t-if="state.other_warehouses?.length > 0">
+            <AccordionItem t-if="this.state.other_warehouses?.length > 0">
                 <t t-set-slot="header">
                     Inventory
                 </t>
                 <t t-set-slot="content">
                     <div class="border-start border-info text-muted small text-muted d-flex flex-column ps-2 ms-1">
-                        <t t-foreach="state.other_warehouses" t-as="warehouse" t-key="warehouse.id">
+                        <t t-foreach="this.state.other_warehouses" t-as="warehouse" t-key="warehouse.id">
                             <div class="d-flex gap-2">
                                 <div>
                                     <t t-esc="warehouse.name"/>

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.LinkPreviewConfirmDelete">
-        <Dialog size="'md'" title.translate="Confirmation" modalRef="modalRef" contentClass="'o-bg-body o-mail-LinkPreview-dialog'">
+        <Dialog size="'md'" title.translate="Confirmation" modalRef="this.modalRef" contentClass="'o-bg-body o-mail-LinkPreview-dialog'">
             <p class="mx-3 mb-3">Do you really want to delete this preview?</p>
             <div class="d-flex flex-column ms-md-2">
                 <blockquote>
-                    <t t-component="props.LinkPreview" messageLinkPreview="props.messageLinkPreview"/>
+                    <t t-component="this.props.LinkPreview" messageLinkPreview="this.props.messageLinkPreview"/>
                 </blockquote>
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-danger me-2" t-on-click="onClickOk">Delete</button>
-                <button t-if="props.messageLinkPreview.hasDeleteAll" class="btn btn-outline-danger me-2" t-on-click="onClickDeleteAll">Delete all previews</button>
-                <button class="btn btn-secondary me-2" t-on-click="onClickCancel">Discard</button>
+                <button class="btn btn-danger me-2" t-on-click="this.onClickOk">Delete</button>
+                <button t-if="this.props.messageLinkPreview.hasDeleteAll" class="btn btn-outline-danger me-2" t-on-click="this.onClickDeleteAll">Delete all previews</button>
+                <button class="btn btn-secondary me-2" t-on-click="this.onClickCancel">Discard</button>
             </t>
         </Dialog>
     </t>

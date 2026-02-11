@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
     <t t-inherit="project.ProjectMilestone" t-inherit-mode="extension">
-        <xpath expr="//t[@t-esc='milestone.name']" position="replace">
+        <xpath expr="//t[@t-esc='this.milestone.name']" position="replace">
             <span>
-                <t t-esc="milestone.name"/>
-                <span t-if="milestone.allow_billable &amp;&amp; milestone.quantity_percentage &amp;&amp; !milestone.sale_line_display_name" class="fst-italic text-muted">
-                    (<t t-esc="(100 * milestone.quantity_percentage).toFixed(2)"/>%)
+                <t t-esc="this.milestone.name"/>
+                <span t-if="this.milestone.allow_billable &amp;&amp; this.milestone.quantity_percentage &amp;&amp; !this.milestone.sale_line_display_name" class="fst-italic text-muted">
+                    (<t t-esc="(100 * this.milestone.quantity_percentage).toFixed(2)"/>%)
                 </span>
             </span>
-            <div t-if="milestone.allow_billable" t-attf-class="fst-italic small {{state.colorClass and ' opacity-75' || 'text-muted'}}">
-                <t t-if="milestone.sale_line_display_name" t-esc="milestone.sale_line_display_name"/>
-                <span t-if="milestone.quantity_percentage &amp;&amp; milestone.sale_line_display_name">
-                    (<t t-esc="(100 * milestone.quantity_percentage).toFixed(2)"/>%)
+            <div t-if="this.milestone.allow_billable" t-attf-class="fst-italic small {{this.state.colorClass and ' opacity-75' || 'text-muted'}}">
+                <t t-if="this.milestone.sale_line_display_name" t-esc="this.milestone.sale_line_display_name"/>
+                <span t-if="this.milestone.quantity_percentage &amp;&amp; this.milestone.sale_line_display_name">
+                    (<t t-esc="(100 * this.milestone.quantity_percentage).toFixed(2)"/>%)
                 </span>
            </div>
         </xpath>

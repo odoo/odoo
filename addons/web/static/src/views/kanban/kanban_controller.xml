@@ -2,18 +2,18 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanView">
-        <div t-attf-class="{{ className }} {{ hasSelectedRecords ? 'o_kanban_selection_active' : 'o_kanban_selection_available' }}" t-ref="root">
-            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
+        <div t-attf-class="{{ this.className }} {{ this.hasSelectedRecords ? 'o_kanban_selection_active' : 'o_kanban_selection_available' }}" t-ref="root">
+            <Layout className="this.model.useSampleModel ? 'o_view_sample_data' : ''" display="this.display">
                 <t t-set-slot="control-panel-buttons">
-                    <t t-call="{{ props.buttonTemplate }}"/>
-                    <t t-foreach="headerButtons" t-as="button" t-key="button.id" t-if="!evalViewModifier(button.invisible)">
+                    <t t-call="{{ this.props.buttonTemplate }}"/>
+                    <t t-foreach="this.headerButtons" t-as="button" t-key="this.button.id" t-if="!this.evalViewModifier(this.button.invisible)">
                         <MultiRecordViewButton
-                            t-if="button.display === 'always'"
-                            list="model.root"
+                            t-if="this.button.display === 'always'"
+                            list="this.model.root"
                             className="button.className"
                             clickParams="button.clickParams"
                             defaultRank="'btn-secondary'"
-                            domain="props.domain"
+                            domain="this.props.domain"
                             icon="button.icon"
                             string="button.string"
                             title="button.title"
@@ -22,41 +22,41 @@
                     </t>
                 </t>
                 <t t-set-slot="control-panel-selection-actions">
-                    <div t-if="hasSelectedRecords" class="o_selection_container d-flex gap-1 w-100 w-md-auto">
+                    <div t-if="this.hasSelectedRecords" class="o_selection_container d-flex gap-1 w-100 w-md-auto">
                        <SelectionBox root="this.model.root"/>
-                        <t t-if="!env.isSmall">
-                            <t t-foreach="headerButtons" t-as="button" t-key="button.id" t-if="!evalViewModifier(button.invisible)">
+                        <t t-if="!this.env.isSmall">
+                            <t t-foreach="this.headerButtons" t-as="button" t-key="this.button.id" t-if="!this.evalViewModifier(this.button.invisible)">
                                 <MultiRecordViewButton
-                                    t-if="button.display !== 'always'"
-                                    list="model.root"
+                                    t-if="this.button.display !== 'always'"
+                                    list="this.model.root"
                                     className="button.className"
                                     clickParams="button.clickParams"
                                     defaultRank="'btn-secondary'"
-                                    domain="props.domain"
+                                    domain="this.props.domain"
                                     icon="button.icon"
                                     string="button.string"
                                     title="button.title"
                                     attrs="button.attrs"
                                 />
                             </t>
-                            <t t-if="props.info.actionMenus">
+                            <t t-if="this.props.info.actionMenus">
                                 <ActionMenus t-props="this.actionMenuProps"/>
                             </t>
                         </t>
                     </div>
                 </t>
                 <t t-set-slot="control-panel-additional-actions">
-                    <CogMenu t-if="!hasSelectedRecords"/>
-                    <CogMenu t-elif="env.isSmall and (props.info.actionMenus or headerButtons.length)" t-props="this.actionMenuProps" hasSelectedRecords="hasSelectedRecords">
-                        <t t-foreach="headerButtons" t-as="button" t-key="button.id" t-if="!evalViewModifier(button.invisible)">
+                    <CogMenu t-if="!this.hasSelectedRecords"/>
+                    <CogMenu t-elif="this.env.isSmall and (this.props.info.actionMenus or this.headerButtons.length)" t-props="this.actionMenuProps" hasSelectedRecords="this.hasSelectedRecords">
+                        <t t-foreach="this.headerButtons" t-as="button" t-key="this.button.id" t-if="!this.evalViewModifier(this.button.invisible)">
                             <DropdownItem class="'o-dropdown-item-unstyled-button'">
                                 <MultiRecordViewButton
-                                    t-if="button.display !== 'always'"
-                                    list="model.root"
+                                    t-if="this.button.display !== 'always'"
+                                    list="this.model.root"
                                     className="button.className"
                                     clickParams="button.clickParams"
                                     defaultRank="'btn-secondary'"
-                                    domain="props.domain"
+                                    domain="this.props.domain"
                                     icon="button.icon"
                                     string="button.string"
                                     title="button.title"
@@ -67,30 +67,30 @@
                     </CogMenu>
                 </t>
                 <t t-set-slot="control-panel-actions">
-                    <SearchBar t-if="!offlineService.offline" toggler="searchBarToggler" autofocus="firstLoad"/>
-                    <OfflineSearchBar t-else="" toggler="searchBarToggler" autofocus="firstLoad"/>
+                    <SearchBar t-if="!this.offlineService.offline" toggler="this.searchBarToggler" autofocus="this.firstLoad"/>
+                    <OfflineSearchBar t-else="" toggler="this.searchBarToggler" autofocus="this.firstLoad"/>
                 </t>
                 <t t-set-slot="control-panel-navigation-additional">
-                    <t t-if="!hasSelectedRecords">
-                        <t t-if="offlineService.offline" t-component="searchBarToggler.offlineComponent" t-props="searchBarToggler.props"/>
-                        <t t-else="" t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
+                    <t t-if="!this.hasSelectedRecords">
+                        <t t-if="this.offlineService.offline" t-component="this.searchBarToggler.offlineComponent" t-props="this.searchBarToggler.props"/>
+                        <t t-else="" t-component="this.searchBarToggler.component" t-props="this.searchBarToggler.props"/>
                     </t>
                 </t>
-                <t t-component="props.Renderer" t-if="model.isReady"
-                    list="model.root"
-                    archInfo="props.archInfo"
-                    Compiler="props.Compiler"
-                    readonly="props.readonly"
-                    forceGlobalClick="props.forceGlobalClick"
-                    deleteRecord.bind="deleteRecord"
-                    openRecord.bind="openRecord"
-                    noContentHelp="props.info.noContentHelp"
-                    scrollTop.bind="scrollTop"
-                    canQuickCreate="canQuickCreate"
-                    quickCreateState="quickCreateState"
-                    progressBarState="progressBarState"
+                <t t-component="this.props.Renderer" t-if="this.model.isReady"
+                    list="this.model.root"
+                    archInfo="this.props.archInfo"
+                    Compiler="this.props.Compiler"
+                    readonly="this.props.readonly"
+                    forceGlobalClick="this.props.forceGlobalClick"
+                    deleteRecord.bind="this.deleteRecord"
+                    openRecord.bind="this.openRecord"
+                    noContentHelp="this.props.info.noContentHelp"
+                    scrollTop.bind="this.scrollTop"
+                    canQuickCreate="this.canQuickCreate"
+                    quickCreateState="this.quickCreateState"
+                    progressBarState="this.progressBarState"
                 />
-                <t t-elif="model.couldNotLoadRootOffline">
+                <t t-elif="this.model.couldNotLoadRootOffline">
                     <OfflineActionHelper/>
                 </t>
             </Layout>
@@ -98,7 +98,7 @@
     </t>
 
     <t t-name="web.KanbanView.Buttons">
-        <button t-if="!env.inDialog and canCreate" type="button" t-att-disabled="isNewButtonDisabled" class="btn btn-primary o-kanban-button-new" accesskey="c" t-on-click="() => this.createRecord()" data-bounce-button="">
+        <button t-if="!this.env.inDialog and this.canCreate" type="button" t-att-disabled="this.isNewButtonDisabled" class="btn btn-primary o-kanban-button-new" accesskey="c" t-on-click="() => this.createRecord()" data-bounce-button="">
             New
         </button>
     </t>

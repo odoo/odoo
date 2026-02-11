@@ -3,17 +3,17 @@
     <!-- /file template -->
     <t t-name="html_editor.EmbeddedFile" t-inherit="html_editor.ReadonlyEmbeddedFile" t-inherit-mode="primary">
         <xpath expr="//span[hasclass('o_file_name_container')]" position="after">
-            <input t-attf-class="rounded border-0 mx-2 #{ localState.editFileName ? '' : 'd-none'}"
-                t-ref="nameInput" type="text" maxLength="100" t-att-placeholder="fileModel.filename"
-                t-on-blur="onBlurNameInput" t-on-input.stop="" t-on-keydown.stop="onKeydownNameInput"
-                t-att-value="fileModel.filename"/>
+            <input t-attf-class="rounded border-0 mx-2 #{ this.localState.editFileName ? '' : 'd-none'}"
+                t-ref="nameInput" type="text" maxLength="100" t-att-placeholder="this.fileModel.filename"
+                t-on-blur="this.onBlurNameInput" t-on-input.stop="" t-on-keydown.stop="this.onKeydownNameInput"
+                t-att-value="this.fileModel.filename"/>
         </xpath>
         <xpath expr="//span[hasclass('o_file_name_container')]" position="attributes">
             <attribute name="t-att-class">{
-                "d-none": localState.editFileName,
+                "d-none": this.localState.editFileName,
                 "cursor-pointer": true,
             }</attribute>
-            <attribute name="t-on-focus">onFocusFileName</attribute>
+            <attribute name="t-on-focus">this.onFocusFileName</attribute>
             <attribute name="tabindex">-1</attribute>
         </xpath>
         <xpath expr="//span[hasclass('o_file_name')]" position="after">

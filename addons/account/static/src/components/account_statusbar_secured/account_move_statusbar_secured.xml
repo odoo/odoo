@@ -27,7 +27,7 @@
             <attribute name="t-esc" />
         </xpath>
 
-        <xpath expr="//*[@t-out='getCurrentLabel()']" position="replace">
+        <xpath expr="//*[@t-out='this.getCurrentLabel()']" position="replace">
             <t t-set="item" t-value="currentItem"/>
             <t t-call="account.MoveStatusBarSecuredField.ItemLabel"/>
         </xpath>

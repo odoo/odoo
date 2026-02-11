@@ -2,17 +2,17 @@
 <templates xml:space="preserve">
     <t t-name="sale.ComboConfiguratorDialog">
         <Dialog
-            title="props.display_name"
+            title="this.props.display_name"
             contentClass="'sale-combo-configurator-dialog'"
             bodyClass="'d-flex flex-column gap-4'"
         >
-            <div t-if="unconfigurableCombos.length" class="mb-4">
+            <div t-if="this.unconfigurableCombos.length" class="mb-4">
                 <span class="d-inline-block mb-3 h4">
                     Included
                 </span>
                 <div class="container">
                     <div
-                        t-foreach="unconfigurableCombos"
+                        t-foreach="this.unconfigurableCombos"
                         t-as="combo"
                         t-key="combo.id"
                         class="row mb-3"
@@ -44,7 +44,7 @@
                     </div>
                 </div>
             </div>
-            <div t-foreach="configurableCombos" t-as="combo" t-key="combo.id">
+            <div t-foreach="this.configurableCombos" t-as="combo" t-key="combo.id">
                 <span
                     name="sale_combo_configurator_title"
                     t-attf-class="d-inline-block mb-3 h4 {{combo_index !== 0? 'mt-4' : ''}}"
@@ -53,10 +53,10 @@
                 <div class="row row-cols-1 row-cols-md-3 g-3">
                     <t t-foreach="combo.combo_items" t-as="comboItem" t-key="comboItem.id">
                         <ProductCard
-                            product="getSelectedOrProvidedComboItem(combo.id, comboItem).product"
+                            product="this.getSelectedOrProvidedComboItem(combo.id, comboItem).product"
                             extraPrice="comboItem.extra_price"
                             onClick="() => this.selectComboItem(combo.id, comboItem)"
-                            isSelected="state.selectedComboItems.get(combo.id)?.id === comboItem.id"
+                            isSelected="this.state.selectedComboItems.get(combo.id)?.id === comboItem.id"
                             isConfigurable="comboItem.is_configurable"
                         />
                     </t>
@@ -68,33 +68,33 @@
                         <button
                             name="sale_combo_configurator_confirm_button"
                             class="btn btn-primary w-100 w-lg-auto"
-                            t-att-disabled="!areAllCombosSelected || state.isLoading"
-                            t-on-click="confirm"
+                            t-att-disabled="!this.areAllCombosSelected || this.state.isLoading"
+                            t-on-click="this.confirm"
                         >
                             Add to order
                         </button>
                         <button
                             name="sale_combo_configurator_cancel_button"
                             class="btn btn-secondary w-100 w-lg-auto"
-                            t-on-click="cancel"
+                            t-on-click="this.cancel"
                         >
                             Discard
                         </button>
                     </div>
                     <div class="d-flex gap-3 align-items-center">
-                        <div t-if="props.options?.showQuantity ?? true" class="combo_configurator_quantity ps-lg-3">
+                        <div t-if="this.props.options?.showQuantity ?? true" class="combo_configurator_quantity ps-lg-3">
                             <QuantityButtons
-                                quantity="state.quantity"
+                                quantity="this.state.quantity"
                                 setQuantity="quantity => this.setQuantity(quantity)"
-                                isMinusButtonDisabled="state.quantity === 1"
+                                isMinusButtonDisabled="this.state.quantity === 1"
                                 btnClasses="'d-inline-block w-auto'"
                             />
                         </div>
-                        <div t-if="props.options?.showPrice ?? true" class="w-100 w-md-auto">
+                        <div t-if="this.props.options?.showPrice ?? true" class="w-100 w-md-auto">
                             <span
                                 name="sale_combo_configurator_total"
                                 class="h6 mb-0"
-                                t-out="totalMessage"
+                                t-out="this.totalMessage"
                             />
                             <span
                                 t-if="this.props.price_info"
