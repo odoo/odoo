@@ -3,6 +3,8 @@ import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { initLNA } from "@point_of_sale/app/utils/init_lna";
+
 const EPSON_ERRORS = {
     DeviceNotFound: _t(
         "Check the printer configuration for the 'Device ID' setting.\nIt should be set to: 'local_printer'"
@@ -50,7 +52,7 @@ export class TestEPos extends Component {
             const response = await this.orm.read(
                 "pos.printer",
                 [printer_id],
-                ["epson_printer_ip", "name", "printer_type"]
+                ["epson_printer_ip", "name", "printer_type", "use_lna"]
             );
             return response[0];
         } else {
@@ -60,6 +62,7 @@ export class TestEPos extends Component {
                 name: data.name,
                 epson_printer_ip: data.epson_printer_ip,
                 printer_type: data.printer_type,
+                use_lna: data.use_lna,
             };
         }
     }
@@ -107,14 +110,19 @@ export class TestEPos extends Component {
         const printer = await this.getPrinterDataEPos(printer_id);
         if (printer.printer_type === "epson_epos") {
             try {
-                const url = window.location.protocol + "//" + printer.epson_printer_ip;
+                const protocol = printer.use_lna ? "http:" : window.location.protocol;
+                const url = protocol + "//" + printer.epson_printer_ip;
                 const address = url + "/cgi-bin/epos/service.cgi?devid=local_printer";
-
-                const result = await fetch(address, {
+                const params = {
                     method: "POST",
                     body: this._getReceipt(printer.name),
                     signal: AbortSignal.timeout(15000),
-                });
+                };
+                if (printer.use_lna) {
+                    params.targetAddressSpace = "local";
+                    await initLNA(this.notification);
+                }
+                const result = await fetch(address, params);
                 const body = await result.text();
                 const parser = new DOMParser();
                 const parsedBody = parser.parseFromString(body, "application/xml");

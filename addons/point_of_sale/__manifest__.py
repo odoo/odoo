@@ -83,6 +83,7 @@
             'point_of_sale/static/src/app/hooks/hooks.js',
             'point_of_sale/static/src/backend/many2many_placeholder_list_view/*',
             'point_of_sale/static/src/backend/test_epos/*',
+            'point_of_sale/static/src/app/utils/init_lna.js',
         ],
         "web.assets_web_dark": [
             'point_of_sale/static/src/scss/pos_dashboard.dark.scss',
