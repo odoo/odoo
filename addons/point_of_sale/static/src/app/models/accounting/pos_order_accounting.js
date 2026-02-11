@@ -95,11 +95,11 @@ export class PosOrderAccounting extends Base {
         }
 
         const total =
-            Math.abs(this.priceIncl) -
-            Math.abs(this.amountPaid) +
-            (isNegative ? -roundingSanatizer : roundingSanatizer);
+            Math.abs(this.amountPaid) -
+            Math.abs(this.priceIncl) +
+            (isNegative ? roundingSanatizer : -roundingSanatizer);
 
-        const amount = isNegative ? -this.currency.round(total) : this.currency.round(total);
+        const amount = this.currency.round(total);
         return this.config.cash_rounding
             ? this.config.rounding_method.asymmetricRound(amount)
             : amount;
