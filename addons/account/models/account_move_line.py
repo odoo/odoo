@@ -1914,7 +1914,8 @@ class AccountMoveLine(models.Model):
         SKIPPED_ACCOUNT_TYPES = {'asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card'}
         lines_to_validate = self.filtered(lambda line: (
             line.display_type == 'product' and
-            line.account_id.account_type not in SKIPPED_ACCOUNT_TYPES
+            line.account_id.account_type not in SKIPPED_ACCOUNT_TYPES and
+            line.journal_id != line.company_id.currency_exchange_journal_id
         ))
         (self - lines_to_validate).has_invalid_analytics = False
         for line in lines_to_validate:
@@ -3046,7 +3047,10 @@ class AccountMoveLine(models.Model):
 
     def _validate_analytic_distribution(self):
         lines_with_missing_analytic_distribution = self.env['account.move.line']
-        for line in self.filtered(lambda line: line.display_type == 'product'):
+        for line in self.filtered(lambda line: (
+            line.display_type == 'product' and
+            line.journal_id != line.company_id.currency_exchange_journal_id
+        )):
             try:
                 line._validate_distribution(
                     company_id=line.company_id.id,
