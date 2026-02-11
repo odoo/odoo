@@ -5,7 +5,6 @@ from urllib.parse import quote, urlencode, urlparse
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.addons.l10n_tr_nilvera.const import NILVERA_ERROR_CODE_MESSAGES
 from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
 
 MOVE_TYPE_CATEGORY_MAP = {
@@ -248,7 +247,7 @@ class AccountMove(models.Model):
             elif response.status_code in {401, 403}:
                 raise UserError(_("Oops, seems like you're unauthorised to do this. Try another API key with more rights or contact Nilvera."))
             elif 400 <= response.status_code < 500:
-                error_message, error_codes = self._l10n_tr_nilvera_einvoice_get_error_messages_from_response(response)
+                error_message, error_codes = client._get_error_message_with_codes_from_response(response)
 
                 # If the sequence/series is not found on Nilvera, add it then retry.
                 if 3009 in error_codes and post_series:
@@ -470,22 +469,6 @@ class AccountMove(models.Model):
                     document_category="Sale",
                     invoice_channel=invoice.l10n_tr_nilvera_customer_status,
                 )
-
-    def _l10n_tr_nilvera_einvoice_get_error_messages_from_response(self, response):
-        msg = ""
-        error_codes = []
-
-        response_json = response.json()
-        if errors := response_json.get('Errors'):
-            msg += _("The invoice couldn't be sent due to the following errors:\n")
-
-            for error in errors:
-                code = error.get('Code')
-                description = NILVERA_ERROR_CODE_MESSAGES.get(code, error.get('Description'))
-                msg += "\n%s - %s:\n%s\n" % (code, description, error.get('Detail'))
-                error_codes.append(code)
-
-        return msg, error_codes
 
     def _l10n_tr_nilvera_einvoice_check_negative_lines(self):
         return any(
