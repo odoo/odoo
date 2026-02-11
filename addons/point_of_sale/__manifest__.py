@@ -86,6 +86,7 @@
             ('remove', 'point_of_sale/static/src/backend/views/pivot/*'),
             ('remove', 'point_of_sale/static/src/backend/views/graph/*'),
             'point_of_sale/static/src/backend/test_epos/*',
+            'point_of_sale/static/src/app/utils/init_lna.js',
         ],
         'web.assets_backend_lazy': [
             'point_of_sale/static/src/backend/views/pivot/*',
