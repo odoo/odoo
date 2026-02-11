@@ -7,6 +7,7 @@ import { patch } from "@web/core/utils/patch";
 patch(Thread.prototype, {
     setup() {
         super.setup();
+        this.chatbot = fields.One("Chatbot");
         this.livechat_operator_id = fields.One("Persona");
         this.livechatVisitorMember = fields.One("discuss.channel.member", {
             compute() {
