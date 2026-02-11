@@ -9,6 +9,7 @@ from odoo.addons.account.tools import (
     is_valid_structured_reference_si,
     is_valid_structured_reference_iso,
     is_valid_structured_reference,
+    is_valid_structured_reference_for_country,
 )
 
 
@@ -168,3 +169,18 @@ class StructuredReferenceTest(TransactionCase):
         self.assertFalse(is_valid_structured_reference('1234567898'))  # NO-SE
         self.assertFalse(is_valid_structured_reference('6000056789012345'))  # NL
         self.assertFalse(is_valid_structured_reference("SI01 19-1235-84504"))  # SI
+
+    def test_structured_reference_for_country(self):
+        # Valid structured references for supported countries
+        self.assertTrue(is_valid_structured_reference_for_country('***020/3430/57642***', 'BE'))
+        self.assertTrue(is_valid_structured_reference_for_country('2023 0000 98', 'FI'))
+        self.assertTrue(is_valid_structured_reference_for_country('1234 5678 97', 'NO'))
+        self.assertTrue(is_valid_structured_reference_for_country('1234 5678 97', 'SE'))
+        self.assertTrue(is_valid_structured_reference_for_country('5000056789012345', 'NL'))
+        self.assertTrue(is_valid_structured_reference_for_country('SI01 25-20-85', 'SI'))
+
+        # Fallback to ISO 11649 for unsupported countries
+        self.assertTrue(is_valid_structured_reference_for_country('RF18 5390 0754 7034 ', 'FR'))
+
+        # Returns False for invalid references
+        self.assertFalse(is_valid_structured_reference_for_country(''))
