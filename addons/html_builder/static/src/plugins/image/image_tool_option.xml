@@ -8,7 +8,7 @@
     <BuilderRow label.translate="Transform" level="1" preview="false">
         <div class="btn-group o-hb-button-group">
             <BuilderButton title.translate="Crop image" action="'cropImage'" icon="'fa-crop'" id="'cropImage'" />
-            <BuilderButton title.translate="Reset crop" action="'resetCrop'" t-if="this.isActiveItem('cropImage')" icon="'oi-close'" className="'btn-danger-color-hover rounded-start-0 m-0 py-0 flex-grow-0'" />
+            <BuilderButton title.translate="Reset crop" action="'resetCrop'" t-if="this.isActiveItem('cropImage')" icon="'oi-close'" className="'btn-danger-color-hover border-start-0 rounded-start-0 m-0 py-0 flex-grow-0'" />
         </div>
         <ImageTransformOption t-if="!state.isImageAnimated and !state.isSocialMediaImg" />
     </BuilderRow>
