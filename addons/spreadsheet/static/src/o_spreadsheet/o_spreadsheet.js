@@ -10,6 +10,7 @@
 =======
  * @version 19.2.0-alpha.3
 <<<<<<< HEAD
+<<<<<<< HEAD
  * @date 2026-01-19T15:07:01.887Z
  * @hash 122e1027e
 >>>>>>> cdba1857bce3 ([IMP] update spreadsheet)
@@ -17,6 +18,10 @@
  * @date 2026-01-20T08:06:04.782Z
  * @hash 12831a2f6
 >>>>>>> 70120314e9e5 ([IMP] update spreadsheet)
+=======
+ * @date 2026-01-20T08:53:29.120Z
+ * @hash 68b35d1a6
+>>>>>>> 7b034f450b4e ([IMP] update spreadsheet)
  */
 odoo.define('@spreadsheet/o_spreadsheet/o_spreadsheet', ['@odoo/owl'], function (require) {
 'use strict';
@@ -107144,6 +107149,7 @@ __info__.hash = "3d77c5351";
 =======
 __info__.version = "19.2.0-alpha.3";
 <<<<<<< HEAD
+<<<<<<< HEAD
 __info__.date = "2026-01-19T15:07:01.887Z";
 __info__.hash = "122e1027e";
 >>>>>>> cdba1857bce3 ([IMP] update spreadsheet)
@@ -107151,6 +107157,10 @@ __info__.hash = "122e1027e";
 __info__.date = "2026-01-20T08:06:04.782Z";
 __info__.hash = "12831a2f6";
 >>>>>>> 70120314e9e5 ([IMP] update spreadsheet)
+=======
+__info__.date = "2026-01-20T08:53:29.120Z";
+__info__.hash = "68b35d1a6";
+>>>>>>> 7b034f450b4e ([IMP] update spreadsheet)
 //# sourceMappingURL=o_spreadsheet.esm.js.map
 return __exports;
 });
