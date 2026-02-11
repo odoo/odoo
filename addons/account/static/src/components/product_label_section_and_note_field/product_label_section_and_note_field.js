@@ -42,15 +42,24 @@ export class ProductLabelSectionAndNoteField extends ProductNameAndDescriptionFi
         return this.isSection || this.isSubSection;
     }
 
+    get translatedProductName() {
+        return this.props.record.data.translated_product_name;
+    }
+
+    get label() {
+        let label = this.props.record.data[this.descriptionColumn];
+        if (this.translatedProductName && label.startsWith(this.translatedProductName)) {
+            label = label.slice(this.translatedProductName.length + 1);
+        }
+        else if (this.productName && label.startsWith(this.productName)) {
+            label = label.slice(this.productName.length + 1);
+        }
+        return label;
+    }
+
     isNote(record = null) {
         record = record || this.props.record;
         return record.data.display_type === "line_note";
-    }
-
-    parseLabel(value) {
-        return (this.productName && value && this.productName.concat("\n", value))
-            || (this.productName && !value && this.productName)
-            || (value || "");
     }
 
     shouldShowWarning() {
@@ -60,6 +69,16 @@ export class ProductLabelSectionAndNoteField extends ProductNameAndDescriptionFi
             !this.isSectionOrSubSection &&
             !this.isNote()
         );
+    }
+
+    parseLabel(value) {
+        if(!value){
+            return this.productName;
+        }
+        if(this.translatedProductName){
+            return this.translatedProductName.concat("\n", value);
+        }
+        return this.productName.concat("\n", value);
     }
 }
 
@@ -80,6 +99,9 @@ export const productLabelSectionAndNoteField = {
         props.show_label_warning = options.show_label_warning;
         return props;
     },
+    fieldDependencies: [
+        { name: 'translated_product_name', type: 'char' },
+    ],
 };
 registry
     .category("fields")
