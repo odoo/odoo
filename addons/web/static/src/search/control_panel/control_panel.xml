@@ -49,7 +49,7 @@
                             Breadcrumbs component in the NavBar.
                         -->
                         <div class="o_fallback_breadcrumbs d-contents"/>
-                        <t t-portal="'.o_navbar_breadcrumbs, .o_fallback_breadcrumbs'">
+                        <t t-custom-portal="'.o_navbar_breadcrumbs, .o_fallback_breadcrumbs'">
                             <Breadcrumbs breadcrumbs="breadcrumbs"/>
                         </t>
                         <section class="o_control_panel_breadcrumbs_actions d-contents">

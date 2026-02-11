@@ -11,7 +11,7 @@
     <img class="o_burger_menu_avatar o_image_24_cover rounded" t-att-src="'/web/image?model=res.users&amp;field=avatar_128&amp;id=' + user.userId" alt="Menu"/>
   </button>
 
-  <t t-portal="'body'">
+  <t t-custom-portal="'body'">
     <Transition name="'o-burger-slide'" visible="state.isBurgerOpened" leaveDuration="200" t-slot-scope="transition">
       <div class="o_burger_menu position-fixed top-0 bottom-0 start-100 d-flex flex-column flex-nowrap" t-att-class="transition.className" t-on-touchstart.stop="_onSwipeStart" t-on-touchend.stop="_onSwipeEnd">
         <div class="o_sidebar_topbar d-flex align-items-center justify-content-between flex-shrink-0 py-0 fs-4">
