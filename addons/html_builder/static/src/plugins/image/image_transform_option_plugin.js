@@ -25,7 +25,6 @@ class TransformImageAction extends BuilderAction {
         params: { isImageTransformationOpen, closeImageTransformation },
     }) {
         if (!isImageTransformationOpen()) {
-            let changed = false;
             const deferredTillMounted = Promise.withResolvers();
             registry.category("main_components").add("ImageTransformation", {
                 Component: ImageTransformation,
@@ -34,14 +33,8 @@ class TransformImageAction extends BuilderAction {
                     document: this.document,
                     editable: this.editable,
                     destroy: () => closeImageTransformation(),
-                    onChange: () => {
-                        changed = true;
-                    },
                     onApply: () => {
-                        if (changed) {
-                            changed = false;
-                            this.dependencies.history.addStep();
-                        }
+                        this.dependencies.history.addStep();
                     },
                     onComponentMounted: () => {
                         deferredTillMounted.resolve();
