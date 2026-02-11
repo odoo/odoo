@@ -53,10 +53,16 @@ class TestSelfOrderMobile(SelfOrderCommonTest, OnlinePaymentCommon):
         self.pos_config.write({
             'self_ordering_pay_after': 'meal',
         })
+        # Cancel other draft orders
+        self.env['pos.order'].search([('state', '=', 'draft')]).state = 'cancel'
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, "self_mobile_online_payment_meal_table")
+        pos_order = self.env['pos.order'].search([], limit=1)
+        pdis_order = self.env['pos.prep.order'].search([('pos_order_id', '=', pos_order.id)])
+        pdis_lines = pdis_order.prep_line_ids
+        self.assertEqual(len(pdis_lines), 2, "Should have 2 preparation orderlines")
 
     def test_online_payment_kiosk_qr_code(self):
         """
