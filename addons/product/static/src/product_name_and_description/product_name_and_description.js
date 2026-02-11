@@ -105,11 +105,14 @@ export class ProductNameAndDescriptionField extends Component {
     }
 
     get label() {
-        let label = this.props.record.data[this.descriptionColumn];
-        if (label.includes(this.productName)) {
-            label = label.replace(this.productName, "");
+        let label = this.props.record.data.name;
+        if (this.translatedProductName && label.startsWith(this.translatedProductName)) {
+            label = label.slice(this.translatedProductName.length + 1);
         }
-        return label.trim();
+        else if (this.productName && label.startsWith(this.productName)) {
+            label = label.slice(this.productName.length + 1);
+        }
+        return label;
     }
 
     get m2oProps() {
@@ -141,7 +144,13 @@ export class ProductNameAndDescriptionField extends Component {
     }
 
     parseLabel(value) {
-        return value || this.productName;
+        if(!value){
+            return this.productName;
+        }
+        if(this.translatedProductName){
+            return this.translatedProductName.concat("\n", value);
+        }
+        return this.productName.concat("\n", value);
     }
 
     /**
