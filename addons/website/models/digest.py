@@ -79,8 +79,12 @@ class Digest(models.Model):
     def _get_kpi_custom_settings(self, company, user):
         res = super()._get_kpi_custom_settings(company, user)
         menu_id = self.env.ref('website.menu_website_configuration').id
-        res['kpi_action']['kpi_website_visitor_count'] = f'website.website_visitors_action?menu_id={menu_id}'
-        res['kpi_action']['kpi_website_track_count'] = f'website.website_visitor_view_action?menu_id={menu_id}'
+        res['kpi_action']['kpi_website_visitor_count'] = (
+            f'website.website_visitors_action?menu_id={menu_id}&view_type=graph'
+        )
+        res['kpi_action']['kpi_website_track_count'] = (
+            f'website.website_visitor_view_action?menu_id={menu_id}&view_type=graph'
+        )
         res['kpi_sequence']['kpi_website_visitor_count'] = 3500
         res['kpi_sequence']['kpi_website_track_count'] = 3505
         return res
