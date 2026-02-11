@@ -11,6 +11,13 @@ patch(Thread.prototype, {
         this.livechat_end_dt = fields.Datetime();
         this.livechat_lang_id = fields.One("res.lang");
         this.livechat_operator_id = fields.One("res.partner");
+<<<<<<< 0ff07e7cbd6589b06174f3301ae8207a6513411a
+||||||| b44295bb6ce621ff87cbc96860492650d90d0ad7
+        this.livechat_conversation_tag_ids = fields.Many("im_livechat.conversation.tag");
+=======
+        this.livechat_conversation_tag_ids = fields.Many("im_livechat.conversation.tag");
+        this.chatbot = fields.One("Chatbot");
+>>>>>>> efaea1fbdb1cf18e09943fa0119d525c54c5065e
         this.livechatVisitorMember = fields.One("discuss.channel.member", {
             compute() {
                 if (this.channel?.channel_type !== "livechat") {
