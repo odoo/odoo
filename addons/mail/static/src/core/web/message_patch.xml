@@ -23,7 +23,9 @@
                             </t>
                         </ul>
                     </t>
-                    <div t-if="!message.isEmpty and message.richBody" t-call="mail.Message.bodyAsNotification" t-ref="body"/>
+                    <div t-if="!message.isEmpty and message.richBody" t-ref="body">
+                        <t t-call="mail.Message.bodyAsNotification"/>
+                    </div>
                 </div>
             </t>
             <t t-else="">$0</t>
