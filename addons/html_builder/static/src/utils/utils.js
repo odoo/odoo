@@ -31,6 +31,9 @@ export function getSnippetName(snippetEl) {
     if (snippetEl.matches(".btn")) {
         return _t("Button");
     }
+    if (snippetEl.matches("[data-snippet=s_website_form]")) {
+        return _t("Form");
+    }
     return _t("Block");
 }
 
