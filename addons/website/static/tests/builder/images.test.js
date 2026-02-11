@@ -62,7 +62,7 @@ test("Double click on image and replace it", async () => {
     await waitSidebarUpdated();
     await waitForNone(".o_select_media_dialog");
     expect(".o_select_media_dialog").toHaveCount(0);
-    expect(":iframe img").toHaveClass("o_modified_image_to_save");
+    expect(":iframe img").toHaveClass("o_b64_image_to_save");
     expect(".options-container[data-container-title='Image']").toHaveCount(1);
 });
 
