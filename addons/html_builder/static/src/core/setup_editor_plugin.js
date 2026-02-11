@@ -38,19 +38,9 @@ export class SetupEditorPlugin extends Plugin {
         welcomeMessageEl?.remove();
         this.dispatchTo("before_setup_editor_handlers");
         const savableSelectors = this.getResource("savable_selectors").join(", ");
-        const savableEls = [...this.editable.querySelectorAll(savableSelectors)]
-            .filter((el) => !el.closest(".o_not_editable"))
-            .filter((el) => !el.matches("link, script"))
-            .filter((el) => !el.hasAttribute("data-oe-readonly"))
-            .filter(
-                (el) =>
-                    !el.matches(
-                        'img[data-oe-field="arch"], br[data-oe-field="arch"], input[data-oe-field="arch"]'
-                    )
-            )
-            .filter((el) => !el.classList.contains("oe_snippet_editor"))
-            .filter((el) => !el.matches("hr, br, input, textarea"))
-            .filter((el) => !el.hasAttribute("data-oe-sanitize-prevent-edition"));
+        const savableEls = [...this.editable.querySelectorAll(savableSelectors)].filter((el) =>
+            this.isSavableElement(el)
+        );
         for (const savableEl of savableEls) {
             savableEl.classList.add("o_savable");
         }
@@ -94,5 +84,19 @@ export class SetupEditorPlugin extends Plugin {
     getSavableAreas(rootEl) {
         const editableEl = rootEl || this.editable;
         return selectElements(editableEl, ".o_savable");
+    }
+
+    isSavableElement(el) {
+        return (
+            !el.closest(".o_not_editable") &&
+            !el.matches("link, script") &&
+            !el.hasAttribute("data-oe-readonly") &&
+            !el.matches(
+                'img[data-oe-field="arch"], br[data-oe-field="arch"], input[data-oe-field="arch"]'
+            ) &&
+            !el.classList.contains("oe_snippet_editor") &&
+            !el.matches("hr, br, input, textarea") &&
+            !el.hasAttribute("data-oe-sanitize-prevent-edition")
+        );
     }
 }
