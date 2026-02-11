@@ -1482,6 +1482,8 @@ class MrpProduction(models.Model):
 
     def set_qty_producing(self):
         self.ensure_one()
+        if self.env.context.get('skip_component_qty_recompute'):
+            return
         self._set_qty_producing(False)
 
     def action_view_mrp_production_childs(self):
@@ -3047,8 +3049,6 @@ class MrpProduction(models.Model):
 
     def action_clear_lot_producing_ids(self):
         self.lot_producing_ids = [Command.clear()]
-        self.qty_producing = 0
-        self._set_qty_producing(False)
 
     def _track_subtype(self, init_values):
         self.ensure_one()
