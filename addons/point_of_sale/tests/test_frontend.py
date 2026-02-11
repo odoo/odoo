@@ -1729,6 +1729,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         report_refund_order, report_order = self.env['report.pos.order'].sudo().search([('order_id', 'in', current_session.order_ids.ids)])
         self.assertEqual(report_order.margin, 20.0)
         self.assertEqual(report_refund_order.margin, -20.0)
+        self.assertEqual(report_order.price_total, 20.0)
+        self.assertEqual(report_refund_order.price_total, -20.0)
 
     def test_product_combo_price(self):
         """ Check that the combo has the expected price """
