@@ -63,27 +63,29 @@ class ResDeviceLog(models.Model):
         else:
             cursor = nullcontext(self.env.cr)
         with cursor as cr:
+            info = {
+                'session_identifier': session_identifier,
+                'user_id': user_id,
+                'ip_address': device['ip_address'],
+                'user_agent': device['user_agent'][:1024],  # Truncate very long user-agent
+                'country': device.get('country'),  # TODO (v20): remove backward compatibility by forcing the key
+                'city': device.get('city'),  # TODO (v20): remove backward compatibility by forcing the key
+                'first_activity': datetime.fromtimestamp(device['first_activity']),
+                'last_activity': datetime.fromtimestamp(device['last_activity']),
+                'revoked': False,
+            }
             cr.execute(SQL("""
                 INSERT INTO res_device_log (session_identifier, user_id, ip_address, user_agent, country, city, first_activity, last_activity, revoked)
                 VALUES (%(session_identifier)s, %(user_id)s, %(ip_address)s, %(user_agent)s, %(country)s, %(city)s, %(first_activity)s, %(last_activity)s, %(revoked)s)
-            """,
-                session_identifier=session_identifier,
-                user_id=user_id,
-                ip_address=device['ip_address'],
-                user_agent=device['user_agent'][:1024],  # Truncate very long user-agent
-                country=device.get('country'),  # TODO (v20): remove backward compatibility by forcing the key
-                city=device.get('city'),  # TODO (v20): remove backward compatibility by forcing the key
-                first_activity=datetime.fromtimestamp(device['first_activity']),
-                last_activity=datetime.fromtimestamp(device['last_activity']),
-                revoked=False,
-            ))
-        _logger.info('User %d inserts device log (%s)', user_id, session_identifier)
+            """, **info))
+        _logger.info('User %(user_id)d inserts device log: %(session_identifier)s - %(ip_address)s - %(user_agent)s', info)
 
     @api.autovacuum
     def _gc_device_log(self):
-        # Keep the last device log
-        # (even if the session file no longer exists on the filesystem)
-        self.env.cr.execute("""
+        # Soft GC:
+        # Keep the last device log even if the session file
+        # no longer exists on the filesystem
+        query = SQL("""
             DELETE FROM res_device_log log1
             WHERE EXISTS (
                 SELECT 1 FROM res_device_log log2
@@ -94,6 +96,18 @@ class ResDeviceLog(models.Model):
                     AND log1.last_activity < log2.last_activity
             )
         """)
+
+        # Hard GC:
+        # Delete device logs if the last activity has been exceeded by a defined
+        # number of days (ensure the session file no longer exists on the filesystem)
+        if retention_days := self.env['ir.config_parameter'].get_int('base.res_device_log_retention_days'):
+            max_last_activity = self.env.cr.now() - timedelta(days=retention_days)
+            query = SQL(
+                '%s OR (log1.revoked IS TRUE AND log1.last_activity < %s)',
+                query, max_last_activity,
+            )
+
+        self.env.cr.execute(query)
         _logger.info('GC device logs delete %d entries', self.env.cr.rowcount)
 
     @api.autovacuum
