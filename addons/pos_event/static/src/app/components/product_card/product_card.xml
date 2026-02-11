@@ -13,10 +13,9 @@
                 </t>
                 <t t-else="">
                     <span t-if="availableSeats > 0">
-                        <t t-esc="availableSeats" /> left
+                        <t t-esc="availableSeats" /> seats
                     </span>
-                    <span t-elif="availableSeats === 0">Unlimited</span>
-                    <span t-else="">Sold out</span>
+                    <span t-elif="availableSeats !== 0">Sold out</span>
                 </t>
             </div>
         </xpath>
