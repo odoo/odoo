@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from freezegun import freeze_time
 from unittest.mock import patch
 
@@ -13,6 +13,7 @@ from odoo.addons.test_http.utils import (
     USER_AGENT_linux_chrome,
     USER_AGENT_linux_firefox
 )
+from odoo.http import SESSION_LIFETIME
 from odoo.tests import tagged
 
 from .test_common import TestHttpBase
@@ -415,13 +416,66 @@ class TestDevice(TestHttpBase):
         odoo.http.root.session_store.store.clear()
 
         # Update all device logs
-        with freeze_time('2025-02-01 08:00:00'), patch.object(self.cr, 'commit', lambda: ...):
-            self.DeviceLog.sudo()._ResDeviceLog__update_revoked()
-        self.DeviceLog.flush_model()  # Because write on ``res.device.log`` and so we have new values in cache
-        self.Session.invalidate_model()  # Because it depends on the ``res.device.log`` model (updated in database)
+        with freeze_time('2025-02-01 08:00:00'), self.registry.cursor() as cr:
+            self.DeviceLog.with_env(self.env(cr=cr))._ResDeviceLog__update_revoked()
+        self.env.invalidate_all()
+        # Invalidate because:
+        # - write on ``res.device.log`` and so we have new values in cache
+        # - it depends on the ``res.device.log`` model (updated in database)
 
         self.assertEqual(len(self.user_admin.session_ids), 0)
         self.assertEqual(len(self.user_internal.session_ids), 0)
+
+    def test_filesystem_reflexion_gc(self):
+
+        def now(days=0):
+            return datetime.now() + timedelta(days=days)
+
+        session = self.authenticate(self.user_admin.login, self.user_admin.login)
+
+        with freeze_time(now()):
+            for i in range(10):
+                self.DeviceLog.create({
+                    'session_identifier': session.sid,
+                    'user_id': session.uid,
+                    'revoked': False,
+                    'ip_address': TEST_IP,
+                    'user_agent': USER_AGENT_linux_chrome,
+                    'first_activity': datetime.now(),
+                    'last_activity': datetime.now() + timedelta(seconds=i),
+                })
+
+        *_, logs = self.get_devices(self.user_admin)
+        self.assertEqual(len(logs), 10)
+
+        # Apply Soft GC
+        with freeze_time(now()), self.registry.cursor() as cr:
+            self.DeviceLog.with_env(self.env(cr=cr))._gc_device_log()
+        *_, logs = self.get_devices(self.user_admin)
+        self.assertEqual(len(logs), 1)
+
+        # Apply Hard GC
+        ICP = self.env['ir.config_parameter']
+        ICP.set_int('base.res_device_log_retention_days', 10)
+
+        with freeze_time(now(days=11)), self.registry.cursor() as cr:
+            self.DeviceLog.with_env(self.env(cr=cr))._gc_device_log()
+        *_, logs = self.get_devices(self.user_admin)
+        self.assertEqual(len(logs), 1, 'Because the session still exists on the filesystem')
+
+        # Revoke the session and mark it revoked in database
+        odoo.http.root.session_store.store.clear()
+        with freeze_time(now(days=(SESSION_LIFETIME / 86400) + 1)), self.registry.cursor() as cr:
+            self.DeviceLog.with_env(self.env(cr=cr))._ResDeviceLog__update_revoked()
+        self.env.invalidate_all()
+
+        with freeze_time(now(days=11)), self.registry.cursor() as cr:
+            self.DeviceLog.with_env(self.env(cr=cr))._gc_device_log()
+        *_, logs = self.get_devices(self.user_admin)
+        self.assertEqual(len(logs), 0,
+            'Because the session is not present on the filesystem '
+            'and the last activity has been exceeded'
+        )
 
     # --------------------
     # SPECIFIC USE CASE
