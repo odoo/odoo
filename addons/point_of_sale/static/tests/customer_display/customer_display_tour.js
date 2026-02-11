@@ -38,6 +38,11 @@ registry.category("web_tour.tours").add("CustomerDisplayTour", {
                 content: "An order line with `isSelected: true` should have 'selected' class",
                 trigger: ".order-container .orderline:last-child.selected",
             },
+            CustomerDisplay.postMessage(CustomerDisplay.SCREENSAVER, "screensaver"),
+            {
+                content: "Check that we are now on the 'Screensaver' screen",
+                trigger: ".login-overlay",
+            },
         ].flat(),
 });
 

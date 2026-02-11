@@ -7,6 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 import { mountComponent } from "@web/env";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
+import { useTime } from "@point_of_sale/app/hooks/time_hook";
 
 export class CustomerDisplay extends Component {
     static template = "point_of_sale.CustomerDisplay";
@@ -17,6 +18,7 @@ export class CustomerDisplay extends Component {
         this.session = session;
         this.dialog = useService("dialog");
         this.order = useService("customer_display_data");
+        this.time = useTime();
         const singleDialog = useSingleDialog();
 
         this.scrollableRef = useRef("scrollable");

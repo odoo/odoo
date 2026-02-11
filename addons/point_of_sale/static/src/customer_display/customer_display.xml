@@ -2,7 +2,24 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.CustomerDisplay">
         <t t-set="bgImgSrc" t-value="session.customer_display_bg_img ? 'url(/web/image/pos.config/' + pos.config.id + '/customer_display_bg_img)' : 'none'" />
-        <div class="o_customer_display d-flex h-100">
+        <div t-if="order.displayScreenSaver" class="login-overlay fixed-top w-100 h-100 p-4 d-flex flex-column">
+            <div class="screen-login-header d-flex justify-content-between">
+                <div class="screen-login-timer d-flex align-items-center gap-2 bg-transparent">
+                    <div class="timer-hours fs-1" t-out="time.hours" />
+                    <div class="timer-date-container d-flex flex-column smaller">
+                        <div class="timer-day" t-out="time.day" />
+                        <div class="timer-date" t-out="time.date" />
+                    </div>
+                </div>
+                <div class="screen-login-logo ms-auto">
+                    <img t-attf-src="/logo?company={{session.company_id}}" alt="Logo"/>
+                </div>
+            </div>
+            <div class="d-flex h-100 w-100 justify-content-center align-items-center">
+                <div class="pos-logo w-100 h-25"/>
+            </div>
+        </div>
+        <div t-else="" class="o_customer_display d-flex h-100">
             <div class="o_customer_display_sidebar d-flex flex-column align-items-center justify-content-center gap-2 p-4 bg-view" t-att-style="session.has_bg_img ? `background-image: url(/web/image/pos.config/${session.config_id}/customer_display_bg_img); min-width: 30%; min-height: 15%;` : ``">
                 <div t-if="!session.has_bg_img" class="o_customer_display_logo d-flex mw-50 mw-md-100 p-2 rounded-3 bg-white">
                     <img class="img-fluid" t-attf-src="/logo?company={{session.company_id}}"/>

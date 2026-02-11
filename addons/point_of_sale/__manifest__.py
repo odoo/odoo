@@ -236,7 +236,11 @@
             "point_of_sale/static/src/app/utils/use_timed_press.js",
             "point_of_sale/static/src/app/components/popups/qr_code_popup/*",
             "point_of_sale/static/src/utils.js",
+            "point_of_sale/static/src/scss/pos_variables_extra.scss",
             "point_of_sale/static/src/customer_display/**/*",
+            "point_of_sale/static/src/app/hooks/time_hook.js",
+            "point_of_sale/static/src/app/pos_app.scss",
+            "point_of_sale/static/src/app/screens/login_screen/login_screen.scss",
         ],
         'point_of_sale.customer_display_assets_test': [
             ('include', 'point_of_sale.base_tests'),

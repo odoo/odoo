@@ -37,6 +37,16 @@ export class CustomerDisplayPosAdapter {
             });
     }
 
+    displayScreenSaver() {
+        this.data.displayScreenSaver = true;
+    }
+
+    setExtraData(data) {
+        if (data) {
+            Object.assign(this.data, data);
+        }
+    }
+
     formatOrderData(order) {
         this.currency = order.currency;
         this.data = {
@@ -52,6 +62,7 @@ export class CustomerDisplayPosAdapter {
             paymentLines: order.payment_ids.map((pl) => this.getPaymentData(pl)),
             lines: order.lines.map((l) => this.getOrderlineData(l)),
             qrPaymentData: this.getQrPaymentData(order),
+            displayScreenSaver: false,
         };
     }
 
