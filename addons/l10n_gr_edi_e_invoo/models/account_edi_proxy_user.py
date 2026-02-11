@@ -36,7 +36,7 @@ class AccountEdiProxyClientUser(models.Model):
 
     def _get_proxy_identification(self, company, proxy_type):
         if proxy_type == L10N_GR_EDI_PROXY_TYPE:
-            if not company.vat:
+            if not company.has_vat:
                 raise RedirectWarning(
                     message=self.env._(
                         'Please fill the VAT number of company "%(company_name)s" before sending electronic invoices.',

@@ -456,7 +456,7 @@ class Picking(models.Model):
         partner = data['transport_partner_id']
         missing_carrier_partner_fields = []
 
-        if not partner.vat:
+        if not partner.has_vat:
             missing_carrier_partner_fields.append(_("VAT"))
 
         if not partner.city:
@@ -818,7 +818,7 @@ class Picking(models.Model):
         name = data['name']
         commercial_partner_code = None
 
-        if commercial_partner.vat:
+        if commercial_partner.has_vat:
             commercial_partner_code = self._l10n_ro_edi_stock_get_cod(commercial_partner)
         elif self.l10n_ro_edi_stock_operation_type == '30':
             commercial_partner_code = 'PF'

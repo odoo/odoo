@@ -426,7 +426,7 @@ class AccountMove(models.Model):
             if not re.fullmatch(r'[\d]+', formatted_phone):
                 errors.append(self.env._("Phone number contains invalid characters! It should be in the format: '+886 0997624293'."))
 
-        if self.l10n_tw_edi_is_b2b and not self.partner_id.vat:
+        if self.l10n_tw_edi_is_b2b and not self.partner_id.has_vat:
             errors.append(self.env._("A tax ID is required for company contact or individual contact under a company."))
 
         if self.l10n_tw_edi_is_b2b and self.partner_id.vat and (not self.partner_id.vat.isdigit() or len(self.partner_id.vat) != 8):

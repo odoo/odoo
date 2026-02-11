@@ -22,7 +22,7 @@ class AccountMove(models.Model):
                 (not move.partner_id and move.move_type in ('in_receipt', 'out_receipt'))
                 or (simplified_partner and move.partner_id == simplified_partner)
                 or (move.move_type in ('out_invoice', 'out_refund')
-                    and not move.commercial_partner_id.vat
+                    and not move.commercial_partner_id.has_vat
                     and currency_id.compare_amounts(abs(move.amount_total_signed), move.company_id.l10n_es_simplified_invoice_limit) <= 0
                     and move.commercial_partner_id.country_id in self.env.ref('base.europe').country_ids
                 )

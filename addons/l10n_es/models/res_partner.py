@@ -14,7 +14,7 @@ class ResPartner(models.Model):
 
     def _l10n_es_freelancer(self):
         self.ensure_one()
-        if not self.vat:
+        if not self.has_vat:
             return False
 
         vat = split_vat(self.vat, default_country_code='ES')[1]
@@ -27,20 +27,20 @@ class ResPartner(models.Model):
         eu_country_codes = set(self.env.ref('base.europe').country_ids.mapped('code'))
 
         partner_info = {}
-        IDOtro_ID = self.vat or 'NO_DISPONIBLE'
+        IDOtro_ID = self.has_vat and self.vat or 'NO_DISPONIBLE'
 
-        if (not self.country_id or self.country_id.code == 'ES') and self.vat:
+        if (not self.country_id or self.country_id.code == 'ES') and self.has_vat:
             # ES partner with VAT.
             partner_info['NIF'] = self.vat.removeprefix('ES')
             if self.env.context.get('error_1117'):
                 partner_info['IDOtro'] = {'IDType': '07', 'ID': IDOtro_ID}
 
-        elif self.country_id.code in eu_country_codes and self.vat:
+        elif self.country_id.code in eu_country_codes and self.has_vat:
             # European partner.
             partner_info['IDOtro'] = {'IDType': '02', 'ID': IDOtro_ID}
         else:
             partner_info['IDOtro'] = {'ID': IDOtro_ID}
-            if self.vat:
+            if self.has_vat:
                 partner_info['IDOtro']['IDType'] = '04'
             else:
                 partner_info['IDOtro']['IDType'] = '06'

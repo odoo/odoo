@@ -327,7 +327,7 @@
                     <field name="category_id" string="Tag" operator="child_of"/>
                     <field name="user_id"/>
                     <separator/>
-                    <filter string="Subject to VAT" name="filter_vat_set" domain="[('vat', '!=', False)]"/>
+                    <filter string="Subject to VAT" name="filter_vat_set" domain="[('has_vat', '=', True)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <field name="properties"/>

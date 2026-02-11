@@ -88,7 +88,7 @@ class L10n_FrFecExportWizard(models.TransientModel):
         * For non-french companies -> returns the complete vat number
         """
         is_dom_tom = company.account_fiscal_country_id and 'DOM-TOM' in company.account_fiscal_country_id.country_group_codes
-        if not company.vat or is_dom_tom:
+        if not company.has_vat or is_dom_tom:
             return ''
         elif company.country_id.code == 'FR' and len(company.vat) >= 13 and siren.is_valid(company.vat[4:13]):
             return company.vat[4:13]

@@ -181,7 +181,7 @@ class StockPicking(models.Model):
         company = self.company_id
         if not company._l10n_vn_edi_get_credentials_company():
             errors.append(_('SInvoice credentials are missing on company %s.', company.display_name))
-        if not company.vat:
+        if not company.has_vat:
             errors.append(_('VAT number is missing on company %s.', company.display_name))
         if not self.l10n_vn_edi_symbol_id:
             errors.append(_('The transfer note symbol must be provided. Set it on the warehouse or in the Inventory settings.'))

@@ -354,7 +354,7 @@ class AccountMove(models.Model):
         errors = []
         if not company.l10n_vn_edi_username or not company.l10n_vn_edi_password:
             errors.append(_('SInvoice credentials are missing on company %s.', company.display_name))
-        if not company.vat:
+        if not company.has_vat:
             errors.append(_('VAT number is missing on company %s.', company.display_name))
         company_phone = company.phone and SInvoiceService.format_phone_number(company.phone)
         if company_phone and not company_phone.isdecimal():

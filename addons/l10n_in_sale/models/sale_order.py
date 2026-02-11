@@ -8,7 +8,7 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     l10n_in_reseller_partner_id = fields.Many2one('res.partner',
-        string='Reseller', domain="[('vat', '!=', False), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", readonly=False)
+        string='Reseller', domain="[('has_vat', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", readonly=False)
 
     @api.depends('partner_invoice_id')
     def _compute_fiscal_position_id(self):

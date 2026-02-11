@@ -69,7 +69,7 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         commercial_partner = partner.commercial_partner_id
 
         if commercial_partner.country_code in ('AU', 'NZ'):
-            if commercial_partner.vat and commercial_partner.vat != '/':
+            if commercial_partner.has_vat:
                 vals['party_node']['cac:PartyLegalEntity'] = [{
                     'cbc:RegistrationName': {'_text': commercial_partner.name},
                     'cbc:CompanyID': {

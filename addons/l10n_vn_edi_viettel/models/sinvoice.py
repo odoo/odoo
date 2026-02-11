@@ -113,7 +113,7 @@ class L10n_Vn_Edi_ViettelSinvoiceSymbol(models.Model):
         symbols_to_create = []
 
         for company in vn_companies:
-            if not company.vat:
+            if not company.has_vat:
                 errors.append(_('VAT number is missing on company %s.', company.display_name))
                 continue
 

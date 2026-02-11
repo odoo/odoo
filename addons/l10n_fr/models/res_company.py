@@ -26,7 +26,7 @@ class ResCompany(models.Model):
         return ['FR', 'MF', 'MQ', 'NC', 'PF', 'RE', 'GF', 'GP', 'TF', 'BL', 'PM', 'YT', 'WF']  # These codes correspond to France and DOM-TOM.
 
     def _is_accounting_unalterable(self):
-        if not self.vat and not self.country_id:
+        if not self.has_vat and not self.country_id:
             return False
         return self.country_id and self.country_id.code in self._get_france_country_codes()
 

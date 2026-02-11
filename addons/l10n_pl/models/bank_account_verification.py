@@ -151,10 +151,12 @@ class BankAccountVerification(models.Model):
             partner_bank2verification = verifications.grouped(lambda verif: verif.partner_bank_account_number)
             for partner_bank in partner_banks:
                 partner_bank_verif = partner_bank2verification.get(partner_bank.sanitized_account_number)
-                if self.env['res.partner']._is_vat_void(partner_bank.partner_id.vat):
+                if not partner_bank.partner_id.has_vat:
+                    def has_vat(vat):
+                        return self.env['res.partner'].new({'vat': vat}).has_vat
                     if not partner_bank_verif or not partner_bank_verif.filtered(lambda verif:
                         verif.partner_id == partner_bank.partner_id
-                        and self.env['res.partner']._is_vat_void(verif.partner_vat)
+                        and not has_vat(verif.partner_vat)
                     ):
                         create_vals += self._get_creation_vals('incomplete_partner', partner_banks=partner_bank)
                     continue

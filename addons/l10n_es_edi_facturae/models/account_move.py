@@ -411,9 +411,9 @@ class AccountMove(models.Model):
         company = self.company_id
         partner = self.commercial_partner_id
 
-        if not company.vat:
+        if not company.has_vat:
             raise UserError(_('The company needs a set tax identification number or VAT number'))
-        if not partner.vat:
+        if not partner.has_vat:
             raise UserError(_('The partner needs a set tax identification number or VAT number'))
         if not partner.country_id:
             raise UserError(_("The partner needs a set country"))
