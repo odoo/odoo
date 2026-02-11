@@ -11,7 +11,7 @@ import odoo.modules.registry
 from odoo.exceptions import AccessError
 from odoo.http import Controller, request, route
 from odoo.http.router import db_filter
-from odoo.http.session import authenticate, logout, touch
+from odoo.http.session import authenticate, logout, save_session, touch
 
 _logger = logging.getLogger(__name__)
 
@@ -47,7 +47,7 @@ class Session(Controller):
                 return {'uid': None}
 
             request.session.db = db
-            request._save_session(env)
+            save_session(request, env)
 
             return env['ir.http'].with_user(request.session.uid).session_info()
 
