@@ -30,6 +30,7 @@
             <xpath expr="//notebook/page[@name='description_page']" position="after">
                 <field name="analytic_account_active" invisible="1"/>
                 <field name="allow_timesheets" invisible="1"/>
+                <field name="remaining_hours" invisible="1"/>
                 <page string="Timesheets" name="page_timesheets" id="timesheets_tab" invisible="not allow_timesheets">
                     <field name="timesheet_ids" mode="tree,kanban"
                           invisible="not analytic_account_active">
@@ -103,7 +104,7 @@
                                 <label class="fw-bold text-danger" for="remaining_hours" string="Remaining Days"
                                        invisible="allocated_hours == 0.0 or not encode_uom_in_days or remaining_hours &gt;= 0"/>
                             </span>
-                            <field name="remaining_hours" widget="timesheet_uom" class="oe_subtotal_footer_separator"
+                            <field name="remaining_hours" widget="timesheet_uom" class="oe_subtotal_footer_separator" decoration-danger="remaining_hours &lt; 0"
                                   invisible="allocated_hours == 0.0" nolabel="1"/>
                         </group>
                     </group>
