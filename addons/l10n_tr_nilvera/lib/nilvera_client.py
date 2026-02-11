@@ -6,6 +6,8 @@ from json import JSONDecodeError
 from odoo import _
 from odoo.exceptions import UserError
 
+from odoo.addons.l10n_tr_nilvera.const import NILVERA_ERROR_CODE_MESSAGES
+
 _logger = logging.getLogger(__name__)
 
 def _get_nilvera_client(company, timeout_limit=None):
@@ -80,3 +82,26 @@ class NilveraClient:
         except JSONDecodeError:
             _logger.exception(_("Invalid JSON response: %s", response.text))
             raise UserError(_("An error occurred. Try again later."))
+
+    def _get_error_message_with_codes_from_response(self, response):
+        """
+        Extract and format error messages and codes from an API response.
+
+        :param requests.Response response: The response object from the API.
+        :return: A tuple (error_message_string, list_of_error_codes).
+        :rtype: tuple(str, list[str])
+        """
+        msg = ""
+        error_codes = []
+
+        response_json = response.json()
+        if errors := response_json.get('Errors'):
+            msg += _("The invoice couldn't be sent due to the following errors:\n")
+
+            for error in errors:
+                code = error.get('Code')
+                description = NILVERA_ERROR_CODE_MESSAGES.get(code, error.get('Description'))
+                msg += "\n%s - %s:\n%s\n" % (code, description, error.get('Detail'))
+                error_codes.append(code)
+
+        return msg, error_codes
