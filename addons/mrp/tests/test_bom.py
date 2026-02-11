@@ -2872,6 +2872,34 @@ class TestBoM(TestMrpCommon):
         bom_overview = self.env['report.mrp.report_bom_structure']._get_report_data(bom.id, 1.6)['lines']
         self.assertEqual(bom_overview['operations_time'], 32)
 
+    def test_copy_existing_operations_button_visible_even_for_first_operation(self):
+        """
+        Test that the 'Copy Existing Operations' button is visible even on an
+        empty BoM and that it correctly imports operations from a source BoM.
+        """
+        # 1. Setup: Create a 'Source' BoM with one operation
+        bom_source = self.env['mrp.bom'].create({
+            'product_id': self.product_1.id,
+            'product_tmpl_id': self.product_1.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+        })
+        self.env['mrp.routing.workcenter'].create({
+            'name': 'Source Operation',
+            'bom_id': bom_source.id,
+            'workcenter_id': self.workcenter_1.id,
+            'time_cycle': 15,
+        })
+
+        # 2. Setup: Create a 'Target' BoM with NO operations (empty)
+        bom_target = self.env['mrp.bom'].create({
+            'product_id': self.product_2.id,
+            'product_tmpl_id': self.product_2.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+        })
+        self.assertTrue(bom_target.show_copy_operations_button, "The copy operations button should be visible even if the current BoM is empty.")
+
 
 @tagged('-at_install', 'post_install')
 class TestTourBoM(HttpCase):
