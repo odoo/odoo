@@ -89,24 +89,46 @@ export class ProductTemplateAccounting extends Base {
             quantity = related_lines.reduce((sum, line) => sum + line.getQuantity(), 0);
         }
 
-        const tmplRules = (productTmpl.backLink("<-product.pricelist.item.product_tmpl_id") || [])
-            .filter((rule) => rule.pricelist_id.id === pricelist.id && !rule.product_id)
-            .sort((a, b) => b.min_quantity - a.min_quantity);
-        const productRules = (product?.backLink?.("<-product.pricelist.item.product_id") || [])
-            .filter((rule) => rule.pricelist_id.id === pricelist.id)
-            .sort((a, b) => b.min_quantity - a.min_quantity);
+        const findBestRule = (rules) => {
+            let bestRule = null;
+            for (const rule of rules) {
+                if (!rule.min_quantity || rule.min_quantity <= quantity) {
+                    if (!bestRule || rule.min_quantity > bestRule.min_quantity) {
+                        bestRule = rule;
+                    }
+                }
+            }
+            return bestRule;
+        };
 
-        const tmplRulesSet = new Set(tmplRules.map((rule) => rule.id));
-        const productRulesSet = new Set(productRules.map((rule) => rule.id));
-        const generalRulesIds = pricelist.getGeneralRulesIdsByCategories(this.parentCategories);
-        const rules = this.models["product.pricelist.item"]
-            .readMany([...productRulesSet, ...tmplRulesSet, ...generalRulesIds])
-            .filter((r) => !r.min_quantity || r.min_quantity <= quantity);
+        let rule = null;
 
-        const rule = rules.length && rules[0];
+        // 1. Variant Rules
+        if (product) {
+            const productRules = pricelist.getRulesByProductId(product.id);
+            rule = findBestRule(productRules);
+        }
+
+        // 2. Template Rules
+        if (!rule) {
+            const tmplRules = pricelist.getRulesByTmplId(productTmpl.id);
+            rule = findBestRule(tmplRules);
+        }
+
+        // 3. General Rules (Category + Global)
+        if (!rule) {
+            const generalRulesIds = pricelist.getGeneralRulesIdsByCategories(this.parentCategories);
+            if (generalRulesIds && generalRulesIds.length > 0) {
+                const generalRules =
+                    this.models["product.pricelist.item"].readMany(generalRulesIds);
+                rule = findBestRule(generalRules);
+            }
+        }
+
         if (!rule) {
             return price;
         }
+
         if (rule.base === "pricelist") {
             if (rule.base_pricelist_id) {
                 price = this.getPrice(rule.base_pricelist_id, quantity, 0, true, variant);
