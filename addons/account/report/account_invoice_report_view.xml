@@ -110,6 +110,7 @@
                 <filter string="Credit Notes" name="creditnote" domain="['|', ('move_type','=','out_refund'),('move_type','=','in_refund')]"/>
                 <separator/>
                 <filter name="filter_invoice_date" date="invoice_date"/>
+                <filter name="filter_invoice_date_last_30_days" string="Last 30 Days" domain="[('invoice_date', '&gt;=', 'today -30d'), ('invoice_date', '&lt;=', 'today')]" invisible="1"/>
                 <filter name="invoice_date_due" date="invoice_date_due"/>
                 <field name="partner_id" operator="child_of"/>
                 <field name="invoice_user_id" />
@@ -147,6 +148,21 @@
         <field name="path">customer-invoices-analysis</field>
         <field name="view_mode">graph,pivot</field>
         <field name="context">{'search_default_current':1, 'search_default_customer': 1, 'group_by':['invoice_date:month']}</field>
+        <field name="search_view_id" ref="view_account_invoice_report_search"/>
+        <field name="help">From this report, you can have an overview of the amount invoiced to your customers. The search tool can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
+    </record>
+
+    <record id="action_account_invoice_report_all_digest" model="ir.actions.act_window">
+        <field name="name">Invoices Analysis</field>
+        <field name="res_model">account.invoice.report</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="domain">[('state', '=', 'posted'), ('account_id.internal_group', '=', 'income')]</field>
+        <field name="context">{
+            'search_default_filter_invoice_date_last_30_days': 1,
+            'group_by': ['invoice_date:day'],
+            'graph_measure': 'price_total',
+            'pivot_measures': ['price_total']
+        }</field>
         <field name="search_view_id" ref="view_account_invoice_report_search"/>
         <field name="help">From this report, you can have an overview of the amount invoiced to your customers. The search tool can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
     </record>

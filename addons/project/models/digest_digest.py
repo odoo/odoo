@@ -15,12 +15,12 @@ class DigestDigest(models.Model):
         self._calculate_kpi(
             'project.task',
             'kpi_project_task_opened_value',
-            additional_domain=[('stage_id.fold', '=', False), ('project_id', '!=', False)],
+            additional_domain=[('is_closed', '=', False), ('project_id', '!=', False)],
         )
 
     def _get_kpi_custom_settings(self, company, user):
         res = super()._get_kpi_custom_settings(company, user)
         menu_id = self.env.ref('project.menu_main_pm').id
-        res['kpi_action']['kpi_project_task_opened'] = f'project.open_view_project_all?menu_id={menu_id}'
+        res['kpi_action']['kpi_project_task_opened'] = f'project.action_project_task_user_open_tasks?menu_id={menu_id}'
         res['kpi_sequence']['kpi_project_task_opened'] = 7500
         return res

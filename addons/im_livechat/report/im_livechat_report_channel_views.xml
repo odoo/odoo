@@ -131,7 +131,22 @@
             <field name="name">Sessions</field>
             <field name="res_model">im_livechat.report.channel</field>
             <field name="view_mode">graph,pivot</field>
-            <field name="context">{"graph_measure": "time_to_answer", "search_default_filter_date_last_week":1}</field>
+            <field name="context">{"graph_measure": "time_to_answer", "search_default_filter_date_last_month":1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">No data yet!</p>
+                <p>Track and improve live chat performance with insights on session activity, response times, customer ratings, and call interactions.</p>
+            </field>
+        </record>
+
+        <record id="im_livechat_report_channel_rating_action" model="ir.actions.act_window">
+            <field name="name">Happy Sessions</field>
+            <field name="res_model">im_livechat.report.channel</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="context">{
+                "graph_measure": "rating_percentage",
+                "search_default_filter_date_last_month": 1,
+                "search_default_group_by_rating": 1,
+            }</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">No data yet!</p>
                 <p>Track and improve live chat performance with insights on session activity, response times, customer ratings, and call interactions.</p>

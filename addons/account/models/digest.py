@@ -33,6 +33,8 @@ class DigestDigest(models.Model):
     def _get_kpi_custom_settings(self, company, user):
         res = super()._get_kpi_custom_settings(company, user)
         menu_id = self.env.ref('account.menu_finance').id
-        res['kpi_action']['kpi_account_total_revenue'] = f'account.action_move_out_invoice_type?menu_id={menu_id}'
+        res['kpi_action']['kpi_account_total_revenue'] = (
+            f'account.action_account_invoice_report_all_digest?menu_id={menu_id}'
+        )
         res['kpi_sequence']['kpi_account_total_revenue'] = 5500
         return res

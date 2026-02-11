@@ -11,7 +11,7 @@ class DigestDigest(models.Model):
     kpi_livechat_rating_value = fields.Float(digits=(16, 2), compute='_compute_kpi_livechat_rating_value')
     kpi_livechat_conversations = fields.Boolean('Conversations handled')
     kpi_livechat_conversations_value = fields.Integer(compute='_compute_kpi_livechat_conversations_value')
-    kpi_livechat_response = fields.Boolean('Time to answer (sec)')
+    kpi_livechat_response = fields.Boolean('Response Time')
     kpi_livechat_response_value = fields.Float(digits=(16, 2), compute='_compute_kpi_livechat_response_value')
 
     def _compute_kpi_livechat_rating_value(self):
@@ -59,6 +59,7 @@ class DigestDigest(models.Model):
 
     def _get_kpi_custom_settings(self, company, user):
         res = super()._get_kpi_custom_settings(company, user)
+        res['kpi_action']['kpi_livechat_rating'] = 'im_livechat.im_livechat_report_channel_rating_action'
         res['kpi_action']['kpi_livechat_conversations'] = 'im_livechat.im_livechat_report_channel_action'
         res['kpi_action']['kpi_livechat_response'] = 'im_livechat.im_livechat_report_channel_time_to_answer_action'
         res['is_cross_company'].update(('kpi_livechat_rating', 'kpi_livechat_conversations', 'kpi_livechat_response'))

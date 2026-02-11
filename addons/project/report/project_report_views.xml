@@ -68,6 +68,10 @@
                 <search position="attributes">
                     <attribute name="string">Tasks Analysis</attribute>
                 </search>
+                <search position="inside">
+                    <filter string="Last 30 Days" name="project_report_create_date_last_30_days" invisible="1"
+                        domain="[('create_date', '&gt;=', '-30d')]"/>
+                </search>
             </field>
         </record>
 
@@ -79,6 +83,26 @@
             <field name="view_mode">graph,pivot</field>
             <field name="search_view_id" ref="view_task_project_user_search"/>
             <field name="context">{'group_by': [], 'graph_measure': '__count__'}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    No data yet!
+                </p><p>
+                    Analyze the progress of your projects and the performance of your employees.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_project_task_user_open_tasks" model="ir.actions.act_window">
+            <field name="name">Tasks Analysis</field>
+            <field name="res_model">report.project.task.user</field>
+            <field name="domain">[('project_id', '!=', False), ('has_template_ancestor', '=', False), ('has_project_template', '=', False)]</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="search_view_id" ref="view_task_project_user_search"/>
+            <field name="context">{
+                'search_default_open_tasks': 1,
+                'search_default_project_report_create_date_last_30_days': 1,
+                'graph_measure': '__count__',
+            }</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_empty_folder">
                     No data yet!

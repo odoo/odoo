@@ -120,8 +120,10 @@
                     <field name="user_id" string="Salesperson"/>
                     <separator/>
                     <filter name="filter_create_date" date="create_date" default_period="year"/>
+                    <filter string="Last 30 Days" name="filter_create_date_last_30_days" domain="[('create_date', '&gt;=', '-30d')]" invisible="1"/>
                     <filter string="Expected Closing" name="filter_date_deadline" date="date_deadline"/>
                     <filter string="Date Closed" name="date_closed_filter" date="date_closed"/>
+                    <filter string="Last 30 Days" name="filter_date_closed_last_30_days" domain="[('date_closed', '&gt;=', '-30d'), ('date_closed', '&lt;', 'now')]" invisible="1"/>
                     <group>
                         <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                         <field name="stage_id" domain="['|', ('team_ids', '=', False), ('team_ids', 'in', 'team_id')]"/>
@@ -200,6 +202,35 @@
             </field>
         </record>
 
+        <record id="action_crm_opportunity_report_won" model="ir.actions.act_window">
+            <field name="name">Pipeline Analysis</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">graph,pivot,list,form</field>
+            <field name="search_view_id" ref="crm.crm_opportunity_report_view_search"/>
+            <field name="context">{
+                'search_default_filter_opportunity': 1,
+                'search_default_filter_won_status_won': 1,
+                'search_default_filter_date_closed_last_30_days': 1,
+                'graph_measure': '__count__',
+                'pivot_measures': ['__count'],
+                'graph_groupbys': ['date_closed:day'],
+                'group_by': ['date_closed:day'],
+                'show_lead_gen_button': 1,
+            }</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph')}),
+                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot')}),
+                          (0, 0, {'view_mode': 'list', 'view_id': ref('crm_lead_view_tree_opportunity_reporting')})]"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data found!
+                </p><p>
+                    Use this menu to have an overview of your Pipeline.
+                </p>
+            </field>
+        </record>
+
         <record id="crm_opportunity_report_action_lead" model="ir.actions.act_window">
             <field name="name">Leads Analysis</field>
             <field name="res_model">crm.lead</field>
@@ -209,6 +240,34 @@
                 'search_default_filter_active': 1,
                 'search_default_filter_inactive': 1,
                 'search_default_filter_create_date': 1,
+            }</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph_lead')}),
+                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot_lead')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('crm_lead_view_form')}),
+                          (0, 0, {'view_mode': 'list', 'view_id': ref('crm_lead_view_tree_reporting')}),
+                         ]"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data found!
+                </p><p>
+                    This analysis shows you how many leads have been created per month.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_crm_lead_report_active_leads" model="ir.actions.act_window">
+            <field name="name">Leads Analysis</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">graph,pivot,list</field>
+            <field name="search_view_id" ref="crm.crm_opportunity_report_view_search"/>
+            <field name="context">{
+                'search_default_filter_create_date_last_30_days': 1,
+                'graph_measure': '__count__',
+                'pivot_measures': ['__count'],
+                'graph_groupbys': ['create_date:day'],
+                'group_by': ['create_date:day'],
             }</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),

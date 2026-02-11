@@ -33,6 +33,7 @@
                 <field name="page_id"/>
                 <field name="url"/>
                 <field name="visit_datetime"/>
+                <filter string="Last 30 Days" name="filter_last_30_days" domain="[('visit_datetime', '&gt;=', '-30d'), ('visit_datetime', '&lt;', 'now')]" invisible="1"/>
                 <filter string="Pages" name="type_page" domain="[('page_id', '!=', False)]"/>
                 <filter string="Urls &amp; Pages" name="type_url" domain="[('url', '!=', False)]"/>
                 <group>
@@ -229,6 +230,7 @@
                 <field name="visit_count"/>
                 <field name="page_ids"/>
                 <filter string="Last 7 Days" name="filter_last_7_days" domain="[('last_connection_datetime', '&gt;', '-7d')]"/>
+                <filter string="Last 30 Days" name="filter_last_30_days" domain="[('last_connection_datetime', '&gt;', '-30d')]" invisible="1"/>
                 <separator/>
                 <filter string="Unregistered" name="filter_type_visitor" domain="[('partner_id', '=', False)]"/>
                 <filter string="Contacts" name="filter_type_customer" domain="[('partner_id', '!=', False)]"/>
@@ -264,7 +266,7 @@
         <field name="res_model">website.visitor</field>
         <field name="path">visitors</field>
         <field name="view_mode">kanban,list,form,graph</field>
-        <field name="context">{'search_default_filter_last_7_days':1}</field>
+        <field name="context">{'search_default_filter_last_30_days':1}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             No Visitors yet!
@@ -302,7 +304,14 @@
         <field name="res_model">website.track</field>
         <field name="path">website-page-views</field>
         <field name="view_mode">list</field>
-        <field name="context">{'search_default_type_url': 1, 'create': False, 'edit': False, 'copy': False}</field>
+        <field name="search_view_id" ref="website_visitor_page_view_search"/>
+        <field name="context">{
+            'search_default_type_url': 1,
+            'search_default_filter_last_30_days': 1,
+            'create': False,
+            'edit': False,
+            'copy': False
+        }</field>
         <field name="view_ids" eval="[(5, 0, 0),
             (0, 0, {'view_mode': 'list', 'view_id': ref('website_visitor_track_view_tree')}),
             (0, 0, {'view_mode': 'graph', 'view_id': ref('website_visitor_track_view_graph')}),

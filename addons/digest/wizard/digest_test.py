@@ -9,7 +9,7 @@ class TestDigest(models.TransientModel):
 
     digest_id = fields.Many2one('digest.digest', string='Digest', required=True, ondelete='cascade')
     user_ids = fields.Many2many('res.users', string='Recipients', domain="[('share', '=', False)]",
-                                default=lambda self: self.env.user)
+                                default=lambda self: self.env.user, required=True)
 
     def send_mail_test(self):
         self.ensure_one()
