@@ -25,4 +25,30 @@
             </field>
         </record>
     </data>
+
+    <!-- This view is used in account_reports, since account_reports doesn't have base_vat as a dependency
+         we are unable to have it in that module as it fail to import the view, so we need to add it here
+         to not have to add another bridge module that would only contain this view -->
+    <record id="view_res_partner_return_filter" model="ir.ui.view">
+        <field name="name">res.partner.return.filter</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <group position="before">
+                <filter name="partners_during_period" string="Return Dates"
+                        domain="[('id', 'in', context.get('partners_during_period', []))]"/>
+                <separator/>
+                <filter name="invalid_vies" string="Partners with invalid VAT (VIES)"
+                        domain="[('vies_valid', '=', False)]"/>
+                <separator/>
+                <filter name="exclude_partners_from_own_country" string="Partners With Different Fiscal Country"
+                        domain="[('country_id', '!=', context.get('company_fiscal_country'))]"/>
+                <separator/>
+                <filter name="european_country_ids" string="European Partner"
+                        domain="[('country_id', 'in', context.get('european_country_ids', []))]"/>
+                <separator/>
+            </group>
+        </field>
+    </record>
 </odoo>
