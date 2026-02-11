@@ -117,7 +117,7 @@ def extract_pdf_embedded_files(filename, content):
             return []
 
         try:
-            return list(pdf_reader.getAttachments())
+            return list(pdf_reader.get_attachments())
         except (NotImplementedError, StructError, PdfReadError) as e:
             _logger.warning("Unable to access the attachments of %s. Tried to decrypt it, but %s.", filename, e)
             return []

@@ -11,7 +11,7 @@ from odoo.tools.pdf import (
     NumberObject,
     PdfFileReader,
     PdfFileWriter,
-    createStringObject,
+    create_string_object,
 )
 
 
@@ -208,17 +208,16 @@ class IrActionsReport(models.Model):
 
         field_names = set()
         if prefix:
-            field_names = reader.getFormTextFields()
+            field_names = reader.get_form_text_fields()
 
-        for page_id in range(reader.getNumPages()):
-            page = reader.getPage(page_id)
+        for page in reader.pages:
             if prefix and page.get('/Annots'):
                 # Modifying the annots that hold every information about the form fields
                 for j in range(len(page['/Annots'])):
-                    reader_annot = page['/Annots'][j].getObject()
+                    reader_annot = page['/Annots'][j].get_object()
                     # Check parent object for '/T' if missing.
                     if '/T' not in reader_annot and '/Parent' in reader_annot:
-                        reader_annot = reader_annot['/Parent'].getObject()
+                        reader_annot = reader_annot['/Parent'].get_object()
                     if reader_annot.get('/T') in field_names:
                         # Prefix all form fields in the document with the document identifier.
                         # This is necessary to know which value needs to be taken when filling the forms.
@@ -234,7 +233,7 @@ class IrActionsReport(models.Model):
                         new_flags = form_flags | readonly_flag | multiline_flag
 
                         reader_annot.update({
-                            NameObject("/T"): createStringObject(new_key),
+                            NameObject("/T"): create_string_object(new_key),
                             NameObject("/Ff"): NumberObject(new_flags),
                         })
-            writer.addPage(page)
+            writer.add_page(page)

@@ -31,7 +31,7 @@ class IrActionsReport(models.Model):
 
                     # Post-process and embed the additional files.
                     writer = OdooPdfFileWriter()
-                    writer.cloneReaderDocumentRoot(reader)
+                    writer.clone_reader_root_document(reader)
                     for edi_document in to_embed:
                         # The attachements on the edi documents are only system readable
                         # because they don't have res_id and res_model, here we are sure that

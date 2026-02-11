@@ -801,7 +801,7 @@ class IrActionsReport(models.Model):
         for stream in streams:
             try:
                 reader = PdfFileReader(stream)
-                writer.appendPagesFromReader(reader)
+                writer.append_pages_from_reader(reader)
             except (PdfReadError, TypeError, NotImplementedError, ValueError) as e:
                 handle_error(error=e, error_stream=stream)
         result_stream = io.BytesIO()
@@ -921,10 +921,10 @@ class IrActionsReport(models.Model):
             # pages one by one.
             html_ids_wo_none = [x for x in html_ids if x]
             reader = PdfFileReader(pdf_content_stream)
-            if reader.numPages == len(res_ids_wo_stream):
-                for i in range(reader.numPages):
+            if len(reader.pages) == len(res_ids_wo_stream):
+                for i, p in enumerate(reader.pages):
                     attachment_writer = PdfFileWriter()
-                    attachment_writer.addPage(reader.getPage(i))
+                    attachment_writer.add_page(p)
                     stream = io.BytesIO()
                     attachment_writer.write(stream)
                     collected_streams[res_ids_wo_stream[i]]['stream'] = stream
@@ -963,10 +963,10 @@ class IrActionsReport(models.Model):
                 if has_same_number_of_outlines and has_top_level_heading:
                     # Split the PDF according to outlines.
                     for i, num in enumerate(outlines_pages):
-                        to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else reader.numPages
+                        to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else len(reader.pages)
                         attachment_writer = PdfFileWriter()
-                        for j in range(num, to):
-                            attachment_writer.addPage(reader.getPage(j))
+                        for p in reader.pages[num:to]:
+                            attachment_writer.add_page(p)
                         stream = io.BytesIO()
                         attachment_writer.write(stream)
                         collected_streams[res_ids_wo_stream[i]]['stream'] = stream

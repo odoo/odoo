@@ -194,7 +194,7 @@ class SalePdfFormField(models.Model):
     def _ensure_document_not_encrypted(self, document):
         document_is_invalid = False
         try:
-            document_is_invalid = pdf.PdfFileReader(io.BytesIO(document), strict=False).isEncrypted
+            document_is_invalid = pdf.PdfFileReader(io.BytesIO(document), strict=False).is_encrypted
         except (pdf.DependencyError, pdf.PdfReadError):
             document_is_invalid = True
         if document_is_invalid:
@@ -218,7 +218,7 @@ class SalePdfFormField(models.Model):
             if document.raw:
                 self._ensure_document_not_encrypted(document.raw)
                 reader = pdf.PdfFileReader(io.BytesIO(document.raw), strict=False)
-                for field in unique(reader.getFormTextFields()):
+                for field in unique(reader.get_form_text_fields()):
                     if field not in existing_form_fields_name:
                         document.form_field_ids = [
                             Command.create({

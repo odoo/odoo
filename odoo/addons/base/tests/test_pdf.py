@@ -19,20 +19,20 @@ class TestPdf(TransactionCase):
         self.minimal_pdf_reader = pdf.OdooPdfFileReader(self.minimal_reader_buffer)
 
     def test_odoo_pdf_file_reader(self):
-        attachments = list(self.minimal_pdf_reader.getAttachments())
+        attachments = list(self.minimal_pdf_reader.get_attachments())
         self.assertEqual(len(attachments), 0)
 
         pdf_writer = pdf.PdfFileWriter()
-        pdf_writer.cloneReaderDocumentRoot(self.minimal_pdf_reader)
-        pdf_writer.addAttachment('test_attachment.txt', b'My awesome attachment')
+        pdf_writer.clone_reader_document_root(self.minimal_pdf_reader)
+        pdf_writer.add_attachment('test_attachment.txt', b'My awesome attachment')
         out = io.BytesIO()
         pdf_writer.write(out)
 
         r = pdf.OdooPdfFileReader(io.BytesIO(out.getvalue()))
-        self.assertEqual(len(list(r.getAttachments())), 1)
+        self.assertEqual(len(list(r.get_attachments())), 1)
 
     def test_odoo_pdf_file_writer(self):
-        attachments = list(self.minimal_pdf_reader.getAttachments())
+        attachments = list(self.minimal_pdf_reader.get_attachments())
         self.assertEqual(len(attachments), 0)
         r = self.minimal_pdf_reader
 
@@ -41,20 +41,20 @@ class TestPdf(TransactionCase):
             ('another_attachment.txt', b'My awesome OTHER attachment'),
         ], start=1):
             pdf_writer = pdf.OdooPdfFileWriter()
-            pdf_writer.cloneReaderDocumentRoot(r)
-            pdf_writer.addAttachment(name, data)
+            pdf_writer.clone_reader_document_root(r)
+            pdf_writer.add_attachment(name, data)
             out = io.BytesIO()
             pdf_writer.write(out)
 
             r = pdf.OdooPdfFileReader(io.BytesIO(out.getvalue()))
-            self.assertEqual(len(list(r.getAttachments())), count)
+            self.assertEqual(len(list(r.get_attachments())), count)
 
     def test_odoo_pdf_file_reader_with_owner_encryption(self):
         pdf_writer = pdf.OdooPdfFileWriter()
-        pdf_writer.cloneReaderDocumentRoot(self.minimal_pdf_reader)
+        pdf_writer.clone_reader_document_root(self.minimal_pdf_reader)
 
-        pdf_writer.addAttachment('test_attachment.txt', b'My awesome attachment')
-        pdf_writer.addAttachment('another_attachment.txt', b'My awesome OTHER attachment')
+        pdf_writer.add_attachment('test_attachment.txt', b'My awesome attachment')
+        pdf_writer.add_attachment('another_attachment.txt', b'My awesome OTHER attachment')
 
         pdf_writer.encrypt("", "foo")
 
@@ -64,24 +64,23 @@ class TestPdf(TransactionCase):
 
         with io.BytesIO(encrypted_content) as reader_buffer:
             pdf_reader = pdf.OdooPdfFileReader(reader_buffer)
-            attachments = list(pdf_reader.getAttachments())
+            attachments = list(pdf_reader.get_attachments())
 
         self.assertEqual(len(attachments), 2)
 
     def test_merge_pdf(self):
-        self.assertEqual(self.minimal_pdf_reader.getNumPages(), 1)
-        page = self.minimal_pdf_reader.getPage(0)
+        self.assertEqual(len(self.minimal_pdf_reader.pages), 1)
 
         merged_pdf = pdf.merge_pdf([self.file, self.file])
         merged_reader_buffer = io.BytesIO(merged_pdf)
         merged_pdf_reader = pdf.OdooPdfFileReader(merged_reader_buffer)
-        self.assertEqual(merged_pdf_reader.getNumPages(), 2)
+        self.assertEqual(len(merged_pdf_reader.pages), 2)
         merged_reader_buffer.close()
 
     def test_branded_file_writer(self):
         # It's not easy to create a PDF with PyPDF2, so instead we copy PDF with our custom pdf writer
         pdf_writer = pdf.PdfFileWriter()  # BrandedFileWriter
-        pdf_writer.cloneReaderDocumentRoot(self.minimal_pdf_reader)
+        pdf_writer.clone_reader_document_root(self.minimal_pdf_reader)
         writer_buffer = io.BytesIO()
         pdf_writer.write(writer_buffer)
         branded_content = writer_buffer.getvalue()
@@ -90,7 +89,7 @@ class TestPdf(TransactionCase):
         # Read the metadata of the newly created pdf.
         reader_buffer = io.BytesIO(branded_content)
         pdf_reader = pdf.PdfFileReader(reader_buffer)
-        pdf_info = pdf_reader.getDocumentInfo()
+        pdf_info = pdf_reader.metadata
         self.assertEqual(pdf_info['/Producer'], 'Odoo')
         self.assertEqual(pdf_info['/Creator'], 'Odoo')
         reader_buffer.close()

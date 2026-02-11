@@ -485,7 +485,7 @@ class AccountEdiFormat(models.Model):
         xml_content = attachment.raw
         file_name = attachment.name
 
-        pdf_writer.addAttachment(file_name, xml_content, subtype='text/xml')
+        pdf_writer.add_attachment(file_name, xml_content, subtype='text/xml')
         if not pdf_writer.is_pdfa:
             try:
                 pdf_writer.convert_to_pdfa()
