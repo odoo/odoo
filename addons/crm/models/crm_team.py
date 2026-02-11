@@ -3,6 +3,7 @@
 import datetime
 import logging
 import random
+from collections import defaultdict
 
 from ast import literal_eval
 from markupsafe import Markup
@@ -408,6 +409,15 @@ class CrmTeam(models.Model):
         max_create_dt = self.env.cr.now() - datetime.timedelta(hours=BUNDLE_HOURS_DELAY)
         duplicates_lead_cache = dict()
 
+        def _log_team_data(teams_data):
+            for team, team_data in teams_data.items():
+                _logger.info(
+                    '## Assigned %s leads to team %s',
+                    len(team_data['assigned']) + len(team_data['merged']), team.id)
+                _logger.info(
+                    '\tLeads: direct assign %s / merge result %s / duplicates merged: %s',
+                    team_data['assigned'], team_data['merged'], team_data['duplicates'])
+
         # teams data
         teams_data, population, weights = dict(), list(), list()
         for team in self:
@@ -449,6 +459,12 @@ class CrmTeam(models.Model):
         # assignment process data
         global_data = dict(assigned=set(), merged=set(), duplicates=set())
         leads_done_ids, lead_unlink_ids, counter = set(), set(), 0
+        commit_global_data = dict(assigned=set(), merged=set(), duplicates=set())
+        commit_teams_data = defaultdict(lambda: {
+            'assigned': set(),
+            'merged': set(),
+            'duplicates': set(),
+        })
         while population:
             counter += 1
             team = random.choices(population, weights=weights, k=1)[0]
@@ -463,10 +479,18 @@ class CrmTeam(models.Model):
 
             # assign + deduplicate and concatenate results in teams_data to keep some history
             candidate_lead = teams_data[team]["leads"][0]
-            assign_res = team._allocate_leads_deduplicate(candidate_lead, duplicates_cache=duplicates_lead_cache)
+            try:
+                assign_res = team._allocate_leads_deduplicate(candidate_lead, duplicates_cache=duplicates_lead_cache)
+            except Exception as e:
+                _logger.error("[Assign Lead] Error while assigning lead %s (ID: %d) to team %s (ID: %d). Error: %s", candidate_lead.name, candidate_lead.id, team.name, team.id, str(e))
+                _logger.info('## Assigned %s leads', (len(global_data['assigned'] - commit_global_data['assigned']) + len(global_data['merged'] - commit_global_data['assigned'])))
+                raise
+
             for key in ('assigned', 'merged', 'duplicates'):
+                commit_teams_data.setdefault(team, {}).setdefault(key, set()).update(assign_res[key])
                 teams_data[team][key].update(assign_res[key])
                 leads_done_ids.update(assign_res[key])
+                commit_global_data[key].update(assign_res[key])
                 global_data[key].update(assign_res[key])
             lead_unlink_ids.update(assign_res['duplicates'])
 
@@ -477,22 +501,25 @@ class CrmTeam(models.Model):
                 self.env['crm.lead'].browse(lead_unlink_ids).unlink()
                 lead_unlink_ids = set()
                 self.env.cr.commit()
+                _log_team_data(commit_teams_data)
+                commit_global_data = dict(assigned=set(), merged=set(), duplicates=set())
+                commit_teams_data = defaultdict(lambda: {
+                    'assigned': set(),
+                    'merged': set(),
+                    'duplicates': set(),
+                })
 
         # unlink duplicates once
         self.env['crm.lead'].browse(lead_unlink_ids).unlink()
 
-        if auto_commit:
+        if auto_commit and counter % BUNDLE_COMMIT_SIZE != 0:
             self.env.cr.commit()
+            _log_team_data(commit_teams_data)
 
         # some final log
+        if not auto_commit:
+            _log_team_data(teams_data)
         _logger.info('## Assigned %s leads', (len(global_data['assigned']) + len(global_data['merged'])))
-        for team, team_data in teams_data.items():
-            _logger.info(
-                '## Assigned %s leads to team %s',
-                len(team_data['assigned']) + len(team_data['merged']), team.id)
-            _logger.info(
-                '\tLeads: direct assign %s / merge result %s / duplicates merged: %s',
-                team_data['assigned'], team_data['merged'], team_data['duplicates'])
         return teams_data
 
     def _allocate_leads_deduplicate(self, leads, duplicates_cache=None):
@@ -579,6 +606,7 @@ class CrmTeam(models.Model):
         """
         auto_commit = not modules.module.current_test
         result_data = {}
+        commit_result_data = {}
         commit_bundle_size = self.env['ir.config_parameter'].sudo().get_int('crm.assignment.commit.bundle') or 100
         teams_with_members = self.filtered(lambda team: team.crm_team_member_ids)
         quota_per_member = {member: member._get_assignment_quota(force_quota=force_quota) for member in self.crm_team_member_ids}
@@ -603,6 +631,7 @@ class CrmTeam(models.Model):
                 user_ids=member_found.user_id.ids
             )
             result_data[member_found]['assigned'] += lead
+            commit_result_data[member_found]['assigned'] += lead
 
             # if member still has quota, move at end of list; otherwise just remove
             assign_lst.remove(member_found)
@@ -615,6 +644,13 @@ class CrmTeam(models.Model):
                     optional_lst.append(member_found)
             return member_found
 
+        def _log_member_data(result_data):
+            for member, member_info in result_data.items():
+                _logger.info(
+                    '-> member %s of team %s: assigned %d/%d leads (%s)',
+                    member.id, member.crm_team_id.id, len(member_info["assigned"]), quota_per_member[member], member_info["assigned"],
+                )
+
         for team, leads_to_assign_ids in leads_per_team.items():
             members_to_assign = list(team.crm_team_member_ids.filtered(lambda member:
                 not member.assignment_optout and quota_per_member.get(member, 0) > 0
@@ -625,6 +661,7 @@ class CrmTeam(models.Model):
                 member: {"assigned": self.env["crm.lead"], "quota": quota_per_member[member]}
                 for member in members_to_assign
             })
+            commit_result_data = defaultdict(lambda: {"assigned": self.env["crm.lead"]})
             # Need to check that record still exists since the ids have been fetched at the beginning of the process
             # Previous iteration has committed the change, records may have been deleted in the meanwhile
             to_assign = self.env['crm.lead'].browse(leads_to_assign_ids).exists()
@@ -647,12 +684,19 @@ class CrmTeam(models.Model):
             # first assign loop: preferred leads, always priority
             for lead in preferred_leads.sorted(lambda lead: (-lead.probability, id)):
                 counter += 1
-                member_found = _assign_lead(lead, members_to_assign_wpref, preferred_leads_per_member, quota_per_member, members_to_assign, members_to_assign_wpref)
+                try:
+                    member_found = _assign_lead(lead, members_to_assign_wpref, preferred_leads_per_member, quota_per_member, members_to_assign, members_to_assign_wpref)
+                except Exception as e:
+                    _logger.error("[Assign Lead] Error while assigning preferred lead %s (ID: %d) to a member of team %s (ID: %d). Error: %s", lead.name, lead.id, team.name, team.id, str(e))
+                    raise
+
                 if not member_found:
                     continue
                 assigned_preferred_leads += lead
                 if auto_commit and counter % commit_bundle_size == 0:
                     self.env.cr.commit()
+                    _log_member_data(commit_result_data)
+                    commit_result_data = defaultdict(lambda: {"assigned": self.env["crm.lead"]})
 
             # second assign loop: fill up with other leads
             to_assign = to_assign - assigned_preferred_leads
@@ -662,15 +706,30 @@ class CrmTeam(models.Model):
             }
             for lead in to_assign.sorted(lambda lead: (-lead.probability, id)):
                 counter += 1
-                member_found = _assign_lead(lead, members_to_assign, leads_per_member, quota_per_member, members_to_assign)
+                try:
+                    member_found = _assign_lead(lead, members_to_assign, leads_per_member, quota_per_member, members_to_assign)
+                except Exception as e:
+                    _logger.error("[Assign Lead] Error while assigning lead %s (ID: %d) to a member of team %s (ID: %d). Error: %s", lead.name, lead.id, team.name, team.id, str(e))
+                    _logger.info(
+                        'Assigned %s leads to %s salesmen',
+                        sum(
+                            len(leads_info['assigned'] - commit_result_data[sales_person]['assigned'])
+                            for sales_person, leads_info in result_data.items()
+                        ), len(result_data),
+                    )
+                    raise
+
                 if not member_found:
                     continue
                 if auto_commit and counter % commit_bundle_size == 0:
                     self.env.cr.commit()
+                    _log_member_data(commit_result_data)
+                    commit_result_data = defaultdict(lambda: {"assigned": self.env["crm.lead"]})
 
             # Make sure we commit at least at the end of the team
-            if auto_commit:
+            if auto_commit and counter % commit_bundle_size != 0:
                 self.env.cr.commit()
+                _log_member_data(commit_result_data)
             # Once we are done with a team we don't need to keep the leads in memory
             # Try to avoid to explode memory usage
             self.env.invalidate_all()
@@ -678,15 +737,13 @@ class CrmTeam(models.Model):
                 'Team %s: Assigned %s leads based on preference, on a potential of %s (limited by quota)',
                 team.name, len(assigned_preferred_leads), len(preferred_leads)
             )
+
+        if not auto_commit:
+            _log_member_data(result_data)
         _logger.info(
             'Assigned %s leads to %s salesmen',
-            sum(len(r['assigned']) for r in result_data.values()), len(result_data)
+            sum(len(r['assigned']) for r in result_data.values()), len(result_data),
         )
-        for member, member_info in result_data.items():
-            _logger.info(
-                '-> member %s of team %s: assigned %d/%d leads (%s)',
-                member.id, member.crm_team_id.id, len(member_info["assigned"]), member_info["quota"], member_info["assigned"]
-            )
         return result_data
 
     # ------------------------------------------------------------
