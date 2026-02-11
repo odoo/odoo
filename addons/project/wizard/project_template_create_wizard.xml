@@ -15,20 +15,24 @@
                 <group>
                     <group>
                         <field name="date" required="not template_has_dates and date_start" invisible="1"/>
-                        <field name="date_start" required="not template_has_dates and date" string="Planned Date" widget="daterange" options='{"end_date_field": "date", "always_range": "1"}'/>
-                        <label for="alias_name" string="Create tasks by sending an email to" class="pe-2"/>
+                        <field name="date_start" required="not template_has_dates and date" string="Planned Date" widget="daterange"
+                            options='{"end_date_field": "date", "always_range": "1"}' placeholder="Undefined"/>
+                        <label for="alias_name" string="Project's Email"/>
                         <div class="d-inline-flex">
                             <field name="alias_name" placeholder="e.g. office-party"/>@ <field name="alias_domain_id" placeholder="e.g. mycompany.com" options="{'no_create': True, 'no_open': True}"/>
                         </div>
                     </group>
                 </group>
-                <field name="role_to_users_ids" invisible="not role_to_users_ids">
-                    <list create="0" delete="0" no_open="1" editable="bottom">
-                        <field name="role_id" force_save="1" readonly="1" options="{'no_open': True}"/>
-                        <field name="user_ids" widget="many2many_avatar_user" options="{'no_open': True, 'no_quick_create': True}"/>
-                        <field name="role_user_ids" column_invisible="1"/> <!-- Needed to compute the domain of user_ids -->
-                    </list>
-                </field>
+                <notebook invisible="not role_to_users_ids">
+                    <page name="assignment" string="Assignment">
+                        <field name="role_to_users_ids">
+                            <list create="0" delete="0" no_open="1" editable="bottom">
+                                <field name="role_id" force_save="1" string="Role" readonly="1" options="{'no_open': True}" width="240px"/>
+                                <field name="user_ids" widget="many2many_avatar_user" options="{'no_open': True, 'no_quick_create': True}"/>
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
                 <footer>
                     <button string="Create project" name="create_project_from_template" type="object" class="btn-primary o_open_tasks" data-hotkey="q"/>
                     <button class="btn-secondary" special="cancel" data-hotkey="x"/>
