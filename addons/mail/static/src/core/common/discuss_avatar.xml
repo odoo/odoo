@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.DiscussAvatar">
-        <svg t-att-width="props.size" t-att-height="props.size" viewBox="0 0 32 32" class="overflow-visible">
+        <svg t-att-width="props.size" t-att-height="props.size" viewBox="0 0 32 32" class="overflow-visible" t-att-class="props.className">
             <mask t-att-id="uniqueId" width="32" height="32">
                 <rect x="0" y="0" height="32" width="32" fill="white"/>
                 <rect t-if="showIcon" color="black" t-att-x="isTyping ? 15 : 19" y="19" t-att-width="isTyping ? 24 : 16" t-att-height="isTyping ? 15 : 16" rx="8" ry="8"/>
