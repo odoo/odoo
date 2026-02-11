@@ -587,6 +587,34 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"})
         self.assertEqual(scheme_ID.attrib.get("schemeID"), "0190")
 
+    def test_bank_details_import(self):
+        acc_number = '1234567890'
+        partner_bank = self.env['res.partner.bank'].create({
+            'active': False,
+            'acc_number': acc_number,
+            'partner_id': self.partner_a.id
+        })
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'in_invoice',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+        # will not raise sql constraint because the sql is not commited yet
+        self.env['account.edi.common']._import_retrieve_and_fill_partner_bank_details(invoice, [acc_number])
+        self.assertEqual(invoice.partner_bank_id, partner_bank, "Partner bank must be the same")
+        self.assertTrue(partner_bank.active, "Partner bank must be the activated")
+
+    def test_bank_details_import_duplicate(self):
+        acc_number = '1234567890'
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'in_invoice',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+        # Importing should not try to create multiple partner bank records with the same account number.
+        # It would cause a traceback due to a unique constraint on the (sanitized) account number, partner pair.
+        self.env['account.edi.common']._import_retrieve_and_fill_partner_bank_details(invoice, [acc_number, acc_number])
+
     def test_send_and_print_extra_attachments(self):
         if self.env['ir.module.module']._get('test_mimetypes').state != 'installed':
             raise SkipTest("Module required for the test is not installed (test_mimetypes)")
