@@ -28,6 +28,7 @@ from .registry import Registry
 
 if typing.TYPE_CHECKING:
     from collections.abc import Collection, Iterable
+    from typing import Literal
     from odoo.api import Environment
     from odoo.sql_db import BaseCursor
     from odoo.tests.result import OdooTestResult
@@ -269,25 +270,10 @@ def load_module_graph(
         test_queries = 0
         test_results = None
 
-        update_from_config = tools.config['update'] or tools.config['init'] or tools.config['reinit']
-        if tools.config['test_enable'] and (update_operation or not update_from_config):
-            from odoo.tests import loader  # noqa: PLC0415
-            suite = loader.make_suite([module_name], 'at_install')
-            if suite.countTestCases():
-                if not update_operation:
-                    registry._setup_models__(env.cr, [])  # incremental setup
-                registry.check_null_constraints(env.cr)
-                # Python tests
-                tests_t0, tests_q0 = time.time(), odoo.sql_db.sql_counter
-                test_results = loader.run_suite(suite, global_report=report)
-                assert report is not None, "Missing report during tests"
-                report.update(test_results)
-                test_time = time.time() - tests_t0
-                test_queries = odoo.sql_db.sql_counter - tests_q0
-
-                # tests may have reset the environment
-                module = env['ir.module.module'].browse(module_id)
-
+        if tools.config['test_enable'] and update_operation:
+            test_time, _, test_queries, test_results = test_modules(registry, [module_name], 'at_install', report)
+            # tests may have reset the environment
+            module = env['ir.module.module'].browse(module_id)
 
         extra_queries = odoo.sql_db.sql_counter - module_extra_query_count - test_queries
         extras = []
@@ -600,6 +586,48 @@ def load_modules(
                 ON CONFLICT DO NOTHING
                 """
             )
+
+
+def test_modules(
+    registry: Registry,
+    module_names: list[str],
+    position: Literal['at_install', 'post_install'],
+    report: OdooTestResult | None = None
+) -> tuple[float, int, int, OdooTestResult | None]:
+    from odoo.tests import loader  # noqa: PLC0415
+    suite = loader.make_suite(module_names, position)
+    test_time, test_count, test_queries, test_results = 0.0, 0, 0, None
+    if suite.countTestCases():
+        assert report is not None, "Missing report during tests"
+        tests_before = report.testsRun
+        with registry.cursor() as cr:
+            if position == 'at_install' and not registry.ready:
+                registry._setup_models__(cr, [])  # incremental setup
+                registry.check_null_constraints(cr)
+            else:  # post_install
+                if suite.has_http_case():
+                    env = api.Environment(cr, api.SUPERUSER_ID, {})
+                    env['ir.qweb']._pregenerate_assets_bundles()
+
+        # Python tests
+        tests_t0, tests_q0 = time.time(), odoo.sql_db.sql_counter
+        loaded_before = registry.loaded
+        ready_before = registry.ready
+        try:
+            if ready_before and position == 'at_install':
+                # best effort to restore the test environment
+                registry.ready = registry.loaded = False
+            test_results = loader.run_suite(suite, global_report=report)
+        finally:
+            registry.loaded = loaded_before
+            registry.ready = ready_before
+
+        report.update(test_results)
+        test_time = time.time() - tests_t0
+        test_queries = odoo.sql_db.sql_counter - tests_q0
+        test_count = report.testsRun - tests_before
+
+    return test_time, test_count, test_queries, test_results
 
 
 def reset_modules_state(db_name: str) -> None:
