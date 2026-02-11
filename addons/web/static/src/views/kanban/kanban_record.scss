@@ -187,14 +187,15 @@
 }
 
 .o_kanban_selection_available .o_kanban_record.o_record_selection_available {
-    background-color: rgba(0, 0, 0, 0.1);
-    > *:not(.o_record_selection_tooltip) {
-        filter: brightness(0.9);
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.1);
     }
     &:hover {
-        background-color: rgba(0, 0, 0, 0.5);
-        > *:not(.o_record_selection_tooltip) {
-            filter: brightness(0.6);
+        &::after {
+            background-color: rgba(0, 0, 0, 0.5);
         }
         .o_record_selection_tooltip {
             display: block !important;
