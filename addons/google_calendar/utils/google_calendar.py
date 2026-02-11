@@ -28,7 +28,7 @@ class GoogleCalendarService():
         self.google_service = google_service
 
     @requires_auth_token
-    def get_events(self, sync_token=None, token=None, event_id=None, timeout=TIMEOUT):
+    def get_events(self, sync_token=None, token=None, event_id=None, search_params=None, timeout=TIMEOUT):
         url = "/calendar/v3/calendars/primary/events"
         if event_id:
             url += f"/{event_id}"
@@ -45,6 +45,8 @@ class GoogleCalendarService():
             upper_bound = fields.Datetime.add(fields.Datetime.now(), days=day_range)
             params['timeMin'] = lower_bound.isoformat() + 'Z'  # Z = UTC (RFC3339)
             params['timeMax'] = upper_bound.isoformat() + 'Z'  # Z = UTC (RFC3339)
+        if search_params:
+            params.update(search_params)
         try:
             status, data, time = self.google_service._do_request(url, params, headers, method='GET', timeout=timeout)
         except requests.HTTPError as e:
