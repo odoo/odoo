@@ -10,7 +10,7 @@ import { _t } from "@web/core/l10n/translation";
  *     exclude: CSSSelector;
  *     dropIn: CSSSelector;
  *     dropNear: CSSSelector;
- *     excludeNearParent: CSSSelector;
+ *     excludeParent: CSSSelector;
  * }} DropzoneSelector
  *
  * @typedef { Object } DropZoneShared
@@ -108,14 +108,14 @@ export class DropZonePlugin extends Plugin {
                 dropNear,
                 dropLockWithin,
                 excludeAncestor,
-                excludeNearParent,
+                excludeParent,
             } = dropzoneSelector;
             if (snippetEl.matches(selector) && !snippetEl.matches(exclude)) {
                 if (dropNear) {
                     selectorSiblings.push(
                         ...this.getSelectorSiblings(editableAreaEls, rootEl, {
                             selector: dropNear,
-                            excludeNearParent,
+                            excludeParent,
                         })
                     );
                 }

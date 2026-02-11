@@ -130,20 +130,14 @@ export class DisableSnippetsPlugin extends Plugin {
     getDropAreas(editableAreaEls, rootEl) {
         const dropAreasBySelector = [];
         this.getResource("dropzone_selector").forEach((dropzoneSelector) => {
-            const {
-                selector,
-                exclude = false,
-                dropIn,
-                dropNear,
-                excludeNearParent,
-            } = dropzoneSelector;
+            const { selector, exclude = false, dropIn, dropNear, excludeParent } = dropzoneSelector;
 
             const dropAreaEls = [];
             if (dropNear) {
                 dropAreaEls.push(
                     ...this.dependencies.dropzone.getSelectorSiblings(editableAreaEls, rootEl, {
                         selector: dropNear,
-                        excludeNearParent,
+                        excludeParent,
                     })
                 );
             }
