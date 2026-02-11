@@ -18,6 +18,7 @@ declare module "plugins" {
     import { footer_templates_providers, FooterOptionShared } from "@website/builder/plugins/options/footer_option_plugin";
     import { gallery_items_providers, reorder_items_processors } from "@website/builder/plugins/options/gallery_element_option_plugin";
     import { GoogleMapsOptionShared } from "@website/builder/plugins/options/google_maps_option/google_maps_option_plugin";
+    import { header_templates_providers, HeaderOptionShared } from "@website/builder/plugins/options/header/header_option_plugin";
     import { ImageGalleryOptionShared } from "@website/builder/plugins/options/image_gallery_option_plugin";
     import { InstagramOptionShared } from "@website/builder/plugins/options/instagram_option_plugin";
     import { MegaMenuOptionShared } from "@website/builder/plugins/options/mega_menu_option_plugin";
@@ -48,6 +49,7 @@ declare module "plugins" {
         edit_interaction: EditInteractionShared;
         footerOption: FooterOptionShared;
         googleMapsOption: GoogleMapsOptionShared;
+        headerOption: HeaderOptionShared;
         imageGalleryOption: ImageGalleryOptionShared;
         imageHover: ImageHoverShared;
         instagramOption: InstagramOptionShared;
@@ -89,6 +91,7 @@ declare module "plugins" {
         // Providers
         footer_templates_providers: footer_templates_providers;
         gallery_items_providers: gallery_items_providers;
+        header_templates_providers: header_templates_providers;
 
         // Data
         searchbar_option_display_items: searchbar_option_display_items;

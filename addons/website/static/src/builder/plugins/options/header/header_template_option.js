@@ -3,6 +3,12 @@ import { basicHeaderOptionSettings } from "./basicHeaderOptionSettings";
 
 export class HeaderTemplateOption extends BaseOptionComponent {
     static template = "website.HeaderTemplateOption";
+    static dependencies = ["headerOption"];
+
+    setup() {
+        super.setup();
+        this.headerTemplates = this.dependencies.headerOption.getHeaderTemplates();
+    }
 
     hasSomeOptions(opts) {
         return opts.some((opt) => this.isActiveItem(opt));
@@ -10,3 +16,15 @@ export class HeaderTemplateOption extends BaseOptionComponent {
 }
 
 Object.assign(HeaderTemplateOption, basicHeaderOptionSettings);
+
+export class HeaderTemplateChoice extends BaseOptionComponent {
+    static template = "website.HeaderTemplateChoice";
+    static props = {
+        title: String,
+        views: Array,
+        varName: String,
+        imgSrc: String,
+        id: String,
+        menuShadowClass: String,
+    };
+}

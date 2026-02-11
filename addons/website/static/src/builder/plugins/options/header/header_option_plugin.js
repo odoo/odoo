@@ -5,12 +5,27 @@ import {
 } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { HeaderElementsOption } from "./header_elements_option";
 import { HeaderFontOption } from "./header_font_option";
-import { HeaderTemplateOption } from "./header_template_option";
+import { HeaderTemplateChoice, HeaderTemplateOption } from "./header_template_option";
 import { HeaderIconBackgroundOption } from "./header_icon_background_option";
 import { HeaderTopOptions } from "./header_top_options";
+
+/** @typedef {import("@odoo/owl").Component} Component */
+
+/**
+ * @typedef { Object } HeaderOptionShared
+ * @property { HeaderOptionPlugin['getHeaderTemplates'] } getHeaderTemplates
+ */
+/**
+ * @typedef {(() => {
+ *     key: string,
+ *     Component: Component,
+ *     props: any,
+ * }[])[]} header_templates_providers
+ */
 
 const [
     HEADER_TEMPLATE,
@@ -39,6 +54,7 @@ export {
 export class HeaderOptionPlugin extends Plugin {
     static id = "headerOption";
     static dependencies = ["customizeWebsite", "menuDataPlugin"];
+    static shared = ["getHeaderTemplates"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -63,7 +79,56 @@ export class HeaderOptionPlugin extends Plugin {
         // this button if it's empty
         are_inlines_allowed_at_root_predicates: (node) =>
             node.matches("#o_main_nav .oe_structure_solo .oe_unremovable [contenteditable='true']"),
+        header_templates_providers: [
+            () =>
+                [
+                    { name: "default", title: _t("Default") },
+                    {
+                        name: "hamburger",
+                        title: _t("Hamburger Menu"),
+                        extraViews: ["website.no_autohide_menu"],
+                    },
+                    { name: "boxed", title: _t("Rounded Box Menu") },
+                    { name: "stretch", title: _t("Stretch Menu") },
+                    { name: "vertical", title: _t("Vertical") },
+                    { name: "search", title: _t("Menu with Search Bar") },
+                    { name: "sales_one", title: _t("Menu - Sales 1") },
+                    { name: "sales_two", title: _t("Menu - Sales 2") },
+                    { name: "sales_three", title: _t("Menu - Sales 3") },
+                    { name: "sales_four", title: _t("Menu - Sales 4") },
+                    {
+                        name: "sidebar",
+                        title: _t("Sidebar"),
+                        extraViews: ["website.no_autohide_menu"],
+                        menuShadowClass: "shadow-lg",
+                    },
+                ].map((info) => {
+                    const view = info.view ?? `website.template_header_${info.name}`;
+                    return {
+                        key: info.name,
+                        Component: HeaderTemplateChoice,
+                        props: {
+                            id: `header_${info.name}_opt`,
+                            imgSrc: `/website/static/src/img/snippets_options/header_template_${info.name}.svg`,
+                            menuShadowClass: info.menuShadowClass ?? "shadow-sm",
+                            title: info.title,
+                            varName: info.name,
+                            views: [view, ...(info.extraViews || [])],
+                        },
+                    };
+                }),
+        ],
     };
+
+    setup() {
+        this.headerTemplates = this.getResource("header_templates_providers").flatMap((provider) =>
+            provider()
+        );
+    }
+
+    getHeaderTemplates() {
+        return this.headerTemplates;
+    }
 }
 
 registry.category("website-plugins").add(HeaderOptionPlugin.id, HeaderOptionPlugin);

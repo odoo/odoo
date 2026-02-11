@@ -3,171 +3,9 @@
     <t t-name="website.HeaderTemplateOption">
         <BuilderRow label.translate="Template">
             <BuilderSelect action="'reloadComposite'">
-                <BuilderSelectItem
-                    id="'header_default_opt'"
-                    title.translate="Default"
-                    actionParam="[
-                        {
-                            action: 'websiteConfig',
-                            actionParam: {
-                                views: ['website.template_header_default'],
-                                vars: { 'header-template': 'default', 'menu-shadow-class': 'shadow-sm', 'menu-box-shadow-style': null },
-                                checkVars: false,
-                            }
-                        }
-                    ]">
-                    <Image attrs="{ style: 'width: calc(100% - 0.5rem);' }" src="'/website/static/src/img/snippets_options/header_template_default.svg'"/>
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    id="'header_hamburger_opt'"
-                    title.translate="Hamburger Menu"
-                    actionParam="[
-                        {
-                            action: 'websiteConfig',
-                            actionParam: {
-                                views: ['website.template_header_hamburger', 'website.no_autohide_menu'],
-                                vars: { 'header-template': 'hamburger', 'menu-shadow-class': 'shadow-sm', 'menu-box-shadow-style': null },
-                                checkVars: false,
-                            }
-                        }
-                    ]">
-                    <Image attrs="{ style: 'width: calc(100% - 0.5rem);' }" src="'/website/static/src/img/snippets_options/header_template_hamburger.svg'"/>
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    id="'header_boxed_opt'"
-                    title.translate="Rounded Box Menu"
-                    actionParam="[
-                        {
-                            action: 'websiteConfig',
-                            actionParam: {
-                                views: ['website.template_header_boxed'],
-                                vars: { 'header-template': 'boxed', 'menu-shadow-class': 'shadow-sm', 'menu-box-shadow-style': null },
-                                checkVars: false,
-                            }
-                        }
-                    ]">
-                    <Image attrs="{ style:' width: calc(100% - 0.5rem);' }" src="'/website/static/src/img/snippets_options/header_template_boxed.svg'"/>
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    id="'header_stretch_opt'"
-                    title.translate="Stretch Menu"
-                    actionParam="[
-                        {
-                            action: 'websiteConfig',
-                            actionParam: {
-                                views: ['website.template_header_stretch'],
-                                vars: { 'header-template': 'stretch', 'menu-shadow-class': 'shadow-sm', 'menu-box-shadow-style': null },
-                                checkVars: false,
-                            }
-                        }
-                    ]">
-                    <Image attrs="{ style: 'width: calc(100% - 0.5rem);' }" src="'/website/static/src/img/snippets_options/header_template_stretch.svg'"/>
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    id="'header_vertical_opt'"
-                    title.translate="Vertical"
-                    actionParam="[
-                        {
-                            action: 'websiteConfig',
-                            actionParam: {
-                                views: ['website.template_header_vertical'],
-                                vars: { 'header-template': 'vertical', 'menu-shadow-class': 'shadow-sm', 'menu-box-shadow-style': null },
-                                checkVars: false,
-                            }
-                        }
-                    ]">
-                    <Image attrs="{ style: 'width: calc(100% - 0.5rem);'}" src="'/website/static/src/img/snippets_options/header_template_vertical.svg'"/>
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    id="'header_search_opt'"
-                    title.translate="Menu with Search Bar"
-                    actionParam="[
-                        {
-                            action: 'websiteConfig',
-                            actionParam: {
-                                views: ['website.template_header_search'],
-                                vars: { 'header-template': 'search', 'menu-shadow-class': 'shadow-sm', 'menu-box-shadow-style': null },
-                                checkVars: false,
-                            }
-                        }
-                    ]">
-                    <Image attrs="{ style: 'width: calc(100% - 0.5rem);'}" src="'/website/static/src/img/snippets_options/header_template_search.svg'"/>
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    id="'header_sales_one_opt'"
-                    title.translate="Menu - Sales 1"
-                    actionParam="[
-                        {
-                            action: 'websiteConfig',
-                            actionParam: {
-                                views: ['website.template_header_sales_one'],
-                                vars: { 'header-template': 'sales_one', 'menu-shadow-class': 'shadow-sm', 'menu-box-shadow-style': null },
-                                checkVars: false,
-                            }
-                        }
-                    ]">
-                    <Image attrs="{ style: 'width: calc(100% - 0.5rem);'}" src="'/website/static/src/img/snippets_options/header_template_sales_one.svg'"/>
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    id="'header_sales_two_opt'"
-                    title.translate="Menu - Sales 2"
-                    actionParam="[
-                        {
-                            action: 'websiteConfig',
-                            actionParam: {
-                                views: ['website.template_header_sales_two'],
-                                vars: { 'header-template': 'sales_two', 'menu-shadow-class': 'shadow-sm', 'menu-box-shadow-style': null },
-                                checkVars: false,
-                            }
-                        }
-                    ]">
-                    <Image attrs="{ style: 'width: calc(100% - 0.5rem);'}" src="'/website/static/src/img/snippets_options/header_template_sales_two.svg'"/>
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    id="'header_sales_three_opt'"
-                    title.translate="Menu - Sales 3"
-                    actionParam="[
-                        {
-                            action: 'websiteConfig',
-                            actionParam: {
-                                views: ['website.template_header_sales_three'],
-                                vars: { 'header-template': 'sales_three', 'menu-shadow-class': 'shadow-sm', 'menu-box-shadow-style': null },
-                                checkVars: false,
-                            }
-                        }
-                    ]">
-                    <Image attrs="{ style: 'width: calc(100% - 0.5rem);'}" src="'/website/static/src/img/snippets_options/header_template_sales_three.svg'"/>
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    id="'header_sales_four_opt'"
-                    title.translate="Menu - Sales 4"
-                    actionParam="[
-                        {
-                            action: 'websiteConfig',
-                            actionParam: {
-                                views: ['website.template_header_sales_four'],
-                                vars: { 'header-template': 'sales_four', 'menu-shadow-class': 'shadow-sm', 'menu-box-shadow-style': null },
-                                checkVars: false,
-                            }
-                        }
-                    ]">
-                    <Image attrs="{ style: 'width: calc(100% - 0.5rem);'}" src="'/website/static/src/img/snippets_options/header_template_sales_four.svg'"/>
-                </BuilderSelectItem>
-                <BuilderSelectItem
-                    id="'header_sidebar_opt'"
-                    title.translate="Sidebar"
-                    actionParam="[
-                        {
-                            action: 'websiteConfig',
-                            actionParam: {
-                                views: ['website.template_header_sidebar', 'website.no_autohide_menu'],
-                                vars: { 'header-template': 'sidebar', 'menu-shadow-class': 'shadow-lg', 'menu-box-shadow-style': null },
-                                checkVars: false,
-                            }
-                        }
-                    ]">
-                    <Image attrs="{ style: 'width: calc(100% - 0.5rem);'}" src="'/website/static/src/img/snippets_options/header_template_sidebar.svg'"/>
-                </BuilderSelectItem>
+                <t t-foreach="headerTemplates" t-as="template" t-key="template.key">
+                    <t t-component="template.Component" t-props="template.props"/>
+                </t>
             </BuilderSelect>
         </BuilderRow>
 
@@ -317,5 +155,27 @@
                 </BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
+    </t>
+
+    <t t-name="website.HeaderTemplateChoice">
+        <BuilderSelectItem
+            id="props.id"
+            title="props.title"
+            actionParam="[
+                {
+                    action: 'websiteConfig',
+                    actionParam: {
+                        views: props.views,
+                        vars: {
+                            'header-template': props.varName,
+                            'menu-shadow-class': props.menuShadowClass,
+                            'menu-box-shadow-style': null,
+                        },
+                        checkVars: false,
+                    },
+                }
+            ]">
+            <Image attrs="{ style: 'width: calc(100% - 0.5rem);' }" src="props.imgSrc"/>
+        </BuilderSelectItem>
     </t>
 </templates>
