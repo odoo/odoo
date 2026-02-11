@@ -7,13 +7,13 @@
                 New
             </button>
             <t t-set-slot="content">
-                <DropdownItem tag="'button'" class="'btn btn-link'" onSelected="props.onCreate">
+                <DropdownItem tag="'button'" class="'o-task-template btn btn-link o-new-task'" onSelected="props.onCreate">
                     New Task
                 </DropdownItem>
                 <div role="separator" class="dropdown-divider"/>
                 <div class="dropdown-header">Task Templates</div>
                 <t t-foreach="state.taskTemplates" t-as="template" t-key="template.id">
-                    <DropdownItem tag="'button'" class="'btn btn-link o-dropdopwn-item-indent o-task-template d-flex align-items-center pe-0'"
+                    <DropdownItem tag="'button'" class="'btn btn-link o-dropdopwn-item-indent o-task-template d-flex align-items-center'"
                         onSelected="() => this.createTaskFromTemplate(template.id)">
                         <span class="text-truncate" t-out="template.name"/>
                         <ProjectTemplateButtons resModel="'project.task'" resId="template.id"/>
