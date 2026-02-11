@@ -188,11 +188,11 @@ class ResDevice(models.Model):
             SELECT
                 MAX(L.id) as id,
                 L.session_identifier as session_identifier,
-                MIN(L.user_id) as user_id,
+                L.user_id as user_id,
                 L.ip_address as ip_address,
                 L.user_agent as user_agent,
-                MAX(L.country) as country,
-                MAX(L.city) as city,
+                L.country as country,
+                L.city as city,
                 MIN(L.first_activity) as first_activity,
                 MAX(L.last_activity) as last_activity,
                 bool_and(L.revoked) as revoked
@@ -202,8 +202,11 @@ class ResDevice(models.Model):
                 L.revoked IS NOT TRUE
             GROUP BY
                 session_identifier,
+                user_id,
                 ip_address,
-                user_agent
+                user_agent,
+                country,
+                city
         """
 
     def init(self):
@@ -273,14 +276,15 @@ class ResSession(models.Model):
             SELECT
                 MAX(D.id) as id,
                 D.session_identifier as session_identifier,
-                MIN(D.user_id) as user_id,
+                D.user_id as user_id,
                 MIN(D.first_activity) as first_activity,
                 MAX(D.last_activity) as last_activity,
                 bool_and(D.revoked) as revoked
             FROM
                 res_device D
             GROUP BY
-                session_identifier
+                session_identifier,
+                user_id
         """
 
     @check_identity
