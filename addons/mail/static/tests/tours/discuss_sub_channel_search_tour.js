@@ -41,7 +41,7 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
             trigger: ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(30)",
         },
         ...range(99, 69).map((i) => ({
-            trigger: `.o-mail-SubChannelPreview:text(Sub Channel ${i})`,
+            trigger: `.o-mail-SubChannelPreview .o-mail-SubChannel-name:text(Sub Channel ${i})`,
         })),
         {
             trigger: ".o-mail-ActionPanel:has(.o-mail-SubChannelList) .o_searchview_input",
@@ -70,10 +70,10 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
         // Already fetched sub channels are shown in addition to the one
         // that was fetched during the search.
         ...range(99, 69).map((i) => ({
-            trigger: `.o-mail-SubChannelPreview:text(Sub Channel ${i})`,
+            trigger: `.o-mail-SubChannelPreview .o-mail-SubChannel-name:text(Sub Channel ${i})`,
         })),
         {
-            trigger: ".o-mail-SubChannelPreview:text(Sub Channel 10)",
+            trigger: ".o-mail-SubChannelPreview .o-mail-SubChannel-name:text(Sub Channel 10)",
             async run() {
                 // Ensure lazy loading is still working after a search.
                 await waitForLoadMoreToDisappearDef;
@@ -89,7 +89,7 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
                 ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(61):contains(Sub Channel 40)",
         },
         ...range(99, 39).map((i) => ({
-            trigger: `.o-mail-SubChannelPreview:text(Sub Channel ${i})`,
+            trigger: `.o-mail-SubChannelPreview .o-mail-SubChannel-name:text(Sub Channel ${i})`,
         })),
         {
             trigger: "body",
@@ -107,7 +107,7 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
                 ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(90):contains(Sub Channel 11)",
         },
         ...range(99, 9).map((i) => ({
-            trigger: `.o-mail-SubChannelPreview:text(Sub Channel ${i})`,
+            trigger: `.o-mail-SubChannelPreview .o-mail-SubChannel-name:text(Sub Channel ${i})`,
         })),
         {
             trigger: "body",
@@ -124,7 +124,7 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
                 ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(100):contains(Sub Channel 0)",
         },
         ...range(99, 0).map((i) => ({
-            trigger: `.o-mail-SubChannelPreview:text(Sub Channel ${i})`,
+            trigger: `.o-mail-SubChannelPreview .o-mail-SubChannel-name:text(Sub Channel ${i})`,
         })),
     ],
 });

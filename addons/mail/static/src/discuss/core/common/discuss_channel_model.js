@@ -13,6 +13,8 @@ import {
 import { formatList } from "@web/core/l10n/utils";
 import { imageUrl } from "@web/core/utils/urls";
 
+const { DateTime } = luxon;
+
 /** @import { AwaitChatHubInit } from "@mail/core/common/chat_hub_model" */
 
 export class DiscussChannel extends Record {
@@ -203,6 +205,11 @@ export class DiscussChannel extends Record {
         }
         return this.channel_member_ids.filter(({ persona }) => persona?.notEq(this.store.self));
     }
+    get createDateSimple() {
+        return this.create_date
+            ?.toLocaleString(DateTime.TIME_SIMPLE, { locale: user.lang })
+            .replace(" ", " "); // so that AM/PM are properly wrapped
+    }
     discuss_category_id = fields.One("discuss.category", {
         inverse: "channel_ids",
     });
@@ -233,6 +240,7 @@ export class DiscussChannel extends Record {
         return this.name;
     }
     create_date = fields.Datetime();
+    create_uid = fields.One("res.users");
     /** @type {"not_fetched"|"pending"|"fetched"} */
     fetchMembersState = "not_fetched";
     /** @type {"not_fetched"|"fetching"|"fetched"} */
