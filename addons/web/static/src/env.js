@@ -5,7 +5,6 @@ import { getTemplate } from "@web/core/templates";
 import { appTranslateFn } from "@web/core/l10n/translation";
 import { session } from "@web/session";
 import { isMacOS } from "@web/core/browser/feature_detection";
-import { compatibilityDirectives, compatibilityGlobals } from "@web/owl2/utils";
 
 // -----------------------------------------------------------------------------
 // Types
@@ -192,7 +191,6 @@ export const customDirectives = {
         node.setAttribute(`t-on-click${mods}`, handlerFunction);
         node.setAttribute(`t-on-auxclick${mods}`, handlerFunction);
     },
-    ...compatibilityDirectives,
 };
 
 export const globalValues = {
@@ -212,7 +210,6 @@ export const globalValues = {
             value(ev, isMiddleClick);
         }
     },
-    ...compatibilityGlobals,
 };
 
 /**

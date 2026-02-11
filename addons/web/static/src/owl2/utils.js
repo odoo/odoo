@@ -187,7 +187,7 @@ class Portal extends owl.Component {
     }
 }
 
-export const compatibilityDirectives = {
+const customDirectives = {
     /**
      * @param {HTMLElement} node
      * @param {string} value
@@ -219,6 +219,27 @@ export const compatibilityDirectives = {
     },
 };
 
-export const compatibilityGlobals = {
+const globalValues = {
     Portal,
 };
+
+class App extends owl.App {
+    /**
+     * @param {any} component
+     * @param {any} config
+     */
+    constructor(component, config) {
+        super(component, {
+            ...config,
+            customDirectives: {
+                ...customDirectives,
+                ...config.customDirectives,
+            },
+            globalValues: {
+                ...globalValues,
+                ...config.globalValues,
+            },
+        });
+    }
+}
+owl.App = App;
