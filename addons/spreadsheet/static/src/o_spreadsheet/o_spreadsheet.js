@@ -9,9 +9,14 @@
  * @hash 3d77c5351
 =======
  * @version 19.2.0-alpha.3
+<<<<<<< HEAD
  * @date 2026-01-19T15:07:01.887Z
  * @hash 122e1027e
 >>>>>>> cdba1857bce3 ([IMP] update spreadsheet)
+=======
+ * @date 2026-01-20T08:06:04.782Z
+ * @hash 12831a2f6
+>>>>>>> 70120314e9e5 ([IMP] update spreadsheet)
  */
 odoo.define('@spreadsheet/o_spreadsheet/o_spreadsheet', ['@odoo/owl'], function (require) {
 'use strict';
@@ -93711,7 +93716,7 @@ class PieChartDesignPanel extends Component {
             return slicesColors?.[this.state.index];
         }
         const dataSets = this.runtime.chartJsConfig.data.datasets;
-        const color = dataSets[0].backgroundColor?.[this.state.index];
+        const color = dataSets[0]?.backgroundColor?.[this.state.index];
         return color;
     }
 }
@@ -107138,9 +107143,14 @@ __info__.date = "2026-02-06T07:18:54.541Z";
 __info__.hash = "3d77c5351";
 =======
 __info__.version = "19.2.0-alpha.3";
+<<<<<<< HEAD
 __info__.date = "2026-01-19T15:07:01.887Z";
 __info__.hash = "122e1027e";
 >>>>>>> cdba1857bce3 ([IMP] update spreadsheet)
+=======
+__info__.date = "2026-01-20T08:06:04.782Z";
+__info__.hash = "12831a2f6";
+>>>>>>> 70120314e9e5 ([IMP] update spreadsheet)
 //# sourceMappingURL=o_spreadsheet.esm.js.map
 return __exports;
 });
