@@ -31,7 +31,7 @@ test("navigate to sub channel", async () => {
     await click(".o-mail-DiscussSidebarChannel", { name: "General" });
     await contains(".o-mail-DiscussContent-threadName", { value: "General" });
     await click("button[title='Threads']");
-    await click(".o-mail-SubChannelPreview:text('New Thread')");
+    await click(".o-mail-SubChannelPreview .o-mail-SubChannel-name:text('New Thread')");
     await contains(".o-mail-DiscussContent-threadName", { value: "New Thread" });
     // Should access sub-thread when clicking on the notification.
     await click(".o-mail-DiscussSidebarChannel", { name: "General" });
@@ -146,7 +146,7 @@ test("create sub thread from sub-thread list", async () => {
     await openDiscuss(channelId);
     await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
     await click("button[title='Threads']");
-    await contains(".o-mail-SubChannelList:text('This channel has no thread yet.')");
+    await contains(".o-mail-SubChannelList:text('This conversation has no threads yet.')");
     await click("button[aria-label='Create Thread']");
     await contains(".o-mail-DiscussContent-threadName", { value: "New Thread" });
     await click(".o-mail-DiscussSidebarChannel", { name: "General" });
@@ -157,7 +157,7 @@ test("create sub thread from sub-thread list", async () => {
         "MyEpicThread"
     );
     await click("button[aria-label='Search button']");
-    await contains(".o-mail-SubChannelList:text('No thread named \"MyEpicThread\"')");
+    await contains(".o-mail-SubChannelList:text('No threads found.')");
     await click("button[aria-label='Create Thread']");
     await contains(".o-mail-DiscussContent-threadName", { value: "MyEpicThread" });
 });

@@ -29,4 +29,8 @@ export class SubChannelPreview extends Component {
         }
         return _t("%(count)s Messages", { count: this.props.channel.message_count });
     }
+
+    get startedByText() {
+        return _t("Started by %(name)s", { name: this.props.channel.create_uid.name });
+    }
 }

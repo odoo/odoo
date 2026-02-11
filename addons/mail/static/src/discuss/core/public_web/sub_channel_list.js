@@ -3,7 +3,6 @@ import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { SubChannelPreview } from "@mail/discuss/core/public_web/sub_channel_preview";
 import { useSequential, useVisible } from "@mail/utils/common/hooks";
 import { Component, useEffect, useRef, useState } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
@@ -25,7 +24,6 @@ export class SubChannelList extends Component {
         this.state = useState({
             loading: false,
             searchTerm: "",
-            lastSearchTerm: "",
             searching: false,
             subChannels: this.props.channel.sub_channel_ids,
         });
@@ -49,10 +47,6 @@ export class SubChannelList extends Component {
         );
     }
 
-    get NO_THREAD_FOUND() {
-        return _t(`No thread named "%(thread_name)s"`, { thread_name: this.state.lastSearchTerm });
-    }
-
     /**
      * @param {import("models").DiscussChannel} subChannel
      */
@@ -61,14 +55,11 @@ export class SubChannelList extends Component {
             await rpc("/discuss/channel/join", { channel_id: subChannel.id });
         }
         subChannel.open({ focus: true });
-        if (this.env.inChatWindow) {
-            this.props.close?.();
-        }
+        this.props.close?.();
     }
 
     clearSearch() {
         this.state.searchTerm = "";
-        this.state.lastSearchTerm = "";
         this.state.searching = false;
         this.state.loading = false;
         this.state.subChannels = this.props.channel.sub_channel_ids;
@@ -99,7 +90,6 @@ export class SubChannelList extends Component {
                 });
                 if (this.state.searching) {
                     this._refreshSubChannelList();
-                    this.state.lastSearchTerm = this.state.searchTerm;
                 }
             } finally {
                 this.state.loading = false;
