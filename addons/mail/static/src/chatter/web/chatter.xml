@@ -32,7 +32,7 @@
                 <button class="btn btn-link text-action px-1" aria-label="Search Messages" title="Search Messages" t-on-click="onClickSearch">
                     <i class="oi oi-search fa-fw" role="img"/>
                 </button>
-                <button t-if="hasPinnedMessages" class="btn btn-link text-action p-1" aria-label="Pinned Messages" title="Pinned Messages" t-on-click="onClickPinnedMessages">
+                <button t-if="hasPinnedMessages" class="btn btn-link text-action p-1" aria-label="Pinned Messages" title="Pinned Messages" t-on-click="onClickPinnedMessages" t-att-disabled="state.isSearchOpen">
                     <i class="fa fa-fw fa-thumb-tack" role="img"/>
                 </button>
                 <button t-if="props.hasAttachmentPreview and state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action px-1" t-on-click="popoutAttachment">
@@ -68,7 +68,7 @@
         </div>
         <div class="o-mail-Chatter-content d-flex flex-column flex-grow-1 bg-inherit">
             <t>
-                <div t-if="state.isAttachmentBoxOpened" class="o-mail-AttachmentBox position-relative">
+                <div t-if="state.isAttachmentBoxOpened and !state.isSearchOpen" class="o-mail-AttachmentBox position-relative">
                     <div class="d-flex align-items-center">
                         <hr class="flex-grow-1"/>
                         <span class="p-3 fw-bold">
@@ -91,7 +91,7 @@
                         </FileUploader>
                     </div>
                 </div>
-                <div t-if="state.showPinnedMessages and hasPinnedMessages" class="o-mail-pinnedMessages bg-inherit">
+                <div t-if="state.showPinnedMessages and hasPinnedMessages and !state.isSearchOpen" class="o-mail-pinnedMessages bg-inherit">
                     <div class="d-flex align-items-center">
                         <hr class="flex-grow-1"/>
                         <span class="p-3 fw-bold">Pinned Messages</span>
