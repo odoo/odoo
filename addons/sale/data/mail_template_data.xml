@@ -9,6 +9,7 @@
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
             <field name="description">Used by salespeople when they send quotations or proforma to prospects</field>
+            <field name="email_layout_xmlid">mail.mail_notification_layout_with_responsible_signature</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
@@ -60,6 +61,7 @@
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
             <field name="description">Used by salespeople when they send pro forma to prospects</field>
+            <field name="email_layout_xmlid">mail.mail_notification_layout_with_responsible_signature</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
@@ -91,6 +93,7 @@
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
             <field name="description">Sent to customers on order confirmation</field>
+            <field name="email_layout_xmlid">mail.mail_notification_layout_with_responsible_signature</field>
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
                     <t t-set="color" t-value="object.company_id.email_secondary_color or '#875A7B'"/>
@@ -366,6 +369,7 @@
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
             <field name="description">Sent to customers when a payment is received but doesn't immediately confirm their order</field>
+            <field name="email_layout_xmlid">mail.mail_notification_layout_with_responsible_signature</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 12px;">

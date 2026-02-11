@@ -83,6 +83,12 @@ class MailTemplate(models.Model):
         string='Dynamic Reports',
         domain="[('model', '=', model)]")
     email_layout_xmlid = fields.Char('Email Notification Layout', copy=False)
+    email_layout_force_header = fields.Boolean('Force Header', default=False,
+        help="If checked, the header will be always shown in the email body when this template is used with"
+        "notification layout.")
+    email_layout_force_footer = fields.Boolean('Force Footer', default=False,
+        help="If checked, the footer will be always shown in the email body when this template is used with"
+        "notification layout.")
     # options
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False, index='btree_not_null',
                                      help="Optional preferred server for outgoing mails. If not set, the highest "

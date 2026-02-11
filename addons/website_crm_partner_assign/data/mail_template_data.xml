@@ -10,6 +10,9 @@
             <field name="email_to">{{ ctx['partner_id'].email_formatted }}</field>
             <field name="use_default_to" eval="False"/>
             <field name="description">Sent to partner when a lead has been assigned to him</field>
+            <field name="email_layout_xmlid">mail.mail_notification_layout</field>
+            <field name="email_layout_force_header" eval="True"/>
+            <field name="email_layout_force_footer" eval="True"/>
             <field name="body_html" type="html"><t>
 Hello,<br/>
 We have been contacted by those prospects that are in your region. Thus, the following leads have been assigned to <t t-out="ctx['partner_id'].name or ''"></t>:<br/>

@@ -9,6 +9,7 @@
             <field name="email_from">{{ object.user_id.email_formatted or user.email_formatted }}</field>
             <field name="partner_to" >{{ ctx['partner'].id}}</field>
             <field name="use_default_to" eval="False"/>
+            <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">

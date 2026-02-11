@@ -1062,7 +1062,6 @@ class SurveySurvey(models.Model):
             self.env.context,
             default_survey_id=self.id,
             default_template_id=template and template.id or False,
-            default_email_layout_xmlid='mail.mail_notification_light',
             default_send_email=(self.access_mode != 'public'),
         )
         return {

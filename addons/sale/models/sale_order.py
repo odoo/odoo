@@ -1154,7 +1154,6 @@ class SaleOrder(models.Model):
             'default_model': 'sale.order',
             'default_res_ids': self.ids,
             'default_composition_mode': 'comment',
-            'default_email_layout_xmlid': 'mail.mail_notification_layout_with_responsible_signature',
             'email_notification_allow_footer': True,
             'hide_mail_template_management_options': True,
             'proforma': self.env.context.get('proforma', False),
@@ -1870,11 +1869,12 @@ class SaleOrder(models.Model):
 
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
                                                    force_email_company=False, force_email_lang=False,
-                                                   force_record_name=False):
+                                                   force_record_name=False, force_header=False, force_footer=False):
         render_context = super()._notify_by_email_prepare_rendering_context(
             message, msg_vals=msg_vals, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang,
-            force_record_name=force_record_name,
+            force_record_name=force_record_name, force_header=force_header,
+            force_footer=force_footer,
         )
         lang_code = render_context.get('lang')
         record = render_context['record']

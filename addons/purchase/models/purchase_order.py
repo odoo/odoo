@@ -531,10 +531,12 @@ class PurchaseOrder(models.Model):
 
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
                                                    force_email_company=False, force_email_lang=False,
+                                                   force_header=False, force_footer=False,
                                                    force_record_name=False):
         render_context = super()._notify_by_email_prepare_rendering_context(
             message, msg_vals=msg_vals, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang,
+            force_header=force_header, force_footer=force_footer,
             force_record_name=force_record_name,
         )
         subtitles = [render_context['record'].name]
@@ -587,7 +589,6 @@ class PurchaseOrder(models.Model):
             'default_res_ids': self.ids,
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
-            'default_email_layout_xmlid': "mail.mail_notification_layout_with_responsible_signature",
             'email_notification_allow_footer': True,
             'force_email': True,
             'hide_mail_template_management_options': True,
@@ -1141,7 +1142,6 @@ class PurchaseOrder(models.Model):
             'default_res_ids': self.ids,
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
-            'default_email_layout_xmlid': "mail.mail_notification_layout_with_responsible_signature",
             'force_email': True,
             'mark_rfq_as_sent': True,
         })

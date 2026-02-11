@@ -1880,6 +1880,44 @@ class MailCommon(MailCase):
         cls.partner_employee = cls.user_employee.partner_id
         cls.guest = cls.env['mail.guest'].create({'name': 'Guest Mario'})
         cls.subtitles = []
+        cls.default_arch_db_layout = """
+<body>
+    <t t-set="show_header" t-value="email_notification_force_header or (
+        email_notification_allow_header and has_button_access)"/>
+    <t t-set="show_footer" t-value="email_notification_force_footer or (
+        email_notification_allow_footer and show_header and author_user and author_user._is_internal())"/>
+    <p>English Layout for <t t-out="model_description"/></p>
+    <img t-att-src="'/logo.png?company=%s' % (company.id or 0)" t-att-alt="'%s' % company.name"/>
+    <div t-if="show_header">HEADER
+        <a t-if="has_button_access" t-att-href="button_access['url']">
+            <t t-out="button_access['title']"/>
+        </a>
+        <t t-if="actions" t-foreach="actions" t-as="action">
+            <a t-att-href="action['url']">
+                <t t-out="action['title']"/>
+            </a>
+        </t>
+        <t t-if="subtitles">
+            <t t-foreach="subtitles" t-as="subtitle">
+                <b t-if="subtitles_highlight_index == subtitle_index" t-out="subtitle"/>
+                <span t-else="" t-out="subtitle"/>
+            </t>
+        </t>
+    </div>
+    <t t-out="message.body"/>
+    <ul t-if="tracking_values">
+        <li t-foreach="tracking_values" t-as="tracking">
+            <t t-out="tracking[0]"/>: <t t-out="tracking[1]"/> -&gt; <t t-out="tracking[2]"/>
+        </li>
+    </ul>
+    <div t-if="signature" t-out="signature"/>
+    <div t-if="show_footer">
+        <p>Sent by <t t-out="company.name"/></p>
+        <span t-if="show_unfollow" id="mail_unfollow">
+            | <a href="/mail/unfollow" style="text-decoration:none; color:#555555;">Unfollow</a>
+        </span>
+    </div>
+</body>"""
 
     @classmethod
     def _activate_multi_company(cls):
@@ -1993,44 +2031,7 @@ class MailCommon(MailCase):
 
         # create a custom layout for email notification
         if not layout_arch_db:
-            layout_arch_db = """
-<body>
-    <t t-set="show_header" t-value="email_notification_force_header or (
-        email_notification_allow_header and has_button_access)"/>
-    <t t-set="show_footer" t-value="email_notification_force_footer or (
-        email_notification_allow_footer and show_header and author_user and author_user._is_internal())"/>
-    <p>English Layout for <t t-out="model_description"/></p>
-    <img t-att-src="'/logo.png?company=%s' % (company.id or 0)" t-att-alt="'%s' % company.name"/>
-    <div t-if="show_header">HEADER
-        <a t-if="has_button_access" t-att-href="button_access['url']">
-            <t t-out="button_access['title']"/>
-        </a>
-        <t t-if="actions" t-foreach="actions" t-as="action">
-            <a t-att-href="action['url']">
-                <t t-out="action['title']"/>
-            </a>
-        </t>
-        <t t-if="subtitles">
-            <t t-foreach="subtitles" t-as="subtitle">
-                <b t-if="subtitles_highlight_index == subtitle_index" t-out="subtitle"/>
-                <span t-else="" t-out="subtitle"/>
-            </t>
-        </t>
-    </div>
-    <t t-out="message.body"/>
-    <ul t-if="tracking_values">
-        <li t-foreach="tracking_values" t-as="tracking">
-            <t t-out="tracking[0]"/>: <t t-out="tracking[1]"/> -&gt; <t t-out="tracking[2]"/>
-        </li>
-    </ul>
-    <div t-if="signature" t-out="signature"/>
-    <div t-if="show_footer">
-        <p>Sent by <t t-out="company.name"/></p>
-        <span t-if="show_unfollow" id="mail_unfollow">
-            | <a href="/mail/unfollow" style="text-decoration:none; color:#555555;">Unfollow</a>
-        </span>
-    </div>
-</body>"""
+            layout_arch_db = cls.default_arch_db_layout
         view = cls.env['ir.ui.view'].create({
             'arch_db': layout_arch_db,
             'key': 'test_layout',

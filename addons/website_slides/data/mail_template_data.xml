@@ -7,6 +7,7 @@
             <field name="subject">New {{ object.slide_category }} published on {{ object.channel_id.name }}</field>
             <field name="use_default_to" eval="False"/>
             <field name="description">Sent to attendees when new course is published</field>
+            <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 13px;">
@@ -43,6 +44,7 @@
             <field name="email_to">{{ ctx.get('email', '') }}</field>
             <field name="use_default_to" eval="False"/>
             <field name="description">Sent when attendees share the course by email</field>
+            <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 13px;">
@@ -76,6 +78,7 @@
             <field name="partner_to" eval="False"/>
             <field name="use_default_to" eval="True"/>
             <field name="description">Sent to attendees once they've completed the course</field>
+            <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
                     <div style="margin: 0px; padding: 0px; font-size: 13px;">
@@ -106,6 +109,7 @@
             <field name="subject">{{ user.name }} shared a Course</field>
             <field name="email_from">{{ user.email_formatted }}</field>
             <field name="use_default_to" eval="False"/>
+            <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
                     <p style="margin: 0px; padding: 0px; font-size: 13px;">
@@ -142,6 +146,7 @@
             <field name="email_from">{{ user.email_formatted }}</field>
             <field name="use_default_to" eval="True"/>
             <field name="description">Sent to attendees when they are added to a course</field>
+            <field name="email_layout_xmlid">mail.mail_notification_layout</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px; font-size: 13px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
@@ -171,6 +176,7 @@
             <field name="email_from">{{ user.email_formatted }}</field>
             <field name="use_default_to" eval="True"/>
             <field name="description">Sent to potential attendees to check out the course.</field>
+            <field name="email_layout_xmlid">mail.mail_notification_layout</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px; font-size: 13px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
