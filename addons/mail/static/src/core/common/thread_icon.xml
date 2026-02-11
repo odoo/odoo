@@ -14,7 +14,7 @@
         <t t-elif="channel?.channel_type === 'group'">
             <t name="group"/>
         </t>
-        <t t-elif="channel?.channel_type?.includes('chat') and correspondent">
+        <t t-elif="channel?.showImStatus and channel?.channel_type?.includes('chat') and correspondent">
             <t name="chat">
                 <t name="chat_static">
                     <ImStatus t-if="correspondent.im_status" className="class" member="correspondent" size="props.size" typing="props.typing"/>

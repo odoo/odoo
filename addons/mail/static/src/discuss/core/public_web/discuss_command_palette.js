@@ -159,7 +159,7 @@ export class DiscussCommandPalette {
         const TOTAL_LIMIT = this.ui.isSmall ? 7 : 10;
         const remaining = TOTAL_LIMIT - (filtered ? filtered.size : 0);
         let partners = [];
-        if (this.store.self_user) {
+        if (this.store.self_user?.share === false) {
             partners = Object.values(this.store["res.partner"].records).filter(
                 (partner) =>
                     partner.main_user_id?.share === false &&

@@ -43,7 +43,8 @@ registerThreadAction("add-to-favorites", {
      * @param {Object} param0
      * @param {import("models").DiscussChannel} param0.channel
      */
-    condition: ({ channel, owner }) =>
+    condition: ({ channel, store, owner }) =>
+        store.self_user?.share === false &&
         channel &&
         channel.self_member_id &&
         !channel.self_member_id.is_favorite &&
@@ -238,7 +239,8 @@ registerThreadAction("hide", {
      * @param {Object} param0
      * @param {import("models").DiscussChannel} param0.channel
      */
-    condition: ({ channel, owner }) =>
+    condition: ({ channel, store, owner }) =>
+        store.self_user?.share === false &&
         (channel?.canHide || channel?.sub_channel_ids.some((subChannel) => subChannel.canHide)) &&
         !channel?.isSelfInCall &&
         !owner.isDiscussContent,

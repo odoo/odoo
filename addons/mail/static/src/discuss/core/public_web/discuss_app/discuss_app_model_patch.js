@@ -69,7 +69,7 @@ const discussAppPatch = {
             extraClass: "o-mail-DiscussSidebarCategory-chat",
             icon: "oi oi-users",
             id: "chats",
-            name: _t("Direct messages"),
+            name: _t("Direct Messages"),
             sequence: 30,
         };
     },
