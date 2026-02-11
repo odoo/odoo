@@ -6,10 +6,10 @@ import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { _t } from "@web/core/l10n/translation";
 import {
-    KanbanMany2ManyTagsAvatarUserField,
+    CardMany2ManyTagsAvatarUserField,
     ListMany2ManyTagsAvatarUserField,
     Many2ManyTagsAvatarUserField,
-    kanbanMany2ManyTagsAvatarUserField,
+    cardMany2ManyTagsAvatarUserField,
     listMany2ManyTagsAvatarUserField,
     many2ManyTagsAvatarUserField,
 } from "@mail/views/web/fields/many2many_avatar_user_field/many2many_avatar_user_field";
@@ -111,7 +111,7 @@ registry.category("fields").add("list.many2many_avatar_resource", listMany2ManyA
 
 export class Many2ManyTagsAvatarResourceFieldPopover extends WithResourceFieldMixin(Many2ManyTagsAvatarFieldPopover) {}
 
-export class KanbanMany2ManyAvatarResourceField extends WithResourceFieldMixin(KanbanMany2ManyTagsAvatarUserField) {
+export class KanbanMany2ManyAvatarResourceField extends WithResourceFieldMixin(CardMany2ManyTagsAvatarUserField) {
     static PopoverClass = Many2ManyTagsAvatarResourceFieldPopover;
 
     get placeholder() {
@@ -119,9 +119,9 @@ export class KanbanMany2ManyAvatarResourceField extends WithResourceFieldMixin(K
     }
 }
 export const kanbanMany2ManyAvatarResourceField = {
-    ...kanbanMany2ManyTagsAvatarUserField,
+    ...cardMany2ManyTagsAvatarUserField,
     ...resourceFieldMixin,
     component: KanbanMany2ManyAvatarResourceField,
 };
-registry.category("fields").add("kanban.many2many_avatar_resource", kanbanMany2ManyAvatarResourceField);
+registry.category("fields").add("card.many2many_avatar_resource", kanbanMany2ManyAvatarResourceField);
 registry.category("fields").add("activity.many2many_avatar_resource", kanbanMany2ManyAvatarResourceField);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="hr.KanbanMany2OneAvatarEmployeeField">
+    <t t-name="hr.CardMany2OneAvatarEmployeeField">
         <KanbanMany2One t-props="this.m2oProps">
             <t t-set-slot="avatar">
                 <Avatar cssClass="'o_m2o_avatar'" resModel="this.relation" resId="this.value.id" noSpacing="false" displayName="this.displayName" uniqueId="this.uniqueId"/>

@@ -154,6 +154,7 @@ class IrUiView(models.Model):
                              ('calendar', 'Calendar'),
                              ('kanban', 'Kanban'),
                              ('search', 'Search'),
+                             ('card', "Card"),
                              ('qweb', 'QWeb')], string='View Type')
     arch = fields.Text(compute='_compute_arch', inverse='_inverse_arch', string='View Architecture',
                        help="""This field should be used when accessing view arch. It will use translation.
@@ -1730,6 +1731,18 @@ actual arch.
         self._postprocess_view(node, field.comodel_name, editable=False, node_info=node_info)
         name_manager.has_field(node, name, node_info)
 
+    def _postprocess_tag_card(self, node, name_manager, node_info):
+        # When this is called as the root of the recursive sub-view call below,
+        # view_type is 'card' and children should be processed normally by the
+        # inner stack — returning here lets that happen without re-entering.
+        if node_info.get('view_type') == 'card':
+            return
+        # card nodes are processed as nested sub-views on the same model so that
+        # fields auto-added for expression evaluation land inside <card> rather
+        # than being appended to the parent view root.
+        node_info['children'] = []
+        self._postprocess_view(node, name_manager.model._name, editable=False, node_info=node_info)
+
     def _postprocess_tag_label(self, node, name_manager, node_info):
         if not node.get('for'):
             return
@@ -2156,7 +2169,7 @@ actual arch.
                 self._log_view_warning(msg, node)
 
     def _is_qweb_based_view(self, view_type):
-        return view_type == 'kanban'
+        return view_type == 'kanban' or view_type == 'card'
 
     def _validate_attributes(self, node, name_manager, node_info):
         """ Generic validation of node attributes. """
@@ -3118,6 +3131,14 @@ class Base(models.AbstractModel):
         """
         # Get the view arch and all other attributes describing the composition of the view
         arch, view = self._get_view(view_id, view_type, **options)
+
+        # Inline the card view if the root element references one via the 'card_id' attribute.
+        # The card arch is appended as a <card> child so that _postprocess_tag_card can
+        # process it as a nested sub-view, ensuring that fields auto-added for expression
+        # evaluation land inside <card> rather than at the parent view root.
+        if card_id := arch.get('card_id'):
+            card_arch, _card_view = self._get_view(view_id=int(card_id), view_type='card')
+            arch.append(card_arch)
 
         # Apply post processing, groups and modifiers etc...
         arch, models = self._get_view_postprocessed(view, arch, **options)

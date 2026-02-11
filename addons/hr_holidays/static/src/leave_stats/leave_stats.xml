@@ -5,7 +5,7 @@
             <div>
                 <div class="d-flex align-items-end">
                     <div class="mx-1">
-                        <KanbanMany2OneAvatarEmployeeField
+                        <CardMany2OneAvatarEmployeeField
                             record="this.props.record"
                             name="'employee_id'"
                         />
@@ -50,7 +50,7 @@
                 <div t-foreach="this.state.departmentLeaves" t-as="leave" t-key="leave.id" class="d-flex flex-column mb-2">
                     <div class=" d-flex my-1 gap-1">
                         <div class="col-3 d-flex">
-                            <KanbanMany2OneAvatarEmployeeField
+                            <CardMany2OneAvatarEmployeeField
                                 record="{'data' : {'employee_id': leave.employee_id}, 'fields': this.props.record.fields}"
                                 name="'employee_id'" relation="'hr.employee.public'"
                             />

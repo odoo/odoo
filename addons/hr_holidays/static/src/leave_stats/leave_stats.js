@@ -5,13 +5,13 @@ import { useRecordObserver } from "@web/model/relational_model/utils";
 import { formatFloatTime } from "@web/views/fields/formatters";
 import { Component, onWillStart, proxy } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
-import { KanbanMany2OneAvatarEmployeeField } from "@hr/views/fields/many2one_avatar_employee_field/kanban_many2one_avatar_employee_field";
+import { CardMany2OneAvatarEmployeeField } from "@hr/views/fields/many2one_avatar_employee_field/kanban_many2one_avatar_employee_field";
 const { DateTime } = luxon;
 
 export class LeaveStatsComponent extends Component {
     static template = "hr_holidays.LeaveStatsComponent";
     static components = {
-        KanbanMany2OneAvatarEmployeeField,
+        CardMany2OneAvatarEmployeeField,
     };
     static props = { ...standardWidgetProps };
 

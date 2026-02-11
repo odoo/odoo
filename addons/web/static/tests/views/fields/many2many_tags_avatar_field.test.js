@@ -13,7 +13,7 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { KanbanMany2ManyTagsAvatarField } from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
+import { CardMany2ManyTagsAvatarField } from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
 
 describe.current.tags("desktop");
 
@@ -220,7 +220,7 @@ test("widget many2many_tags_avatar in kanban view", async () => {
     Partner._views = {
         list: '<list><field name="name"/></list>',
     };
-    patchWithCleanup(KanbanMany2ManyTagsAvatarField.prototype, {
+    patchWithCleanup(CardMany2ManyTagsAvatarField.prototype, {
         get specification() {
             return {
                 ...super.specification,

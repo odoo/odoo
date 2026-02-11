@@ -3,8 +3,8 @@ import { ProductCatalogPurchaseSuggestOrderLine } from "./purchase_order_line";
 
 export class ProductCatalogPurchaseSuggestKanbanRecord extends ProductCatalogKanbanRecord {
     /* Hides suggest line if suggest_qty == qty in PO */
-    getRecordClasses(...args) {
-        const classes = super.getRecordClasses(args) || "";
+    getCardClasses(...args) {
+        const classes = super.getCardClasses(args) || "";
         const catalogData = this.productCatalogData || {};
 
         if (catalogData.suggested_qty && catalogData.suggested_qty == catalogData.quantity) {

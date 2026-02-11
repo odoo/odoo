@@ -1,6 +1,6 @@
-import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
+import { CardCompiler } from "@web/views/card/card_compiler";
 
-export class ProjectTaskKanbanCompiler extends KanbanCompiler {
+export class ProjectTaskKanbanCompiler extends CardCompiler {
     setup() {
         super.setup();
         this.subtaskListComponentCompiled = {
