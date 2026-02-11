@@ -245,6 +245,7 @@ export class LinkPlugin extends Plugin {
         split_element_block_overrides: this.handleSplitBlock.bind(this),
         insert_line_break_element_overrides: this.handleInsertLineBreak.bind(this),
         delete_image_overrides: this.deleteImageLink.bind(this),
+        delete_backward_overrides: withSequence(15, this.handleDeleteBackward.bind(this)),
     };
     setup() {
         this.overlay = this.dependencies.overlay.createOverlay(LinkPopover, {}, { sequence: 50 });
@@ -979,6 +980,25 @@ export class LinkPlugin extends Plugin {
         [targetNode, targetOffset] = edge === "start" ? leftPos(targetNode) : rightPos(targetNode);
         blockToSplit = targetNode;
         splitOrLineBreakCallback({ ...params, targetNode, targetOffset, blockToSplit });
+        return true;
+    }
+
+    handleDeleteBackward({ startContainer, startOffset, endContainer, endOffset }) {
+        // Detect if selection is around FEFF after the end edge of a button.
+        if (startContainer !== endContainer || startOffset !== 0 || endOffset !== 1) {
+            return;
+        }
+        if (startContainer.nodeType !== Node.TEXT_NODE || startContainer.textContent != "\uFEFF") {
+            return;
+        }
+        if (!startContainer.previousSibling?.matches("a.btn")) {
+            return;
+        }
+        // Move before inner FEFF of the button.
+        this.dependencies.selection.setSelection({
+            anchorNode: startContainer.previousSibling,
+            anchorOffset: startContainer.previousSibling.childNodes.length - 1,
+        });
         return true;
     }
 }
