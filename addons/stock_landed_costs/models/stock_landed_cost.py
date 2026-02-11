@@ -119,14 +119,15 @@ class StockLandedCost(models.Model):
                 'move_type': 'entry',
             }
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
-                product = line.move_id.product_id
+                line_move = line._get_adjustment_line_move()
+                product = line_move.product_id
                 # Products with manual inventory valuation are ignored because they do not need to create journal entries.
                 if product.valuation != "real_time":
                     continue
                 # `remaining_qty` is negative if the move is out and delivered proudcts that were not
                 # in stock.
 
-                remaining_qty = line.move_id.remaining_qty
+                remaining_qty = line_move.remaining_qty
                 move_vals['line_ids'] += line._create_accounting_entries(remaining_qty)
 
             # batch standard price computation avoid recompute quantity_svl at each iteration
@@ -149,7 +150,7 @@ class StockLandedCost(models.Model):
             cost.write(cost_vals)
             if cost.account_move_id:
                 move._post()
-            cost.valuation_adjustment_lines.move_id._set_value()
+            cost.valuation_adjustment_lines._get_adjustment_line_move()._set_value()
         return True
 
     def get_valuation_lines(self):
@@ -386,3 +387,6 @@ class StockValuationAdjustmentLines(models.Model):
         AccountMoveLine.append([0, 0, credit_line])
 
         return AccountMoveLine
+
+    def _get_adjustment_line_move(self):
+        return self.move_id
