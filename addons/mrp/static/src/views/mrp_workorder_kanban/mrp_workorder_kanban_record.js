@@ -1,8 +1,8 @@
 import { KanbanRecord } from "@web/views/kanban/kanban_record";
 
 export class MrpWorkorderKanbanRecord extends KanbanRecord {
-    getRecordClasses(...args) {
-        let classes = super.getRecordClasses(args);
+    getCardClasses(...args) {
+        let classes = super.getCardClasses(args);
         if (this.record.production_state.raw_value == 'draft') {
             classes += " o_wo_draft";
         }

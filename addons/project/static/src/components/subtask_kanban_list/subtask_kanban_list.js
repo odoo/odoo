@@ -60,7 +60,7 @@ export class SubtaskKanbanList extends Component {
                     type: "selection",
                     widget: "project_task_state_selection",
                 }),
-                viewType: "kanban",
+                viewType: "card",
             },
         };
     }

@@ -44,11 +44,7 @@ export class Many2OneAvatarEmployeeField extends Component {
 registry.category("fields").add("many2one_avatar_employee", {
     ...buildM2OFieldDescription(Many2OneAvatarEmployeeField),
     relatedFields: [{ name: "write_date", type: "datetime" }],
-    additionalClasses: [
-        "o_field_many2one_avatar",
-        "o_field_many2one_avatar_kanban",
-        "o_field_many2one_avatar_user",
-    ],
+    additionalClasses: ["o_field_many2one_avatar", "o_field_many2one_avatar_user"],
     extractProps(staticInfo, dynamicInfo) {
         return {
             ...extractM2OFieldProps(staticInfo, dynamicInfo),
