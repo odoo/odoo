@@ -220,8 +220,8 @@ actual arch.
             return re.sub(r'(?P<prefix>[^%])%\((?P<xmlid>.*?)\)[ds]', replacer, arch_fs)
 
         lang = self.env.lang or 'en_US'
-        env_en = self.with_context(edit_translations=None, lang='en_US').env
-        env_lang = self.with_context(lang=lang).env
+        env_en = self.with_context(edit_translations=None, lang='en_US', check_translations=True).env
+        env_lang = self.with_context(lang=lang, check_translations=True).env
         field_arch_db = self._fields['arch_db']
         for view in self:
             arch_fs = None
