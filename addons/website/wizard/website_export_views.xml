@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_website_export_wizard" model="ir.ui.view">
+        <field name="name">website.export.wizard.form</field>
+        <field name="model">website.export.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Export Website" groups="base.group_system">
+                <group>
+                    <field name="website_id" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+                    <field name="page_scope" widget="radio"
+                        options="{'horizontal': true}"
+                        required="1"/>
+                    <field name="page_ids" invisible="page_scope != 'selection'"
+                        context="{'website_id': website_id}"
+                        domain="[('website_id', 'in', [website_id, False]), ('key', 'not ilike', '%_debug_page_view%')]"
+                        options="{'no_create': True, 'no_create_edit': True}">
+                        <list create="0" edit="0" delete="0">
+                            <field name="name" string="Page Title"/>
+                            <field name="url" string="Page URL"/>
+                        </list>
+                    </field>
+                    <field name="include_assets"/>
+                </group>
+                <div invisible="not export_file">
+                    <field name="export_file" widget="binary" filename="export_filename" readonly="1"/>
+                </div>
+                <footer>
+                    <button string="Export" type="object" name="action_export" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_website_export_wizard" model="ir.actions.act_window">
+        <field name="name">Export Website</field>
+        <field name="res_model">website.export.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_website_export_wizard"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_website_export_wizard"
+        name="Export Website"
+        parent="website.menu_website_global_configuration"
+        action="action_website_export_wizard"
+        groups="base.group_system"
+        sequence="50"/>
+
+</odoo>
