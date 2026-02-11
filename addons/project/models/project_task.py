@@ -870,7 +870,7 @@ class ProjectTask(models.Model):
                 if self.env.context.get('copy_from_template'):
                     current_task = current_task.with_context(active_test=True)
                 child_ids = current_task.child_ids
-                vals['child_ids'] = [Command.create(child_id.copy_data(default)[0]) for child_id in child_ids]
+                vals['child_ids'] = [Command.create(child_id.copy_data(default)[0]) for child_id in child_ids.filtered(lambda c: c.active)]
             if not has_default_users and vals['user_ids']:
                 task_active_users = task.user_ids & active_users
                 vals['user_ids'] = [Command.set(task_active_users.ids)]
