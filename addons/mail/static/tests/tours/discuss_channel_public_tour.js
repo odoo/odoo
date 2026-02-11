@@ -7,6 +7,7 @@ const messageSelector = ".o-mail-Message:has(.o-mail-Message-body:contains('chee
 const editedMessageSelector = ".o-mail-Message:has(.o-mail-Message-body:contains('vegetables'))";
 
 registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         {
             trigger: ".o-mail-Discuss",
