@@ -34,6 +34,7 @@ const checkRows = (values) => ({
 });
 
 registry.category("web_tour.tours").add("mail_activity_view_tour", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps ) #245680
     steps: () => [
         {
             content: "Open the debug menu",
