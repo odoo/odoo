@@ -1560,6 +1560,11 @@ class ProjectTask(models.Model):
                     mail_auto_delete=True,
                 )
 
+    def _message_auto_subscribe(self, updated_values, followers_existing_policy='skip'):
+        if updated_values.get('project_id'):
+            followers_existing_policy = 'update'
+        return super()._message_auto_subscribe(updated_values, followers_existing_policy)
+
     def _message_auto_subscribe_followers(self, updated_values, default_subtype_ids):
         if 'user_ids' not in updated_values:
             return []
