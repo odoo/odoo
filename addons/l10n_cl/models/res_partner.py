@@ -28,7 +28,7 @@ class ResPartner(models.Model):
 
     def _run_check_identification(self, validation='error'):
         """ We format the RUN thing (actually, it could just use the parent method)"""
-        l10n_cl_partners = self.filtered(lambda p: p.vat and len(p.vat) > 2 and p.country_code == 'CL')
+        l10n_cl_partners = self.filtered(lambda p: p.has_vat and p.country_code == 'CL')
         if l10n_cl_partners:
             identification_types = [self.env.ref('l10n_cl.it_RUN').id]
             for partner in l10n_cl_partners.filtered(lambda p: p.l10n_latam_identification_type_id.id in identification_types):

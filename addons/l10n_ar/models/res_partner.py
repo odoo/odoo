@@ -46,7 +46,7 @@ class ResPartner(models.Model):
         """ We add this computed field that returns cuit (VAT AR) or nothing if this one is not set for the partner.
         This Validation can be also done by calling ensure_vat() method that returns the cuit (VAT AR) or error if this
         one is not found """
-        recs_ar_vat = self.filtered(lambda x: x.l10n_latam_identification_type_id.l10n_ar_afip_code == '80' and x.vat)
+        recs_ar_vat = self.filtered(lambda x: x.l10n_latam_identification_type_id.l10n_ar_afip_code == '80' and x.has_vat)
         for rec in recs_ar_vat:
             rec.l10n_ar_vat = stdnum.ar.cuit.compact(rec.vat)
         remaining = self - recs_ar_vat
@@ -56,7 +56,7 @@ class ResPartner(models.Model):
     def _compute_is_company(self):
         "True if partner is considered a company in Argentina, based on Identification Type and CUIT prefix."
         l10n_ar_partners = self.filtered(
-            lambda p: not p._is_vat_void(p.vat)
+            lambda p: p.has_vat
                 and p.l10n_latam_identification_type_id.l10n_ar_afip_code
                 and p.country_code == 'AR'
         )
@@ -158,7 +158,7 @@ class ResPartner(models.Model):
         """ Sanitize the identification number. Return the digits/integer value of the identification number
         If not vat number defined return 0 """
         self.ensure_one()
-        if not self.vat:
+        if not self.has_vat:
             return 0
         if module := self._get_validation_module():
             self._l10n_ar_identification_validation()

@@ -144,7 +144,7 @@ class AccountMoveSend(models.AbstractModel):
             }
 
         if public_spending_units_missing_vat := tr_nilvera_moves.l10n_tr_public_spending_unit_id.filtered(lambda rec:
-            not rec.vat
+            not rec.has_vat
             or not rec.street
             or not rec.city
             or not rec.state_id

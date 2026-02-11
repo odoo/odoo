@@ -75,6 +75,4 @@ class ResCompany(models.Model):
             See https://zatca.gov.sa/ar/RulesRegulations/Taxes/Documents/20210528_ZATCA_Electronic_Invoice_XML_Implementation_Standard_vShared.pdf
         """
         self.ensure_one()
-        if not self.vat:
-            return False
-        return len(self.vat) == 15 and bool(re.match(r'^3\d{13}3$', self.vat))
+        return self.has_vat and len(self.vat) == 15 and bool(re.match(r'^3\d{13}3$', self.vat))

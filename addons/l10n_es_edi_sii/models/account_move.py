@@ -241,7 +241,7 @@ class AccountMove(models.Model):
         company = self.company_id
         errors = []
 
-        if self.env['res.partner']._is_vat_void(company.vat):
+        if not company.has_vat:
             errors.append(self.env._("VAT number is missing on company %s.", company.display_name))
 
         if not company.l10n_es_sii_certificate_id:

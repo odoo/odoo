@@ -66,7 +66,7 @@ class AccountMove(models.Model):
         if not self:
             return errors
         company = self.company_id
-        if not company.vat:
+        if not company.has_vat:
             errors['vat_missing'] = {'message': self.env._("You must have a VAT number to be able to issue e-invoices\n")}
         if not company.country_id or not company.street or not company.city:
             errors['address_problem'] = {'message': self.env._("Please complete the address of your company\n")}

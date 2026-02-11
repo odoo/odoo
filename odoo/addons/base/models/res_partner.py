@@ -18,7 +18,7 @@ from werkzeug import urls
 
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
-from odoo.tools import LazyTranslate
+from odoo.tools import SQL, LazyTranslate
 from odoo.tools.business_data import street_split, split_vat
 from odoo.tools.date_utils import all_timezones
 from odoo.tools.translate import LazyGettext
@@ -317,6 +317,14 @@ class ResPartner(models.Model):
         readonly=False, store=True,
         help='The internal user in charge of this contact.')
     vat = fields.Char(string='Tax ID', index=True, inverse='_inverse_vat', help="You can use '/' to indicate that the customer has no Tax ID.")
+    has_vat = fields.Boolean(
+        string="Has Tax ID",
+        compute="_compute_has_vat",
+        compute_sql="_compute_sql_has_vat",
+        compute_sudo=True,
+        help="Technical field indicating whether the Tax ID is not a placeholder."
+             "Returns False for placeholder values such as '/', 'NA', 'na', or an empty string.",
+    )
     additional_identifiers = fields.Json(string="Additional Identifiers", copy=False)
     available_additional_identifiers_metadata = fields.Json(compute='_compute_available_additional_identifiers_metadata')
     vat_label = fields.Char(string='Tax ID Label', compute='_compute_vat_label')
@@ -536,9 +544,8 @@ class ResPartner(models.Model):
             # so that you can reactivate it instead of creating a new one, which would lose its history.
             Partner = self.with_context(active_test=False).sudo()
             vats = [partner.vat]
-            should_check_vat = not self._is_vat_void(partner.vat)
 
-            if should_check_vat and partner.country_id and 'EU_PREFIX' in partner.country_id.country_group_codes:
+            if partner.has_vat and partner.country_id and 'EU_PREFIX' in partner.country_id.country_group_codes:
                 if partner.vat[:2].isalpha():
                     vats.append(partner.vat[2:])
                 else:
@@ -556,7 +563,7 @@ class ResPartner(models.Model):
                 domain += [('id', '!=', partner_id), '!', ('id', 'child_of', partner_id)]
             # For VAT number being only one character, we will skip the check just like the regular check_vat
 
-            partner.same_vat_partner_id = should_check_vat and not partner.parent_id and Partner.search(domain, limit=1)
+            partner.same_vat_partner_id = partner.has_vat and not partner.parent_id and Partner.search(domain, limit=1)
 
     @api.depends_context('company')
     def _compute_vat_label(self):
@@ -921,7 +928,16 @@ class ResPartner(models.Model):
             website = url.replace(scheme='http').to_url()
         return website
 
-    @api.depends('vat', 'commercial_partner_id')
+    @api.depends('vat')
+    def _compute_has_vat(self):
+        for partner in self:
+            vat = partner.vat
+            partner.has_vat = vat and vat not in ('/', 'na', 'NA')
+
+    def _compute_sql_has_vat(self, table):
+        return SQL("%s NOT IN ('/', 'na', 'NA', '')", table.vat)
+
+    @api.depends('has_vat', 'commercial_partner_id')
     def _compute_is_company(self):
         """ By default, a partner is considered as a company if they are their own
         commercial entity (see computed field), and if their VAT is considered as being
@@ -931,7 +947,7 @@ class ResPartner(models.Model):
         definition of what is a company (e.g. more strict VAT, specific field usage,
         ...) """
         for partner in self:
-            partner.is_company = partner.commercial_partner_id == partner and not partner._is_vat_void(partner.vat)
+            partner.is_company = partner.commercial_partner_id == partner and partner.has_vat
 
     def _compute_is_public(self):
         for partner in self.with_context(active_test=False):
@@ -1030,11 +1046,6 @@ class ResPartner(models.Model):
             vals = self.env['res.partner']._add_missing_default_values(vals)
             partner._fields_sync(vals)
         return partners
-
-    def _is_vat_void(self, vat):
-        if not vat:
-            return True
-        return vat in ['/', 'na', 'NA']
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_user(self):
@@ -1399,7 +1410,7 @@ class ResPartner(models.Model):
         if not country or not vat:
             return vat, False
         if 1 <= len(vat) <= 2:
-            if self._is_vat_void(vat) or not validation:
+            if not self.env['res.partner'].new({'vat': vat}).has_vat or not validation:
                 return vat, False
             if validation == 'setnull':
                 return '', False

@@ -75,7 +75,7 @@ class ResPartner(models.Model):
         # VAT number and country code
         normalized_vat = self.vat
         normalized_country = self.country_code
-        if has_vat := self.vat not in [False, '/', 'NA']:
+        if self.has_vat:
             normalized_vat = self.vat.replace(' ', '')
             if in_eu:
                 # If there is no country-code prefix, it's domestic to Italy
@@ -92,7 +92,7 @@ class ResPartner(models.Model):
         # If it has a codice fiscale (and no country), it's an Italian partner
         if not normalized_country and self.l10n_it_codice_fiscale:
             normalized_country = 'IT'
-        elif not has_vat and self.country_id and self.country_id.code != 'IT':
+        elif not self.has_vat and self.country_id and self.country_id.code != 'IT':
             if in_eu:
                 normalized_vat = '0000000'
             else:
@@ -140,7 +140,7 @@ class ResPartner(models.Model):
 
     @api.onchange('vat', 'country_id')
     def _l10n_it_onchange_vat(self):
-        if self.vat and (
+        if self.has_vat and (
             self.country_code == "IT"
             if self.country_code
             else self.vat.startswith("IT")

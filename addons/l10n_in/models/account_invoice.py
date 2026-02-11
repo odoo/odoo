@@ -59,7 +59,7 @@ class AccountMove(models.Model):
     l10n_in_reseller_partner_id = fields.Many2one(
         comodel_name='res.partner',
         string="Reseller",
-        domain=[('vat', '!=', False)],
+        domain=[('has_vat', '=', True)],
         help="Only Registered Reseller"
     )
     l10n_in_journal_type = fields.Selection(string="Journal Type", related='journal_id.type')

@@ -98,7 +98,7 @@ class ResCompany(models.Model):
     def _l10n_hu_edi_test_credentials(self):
         with L10nHuEdiConnection(self.env) as connection:
             for company in self:
-                if not company.vat:
+                if not company.has_vat:
                     raise UserError(_('NAV Credentials: Please set the hungarian vat number on the company first!'))
                 try:
                     connection.do_token_exchange(company._l10n_hu_edi_get_credentials_dict())

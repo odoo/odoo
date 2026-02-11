@@ -660,7 +660,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 'cbc:ElectronicMail': {'_text': partner.email},
             },
         }
-        if partner.vat and partner.vat != '/':
+        if partner.has_vat:
             party_node['cac:PartyTaxScheme'] = {
                 'cbc:RegistrationName': {'_text': commercial_partner.name},
                 'cbc:CompanyID': {'_text': commercial_partner.vat},

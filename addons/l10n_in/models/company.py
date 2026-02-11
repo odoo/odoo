@@ -135,10 +135,10 @@ class ResCompany(models.Model):
             ])
             taxes.write({'active': active})
 
-    @api.depends('vat')
+    @api.depends('has_vat')
     def _compute_l10n_in_hsn_code_digit(self):
         for record in self:
-            if record.country_code == "IN" and record.vat:
+            if record.country_code == "IN" and record.has_vat:
                 record.l10n_in_hsn_code_digit = "4"
             else:
                 record.l10n_in_hsn_code_digit = False

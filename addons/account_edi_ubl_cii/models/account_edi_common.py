@@ -321,7 +321,7 @@ class AccountEdiCommon(models.AbstractModel):
         supplier_in_eea = supplier.country_id.code in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES
         customer_in_eea = customer.country_id.code in EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES
 
-        if (supplier_in_eea or customer_in_eea) and supplier.vat:
+        if (supplier_in_eea or customer_in_eea) and supplier.has_vat:
             if tax.amount != 0 and not tax.has_negative_factor:
                 # Special case: Purchase reverse-charge taxes for self-billed invoices.
                 # See explanation above.

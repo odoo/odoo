@@ -44,7 +44,7 @@ class ResPartner(models.Model):
             return
 
         for partner in self:
-            if not partner.vat:
+            if not partner.has_vat:
                 partner.vies_valid = False
                 continue
             if partner.parent_id and partner.parent_id.vat == partner.vat:

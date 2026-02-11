@@ -263,7 +263,7 @@ class AccountFiscalPosition(models.Model):
 
         company = self.env.company
         intra_eu = vat_exclusion = False
-        if company.vat and partner.vat:
+        if company.has_vat and partner.has_vat:
             eu_country_codes = set(self.env.ref('base.europe').country_ids.mapped('code'))
             intra_eu = company.vat[:2] in eu_country_codes and partner.vat[:2] in eu_country_codes
             vat_exclusion = company.vat[:2] == partner.vat[:2]
@@ -873,7 +873,7 @@ class ResPartner(models.Model):
     def _get_vat_required_valid(self, company=None):
         """ Hook for determining VAT validity with more complex VAT requirements. (like VIES)"""
         self.ensure_one()
-        return bool(self.vat and self.vat != '/')
+        return self.has_vat
 
     # TODO accounting/JCO, seems strange that this address validation logic is only there for pos, and
     # not for standard address management on portal/ecommerce
