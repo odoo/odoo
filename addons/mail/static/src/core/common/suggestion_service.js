@@ -164,7 +164,7 @@ export class SuggestionService {
      * @param {String} [param0.delimiter] can be one one of the following: ["@", "#"]
      * @param {String} [param0.term]
      * @param {Object} [options={}]
-     * @param {Integer} [options.thread] prioritize and/or restrict
+     * @param {import("models").Thread} [options.thread] prioritize and/or restrict
      *  result in the context of given thread
      * @returns {{ type: String, suggestions: Array }}
      */
