@@ -12214,6 +12214,70 @@ test("new record, receive more create commands than limit", async () => {
     expect(".o_x2m_control_panel .o_pager").toHaveCount(0);
 });
 
+test("existing record: receive more create commands than limit", async () => {
+    Partner._records = [
+        { id: 1, name: "Initial Record 1", p: [1, 2, 3, 4] },
+        { id: 2, name: "Initial Record 2" },
+        { id: 3, name: "Initial Record 3" },
+        { id: 4, name: "Initial Record 4" },
+    ]
+    Partner._onChanges = {
+        int_field: function (obj) {
+            if (obj.int_field === 16) {
+                obj.p = [
+                    [0, 0, { display_name: "Record 1" }],
+                    [0, 0, { display_name: "Record 2" }],
+                    [0, 0, { display_name: "Record 3" }],
+                    [0, 0, { display_name: "Record 4" }],
+                ];
+            }
+        },
+    };
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="int_field"/>
+                <group>
+                    <field name="p">
+                        <list limit="2">
+                            <field name="display_name"/>
+                        </list>
+                    </field>
+                </group>
+            </form>`,
+    });
+
+    expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual([
+        "Initial Record 1",
+        "Initial Record 2",
+    ]);
+
+    await contains("[name=int_field] input").edit("16", { confirm: "blur" });
+
+    expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual([
+        "Initial Record 1",
+        "Initial Record 2",
+        "Record 1",
+        "Record 2",
+        "Record 3",
+        "Record 4",
+    ]);
+
+    await contains(".o_data_row :text('Record 3') ~ .o_list_record_remove").click();
+
+    expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual([
+        "Initial Record 1",
+        "Initial Record 2",
+        "Record 1",
+        "Record 2",
+        "Record 4",
+        "Initial Record 3",
+    ]);
+});
+
 test("active actions are passed to o2m field", async () => {
     Partner._records[0].turtles = [1, 2, 3];
 
