@@ -91,6 +91,7 @@ export class ResponsivePlugin extends BasePlugin {
         );
         let el;
         while ((el = treeWalker.nextNode())) {
+            // TODO EGGMAIL: ensure compatibility of this algo with RTL
             const rect = getClientRect(el);
             const prev = getClientRect(el.previousElementSibling);
             const next = getClientRect(el.nextElementSibling);
@@ -135,6 +136,21 @@ export class ResponsivePlugin extends BasePlugin {
             // do we need the mobile interpretation at this stage? Yes, it will
             // add some missing clusters without any conclusion, and we can easily check
             // if an element is a cluster in both, only in desktop, or only in mobile
+
+            //
+            // TODO: verify that cluster identification works in following cases:
+            // alert block (float),
+            // container/row/col combo with offsets and unfinished rows
+            // normal table
+            // d-flex block without container/row/col?
+            //
+            // if heuristics are correct -> start implementing "table" conversion
+            // This should resolve almost all layout concerns (need to identify attributes/relevant css properties)
+            // decide which properties we copy from class_to_style, more difficult when applying on tables
+            // next issue would be images, fontawesome to image, and so on
+            // handle outlook with ghost tables
+            // handle colors
+            // handle stylesheets in mail for usage of convert_inline
         }
         this.htmlStructures.set(layoutType, undefined);
     }
