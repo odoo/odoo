@@ -82,3 +82,64 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         finished_sm = picking.move_ids[0]
         self.assertEqual(finished_sm.move_orig_ids.production_id.product_id, self.finished)
+
+    def test_kit_tracked_does_not_ask_lot(self):
+        categ = self.env.ref("product.product_category_all")
+        kit_product, component = self.env["product.product"].create(
+            [
+                {
+                    "name": "Kit Product",
+                    "is_storable": True,
+                    "categ_id": categ.id,
+                    "available_in_pos": True,
+                    "tracking": "lot",
+                    "lst_price": 10.0,
+                },
+                {
+                    "name": "Lot Component",
+                    "is_storable": True,
+                    "categ_id": categ.id,
+                    "available_in_pos": True,
+                    "tracking": "lot",
+                    "lst_price": 5.0,
+                },
+            ]
+        )
+        self.env["mrp.bom"].create(
+            {
+                "product_tmpl_id": kit_product.product_tmpl_id.id,
+                "product_qty": 1.0,
+                "type": "phantom",
+                "bom_line_ids": [
+                    Command.create(
+                        {
+                            "product_id": component.id,
+                            "product_qty": 1.0,
+                        }
+                    ),
+                ],
+            }
+        )
+        kit_product.invalidate_recordset(["has_phantom_bom"])
+        lot = self.env["stock.lot"].create(
+            {
+                "name": "COMP-LOT-1",
+                "product_id": component.id,
+                "company_id": self.env.company.id,
+            }
+        )
+        warehouse = self.env["stock.warehouse"].search(
+            [("company_id", "=", self.env.company.id)], limit=1
+        )
+        self.env["stock.quant"].with_context(inventory_mode=True).create(
+            {
+                "product_id": component.id,
+                "location_id": warehouse.lot_stock_id.id,
+                "lot_id": lot.id,
+                "inventory_quantity": 10.0,
+            }
+        ).action_apply_inventory()
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        url = "/pos/ui?config_id=%d" % self.main_pos_config.id
+        self.start_tour(url, "test_pos_mrp_kit_does_not_ask_lot", login="pos_user")

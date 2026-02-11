@@ -28,6 +28,10 @@ export class ProductProduct extends Base {
     isTracked() {
         const pickingType = this.models["stock.picking.type"].readAll()[0];
 
+        if (this.has_phantom_bom) {
+            return false;
+        }
+
         return (
             ["serial", "lot"].includes(this.tracking) &&
             (pickingType.use_create_lots || pickingType.use_existing_lots)

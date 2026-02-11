@@ -32,3 +32,14 @@ registry.category("web_tour.tours").add("test_ship_later_kit_and_mto_manufacture
             ReceiptScreen.receiptIsThere(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_pos_mrp_kit_does_not_ask_lot", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Kit Product"),
+            Dialog.isNot(),
+            ProductScreen.selectedOrderlineHas("Kit Product", "1"),
+        ].flat(),
+});
