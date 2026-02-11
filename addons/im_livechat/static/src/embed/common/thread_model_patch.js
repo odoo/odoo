@@ -4,7 +4,6 @@ import "@mail/discuss/core/common/thread_model_patch";
 import { generateEmojisOnHtml } from "@mail/utils/common/format";
 
 import { patch } from "@web/core/utils/patch";
-import { Deferred } from "@web/core/utils/concurrency";
 
 patch(Thread.prototype, {
     setup() {
@@ -40,9 +39,9 @@ patch(Thread.prototype, {
          * with its temporary counterpart (i.e. when the actions following the
          * persist call are done to avoid flickering).
          *
-         * @type {Deferred}
+         * @type {PromiseWithResolvers}
          */
-        this.readyToSwapDeferred = new Deferred();
+        this.readyToSwapDeferred = null;
         this._toggleChatbot = fields.Attr(false, {
             compute() {
                 return this.channel?.chatbot && !this.channel.livechat_end_dt;
