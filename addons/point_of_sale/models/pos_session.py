@@ -1103,8 +1103,6 @@ class PosSession(models.Model):
         if float_compare(amounts['amount'], 0, precision_rounding=self.currency_id.rounding) < 0:
             # revert the accounts because account.payment doesn't accept negative amount.
             account_payment.write({
-                'outstanding_account_id': account_payment.destination_account_id,
-                'destination_account_id': account_payment.outstanding_account_id,
                 'payment_type': 'outbound',
             })
 
