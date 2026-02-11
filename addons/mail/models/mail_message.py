@@ -984,17 +984,45 @@ class MailMessage(models.Model):
             domain &= message_domain
         if search_term or is_notification is not None:
             res["count"] = self.search_count(domain)
-        if around is not None:
-            messages_before = self.search(domain & Domain('id', '<=', around), limit=limit // 2, order="id DESC")
-            messages_after = self.search(domain & Domain('id', '>', around), limit=limit // 2, order='id ASC')
-            return {**res, "messages": (messages_after + messages_before).sorted('id', reverse=True)}
-        if before:
-            domain &= Domain('id', '<', before)
+
+        is_chatter_view = self.env.context.get('is_chatter_view', False)
+
+        if is_chatter_view:
+            if around is not None:
+                around_message = self.browse(around)
+                messages_before = self.search(domain & Domain('date', '<=', around_message.date), limit=limit // 2, order="date DESC, id DESC")
+                messages_after = self.search(domain & Domain('date', '>', around_message.date), limit=limit // 2, order='date ASC, id ASC')
+                return {**res, "messages": (messages_after + messages_before).sorted(lambda m: (m.date, m.id), reverse=True)}
+            if before:
+                before_message = self.browse(before)
+                domain &= Domain.OR([
+                    [('date', '<', before_message.date)],
+                    [('date', '=', before_message.date), ('id', '<', before)]
+                ])
+            if after:
+                after_message = self.browse(after)
+                domain &= Domain.OR([
+                    [('date', '>', after_message.date)],
+                    [('date', '=', after_message.date), ('id', '>', after)]
+                ])
+            order = 'date ASC, id ASC' if after else 'date DESC, id DESC'
+        else:
+            if around is not None:
+                messages_before = self.search(domain & Domain('id', '<=', around), limit=limit // 2, order="id DESC")
+                messages_after = self.search(domain & Domain('id', '>', around), limit=limit // 2, order='id ASC')
+                return {**res, "messages": (messages_after + messages_before).sorted('id', reverse=True)}
+            if before:
+                domain &= Domain('id', '<', before)
+            if after:
+                domain &= Domain('id', '>', after)
+            order = 'id ASC' if after else 'id DESC'
+
+        res["messages"] = self.search(domain, limit=limit, order=order)
         if after:
-            domain &= Domain('id', '>', after)
-        res["messages"] = self.search(domain, limit=limit, order='id ASC' if after else 'id DESC')
-        if after:
-            res["messages"] = res["messages"].sorted('id', reverse=True)
+            if is_chatter_view:
+                res["messages"] = res["messages"].sorted(lambda m: (m.date, m.id), reverse=True)
+            else:
+                res["messages"] = res["messages"].sorted('id', reverse=True)
         return res
 
     def _get_tracking_values_domain(self, search_term):
