@@ -567,6 +567,14 @@
         <field name="category" eval="'working_time'"/>
     </record>
 
+    <record id="l10n_be_work_entry_type_paid_time_off_worker" model="hr.work.entry.type">
+        <field name="name">Worker Paid Time Off</field>
+        <field name="code">LEAVE121</field>
+        <field name="color">5</field>
+        <field name="display_code">WPT</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
 <!-- YTI TODO: Encore unpaid work entry types on structure -->
     <record id="l10n_be_work_entry_type_unpaid_recovered_compensatory_rest" model="hr.work.entry.type">
         <field name="name">Unpaid compensatory rest at the time of recovery following hours worked at another time</field>
@@ -671,6 +679,7 @@
         <field name="name">Incapacity for work with guaranteed salary system for workers - 2nd week</field>
         <field name="code">LEAVE218</field>
         <field name="color">5</field>
+        <field name="amount_rate">0.8588</field>
         <field name="display_code">IW2</field>
         <field name="country_id" ref="base.be"/>
         <field name="category" eval="'absence'"/>
@@ -753,6 +762,7 @@
         <field name="code">LEAVE229</field>
         <field name="color">5</field>
         <field name="display_code">WAS</field>
+        <field name="amount_rate">0.8588</field>
         <field name="country_id" ref="base.be"/>
         <field name="category" eval="'absence'"/>
     </record>

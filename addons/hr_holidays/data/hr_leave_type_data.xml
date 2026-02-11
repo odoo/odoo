@@ -100,6 +100,25 @@
     </record>
 
 <!-- BE : Belgium -->
+
+    <record id="l10n_be_leave_type_paid_time_off_worker" model="hr.leave.type">
+        <field name="name">Worker Paid Time Off</field>
+        <field name="requires_allocation">True</field>
+        <field name="employee_requests">False</field>
+        <field name="leave_validation_type">both</field>
+        <field name="allocation_validation_type">hr</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="leave_notif_subtype_id" ref="mt_leave"/>
+        <field name="allocation_notif_subtype_id" ref="mt_leave_allocation"/>
+        <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
+        <field name="icon_id" ref="hr_holidays.icon_14"/>
+        <field name="color">2</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.be"/>
+        <field name="sequence">1</field>
+    </record>
+
     <record id="l10n_be_leave_type_small_unemployment" model="hr.leave.type">
         <field name="name">Small Unemployment</field>
         <field name="requires_allocation">True</field>
