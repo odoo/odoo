@@ -8,6 +8,7 @@ patch(Thread.prototype, {
     setup() {
         super.setup();
         this.livechat_end_dt = fields.Datetime();
+        this.chatbot = fields.One("Chatbot");
         this.livechat_operator_id = fields.One("Persona");
         this.livechatVisitorMember = fields.One("discuss.channel.member", {
             compute() {
