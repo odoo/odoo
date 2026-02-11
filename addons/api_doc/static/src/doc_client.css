@@ -237,17 +237,23 @@ pre {
 
 .o-doc-dynamic-tooltip {
     position: fixed;
+    font-size: .85em;
     z-index: 1000;
     min-width: 10rem;
-    max-width: 25rem;
+    max-width: 35rem;
     background-color: var(--background);
     color: var(--text);
-    padding: .3rem .5rem;
     border-radius: 6px;
-    text-align: center;
+    text-align: left;
+    max-height: 300px;
     box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.3);
     opacity: 0;
     transition: opacity 0.2s ease-in-out;
+    pointer-events: none;
+
+    p {
+        margin-bottom: 0 !important;
+    }
 }
 
 .btn-sm {
