@@ -3,6 +3,12 @@
         cursor: context-menu;
         outline: $border-width solid $o-action;
     }
+    &.text-muted {
+        img {
+            filter: grayscale(1);
+            opacity: 0.5;
+        }
+    }
 }
 
 .o_kanban_record  {

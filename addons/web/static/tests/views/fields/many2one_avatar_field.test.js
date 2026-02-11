@@ -431,3 +431,21 @@ test("widget many2one_avatar in kanban view without access rights", async () => 
         ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > .o_quick_assign"
     ).toHaveCount(0);
 });
+
+test(`decoration-muted works on avatars`, async () => {
+    Partner._records.forEach((rec) => (rec.int_field = 9));
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="int_field"/>
+                <field name="user_id" widget="many2one_avatar" decoration-muted="int_field &lt; 5"/>
+                <field name="user_id" widget="many2one_avatar" decoration-muted="int_field &gt; 5"/>
+            </form>
+        `,
+        resId: 2,
+    });
+    expect(`.o_avatar:eq(0) img`).not.toHaveStyle({ opacity: 0.5, filter: "grayscale(1)" });
+    expect(`.o_avatar:eq(1) img`).toHaveStyle({ opacity: 0.5, filter: "grayscale(1)" });
+});
