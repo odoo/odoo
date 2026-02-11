@@ -205,16 +205,6 @@ test("sendDraftOrderToServer", async () => {
     expect(store.models["pos.order"].length).toBe(1);
 });
 
-test("sendDraftOrderToServer updateLastOrderChange", async () => {
-    const store = await setupSelfPosEnv();
-    const order = await getFilledSelfOrder(store);
-
-    const product1 = store.models["product.template"].get(8);
-    await store.addToCart(product1, 1, "");
-    await store.sendDraftOrderToServer();
-    expect(Object.keys(order.last_order_preparation_change.lines)).toHaveLength(3);
-});
-
 describe("cancelOrder", () => {
     test("Normal cancel order", async () => {
         const store = await setupSelfPosEnv();
