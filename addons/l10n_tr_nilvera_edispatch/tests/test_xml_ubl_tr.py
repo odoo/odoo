@@ -29,7 +29,7 @@ class TestEdispatchUBLTr(TestUBLTRCommon):
                     'move_line_ids': [
                         Command.create({'product_id': self.product_a.id, 'qty_done': qty}),
                     ],
-                    'l10n_tr_nilvera_dispatch_state': 'sent',
+                    'l10n_tr_nilvera_send_status': 'sent',
                 } for qty in [1, 2]
             ])
             generated_xml = self._generate_invoice_xml(

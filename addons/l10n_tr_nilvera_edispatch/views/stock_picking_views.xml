@@ -19,9 +19,9 @@
         <field name="arch" type="xml">
             <xpath expr="//group" position="inside">
                 <filter 
-                    string="GİB e-Dispatch State"
-                    name="l10n_tr_nilvera_dispatch_state"
-                    context="{'group_by': 'l10n_tr_nilvera_dispatch_state'}"
+                    string="Nilvera Status"
+                    name="nilvera_status"
+                    context="{'group_by': 'l10n_tr_nilvera_send_status'}"
                 />
             </xpath>
         </field>
@@ -33,8 +33,26 @@
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
-                <button name="action_generate_l10n_tr_edispatch_xml" type="object" invisible="country_code != 'TR' or picking_type_code != 'outgoing' or state != 'done' or not partner_id" string="Generate GİB e-Dispatch (XML)" />
+                <button name="action_send_edispatch_xml"
+                        type="object"
+                        invisible="country_code != 'TR' or picking_type_code != 'outgoing' or state != 'done' or not partner_id or l10n_tr_nilvera_send_status != 'not_sent'"
+                        string="Send GİB e-Dispatch (XML)" />
             </xpath>
+            <field name="origin" position="after">
+                <label for="l10n_tr_nilvera_send_status" invisible="country_code != 'TR' or state == 'draft' or picking_type_code != 'outgoing'"/>
+                <div name="nilvera_div"
+                     class="o_row o_align_center"
+                     invisible="country_code != 'TR' or state == 'draft' or picking_type_code != 'outgoing'">
+                    <field name="l10n_tr_nilvera_send_status" class="oe_inline"/>
+                    <button
+                        name="l10n_tr_nilvera_get_dispatch_status"
+                        type="object"
+                        class="o_icon_button text-primary"
+                        invisible="l10n_tr_nilvera_send_status not in ['sent', 'waiting']"
+                        title="Synchronize with Nilvera"
+                        icon="fa-refresh"/>
+                </div>
+            </field>
             <xpath expr="//notebook" position="inside">
                 <page name="l10n_tr_edispatch" string="e-Dispatch" invisible="country_code != 'TR' or picking_type_code == 'internal' or not partner_id">
                     <group>
@@ -49,7 +67,6 @@
                             <field name="l10n_tr_nilvera_seller_supplier_id"/>
                             <field name="l10n_tr_nilvera_buyer_originator_id"/>
                             <field name="l10n_tr_nilvera_delivery_notes"/>
-                            <field name="l10n_tr_nilvera_dispatch_state" invisible="picking_type_code != 'outgoing'"/>
                         </group>
                     </group>
                     <group>
@@ -83,14 +100,12 @@ records.action_generate_l10n_tr_edispatch_xml(is_list=True)
         </field>
     </record>
 
-    <record model="ir.actions.server" id="action_mark_l10n_tr_nilvera_edispatch_status">
-        <field name="name">Mark as sent (GİB e-Dispatch)</field>
+    <record model="ir.actions.server" id="action_export_l10n_tr_nilvera_edispatch_form">
+        <field name="name">Generate GİB e-Dispatch (XML)</field>
         <field name="model_id" ref="model_stock_picking"/>
         <field name="binding_model_id" ref="model_stock_picking"/>
-        <field name="binding_view_types">list</field>
+        <field name="binding_view_types">form</field>
         <field name="state">code</field>
-        <field name="code">
-records.action_mark_l10n_tr_edispatch_status()
-        </field>
+        <field name="code">records.action_generate_l10n_tr_edispatch_xml()</field>
     </record>
 </odoo>

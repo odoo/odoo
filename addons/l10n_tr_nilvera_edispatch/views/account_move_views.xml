@@ -12,7 +12,7 @@
                     invisible="country_code != 'TR' or move_type != 'out_invoice' or l10n_tr_nilvera_company_einvoice_status != 'einvoice'"
                     options="{'no_create': True}"
                     context="{'search_default_partner_id': partner_id}"
-                    domain="[('picking_type_code', '=', 'outgoing'), ('state', '=', 'done'), ('l10n_tr_nilvera_dispatch_state', '=', 'sent')]"
+                    domain="[('picking_type_code', '=', 'outgoing'), ('state', '=', 'done'), ('l10n_tr_nilvera_send_status', '=', 'succeed')]"
                     widget="many2many_tags"
                 />
             </xpath>

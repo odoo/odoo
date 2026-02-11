@@ -25,7 +25,7 @@ class AccountMove(models.Model):
             ):
                 continue
             move.l10n_tr_nilvera_edispatch_ids = move.invoice_line_ids.sale_line_ids.order_id.picking_ids.filtered(
-                    lambda p: p.l10n_tr_nilvera_dispatch_state == "sent"
+                    lambda p: p.l10n_tr_nilvera_send_status == "succeed"
                     and p.state == "done"
                     and p.picking_type_code == "outgoing"
                     and p.partner_id == move.partner_id,

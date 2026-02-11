@@ -1,5 +1,7 @@
 import uuid
 
+from markupsafe import Markup
+from io import BytesIO
 from lxml import etree
 
 from odoo import Command, _, api, fields, models
@@ -8,11 +10,18 @@ from odoo.tools import cleanup_xml_node
 from odoo.tools.xml_utils import find_xml_value
 
 from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NAMESPACES
+from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
 
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
+    l10n_tr_nilvera_uuid = fields.Char(
+        string="Nilvera Document UUID",
+        copy=False,
+        readonly=True,
+        default=lambda self: str(uuid.uuid4()),
+    )
     l10n_tr_nilvera_dispatch_type = fields.Selection(
         string="Dispatch Type",
         help="Used to populate the type of dispatch.",
@@ -72,13 +81,47 @@ class StockPicking(models.Model):
         copy=False,
     )
     l10n_tr_nilvera_delivery_notes = fields.Char(string="Delivery Notes", copy=False)
-    l10n_tr_nilvera_dispatch_state = fields.Selection(
-        string="e-Dispatch State",
-        selection=[('to_send', "To Send"), ('sent', "Sent")],
-        tracking=True,
+    l10n_tr_nilvera_send_status = fields.Selection(
+        string="Nilvera Status",
+        selection=[
+            ('error', "Error"),
+            ('not_sent', "Not sent"),
+            ('sent', "Sent and waiting response"),
+            ('succeed', "Successful"),
+            ('waiting', "Waiting"),
+            ('unknown', "Unknown"),
+        ],
         copy=False,
+        readonly=True,
+        default='not_sent',
     )
     l10n_tr_nilvera_edispatch_warnings = fields.Json(compute='_compute_edispatch_warnings')
+    l10n_tr_nilvera_edispatch_xml_file = fields.Binary(
+        string="Nilvera E-Despatch XML File",
+        copy=False,
+        attachment=True,
+    )
+    l10n_tr_nilvera_edispatch_xml_id = fields.Many2one(
+        "ir.attachment",
+        string="Nilvera E-Despatch XML",
+        compute='_compute_l10n_tr_nilvera_edispatch_xml_id',
+    )
+
+    @api.depends('l10n_tr_nilvera_edispatch_xml_file')
+    def _compute_l10n_tr_nilvera_edispatch_xml_id(self):
+        """
+        Helper to retreive Attachment from Binary fields
+        This is needed because fields.Many2one('ir.attachment') makes all
+        attachments available to the user.
+        """
+        attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', self._name),
+            ('res_id', 'in', self.ids),
+            ('res_field', '=', 'l10n_tr_nilvera_edispatch_xml_file')
+        ])
+        picking_vals = {att.res_id: att for att in attachments}
+        for picking in self:
+            picking.l10n_tr_nilvera_edispatch_xml_id = picking_vals.get(picking._origin.id, False)
 
     @api.depends(
         'l10n_tr_nilvera_carrier_id', 'l10n_tr_nilvera_buyer_id', 'l10n_tr_nilvera_seller_supplier_id',
@@ -102,8 +145,6 @@ class StockPicking(models.Model):
         for picking in self:
             if picking.country_code != 'TR' or picking.picking_type_code != 'outgoing' or picking.state != 'done':
                 continue
-            if picking.partner_id:
-                picking.l10n_tr_nilvera_dispatch_state = 'to_send'
             else:
                 picking.message_post(
                     body=_("e-Dispatch will not be generated as the Delivery Address is not set.")
@@ -121,7 +162,7 @@ class StockPicking(models.Model):
             self.company_id.partner_id
             | self.partner_id.commercial_partner_id
             | self.l10n_tr_nilvera_carrier_id
-        )
+        ).filtered(lambda p: p.l10n_tr_nilvera_customer_status == 'einvoice')
 
         error_messages = (
             partners._l10n_tr_nilvera_validate_partner_details() |
@@ -215,7 +256,6 @@ class StockPicking(models.Model):
             return self._l10n_tr_validate_edispatch_on_done()
 
     def _l10n_tr_generate_edispatch_xml(self):
-        dispatch_uuid = str(uuid.uuid4())
         drivers = []
         for driver in self.l10n_tr_nilvera_driver_ids:
             driver_name = driver.name.split(' ', 1)
@@ -235,7 +275,8 @@ class StockPicking(models.Model):
         values = {
             'ubl_version_id': 2.1,
             'customization_id': 'TR1.2.1',
-            'uuid': dispatch_uuid,
+            'uuid': self.l10n_tr_nilvera_uuid,
+            'id': self._get_nilvera_document_serial_number(),
             'picking': self,
             'current_company': self.env.company.partner_id,
             'issue_date': scheduled_date_local.date().strftime('%Y-%m-%d'),
@@ -263,29 +304,121 @@ class StockPicking(models.Model):
             'raw': xml_string,
             'res_model': self._name,
             'res_id': self.id,
-            'type': 'binary',
+            'res_field': 'l10n_tr_nilvera_edispatch_xml_file',
+            'mimetype': 'application/xml',
         })
+        self.invalidate_recordset(fnames=['l10n_tr_nilvera_edispatch_xml_id', 'l10n_tr_nilvera_edispatch_xml_file'])
         self.message_post(
             body=_("e-Dispatch XML file generated successfully."),
             attachment_ids=[attachment.id],
             subtype_xmlid='mail.mt_note',
         )
 
+    def _l10n_tr_nilvera_submit_document(self, xml_file, post_series=True):
+        """
+        Submits an e-despatch document to Nilvera for processing.
+
+        :param xml_file: The XML file to be submitted.
+        :type xml_file: file-like object
+        :param post_series: Whether to attempt posting the series/sequence to Nilvera if it is missing.
+                            Defaults to True. Useful for avoiding an infinite loop.
+        :type post_series: bool
+        :raises UserError: If the API key lacks necessary rights (401 or 403 responses), if the response
+                            indicates a client error (4xx), or if a server error occurs (500).
+        :return: None
+        """
+        with _get_nilvera_client(self.env.company) as client:
+            response = client.request(
+                "POST",
+                endpoint='/edespatch/Send/Xml',
+                params={'Alias': self.partner_id.l10n_tr_nilvera_edispatch_alias_id.name or 'urn:mail:irsaliyepk@gib.gov.tr'},
+                files={'file': (xml_file.name, xml_file, 'application/xml')},
+                handle_response=False,
+            )
+
+        if response.status_code == 200:
+            self.l10n_tr_nilvera_send_status = 'sent'
+        elif response.status_code in {401, 403}:
+            raise UserError(_("Oops, seems like you're unauthorised to do this. Try another API key with more rights or contact Nilvera."))
+        elif 400 <= response.status_code < 500:
+            error_message, error_codes = client._get_error_message_with_codes_from_response(response)
+
+            # If the sequence/series is not found on Nilvera, add it then retry.
+            if 3009 in error_codes and post_series:
+                self._l10n_tr_nilvera_post_series(client)
+                xml_file.seek(0)  # reset stream before retry, as previous POST moved the buffer to the EOF
+                return self._l10n_tr_nilvera_submit_document(xml_file, post_series=False)
+            raise UserError(error_message)
+        elif response.status_code == 500:
+            raise UserError(_("Server error from Nilvera, please try again later."))
+
+        self.message_post(body=_("The dispatch has been successfully sent to Nilvera."))
+
+    def _l10n_tr_nilvera_post_series(self, client):
+        if not self.picking_type_id.sequence_code:
+            return
+
+        client.request(
+            "POST",
+            endpoint="/edespatch/Series",
+            json={
+                'Name': self.picking_type_id.sequence_code.upper(),
+                'IsActive': True,
+                'IsDefault': False,
+            },
+        )
+
+    def _l10n_tr_nilvera_get_submitted_document_status(self):
+        for company, stock_pickings in self.grouped("company_id").items():
+            with _get_nilvera_client(company) as client:
+                for stock_picking in stock_pickings:
+                    response = client.request(
+                        "GET",
+                        endpoint=f"/edespatch/Sale/{stock_picking.l10n_tr_nilvera_uuid}/Status",
+                    )
+
+                    nilvera_status = response.get('DespatchStatus', {}).get('Code')
+                    if nilvera_status in dict(stock_pickings._fields['l10n_tr_nilvera_send_status'].selection):
+                        stock_pickings.l10n_tr_nilvera_send_status = nilvera_status
+                        if nilvera_status == 'error':
+                            stock_pickings.message_post(
+                                body=Markup(
+                                    "%s<br/>%s - %s<br/>"
+                                ) % (
+                                    _("The dispatch couldn't be sent to the recipient."),
+                                    response.get('DespatchStatus', {}).get('Description'),
+                                    response.get('DespatchStatus', {}).get('DetailDescription'),
+                                )
+                            )
+                    else:
+                        stock_pickings.message_post(body=_("The dispatch status couldn't be retrieved from Nilvera."))
+
+    def l10n_tr_nilvera_get_dispatch_status(self):
+        self._l10n_tr_nilvera_get_submitted_document_status()
+
+    def action_send_edispatch_xml(self):
+        if self.l10n_tr_nilvera_edispatch_warnings:
+            raise UserError(_("Cannot send the XML when there are warnings."))
+        self._l10n_tr_generate_edispatch_xml()
+        xml_file = BytesIO(self.l10n_tr_nilvera_edispatch_xml_id.raw or b'')
+        xml_file.name = self.l10n_tr_nilvera_edispatch_xml_id.name or ''
+        self._l10n_tr_nilvera_submit_document(xml_file)
+
     def action_generate_l10n_tr_edispatch_xml(self, is_list=False):
-        errors = []
+        invalid_picking_names = []
         for picking in self:
             if picking.country_code == 'TR' and picking.picking_type_code == 'outgoing':
                 if picking._l10n_tr_validate_edispatch_fields():
-                    errors.append(picking.name)
+                    invalid_picking_names.append(picking.name)
                 else:
                     picking._l10n_tr_generate_edispatch_xml()
-        if is_list and errors:
-            raise UserError(_("Error occurred in generating XML for following records:\n- %s", '\n- '.join(errors)))
+        if is_list and invalid_picking_names:
+            raise UserError(_("Error occurred in generating XML for following records:\n- %s", '\n- '.join(invalid_picking_names)))
 
-    def action_mark_l10n_tr_edispatch_status(self):
-        self.filtered(
-            lambda p: p.country_code == 'TR' and p.picking_type_code == 'outgoing'
-        ).l10n_tr_nilvera_dispatch_state = 'sent'
+    def _get_mail_thread_data_attachments(self):
+        # EXTENDS 'stock'
+        # Else, attachments with 'res_field' get excluded.
+        return super()._get_mail_thread_data_attachments() + self.l10n_tr_nilvera_edispatch_xml_id
 
     def _get_tag_text(self, xpath, tree, default=''):
         return find_xml_value(xpath, tree, UBL_NAMESPACES) or default
