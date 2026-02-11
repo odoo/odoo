@@ -30,7 +30,6 @@ import {
     test,
     tick,
 } from "@odoo/hoot";
-import { Component, xml } from "@odoo/owl";
 import { addNewRule } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import {
     MockServer,
@@ -83,27 +82,20 @@ import {
 import { onRendered, onWillRender } from "@web/owl2/utils";
 
 import { browser } from "@web/core/browser/browser";
-import { currencies } from "@web/core/currency";
 import { FileInput } from "@web/core/file_input/file_input";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { SampleServer } from "@web/model/sample_server";
-import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
 import { KanbanController } from "@web/views/kanban/kanban_controller";
 import { KanbanRecord } from "@web/views/kanban/kanban_record";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { kanbanView } from "@web/views/kanban/kanban_view";
 import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
-import { ViewButton } from "@web/views/view_button/view_button";
 import { AnimatedNumber } from "@web/views/view_components/animated_number";
 import { WebClient } from "@web/webclient/webclient";
 
 const { IrAttachment } = webModels;
-
-const fieldRegistry = registry.category("fields");
-const viewRegistry = registry.category("views");
-const viewWidgetRegistry = registry.category("view_widgets");
 
 async function createFileInput({ mockPost, mockAdd, props }) {
     mockService("notification", {
@@ -297,23 +289,6 @@ test("kanban rendering with class and style attributes", async () => {
     });
 });
 
-test("generic tags are case insensitive", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <Div class="test">Hello</Div>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect("div.test").toHaveCount(4);
-});
-
 test("kanban records are clickable by default", async () => {
     await mountView({
         type: "kanban",
@@ -353,85 +328,6 @@ test("kanban records with global_click='0'", async () => {
 
     await contains(".o_kanban_record").click();
     expect.verifySteps([]);
-});
-
-test("float fields are formatted properly without using a widget", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="float_field" digits="[0,5]"/>
-                        <field name="float_field" digits="[0,3]"/>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(".o_kanban_record:first").toHaveText("0.40000\n0.400");
-});
-
-test("field with widget and attributes in kanban", async () => {
-    const myField = {
-        component: class MyField extends Component {
-            static template = xml`<span/>`;
-            static props = ["*"];
-            setup() {
-                if (this.props.record.resId === 1) {
-                    expect(this.props.attrs).toEqual({
-                        name: "int_field",
-                        widget: "my_field",
-                        str: "some string",
-                        bool: "true",
-                        num: "4.5",
-                        field_id: "int_field_0",
-                    });
-                }
-            }
-        },
-        extractProps: ({ attrs }) => ({ attrs }),
-    };
-    fieldRegistry.add("my_field", myField);
-    after(() => fieldRegistry.remove("my_field"));
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <field name="foo"/>
-                <templates>
-                    <t t-name="card">
-                        <field name="int_field" widget="my_field"
-                            str="some string"
-                            bool="true"
-                            num="4.5"
-                        />
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-});
-
-test("kanban with integer field with human_readable option", async () => {
-    Partner._records[0].int_field = 5 * 1000 * 1000;
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="int_field" options="{'human_readable': true}"/>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(queryAllTexts(".o_kanban_record:not(.o_kanban_ghost)")).toEqual(["5M", "9", "17", "-4"]);
-    expect(".o_field_widget").toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -671,208 +567,6 @@ test("kanban grouped by date field", async () => {
     });
 
     expect(queryAllTexts(".o_column_title")).toEqual(["None\n(3)", "June 2007\n(1)"]);
-});
-
-test("context can be used in kanban template", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field t-if="context.some_key" name="foo"/>
-                    </t>
-                </templates>
-            </kanban>`,
-        context: { some_key: 1 },
-        domain: [["id", "=", 1]],
-    });
-
-    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
-    expect(".o_kanban_record span:contains(yop)").toHaveCount(1);
-});
-
-test("kanban with sub-template", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <t t-call="another-template"/>
-                    </t>
-                    <t t-name="another-template">
-                        <field name="foo"/>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(queryAllTexts(".o_kanban_record:not(.o_kanban_ghost)")).toEqual([
-        "yop",
-        "blip",
-        "gnap",
-        "blip",
-    ]);
-});
-
-test("kanban with t-set outside card", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <field name="int_field"/>
-                <templates>
-                    <t t-name="card">
-                        <t t-set="x" t-value="record.int_field.value"/>
-                        <div>
-                            <t t-out="x"/>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(queryAllTexts(".o_kanban_record:not(.o_kanban_ghost)")).toEqual(["10", "9", "17", "-4"]);
-});
-
-test("kanban with t-if/t-else on field", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field t-if="record.int_field.value > -1" name="int_field"/>
-                        <t t-else="">Negative value</t>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(queryAllTexts(".o_kanban_record:not(.o_kanban_ghost)")).toEqual([
-        "10",
-        "9",
-        "17",
-        "Negative value",
-    ]);
-});
-
-test("kanban with t-if/t-else on field with widget", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field t-if="record.int_field.value > -1" name="int_field" widget="integer"/>
-                        <t t-else="">Negative value</t>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(queryAllTexts(".o_kanban_record:not(.o_kanban_ghost)")).toEqual([
-        "10",
-        "9",
-        "17",
-        "Negative value",
-    ]);
-});
-
-test("field with widget and dynamic attributes in kanban", async () => {
-    const myField = {
-        component: class MyField extends Component {
-            static template = xml`<span/>`;
-            static props = ["*"];
-        },
-        extractProps: ({ attrs }) => {
-            expect.step(
-                `${attrs["dyn-bool"]}/${attrs["interp-str"]}/${attrs["interp-str2"]}/${attrs["interp-str3"]}`
-            );
-        },
-    };
-    fieldRegistry.add("my_field", myField);
-    after(() => fieldRegistry.remove("my_field"));
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <field name="foo"/>
-                <templates>
-                    <t t-name="card">
-                        <field name="int_field" widget="my_field"
-                            t-att-dyn-bool="record.foo.value.length > 3"
-                            t-attf-interp-str="hello {{record.foo.value}}"
-                            t-attf-interp-str2="hello #{record.foo.value} !"
-                            t-attf-interp-str3="hello {{record.foo.value}} }}"
-                        />
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-    expect.verifySteps([
-        "false/hello yop/hello yop !/hello yop }}",
-        "true/hello blip/hello blip !/hello blip }}",
-        "true/hello gnap/hello gnap !/hello gnap }}",
-        "true/hello blip/hello blip !/hello blip }}",
-    ]);
-});
-
-test("view button and string interpolated attribute in kanban", async () => {
-    patchWithCleanup(ViewButton.prototype, {
-        setup() {
-            super.setup();
-            expect.step(`[${this.props.clickParams["name"]}] className: '${this.props.className}'`);
-        },
-    });
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <field name="foo"/>
-                <templates>
-                    <t t-name="card">
-                        <a name="one" type="object" class="hola"/>
-                        <a name="two" type="object" class="hola" t-attf-class="hello"/>
-                        <a name="sri" type="object" class="hola" t-attf-class="{{record.foo.value}}"/>
-                        <a name="foa" type="object" class="hola" t-attf-class="{{record.foo.value}} olleh"/>
-                        <a name="fye" type="object" class="hola" t-attf-class="hello {{record.foo.value}}"/>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-    expect.verifySteps([
-        "[one] className: 'hola oe_kanban_action'",
-        "[two] className: 'hola oe_kanban_action hello'",
-        "[sri] className: 'hola oe_kanban_action yop'",
-        "[foa] className: 'hola oe_kanban_action yop olleh'",
-        "[fye] className: 'hola oe_kanban_action hello yop'",
-        "[one] className: 'hola oe_kanban_action'",
-        "[two] className: 'hola oe_kanban_action hello'",
-        "[sri] className: 'hola oe_kanban_action blip'",
-        "[foa] className: 'hola oe_kanban_action blip olleh'",
-        "[fye] className: 'hola oe_kanban_action hello blip'",
-        "[one] className: 'hola oe_kanban_action'",
-        "[two] className: 'hola oe_kanban_action hello'",
-        "[sri] className: 'hola oe_kanban_action gnap'",
-        "[foa] className: 'hola oe_kanban_action gnap olleh'",
-        "[fye] className: 'hola oe_kanban_action hello gnap'",
-        "[one] className: 'hola oe_kanban_action'",
-        "[two] className: 'hola oe_kanban_action hello'",
-        "[sri] className: 'hola oe_kanban_action blip'",
-        "[foa] className: 'hola oe_kanban_action blip olleh'",
-        "[fye] className: 'hola oe_kanban_action hello blip'",
-    ]);
 });
 
 test("pager should be hidden in grouped mode", async () => {
@@ -1717,98 +1411,6 @@ test("kanban grouped by stage_id: move record from to the None column", async ()
     // Assert it's back in "None"
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
     expect(queryAllTexts(".o_kanban_record", { root: getKanbanColumn(0) })[1]).toBe("Task B");
-});
-
-test("many2many_tags in kanban views", async () => {
-    Partner._records[0].category_ids = [6, 7];
-    Partner._records[1].category_ids = [7, 8];
-    Category._records.push({
-        id: 8,
-        name: "hello",
-        color: 0,
-    });
-
-    stepAllNetworkCalls();
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
-                        <field name="foo"/>
-                        <field name="state" widget="priority"/>
-                    </t>
-                </templates>
-            </kanban>`,
-        selectRecord: (resId) => {
-            expect(resId).toBe(1, {
-                message: "should trigger an event to open the clicked record in a form view",
-            });
-        },
-    });
-
-    expect(
-        queryAll(".o_field_many2many_tags .o_tag", { root: getKanbanRecord({ index: 0 }) })
-    ).toHaveCount(2, {
-        message: "first record should contain 2 tags",
-    });
-    expect(queryAll(".o_tag.o_tag_color_2", { root: getKanbanRecord({ index: 0 }) })).toHaveCount(
-        1,
-        {
-            message: "first tag should have color 2",
-        }
-    );
-    expect.verifySteps([
-        "/web/webclient/translations",
-        "/web/webclient/load_menus",
-        "get_views",
-        "web_search_read",
-        "has_group",
-    ]);
-
-    // Checks that second records has only one tag as one should be hidden (color 0)
-    expect(".o_kanban_record:nth-child(2) .o_tag").toHaveCount(1, {
-        message: "there should be only one tag in second record",
-    });
-    expect(".o_kanban_record:nth-child(2) .o_tag:first").toHaveText("silver");
-
-    // Write on the record using the priority widget to trigger a re-render in readonly
-    await contains(".o_kanban_record:first-child .o_priority_star:first-child").click();
-
-    expect.verifySteps(["web_save"]);
-    expect(".o_kanban_record:first-child .o_field_many2many_tags .o_tag").toHaveCount(2, {
-        message: "first record should still contain only 2 tags",
-    });
-    const tags = queryAll(".o_kanban_record:first-child .o_tag");
-    expect(tags[0]).toHaveText("gold");
-    expect(tags[1]).toHaveText("silver");
-
-    // click on a tag (should trigger switch_view)
-    await contains(".o_kanban_record:first-child .o_tag:first-child").click();
-});
-
-test("priority field should not be editable when missing access rights", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban edit="0">
-                <templates>
-                    <t t-name="card">
-                        <field name="foo"/>
-                        <field name="state" widget="priority"/>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-    // Try to fill one star in the priority field of the first record
-    await contains(".o_kanban_record:first-child .o_priority_star:first-child").click();
-    expect(".o_kanban_record:first-child .o_priority .fa-star-o").toHaveCount(2, {
-        message: "first record should still contain 2 empty stars",
-    });
 });
 
 test("Do not open record when clicking on `a` with `href`", async () => {
@@ -4611,110 +4213,6 @@ test("bounce create button when no data and click on empty area", async () => {
     expect(".o-kanban-button-new").toHaveClass("o_catch_attention");
 });
 
-test("buttons with modifiers", async () => {
-    Partner._records[1].bar = false; // so that test is more complete
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <field name="foo"/>
-                <field name="bar"/>
-                <field name="state"/>
-                <templates>
-                    <div t-name="card">
-                        <button class="o_btn_test_1" type="object" name="a1" invisible="foo != 'yop'"/>
-                        <button class="o_btn_test_2" type="object" name="a2" invisible="bar and state not in ['abc', 'def']"/>
-                    </div>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(".o_btn_test_1").toHaveCount(1, { message: "kanban should have one buttons of type 1" });
-    expect(".o_btn_test_2").toHaveCount(3, {
-        message: "kanban should have three buttons of type 2",
-    });
-});
-
-test("support styling of anchor tags with action type", async function (assert) {
-    expect.assertions(3);
-
-    mockService("action", {
-        doActionButton(action) {
-            expect(action.name).toBe("42");
-        },
-    });
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <div t-name="card">
-                        <field name="foo"/>
-                        <a type="action" name="42" class="btn-primary" style="margin-left: 10px"><i class="oi oi-arrow-right"/> Click me !</a>
-                    </div>
-                </templates>
-            </kanban>`,
-    });
-
-    await click("a[type='action']");
-    expect("a[type='action']:first").toHaveClass("btn-primary");
-    expect(queryFirst("a[type='action']").style.marginLeft).toBe("10px");
-});
-
-test("button executes action and reloads", async () => {
-    stepAllNetworkCalls();
-
-    let count = 0;
-    mockService("action", {
-        async doActionButton({ onClose }) {
-            count++;
-            await animationFrame();
-            onClose();
-        },
-    });
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <div t-name="card">
-                        <field name="foo"/>
-                        <button type="object" name="a1" class="a1">
-                            A1
-                        </button>
-                    </div>
-                </templates>
-            </kanban>`,
-    });
-
-    expect.verifySteps([
-        "/web/webclient/translations",
-        "/web/webclient/load_menus",
-        "get_views",
-        "web_search_read",
-        "has_group",
-    ]);
-    expect("button.a1").toHaveCount(4);
-    expect("button.a1:first").not.toHaveAttribute("disabled");
-
-    await click("button.a1");
-
-    expect("button.a1:first").toHaveAttribute("disabled");
-
-    await animationFrame();
-
-    expect("button.a1:first").not.toHaveAttribute("disabled");
-    expect(count).toBe(1, { message: "should have triggered an execute action only once" });
-    // the records should be reloaded after executing a button action
-    expect.verifySteps(["web_search_read"]);
-});
-
 test("button executes action and check domain", async () => {
     Partner._fields.active = fields.Boolean({ default: true });
     for (let i = 0; i < Partner._records.length; i++) {
@@ -4749,162 +4247,6 @@ test("button executes action and check domain", async () => {
     await contains("button.action-archive", { root: getKanbanRecord({ index: 0 }) }).click();
     expect(queryText("span", { root: getKanbanRecord({ index: 0 }) })).not.toBe("yop", {
         message: "should have removed 'yop' record from the view",
-    });
-});
-
-test("field tag with modifiers but no widget", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="foo" invisible="id == 1"/>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(".o_kanban_record:first").toHaveText("");
-    expect(".o_kanban_record:eq(1)").toHaveText("blip");
-});
-
-test("field tag with widget and class attributes", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="foo" widget="char" class="hi"/>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(".o_field_widget.hi").toHaveCount(4);
-});
-
-test("rendering date and datetime (value)", async () => {
-    Partner._records[0].date = "2017-01-25";
-    Partner._records[1].datetime = "2016-12-12 10:55:05";
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field class="date" name="date"/>
-                        <field class="datetime" name="datetime"/>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(getKanbanRecord({ index: 0 }).querySelector(".date")).toHaveText("Jan 25, 2017");
-    expect(getKanbanRecord({ index: 1 }).querySelector(".datetime")).toHaveText(
-        "Dec 12, 2016, 11:55 AM"
-    );
-});
-
-test("rendering date and datetime (raw value)", async () => {
-    Partner._records[0].date = "2017-01-25";
-    Partner._records[1].datetime = "2016-12-12 10:55:05";
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <field name="date"/>
-                <field name="datetime"/>
-                <templates>
-                    <t t-name="card">
-                        <span class="date" t-out="record.date.raw_value"/>
-                        <span class="datetime" t-out="record.datetime.raw_value"/>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(getKanbanRecord({ index: 0 }).querySelector(".date")).toHaveText(
-        "2017-01-25T00:00:00.000+01:00"
-    );
-    expect(getKanbanRecord({ index: 1 }).querySelector(".datetime")).toHaveText(
-        "2016-12-12T11:55:05.000+01:00"
-    );
-});
-
-test("rendering many2one (value)", async () => {
-    Partner._records[1].product_id = false;
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="product_id" class="product_id"/>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(getKanbanRecordTexts()).toEqual(["hello", "", "hello", "xmo"]);
-});
-
-test("rendering many2one (raw value)", async () => {
-    Partner._records[1].product_id = false;
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <field name="product_id"/>
-                <templates>
-                    <t t-name="card">
-                        <span class="product_id" t-out="record.product_id.raw_value"/>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(getKanbanRecordTexts()).toEqual(["3", "false", "3", "5"]);
-});
-
-test("evaluate conditions on relational fields", async () => {
-    Partner._records[0].product_id = false;
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <field name="product_id"/>
-                <field name="category_ids"/>
-                <templates>
-                    <t t-name="card">
-                        <button t-if="!record.product_id.raw_value" class="btn_a">A</button>
-                        <button t-if="!record.category_ids.raw_value.length" class="btn_b">B</button>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4, {
-        message: "there should be 4 records",
-    });
-    expect(".o_kanban_record:not(.o_kanban_ghost) .btn_a").toHaveCount(1, {
-        message: "only 1 of them should have the 'Action' button",
-    });
-    expect(".o_kanban_record:not(.o_kanban_ghost) .btn_b").toHaveCount(2, {
-        message: "only 2 of them should have the 'Action' button",
     });
 });
 
@@ -5053,28 +4395,6 @@ test("open config dropdown on kanban with records and groups draggable off", asy
     await toggleKanbanColumnActions(0);
 
     expect(".o-dropdown--menu").toHaveCount(1);
-});
-
-test("properly evaluate more complex domains", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <field name="bar"/>
-                <field name="category_ids"/>
-                <templates>
-                    <t t-name="card">
-                        <field name="foo"/>
-                        <button type="object" invisible="bar or category_ids" class="btn btn-primary float-end" name="arbitrary">Join</button>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect("button.float-end.oe_kanban_action").toHaveCount(1, {
-        message: "only one button should be visible",
-    });
 });
 
 test("kanban with color attribute", async () => {
@@ -5590,74 +4910,6 @@ test("resequence a record twice", async () => {
     });
     // should have resequenced twice
     expect.verifySteps(["resequence", "resequence"]);
-});
-
-test("basic support for widgets (being Owl Components)", async () => {
-    class MyComponent extends Component {
-        static template = xml`<div t-att-class="this.props.class" t-out="this.value"/>`;
-        static props = ["*"];
-        get value() {
-            return JSON.stringify(this.props.record.data);
-        }
-    }
-    const myComponent = {
-        component: MyComponent,
-    };
-    viewWidgetRegistry.add("test", myComponent);
-    after(() => viewWidgetRegistry.remove("test"));
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="foo"/>
-                        <widget name="test"/>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(getKanbanRecord({ index: 2 }).querySelector(".o_widget")).toHaveText('{"foo":"gnap"}');
-});
-
-test("kanban card: record value should be updated", async () => {
-    class MyComponent extends Component {
-        static template = xml`<div><button t-on-click="this.onClick">CLick</button></div>`;
-        static props = ["*"];
-        onClick() {
-            this.props.record.update({ foo: "yolo" });
-        }
-    }
-    const myComponent = {
-        component: MyComponent,
-    };
-    viewWidgetRegistry.add("test", myComponent);
-    after(() => viewWidgetRegistry.remove("test"));
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="foo" class="foo"/>
-                        <widget name="test"/>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(queryText(".foo", { root: getKanbanRecord({ index: 0 }) })).toBe("yop");
-
-    await click(queryOne("button", { root: getKanbanRecord({ index: 0 }) }));
-    await animationFrame();
-    await animationFrame();
-
-    expect(queryText(".foo", { root: getKanbanRecord({ index: 0 }) })).toBe("yolo");
 });
 
 test.tags("desktop");
@@ -6390,127 +5642,6 @@ test("click on image field in kanban (with default global_click)", async () => {
     await contains(".o_field_image").click();
 });
 
-test("kanban view with boolean field", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="bar"/>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(".o_kanban_record input:disabled").toHaveCount(4);
-    expect(".o_kanban_record input:checked").toHaveCount(3);
-    expect(".o_kanban_record input:not(:checked)").toHaveCount(1);
-});
-
-test("kanban view with boolean widget", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="bar" widget="boolean"/>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(
-        queryAll("div.o_field_boolean .o-checkbox", { root: getKanbanRecord({ index: 0 }) })
-    ).toHaveCount(1);
-});
-
-test("kanban view with boolean toggle widget", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="bar" widget="boolean_toggle"/>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-    expect(getKanbanRecord({ index: 0 }).querySelector("[name='bar'] input")).toBeChecked();
-    expect(getKanbanRecord({ index: 1 }).querySelector("[name='bar'] input")).toBeChecked();
-
-    await click("[name='bar'] input:only", { root: getKanbanRecord({ index: 1 }) });
-    await animationFrame();
-
-    expect(getKanbanRecord({ index: 0 }).querySelector("[name='bar'] input")).toBeChecked();
-    expect(getKanbanRecord({ index: 1 }).querySelector("[name='bar'] input")).not.toBeChecked();
-});
-
-test("kanban view with monetary and currency fields without widget", async () => {
-    const mockedCurrencies = {};
-    for (const record of Currency._records) {
-        mockedCurrencies[record.id] = record;
-    }
-    patchWithCleanup(currencies, mockedCurrencies);
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <field name="currency_id"/>
-                <templates>
-                    <t t-name="card">
-                        <field name="salary"/>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(getKanbanRecordTexts()).toEqual([
-        `$ 1,750.00`,
-        `$ 1,500.00`,
-        `2,000.00 €`,
-        `$ 2,222.00`,
-    ]);
-});
-
-test("kanban widget can extract props from attrs", async () => {
-    class TestWidget extends Component {
-        static template = xml`<div class="o-test-widget-option" t-out="this.props.title"/>`;
-        static props = ["*"];
-    }
-    const testWidget = {
-        component: TestWidget,
-        extractProps: ({ attrs }) => ({
-            title: attrs.title,
-        }),
-    };
-    viewWidgetRegistry.add("widget_test_option", testWidget);
-    after(() => viewWidgetRegistry.remove("widget_test_option"));
-
-    await mountView({
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <widget name="widget_test_option" title="Widget with Option"/>
-                    </t>
-                </templates>
-            </kanban>`,
-        resModel: "partner",
-        type: "kanban",
-    });
-
-    expect(".o-test-widget-option").toHaveCount(4);
-    expect(".o-test-widget-option:first").toHaveText("Widget with Option");
-});
-
 test("action/type attributes on kanban arch, type='object'", async () => {
     mockService("action", {
         doActionButton(params) {
@@ -6577,51 +5708,6 @@ test("action/type attributes on kanban arch, type='action'", async () => {
     ]);
     await contains(".o_kanban_record p").click();
     expect.verifySteps(["doActionButton type action name a1", "web_search_read"]);
-});
-
-test("Missing t-key is automatically filled with a warning", async () => {
-    patchWithCleanup(console, { warn: () => expect.step("warning") });
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <div>
-                            <span t-foreach="[1, 2, 3]" t-as="i" t-out="i" />
-                        </div>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect.verifySteps(["warning"]);
-    expect(getKanbanRecord({ index: 0 })).toHaveText("123");
-});
-
-test("Allow use of 'editable'/'deletable' in ungrouped kanban", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <div t-name="card">
-                        <button t-if="widget.editable">EDIT</button>
-                        <button t-if="widget.deletable">DELETE</button>
-                    </div>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(getKanbanRecordTexts()).toEqual([
-        "EDITDELETE",
-        "EDITDELETE",
-        "EDITDELETE",
-        "EDITDELETE",
-    ]);
 });
 
 test.tags("desktop");
@@ -6856,30 +5942,6 @@ test("dropdown is closed on item click", async () => {
     expect(".o-dropdown--menu").toHaveCount(0);
 });
 
-test("can use JSON in kanban template", async () => {
-    Partner._records = [{ id: 1, foo: '["g", "e", "d"]' }];
-
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <field name="foo"/>
-                <templates>
-                    <t t-name="card">
-                        <div>
-                            <span t-foreach="JSON.parse(record.foo.raw_value)" t-as="v" t-key="v_index" t-out="v"/>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
-    expect(".o_kanban_record span").toHaveCount(3);
-    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveText("ged");
-});
-
 test.tags("desktop");
 test("keep focus in cp when pressing arrowdown and no kanban card", async () => {
     Partner._records = [];
@@ -7066,69 +6128,6 @@ test("no leak of TransactionInProgress (not grouped case)", async () => {
         "blip",
     ]);
     expect.verifySteps(["resequence"]);
-});
-
-test("fieldDependencies support for fields", async () => {
-    const customField = {
-        component: class CustomField extends Component {
-            static template = xml`<span t-out="this.props.record.data.int_field"/>`;
-            static props = ["*"];
-        },
-        fieldDependencies: [{ name: "int_field", type: "integer" }],
-    };
-    fieldRegistry.add("custom_field", customField);
-    after(() => fieldRegistry.remove("custom_field"));
-
-    await mountView({
-        resModel: "partner",
-        type: "kanban",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="foo" widget="custom_field"/>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect("[name=foo] span:first").toHaveText("10");
-});
-
-test("fieldDependencies support for fields: dependence on a relational field", async () => {
-    const customField = {
-        component: class CustomField extends Component {
-            static template = xml`<span t-out="this.props.record.data.product_id.display_name"/>`;
-            static props = ["*"];
-        },
-        fieldDependencies: [{ name: "product_id", type: "many2one", relation: "product" }],
-    };
-    fieldRegistry.add("custom_field", customField);
-    after(() => fieldRegistry.remove("custom_field"));
-
-    stepAllNetworkCalls();
-
-    await mountView({
-        resModel: "partner",
-        type: "kanban",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="foo" widget="custom_field"/>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect("[name=foo] span:first").toHaveText("hello");
-    expect.verifySteps([
-        "/web/webclient/translations",
-        "/web/webclient/load_menus",
-        "get_views",
-        "web_search_read",
-        "has_group",
-    ]);
 });
 
 test("column quick create - title and placeholder", async function (assert) {
@@ -7446,27 +6445,6 @@ test("d&d records grouped by m2o with m2o displayed in records", async () => {
 
     expect.verifySteps(["web_save", "web_resequence"]);
     expect(queryAllTexts(".o_kanban_record")).toEqual(["hello", "hello", "hello", "xmo"]);
-});
-
-test("Can't use KanbanRecord implementation details in arch", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <div>
-                            <t t-out="__owl__"/>
-                            <t t-out="props"/>
-                            <t t-out="env"/>
-                            <t t-out="render"/>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-    expect(".o_kanban_record:first").toHaveInnerHTML("<div></div>");
 });
 
 test.tags("desktop");
@@ -7957,67 +6935,6 @@ test("group by properties and drag and drop", async () => {
     expect.verifySteps(["web_save", "resequence"]);
     expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(0);
     expect(".o_kanban_group:nth-child(3) .o_kanban_record").toHaveCount(2);
-});
-
-test("kanbans with basic and custom compiler, same arch", async () => {
-    // In this test, the exact same arch will be rendered by 2 different kanban renderers:
-    // once with the basic one, and once with a custom renderer having a custom compiler. The
-    // purpose of the test is to ensure that the template is compiled twice, once by each
-    // compiler, even though the arch is the same.
-    class MyKanbanCompiler extends KanbanCompiler {
-        setup() {
-            super.setup();
-            this.compilers.push({ selector: "div", fn: this.compileDiv });
-        }
-
-        compileDiv(node, params) {
-            const compiledNode = this.compileGenericNode(node, params);
-            compiledNode.setAttribute("class", "my_kanban_compiler");
-            return compiledNode;
-        }
-    }
-    viewRegistry.add("my_kanban", {
-        ...kanbanView,
-        Compiler: MyKanbanCompiler,
-    });
-    after(() => viewRegistry.remove("my_kanban"));
-
-    Partner._fields.one2many = fields.One2many({ relation: "partner" });
-    Partner._records[0].one2many = [1];
-    Partner._views["form"] = `<form><field name="one2many" mode="kanban"/></form>`;
-    Partner._views["kanban"] = `
-        <kanban js_class="my_kanban">
-            <templates>
-                <t t-name="card">
-                    <div><field name="foo"/></div>
-                </t>
-            </templates>
-        </kanban>`;
-
-    await mountWithCleanup(WebClient);
-    await getService("action").doAction({
-        res_model: "partner",
-        type: "ir.actions.act_window",
-        views: [
-            [false, "kanban"],
-            [false, "form"],
-        ],
-    });
-
-    // main kanban, custom view
-    expect(".o_kanban_view").toHaveCount(1);
-    expect(".o_my_kanban_view").toHaveCount(1);
-    expect(".my_kanban_compiler").toHaveCount(4);
-
-    // switch to form
-    await contains(".o_kanban_record").click();
-    await animationFrame();
-    expect(".o_form_view").toHaveCount(1);
-    expect(".o_form_view .o_field_widget[name=one2many]").toHaveCount(1);
-
-    // x2many kanban, basic renderer
-    expect(".o_kanban_record:not(.o_kanban_ghost):not(.o-kanban-button-new)").toHaveCount(1);
-    expect(".my_kanban_compiler").toHaveCount(0);
 });
 
 test("grouped on field with readonly expression depending on context", async () => {
@@ -9715,28 +8632,6 @@ test(`groupby use odoomark`, async () => {
     expect(`.o_kanban_group`).toHaveCount(2);
     expect(`.o_kanban_group b`).toHaveCount(2);
     expect(`.o_kanban_group span.o_badge`).toHaveCount(2);
-});
-
-test.tags("desktop");
-test("kanban: fields with data-tooltip attribute", async () => {
-    await mountView({
-        resModel: "partner",
-        type: "kanban",
-        arch: `
-            <kanban sample="1">
-                <templates>
-                    <t t-name="card">
-                        <field name="foo" data-tooltip="pipu" />
-                    </t>
-                </templates>
-            </kanban>`,
-        groupBy: ["product_id"],
-    });
-
-    expect(".o-tooltip").toHaveCount(0);
-    await hover("article:contains(gnap) span");
-    await advanceTime(500);
-    expect(".o-tooltip").toHaveCount(1);
 });
 
 test.tags("desktop");

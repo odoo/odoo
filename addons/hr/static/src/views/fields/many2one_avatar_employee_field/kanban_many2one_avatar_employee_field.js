@@ -12,8 +12,8 @@ import {
     Many2OneField,
 } from "@web/views/fields/many2one/many2one_field";
 
-export class KanbanMany2OneAvatarEmployeeField extends Component {
-    static template = "hr.KanbanMany2OneAvatarEmployeeField";
+export class CardMany2OneAvatarEmployeeField extends Component {
+    static template = "hr.CardMany2OneAvatarEmployeeField";
     static components = { Avatar, KanbanMany2One };
     static props = {
         ...Many2OneField.props,
@@ -55,8 +55,8 @@ export class KanbanMany2OneAvatarEmployeeField extends Component {
 
 /** @type {import("registries").FieldsRegistryItemShape} */
 const fieldDescr = {
-    ...buildM2OFieldDescription(KanbanMany2OneAvatarEmployeeField),
-    additionalClasses: ["o_field_many2one_avatar_kanban", "o_field_many2one_avatar_user"],
+    ...buildM2OFieldDescription(CardMany2OneAvatarEmployeeField),
+    additionalClasses: ["o_field_many2one_avatar_user"],
     relatedFields: [{ name: "write_date", type: "datetime" }],
     extractProps(staticInfo, dynamicInfo) {
         return {
@@ -77,4 +77,4 @@ const fieldDescr = {
 };
 
 registry.category("fields").add("activity.many2one_avatar_employee", fieldDescr);
-registry.category("fields").add("kanban.many2one_avatar_employee", fieldDescr);
+registry.category("fields").add("card.many2one_avatar_employee", fieldDescr);

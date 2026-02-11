@@ -104,7 +104,7 @@ export class Many2ManyTagsAvatarFieldPopover extends Many2ManyTagsAvatarField {
     }
 }
 
-export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
+export class CardMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
     static props = {
         ...super.props,
         isEditable: { type: Boolean, optional: true },
@@ -152,9 +152,9 @@ export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
     }
 }
 
-export const kanbanMany2ManyTagsAvatarField = {
+export const cardMany2ManyTagsAvatarField = {
     ...many2ManyTagsAvatarField,
-    component: KanbanMany2ManyTagsAvatarField,
+    component: CardMany2ManyTagsAvatarField,
     extractProps(fieldInfo, dynamicInfo) {
         const props = many2ManyTagsAvatarField.extractProps(...arguments);
         props.isEditable = !dynamicInfo.readonly;
@@ -162,4 +162,4 @@ export const kanbanMany2ManyTagsAvatarField = {
     },
 };
 
-registry.category("fields").add("kanban.many2many_tags_avatar", kanbanMany2ManyTagsAvatarField);
+registry.category("fields").add("card.many2many_tags_avatar", cardMany2ManyTagsAvatarField);
