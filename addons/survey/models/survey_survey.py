@@ -1064,6 +1064,7 @@ class SurveySurvey(models.Model):
             default_template_id=template and template.id or False,
             default_email_layout_xmlid='mail.mail_notification_light',
             default_send_email=(self.access_mode != 'public'),
+            hide_mail_template_management_options=True,
         )
         return {
             'type': 'ir.actions.act_window',
