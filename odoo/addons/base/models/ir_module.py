@@ -204,7 +204,7 @@ class IrModuleModule(models.Model):
                 raw_description = module.description or ''
 
                 try:
-                    output = publish_string(source=raw_description, settings_overrides=overrides, writer=MyWriter())
+                    output = publish_string(source=raw_description, source_path=module.name, settings_overrides=overrides, writer=MyWriter())
                 except Exception as e:  # noqa: BLE001
                     _logger.warning("Failed to render module description for %s: %s. Falling back to raw description.", module.name, e)
                     output = Markup('<pre><code>%s</code></pre>') % raw_description
