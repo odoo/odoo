@@ -104,14 +104,6 @@ export class ProductNameAndDescriptionField extends Component {
         return this.props.record.data[this.props.name].display_name || "";
     }
 
-    get label() {
-        let label = this.props.record.data[this.descriptionColumn];
-        if (label.includes(this.productName)) {
-            label = label.replace(this.productName, "");
-        }
-        return label.trim();
-    }
-
     get m2oProps() {
         const p = computeM2OProps(this.props);
         let value = p.value && { ...p.value };
@@ -138,10 +130,6 @@ export class ProductNameAndDescriptionField extends Component {
     switchLabelVisibility() {
         this.labelVisibility.value = !this.labelVisibility.value;
         this.switchToLabel = true;
-    }
-
-    parseLabel(value) {
-        return value || this.productName;
     }
 
     /**

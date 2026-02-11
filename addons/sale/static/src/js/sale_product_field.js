@@ -137,28 +137,6 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         };
     }
 
-    get label() {
-        let label = this.props.record.data.name;
-        if (this.translatedProductName && label.startsWith(this.translatedProductName)) {
-            // Remove the translated name as it is already shown to the salesman on the SOL.
-            label = label.slice(this.translatedProductName.length + 1);  // + "\n"
-        } else {
-            label = super.label;
-        }
-        return label;
-    }
-
-    get translatedProductName() {
-        return this.props.record.data.translated_product_name;
-    }
-
-    parseLabel(value) {
-        if (!this.translatedProductName) {
-            return super.parseLabel(value);
-        }
-        return value && this.translatedProductName.concat("\n", value) || this.translatedProductName;
-    }
-
     get m2oProps() {
         const p = super.m2oProps;
         const value = p.value && { ...p.value };
@@ -459,11 +437,11 @@ export const saleOrderLineProductField = {
         };
     },
     fieldDependencies: [
+        ...(productLabelSectionAndNoteField.fieldDependencies || []),
         { name: 'is_configurable_product', type: 'boolean' },
         { name: 'product_type', type: 'selection' },
         { name: 'service_tracking', type: 'selection' },
         { name: 'product_template_attribute_value_ids', type: 'many2many' },
-        { name: 'translated_product_name', type: 'char' },
     ],
 };
 
