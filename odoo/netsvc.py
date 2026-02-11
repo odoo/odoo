@@ -196,6 +196,7 @@ def init_logger():
 
     # enable deprecation warnings (disabled by default)
     warnings.simplefilter('default', category=DeprecationWarning)
+    warnings.filterwarnings('default', category=PendingDeprecationWarning)
     # https://github.com/urllib3/urllib3/issues/2680
     warnings.filterwarnings('ignore', r'^\'urllib3.contrib.pyopenssl\' module is deprecated.+', category=DeprecationWarning)
     # ignore a bunch of warnings we can't really fix ourselves
