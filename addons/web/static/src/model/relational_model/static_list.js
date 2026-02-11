@@ -477,7 +477,7 @@ export class StaticList extends DataPoint {
                     const record = this._createRecordDatapoint(command[2], { virtualId });
                     this.records.push(record);
                     addOwnCommand([CREATE, virtualId]);
-                    const index = this.offset + this.limit + this._tmpIncreaseLimit;
+                    const index = this.offset + this.limit;
                     this._currentIds.splice(index, 0, virtualId);
                     this._tmpIncreaseLimit = Math.max(this.records.length - this.limit, 0);
                     const nextLimit = this.limit + this._tmpIncreaseLimit;
