@@ -28,7 +28,7 @@ export class DocMethod extends Component {
                     value: "annotation" in options ? options.annotation : "-",
                 },
                 { type: TABLE_TYPES.Code, value: this.getDefaultValue(options) },
-                { type: TABLE_TYPES.Tooltip, value: markup(options.doc) || "" },
+                { type: TABLE_TYPES.Tooltip, value: options.doc ? markup(options.doc) : "" },
             ]),
         };
     }
