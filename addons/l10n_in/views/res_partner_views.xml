@@ -64,7 +64,7 @@
         <field name="inherit_id" ref="base_vat.view_partner_base_vat_form" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vies_valid']" position="after">
-                <span invisible="country_code != 'IN' or not l10n_in_gstin_status_feature_enabled or not vat or 'IN' not in fiscal_country_codes">
+                <span invisible="country_code != 'IN' or not l10n_in_gstin_status_feature_enabled or vat in [False, '', '/', 'NA', 'na'] or 'IN' not in fiscal_country_codes">
                     <span invisible="not l10n_in_gstin_verified_date or not l10n_in_gstin_verified_status"
                         class="oe_inline text-success">Active</span>
                     <span invisible="not l10n_in_gstin_verified_date or l10n_in_gstin_verified_status"

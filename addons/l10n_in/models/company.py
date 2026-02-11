@@ -125,7 +125,7 @@ class ResCompany(models.Model):
     @api.depends('vat')
     def _compute_l10n_in_hsn_code_digit(self):
         for record in self:
-            if record.country_code == "IN" and record.vat:
+            if record.country_code == "IN" and record.vat not in [False, '', '/', 'NA', 'na']:
                 record.l10n_in_hsn_code_digit = "4"
             else:
                 record.l10n_in_hsn_code_digit = False
