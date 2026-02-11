@@ -35,11 +35,11 @@ except ImportError:
 
 if typing.TYPE_CHECKING:
     # for type checking, default to the newest version
-    from . import _pypdf2_2 as pypdf
+    from . import _pypdf as pypdf
 else:
     errors = []
     # keep pypdf2 2.x first so noble uses that rather than pypdf 4.0
-    for SUBMOD in ['._pypdf2_2', '._pypdf', '._pypdf2_1']:
+    for SUBMOD in ['._pypdf2_2', '._pypdf']:
         try:
             pypdf = importlib.import_module(SUBMOD, __spec__.name)
             break
@@ -58,11 +58,8 @@ ArrayObject, BooleanObject, ByteStringObject, DecodedStreamObject, DictionaryObj
 # compatibility aliases
 PdfReadError = errors.PdfReadError  # moved in 2.0
 PdfStreamError = errors.PdfStreamError  # moved in 2.0
+DependencyError = errors.DependencyError
 createStringObject = create_string_object  # deprecated in 2.0, removed in 5.0
-try:
-    DependencyError = errors.DependencyError
-except AttributeError:
-    DependencyError = NotImplementedError
 
 # ----------------------------------------------------------
 # PyPDF2 hack
@@ -117,25 +114,13 @@ if hasattr(NameObject, 'renumber_table'):
     })
 
 
-if hasattr(PdfWriter, 'write_stream'):
-    # >= 2.x has a utility `write` which can open a path, so `write_stream` could be called directly
-    class BrandedFileWriter(PdfWriter):
-        def write_stream(self, *args, **kwargs):
-            self.add_metadata({
-                '/Creator': "Odoo",
-                '/Producer': "Odoo",
-            })
-            super().write_stream(*args, **kwargs)
-else:
-    # 1.x has a monolithic write method
-    class BrandedFileWriter(PdfWriter):
-        def write(self, *args, **kwargs):
-            self.addMetadata({
-                '/Creator': "Odoo",
-                '/Producer': "Odoo",
-            })
-            super().write(*args, **kwargs)
-
+class BrandedFileWriter(PdfWriter):
+    def write_stream(self, *args, **kwargs):
+        self.add_metadata({
+            '/Creator': "Odoo",
+            '/Producer': "Odoo",
+        })
+        super().write_stream(*args, **kwargs)
 
 PdfFileWriter = BrandedFileWriter
 
@@ -163,41 +148,9 @@ def fill_form_fields_pdf(writer, form_fields):
     :param dict form_fields: a dictionary of form fields to update in the PDF
     :return: a filled PDF datastring
     '''
-
-    # This solves a known problem with PyPDF2, where with some pdf software, forms fields aren't
-    # correctly filled until the user click on it, see: https://github.com/py-pdf/pypdf/issues/355
-    if hasattr(writer, 'set_need_appearances_writer'):
-        writer.set_need_appearances_writer()
-        is_upper_version_pypdf2 = True
-    else:  # This method was renamed in PyPDF2 2.0
-        is_upper_version_pypdf2 = False
-        catalog = writer._root_object
-        # get the AcroForm tree
-        if "/AcroForm" not in catalog:
-            writer._root_object.update({
-                NameObject("/AcroForm"): IndirectObject(len(writer._objects), 0, writer)
-            })
-        writer._root_object["/AcroForm"][NameObject("/NeedAppearances")] = BooleanObject(True)
-
-    nbr_pages = len(writer.pages) if is_upper_version_pypdf2 else writer.getNumPages()
-
-    for page_id in range(0, nbr_pages):
-        page = writer.getPage(page_id)
-
-        if is_upper_version_pypdf2:
-            writer.update_page_form_field_values(page, form_fields)
-        else:
-            # Known bug on previous versions of PyPDF2, fixed in 2.11
-            if not page.get('/Annots'):
-                _logger.info("No fields to update in this page")
-            else:
-                try:
-                    writer.updatePageFormFieldValues(page, form_fields)
-                except ValueError:
-                    # Known bug on previous versions of PyPDF2 for some PDFs, fixed in 2.4.2
-                    _logger.info("Fields couldn't be filled in this page.")
-                    continue
-
+    writer.set_need_appearances_writer()
+    for page in writer.pages:
+        writer.update_page_form_field_values(page, form_fields)
 
 def rotate_pdf(pdf):
     ''' Rotate clockwise PDF (90°) into a new PDF.
@@ -396,10 +349,7 @@ class OdooPdfFileWriter(PdfFileWriter):
 
         adapted_subtype = subtype
         if REGEX_SUBTYPE_UNFORMATED.match(subtype):
-            # _pypdf2_2 and _pypdf does the formating when creating a NameObject
-            if SUBMOD in ('._pypdf2_2', '._pypdf'):
-                return '/' + subtype
-            adapted_subtype = '/' + subtype.replace('/', '#2F')
+            return '/' + subtype
 
         if not REGEX_SUBTYPE_FORMATED.match(adapted_subtype):
             # The subtype still does not match the correct format, so we will not add it to the document
@@ -472,14 +422,6 @@ class OdooPdfFileWriter(PdfFileWriter):
             second_line = stream.readlines(1)[0]
             if second_line.decode('latin-1')[0] == '%' and len(second_line) == 6:
                 self.is_pdfa = True
-                # This is broken in pypdf 3+ and pypdf2 has been automatically
-                # writing a binary comment since 1.27
-                # py-pdf/pypdf@036789a4664e3f572292bc7dceec10f08b7dbf62 so we
-                # only need this if running on 1.x
-                #
-                # incidentally that means the heuristic above is completely broken
-                if SUBMOD == '._pypdf2_1':
-                    self._header += second_line
         # clone_reader_document_root clones reader._ID since 3.2 (py-pdf/pypdf#1520)
         if not hasattr(self, '_ID'):
             # Look if we have an ID in the incoming stream and use it.
@@ -502,17 +444,6 @@ class OdooPdfFileWriter(PdfFileWriter):
         # Set the PDF version to 1.7 (as PDF/A-3 is based on version 1.7) and make it PDF/A compliant.
         # See https://github.com/veraPDF/veraPDF-validation-profiles/wiki/PDFA-Parts-2-and-3-rules#rule-612-1
         self._header = b"%PDF-1.7"
-
-        # " The file header shall begin at byte zero and shall consist of "%PDF-1.n" followed by a single EOL marker,
-        # where 'n' is a single digit number between 0 (30h) and 7 (37h) "
-        # " The aforementioned EOL marker shall be immediately followed by a % (25h) character followed by at least four
-        # bytes, each of whose encoded byte values shall have a decimal value greater than 127 ".
-        # PyPDF2 2.X+ already adds these 4 characters by default (so ._pypdf2_2 and ._pypdf don't need it).
-        # The injected character `\xc3\xa9` is equivalent to the character `é`.
-        # Therefore, on `_pypdf2_1`, the header will look like: `%PDF-1.7\n%éééé`,
-        # while on `_pypdf2_2` and `_pypdf`, it will look like: `%PDF-1.7\n%âãÏÓ`.
-        if SUBMOD == '._pypdf2_1':
-            self._header += b"\n%\xc3\xa9\xc3\xa9\xc3\xa9\xc3\xa9"
 
         # Add a document ID to the trailer. This is only needed when using encryption with regular PDF, but is required
         # when using PDF/A
