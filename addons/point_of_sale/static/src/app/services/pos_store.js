@@ -1956,8 +1956,17 @@ export class PosStore extends WithLazyGetterTrap {
             line.isCombo ||
             line.combo_parent_uuid ||
             this.models["product.product"].get(line.product_id).type == "combo";
-        const comboChanges = orderChange.new.filter(isPartOfCombo);
-        const normalChanges = orderChange.new.filter((line) => !isPartOfCombo(line));
+        const { comboChanges, normalChanges } = orderChange.new.reduce(
+            (acc, line) => {
+                if (isPartOfCombo(line)) {
+                    acc.comboChanges.push(line);
+                    return acc;
+                }
+                acc.normalChanges.push(line);
+                return acc;
+            },
+            { comboChanges: [], normalChanges: [] }
+        );
         normalChanges.sort((a, b) => {
             const sequenceA = a.pos_categ_sequence;
             const sequenceB = b.pos_categ_sequence;
@@ -2069,18 +2078,47 @@ export class PosStore extends WithLazyGetterTrap {
 
     async prepareReceiptGroupedData(data) {
         const dataChanges = data.changes?.data;
-        if (dataChanges && dataChanges.some((c) => c.group)) {
-            const groupedData = dataChanges.reduce((acc, c) => {
-                const { name = "", index = -1 } = c.group || {};
-                if (!acc[name]) {
-                    acc[name] = { name, index, data: [] };
+        if (dataChanges) {
+            if (dataChanges.some((c) => c.group)) {
+                const groupedData = dataChanges.reduce((acc, c) => {
+                    const { name = "", index = -1 } = c.group || {};
+                    if (!acc[name]) {
+                        acc[name] = { name, index, data: [] };
+                    }
+                    acc[name].data.push(c);
+                    return acc;
+                }, {});
+                data.changes.groupedData = Object.values(groupedData).sort(
+                    (a, b) => a.index - b.index
+                );
+                for (const group of data.changes.groupedData) {
+                    group.data = this.mergeComboOrderlines(group.data);
                 }
-                acc[name].data.push(c);
-                return acc;
-            }, {});
-            data.changes.groupedData = Object.values(groupedData).sort((a, b) => a.index - b.index);
+            } else {
+                data.changes.data = this.mergeComboOrderlines(dataChanges);
+            }
         }
         return data;
+    }
+
+    mergeComboOrderlines(dataChanges) {
+        const getExistingLineInCombo = (line, lines) =>
+            lines.find(
+                (l) =>
+                    l.combo_parent_uuid &&
+                    l.combo_parent_uuid == line.combo_parent_uuid &&
+                    l.product_id == line.product_id
+            );
+        const mergedChanges = [];
+        for (const change of dataChanges) {
+            const existingLine = getExistingLineInCombo(change, mergedChanges);
+            if (existingLine) {
+                existingLine.quantity += change.quantity;
+                continue;
+            }
+            mergedChanges.push(change);
+        }
+        return mergedChanges;
     }
 
     async printOrderChanges(data, printer) {

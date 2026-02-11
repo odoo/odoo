@@ -686,6 +686,23 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_open_default_register_screen_config')
 
+    def test_preparation_display_combo_merge_lines(self):
+        setup_product_combo_items(self)
+        pos_printer = self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+        })
+        self.pos_config.write({
+            'is_order_printer': True,
+            'printer_ids': [Command.set(pos_printer.ids)],
+        })
+        combo = self.env["product.combo"].search([("name", "=", "Desk Accessories Combo")], limit=1)
+        combo.write({"qty_max": 2})
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_preparation_display_combo_merge_lines')
+
     def test_fast_payment_validation_from_restaurant_product_screen_with_automatic_receipt_printing(self):
         self.env['pos.printer'].create({
                 'name': 'Printer',

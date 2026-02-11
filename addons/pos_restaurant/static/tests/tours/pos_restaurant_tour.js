@@ -751,6 +751,27 @@ registry.category("web_tour.tours").add("test_open_default_register_screen_confi
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_preparation_display_combo_merge_lines", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            checkPreparationTicketData([
+                { name: "Office Combo", qty: 1 },
+                { name: "Combo Product 2", qty: 2 },
+                { name: "Combo Product 4", qty: 1 },
+                { name: "Combo Product 6", qty: 1 },
+            ]),
+        ].flat(),
+});
+
 registry
     .category("web_tour.tours")
     .add(
