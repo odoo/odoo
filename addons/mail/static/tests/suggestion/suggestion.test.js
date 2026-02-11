@@ -823,8 +823,8 @@ test("[text composer] Internal user should be displayed first", async () => {
     await click("button:text('Send message')");
     await insertText(".o-mail-Composer-input", "@Person ");
     await contains(" .o-mail-Composer-suggestion:eq(0) strong:text('Person D')");
-    await contains(" .o-mail-Composer-suggestion:eq(1) strong:text('Person C')");
-    await contains(" .o-mail-Composer-suggestion:eq(2) strong:text('Person B')");
+    await contains(" .o-mail-Composer-suggestion:eq(1) strong:text('Person B')");
+    await contains(" .o-mail-Composer-suggestion:eq(2) strong:text('Person C')");
     await contains(" .o-mail-Composer-suggestion:eq(3) strong:text('Person A')");
 });
 
@@ -865,8 +865,8 @@ test("Internal user should be displayed first", async () => {
     await focus(".o-mail-Composer-html.odoo-editor-editable");
     await htmlInsertText(editor, "@Person ");
     await contains(".o-mail-Composer-suggestion:eq(0) strong:text('Person D')");
-    await contains(".o-mail-Composer-suggestion:eq(1) strong:text('Person C')");
-    await contains(".o-mail-Composer-suggestion:eq(2) strong:text('Person B')");
+    await contains(".o-mail-Composer-suggestion:eq(1) strong:text('Person B')");
+    await contains(".o-mail-Composer-suggestion:eq(2) strong:text('Person C')");
     await contains(".o-mail-Composer-suggestion:eq(3) strong:text('Person A')");
 });
 
