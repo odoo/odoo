@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools import ormcache
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import float_is_zero, float_repr, float_round, float_compare
@@ -136,6 +137,10 @@ class ProductProduct(models.Model):
         help="Technical field to correctly show the currently selected company's currency that corresponds "
              "to the totaled value of the product's valuation layers")
 
+    @ormcache('product', 'qty_available', 'at_date', 'qty_valued', skip_arg=1)
+    def _ormcache_product_total_value(self, product, qty_available, at_date, qty_valued):
+        return product.with_context(warehouse_id=False)._run_fifo(qty_available, at_date=at_date) * qty_valued / qty_available
+
     @api.depends_context('to_date', 'company', 'warehouse_id')
     @api.depends('cost_method', 'stock_move_ids.value', 'standard_price')
     def _compute_value(self):
@@ -165,7 +170,7 @@ class ProductProduct(models.Model):
             elif product.cost_method == 'average':
                 product.total_value = product._run_avco(at_date=at_date)[1] * qty_valued / qty_available
             else:
-                product.total_value = product.with_context(warehouse_id=False)._run_fifo(qty_available, at_date=at_date) * qty_valued / qty_available
+                product.total_value = self._ormcache_product_total_value(product, qty_available, at_date, qty_valued)
             product.avg_cost = product.total_value / qty_valued if not product.uom_id.is_zero(qty_valued) else 0
 
     @api.model_create_multi
@@ -238,9 +243,13 @@ class ProductProduct(models.Model):
         lots = self.env['stock.lot'].search(domain)
         return sum(lots.mapped('total_value'))
 
+    @ormcache()
+    def _ormcache_search_valued_internal(self):
+        return self.env['stock.location'].search([('is_valued_internal', '=', True)])
+
     def _with_valuation_context(self):
         self_with_context = self
-        valued_locations = self.env['stock.location'].search([('is_valued_internal', '=', True)])
+        valued_locations = self._ormcache_search_valued_internal()
         self_with_context = self.with_context(location=valued_locations.ids)
         # In FIFO, the stack in on stock.move and their value is already computed base on the owner
         if self.cost_method != 'fifo':
