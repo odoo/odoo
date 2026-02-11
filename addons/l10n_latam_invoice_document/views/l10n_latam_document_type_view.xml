@@ -5,14 +5,14 @@
         <field name="name">l10n_latam.document.type.form</field>
         <field name="model">l10n_latam.document.type</field>
         <field name="arch" type="xml">
-            <form string="Document Type" create="0" edit="0">
+            <form string="Document Type" create="0">
                 <group>
-                    <field name='code'/>
-                    <field name="name"/>
-                    <field name='doc_code_prefix'/>
-                    <field name='report_name'/>
-                    <field name='internal_type'/>
-                    <field name='country_id'/>
+                    <field name='code' readonly="True"/>
+                    <field name="name" readonly="True"/>
+                    <field name='doc_code_prefix' readonly="True"/>
+                    <field name='report_name' readonly="True"/>
+                    <field name='internal_type' readonly="True"/>
+                    <field name='country_id' readonly="True"/>
                 </group>
             </form>
         </field>

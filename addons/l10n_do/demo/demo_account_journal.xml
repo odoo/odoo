@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="demo_edi_sales_journal" model="account.journal" forcecreate="1">
+        <field name="name">Electronic Invoicing Sales</field>
+        <field name="code">EINV</field>
+        <field name="type">sale</field>
+        <field name="l10n_latam_use_documents" eval="True"/>
+        <field name="company_id" ref="base.demo_company_do"/>
+    </record>
+</odoo>
