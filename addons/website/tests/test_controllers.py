@@ -200,6 +200,7 @@ class TestControllers(tests.HttpCase):
         """
         Test that /website/force/{website.id} redirects domain correctly
         """
+        self.env.user.group_ids += self.env.ref('website.group_multi_website')
         website = self.env['website'].search([], limit=1)
         website.domain = self.base_url()
         with MockRequest(self.env, website=website, url_root='http://example.com') as mock_request:
