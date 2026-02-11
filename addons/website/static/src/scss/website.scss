@@ -421,7 +421,7 @@ $-header-nav-link-height: $nav-link-height;
     @include o-add-gradient('footer-gradient');
 
     .o_footer_copyright {
-        $-footer-color: o-color('footer-custom') or o-color('footer');
+        $-footer-color: o-color('footer-custom') or o-color('footer') or rgba(0, 0, 0, 0);
         @include o-apply-colors('copyright', $background: $-footer-color);
         @include o-apply-colors('copyright-custom', $background: $-footer-color);
         @include o-add-gradient('copyright-gradient');
