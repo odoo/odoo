@@ -61,3 +61,12 @@ class TestDocTypes(AccountTestInvoicingCommon):
         self.assertEqual(debit_note.l10n_latam_document_type_id.code, "123", "Not Export e-Invoice Debit Note")
         expected_docs = ["123"] if self.env['ir.module.module']._get('l10n_uy_edi').state == 'installed' else ['123', '223']
         self.assertEqual(debit_note.l10n_latam_available_document_type_ids.mapped("code"), expected_docs, "Bad Domain")
+
+    def test_valid_document_numbers(self):
+        uy_document_type = self.env.ref('l10n_uy.dc_dn_e_inv_exp')
+        error_msg = 'The document number must have a maximum of 2 alphanumeric characters in the beginning with exactly 7 digits following.'
+        self.assertEqual(uy_document_type._format_document_number('AZ1234567'), 'AZ1234567', error_msg)
+        self.assertEqual(uy_document_type._format_document_number('9A1234567'), '9A1234567', error_msg)
+        self.assertEqual(uy_document_type._format_document_number('88 1234567'), '881234567', error_msg)
+        self.assertEqual(uy_document_type._format_document_number('q 1234567'), 'Q1234567', error_msg)
+        self.assertEqual(uy_document_type._format_document_number('5 1234567'), '51234567', error_msg)
