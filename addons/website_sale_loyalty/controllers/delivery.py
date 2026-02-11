@@ -34,9 +34,14 @@ class WebsiteSaleLoyaltyDelivery(Delivery):
             res['delivery_discount_minor_amount'] = payment_utils.to_minor_currency_units(
                 shipping_discount, order.currency_id
             )
+        discount_lines = order.order_line.filtered(
+            lambda line: line.reward_id.reward_type == 'discount'
+        )
+        groupable_lines = discount_lines.filtered(
+            lambda line: line.reward_id.discount_mode == 'percent'
+        )
         res['discount_reward_amounts'] = [
             to_html(sum(lines.mapped('price_subtotal')))
-            for reward, lines in order.order_line.grouped('reward_id').items()
-            if reward.reward_type == 'discount'
-        ]
+            for lines in groupable_lines.grouped('reward_id').values()
+        ] + [to_html(line.price_subtotal) for line in discount_lines - groupable_lines]
         return res
