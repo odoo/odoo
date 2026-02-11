@@ -1,0 +1,20 @@
+@media print {
+    .o_spreadsheet_dashboard_action {
+        height: 100% !important;
+        .o_control_panel {
+            display: none !important;
+        }
+        .o_content {
+            height: 100% !important;
+            .o_renderer {
+                overflow: visible !important;
+            }
+        }
+    }
+}
+
+.o_spreadsheet_dashboard_action:has(.o-spreadsheet-print) {
+    .o_spreadsheet_dashboard_search_panel, .o_control_panel {
+        display: none !important;
+    }
+}
