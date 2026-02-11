@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { fillEmpty, fillShrunkPhrasingParent } from "@html_editor/utils/dom";
-import { closestElement } from "@html_editor/utils/dom_traversal";
+import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { withSequence } from "@html_editor/utils/resource";
 import { htmlEscape } from "@odoo/owl";
@@ -28,7 +28,8 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert an info banner"),
                 icon: "fa-info-circle",
                 isAvailable: (selection) =>
-                    this.checkPredicates("is_banner_command_available_predicates", selection) ?? true,
+                    this.checkPredicates("is_banner_command_available_predicates", selection) ??
+                    true,
                 run: () => {
                     this.insertBanner(_t("Banner Info"), "💡", "info");
                 },
@@ -39,7 +40,8 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert a success banner"),
                 icon: "fa-check-circle",
                 isAvailable: (selection) =>
-                    this.checkPredicates("is_banner_command_available_predicates", selection) ?? true,
+                    this.checkPredicates("is_banner_command_available_predicates", selection) ??
+                    true,
                 run: () => {
                     this.insertBanner(_t("Banner Success"), "✅", "success");
                 },
@@ -50,7 +52,8 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert a warning banner"),
                 icon: "fa-exclamation-triangle",
                 isAvailable: (selection) =>
-                    this.checkPredicates("is_banner_command_available_predicates", selection) ?? true,
+                    this.checkPredicates("is_banner_command_available_predicates", selection) ??
+                    true,
                 run: () => {
                     this.insertBanner(_t("Banner Warning"), "⚠️", "warning");
                 },
@@ -61,7 +64,8 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert a danger banner"),
                 icon: "fa-exclamation-circle",
                 isAvailable: (selection) =>
-                    this.checkPredicates("is_banner_command_available_predicates", selection) ?? true,
+                    this.checkPredicates("is_banner_command_available_predicates", selection) ??
+                    true,
                 run: () => {
                     this.insertBanner(_t("Banner Danger"), "❌", "danger");
                 },
@@ -72,7 +76,8 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert a monospace banner"),
                 icon: "fa-laptop",
                 isAvailable: (selection) =>
-                    this.checkPredicates("is_banner_command_available_predicates", selection) ?? true,
+                    this.checkPredicates("is_banner_command_available_predicates", selection) ??
+                    true,
                 run: () => {
                     this.insertBanner(
                         _t("Monospace Banner"),
@@ -119,6 +124,10 @@ export class BannerPlugin extends Plugin {
                 return false;
             }
         },
+        normalize_processors: withSequence(
+            5, // before tabs are aligned
+            this.handle_monospace_tab_to_spaces.bind(this)
+        ),
         move_node_blacklist_selectors: ".o_editor_banner *",
         move_node_whitelist_selectors: ".o_editor_banner",
 
@@ -199,5 +208,12 @@ export class BannerPlugin extends Plugin {
         bannerElement.replaceWith(baseContainer);
         this.dependencies.selection.setCursorStart(baseContainer);
         return true;
+    }
+
+    handle_monospace_tab_to_spaces(root) {
+        for (const el of selectElements(root, ".font-monospace.o_editor_banner .oe-tabs")) {
+            const spacesElement = document.createTextNode("\u00A0\u00A0\u00A0\u00A0");
+            el.replaceWith(spacesElement);
+        }
     }
 }
