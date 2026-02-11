@@ -319,11 +319,8 @@ class MrpBom(models.Model):
             bom.operation_count = len(bom.operation_ids)
 
     def _compute_show_copy_operations_button(self):
-        for bom in self:
-            if not bom.operation_ids:
-                self.show_copy_operations_button = bool(self.env['mrp.routing.workcenter'].search_count([], limit=1))
-                break
-            bom.show_copy_operations_button = False
+        exist_operation = bool(self.env['mrp.routing.workcenter'].search_count([], limit=1))
+        self.show_copy_operations_button = exist_operation
 
     def action_compute_bom_days(self):
         company_id = self.env.context.get('default_company_id', self.env.company.id)
