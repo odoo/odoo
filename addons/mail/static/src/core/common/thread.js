@@ -192,11 +192,11 @@ export class Thread extends Component {
             () => [this.state.mountedAndLoaded]
         );
         onMounted(() => {
-            if (!this.env.chatter || this.env.chatter?.fetchMessages) {
+            if (!this.env.chatter || this.env.chatter?.shouldFetchMessages) {
                 if (this.env.chatter) {
-                    this.env.chatter.fetchMessages = false;
+                    this.env.chatter.shouldFetchMessages = false;
                 }
-                this.fetchMessages();
+                this.fetchInitialMessages();
             }
         });
         onWillUnmount(() => {
@@ -242,9 +242,9 @@ export class Thread extends Component {
             if (nextProps.thread.notEq(this.props.thread)) {
                 this.lastJumpPresent = nextProps.jumpPresent;
             }
-            if (!this.env.chatter || this.env.chatter?.fetchMessages) {
+            if (!this.env.chatter || this.env.chatter?.shouldFetchMessages) {
                 if (this.env.chatter) {
-                    this.env.chatter.fetchMessages = false;
+                    this.env.chatter.shouldFetchMessages = false;
                 }
                 toRaw(nextProps.thread).fetchNewMessages();
             }
@@ -465,7 +465,7 @@ export class Thread extends Component {
         }
     }
 
-    fetchMessages() {
+    fetchInitialMessages() {
         toRaw(this.props.thread).fetchNewMessages();
     }
 

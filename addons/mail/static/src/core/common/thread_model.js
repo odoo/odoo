@@ -415,7 +415,10 @@ export class Thread extends Record {
         return msgs;
     }
 
-    /** @param {{after: Number, before: Number}} */
+    /**
+     * @param {{after: Number, before: Number}}
+     * @returns {Promise<{data: any, messages: number[]}>}
+     */
     async fetchMessagesData({ after, around, before } = {}) {
         // ordered messages received: newest to oldest
         return await rpc(this.getFetchRoute(), {

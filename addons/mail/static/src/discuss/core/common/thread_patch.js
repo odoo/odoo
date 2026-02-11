@@ -56,11 +56,11 @@ const threadPatch = {
         }
     },
     /** @override */
-    fetchMessages() {
+    fetchInitialMessages() {
         if (this.channel?.self_member_id && this.props.thread.scrollUnread) {
             toRaw(this.props.thread).loadAround(this.channel.self_member_id.new_message_separator);
         } else {
-            super.fetchMessages();
+            super.fetchInitialMessages();
         }
     },
     get newMessageBannerText() {
