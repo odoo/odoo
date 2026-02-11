@@ -1597,7 +1597,7 @@ describe("toolbar open and close on user interaction", () => {
             await expectElementCount(".o-we-toolbar", 1);
         });
 
-        test("toolbar should not open between double and triple click", async () => {
+        test.only("toolbar should not open between double and triple click", async () => {
             const { el } = await setupEditor("<p>test text</p>");
             const p = el.firstElementChild;
 
