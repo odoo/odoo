@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { fillEmpty, fillShrunkPhrasingParent } from "@html_editor/utils/dom";
-import { closestElement } from "@html_editor/utils/dom_traversal";
+import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { withSequence } from "@html_editor/utils/resource";
 import { htmlEscape } from "@odoo/owl";
@@ -110,6 +110,10 @@ export class BannerPlugin extends Plugin {
                 categoryId: "banner",
             },
         ],
+        normalize_handlers: withSequence(
+            5, // before tabs are aligned
+            this.handle_monospace_tab_to_spaces.bind(this)
+        ),
         power_buttons_visibility_predicates: ({ anchorNode }) =>
             !closestElement(anchorNode, ".o_editor_banner"),
         move_node_blacklist_selectors: ".o_editor_banner *",
@@ -192,5 +196,12 @@ export class BannerPlugin extends Plugin {
         bannerElement.replaceWith(baseContainer);
         this.dependencies.selection.setCursorStart(baseContainer);
         return true;
+    }
+
+    handle_monospace_tab_to_spaces(root) {
+        for (const el of selectElements(root, ".font-monospace.o_editor_banner .oe-tabs")) {
+            const spacesElement = document.createTextNode("\u00A0\u00A0\u00A0\u00A0");
+            el.replaceWith(spacesElement);
+        }
     }
 }
