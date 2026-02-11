@@ -69,6 +69,18 @@ patch(OrderPaymentValidation.prototype, {
                 });
                 return false;
             }
+            if (
+                this.order.payment_requires_customer(onlinePaymentLines) &&
+                !this.order.partner_id?.email
+            ) {
+                this.pos.dialog.add(AlertDialog, {
+                    title: _t("Payment provider requirement"),
+                    body: _t(
+                        "Please ensure you have a customer with an email address on this order."
+                    ),
+                });
+                return false;
+            }
             let prevOnlinePaymentLine = null;
             let lastOrderServerOPData = null;
             for (const onlinePaymentLine of onlinePaymentLines) {
