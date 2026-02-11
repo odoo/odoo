@@ -11,7 +11,7 @@ from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import Query, SQL
 from odoo.tools.barcode import check_barcode_encoding
-from odoo.tools.float_utils import float_compare
+from odoo.tools.float_utils import float_compare, float_is_zero
 from odoo.tools.mail import html2plaintext, is_html_empty
 
 PY_OPERATORS = {
@@ -527,6 +527,48 @@ class ProductProduct(models.Model):
                     'message': _("You have product(s) in stock that have no lot/serial number. You can assign lot/serial numbers by doing an inventory adjustment.")}}
 
     @api.model
+    def _restore_stock_quants(self):
+        MoveLine = self.env['stock.move.line'].sudo().with_context(active_test=False)
+        Quant = self.env['stock.quant'].sudo().with_context(active_test=False)
+        precision = self.env["decimal.precision"].precision_get("Product Unit")
+
+        # Ensure we restore the Quants from a clean state
+        self.sudo().stock_quant_ids.unlink()
+
+        # Compute the expected Quantities based on the StockMoveLine records
+        move_line_domain = [('product_id', 'in', self.ids), ('product_id.is_storable', '=', True), ('state', '=', 'done')]
+        out_group_fields = ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id']
+        in_group_fields = ['product_id', 'location_dest_id', 'lot_id', 'result_package_id', 'owner_id']
+
+        quantities_dict = defaultdict(float)
+
+        moves_in_res = MoveLine._read_group(move_line_domain, in_group_fields, ['quantity_product_uom:sum'])
+        for product, location, lot, package, owner, quantity_uom in moves_in_res:
+            key = (product.id, location.id, lot.id, package.id, owner.id)
+            quantities_dict[key] += quantity_uom
+
+        moves_out_res = MoveLine._read_group(move_line_domain, out_group_fields, ['quantity_product_uom:sum'])
+        for product, location, lot, package, owner, quantity_uom in moves_out_res:
+            key = (product.id, location.id, lot.id, package.id, owner.id)
+            quantities_dict[key] -= quantity_uom
+
+        # Create the Quants
+        quants_vals = []
+        for (product_id, location_id, lot_id, package_id, owner_id), quantity_uom in quantities_dict.items():
+            if float_is_zero(quantity_uom, precision_digits=precision):
+                continue
+            quants_vals.append({
+                'product_id': product_id,
+                'location_id': location_id,
+                'lot_id': lot_id,
+                'package_id': package_id,
+                'owner_id': owner_id,
+                'quantity': quantity_uom,
+            })
+        if quants_vals:
+            Quant.create(quants_vals)
+
+    @api.model
     def view_header_get(self, view_id, view_type):
         res = super().view_header_get(view_id, view_type)
         if not res and self.env.context.get('active_id') and self.env.context.get('active_model') == 'stock.location':
@@ -673,7 +715,17 @@ class ProductProduct(models.Model):
             self.filtered(lambda p: p.active != vals['active']).with_context(active_test=False).orderpoint_ids.write({
                 'active': vals['active']
             })
-        return super().write(vals)
+
+        product_restore_quants = self.env['product.product']
+        if 'is_storable' in vals:
+            product_restore_quants = self.filtered(lambda prd: prd.is_storable != vals['is_storable'] and not prd.is_storable)
+
+        res = super().write(vals)
+        if product_restore_quants:
+            self.sudo()._restore_stock_quants()
+            self.env['stock.quant'].sudo()._clean_reservations()
+
+        return res
 
     def _get_quantity_in_progress(self, location_ids=False, warehouse_ids=False):
         return defaultdict(float), defaultdict(float)
@@ -1103,13 +1155,7 @@ class ProductTemplate(models.Model):
                 if quant:
                     raise UserError(_("This product's company cannot be changed as long as there are quantities of it belonging to another company."))
 
-        clean_inventory = False
-        if 'is_storable' in vals and any(vals['is_storable'] != prod_tmpl.is_storable and not prod_tmpl.is_storable for prod_tmpl in self):
-            clean_inventory = True
-
         res = super().write(vals)
-        if clean_inventory:
-            self.env['stock.quant'].sudo()._clean_reservations()
         return res
 
     def copy(self, default=None):
