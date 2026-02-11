@@ -1,4 +1,5 @@
 import * as PosLoyalty from "@pos_loyalty/../tests/tours/utils/pos_loyalty_util";
+<<<<<<< 16b19de98cb46a72c530592d61daa3918a332746
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
@@ -7,6 +8,27 @@ import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_li
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
+||||||| 6aa9147eef3212b5a4ebf374e617caba198ad7b5
+import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
+import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
+import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
+import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
+import * as PartnerList from "@point_of_sale/../tests/tours/utils/partner_list_util";
+import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
+import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
+import { negateStep } from "@point_of_sale/../tests/tours/utils/common";
+=======
+import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_screen_util";
+import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
+import * as PaymentScreen from "@point_of_sale/../tests/tours/utils/payment_screen_util";
+import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_screen_util";
+import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
+import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
+import * as PartnerList from "@point_of_sale/../tests/tours/utils/partner_list_util";
+import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
+import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
+import { negateStep } from "@point_of_sale/../tests/tours/utils/common";
+>>>>>>> cc7524979af6415d3830720d29934564981f9c92
 import { delay } from "@web/core/utils/concurrency";
 import { registry } from "@web/core/registry";
 
@@ -212,5 +234,23 @@ registry.category("web_tour.tours").add("EWalletLoyaltyHistory", {
             }),
             PosLoyalty.orderTotalIs("0.00"),
             PosLoyalty.finalizeOrder("Cash", "0"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_ewallet_tax_included_invoice", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAA"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            PosLoyalty.eWalletButtonState({ highlighted: true, click: true }),
+            PosLoyalty.orderTotalIs("0.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.isShown(),
         ].flat(),
 });
