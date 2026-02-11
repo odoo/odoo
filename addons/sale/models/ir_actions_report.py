@@ -28,13 +28,13 @@ class IrActionsReport(models.Model):
             reader_buffer = io.BytesIO(pdf_content)
             reader = OdooPdfFileReader(reader_buffer, strict=False)
             writer = OdooPdfFileWriter()
-            writer.cloneReaderDocumentRoot(reader)
+            writer.clone_reader_root_document(reader)
 
             # Generate and attach EDI documents from each builder
             for builder in builders:
                 xml_content = builder._export_order(sale_order)
 
-                writer.addAttachment(
+                writer.add_attachment(
                     builder._export_invoice_filename(sale_order),  # works even if it's a SO or PO
                     xml_content,
                     subtype='text/xml'

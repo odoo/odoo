@@ -500,13 +500,13 @@ class SnailmailLetter(models.Model):
         invoice = PdfFileReader(io.BytesIO(invoice_bin))
         cover_bin = io.BytesIO(cover_buf.getvalue())
         cover_file = PdfFileReader(cover_bin)
-        out_writer.appendPagesFromReader(cover_file)
+        out_writer.append_pages_from_reader(cover_file)
 
         # Add a blank buffer page to avoid printing behind the cover page
         if self.duplex:
-            out_writer.addBlankPage()
+            out_writer.add_blank_page()
 
-        out_writer.appendPagesFromReader(invoice)
+        out_writer.append_pages_from_reader(invoice)
 
         out_buff = io.BytesIO()
         out_writer.write(out_buff)
@@ -550,8 +550,8 @@ class SnailmailLetter(models.Model):
         curr_pdf = PdfFileReader(io.BytesIO(invoice_bin))
         out = PdfFileWriter()
         for page in curr_pdf.pages:
-            page.mergePage(new_pdf.getPage(0))
-            out.addPage(page)
+            page.merge_page(new_pdf.pages[0])
+            out.add_page(page)
         out_stream = io.BytesIO()
         out.write(out_stream)
         out_bin = out_stream.getvalue()
