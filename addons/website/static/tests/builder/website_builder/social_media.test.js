@@ -46,6 +46,16 @@ async function testSocialSnippetOptions(snippetName, containerTitle, iconName) {
         ];
     });
 
+    onRpc(`${location.origin}/website/social/facebook`, () => ({
+        title: "title",
+        description: "description",
+    }));
+
+    onRpc(`/html_editor/link_preview_internal`, () => ({
+        title: "title",
+        description: "description",
+    }));
+
     const core = await setupWebsiteBuilderWithSnippet(snippetName, {
         styleContent: `.${snippetName}.no_icon_color a {
             color: inherit !important;

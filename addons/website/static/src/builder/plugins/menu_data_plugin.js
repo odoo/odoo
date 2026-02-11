@@ -26,6 +26,7 @@ export class MenuDataPlugin extends Plugin {
                     ),
                 getProps: (props) => ({
                     ...props,
+                    canEdit: props.canEdit || this.isMenuLink(props.linkElement),
                     onClickEditLink: (elem, callback) => {
                         const menuEl = elem.props.linkElement.querySelector("[data-oe-id]");
                         this.services.dialog.add(MenuDialog, {

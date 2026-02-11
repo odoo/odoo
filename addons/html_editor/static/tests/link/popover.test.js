@@ -1994,3 +1994,24 @@ test("Should properly show the preview if fetching metadata fails", async () => 
     await waitFor(".o-we-linkpopover");
     expect(cleanLinkArtifacts(getContent(el))).toBe('<p><a href="/contactus">a[]b</a></p>');
 });
+
+test("Should should show link popover without edit", async () => {
+    const id = Math.random().toString();
+    onRpc("/html_editor/link_preview_internal", () => Promise.reject(new Error(`No data ${id}`)));
+    const originalConsoleWarn = console.warn.bind(console);
+    patchWithCleanup(console, {
+        warn: (msg, error, ...args) => {
+            if (!error?.message?.includes?.(id)) {
+                originalConsoleWarn(msg, error, ...args);
+            }
+        },
+    });
+    const { el } = await setupEditor(
+        '<p contenteditable="false"><a href="#"><i class="fa"></i></a></p>'
+    );
+    await animationFrame();
+    await click(el.querySelector(".fa"));
+    // Should open the link popover without edit button
+    expectElementCount(".o-we-linkpopover", 1);
+    expectElementCount(".o_we_edit_link", 0);
+});

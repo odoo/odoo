@@ -3,8 +3,14 @@ import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { MediaDialog } from "./media_dialog/media_dialog";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { ICON_SELECTOR, isElement } from "@html_editor/utils/dom_info";
-import { isIconElement, isZwnbsp } from "../../utils/dom_info";
+import {
+    ICON_SELECTOR,
+    isContentEditable,
+    isElement,
+    isIconElement,
+    isZwnbsp,
+} from "@html_editor/utils/dom_info";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
@@ -68,7 +74,7 @@ export class IconPlugin extends Plugin {
                 // FEFF is directly adjacent to it.
                 const isIconRelatedNode = (node) => {
                     if (
-                        node.classList?.contains("fa") ||
+                        (node.classList?.contains("fa") && isContentEditable(node.parentElement)) ||
                         node.parentElement?.classList.contains("fa")
                     ) {
                         return true;
@@ -141,7 +147,18 @@ export class IconPlugin extends Plugin {
                 text: _t("Replace"),
             },
         ],
+        click_overrides: this.onClickIcon.bind(this),
     };
+
+    onClickIcon(ev) {
+        const node = ev.target;
+        if (isIconElement(closestElement(node)) && !isContentEditable(node.parentElement)) {
+            // We select around an icon inside non editable.
+            // This might, in case icon inside link, show the link
+            // popover to be able to open link.
+            this.dependencies.selection.selectElement(ev.target);
+        }
+    }
 
     getTargetedIcon() {
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
