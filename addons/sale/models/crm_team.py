@@ -8,41 +8,7 @@ from odoo.tools import SQL
 class CrmTeam(models.Model):
     _inherit = 'crm.team'
 
-    invoiced = fields.Float(
-        compute='_compute_invoiced',
-        string='Invoiced This Month', readonly=True,
-        help="Invoice revenue for the current month. This is the amount the sales "
-                "channel has invoiced this month. It is used to compute the progression ratio "
-                "of the current and target revenue on the kanban view.")
-    invoiced_target = fields.Float(
-        string='Invoicing Target',
-        help="Revenue Target for the current month (untaxed total of paid invoices).")
     sale_order_count = fields.Integer(compute='_compute_sale_order_count', string='# Sale Orders')
-
-    def _compute_invoiced(self):
-        if self.ids:
-            today = fields.Date.today()
-            data_map = dict(self.env.execute_query(SQL(
-                ''' SELECT
-                        move.team_id AS team_id,
-                        SUM(move.amount_untaxed_signed) AS amount_untaxed_signed
-                    FROM account_move move
-                    WHERE move.move_type IN ('out_invoice', 'out_refund', 'out_receipt')
-                    AND move.payment_state IN ('in_payment', 'paid', 'reversed')
-                    AND move.state = 'posted'
-                    AND move.team_id IN %s
-                    AND move.date BETWEEN %s AND %s
-                    GROUP BY move.team_id
-                ''',
-                tuple(self.ids),
-                fields.Date.to_string(today.replace(day=1)),
-                fields.Date.to_string(today),
-            )))
-        else:
-            data_map = {}
-
-        for team in self:
-            team.invoiced = data_map.get(team._origin.id, 0.0)
 
     def _compute_sale_order_count(self):
         sale_order_data = self.env['sale.order']._read_group([
@@ -65,9 +31,6 @@ class CrmTeam(models.Model):
         if self._in_sale_scope():
             return self.env["ir.actions.actions"]._for_xml_id("sale.action_order_report_so_salesteam")
         return super().action_primary_channel_button()
-
-    def update_invoiced_target(self, value):
-        return self.write({'invoiced_target': round(float(value or 0))})
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_used_for_sales(self):

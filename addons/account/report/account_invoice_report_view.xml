@@ -47,8 +47,13 @@
                 <field name="price_total_currency" optional="show" sum="Total"/>
                 <field name="price_margin" optional="hide"/>
                 <field name="inventory_value" optional="hide" sum="Total"/>
-                <field name="state" optional="hide"/>
-                <field name="payment_state" optional="hide"/>
+                <field name="state" optional="hide" widget="badge"
+                       decoration-success="state == 'posted'"
+                       decoration-info="state == 'draft'"/>
+                <field name="payment_state" optional="hide" widget="badge"
+                       decoration-info="payment_state in ('partial','in_payment')"
+                       decoration-success="payment_state == 'paid'"
+                       decoration-danger="payment_state in ('reversed','not_paid')"/>
                 <field name="move_type" optional="hide"/>
              </list>
          </field>

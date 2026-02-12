@@ -323,7 +323,7 @@
                                             options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'mailing_model_real'}"
                                             readonly="state in ('sending', 'done')"
                                             widget="char_emojis" placeholder="e.g. Check it out before it's too late!"/>
-                                        <field name="email_from" readonly="state in ('sending', 'done')"/>
+                                        <field name="email_from" readonly="state in ('sending', 'done')" required="mailing_type == 'mail'"/>
                                         <label for="reply_to"/>
                                         <div name="reply_to_details">
                                             <field name="reply_to_mode" widget="radio"
