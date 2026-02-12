@@ -183,6 +183,10 @@ class Toledo8217Driver(ScaleDriver):
             _logger.exception('Error while probing %s with protocol %s', device, protocol.name)
         return False
 
+    @staticmethod
+    def _get_raw_response(connection):
+        return connection.read_until(b"\r")
+
     def _read_status(self, answer):
         """
         Status byte in form of an ascii character (Ex: 'D') is sent if scale is in motion, or is net/gross weight is negative or over capacity.
