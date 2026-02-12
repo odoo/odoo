@@ -1,3 +1,4 @@
+import { useExternalListener } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
@@ -7,7 +8,7 @@ import { Field } from "@web/views/fields/field";
 import { Record } from "@web/model/record";
 import { getFormattedDateSpan } from "@web/views/calendar/utils";
 
-import { Component, useExternalListener } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 export class CalendarCommonPopover extends Component {
     static template = "web.CalendarCommonPopover";

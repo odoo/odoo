@@ -1,8 +1,8 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect, useState } from "@web/owl2/utils";
 import { useAutofocus } from "../utils/hooks";
 import { clamp } from "../utils/numbers";
 
-import { Component, EventBus, useExternalListener } from "@odoo/owl";
+import { Component, EventBus } from "@odoo/owl";
 
 export const PAGER_UPDATED_EVENT = "PAGER:UPDATED";
 export const pagerBus = new EventBus();

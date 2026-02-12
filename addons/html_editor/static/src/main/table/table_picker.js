@@ -1,5 +1,5 @@
-import { useState } from "@web/owl2/utils";
-import { Component, useExternalListener } from "@odoo/owl";
+import { useExternalListener, useState } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 
 export class TablePicker extends Component {
     static template = "html_editor.TablePicker";

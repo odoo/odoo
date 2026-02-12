@@ -1,10 +1,10 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useExternalListener, useRef, useState } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { browser } from "@web/core/browser/browser";
 import { queryAll, queryFirst, queryOne } from "@odoo/hoot-dom";
-import { Component, useExternalListener } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { tourRecorderState } from "./tour_recorder_state";

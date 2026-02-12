@@ -1,5 +1,4 @@
-import { render, useComponent, useLayoutEffect } from "@web/owl2/utils";
-import { useExternalListener } from "@odoo/owl";
+import { render, useComponent, useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import { pick, shallowEqual } from "@web/core/utils/objects";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 

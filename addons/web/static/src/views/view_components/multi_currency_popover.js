@@ -1,5 +1,5 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart, useExternalListener } from "@odoo/owl";
+import { useExternalListener, useState } from "@web/owl2/utils";
+import { Component, onWillStart } from "@odoo/owl";
 import { getCurrency, getCurrencyRates } from "@web/core/currency";
 import { toLocaleDateString } from "@web/core/l10n/dates";
 import { user } from "@web/core/user";

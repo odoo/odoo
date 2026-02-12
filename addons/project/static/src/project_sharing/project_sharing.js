@@ -1,10 +1,10 @@
-import { useState } from "@web/owl2/utils";
+import { useExternalListener, useState } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { ActionContainer } from "@web/webclient/actions/action_container";
-import { Component, onMounted, useExternalListener } from "@odoo/owl";
+import { Component, onMounted } from "@odoo/owl";
 
 export class ProjectSharingWebClient extends Component {
     static props = {};

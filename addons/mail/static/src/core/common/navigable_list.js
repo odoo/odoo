@@ -1,9 +1,9 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
 
-import { Component, useExternalListener } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
