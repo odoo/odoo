@@ -110,7 +110,25 @@
                         <t t-set="tx_sudo" t-value="object.get_portal_last_transaction()"/>
                         Your order <span style="font-weight:bold;" t-out="object.name or ''">S00049</span>
                         <t t-if="object.state == 'sale' or (tx_sudo and tx_sudo.state in ('done', 'authorized'))">
-                            has been confirmed.<br/>
+                            <t
+                                t-if="hasattr(object, 'carrier_id') and object.carrier_id.delivery_type == 'in_store'"
+                            >
+                                <t
+                                    t-if="object.commitment_date and object.commitment_date.date() != object.date_order.date()"
+                                >
+                                    has been confirmed and will be ready on
+                                    <span
+                                        t-field="object.commitment_date"
+                                        t-options='{"widget": "date"}'
+                                    />.<br/>
+                                </t>
+                                <t t-else="">
+                                    has been confirmed and will be ready soon.<br/>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                has been confirmed.<br/>
+                            </t>
                             Thank you for your trust.
                         </t>
                         <t t-elif="tx_sudo and tx_sudo.state == 'pending'">
@@ -311,7 +329,6 @@
                                     <td style="width: 20%; padding-top: 4px; border-top: 1px solid #343a40; opacity: 0.9;" align="left"><strong>Total</strong></td>
                                     <td style="width: 80%; padding-top: 4px; border-top: 1px solid #343a40; font-weight: bold; " align="right">
                                         <span style="display: inline-block; margin-right: 4px; padding: 4px 8px; border: 1px solid #dee2e6; border-radius: 4px;">
-                                            <span style="opacity: 0.9;">Paid with</span>
                                             <span t-attf-style="color: #{color}; font-weight: bold;">
                                                 <t t-out="tx_sudo.provider_id.sudo().name or ''"></t>
                                             </span>
@@ -324,7 +341,11 @@
                         <table t-if="object.partner_shipping_id and not object.only_services" width="295" style="vertical-align: top; font-size: 14px; margin-bottom: 12px;" align="left" role="presentation">
                             <tr>
                                 <td style="padding-bottom: 4px; font-weight: bold;">
-                                    <span style="opacity: 0.9;">Delivery with</span>
+                                    <t
+                                        t-if="not (hasattr(object, 'carrier_id') and object.carrier_id.delivery_type == 'in_store')"
+                                    >
+                                        <span style="opacity: 0.9;">Delivery with</span>
+                                    </t>
                                     <span t-attf-style="color: {{color}}; opacity: 1;"><t t-out="object.carrier_id.name or ''"></t></span>
                                 </td>
                             </tr>

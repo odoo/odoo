@@ -11,7 +11,7 @@
          </t>
          <div name="address_summary_container" position="replace">
              <t t-if="order.partner_shipping_id.pickup_location_data">
-                <p t-att-class="delivery_title_classes">Deliver to pickup point</p>
+                <p t-att-class="delivery_title_classes">Pickup point</p>
                 <div
                     class="fw-bold" t-out="order.partner_shipping_id.pickup_location_data.get('name', '')"
                 />
