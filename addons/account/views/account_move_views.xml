@@ -561,6 +561,7 @@
                     </header>
                     <field name="made_sequence_gap" column_invisible="True"/>
                     <field name="duplicated_ref_ids" column_invisible="True"/>  <!-- Needed for custome view account_tree-->
+                    <field name="is_exact_ref_duplicate" column_invisible="True"/>  <!-- Needed for custome view account_tree-->
                     <field name="name" decoration-bf="1" decoration-danger="made_sequence_gap and state == 'posted'" widget="char_with_placeholder_field" placeholder="/"/>
                     <field name="invoice_partner_display_name" column_invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund', 'in_receipt')" groups="base.group_user" string="Vendor" />
                     <field name="invoice_partner_display_name" column_invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt')" groups="base.group_user" string="Customer" />
@@ -855,7 +856,19 @@
                         <field name="alerts" class="o_field_html" widget="actionable_errors"/>
                     </div>
                     <!--Duplicate check-->
-                    <div class="d-flex alert alert-warning w-100 d-flex align-items-center gap-1" invisible="not duplicated_ref_ids"  role="alert">
+                    <div class="d-flex alert alert-danger w-100 d-flex align-items-center gap-1" invisible="not is_exact_ref_duplicate"  role="alert">
+                        <span>This document might be a duplicate of</span>
+                        <field name="duplicated_ref_ids" widget="x2many_buttons" nb_records_shown="1" string="Duplicated Documents" context="{'name_as_amount_total': True}"/>
+                        <button name="action_delete_duplicates"
+                                type="object"
+                                class="btn btn-link text-danger ms-auto d-flex align-items-center gap-1"
+                                invisible="not is_draft_duplicated_ref_ids">
+                            <i class="fa fa-trash text-danger"/>
+                            <span class="text-danger" invisible="duplicated_ref_ids.length == 1">Delete all duplicates</span>
+                            <span class="text-danger" invisible="duplicated_ref_ids.length &gt; 1">Delete duplicate</span>
+                        </button>
+                    </div>
+                    <div class="d-flex alert alert-warning w-100 d-flex align-items-center gap-1" invisible="not duplicated_ref_ids or is_exact_ref_duplicate or state != 'draft'"  role="alert">
                         <span>This document might be a duplicate of</span>
                         <field name="duplicated_ref_ids" widget="x2many_buttons" nb_records_shown="1" string="Duplicated Documents" context="{'name_as_amount_total': True}"/>
                         <button name="action_delete_duplicates"

@@ -746,6 +746,7 @@ class AccountMove(models.Model):
     )
     duplicated_ref_ids = fields.Many2many(comodel_name='account.move', compute='_compute_duplicated_ref_ids')
     is_draft_duplicated_ref_ids = fields.Boolean(compute="_compute_is_draft_duplicated_ref_ids")
+    is_exact_ref_duplicate = fields.Boolean(compute='_compute_is_exact_ref_duplicate')
     need_cancel_request = fields.Boolean(compute='_compute_need_cancel_request')
 
     show_update_fpos = fields.Boolean(string="Has Fiscal Position Changed", store=False)  # True if the fiscal position was changed
@@ -2198,6 +2199,11 @@ class AccountMove(models.Model):
     def _compute_is_draft_duplicated_ref_ids(self):
         for move in self:
             move.is_draft_duplicated_ref_ids = any(duplicate_move.state == 'draft' for duplicate_move in move.duplicated_ref_ids)
+
+    @api.depends('duplicated_ref_ids')
+    def _compute_is_exact_ref_duplicate(self):
+        for move in self:
+            move.is_exact_ref_duplicate = any(duplicate_move.ref == move.ref for duplicate_move in move.duplicated_ref_ids)
 
     @api.depends('company_id')
     def _compute_display_qr_code(self):
@@ -5293,11 +5299,10 @@ class AccountMove(models.Model):
         self.ensure_one()
         if self.env.context.get('name_as_amount_total'):
             currency_amount = self.currency_id.format(self.amount_total)
-            if self.state == 'posted':
-                ref = f" - {self.ref}" if self.ref else ""
-                return _("%(name)s%(ref)s at %(currency_amount)s", name=(self.name), ref=ref, currency_amount=currency_amount)
-            if self.name:
-                return _("%(name)s - Draft at (%(currency_amount)s)", name=(self.name), currency_amount=currency_amount)
+            if self.ref:
+                return _("%(ref)s at %(currency_amount)s", ref=self.ref, currency_amount=currency_amount)
+            elif self.name:
+                return _("%(name)s at %(currency_amount)s", name=self.name, currency_amount=currency_amount)
             else:
                 return _("Draft (%(currency_amount)s)", currency_amount=currency_amount)
         name = ''
