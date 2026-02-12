@@ -9,6 +9,7 @@ import {
 import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
 import {
     isEmptyBlock,
+    isIconElement,
     isRedundantElement,
     isTextNode,
     isVisibleTextNode,
@@ -119,6 +120,7 @@ export class ColorPlugin extends Plugin {
                         .filter(
                             (n) =>
                                 (isTextNode(n) ||
+                                    isIconElement(n) ||
                                     n.matches?.(`t, ${PROTECTED_QWEB_SELECTOR}`) ||
                                     (mode === "backgroundColor" &&
                                         n.classList.contains("o_selected_td"))) &&
@@ -258,6 +260,13 @@ export class ColorPlugin extends Plugin {
                     )
                 ) {
                     font = null;
+                }
+                const faNodes = font ? [...selectElements(font, ".fa")] : [];
+                if (faNodes && Array.from(faNodes).some((faNode) => faNode.contains(node))) {
+                    return font;
+                }
+                if (isIconElement(node)) {
+                    return node;
                 }
                 const children = font && descendants(font);
                 if (font && !this.dependencies.split.isUnsplittable(font)) {
