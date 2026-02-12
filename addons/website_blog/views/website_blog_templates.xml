@@ -21,7 +21,7 @@
 Used by 'All blogs' and 'blog' (to share the same layout options) and to display
 list of filtered posts (by date or tag).
 ============================================================================ -->
-<template id="blog_post_short" name="Blog Posts">
+<template id="blog_post_short" name="Blog Posts" track="1">
     <t t-set="head">
         <link t-if="blog" t-att-href="'/blog/%s/feed' % slug(blog)" type="application/atom+xml" rel="alternate" title="Atom Feed"/>
         <meta t-if="active_tag_ids" name="robots" t-attf-content="none"/>
@@ -164,7 +164,7 @@ list of filtered posts (by date or tag).
 
 <!-- ====== Blog Post Complete Layout ==========================================
 ============================================================================ -->
-<template id="website_blog.blog_post_complete" name="Blog Post" track="1">
+<template id="website_blog.blog_post_complete" name="Blog Post">
     <t t-call="website_blog.index">
 
         <t t-set="opt_blog_post_regular_cover" t-value="is_view_active('website_blog.opt_blog_post_regular_cover')"/>

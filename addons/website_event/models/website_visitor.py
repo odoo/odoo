@@ -20,6 +20,27 @@ class WebsiteVisitor(models.Model):
         search="_search_event_registered_ids",
         groups="event.group_event_registration_desk")
 
+    visitor_event_count = fields.Integer(
+        string="Event Views",
+        compute='_compute_event_statistics',
+    )
+    event_ids = fields.Many2many(
+        comodel_name='event.event',
+        string="Events",
+        compute='_compute_event_statistics',
+    )
+
+    def _compute_event_statistics(self):
+        self._compute_visitor_agg(field_name='event_ids', rel_field='event_id', count_field='visitor_event_count')
+
+    def _add_viewed_event(self, event_id):
+        """ add a website_track with a page marked as viewed"""
+        self.ensure_one()
+        if event_id:
+            domain = [('event_id', '=', event_id)]
+            website_track_values = {'event_id': event_id}
+            self._add_tracking(domain, website_track_values)
+
     @api.depends('partner_id', 'event_registration_ids.name')
     def _compute_display_name(self):
         """ If there is an event registration for an anonymous visitor, use that

@@ -169,7 +169,7 @@
     </template>
 
     <!-- /shop product listing -->
-    <template id="website_sale.products" name="Products">
+    <template id="website_sale.products" name="Products" track="1">
         <t t-set="website_sale_sortable" t-value="website._get_product_sort_mapping()"/>
         <t t-call="website.layout"
             additional_title="category.name"

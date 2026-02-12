@@ -296,6 +296,10 @@ class WebsiteBlog(http.Controller):
             tag = request.env['blog.tag'].browse(int(tag_id))
         blog_url = QueryURL('', ['blog', 'tag'], blog=blog_post.blog_id, tag=tag, date_begin=date_begin, date_end=date_end)
 
+        visitor = request.env['website.visitor']._get_visitor_from_request()
+        if visitor:
+            visitor._add_viewed_blog(blog_post.id)
+
         if not blog_post.blog_id.id == blog.id:
             return request.redirect("/blog/%s/%s" % (request.env['ir.http']._slug(blog_post.blog_id), request.env['ir.http']._slug(blog_post)), code=301)
 
