@@ -133,7 +133,7 @@ class AccountMoveLine(models.Model):
         compute='_compute_cumulated_balance',
         currency_field='company_currency_id',
         exportable=False,
-        help="Cumulated balance depending on the domain and the order chosen in the view.")
+        help="Cumulated balance for the account.")
     currency_rate = fields.Float(
         compute='_compute_currency_rate',
         help="Currency rate from company currency to document currency.",
@@ -778,24 +778,101 @@ class AccountMoveLine(models.Model):
 
     @api.depends_context('order_cumulated_balance', 'domain_cumulated_balance')
     def _compute_cumulated_balance(self):
-        if not self.env.context.get('order_cumulated_balance'):
-            # We do not come from search_fetch, so we are not in a list view, so it doesn't make any sense to compute the cumulated balance
+        """ Compute the cumulated balance for each line in a list view.
+
+        This is limited to:
+        - only the view with the specific ordering of `date desc, move_name desc, id`
+        - a domain containing an account, and a few more conditions
+        - an account not shared by multiples companies with different currencies
+
+        We put those limits in place for the sake of simplicity, and because such computation is pretty heavy,
+        as it can require to sum every move lines of an account.
+
+        If the field is in the view and one of those conditions is not met, the cumulated balance will not be computed
+        and will be displayed as 0. This is expected and a limitation since parsing domains, consolidating and reordering
+        are making this too complex and expensive to compute.
+        """
+        def _get_domain_information(domain):
+            account_id = None
+            parent_state_domain = []
+            for domain_element in domain:
+                if isinstance(domain_element, (list, tuple)):
+                    field, operator, value = domain_element
+                    # If a single account_id is specified
+                    if (not account_id or account_id == value) and field == 'account_id' and operator == '=':
+                        account_id = value
+                        continue
+                    # If a single account_id is specified in a list/tuple
+                    if isinstance(value, (list, tuple)) and len(value) == 1 and (not account_id or account_id == value[0]) and field == 'account_id' and operator == 'in':
+                        account_id = value[0]
+                        continue
+                    # If a parent_state filter is specified
+                    if field == 'parent_state':
+                        parent_state_domain.append(domain_element)
+                        continue
+                    # Ignore date and display_type filters as they do not impact the cumulated balance
+                    if (
+                        (field == 'date' and operator in ('>=', '<=', '=', '>', '<'))
+                        or (field == 'display_type' and operator == 'not in' and value == ('line_section', 'line_subsection', 'line_note'))
+                    ):
+                        continue
+                # Ignore AND operators
+                elif domain_element == '&':
+                    continue
+                # If anything else than the above is found, we invalidate the domain and dont calculate the cumulated balance.
+                # some valid condition might be ignored, but there's no way to easily handle it here as the domain can be modified by the user.
+                # And if the user filter the records to display too much, the cumulated balance will be wrong.
+                return None, []
+            return account_id, parent_state_domain
+
+        order = self.env.context.get('order_cumulated_balance')
+        domain = Domain(self.env.context.get('domain_cumulated_balance') or []).optimize_full(self)
+        account_id, parent_state_domain = _get_domain_information(domain)
+        if order != 'date desc, move_name desc, id' or not account_id or not self:
+            # Using a different order invalidates the cumulated balance as it means we are not summing by date, which
+            # means the cumulated balances of different fiscal years would be mixed together.
             self.cumulated_balance = 0
             return
 
-        # get the where clause
-        query = self._search(self.env.context.get('domain_cumulated_balance') or [], bypass_access=True)
-        sql_order = self._order_to_sql(query.table, self.env.context.get('order_cumulated_balance'), reverse=True)
-        result = dict(self.env.execute_query(query.select(
-            query.table.id,
-            SQL(
-                "SUM(%s) OVER (ORDER BY %s ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)",
-                query.table.balance,
-                sql_order,
-            ),
-        )))
-        for record in self:
-            record.cumulated_balance = result[record.id]
+        account = self.env['account.account'].browse(account_id)
+        if len(set(account.company_ids.mapped('currency_id'))) != 1:
+            # If the account is shared between multiple companies with different currencies,
+            # the balance won't make sense as we would be consolidating amounts in different currencies.
+            # This is a problem since the amounts would need to be converted and we dont know the conversion rate to use.
+            # As using the latest one available could be wrong for older entries.
+            self.cumulated_balance = 0
+            return
+
+        minimum_record = self.sorted(order)[-1]
+        fy_dates = None
+        if not account.include_initial_balance:
+            fy_dates = account.company_ids[0].compute_fiscalyear_dates(minimum_record.date)
+
+        initial_balance = self._read_group(
+            domain=[
+                ('account_id', '=', account_id),
+                *parent_state_domain,
+                *([('move_id.date', '>=', fy_dates['date_from'])] if fy_dates else []),
+                '|',
+                ('date', '<', minimum_record.date),
+                '&',
+                ('date', '=', minimum_record.date),
+                '|',
+                ('move_name', '<', minimum_record.move_name),
+                '&',
+                ('move_name', '=', minimum_record.move_name),
+                ('id', '>', minimum_record.id),
+            ],
+            aggregates=['balance:sum'],
+        )[0][0] or 0.0
+
+        for record in reversed(self):
+            if fy_dates and record.date > fy_dates['date_to']:
+                initial_balance = 0.0
+                fy_dates = account.company_ids[0].compute_fiscalyear_dates(record.date)
+
+            initial_balance += record.balance
+            record.cumulated_balance = initial_balance
 
     def _search_open_on_date(self, operator, value):
         return []
