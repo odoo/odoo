@@ -28,6 +28,15 @@ class StockPickingType(models.Model):
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
+    def write(self, vals):
+        res = super().write(vals)
+        if 'carrier_id' in vals:
+            for picking in self:
+                if picking.picking_type_id.batch_group_by_carrier and picking.state == 'assigned':
+                    picking.batch_id = False
+                    picking._find_auto_batch()
+        return res
+
     def _get_possible_pickings_domain(self):
         domain = super()._get_possible_pickings_domain()
         if self.picking_type_id.batch_group_by_carrier:

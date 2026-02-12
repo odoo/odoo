@@ -74,3 +74,132 @@ class TestDeliveryPickingBatch(common.TransactionCase):
         package = pack_wizard.action_put_in_pack()
         batch.action_done()
         self.assertEqual(package.weight, 3.0)
+
+    def test_auto_batch_carrier_change_after_confirmation(self):
+        """
+            Test an auto batch scenario where pickings correctly join the correct batches when carrier is set after confirmation.
+            The pickings looks like this:
+            - picking_1: confirmed with carrier_1
+            - picking_2: confirmed without carrier > carrier_1 is set after confirmation
+            - picking_3: confirmed with carrier_2
+            - picking_4: confirmed with carrier_1 > carrier_2 is set after confirmation
+            The expected result is:
+            - batch_1: picking_1, picking_2
+            - batch_2: picking_3, picking_4
+        """
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        picking_type = self.env['stock.picking.type'].create({
+            'name': 'Test Delivery with Auto Batch',
+            'sequence_code': 'TEST',
+            'code': 'outgoing',
+            'company_id': self.env.company.id,
+            'warehouse_id': warehouse.id,
+            'auto_batch': True,
+            'batch_group_by_carrier': True,
+        })
+
+        carrier_1 = self.env['delivery.carrier'].create({
+            'name': 'Carrier 1',
+            'delivery_type': 'fixed',
+            'fixed_price': 10.0,
+            'product_id': self.env['product.product'].create({
+                'name': 'Delivery Carrier 1',
+                'type': 'service',
+                'categ_id': self.env.ref('delivery.product_category_deliveries').id,
+                'list_price': 10.0,
+            }).id
+        })
+        carrier_2 = self.env['delivery.carrier'].create({
+            'name': 'Carrier 2',
+            'delivery_type': 'fixed',
+            'fixed_price': 15.0,
+            'product_id': self.env['product.product'].create({
+                'name': 'Delivery Carrier 2',
+                'type': 'service',
+                'categ_id': self.env.ref('delivery.product_category_deliveries').id,
+                'list_price': 15.0,
+            }).id
+        })
+
+        self.env['stock.quant']._update_available_quantity(self.product_a, self.stock_location, 40)
+
+        picking_1 = self.env['stock.picking'].create({
+            'picking_type_id': picking_type.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'carrier_id': carrier_1.id,
+        })
+        self.env['stock.move'].create({
+            'product_id': self.product_a.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product_a.uom_id.id,
+            'picking_id': picking_1.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        picking_1.action_confirm()
+
+        self.assertTrue(picking_1.batch_id, "Picking 1 should be in a batch")
+
+        picking_2 = self.env['stock.picking'].create({
+            'picking_type_id': picking_type.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        self.env['stock.move'].create({
+            'product_id': self.product_a.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product_a.uom_id.id,
+            'picking_id': picking_2.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        picking_2.action_confirm()
+
+        # simulating setting carrier after confirming SO without setting a carrier
+        picking_2.write({'carrier_id': carrier_1.id})
+
+        self.assertEqual(picking_2.batch_id, picking_1.batch_id,
+                        "Picking 2 should join the same batch as picking 1 (carrier 1)")
+
+        picking_3 = self.env['stock.picking'].create({
+            'picking_type_id': picking_type.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'carrier_id': carrier_2.id,
+        })
+        self.env['stock.move'].create({
+            'product_id': self.product_a.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product_a.uom_id.id,
+            'picking_id': picking_3.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        picking_3.action_confirm()
+
+        self.assertTrue(picking_3.batch_id, "Picking 3 should be in a batch")
+        self.assertNotEqual(picking_3.batch_id, picking_1.batch_id,
+                           "Picking 3 should be in a different batch than picking 1 and 2 (carrier 2)")
+
+        # Test changing carrier on an confirmed SO but not batched yet
+        picking_4 = self.env['stock.picking'].create({
+            'picking_type_id': picking_type.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'carrier_id': carrier_1.id,
+        })
+        self.env['stock.move'].create({
+            'product_id': self.product_a.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product_a.uom_id.id,
+            'picking_id': picking_4.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        picking_4.action_confirm()
+        picking_4.write({'carrier_id': carrier_2.id})
+
+        self.assertTrue(picking_4.batch_id, "Picking 4 should be in a batch")
+        self.assertEqual(picking_4.batch_id, picking_3.batch_id,
+                           "Picking 4 should be in the same batch as picking 3")
