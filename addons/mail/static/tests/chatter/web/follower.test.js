@@ -9,8 +9,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { Deferred } from "@odoo/hoot-mock";
-import { mockService, onRpc } from "@web/../tests/web_test_helpers";
+import { onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -56,27 +55,14 @@ test("base rendering editable", async () => {
     await contains("[title='Remove this follower']");
 });
 
-test("click on partner follower details", async () => {
+test("click on partner follower opens avatar card", async () => {
     const pyEnv = await startServer();
-    const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
+    const [threadId, partnerId] = pyEnv["res.partner"].create([{}, { name: "Batman" }]);
     pyEnv["mail.followers"].create({
         is_active: true,
         partner_id: partnerId,
         res_id: threadId,
         res_model: "res.partner",
-    });
-    const openFormDef = new Deferred();
-    mockService("action", {
-        doAction(action) {
-            if (action?.res_id !== partnerId) {
-                return super.doAction(...arguments);
-            }
-            expect.step("do_action");
-            expect(action.res_id).toBe(partnerId);
-            expect(action.res_model).toBe("res.partner");
-            expect(action.type).toBe("ir.actions.act_window");
-            openFormDef.resolve();
-        },
     });
     await start();
     await openFormView("res.partner", threadId);
@@ -84,8 +70,7 @@ test("click on partner follower details", async () => {
     await contains(".o-mail-Follower");
     await contains(".o-mail-Follower-details");
     await click(".o-mail-Follower-details:first");
-    await openFormDef;
-    await expect.waitForSteps(["do_action"]); // redirect to partner profile
+    await contains(".o_avatar_card:contains('Batman')");
 });
 
 test("click on edit follower", async () => {
