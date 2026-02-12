@@ -1144,39 +1144,62 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertTrue(self.test_move.state == 'posted')
 
     def test_cumulated_balance(self):
-        move = self.env['account.move'].create({
-            'line_ids': [Command.create({
-                'balance': 100,
-                'account_id': self.company_data['default_account_receivable'].id,
-            }), Command.create({
-                'balance': 100,
-                'account_id': self.company_data['default_account_tax_sale'].id,
-            }), Command.create({
-                'balance': -200,
-                'account_id': self.company_data['default_account_revenue'].id,
-            })]
-        })
+        receivable_account = self.copy_account(self.company_data['default_account_receivable'])
+        tax_account = self.copy_account(self.company_data['default_account_tax_sale'])
+        revenue_account = self.copy_account(self.company_data['default_account_revenue'])
 
-        for order, expected in [
-            ('balance DESC', [
-                (100, 0),
-                (100, -100),
-                (-200, -200),
-            ]),
-            ('balance ASC', [
-                (-200, 0),
-                (100, 200),
-                (100, 100),
-            ]),
+        for receivable_amount, tax_amount, revenue_amount, date in [
+            (115.0, 15.0, -130.0, '2024-01-15'),
+            (180.0, 20.0, -200.0, '2024-05-20'),
+            (245.0, 45.0, -290.0, '2025-07-10'),
         ]:
-            read_results = self.env['account.move.line'].search_read(
-                domain=[('move_id', '=', move.id)],
-                fields=['balance', 'cumulated_balance'],
-                order=order,
-            )
-            for (balance, cumulated_balance), read_result in zip(expected, read_results):
-                self.assertAlmostEqual(balance, read_result['balance'])
-                self.assertAlmostEqual(cumulated_balance, read_result['cumulated_balance'])
+            self.env['account.move'].create({
+                'date': date,
+                'line_ids': [Command.create({
+                    'balance': receivable_amount,
+                    'account_id': receivable_account.id,
+                }), Command.create({
+                    'balance': tax_amount,
+                    'account_id': tax_account.id,
+                }), Command.create({
+                    'balance': revenue_amount,
+                    'account_id': revenue_account.id,
+                })]
+            })
+
+        expected = [
+            # The cumulated balance should sum the balances of all previous moves during the period.
+            ('2024-01-01', 1, receivable_account, [115.0, 295.0]),
+            ('2024-01-01', 1, tax_account, [15.0, 35.0]),
+            ('2024-01-01', 1, revenue_account, [-130.0, -330.0]),
+
+            # Accounts that don't include their intinal balance should reset to 0, other should keep their balance.
+            ('2025-01-01', 1, receivable_account, [540.0]),
+            ('2025-01-01', 1, tax_account, [80.0]),
+            ('2025-01-01', 1, revenue_account, [-290.0]),
+
+            # If we start partitaly in the fiscal year, accounts should calculate over the entire fiscal year.
+            ('2024-05-01', 1, receivable_account, [295.0]),
+            ('2024-05-01', 1, tax_account, [35.0]),
+            ('2024-05-01', 1, revenue_account, [-330.0]),
+
+            # If we search_fetch over multiples fiscal year, if the result include move lines from different fiscal
+            # years and the account shouldn't include it's initial balance, the balance should still reset.
+            ('2024-01-01', 2, receivable_account, [115.0, 295.0, 540.0]),
+            ('2024-01-01', 2, tax_account, [15.0, 35.0, 80.0]),
+            ('2024-01-01', 2, revenue_account, [-130.0, -330.0, -290.0]),
+        ]
+
+        for date_from, years, account, excepted_amounts in expected:
+            date_from = fields.Date.from_string(date_from)
+            move_lines = self.env['account.move.line'].search_fetch(domain=[
+                ('account_id', '=', account.id),
+                ('date', '>=', date_from),
+                ('date', '<=', date_from + relativedelta(years=years)),
+            ], field_names=['cumulated_balance'])
+            self.assertEqual(len(move_lines), len(excepted_amounts))
+            for line, expected_amount in zip(reversed(move_lines), excepted_amounts):
+                self.assertEqual(line.cumulated_balance, expected_amount)
 
     def test_move_line_rounding(self):
         """Whatever arguments we give to the creation of an account move,
