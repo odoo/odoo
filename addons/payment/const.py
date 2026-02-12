@@ -540,7 +540,7 @@ CURRENCY_MINOR_UNITS = {
 }
 
 REPORT_REASONS_MAPPING = {
-    'exceed_max_amount': _lt("maximum amount exceeded"),
+    'exceed_min_or_max_amount': _lt("minimum or maximum amount exceeded"),
     'express_checkout_not_supported': _lt("express checkout not supported"),
     'incompatible_country': _lt("incompatible country"),
     'incompatible_currency': _lt("incompatible currency"),

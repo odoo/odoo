@@ -17,6 +17,14 @@
                     required="state != 'disabled' and code not in ['none', 'custom']"/>
                 <field name="support_refund" groups="base.group_no_one"/>
             </group>
+            <field name="available_country_ids" position="after">
+                <field
+                    name="available_pricelist_ids"
+                    widget="many2many_tags"
+                    placeholder="All Pricelists"
+                    options="{'no_create': True}"
+                />
+            </field>
         </field>
     </record>
 

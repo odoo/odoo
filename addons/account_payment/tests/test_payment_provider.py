@@ -33,3 +33,21 @@ class TestPaymentProvider(AccountPaymentCommon):
             })
             provider_duplicated.invalidate_recordset(fnames=['journal_id'])
             self.assertEqual(provider_duplicated.journal_id, bank_journal)
+
+    def test_provider_not_compatible_with_unavailable_pricelists(self):
+        """Test that the provider is not compatible with a pricelist that is not available."""
+        pricelist_10 = self.env['product.pricelist'].create({
+            'name': 'EUR 10',
+            'currency_id': self.currency_euro.id,
+        })
+        pricelist_20 = self.env['product.pricelist'].create({
+            'name': 'EUR 20',
+            'currency_id': self.currency_euro.id,
+        })
+        self.partner.property_product_pricelist = pricelist_10
+        self.provider.available_pricelist_ids = pricelist_20
+
+        compatible_providers = self.env['payment.provider']._get_compatible_providers(
+            self.company.id, self.partner.id, self.amount,
+        )
+        self.assertNotIn(self.provider, compatible_providers)
