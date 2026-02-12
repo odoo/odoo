@@ -3,7 +3,7 @@ import { click, manuallyDispatchProgrammaticEvent, press, waitFor } from "@odoo/
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
-import { insertLineBreak, insertText, keydownTab } from "./_helpers/user_actions";
+import { insertLineBreak, insertText, keydownShiftTab, keydownTab } from "./_helpers/user_actions";
 import { loader } from "@web/core/emoji_picker/emoji_picker";
 import { execCommand } from "./_helpers/userCommands";
 import { unformat } from "./_helpers/format";
@@ -363,5 +363,50 @@ test("Monospace banner should use spaces instead of tabs", async () => {
             </div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         )
+    );
+});
+
+test("Monospace banner should unindent on shift+tab", async () => {
+    const wrap = (lines) => {
+        const linesText = lines.map((line) => `<div class="o-paragraph">${line}</div>`).join("");
+        return `<p data-selection-placeholder=""><br></p>
+         <div class="font-monospace o_editor_banner user-select-none o-contenteditable-false d-flex align-items-center alert alert-secondary pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
+             <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
+                 ${linesText}
+             </div>
+         </div>
+         <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`;
+    };
+    const tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
+    const tabZws = `${tab}\u200b`;
+    const { el, editor } = await setupEditor(wrap(["[a() {", `${tab}x = 1;`, "}]"]));
+    expect(unformat(getContent(el))).toBe(unformat(wrap(["[a() {", `${tab}x = 1;`, "}]"])));
+    await keydownTab(editor);
+    expect(unformat(getContent(el))).toBe(
+        unformat(wrap([`${tabZws}[a() {`, `${tabZws}${tab}x = 1;`, `${tabZws}}]`]))
+    );
+    await keydownTab(editor);
+    expect(unformat(getContent(el))).toBe(
+        unformat(
+            wrap([
+                `${tabZws}${tabZws}[a() {`,
+                `${tabZws}${tabZws}${tab}x = 1;`,
+                `${tabZws}${tabZws}}]`,
+            ])
+        )
+    );
+    await keydownShiftTab(editor);
+    expect(unformat(getContent(el))).toBe(
+        unformat(
+            wrap([`\u200b${tabZws}[a() {`, `\u200b${tabZws}${tab}x = 1;`, `\u200b${tabZws}}]`])
+        )
+    );
+    await keydownShiftTab(editor);
+    expect(unformat(getContent(el))).toBe(
+        unformat(wrap([`\u200b\u200b[a() {`, `\u200b\u200b${tab}x = 1;`, `\u200b\u200b}]`]))
+    );
+    await keydownShiftTab(editor);
+    expect(unformat(getContent(el))).toBe(
+        unformat(wrap([`\u200b\u200b[a() {`, `\u200b\u200bx = 1;`, `\u200b\u200b}]`]))
     );
 });
