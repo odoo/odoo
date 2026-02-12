@@ -19,8 +19,10 @@ class ChartOptionPlugin extends Plugin {
         so_content_addition_selector: [".s_chart"],
         builder_actions: {
             SetChartTypeAction,
+            SetColumnAction,
             AddColumnAction,
             RemoveColumnAction,
+            SetRowAction,
             AddRowAction,
             RemoveRowAction,
             UpdateDatasetValueAction,
@@ -105,6 +107,42 @@ export class SetChartTypeAction extends BaseChartAction {
         this.updateDOMData(editingElement, data);
     }
 }
+export class SetColumnAction extends BaseChartAction {
+    static id = "setColumn";
+    apply({ editingElement, value }) {
+        const data = this.getData(editingElement);
+        const diff = parseInt(value) - data.datasets.length;
+
+        if (diff == 0) {
+            return;
+        }
+        if (diff > 0) {
+            const fillDatasetArray = (value) => Array(data.labels.length).fill(value);
+            const infoToAdd = [];
+            for (let i = 0; i < diff; i++) {
+                const newDataset = {
+                    key: DATASET_KEY_PREFIX + Date.now() + i,
+                    label: "",
+                    data: fillDatasetArray(0),
+                    backgroundColor: this.isPieChart(editingElement)
+                        ? data.labels.map(() => this.randomColor())
+                        : this.randomColor(),
+                    borderColor: this.isPieChart(editingElement) ? fillDatasetArray("") : "",
+                };
+                infoToAdd.push(newDataset);
+            }
+            data.datasets.push(...infoToAdd);
+            this.updateDOMData(editingElement, data);
+        } else {
+            data.datasets.splice(diff);
+            this.updateDOMData(editingElement, data);
+        }
+    }
+    getValue({ editingElement }) {
+        const data = this.getData(editingElement);
+        return data.datasets.length;
+    }
+}
 export class AddColumnAction extends BaseChartAction {
     static id = "addColumn";
     apply({ editingElement }) {
@@ -131,6 +169,45 @@ export class RemoveColumnAction extends BaseChartAction {
         const toRemoveIndex = data.datasets.findIndex((dataset) => dataset.key === key);
         data.datasets.splice(toRemoveIndex, 1);
         this.updateDOMData(editingElement, data);
+    }
+}
+export class SetRowAction extends BaseChartAction {
+    static id = "setRow";
+    apply({ editingElement, value }) {
+        const data = this.getData(editingElement);
+        const diff = parseInt(value) - data.labels.length;
+
+        if (diff == 0) {
+            return;
+        }
+        if (diff > 0) {
+            for (let i = 0; i < diff; i++) {
+                data.labels.push("");
+                data.datasets.forEach((dataset) => {
+                    dataset.data.push(0);
+                    if (this.isPieChart(editingElement)) {
+                        dataset.backgroundColor.push(this.randomColor());
+                        dataset.borderColor.push("");
+                    }
+                });
+            }
+            this.updateDOMData(editingElement, data);
+        } else {
+            const data = this.getData(editingElement);
+            data.labels.splice(diff);
+            data.datasets.forEach((dataset) => {
+                dataset.data.splice(diff);
+                if (this.isPieChart(editingElement)) {
+                    dataset.backgroundColor.splice(diff);
+                    dataset.borderColor.splice(diff);
+                }
+            });
+            this.updateDOMData(editingElement, data);
+        }
+    }
+    getValue({ editingElement }) {
+        const data = this.getData(editingElement);
+        return data.labels.length;
     }
 }
 export class AddRowAction extends BaseChartAction {
