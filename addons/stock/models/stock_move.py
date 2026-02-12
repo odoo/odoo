@@ -2410,7 +2410,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                 orderpoints_context_by_company[orderpoint.company_id].setdefault(orderpoint.id, [])
                 orderpoints_context_by_company[orderpoint.company_id][orderpoint.id].append(move.origin)
         for company, orderpoints in orderpoints_by_company.items():
-            orderpoints.with_context(origins=orderpoints_context_by_company[company])._procure_orderpoint_confirm(
+            orderpoints.sudo().with_context(origins=orderpoints_context_by_company[company])._procure_orderpoint_confirm(
                 company_id=company, raise_user_error=False)
 
     def _trigger_assign(self):
