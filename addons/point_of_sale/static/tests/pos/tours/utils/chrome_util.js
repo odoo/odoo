@@ -116,6 +116,7 @@ export function clickPlanButton() {
             run: "click",
         },
         ...waitRequest(),
+        ...waitForOrdersSync(),
     ];
 }
 export function startPoS() {
@@ -367,4 +368,18 @@ export function selectPresetDateButton(formattedDate) {
         trigger: `.modal-body button:contains("${formattedDate}")`,
         run: "click",
     };
+}
+
+export function waitForOrdersSync() {
+    return [
+        {
+            trigger: "body",
+            content: "Wait for the orders to be synced",
+            timeout: 15000,
+            async run({ waitUntil }) {
+                await waitUntil(() => !posmodel.syncingOrders.size, { timeout: 10000 });
+                await new Promise((resolve) => setTimeout(resolve));
+            },
+        },
+    ];
 }
