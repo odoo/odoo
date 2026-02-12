@@ -279,7 +279,8 @@ def upgrade_this(file_manager, log_info, log_error):
     outside_vars = {
         "mail.Composer.quickActions": {'partitionedActions'},
         "web.Breadcrumb.Name": {'breadcrumb'},
-        "web.SearchPanel.Category": {'section'}
+        "web.SearchPanel.Category": {'section'},
+        "web.ListRenderer.RecordRow": {'record'},
     }  # vars defined under t-call
     inside_vars = {} # vars defined inside template, eg. using t-set
 
