@@ -62,8 +62,8 @@ class PosConfig(models.Model):
     )
     self_ordering_image_home_ids = fields.Many2many(
         'ir.attachment',
-        string="Add images",
-        help="Image to display on the self order screen",
+        string="Add Media",
+        help="Media items to display on the self order screen",
         bypass_search_access=True,
     )
     self_ordering_image_background_ids = fields.Many2many(
@@ -294,7 +294,7 @@ class PosConfig(models.Model):
         if not read_records:
             return read_records
         record = read_records[0]
-        record['_self_ordering_image_home_ids'] = config.self_ordering_image_home_ids.ids
+        record['_self_ordering_image_home_ids'] = config.self_ordering_image_home_ids.read(['mimetype'])
         record['_self_ordering_image_background_ids'] = config.self_ordering_image_background_ids.ids
         record['_pos_special_products_ids'] = config._get_special_products().ids
         record['_self_order_pos'] = True

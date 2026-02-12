@@ -10,14 +10,18 @@
             </div>
         </div>
         <div t-if="selfOrder.config._self_ordering_image_home_ids.length > 0" t-on-click="start" class="d-flex flex-column vh-100 align-items-center overflow-hidden">
-            <div id="carouselAutoplaying" t-ref="carousel" class="carousel slide w-100 h-100" data-bs-ride="true">
+            <div id="carouselAutoplaying" t-ref="carousel" class="carousel slide w-100 h-100">
                 <div class="carousel-inner h-100 w-100">
-                    <div
-                        t-foreach="selfOrder.config._self_ordering_image_home_ids"
-                        t-as="imageId"
-                        t-key="imageId"
-                        t-attf-class="carousel-item object-fit-cover h-100 w-100 {{activeImage}}"
-                        t-attf-style="background-image: url('/web/image/ir.attachment/{{imageId}}/raw'); background-size: cover; background-position: center;" />
+                    <div t-foreach="selfOrder.config._self_ordering_image_home_ids" t-as="attachment" t-key="attachment.id"
+                        t-attf-class="carousel-item h-100 w-100 {{activeImage}}">
+                        <video t-if="attachment.mimetype.startsWith('video/')" class="w-100 h-100 object-fit-contain"
+                            autoplay="true" muted="true" loop="true" playsinline="true"
+                            t-att-src="'/web/image/ir.attachment/' + attachment.id + '/raw'"
+                        />
+                        <div t-else="" class="h-100 w-100 img-background" 
+                            t-attf-style="background-image: url('/web/image/ir.attachment/{{attachment.id}}/raw');"
+                        />
+                    </div>
                 </div>
             </div>
         </div>
