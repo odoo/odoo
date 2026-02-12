@@ -23,9 +23,9 @@
             class="btn btn-primary fa fa-fw fa-times"
             style="min-width: min-content;"
             t-on-click="() => this.select()"
-            t-on-pointerenter="hasPreview ? () => this.preview() : undefined"
+            t-on-pointerenter="hasPreview ? () => this.preview() : () => {}"
             t-on-pointerleave="revert"
-            t-on-focusin="hasPreview ? () => this.preview() : undefined"
+            t-on-focusin="hasPreview ? () => this.preview() : () => {}"
             t-on-focusout="revert"
         />
     </BuilderComponent>
