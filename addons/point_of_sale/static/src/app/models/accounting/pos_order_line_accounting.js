@@ -138,10 +138,15 @@ export class PosOrderlineAccounting extends Base {
     }
 
     get taxGroupLabels() {
-        return this.tax_ids
-            ?.map((tax) => tax.tax_group_id?.pos_receipt_label)
-            .filter((label) => label)
-            .join(" ");
+        let taxes_id = this.tax_ids;
+        if (this.order_id.fiscal_position_id) {
+            taxes_id = this.order_id.fiscal_position_id.getTaxesAfterFiscalPosition(this.tax_ids);
+        }
+        return [
+            ...new Set(
+                taxes_id?.map((tax) => tax.tax_group_id.pos_receipt_label).filter((label) => label)
+            ),
+        ].join(" ");
     }
 
     delete(record, opts = {}) {
