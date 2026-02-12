@@ -1,5 +1,5 @@
-import { useState } from "@web/owl2/utils";
-import { Component, validate } from "@odoo/owl";
+import { useState, validate } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { omit, pick } from "@web/core/utils/objects";
 
 export class Toolbar extends Component {

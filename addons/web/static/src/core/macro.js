@@ -1,6 +1,6 @@
+import { validate } from "@web/owl2/utils";
 import { isVisible } from "@web/core/utils/ui";
 import { delay } from "@web/core/utils/concurrency";
-import { validate } from "@odoo/owl";
 
 const macroSchema = {
     name: { type: String, optional: true },

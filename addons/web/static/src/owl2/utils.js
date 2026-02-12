@@ -49,6 +49,14 @@ export function render(component, deep = false) {
 }
 
 /**
+ * @param {any} value
+ * @param {any} descr
+ */
+export function validate(value, descr) {
+    return owl.validate(value, descr);
+}
+
+/**
  * @param {() => void} cb
  */
 export function onWillRender(cb) {

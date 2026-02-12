@@ -1,4 +1,5 @@
-import { Component, markup, whenReady, validate } from "@odoo/owl";
+import { validate } from "@web/owl2/utils";
+import { Component, markup, whenReady } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
