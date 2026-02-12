@@ -126,15 +126,19 @@ class BaseString(Field[str | typing.Literal[False]]):
         ):
             base_lang = record._get_base_lang()
             lang = record.env.lang or 'en_US'
+            delay_translation = value != record.with_context(edit_translations=None, check_translations=None, lang=lang)[self.name]
 
             if lang != base_lang:
                 base_value = record.with_context(edit_translations=None, check_translations=True, lang=base_lang)[self.name]
-                base_terms_iter = iter(self.get_trans_terms(base_value))
-                get_base = lambda term: next(base_terms_iter)
+                base_terms = self.get_trans_terms(base_value)
+                translated_terms = self.get_trans_terms(value) if value != base_value else base_terms
+                if len(base_terms) != len(translated_terms):
+                    # term number mismatch, ignore all translations
+                    value = base_value
+                    translated_terms = base_terms
+                get_base = dict(zip(translated_terms, base_terms)).__getitem__
             else:
                 get_base = lambda term: term
-
-            delay_translation = value != record.with_context(edit_translations=None, check_translations=None, lang=lang)[self.name]
 
             # use a wrapper to let the frontend js code identify each term and
             # its metadata in the 'edit_translations' context
