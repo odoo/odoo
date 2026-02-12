@@ -2,7 +2,6 @@
 from datetime import date, datetime, timedelta
 from zoneinfo import ZoneInfo
 
-from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 
