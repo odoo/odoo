@@ -13,6 +13,11 @@ export const Direction = {
     FORWARD: "FORWARD",
 };
 
+const defaultTestConfig = {
+    debouncePowerbuttons: false,
+    debounceHints: false,
+};
+
 class TestEditor extends Component {
     static template = xml`
         <t t-if="props.styleContent">
@@ -78,7 +83,10 @@ class TestEditor extends Component {
  */
 export async function setupEditor(content, options = {}) {
     const wysiwygProps = Object.assign({}, options.props);
-    wysiwygProps.config = options.config || {};
+    wysiwygProps.config = {
+        ...defaultTestConfig,
+        ...(options.config || {}),
+    };
     const attachedEditor = new Promise((resolve) => {
         wysiwygProps.onLoad = (editor) => {
             const oldAttachTo = editor.attachTo;
