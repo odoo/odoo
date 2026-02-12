@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { fillEmpty, fillShrunkPhrasingParent } from "@html_editor/utils/dom";
-import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
+import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { withSequence } from "@html_editor/utils/resource";
 import { htmlEscape } from "@odoo/owl";
@@ -120,6 +120,7 @@ export class BannerPlugin extends Plugin {
         /** Overrides */
         delete_backward_overrides: this.handleDeleteBackward.bind(this),
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
+        shift_tab_overrides: this.handleShiftTab.bind(this),
     };
 
     setup() {
@@ -200,6 +201,33 @@ export class BannerPlugin extends Plugin {
         for (const el of selectElements(root, ".font-monospace.o_editor_banner .oe-tabs")) {
             const spacesElement = document.createTextNode("\u00A0\u00A0\u00A0\u00A0");
             el.replaceWith(spacesElement);
+        }
+    }
+
+    handleShiftTab() {
+        const selection = this.dependencies.selection.getEditableSelection();
+        const monospaceBannerElement = closestElement(
+            selection.anchorNode,
+            ".font-monospace.o_editor_banner"
+        );
+        if (!monospaceBannerElement) {
+            return;
+        }
+        const fourSpacesRe = /^(?:\u200B*\s\u200B*){4}/;
+        for (const block of [...this.dependencies.selection.getTargetedBlocks()]) {
+            const text = block.textContent;
+            if (text.match(fourSpacesRe)) {
+                // Unindent first text node
+                const textNode = descendants(block).find(
+                    (n) =>
+                        n.nodeType === Node.TEXT_NODE &&
+                        n.textContent.length &&
+                        n.textContent !== "\u200b"
+                );
+                if (textNode) {
+                    textNode.textContent = textNode.textContent.replace(fourSpacesRe, "");
+                }
+            }
         }
     }
 }
