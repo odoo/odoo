@@ -306,3 +306,16 @@ registry.category("web_tour.tours").add("test_receipt_screen_edit_payment_lines"
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_amount_total_is_rounded", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptIsThere(),
+        ].flat(),
+});
