@@ -9,7 +9,8 @@ export class ContactImageField extends ImageField {
     getUrl(imageFieldName) {
         if (
             this.props.previewImage &&
-            (!this.props.record.data[this.props.name] || !this.state.isValid)
+            (!this.props.record.data[this.props.name] || !this.state.isValid) &&
+            this.props.record.data[imageFieldName]
         ) {
             if (isBinarySize(this.props.record.data[imageFieldName])) {
                 this.lastURL = imageUrl(
