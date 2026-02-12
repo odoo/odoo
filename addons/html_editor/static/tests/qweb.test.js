@@ -6,6 +6,7 @@ import { getContent, setSelection } from "./_helpers/selection";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { dispatchClean } from "./_helpers/dispatch";
+import { bold } from "./_helpers/user_actions";
 
 const config = { Plugins: [...MAIN_PLUGINS, QWebPlugin] };
 describe("qweb picker", () => {
@@ -306,4 +307,66 @@ test("cleaning removes content editable", async () => {
             <t t-esc="test">Hello</t>
             <t t-raw="test">Hello</t>
         </div>`);
+});
+
+describe("toolbar visibility on contenteditable false elements", () => {
+    test("should open the toolbar when the selected t-out is contenteditable false", async () => {
+        const { el } = await setupEditor(
+            '<div contenteditable="false"><t t-out="">a[]bc</t></div>',
+            { config }
+        );
+        await dblclick("t");
+        await animationFrame();
+        expect(".o-we-toolbar").toHaveCount(1);
+        expect(getContent(el)).toBe(
+            `[<div contenteditable="false"><t t-out="" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">abc</t></div>]`
+        );
+    });
+
+    test("should open the toolbar when the selected t-field is contenteditable false", async () => {
+        const { el } = await setupEditor(
+            '<div contenteditable="false"><t t-field="">a[]bc</t></div>',
+            { config }
+        );
+        await dblclick("t");
+        await animationFrame();
+        expect(".o-we-toolbar").toHaveCount(1);
+        expect(getContent(el)).toBe(
+            `[<div contenteditable="false"><t t-field="" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">abc</t></div>]`
+        );
+    });
+
+    test("should open the toolbar when the selected t-esc is contenteditable=false", async () => {
+        const { el } = await setupEditor(
+            '<div contenteditable="false"><t t-esc="">a[]bc</t></div>',
+            { config }
+        );
+        await dblclick("t");
+        await animationFrame();
+        expect(".o-we-toolbar").toHaveCount(1);
+        expect(getContent(el)).toBe(
+            `[<div contenteditable="false"><t t-esc="" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">abc</t></div>]`
+        );
+    });
+});
+
+test("should create a history step when applying bold to a QWeb tag", async () => {
+    const { editor, el } = await setupEditor(
+        `<div><p t-esc="'Test'" contenteditable="false">T[e]st</p></div>`,
+        { config }
+    );
+    await dblclick("[t-esc]");
+    await animationFrame();
+    bold(editor);
+    expect(getContent(el)).toBe(
+        `<div>[<p t-esc="'Test'" contenteditable="false" data-oe-protected="true" style="font-weight: bolder;">Test</p>]</div>`
+    );
+    expect(queryOne(`p[contenteditable="false"]`).childNodes.length).toBe(1);
+    const historySteps = editor.shared.history.getHistorySteps();
+    expect(historySteps.length).toBe(2);
+    const lastStep = historySteps.at(-1);
+    expect(lastStep.mutations.length).toBe(1);
+    expect(lastStep.mutations[0].type).toBe("attributes");
+    expect(lastStep.mutations[0].attributeName).toBe("style");
+    expect(lastStep.mutations[0].value).toBe("font-weight: bolder;");
 });

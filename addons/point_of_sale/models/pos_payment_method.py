@@ -17,6 +17,9 @@ class PosPaymentMethod(models.Model):
             selection.append(('qr_code', self.env._("Bank App (QR Code)")))
         return selection
 
+    def _is_online_payment(self):
+        return False
+
     name = fields.Char(string="Method", required=True, translate=True, help='Defines the name of the payment method that will be displayed in the Point of Sale when the payments are selected.')
     sequence = fields.Integer(copy=False)
     outstanding_account_id = fields.Many2one('account.account',

@@ -729,3 +729,14 @@ export function addDiscount(discount) {
             .flatMap((key) => Numpad.click(key)),
     ].flat();
 }
+
+export function saveOrder() {
+    return [
+        clickReview(),
+        {
+            content: "save order",
+            trigger: ".pads .fa-upload",
+            run: "click",
+        },
+    ];
+}
