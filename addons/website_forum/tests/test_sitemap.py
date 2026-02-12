@@ -11,7 +11,7 @@ from odoo.tests import tagged
 class TestWebsiteControllers(TestForumCommon):
 
     def test_01_forum_sitemap(self):
-        website = self.env['website'].browse(1)
+        website = self.env.ref('website.default_website')
 
         # Simulate post from 2023-05-31
         datetime = '2023-05-31'

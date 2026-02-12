@@ -40,12 +40,14 @@ class TestWebsiteAttachment(odoo.tests.HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_image_quality', login="admin")
 
     def test_03_link_to_document(self):
-        text = b'Lorem Ipsum'
-        self.env['ir.attachment'].create({
+        Attachment = self.env['ir.attachment']
+        # hardcoded id for JS tour
+        self.env.cr.execute("SELECT setval(pg_get_serial_sequence(%s, 'id'), 437296, false)", (Attachment._table,))
+        Attachment.create({
             'name': 'sample.txt',
             'public': True,
             'mimetype': 'text/plain',
-            'raw': text,
+            'raw': b'Lorem Ipsum',
         })
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'test_link_to_document', login="admin")
 

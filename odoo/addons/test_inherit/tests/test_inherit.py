@@ -80,7 +80,7 @@ class test_inherits(common.TransactionCase):
     def test_60_inherit_with_python(self):
         self.assertEqual(self.env['test.inherit.mother'].foo(), 42)
         self.assertEqual(self.env[TestInheritMother._name].foo(), 42)
-        self.assertEqual(self.env['test.inherit.mother'].browse(1).surname, 'Mother A')
+        self.assertEqual(self.env.ref('test_inherit.mother_a').surname, 'Mother A')
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

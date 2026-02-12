@@ -32,7 +32,7 @@ class TestProductPictureController(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.website = cls.env["website"].browse(1)
+        cls.website = cls.env.ref('website.default_website')
         cls.WebsiteSaleController = WebsiteSale()
         cls.product = cls.env["product.product"].create({
             "name": "Storage Test Box",
@@ -266,7 +266,7 @@ class TestProductVideoUpload(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.website = cls.env["website"].browse(1)
+        cls.website = cls.env.ref('website.default_website')
         cls.WebsiteSaleController = WebsiteSale()
         cls.product = cls.env["product.product"].create({
             "name": "Test Video Product",

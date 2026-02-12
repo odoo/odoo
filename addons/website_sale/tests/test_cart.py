@@ -149,7 +149,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
     def test_check_order_delivery_before_payment(self):
         with self.mock_request():
             sale_order = self.env["sale.order"].create({
-                "partner_id": self.public_user.id,
+                "partner_id": self.public_user.partner_id.id,
                 "order_line": [Command.create({"product_id": self.product.id})],
                 "access_token": "test_token",
             })
@@ -461,7 +461,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
     def test_checkout_no_delivery_method_available(self):
         portal_user = self.user_portal
         portal_user.write(self.dummy_partner_address_values)
-        self.carrier.country_ids = [Command.set((2,))]
+        self.carrier.country_ids = [Command.set(self.env.ref('base.be').ids)]
         self.product.type = "consu"
         with (
             self.mock_request(user=portal_user) as request,

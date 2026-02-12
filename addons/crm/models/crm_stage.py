@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.tools import sql
 
 AVAILABLE_PRIORITIES = [
     ('0', 'Low'),
@@ -34,6 +34,15 @@ class CrmStage(models.Model):
     # This field for interface only
     team_count = fields.Integer('team_count', compute='_compute_team_count')
     color = fields.Integer(string='Color', export_string_translation=False)
+
+    def _auto_init(self):
+        # TODO stop hardcoding ids in tests and remove this
+        cr = self.env.cr
+        reset_sequence = self._auto and not sql.table_exists(cr, self._table)
+        res = super()._auto_init()
+        if reset_sequence:
+            cr.execute("SELECT setval(pg_get_serial_sequence(%s, 'id'), 1, false)", (self._table,))
+        return res
 
     @api.depends('team_ids')
     def _compute_team_count(self):

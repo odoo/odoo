@@ -365,7 +365,7 @@ class TestProcRule(TransactionCase):
             'inventory_quantity': 14.5,
         }).action_apply_inventory()
 
-        orderpoint = self.env['stock.warehouse.orderpoint'].with_user(self.env['res.users'].browse(2)).create({
+        orderpoint = self.env['stock.warehouse.orderpoint'].with_user(self.env.ref('base.user_admin')).create({
             'name': 'ProductA RR',
             'product_id': self.productA.id,
             'product_min_qty': 15.0,
@@ -604,7 +604,7 @@ class TestProcRule(TransactionCase):
         orderpoint.unlink()
 
     def test_replenishment_order_to_max(self):
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         self.product.is_storable = True
         self.env['stock.quant']._update_available_quantity(self.product, warehouse.lot_stock_id, 10)
         orderpoint = self.env['stock.warehouse.orderpoint'].create({

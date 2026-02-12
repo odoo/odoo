@@ -246,7 +246,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
                 "product_template_id": self.productC.product_tmpl_id.id,
                 "product_id": self.productC.id,
                 "quantity": 1,
-                "uom_id": 1,
+                "uom_id": self.productC.uom_id.id,
                 "product_custom_attribute_values": [],
                 "no_variant_attribute_value_ids": [],
                 "linked_products": []
@@ -332,7 +332,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             query_count += 1
             queries['product_product'] += 1
 
-        tax = self.env.ref('account.1_sale_tax_template', raise_if_not_found=False)
+        tax = self.env.ref(f'account.{self.env.company.id}_sale_tax_template', raise_if_not_found=False)
         if tax and tax.name == '15%':
             query_count += 2
             queries['account_tax_repartition_line'] = 2

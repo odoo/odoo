@@ -686,7 +686,7 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         currency = Currency.create({'name': 'ZZZ', 'symbol': 'ZZZ', 'rounding': 1.0})
         currency_rate = CurrencyRate.create({'name': '2010-01-01', 'currency_id': currency.id, 'rate': 1.0})
         non_currency_id = currency_rate.id + 1000
-        default_currency = Currency.browse(1)
+        default_currency = Currency.env.ref('base.USD')
 
         # search the currency via its rates one2many (the one2many must point back at the currency)
         currency_rate1 = self._search(CurrencyRate, [('currency_id', 'not like', 'probably_unexisting_name')])
@@ -1939,7 +1939,7 @@ class TestMany2one(TransactionCase):
         super().setUp()
         self.Partner = self.env['res.partner'].with_context(active_test=False)
         self.User = self.env['res.users'].with_context(active_test=False)
-        self.company = self.env['res.company'].browse(1)
+        self.company = self.env.ref('base.main_company')
 
     def test_inherited(self):
         with self.assertQueries(['''
@@ -2488,7 +2488,7 @@ class TestMany2many(TransactionCase):
     def setUp(self):
         super().setUp()
         self.User = self.env['res.users'].with_context(active_test=False)
-        self.company = self.env['res.company'].browse(1)
+        self.company = self.env.ref('base.main_company')
 
     def test_regular(self):
         group = self.env.ref('base.group_user')

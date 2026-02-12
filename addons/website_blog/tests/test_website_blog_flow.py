@@ -197,8 +197,8 @@ class TestWebsiteBlogTranslationFlow(HttpCase, TestWebsiteBlogCommon):
         # Setup
         br_lang = self.env['res.lang']._activate_lang('pt_BR')
         en_lang = self.env['res.lang']._activate_lang('en_US')
-        
-        website = self.env['website'].browse(1)
+
+        website = self.env.ref('website.default_website')
         website.language_ids += br_lang
         website.default_lang_id = br_lang
 
@@ -215,7 +215,7 @@ class TestWebsiteBlogTranslationFlow(HttpCase, TestWebsiteBlogCommon):
         })
         self.assertEqual('Todos os blogs', blog_post.with_context(lang=br_lang.code).content)
         self.assertEqual('All blogs', blog_post.with_context(lang=en_lang.code).content)
-        
+
         # Test updating translation
         payload = self.build_rpc_payload({
             'model': blog_post._name,
@@ -235,7 +235,7 @@ class TestWebsiteBlogTranslationFlow(HttpCase, TestWebsiteBlogCommon):
             'name': 'Test Blog Post',
             'blog_id': blog.id,
             'tag_ids': [(6, 0, [blog_tag.id])],
-            'author_id': self.env.user.id,
+            'author_id': self.env.user.partner_id.id,
             'is_published': True,
         })
         response = self.url_open('/blog/tag/demo')

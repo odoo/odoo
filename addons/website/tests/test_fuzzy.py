@@ -110,7 +110,7 @@ class TestAutoComplete(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.website = cls.env['website'].browse(1)
+        cls.website = cls.env.ref('website.default_website')
         cls.WebsiteController = Website()
         cls.options = {
             'displayDescription': True,

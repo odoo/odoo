@@ -411,7 +411,7 @@ def _initialize_db(
             if '@' in user_login:
                 main_company_values['email'] = user_login
             if main_company_values:
-                env['res.company'].browse(1).write(main_company_values)
+                env.ref('base.main_company').write(main_company_values)
 
         # update admin's password and lang and login
         values = {'password': user_password, 'lang': lang}

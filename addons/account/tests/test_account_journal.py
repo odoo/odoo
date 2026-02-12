@@ -53,7 +53,7 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
         invoice_invalid.journal_id = journal
         invoice_invalid.action_post()
         self.assertTrue(invoice_invalid.payment_reference, "A payment reference should be generated.")
-        self.assertIn(str(journal.id), invoice_invalid.payment_reference, "The reference should fall back to using the journal ID.")
+        self.assertIn(str(journal.id), ''.join(invoice_invalid.payment_reference.split()), "The reference should fall back to using the journal ID.")
 
         # Case 3: Code is non-ASCII but alphanumeric (e.g., Greek letter 'INVα'). # noqa: RUF003
         journal.code = 'INVα'
@@ -61,7 +61,7 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
         invoice_unicode.journal_id = journal
         invoice_unicode.action_post()
         self.assertTrue(invoice_unicode.payment_reference, "A payment reference should be generated.")
-        self.assertIn(str(journal.id), invoice_unicode.payment_reference, "The reference should fall back to using the journal ID for non-ASCII codes.")
+        self.assertIn(str(journal.id), ''.join(invoice_unicode.payment_reference.split()), "The reference should fall back to using the journal ID for non-ASCII codes.")
 
     def test_changing_journal_company(self):
         ''' Ensure you can't change the company of an account.journal if there are some journal entries '''
@@ -455,7 +455,7 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
 
         expected_id = str(invoice_non_latin.journal_id.id)
         ref_parts_non_latin = invoice_non_latin.payment_reference.split()
-        self.assertEqual(ref_parts_non_latin[1][:len(expected_id)], expected_id, "The reference should start with " + expected_id)
+        self.assertEqual(''.join(ref_parts_non_latin[1:])[:len(expected_id)], expected_id, "The reference should start with " + expected_id)
 
         ref_parts_latin = invoice_latin.payment_reference.split()
         self.assertIn(ref_parts_latin[1][:3], latin_code, f"Expected journal code '{latin_code}' in second part of reference")

@@ -7,7 +7,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
-from odoo import tests
+from odoo import api, tests
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import date_utils
@@ -351,7 +351,7 @@ class TestAccessRightsWrite(TestHrHolidaysAccessRightsCommon):
             'work_entry_type_id': self.work_entry_type.id,
             'state': 'confirm',
         }
-        self.employee_hrmanager.leave_manager_id = self.env['res.users'].browse(1)
+        self.employee_hrmanager.leave_manager_id = api.SUPERUSER_ID
         leave_date = date_utils.start_of(date.today() + relativedelta(days=7), 'week')
         hr_leave = self.request_leave(self.user_hruser_id, leave_date, 1, values)
 

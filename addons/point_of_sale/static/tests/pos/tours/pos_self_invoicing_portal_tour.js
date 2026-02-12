@@ -76,9 +76,14 @@ registry.category("web_tour.tours").add("invoicePoSOrderWithSelfInvocing", {
             run: function () {
                 const countrySelect = document.querySelector("select[name='country_id']");
                 if (Array.from(countrySelect.classList).includes("d-none")) {
-                    throw new Error("The language selector must not be hidden.");
+                    throw new Error("The country selector must not be hidden.");
                 }
-                countrySelect.value = "233";
+                const option = Array.from(countrySelect.options).find(
+                    (opt) => opt.textContent.trim() === "United States"
+                );
+                if (option) {
+                    countrySelect.value = option.value;
+                }
             },
         },
         {
@@ -86,9 +91,14 @@ registry.category("web_tour.tours").add("invoicePoSOrderWithSelfInvocing", {
             run: function () {
                 const stateSelect = document.querySelector("select[name='state_id']");
                 if (Array.from(stateSelect.classList).includes("d-none")) {
-                    throw new Error("The language selector must not be hidden.");
+                    throw new Error("The country state selector must not be hidden.");
                 }
-                stateSelect.value = "19";
+                const option = Array.from(stateSelect.options).find(
+                    (opt) => opt.textContent.trim() === "Georgia"
+                );
+                if (option) {
+                    stateSelect.value = option.value;
+                }
             },
         },
         {

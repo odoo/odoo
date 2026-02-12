@@ -16,7 +16,7 @@ class TestAutoComplete(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.website = cls.env['website'].browse(1)
+        cls.website = cls.env.ref('website.default_website')
         cls.WebsiteController = Website()
 
     def _autocomplete(self, term, expected_count, expected_fuzzy_term, search_type="test", options=None):
@@ -90,13 +90,13 @@ class TestAutoComplete(TransactionCase):
                 _logger.warning("pg_trgm extension can't be installed, which is required to run this test")
                 return
 
-        with MockRequest(self.env, website=self.env['website'].browse(1)):
+        with MockRequest(self.env, website=self.env.ref('website.default_website')):
             # This should not crash. This ensures that when searching on `name`
             # field of `website.page` model, it works properly when `pg_trgm` is
             # activated.
             # Indeed, `name` is a field of `website.page` record but only at the
             # ORM level, not in SQL, due to how `inherits` works.
-            self.env['website'].browse(1)._search_with_fuzzy(
+            self.env.ref('website.default_website')._search_with_fuzzy(
                 'pages', 'test', limit=5, order='name asc, website_id desc, id', options={
                     'displayDescription': False, 'displayDetail': False,
                     'displayExtraDetail': False, 'displayExtraLink': False,
