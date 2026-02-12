@@ -499,9 +499,32 @@ class AccountEdiCommon(models.AbstractModel):
     def _import_partner_bank(self, invoice, bank_details):
         """ Retrieve the bank account, if no matching bank account is found, create it """
         # clear the context, because creation of partner when importing should not depend on the context default values
+        ResPartnerBank = self.env['res.partner.bank'].with_env(self.env(context=clean_context(self.env.context)))
         bank_details = list(set(map(sanitize_account_number, bank_details)))
-        body = _("The following bank account numbers got retrieved during the import : %s", ", ".join(bank_details))
-        invoice.with_context(no_new_invoice=True).message_post(body=body)
+        if invoice.is_inbound():
+            return
+        partner = invoice.partner_id
+        banks_to_create = []
+        acc_number_partner_bank_dict = {
+            bank.sanitized_acc_number: bank
+            for bank in ResPartnerBank.with_context(active_test=False).search(
+                [('partner_id', '=', partner.id), ('acc_number', 'in', bank_details)]
+            )
+        }
+        for account_number in bank_details:
+            partner_bank = acc_number_partner_bank_dict.get(account_number, ResPartnerBank)
+            if partner_bank.partner_id == partner:
+                if not partner_bank.active:
+                    partner_bank.active = True
+                invoice.partner_bank_id = partner_bank
+                return
+            elif not partner_bank and account_number:
+                banks_to_create.append({
+                    'acc_number': account_number,
+                    'partner_id': partner.id,
+                })
+        if banks_to_create:
+            invoice.partner_bank_id = ResPartnerBank.create(banks_to_create)[0]
 
     def _import_document_allowance_charges(self, tree, record, tax_type, qty_factor=1):
         logs = []
