@@ -67,10 +67,10 @@
                             </span>
 
                         </div>
-                        <div class="input-group mb-2">
+                        <div t-if="props.includeStyling" class="input-group mb-2">
                             <Dropdown menuClass="'o-we-link-type-dropdown'">
                                 <button name="link_type" class="form-select form-select-sm border-dark-subtle text-start">
-                                    <t t-set="selectedItem" t-value="state.colorsData.find(colorData => colorData.type === state.type)" />
+                                    <t t-set="selectedItem" t-value="this.buttonTypesData.find(typeData => typeData.type === state.type)" />
                                     <span t-att-class="selectedItem.className"
                                         t-att-style="selectedItem.style"
                                         t-out="selectedItem.label"/>
@@ -78,62 +78,32 @@
                                 <t t-set-slot="content">
                                     <div data-prevent-closing-overlay="true">
                                         <DropdownItem
-                                            t-if="props.allowCustomStyle or colorData.type !== 'custom'"
-                                            t-foreach="state.colorsData"
-                                            t-as="colorData"
-                                            t-key="colorData.type"
-                                            onSelected="() => this.onSelectedLinkType(colorData.type)"
+                                            t-if="typeData.type !== 'custom'"
+                                            t-foreach="this.buttonTypesData"
+                                            t-as="typeData"
+                                            t-key="typeData.type"
+                                            onSelected="() => this.onSelectedLinkType(typeData.type)"
                                             t-on-pointerdown.stop.prevent="() => {}"
                                         >
-                                            <span t-att-class="colorData.className"
-                                                t-att-style="colorData.style"
-                                                t-out="colorData.label"/>
+                                            <span t-att-class="typeData.className"
+                                                t-att-style="typeData.style"
+                                                t-out="typeData.label"/>
                                         </DropdownItem>
                                     </div>
                                 </t>
                             </Dropdown>
                         </div>
-                        <div t-if="state.type !== 'link'" class="input-group mb-2">
+                        <div t-if="props.includeStyling and state.type !== 'link'" class="input-group mb-2">
                             <select name="link_style_size" class="form-select form-select-sm border-dark-subtle" t-model="state.buttonSize" t-on-change="onChange" aria-label="Select button size">
                                 <option t-foreach="this.buttonSizesData" t-as="buttonSizesData" t-key="buttonSizesData.size" t-att-value="buttonSizesData.size"
                                     t-att-selected="state.buttonSize === buttonSizesData.size" t-out="buttonSizesData.label"/>
                             </select>
                             <select name="link_style_shape" class="form-select form-select-sm link-style border-dark-subtle" t-model="state.buttonShape" t-on-change="onChange" aria-label="Select button shape">
-                                <option t-foreach="this.buttonShapeData" t-as="buttonShapeData" t-key="buttonShapeData.shape" t-att-value="buttonShapeData.shape"
+                                <option t-foreach="this.buttonShapesData" t-as="buttonShapeData" t-key="buttonShapeData.shape" t-att-value="buttonShapeData.shape"
                                     t-att-selected="state.buttonShape === buttonShapeData.shape" t-out="buttonShapeData.label"/>
                             </select>
                         </div>
 
-                        <t t-if="state.type === 'custom'">
-                            <div class="d-flex mb-1 custom-text-color">
-                                <label>Text Color</label>
-                                <button class="o_we_color_preview custom-text-picker me-3" t-att-data-color="this.customTextColorState.selectedColor" t-ref="customTextColorButton"
-                                        t-attf-style="background-color: {{this.props.formatColor(this.customTextColorState.selectedColor)}}"/>
-                                <label>Fill Color</label>
-                                <button class="o_we_color_preview custom-fill-picker" t-att-data-color="this.customFillColorState.selectedColor" t-ref="customFillColorButton"
-                                        t-attf-style="{{this.customFillColorState.selectedColor?.includes('gradient') ? 'background-image' : 'background-color'}}: {{this.props.formatColor(this.customFillColorState.selectedColor)}}" />
-                            </div>
-                            <div class="d-flex mb-1 custom-border align-items-center">
-                                <label class="flex-shrink-0">Border</label>
-                                <div class="input-group me-1">
-                                    <input type="number" min="0"
-                                        class="form-control form-control-sm custom-border-size flex-grow-0" t-model="state.customBorderSize"
-                                        placeholder="Border Size" t-on-keydown="onKeydownEnter" t-on-input="onInput"/>
-                                    <span class="input-group-text">px</span>
-                                </div>
-                                <div class="d-flex align-items-center" t-if="state.customBorderSize > 0">
-                                    <select name="link_style_border" class="form-select form-select-sm custom-border-style me-1" t-model="state.customBorderStyle" t-on-change="onChange">
-                                        <t t-foreach="this.borderData" t-as="borderData" t-key="borderData.style">
-                                            <option t-att-value="borderData.style" t-att-selected="state.customBorderStyle === borderData.style">
-                                                <span t-esc="borderData.label"/>
-                                            </option>
-                                        </t>
-                                    </select>
-                                    <button class="o_we_color_preview custom-border-picker" t-att-data-color="this.customBorderColorState.selectedColor" t-ref="customBorderColorButton"
-                                        t-attf-style="background-color: {{this.props.formatColor(this.customBorderColorState.selectedColor)}}" />
-                                </div>
-                            </div>
-                        </t>
                         <t t-if="props.allowTargetBlank">
                             <t t-if="state.isDocument">
                                 <CheckBox

@@ -512,15 +512,7 @@ export class LinkPlugin extends Plugin {
         const selectionTextContent = selection?.textContent();
         const isImage = !!findInSelection(selection, "img");
 
-        const applyCallback = (
-            url,
-            label,
-            classes,
-            customStyle,
-            linkTarget,
-            attachmentId,
-            relValue
-        ) => {
+        const applyCallback = (url, label, classes, linkTarget, attachmentId, relValue) => {
             if (this.linkInDocument) {
                 if (url) {
                     this.linkInDocument.href = url;
@@ -542,11 +534,6 @@ export class LinkPlugin extends Plugin {
                         this.linkInDocument.className = classes;
                     } else {
                         this.linkInDocument.removeAttribute("class");
-                    }
-                    if (customStyle) {
-                        this.linkInDocument.setAttribute("style", customStyle);
-                    } else {
-                        this.linkInDocument.removeAttribute("style");
                     }
                     if (
                         this.linkInDocument.childElementCount == 0 &&
@@ -601,9 +588,6 @@ export class LinkPlugin extends Plugin {
                     const link = this.createLink(url, label);
                     if (classes) {
                         link.className = classes;
-                    }
-                    if (customStyle) {
-                        link.setAttribute("style", customStyle);
                     }
                     if (linkTarget) {
                         link.setAttribute("target", linkTarget);
@@ -670,7 +654,7 @@ export class LinkPlugin extends Plugin {
             type: this.type || "",
             LinkPopoverState: this.LinkPopoverState,
             showReplaceTitleBanner: this.newlyInsertedLinks.has(linkElement),
-            allowCustomStyle: this.config.allowCustomStyle,
+            includeStyling: !this.config.hideStylingInLinkPopover,
             allowTargetBlank: this.config.allowTargetBlank,
             allowStripDomain: this.config.allowStripDomain,
         };
@@ -709,15 +693,9 @@ export class LinkPlugin extends Plugin {
                     focusNode: link,
                     focusOffset: nodeSize(link),
                 });
-                const saveCustomStyle = link.getAttribute("style");
-                link.removeAttribute("style");
-                this.dependencies.color.removeAllColor();
-                if (
-                    saveCustomStyle &&
-                    this.config.allowCustomStyle &&
-                    link.className.includes("custom")
-                ) {
-                    link.setAttribute("style", saveCustomStyle);
+                if (!this.config.hideStylingInLinkPopover) {
+                    link.removeAttribute("style");
+                    this.dependencies.color.removeAllColor();
                 }
                 // Remove the current link (linkInDocument) if it has no content
                 if (cleanZWChars(link.textContent) === "" && !link.querySelector("img")) {
