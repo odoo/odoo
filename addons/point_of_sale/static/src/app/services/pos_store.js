@@ -5,7 +5,13 @@ import { reactive } from "@odoo/owl";
 import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { random5Chars, uuidv4, Counter, orderUsageUTCtoLocalUtil } from "@point_of_sale/utils";
+import {
+    random5Chars,
+    uuidv4,
+    Counter,
+    orderUsageUTCtoLocalUtil,
+    getTimeUtil,
+} from "@point_of_sale/utils";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { OpeningControlPopup } from "@point_of_sale/app/components/popups/opening_control_popup/opening_control_popup";
@@ -35,7 +41,6 @@ import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "../utils/devices_synchronisation";
 import { formatDate, deserializeDateTime } from "@web/core/l10n/dates";
-import { localization } from "@web/core/l10n/localization";
 import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_info_popup/product_info_popup";
 import { RetryPrintPopup } from "@point_of_sale/app/components/popups/retry_print_popup/retry_print_popup";
 import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
@@ -2855,7 +2860,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
     getTime(date) {
-        return date.toFormat(localization.timeFormat);
+        return getTimeUtil(date);
     }
 
     orderDone(order) {

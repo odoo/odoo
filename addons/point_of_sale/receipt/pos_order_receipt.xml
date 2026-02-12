@@ -189,8 +189,8 @@
         <template id="point_of_sale.pos_order_receipt_footer">
             <div class="w-100 text-center mt-3">
                 <div class="w-100 mt-2" name="footer" />
-                <div class="mt-2 mb-2" t-if="order['shipping_date']">
-                    Expected delivery: <span class="shipping-date" t-out="order['shipping_date']" />
+                <div class="mt-2 mb-2" t-if="extra_data['formated_shipping_date']">
+                    Expected delivery: <span class="shipping-date" t-out="extra_data['formated_shipping_date']" />
                 </div>
                 <table class="w-100 text-small">
                     <tbody name="company_info">

@@ -119,6 +119,7 @@ export class GeneratePrinterData {
                 company_state_name: company.state_id?.name || "",
                 company_country_name: company.country_id?.name || "",
                 formated_date_order: this.order.formatDateOrTime("date_order", "datetime"),
+                formated_shipping_date: this.order.formatDateOrTime("shipping_date", "date"),
             },
         };
     }

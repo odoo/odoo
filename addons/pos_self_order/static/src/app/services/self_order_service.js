@@ -15,6 +15,7 @@ import {
     constructFullProductName,
     random5Chars,
     orderUsageUTCtoLocalUtil,
+    getTimeUtil,
 } from "@point_of_sale/utils";
 import { getOrderLineValues } from "./card_utils";
 import {
@@ -911,6 +912,9 @@ export class SelfOrder extends Reactive {
 
     hasPresets() {
         return this.config.use_presets && this.models["pos.preset"].length > 1;
+    }
+    getTime(date) {
+        return getTimeUtil(date);
     }
 
     getPendingPaymentLine(terminalName) {

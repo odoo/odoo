@@ -742,6 +742,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     @skip('Temporary to fast merge new valuation')
     def test_05_ticket_screen(self):
+        self.env['res.lang']._lang_get(self.pos_user.lang).write({'date_format': '%m.%d.%Y', 'time_format': '%I.%M.%S %p'})
         self.pos_user.write({
             'group_ids': [
                 (4, self.env.ref('account.group_account_invoice').id),
@@ -749,6 +750,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'TicketScreenTour', login="pos_user")
+        self.env['res.lang']._lang_get(self.pos_user.lang).write({'date_format': 'MM/dd/yyyy', 'time_format': 'HH:mm:ss'})
 
     def test_06_tip_screen(self):
         self.main_pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True, 'tip_product_id': self.env.ref('point_of_sale.product_product_tip')})

@@ -207,7 +207,7 @@ export class CartPage extends Component {
 
                 options.categories[date].subCategories[slot.periode].options.push({
                     id: slot.datetime.toFormat("yyyy-MM-dd HH:mm:ss"),
-                    name: slot.datetime.toFormat("HH:mm"),
+                    name: this.selfOrder.getTime(slot.datetime),
                 });
             }
         }

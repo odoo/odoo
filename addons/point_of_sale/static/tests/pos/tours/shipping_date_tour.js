@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add("test_pos_order_shipping_date", {
                         ...document.querySelectorAll(".payment-buttons .d-flex .btn span"),
                     ];
                     const nextYear = new Date().getFullYear() + 1;
-                    const expectedDate = `5/30/${nextYear}`;
+                    const expectedDate = `05/30/${nextYear}`;
                     if (!spans.some((span) => span.innerText === expectedDate)) {
                         throw new Error("Expected shipping date is not set");
                     }
