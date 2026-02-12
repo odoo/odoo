@@ -74,6 +74,8 @@ class ResPartnerBank(models.Model):
     _rec_name = 'acc_number'
     _description = 'Bank Accounts'
     _order = 'sequence, id'
+    _check_company_auto = True
+    _check_company_domain = models.check_company_domain_parent_of
 
     @api.model
     def get_supported_account_types(self):
