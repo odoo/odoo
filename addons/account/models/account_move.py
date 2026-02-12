@@ -4724,10 +4724,11 @@ class AccountMove(models.Model):
         if self.invoice_pdf_report_id:
             attachments = self.env['account.move.send']._get_invoice_extra_attachments(self)
         else:
-            content, _ = self.env['ir.actions.report']._render('account.account_invoices', self.ids, data={'proforma': True})
+            proforma = self.is_sale_document(())
+            content, _ = self.env['ir.actions.report']._render('account.account_invoices', self.ids, data={'proforma': proforma})
             attachments = self.env['ir.attachment'].new({
                 'raw': content,
-                'name': self._get_invoice_proforma_pdf_report_filename(),
+                'name': self._get_invoice_proforma_pdf_report_filename() if proforma else self._get_invoice_report_filename(),
                 'mimetype': 'application/pdf',
                 'res_model': self._name,
                 'res_id': self.id,
