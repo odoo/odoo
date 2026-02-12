@@ -42,6 +42,7 @@ import { logPosMessage } from "../utils/pretty_console_log";
 import { initLNA } from "../utils/init_lna";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { SnoozedProductTracker } from "@point_of_sale/app/models/utils/snooze_tracker";
+import { ScaleScreen } from "@point_of_sale/app/screens/scale_screen/scale_screen";
 import { Domain } from "@web/core/domain";
 
 const { DateTime } = luxon;
@@ -477,6 +478,15 @@ export class PosStore extends WithLazyGetterTrap {
                 .category("pos_payment_providers")
                 .get(pm.payment_provider, null);
             pm.payment_interface = PaymentInterface ? new PaymentInterface(this, pm) : null;
+        }
+
+        // Add Scale
+        for (const ScaleInterface of registry.category("electronic_scales").getAll()) {
+            const scaleInstance = new ScaleInterface(this);
+            if (await scaleInstance.connectToScale()) {
+                this.scale = scaleInstance;
+                break;
+            }
         }
 
         if (this.ticketPrinter.useLna) {
@@ -959,6 +969,12 @@ export class PosStore extends WithLazyGetterTrap {
         if (keepGoing === false) {
             return;
         }
+
+        keepGoing = await this.handleWeighableProduct(values, order, configure);
+        if (keepGoing === false) {
+            return;
+        }
+
         const linesWithExtraConfigs = await this.handleOrderLineConfiguration(
             order,
             values,
@@ -998,6 +1014,42 @@ export class PosStore extends WithLazyGetterTrap {
     async handleOrderLineConfiguration(order, values, code, vals, options, configure) {
         // To be overridden
         return {};
+    }
+
+    weighProduct() {
+        return makeAwaitable(this.env.services.dialog, ScaleScreen);
+    }
+
+    async handleWeighableProduct(values, order, configure) {
+        if (values.product_tmpl_id.to_weight && this.scale && configure) {
+            if (values.product_tmpl_id.isScaleAvailable) {
+                const decimalAccuracy = this.models["decimal.precision"].find(
+                    (dp) => dp.name === "Product Unit"
+                ).digits;
+                const overridedValues = {};
+                if (order.pricelist_id) {
+                    overridedValues.pricelist = order.pricelist_id;
+                }
+                if (order.fiscal_position_id) {
+                    overridedValues.fiscalPosition = order.fiscal_position_id;
+                }
+                this.scale.setProduct(
+                    values.product_id,
+                    decimalAccuracy,
+                    values.product_id.getTaxDetails({ overridedValues }).total_included
+                );
+                const weight = await this.weighProduct();
+                if (weight) {
+                    values.qty = weight;
+                } else if (weight !== null) {
+                    return false;
+                }
+            } else {
+                await values.product_tmpl_id._onScaleNotAvailable();
+            }
+        }
+
+        return true;
     }
 
     /**
