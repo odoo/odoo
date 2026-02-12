@@ -216,6 +216,20 @@ class AccountPayment(models.Model):
         res = super()._get_trigger_fields_to_synchronize()
         return res + ('l10n_latam_new_check_ids',)
 
+    def _prepare_move_lines_per_type(self, write_off_line_vals=None, force_balance=None):
+        """ Add check name and operation on liquidity line """
+        res = super()._prepare_move_lines_per_type(write_off_line_vals=write_off_line_vals, force_balance=force_balance)
+
+        if (self.l10n_latam_new_check_ids or self.l10n_latam_move_check_ids) and self.payment_method_code != 'own_checks' and res.get('liquidity_lines'):
+            check_name = [check_name for check_name in (self.l10n_latam_new_check_ids | self.l10n_latam_move_check_ids).mapped('name') if check_name]
+            document_name = (
+                _('Checks %s received') if self.payment_type == 'inbound' else _('Checks %s delivered')) % (
+                ', '.join(check_name)
+            )
+            res['liquidity_lines'][0].update({
+                'name': document_name + ' - ' + ''.join([item[1] for item in self._get_aml_default_display_name_list()]),
+            })
+        return res
 
     @api.depends('l10n_latam_move_check_ids')
     def _compute_destination_account_id(self):
