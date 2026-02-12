@@ -1236,8 +1236,8 @@ describe(parseUrl(import.meta.url), () => {
             "pointerleave:0@input",
             "mouseleave:0@input",
             // Change
-            "blur@input",
             "change@input",
+            "blur@input",
             "focusout@input",
         ]);
     });
@@ -1759,6 +1759,8 @@ describe(parseUrl(import.meta.url), () => {
             "focus@input",
             "focusin@input",
             "focusin@form",
+            "keyup:Tab@input",
+            "keyup:Tab@form",
             // Enter
             "keydown:Enter@input",
             "keydown:Enter@form",
@@ -1790,6 +1792,8 @@ describe(parseUrl(import.meta.url), () => {
             "focus@button",
             "focusin@button",
             "focusin@form",
+            "keyup:Tab@button",
+            "keyup:Tab@form",
             // Enter
             "keydown:Enter@button",
             "keydown:Enter@form",
@@ -1822,6 +1826,8 @@ describe(parseUrl(import.meta.url), () => {
             "focus@button",
             "focusin@button",
             "focusin@form",
+            "keyup:Tab@button",
+            "keyup:Tab@form",
             // Enter
             "keydown:Enter@button",
             "keydown:Enter@form",

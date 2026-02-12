@@ -2,7 +2,13 @@ import { after, expect, test } from "@odoo/hoot";
 import { click, edit, queryAll, queryAllProperties, queryAllTexts, resize } from "@odoo/hoot-dom";
 import { animationFrame, mockTimeZone } from "@odoo/hoot-mock";
 import {
+    editTime,
+    getPickerCell,
+    zoomOut,
+} from "@web/../tests/core/datetime/datetime_test_helpers";
+import {
     clickSave,
+    contains,
     defineModels,
     defineParams,
     fields,
@@ -10,11 +16,6 @@ import {
     mountView,
     onRpc,
 } from "@web/../tests/web_test_helpers";
-import {
-    editTime,
-    getPickerCell,
-    zoomOut,
-} from "@web/../tests/core/datetime/datetime_test_helpers";
 
 import { resetDateFieldWidths } from "@web/views/list/column_width_hook";
 class Partner extends models.Model {
@@ -297,12 +298,8 @@ test("multi edition of DatetimeField in list view: edit date in input", async ()
 
     await click(".o_field_datetime input");
     await edit("10/02/2019 09:00:00", { confirm: "Enter" });
-    await animationFrame();
 
-    expect(".modal").toHaveCount(1);
-
-    await click(".modal .modal-footer .btn-primary");
-    await animationFrame();
+    await contains(".modal:only .modal-footer .btn-primary").click();
 
     expect(".o_data_row:first-child .o_data_cell:first").toHaveText("10/02/2019 09:00");
     expect(".o_data_row:nth-child(2) .o_data_cell:first").toHaveText("10/02/2019 09:00");
@@ -334,10 +331,7 @@ test("multi edition of DatetimeField in list view: clear date in input", async (
     await edit("", { confirm: "Enter" });
     await animationFrame();
 
-    expect(".modal").toHaveCount(1);
-
-    await click(".modal .modal-footer .btn-primary");
-    await animationFrame();
+    await contains(".modal:only .modal-footer .btn-primary").click();
 
     expect(".o_data_row:first-child .o_data_cell:first").toHaveText("");
     expect(".o_data_row:nth-child(2) .o_data_cell:first").toHaveText("");
