@@ -203,6 +203,20 @@ export function shippingDateIsToday() {
     ];
 }
 
+export function checkOrderlineTaxGroupLabel(label) {
+    return {
+        content: `Verify that the tax group "${label}" appears on the receipt order line.`,
+        trigger: `.pos-receipt .line-details:contains("${label}")`,
+    };
+}
+
+export function checkTaxSummaryTaxGroupLabel(label) {
+    return {
+        content: `Verify that the tax group "${label}" appears in the receipt tax summary.`,
+        trigger: `.pos-receipt-taxes:contains('${label}')`,
+    };
+}
+
 export function cashierNameExists(name) {
     return [
         {

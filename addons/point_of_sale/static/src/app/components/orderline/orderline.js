@@ -34,13 +34,7 @@ export class Orderline extends Component {
     }
 
     get taxGroup() {
-        return [
-            ...new Set(
-                this.line.product_id.taxes_id
-                    ?.map((tax) => tax.tax_group_id.pos_receipt_label)
-                    .filter((label) => label)
-            ),
-        ].join(" ");
+        return this.line.taxGroupLabels;
     }
 
     setup() {
