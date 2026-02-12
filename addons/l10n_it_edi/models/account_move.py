@@ -678,8 +678,7 @@ class AccountMove(models.Model):
         # Download invoices
         invoices_data = {}
         try:
-            invoices_data = proxy_user._make_request(f'{server_url}/api/l10n_it_edi/1/in/RicezioneInvoice',
-                params={'recipient_codice_fiscale': proxy_user.company_id.l10n_it_codice_fiscale})
+            invoices_data = proxy_user._make_request(f'{server_url}/api/l10n_it_edi/1/in/RicezioneInvoice')
         except AccountEdiProxyError as e:
             _logger.error('Error while receiving invoices from the SdI: %s', e)
             return False
