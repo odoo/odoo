@@ -115,10 +115,21 @@ class AccountMoveReversal(models.TransientModel):
         moves = self.move_ids
 
         # Create default values.
+        partners = moves.company_id.partner_id + moves.commercial_partner_id
+
+        bank_ids = self.env['res.partner.bank'].search([
+            ('partner_id', 'in', partners.ids),
+            ('company_id', 'in', moves.company_id.ids + [False]),
+        ], order='sequence DESC')
+        partner_to_bank = {bank.partner_id: bank for bank in bank_ids}
         default_values_list = []
         for move in moves:
+            if move.is_outbound():
+                partner = move.company_id.partner_id
+            else:
+                partner = move.commercial_partner_id
             default_values_list.append({
-                'partner_bank_id': False,  # Resets the partner_bank_id as we'll force its recomputation
+                'partner_bank_id': partner_to_bank.get(partner, self.env['res.partner.bank']).id,
                 **self._prepare_default_reversal(move),
             })
 
@@ -137,14 +148,12 @@ class AccountMoveReversal(models.TransientModel):
         moves_to_redirect = self.env['account.move']
         for moves, default_values_list, is_cancel_needed in batches:
             new_moves = moves._reverse_moves(default_values_list, cancel=is_cancel_needed)
-            new_moves._compute_partner_bank_id()
 
             if self.refund_method == 'modify':
                 moves_vals_list = []
                 for move in moves.with_context(include_business_fields=True):
                     moves_vals_list.append(move.copy_data({'date': self.date if self.date_mode == 'custom' else move.date})[0])
                 new_moves = self.env['account.move'].create(moves_vals_list)
-                new_moves._compute_partner_bank_id()
 
             moves_to_redirect |= new_moves
 
