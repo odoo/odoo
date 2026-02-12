@@ -12,6 +12,7 @@ from io import BytesIO
 from itertools import islice
 from textwrap import shorten
 from xml.etree import ElementTree as ET
+from collections import defaultdict
 
 import requests
 import werkzeug.urls
@@ -609,6 +610,169 @@ class Website(Home):
         order = order or 'name ASC'
         return 'is_published desc, %s, id desc' % order
 
+    def _sort_results_by_relevance(self, results, phrase, sort_by_model=False):
+        # Order of priority:
+        # name > (tags) > description
+        term_list = list({t for t in (phrase or '').lower().split() if t})
+
+        def is_perfect_match(search_text, term):
+            return bool(re.search(rf"\b{re.escape(term)}\b", search_text, flags=re.IGNORECASE))
+
+        def get_position_term_pairs(term_list, text):
+            position_word_pairs = []
+            missing_word_count = 0
+            for term in term_list:
+                is_missing = True
+                start = 0
+                while True:
+                    start = text.find(term, start)
+                    if start == -1:
+                        if is_missing:
+                            missing_word_count += 1
+                        break
+                    is_missing = False
+                    position_word_pairs.append((start, term))
+                    start += len(term)
+            return [sorted(position_word_pairs), missing_word_count]  # Sort by position
+
+        def get_best_distance(position_word_pairs):
+            required_term_count = len({word for _, word in position_word_pairs})
+            if required_term_count < 2:
+                return 0
+
+            left = 0
+            term_counts = defaultdict(int)
+            terms_in_current_window = 0
+            best_window_size = float('inf')
+
+            for right in range(len(position_word_pairs)):
+                right_pos, right_word = position_word_pairs[right]
+
+                # Add the right-side word to our window
+                if term_counts[right_word] == 0:
+                    terms_in_current_window += 1
+                term_counts[right_word] += 1
+
+                while terms_in_current_window == required_term_count:
+                    left_pos, left_word = position_word_pairs[left]
+                    current_window_size = right_pos - (left_pos + len(left_word))
+
+                    # If this is the tightest window we've seen, save it
+                    if current_window_size < best_window_size:
+                        best_window_size = current_window_size
+
+                    # Remove the left-size word and slide the window forward
+                    term_counts[left_word] -= 1
+                    if term_counts[left_word] == 0:
+                        terms_in_current_window -= 1
+                    left += 1
+
+            return best_window_size
+
+        def get_description(result):
+            desc_field = result.get('_mapping', {}).get('description', {}).get('name', '')
+            return result.get(desc_field) or ''
+
+        results_to_sort = []
+        for result in results:
+            description_text = get_description(result).lower()
+            name_text = (result.get('name') or '').lower()
+            tag_names = [(tag.get('name') or '').lower() for tag in result.get('tag_ids', [])]
+
+            tag_matched_count = 0
+            imperfect_match_in_name_count = 0
+            imperfect_match_in_desc_count = 0
+            for term in term_list:
+                has_tag_match = any(term in tag_name for tag_name in tag_names)
+                if has_tag_match:
+                    tag_matched_count += 1
+
+                term_matches_in_name = name_text.find(term, 0)
+                term_matches_in_desc = description_text.find(term, 0)
+
+                if term_matches_in_name != -1 and not is_perfect_match(name_text, term):
+                    imperfect_match_in_name_count += 1
+                if term_matches_in_desc != -1 and not is_perfect_match(description_text, term):
+                    imperfect_match_in_desc_count += 1
+
+            name_pos_term_pairs, missing_word_in_name_count = get_position_term_pairs(term_list, name_text)
+            desc_pos_term_pairs, missing_word_in_desc_count = get_position_term_pairs(term_list, description_text)
+            name_best_distance = 0
+            desc_best_distance = 0
+
+            if len(term_list) - missing_word_in_name_count >= 2:
+                name_best_distance = get_best_distance(name_pos_term_pairs)
+            if len(term_list) - missing_word_in_desc_count >= 2:
+                desc_best_distance = get_best_distance(desc_pos_term_pairs)
+
+            is_perfect_name = missing_word_in_name_count == 0 and imperfect_match_in_name_count == 0
+            is_perfect_desc = missing_word_in_desc_count == 0 and imperfect_match_in_desc_count == 0
+            has_imperfect_name_without_missing = missing_word_in_name_count == 0 and imperfect_match_in_name_count > 0
+            has_imperfect_desc_without_missing = missing_word_in_desc_count == 0 and imperfect_match_in_desc_count > 0
+            if is_perfect_name:
+                rank = 0
+                imperfect_match_count = 0
+                distance = name_best_distance
+            elif is_perfect_desc:
+                rank = 2
+                imperfect_match_count = 0
+                distance = desc_best_distance
+            elif has_imperfect_name_without_missing:
+                rank = 4
+                imperfect_match_count = imperfect_match_in_name_count
+                distance = name_best_distance
+            elif has_imperfect_desc_without_missing:
+                rank = 6
+                imperfect_match_count = imperfect_match_in_desc_count
+                distance = desc_best_distance
+            else:
+                rank = 8
+                if missing_word_in_name_count < missing_word_in_desc_count:
+                    imperfect_match_count = missing_word_in_name_count
+                    distance = name_best_distance
+                elif missing_word_in_desc_count < missing_word_in_name_count:
+                    # description is more penalized compared to name
+                    imperfect_match_count = missing_word_in_desc_count + 1
+                    distance = desc_best_distance
+                else:
+                    imperfect_match_count = missing_word_in_name_count
+                    distance = min(name_best_distance, desc_best_distance)
+            # We want tags to make the result superior when present and matching
+            if tag_matched_count:
+                if tag_matched_count == len(term_list):
+                    rank = min(rank, 1)
+                else:
+                    rank = max(0, rank - 1)
+                imperfect_match_count -= tag_matched_count
+
+            results_to_sort.append({
+                'result': result,
+                'rank': rank,
+                'imperfect_match_count': imperfect_match_count,
+                'distance': distance,
+            })
+
+        results = [sorted_result['result'] for sorted_result in sorted(
+            results_to_sort,
+            key=lambda x: (
+                x['rank'],
+                x['imperfect_match_count'],
+                x['distance'],
+            ),
+        )]
+        if sort_by_model:
+            # When sorted by model, we group all the results by model
+            # The model with the best result score first, and so on
+            models = []
+            for res in results:
+                if res.get('model') not in models:
+                    models.append(res.get('model'))
+            results_by_model = []
+            for model in models:
+                results_by_model += [res for res in results if res.get('model') == model]
+            return results_by_model
+        return results
+
     @http.route('/website/snippet/autocomplete', type='jsonrpc', auth='public', website=True, readonly=True)
     def autocomplete(self, search_type=None, term=None, order=None, offset=0, limit=6, max_nb_chars=999, options=None):
         """
@@ -624,6 +788,7 @@ class Website(Home):
             allowFuzzy: enables the fuzzy matching when truthy
             fuzzy (boolean): True when called after finding a name through fuzzy matching
             renderTemplate (bool): If True, returns rendered HTML instead of grouped dict results
+            sort_by_relevance: True if we want to sort results by relevance
 
         :returns: dict (or False if no result) containing
             - 'results' (dict | str):
@@ -650,38 +815,6 @@ class Website(Home):
                 'results_count': 0,
                 'parts': {},
             }
-
-        if options.get("proportionateAllocation") and results_count > limit:
-            """
-            Distribute a global result limit proportionally across groups
-            based on their contribution to the total results.
-
-            Example:
-                Total retrieved results across 3 models = 50
-                    - M1: 5   (10%)
-                    - M2: 10  (20%)
-                    - M3: 35  (70%)
-
-                With limit = 30:
-                    - M1 → 10% of 30 ≈ 3
-                    - M2 → 20% of 30 ≈ 6
-                    - M3 → 70% of 30 ≈ 21
-
-            Note:
-                Due to rounding and minimum allocation guarantees,
-                the total number of allocated results may slightly exceed `limit`.
-            """
-            total_obtained_results = sum(len(m.get("results", [])) for m in search_results)
-            for model in search_results:
-                results_data = model.get("results")
-                if results_data:
-                    # Calculate proportional allocation for this group
-                    allocated_count = math.ceil(
-                        (len(results_data) / total_obtained_results) * limit
-                    )
-                    # Ensure at least 1 result per group to maintain visibility
-                    allocated_count = max(allocated_count, 1)
-                    model["results"] = results_data[:allocated_count]
 
         term = fuzzy_term or term
         search_results = request.website._search_render_results(search_results, limit)
@@ -738,6 +871,72 @@ class Website(Home):
                 'data': result_data,
                 'has_more': search_result.get('count') > offset + limit
             }
+        if options.get('sort_by_relevance'):
+            ranked_results = [
+                dict(record, model=group_key)
+                for group_key, group in result.items()
+                for record in group['data']
+            ]
+            ranked_results = self._sort_results_by_relevance(
+                ranked_results,
+                term,
+                sort_by_model=options.get('sort_by_model', False),
+            )
+            if options.get('sort_by_model'):
+                grouped_result = {}
+                for record in ranked_results:
+                    group_key = record.pop('model')
+                    if group_key not in grouped_result:
+                        group = result[group_key]
+                        grouped_result[group_key] = {
+                            'groupName': group['groupName'],
+                            'searchCount': group['searchCount'],
+                            'data': [],
+                            'has_more': group['has_more'],
+                        }
+                    grouped_result[group_key]['data'].append(record)
+                result = grouped_result
+            else:
+                for record in ranked_results:
+                    record.pop('model', None)
+                result = {
+                    'all': {
+                        'groupName': _('All'),
+                        'searchCount': results_count,
+                        'data': ranked_results,
+                        'has_more': any(group['has_more'] for group in result.values()),
+                    }
+                }
+
+        if options.get("proportionateAllocation") and results_count > limit:
+            """
+            Distribute a global result limit proportionally across groups
+            based on their contribution to the total results.
+
+            Example:
+                Total retrieved results across 3 models = 50
+                    - M1: 5   (10%)
+                    - M2: 10  (20%)
+                    - M3: 35  (70%)
+
+                With limit = 30:
+                    - M1 → 10% of 30 ≈ 3
+                    - M2 → 20% of 30 ≈ 6
+                    - M3 → 70% of 30 ≈ 21
+
+            Note:
+                Due to rounding and minimum allocation guarantees,
+                the total number of allocated results may slightly exceed `limit`.
+            """
+            total_obtained_results = sum(len(group['data']) for group in result.values())
+            if total_obtained_results:
+                for group in result.values():
+                    results_data = group.get('data')
+                    if not results_data:
+                        continue
+                    allocated_count = math.ceil((len(results_data) / total_obtained_results) * limit)
+                    allocated_count = max(allocated_count, 1)
+                    group['data'] = results_data[:allocated_count]
 
         if options.get('renderTemplate'):
             values = [item for group in result.values() for item in group['data']]
