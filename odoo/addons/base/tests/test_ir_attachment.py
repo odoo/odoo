@@ -1,21 +1,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+import contextlib
 import hashlib
 import io
 import os
-import contextlib
+import tracemalloc
 from unittest.mock import patch
 
 from PIL import Image
 
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessError, ValidationError
+from odoo.tests import tagged
+from odoo.tools import BinaryBytes, file_path, mute_logger
+from odoo.tools.image import image_apply_opt
+
 from odoo.addons.base.models.ir_attachment import IrAttachment
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.tools import BinaryBytes, mute_logger
-from odoo.tests import tagged
-
-from odoo.tools.image import image_apply_opt
 
 HASH_SPLIT = 2      # FIXME: testing implementations detail is not a good idea
 
@@ -244,6 +245,40 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
                 [('id', 'in', main_partner.ids)], ['image_128']
             )
             self.assertEqual(patch_file_read.call_count, 0)
+
+    def test_16_from_path_takes_little_memory(self):
+        # The biggest file we reliably have is "i18n/base.pot" which is
+        # is 1.3MiB. We use tracemalloc to make sure _from_path() uses
+        # little memory when compared to create({'raw': file.read()}).
+        path = file_path('base/i18n/base.pot')
+
+        # warmup outside of tracemalloc
+        self.env['ir.attachment'].create({'name': 'empty', 'raw': b''})
+
+        tracemalloc.start()
+        try:
+            with open(path, 'rb') as file:
+                attach1 = self.env['ir.attachment'].create({
+                    'name': 'base.pot',
+                    'raw': file.read(),
+                })
+            _, attach1_peak_memory_usage = tracemalloc.get_traced_memory()
+            tracemalloc.reset_peak()
+
+            attach2 = self.env['ir.attachment']._from_path(path)
+            _, attach2_peak_memory_usage = tracemalloc.get_traced_memory()
+        finally:
+            tracemalloc.stop()
+
+        self.assertEqual(attach1.raw.content, attach2.raw.content)
+        self.assertTrue(attach1.file_size == attach2.file_size == (st_size := os.stat(path).st_size),
+                       (attach1.file_size, attach2.file_size, st_size))
+        self.assertTrue(attach1.mimetype == attach2.mimetype == 'text/plain', (attach1.mimetype, attach2.mimetype))
+        self.assertEqual(attach1.checksum, attach2.checksum)
+
+        self.assertLess(attach2_peak_memory_usage, attach1_peak_memory_usage // 2,
+            "_from_path(file.name) must be much more memory efficient than create({'raw': file.read()})")
+
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

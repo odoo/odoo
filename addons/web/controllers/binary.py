@@ -6,9 +6,10 @@ import logging
 import os
 import unicodedata
 from contextlib import nullcontext
+from http import HTTPStatus
 
 import odoo
-from odoo import _, api
+from odoo import _, api, http
 from odoo.exceptions import AccessError, UserError
 from odoo.http import Controller, request, route
 from odoo.http.stream import STATIC_CACHE_LONG, Stream
@@ -208,6 +209,16 @@ class Binary(Controller):
             send_file_kwargs['max_age'] = None
 
         return stream.get_response(**send_file_kwargs)
+
+    # the upload size limit is the ICP web.max_file_upload_size (128MiB by default)
+    @http.route('/web/upload', type='http', auth='user', csrf=False)
+    def upload(self, file, **attachment_vals):
+        attachment_vals.setdefault('name', file.filename)
+        attachment_vals.setdefault('mimetype', file.content_type)
+        if public := attachment_vals.get('public', '0'):
+            attachment_vals['public'] = str2bool(public)
+        attach = self.env['ir.attachment']._from_file(file, **attachment_vals)
+        return request.redirect(f'/web/content/{attach.id}', code=HTTPStatus.CREATED)
 
     @route('/web/binary/upload_attachment', type='http', auth="user")
     def upload_attachment(self, model, id, ufile, callback=None):
