@@ -1,4 +1,4 @@
-import { reactive } from "@odoo/owl";
+import { reactive } from "@web/owl2/utils";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";

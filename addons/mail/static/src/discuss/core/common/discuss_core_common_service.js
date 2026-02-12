@@ -1,4 +1,5 @@
-import { markup, reactive } from "@odoo/owl";
+import { reactive } from "@web/owl2/utils";
+import { markup } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 

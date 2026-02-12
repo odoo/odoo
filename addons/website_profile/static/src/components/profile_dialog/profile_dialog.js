@@ -1,6 +1,6 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { reactive, useRef, useState } from "@web/owl2/utils";
 import { Wysiwyg } from "@html_editor/wysiwyg";
-import { Component, markup, onMounted, onWillStart, reactive } from "@odoo/owl";
+import { Component, markup, onMounted, onWillStart } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";

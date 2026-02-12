@@ -1,4 +1,5 @@
-import { batched, reactive } from "@odoo/owl";
+import { reactive } from "@web/owl2/utils";
+import { batched } from "@odoo/owl";
 
 export const HEADINGS = ["H1", "H2", "H3", "H4", "H5", "H6"];
 

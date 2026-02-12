@@ -1,8 +1,7 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { reactive, useSubEnv } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { formView } from "@web/views/form/form_view";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { reactive } from "@odoo/owl";
 import { FormController } from "@web/views/form/form_controller";
 
 class MailingPreviewFormController extends FormController {

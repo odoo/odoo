@@ -1,3 +1,4 @@
+import { reactive } from "@web/owl2/utils";
 import { Store as BaseStore, fields, makeStore } from "@mail/model/export";
 import {
     attClassObjectToString,
@@ -6,7 +7,6 @@ import {
 } from "@mail/utils/common/format";
 import { compareDatetime } from "@mail/utils/common/misc";
 
-import { reactive } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";

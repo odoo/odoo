@@ -1,4 +1,5 @@
-import { reactive, markRaw } from "@odoo/owl";
+import { reactive } from "@web/owl2/utils";
+import { markRaw } from "@odoo/owl";
 import { Model } from "@odoo/o-spreadsheet";
 import { registry } from "@web/core/registry";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";

@@ -1,4 +1,4 @@
-import { useComponent, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { reactive, useComponent, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { markEventHandled } from "@web/core/utils/misc";
 
 import {
@@ -9,7 +9,6 @@ import {
     onWillPatch,
     onWillStart,
     onWillUnmount,
-    reactive,
     useExternalListener,
     xml,
 } from "@odoo/owl";

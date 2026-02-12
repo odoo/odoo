@@ -1,5 +1,5 @@
+import { reactive } from "@web/owl2/utils";
 import { Mutex } from "@web/core/utils/concurrency";
-import { reactive } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import {

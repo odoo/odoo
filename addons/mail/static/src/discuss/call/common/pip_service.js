@@ -1,5 +1,5 @@
+import { reactive } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
-import { reactive } from "@odoo/owl";
 import { Meeting } from "./meeting";
 
 export const callPipService = {

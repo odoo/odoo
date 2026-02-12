@@ -1,4 +1,4 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { reactive, useSubEnv } from "@web/owl2/utils";
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
@@ -13,7 +13,7 @@ import { useActionLinks } from "@web/views/view_hook";
 import { computeViewClassName } from "./utils";
 import { loadBundle } from "@web/core/assets";
 import { cookie } from "@web/core/browser/cookie";
-import { Component, markRaw, onWillUpdateProps, onWillStart, toRaw, reactive } from "@odoo/owl";
+import { Component, markRaw, onWillUpdateProps, onWillStart, toRaw } from "@odoo/owl";
 import { session } from "@web/session";
 
 /**

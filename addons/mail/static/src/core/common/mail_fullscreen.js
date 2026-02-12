@@ -1,4 +1,5 @@
-import { Component, reactive } from "@odoo/owl";
+import { reactive } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 

@@ -1,5 +1,5 @@
+import { reactive } from "@web/owl2/utils";
 import { Plugin } from "@html_editor/plugin";
-import { reactive } from "@odoo/owl";
 import { uniqueId } from "@web/core/utils/functions";
 import { isRemovable } from "./remove_plugin";
 import { isClonable } from "./clone_plugin";

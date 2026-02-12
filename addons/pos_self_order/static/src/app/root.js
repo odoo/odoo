@@ -1,4 +1,5 @@
-import { mount, whenReady, reactive } from "@odoo/owl";
+import { reactive } from "@web/owl2/utils";
+import { mount, whenReady } from "@odoo/owl";
 import { selfOrderIndex as Index } from "./self_order_index";
 import { mountComponent } from "@web/env";
 import { Loader } from "@point_of_sale/app/components/loader/loader";

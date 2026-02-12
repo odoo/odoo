@@ -1,4 +1,5 @@
-import { markup, reactive } from "@odoo/owl";
+import { reactive } from "@web/owl2/utils";
+import { markup } from "@odoo/owl";
 
 import { parseVersion } from "@mail/utils/common/misc";
 import { browser } from "@web/core/browser/browser";

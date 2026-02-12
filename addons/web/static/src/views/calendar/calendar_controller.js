@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { reactive, useState } from "@web/owl2/utils";
 import {
     deleteConfirmationMessage,
     ConfirmationDialog,
@@ -21,7 +21,7 @@ import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiSelectionButtons } from "@web/views/view_components/multi_selection_buttons";
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
 
-import { Component, reactive } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 
 const { DateTime } = luxon;
