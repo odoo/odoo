@@ -2735,7 +2735,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(workorder.time_ids[0].duration, real_duration_decreased - real_duration_under_expected, "Time tracking duration should have been reduced to reflect new shorter duration")
 
     def test_duration_handles_overlaps_and_loss_types(self):
-        """Duration must merge overlapping productive/performance intervals and exclude availability."""
+        """Duration must merge overlapping intervals by time type."""
         mo = Form(self.env['mrp.production'])
         mo.bom_id = self.bom_4
         mo = mo.save()
@@ -2744,7 +2744,7 @@ class TestMrpOrder(TestMrpCommon):
 
         base_dt = datetime(2024, 1, 1, 8, 0, 0)
         productive_loss = self.env.ref('mrp.block_reason7')  # productive
-        availability_loss = self.env.ref('mrp.block_reason0')  # availability (must be excluded)
+        availability_loss = self.env.ref('mrp.block_reason0')  # availability
 
         self.env['mrp.workcenter.productivity'].create([
             {   # 08:00-09:00 productive (60 min)
@@ -2761,20 +2761,20 @@ class TestMrpOrder(TestMrpCommon):
                 'date_start': base_dt + timedelta(minutes=30),
                 'date_end': base_dt + timedelta(hours=1, minutes=30),
             },
-            {   # 09:30-10:30 availability (60 min) - must NOT be counted
+            {   # 09:00-10:00 availability (60 min) - must NOT be counted in the same interval
                 'workorder_id': workorder.id,
                 'workcenter_id': workorder.workcenter_id.id,
                 'loss_id': availability_loss.id,
-                'date_start': base_dt + timedelta(hours=1, minutes=30),
-                'date_end': base_dt + timedelta(hours=2, minutes=30),
+                'date_start': base_dt + timedelta(hours=1),
+                'date_end': base_dt + timedelta(hours=2),
             },
         ])
 
         # Merged productive pool: 08:00-09:30 = 90 min (overlap deduplicated)
-        # Availability excluded - total = 90 min
+        # Availability alone = 60 min
         self.assertAlmostEqual(
-            workorder.duration, 90.0, places=1,
-            msg="Overlapping productive intervals must be merged; availability must be excluded",
+            workorder.duration, 150.0, places=1,
+            msg="Overlapping productive intervals must be merged; availability must be completelly added",
         )
 
     def test_propagate_quantity_on_backorders(self):
