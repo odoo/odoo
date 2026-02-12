@@ -14,10 +14,10 @@
                 <attribute name="invisible" separator=" or " add="l10n_tr_nilvera_send_status == 'error' and l10n_tr_nilvera_uuid"/>
             </xpath>
             <xpath expr="//div[@name='journal_div']" position="after">
-                <label for="l10n_tr_nilvera_send_status" invisible="country_code != 'TR' or state == 'draft' or move_type not in ['out_invoice', 'in_invoice']"/>
+                <label for="l10n_tr_nilvera_send_status" invisible="country_code != 'TR' or state == 'draft' or move_type != 'out_invoice'"/>
                 <div name="nilvera_div"
                      class="d-flex"
-                     invisible="country_code != 'TR' or state == 'draft' or move_type not in ['out_invoice', 'in_invoice']">
+                     invisible="country_code != 'TR' or state == 'draft' or move_type != 'out_invoice'">
                     <field name="l10n_tr_nilvera_send_status" class="oe_inline"/>
                 </div>
             </xpath>
