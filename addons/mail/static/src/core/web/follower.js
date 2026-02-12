@@ -1,7 +1,9 @@
 import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
 import { FollowerSubtypeDialog } from "@mail/core/web/follower_subtype_dialog";
+import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { usePopover } from "@web/core/popover/popover_hook";
 
 /**
  * @typedef {Object} Props
@@ -17,14 +19,17 @@ export class Follower extends Component {
 
     setup() {
         this.store = useService("mail.store");
+        this.avatarCard = usePopover(AvatarCardPopover, { position: "right" });
     }
 
-    onClickDetails() {
-        this.store.openDocument({
+    onClickDetails(ev) {
+        if (this.avatarCard.isOpen) {
+            return;
+        }
+        this.avatarCard.open(ev.currentTarget, {
             id: this.props.follower.partner_id.id,
-            model: "res.partner"
+            model: "res.partner",
         });
-        this.props.close?.();
     }
 
     async onClickEdit() {
