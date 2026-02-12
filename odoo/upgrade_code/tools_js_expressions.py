@@ -486,6 +486,7 @@ def update_template(content: str, vars):
     result = update_etree(content, callback)
     result = result.replace("<![CDATA[", "").replace("]]>", "")
     result = result.replace("\u200b", "&#8203;")
+    result = result.replace("&&", "&amp;&amp;")
     return result
 
 
@@ -790,6 +791,23 @@ tests = [
 <xpath expr="//div[hasclass('o_cp_action_menus')]" position="attributes">
     <attribute name="t-on-click">this.onClick</attribute>
 </xpath>
+""",
+    },
+    {
+        "name": "xpath position=attribute, variation",
+        "content": """
+<t t-name="project.ProjectTaskKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
+    <xpath expr="//div[hasclass('o_kanban_group_nocontent')]" position="attributes">
+        <attribute name="t-if">props.list.groups.length === 0 &amp;&amp; !props.hideKanbanStagesNocontent</attribute>
+    </xpath>
+</t>
+""",
+        "expected": """
+<t t-name="project.ProjectTaskKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
+    <xpath expr="//div[hasclass('o_kanban_group_nocontent')]" position="attributes">
+        <attribute name="t-if">this.props.list.groups.length === 0 &amp;&amp; !this.props.hideKanbanStagesNocontent</attribute>
+    </xpath>
+</t>
 """,
     },
     {
