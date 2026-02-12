@@ -86,7 +86,7 @@ class ResourceCalendar(models.Model):
         ('variable', 'Variable')],
         string='Calendar Type', default='fixed', required=True)
 
-    @api.constrains('attendance_ids.date', 'schedule_type')
+    @api.constrains('attendance_ids', 'schedule_type')
     def _check_attendance_ids(self):
         if self.attendance_ids.filtered(lambda a: bool(a.date) if a.calendar_id.schedule_type == "fixed" else not a.date):
             raise ValidationError(self.env._("You cannot have attendances based on weekday and date in the same calendar"))
