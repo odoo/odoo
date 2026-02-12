@@ -750,28 +750,32 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         else:
             raise AssertionError('mail.mail exists for message %s / recipients %s but should not exist' % (mail_message, recipients.ids))
         finally:
-            self.assertNotSentEmail(recipients)
+            self.assertNotSentEmail(recipients=recipients, message_id=mail_message.message_id)
 
-    def assertNotSentEmail(self, recipients=None):
+    def assertNotSentEmail(self, recipients=None, message_id=None):
         """Check no email was generated during gateway mock.
 
         :param recipients:
             List of partner for which we will check that no email have been sent
             Or list of email address
-            If None, we will check that no email at all have been sent
+            If empty, we will check that no email at all have been sent
+        :param message_id:
+            message-id associated with the email. Allows to identify emails originating
+            from the a specific message in odoo.
         """
-        if recipients is None:
-            mails = self._mails
-        else:
+        mails = self._mails
+        if message_id:
+            mails = [mail for mail in self._mails if mail['message_id'] == message_id]
+        if recipients:
             all_emails = [
-                email_to.email if isinstance(email_to, self.env['res.partner'].__class__)
+                email_to.email_formatted if isinstance(email_to, self.env['res.partner'].__class__)
                 else email_to
                 for email_to in recipients
             ]
 
             mails = [
                 mail
-                for mail in self._mails
+                for mail in mails
                 if any(email in all_emails for email in mail['email_to'])
             ]
 
@@ -1370,8 +1374,8 @@ class MailCase(MockEmail):
                             **email_values
                         )
 
-            if not any(p for recipients in email_groups.values() for p in recipients):
-                self.assertNoMail(partners, mail_message=message, author=message.author_id)
+            if not any(recipient_val for recipient_dict in email_groups.values() for recipient_val in recipient_dict.values()):
+                self.assertNoMail(self.env['res.partner'], mail_message=message, author=message.author_id)
 
         return done_msgs, done_notifs
 
