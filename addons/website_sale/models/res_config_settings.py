@@ -25,10 +25,9 @@ class ResConfigSettings(models.TransientModel):
         implied_group='website_sale.group_product_feed',
         group='base.group_user',
     )
-    group_suggested_products = fields.Boolean(
+    group_automate_suggested_products = fields.Boolean(
         string="Automate suggested products",
-        help="Dynamically add optional, accessory and alternative products.",
-        implied_group='website_sale.group_suggested_products',
+        implied_group='website_sale.group_automate_suggested_products',
         group='base.group_user',
     )
 
@@ -125,32 +124,31 @@ class ResConfigSettings(models.TransientModel):
                 website._populate_product_feeds()
 
         # Activate / deactivate the automation of suggested products
-        suggested_products_cron = (
-            self.env['ir.cron'].sudo().env.ref('website_sale.ir_cron_update_suggested_products')
+        suggested_products_cron_sudo = (
+            self.env['ir.cron'].sudo().env.ref('website_sale.update_suggested_products_cron')
         )
-        if self.group_suggested_products and not suggested_products_cron.active:
-            self._set_products_to_suggest()
-            suggested_products_cron.active = True
-            suggested_products_cron._trigger()
-        elif not self.group_suggested_products and suggested_products_cron.active:
-            suggested_products_cron.active = False
+        if self.group_automate_suggested_products:  # The feature is enabled
+            self._flag_products_for_automated_suggestions()
+            suggested_products_cron_sudo.active = True
+            suggested_products_cron_sudo._trigger()
+        else:  # The feature is disabled
+            suggested_products_cron_sudo.active = False
 
-    def _set_products_to_suggest(self):
-        products = (
-            self.env['product.template']
-            .sudo()  # TODO why?
-            .search([('is_published', '=', True), ('sale_ok', '=', True)])
-        )
-        # Don't erase existing optional, accessory, alternative products when enabling the feature.
-        products.filtered_domain([('optional_product_ids', '=', None)]).write({
-            'suggest_optional_products': True
-        })
-        products.filtered_domain([('accessory_product_ids', '=', None)]).write({
-            'suggest_accessory_products': True
-        })
-        products.filtered_domain([('alternative_product_ids', '=', None)]).write({
-            'suggest_alternative_products': True
-        })
+    def _flag_products_for_automated_suggestions(self):
+        """Find products without suggested (optional, accessory, or alternative) products and mark
+        them for automatic suggestion updates.
+
+        :rtype: None
+        """
+        products = self.env['product.template'].search([
+            ('is_published', '=', True),
+            ('sale_ok', '=', True),
+        ])
+        products.filtered(lambda p: not p.optional_product_ids).suggest_optional_products = True
+        products.filtered(lambda p: not p.accessory_product_ids).suggest_accessory_products = True
+        products.filtered(
+            lambda p: not p.alternative_product_ids
+        ).suggest_alternative_products = True
 
     # === ACTION METHODS === #
 

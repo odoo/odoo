@@ -48,7 +48,9 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _default_suggest_products(self):
-        return self.env['res.groups']._is_feature_enabled('website_sale.group_suggested_products')
+        return self.env['res.groups']._is_feature_enabled(
+            'website_sale.group_automate_suggested_products'
+        )
 
     @api.model
     def _default_website_sequence(self):
@@ -320,15 +322,18 @@ class ProductTemplate(models.Model):
         return self.alternative_product_ids.filtered_domain(domain)
 
     def _update_suggested_products(self, batch_size=None):
-        """Complete optional, accessory and alternative products on salable and published products.
+        """Complete optional, accessory, and alternative products on salable and published products.
 
         Optional products: up to 2 products bought together with the main product.
         Accessory products: up to 1 product bought together with the main product.
         Alternative products: up to 4 products sharing similar characteristics.
 
-        :param batch_size: maximum number of products to process at once (for the cron)
-        :type batch_size: int, optional
+        :param int batch_size: The maximum number of products to process at once (for the cron)
+        :rtype: None
         """
+        if not self.env['res.groups']._is_feature_enabled('website_sale.group_suggested_products'):
+            return  # Don't update suggested products if the feature is not enabled.
+
         now = fields.Datetime.now()
         products_domain = [('sale_ok', '=', True), ('is_published', '=', True)]
         all_products = self.search(products_domain)

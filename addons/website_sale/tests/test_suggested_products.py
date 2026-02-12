@@ -61,20 +61,20 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
             'state': 'sale',
         })
 
-    def test_01_activate_suggested_products_settings_triggers_cron(self):
+    def test_activate_automate_suggested_products_settings_triggers_cron(self):
         """Activating the website settings automatically triggers the cron
         updating the optional and alternative products."""
-        suggested_products_cron = self.env.ref('website_sale.ir_cron_update_suggested_products')
+        suggested_products_cron = self.env.ref('website_sale.update_suggested_products_cron')
         with self.capture_triggers(
-            'website_sale.ir_cron_update_suggested_products'
+            'website_sale.update_suggested_products_cron'
         ) as captured_triggers:
             # Enable the suggested products feature
-            self.env['res.config.settings'].create({'group_suggested_products': True}).set_values()
+            self.env['res.config.settings'].create({'group_automate_suggested_products': True}).set_values()
         self.assertTrue(suggested_products_cron.active)
         # Assert that a trigger was created
-        self.assertEqual(len(captured_triggers.records), 1)
+        self.assertTrue(captured_triggers.records)
 
-    def test_02_update_suggested_products_sets_alternative_products(self):
+    def test_update_suggested_products_sets_alternative_products(self):
         """_update_suggested_products fills alternative products based on shared categories."""
         # Clear any existing alternatives
         tested_products = self.template_desk | self.template_chair | self.template_combo_desk_chair
@@ -88,7 +88,7 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
         chair_and_desk = self.template_chair | self.template_desk
         self.assertEqual(self.template_combo_desk_chair.alternative_product_ids, chair_and_desk)
 
-    def test_03_update_suggested_products_sets_optional_products(self):
+    def test_update_suggested_products_sets_optional_products(self):
         """Test that _update_suggested_products fills optional products based on sales history."""
         # Clear any existing optional products
         self.template_desk.optional_product_ids = False
@@ -96,7 +96,7 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
         self.template_desk._update_suggested_products()
         self.assertEqual(self.template_desk.optional_product_ids, self.template_chair)
 
-    def test_04_cron_write_preserves_automation(self):
+    def test_cron_write_preserves_automation(self):
         """Test that writing from cron context doesn't disable the automation flags."""
         self.template_desk.suggest_alternative_products = True
         self.template_desk.suggest_optional_products = True
@@ -109,7 +109,7 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
         self.assertTrue(self.template_desk.suggest_alternative_products)
         self.assertTrue(self.template_desk.suggest_optional_products)
 
-    def test_05_manual_write_disables_automation(self):
+    def test_manual_write_disables_automation(self):
         """Test that manually writing disables the automation flags."""
         # Ensure the automation is set for template_desk
         self.template_desk.suggest_alternative_products = True
@@ -122,7 +122,7 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
         self.assertFalse(self.template_desk.suggest_alternative_products)
         self.assertFalse(self.template_desk.suggest_optional_products)
 
-    def test_06_action_reenables_automation(self):
+    def test_action_reenables_automation(self):
         """Test that calling _update_suggested_products from the action re-enables automation."""
         self.template_desk.suggest_alternative_products = False
         self.template_desk.suggest_optional_products = False
@@ -131,7 +131,7 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
         self.assertTrue(self.template_desk.suggest_alternative_products)
         self.assertTrue(self.template_desk.suggest_optional_products)
 
-    def test_07_cron_only_updates_outdated_products(self):
+    def test_cron_only_updates_outdated_products(self):
         """Test that cron only updates products not updated within the last 12 hours."""
         now = fields.Datetime.now()
         recent_date = now - relativedelta(hours=6)

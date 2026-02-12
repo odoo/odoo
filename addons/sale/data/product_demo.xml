@@ -159,14 +159,13 @@
         <field name="image_1920" type="base64" file="sale/static/img/floor_protection-image.jpg"/>
     </record>
 
+    <!-- Assign XMLID to automatically created product variant -->
     <function model="ir.model.data" name="_update_xmlids">
-        <value model="base" eval="[
-            {
-                'xml_id': 'sale.product_product_1_product_product',
-                'record': obj().env.ref('sale.product_product_1_product_template').product_variant_id,
-                'noupdate': True,
-            },
-        ]"/>
+        <value model="base" eval="[{
+            'xml_id': 'sale.product_product_1_product_product',
+            'record': obj().env.ref('sale.product_product_1_product_template').product_variant_id,
+            'noupdate': True,
+        }]"/>
     </function>
 
     <record id="product.product_product_4_product_template" model="product.template">
