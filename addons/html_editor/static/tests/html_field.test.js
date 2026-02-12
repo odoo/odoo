@@ -921,7 +921,7 @@ test("Embed video by pasting video URL", async () => {
         resModel: "partner",
         arch: `
             <form>
-                <field name="txt" widget="html"/>
+                <field name="txt" widget="html" options="{'debounceHints': false}"/>
             </form>`,
     });
 
@@ -1095,7 +1095,7 @@ test("html field with a placeholder", async () => {
         resModel: "partner",
         arch: `
             <form>
-                <field name="txt" widget="html" placeholder="test"/>
+                <field name="txt" widget="html" placeholder="test" options="{'debounceHints': false}"/>
             </form>`,
     });
 
