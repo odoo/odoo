@@ -29,6 +29,6 @@ export class PortalChatter extends Component {
             id: this.props.resId,
             model: this.props.resModel,
         });
-        thread.messages = await thread.fetchMessages();
+        thread.messages = await thread.fetchMessages({ routeParams: this.messageFetchRouteParams });
     }
 }

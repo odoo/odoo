@@ -15,6 +15,17 @@ import { Deferred } from "@web/core/utils/concurrency";
  * @property {string} reason
  */
 
+/**
+ * @typedef {Object} MessageFetchParams
+ * @property {number} [after]
+ * @property {number} [around]
+ * @property {number} [before]
+ */
+
+/**
+ * @typedef {Object} MessageRouteParams Specific overrides for the RPC route metadata usually provided by the caller component.
+ */
+
 export class Thread extends Record {
     static id = AND("model", "id");
     static _name = "mail.thread";
@@ -397,15 +408,19 @@ export class Thread extends Record {
         return this.hasReadAccess;
     }
 
-    /** @param {{after: Number, before: Number}} */
-    async fetchMessages({ after, around, before } = {}) {
+    /**
+     * @param {Object} [options]
+     * @param {MessageFetchParams} [options.fetchParams]
+     * @param {MessageRouteParams} [options.routeParams]
+     */
+    async fetchMessages({ fetchParams = {}, routeParams = {} } = {}) {
         this.status = "loading";
         if (!["mail.box", "discuss.channel"].includes(this.model) && !this.id) {
             this.isLoaded = true;
             return [];
         }
         try {
-            const { messages } = await this.fetchMessagesData({ after, around, before });
+            const { messages } = await this.fetchMessagesData({ fetchParams, routeParams });
             this.hasLoadingFailedError = undefined;
             this.hasLoadingFailed = false;
             return messages.reverse();
@@ -420,15 +435,21 @@ export class Thread extends Record {
     }
 
     /**
-     * @param {{after: Number, before: Number}}
+     * @param {Object} [options]
+     * @param {MessageFetchParams} [options.fetchParams]
+     * @param {MessageRouteParams} [options.routeParams]
      * @returns {Promise<{messages: number[]}>}
      */
-    async fetchMessagesData({ after, around, before } = {}) {
+    async fetchMessagesData({
+        fetchParams: { after, around, before } = {},
+        routeParams = {},
+    } = {}) {
         // ordered messages received: newest to oldest
         return await this.store.fetchStoreData(
             this.getFetchRoute(),
             {
                 ...this.getFetchParams(),
+                ...routeParams,
                 fetch_params: {
                     limit:
                         !around && around !== 0
@@ -443,8 +464,12 @@ export class Thread extends Record {
         );
     }
 
-    /** @param {"older"|"newer"} epoch */
-    async fetchMoreMessages(epoch = "older") {
+    /**
+     * @param {Object} [options]
+     * @param {"older"|"newer"} [options.epoch="older"]
+     * @param {MessageRouteParams} [options.routeParams]
+     */
+    async fetchMoreMessages({ epoch = "older", routeParams = {} } = {}) {
         if (
             this.status === "loading" ||
             (epoch === "older" && !this.loadOlder) ||
@@ -456,7 +481,7 @@ export class Thread extends Record {
         const after = epoch === "newer" ? this.newestPersistentMessage?.id : undefined;
         let fetched = [];
         try {
-            fetched = await this.fetchMessages({ after, before });
+            fetched = await this.fetchMessages({ fetchParams: { after, before }, routeParams });
         } catch {
             return;
         }
@@ -503,7 +528,11 @@ export class Thread extends Record {
         return this.store.self_user?.partner_id || this.store.self_guest;
     }
 
-    async fetchNewMessages() {
+    /**
+     * @param {Object} [options]
+     * @param {MessageRouteParams} [options.routeParams]
+     */
+    async fetchNewMessages({ routeParams = {} } = {}) {
         if (
             this.status === "loading" ||
             (this.isLoaded && ["discuss.channel", "mail.box"].includes(this.model))
@@ -513,7 +542,7 @@ export class Thread extends Record {
         const after = this.isLoaded ? this.newestPersistentMessage?.id : undefined;
         let fetched = [];
         try {
-            fetched = await this.fetchMessages({ after });
+            fetched = await this.fetchMessages({ fetchParams: { after }, routeParams });
         } catch {
             return;
         }
@@ -591,9 +620,11 @@ export class Thread extends Record {
      * messages around the message to jump to if required, and update the thread
      * messages accordingly.
      *
-     * @param {import("models").Message} [messageId] if not provided, load around newest message
+     * @param {Object} options
+     * @param {number} [options.messageId]
+     * @param {MessageRouteParams} [options.routeParams]
      */
-    async loadAround(messageId) {
+    async loadAround({ messageId, routeParams = {} } = {}) {
         if (
             this.status === "loading" ||
             (this.isLoaded && this.messages.some(({ id }) => id === messageId))
@@ -604,7 +635,10 @@ export class Thread extends Record {
         this.scrollTop = undefined;
         try {
             this.phantomMessages = this.messages;
-            this.messages = await this.fetchMessages({ around: messageId });
+            this.messages = await this.fetchMessages({
+                fetchParams: { around: messageId },
+                routeParams,
+            });
             this.phantomMessages = [];
         } catch {
             this.isLoaded = true;
