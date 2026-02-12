@@ -62,6 +62,14 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             'unit_of_measure': 'day',
         })
 
+        self.hr_work_entry_type_half_day = self.env['hr.work.entry.type'].sudo().create({
+            'name': 'Time Off Type (half day)',
+            'code': 'LEAVEHALFDAY',
+            'requires_allocation': False,
+            'request_unit': 'half_day',
+            'count_as': 'absence',
+        })
+
         # HR Officer allocates some leaves to the employee 1
         self.Requests = self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True)
         self.Allocations = self.env['hr.leave.allocation'].with_context(mail_create_nolog=True, mail_notrack=True)
@@ -451,3 +459,54 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         self.assertTrue(len(current_leave.timesheet_ids), 1)
         self.assertEqual(past_leave.timesheet_ids.unit_amount, 8, "The timesheet for the past contract should have 8 hours")
         self.assertEqual(current_leave.timesheet_ids.unit_amount, 7, "The timesheet for the Current contract should have 7 hours")
+
+    def test_timesheet_generation_for_flexible_employee_with_half_day_time_off_type(self):
+        """
+        Ensure timesheet entries are generated correctly for employees
+        with flexible schedules using a 'half-day' leave type:
+            - A full-day request creates an 8h entry.
+            - A half-day request creates a 4h entry.
+            - Multi-day requests aggregate correctly across days.
+        """
+        self.empl_employee.write({
+            'resource_calendar_id': False,
+            'hours_per_week': 40,
+            'hours_per_day': 8.0,
+        })
+
+        # Create 3 scenarios: Full Day, Single Half Day, and Multi-Day
+        time_off, time_off_half_day, time_off_multi_day = self.Requests.with_user(self.user_employee).create([
+            {
+                'name': 'Test Full Day',
+                'employee_id': self.empl_employee.id,
+                'work_entry_type_id': self.hr_work_entry_type_half_day.id,
+                'request_date_from': datetime(2026, 2, 9),
+                'request_date_to': datetime(2026, 2, 9),
+            },
+            {
+                'name': 'Test Single Half Day',
+                'employee_id': self.empl_employee.id,
+                'work_entry_type_id': self.hr_work_entry_type_half_day.id,
+                'request_date_from': datetime(2026, 2, 10),
+                'request_date_to': datetime(2026, 2, 10),
+                'request_date_from_period': 'am',
+                'request_date_to_period': 'am',
+            },
+            {
+                'name': 'Test Multi-Day',
+                'employee_id': self.empl_employee.id,
+                'work_entry_type_id': self.hr_work_entry_type_half_day.id,
+                'request_date_from': datetime(2026, 2, 11),
+                'request_date_to': datetime(2026, 2, 12),
+            }]
+        )
+
+        (time_off | time_off_half_day | time_off_multi_day).with_user(SUPERUSER_ID).action_approve()
+        validation_data = [
+            (time_off, 1, 8.0),
+            (time_off_half_day, 1, 4.0),
+            (time_off_multi_day, 2, 16.0),
+        ]
+        for leave, expected_entries, expected_hours in validation_data:
+            self.assertEqual(len(leave.timesheet_ids), expected_entries, f"{leave.name}: incorrect number of timesheet entries.")
+            self.assertEqual(sum(leave.timesheet_ids.mapped('unit_amount')), expected_hours, f"{leave.name}: incorrect total timesheet hours.")
