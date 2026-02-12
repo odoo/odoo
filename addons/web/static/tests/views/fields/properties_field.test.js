@@ -1,15 +1,25 @@
-import { animationFrame, expect, getFixture, mockDate, runAllTimers, test } from "@odoo/hoot";
 import {
+    animationFrame,
     click,
     edit,
+    expect,
+    getFixture,
+    mockDate,
     press,
     queryAll,
     queryAllTexts,
     queryAllValues,
     queryAttribute,
     queryFirst,
+    runAllTimers,
+    test,
     waitFor,
-} from "@odoo/hoot-dom";
+} from "@odoo/hoot";
+import { PropertiesField } from "@web/views/fields/properties/properties_field";
+import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
+import { WebClient } from "@web/webclient/webclient";
+
 import { editTime, getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickCancel,
@@ -27,11 +37,7 @@ import {
     toggleActionMenu,
     toggleMenuItem,
 } from "@web/../tests/web_test_helpers";
-import { PropertiesField } from "@web/views/fields/properties/properties_field";
 import { PROPERTY_TYPES } from "@web/views/fields/properties/property_definition";
-import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
-import { WebClient } from "@web/webclient/webclient";
 
 async function closePopover() {
     // Close the popover by clicking outside
@@ -2926,7 +2932,7 @@ test("properties definition: test display and edit", async () => {
     await animationFrame();
     expect(".o_field_property_selection_option").toHaveCount(3, {
         message: "Only the 3 options from the demo data should be displayed.",
-    })
+    });
     await click(".o_field_property_selection .fa-plus");
     await animationFrame();
     await edit("New option");
@@ -2935,7 +2941,7 @@ test("properties definition: test display and edit", async () => {
     await animationFrame();
     expect(".o_field_property_selection_option").toHaveCount(4, {
         message: "The added option should now be displayed.",
-    })
+    });
     await closePopover();
 
     // Add a new definition

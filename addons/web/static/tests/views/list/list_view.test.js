@@ -1,12 +1,18 @@
-import { expect, getFixture, mockSendBeacon, test } from "@odoo/hoot";
 import {
+    animationFrame,
     clear,
     click,
+    Deferred,
     edit,
+    expect,
+    getFixture,
     hover,
     keyDown,
     keyUp,
     middleClick,
+    mockDate,
+    mockSendBeacon,
+    mockTimeZone,
     pointerDown,
     pointerUp,
     press,
@@ -17,17 +23,12 @@ import {
     queryOne,
     queryRect,
     queryText,
+    runAllTimers,
+    test,
+    tick,
     unload,
     waitFor,
-} from "@odoo/hoot-dom";
-import {
-    animationFrame,
-    Deferred,
-    mockDate,
-    mockTimeZone,
-    runAllTimers,
-    tick,
-} from "@odoo/hoot-mock";
+} from "@odoo/hoot";
 import { Component, markup, onRendered, onWillStart, useRef, xml } from "@odoo/owl";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
@@ -76,10 +77,10 @@ import {
     webModels,
 } from "@web/../tests/web_test_helpers";
 
-import { localization } from "@web/core/l10n/localization";
 import { buildSelector } from "@web/../tests/_framework/view_test_helpers";
 import { currencies } from "@web/core/currency";
 import { Domain } from "@web/core/domain";
+import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { useBus } from "@web/core/utils/hooks";
@@ -11222,7 +11223,7 @@ test(`multi edit field with daterange widget (edition without using the picker)`
     await contains(
         `.o_data_row .o_data_cell .o_field_daterange[name='date_start'] input[data-field='date_start']`
     ).edit("2016-04-01 11:00:00", { confirm: "enter" });
-    expect(`.modal`).toHaveCount(1, {
+    expect(await waitFor(".modal")).toHaveCount(1, {
         message: "The confirm dialog should appear to confirm the multi edition.",
     });
     expect(queryAllTexts(`.modal-body .o_modal_changes td`)).toEqual([
