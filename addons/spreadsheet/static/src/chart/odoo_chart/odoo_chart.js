@@ -51,6 +51,8 @@ export class OdooChart extends AbstractChart {
         this.showValues = definition.showValues;
         this._dataSets = definition.dataSets || [];
         this.humanize = definition.humanize ?? true;
+        this.annotationText = definition.annotationText;
+        this.annotationLink = definition.annotationLink;
     }
 
     static transformDefinition(definition) {
@@ -92,6 +94,8 @@ export class OdooChart extends AbstractChart {
             dataSets: this.dataSets,
             datasetsConfig: this.datasetsConfig,
             humanize: this.humanize,
+            annotationText: this.annotationText,
+            annotationLink: this.annotationLink,
         };
     }
 
