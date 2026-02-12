@@ -745,7 +745,9 @@ class AccountMove(models.Model):
         groups="account.group_account_invoice,account.group_account_readonly",
     )
     duplicated_ref_ids = fields.Many2many(comodel_name='account.move', compute='_compute_duplicated_ref_ids')
+    # used to check if any moves in duplicated_ref_ids are in the 'Draft' state.
     is_draft_duplicated_ref_ids = fields.Boolean(compute="_compute_is_draft_duplicated_ref_ids")
+    is_exact_move_duplicate = fields.Boolean(compute='_compute_is_draft_duplicated_ref_ids')
     need_cancel_request = fields.Boolean(compute='_compute_need_cancel_request')
 
     show_update_fpos = fields.Boolean(string="Has Fiscal Position Changed", store=False)  # True if the fiscal position was changed
@@ -2084,7 +2086,7 @@ class AccountMove(models.Model):
             move.duplicated_ref_ids = move_to_duplicate_move.get(move._origin, self.env['account.move'])
 
     def _duplicated_ref_ids_depends(self):
-        return ["ref", "move_type", "partner_id", "invoice_date", "tax_totals"]
+        return ["ref", "move_type", "partner_id", "invoice_date", "tax_totals", "currency_id"]
 
     def _fetch_duplicate_reference(self, matching_states=('draft', 'posted')):
         moves = self.filtered(lambda m: m.is_sale_document() or m.is_purchase_document())
@@ -2131,6 +2133,7 @@ class AccountMove(models.Model):
                    AND move.id != duplicate_move.id
                    AND duplicate_move.state IN %(matching_states)s
                    AND move.move_type = duplicate_move.move_type
+                   AND move.currency_id = duplicate_move.currency_id
                    AND (%(move_type_sql_condition)s)
                  WHERE move.id IN %(moves)s
                  GROUP BY move.id
@@ -2199,6 +2202,15 @@ class AccountMove(models.Model):
     def _compute_is_draft_duplicated_ref_ids(self):
         for move in self:
             move.is_draft_duplicated_ref_ids = any(duplicate_move.state == 'draft' for duplicate_move in move.duplicated_ref_ids)
+            move.is_exact_move_duplicate = any(
+                move.ref and move.ref == dup.ref
+                and move.move_type == dup.move_type
+                and move.partner_id == dup.partner_id
+                and move.invoice_date == dup.invoice_date
+                and move.amount_total == dup.amount_total
+                and move.is_purchase_document()
+                for dup in move.duplicated_ref_ids
+            )
 
     @api.depends('company_id')
     def _compute_display_qr_code(self):
@@ -5297,13 +5309,16 @@ class AccountMove(models.Model):
         self.ensure_one()
         if self.env.context.get('name_as_amount_total'):
             currency_amount = self.currency_id.format(self.amount_total)
-            if self.state == 'posted':
+            if self.is_sale_document(include_receipts=True) and self.state == "posted":
                 ref = f" - {self.ref}" if self.ref else ""
                 return _("%(name)s%(ref)s at %(currency_amount)s", name=(self.name), ref=ref, currency_amount=currency_amount)
-            if self.name:
-                return _("%(name)s - Draft at (%(currency_amount)s)", name=(self.name), currency_amount=currency_amount)
-            else:
-                return _("Draft (%(currency_amount)s)", currency_amount=currency_amount)
+            label = (self.ref or self.name or "") if self.is_purchase_document(include_receipts=True) else (self.name or "")
+            if label:
+                if self.state == 'draft':
+                    return _("%(label)s at %(currency_amount)s (Draft)", label=label, currency_amount=currency_amount)
+                return _("%(label)s at %(currency_amount)s", label=label, currency_amount=currency_amount)
+            return _("Draft (%(currency_amount)s)", currency_amount=currency_amount)
+
         name = ''
         if self.state == 'draft':
             name += {
