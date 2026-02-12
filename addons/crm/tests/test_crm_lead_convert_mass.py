@@ -31,7 +31,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         with self.assertQueryCount(user_sales_manager=0):
             test_leads = self.env['crm.lead'].browse(test_leads.ids)
 
-        with self.assertQueryCount(user_sales_manager=476):  # crm 476 / com 476 / ent 605
+        with self.assertQueryCount(user_sales_manager=545):  # crm 545 / com 545 / ent 545
             test_leads._handle_salesmen_assignment(user_ids=user_ids, team_id=False)
 
         self.assertEqual(test_leads.team_id, self.sales_team_convert | self.sales_team_1)
@@ -49,7 +49,7 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         with self.assertQueryCount(user_sales_manager=0):
             test_leads = self.env['crm.lead'].browse(test_leads.ids)
 
-        with self.assertQueryCount(user_sales_manager=452):  # crm 428 / com 428 / ent 452
+        with self.assertQueryCount(user_sales_manager=520):  # crm 497 / com 497 / ent 520
             test_leads._handle_salesmen_assignment(user_ids=user_ids, team_id=team_id)
 
         self.assertEqual(test_leads.team_id, self.sales_team_convert)

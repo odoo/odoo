@@ -278,7 +278,7 @@ class MailMessage(models.Model):
     def _compute_linked_message_ids(self):
         """ Compute the linked messages from the body of the message."""
         message_ids_by_message = defaultdict(list)
-        for message in self.sudo():
+        for message in self._filtered_access('read'):
             if tools.is_html_empty(message.body):
                 continue
             str_ids = html.fromstring(message.body).xpath(
@@ -1448,12 +1448,13 @@ class MailMessage(models.Model):
         ids_by_model = defaultdict(OrderedSet)
         prefetch_ids_by_model = defaultdict(OrderedSet)
         prefetch_messages = self | self.browse(self._prefetch_ids)
-        for message in prefetch_messages.filtered(lambda m: m.model and m.res_id):
+        # prefetch read in sudo because we may have access to only part of the prefetch
+        for message in prefetch_messages.sudo().filtered(lambda m: m.model and m.res_id):
             target = ids_by_model if message in self else prefetch_ids_by_model
             target[message.model].add(message.res_id)
         return {
             model_name: self.env[model_name].browse(ids)
-            .with_prefetch(tuple(ids_by_model[model_name] | prefetch_ids_by_model[model_name]))
+            .with_prefetch(tuple(ids | prefetch_ids_by_model[model_name]))
             for model_name, ids in ids_by_model.items()
         }
 
