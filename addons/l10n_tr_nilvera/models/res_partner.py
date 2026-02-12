@@ -94,7 +94,7 @@ class ResPartner(models.Model):
         if not self.vat:
             return
 
-        with _get_nilvera_client(self.env.company) as client:
+        with _get_nilvera_client(self.env._, self.env.company) as client:
             response = client.request("GET", "/general/GlobalCompany/Check/TaxNumber/" + urllib.parse.quote(self.vat), handle_response=False)
             if response.status_code == 200:
                 query_result = response.json()

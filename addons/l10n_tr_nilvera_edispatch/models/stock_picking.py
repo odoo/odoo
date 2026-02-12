@@ -327,7 +327,7 @@ class StockPicking(models.Model):
                             indicates a client error (4xx), or if a server error occurs (500).
         :return: None
         """
-        with _get_nilvera_client(self.env.company) as client:
+        with _get_nilvera_client(self.env._, self.company) as client:
             response = client.request(
                 "POST",
                 endpoint='/edespatch/Send/Xml',
@@ -370,7 +370,7 @@ class StockPicking(models.Model):
 
     def _l10n_tr_nilvera_get_submitted_document_status(self):
         for company, stock_pickings in self.grouped("company_id").items():
-            with _get_nilvera_client(company) as client:
+            with _get_nilvera_client(self.env._, company) as client:
                 for stock_picking in stock_pickings:
                     response = client.request(
                         "GET",
