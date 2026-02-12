@@ -3,20 +3,24 @@ import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { WebClient } from "@web/webclient/webclient";
 
-import { expect, getFixture, test } from "@odoo/hoot";
 import {
+    animationFrame,
     click,
     edit,
+    expect,
+    getFixture,
+    mockDate,
     press,
     queryAll,
     queryAllTexts,
     queryAllValues,
     queryAttribute,
     queryFirst,
+    runAllTimers,
     select,
+    test,
     waitFor,
-} from "@odoo/hoot-dom";
-import { animationFrame, mockDate, runAllTimers } from "@odoo/hoot-mock";
+} from "@odoo/hoot";
 import {
     getPickerApplyButton,
     getPickerCell,
