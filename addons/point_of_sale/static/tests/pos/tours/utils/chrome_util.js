@@ -190,9 +190,6 @@ export function noFloatingOrder(name) {
 export function clickOrders() {
     return { trigger: ".pos-leftheader .orders-button", run: "click" };
 }
-export function clickPresetTimingSlot() {
-    return { trigger: ".pos-leftheader .preset-time-btn", run: "click" };
-}
 export function selectPresetTimingSlotHour(hour) {
     return [
         {
@@ -205,6 +202,12 @@ export function selectPresetTimingSlotHour(hour) {
             trigger: `body:not(:has(.modal)):not(:has(.oe_status .fa-spin)) .pos-leftheader .preset-time-btn:contains(${hour})`,
         },
     ];
+}
+export function presetTimingSlotIs(hour) {
+    return { trigger: `.pos-leftheader .preset-time-btn:contains('${hour}')` };
+}
+export function selectPresetTimingSlot(slot) {
+    return { trigger: `.modal button:contains('${slot}')`, run: "click" };
 }
 export function presetTimingSlotHourNotExists(hour) {
     return { trigger: negate(`.modal button:visible:contains('${hour}')`) };
