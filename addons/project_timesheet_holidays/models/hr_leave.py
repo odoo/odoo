@@ -39,11 +39,11 @@ class HrLeave(models.Model):
 
             calendar_timezone = ZoneInfo(calendar.tz)
 
-            if calendar.flexible_hours and (leave.leave_type_request_unit == 'hour' or leave.leave_type_request_unit == 'half_day' or leave.date_from.date() == leave.date_to.date()):
+            if calendar.flexible_hours and leave.date_from.date() == leave.date_to.date():
                 leave_date = leave.date_from.astimezone(calendar_timezone).date()
                 if leave.leave_type_request_unit == 'hour':
                     hours = leave.request_hour_to - leave.request_hour_from
-                elif leave.leave_type_request_unit == 'half_day':
+                elif leave.leave_type_request_unit == 'half_day' and leave.request_date_from_period == leave.request_date_to_period:
                     hours = calendar.hours_per_day / 2
                 else:  # Single-day leave
                     hours = calendar.hours_per_day
