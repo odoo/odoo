@@ -1,7 +1,7 @@
+import { reactive } from "@web/owl2/utils";
 /* global waitForWebfonts */
 
 import { Mutex } from "@web/core/utils/concurrency";
-import { reactive } from "@odoo/owl";
 import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";

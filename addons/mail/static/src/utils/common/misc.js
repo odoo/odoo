@@ -1,5 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { reactive } from "@odoo/owl";
+import { reactive, useLayoutEffect } from "@web/owl2/utils";
 import { AssetsLoadingError, getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
 import { effect } from "@web/core/utils/reactive";

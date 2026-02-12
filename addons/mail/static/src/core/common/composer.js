@@ -1,4 +1,4 @@
-import { useChildSubEnv, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { reactive, useChildSubEnv, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
@@ -24,7 +24,6 @@ import {
     useExternalListener,
     toRaw,
     EventBus,
-    reactive,
 } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";

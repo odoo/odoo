@@ -1,7 +1,7 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { reactive, useRef, useState } from "@web/owl2/utils";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { Component, xml, reactive } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";

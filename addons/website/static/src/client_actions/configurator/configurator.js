@@ -1,4 +1,4 @@
-import { useEnv, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { reactive, useEnv, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 const sessionStorage = browser.sessionStorage;
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
@@ -17,7 +17,6 @@ import { router } from "@web/core/browser/router";
 import {
     Component,
     onMounted,
-    reactive,
     onWillStart,
     useExternalListener,
 } from "@odoo/owl";

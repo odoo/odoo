@@ -1,3 +1,4 @@
+import { reactive } from "@web/owl2/utils";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 import { uuidv4 } from "@point_of_sale/utils";
 import { CancelDialog } from "@pos_glory_cash/app/components/cancel_dialog";
@@ -16,7 +17,6 @@ import {
     XML_REQUESTS,
 } from "@pos_glory_cash/utils/constants";
 import { SocketIoService } from "@pos_glory_cash/utils/socket_io";
-import { reactive } from "@odoo/owl";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { sortBy } from "@web/core/utils/arrays";

@@ -1,4 +1,4 @@
-import { useComponent, useEnv, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { reactive, useComponent, useEnv, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { isElement, isTextNode } from "@html_editor/utils/dom_info";
 import {
     Component,
@@ -6,7 +6,6 @@ import {
     onWillDestroy,
     onWillStart,
     onWillUpdateProps,
-    reactive,
     toRaw,
 } from "@odoo/owl";
 import { convertNumericToUnit, getHtmlStyle } from "@html_editor/utils/formatting";

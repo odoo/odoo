@@ -1,6 +1,7 @@
+import { reactive } from "@web/owl2/utils";
 import { Loader } from "@point_of_sale/app/components/loader/loader";
 import { getTemplate } from "@web/core/templates";
-import { mount, reactive, whenReady } from "@odoo/owl";
+import { mount, whenReady } from "@odoo/owl";
 import { _t, appTranslateFn } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { localization } from "@web/core/l10n/localization";

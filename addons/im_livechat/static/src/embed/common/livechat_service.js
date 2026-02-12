@@ -1,6 +1,6 @@
+import { reactive } from "@web/owl2/utils";
 import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
 
-import { reactive } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 
 import { _t } from "@web/core/l10n/translation";

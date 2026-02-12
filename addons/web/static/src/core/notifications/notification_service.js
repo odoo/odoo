@@ -1,7 +1,7 @@
+import { reactive } from "@web/owl2/utils";
 import { registry } from "../registry";
 import { NotificationContainer } from "./notification_container";
 
-import { reactive } from "@odoo/owl";
 
 /**
  * @typedef {Object} NotificationButton

@@ -1,8 +1,8 @@
+import { reactive } from "@web/owl2/utils";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { ColorSelector } from "./color_selector";
-import { reactive } from "@odoo/owl";
 import { isStylable, isTextNode } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { isCSSColor, RGBA_REGEX, rgbaToHex } from "@web/core/utils/colors";

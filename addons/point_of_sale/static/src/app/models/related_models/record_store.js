@@ -1,6 +1,6 @@
+import { reactive } from "@web/owl2/utils";
 import { Base } from "./base";
 import { RAW_SYMBOL } from "./utils";
-import { reactive } from "@odoo/owl";
 
 export class RecordStore {
     /**

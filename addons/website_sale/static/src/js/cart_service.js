@@ -1,4 +1,4 @@
-import { reactive } from '@odoo/owl';
+import { reactive } from "@web/owl2/utils";
 import {
     ComboConfiguratorDialog
 } from '@sale/js/combo_configurator_dialog/combo_configurator_dialog';

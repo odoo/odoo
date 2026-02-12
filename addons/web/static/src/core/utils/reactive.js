@@ -1,4 +1,4 @@
-import { reactive } from "@odoo/owl";
+import { reactive } from "@web/owl2/utils";
 
 /**
  * This class should be used as a base when creating a class that is intended to

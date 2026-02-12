@@ -1,4 +1,4 @@
-import { useChildSubEnv } from "@web/owl2/utils";
+import { reactive, useChildSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
@@ -24,7 +24,6 @@ import {
     onWillUnmount,
     onError,
     xml,
-    reactive,
     status,
 } from "@odoo/owl";
 import { downloadReport, getReportUrl } from "./reports/utils";

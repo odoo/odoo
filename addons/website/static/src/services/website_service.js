@@ -1,3 +1,4 @@
+import { reactive } from "@web/owl2/utils";
 import { jsToPyLocale } from "@web/core/l10n/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -6,7 +7,7 @@ import { isVisible } from "@web/core/utils/ui";
 
 import { FullscreenIndication } from "../components/fullscreen_indication/fullscreen_indication";
 import { WebsiteLoader } from "../components/website_loader/website_loader";
-import { reactive, EventBus } from "@odoo/owl";
+import { EventBus } from "@odoo/owl";
 
 const websiteSystrayRegistry = registry.category("website_systray");
 

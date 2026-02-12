@@ -1,3 +1,4 @@
+import { reactive } from "@web/owl2/utils";
 import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { unwrapContents } from "@html_editor/utils/dom";
@@ -33,7 +34,6 @@ import {
     SUPPORTED_BASE_CONTAINER_NAMES,
 } from "@html_editor/utils/base_container";
 import { withSequence } from "@html_editor/utils/resource";
-import { reactive } from "@odoo/owl";
 import { FontSizeSelector } from "./font_size_selector";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { weakMemoize } from "@html_editor/utils/functions";

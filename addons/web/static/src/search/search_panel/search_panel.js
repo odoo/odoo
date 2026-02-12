@@ -1,4 +1,4 @@
-import { render, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { reactive, render, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useBus } from "@web/core/utils/hooks";
 
@@ -7,7 +7,6 @@ import {
     onMounted,
     onWillStart,
     onWillUpdateProps,
-    reactive,
 } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { exprToBoolean } from "@web/core/utils/strings";

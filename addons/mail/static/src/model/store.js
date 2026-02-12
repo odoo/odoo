@@ -1,6 +1,7 @@
+import { reactive } from "@web/owl2/utils";
 import { Record } from "./record";
 import { STORE_SYM, modelRegistry } from "./misc";
-import { reactive, toRaw } from "@odoo/owl";
+import { toRaw } from "@odoo/owl";
 
 /** @typedef {import("./record_list").RecordList} RecordList */
 

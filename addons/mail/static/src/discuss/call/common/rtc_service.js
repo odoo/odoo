@@ -1,3 +1,4 @@
+import { reactive } from "@web/owl2/utils";
 import { fields, Record } from "@mail/model/export";
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { CallPermissionDialog } from "@mail/discuss/call/common/call_permission_dialog";
@@ -8,7 +9,7 @@ import { rpc } from "@web/core/network/rpc";
 import { assignDefined, closeStream, onChange } from "@mail/utils/common/misc";
 import { CallInfiniteMirroringWarning } from "@mail/discuss/call/common/call_infinite_mirroring_warning";
 
-import { reactive, toRaw } from "@odoo/owl";
+import { toRaw } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
