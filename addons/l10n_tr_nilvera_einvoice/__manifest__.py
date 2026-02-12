@@ -27,6 +27,7 @@ Features include:
         'views/account_tax_views.xml',
         'views/product_views.xml',
         'views/res_config_settings_views.xml',
+        'wizards/l10n_tr_nilvera_einvoice_ticafatura_response_wizard_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

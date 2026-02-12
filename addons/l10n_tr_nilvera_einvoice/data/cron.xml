@@ -49,4 +49,30 @@
         <field name="interval_type">hours</field>
         <field name="nextcall" eval="(DateTime.now() + timedelta(hours=12)).strftime('%Y-%m-%d %H:%M:%S')"/>
     </record>
+
+    <record id="ir_cron_nilvera_sync_ticarifatura_response" model="ir.cron">
+        <field name="name">Nilvera: Sync TICARIFATURA customer response</field>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="state">code</field>
+        <field name="code"><![CDATA[model._l10n_tr_nilvera_company_sync_ticarifatura_response()
+# Sync Nilvera TICARIFATURA customer responses
+#
+# Parameters:
+# - ratio (list[int, int]): Percentage split for processing
+#   [new_invoices, previously_checked_invoices]
+#   Defaults to an automatic ratio based on invoice counts.
+#
+# - batch_size (int): Number of invoices processed per run.
+#   Default: 20
+#
+# Examples:
+# model._l10n_tr_nilvera_company_sync_ticarifatura_response(ratio=[40, 60])
+# model._l10n_tr_nilvera_company_sync_ticarifatura_response(batch_size=20)
+# model._l10n_tr_nilvera_company_sync_ticarifatura_response(ratio=[40, 60], batch_size=20)
+]]>
+        </field>
+        <field name="interval_number">12</field>
+        <field name="interval_type">hours</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(hours=12)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
 </odoo>
