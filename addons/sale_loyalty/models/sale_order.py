@@ -222,7 +222,7 @@ class SaleOrder(models.Model):
 
         affected_coupons = previously_confirmed.filtered(
             lambda s: s.state != 'sale',
-        )._get_point_changes().keys()
+        ).coupon_point_ids.mapped('coupon_id')
 
         for coupon in affected_coupons:
             coupon_history_lines = cancelled_history_lines.filtered(
@@ -255,47 +255,52 @@ class SaleOrder(models.Model):
         :param coupon_history_lines: Cancelled loyalty history lines
         """
         today = fields.Date.today()
-        coupon_history_lines_ids = coupon_history_lines.ids
+        cancelled_history_line_ids = coupon_history_lines.ids
 
-        all_tracks = self.env['loyalty.point.track'].sudo().search([
+        related_point_tracks = self.env['loyalty.point.track'].sudo().search([
             '|',
-            ('issuer_line_id', 'in', coupon_history_lines_ids),
-            ('redeemer_line_id', 'in', coupon_history_lines_ids),
+            ('issuer_line_id', 'in', cancelled_history_line_ids),
+            ('redeemer_line_id', 'in', cancelled_history_line_ids),
         ])
 
         issuers_to_compensate = self.env['loyalty.history'].sudo()
         reallocation_values = []
 
-        for track in all_tracks:
+        for track in related_point_tracks:
+            # Skip track if both issuer and redeemer are cancelled
+            if (
+                track.issuer_line_id.id in cancelled_history_line_ids
+                and track.redeemer_line_id.id in cancelled_history_line_ids
+            ):
+                continue
+
             # Redeemed points, hence refund those points to original issuer
-            if track.redeemer_line_id.id in coupon_history_lines_ids:
+            if track.redeemer_line_id.id in cancelled_history_line_ids:
                 issuer = track.issuer_line_id
-                if (
-                    issuer and issuer.id not in coupon_history_lines_ids
-                    and (not issuer.expiration_date or issuer.expiration_date >= today)
-                ):
+                if issuer and (not issuer.expiration_date or issuer.expiration_date >= today):
                     issuer.available_issued_points += track.points
                     issuers_to_compensate |= issuer
 
             # Issued points, hence try to reallocate from eligible issuers
-            elif track.issuer_line_id.id in coupon_history_lines_ids:
+            elif track.issuer_line_id.id in cancelled_history_line_ids:
                 reallocation_values.append({
                     'card_id': track.issuer_line_id.card_id.id,
                     'points_to_redeem': track.points,
                     'redeemer_history_line_id': track.redeemer_line_id.id,
                 })
 
-        all_tracks.unlink()
+        related_point_tracks.unlink()
         coupon_history_lines.sudo().unlink()
+
+        # Handle any remaining debts and update active status
+        for issuer in issuers_to_compensate.exists():
+            issuer.active = True
+            if issuer.card_id.points < 0:
+                issuer.compensate_existing_debts()
 
         # Re-redeem points for the tracks that lost their issuer
         if reallocation_values:
             self.env['loyalty.history'].redeem_loyalty_points(reallocation_values)
-
-        # Handle any remaining debts and update active status
-        for issuer in issuers_to_compensate.exists():
-            issuer.compensate_existing_debts()
-            issuer.active = (issuer.available_issued_points > 0)
 
     def _recompute_loyalty_card_balances(self, coupons):
         """
@@ -309,10 +314,9 @@ class SaleOrder(models.Model):
 
             debts = self.env['loyalty.point.track'].sudo().search([
                 ('issuer_line_id', '=', False),
-                ('points', '<', 0),
                 ('redeemer_line_id.card_id', '=', coupon.id),
             ])
-            total_debt = sum(abs(debt.points) for debt in debts)
+            total_debt = abs(sum(debts.mapped('points')))
 
             coupon.points = available - total_debt
 

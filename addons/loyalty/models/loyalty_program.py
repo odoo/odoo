@@ -142,6 +142,7 @@ class LoyaltyProgram(models.Model):
         store=True,
         readonly=False,
     )
+    expire_after = fields.Integer('Rewards expire after')
     portal_visible = fields.Boolean(
         help="""
         Show in web portal, PoS customer ticket, eCommerce checkout, the number of points available
@@ -173,7 +174,6 @@ class LoyaltyProgram(models.Model):
         help="Manage where your program should be available for use.",
         store=False,
     )
-    expire_after = fields.Integer('Rewards expire after')
 
     _check_max_usage = models.Constraint(
         'CHECK (limit_usage = False OR max_usage > 0)',
