@@ -1,5 +1,5 @@
 import re
-
+from tools_js_expressions import update_template, aggregate_vars, replace_x_path_only
 
 EXCLUDED_PATH = (
     'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
@@ -31,12 +31,47 @@ class JSTooling:
             position: The index of the word to check.
 
         Returns:
-            True if the line starts with // before the position.
+            True if the line starts with //, /* or /** before the position.
         """
         # We look back to the start of the current line
         line_start = content.rfind('\n', 0, position) + 1
-        line_text = content[line_start:position]
-        return '//' in line_text
+        line_text = content[line_start:position].lstrip()
+        return '//' in line_text or '/*' in line_text or '/**' in line_text or line_text.startswith("*")
+
+    @staticmethod
+    def has_active_usage(content: str, word: str) -> bool:
+        """Checks if a word is used outside of a comment line.
+
+        Args:
+            content: The file content.
+            word: The word to look for (e.g., 'useEffect').
+
+        Returns:
+            True if at least one usage is not commented out.
+        """
+        for match in re.finditer(rf'\b{word}\b', content):
+            if not JSTooling.is_commented(content, match.start()):
+                return True
+        return False
+
+    @staticmethod
+    def replace_usage(content: str, old_name: str, new_name: str) -> str:
+        """Replaces usage ONLY if the line is not a comment.
+
+        Args:
+            content: The file content.
+            old_name: Original variable name.
+            new_name: New variable name.
+
+        Returns:
+            The updated content.
+        """
+        def replacer(match):
+            if JSTooling.is_commented(content, match.start()):
+                return match.group(0)  # Return unchanged
+            return new_name
+
+        return re.sub(rf'\b{old_name}\b', replacer, content)
 
     @staticmethod
     def add_import(content: str, name: str, source: str) -> str:
@@ -198,9 +233,35 @@ class JSTooling:
             old_name: Original variable name.
             new_name: New variable name.
         Returns:
-            The updated content.
+            The JS content with transformed string literals.
         """
-        return re.sub(rf'\b{old_name}\b', new_name, content)
+        pattern = re.compile(
+            r"'(?:\\.|[^'\\])*'|\"(?:\\.|[^\"\\])*\"|`(?:\\.|[^`\\])*`",
+            re.DOTALL,
+        )
+
+        def replacer(match: re.Match) -> str:
+            literal = match.group(0)
+            delimiter = literal[0]
+            inner = literal[1:-1]
+            return delimiter + transform_func(inner) + delimiter
+
+        return pattern.sub(replacer, content)
+
+    @staticmethod
+    def transform_arch_templates(content: str, transform_func: callable) -> str:
+        """Finds arch: `...` or arch = `...` template literals and applies a transform
+        function to the inner XML string.
+        """
+        pattern = re.compile(r"(\barch\b\s*(?:[:=])\s*`)(.*?)(`)", re.DOTALL)
+
+        def replacer(match: re.Match) -> str:
+            prefix = match.group(1)
+            xml_content = match.group(2)
+            suffix = match.group(3)
+            return f"{prefix}{transform_func(xml_content)}{suffix}"
+
+        return pattern.sub(replacer, content)
 
     @staticmethod
     def clean_whitespace(content: str) -> str:
@@ -571,6 +632,49 @@ def upgrade_t_model(file_manager, log_info, log_error):
 
         file_manager.print_progress(fileno, len(files))
 
+def upgrade_this(file_manager, log_info, log_error):
+
+    web_files = [
+        f for f in file_manager
+        if 'addons/web/static/src' in f.path._str
+        and f.path.suffix == '.xml'
+        and not any(f.path._str.endswith(p) for p in EXCLUDED_PATH)
+    ]
+
+    # Step 1: Gather all variables in the web module
+    outside_vars = {}  # vars defined under t-call
+    inside_vars = {}  # vars defined inside template, eg. using t-set
+    for fileno, file in enumerate(web_files, start=1):
+        aggregate_vars(file.content, outside_vars, inside_vars)
+
+    # Step 2: Add this. to all non local template vars (except those coming from external t-call)
+    for fileno, file in enumerate(web_files, start=1):
+        try:
+            file.content = update_template(file.content, outside_vars)
+        except Exception as e:
+            log_error(file.path, e)
+
+        file_manager.print_progress(fileno, len(web_files))
+
+    # Step 3: Modify x-path targetting web files we might have modified above
+    INHERIT_PATTERN = re.compile(r't-inherit=["\']web\..*?["\']')  # Matches t-inherit="web.xxxxx
+    all_files = [
+        f for f in file_manager
+        if 'static/src/' in f.path._str
+        and f.path.suffix == '.xml'
+        and not any(f.path._str.endswith(p) for p in EXCLUDED_PATH)
+    ]
+
+    for fileno, file in enumerate(all_files, start=1):
+        try:
+            if INHERIT_PATTERN.search(file.content):
+                file.content = replace_x_path_only(file.content, inside_vars)
+
+        except Exception as e:
+            log_error(file.path, e)
+
+        file_manager.print_progress(fileno, len(web_files))
+
 
 def upgrade(file_manager) -> str:
     """Main upgrade_code entry point."""
@@ -591,5 +695,6 @@ def upgrade(file_manager) -> str:
     collector.run_sub("Migrating t-esc", upgrade_t_esc)
     collector.run_sub("Migrating t-ref", upgrade_t_ref)
     collector.run_sub("Migrating t-model", upgrade_t_model)
+    collector.run_sub("Migrating this.", upgrade_this)
 
     collector.finalize()
