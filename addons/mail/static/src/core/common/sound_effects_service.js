@@ -1,6 +1,20 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { url } from "@web/core/utils/urls";
+import { Deferred } from "@web/core/utils/concurrency";
+
+const WAIT_IN_QUEUE_DURATION = 800;
+
+function stopEffect(soundEffect) {
+    if (!soundEffect) {
+        return;
+    }
+    clearTimeout(soundEffect.queueTimeout);
+    if (soundEffect.audio) {
+        soundEffect.audio.pause();
+        soundEffect.audio.currentTime = 0;
+    }
+}
 
 export class SoundEffects {
     /**
@@ -17,6 +31,7 @@ export class SoundEffects {
             "ptt-press": { defaultVolume: 0.1, path: "/mail/static/src/audio/ptt-press" },
             "ptt-release": { defaultVolume: 0.1, path: "/mail/static/src/audio/ptt-release" },
             "call-invitation": {
+                lockDuration: WAIT_IN_QUEUE_DURATION + 200,
                 defaultVolume: 0.5,
                 path: "/mail/static/src/audio/call-invitation",
             },
@@ -30,13 +45,14 @@ export class SoundEffects {
     }
 
     /**
-     * @param {String} param0 soundEffectName
-     * @param {Object} param1
+     * @param {String} soundEffectName
+     * @param {Object} [param1]
      * @param {boolean} [param1.loop] true if we want to make the audio loop, will only stop if stop() is called
      * @param {float} [param1.volume] the volume percentage in decimal to play this sound.
      *   If not provided, uses the default volume of this sound effect.
+     * @param {string | number} [param1.unique] an unique identifier if the same sound effect should have distinct locks
      */
-    play(soundEffectName, { loop = false, volume } = {}) {
+    play(soundEffectName, { loop = false, volume, unique } = {}) {
         if (typeof browser.Audio === "undefined") {
             return;
         }
@@ -44,19 +60,45 @@ export class SoundEffects {
         if (!soundEffect) {
             return;
         }
-        if (!soundEffect.audio) {
-            const audio = new browser.Audio();
-            const ext = audio.canPlayType("audio/ogg; codecs=vorbis") ? ".ogg" : ".mp3";
-            this._setAudioSrc(audio, url(soundEffect.path + ext));
-            soundEffect.audio = audio;
-        }
-        if (!soundEffect.audio.paused) {
-            soundEffect.audio.pause();
-        }
-        soundEffect.audio.currentTime = 0;
-        soundEffect.audio.loop = loop;
-        soundEffect.audio.volume = volume ?? soundEffect.defaultVolume ?? 1;
-        Promise.resolve(soundEffect.audio.play()).catch(() => {});
+        const controller = new AbortController();
+        /**
+         * Wait in queue just in case the lock opened early due to a crash, this can happen
+         * if the tab that gets the lock is not allowed to play audio.
+         */
+        soundEffect.queueTimeout = setTimeout(() => controller.abort(), WAIT_IN_QUEUE_DURATION);
+        const lockName = unique ? `${soundEffectName}${unique}` : soundEffectName;
+        navigator.locks
+            .request(lockName, { signal: controller.signal }, async () => {
+                if (!soundEffect.audio) {
+                    const audio = new browser.Audio();
+                    const ext = audio.canPlayType("audio/ogg; codecs=vorbis") ? ".ogg" : ".mp3";
+                    this._setAudioSrc(audio, url(soundEffect.path + ext));
+                    soundEffect.audio = audio;
+                }
+                const lockTime = new Deferred();
+                setTimeout(lockTime.resolve, soundEffect.lockDuration ?? 0);
+                if (!soundEffect.audio.paused) {
+                    if (loop && soundEffect.audio.loop) {
+                        await lockTime;
+                        return;
+                    }
+                    soundEffect.audio.pause();
+                }
+                soundEffect.audio.currentTime = 0;
+                soundEffect.audio.loop = loop;
+                soundEffect.audio.volume = volume ?? soundEffect.defaultVolume ?? 1;
+                const audioProm = Promise.resolve(soundEffect.audio.play());
+                await Promise.allSettled([
+                    /**
+                     * Skipping the lock in case of failure so that other callers
+                     * in queue can attempt to play the sound.
+                     */
+                    audioProm.catch(() => lockTime.reject()),
+                    lockTime,
+                ]);
+                clearTimeout(soundEffect.queueTimeout);
+            })
+            .catch(() => {});
     }
     /** To be patched in tests to use data-src */
     _setAudioSrc(audio, srcPath) {
@@ -67,18 +109,12 @@ export class SoundEffects {
      * @param {String} [soundEffectName]
      */
     stop(soundEffectName) {
-        const soundEffect = this.soundEffects[soundEffectName];
-        if (soundEffect) {
-            if (soundEffect.audio) {
-                soundEffect.audio.pause();
-                soundEffect.audio.currentTime = 0;
-            }
+        if (soundEffectName) {
+            const soundEffect = this.soundEffects[soundEffectName];
+            stopEffect(soundEffect);
         } else {
             for (const soundEffect of Object.values(this.soundEffects)) {
-                if (soundEffect.audio) {
-                    soundEffect.audio.pause();
-                    soundEffect.audio.currentTime = 0;
-                }
+                stopEffect(soundEffect);
             }
         }
     }
