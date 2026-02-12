@@ -896,9 +896,35 @@ registry.category("web_tour.tours").add("test_fiscal_position_tax_group_labels",
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Test Product"),
-            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.totalAmountIs("115.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.checkTicketData({
+                orderlines: [
+                    {
+                        name: "Test Product",
+                        cssRules: [
+                            {
+                                css: ".tax-group",
+                                text: "Tax Group 1",
+                            },
+                        ],
+                    },
+                ],
+                cssRules: [
+                    {
+                        css: ".pos-receipt-taxes",
+                        text: "Tax Group 1  ",
+                    },
+                ],
+            }),
+            FeedbackScreen.clickNextOrder(),
+            ProductScreen.clickDisplayedProduct("Test Product"),
+            ProductScreen.totalAmountIs("115.00"),
             ProductScreen.clickFiscalPosition("Fiscal Position Test"),
-            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.totalAmountIs("105.00"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
             PaymentScreen.clickValidate(),
@@ -918,7 +944,7 @@ registry.category("web_tour.tours").add("test_fiscal_position_tax_group_labels",
                 cssRules: [
                     {
                         css: ".pos-receipt-taxes",
-                        text: "Tax Group 2",
+                        text: "Tax Group 2  ",
                     },
                 ],
             }),
