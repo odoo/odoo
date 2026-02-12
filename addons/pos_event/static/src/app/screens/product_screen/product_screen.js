@@ -197,6 +197,8 @@ patch(ProductScreen.prototype, {
                 event_ticket_id: ticket,
                 event_slot_id: slotSelected,
             });
+            const order = this.pos.getOrder();
+            order.setLinePrice(line, order.pricelist_id);
 
             for (const registration of data) {
                 // Global answers have precedence for identification question types.
