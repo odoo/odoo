@@ -36,7 +36,7 @@
                 <field name="date"/>
                 <field name="quantity"/>
                 <field name="uom_id" groups="uom.group_uom"/>
-                <field name="lot_ids" widget="many2many_tags" column_invisible="context.get('tracking') == 'none'"/>
+                <field name="lot_ids" widget="many2many_tags" column_invisible="context.get('tracking') == 'none'" options="{'on_tag_click': 'open_form'}"/>
                 <field name="value" widget="monetary" options="{'currency_field': 'company_currency_id'}" column_invisible="context.get('cost_method') != 'fifo'"/>
                 <field name="standard_price" widget="monetary" options="{'currency_field': 'company_currency_id'}" string="Unit Cost" column_invisible="context.get('cost_method') == 'fifo'"/>
                 <field name="remaining_qty" sum="Total Remaining Qty" width="200px"/>

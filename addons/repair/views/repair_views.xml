@@ -174,12 +174,12 @@
                                 <field name="quantity" string="Reserved" readonly="not product_id" optional="hide"/>
                                 <field name="uom_id" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" widget="many2one_uom"/>
                                 <field name="lot_ids" widget="many2many_tags"
+                                    options="{'on_tag_click': 'open_form'}"
                                     groups="stock.group_production_lot"
-                                    invisible="not show_details_visible or has_tracking != 'serial'"
                                     optional="hide"
-                                    context="{'default_product_id': product_id}"
+                                    context="{'default_product_id': product_id, 'active_move_id': id}"
                                     domain="[('product_id','=',product_id)]"
-                                    readonly="not id"/>
+                                    readonly="not id or not show_details_visible or has_tracking == 'none'"/>
                                 <button name="action_show_details" type="object" string="Details"
                                         invisible="not show_details_visible" options='{"warn": true}'
                                         context="{'default_location_dest_id': location_dest_id}"

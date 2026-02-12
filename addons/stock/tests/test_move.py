@@ -6742,3 +6742,26 @@ class TestStockMove(TestStockCommon):
         # All the move lines are also picked
         for move_line in delivery.move_ids.move_line_ids:
             self.assertTrue(move_line.picked)
+
+    def test_modifying_lots_updates_move_lines_and_quantity(self):
+        """ Ensure lot assignment changes correctly update move lines and quantity."""
+        product = self.product_lot
+        stock_location = self.stock_location
+        Quant = self.env['stock.quant']
+        lot1, lot2, lot3 = self.env['stock.lot'].create([{
+            'name': 'lot%s' % str(i), 'product_id': product.id,
+        } for i in range(1, 4)])
+        Quant._update_available_quantity(product, stock_location, 10, lot_id=lot1)
+        Quant._update_available_quantity(product, stock_location, 10, lot_id=lot2)
+        Quant._update_available_quantity(product, stock_location, 20, lot_id=lot3)
+
+        delivery = self.env['stock.picking'].create({'picking_type_id': self.picking_type_out.id})
+        move = self._create_move(product, stock_location, self.customer_location, product_uom_qty=20, picking_id=delivery.id)
+        delivery.action_confirm()
+        with Form(delivery) as delivery_form:
+            with delivery_form.move_ids.edit(0) as move_form:
+                move_form.lot_ids = lot3
+            delivery = delivery_form.save()
+        self.assertRecordValues(move.move_line_ids, [{'lot_id': lot3.id, 'quantity': 20}])
+        delivery.button_validate()
+        self.assertRecordValues(delivery.move_ids, [{'state': 'done', 'lot_ids': [lot3.id], 'quantity': 20}])

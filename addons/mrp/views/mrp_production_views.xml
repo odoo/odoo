@@ -460,14 +460,13 @@
                                     <field name="show_details_visible" column_invisible="True"/>
                                     <field name="lot_ids" widget="many2many_tags"
                                         optional="hide"
-                                        string="Lot/Serial Numbers"
                                         help="Displays the consumed Lot/Serial Numbers."
                                         groups="stock.group_production_lot"
-                                        readonly="1"
+                                        options="{'on_tag_click': 'open_form'}"
                                         column_invisible="not parent.show_lot_ids or parent.state == 'draft'"
                                         invisible="not show_details_visible"
                                         create="parent.use_create_components_lots"
-                                        context="{'default_product_id': product_id}"
+                                        context="{'default_product_id': product_id, 'active_move_id': id}"
                                         domain="[('product_id','=',product_id)]"/>
                                     <button name="action_show_details" type="object" title="Show Details" string="Details" context="{'default_product_uom_qty': 0}" invisible="not show_details_visible or has_tracking == 'none'"/>
                                     <button class="o_optional_button btn" name="action_show_details" type="object" title="Show Details" string="Details" context="{'default_product_uom_qty': 0}" invisible="has_tracking != 'none' or not show_details_visible"/>
@@ -516,13 +515,12 @@
                                     <field name="show_details_visible" column_invisible="True"/>
                                     <field name="lot_ids" widget="many2many_tags"
                                         optional="hide"
-                                        string="Lot/Serial Numbers"
                                         help="Displays the produced Lot/Serial Numbers."
                                         groups="stock.group_production_lot"
-                                        readonly="1"
                                         column_invisible="not parent.show_lot_ids or parent.state == 'draft'"
                                         invisible="not show_details_visible"
                                         create="parent.use_create_components_lots"
+                                        options="{'on_tag_click': 'open_form'}"
                                         context="{'default_product_id': product_id}"
                                         domain="[('product_id','=',product_id)]"/>
                                     <button name="action_show_details" type="object" title="Show Details" icon="fa-list" invisible="has_tracking == 'none' or not show_details_visible"/>

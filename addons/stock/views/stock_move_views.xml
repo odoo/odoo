@@ -340,7 +340,11 @@
                                     <field name="quantity" string="Quantity" readonly="state in ('done', 'cancel')"/>
                                     <field name="uom_id" widget="many2one_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" readonly="state in ('done', 'cancel')"/>
                                 </div>
-                                <field name="lot_ids" widget="many2many_tags" string="Lot/Serial Numbers" invisible="not product_id or has_tracking == 'none'" readonly="state in ('done', 'cancel')" domain="[('product_id', '=', product_id), ('id', 'in', context.get('lot_ids'))] if context.get('lot_ids') else [('product_id', '=', product_id)]"/>
+                                <field name="lot_ids" widget="many2many_tags" string="Lot/Serial Numbers"
+                                    invisible="not product_id or has_tracking == 'none'"
+                                    readonly="state in ('done', 'cancel')"
+                                    options="{'on_tag_click': 'open_form'}"
+                                    domain="[('product_id', '=', product_id), ('id', 'in', context.get('lot_ids'))] if context.get('lot_ids') else [('product_id', '=', product_id)]"/>
                                 <field name="scrap_reason_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="state == 'cancel'"/>
                             </group>
                             <group>
