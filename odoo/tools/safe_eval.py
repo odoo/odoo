@@ -31,7 +31,7 @@ import odoo.exceptions
 
 unsafe_eval = eval
 
-__all__ = ['const_eval', 'safe_eval']
+__all__ = ['expr_eval', 'safe_eval']
 
 # The time module is usually already provided in the safe_eval environment
 # but some code, e.g. datetime.datetime.now() (Windows/Python 2.5.2, bug
@@ -262,28 +262,6 @@ def compile_codeobj(expr: str, /, filename: str = '<unknown>', mode: typing.Lite
         raise ValueError('%r while compiling\n%r' % (e, expr))
     return code_obj
 
-
-def const_eval(expr):
-    """const_eval(expression) -> value
-
-    Safe Python constant evaluation
-
-    Evaluates a string that contains an expression describing
-    a Python constant. Strings that are not valid Python expressions
-    or that contain other code besides the constant raise ValueError.
-
-    >>> const_eval("10")
-    10
-    >>> const_eval("[1,2, (3,4), {'foo':'bar'}]")
-    [1, 2, (3, 4), {'foo': 'bar'}]
-    >>> const_eval("1+2")
-    Traceback (most recent call last):
-    ...
-    ValueError: opcode BINARY_ADD not allowed
-    """
-    c = compile_codeobj(expr)
-    assert_valid_codeobj(_CONST_OPCODES, c, expr)
-    return unsafe_eval(c)
 
 def expr_eval(expr):
     """expr_eval(expression) -> value
