@@ -13,8 +13,6 @@ from contextlib import contextmanager, nullcontext
 from datetime import datetime
 
 import babel.core
-import psycopg2
-from psycopg2.errors import ReadOnlySqlTransaction
 from werkzeug.datastructures import (
     Headers,
     ImmutableMultiDict,
@@ -22,31 +20,23 @@ from werkzeug.datastructures import (
 )
 from werkzeug.exceptions import (
     Forbidden,
-    HTTPException,
     NotFound,
     UnsupportedMediaType,
 )
 from werkzeug.local import LocalStack
-from werkzeug.security import safe_join
 from werkzeug.urls import URL, url_encode, url_parse
 from werkzeug.utils import redirect
 
 import odoo
-from odoo.api import Environment
-from odoo.exceptions import AccessDenied
-from odoo.modules.registry import Registry
-from odoo.tools import (
-    config,
-    consteq,
-    json_default,
-    profiler,
-)
+from odoo.tools import consteq, json_default, profiler
 
 if typing.TYPE_CHECKING:
     from collections.abc import Mapping, Iterable
     import werkzeug.routing
 
+    from odoo.api import Environment
     from odoo.models import BaseModel
+    from odoo.modules.registry import Registry
     from .response import Response
     from .routing_map import Endpoint
     from .session import Session
@@ -60,16 +50,6 @@ request: Request = _request_stack()  # type: ignore[assignment]
 
 CSRF_TOKEN_SALT = 60 * 60 * 24 * 365  # 1 year
 """ The default csrf token lifetime, a salt against BREACH. """
-
-NOT_FOUND_NODB = """\
-<!DOCTYPE html>
-<title>404 Not Found</title>
-<h1>Not Found</h1>
-<p>No database is selected and the requested URL was not found in the server-wide controllers.</p>
-<p>Please verify the hostname, <a href=/web/login>login</a> and try again.</p>
-
-<!-- Alternatively, use the X-Odoo-Database header. -->
-"""
 
 
 @contextmanager
@@ -102,7 +82,7 @@ class Request:
         self.dispatcher = HttpDispatcher(self)  # until we match
         self.geoip = GeoIP(httprequest.remote_addr or '')
 
-        # set by _serve_db
+        # set by serve_db
         self.registry: Registry | None = None
         self.env: Environment | None = None
         # set by the Dispatcher
@@ -515,179 +495,6 @@ class Request:
             raise UnsupportedMediaType(response=res)
         self.dispatcher = dispatcher_cls(self)
 
-    # =====================================================
-    # Routing
-    # =====================================================
-    def _serve_static(self) -> Response:
-        """ Serve a static file from the file system. """
-        module, _, path = self.httprequest.path[1:].partition('/static/')
-        try:
-            directory = root.static_path(module)
-            if not directory:
-                raise NotFound(f'Module "{module}" not found.\n')
-            filepath = safe_join(directory, path)
-            debug = (
-                'assets' in self.session.debug and
-                ' wkhtmltopdf ' not in self.httprequest.user_agent.string
-            )
-            res = Stream.from_path(filepath, public=True).get_response(
-                max_age=0 if debug else STATIC_CACHE,
-                content_security_policy=None,
-            )
-            root.set_csp(res)
-            return res
-        except OSError:  # cover both missing file and invalid permissions
-            raise NotFound(f'File "{path}" not found in module {module}.\n')
-
-    def _serve_nodb(self) -> Response:
-        """
-        Dispatch the request to its matching controller in a
-        database-free environment.
-        """
-        try:
-            router = root.nodb_routing_map.bind_to_environ(self.httprequest.environ)
-            try:
-                rule, args = router.match(return_rule=True)
-            except NotFound as exc:
-                exc.response = Response(NOT_FOUND_NODB, status=exc.code, headers=[
-                    ('Content-Type', 'text/html; charset=utf-8'),
-                ])
-                raise
-            self._set_request_dispatcher(rule)
-            self.dispatcher.pre_dispatch(rule, args)
-            endpoint: Endpoint = rule.endpoint  # type: ignore
-            response = self.dispatcher.dispatch(endpoint, args)
-            self.dispatcher.post_dispatch(response)
-            return response
-        except HTTPException as exc:
-            if exc.code is not None:
-                raise
-            # Valid response returned via werkzeug.exceptions.abort
-            response = exc.get_response()
-            HttpDispatcher(self).post_dispatch(response)
-            return response
-
-    def _serve_db(self) -> Response:
-        """ Load the ORM and use it to process the request. """
-        # reuse the same cursor for building, checking the registry, for
-        # matching the controller endpoint and serving the data
-        cr = None
-        try:
-            # get the registry and cursor (RO)
-            try:
-                registry = Registry(self.db)
-                cr = registry.cursor(readonly=True)
-                self.registry = registry.check_signaling(cr)
-            except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError) as e:
-                raise RegistryError(f"Cannot get registry {self.db}") from e
-
-            # find the controller endpoint to use
-            self.env = Environment(cr, self.session.uid, self.session.context)
-            try:
-                rule, args = self.registry['ir.http']._match(self.httprequest.path)
-            except NotFound as not_found_exc:
-                # no controller endpoint matched -> fallback or 404
-                serve_func = functools.partial(self._serve_ir_http_fallback, not_found_exc)
-                readonly = True
-            else:
-                # a controller endpoint matched -> dispatch it the request
-                self._set_request_dispatcher(rule)
-                serve_func = functools.partial(self._serve_ir_http, rule, args)
-                endpoint: Endpoint = rule.endpoint  # type: ignore
-                readonly = endpoint.routing['readonly']
-                if callable(readonly):
-                    readonly = readonly(endpoint.func.__self__, rule, args)
-
-            # keep on using the RO cursor when a readonly route matched,
-            # and for serve fallback
-            if readonly and cr.readonly:
-                threading.current_thread().cursor_mode = 'ro'
-                try:
-                    return retrying(serve_func, env=self.env)
-                except ReadOnlySqlTransaction as exc:
-                    # although the controller is marked read-only, it
-                    # attempted a write operation, try again using a
-                    # read/write cursor
-                    _logger.warning("%s, retrying with a read/write cursor", exc.args[0].rstrip(), exc_info=True)
-                    threading.current_thread().cursor_mode = 'ro->rw'
-                except Exception as exc:  # noqa: BLE001
-                    raise self._update_served_exception(exc)
-            else:
-                threading.current_thread().cursor_mode = 'rw'
-
-            # we must use a RW cursor when a read/write route matched, or
-            # there was a ReadOnlySqlTransaction error
-            if cr.readonly:
-                cr.close()
-                cr = self.env.registry.cursor()
-            else:
-                # the cursor is already a RW cursor, start a new transaction
-                # that will avoid repeatable read serialization errors because
-                # check signaling is not done in `retrying` and that function
-                # would just succeed the second time
-                cr.rollback()
-            assert not cr.readonly
-            self.env = self.env(cr=cr)
-            try:
-                return retrying(serve_func, env=self.env)
-            except Exception as exc:  # noqa: BLE001
-                raise self._update_served_exception(exc)
-        except HTTPException as exc:
-            if exc.code is not None:
-                raise
-            # Valid response returned via werkzeug.exceptions.abort
-            response = exc.get_response()
-            HttpDispatcher(self).post_dispatch(response)
-            return response
-        finally:
-            self.env = None
-            if cr is not None:
-                cr.close()
-
-    def _update_served_exception(self, exc: Exception) -> Exception:
-        if isinstance(exc, HTTPException) and exc.code is None:
-            return exc  # bubble up to _serve_db
-        if (
-            'werkzeug' in config['dev_mode']
-            and self.dispatcher.routing_type != JsonRPCDispatcher.routing_type
-        ):
-            return exc  # bubble up to werkzeug.debug.DebuggedApplication
-        if not hasattr(exc, 'error_response'):
-            if isinstance(exc, AccessDenied):
-                exc.suppress_traceback()
-            exc.error_response = self.registry['ir.http']._handle_error(exc)
-        return exc
-
-    def _serve_ir_http_fallback(self, not_found: NotFound) -> Response:
-        """
-        Called when no controller match the request path. Delegate to
-        ``ir.http._serve_fallback`` to give modules the opportunity to
-        find an alternative way to serve the request. In case no module
-        provided a response, a generic 404 - Not Found page is returned.
-        """
-        self.params = self.get_http_params()
-        self.registry['ir.http']._auth_method_public()
-        response = self.registry['ir.http']._serve_fallback()
-        if response:
-            self.registry['ir.http']._post_dispatch(response)
-            return response
-
-        no_fallback = NotFound()
-        no_fallback.__context__ = not_found  # During handling of {not_found}, {no_fallback} occurred:
-        no_fallback.error_response = self.registry['ir.http']._handle_error(no_fallback)
-        raise no_fallback
-
-    def _serve_ir_http(self, rule: werkzeug.routing.Rule, args) -> Response:
-        """
-        Called when a controller match the request path. Delegate to
-        ``ir.http`` to serve a response.
-        """
-        self.registry['ir.http']._authenticate(rule.endpoint)
-        self.registry['ir.http']._pre_dispatch(rule, args)
-        response = self.dispatcher.dispatch(rule.endpoint, args)
-        self.registry['ir.http']._post_dispatch(response)
-        return response
-
 
 # ruff: noqa: E402
 if typing.TYPE_CHECKING:
@@ -695,11 +502,9 @@ if typing.TYPE_CHECKING:
     from ._facade import DEFAULT_MAX_CONTENT_LENGTH
 else:
     from ._facade import DEFAULT_MAX_CONTENT_LENGTH, HTTPRequest  # noqa: F401
-from .dispatcher import HttpDispatcher, JsonRPCDispatcher, _dispatchers
+from .dispatcher import HttpDispatcher, _dispatchers
 from .geoip import GeoIP
 from .response import FutureResponse, Response
-from .retrying import retrying
-from .router import RegistryError, root
 from .session import (
     DEFAULT_LANG,
     SESSION_ROTATION_INTERVAL,
@@ -709,7 +514,6 @@ from .session import (
     logout,
     session_store,
 )
-from .stream import STATIC_CACHE, Stream
 
 # ruff: noqa: I001
 from . import router  # db_list, db_filter
