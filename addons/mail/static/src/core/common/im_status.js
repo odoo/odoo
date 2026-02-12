@@ -3,8 +3,20 @@ import { Typing } from "@mail/discuss/typing/common/typing";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 
 export const imStatusDataRegistry = registry.category("mail.im_status_data");
+
+imStatusDataRegistry.add(
+    "bot",
+    {
+        condition: ({ persona, store }) => persona.eq(store.odoobot),
+        icon: "fa fa-heart o-xsmaller o-pt-0_5",
+        color: "text-success",
+        title: _t("User is a bot"),
+    },
+    { sequence: 90 }
+);
 
 imStatusDataRegistry.add(
     "mail",
@@ -15,7 +27,6 @@ imStatusDataRegistry.add(
             away: "fa fa-adjust",
             busy: "fa fa-minus-circle",
             offline: "fa fa-circle-o",
-            bot: "fa fa-heart o-xsmaller o-pt-0_5",
             default: "fa fa-question-circle",
         },
         title: {
@@ -23,7 +34,6 @@ imStatusDataRegistry.add(
             away: _t("User is idle"),
             busy: _t("User is busy"),
             offline: _t("User is offline"),
-            bot: _t("User is a bot"),
             default: _t("No IM status available"),
         },
     },
@@ -39,6 +49,7 @@ export class ImStatus extends Component {
     setup() {
         super.setup();
         this.attClassObjectToString = attClassObjectToString;
+        this.store = useService("mail.store");
     }
 
     get persona() {
@@ -61,7 +72,9 @@ export class ImStatus extends Component {
     get activeImStatusData() {
         return imStatusDataRegistry
             .getAll()
-            .find((r) => r.condition({ persona: this.persona, member: this.props.member }));
+            .find((r) =>
+                r.condition({ store: this.store, persona: this.persona, member: this.props.member })
+            );
     }
 
     get icon() {
@@ -75,8 +88,11 @@ export class ImStatus extends Component {
     }
 
     get colorClass() {
+        const data = this.activeImStatusData;
+        if (data.color) {
+            return data.color;
+        }
         switch (this.persona.im_status) {
-            case "bot":
             case "online":
                 return "text-success";
             case "away":

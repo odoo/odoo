@@ -14,6 +14,10 @@ export class HrEmployee extends models.ServerModel {
         return this.env["hr.employee.public"]._get_store_avatar_card_fields();
     }
 
+    _get_store_im_status_fields() {
+        return [];
+    }
+
     _views = {
         search: `<search><field name="display_name" string="Name" /></search>`,
         list: `<list><field name="display_name"/></list>`,

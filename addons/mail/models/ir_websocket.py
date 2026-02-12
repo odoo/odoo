@@ -13,7 +13,7 @@ from odoo.tools.misc import verify_limited_field_access_token
 PRESENCE_CHANNEL_PREFIX = "odoo-presence-"
 PRESENCE_CHANNEL_REGEX = re.compile(
     rf"{PRESENCE_CHANNEL_PREFIX}"
-    r"(?P<model>res\.partner|mail\.guest)_(?P<record_id>\d+)"
+    r"(?P<model>res\.users|mail\.guest)_(?P<record_id>\d+)"
     r"(?:-(?P<token>[a-f0-9]{64}o0x[a-f0-9]+))?$"
 )
 _logger = logging.getLogger(__name__)
@@ -53,25 +53,25 @@ class IrWebsocket(models.AbstractModel):
                 continue
             model, record_id, token = match.groups()
             model_ids_to_token[model][int(record_id)] = token or ""
-        # sudo - res.partner, mail.guest: can access presence targets to decide whether
+        # sudo - res.users, mail.guest: can access presence targets to decide whether
         # the current user is allowed to read it or not.
-        partner_ids = model_ids_to_token["res.partner"].keys()
-        partners = (
-            self.env["res.partner"]
+        user_ids = model_ids_to_token["res.users"].keys()
+        users = (
+            self.env["res.users"]
             .with_context(active_test=False)
             .sudo()
-            .search([("id", "in", partner_ids)])
+            .search([("id", "in", user_ids)])
             .sudo(False)
         )
         user, guest = self.env["res.users"]._get_current_persona()
-        allowed_partners = (
-            partners.filtered(
-                lambda p: verify_limited_field_access_token(
-                    p, "im_status", model_ids_to_token["res.partner"][p.id], scope="mail.presence"
+        allowed_users = (
+            users.filtered(
+                lambda u: verify_limited_field_access_token(
+                    u, "im_status", model_ids_to_token["res.users"][u.id], scope="mail.presence"
                 )
-                or p.has_access("read")
+                or u.has_access("read")
             )
-            | user.partner_id
+            | user
         )
         guest_ids = model_ids_to_token["mail.guest"].keys()
         guests = self.env["mail.guest"].sudo().search([("id", "in", guest_ids)]).sudo(False)
@@ -84,17 +84,14 @@ class IrWebsocket(models.AbstractModel):
             )
             | guest
         )
-        data["channels"].update((partner, "presence") for partner in allowed_partners)
+        # sudo - res.users: can access allowed users's partners
+        data["channels"].update((user.sudo().partner_id, "presence") for user in allowed_users)
         data["channels"].update((guest, "presence") for guest in allowed_guests)
         # There is a gap between a subscription client side (which is debounced)
         # and the actual subcription thus presences can be missed. Send a
         # notification to avoid missing presences during a subscription.
         presence_domain = Domain("last_poll", ">", datetime.now() - timedelta(seconds=2)) & (
-            Domain(
-                "user_id",
-                "in",
-                allowed_partners.with_context(active_test=False).sudo().user_ids.ids,
-            )
+            Domain("user_id", "in", allowed_users.ids)
             | Domain("guest_id", "in", allowed_guests.ids)
         )
         # sudo: mail.presence: access to presence was validated with access token.
@@ -104,7 +101,7 @@ class IrWebsocket(models.AbstractModel):
     def _after_subscribe_data(self, data):
         user, guest = self.env["res.users"]._get_current_persona()
         if user or guest:
-            data["missed_presences"]._send_presence(bus_target=user.partner_id or guest)
+            data["missed_presences"]._send_presence(bus_target=user or guest)
 
     def _on_websocket_closed(self, cookies):
         super()._on_websocket_closed(cookies)

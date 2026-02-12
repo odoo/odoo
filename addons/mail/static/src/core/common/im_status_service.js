@@ -11,9 +11,9 @@ export const AWAY_DELAY = 30 * 60 * 1000; // 30 minutes
  * is online).
  *
  * To receive updates through the bus, subscribe to presence channels
- * (e.g., subscribe to `odoo-presence-res.partner_3-token` to receive updates about
- * this partner). Token is optional and can be used to grant access to the presence
- * channel if the user is not allowed to read the partner's presence.
+ * (e.g., subscribe to `odoo-presence-res.users_3-token` to receive updates about
+ * this user). Token is optional and can be used to grant access to the presence
+ * channel if the user is not allowed to read the other user's presence.
  * See `_get_im_status_access_token`.
  */
 export const imStatusService = {
@@ -40,16 +40,16 @@ export const imStatusService = {
         bus_service.addEventListener("BUS:CONNECT", () => updateBusPresence(), { once: true });
         bus_service.subscribe(
             "bus.bus/im_status_updated",
-            async ({ presence_status, im_status, partner_id, guest_id }) => {
+            async ({ presence_status, im_status, user_id, guest_id }) => {
                 const store = env.services["mail.store"];
-                const partner = store["res.partner"].get(partner_id);
+                const user = store["res.users"].get(user_id);
                 const guest = store["mail.guest"].get(guest_id);
-                if (!partner && !guest) {
+                if (!user && !guest) {
                     return; // Do not store unknown persona's status
                 }
-                partner?.debouncedSetImStatus(im_status);
+                user?.debouncedSetImStatus(im_status);
                 guest?.debouncedSetImStatus(im_status);
-                if (partner?.eq(store.self_user?.partner_id) || guest?.eq(store.self_guest)) {
+                if (user?.eq(store.self_user) || guest?.eq(store.self_guest)) {
                     const isOnline = presence.getInactivityPeriod() < AWAY_DELAY;
                     if ((presence_status === "away" && isOnline) || presence_status === "offline") {
                         updateBusPresence();

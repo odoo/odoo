@@ -328,9 +328,14 @@ test("guests are not allowed to use commands", async () => {
 test("sidebar: chat im_status rendering", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2, partnerId_3] = pyEnv["res.partner"].create([
-        { im_status: "offline", name: "Partner1" },
-        { im_status: "online", name: "Partner2" },
-        { im_status: "away", name: "Partner3" },
+        { name: "Partner1" },
+        { name: "Partner2" },
+        { name: "Partner3" },
+    ]);
+    pyEnv["res.users"].create([
+        { partner_id: partnerId_1, im_status: "offline" },
+        { partner_id: partnerId_2, im_status: "online" },
+        { partner_id: partnerId_3, im_status: "away" },
     ]);
     pyEnv["discuss.channel"].create([
         {
@@ -1768,10 +1773,15 @@ test("Thread avatar image is displayed in top bar of channels of type 'channel' 
 test("Partner IM status is displayed as thread icon in top bar of channels of type 'chat'", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2, partnerId_3, partnerId_4] = pyEnv["res.partner"].create([
-        { im_status: "online", name: "Michel Online" },
-        { im_status: "offline", name: "Jacqueline Offline" },
-        { im_status: "away", name: "Nabuchodonosor Idle" },
-        { im_status: "im_partner", name: "Robert Fired" },
+        { name: "Michel Online" },
+        { name: "Jacqueline Offline" },
+        { name: "Nabuchodonosor Idle" },
+        { name: "Robert Fired" },
+    ]);
+    pyEnv["res.users"].create([
+        { partner_id: partnerId_1, im_status: "online" },
+        { partner_id: partnerId_2, im_status: "offline" },
+        { partner_id: partnerId_3, im_status: "away" },
     ]);
     pyEnv["discuss.channel"].create([
         {

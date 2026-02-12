@@ -15,7 +15,8 @@ defineMailModels();
 
 test("initially online", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "online" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["res.users"].create({ partner_id: partnerId, im_status: "online" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
@@ -30,7 +31,8 @@ test("initially online", async () => {
 
 test("initially offline", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "offline" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["res.users"].create({ partner_id: partnerId, im_status: "offline" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
@@ -45,7 +47,8 @@ test("initially offline", async () => {
 
 test("initially away", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "away" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["res.users"].create({ partner_id: partnerId, im_status: "away" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
@@ -62,27 +65,27 @@ test("change icon on change partner im_status", async () => {
     patchWithCleanup(Store, { IM_STATUS_DEBOUNCE_DELAY: 0 });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
-    pyEnv["res.partner"].write([serverState.partnerId], { im_status: "online" });
+    pyEnv["res.users"].write([serverState.userId], { im_status: "online" });
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is online']");
-    pyEnv["res.partner"].write([serverState.partnerId], { im_status: "offline" });
+    pyEnv["res.users"].write([serverState.userId], { im_status: "offline" });
     pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
-        partner_id: serverState.partnerId,
+        user_id: serverState.userId,
         im_status: "offline",
         presence_status: "offline",
     });
     await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is offline']");
-    pyEnv["res.partner"].write([serverState.partnerId], { im_status: "away" });
+    pyEnv["res.users"].write([serverState.userId], { im_status: "away" });
     pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
-        partner_id: serverState.partnerId,
+        user_id: serverState.userId,
         im_status: "away",
         presence_status: "away",
     });
     await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is idle']");
-    pyEnv["res.partner"].write([serverState.partnerId], { im_status: "online" });
+    pyEnv["res.users"].write([serverState.userId], { im_status: "online" });
     pyEnv["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
-        partner_id: serverState.partnerId,
+        user_id: serverState.userId,
         im_status: "online",
         presence_status: "online",
     });
@@ -91,7 +94,8 @@ test("change icon on change partner im_status", async () => {
 
 test("show im status in messaging menu preview of chat", async () => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "online" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["res.users"].create({ partner_id: partnerId, im_status: "online" });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),

@@ -9,7 +9,7 @@
                             t-attf-src="/web/image/{{props.model}}/{{props.id}}/avatar_128"
                             class="rounded"
                         />
-                        <span t-if="partner?.im_status and partner.im_status !== 'im_partner'" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center bg-inherit">
+                        <span t-if="partner?.im_status" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center bg-inherit">
                             <ImStatus persona="partner" />
                         </span>
                     </span>

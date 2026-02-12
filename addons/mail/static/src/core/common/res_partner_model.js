@@ -1,42 +1,15 @@
-import { Store } from "@mail/core/common/store_service";
 import { fields, Record } from "@mail/model/export";
 import { imageUrl } from "@web/core/utils/urls";
-import { debounce } from "@web/core/utils/timing";
 
 const { DateTime } = luxon;
 
 export class ResPartner extends Record {
     static _name = "res.partner";
-    static new() {
-        const record = super.new(...arguments);
-        record.debouncedSetImStatus = debounce(
-            (newStatus) => record.updateImStatus(newStatus),
-            Store.IM_STATUS_DEBOUNCE_DELAY
-        );
-        return record;
-    }
-
-    _triggerPresenceSubscription = fields.Attr(null, {
-        compute() {
-            return this.monitorPresence && this.presenceChannel;
-        },
-        onUpdate() {
-            if (this.previousPresencechannel) {
-                this.store.env.services.bus_service.deleteChannel(this.previousPresencechannel);
-            }
-            if (this._triggerPresenceSubscription) {
-                this.store.env.services.bus_service.addChannel(this.presenceChannel);
-            }
-            this.previousPresencechannel = this.presenceChannel;
-        },
-        eager: true,
-    });
     /** @type {string} */
     avatar_128_access_token;
     /** @type {string} */
     commercial_company_name;
     country_id = fields.One("res.country");
-    debouncedSetImStatus;
     /** @type {string} */
     email;
     /**
@@ -50,27 +23,24 @@ export class ResPartner extends Record {
     id;
     /** @type {ImStatus} */
     im_status = fields.Attr(null, {
-        onUpdate() {
-            if (this.eq(this.store.self_user?.partner_id) && this.im_status === "offline") {
-                this.store.env.services.im_status.updateBusPresence();
+        compute() {
+            const users_status = this.user_ids.map((u) => u.im_status);
+            if (users_status.includes("online")) {
+                return "online";
+            } else if (users_status.includes("away")) {
+                return "away";
+            } else if (users_status.includes("busy")) {
+                return "busy";
+            } else if (users_status.includes("offline")) {
+                return "offline";
             }
         },
     });
-    /** @type {string|undefined} */
-    im_status_access_token;
     /** @type {boolean | undefined} */
     is_company;
     /** @type {boolean} */
     is_public;
     main_user_id = fields.One("res.users");
-    monitorPresence = fields.Attr(false, {
-        compute() {
-            if (!this.store.env.services.bus_service.isActive || this.id <= 0) {
-                return false;
-            }
-            return this.im_status !== "im_partner" && !this.is_public;
-        },
-    });
     /** @type {string} */
     name;
     /** @type {string} */
@@ -78,18 +48,9 @@ export class ResPartner extends Record {
     /** @type {string} */
     phone;
     /** @type {luxon.DateTime} */
-    offline_since = fields.Datetime();
-    presenceChannel = fields.Attr(null, {
-        compute() {
-            const channel = `odoo-presence-res.partner_${this.id}`;
-            if (this.im_status_access_token) {
-                return channel + `-${this.im_status_access_token}`;
-            }
-            return channel;
-        },
+    offline_since = fields.Datetime(null, {
+        compute: () => DateTime.max(this.user_ids.map((u) => u.offline_since)),
     });
-    /** @type {string|undefined} */
-    previousPresencechannel;
     user_ids = fields.Many("res.users", { inverse: "partner_id" });
     write_date = fields.Datetime();
 
@@ -122,13 +83,6 @@ export class ResPartner extends Record {
             (channel) =>
                 channel.channel_type === "chat" && channel.correspondent?.partner_id?.eq(this)
         );
-    }
-
-    updateImStatus(newStatus) {
-        if (newStatus === "offline") {
-            this.offline_since = DateTime.now();
-        }
-        this.im_status = newStatus;
     }
 }
 

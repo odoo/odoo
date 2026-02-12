@@ -27,9 +27,9 @@ class TestMailPresence(WebsocketCase, MailCommon):
             auth_cookie = f"{requested_by._cookie_name}={requested_by._format_auth_cookie()};"
         websocket = self.websocket_connect(cookie=auth_cookie)
         target_channel = target.partner_id if target_user else target
-        channel_parts = ["odoo-presence", f"{target_channel._name}_{target_channel.id}"]
+        channel_parts = ["odoo-presence", f"{target._name}_{target.id}"]
         if has_token:
-            channel_parts.append(target_channel._get_im_status_access_token())
+            channel_parts.append(target._get_im_status_access_token())
         self.subscribe(websocket, ["-".join(channel_parts)], self.env["bus.bus"]._bus_last_id())
         self.env["mail.presence"]._update_presence(target)
         self.trigger_notification_dispatching([(target_channel, "presence")])
@@ -44,8 +44,8 @@ class TestMailPresence(WebsocketCase, MailCommon):
         self.assertEqual(notifications[0]["message"]["payload"]["im_status"], "online")
         self.assertEqual(notifications[0]["message"]["payload"]["presence_status"], "online")
         self.assertEqual(
-            notifications[0]["message"]["payload"]["partner_id" if target_user else "guest_id"],
-            target_channel.id,
+            notifications[0]["message"]["payload"]["user_id" if target_user else "guest_id"],
+            target.id,
         )
 
     @freeze_all_time()

@@ -1,7 +1,9 @@
 import { mailModels } from "@mail/../tests/mail_test_helpers";
-import { serverState } from "@web/../tests/web_test_helpers";
+import { fields, serverState } from "@web/../tests/web_test_helpers";
 
 export class ResUsers extends mailModels.ResUsers {
+    im_status = fields.Char({ default: "online" });
+
     /**
      * @override
      */

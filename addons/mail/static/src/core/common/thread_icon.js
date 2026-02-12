@@ -2,7 +2,6 @@ import { useService } from "@web/core/utils/hooks";
 
 import { Component } from "@odoo/owl";
 import { Thread } from "./thread_model";
-import { _t } from "@web/core/l10n/translation";
 import { ImStatus } from "./im_status";
 import { attClassObjectToString } from "@mail/utils/common/format";
 
@@ -41,12 +40,5 @@ export class ThreadIcon extends Component {
 
     get correspondent() {
         return this.channel?.correspondent;
-    }
-
-    get defaultChatIcon() {
-        return {
-            class: "fa fa-question-circle opacity-75",
-            title: _t("No IM status available"),
-        };
     }
 }

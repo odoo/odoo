@@ -106,6 +106,7 @@ class ResPartner(models.Model):
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
         super()._store_avatar_card_fields(res)
+        res.attr("main_user_id")
         if res.is_for_internal_users():
             # sudo: res.partner - internal users can access employee information of partner
             res.many("employee_ids", "_store_avatar_card_fields", mode="ADD", sudo=True)

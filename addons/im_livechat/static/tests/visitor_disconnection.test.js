@@ -49,7 +49,7 @@ test("Visitor going offline shows disconnection banner to operator", async () =>
     mockDate("2025-01-01 12:00:00", +1);
     pyEnv["mail.guest"].write(guestId, { im_status: "offline" });
     pyEnv["bus.bus"]._sendone(guestId, "bus.bus/im_status_updated", {
-        partner_id: false,
+        user_id: false,
         guest_id: guestId,
         im_status: "offline",
     });
@@ -67,7 +67,7 @@ test("Visitor going offline shows disconnection banner to operator", async () =>
     await click(".o-mail-ChatBubble");
     await contains(".o-livechat-VisitorDisconnected", { text: `Visitor is disconnected` });
     pyEnv["bus.bus"]._sendone(guestId, "bus.bus/im_status_updated", {
-        partner_id: false,
+        user_id: false,
         guest_id: guestId,
         im_status: "online",
     });

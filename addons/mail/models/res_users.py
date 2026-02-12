@@ -7,6 +7,7 @@ from odoo import _, api, Command, fields, models, modules, tools
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import email_normalize
+from odoo.tools.misc import limited_field_access_token
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -43,6 +44,7 @@ class ResUsers(models.Model):
     is_out_of_office = fields.Boolean('Out of Office', compute='_compute_is_out_of_office')
     # sudo: res.users - can access presence of accessible user
     im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
+    offline_since = fields.Datetime("Offline since", compute="_compute_im_status", compute_sudo=True)
     manual_im_status = fields.Selection(
         [("away", "Away"), ("busy", "Do Not Disturb"), ("offline", "Offline")],
         string="IM status manually set by the user",
@@ -114,6 +116,11 @@ class ResUsers(models.Model):
                 "offline"
                 if user.presence_ids.status in ["offline", False]
                 else user.manual_im_status or user.presence_ids.status
+            )
+            user.offline_since = (
+                user.presence_ids.last_poll
+                if user.im_status == "offline"
+                else None
             )
 
     def _inverse_notification_type(self):
@@ -395,17 +402,27 @@ class ResUsers(models.Model):
             lambda res: (
                 res.extend(["active", "main_user_id", "name", "tz"]),
                 res.from_method("_store_avatar_fields"),
-                res.from_method("_store_im_status_fields"),
             ),
         )
+        res.from_method("_store_im_status_fields")
         res.attr("is_admin", lambda u: u._is_admin())
         res.extend(["notification_type", "share", "signature"])
 
     def _store_main_user_fields(self, res: Store.FieldList):
         res.attr("share")
 
+    def _get_im_status_access_token(self):
+        """Return a scoped access token for the `im_status` field. The token is used in
+        `ir_websocket._prepare_subscribe_data` to grant access to presence channels.
+
+        :rtype: str
+        """
+        self.ensure_one()
+        return limited_field_access_token(self, "im_status", scope="mail.presence")
+
     def _store_im_status_fields(self, res: Store.FieldList):
-        res.attr("id")
+        res.attr("im_status")
+        res.attr("im_status_access_token", lambda u: u._get_im_status_access_token())
 
     @api.model
     def _get_activity_groups(self):
