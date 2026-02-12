@@ -100,7 +100,7 @@ test("default opacity should get applied when applying background color to icon"
     await expectElementCount(".o-we-toolbar", 1);
     expect(".o_font_color_selector").toHaveCount(0); // selector closed
     expect(getContent(el)).toBe(
-        `<p><font style="background-color: rgba(255, 0, 0, 0.6);">[ab</font><font style="background-color: rgba(255, 0, 0, 0.6);">\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff</font><font style="background-color: rgba(255, 0, 0, 0.6);">cd]</font></p>`
+        `<p><font style="background-color: rgba(255, 0, 0, 0.6);">[ab</font>\ufeff<span class="fa fa-glass" contenteditable="false" style="background-color: rgba(255, 0, 0, 0.6);">\u200b</span>\ufeff<font style="background-color: rgba(255, 0, 0, 0.6);">cd]</font></p>`
     );
 });
 
