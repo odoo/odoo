@@ -26,7 +26,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
         super().setUpClass()
 
         cls.env.ref('payment.payment_provider_transfer').write({
-            'state': 'enabled',
+            'is_live': True,
             'is_published': True,
         })
 
@@ -84,7 +84,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
 
         transfer_provider = self.env.ref('payment.payment_provider_transfer')
         transfer_provider.write({
-            'state': 'enabled',
+            'is_live': True,
             'is_published': True,
         })
         transfer_provider._transfer_ensure_pending_msg_is_set()
@@ -95,7 +95,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
         self.env['product.pricelist'].with_context(active_test=False).search([]).unlink()
         transfer_provider = self.env.ref('payment.payment_provider_transfer')
         transfer_provider.write({
-            'state': 'enabled',
+            'is_live': True,
             'is_published': True,
         })
         transfer_provider._transfer_ensure_pending_msg_is_set()
@@ -108,7 +108,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
     def test_buy_last_ticket(self):
         transfer_provider = self.env.ref('payment.payment_provider_transfer')
         transfer_provider.write({
-            'state': 'enabled',
+            'is_live': True,
             'is_published': True,
         })
         transfer_provider._transfer_ensure_pending_msg_is_set()

@@ -84,22 +84,17 @@ class PaymentToken(models.Model):
         return dict()
 
     def write(self, vals):
-        """Prevent unarchiving tokens and handle their archiving.
-
-        :return: The result of the call to the parent method.
-        :rtype: bool
-        :raise UserError: If at least one token is being unarchived.
-        """
         if "active" in vals:
+            # Prevent unarchiving tokens linked to archived payment methods or providers.
             if vals["active"]:
                 if any(
-                    not token.payment_method_id.active or token.provider_id.state == "disabled"
+                    not token.payment_method_id.active or not token.provider_id.active
                     for token in self
                 ):
                     raise UserError(
                         self.env._(
                             "You can't unarchive tokens linked to inactive payment methods or"
-                            " disabled providers."
+                            " archived providers."
                         )
                     )
             else:

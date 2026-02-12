@@ -12,7 +12,7 @@ class TestClickAndCollectFlow(HttpCase, ClickAndCollectCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.storable_product.name = "Test CAC Product"
-        cls.provider.write({"state": "enabled", "is_published": True})
+        cls.provider.write({"is_live": True, "is_published": True})
         cls.in_store_dm.warehouse_ids[0].partner_id = cls.env["res.partner"].create({
             **cls.dummy_partner_address_values,
             "name": "Shop 1",

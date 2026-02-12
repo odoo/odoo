@@ -99,7 +99,7 @@ class PaymentProvider(models.Model):
         ).id
         return outstanding_account_id
 
-    @api.depends('code', 'state', 'company_id')
+    @api.depends('code', 'is_live', 'company_id')
     def _compute_journal_id(self):
         for provider in self:
             pay_method_line = self.env['account.payment.method.line'].search([
@@ -109,16 +109,14 @@ class PaymentProvider(models.Model):
 
             if pay_method_line:
                 provider.journal_id = pay_method_line.journal_id
-            elif provider.state in ('enabled', 'test'):
-                provider.journal_id = self.env['account.journal'].search(
-                    [
-                        ('company_id', '=', provider.company_id.id),
-                        ('type', '=', 'bank'),
-                    ],
-                    limit=1,
-                )
+            else:
+                domain = provider._get_journal_domain()
+                provider.journal_id = self.env["account.journal"].search(domain, limit=1)
                 if provider.id:
                     provider._ensure_payment_method_line()
+
+    def _get_journal_domain(self):
+        return [("company_id", "=", self.company_id.id), ("type", "=", "bank")]
 
     def _inverse_journal_id(self):
         for provider in self:

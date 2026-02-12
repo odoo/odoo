@@ -39,7 +39,7 @@ class PaymentTransaction(models.Model):
             return {}
 
         api_url = response_content[
-            "init_point" if self.provider_id.state == "enabled" else "sandbox_init_point"
+            "init_point" if self.provider_id.is_live else "sandbox_init_point"
         ]
         return {
             "api_url": api_url,

@@ -21,7 +21,7 @@ class PaymentProvider(models.Model):
         selection_add=[("paypal", "PayPal")], ondelete={"paypal": "set default"}
     )
     paypal_email_account = fields.Char(
-        string="Email",
+        string="PayPal Email",
         help="The public business email solely used to identify the account with PayPal",
         required_if_provider="paypal",
         default=lambda self: self.env.company.email,
@@ -126,11 +126,9 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
 
-        if self.state == "enabled":
-            api_url = "https://api-m.paypal.com"
-        else:  # test
-            api_url = "https://api-m.sandbox.paypal.com"
-        return api_url
+        if self.is_live:
+            return "https://api-m.paypal.com"
+        return "https://api-m.sandbox.paypal.com"
 
     def _build_request_headers(
         self, *args, idempotency_key=None, is_refresh_token_request=False, **kwargs

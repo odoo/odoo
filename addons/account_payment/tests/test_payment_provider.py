@@ -22,7 +22,6 @@ class TestPaymentProvider(AccountPaymentCommon):
             provider_duplicated = self.dummy_provider.copy(default={
                 'name': 'Duplicated Provider',
                 'company_id': child_company.id,
-                'state': 'test',
             })
             self.assertFalse(provider_duplicated.journal_id)
 

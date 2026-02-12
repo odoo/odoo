@@ -25,10 +25,10 @@ class PaymentProvider(models.Model):
 
     # === CONSTRAINT METHODS ===#
 
-    @api.constrains("state", "code")
-    def _check_provider_state(self):
-        if self.filtered(lambda p: p.code == "demo" and p.state not in ("test", "disabled")):
-            raise UserError(self.env._("Demo providers should never be enabled."))
+    @api.constrains("is_live", "code")
+    def _check_demo_is_not_live(self):
+        if self.filtered(lambda p: p.code == "demo" and p.is_live):
+            raise UserError(self.env._("Demo providers must never be set in live mode."))
 
     # === CRUD METHODS ===#
 

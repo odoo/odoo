@@ -64,7 +64,6 @@ class PaymentCommon(BaseCommon):
         cls.dummy_provider = cls.env["payment.provider"].create({
             "name": "Dummy Provider",
             "code": "none",
-            "state": "test",
             "is_published": True,
             "payment_method_ids": [Command.set([cls.pm_unknown.id])],
             "allow_tokenization": True,
@@ -113,7 +112,7 @@ class PaymentCommon(BaseCommon):
 
     @classmethod
     def _prepare_provider(cls, code, company=None, update_values=None, **kwargs):
-        """Prepare and return the first active provider matching the given code and company.
+        """Prepare and return the first installed provider matching the given code and company.
 
         All other providers belonging to the same company are disabled to avoid any interferences.
 
@@ -140,7 +139,6 @@ class PaymentCommon(BaseCommon):
             _logger.error("No payment.provider found for code %s in company %s", code, company.name)
             return cls.env["payment.provider"]
 
-        update_values["state"] = "test"
         provider.write(update_values)
         return provider
 

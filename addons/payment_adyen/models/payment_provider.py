@@ -18,34 +18,34 @@ class PaymentProvider(models.Model):
 
     code = fields.Selection(selection_add=[("adyen", "Adyen")], ondelete={"adyen": "set default"})
     adyen_merchant_account = fields.Char(
-        string="Merchant Account",
+        string="Adyen Merchant Account",
         help="The code of the merchant account to use with this provider",
         required_if_provider="adyen",
         copy=False,
         groups="base.group_system",
     )
     adyen_api_key = fields.Char(
-        string="API Key",
+        string="Adyen API Key",
         help="The API key of the webservice user",
         required_if_provider="adyen",
         copy=False,
         groups="base.group_system",
     )
     adyen_client_key = fields.Char(
-        string="Client Key",
+        string="Adyen Client Key",
         help="The client key of the webservice user",
         required_if_provider="adyen",
         copy=False,
     )
     adyen_hmac_key = fields.Char(
-        string="HMAC Key",
+        string="Adyen HMAC Key",
         help="The HMAC key of the webhook",
         required_if_provider="adyen",
         copy=False,
         groups="base.group_system",
     )
     adyen_api_url_prefix = fields.Char(
-        string="API URL Prefix", help="The base URL for the API endpoints", copy=False
+        string="Adyen API URL Prefix", help="The base URL for the API endpoints", copy=False
     )
 
     # === CRUD METHODS === #
@@ -156,9 +156,9 @@ class PaymentProvider(models.Model):
 
         version = const.API_ENDPOINT_VERSIONS[endpoint]
         endpoint = endpoint if not endpoint_param else endpoint.format(endpoint_param)
-        if self.state == "enabled":
+        if self.is_live:
             domain = f"{self.adyen_api_url_prefix}-checkout-live.adyenpayments.com"
-        else:  # test
+        else:
             domain = "checkout-test.adyen.com"
         return urljoin(f"https://{domain}", f"checkout/V{version}/{endpoint}")
 

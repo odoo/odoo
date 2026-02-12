@@ -84,13 +84,13 @@ class PaymentProvider(models.Model):
 
     # === CONSTRAINT METHODS === #
 
-    @api.constrains("state")
-    def _check_razorpay_credentials_are_set_before_enabling(self):
-        """Check that the Razorpay credentials are valid when the provider is enabled.
+    @api.constrains("is_live")
+    def _check_razorpay_credentials_are_set_if_live(self):
+        """Check that the Razorpay credentials are valid when the provider is set to live mode.
 
         :raise ValidationError: If the Razorpay credentials are not valid.
         """
-        for provider in self.filtered(lambda p: p.code == "razorpay" and p.state != "disabled"):
+        for provider in self.filtered(lambda p: p.code == "razorpay" and p.is_live):
             if not provider.razorpay_account_id:
                 if not provider.razorpay_key_id or not provider.razorpay_key_secret:
                     if provider.razorpay_is_oauth_supported:

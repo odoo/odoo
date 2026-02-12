@@ -18,6 +18,12 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+        if "payment_stripe" in cls.env["ir.module.module"]._installed():
+            cls.env["payment.provider"].search([
+                ("code", "=", "stripe")
+            ]).allow_express_checkout = False
+
         cls.env.ref("base.user_admin").write({
             "company_id": cls.env.company.id,
             "company_ids": [(4, cls.env.company.id)],
@@ -40,7 +46,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
 
         transfer_provider = self.env.ref("payment.payment_provider_transfer")
         transfer_provider.sudo().write({
-            "state": "enabled",
+            "is_live": True,
             "is_published": True,
             "company_id": self.env.company.id,
         })

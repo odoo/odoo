@@ -224,17 +224,20 @@ class PaymentMethod(models.Model):
             )
             linked_tokens.active = False
 
-        # Prevent enabling a payment method if it is not linked to an enabled provider.
+        # Prevent enabling a payment method if it is not linked to an installed provider.
         if vals.get("active"):
             for pm in self:
                 primary_pm = pm if pm.is_primary else pm.primary_payment_method_id
                 if (
                     not primary_pm.active  # Don't bother for already enabled payment methods.
-                    and all(p.state == "disabled" for p in primary_pm.provider_ids)
+                    and all(
+                        p.module_state in ["uninstalled", "uninstallable"]
+                        for p in primary_pm.provider_ids
+                    )
                 ):
                     raise UserError(
                         pm.env._(
-                            "This payment method needs a partner in crime; you should enable a"
+                            "This payment method needs a partner in crime; you should install a"
                             " payment provider supporting this method first."
                         )
                     )

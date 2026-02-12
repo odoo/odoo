@@ -8,18 +8,19 @@ from odoo.addons.payment_mercado_pago.tests.common import MercadoPagoCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentProvider(MercadoPagoCommon):
-    def test_allow_enabling_if_credentials_are_set(self):
-        """Test that enabling a Mercado Pago provider with credentials succeeds."""
-        self._assert_does_not_raise(ValidationError, self.provider.write({"state": "enabled"}))
+    def test_allow_setting_live_if_credentials_are_set(self):
+        """Test that setting live a Mercado Pago provider with credentials succeeds."""
+        self._assert_does_not_raise(ValidationError, self.provider.write({"is_live": True}))
 
-    def test_prevent_enabling_if_credentials_are_not_set(self):
-        """Test that enabling a Mercado Pago provider without credentials raises a
+    def test_prevent_setting_live_if_credentials_are_not_set(self):
+        """Test that setting live a Mercado Pago provider without credentials raises a
         ValidationError."""
         # Reset the state and credentials together to avoid triggering the constraint outside of the
         # 'assertRaises'.
+        self.provider.module_state = "installed"
         self.provider.action_reset_credentials()
         with self.assertRaises(ValidationError):
-            self.provider.state = "enabled"
+            self.provider.is_live = True
 
     def test_incompatible_with_unsupported_currencies(self):
         """Test that Mercado Pago providers are filtered out from compatible providers when the

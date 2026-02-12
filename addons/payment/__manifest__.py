@@ -33,12 +33,14 @@
     ],
     "assets": {
         "web.assets_frontend": [
-            "payment/static/src/**/*",
-            ("remove", "payment/static/src/js/payment_wizard_copy_clipboard_field.js"),
+            "payment/static/src/interactions/*",
+            "payment/static/src/scss/*",
+            "payment/static/src/xml/*",
         ],
         "web.assets_backend": [
             "payment/static/src/scss/payment_provider.scss",
             "payment/static/src/js/payment_wizard_copy_clipboard_field.js",
+            "payment/static/src/components/**/*",
         ],
         "web.assets_unit_tests_setup": [
             "payment/static/src/interactions/express_checkout.js",

@@ -57,11 +57,9 @@ class PaymentProvider(models.Model):
     # === BUSINESS METHODS === #
 
     def _nuvei_get_api_url(self):
-        if self.state == "enabled":
-            api_url = "https://secure.safecharge.com/ppp/purchase.do"
-        else:  # 'test'
-            api_url = "https://ppp-test.safecharge.com/ppp/purchase.do"
-        return api_url
+        if self.is_live:
+            return "https://secure.safecharge.com/ppp/purchase.do"
+        return "https://ppp-test.safecharge.com/ppp/purchase.do"
 
     def _nuvei_calculate_signature(self, data, incoming=True):
         """Compute the signature for the provided data according to the Nuvei documentation.

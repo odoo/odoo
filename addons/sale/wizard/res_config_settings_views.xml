@@ -68,7 +68,7 @@
                             </div>
                             <div
                                 class="row mt8"
-                                invisible="not portal_confirmation_pay or active_provider_id"
+                                invisible="not portal_confirmation_pay or installed_provider_id"
                             >
                                 <div invisible="not onboarding_payment_module" class="oe_inline">
                                     <button
@@ -103,16 +103,16 @@
                             </div>
                             <div
                                 class="mt8"
-                                invisible="not portal_confirmation_pay or not active_provider_id"
+                                invisible="not portal_confirmation_pay or not installed_provider_id"
                             >
                                 <button
                                     type="object"
-                                    name="action_view_active_provider"
+                                    name="action_view_installed_provider"
                                     class="btn btn-primary col-auto"
                                 >
                                     Configure
                                     <field
-                                        name="active_provider_id"
+                                        name="installed_provider_id"
                                         class="oe_inline"
                                         nolabel="1"
                                         options="{'no_open': True}"

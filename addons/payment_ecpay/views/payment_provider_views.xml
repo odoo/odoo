@@ -6,26 +6,27 @@
         <field name="model">payment.provider</field>
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
-            <group name="provider_credentials" position='inside'>
-                <group invisible="code != 'ecpay'">
-                    <field
-                        string="Merchant ID"
-                        name="ecpay_merchant_id"
-                        required="code == 'ecpay' and state != 'disabled'"
-                    />
-                    <field
-                        string="Secure Hash Secret"
-                        name="ecpay_hash_key"
-                        required="code == 'ecpay' and state != 'disabled'"
-                        password="True"
-                    />
-                    <field
-                        string="Secure Hash IV"
-                        name="ecpay_hash_iv"
-                        required="code == 'ecpay' and state != 'disabled'"
-                        password="True"
-                    />
-                </group>
+            <group name="provider_credentials" position="inside">
+                <field
+                    string="Merchant ID"
+                    name="ecpay_merchant_id"
+                    invisible="code != 'ecpay'"
+                    required="is_live"
+                />
+                <field
+                    string="Secure Hash Secret"
+                    name="ecpay_hash_key"
+                    invisible="code != 'ecpay'"
+                    required="is_live"
+                    password="True"
+                />
+                <field
+                    string="Secure Hash IV"
+                    name="ecpay_hash_iv"
+                    invisible="code != 'ecpay'"
+                    required="is_live"
+                    password="True"
+                />
             </group>
         </field>
     </record>

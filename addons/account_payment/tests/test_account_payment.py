@@ -233,7 +233,8 @@ class TestAccountPayment(AccountPaymentCommon):
         """ Deleting an account.payment.method.line that is related to a provider in 'test' or 'enabled' state
         should raise an error.
         """
-        self.assertEqual(self.dummy_provider.state, 'test')
+        self.assertFalse(self.dummy_provider.is_live)
+        self.dummy_provider.module_state = "installed"
         with self.assertRaises(UserError):
             self.dummy_provider.journal_id.inbound_payment_method_line_ids.unlink()
 
@@ -257,8 +258,6 @@ class TestAccountPayment(AccountPaymentCommon):
             # Test duplication of the provider.
             payment_method_line.payment_account_id = self.inbound_payment_method_line.payment_account_id
             copy_provider = self.provider.copy()
-            self.assertRecordValues(copy_provider, [{'journal_id': False}])
-            copy_provider.state = 'test'
             self.assertRecordValues(copy_provider, [{'journal_id': journal.id}])
             self.assertRecordValues(get_payment_method_line(copy_provider), [{
                 'journal_id': journal.id,
@@ -266,10 +265,6 @@ class TestAccountPayment(AccountPaymentCommon):
             }])
 
             # We are able to have both on the same journal...
-            with self.assertRaises(ValidationError):
-                # ...but not having both with the same name.
-                provider.journal_id = journal
-
             method_line = get_payment_method_line(copy_provider)
             method_line.name = "dummy (copy)"
             provider.journal_id = journal

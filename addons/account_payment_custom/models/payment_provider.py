@@ -10,29 +10,15 @@ class PaymentProvider(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        """Enable the cron to confirm wire transfers if provider Wire Transfer is enabled."""
+        """Enable the cron to confirm wire transfers if a Wire Transfer provider is created."""
         providers = super().create(vals_list)
-        if any(
-            p.code == "custom"
-            and p.custom_mode == "wire_transfer"
-            and p.state in ("enabled", "test")
-            for p in providers
-        ):
+        if any(p.custom_mode == "wire_transfer" for p in providers):
             self._toggle_confirm_wire_transfer_transactions_cron()
         return providers
 
-    def write(self, vals):
-        """Enable the cron to confirm wire transfers if provider Wire Transfer is enabled."""
-        res = super().write(vals)
-        if "state" in vals and any(
-            p.code == "custom" and p.custom_mode == "wire_transfer" for p in self
-        ):
-            self._toggle_confirm_wire_transfer_transactions_cron()
-        return res
-
     @api.model
     def _toggle_confirm_wire_transfer_transactions_cron(self):
-        """Enable the cron to confirm wire transfers if provider Wire Transfer is enabled.
+        """Enable the cron to confirm wire transfers if a Wire Transfer provider exists.
 
         This allows for saving resources on the cron's wake-up overhead when it has nothing to do.
 
@@ -42,19 +28,26 @@ class PaymentProvider(models.Model):
             "account_payment_custom.cron_auto_confirm_paid_wire_transfer_txs", False
         )
         if wire_transfer_cron:
-            any_active_wire_transfer_provider = bool(
-                self.sudo().search_count(
-                    [
-                        ("code", "=", "custom"),
-                        ("custom_mode", "=", "wire_transfer"),
-                        ("state", "in", ("enabled", "test")),
-                    ],
-                    limit=1,
-                )
+            any_wire_transfer_provider = bool(
+                self.sudo().search_count([("custom_mode", "=", "wire_transfer")], limit=1)
             )
-            wire_transfer_cron.active = any_active_wire_transfer_provider
+            wire_transfer_cron.active = any_wire_transfer_provider
 
     # === SETUP METHODS === #
+
+    @api.model
+    def _setup_provider(self, *args, custom_mode=None, **kwargs):
+        """Override of `payment` to enable the cron to confirm wire transfers."""
+        super()._setup_provider(*args, custom_mode=custom_mode, **kwargs)
+        if custom_mode == "wire_transfer":
+            self._toggle_confirm_wire_transfer_transactions_cron()
+
+    @api.model
+    def _remove_provider(self, *args, custom_mode=None, **kwargs):
+        """Override of `payment` to disable the cron to confirm wire transfers."""
+        super()._remove_provider(*args, custom_mode=custom_mode, **kwargs)
+        if custom_mode == "wire_transfer":
+            self._toggle_confirm_wire_transfer_transactions_cron()
 
     def _get_code(self):
         """Override of `payment` to consider the custom_mode as the code for 'wire_transfer'."""

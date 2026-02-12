@@ -22,6 +22,7 @@
         <field name="active" eval="False"/>
     </record>
 
+    <!-- Re-enable the cron if a module update disabled it -->
     <function model="payment.provider" name="_toggle_post_processing_cron"/>
 
 </odoo>

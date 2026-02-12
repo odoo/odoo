@@ -10,12 +10,12 @@
                 <setting
                     id="website_payment_settings"
                     type="header"
-                    invisible="has_enabled_provider"
+                    invisible="installed_provider_id"
                     class="bg-warning"
                 >
-                    <div class="row d-flex align-items-baseline" invisible="active_provider_id">
+                    <div class="row d-flex align-items-baseline">
                         <span class="oe_inline pe-0">
-                            Enable a payment provider to accept online payments.
+                            Install a payment provider to accept online payments.
                         </span>
                         <div
                             invisible="not onboarding_payment_module"
@@ -49,28 +49,6 @@
                             class="btn btn-link oe_inline px-1"
                         />
                     </div>
-                    <div class="d-flex align-items-baseline" invisible="not active_provider_id">
-                        <span>Enable a payment provider to accept online payments.</span>
-                        <button
-                            type="object"
-                            name="action_view_active_provider"
-                            class="btn btn-link px-1"
-                        >
-                            Configure
-                            <field
-                                name="active_provider_id"
-                                nolabel="1"
-                                options="{'no_open': True}"
-                            />
-                        </button>
-                        <span>or</span>
-                        <button
-                            string="Find another provider"
-                            type="action"
-                            name="%(payment.action_payment_provider)d"
-                            class="btn btn-link px-1"
-                        />
-                    </div>
                 </setting>
             </setting>
             <block id="website_info_settings" position="after">
@@ -82,7 +60,7 @@
                         documentation="/applications/finance/payment_providers.html"
                     >
                         <div class="content-group">
-                            <div class="row" invisible="active_provider_id">
+                            <div class="row" invisible="installed_provider_id">
                                 <div
                                     invisible="not onboarding_payment_module" class="oe_inline pe-0"
                                 >
@@ -116,15 +94,15 @@
                                     icon="oi-arrow-right"
                                 />
                             </div>
-                            <div invisible="not active_provider_id">
+                            <div invisible="not installed_provider_id">
                                 <button
                                     type="object"
-                                    name="action_view_active_provider"
+                                    name="action_view_installed_provider"
                                     class="btn btn-primary"
                                 >
                                     Configure
                                     <field
-                                        name="active_provider_id"
+                                        name="installed_provider_id"
                                         options="{'no_open': True}"
                                         nolabel="1"
                                         class="oe_inline"

@@ -72,8 +72,8 @@ class RazorpayController(Controller):
             "razorpay_refresh_token": response_content["refresh_token"],
             "razorpay_access_token": response_content["access_token"],
             "razorpay_access_token_expiry": expires_in,
-            # Enable the provider.
-            "state": "enabled",
+            # Set the provider live.
+            "is_live": True,
             "is_published": True,
         })
         try:
