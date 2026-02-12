@@ -249,8 +249,16 @@
                 </p>
             </td>
             <td class="text-center" name="move_line_aggregated_qty_ordered">
-                <span t-esc="aggregated_lines[line]['qty_ordered']"
-                    t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
+                <t t-set="qty_ordered" t-value="aggregated_lines[line]['qty_ordered']"/>
+                <t t-set="move_demand" t-value="aggregated_lines[line].get('move', {}).product_uom_qty"/>
+                <t t-if="move_demand and move_demand &lt; qty_ordered">
+                    <span t-esc="move_demand"
+                        t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
+                </t>
+                <t t-else="">
+                    <span t-esc="qty_ordered"
+                        t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
+                </t>
                 <span t-esc="aggregated_lines[line]['product_uom'].name"/>
                 <span t-if="aggregated_lines[line]['packaging'].name">
                     (<span t-out="aggregated_lines[line]['packaging_qty']" t-options='{"widget": "integer"}'/> <span t-out="aggregated_lines[line]['packaging'].name"/>)
