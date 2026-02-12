@@ -45,11 +45,15 @@ export class MailComposerFormRenderer extends formView.Renderer {
         );
 
         const getActiveMailThreads = () => {
-            const resIds =
-                this.props.record.resModel === "mail.scheduled.message"
-                    ? [this.props.record.data.res_id.resId]
-                    : JSON.parse(this.props.record.data.res_ids);
-
+            let resIds;
+            if (this.props.record.resModel === "mail.scheduled.message") {
+                resIds = [this.props.record.data.res_id.resId];
+            } else {
+                // composer does not store res_ids past a certain limit, assume active_ids is used
+                resIds = this.props.record.data.res_ids
+                    ? JSON.parse(this.props.record.data.res_ids)
+                    : this.props.record.context.active_ids;
+            }
             return resIds.map((resId) => {
                 const thread = this.mailStore["mail.thread"].insert({
                     model: this.props.record.data.model,
