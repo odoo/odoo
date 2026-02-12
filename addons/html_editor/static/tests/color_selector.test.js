@@ -1,22 +1,24 @@
-import { describe, expect, test } from "@odoo/hoot";
 import {
+    animationFrame,
     click,
-    waitFor,
-    queryOne,
+    describe,
+    drag,
+    edit,
+    expect,
     hover,
     press,
-    waitUntil,
-    edit,
-    queryAllValues,
     queryAll,
-    manuallyDispatchProgrammaticEvent,
-} from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+    queryAllValues,
+    queryOne,
+    test,
+    waitFor,
+    waitUntil,
+} from "@odoo/hoot";
+import { contains } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
-import { contains } from "@web/../tests/web_test_helpers";
-import { execCommand } from "./_helpers/userCommands";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { execCommand } from "./_helpers/userCommands";
 
 test("can set foreground color", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
@@ -202,7 +204,7 @@ test("applied custom color should be shown in colorpicker after switching tab", 
     await animationFrame();
     expect(".o_hex_input").toHaveValue("#FF0000");
     const newColor = "#00FF00";
-    await contains(".o_hex_input").edit(newColor);
+    await contains(".o_hex_input").edit(newColor, { confirm: false });
     expect(".o_hex_input").toHaveValue(newColor);
     expect(getContent(el)).toBe(
         '<p><font style="background-color: rgb(0, 255, 0);">[test]</font></p>'
@@ -737,21 +739,9 @@ describe("color preview", () => {
         await click(".o-select-color-background");
         await animationFrame();
         await click(".btn:contains('Custom')");
-        const newColor = "#FF0000";
-        await contains(".o_hex_input").edit(newColor);
-        const slider = document.querySelector(".o_opacity_slider");
-        const rect = slider.getBoundingClientRect();
-        const middleY = rect.top + rect.height / 2;
-        manuallyDispatchProgrammaticEvent(slider, "mousedown", {
-            clientX: rect.left,
-            clientY: middleY,
-        });
-        const fontEl = queryOne("font");
-        const bgColor = fontEl.style.backgroundColor;
-        expect(bgColor).toMatch(/^rgba\(255,\s*0,\s*0,\s*0\.\d+\)$/);
-        manuallyDispatchProgrammaticEvent(slider, "mouseup", {
-            clientX: rect.left,
-            clientY: middleY,
-        });
+        await contains(".o_hex_input").edit("#FF0000", { confirm: false });
+        const { drop } = await drag(".o_opacity_slider");
+        expect("font").toHaveStyle({ backgroundColor: /rgba\(255, 0, 0, 0\.\d+\)/ });
+        await drop();
     });
 });
