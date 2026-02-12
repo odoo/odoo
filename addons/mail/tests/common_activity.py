@@ -53,6 +53,21 @@ class ActivityScheduleCase(MailCommon):
             self.activity_create_mocked = activity_create_mocked
             yield
 
+    def _expected_default_activity_type(self, res_model):
+        activity = self.env["mail.activity"].with_context(active_test=False)._read_group(
+            domain=[
+                ("create_uid", "=", self.env.user.id),
+                ("res_model", "in", [False, res_model]),
+            ],
+            groupby=["activity_type_id"],
+            aggregates=["id:count"],
+            order="__count desc, activity_type_id asc",
+            limit=1,
+        )
+        return (
+            activity[0][0] if activity else self.env["mail.activity"]._default_activity_type_for_model(res_model)
+        )
+
     def assertActivityValues(self, activity, activity_values):
         self.assertEqual(len(activity), 1)
         for fname, fvalue in activity_values.items():

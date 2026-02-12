@@ -233,7 +233,19 @@ class MailActivitySchedule(models.TransientModel):
             if not scheduler.activity_type_id or (
                 scheduler.activity_type_id.res_model and scheduler.res_model and scheduler.activity_type_id.res_model != scheduler.res_model
             ):
-                scheduler.activity_type_id = scheduler.env['mail.activity']._default_activity_type_for_model(scheduler.res_model)
+                activity = scheduler.env['mail.activity'].with_context(active_test=False)._read_group(
+                    domain=[
+                        ("create_uid", "=", self.env.user.id),
+                        ("res_model", "in", [False, scheduler.res_model]),
+                    ],
+                    groupby=["activity_type_id"],
+                    aggregates=["id:count"],
+                    order="__count desc, activity_type_id asc",
+                    limit=1,
+                )
+                scheduler.activity_type_id = (
+                    activity[0][0].id if activity else scheduler.env["mail.activity"]._default_activity_type_for_model(scheduler.res_model)
+                )
 
     @api.onchange('activity_type_id')
     def _onchange_activity_type_id(self):

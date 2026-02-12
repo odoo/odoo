@@ -127,10 +127,11 @@ class TestActivitySchedule(ActivityScheduleCase):
                         form.save().action_schedule_activities()
 
                 for record in test_records:
+                    expected_type = self._expected_default_activity_type(record._name)
                     self.assertActivityCreatedOnRecord(record, {
-                        'activity_type_id': self.activity_type_todo,
+                        'activity_type_id': expected_type,
                         'automated': False,
-                        'date_deadline': self.reference_now.date() + timedelta(days=4),  # activity type delay
+                        'date_deadline': self.reference_now.date() + timedelta(days=expected_type.delay_count),  # activity type delay
                         'note': '<p>Useful link ...</p>',
                         'summary': 'Write specification',
                         'user_id': self.user_admin,
@@ -161,10 +162,11 @@ class TestActivitySchedule(ActivityScheduleCase):
                         ).action_schedule_activities()
 
                 for record in test_records:
+                    expected_type = self._expected_default_activity_type(record._name)
                     self.assertActivityCreatedOnRecord(record, {
-                        'activity_type_id': self.activity_type_call,
+                        'activity_type_id': expected_type,
                         'automated': False,
-                        'date_deadline': self.reference_now.date() + timedelta(days=1),  # activity call delay
+                        'date_deadline': self.reference_now.date() + timedelta(days=expected_type.delay_count),  # activity call delay
                         'note': False,
                         'summary': 'TodoSumCallSummary',
                         'user_id': self.user_admin,
