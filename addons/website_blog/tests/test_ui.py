@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+import re
 from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
 from datetime import datetime
 
@@ -144,3 +145,19 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
 
     def test_blog_posts_dynamic_snippet_options(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_options', login='admin')
+
+    def test_blog_posts_dynamic_snippet_visibility(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_edit', login='admin')
+        homepage_view = self.env['ir.ui.view'].search([
+            ('website_id', '=', self.env.ref('website.default_website').id),
+            ('key', '=', 'website.homepage'),
+        ])
+        # Unpublish blog posts so the dynamic snippet can't show content.
+        blog_posts = self.env['blog.post'].search([])
+        blog_posts.write({'website_published': False})
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_empty', login='admin')
+
+        # Visibility for misconfigured snippets.
+        homepage_view_arch_misconfigured = re.sub(r'data-filter-id="\d+"', 'data-filter-id="-1"', homepage_view.arch_db)
+        homepage_view.write({'arch': homepage_view_arch_misconfigured})
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_misconfigured', login='admin')
