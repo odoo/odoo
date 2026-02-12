@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
 from markupsafe import Markup
 
 from odoo import api, fields, models, tools, _
-from odoo.addons.phone_validation.tools import phone_validation
 
 
 class EventRegistration(models.Model):
@@ -20,7 +18,7 @@ class EventRegistration(models.Model):
     @api.depends('lead_ids')
     def _compute_lead_count(self):
         for record in self:
-            record.lead_count = len(record.lead_ids)
+            record.lead_count = len(record.with_context(active_test=False).lead_ids)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -34,6 +32,22 @@ class EventRegistration(models.Model):
         if not self.env.context.get('event_lead_rule_skip'):
             registrations._apply_lead_generation_rules()
         return registrations
+
+    def action_view_leads(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_opportunities')
+        action['domain'] = [('registration_ids', 'in', self.id)]
+        context = self.env['crm.lead']._evaluate_context_from_action(action)
+        action['context'] = context | {'active_test': False}
+
+        # If only one lead, open form view directly, otherwise open the list view
+        if self.lead_count == 1:
+            lead = self.with_context(active_test=False).lead_ids[:1]
+            action['views'] = [(False, 'form')]
+            action['res_id'] = lead.id
+        else:
+            action['views'] = sorted(action['views'], key=lambda view: view[1] != 'list')
+
+        return action
 
     def write(self, vals):
         """ Update the lead values depending on fields updated in registrations.

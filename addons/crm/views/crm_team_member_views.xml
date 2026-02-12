@@ -8,9 +8,8 @@
         <field name="arch" type="xml">
             <field name="user_id" position="after">
                 <field name="assignment_enabled" column_invisible="True"/>
-                <field name="assignment_optout"/>
-                <field name="assignment_max"/>
-                <field name="lead_month_count"/>
+                <field name="assignment_max" width="250px"/>
+                <field name="lead_month_count" width="150px"/>
             </field>
         </field>
     </record>
@@ -22,15 +21,12 @@
         <field name="arch" type="xml">
             <field name="active" position="after">
                 <field name="assignment_enabled"/>
-                <field name="assignment_optout"/>
                 <field name="assignment_max"/>
             </field>
             <xpath expr="//main" position="after">
-                <div class="o_member_assignment"
-                        invisible="assignment_optout">
-                    <field name="lead_month_count" widget="gauge"
-                        options="{'max_field': 'assignment_max'}"
-                        invisible="assignment_max == 0"/>
+                <div class="o_member_assignment" invisible="assignment_rules == 'opt-out'">
+                    <field name="lead_month_count" widget="gauge" options="{'max_field': 'assignment_max'}" invisible="assignment_rules != 'limited'"/>
+                    <field name="lead_month_count" widget="gauge" options="{'max_tooltip': 'Unlimited'}" invisible="assignment_rules != 'unlimited'"/>
                 </div>
             </xpath>
         </field>
@@ -45,19 +41,24 @@
                 <notebook>
                     <page string="Lead Assignment" name="lead_assign">
                         <group>
-                            <label for="assignment_max" class="o_form_label text-900" string="Capacity" invisible="assignment_optout"/>
-                            <span invisible="assignment_optout">
-                                <field name="lead_month_count" class="oe_inline"/>
-                                <span> leads assigned the last 30 days out of a maximum of </span>
-                                <field name="assignment_max" class="oe_inline o_field_highlight o_input_6ch border-bottom border-dark"/>
+                            <label for="assignment_rules" class="o_form_label text-nowrap text-900"/>
+                            <span>
+                                <field name="assignment_rules" class="oe_inline o_field_highlight" nolabel="1"/>
+                                <span invisible="assignment_rules != 'limited'" class="ms-1">
+                                    <span class="me-1"> of </span>
+                                    <field name="assignment_max" class="oe_inline o_field_highlight o_input_4ch"/>
+                                    <span> leads per 30 days </span>
+                                    <span invisible="lead_month_count == 0">
+                                        (<field name="lead_month_count" class="oe_inline"/> assigned)
+                                    </span>
+                                </span>
                             </span>
-                            <field name="assignment_optout"/>
-                            <field name="assignment_domain_preferred" string="Lead Priority Filter" widget="domain"
+                            <field name="assignment_domain_preferred" string="Give priority if" widget="domain"
                                 options="{'model': 'crm.lead', 'foldable': True}"
-                                invisible="not assignment_enabled or assignment_max == 0 or assignment_optout"/>
-                            <field name="assignment_domain" string="Lead Assignment Filter" widget="domain"
+                                invisible="assignment_rules == 'opt-out'"/>
+                            <field name="assignment_domain" string="Only assign if" widget="domain"
                                 options="{'model': 'crm.lead', 'foldable': True}"
-                                invisible="not assignment_enabled or assignment_max == 0 or assignment_optout"/>
+                                invisible="assignment_rules == 'opt-out'"/>
                         </group>
                     </page>
                 </notebook>

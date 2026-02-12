@@ -2,7 +2,9 @@
 <templates>
     <t t-name="crm.Kanban.Buttons" t-inherit="web.KanbanView.Buttons" t-inherit-mode="primary">
         <xpath expr="." position="inside">
-            <LeadGenerationDropdown/>
+            <t t-if="env.searchModel.context.show_lead_gen_button">
+                <LeadGenerationDropdown/>
+            </t>
         </xpath>
     </t>
 </templates>

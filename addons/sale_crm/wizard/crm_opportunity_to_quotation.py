@@ -34,8 +34,8 @@ class CrmQuotationPartner(models.TransientModel):
 
     action = fields.Selection([
         ('create', 'Create a new customer'),
+        ('nothing', 'Do not link to a customer'),
         ('exist', 'Link to an existing customer'),
-        ('nothing', 'Do not link to a customer')
     ], string='Quotation Customer', required=True)
     lead_id = fields.Many2one('crm.lead', "Associated Lead", required=True)
     partner_id = fields.Many2one('res.partner', 'Customer')
