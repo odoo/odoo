@@ -531,7 +531,9 @@ export class SearchModel extends EventBus {
         const { domain, groupBys } = search;
         if (domain !== "[]") {
             const description = _t("Custom filter");
-            this.createNewFilters([{ description, domain, name: "custom filter", invisible: "True" }]);
+            this.createNewFilters([
+                { description, domain, name: "custom filter", invisible: "True" },
+            ]);
         }
         this._toggleGroupBys(groupBys);
         this._notify();
@@ -961,6 +963,9 @@ export class SearchModel extends EventBus {
             );
             if (index >= 0) {
                 this.query.splice(index, 1);
+                if (searchItem.type === "parentFilter") {
+                    continue;
+                }
                 if (!yearSelected(this._getSelectedGeneratorIds(searchItemId))) {
                     // This is the case where generatorId was the last option
                     // of type 'year' to be there before being removed above.
@@ -972,9 +977,11 @@ export class SearchModel extends EventBus {
                 }
             } else {
                 if (generatorId.startsWith("custom")) {
-                    this.query = this.query.filter(
-                        (queryElem) => searchItemId !== queryElem.searchItemId
-                    );
+                    if (searchItem.type !== "parentFilter") {
+                        this.query = this.query.filter(
+                            (queryElem) => searchItemId !== queryElem.searchItemId
+                        );
+                    }
                     this.query.push({ searchItemId, generatorId });
                     continue;
                 }
@@ -1755,9 +1762,11 @@ export class SearchModel extends EventBus {
             );
             return dateFilterRange[key];
         }
-        return searchItem.optionsParams.customOptions
+        const options = searchItem.optionsParams.customOptions
             .filter((item) => generatorIds.includes(item.id))
-            .map((o) => o[key])[0];
+            .map((o) => o[key]);
+
+        return key === "domain" ? Domain.or(options) : options;
     }
 
     /**
@@ -1861,8 +1870,7 @@ export class SearchModel extends EventBus {
                         }
                         break;
                     }
-                    case "dateFilter":
-                    case "parentFilter": {
+                    case "dateFilter": {
                         type = "filter";
                         const innerFilterDescription = this._getParentFilterDomain(
                             searchItem,
@@ -1870,6 +1878,16 @@ export class SearchModel extends EventBus {
                             "description"
                         );
                         values.push(`${searchItem.description}: ${innerFilterDescription}`);
+                        break;
+                    }
+                    case "parentFilter": {
+                        type = "filter";
+                        const innerFilterDescription = this._getParentFilterDomain(
+                            searchItem,
+                            activeItem.generatorIds,
+                            "description"
+                        );
+                        innerFilterDescription.forEach((filter) => values.push(filter));
                         break;
                     }
                     default: {
