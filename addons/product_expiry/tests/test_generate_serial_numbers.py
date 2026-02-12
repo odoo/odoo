@@ -268,3 +268,28 @@ class TestProductExpiryTour(TestStockPickingTour):
         url = self._get_picking_url(self.receipt.id)
 
         self.start_tour(url, 'test_generate_serial_with_expiration', login='admin')
+
+    @freeze_time("2025-12-30")
+    def test_modify_removal_and_expiration_dates(self):
+        """
+        Ensure that we can edit the removal_date and expiration_date fields at the same time
+        Without triggering the compute method for the expiration when saving modifications.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Test Dates',
+            'is_storable': True,
+            'tracking': 'lot',
+            'use_expiration_date': True
+        })
+
+        self.env['stock.move'].create({
+            'product_id': product.id,
+            'product_uom_qty': 2,
+            'product_uom': product.uom_id.id,
+            'picking_id': self.receipt.id,
+        })
+
+        self.receipt.action_confirm()
+        url = self._get_picking_url(self.receipt.id)
+
+        self.start_tour(url, 'test_modify_removal_and_expiration_dates', login='admin')
