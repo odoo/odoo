@@ -66,7 +66,7 @@ TRANSLATED_ELEMENTS = {
     'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'del', 'dfn', 'em',
     'font', 'i', 'ins', 'kbd', 'keygen', 'mark', 'math', 'meter', 'output',
     'progress', 'q', 'ruby', 's', 'samp', 'small', 'span', 'strong', 'sub',
-    'sup', 'time', 'u', 'var', 'wbr', 'text', 'select', 'option',
+    'sup', 'time', 'u', 'var', 'wbr', 'text',
 }
 
 # Attributes from QWeb views that must be translated.
@@ -226,11 +226,21 @@ def translate_xml_node(node, callback, parse, serialize):
                     # so that 'result_elem' can be checked by translatable and hastext
                     result_elem.tag = 'span'
                     if translatable(result_elem) and hastext(result_elem):
-                        div = result_elem
-                        if pos:
-                            node[pos-1].tail = div.text
+                        if node.tag.lower() == 'option' and len(result_elem) and result_elem[0].get('data-oe-translation-source-sha'):
+                            # In 'edit_translations' context, a <span> wrapper
+                            # is put in 'result_elem' to let the user translate
+                            # fields in the frontend.
+                            # But <span> can't be inside an <option> element,
+                            # so we put it in an attribute instead.
+                            # In this context, we can skip replacing the node
+                            # content.
+                            node.set('data-oe-translation-span-wrapper', etree.tostring(result_elem[0]))
                         else:
-                            node.text = div.text
+                            div = result_elem
+                            if pos:
+                                node[pos - 1].tail = div.text
+                            else:
+                                node.text = div.text
 
                 # move the content of the <div> element back inside node
                 while len(div) > 0:
