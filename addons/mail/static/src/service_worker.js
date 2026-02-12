@@ -160,40 +160,43 @@ async function openDiscussChannel(channelId, { action, joinCall = false, source 
     }
 }
 
-self.addEventListener("notificationclick", (event) => {
-    event.notification.close();
-    if (event.notification.data) {
-        const { action, model, res_id } = event.notification.data;
-        if (model === "discuss.channel") {
-            if (event.action === PUSH_NOTIFICATION_ACTION.DECLINE) {
-                event.waitUntil(
-                    fetch("/mail/rtc/channel/leave_call", {
-                        headers: { "Content-type": "application/json" },
-                        body: JSON.stringify({
-                            id: 1,
-                            jsonrpc: "2.0",
-                            method: "call",
-                            params: { channel_id: res_id },
-                        }),
-                        method: "POST",
-                        mode: "cors",
-                        credentials: "include",
-                    })
-                );
-                return;
-            }
+async function handleNotificationClick(event) {
+    const { action, model, res_id } = event.notification.data;
+    if (model === "discuss.channel") {
+        if (event.action === PUSH_NOTIFICATION_ACTION.DECLINE) {
             event.waitUntil(
-                openDiscussChannel(res_id, {
-                    action,
-                    joinCall: event.action === PUSH_NOTIFICATION_ACTION.ACCEPT,
+                fetch("/mail/rtc/channel/leave_call", {
+                    headers: { "Content-type": "application/json" },
+                    body: JSON.stringify({
+                        id: 1,
+                        jsonrpc: "2.0",
+                        method: "call",
+                        params: { channel_id: res_id },
+                    }),
+                    method: "POST",
+                    mode: "cors",
+                    credentials: "include",
                 })
             );
-        } else {
-            const modelPath = model.includes(".") ? model : `m-${model}`;
-            event.waitUntil(clients.openWindow(`/odoo/${modelPath}/${res_id}`));
+            return;
         }
+        return openDiscussChannel(res_id, {
+            action,
+            joinCall: event.action === PUSH_NOTIFICATION_ACTION.ACCEPT,
+        });
+    } else {
+        const modelPath = model.includes(".") ? model : `m-${model}`;
+        return clients.openWindow(`/odoo/${modelPath}/${res_id}`);
+    }
+}
+
+self.addEventListener("notificationclick", async (event) => {
+    event.notification.close();
+    if (event.notification.data) {
+        event.waitUntil(handleNotificationClick(event));
     }
 });
+
 self.addEventListener("push", async (event) => {
     const notification = event.data.json();
     switch (notification.options?.data?.type) {
