@@ -503,7 +503,7 @@ def update_template(content: str, outside_vars, inside_vars):
     return result
 
 
-def replace_x_path_only(content: str, variables: dict):
+def replace_x_path_only(content: str, variables: set):
     def fix_xpath(root: etree._ElementTree):
         for node in root.xpath("descendant-or-self::*[@t-inherit]"):
             attr = node.get("t-inherit")
@@ -573,6 +573,9 @@ def _aggregate_inside_vars(root: etree._ElementTree, inside_vars: dict[str, set[
                 var_set, loop_node.get("t-foreach-index") or loop_node.get("t-index")
             )
 
+        # TODO t-set-slot vars
+        # for loop_node in tpl.xpath("descendant-or-self::*[@t-set-slot]"):
+
 
 def aggregate_vars(content: str, vars={}, inside_vars={}):
     def callback(tree):
@@ -580,7 +583,6 @@ def aggregate_vars(content: str, vars={}, inside_vars={}):
         _aggregate_inside_vars(tree, inside_vars)
 
     update_etree(content, callback)
-    return vars, inside_vars
 
 
 # ------------------------------------------------------------------------------
@@ -1535,6 +1537,29 @@ test_vars = [
         </xpath>
     </t>
 </templates>
+        """,
+    },
+    {
+        "name": "t-att-for with global vars",
+        "outside_vars": defaultdict(set),
+        "inside_vars": {'web.RadioField': {'item'}},
+        "content": """
+<t t-name="web.SettingsRadioField" t-inherit="web.RadioField" t-inherit-mode="primary">
+    <xpath expr="//label" position="replace">
+        <label class="form-check-label o_form_label" t-att-for="`${id}_${item[0]}`">
+            <HighlightText originalText="item[1]"/>
+        </label>
+    </xpath>
+</t>
+        """,
+        "expected": """
+<t t-name="web.SettingsRadioField" t-inherit="web.RadioField" t-inherit-mode="primary">
+    <xpath expr="//label" position="replace">
+        <label class="form-check-label o_form_label" t-att-for="`${this.id}_${item[0]}`">
+            <HighlightText originalText="item[1]"/>
+        </label>
+    </xpath>
+</t>
         """,
     },
 ]
