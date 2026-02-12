@@ -191,7 +191,7 @@ class AccountPayment(models.Model):
                     liquidity_amount_currency,
                     self.company_id.currency_id,
                     self.company_id,
-                    self
+                    self.date
                 )
                 line_vals.append({
                     'name': _(
