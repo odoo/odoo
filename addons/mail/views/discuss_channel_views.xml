@@ -148,6 +148,9 @@
                     <filter string="Not Joined" name="filter_not_joined" domain="[('is_member', '=', False)]"/>
                     <separator/>
                     <filter string="Archived" name="filter_archived" domain="[('active', '=', False)]"/>
+                    <group>
+                        <filter string="Categories" name="group_by_categories" context="{'group_by': 'discuss_category_id'}"/>
+                    </group>
                 </search>
             </field>
         </record>
