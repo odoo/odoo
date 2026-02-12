@@ -125,6 +125,12 @@ class PaymentProvider(models.Model):
         readonly=False,
         context={'active_test': False},
     )
+    minimum_amount = fields.Monetary(
+        string="Minimum Amount",
+        help="The minimum payment amount that this payment provider is available for. Leave blank "
+        "to make it available for any payment amount.",
+        currency_field='main_currency_id',
+    )
     maximum_amount = fields.Monetary(
         string="Maximum Amount",
         help="The maximum payment amount that this payment provider is available for. Leave blank "
@@ -603,7 +609,7 @@ class PaymentProvider(models.Model):
                 reason=REPORT_REASONS_MAPPING['incompatible_country'],
             )
 
-        # Handle the maximum amount.
+        # Handle the minimum and maximum amounts.
         currency = self.env['res.currency'].browse(currency_id).exists()
         if not is_validation and currency:  # The currency is required to convert the amount.
             company = self.env['res.company'].browse(company_id).exists()
@@ -612,6 +618,10 @@ class PaymentProvider(models.Model):
             unfiltered_providers = providers
             providers = providers.filtered(
                 lambda p: (
+                    not p.minimum_amount
+                    or currency.compare_amounts(p.minimum_amount, converted_amount) != 1
+                )
+                and (
                     not p.maximum_amount
                     or currency.compare_amounts(p.maximum_amount, converted_amount) != -1
                 )
@@ -620,7 +630,7 @@ class PaymentProvider(models.Model):
                 report,
                 unfiltered_providers - providers,
                 available=False,
-                reason=REPORT_REASONS_MAPPING['exceed_max_amount'],
+                reason=REPORT_REASONS_MAPPING['exceed_min_or_max_amount'],
             )
 
         # Handle the available currencies; allow all currencies if the list is empty.

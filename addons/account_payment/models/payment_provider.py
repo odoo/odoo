@@ -2,6 +2,15 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools.translate import LazyTranslate
+
+from odoo.addons.payment import utils as payment_utils
+
+_lt = LazyTranslate(__name__, default_lang='en_US')
+
+REPORT_REASONS_MAPPING = {
+    'pricelist_not_allowed': _lt("pricelist not allowed"),
+}
 
 
 class PaymentProvider(models.Model):
@@ -16,6 +25,11 @@ class PaymentProvider(models.Model):
         check_company=True,
         domain='[("type", "=", "bank")]',
         copy=False,
+    )
+    available_pricelist_ids = fields.Many2many(
+        string="Pricelists",
+        help="Only allow this payment provider when the partner's pricelist matches one of these.",
+        comodel_name='product.pricelist',
     )
 
     #=== COMPUTE METHODS ===#
@@ -111,6 +125,34 @@ class PaymentProvider(models.Model):
     @api.model
     def _get_provider_payment_method(self, code):
         return self.env['account.payment.method'].search([('code', '=', code)], limit=1)
+
+    # === BUSINESS METHODS === #
+
+    @api.model
+    def _get_compatible_providers(self, company_id, partner_id, *args, report=None, **kwargs):
+        """Override of `payment` to exclude providers with incompatible pricelists.
+
+        :param int company_id: The company to which providers must belong, as a `res.company` id.
+        :param int partner_id: The partner making the payment, as a `res.partner` id.
+        :param dict report: The availability report.
+        :return: The compatible providers
+        :rtype: payment.provider
+        """
+        compatible_providers = super()._get_compatible_providers(
+            company_id, partner_id, *args, report=report, **kwargs
+        )
+        if pricelist := self.env['res.partner'].browse(partner_id).property_product_pricelist:
+            unfiltered_providers = compatible_providers
+            compatible_providers = compatible_providers.filtered(
+                lambda p: not p.available_pricelist_ids or pricelist in p.available_pricelist_ids
+            )
+            payment_utils.add_to_report(
+                report,
+                unfiltered_providers - compatible_providers,
+                available=False,
+                reason=REPORT_REASONS_MAPPING['pricelist_not_allowed'],
+            )
+        return compatible_providers
 
     #=== BUSINESS METHODS ===#
 

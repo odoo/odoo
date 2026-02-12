@@ -167,6 +167,39 @@ class TestPaymentProvider(PaymentCommon):
         )
         self.assertIn(self.provider, compatible_providers)
 
+    def test_provider_compatible_when_minimum_amount_is_zero(self):
+        """Test that the maximum amount has no effect on the provider's compatibility when it is set
+        to 0."""
+        self.provider.minimum_amount = 0
+        currency = self.provider.main_currency_id.id
+
+        compatible_providers = self.env['payment.provider']._get_compatible_providers(
+            self.company.id, self.partner.id, self.amount, currency_id=currency
+        )
+        self.assertIn(self.provider, compatible_providers)
+
+    def test_provider_compatible_when_payment_above_minimum_amount(self):
+        """Test that a provider is compatible when the payment amount is less than the maximum
+        amount."""
+        self.provider.minimum_amount = self.amount - 10
+        currency = self.provider.main_currency_id.id
+
+        compatible_providers = self.env['payment.provider']._get_compatible_providers(
+            self.company.id, self.partner.id, self.amount, currency_id=currency
+        )
+        self.assertIn(self.provider, compatible_providers)
+
+    def test_provider_not_compatible_when_payment_below_minimum_amount(self):
+        """Test that the provider is not compatible when the payment amount is less than the minimum
+        amount."""
+        self.provider.minimum_amount = self.amount + 10
+        currency = self.provider.main_currency_id.id
+
+        compatible_providers = self.env['payment.provider']._get_compatible_providers(
+            self.company.id, self.partner.id, self.amount, currency_id=currency
+        )
+        self.assertNotIn(self.provider, compatible_providers)
+
     def test_provider_compatible_when_maximum_amount_is_zero(self):
         """ Test that the maximum amount has no effect on the provider's compatibility when it is
         set to 0. """
@@ -309,6 +342,13 @@ class TestPaymentProvider(PaymentCommon):
         france = self.env.ref('base.fr')
         self.partner.country_id = france
 
+        # Prepare a provider with a minimum amount higher than the payment amount.
+        below_min_provider = self.provider.copy()
+        below_min_provider.write({
+            'state': 'test',
+            'minimum_amount': self.amount + 10.0,
+        })
+
         # Prepare a provider with a maximum amount lower than the payment amount.
         exceeding_max_provider = self.provider.copy()
         exceeding_max_provider.write({
@@ -359,9 +399,13 @@ class TestPaymentProvider(PaymentCommon):
                 'available': False,
                 'reason': REPORT_REASONS_MAPPING['incompatible_country'],
              },
+            below_min_provider: {
+                'available': False,
+                'reason': REPORT_REASONS_MAPPING['exceed_min_or_max_amount'],
+            },
             exceeding_max_provider: {
                 'available': False,
-                'reason': REPORT_REASONS_MAPPING['exceed_max_amount'],
+                'reason': REPORT_REASONS_MAPPING['exceed_min_or_max_amount'],
             },
             invalid_currency_provider: {
                 'available': False,
