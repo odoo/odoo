@@ -65,15 +65,16 @@ class ProductTemplate(models.Model):
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
 
     def _get_product_accounts(self):
+        skip_company_accounts = self.env.context.get('skip_company_accounts', False)
         return {
             'income': (
                 self.property_account_income_id
                 or self.categ_id.property_account_income_categ_id
-                or (self.company_id or self.env.company).income_account_id
+                or ((self.company_id or self.env.company).income_account_id if not skip_company_accounts else self.env['account.account'])
             ), 'expense': (
                 self.property_account_expense_id
                 or self.categ_id.property_account_expense_categ_id
-                or (self.company_id or self.env.company).expense_account_id
+                or ((self.company_id or self.env.company).expense_account_id if not skip_company_accounts else self.env['account.account'])
             ),
         }
 

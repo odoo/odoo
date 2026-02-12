@@ -601,7 +601,7 @@ class AccountMoveLine(models.Model):
         for line in product_lines:
             if line.product_id:
                 fiscal_position = line.move_id.fiscal_position_id
-                accounts = line.with_company(line.company_id).product_id\
+                accounts = line.with_context(skip_company_accounts=True).with_company(line.company_id).product_id\
                     .product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
                 if line.move_id.is_sale_document(include_receipts=True):
                     line.account_id = accounts['income'] or line.account_id
