@@ -117,6 +117,20 @@ class TestUsers(UsersCommonCase):
             "If the partner_id of a user has already a company, it is replaced by the user company"
         )
 
+    def test_user_login_in_lowercase(self):
+        """ Check that the user login is stored in lowercase """
+
+        test_user = self.env['res.users'].create({'name': 'John Smith', 'login': 'JSmith'})
+        self.assertEqual(
+            test_user.login, 'jsmith',
+            "The login of a user shall be stored in lowercase",
+        )
+
+        test_user.write({'login': 'JSmiTh'})
+        self.assertEqual(
+            test_user.login, 'jsmith',
+            "The login of a user shall be stored in lowercase",
+        )
 
     def test_change_user_company(self):
         """ Check the partner company update when the user company is changed """

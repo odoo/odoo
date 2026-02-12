@@ -3,7 +3,7 @@
 import logging
 
 from odoo.tools.translate import _
-from odoo.tools import email_normalize
+from odoo.tools import email_normalize, single_email_re
 from odoo.exceptions import UserError
 
 from odoo import api, fields, models, Command
@@ -105,7 +105,7 @@ class PortalWizardUser(models.TransientModel):
             if next((user for user in existing_users if self._is_portal_similar_than_user(user, portal_user)), None):
                 portal_user.email_state = 'exist'
             else:
-                portal_user.email_state = 'ok'
+                portal_user.email_state = 'ok' if single_email_re.match(portal_user.email) else 'ko'
 
     @api.depends('partner_id')
     def _compute_user_id(self):
