@@ -45,7 +45,7 @@ class TestHttpBase(HttpCaseWithUserDemo):
         assert len(dblist) >= 2, "There should be at least 2 databases"
         with patch('odoo.http.router.db_list') as db_list, \
              patch('odoo.http.router.db_filter') as db_filter, \
-             patch('odoo.http.requestlib.Registry') as Registry:  # TODO @juc: router
+             patch('odoo.http.router.Registry') as Registry:
             db_list.return_value = dblist
             db_filter.side_effect = lambda dbs, host=None: [db for db in dbs if db in dblist]
             Registry.return_value = self.registry
