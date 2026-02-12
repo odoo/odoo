@@ -71,7 +71,6 @@ export class BlockTab extends Component {
                 this.cancelDragAndDrop = this.shared.history.makeSavePoint();
                 this.dragState = {};
                 let snippetEl;
-                const baseSectionEl = snippet.content.cloneNode(true);
                 this.state.ongoingInsertion = true;
                 await new Promise((resolve) => {
                     this.snippetModel.openSnippetDialog(
@@ -82,7 +81,7 @@ export class BlockTab extends Component {
 
                                 // Add the dropzones corresponding to a section and
                                 // make them invisible.
-                                const selectors = this.shared.dropzone.getSelectors(baseSectionEl);
+                                const selectors = this.shared.dropzone.getSelectors(snippetEl);
                                 const dropzoneEls =
                                     this.shared.dropzone.activateDropzones(selectors);
                                 this.editable
