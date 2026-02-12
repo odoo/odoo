@@ -162,7 +162,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
         website = self.website.with_user(self.public_user)
         with MockRequest(website.env, website=website):
             sale_order = self.env['sale.order'].create({
-                'partner_id': self.public_user.id,
+                'partner_id': self.public_user.partner_id.id,
                 'order_line': [Command.create({'product_id': self.product.id})],
                 'access_token': 'test_token',
             })
@@ -515,7 +515,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
         portal_user = self.user_portal
         website = self.website.with_user(portal_user)
         portal_user.write(self.dummy_partner_address_values)
-        self.carrier.country_ids = [Command.set((2,))]
+        self.carrier.country_ids = [Command.set(self.env.ref('base.be').ids)]
         self.product.type = 'consu'
         with (
             MockRequest(website.env, website=website) as request,

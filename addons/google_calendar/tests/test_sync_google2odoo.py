@@ -1508,8 +1508,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'allday': False,
             'google_id': google_id,
             'need_sync': False,
-            'user_id': self.env.user.partner_id.id,
-            'partner_ids': [(6, 0, [self.env.user.partner_id.id, partner1.id, partner2.id, partner3.id, partner4.id],)]
+            'user_id': self.env.user.id,
+            'partner_ids': [(6, 0, [self.env.user.partner_id.id, partner1.id, partner2.id, partner3.id, partner4.id])]
             # current user is attendee
         })
         recurrence = self.env['calendar.recurrence'].create({
@@ -1548,7 +1548,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.sync(gevent)
         # User attendee removed but gevent owner might be added after synch.
         mails = event.attendee_ids.mapped('email')
-        self.assertFalse(mails)
+        self.assertEqual(mails, ['odoobot@example.com'])
 
         self.assertGoogleAPINotCalled()
 

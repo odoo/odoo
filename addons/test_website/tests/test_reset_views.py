@@ -41,7 +41,7 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
         self.test_page_view = self.Website.viewref('test_website.test_page_view')
         total_views = self.View.search_count([('type', '=', 'qweb')])
         # Trigger COW then break the QWEB XML on it
-        break_view(self.test_page_view.with_context(website_id=1))
+        break_view(self.test_page_view.with_context(website_id=self.ref('website.default_website')))
         self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view")
         self.fix_it('/test_page_view')
 
@@ -50,7 +50,7 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
         total_views = self.View.search_count([('type', '=', 'qweb')])
         # Trigger COW then break the QWEB XML on it
         # `t-att-data="no_record.exist"` will test the case where exception.html contains branding
-        break_view(self.test_view.with_context(website_id=1), to='<p t-att-data="no_record.exist" />')
+        break_view(self.test_view.with_context(website_id=self.ref('website.default_website')), to='<p t-att-data="no_record.exist" />')
         self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view")
         self.fix_it('/test_view')
 
@@ -60,7 +60,7 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
 
         total_views = self.View.search_count([('type', '=', 'qweb')])
         # Trigger COW then break the QWEB XML on it
-        break_view(self.test_view_to_be_t_called.with_context(website_id=1))
+        break_view(self.test_view_to_be_t_called.with_context(website_id=self.ref('website.default_website')))
         break_view(self.test_view, to='<t t-call="test_website.test_view_to_be_t_called"/>')
         self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view")
         self.fix_it('/test_view')
@@ -71,7 +71,7 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
 
         # Activate and break the inherited view
         self.test_view_child_broken.active = True
-        break_view(self.test_view_child_broken.with_context(website_id=1, load_all_views=True))
+        break_view(self.test_view_child_broken.with_context(website_id=self.ref('website.default_website'), load_all_views=True))
 
         self.fix_it('/test_view')
 
@@ -80,7 +80,7 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
     # def test_05_reset_specific_view_controller_broken_request(self):
     #     total_views = self.View.search_count([('type', '=', 'qweb')])
     #     # Trigger COW then break the QWEB XML on it
-    #     break_view(self.test_view.with_context(website_id=1), to='<t t-out="request.env[\'website\'].browse(\'a\').name" />')
+    #     break_view(self.test_view.with_context(website_id=self.ref('website.default_website')), to='<t t-out="request.env[\'website\'].browse(\'a\').name" />')
     #     self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view (1)")
     #     self.fix_it('/test_view')
 
@@ -89,7 +89,7 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
     def test_06_reset_specific_view_controller_inexisting_template(self):
         total_views = self.View.search_count([('type', '=', 'qweb')])
         # Trigger COW then break the QWEB XML on it
-        break_view(self.test_view.with_context(website_id=1), to='<t t-call="no_record.exist"/>')
+        break_view(self.test_view.with_context(website_id=self.ref('website.default_website')), to='<t t-call="no_record.exist"/>')
         self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view (2)")
         self.fix_it('/test_view')
 
@@ -105,9 +105,9 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
         self.test_page_view = self.Website.viewref('test_website.test_page_view')
         total_views = self.View.search_count([('type', '=', 'qweb')])
         # Trigger COW then break the QWEB XML on it
-        break_view(self.test_page_view.with_context(website_id=1))
+        break_view(self.test_page_view.with_context(website_id=self.ref('website.default_website')))
         # Break it again to have a previous arch different than file arch
-        break_view(self.test_page_view.with_context(website_id=1))
+        break_view(self.test_page_view.with_context(website_id=self.ref('website.default_website')))
         self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view")
 
         with self.assertRaises(AssertionError):

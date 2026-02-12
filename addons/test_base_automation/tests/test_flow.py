@@ -302,7 +302,7 @@ if env.context.get('old_values', None): # on write only
                 'code': """
 if env.context.get('old_values', None):  # on write
     if 'user_id' in env.context['old_values'][record.id]:
-        record.write({'is_assigned_to_admin': (record.user_id.id == 1)})""",
+        record.write({'is_assigned_to_admin': (record.user_id == record.env.ref('base.user_root'))})""",
                 },
             )
 
@@ -1492,7 +1492,7 @@ class TestCompute(common.TransactionCase):
         })
 
         ext_partner = self.env["res.partner"].create({"name": "ext", "email": "email@server.com"})
-        internal_partner = self.env["res.users"].browse(2).partner_id
+        internal_partner = self.env.ref('base.user_admin').partner_id
 
         obj = self.env["base.automation.lead.thread.test"].create({"name": "test"})
         obj.message_subscribe([ext_partner.id, internal_partner.id])
@@ -1555,7 +1555,7 @@ class TestCompute(common.TransactionCase):
         })
 
         ext_partner = self.env["res.partner"].create({"name": "ext", "email": "email@server.com"})
-        internal_partner = self.env["res.users"].browse(2).partner_id
+        internal_partner = self.env.ref('base.user_admin').partner_id
 
         obj = self.env["base.automation.lead.thread.test"].create({"name": "test"})
         obj.message_subscribe([ext_partner.id, internal_partner.id])

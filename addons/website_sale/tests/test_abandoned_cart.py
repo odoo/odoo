@@ -237,7 +237,7 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             'order_line': order_line,
         })
         transaction = self.env['payment.transaction'].create({
-            'provider_id': 15,
+            'provider_id': self.ref('payment.payment_provider_demo'),
             'payment_method_id': self.payment_method_id,
             'partner_id': self.customer.id,
             'reference': abandoned_sale_order.name,

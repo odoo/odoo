@@ -2453,6 +2453,17 @@ class BaseModel(metaclass=MetaModel):
                     for field in sorted(self._fields.values(), key=lambda f: f.column_order)
                     if field.name != 'id' and field.store and field.column_type
                 ])
+                if self._inherits:
+                    # Randomize first sequence number to avoid having records
+                    # with similar ids when testing. For example, avoid having
+                    # first res_users and res_partner sharing the same id.
+                    # Just using the number of existing tables multiplied by a
+                    # prime.
+                    cr.execute("""
+                        SELECT setval(
+                            pg_get_serial_sequence(%s, 'id'),
+                            abs(hashtext(%s)) %% 43 + 7)""",
+                        (self._table, self._table))
 
             if self._parent_store:
                 if not sql.column_exists(cr, self._table, 'parent_path'):

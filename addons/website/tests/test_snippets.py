@@ -27,7 +27,7 @@ class TestSnippets(HttpCase):
         self.start_tour('/@/', 'default_shape_gets_palette_colors', login='admin')
 
     def test_03_snippets_all_drag_and_drop(self):
-        with MockRequest(self.env, website=self.env['website'].browse(1)):
+        with MockRequest(self.env, website=self.env.ref('website.default_website')):
             snippets_template = self.env['ir.ui.view'].render_public_asset('website.snippets')
         html_template = html.fromstring(snippets_template)
         data_snippet_els = html_template.xpath("//*[snippets and not(hasclass('d-none'))]//*[@data-oe-snippet-key]")
@@ -76,7 +76,7 @@ class TestSnippets(HttpCase):
         create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_banner_default_image.jpg')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_social_media', login="admin")
         self.assertEqual(
-            self.env['website'].browse(1).social_instagram,
+            self.env.ref('website.default_website').social_instagram,
             'https://instagram.com/odoo.official/',
             'Social media should have been updated'
         )

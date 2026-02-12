@@ -24,7 +24,7 @@ class WebsiteVisitorTestsEventTrack(TestEventOnlineCommon, WebsiteVisitorTestsCo
             'name': 'Wishlister Alex',
             'lang_id': self.env.ref('base.lang_en').id,
             'country_id': self.env.ref('base.be').id,
-            'website_id': 1,
+            'website_id': self.ref('website.default_website'),
             'last_connection_datetime': datetime.now() - timedelta(days=8),
             'access_token': 'f9d2b93591d6f602e5e8afa238e35a6c',
             'event_track_visitor_ids': [(0, 0, {

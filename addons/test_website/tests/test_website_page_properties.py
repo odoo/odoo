@@ -10,7 +10,8 @@ class TestWebsitePageProperties(HttpCase):
         self.start_tour('/test_view', 'website_page_properties_common', login='admin')
 
     def test_website_page_properties_can_publish(self):
-        self.start_tour('/test_website/model_item/1', 'website_page_properties_can_publish', login='admin')
+        item_id = self.env['test.model'].search([], limit=1).ensure_one().id
+        self.start_tour(f'/test_website/model_item/{item_id}', 'website_page_properties_can_publish', login='admin')
 
     def test_website_page_properties_website_page(self):
         # Create a website page with a different URL to be tested for dependency

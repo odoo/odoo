@@ -246,7 +246,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
                 "product_template_id": self.productC.product_tmpl_id.id,
                 "product_id": self.productC.id,
                 "quantity": 1,
-                "uom_id": 1,
+                "uom_id": self.productC.uom_id.id,
                 "product_custom_attribute_values": [],
                 "no_variant_attribute_value_ids": [],
                 "linked_products": []

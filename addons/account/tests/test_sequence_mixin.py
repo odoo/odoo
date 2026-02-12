@@ -51,6 +51,11 @@ class TestSequenceMixinCommon(AccountTestInvoicingCommon):
 
 @tagged('post_install', '-at_install')
 class TestSequenceMixin(TestSequenceMixinCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.ref('base.partner_root').company_id = cls.env.company
+
     def assertNameAtDate(self, date, name):
         test = self.create_move(date=date)
         test.action_post()
@@ -92,7 +97,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         self.env.company.fiscalyear_last_month = '12'
 
         bill = self.env['account.move'].create({
-            'partner_id': 1,
+            'partner_id': self.ref('base.partner_root'),
             'move_type': 'in_invoice',
             'date': '2016-01-01',
             'line_ids': [
@@ -115,7 +120,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
             self.assertMoveName(bill_form, 'BILL/16-17/01/0001')
 
         invoice = self.env['account.move'].create({
-            'partner_id': 1,
+            'partner_id': self.ref('base.partner_root'),
             'move_type': 'out_invoice',
             'date': '2016-01-01',
             'line_ids': [
@@ -140,7 +145,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         self.env.company.quick_edit_mode = 'in_invoices'
 
         bill_1 = self.env['account.move'].create({
-            'partner_id': 1,
+            'partner_id': self.ref('base.partner_root'),
             'move_type': 'in_invoice',
             'date': '2016-01-01',
             'invoice_date': '2016-01-01',
@@ -368,7 +373,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         )
         (invoice + invoice2 + refund + refund2).write({
             'journal_id': self.company_data['default_journal_sale'].id,
-            'partner_id': 1,
+            'partner_id': self.ref('base.partner_root'),
             'invoice_date': '2016-01-01',
         })
         (invoice + invoice2).move_type = 'out_invoice'
@@ -601,7 +606,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         # First bill in second half of first month of the fiscal year, which is
         # the start of the fiscal year
         bill = self.env['account.move'].create({
-            'partner_id': 1,
+            'partner_id': self.ref('base.partner_root'),
             'move_type': 'in_invoice',
             'date': '2024-04-17',
             'line_ids': [

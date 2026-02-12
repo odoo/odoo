@@ -25,7 +25,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
             "name": "Post Test",
             "subtitle": "Subtitle Test",
             "blog_id": blog.id,
-            "author_id": cls.env.user.id,
+            "author_id": cls.env.user.partner_id.id,
             "tag_ids": [(4, blog_tag.id)],
             "is_published": True,
             "cover_properties": """{"background-image": "url('/website_blog/static/src/img/cover_1.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0"}""",
@@ -98,7 +98,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         blog_post_1 = Post.create({
             'name': 'First Blog Post',
             'blog_id': Blog1.id,
-            'author_id': self.env.user.id,
+            'author_id': self.env.user.partner_id.id,
             'is_published': True,
             'published_date': datetime(2025, 2, 10, 12, 0, 0),
         })
@@ -107,7 +107,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         blog_post_2 = Post.create({
             'name': 'Second Blog Post',
             'blog_id': Blog2.id,
-            'author_id': self.env.user.id,
+            'author_id': self.env.user.partner_id.id,
             'is_published': True,
             'published_date': datetime(2025, 1, 15, 14, 30, 0),
         })

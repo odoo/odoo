@@ -23,6 +23,8 @@ class IrConfigParameter(models.Model):
         ):
             raise UserError(_('The value for %s must be the ID to a valid analytic plan that is not a subplan', param.key))
         res = super().write(vals)
-        self.env['account.analytic.plan'].browse(int(old_plan_id))._sync_all_plan_column()
-        plan_field.unlink()
+        old_plan = self.env['account.analytic.plan'].browse(int(old_plan_id))
+        if not (old_plan.id == 1 and not self.env.registry.ready and not old_plan.exists()):
+            old_plan._sync_all_plan_column()
+            plan_field.unlink()
         return res

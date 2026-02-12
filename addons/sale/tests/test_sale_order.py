@@ -900,7 +900,7 @@ class TestSalesTeam(SaleCommon):
             'login': 'team0user',
             'name': 'User in Team 0',
         })
-        cls.sale_team.write({'member_ids': [4, cls.user_in_team.id]})
+        cls.sale_team.write({'member_ids': [(4, cls.user_in_team.id)]})
         cls.user_not_in_team = cls.env['res.users'].create({
             'email': 'noteamuser@example.com',
             'login': 'noteamuser',

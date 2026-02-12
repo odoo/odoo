@@ -148,7 +148,7 @@ class test_search(TransactionCase):
 
         # Create test users
         u = Users.create({'name': '__search', 'login': '__search', 'group_ids': [Command.set([group_employee.id])]})
-        a = Users.create({'name': '__test_A', 'login': '__test_A', 'country_id': country_be.id, 'state_id': country_be.id})
+        a = Users.create({'name': '__test_A', 'login': '__test_A', 'country_id': country_be.id, 'state_id': country_be.state_ids[0].id})
         b = Users.create({'name': '__test_B', 'login': '__a_test_B', 'country_id': country_us.id, 'state_id': states_us[1].id})
         c = Users.create({'name': '__test_B', 'login': '__z_test_B', 'country_id': country_us.id, 'state_id': states_us[0].id})
 

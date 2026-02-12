@@ -165,6 +165,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
             ]
         })
         self.env['website'].browse(1).write({'google_analytics_key': 'G-XXXXXXXXXXX'})
+        self.env.ref('website.default_website').write({'google_analytics_key': 'G-XXXXXXXXXXX'})
         self.start_tour('/shop?search=Colored T-Shirt', 'website_sale.google_analytics_view_item')
         # Data for google_analytics_add_to_cart
         self.env['product.template'].create({

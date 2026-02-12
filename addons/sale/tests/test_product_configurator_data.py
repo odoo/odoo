@@ -19,7 +19,7 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
                 'params': {
                     'product_template_id': product_template.id,
                     'quantity': 1.0,
-                    'currency_id': 1,
+                    'currency_id': self.ref('base.USD'),
                     'so_date': str(self.env.cr.now()),
                     'product_uom_id': None,
                     'company_id': None,
