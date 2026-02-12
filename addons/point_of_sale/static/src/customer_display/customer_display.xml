@@ -100,11 +100,11 @@
                         </h4>
                     </t>
                     <div class="d-flex flex-column px-3">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div t-if="order.scaleData.grossWeight" class="d-flex justify-content-between align-items-center mb-2">
                             <div class="w-60 fs-5 me-2 form-control-plaintext">Gross Weight:</div>
                             <div class="weight fs-5 js-weight text-end form-control-plaintext" t-esc="order.scaleData.grossWeight"></div>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div t-if="order.scaleData.tare" class="d-flex justify-content-between align-items-center mb-2">
                             <div class="w-60 fs-5 me-2 form-control-plaintext">Tare Weight:</div>
                             <div class="weight fs-5 js-weight text-end form-control-plaintext" t-esc="order.scaleData.tare"></div>
                         </div>
