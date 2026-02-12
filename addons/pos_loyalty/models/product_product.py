@@ -16,3 +16,53 @@ class ProductProduct(models.Model):
             params.extend([field for field in missing_fields if field in self._fields])
 
         return params
+<<<<<<< 2a28bd94667758c87379dc79cfa559337a90a3ac
+||||||| 2264f330859b79010b227e3a9fda1075de8ed4e8
+
+    def _load_pos_data(self, data):
+        res = super()._load_pos_data(data)
+        config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
+        try:
+            rewards = config_id._get_program_ids().reward_ids
+            reward_products = rewards.discount_line_product_id | rewards.reward_product_ids | rewards.reward_product_id
+            trigger_products = config_id._get_program_ids().filtered(lambda p: p.program_type in ['ewallet', 'gift_card']).trigger_product_ids
+
+            loyalty_product_ids = set(reward_products.ids + trigger_products.ids)
+            classic_product_ids = {product['id'] for product in res['data']}
+            products = self.env['product.product'].browse(list(loyalty_product_ids - classic_product_ids))
+            products = products.read(fields=res['fields'], load=False)
+            self._process_pos_ui_product_product(products, config_id)
+
+            data['pos.session']['data'][0]['_pos_special_products_ids'] += [product.id for product in reward_products if product.id not in [p["id"] for p in res['data']]]
+
+            # Identify special loyalty products (e.g., gift cards, e-wallets) to be displayed in the POS
+            data['pos.session']['data'][0]['_pos_special_display_products_ids'] = trigger_products.ids
+            res['data'].extend(products)
+        except AccessError as e:
+            _logger.warning('Cannot load loyalty products into the PoS \n%s', e)
+
+        return res
+=======
+
+    def _load_pos_data(self, data):
+        res = super()._load_pos_data(data)
+        config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
+        try:
+            rewards = config_id._get_program_ids().reward_ids
+            reward_products = rewards.discount_line_product_id | rewards.reward_product_ids | rewards.reward_product_id
+            trigger_products = config_id._get_program_ids().filtered(lambda p: p.program_type in ['ewallet', 'gift_card']).trigger_product_ids
+
+            loyalty_product_ids = set(reward_products.ids + trigger_products.ids)
+            classic_product_ids = {product['id'] for product in res['data']}
+            products = self.env['product.product'].browse(list(loyalty_product_ids - classic_product_ids))
+            products = products.read(fields=res['fields'], load=False)
+            self._process_pos_ui_product_product(products, config_id)
+
+            # Identify special loyalty products (e.g., gift cards, e-wallets) to be displayed in the POS
+            data['pos.session']['data'][0]['_pos_special_display_products_ids'] = trigger_products.ids
+            res['data'].extend(products)
+        except AccessError as e:
+            _logger.warning('Cannot load loyalty products into the PoS \n%s', e)
+
+        return res
+>>>>>>> 1be3195a32832edd60cfff1e00ee5324a635caaa
