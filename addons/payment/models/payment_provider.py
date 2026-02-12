@@ -138,7 +138,7 @@ class PaymentProvider(models.Model):
         translate=True)
     pending_msg = fields.Html(
         string="Pending Message",
-        help="The message displayed if the order pending after the payment process",
+        help="The message displayed if the order is handled by a deferred payment method",
         default=lambda self: _(
             "Your payment has been processed but is waiting for approval."
         ), translate=True)

@@ -326,6 +326,13 @@
         />
     </record>
 
+    <record id="payment_provider_pay_on_invoice" model="payment.provider">
+        <field name="name">Pay on Invoice</field>
+        <field name="sequence">30</field>
+        <field name="image_128" type="base64" file="payment_custom/static/description/icon_invoice.png"/>
+        <field name="module_id" ref="base.module_payment_custom"/>
+    </record>
+
     <record id="payment_provider_paymob" model="payment.provider">
         <field name="name">Paymob</field>
         <field name="image_128" type="base64" file="payment_paymob/static/description/icon.png"/>
@@ -355,13 +362,6 @@
                     ref('payment_method_valu'),
                 ])]"
         />
-    </record>
-
-    <record id="payment_provider_pay_on_invoice" model="payment.provider">
-        <field name="name">Pay on Invoice</field>
-        <field name="sequence">30</field>
-        <field name="image_128" type="base64" file="payment_custom/static/description/icon_invoice.png"/>
-        <field name="module_id" ref="base.module_payment_custom"/>
     </record>
 
     <record id="payment_provider_paypal" model="payment.provider">
@@ -469,7 +469,7 @@
     <record id="payment_provider_transfer" model="payment.provider">
         <field name="name">Wire Transfer</field>
         <field name="sequence">30</field>
-        <field name="image_128" type="base64" file="payment_custom/static/description/icon.png"/>
+        <field name="image_128" type="base64" file="payment_custom/static/description/icon_transfer.png"/>
         <field name="module_id" ref="base.module_payment_custom"/>
     </record>
 
