@@ -1,6 +1,5 @@
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
-import { expect, test } from "@odoo/hoot";
-import { advanceTime } from "@odoo/hoot-mock";
+import { animationFrame, expect, test } from "@odoo/hoot";
 import {
     defineModels,
     fieldInput,
@@ -14,7 +13,7 @@ class Product extends models.Model {
     url = fields.Char({
         onChange(record) {
             // factice onchange to cause onchange calls
-        }
+        },
     });
     old_url = fields.Char();
 }
@@ -26,7 +25,10 @@ test("PageUrlField in form view", async () => {
     Product._records = [{ id: 1, url: "/test", old_url: "/test" }];
     onRpc("onchange", ({ args }) => {
         expect.step(`onchange ${args[1].url}`);
+        def.resolve();
     });
+
+    let def = Promise.withResolvers();
     await mountView({
         type: "form",
         resModel: "product",
@@ -44,13 +46,16 @@ test("PageUrlField in form view", async () => {
     await fieldInput("url").press("a");
     await fieldInput("url").press("b");
     expect(`#changed`).toHaveCount(0);
-    await advanceTime(100);
+    await def.promise; // onchange
+    await animationFrame(); // render
     expect(`#changed`).toHaveCount(1);
 
+    def = Promise.withResolvers();
     await fieldInput("url").press("Backspace");
     await fieldInput("url").press("Backspace");
     expect(`#changed`).toHaveCount(1);
-    await advanceTime(100);
+    await def.promise; // onchange
+    await animationFrame(); // render
     expect(`#changed`).toHaveCount(0);
-    expect.verifySteps(['onchange /testab', 'onchange /test']);
+    expect.verifySteps(["onchange /testab", "onchange /test"]);
 });

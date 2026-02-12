@@ -1,7 +1,9 @@
-import { describe, expect, test } from "@odoo/hoot";
 import {
+    animationFrame,
     click,
+    describe,
     edit,
+    expect,
     getActiveElement,
     hover,
     press,
@@ -9,16 +11,16 @@ import {
     queryFirst,
     queryOne,
     setInputRange,
+    test,
     waitFor,
     waitUntil,
-} from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+} from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
 import { expandToolbar } from "./_helpers/toolbar";
-import { execCommand } from "./_helpers/userCommands";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { execCommand } from "./_helpers/userCommands";
 
 test("can set foreground color", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
@@ -202,7 +204,7 @@ test("applied custom color should be shown in colorpicker after switching tab", 
     await animationFrame();
     expect(".o_hex_input").toHaveValue("#FF0000");
     const newColor = "#00FF00";
-    await contains(".o_hex_input").edit(newColor);
+    await contains(".o_hex_input").edit(newColor, { confirm: false });
     expect(".o_hex_input").toHaveValue(newColor);
     expect(getContent(el)).toBe(
         '<p><font style="background-color: rgb(0, 255, 0);">test</font></p>'
