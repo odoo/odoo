@@ -54,7 +54,6 @@ test("basic rendering", async () => {
             <form>
                 <field name="lines" widget="slide_category_one2many">
                     <list>
-                        <field name="is_category" column_invisible="1"/>
                         <field name="name"/>
                         <field name="display_name"/>
                         <field name="int"/>
@@ -80,7 +79,6 @@ test("click on section behaves as usual in readonly mode", async () => {
             <form>
                 <field name="lines" widget="slide_category_one2many">
                     <list>
-                        <field name="is_category" column_invisible="1"/>
                         <field name="name"/>
                         <field name="int"/>
                     </list>
@@ -103,7 +101,6 @@ test("click on section edit the section in place", async () => {
             <form>
                 <field name="lines" widget="slide_category_one2many">
                     <list>
-                        <field name="is_category" column_invisible="1"/>
                         <field name="name"/>
                         <field name="int"/>
                     </list>
@@ -125,7 +122,6 @@ test("click on real line opens a dialog", async () => {
             <form>
                 <field name="lines" widget="slide_category_one2many">
                     <list>
-                        <field name="is_category" column_invisible="1"/>
                         <field name="name"/>
                         <field name="int"/>
                     </list>
@@ -147,7 +143,6 @@ test("can create section inline", async () => {
             <form>
                 <field name="lines" widget="slide_category_one2many">
                     <list>
-                        <field name="is_category" column_invisible="1"/>
                         <field name="name"/>
                         <field name="int"/>
                         <control>
@@ -175,7 +170,6 @@ test("creates real record in form dialog", async () => {
             <form>
                 <field name="lines" widget="slide_category_one2many">
                     <list>
-                        <field name="is_category" column_invisible="1"/>
                         <field name="name"/>
                         <field name="int"/>
                         <control>
