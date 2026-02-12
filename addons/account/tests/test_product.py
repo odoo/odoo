@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo import Command
 from odoo.tests import Form, tagged
 from odoo.tests.common import new_test_user
 
@@ -90,3 +91,48 @@ class TestProduct(AccountTestInvoicingCommon):
         })
 
         self.assertEqual(product.taxes_id, tax_new, "The branch company default tax shouldn't be set if we set a different tax on the product from the parent company.")
+
+    def test_product_category_parent_account_fallback(self):
+        """When no account is set on a product category, accounts should be inherited from parent categories.
+        Also covers the case where income and expense are defined at different hierarchy levels.
+        """
+        grandparent_income = self.copy_account(self.company_data['default_account_revenue'])
+        child_expense = self.copy_account(self.company_data['default_account_expense'])
+
+        grandparent_categ = self.env['product.category'].create({
+            'name': 'Grandparent Category',
+            'property_account_income_categ_id': grandparent_income.id,
+        })
+        parent_categ = self.env['product.category'].create({
+            'name': 'Parent Category',
+            'parent_id': grandparent_categ.id,
+            'property_account_income_categ_id': False,
+            'property_account_expense_categ_id': False,
+        })
+        child_categ = self.env['product.category'].create({
+            'name': 'Child Category',
+            'parent_id': parent_categ.id,
+            'property_account_income_categ_id': False,
+            'property_account_expense_categ_id': child_expense.id,
+        })
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'categ_id': child_categ.id,
+        })
+
+        invoice, bill = self.env['account.move'].create([
+            {
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_line_ids': [Command.create({'product_id': product.id})],
+            },
+            {
+                'move_type': 'in_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_line_ids': [Command.create({'product_id': product.id})],
+            },
+        ])
+        self.assertEqual(invoice.invoice_line_ids.account_id, grandparent_income,
+            "Customer invoice line should use grandparent category's income account")
+        self.assertEqual(bill.invoice_line_ids.account_id, child_expense,
+            "Vendor bill line should use child category's expense account")
