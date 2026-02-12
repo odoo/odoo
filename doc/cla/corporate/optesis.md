@@ -14,3 +14,4 @@ List of contributors:
 
 Ibrahima GUEYE 44674493+optesis-ibg@users.noreply.github.com https://github.com/optesis-ibg
 Anta NIANG 51160361+optesis-ang@users.noreply.github.com https://github.com/optesis-ang
+Ibrahima NIASSE EXT 64529673+iniass-dev@users.noreply.github.com https://github.com/
