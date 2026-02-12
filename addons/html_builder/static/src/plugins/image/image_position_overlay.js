@@ -1,11 +1,10 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { scrollTo } from "@html_builder/utils/scrolling";
 import {
     Component,
     onMounted,
     onWillStart,
     onWillUnmount,
-    useExternalListener,
 } from "@odoo/owl";
 
 export class ImagePositionOverlay extends Component {

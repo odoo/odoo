@@ -1,7 +1,7 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
-import { Component, useExternalListener } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { cleanZWChars, deduceURLfromText } from "./utils";
 import { useColorPicker } from "@web/core/color_picker/color_picker";

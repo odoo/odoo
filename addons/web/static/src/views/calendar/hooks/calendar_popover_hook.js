@@ -1,8 +1,7 @@
-import { useComponent } from "@web/owl2/utils";
+import { useComponent, useExternalListener } from "@web/owl2/utils";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 
-import { useExternalListener } from "@odoo/owl";
 
 export function useCalendarPopover(component) {
     const owner = useComponent();

@@ -1,8 +1,8 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 
-import { Component, onMounted, useExternalListener } from "@odoo/owl";
+import { Component, onMounted } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { useChildRef, useService } from "@web/core/utils/hooks";

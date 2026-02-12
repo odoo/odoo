@@ -1,8 +1,8 @@
-import { useComponent, useEnv, useRef, useState } from "@web/owl2/utils";
+import { useComponent, useEnv, useExternalListener, useRef, useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ErrorDialog } from "@web/core/errors/error_dialogs";
-import { onMounted, onPatched, useExternalListener } from "@odoo/owl";
+import { onMounted, onPatched } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 
 /**

@@ -1,5 +1,5 @@
-import { useRef } from "@web/owl2/utils";
-import { onMounted, useExternalListener, onWillUnmount, onPatched } from "@odoo/owl";
+import { useExternalListener, useRef } from "@web/owl2/utils";
+import { onMounted, onWillUnmount, onPatched } from "@odoo/owl";
 import { useDebounced } from "@web/core/utils/timing";
 import { normDeg } from "@pos_restaurant/app/services/floor_plan/utils/utils";
 

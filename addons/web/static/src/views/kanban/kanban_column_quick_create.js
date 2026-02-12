@@ -1,8 +1,8 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useExternalListener, useRef, useState } from "@web/owl2/utils";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 
-import { Component, useExternalListener, onPatched } from "@odoo/owl";
+import { Component, onPatched } from "@odoo/owl";
 
 export class KanbanColumnQuickCreate extends Component {
     static template = "web.KanbanColumnQuickCreate";

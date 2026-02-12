@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { onWillUnmount, useExternalListener } from "@odoo/owl";
+import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
 import { scrollTo } from "@web/core/utils/scrolling";

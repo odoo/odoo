@@ -1,4 +1,4 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useExternalListener, useRef, useState } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
@@ -20,7 +20,6 @@ import { Record } from "@web/model/record";
 import { Field } from "@web/views/fields/field";
 import {
     Component,
-    useExternalListener,
     onWillStart,
     onPatched,
 } from "@odoo/owl";

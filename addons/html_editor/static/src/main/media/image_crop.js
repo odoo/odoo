@@ -1,4 +1,4 @@
-import { useRef } from "@web/owl2/utils";
+import { useExternalListener, useRef } from "@web/owl2/utils";
 import {
     activateCropper,
     loadImage,
@@ -12,7 +12,6 @@ import {
     onMounted,
     onWillDestroy,
     markup,
-    useExternalListener,
     status,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";

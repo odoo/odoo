@@ -1,7 +1,7 @@
-import { useState } from "@web/owl2/utils";
+import { useExternalListener, useState } from "@web/owl2/utils";
 import { Meter } from "@auth_password_policy/password_meter";
 import { ConcretePolicy, recommendations } from "@auth_password_policy/password_policy";
-import { Component, useExternalListener } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 class PasswordMeter extends Component {
