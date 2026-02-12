@@ -227,12 +227,12 @@ class Binary(Controller):
                 filename = unicodedata.normalize('NFD', ufile.filename)
 
             try:
-                attachment = Model.create({
-                    'name': filename,
-                    'raw': ufile.read(),
-                    'res_model': model,
-                    'res_id': int(id)
-                })
+                attachment = Model._from_file(
+                    ufile,
+                    name=filename,
+                    res_model=model,
+                    res_id=int(id),
+                )
                 attachment._post_add_create()
             except AccessError:
                 args.append({'error': _("You are not allowed to upload an attachment here.")})
@@ -244,7 +244,7 @@ class Binary(Controller):
                     'filename': clean(filename),
                     'mimetype': attachment.mimetype,
                     'id': attachment.id,
-                    'size': attachment.file_size
+                    'size': attachment.file_size,
                 })
         return out % (json.dumps(clean(callback)), json.dumps(args)) if callback else json.dumps(args)
 
