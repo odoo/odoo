@@ -6,6 +6,19 @@
         <field name="model">payment.provider</field>
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
+            <sheet position="before">
+
+                <div
+                     name="stripe_onboarding_group"
+                     >
+                    <button string="Connect Stripe"
+                            type="object"
+                            name="action_start_onboarding"
+                            class="btn-primary"
+                            colspan="2"
+                            invisible="state == 'enabled'"/>
+                </div>
+            </sheet>
             <group name="provider_credentials" position="before">
                 <div
                      name="stripe_onboarding_group"
@@ -53,7 +66,7 @@
         </field>
     </record>
 
-    <record id="action_payment_provider_onboarding" model="ir.actions.act_window">
+    <record id="action_payment_provider_onboarding" model="ir.actions.act_window"> <!--I don't fully understand I thought that onboarding would also fill the credentials. why do we need to add context value-->
         <field name="name">Payment Providers</field>
         <field name="res_model">payment.provider</field>
         <field name="view_mode">form</field>

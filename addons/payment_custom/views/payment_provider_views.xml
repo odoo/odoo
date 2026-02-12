@@ -49,4 +49,15 @@
         </field>
     </record>
 
+    <record id="payment_provider_list" model="ir.ui.view">
+        <field name="name">payment.provider.list.custom</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_list"/>
+        <field name="arch" type="xml">
+            <list position="inside">
+                <field name="qr_code" widget="boolean_toggle" invisible="code != 'custom'" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
 </odoo>

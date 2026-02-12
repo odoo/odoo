@@ -54,6 +54,17 @@
                         </group>
                     </group>
                     <notebook invisible="module_id and module_state != 'installed'">
+                        <page string="Payment Methods">
+                            <field name="payment_method_ids" nolabel="1" options='{"no_open":True}'>
+                                <list delete="0" create="0" edit="0" open_form_view="0" >
+                                    <field name="name"/>
+                                    <field name="active" widget="boolean_toggle"/>
+                                    <field name="supported_country_ids" widget="many2many_tags"/>
+                                    <field name="supported_currency_ids" widget="many2many_tags"/>
+                                    <field name="brand_ids" widget="many2many_tags"/>
+                                </list>
+                            </field>
+                        </page>
                         <page string="Credentials" name="credentials" invisible="code == 'none'">
                             <group name="provider_credentials"/>
                         </page>
@@ -121,16 +132,39 @@
         <field name="name">payment.provider.list</field>
         <field name="model">payment.provider</field>
         <field name="arch" type="xml">
-            <list string="Payment Providers" create="false">
+            <list string="Payment Providers" create="false" >
                 <field name="sequence" widget="handle"/>
+                <field name="image_128" widget="image" options="{'size': [25, 25]}" width="40"/>
                 <field name="name"/>
-                <field name="code" groups="base.group_no_one"/>
-                <field name="state"/>
+                <field name="is_published" widget="boolean_toggle"/>
+                <field
+                    name="state"
+                    widget="label_selection"
+                    options="{'classes': {'enabled': 'success', 'test': 'warning', 'disabled' : 'secondary'}}"
+                />
+                <button
+                    name="button_immediate_install"
+                    string="Install"
+                    invisible="module_to_buy or module_state == 'installed'"
+                    type="object"
+                    class="btn btn-primary"
+                />
+                <button
+                    string="Upgrade"
+                    invisible="not module_to_buy or module_state == 'installed'"
+                    class="btn btn-primary"
+                />
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="allow_tokenization" optional="hide"/>
+                <field name="allow_express_checkout" optional="hide"/>
+                <field name="capture_manually" optional="hide"/>
+                <field name="maximum_amount" optional="hide"/>
+                <field name="available_currency_ids" widget="many2many_tags" optional="hide"/>
                 <field name="available_country_ids" widget="many2many_tags" optional="hide"/>
-                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+            <!--not possible to put href-->
             </list>
         </field>
-    </record>
+    </record> <!-- add pricelist and change Test if it will be changed-->
 
     <record id="payment_provider_kanban" model="ir.ui.view">
         <field name="name">payment.provider.kanban</field>
@@ -152,7 +186,6 @@
                             <field type="open"
                                  name="image_128" widget="image"
                                  class="mb-0 o_image_64_max"
-                                 options="{'img_class': 'p-2 border rounded'}"
                                  alt="provider"/>
                         </aside>
                         <main class="ms-2">
@@ -166,11 +199,11 @@
                                     <t t-if="!is_disabled">
                                         <div>
                                             <span t-if="is_published"
-                                                class="badge rounded-pill text-bg-success ms-1">
+                                                class="badge text-bg-success ms-1">
                                                 Published
                                             </span>
                                             <span t-else=""
-                                                class="badge rounded-pill text-bg-info ms-1">
+                                                class="badge text-bg-info ms-1">
                                                 Unpublished
                                             </span>
                                         </div>
@@ -195,14 +228,23 @@
         <field name="model">payment.provider</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name" string="provider" filter_domain="[('name', 'ilike', self)]"/>
+                <field name="name" string="Provider" filter_domain="[('name', 'ilike', self)]"/>
                 <field name="payment_method_ids"
-                       string="payment method"
+                       string="Payment method"
                        context="{'active_test': False}"
                        filter_domain="[
                             '|',
                             ('payment_method_ids.name', 'ilike', self),
                             ('payment_method_ids.code', 'ilike', self),
+                       ]"
+                />
+                <field name="payment_method_ids"
+                       string="Brand"
+                       context="{'active_test': False}"
+                       filter_domain="[
+                            '|',
+                            ('payment_method_ids.brand_ids.name', 'ilike', self),
+                            ('payment_method_ids.brand_ids.code', 'ilike', self)
                        ]"
                 />
                 <filter name="provider_installed" string="Installed" domain="[('module_state', '=', 'installed')]"/>

@@ -20,7 +20,7 @@ _logger = get_payment_logger(__name__, sensitive_keys=SENSITIVE_KEYS)
 class PaymentProvider(models.Model):
     _name = 'payment.provider'
     _description = 'Payment Provider'
-    _order = 'module_state, state desc, sequence, name'
+    _order = 'module_state, state desc, is_published desc, sequence, name'
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
 
@@ -37,7 +37,7 @@ class PaymentProvider(models.Model):
         default='none',
         required=True,
     )
-    state = fields.Selection(
+    state = fields.Selection( #no longer this instead, you have test boolean
         string="State",
         help="In test mode, a fake payment is processed through a test payment interface.\n"
              "This mode is advised when setting up the provider.",
