@@ -87,6 +87,35 @@ CLOSED_STATES = {
     '1_canceled': 'Cancelled',
 }
 
+MONTH_BY_SELECTION = [
+    ('date', 'Date of month'),
+    ('day', 'Day of month'),
+]
+BYDAY_SELECTION = [
+    ('1', 'First'),
+    ('2', 'Second'),
+    ('3', 'Third'),
+    ('4', 'Fourth'),
+    ('-1', 'Last'),
+]
+WEEKDAY_SELECTION = [
+    ('MON', 'Monday'),
+    ('TUE', 'Tuesday'),
+    ('WED', 'Wednesday'),
+    ('THU', 'Thursday'),
+    ('FRI', 'Friday'),
+    ('SAT', 'Saturday'),
+    ('SUN', 'Sunday'),
+]
+REPEAT_UNIT_SELECTION = [
+    ('day', 'Days'),
+    ('week', 'Weeks'),
+    ('weekday', 'Weekdays'),
+    ('month', 'Months'),
+    ('monthday', 'Month Days'),
+    ('year', 'Years'),
+]
+
 
 class ProjectTask(models.Model):
     _name = 'project.task'
@@ -301,17 +330,23 @@ class ProjectTask(models.Model):
     recurring_count = fields.Integer(string="Tasks in Recurrence", compute='_compute_recurring_count')
     recurrence_id = fields.Many2one('project.task.recurrence', copy=False, index='btree_not_null')
     repeat_interval = fields.Integer(string='Repeat Every', default=1, compute='_compute_repeat', compute_sudo=True, readonly=False)
-    repeat_unit = fields.Selection([
-        ('day', 'Days'),
-        ('week', 'Weeks'),
-        ('month', 'Months'),
-        ('year', 'Years'),
-    ], default='week', compute='_compute_repeat', compute_sudo=True, readonly=False)
+    repeat_unit = fields.Selection(REPEAT_UNIT_SELECTION, default='week', compute='_compute_repeat', compute_sudo=True, readonly=False)
     repeat_type = fields.Selection([
         ('forever', 'Forever'),
         ('until', 'Until'),
     ], default="forever", string="Until", compute='_compute_repeat', compute_sudo=True, readonly=False)
     repeat_until = fields.Date(string="End Date", compute='_compute_repeat', compute_sudo=True, readonly=False)
+    mon = fields.Boolean(compute='_compute_repeat', compute_sudo=True, readonly=False, default=False)
+    tue = fields.Boolean(compute='_compute_repeat', compute_sudo=True, readonly=False, default=False)
+    wed = fields.Boolean(compute='_compute_repeat', compute_sudo=True, readonly=False, default=False)
+    thu = fields.Boolean(compute='_compute_repeat', compute_sudo=True, readonly=False, default=False)
+    fri = fields.Boolean(compute='_compute_repeat', compute_sudo=True, readonly=False, default=False)
+    sat = fields.Boolean(compute='_compute_repeat', compute_sudo=True, readonly=False, default=False)
+    sun = fields.Boolean(compute='_compute_repeat', compute_sudo=True, readonly=False, default=False)
+    month_by = fields.Selection(MONTH_BY_SELECTION, compute='_compute_repeat', compute_sudo=True, readonly=False, default='date')
+    repeat_date_of_month = fields.Integer(compute='_compute_repeat', compute_sudo=True, readonly=False, default=1)
+    repeat_by_day_month = fields.Selection(BYDAY_SELECTION, string='By day', compute='_compute_repeat', compute_sudo=True, readonly=False, default='1')
+    repeat_by_weekday_month = fields.Selection(WEEKDAY_SELECTION, string='Weekday', compute='_compute_repeat', compute_sudo=True, readonly=False, default='MON')
 
     # Quick creation shortcuts
     display_name = fields.Char(
@@ -509,6 +544,17 @@ class ProjectTask(models.Model):
             'repeat_unit',
             'repeat_type',
             'repeat_until',
+            'mon',
+            'tue',
+            'wed',
+            'thu',
+            'fri',
+            'sat',
+            'sun',
+            'month_by',
+            'repeat_date_of_month',
+            'repeat_by_day_month',
+            'repeat_by_weekday_month'
         ]
 
     @api.depends('recurring_task')

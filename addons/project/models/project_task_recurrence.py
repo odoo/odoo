@@ -2,9 +2,48 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, Command, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 from dateutil.relativedelta import relativedelta
+from dateutil import rrule
+
+RRULE_WEEKDAYS = {'SUN': rrule.SU, 'MON': rrule.MO, 'TUE': rrule.TU, 'WED': rrule.WE, 'THU': rrule.TH, 'FRI': rrule.FR, 'SAT': rrule.SA}
+REPEAT_UNIT_TO_RRULE = {
+    'day': rrule.DAILY,
+    'week': rrule.WEEKLY,
+    'weekday': rrule.WEEKLY,
+    'month': rrule.MONTHLY,
+    'monthday': rrule.MONTHLY,
+    'year': rrule.YEARLY,
+}
+MONTH_BY_SELECTION = [
+    ('date', 'Date of month'),
+    ('day', 'Day of month'),
+]
+BYDAY_SELECTION = [
+    ('1', 'First'),
+    ('2', 'Second'),
+    ('3', 'Third'),
+    ('4', 'Fourth'),
+    ('-1', 'Last'),
+]
+WEEKDAY_SELECTION = [
+    ('MON', 'Monday'),
+    ('TUE', 'Tuesday'),
+    ('WED', 'Wednesday'),
+    ('THU', 'Thursday'),
+    ('FRI', 'Friday'),
+    ('SAT', 'Saturday'),
+    ('SUN', 'Sunday'),
+]
+REPEAT_UNIT_SELECTION = [
+    ('day', 'Days'),
+    ('week', 'Weeks'),
+    ('weekday', 'Week Days'),
+    ('month', 'Months'),
+    ('monthday', 'Month Days'),
+    ('year', 'Years'),
+]
 
 
 class ProjectTaskRecurrence(models.Model):
@@ -14,17 +53,23 @@ class ProjectTaskRecurrence(models.Model):
     task_ids = fields.One2many('project.task', 'recurrence_id', copy=False)
 
     repeat_interval = fields.Integer(string='Repeat Every', default=1)
-    repeat_unit = fields.Selection([
-        ('day', 'Days'),
-        ('week', 'Weeks'),
-        ('month', 'Months'),
-        ('year', 'Years'),
-    ], default='week', export_string_translation=False)
+    repeat_unit = fields.Selection(REPEAT_UNIT_SELECTION, default='week', export_string_translation=False)
     repeat_type = fields.Selection([
         ('forever', 'Forever'),
         ('until', 'Until'),
     ], default="forever", string="Until")
     repeat_until = fields.Date(string="End Date")
+    mon = fields.Boolean()
+    tue = fields.Boolean()
+    wed = fields.Boolean()
+    thu = fields.Boolean()
+    fri = fields.Boolean()
+    sat = fields.Boolean()
+    sun = fields.Boolean()
+    month_by = fields.Selection(MONTH_BY_SELECTION, default='date')
+    repeat_date_of_month = fields.Integer(default=1)
+    repeat_by_day_month = fields.Selection(BYDAY_SELECTION, string='By day')
+    repeat_by_weekday_month = fields.Selection(WEEKDAY_SELECTION, string='Weekday')
 
     @api.constrains('repeat_interval')
     def _check_repeat_interval(self):
@@ -59,10 +104,44 @@ class ProjectTaskRecurrence(models.Model):
             )
         }
 
-    def _get_recurrence_delta(self):
-        return relativedelta(**{
-            f"{self.repeat_unit}s": self.repeat_interval
-        })
+    def _get_week_list(self):
+        return tuple(
+            rrule.weekday(index)
+            for index, isScheduled in {
+            rrule.MO.weekday: self.mon,
+            rrule.TU.weekday: self.tue,
+            rrule.WE.weekday: self.wed,
+            rrule.TH.weekday: self.thu,
+            rrule.FR.weekday: self.fri,
+            rrule.SA.weekday: self.sat,
+            rrule.SU.weekday: self.sun
+            }.items() if isScheduled)
+
+    def _get_recurrence_delta(self, deadline):
+        self.ensure_one()
+        rrule_params = dict(
+            dtstart=deadline,
+            interval=self.repeat_interval,
+            count=2
+        )
+        if self.repeat_unit == 'weekday':
+            weekdays = self._get_week_list()
+            if not weekdays:
+                raise UserError(_("You have to choose at least one day in the week to schedule taskes based on days of the week"))
+            rrule_params['byweekday'] = weekdays
+            rrule_params['wkst'] = rrule.weekday(int(self.env['res.lang']._get_data(code=self.env.user.lang).week_start) - 1)
+            rrule_params['interval'] = 1
+            # If you schedule on specific days of the week no intervl should be added
+        elif self.repeat_unit == 'monthday':
+            if self.month_by == 'date':
+                rrule_params['bymonthday'] = self.repeat_date_of_month
+            elif self.month_by == 'day':
+                rrule_params['byweekday'] = RRULE_WEEKDAYS[self.repeat_by_weekday_month](int(self.repeat_by_day_month))
+        rrule_date = rrule.rrule(REPEAT_UNIT_TO_RRULE[self.repeat_unit], **rrule_params)
+        # rrule will give out the start date if it is considered valid, which is unwanted since we want the next date from rrule
+        # we therefor calculate 2 dates and take the one that is the earliest and is not equal or smaller than the start date.
+        ret = rrule_date[1] if rrule_date[0] == deadline else rrule_date[0]
+        return ret - deadline
 
     @api.model
     def _create_next_occurrences(self, occurrences_from):
@@ -74,7 +153,7 @@ class ProjectTaskRecurrence(models.Model):
                 rec.repeat_type != 'until' or
                 not task.date_deadline or
                 rec.repeat_until and
-                (task.date_deadline + rec._get_recurrence_delta()).date() <= rec.repeat_until
+                (task.date_deadline + rec._get_recurrence_delta(task.date_deadline)).date() <= rec.repeat_until
             )
 
         occurrences_from = occurrences_from.filtered(should_create_occurrence)
@@ -112,10 +191,12 @@ class ProjectTaskRecurrence(models.Model):
                 field: value[0] if isinstance(value, tuple) else value
                 for field, value in fields_to_copy.items()
             })
-            create_values.update({
-                field: value and value + recurrence._get_recurrence_delta()
-                for field, value in fields_to_postpone.items()
-            })
+            if (task.date_deadline):
+                delta = recurrence._get_recurrence_delta(task.date_deadline)
+                create_values.update({
+                    field: value and value + delta
+                    for field, value in fields_to_postpone.items()
+                })
             copy_data.update(create_values)
             list_create_values.append(copy_data)
 

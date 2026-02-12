@@ -463,15 +463,32 @@
                             </div>
                             <label for="repeat_interval" groups="project.group_project_recurring_tasks" invisible="not recurring_task or not allow_recurring_tasks"/>
                             <div invisible="not recurring_task or not allow_recurring_tasks" class="d-flex" groups="project.group_project_recurring_tasks" name="repeat_intervals">
-                                <field name="repeat_interval" required="recurring_task"
+                                <field name="repeat_interval" required="recurring_task" invisible="repeat_unit in ['weekday','monthday']"
                                        class="me-2" style="max-width: 2rem !important;" />
                                 <field name="repeat_unit" required="recurring_task"
-                                       class="me-2" style="max-width: 4rem !important;" />
+                                       class="me-2" style="max-width: 6rem !important;" />
                                 <field name="repeat_type" required="recurring_task"
                                        class="me-2" style="max-width: 15rem !important;" />
                                 <field name="repeat_until" invisible="repeat_type != 'until'" required="repeat_type == 'until'"
-                                       class="me-2" />
+                                       class="me-2" />  
                             </div>
+                            <span class="fw-bold text-nowrap" invisible="not (recurring_task and repeat_unit in ['weekday'])">Repeat on</span>
+                            <div invisible="not (recurring_task and repeat_unit =='weekday')">
+                                    <widget  name="project_week_days"/>
+                            </div>
+                             <label string="Day of Month" for="month_by" class="fw-bold text-900" style="width: fit-content;" invisible="not(recurring_task and repeat_unit == 'monthday')"/>
+                                <div class="d-flex gap-2" invisible="not(recurring_task and repeat_unit == 'monthday')">
+                                    <field name="month_by" nolabel="1" class="oe_inline w-auto" required="recurring_task and repeat_unit == 'monthday'"/>
+                                    <field name="repeat_date_of_month" nolabel="1" class="oe_inline w-auto"
+                                        required=" recurring_task and repeat_unit == 'monthday' and month_by == 'date'"
+                                        invisible="month_by != 'date'"/>
+                                    <field name="repeat_by_day_month" string="The" class="oe_inline w-auto" nolabel="1"
+                                        required="recurring_task and repeat_unit == 'monthday' and month_by == 'day'"
+                                        invisible="month_by != 'day'"/>
+                                    <field name="repeat_by_weekday_month" nolabel="1" class="oe_inline w-auto"
+                                        required="recurring_task and repeat_unit == 'monthday' and month_by == 'day'"
+                                        invisible="month_by != 'day'"/>
+                                </div>
                             <!-- Field needed to trigger its compute in project_enterprise, but will be replaced in an override defined in hr_timesheet module -->
                             <field name="allocated_hours" invisible="1"/>
                         </group>
