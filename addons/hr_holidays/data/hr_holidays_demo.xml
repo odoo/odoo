@@ -270,6 +270,14 @@
         <value eval="ref('hr_holidays.hr_holidays_cl_mit_2')"/>
     </function>
 
+    <record id="hr_holidays_cl_mit_1" model="hr.leave">
+        <field name="name">Trip</field>
+        <field name="holiday_status_id" ref="leave_type_paid_time_off"/>
+        <field name="request_date_from" eval="(datetime.today().date() - relativedelta(months=1, day=5, weekday=0))"/>
+        <field name="request_date_to" eval="(datetime.today().date() - relativedelta(months=1, day=5, weekday=0))"/>
+        <field name="employee_id" ref="hr.employee_mit"/>
+        <field name="state">confirm</field>
+    </record>
     <!-- ++++++++++++++++++++++  Marc Demo  ++++++++++++++++++++++ -->
 
     <record id="hr_holidays_allocation_cl_qdp" model="hr.leave.allocation">
