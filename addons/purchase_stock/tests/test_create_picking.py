@@ -892,3 +892,36 @@ class TestCreatePicking(ProductVariantsCommon):
         po.order_line.name += '\nRandom purchase notes'
         po.button_confirm()
         self.assertEqual(po.picking_ids.move_ids.description_picking, ('No variant: extra\n' if product_matrix_installed else '') + '[123] ABC\nReceive with care')
+
+    def test_duplicate_move_description(self):
+        """ Ensure the vendor reference appears only once in the description. """
+        vendor = self.env["res.partner"].create({
+            "name": "Provider"
+        })
+
+        product_1 = self.env["product.template"].create({
+            "name": "Product 1",
+            "seller_ids": [Command.create({
+                "partner_id": vendor.id,
+                "min_qty": 4,
+                "price": 35,
+                "product_name": "Product 1",
+                "product_code": "P01"
+            })]
+        }).product_variant_id
+
+        po_1 = self.env["purchase.order"].create({
+            "partner_id": vendor.id,
+            "order_line": [Command.create({
+                "product_id": product_1.id,
+                "product_qty": 4.0,
+                "price_unit": 35.0,
+            })]
+        })
+
+        po_1.button_confirm()
+        move = po_1.picking_ids[0].move_ids[0]
+
+        expected_ref = "[P01] Product 1"
+        count = move.description_picking.count(expected_ref)
+        self.assertEqual(count, 1, f"The vendor reference is displayed {count} times rather than once.")
