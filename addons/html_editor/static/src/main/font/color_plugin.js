@@ -9,6 +9,13 @@ import {
 import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
 import {
     isEmptyBlock,
+<<<<<<< 900eaa72f4939a7655b2906203e70f763e5b5653
+||||||| cbe08465d43d49f7119a07d7090ded6a26ac8677
+    isEmptyTextNode,
+=======
+    isEmptyTextNode,
+    isIconElement,
+>>>>>>> 45f7d4f9bff63e30ef4ec15c210c9bce05ca4681
     isRedundantElement,
     isTextNode,
     isWhitespace,
@@ -185,9 +192,24 @@ export class ColorPlugin extends Plugin {
                         .getTargetedNodes()
                         .filter(
                             (n) =>
+<<<<<<< 900eaa72f4939a7655b2906203e70f763e5b5653
                                 isTextNode(n) ||
                                 (mode === "backgroundColor" &&
                                     n.classList.contains("o_selected_td"))
+||||||| cbe08465d43d49f7119a07d7090ded6a26ac8677
+                                (isTextNode(n) ||
+                                    n.matches?.(`t, ${PROTECTED_QWEB_SELECTOR}`) ||
+                                    (mode === "backgroundColor" &&
+                                        n.classList.contains("o_selected_td"))) &&
+                                this.dependencies.selection.isNodeEditable(n)
+=======
+                                (isTextNode(n) ||
+                                    isIconElement(n) ||
+                                    n.matches?.(`t, ${PROTECTED_QWEB_SELECTOR}`) ||
+                                    (mode === "backgroundColor" &&
+                                        n.classList.contains("o_selected_td"))) &&
+                                this.dependencies.selection.isNodeEditable(n)
+>>>>>>> 45f7d4f9bff63e30ef4ec15c210c9bce05ca4681
                         );
                     return hasAnyNodesColor(nodes, mode);
                 };
@@ -291,7 +313,7 @@ export class ColorPlugin extends Plugin {
                     closestElement(node, "span") ||
                     closestElement(node, (node) => hasTextColorClass(node, mode));
 
-                const faNodes = font?.querySelectorAll(".fa");
+                const faNodes = font ? [...selectElements(font, ".fa")] : [];
                 if (faNodes && Array.from(faNodes).some((faNode) => faNode.contains(node))) {
                     return font;
                 }

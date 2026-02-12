@@ -578,9 +578,15 @@ test("should be able to apply color on icon along with text", async () => {
             '<p>a[bc\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeffde]f</p>',
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfterEdit:
-            '<p>a<font style="color: rgb(255, 0, 0);">[bc</font><font style="color: rgb(255, 0, 0);">\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff</font><font style="color: rgb(255, 0, 0);">de]</font>f</p>',
+            '<p>a<font style="color: rgb(255, 0, 0);">[bc</font>\ufeff<span class="fa fa-glass" contenteditable="false" style="color: rgb(255, 0, 0);">\u200b</span>\ufeff<font style="color: rgb(255, 0, 0);">de]</font>f</p>',
         contentAfter:
+<<<<<<< 900eaa72f4939a7655b2906203e70f763e5b5653
             '<p>a<font style="color: rgb(255, 0, 0);">[bc<span class="fa fa-glass"></span>de]</font>f</p>',
+||||||| cbe08465d43d49f7119a07d7090ded6a26ac8677
+            '<p>a<font style="color: rgb(255, 0, 0);">[bc</font><font style="color: rgb(255, 0, 0);"><span class="fa fa-glass"></span></font><font style="color: rgb(255, 0, 0);">de]</font>f</p>',
+=======
+            '<p>a<font style="color: rgb(255, 0, 0);">[bc</font><span class="fa fa-glass" style="color: rgb(255, 0, 0);"></span><font style="color: rgb(255, 0, 0);">de]</font>f</p>',
+>>>>>>> 45f7d4f9bff63e30ef4ec15c210c9bce05ca4681
     });
 });
 

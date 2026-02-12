@@ -1109,3 +1109,11 @@ describe("removeFormat must not remove non-style classes", () => {
         });
     }
 });
+
+test("should remove format on content with colored icon element", async () => {
+    const { el, editor } = await setupEditor(
+        '<p>[<i class="fa fa-user bg-o-color-1" contenteditable="false"></i>]</p>'
+    );
+    execCommand(editor, "removeFormat");
+    expect(el.querySelector("i.fa").classList.contains("bg-o-color-1")).toBe(false);
+});

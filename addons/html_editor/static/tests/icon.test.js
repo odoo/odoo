@@ -178,7 +178,7 @@ test("Can set icon color", async () => {
     await expectElementCount(".o-we-toolbar", 1);
     expect(".o_font_color_selector").toHaveCount(0); // selector closed
     expect(getContent(el)).toBe(
-        `<p>[<font style="color: rgb(107, 173, 222);">\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff</font>]</p>`
+        `<p>\ufeff[<span class="fa fa-glass" contenteditable="false" style="color: rgb(107, 173, 222);">\u200b</span>]\ufeff</p>`
     );
 });
 
