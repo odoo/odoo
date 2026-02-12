@@ -8,7 +8,7 @@ import { onRpc } from "@web/../tests/web_test_helpers";
 import { PowerboxPlugin } from "../src/main/powerbox/powerbox_plugin";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
-import { insertText, redo, splitBlock, undo } from "./_helpers/user_actions";
+import { insertText, redo, simulateArrowKeyPress, splitBlock, undo } from "./_helpers/user_actions";
 import { expectElementCount } from "./_helpers/ui_expectations";
 
 describe.tags("desktop");
@@ -115,6 +115,27 @@ describe("visibility", () => {
         expect(Math.floor(powerButtons.getBoundingClientRect().left)).toEqual(
             Math.floor(placeholderWidth + 30)
         );
+    });
+    test("should debounce powerButtons on selection change", async () => {
+        const { el, editor } = await setupEditor(
+            "<p>[]<br></p><p><br></p><p><br></p><p><br></p><p><br></p>",
+            {
+                config: { debouncePowerbuttons: true },
+            }
+        );
+        expect(getContent(el)).toBe(
+            `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p><p><br></p><p><br></p><p><br></p><p><br></p>`
+        );
+        await simulateArrowKeyPress(editor, "ArrowDown");
+        expect(".o_we_power_buttons").not.toBeVisible();
+        await simulateArrowKeyPress(editor, "ArrowDown");
+        expect(".o_we_power_buttons").not.toBeVisible();
+        await simulateArrowKeyPress(editor, "ArrowDown");
+        expect(".o_we_power_buttons").not.toBeVisible();
+        await simulateArrowKeyPress(editor, "ArrowDown");
+        await animationFrame();
+        await new Promise((resolve) => setTimeout(resolve, 30));
+        expect(".o_we_power_buttons").toBeVisible();
     });
 });
 

@@ -3,6 +3,7 @@ import { isEditorTab, isEmptyBlock, isProtected } from "@html_editor/utils/dom_i
 import { removeClass } from "@html_editor/utils/dom";
 import { descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { closestBlock } from "../utils/blocks";
+import { debounce } from "@web/core/utils/timing";
 
 /**
  * @typedef {import("@html_editor/editor").EditorContext} EditorContext
@@ -25,7 +26,7 @@ export class HintPlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
-        on_selectionchange_handlers: this.updateHints.bind(this),
+        on_selectionchange_handlers: this.triggerDebouncedUpdateHints.bind(this),
         on_external_history_step_added_handlers: () => {
             this.clearHints();
             this.updateHints();
@@ -61,6 +62,12 @@ export class HintPlugin extends Plugin {
 
     setup() {
         this.updateHints(this.editable);
+        const shouldDebounce = this.config.debounceHints !== false;
+        if (shouldDebounce) {
+            this.debouncedUpdateHints = debounce(this.updateHints.bind(this), 30);
+        } else {
+            this.debouncedUpdateHints = this.updateHints.bind(this);
+        }
     }
 
     destroy() {
@@ -71,6 +78,11 @@ export class HintPlugin extends Plugin {
     normalize() {
         this.clearHints();
         this.updateHints();
+    }
+
+    triggerDebouncedUpdateHints() {
+        this.clearHints();
+        this.debouncedUpdateHints();
     }
 
     /**
