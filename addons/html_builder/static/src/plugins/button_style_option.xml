@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.ButtonStyleOption">
+    <BuilderRow label.translate="Type">
+        <BuilderSelect action="'buttonStyleAction'" actionParam="'type'">
+            <t t-foreach="this.buttonTypesData.slice(1)" t-as="opt" t-key="opt.type">
+                <BuilderSelectItem actionValue="opt.type" preview="opt.type !== 'custom'">
+                    <t t-esc="opt.label"/>
+                </BuilderSelectItem>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <t t-if="state.type === 'custom'">
+        <BuilderRow label.translate="Text" level="1">
+            <BuilderColorPicker styleAction="'color'" enabledTabs="['solid', 'custom']" />
+        </BuilderRow>
+        <BuilderRow label.translate="Fill" level="1">
+            <BuilderColorPicker action="'buttonFillColorAction'" actionParam="{ mainParam: 'background-color', allowImportant: false }" enabledTabs="['solid', 'custom', 'gradient']" />
+        </BuilderRow>
+        <BorderConfigurator label.translate="Border" withRoundCorner="false" withBSClass="false" />
+    </t>
+
+    <BuilderRow label.translate="Size">
+        <BuilderSelect action="'buttonStyleAction'" actionParam="'size'">
+            <t t-foreach="this.buttonSizesData" t-as="sizeData" t-key="sizeData.size">
+                <BuilderSelectItem actionValue="sizeData.size">
+                    <t t-esc="sizeData.label"/>
+                </BuilderSelectItem>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Shape">
+        <BuilderSelect action="'buttonStyleAction'" actionParam="'shape'">
+            <t t-foreach="this.buttonShapesData" t-as="shapeData" t-key="shapeData.shape">
+                <BuilderSelectItem actionValue="shapeData.shape">
+                    <t t-esc="shapeData.label"/>
+                </BuilderSelectItem>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+</templates>

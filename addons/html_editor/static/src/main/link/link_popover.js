@@ -3,25 +3,19 @@ import { _t } from "@web/core/l10n/translation";
 import { Component, useState, useRef, useEffect, useExternalListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { cleanZWChars, deduceURLfromText } from "./utils";
-import { useColorPicker } from "@web/core/color_picker/color_picker";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { isAbsoluteURLInCurrentDomain } from "@html_editor/utils/url";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-
-const DEFAULT_CUSTOM_TEXT_COLOR = "#714B67";
-const DEFAULT_CUSTOM_FILL_COLOR = "#ffffff";
-
-const isCSSVariable = (color) => color.match(/^o-color-\d$|^\d{3}$/);
-const formatColor = (color) => {
-    if (color.match(/^o-color-\d$/gm)) {
-        return `var(--hb-cp-${color})`;
-    }
-    if (color.match(/^\d{3}$/gm)) {
-        return `var(--${color})`;
-    }
-    return color;
-};
+import {
+    BUTTON_SHAPES,
+    BUTTON_SIZES,
+    BUTTON_TYPES,
+    computeButtonClasses,
+    getButtonShape,
+    getButtonSize,
+    getButtonType,
+} from "@html_editor/utils/button_style";
 
 export class LinkPopover extends Component {
     static template = "html_editor.linkPopover";
@@ -48,37 +42,20 @@ export class LinkPopover extends Component {
         canRemove: { type: Boolean, optional: true },
         canUpload: { type: Boolean, optional: true },
         onUpload: { type: Function, optional: true },
-        allowCustomStyle: { type: Boolean, optional: true },
+        includeStyling: { type: Boolean, optional: true },
         allowTargetBlank: { type: Boolean, optional: true },
         allowStripDomain: { type: Boolean, optional: true },
-        formatColor: { type: Function, optional: true },
     };
     static defaultProps = {
         canEdit: true,
         canRemove: true,
-        formatColor: formatColor,
+        includeStyling: true,
     };
     static components = { CheckBox, Dropdown, DropdownItem };
-    buttonSizesData = [
-        { size: "sm", label: _t("Small") },
-        { size: "", label: _t("Medium") },
-        { size: "lg", label: _t("Large") },
-    ];
-    borderData = [
-        { style: "solid", label: "━━━" },
-        { style: "dashed", label: "╌╌╌" },
-        { style: "dotted", label: "┄┄┄" },
-        { style: "double", label: "═══" },
-    ];
-    buttonShapeData = [
-        { shape: "", label: "Default" },
-        { shape: "rounded-circle", label: "Default + Rounded" },
-        { shape: "outline", label: "Outline" },
-        { shape: "outline rounded-circle", label: "Outline + Rounded" },
-        { shape: "fill", label: "Fill" },
-        { shape: "fill rounded-circle", label: "Fill + Rounded" },
-        { shape: "flat", label: "Flat" },
-    ];
+    buttonSizesData = BUTTON_SIZES;
+    buttonShapesData = BUTTON_SHAPES;
+    buttonTypesData = BUTTON_TYPES;
+
     setup() {
         this.ui = useService("ui");
         this.notificationService = useService("notification");
@@ -90,7 +67,6 @@ export class LinkPopover extends Component {
             textContent === linkElement.getAttribute("href") ||
             textContent + "/" === linkElement.getAttribute("href");
 
-        const computedStyle = this.props.document.defaultView.getComputedStyle(linkElement);
         const currentRelValues = linkElement.rel.split(" ");
         this.linkPreviewTarget =
             linkElement.hash?.length && this.isAbsoluteURLInCurrentDomain(linkElement.href)
@@ -110,18 +86,12 @@ export class LinkPopover extends Component {
             urlDescription: "",
             linkPreviewName: "",
             imgSrc: "",
-            type:
-                this.props.type ||
-                linkElement.className.match(/btn(-[a-z0-9_-]*)(primary|secondary|custom)/)?.pop() ||
-                "link",
+            type: this.props.type || getButtonType(linkElement),
             linkTarget: linkElement.target === "_blank" ? "_blank" : "",
             directDownload: true,
             isDocument: false,
-            buttonSize: linkElement.className.match(/btn-(sm|lg)/)?.[1] || "",
-            buttonShape: this.getButtonShape(),
-            customBorderSize: computedStyle.borderWidth.replace("px", "") || "0",
-            customBorderStyle: computedStyle.borderStyle || "solid",
-            colorsData: this.computeColorsData(),
+            buttonSize: getButtonSize(linkElement),
+            buttonShape: getButtonShape(linkElement),
             isImage: this.props.isImage,
             showReplaceTitleBanner: this.props.showReplaceTitleBanner,
             showLabel: !linkElement.childElementCount,
@@ -153,81 +123,6 @@ export class LinkPopover extends Component {
             },
         });
 
-        const getTargetedElements = () => [this.props.linkElement];
-        this.customTextColorState = useState({
-            selectedColor: computedStyle.color || DEFAULT_CUSTOM_TEXT_COLOR,
-            defaultTab: "solid",
-            getTargetedElements,
-        });
-        this.customTextResetPreviewColor = this.customTextColorState.selectedColor;
-        this.customFillColorState = useState({
-            selectedColor:
-                (computedStyle.backgroundImage === "none"
-                    ? undefined
-                    : computedStyle.backgroundImage) ||
-                computedStyle.backgroundColor ||
-                DEFAULT_CUSTOM_FILL_COLOR,
-            defaultTab: "solid",
-            getTargetedElements,
-        });
-        this.customFillResetPreviewColor = this.customFillColorState.selectedColor;
-        this.customBorderColorState = useState({
-            selectedColor: computedStyle.borderColor || DEFAULT_CUSTOM_TEXT_COLOR,
-            defaultTab: "solid",
-            getTargetedElements,
-        });
-        this.customBorderResetPreviewColor = this.customBorderColorState.selectedColor;
-
-        if (this.props.allowCustomStyle) {
-            const createCustomColorPicker = (refName, colorStateRef, resetValueRef) =>
-                useColorPicker(
-                    refName,
-                    {
-                        state: this[colorStateRef],
-                        enabledTabs:
-                            colorStateRef === "customFillColorState"
-                                ? ["solid", "custom", "gradient"]
-                                : ["solid", "custom"],
-                        getUsedCustomColors: () => [],
-                        colorPrefix: "",
-                        cssVarColorPrefix: "hb-cp-",
-                        applyColor: (colorValue) => {
-                            this[colorStateRef].selectedColor = colorValue;
-                            this[resetValueRef] = colorValue;
-                        },
-                        applyColorPreview: (colorValue) => {
-                            this[colorStateRef].selectedColor = colorValue;
-                            this.onChange();
-                        },
-                        applyColorResetPreview: () => {
-                            this[colorStateRef].selectedColor = this[resetValueRef];
-                            this.onChange();
-                        },
-                    },
-                    {
-                        env: this.__owl__.childEnv,
-                        // `useOverlayServiceOffset` adds 1000 to each sequence value to solve
-                        // overlay visibility in `iframe`, here we increment default sequence (50)
-                        // by 1 and we add 1000 to have color picker always on top of all overlays.
-                        sequence: 1051,
-                    }
-                );
-            this.customTextColorPicker = createCustomColorPicker(
-                "customTextColorButton",
-                "customTextColorState",
-                "customTextResetPreviewColor"
-            );
-            this.customFillColorPicker = createCustomColorPicker(
-                "customFillColorButton",
-                "customFillColorState",
-                "customFillResetPreviewColor"
-            );
-            this.customBorderColorPicker = createCustomColorPicker(
-                "customBorderColorButton",
-                "customBorderColorState",
-                "customBorderResetPreviewColor"
-            );
-        }
         this.updateDocumentState();
         this.editingWrapper = useRef("editing-wrapper");
         this.inputRef = useRef(
@@ -269,49 +164,12 @@ export class LinkPopover extends Component {
         option.isChecked = !option.isChecked;
     }
 
-    /**
-     * Return the default color options for the editor.
-     *
-     * Each option is an object with:
-     *  - type      : identifier of the role (e.g., "link", "primary").
-     *  - label     : UI label shown in the editor.
-     *  - className : optional CSS classes for preview elements.
-     *  - style     : optional inline style for preview elements.
-     */
-    computeColorsData() {
-        return [
-            {
-                type: "link",
-                label: _t("Link"),
-                style: "color: #008f8c;",
-            },
-            {
-                type: "primary",
-                label: _t("Button Primary"),
-                className: "btn btn-sm btn-primary",
-            },
-            {
-                type: "secondary",
-                label: _t("Button Secondary"),
-                className: "btn btn-sm btn-secondary",
-            },
-            {
-                type: "custom",
-                label: _t("Custom"),
-            },
-            // Note: by compatibility the dialog should be able to remove old
-            // colors that were suggested like the BS status colors or the
-            // alpha -> epsilon classes. This is currently done by removing
-            // all btn-* classes anyway.
-        ];
-    }
     onChange() {
         // Apply changes to update the link preview.
         this.props.onChange(
             this.state.url,
             this.state.label,
             this.classes,
-            this.customStyles,
             this.state.linkTarget,
             this.state.attachmentId
         );
@@ -328,7 +186,6 @@ export class LinkPopover extends Component {
             this.state.url,
             this.state.label,
             this.classes,
-            this.customStyles,
             this.state.linkTarget,
             this.state.attachmentId,
             relValue
@@ -483,34 +340,6 @@ export class LinkPopover extends Component {
             return deduceURLfromText(text, this.props.linkElement) || "";
         }
     }
-    getButtonShape() {
-        const shapeToRegex = (shape) => {
-            const parts = shape.trim().split(/\s+/);
-            const regexParts = parts.map((cls) => {
-                if (["outline", "fill"].includes(cls)) {
-                    cls = `btn-${cls}`;
-                }
-                return `(?=.*\\b${cls}\\b)`;
-            });
-            return { regex: new RegExp(regexParts.join("")), nbParts: parts.length };
-        };
-        // If multiple shapes match, prefer the one with more specificity.
-        let shapeMatched = "";
-        let matchScore = 0;
-        for (const { shape } of this.buttonShapeData) {
-            if (!shape) {
-                continue;
-            }
-            const { regex, nbParts } = shapeToRegex(shape);
-            if (regex.test(this.props.linkElement.className)) {
-                if (matchScore < nbParts) {
-                    matchScore = nbParts;
-                    shapeMatched = shape;
-                }
-            }
-        }
-        return shapeMatched;
-    }
     /**
      * link preview in the popover
      */
@@ -645,65 +474,11 @@ export class LinkPopover extends Component {
     }
 
     get classes() {
-        const classes = [...this.props.linkElement.classList].filter(
-            (value) => !value.match(/^(btn.*|rounded-circle|flat|(text|bg)-(o-color-\d$|\d{3}$))$/)
-        );
-
-        let stylePrefix = "";
-        if (this.state.type && this.state.type !== "link") {
-            if (this.state.buttonSize) {
-                classes.push(`btn-${this.state.buttonSize}`);
-            }
-
-            if (this.state.buttonShape) {
-                const buttonShape = this.state.buttonShape.split(" ");
-                if (["outline", "fill"].includes(buttonShape[0])) {
-                    stylePrefix = `${buttonShape[0]}-`;
-                }
-                classes.push(buttonShape.slice(stylePrefix ? 1 : 0).join(" "));
-            }
-
-            classes.push(`btn`, `btn-${stylePrefix}${this.state.type}`);
-        }
-
-        const textColor = this.customTextColorState.selectedColor;
-        if (isCSSVariable(textColor)) {
-            classes.push(`text-${textColor}`);
-        }
-
-        const fillColor = this.customFillColorState.selectedColor;
-        if (isCSSVariable(fillColor)) {
-            classes.push(`bg-${fillColor}`);
-        }
-
-        return classes.filter(Boolean).join(" ");
-    }
-
-    get customStyles() {
-        if (!this.props.allowCustomStyle || this.state.type !== "custom") {
-            return false;
-        }
-        let customStyles = "";
-
-        const textColor = this.customTextColorState.selectedColor;
-        if (!isCSSVariable(textColor)) {
-            customStyles += `color: ${textColor}; `;
-        }
-
-        const fillColor = this.customFillColorState.selectedColor;
-        if (!isCSSVariable(fillColor)) {
-            const backgroundProperty = fillColor.includes("gradient")
-                ? "background-image"
-                : "background-color";
-            customStyles += `${backgroundProperty}: ${fillColor}; `;
-        }
-
-        const borderColor = this.customBorderColorState.selectedColor;
-        customStyles += `border-width: ${this.state.customBorderSize}px; `;
-        customStyles += `border-color: ${formatColor(borderColor)}; `;
-        customStyles += `border-style: ${this.state.customBorderStyle}; `;
-
-        return customStyles;
+        return computeButtonClasses(this.props.linkElement, {
+            type: this.state.type,
+            size: this.state.buttonSize,
+            shape: this.state.buttonShape,
+        });
     }
 
     get showUrl() {

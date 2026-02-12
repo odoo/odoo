@@ -546,30 +546,29 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "Click on Edit Link in Popover",
-            trigger: ".o-we-linkpopover .o_we_edit_link",
-            run: "click",
-        },
-        {
-            content: "Click on link type dropdown",
-            trigger: ".o-we-linkpopover button[name='link_type']",
+            content: "Click on button type dropdown",
+            trigger: "[data-label=Type] .o-hb-select-toggle",
             run: "click",
         },
         {
             content: "Change button's style",
-            trigger: ".o-we-link-type-dropdown .dropdown-item:contains('Custom')",
+            trigger: ".o_popover .dropdown-item:contains('Custom')",
             run: "click",
         },
         {
-            trigger: ".o-we-linkpopover select[name=link_style_shape]",
-            run: "select rounded-circle",
+            trigger: "[data-label=Shape] .o-hb-select-toggle",
+            run: "click",
         },
         {
-            trigger: ".o-we-linkpopover select[name='link_style_size']",
-            run: "select sm",
+            trigger: ".o_popover [data-action-value='rounded-circle']",
+            run: "click",
         },
         {
-            trigger: ".o-we-linkpopover .o_we_apply_link",
+            trigger: "[data-label=Size] .o-hb-select-toggle",
+            run: "click",
+        },
+        {
+            trigger: ".o_popover [data-action-value='sm']",
             run: "click",
         },
         {
