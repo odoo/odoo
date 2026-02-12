@@ -135,8 +135,9 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
     @patch_nilvera_request
     def setUpClass(cls):
         super().setUpClass()
-        cls.einvoice_partner._check_nilvera_customer()
-        cls.earchive_partner._check_nilvera_customer()
+        with patch.object(cls.env.cr, 'commit', autospec=True):
+            cls.einvoice_partner._check_nilvera_customer()
+            cls.earchive_partner._check_nilvera_customer()
         cls.env['account.journal'].create({
             'name': 'TR Journal',
             'code': 'TRJ',
