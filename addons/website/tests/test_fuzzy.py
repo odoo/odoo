@@ -215,6 +215,87 @@ class TestAutoComplete(TransactionCase):
             "Should center around first token 'fox' when exact phrase 'fox runs' not found"
         )
 
+    def test_sort_results_by_relevance(self):
+        """Ensure relevance sorting handles source priority and proximity."""
+        sort_results = self.WebsiteController._sort_results_by_relevance
+
+        def _result(name, website_url, description_text='', tag_ids=None, desc_field_name='description', model=None):
+            data = {
+                'name': name,
+                'website_url': website_url,
+                'tag_ids': tag_ids or [],
+                '_mapping': {
+                    'description': {
+                        'html': True,
+                        'match': True,
+                        'name': desc_field_name,
+                        'type': 'text',
+                    },
+                },
+                desc_field_name: description_text,
+            }
+            if model is not None:
+                data['model'] = model
+            return data
+
+        def _urls(records):
+            return [record['website_url'] for record in records]
+
+        # 1/ Single-word priority: name > tag > description.
+        single_word_results = [
+            _result(name='one result', website_url='/name-hit', desc_field_name='description'),
+            _result(name='generic result', website_url='/tag-hit', tag_ids=[{'name': 'one featured'}], desc_field_name='content'),
+            _result(name='generic result', website_url='/desc-hit', description_text='one appears in description only', desc_field_name='arch'),
+        ]
+        ordered_single_word = sort_results(list(reversed(single_word_results)), 'one')
+        self.assertEqual(
+            ['/name-hit', '/tag-hit', '/desc-hit'],
+            _urls(ordered_single_word),
+            "Single-word search should prioritize name matches before tags, then description.",
+        )
+
+        # 2/ Multi-word (3 terms): best proximity should rank first.
+        multi_word_results = [
+            _result(name='alpha beta gamma', website_url='/distance-best', desc_field_name='content'),
+            _result(name='alpha x beta y gamma', website_url='/distance-mid', desc_field_name='arch'),
+            _result(name='alpha ' + 'x ' * 20 + 'beta ' + 'y ' * 20 + 'gamma', website_url='/distance-far', desc_field_name='description'),
+        ]
+        ordered_multi_word = sort_results(list(reversed(multi_word_results)), 'alpha beta gamma')
+        self.assertEqual(
+            ['/distance-best', '/distance-mid', '/distance-far'],
+            _urls(ordered_multi_word),
+            "For 3-word searches, closer term proximity should rank higher.",
+        )
+
+        # 3/ Multi-word with missing words: complete matches first, then fewer missing terms.
+        missing_word_results = [
+            _result(name='alpha beta gamma', website_url='/all-terms-best', desc_field_name='arch'),
+            _result(name='alpha x beta y gamma', website_url='/all-terms-far', desc_field_name='description'),
+            _result(name='alpha beta', website_url='/missing-one', desc_field_name='content'),
+            _result(name='alpha', website_url='/missing-two', desc_field_name='arch'),
+        ]
+        ordered_missing_words = sort_results(list(reversed(missing_word_results)), 'alpha beta gamma')
+        self.assertEqual(
+            ['/all-terms-best', '/all-terms-far', '/missing-one', '/missing-two'],
+            _urls(ordered_missing_words),
+            "Results containing all terms must rank before those missing terms.",
+        )
+
+        # 4/ sort_by_model=True: results should be grouped by model order.
+        grouped_by_model_results = [
+            _result(name='one top result', website_url='/m1-top', desc_field_name='description', model='model 1'),
+            _result(name='someone second result', website_url='/m2-top', desc_field_name='content', model='model 2'),
+            _result(name='generic', website_url='/m1-desc', description_text='one appears here', desc_field_name='arch', model='model 1'),
+            _result(name='generic', website_url='/m2-desc', description_text='one appears here too', desc_field_name='description', model='model 2'),
+            _result(name='generic', website_url='/m2-missing', description_text='no hit', desc_field_name='content', model='model 2'),
+        ]
+        ordered_grouped_by_model = sort_results(list(reversed(grouped_by_model_results)), 'one', sort_by_model=True)
+        self.assertEqual(
+            ['/m1-top', '/m1-desc', '/m2-desc', '/m2-top', '/m2-missing'],
+            _urls(ordered_grouped_by_model),
+            "With sort_by_model enabled, results should be grouped by model while preserving intra-model relevance order.",
+        )
+
     def test_01_few_results(self):
         """ Tests an autocomplete with exact match and less than the maximum number of results """
         suggestions = self._autocomplete("few")

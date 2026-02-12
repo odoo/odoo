@@ -42,7 +42,8 @@ export class SearchBar extends Interaction {
         const dataset = this.inputEl.dataset;
         this.options = {
             displayImage: dataset.displayImage && JSON.parse(dataset.displayImage),
-            displayDescription: dataset.displayDescription && JSON.parse(dataset.displayDescription),
+            displayDescription:
+                dataset.displayDescription && JSON.parse(dataset.displayDescription),
             displayExtraLink: dataset.displayExtraLink && JSON.parse(dataset.displayExtraLink),
             displayDetail: dataset.displayDetail && JSON.parse(dataset.displayDetail),
             // Make it easy for customization to disable fuzzy matching on specific searchboxes
@@ -99,6 +100,7 @@ export class SearchBar extends Interaction {
                 Math.max(this.autocompleteMinWidth, parseInt(this.el.clientWidth)) * 0.22
             ),
             options: this.options,
+            sort_by_relevance: true,
         });
         const fieldNames = this.getFieldsNames();
         res.results.forEach((record) => {

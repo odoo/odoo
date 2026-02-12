@@ -8,8 +8,9 @@ import urllib.parse
 import zipfile
 from hashlib import md5, sha256
 from io import BytesIO
-from itertools import islice
+from itertools import islice, pairwise
 from textwrap import shorten
+from unicodedata import category
 from xml.etree import ElementTree as ET
 
 import requests
@@ -587,8 +588,167 @@ class Website(Home):
         order = order or 'name ASC'
         return 'is_published desc, %s, id desc' % order
 
+    def _sort_results_by_relevance(self, results, phrase, sort_by_model=False):
+        # Order of priority:
+        # name > tags > body
+        # The lower the score, the higher it will be in the results
+        # 0 is the best score
+        term_list = [t for t in (phrase or '').lower().split() if t]
+        number_of_terms = len(term_list)
+        TAG_MATCH_PENALTY = 10 * number_of_terms
+        DESC_MATCH_PENALTY = 20 * number_of_terms
+        MISSING_TERM_PENALTY = 100 * number_of_terms
+        PARTIAL_TERM_MATCH_PENALTY = 30 * number_of_terms
+
+        def find_all(search_text, term):
+            if not term:
+                return
+            start = 0
+            while True:
+                start = search_text.find(term, start)
+                if start == -1:
+                    return
+                yield start
+                start += len(term)
+
+        def is_unicode_punctuation(char):
+            return category(char).startswith('P')
+
+        def is_boundary_surrounded_term(search_text, term, position):
+            term_end = position + len(term)
+            has_left_boundary = (
+                position == 0
+                or search_text[position - 1].isspace()
+                or is_unicode_punctuation(search_text[position - 1])
+            )
+            has_right_boundary = (
+                term_end == len(search_text)
+                or search_text[term_end].isspace()
+                or is_unicode_punctuation(search_text[term_end])
+            )
+            return has_left_boundary and has_right_boundary
+
+        def perfect_match_term(search_text, term, positions):
+            return any(is_boundary_surrounded_term(search_text, term, pos) for pos in positions)
+
+        def get_best_distance(terms, term_positions):
+            penalty = 0
+            term_position_cursor = {}
+            # Check what terms are actually found and save them
+            # Apply a penalty each time a term doesn't have a hit
+            for term in terms:
+                if not term_positions[term]:
+                    penalty += MISSING_TERM_PENALTY
+                else:
+                    term_position_cursor[term] = 0
+
+            if len(term_position_cursor) < 2:
+                return penalty
+
+            def compute_distance(positions, term_lengths):
+                # We sort the positions list and sum the distance between each words
+                # while taking into account the words lenght
+                sorted_pos_and_term_len = sorted(zip(positions, term_lengths), key=lambda x: x[0])
+                distance_sum = 0
+                for previous_match, current_match in pairwise(sorted_pos_and_term_len):
+                    prev_pos, prev_term_len = previous_match
+                    current_pos = current_match[0]
+                    distance_sum += current_pos - (prev_pos + prev_term_len)
+                return distance_sum
+
+            # We set the first distance as a reference
+            current_positions = [term_positions[term][cursor] for term, cursor in term_position_cursor.items()]
+            term_lengths = [len(t) for t in term_position_cursor]
+            best_distance = compute_distance(current_positions, term_lengths)
+
+            # Loop through all the hit positions to get the best distance between all the terms
+            while True:
+                has_next_candidate = False
+                next_term_positions = {}
+                for term, cursor in term_position_cursor.items():
+                    if cursor + 1 < len(term_positions[term]):
+                        next_term_positions[term] = term_positions[term][cursor + 1]
+                        has_next_candidate = True
+                if not has_next_candidate:
+                    break
+                # out of all the next term position candidates, we choose the smallest
+                next_term_to_advance = min(next_term_positions, key=next_term_positions.get)
+                term_position_cursor[next_term_to_advance] += 1
+                # Recalculate the distance with the newly chosen term position
+                current_positions = [term_positions[term][cursor] for term, cursor in term_position_cursor.items()]
+                distance = compute_distance(current_positions, term_lengths)
+                if distance < best_distance:
+                    best_distance = distance
+
+            best_distance += penalty
+            return best_distance
+
+        def get_description(result):
+            mapping = result.get('_mapping') or {}
+            desc_mapping = mapping.get('description')
+            field_name = desc_mapping.get('name') if isinstance(desc_mapping, dict) else None
+            if field_name:
+                return result.get(field_name) or ''
+            return ''
+
+        scored_results = []
+        for result in results:
+            description_text = get_description(result).lower()
+            name_text = result.get('name').lower()
+            score = 0
+            term_positions_in_name = {}
+            term_positions_in_desc = {}
+            terms_in_tags = set()
+            tag_names = [tag.get('name').lower() for tag in result.get('tag_ids', [])]
+            for term in term_list:
+                has_tag_match = any(term in tag_name for tag_name in tag_names)
+                has_perfect_tag_match = any(
+                    perfect_match_term(tag_name, term, list(find_all(tag_name, term)))
+                    for tag_name in tag_names
+                )
+                if has_tag_match:
+                    terms_in_tags.add(term)
+                term_positions_in_name[term] = list(find_all(name_text, term))
+                term_positions_in_desc[term] = list(find_all(description_text, term))
+
+                is_partial_match = False
+                if term_positions_in_name[term]:
+                    is_partial_match = not perfect_match_term(name_text, term, term_positions_in_name[term])
+                elif has_tag_match:
+                    is_partial_match = not has_perfect_tag_match
+                elif term_positions_in_desc[term]:
+                    is_partial_match = not perfect_match_term(description_text, term, term_positions_in_desc[term])
+                if is_partial_match:
+                    score += PARTIAL_TERM_MATCH_PENALTY
+
+            name_score = get_best_distance(term_list, term_positions_in_name)
+            desc_score = get_best_distance(term_list, term_positions_in_desc) + DESC_MATCH_PENALTY
+            tag_score = None
+            tag_match_count = len(terms_in_tags)
+            if number_of_terms and tag_match_count:
+                tag_score = TAG_MATCH_PENALTY * (number_of_terms - tag_match_count + 1)
+
+            score_candidates = [c for c in (name_score, desc_score, tag_score) if c is not None]
+            if score_candidates:
+                score += min(score_candidates)
+            scored_results.append((score, result))
+
+        results = [result for score, result in sorted(scored_results, key=lambda x: x[0])]
+        if sort_by_model:
+            # When sorted by model, we group all the results by model
+            # The model with the best result score first, and so on
+            models = []
+            for res in results:
+                if res.get('model') not in models:
+                    models.append(res.get('model'))
+            results_by_model = []
+            for model in models:
+                results_by_model += [res for res in results if res.get('model') == model]
+            return results_by_model
+        return results
+
     @http.route('/website/snippet/autocomplete', type='jsonrpc', auth='public', website=True, readonly=True)
-    def autocomplete(self, search_type=None, term=None, order=None, limit=5, max_nb_chars=999, options=None):
+    def autocomplete(self, search_type=None, term=None, order=None, limit=5, max_nb_chars=999, options=None, sort_by_relevance=False):
         """
         Returns list of results according to the term and options
 
@@ -621,7 +781,6 @@ class Website(Home):
             }
         term = fuzzy_term or term
         search_results = request.website._search_render_results(search_results, limit)
-
         mappings = []
         results_data = []
         for search_result in search_results:
@@ -632,6 +791,8 @@ class Website(Home):
         if search_type == 'all':
             # Only supported order for 'all' is on name
             results_data.sort(key=lambda r: r.get('name', ''), reverse='name desc' in order)
+        if sort_by_relevance:
+            results_data = self._sort_results_by_relevance(results_data, term)
         results_data = results_data[:limit]
         result = []
         for record in results_data:
