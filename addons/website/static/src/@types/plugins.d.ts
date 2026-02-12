@@ -16,7 +16,7 @@ declare module "plugins" {
     import { DynamicSnippetCarouselOptionShared } from "@website/builder/plugins/options/dynamic_snippet_carousel_option_plugin";
     import { dynamic_snippet_template_updated, DynamicSnippetOptionShared } from "@website/builder/plugins/options/dynamic_snippet_option_plugin";
     import { footer_templates_providers, FooterOptionShared } from "@website/builder/plugins/options/footer_option_plugin";
-    import { gallery_items_providers, reorder_items_handlers } from "@website/builder/plugins/options/gallery_element_option_plugin";
+    import { gallery_items_providers, reorder_items_processors } from "@website/builder/plugins/options/gallery_element_option_plugin";
     import { GoogleMapsOptionShared } from "@website/builder/plugins/options/google_maps_option/google_maps_option_plugin";
     import { ImageGalleryOptionShared } from "@website/builder/plugins/options/image_gallery_option_plugin";
     import { InstagramOptionShared } from "@website/builder/plugins/options/instagram_option_plugin";
@@ -75,11 +75,9 @@ declare module "plugins" {
         // Handlers
         content_manually_updated_handlers: content_manually_updated_handlers;
         dynamic_snippet_template_updated: dynamic_snippet_template_updated;
-        gallery_items_providers: gallery_items_providers;
         mark_translatable_nodes: mark_translatable_nodes;
         on_visibility_toggled_handlers: on_visibility_toggled_handlers;
         remove_hover_effect_handlers: remove_hover_effect_handlers;
-        reorder_items_handlers: reorder_items_handlers;
         set_hover_effect_handlers: set_hover_effect_handlers;
 
         // Overrides
@@ -88,9 +86,11 @@ declare module "plugins" {
         hover_effect_allowed_predicates: hover_effect_allowed_predicates;
 
         // Processors
+        reorder_items_processors: reorder_items_processors;
 
         // Providers
         footer_templates_providers: footer_templates_providers;
+        gallery_items_providers: gallery_items_providers;
 
         // Data
         searchbar_option_display_items: searchbar_option_display_items;

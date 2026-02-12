@@ -54,7 +54,7 @@ class ImageGalleryOption extends Plugin {
         },
         system_classes: ["o_empty_gallery_alert"],
         gallery_items_providers: this.getGalleryItems.bind(this),
-        reorder_items_handlers: this.reorderGalleryItems.bind(this),
+        reorder_items_processors: this.reorderGalleryItems.bind(this),
         on_will_remove_handlers: this.onWillRemove.bind(this),
         on_removed_handlers: this.onRemoved.bind(this),
         on_replaced_media_handlers: ({ newMediaEl }) => this.updateCarouselThumbnail(newMediaEl),
