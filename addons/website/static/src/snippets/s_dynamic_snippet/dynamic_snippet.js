@@ -19,6 +19,11 @@ export class DynamicSnippet extends Interaction {
             "t-on-click": this.callToAction,
         },
         _window: { "t-on-resize": this.throttled(this.render) },
+        _root: {
+            "t-att-class": () => ({
+                o_dynamic_snippet_loading: this.loadingData,
+            }),
+        },
         ".missing_option_warning": {
             "t-att-class": () => ({
                 "d-none": !!this.data.length,
@@ -150,6 +155,7 @@ export class DynamicSnippet extends Interaction {
     }
 
     render() {
+        this.loadingData = false;
         if (this.data.length > 0 || this.withSample) {
             this.prepareContent();
         } else {
@@ -166,7 +172,6 @@ export class DynamicSnippet extends Interaction {
         const templateAreaEl = this.el.querySelector(".dynamic_snippet_template");
         this.services["public.interactions"].stopInteractions(templateAreaEl);
         templateAreaEl.replaceChildren(this.renderedContentNode);
-        this.el.classList.remove("o_dynamic_snippet_empty");
         // TODO this is probably not the only public widget which creates DOM
         // which should be attached to another public widget. Maybe a generic
         // method could be added to properly do this operation of DOM addition.

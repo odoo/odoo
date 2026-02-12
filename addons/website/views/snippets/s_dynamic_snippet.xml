@@ -5,7 +5,7 @@
         <t t-set="snippet_description_default">Check out what's new in our company !</t>
         <t t-set="snippet_button_text_default">See All <i class="fa fa-long-arrow-right ms-2" role="img"/></t>
         <section t-att-data-snippet="snippet_name"
-            t-attf-class="#{snippet_name} #{snippet_classes} s_dynamic o_dynamic_snippet_empty pt64 pb64"
+            t-attf-class="#{snippet_name} #{snippet_classes} s_dynamic o_dynamic_snippet_loading pt64 pb64"
             t-att-data-custom-template-data="custom_template_data or '{}'"
             t-att-data-number-of-records="is_single_record and '1' or ''">
             <div t-attf-class="s_dynamic_snippet_container {{container_classes or 'container'}}">

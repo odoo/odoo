@@ -1,12 +1,17 @@
 .s_dynamic {
     // TODO Dynamic snippet loading style: Temporarily disabled in preview mode
     // since it needs interactions to be available.
-    #wrap &.o_dynamic_snippet_empty:not(.o_check_scroll_position) {
-        section:not(.s_dynamic_snippet_holder) {
-            display: none !important;
+    body:not(.editor_enable) #wrap &:not(.o_check_scroll_position) {
+        &.o_dynamic_snippet_loading {
+            section:not(.s_dynamic_snippet_holder) {
+                display: none !important;
+            }
+            .s_dynamic_snippet_holder {
+                display: block !important;
+            }
         }
-        .s_dynamic_snippet_holder {
-            display: block !important;
+        &:not(.o_dynamic_snippet_loading):has(.dynamic_snippet_template:empty) {
+            display: none !important;
         }
     }
     [data-url] {
