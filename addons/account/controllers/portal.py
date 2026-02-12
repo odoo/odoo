@@ -143,8 +143,8 @@ class PortalAccount(CustomerPortal):
             return request.make_response(attachments.raw, list(headers.items()))
 
         elif report_type in ('html', 'pdf', 'text'):
-            has_generated_invoice = bool(invoice_sudo.invoice_pdf_report_id)
-            request.update_context(proforma_invoice=not has_generated_invoice)
+            proforma = not invoice_sudo.invoice_pdf_report_id and invoice_sudo.is_sale_document()
+            request.update_context(proforma_invoice=proforma)
             return self._show_report(model=invoice_sudo, report_type=report_type, report_ref='account.account_invoices', download=download)
 
         values = self._invoice_get_page_view_values(invoice_sudo, access_token, **kw)
