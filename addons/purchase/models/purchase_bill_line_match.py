@@ -175,7 +175,8 @@ class PurchaseBillMatch(models.Model):
             residual_account_move_lines.unlink()
 
         # Add all remaining POL to the residual bill
-        residual_bill._add_purchase_order_lines(residual_purchase_order_lines)
+        if residual_purchase_order_lines:
+            residual_bill._add_purchase_order_lines(residual_purchase_order_lines)
 
     def action_add_to_po(self):
         if not self or not self.aml_id:
