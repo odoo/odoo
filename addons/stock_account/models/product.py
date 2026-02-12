@@ -144,7 +144,7 @@ class ProductProduct(models.Model):
         self.company_currency_id = company_id.currency_id
 
         for product in self:
-            at_date = fields.Datetime.to_datetime(product.env.context.get('to_date'))
+            at_date = product.env.context.get('to_date')
             if at_date:
                 at_date = at_date.replace(hour=23, minute=59, second=59)
                 product = product.with_context(at_date=at_date)
