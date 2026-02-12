@@ -111,11 +111,6 @@
                     <field name="recurrence_update" widget="radio" options="{'horizontal': True}"/>
                 </div>
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button icon="fa-bars" type="object" name="action_open_calendar_event" invisible="not (res_id and res_model_name)">
-                            <field name="res_model_name"/>
-                        </button>
-                    </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="active" invisible="1"/>
                     <field name="user_can_edit" invisible="1"/>
@@ -171,7 +166,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <field name="res_id" string="Linked to" invisible="not res_id" readonly="1" />
+                            <field name="linked_record" widget="calendar_linked_record"/>
                             <field name="res_model" invisible="1"/>
                             <field name="videocall_source" invisible="1"/>
                             <field name="access_token" invisible="1" force_save="1"/>

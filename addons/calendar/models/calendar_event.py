@@ -129,6 +129,14 @@ class CalendarEvent(models.Model):
         start = now + (datetime.min - now) % timedelta(minutes=30)
         return start + timedelta(hours=duration_hours)
 
+    @api.model
+    def _get_model_selection(self):
+        return [
+            (model.model, model.name)
+            for model in self.env['ir.model'].sudo().search(
+                [('is_mail_activity', '=', True), ('transient', '=', False)])
+        ]
+
     # description
     name = fields.Char('Meeting Subject', required=True)
     description = fields.Html('Description',
@@ -198,6 +206,8 @@ class CalendarEvent(models.Model):
     res_model = fields.Char(
         'Document Model Name', related='res_model_id.model', readonly=True, store=True)
     res_model_name = fields.Char(related='res_model_id.name')
+    linked_record = fields.Reference(selection='_get_model_selection', string="Linked to",
+         compute='_compute_linked_record', inverse='_inverse_linked_record')
     # messaging
     meeting_activity_ids = fields.One2many('mail.activity', 'calendar_event_id', string='Meeting Activities')
     # attendees
@@ -397,6 +407,23 @@ class CalendarEvent(models.Model):
     def _compute_duration(self):
         for event in self:
             event.duration = self._get_duration(event.start, event.stop)
+
+    @api.depends('res_model_id', 'res_id')
+    def _compute_linked_record(self):
+        for event in self:
+            if event.res_model_id and event.res_id:
+                event.linked_record = f"{event.res_model_id.model},{event.res_id}"
+            else:
+                event.linked_record = False
+
+    def _inverse_linked_record(self):
+        for event in self:
+            if event.linked_record:
+                event.res_model_id = self.env['ir.model']._get(event.linked_record._name)
+                event.res_id = event.linked_record.id
+            else:
+                event.res_model_id = False
+                event.res_id = False
 
     @api.depends('start', 'duration')
     def _compute_stop(self):
