@@ -3,6 +3,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { groupBy } from "@web/core/utils/arrays";
 import { uniqueId } from "@web/core/utils/functions";
 import { isZWS } from "@html_editor/utils/dom_info";
+import { _t } from "@web/core/l10n/translation";
 
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
 /**
@@ -95,6 +96,15 @@ export class SavePlugin extends Plugin {
             );
             await this._save(groupedElements);
             skipAfterSaveHandlers = await shouldSkipAfterSaveHandlers();
+        } catch (error) {
+            if (error.exceptionName === "odoo.exceptions.ValidationError") {
+                this.services.notification.add(_t("Previous values restored."), {
+                    title: _t("One or more fields were not valid"),
+                    type: "warning",
+                });
+            } else {
+                throw error;
+            }
         } finally {
             if (!skipAfterSaveHandlers) {
                 this.trigger("on_saved_handlers");

@@ -9,6 +9,7 @@ import {
     models,
     onRpc,
     patchWithCleanup,
+    makeServerError,
 } from "@web/../tests/web_test_helpers";
 import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
 import {
@@ -597,4 +598,46 @@ test("Modifying an element inside '.o_not_editable' should not mark this element
     await contains(`:iframe .test`).click();
     await contains("[data-class-action='x']").click();
     expect(":iframe [data-oe-model='model']").not.toHaveClass("o_dirty");
+});
+
+test("Validation errors are caught on save", async () => {
+    onRpc("ir.ui.view", "save", () => {
+        throw makeServerError({
+            message: "A Validation Error",
+            type: "ValidationError",
+        });
+    });
+    const { getEditor } = await setupWebsiteBuilder(`
+        <h2 class="test-target">
+            <span>Text</span>
+        </h2>
+    `);
+    // Change the span text content and save
+    const el = queryOne(":iframe .test-target");
+    setSelection({ anchorNode: el.childNodes[0], anchorOffset: 1 });
+    await insertText(getEditor(), "x");
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    expect(
+        ".o_notification_manager .o_notification_content:contains('One or more fields were not valid.')"
+    ).toHaveCount(1);
+});
+
+test("Errors different than validation errors are not caught on save", async () => {
+    expect.errors(1);
+    onRpc("ir.ui.view", "save", () => {
+        throw makeServerError({
+            message: "Not A Validation Error",
+        });
+    });
+    const { getEditor } = await setupWebsiteBuilder(`
+        <h2 class="test-target">
+            <span>Text</span>
+        </h2>
+    `);
+    // Change the span text content and save
+    const el = queryOne(":iframe .test-target");
+    setSelection({ anchorNode: el.childNodes[0], anchorOffset: 1 });
+    await insertText(getEditor(), "x");
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    expect.verifyErrors(["RPC_ERROR: Not A Validation Error"]);
 });
