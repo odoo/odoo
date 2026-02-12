@@ -23,6 +23,7 @@ from odoo import _, fields, http, models, release, tools
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.http.router import serve_ir_http
 from odoo.http.session import SessionExpiredException
 from odoo.http.stream import STATIC_CACHE_LONG
 from odoo.tools import OrderedSet, escape_psql, py_to_js_locale
@@ -138,7 +139,7 @@ class Website(Home):
         if homepage_url and homepage_url != '/':
             try:
                 rule, args = request.env['ir.http']._match(homepage_url)
-                return request._serve_ir_http(rule, args)
+                return serve_ir_http(request, rule, args)
             except (AccessError, NotFound, SessionExpiredException):
                 pass
 
