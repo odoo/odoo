@@ -425,28 +425,28 @@
                             <widget name="web_ribbon" title="Approved" bg_color="bg-success" invisible="state != 'validate'"/>
                             <aside>
                                 <img t-att-src="'/web/image/hr.employee.public/' + record.employee_id.raw_value + '/avatar_128?unique=' + record.write_date.raw_value"
-                                    class="o_image_64_cover float-start mb-2 me-2" alt="Employee's image"/>
+                                    class="o_image_64_cover rounded border float-start" alt="Employee's image"/>
                             </aside>
                             <main class="h-100">
-                                <div class="justify-content-center o_holidays_kanban_card">
+                                <div class="o_holidays_kanban_card d-flex flex-column justify-content-center h-100 ps-2 pe-3">
                                     <div class="d-flex flex-row">
-                                        <div class="col-12 align-items-center o_hr_holidays_value">
-                                             <div class="col-4 o_hr_holidays_card">
-                                                <field class="fw-bold fs-3 mb-2" name="employee_id"/>
+                                        <div class="col-12 d-flex align-items-center o_hr_holidays_value">
+                                             <div class="col-3 o_hr_holidays_card">
+                                                <field class="fw-bold fs-4 lh-sm" name="employee_id"/>
                                             </div>
                                             <div class="col-2 o_hr_holidays_name">
                                                 <div class="o_hr_holidays_card">
                                                     <field name="holiday_status_id" class="fw-bold me-1"/>
-                                                    <div class="d-flex flex-wrap">
-                                                    ( <field name="allocation_type"/> )
+                                                    <div class="text-muted">
+                                                        (<field name="allocation_type"/>)
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-2 o_hr_holidays_card">
+                                            <div class="col-2 o_hr_holidays_card ps-3">
                                                 <div class="fw-bold d-flex me-1">
                                                     <field name="duration_display"/>
                                                 </div>
-                                                Amount
+                                                <span class="text-muted">Amount</span>
                                             </div>
                                             <div class="col-2 o_hr_holidays_card">
                                                 <div class="fw-bold d-flex gap-1 me-1">
@@ -454,11 +454,11 @@
                                                     /
                                                     <field name="max_leaves" widget="float" digits="[3,2]"/>
                                                 </div>
-                                                <span>
+                                                <span class="text-muted">
                                                     Current balance
                                                 </span>
                                             </div>
-                                            <div class="col-2 o_hr_holidays_button flex-wrap d-flex pe-4 gap-2 justify-content-start">
+                                            <div class="o_hr_holidays_button col-3 d-flex justify-content-start gap-2 ps-5">
                                                 <button
                                                     name="action_approve" type="object" class="btn btn-primary"
                                                     t-if="record.can_approve.raw_value">
@@ -480,43 +480,41 @@
                                 </div>
                             </main>
                         </div>
-                        <div class="o_hr_holidays_kanban_mobile w-100">
-                            <main class="ps-1 d-flex flex-column w-100 gap-1">
-                                <div class="w-100 d-flex flex-row gap-2 align-items-center">
-                                    <field class="fw-bold" name="employee_id" widget="many2one_avatar_employee"/>
-                                    <field class="fw-bold w-100" name="employee_id"/>
-                                    <span
-                                        style="min-width: fit-content;"
-                                        t-attf-class="rounded-pill badge flex-shrink-1 text-bg-{{
-                                            record.state.raw_value == 'validate' ? 'success' :
-                                            ['confirm', 'validate1'].includes(record.state.raw_value) ?
-                                            'warning' : 'danger' }}"
-                                        t-out="record.state.value"/>
-                                </div>
-                                <div class="content d-flex flex-row gap-1 mb-2">
+                        <div class="o_hr_holidays_kanban_mobile d-flex w-100">
+                            <aside>
+                                <img t-att-src="'/web/image/hr.employee.public/' + record.employee_id.raw_value + '/avatar_128?unique=' + record.write_date.raw_value"
+                                    class="o_image_40_cover rounded float-start" alt="Employee's image"/>
+                            </aside>
+                            <main class="d-flex flex-column ps-2">
+                                <field class="fw-bold" name="employee_id"/>
+                                <div class="content d-flex flex-column lh-sm">
                                     <field name="holiday_status_id" class="text-muted"/>
-                                    <div class="text-muted">
-                                        (<field name="duration_display"/>)
-                                    </div>
+                                    <div class="text-muted">(<field name="duration_display"/>)</div>
                                 </div>
                             </main>
-                            <bottom class="d-flex justify-content-end gap-2">
+                            <div class="o_hr_holidays_button d-flex gap-1 pt-1">
+                                <span
+                                    t-attf-class="rounded-pill badge flex-shrink-1 text-bg-{{
+                                        record.state.raw_value == 'validate' ? 'success' :
+                                        ['confirm', 'validate1'].includes(record.state.raw_value) ?
+                                        'warning' : 'danger' }}"
+                                    t-out="record.state.value"/>
                                 <button
-                                    name="action_approve" type="object" class="btn btn-sm btn-primary py-0"
+                                    name="action_approve" type="object" class="btn btn-sm btn-primary"
                                     t-if="record.can_approve.raw_value">
                                     Approve
                                 </button>
                                 <button
-                                    name="action_approve" type="object" class="btn btn-sm btn-primary py-0"
+                                    name="action_approve" type="object" class="btn btn-sm btn-primary"
                                     t-if="record.can_validate.raw_value and !record.can_approve.raw_value">
                                     Validate
                                 </button>
                                 <button
-                                    name="action_refuse" type="object" class="btn btn-sm btn-secondary py-0"
+                                    name="action_refuse" type="object" class="btn btn-sm btn-secondary"
                                     t-if="record.can_refuse.raw_value">
                                     Refuse
                                 </button>
-                            </bottom>
+                            </div>
                         </div>
                     </t>
                 </templates>
