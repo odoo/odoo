@@ -499,18 +499,32 @@ class IrModuleModule(models.Model):
         cache = self.env.cache
         View = self.env['ir.ui.view']
         field = self.env['ir.ui.view']._fields['arch_db']
-        batch_size = int(self.env['ir.config_parameter'].sudo().get_param('module_terms_loading.batch_size', models.PREFETCH_MAX // 10))
-        self.env.cr.execute(""" SELECT generic.arch_db, specific.arch_db, specific.id
-                                          FROM ir_ui_view generic
+        batch_size = models.PREFETCH_MAX // (10 * len(langs))
+        last_id = 0
+        while True:
+            self.env.cr.execute("""
+                                SELECT generic.arch_db, specific.arch_db, specific.id
+                                FROM ir_ui_view generic
                                          INNER JOIN ir_ui_view specific
-                                            ON generic.key = specific.key
-                                         WHERE generic.website_id IS NULL AND generic.type = 'qweb'
-                                         AND specific.website_id IS NOT NULL
-                                         AND generic.arch_db IS NOT NULL
-                                         AND specific.arch_db IS NOT NULL
-                            """)
-        while batch := self.env.cr.fetchmany(batch_size):
+                                                    ON generic.key = specific.key
+                                WHERE generic.website_id IS NULL
+                                  AND generic.type = 'qweb'
+                                  AND specific.website_id IS NOT NULL
+                                  AND generic.arch_db IS NOT NULL
+                                  AND specific.arch_db IS NOT NULL
+                                  AND specific.id > %s
+                                ORDER BY specific.id ASC
+                                LIMIT %s
+                                """, (last_id, batch_size))
+
+            batch = self.env.cr.fetchall()
+
+            if not batch:
+                break
+
+            batch_specific_ids = []
             for generic_arch_db, specific_arch_db, specific_id in batch:
+                last_id = specific_id
                 langs_update = (langs & generic_arch_db.keys()) - {'en_US'}
                 if not langs_update:
                     continue
@@ -532,6 +546,11 @@ class IrModuleModule(models.Model):
                     specific_arch_db[lang] = field.translate(
                         lambda term: specific_translation_dictionary.get(term, {lang: None})[lang], specific_arch_db_en)
                 cache.update_raw(View.browse(specific_id), field, [specific_arch_db], dirty=True)
+                batch_specific_ids.append(specific_id)
+
+            if batch_specific_ids:
+                records_to_clear = View.browse(batch_specific_ids)
+                records_to_clear.invalidate_recordset(['arch_db'])
 
         default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
         if not default_menu:
