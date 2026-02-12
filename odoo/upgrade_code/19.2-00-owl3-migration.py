@@ -276,8 +276,13 @@ def upgrade_this(file_manager, log_info, log_error):
     ]
 
     # Step 1: Gather all variables in the web module
-    outside_vars = {}  # vars defined under t-call
-    inside_vars = {}  # vars defined inside template, eg. using t-set
+    outside_vars = {
+        "mail.Composer.quickActions": {'partitionedActions'},
+        "web.Breadcrumb.Name": {'breadcrumb'},
+        "web.SearchPanel.Category": {'section'}
+    }  # vars defined under t-call
+    inside_vars = {} # vars defined inside template, eg. using t-set
+
     for fileno, file in enumerate(web_files, start=1):
         aggregate_vars(file.content, outside_vars, inside_vars)
 

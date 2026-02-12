@@ -424,6 +424,7 @@ DIRECTIVES = [
     "t-props",
     "t-model",
     "t-tag",
+    "t-call-context",
 ]
 
 
@@ -593,6 +594,11 @@ def run_tests_main(test):
 
 
 tests = [
+    {
+        "name": "t-call-context",
+        "content": """<t t-call="a" t-call-context="renderingContext"/>""",
+        "expected": """<t t-call="a" t-call-context="this.renderingContext"/>""",
+    },
     {
         "name": "t foreach variation",
         "content": """
