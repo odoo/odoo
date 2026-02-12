@@ -564,7 +564,11 @@ test("Inner filter: toggle", async () => {
 
     await contains(`.o_item_option:eq(0)`).click();
     expect(isItemSelected("Foo")).toBe(true);
-    expect(searchBarMenu.env.searchModel.domain).toEqual([["foo", "=", "abcd"]]);
+    expect(searchBarMenu.env.searchModel.domain).toEqual([
+        "|",
+        ["foo", "=", "abcd"],
+        ["foo", "=", "qsdf"],
+    ]);
 });
 
 test("Inner filter: domain is correctly combined with other filters", async () => {

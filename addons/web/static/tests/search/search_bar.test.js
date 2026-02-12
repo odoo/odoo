@@ -180,6 +180,29 @@ test("navigation with facets", async () => {
 });
 
 test.tags("desktop");
+test("Inner filter: facets are 'or' separated", async () => {
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: ["filter"],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <filter string="Garf">
+                    <filter string="Meow" name="meow" domain="[('garf', '=', 'meow')]"/>
+                    <filter string="Woof" name="woof" domain="[('garf', '=', 'woof')]"/>
+                </filter>
+            </search>
+        `,
+    });
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Garf");
+    await contains(`.o_item_option:eq(0)`).click();
+    await contains(`.o_item_option:eq(1)`).click();
+    expect(getFacetTexts().map((str) => str.replace(/\s+/g, " "))).toEqual(["Meow or Woof"]);
+});
+
+test.tags("desktop");
 test("navigation with facets (2)", async () => {
     await mountWithSearch(SearchBar, {
         resModel: "partner",
