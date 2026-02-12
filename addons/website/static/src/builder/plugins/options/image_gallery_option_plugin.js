@@ -49,7 +49,6 @@ class ImageGalleryOption extends Plugin {
             RemoveAllImagesAction,
             SetImageGalleryLayoutAction,
             SetImageGalleryColumnsAction,
-            SetCarouselSpeedAction,
             IndicatorsStyleClassAction,
         },
         system_classes: ["o_empty_gallery_alert"],
@@ -543,16 +542,6 @@ export class SetImageGalleryColumnsAction extends BuilderAction {
     }
     isApplied({ editingElement, params: { mainParam: columns } }) {
         return columns === this.dependencies.imageGalleryOption.getColumns(editingElement);
-    }
-}
-
-export class SetCarouselSpeedAction extends BuilderAction {
-    static id = "setCarouselSpeed";
-    apply({ editingElement, value }) {
-        editingElement.dataset.bsInterval = value * 1000;
-    }
-    getValue({ editingElement }) {
-        return editingElement.dataset.bsInterval / 1000;
     }
 }
 

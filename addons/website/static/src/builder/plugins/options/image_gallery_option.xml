@@ -76,34 +76,7 @@
     <t t-call="website.ImagePopUpOption"/>
 
     <BuilderContext applyTo="'.carousel'">
-        <BuilderRow label.translate="Transition">
-            <BuilderSelect >
-                <BuilderSelectItem classAction="'slide'">Slide</BuilderSelectItem>
-                <BuilderSelectItem classAction="'carousel-fade slide'">Fade</BuilderSelectItem>
-                <BuilderSelectItem classAction="'carousel-instant slide'">None</BuilderSelectItem>
-            </BuilderSelect>
-        </BuilderRow>
-
-        <BuilderRow label.translate="Autoplay" level="1">
-            <BuilderSelect dataAttributeAction="'bsRide'">
-                <BuilderSelectItem id="'auto_after_first_hover'" dataAttributeActionValue="'true'">After First Hover</BuilderSelectItem>
-                <BuilderSelectItem id="'auto_always'" dataAttributeActionValue="'carousel'">Always</BuilderSelectItem>
-                <BuilderSelectItem dataAttributeActionValue="'false'">Never</BuilderSelectItem>
-            </BuilderSelect>
-        </BuilderRow>
-
-        <t t-if="isActiveItem('auto_after_first_hover') || isActiveItem('auto_always')">
-            <BuilderRow label.translate="Timespan" level="1">
-                <BuilderNumberInput dataAttributeAction="'bsInterval'"
-                    default="10"
-                    unit="'s'"
-                    saveUnit="'ms'"
-                    step="0.1"
-                    min="1"
-                    preview="false"
-                    applyWithUnit="false"/>
-            </BuilderRow>
-        </t>
+        <t t-call="website.CarouselAnimationOption"/>
     </BuilderContext>
 
     <BuilderContext applyTo="'img'">

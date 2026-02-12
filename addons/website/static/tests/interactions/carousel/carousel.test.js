@@ -7,9 +7,9 @@ setupInteractionWhiteList("website.carousel_bootstrap_upgrade_fix");
 
 describe.current.tags("interaction_dev");
 
-const defaultCarouselStyleSnippet = (bsRide, bsInterval) => `
+const defaultCarouselStyleSnippet = (bsRide) => `
     <section class="s_carousel_wrapper p-0" data-snippet="s_carousel" data-vcss="001">
-        <div id="slideshow_sample" class="s_carousel s_carousel_default carousel slide o_colored_level" data-bs-ride="${bsRide}" data-bs-interval="${bsInterval}">
+        <div id="slideshow_sample" class="s_carousel s_carousel_default carousel slide o_colored_level" data-bs-ride="${bsRide}" data-bs-interval="3000">
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.library_image_08" data-name="Image" data-index="0" alt=""/>
@@ -39,10 +39,10 @@ const defaultCarouselStyleSnippet = (bsRide, bsInterval) => `
         </div>
     </section>`;
 
-const imageGalleryCarouselStyleSnippet = (bsRide, bsInterval) => `
+const imageGalleryCarouselStyleSnippet = (bsRide) => `
     <section class="s_image_gallery o_slideshow pt24 pb24 s_image_gallery_controllers_outside s_image_gallery_controllers_outside_arrows_right s_image_gallery_indicators_dots s_image_gallery_arrows_default" data-snippet="s_image_gallery" data-vcss="002" data-columns="3">
         <div class="o_container_small overflow-hidden">
-            <div id="slideshow_sample" class="carousel carousel-dark slide" data-bs-ride="${bsRide}" data-bs-interval="${bsInterval}">
+            <div id="slideshow_sample" class="carousel carousel-dark slide" data-bs-ride="${bsRide}" data-bs-interval="3000">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
                         <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.library_image_08" data-name="Image" data-index="0" alt=""/>
@@ -73,10 +73,8 @@ const imageGalleryCarouselStyleSnippet = (bsRide, bsInterval) => `
         </div>
     </section>`;
 
-// TODO : Fix this test
-// -> It seems like the first slide of the carousel happen after more than 3s
-test.skip("Carousel - Autoplay: Always - 3s - s_carousel", async () => {
-    const { core } = await startInteractions(defaultCarouselStyleSnippet("carousel", "3000"));
+test("Carousel - Autoplay: Always - s_carousel", async () => {
+    const { core } = await startInteractions(defaultCarouselStyleSnippet("carousel"));
     expect(core.interactions).toHaveLength(1);
     expect(".carousel .carousel-item:nth-child(1)").toHaveClass("active");
     expect(".carousel .carousel-item:nth-child(2)").not.toHaveClass("active");
@@ -90,10 +88,8 @@ test.skip("Carousel - Autoplay: Always - 3s - s_carousel", async () => {
     expect(".carousel .carousel-item:nth-child(3)").not.toHaveClass("active");
 });
 
-// TODO : Fix this test
-// -> It seems like the first slide of the carousel happen after more than 3s
-test.skip("Carousel - Autoplay: Always - 3s - s_image_gallery", async () => {
-    const { core } = await startInteractions(imageGalleryCarouselStyleSnippet("carousel", "3000"));
+test("Carousel - Autoplay: Always - s_image_gallery", async () => {
+    const { core } = await startInteractions(imageGalleryCarouselStyleSnippet("carousel"));
     expect(core.interactions).toHaveLength(1);
     expect(".carousel .carousel-item:nth-child(1)").toHaveClass("active");
     expect(".carousel .carousel-item:nth-child(2)").not.toHaveClass("active");
@@ -108,8 +104,8 @@ test.skip("Carousel - Autoplay: Always - 3s - s_image_gallery", async () => {
 });
 
 test.tags("desktop");
-test("Carousel - Autoplay: After First Hover - 3s - s_carousel", async () => {
-    const { core } = await startInteractions(defaultCarouselStyleSnippet("true", "3000"));
+test("Carousel - Autoplay: After First Hover - s_carousel", async () => {
+    const { core } = await startInteractions(defaultCarouselStyleSnippet("true"));
     expect(core.interactions).toHaveLength(1);
     expect(".carousel .carousel-item:nth-child(1)").toHaveClass("active");
     expect(".carousel .carousel-item:nth-child(2)").not.toHaveClass("active");
@@ -133,8 +129,8 @@ test("Carousel - Autoplay: After First Hover - 3s - s_carousel", async () => {
 });
 
 test.tags("desktop");
-test("Carousel - Autoplay: After First Hover - 3s - s_image_gallery", async () => {
-    const { core } = await startInteractions(imageGalleryCarouselStyleSnippet("true", "3000"));
+test("Carousel - Autoplay: After First Hover - s_image_gallery", async () => {
+    const { core } = await startInteractions(imageGalleryCarouselStyleSnippet("true"));
     expect(core.interactions).toHaveLength(1);
     expect(".carousel .carousel-item:nth-child(1)").toHaveClass("active");
     expect(".carousel .carousel-item:nth-child(2)").not.toHaveClass("active");
@@ -157,8 +153,8 @@ test("Carousel - Autoplay: After First Hover - 3s - s_image_gallery", async () =
     expect(".carousel .carousel-item:nth-child(3)").not.toHaveClass("active");
 });
 
-test("Carousel - Autoplay: Never - 3s - s_carousel", async () => {
-    const { core } = await startInteractions(defaultCarouselStyleSnippet("false", "3000"));
+test("Carousel - Autoplay: Never - s_carousel", async () => {
+    const { core } = await startInteractions(defaultCarouselStyleSnippet("false"));
     expect(core.interactions).toHaveLength(1);
     expect(".carousel .carousel-item:nth-child(1)").toHaveClass("active");
     expect(".carousel .carousel-item:nth-child(2)").not.toHaveClass("active");
@@ -172,8 +168,8 @@ test("Carousel - Autoplay: Never - 3s - s_carousel", async () => {
     expect(".carousel .carousel-item:nth-child(3)").not.toHaveClass("active");
 });
 
-test("Carousel - Autoplay: Never - 3s - s_image_gallery", async () => {
-    const { core } = await startInteractions(imageGalleryCarouselStyleSnippet("false", "3000"));
+test("Carousel - Autoplay: Never - s_image_gallery", async () => {
+    const { core } = await startInteractions(imageGalleryCarouselStyleSnippet("false"));
     expect(core.interactions).toHaveLength(1);
     expect(".carousel .carousel-item:nth-child(1)").toHaveClass("active");
     expect(".carousel .carousel-item:nth-child(2)").not.toHaveClass("active");
