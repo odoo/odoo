@@ -148,7 +148,7 @@ class Dispatcher(ABC):
         Manipulate the HTTP response to inject various headers, also
         save the session when it is dirty.
         """
-        self.request._save_session()
+        save_session(self.request)
         self.request._inject_future_response(response)
         root.set_csp(response)
 
@@ -413,4 +413,5 @@ from .session import (
     SessionExpiredException,
     get_session_max_inactivity,
     logout,
+    save_session,
 )

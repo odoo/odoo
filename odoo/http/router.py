@@ -251,7 +251,7 @@ class Application:
             _request_stack.push(request)
 
             try:
-                request._post_init()
+                set_session_and_dbname(request)
                 current_thread.url = httprequest.url
 
                 if self.get_static_file(httprequest.path):
@@ -317,4 +317,4 @@ from .requestlib import (
     request,
 )
 from .routing_map import ROUTING_KEYS, _generate_routing_rules
-from .session import SessionExpiredException, SessionStore, logout
+from .session import SessionExpiredException, SessionStore, set_session_and_dbname, logout

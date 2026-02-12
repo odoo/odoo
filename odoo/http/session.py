@@ -13,6 +13,7 @@ from collections.abc import MutableMapping
 from contextlib import suppress
 from datetime import datetime
 from http import HTTPStatus
+from werkzeug.exceptions import Forbidden
 from zlib import adler32
 
 from odoo.api import Environment
@@ -507,7 +508,7 @@ class SessionStore:
             recent_session = self.get(session.sid)
             if 'next_sid' in recent_session:
                 # A new session has already been saved on disk by a concurrent request,
-                # the _save_session is going to simply use session.sid to set a new cookie.
+                # the save_session is going to simply use session.sid to set a new cookie.
                 session.sid = recent_session['next_sid']
                 return
             next_sid = static + self.generate_key()[STORED_SESSION_BYTES:]
@@ -585,7 +586,80 @@ class SessionStore:
                 self.save(session)
 
 
+def set_session_and_dbname(request: Request) -> None:
+    assert not hasattr(request, 'session') and not hasattr(request, 'db')
+
+    sid = request.httprequest.cookies.get('session_id', '')
+    session = root.session_store.get(sid, keep_sid=True)
+
+    for key, val in get_default_session().items():
+        session.setdefault(key, val)
+    if not session.context.get('lang'):
+        session.context['lang'] = request.default_lang()
+
+    dbname = None
+    host = request.httprequest.environ['HTTP_HOST']
+    header_dbname = request.httprequest.headers.get('X-Odoo-Database')
+    if session.db and router.db_filter([session.db], host=host):
+        dbname = session.db
+        if header_dbname and header_dbname != dbname:
+            e = ("Cannot use both the session_id cookie and the "
+                    "x-odoo-database header.")
+            raise Forbidden(e)
+    elif header_dbname:
+        session.can_save = False  # stateless
+        if router.db_filter([header_dbname], host=host):
+            dbname = header_dbname
+    else:
+        all_dbs = router.db_list(force=True, host=host)
+        if len(all_dbs) == 1:
+            dbname = all_dbs[0]  # monodb
+
+    if session.db != dbname:
+        if session.db:
+            _logger.warning("Logged into database %r, but dbfilter rejects it; logging session out.", session.db)
+            logout(session, keep_db=False)
+        session.db = dbname
+
+    session.is_dirty = False
+    request.session = session
+    request.db = dbname
+
+
+def save_session(request: Request, env: Environment | None = None) -> None:
+    """
+    Save a modified session on disk.
+
+    :param env: an environment to compute the session token.
+        MUST be left ``None`` (in which case it uses the request's
+        env) UNLESS the database changed.
+    """
+    sess = request.session
+    if env is None:
+        env = request.env
+
+    if not sess.can_save:
+        return
+
+    if sess.should_rotate:
+        root.session_store.rotate(sess, env)  # it saves
+    elif sess.uid and time.time() >= sess['create_time'] + SESSION_ROTATION_INTERVAL:
+        root.session_store.rotate(sess, env, soft=True)
+    elif sess.is_dirty:
+        root.session_store.save(sess)
+
+    cookie_sid = request.cookies.get('session_id')
+    if sess.is_dirty or cookie_sid != sess.sid:
+        request.future_response.set_cookie(
+            'session_id',
+            sess.sid,
+            max_age=get_session_max_inactivity(env),
+            httponly=True
+        )
+
+
 # ruff: noqa: E402
+from . import router  # db_list, db_filter (to patch/mock)
 from .geoip import GeoIP
 from .requestlib import request
 from .router import root
