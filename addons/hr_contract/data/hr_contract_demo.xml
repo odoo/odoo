@@ -18,7 +18,7 @@
 
     <record id="hr_contract_admin" model="hr.contract">
         <field name="name">Mitchell Admin Contract</field>
-        <field name="date_start" eval="time.strftime('%Y')+'-1-1'"/>
+        <field name="date_start" eval="(DateTime.today() - relativedelta(months=2)).strftime('%Y')+'-1-1'"/>
         <field name="date_end" eval="time.strftime('%Y-%m-15')"/>
         <field name="employee_id" ref="hr.employee_admin"/>
         <field name="job_id" model="hr.job"
