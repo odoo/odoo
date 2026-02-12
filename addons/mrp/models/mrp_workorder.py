@@ -915,9 +915,12 @@ class MrpWorkorder(models.Model):
 
     def get_duration(self):
         self.ensure_one()
-        now = fields.Datetime.now()
-        times = self.time_ids.filtered(lambda t: t.loss_type in ('productive', 'performance'))
-        return self._intervals_duration([(t.date_start, t.date_end or now, t) for t in times])
+        now = self.env.cr.now()
+        loss_type_times = self.time_ids.grouped(lambda t: t.loss_id.loss_type)
+        duration = 0
+        for times in loss_type_times.values():
+            duration += self._intervals_duration([(t.date_start or now, t.date_end or now, t) for t in times])
+        return duration
 
     def action_mark_as_done(self):
         for wo in self:
