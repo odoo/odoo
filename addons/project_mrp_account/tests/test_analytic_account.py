@@ -206,14 +206,14 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.amount, -20.0)
         self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids[analytic_plan._column_name()], wc_analytic_account)
 
-        # mark as done, duration based on time_ids : 60
+        # mark as done
         mo.qty_producing = 10.0
         mo.set_qty_producing()
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
-        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.amount, -10.0)
+        self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids.amount, -20.0)
         self.assertEqual(mo.workorder_ids.mo_analytic_account_line_ids[self.analytic_plan._column_name()], self.analytic_account)
-        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.amount, -10.0)
+        self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids.amount, -20.0)
         self.assertEqual(mo.workorder_ids.wc_analytic_account_line_ids[analytic_plan._column_name()], wc_analytic_account)
 
     def test_changing_mo_analytic_account(self):
