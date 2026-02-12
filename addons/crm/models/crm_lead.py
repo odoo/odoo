@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import re
+from ast import literal_eval
 from collections import OrderedDict, defaultdict
 from datetime import datetime, timedelta, UTC
 from zoneinfo import ZoneInfo
@@ -15,7 +17,6 @@ from odoo.fields import Domain
 from odoo.tools.translate import _
 from odoo.tools import email_normalize_all, is_html_empty, groupby, parse_contact_from_email, SQL
 from odoo.tools.misc import get_lang
-from odoo.tools.safe_eval import safe_eval
 
 from . import crm_stage
 
@@ -721,13 +722,10 @@ class CrmLead(models.Model):
         return False
 
     def _evaluate_context_from_action(self, action):
-        if action.get('context', '{}'):
-            try:
-                return safe_eval(action['context'], {'active_id': self.id, 'uid': self.env.uid})
-            except (NameError, ValueError):
-                return {}
-        else:
-            return {}
+        context_str = action.get('context', '{}')
+        context_str = re.sub(r'\buid\b', str(self.env.uid), context_str)
+        context_str = re.sub(r'\bactive_id\b', str(self.id), context_str)
+        return literal_eval(context_str)
 
     # ------------------------------------------------------------
     # ORM
