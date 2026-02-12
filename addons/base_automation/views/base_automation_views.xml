@@ -8,15 +8,6 @@
             <field name="arch" type="xml">
                 <form string="Automation Rule">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button groups="base.group_no_one" invisible="trigger != 'on_webhook'"
-                                type="object"
-                                name="action_view_webhook_logs"
-                                string="Logs"
-                                class="oe_stat_button"
-                                icon="fa-list"
-                            />
-                        </div>
                         <field name="active" invisible="1" />
                         <field name="model_name" invisible="1" force_save="True" />
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>

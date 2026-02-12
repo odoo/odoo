@@ -416,3 +416,42 @@ export function manageAttachments({ component, env }) {
 }
 
 debugRegistry.category("form").add("manageAttachments", manageAttachments);
+
+//------------------------------------------------------------------------------
+// Manage Debug logs
+//------------------------------------------------------------------------------
+
+export function manageIrLogging({ component, env }) {
+    const resId = component.model.root.resId;
+    if (!resId) {
+        return null; // No record
+    }
+    const description = _t("Logging");
+    return {
+        type: "item",
+        description,
+        callback: () => {
+            env.services.action.doAction({
+                res_model: "ir.logging",
+                name: description,
+                views: [
+                    [false, "list"],
+                    [false, "form"],
+                ],
+                type: "ir.actions.act_window",
+                domain: [
+                    ["res_model", "=", component.props.resModel],
+                    ["res_id", "=", resId],
+                ],
+                context: {
+                    default_res_model: component.props.resModel,
+                    default_res_id: resId,
+                },
+            });
+        },
+        sequence: 160,
+        section: "record",
+    };
+}
+
+debugRegistry.category("form").add("manageIrLogging", manageIrLogging);

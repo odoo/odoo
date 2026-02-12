@@ -367,14 +367,18 @@ class DeliveryCarrier(models.Model):
                 with db_registry.cursor() as cr:
                     env = api.Environment(cr, SUPERUSER_ID, {})
                     IrLogging = env['ir.logging']
-                    IrLogging.sudo().create({'name': 'delivery.carrier',
-                              'type': 'server',
-                              'dbname': db_name,
-                              'level': 'DEBUG',
-                              'message': xml_string,
-                              'path': self.delivery_type,
-                              'func': func,
-                              'line': 1})
+                    IrLogging.sudo().create({
+                        'name': 'delivery.carrier',
+                        'type': 'server',
+                        'dbname': db_name,
+                        'level': 'DEBUG',
+                        'message': xml_string,
+                        'path': self.delivery_type,
+                        'func': func,
+                        'line': 1,
+                        'res_model': self._name,
+                        'res_id': self.id
+                    })
             except psycopg2.Error:
                 pass
 
