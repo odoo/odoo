@@ -66,14 +66,27 @@ class ProductTemplate(models.Model):
         return {
             'income': (
                 self.property_account_income_id
-                or self.categ_id.property_account_income_categ_id
+                or self._get_category_account('property_account_income_categ_id')
                 or (self.company_id or self.env.company).income_account_id
             ), 'expense': (
                 self.property_account_expense_id
-                or self.categ_id.property_account_expense_categ_id
+                or self._get_category_account('property_account_expense_categ_id')
                 or (self.company_id or self.env.company).expense_account_id
             ),
         }
+
+    def _get_category_account(self, field_name):
+        """
+        Return the first account defined on the product category hierarchy
+        for the given field.
+        """
+        categ = self.categ_id
+        while categ:
+            account = categ[field_name]
+            if account:
+                return account
+            categ = categ.parent_id
+        return self.env['account.account']
 
     def get_product_accounts(self, fiscal_pos=None):
         return {
