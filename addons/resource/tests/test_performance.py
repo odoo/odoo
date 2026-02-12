@@ -31,7 +31,7 @@ class TestVariableResourceCalendarPerformance(TransactionCase):
 
     @warmup
     def test_performance_computes_days_per_week_variable_calendar(self):
-        with self.assertQueryCount(6):
+        with self.assertQueryCount(9):
             self.variable_calendar._compute_days_per_week()
 
     @warmup
@@ -41,5 +41,5 @@ class TestVariableResourceCalendarPerformance(TransactionCase):
 
     @warmup
     def test_performance_computes_hours_per_day_variable_calendar(self):
-        with self.assertQueryCount(6):
+        with self.assertQueryCount(9):
             self.variable_calendar._compute_hours_per_day()

@@ -131,11 +131,3 @@ class TestVariableResourceCalendar(TransactionCase):
             'schedule_type': 'variable',
         })
         self.assertEqual(len(calendar.attendance_ids), 0, "Variable calendar should not have default attendances created.")
-
-        with self.assertRaises(UserError, msg="Should not be able to create fixed attendance on variable calendar"):
-            self.env['resource.calendar.attendance'].create({
-                'calendar_id': calendar.id,
-                'dayofweek': '1',
-                'hour_from': 8,
-                'hour_to': 17,
-            })

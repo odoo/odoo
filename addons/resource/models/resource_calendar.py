@@ -103,7 +103,7 @@ class ResourceCalendar(models.Model):
         return super().write(vals)
 
     def _attendances_to_unlink(self, next_schedule_type=None):
-        return self.attendance_ids.filtered(lambda a: bool(a.date) if next_schedule_type or a.calendar_id.schedule_type == "fixed" else not a.date)
+        return self.attendance_ids.filtered(lambda a: bool(a.date) if (next_schedule_type or a.calendar_id.schedule_type) == "fixed" else not a.date)
 
     @api.depends('hours_per_week', 'company_id.resource_calendar_id.hours_per_week')
     def _compute_full_time_required_hours(self):
@@ -113,18 +113,12 @@ class ResourceCalendar(models.Model):
     @api.depends('company_id', 'schedule_type')
     def _compute_attendance_ids(self):
         for calendar in self:
-            if calendar._origin.company_id == calendar.company_id and calendar._origin.schedule_type == calendar.schedule_type:
-                # Origin pareil schedul type et fixed  à fix
-                continue
-            company_calendar = calendar.company_id.resource_calendar_id
-            if company_calendar and company_calendar.schedule_type == calendar.schedule_type == "fixed" or calendar.schedule_type == "fixed":
-                calendar.update({
-                    'attendance_ids': [(5, 0, 0)] + calendar._get_default_attendance_ids(calendar.company_id),
-                })
-            elif calendar.schedule_type == "variable":
-                calendar.update({
-                    'attendance_ids': [Command.delete(a.id) for a in calendar._attendances_to_unlink()],
-                })
+            if calendar.schedule_type == "variable":
+                calendar.attendance_ids = [Command.delete(a.id) for a in calendar._attendances_to_unlink()]
+            elif not (calendar.attendance_ids.filtered(lambda a: not a.date)
+                      or calendar._origin.company_id == calendar.company_id
+                      and calendar._origin.schedule_type == calendar.schedule_type):
+                calendar.attendance_ids = [(5, 0, 0)] + calendar._get_default_attendance_ids(calendar.company_id)
 
     @api.depends('company_id')
     def _compute_global_leave_ids(self):
