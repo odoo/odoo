@@ -4,7 +4,7 @@
 from odoo import Command
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests import Form
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class TestLotSerial(TestStockCommon):
@@ -90,6 +90,25 @@ class TestLotSerial(TestStockCommon):
         self.assertEqual(vals[1]['quantity'], 4)
         self.assertEqual(vals[2]['lot_name'], 'wxc')
         self.assertEqual(vals[2]['quantity'], 1, "default lot qty")
+
+    def test_lot_generation_with_none_values_raise_usererror(self):
+        with self.assertRaises(UserError):
+            # when quantity is received as None, UserError should be raised
+            self.MoveObj.action_generate_lot_line_vals({
+                'default_tracking': 'lot',
+                'default_product_id': self.productA.id,
+                'default_location_dest_id': self.locationC.id,
+                'default_quantity': None,
+            }, "generate", "", 3, "test")
+
+        with self.assertRaises(UserError):
+            # when quantity per lot is received as None, UserError should be raised
+            self.MoveObj.action_generate_lot_line_vals({
+                'default_tracking': 'lot',
+                'default_product_id': self.productA.id,
+                'default_location_dest_id': self.locationC.id,
+                'default_quantity': 2,
+            }, "generate", "", None, "test")
 
     def test_lot_no_company(self):
         """ check the lot created in a receipt should not have a company if the product is not

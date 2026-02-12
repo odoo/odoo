@@ -996,8 +996,10 @@ Please change the quantity done or the rounding precision of your unit of measur
         default_vals = {}
 
         def generate_lot_qty(quantity, qty_per_lot):
-            if qty_per_lot <= 0:
-                raise UserError(_("The quantity per lot should always be a positive value."))
+            if not qty_per_lot or qty_per_lot <= 0:
+                raise UserError(self.env._("The quantity per lot should always be a positive value."))
+            if not quantity or quantity <= 0:
+                raise UserError(self.env._("The quantity received should always be a positive value."))
             line_count = int(quantity // qty_per_lot)
             leftover = quantity % qty_per_lot
             qty_array = [qty_per_lot] * line_count
