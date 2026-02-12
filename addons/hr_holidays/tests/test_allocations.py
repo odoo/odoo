@@ -626,3 +626,16 @@ class TestAllocations(TestHrHolidaysCommon):
         self.assertEqual(allocation_5_days.state, 'validate')
         allocation_3_days.action_refuse()
         self.assertEqual(allocation_3_days.state, 'refuse')
+
+    @freeze_time('2024-03-25')
+    def test_allocation_count_date_previous_year(self):
+        """Checks that the allocation count is calculated correctly when an employee has an allocation starting during
+        the prevous year, but which hasn't expired yet."""
+
+        self.env['hr.leave.allocation'].create({
+            'employee_id': self.employee.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'allocation_type': 'regular',
+            'date_from': '2023-12-25'
+        })
+        self.assertEqual(1, self.work_entry_type.allocation_count)
