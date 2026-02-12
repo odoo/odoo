@@ -38,12 +38,12 @@ from psycopg2 import OperationalError
 
 import odoo.exceptions
 from .config import config
-from .func import lazy
+from .func import deprecated, lazy
 from .misc import OrderedSet
 
 unsafe_eval = eval
 
-__all__ = ['const_eval', 'safe_eval']
+__all__ = ['const_eval', 'expr_eval', 'safe_eval']
 
 _logger = logging.getLogger(__name__)
 _logger_runtime = logging.getLogger(f'{__name__}.runtime')
@@ -341,10 +341,11 @@ def compile_codeobj(expr: str, /, filename: str = '<unknown>', mode: typing.Lite
         raise ValueError('%r while compiling\n%r' % (e, expr))
 
 
+@deprecated("Since 20.0, use ast.literal_eval instead")
 def const_eval(expr):
     """const_eval(expression) -> value
 
-    Safe Python constant evaluation
+    Safe Python constant evaluation, equivalent to `ast.literal_eval`.
 
     Evaluates a string that contains an expression describing
     a Python constant. Strings that are not valid Python expressions
@@ -357,11 +358,10 @@ def const_eval(expr):
     >>> const_eval("1+2")
     Traceback (most recent call last):
     ...
-    ValueError: opcode BINARY_ADD not allowed
+    ValueError: malformed node or string on line 1: <ast.BinOp object at 0xdeadbeef>
     """
-    c = compile_codeobj(expr)
-    assert_valid_codeobj(_CONST_OPCODES, c, expr)
-    return unsafe_eval(c)
+    return ast.literal_eval(expr)
+
 
 def expr_eval(expr):
     """expr_eval(expression) -> value
@@ -384,6 +384,7 @@ def expr_eval(expr):
     c = compile_codeobj(expr)
     assert_valid_codeobj(_EXPR_OPCODES, c, expr)
     return unsafe_eval(c)
+
 
 _BUILTINS = {
     '__import__': _import,
