@@ -23,8 +23,11 @@ else:
                 "name": name_with_credential,
                 "phone": phone_val,
                 "email": "",
+                "address_1": (rec.address_1 or "").strip(),
+                "address_2": (rec.address_2 or "").strip(),
                 "city": (rec.city or "").strip(),
                 "state": (rec.state or "").strip(),
+                "postal_code": (rec.postal_code or "").strip(),
                 "npi": rec.npi_number or "",
                 "company": "",
                 "license": "",
@@ -140,9 +143,7 @@ else:
                         </group>
                         <group string="Info">
                             <div class="alert alert-info" role="alert">
-                                <p>Searches the NPPES NPI Registry for <strong>optometrists and ophthalmologists</strong>.</p>
-                                <p>Use * for wildcard (e.g., last_name="Smi*").</p>
-                                <p>Enter at least one criterion: name, state, city, or postal code.</p>
+                                <p>Searches the NPPES NPI Registry. Use name, state, city, or postal code. Use * for wildcard.</p>
                             </div>
                         </group>
                     </group>
@@ -187,6 +188,7 @@ else:
                 </sheet>
                 <footer>
                     <button name="action_search" string="Search" type="object" class="btn-primary"/>
+                    <button name="action_manual" string="Manual" type="object" class="btn-secondary"/>
                     <button string="Close" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
@@ -200,15 +202,125 @@ else:
         <field name="target">new</field>
     </record>
 
-    <!-- Standalone app - NPI Registry -->
+    <!-- NPI Registry menu hidden from dropdown; use External Provider then Search NPI Registry -->
     <menuitem id="menu_npi_optometrist_root"
         name="NPI Registry"
-        sequence="100"/>
+        sequence="100"
+        active="False"/>
+
+    <!-- Kanban: no empty rows, only cards for existing records -->
+    <record id="view_external_provider_kanban" model="ir.ui.view">
+        <field name="name">external.provider.kanban</field>
+        <field name="model">external.provider</field>
+        <field name="arch" type="xml">
+            <kanban string="External Provider" create="1" edit="1" delete="1" on_create="npi_optometrist_search.action_npi_optometrist_search">
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="city"/>
+                <field name="state"/>
+                <field name="npi"/>
+                <field name="address_1"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <strong class="o_kanban_record_title"><field name="name"/></strong>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <field name="npi" string="NPI" class="text-muted"/>
+                                <div t-if="record.phone.raw_value"><field name="phone"/></div>
+                                <div t-if="record.address_1.raw_value or record.city.raw_value">
+                                    <field name="address_1"/><t t-if="record.city.raw_value">, </t><field name="city"/><t t-if="record.state.raw_value"> </t><field name="state"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_external_provider_list" model="ir.ui.view">
+        <field name="name">external.provider.list</field>
+        <field name="model">external.provider</field>
+        <field name="arch" type="xml">
+            <list string="External Provider" create="1" edit="1" delete="1" limit="5">
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="address_1"/>
+                <field name="city"/>
+                <field name="state"/>
+                <field name="postal_code"/>
+                <field name="npi"/>
+                <field name="company"/>
+                <field name="license"/>
+                <field name="taxonomy"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_external_provider_form" model="ir.ui.view">
+        <field name="name">external.provider.form</field>
+        <field name="model">external.provider</field>
+        <field name="arch" type="xml">
+            <form string="External Provider">
+                <sheet>
+                    <group>
+                        <group string="Provider Info">
+                            <field name="name"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                            <field name="company"/>
+                            <field name="npi"/>
+                            <field name="license"/>
+                            <field name="taxonomy"/>
+                        </group>
+                        <group string="Address">
+                            <field name="city"/>
+                            <field name="state"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Add address fields to views after load (model has new columns by then) -->
+    <function model="external.provider" name="_add_address_views"/>
+
+    <record id="action_external_provider" model="ir.actions.act_window">
+        <field name="name">External Provider</field>
+        <field name="res_model">external.provider</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="limit">5</field>
+    </record>
 
     <menuitem id="menu_npi_optometrist_search"
         name="Search Optometrists &amp; Ophthalmologists"
         parent="menu_npi_optometrist_root"
         action="action_npi_optometrist_search"
+        sequence="10"/>
+
+    <!-- Under NPI Registry (sidebar when app is open) -->
+
+    <!-- App launcher: External Provider opens Providers (Kanban); New opens NPI search -->
+    <menuitem id="menu_external_provider_root"
+        name="External Provider"
+        action="action_external_provider"
+        sequence="101"/>
+
+    <menuitem id="menu_external_provider_new"
+        name="New"
+        parent="menu_external_provider_root"
+        action="action_npi_optometrist_search"
+        sequence="5"/>
+
+    <menuitem id="menu_external_provider_list"
+        name="Providers"
+        parent="menu_external_provider_root"
+        action="action_external_provider"
         sequence="10"/>
 
 </odoo>

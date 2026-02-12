@@ -7,14 +7,15 @@ _logger = logging.getLogger(__name__)
 
 NPI_API_URL = "https://npiregistry.cms.hhs.gov/api/"
 
-# Taxonomies searched (NPPES uses "Ophthalmologist"; we also try "Ophthalmology")
-NPI_TAXONOMIES = ["Optometrist", "Ophthalmologist", "Ophthalmology"]
+# Taxonomies searched when not searching by NPI number
+NPI_TAXONOMIES = ["Optometrist", "Ophthalmologist", "Ophthalmology", "Optician"]
 
 
 class NpiOptometristSearch(models.TransientModel):
     _name = "npi.optometrist.search"
-    _description = "NPI Optometrist Search"
+    _description = "NPI Eye Care Provider Search"
 
+    npi_number = fields.Char(string="NPI Number", help="Search by exact NPI (optional)")
     first_name = fields.Char(string="First Name", help="Provider first name (trailing * for wildcard)")
     last_name = fields.Char(string="Last Name", help="Provider last name (trailing * for wildcard)")
     state = fields.Char(string="State", size=2, help="Two-letter state code (e.g., CA, UT)")
@@ -30,6 +31,17 @@ class NpiOptometristSearch(models.TransientModel):
         string="Search Results",
         readonly=True,
     )
+
+    def action_manual(self):
+        """Open External Provider form for manual entry (create mode)."""
+        return {
+            "type": "ir.actions.act_window",
+            "name": "External Provider",
+            "res_model": "external.provider",
+            "view_mode": "form",
+            "target": "current",
+            "context": {"default_manual_entry": True},
+        }
 
     def action_search(self):
         """Call NPPES API for both Optometrists and Ophthalmologists, then combine results."""
@@ -51,23 +63,105 @@ class NpiOptometristSearch(models.TransientModel):
         if self.postal_code:
             base_params["postal_code"] = self.postal_code.strip()
 
-        if not any([self.first_name, self.last_name, self.state, self.city, self.postal_code]):
+        has_criteria = any([
+            self.npi_number,
+            self.first_name,
+            self.last_name,
+            self.state,
+            self.city,
+            self.postal_code,
+        ])
+        if not has_criteria:
             return {
                 "type": "ir.actions.client",
                 "tag": "display_notification",
                 "params": {
                     "title": "Search Criteria Required",
-                    "message": "Enter at least one criterion: name, state, city, or postal code.",
+                    "message": "Enter NPI number or at least one criterion: name, state, city, or postal code.",
                     "type": "warning",
                     "sticky": True,
                 },
             }
 
-        # Split limit across taxonomies (e.g. 50 each for Optometrist and Ophthalmologist)
-        limit_per_taxonomy = max(1, min(200, self.limit) // len(NPI_TAXONOMIES))
         self.result_ids.unlink()
         result_records = Result
 
+        # Search by NPI number: single API call, no taxonomy filter
+        if self.npi_number:
+            npi_val = self.npi_number.strip()
+            try:
+                response = requests.get(
+                    NPI_API_URL,
+                    params={"version": "2.1", "number": npi_val},
+                    timeout=30,
+                )
+                response.raise_for_status()
+                data = response.json()
+            except requests.RequestException as e:
+                _logger.exception("NPI API request failed for number %s: %s", npi_val, e)
+                return {
+                    "type": "ir.actions.client",
+                    "tag": "display_notification",
+                    "params": {
+                        "title": "Search Failed",
+                        "message": str(e),
+                        "type": "danger",
+                        "sticky": True,
+                    },
+                }
+            if "Errors" in data and data["Errors"]:
+                return {
+                    "type": "ir.actions.client",
+                    "tag": "display_notification",
+                    "params": {
+                        "title": "No Result",
+                        "message": data["Errors"][0].get("description", "NPI not found."),
+                        "type": "warning",
+                        "sticky": True,
+                    },
+                }
+            results = data.get("results") or []
+            for r in results:
+                basic = r.get("basic", {})
+                addr_list = r.get("addresses") or []
+                primary_addr = next(
+                    (a for a in addr_list if a.get("address_purpose") in ("LOCATION", "PRIMARY")),
+                    addr_list[0] if addr_list else {},
+                )
+                taxonomies = r.get("taxonomies") or []
+                for primary_tax in (taxonomies or [{}]):
+                    name = basic.get("name")
+                    if not name:
+                        first = basic.get("first_name") or ""
+                        last = basic.get("last_name") or ""
+                        name = f"{first} {last}".strip() or "N/A"
+                    result_records |= Result.create({
+                        "provider_type": primary_tax.get("desc") or "N/A",
+                        "npi_number": r.get("number"),
+                        "name": name,
+                        "first_name": basic.get("first_name"),
+                        "last_name": basic.get("last_name"),
+                        "credential": basic.get("credential"),
+                        "telephone_number": primary_addr.get("telephone_number") if isinstance(primary_addr, dict) else None,
+                        "address_1": primary_addr.get("address_1") if isinstance(primary_addr, dict) else None,
+                        "address_2": primary_addr.get("address_2") if isinstance(primary_addr, dict) else None,
+                        "city": primary_addr.get("city") if isinstance(primary_addr, dict) else None,
+                        "state": primary_addr.get("state") if isinstance(primary_addr, dict) else None,
+                        "postal_code": primary_addr.get("postal_code") if isinstance(primary_addr, dict) else None,
+                        "taxonomy_code": primary_tax.get("code"),
+                        "taxonomy_desc": primary_tax.get("desc"),
+                    })
+            self.result_ids = result_records
+            return {
+                "type": "ir.actions.act_window",
+                "res_model": "npi.optometrist.search",
+                "res_id": self.id,
+                "view_mode": "form",
+                "target": "new",
+            }
+
+        # Search by criteria across taxonomies
+        limit_per_taxonomy = max(1, min(200, self.limit) // len(NPI_TAXONOMIES))
         for taxonomy_desc in NPI_TAXONOMIES:
             params = dict(base_params, taxonomy_description=taxonomy_desc, limit=limit_per_taxonomy)
             try:
@@ -167,8 +261,11 @@ class NpiOptometristResult(models.TransientModel):
             "name": name_with_credential,
             "phone": self.telephone_number or "",
             "email": "",
+            "address_1": (self.address_1 or "").strip(),
+            "address_2": (self.address_2 or "").strip(),
             "city": (self.city or "").strip(),
             "state": (self.state or "").strip(),
+            "postal_code": (self.postal_code or "").strip(),
             "npi": self.npi_number or "",
             "company": "",
             "license": "",
