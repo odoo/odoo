@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { groupBy } from "@web/core/utils/arrays";
 import { uniqueId } from "@web/core/utils/functions";
+import { _t } from "@web/core/l10n/translation";
 
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
 /**
@@ -58,6 +59,16 @@ export class SavePlugin extends Plugin {
             await Promise.all(this.getResource("before_save_handlers").map((handler) => handler()));
             await this._save();
             skipAfterSaveHandlers = await shouldSkipAfterSaveHandlers();
+        } catch (error) {
+            if (error.exceptionName?.includes("ValidationError")) {
+                this.services.notification.add(error.data.message, {
+                    title: _t("An error occurred while updating a field"),
+                    type: "warning",
+                    sticky: true,
+                });
+            } else {
+                throw error;
+            }
         } finally {
             if (!skipAfterSaveHandlers) {
                 this.getResource("after_save_handlers").forEach((handler) => handler());
