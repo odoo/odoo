@@ -227,11 +227,11 @@ class Binary(Controller):
                 filename = unicodedata.normalize('NFD', ufile.filename)
 
             try:
-                attachment = Model.create({
+                attachment = Model._upload_file(ufile, {
                     'name': filename,
-                    'raw': ufile.read(),
+                    'mimetype': ufile.content_type,
                     'res_model': model,
-                    'res_id': int(id)
+                    'res_id': int(id),
                 })
                 attachment._post_add_create()
             except AccessError:
@@ -244,7 +244,7 @@ class Binary(Controller):
                     'filename': clean(filename),
                     'mimetype': attachment.mimetype,
                     'id': attachment.id,
-                    'size': attachment.file_size
+                    'size': attachment.file_size,
                 })
         return out % (json.dumps(clean(callback)), json.dumps(args)) if callback else json.dumps(args)
 

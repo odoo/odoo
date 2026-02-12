@@ -3,11 +3,14 @@ from __future__ import annotations
 
 import contextlib
 import hashlib
+import io
 import logging
 import mimetypes
 import os
 import re
+import shutil
 import stat
+import tempfile
 import typing
 import uuid
 import warnings
@@ -28,15 +31,9 @@ from odoo.tools import (
     split_every,
     str2bool,
 )
-from odoo.tools.binary import EMPTY_BINARY, BinaryValue, BinaryBytes
+from odoo.tools.binary import EMPTY_BINARY, BinaryBytes, BinaryValue
 from odoo.tools.constants import PREFETCH_MAX
-from odoo.tools.mimetypes import (
-    MIMETYPE_HEAD_SIZE,
-    _olecf_mimetypes,
-    fix_filename_extension,
-    guess_file_mimetype,
-    guess_mimetype,
-)
+from odoo.tools.mimetypes import guess_file_mimetype, guess_mimetype
 from odoo.tools.misc import limited_field_access_token
 
 if typing.TYPE_CHECKING:
@@ -44,6 +41,7 @@ if typing.TYPE_CHECKING:
 
 _logger = logging.getLogger(__name__)
 SECURITY_FIELDS = ('res_model', 'res_id', 'create_uid', 'public', 'res_field')
+CREATE_FROM_STREAM_FLAG = object()  # sentinel that cannot be given over RPC
 
 
 def condition_values(model, field_name, domain):
@@ -134,7 +132,7 @@ class IrAttachment(models.Model):
         return os.path.join(self._filestore(), path)
 
     @api.model
-    def _get_path(self, bin_data, sha):
+    def _get_path(self, file, sha):
         # scatter files across 256 dirs
         # we use '/' in the db (even on windows)
         fname = sha[:2] + '/' + sha
@@ -144,8 +142,12 @@ class IrAttachment(models.Model):
             os.makedirs(dirname, exist_ok=True)
 
         # prevent sha-1 collision
-        if os.path.isfile(full_path) and not self._same_content(bin_data, full_path):
-            raise UserError(_("The attachment collides with an existing file."))
+        try:
+            with open(full_path, 'rb') as existing_file:
+                if not self._same_content(file, existing_file):
+                    raise UserError(_("The attachment collides with an existing file."))
+        except FileNotFoundError:
+            pass
         return fname, full_path
 
     @api.model
@@ -161,7 +163,7 @@ class IrAttachment(models.Model):
     @api.model
     def _file_write(self, bin_value, checksum):
         assert isinstance(self, IrAttachment)
-        fname, full_path = self._get_path(bin_value, checksum)
+        fname, full_path = self._get_path(io.BytesIO(bin_value), checksum)
         if not os.path.exists(full_path):
             try:
                 with open(full_path, 'wb') as fp:
@@ -310,7 +312,7 @@ class IrAttachment(models.Model):
             'db_datas': data or False,
         }
         if data and self._storage() != 'db':
-            values['store_fname'], _full_path = self._get_path(data, checksum)
+            values['store_fname'], _full_path = self._get_path(io.BytesIO(data), checksum)
             values['db_datas'] = False
         return values
 
@@ -323,18 +325,19 @@ class IrAttachment(models.Model):
         return hashlib.sha1(bin_data or b'').hexdigest()
 
     @api.model
-    def _same_content(self, bin_data, filepath):
-        BLOCK_SIZE = 1024
-        bin_data = memoryview(bin_data)
-        with open(filepath, 'rb') as fd:
-            i = 0
+    def _same_content(self, file1, file2):
+        with contextlib.ExitStack() as exit_stack:
+            exit_stack.callback(file1.seek, file1.tell())
+            file1.seek(0)
+            exit_stack.callback(file2.seek, file2.tell())
+            file2.seek(0)
             while True:
-                data = fd.read(BLOCK_SIZE)
-                if data != bin_data[i * BLOCK_SIZE:(i + 1) * BLOCK_SIZE]:
+                chunk1 = file1.read(io.DEFAULT_BUFFER_SIZE)
+                chunk2 = file2.read(io.DEFAULT_BUFFER_SIZE)
+                if chunk1 != chunk2:
                     return False
-                if not data:
+                if not chunk1:
                     break
-                i += 1
         return True
 
     def _compute_mimetype(self, values):
@@ -741,13 +744,14 @@ class IrAttachment(models.Model):
     def create(self, vals_list):
         record_tuple_set = set()
 
-        # remove computed field depending of raw
-        vals_list = [{
-            key: value
-            for key, value
-            in vals.items()
-            if key not in ('file_size', 'checksum', 'store_fname')
-        } for vals in vals_list]
+        if self.env.context.get('ir_attachment_from_stream') is not CREATE_FROM_STREAM_FLAG:
+            # remove computed field depending of raw
+            vals_list = [{
+                key: value
+                for key, value
+                in vals.items()
+                if key not in ('file_size', 'checksum', 'store_fname')
+            } for vals in vals_list]
         checksum_raw_map = {}
 
         for values in vals_list:
@@ -839,45 +843,105 @@ class IrAttachment(models.Model):
         ]).unlink()
         self.env.registry.clear_cache('assets')
 
-    def _from_request_file(self, file, *, mimetype, **vals):
+    def _upload_file(self, file: io.IOBase, create_vals: api.ValuesType) -> typing.Self:
         """
-        Create an attachment out of a request file
+        Create an attachment out of a file.
 
-        :param file: the request file
-        :param str mimetype:
-            * "TRUST" to use the mimetype and file extension from the
-              request file with no verification.
-            * "GUESS" to determine the mimetype and file extension on
-              the file's content. The determined extension is added at
-              the end of the filename unless the filename already had a
-              valid extension.
-            * a mimetype in format "{type}/{subtype}" to force the
-              mimetype to the given value, it adds the corresponding
-              file extension at the end of the filename unless the
-              filename already had a valid extension.
+        The file is read in chunks to compute the checksum, file size,
+        and destination path. When it doesn't exist on the file-system
+        yet or is not seekable, it is saved in a temporary file in the
+        ``path/to/filestore/<dbname>/upload/`` folder. In all cases, the
+        file is hard-linked/copied to the correct place in the filestore
+        and a new attachment is created for that file.
         """
-        if mimetype == 'TRUST':
-            mimetype = file.content_type
-            filename = file.filename
-        elif mimetype == 'GUESS':
-            head = file.read(MIMETYPE_HEAD_SIZE)
-            file.seek(-len(head), 1)  # rewind
-            mimetype = guess_mimetype(head)
-            filename = fix_filename_extension(file.filename, mimetype)
-            if mimetype in ('application/zip', *_olecf_mimetypes):
-                mimetype = mimetypes.guess_type(filename)[0]
-        elif all(mimetype.partition('/')):
-            filename = fix_filename_extension(file.filename, mimetype)
-        else:
-            raise ValueError(f'{mimetype=}')
+        if 'raw' in create_vals or 'db_datas' in create_vals:
+            e = "Cannot use neither 'raw' nor 'db_datas' with _upload_file."
+            raise ValueError(e)
 
-        return self.create({
-            'name': filename,
-            'type': 'binary',
-            'raw': file.read(),  # load the entire file in memory :(
-            'mimetype': mimetype,
-            **vals,
-        })
+        if self._storage() == 'db':
+            return self.create(dict(create_vals, raw=file.read()))
+
+        # Check permissions first, so we don't read the entire file if
+        # it is gonna fail.
+        if any(self._inaccessible_comodel_records(
+            model_and_ids={create_vals.get('res_model'): [create_vals.get('res_id')]},
+            operation='write',
+        )):
+            raise AccessError(_("Sorry, you are not allowed to access this document."))
+
+        with contextlib.ExitStack() as exit_stack:
+
+            # For os.link and _get_path/_same_content, we need the
+            # file to be seekable and accessible on the file-system.
+            # When it is not, we save it in a named temporary file.
+            src_path = getattr(file, 'name', None)
+            try:
+                if not isinstance(src_path, (str, bytes, os.PathLike)):
+                    raise FileNotFoundError(f"not a path: {src_path}")
+                open(src_path, 'rb').close()  # check we can read it
+                file.seek(0)
+            except OSError:  # not accessible/seekable
+                upload_dir = self._full_path('upload')
+                os.makedirs(upload_dir, 0o755, exist_ok=True)
+                file_upload = exit_stack.enter_context(
+                    tempfile.NamedTemporaryFile(
+                        dir=upload_dir,
+                        prefix="{model}-{id}-{uid}-".format(
+                            model=create_vals.get('res_model', ''),
+                            id=create_vals.get('res_id', ''),
+                            uid=self.env.uid,
+                        ),
+                        suffix='.part',
+                    ),
+                )
+                src_path = file_upload.name
+            else:
+                file_upload = None
+
+            # Read the file's content in chunks to compute its checksum,
+            # size and destination file name. Save it in the temporary
+            # file if necessary.
+            computed_fields = {'file_size': 0}
+            sha = hashlib.sha1()  # sha2 checked in _get_path
+            while chunk := file.read(io.DEFAULT_BUFFER_SIZE):  # 16kiB
+                sha.update(chunk)
+                computed_fields['file_size'] += len(chunk)
+                if file_upload:
+                    file_upload.write(chunk)
+            if file_upload:
+                file_upload.flush()
+            computed_fields['checksum'] = sha.hexdigest()
+            computed_fields['store_fname'], dst_path = (
+                self._get_path(file_upload or file, computed_fields['checksum']))
+            if 'mimetype' not in create_vals:
+                computed_fields['mimetype'] = guess_file_mimetype(src_path)
+
+            # The order of the next lines matters for _gc_file_store. It
+            # MUST be create => _mark_for_gc => link => commit/rollback.
+            attach = (
+                self.with_context(ir_attachment_from_stream=CREATE_FROM_STREAM_FLAG)
+                    .create(create_vals | computed_fields)
+                    .with_env(self.env)
+            )
+            self._mark_for_gc(attach.store_fname)
+            try:
+                os.link(src_path, dst_path)  # Fast hardlink
+            except FileExistsError:
+                pass
+            except OSError:
+                shutil.copyfile(src_path, dst_path)  # Slow copy
+
+            # Prevent changing the content of the file, as it would
+            # break the checksum and store_fname fields. This doesn't
+            # prevent removing it thought. Sysadmins can use umask(1) to
+            # restrict the permissions further.
+            # Note: doing it after link/copyfile makes for a very small
+            #  time window where the file is rw-rw-r--, ideally the file
+            #  would immediately have the rights permission, but I don't
+            #  know how to do that... :(
+            os.chmod(dst_path, 0o444)  # r--r--r--
+
+        return attach
 
     def _to_http_stream(self):
         """ Create a :class:`~Stream`: from an ir.attachment record. """
