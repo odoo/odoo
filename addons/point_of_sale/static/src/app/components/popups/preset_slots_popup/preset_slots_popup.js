@@ -2,7 +2,7 @@ import { Component, onWillStart, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
-import { localization } from "@web/core/l10n/localization";
+import { formatDate } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;
 
@@ -65,9 +65,8 @@ export class PresetSlotsPopup extends Component {
         return periodNames[period];
     }
 
-    formatDate(date) {
-        const dateObj = DateTime.fromFormat(date, "yyyy-MM-dd");
-        return dateObj.toFormat(localization.dateFormat);
+    formatedDate(date) {
+        return formatDate(DateTime.fromFormat(date, "yyyy-MM-dd"));
     }
 
     confirm(slot, preset) {

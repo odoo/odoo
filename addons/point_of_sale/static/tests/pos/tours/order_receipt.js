@@ -15,6 +15,7 @@ registry.category("web_tour.tours").add("test_receipt_data", {
             ProductScreen.clickCustomer("Example Partner"),
             ProductScreen.clickDisplayedProduct("Example Simple Product"),
             ProductScreen.clickPayButton(),
+            PaymentScreen.clickShipLaterButton(),
             PaymentScreen.clickPaymentMethod("Bank", true),
             {
                 content: "Throw receipt data to check in backend",

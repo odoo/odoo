@@ -2,8 +2,7 @@
 import base64
 from io import BytesIO
 from odoo import models, api, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.tools.misc import format_datetime
+from odoo.tools.misc import format_datetime, format_date
 
 import qrcode
 
@@ -153,7 +152,7 @@ class PosOrderReceipt(models.AbstractModel):
                 'module_pos_restaurant': self.config_id.module_pos_restaurant,
             },
             'extra_data': {
-                'preset_datetime': self.preset_time.strftime(DEFAULT_SERVER_DATETIME_FORMAT) if self.preset_time else False,
+                'preset_datetime': format_datetime(self.env, self.preset_time) if self.preset_time else False,
                 'partner_vat_label': company.country_id.vat_label or _("Tax ID"),
                 'self_invoicing_url': f"{self.env.company.get_base_url()}/pos/ticket",
                 'prices': self._order_receipt_generate_taxe_data(),
@@ -161,6 +160,7 @@ class PosOrderReceipt(models.AbstractModel):
                 'company_state_name': company.state_id.name if company.state_id else False,
                 'company_country_name': company.country_id.name if company.country_id else False,
                 'formated_date_order': format_datetime(self.env, self.date_order),
+                'formated_shipping_date': format_date(self.env, self.shipping_date) if self.shipping_date else False
             },
         }
 

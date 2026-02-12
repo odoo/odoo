@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { parseDateTime } from "@web/core/l10n/dates";
+import { parseDate, parseDateTime, serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { parseFloat } from "@web/views/fields/parsers";
 import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -725,16 +725,14 @@ export class TicketScreen extends Component {
                 modelFields: ["date_order"],
                 formatSearch: (searchTerm) => {
                     const includesTime = searchTerm.includes(":");
-                    let parsedDateTime;
                     try {
-                        parsedDateTime = parseDateTime(searchTerm);
+                        if (includesTime) {
+                            return serializeDateTime(parseDateTime(searchTerm));
+                        } else {
+                            return serializeDate(parseDate(searchTerm));
+                        }
                     } catch {
                         return searchTerm;
-                    }
-                    if (includesTime) {
-                        return parsedDateTime.toUTC().toFormat("yyyy-MM-dd HH:mm:ss");
-                    } else {
-                        return parsedDateTime.toFormat("yyyy-MM-dd");
                     }
                 },
             },

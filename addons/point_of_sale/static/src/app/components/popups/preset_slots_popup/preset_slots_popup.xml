@@ -10,7 +10,7 @@
                         t-attf-class="{{ state.selectedDate === sqlDate ? 'btn-primary' : 'btn-secondary' }}"
                         t-att-class="{'o_colorlist_item_color_transparent_6': Object.values(preset.availabilities[sqlDate]).length === 0}"
                         t-on-click="() => state.selectedDate = sqlDate"
-                        t-esc="formatDate(sqlDate)" />
+                        t-esc="formatedDate(sqlDate)" />
                 </div>
                 <hr/>
                 <div class="w-100 mt-3">
@@ -29,7 +29,7 @@
                                     class="btn preset-slot-button p-3"
                                     t-attf-class="{{getSlotColor(slot, preset)}}"
                                     t-on-click="() => this.confirm(slot, preset)">
-                                        <span t-esc="slot.datetime.toFormat('HH:mm')" />
+                                        <span t-esc="pos.getTime(slot.datetime)" />
                                 </button>
                             </div>
                         </div>

@@ -1,10 +1,10 @@
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { computeComboItems } from "./utils/compute_combo_items";
-import { localization } from "@web/core/l10n/localization";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { getStrNotes } from "./utils/order_change";
 import { PosOrderAccounting } from "./accounting/pos_order_accounting";
+import { getTimeUtil } from "@point_of_sale/utils";
 
 const { DateTime } = luxon;
 
@@ -113,7 +113,7 @@ export class PosOrder extends PosOrderAccounting {
     }
 
     get presetDate() {
-        return this.preset_time?.toFormat(localization.dateFormat) || "";
+        return this.formatDateOrTime("preset_time", "date");
     }
 
     get isFutureDate() {
@@ -122,7 +122,7 @@ export class PosOrder extends PosOrderAccounting {
 
     get presetTime() {
         return this.preset_time && this.preset_time.isValid
-            ? this.preset_time.toFormat("HH:mm")
+            ? this.formatDateOrTime("preset_time", "time")
             : false;
     }
 
@@ -133,8 +133,8 @@ export class PosOrder extends PosOrderAccounting {
     get presetDateTime() {
         return this.preset_time?.isValid
             ? this.preset_time.hasSame(this.date_order, "day")
-                ? this.preset_time.toFormat(localization.timeFormat)
-                : this.preset_time.toFormat(`${localization.dateFormat} ${localization.timeFormat}`)
+                ? this.formatDateOrTime("preset_time", "time")
+                : this.formatDateOrTime("preset_time")
             : false;
     }
 
@@ -776,7 +776,7 @@ export class PosOrder extends PosOrderAccounting {
             reprint: reprint,
             pos_reference: this.getName(),
             config_name: this.config_id?.name || this.config.name,
-            time: luxon.DateTime.now().toFormat("HH:mm"),
+            time: getTimeUtil(luxon.DateTime.now()),
             tracking_number: this.tracking_number,
             preset_name: this.preset_id?.name || "",
             preset_time: this.presetDateTime,

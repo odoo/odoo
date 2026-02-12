@@ -1,7 +1,8 @@
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { deepImmutable, clone, RAW_SYMBOL } from "./utils";
 import { toRaw } from "@odoo/owl";
-const { DateTime } = luxon;
+import { formatDate, formatDateTime } from "@web/core/l10n/dates";
+import { getTimeUtil } from "@point_of_sale/utils";
 
 export class Base extends WithLazyGetterTrap {
     static excludedLazyGetters = ["id", "models"];
@@ -55,9 +56,12 @@ export class Base extends WithLazyGetterTrap {
 
     formatDateOrTime(field, type = "datetime") {
         if (type === "date") {
-            return this[field].toLocaleString(DateTime.DATE_SHORT);
+            return formatDate(this[field]);
         }
-        return this[field].toLocaleString(DateTime.DATETIME_SHORT);
+        if (type === "time") {
+            return getTimeUtil(this[field]);
+        }
+        return formatDateTime(this[field]);
     }
 
     isEqual(other) {

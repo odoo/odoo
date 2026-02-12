@@ -11,10 +11,12 @@ import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { registry } from "@web/core/registry";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
+import { formatDate, today } from "@web/core/l10n/dates";
 
 registry.category("web_tour.tours").add("TicketScreenTour", {
     steps: () =>
         [
+            Chrome.freezeDateTime(today().toMillis()),
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
@@ -165,6 +167,13 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             ...ProductScreen.clickRefund(),
             TicketScreen.selectOrder("003"),
             TicketScreen.refundedNoteContains("1.00 Refunded"),
+            // Check date search works with l10n format
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.search("Date", formatDate(today())),
+            TicketScreen.nthRowContains(2, formatDate(today())),
+            TicketScreen.nthRowContains(3, formatDate(today())),
+            TicketScreen.nthRowContains(4, formatDate(today())),
+            Chrome.endTour(),
         ].flat(),
 });
 

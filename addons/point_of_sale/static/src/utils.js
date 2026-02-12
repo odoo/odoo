@@ -3,6 +3,7 @@
 import { session } from "@web/session";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { deserializeDateTime } from "@web/core/l10n/dates";
+import { Time } from "@web/core/l10n/time";
 /*
  * comes from o_spreadsheet.js
  * https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -182,6 +183,10 @@ export function orderUsageUTCtoLocalUtil(data) {
         result[formattedDt] = usage;
     }
     return result;
+}
+
+export function getTimeUtil(date) {
+    return Time.from(date).toString();
 }
 
 /**
