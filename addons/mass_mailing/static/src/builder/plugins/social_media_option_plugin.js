@@ -59,7 +59,7 @@ class MassMailingSocialMediaOptionPlugin extends Plugin {
         ],
         clean_for_save_processors: this.cleanForSave.bind(this),
         normalize_processors: this.normalize.bind(this),
-        replace_media_dialog_params_handlers: this.applyIconsMediaDialogParams.bind(this),
+        replace_media_dialog_params_processors: this.applyIconsMediaDialogParams.bind(this),
     };
 
     setup() {
@@ -122,6 +122,7 @@ class MassMailingSocialMediaOptionPlugin extends Plugin {
             params.node.matches(".s_social_media .s_social_media_links .fa")
         ) {
             params.visibleTabs = ["ICONS"];
+            return params;
         }
     }
 
