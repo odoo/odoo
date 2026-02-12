@@ -121,6 +121,7 @@ export class Thread extends Record {
     followersCount;
     loadOlder = false;
     loadNewer = false;
+    inPortal = false;
     get isFocused() {
         return this.isFocusedCounter !== 0;
     }
@@ -427,6 +428,7 @@ export class Thread extends Record {
                 around,
                 before,
             },
+            ...this.rpcParams,
         });
     }
 
@@ -566,10 +568,6 @@ export class Thread extends Record {
         if (this.model === "mail.box" && this.id === "history") {
             return `/mail/history/messages`;
         }
-        return this.fetchRouteChatter;
-    }
-
-    get fetchRouteChatter() {
         return "/mail/thread/messages";
     }
 

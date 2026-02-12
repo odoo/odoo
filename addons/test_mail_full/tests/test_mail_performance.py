@@ -3,7 +3,7 @@ from markupsafe import Markup
 
 from odoo import Command
 from odoo.addons.test_mail.tests.test_performance import BaseMailPostPerformance
-from odoo.tests.common import users, warmup
+from odoo.tests.common import HttpCase, users, warmup
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -95,7 +95,7 @@ class TestMailPerformance(FullBaseMailPerformance):
 
 
 @tagged('mail_performance', 'post_install', '-at_install')
-class TestPortalFormatPerformance(FullBaseMailPerformance):
+class TestPortalFormatPerformance(FullBaseMailPerformance, HttpCase):
     """Test performance of `portal_message_format` with multiple messages
     with multiple attachments, with ratings.
 
@@ -229,104 +229,49 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('employee')
     @warmup
-    def test_portal_message_format_norating(self):
-        messages_all = self.messages_all.with_user(self.env.user)
-
-        with self.assertQueryCount(employee=10):
-            # res = messages_all.portal_message_format(options=None)
-            res = messages_all.portal_message_format(options={'rating_include': False})
-
-        comment_subtype = self.env.ref('mail.mt_comment')
-        self.assertEqual(len(res), len(messages_all))
-        for format_res, message, record in zip(res, messages_all, self.messages_records):
-            self.assertEqual(len(format_res['attachment_ids']), 2)
-            self.maxDiff = None
+    def test_portal_fetch_messages(self):
+        self.authenticate(self.env.user.login, self.env.user.login)
+        for record in self.record_ratings:
+            record_messages = self.messages_all.filtered(
+                lambda m: m.res_id == record.id and m.model == record._name
+            ).sorted("id", reverse=True)
             self.assertEqual(
-                format_res['attachment_ids'],
-                [
-                    {
-                        'checksum': message.attachment_ids[0].checksum,
-                        'filename': 'Test file 1',
-                        'id': message.attachment_ids[0].id,
-                        'mimetype': 'text/plain',
-                        'name': 'Test file 1',
-                        'raw_access_token': message.attachment_ids[0]._get_raw_access_token(),
-                        'res_id': record.id,
-                        'res_model': record._name,
-                    }, {
-                        'checksum': message.attachment_ids[1].checksum,
-                        'filename': 'Test file 0',
-                        'id': message.attachment_ids[1].id,
-                        'mimetype': 'text/plain',
-                        'name': 'Test file 0',
-                        'raw_access_token': message.attachment_ids[1]._get_raw_access_token(),
-                        'res_id': record.id,
-                        'res_model': record._name,
-                    }
-                ]
+                len(record.message_ids),
+                3,
+                "Each record should have 3 messages, 2 comments + 1 note (record creation)",
             )
-            self.assertEqual(format_res["author_id"]["id"], record.customer_id.id)
-            self.assertEqual(format_res["author_id"]["name"], record.customer_id.display_name)
-            self.assertEqual(format_res["author_id"]["avatar_128_access_token"], record.customer_id._get_avatar_128_access_token())
-            self.assertEqual(format_res['date'], datetime(2023, 5, 15, 10, 30, 5))
-            self.assertEqual(' '.join(format_res['published_date_str'].split()), '05/15/2023 10:30:05 AM')
-            self.assertEqual(format_res['id'], message.id)
-            self.assertFalse(format_res['is_internal'])
-            self.assertFalse(format_res['is_message_subtype_note'])
-            self.assertEqual(format_res['subtype_id'], (comment_subtype.id, comment_subtype.name))
-            # should not be in, not asked
-            self.assertNotIn('rating_id', format_res)
-            self.assertNotIn('rating_stats', format_res)
-            self.assertNotIn('rating_value', format_res)
-
-    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
-    @users('employee')
-    @warmup
-    def test_portal_message_format_rating(self):
-        messages_all = self.messages_all.with_user(self.env.user)
-
-        with self.assertQueryCount(employee=25):  # 24, sometimes +1
-            res = messages_all.portal_message_format(options={'rating_include': True})
-
-        self.assertEqual(len(res), len(messages_all))
-        for format_res, _message, _record in zip(res, messages_all, self.messages_records):
-            self.assertEqual(format_res['rating_id']['publisher_avatar'], f'/web/image/res.partner/{self.partner_admin.id}/avatar_128/50x50')
-            self.assertEqual(format_res['rating_id']['publisher_comment'], 'Comment')
-            self.assertEqual(format_res['rating_id']['publisher_id'], self.partner_admin.id)
-            self.assertEqual(" ".join(format_res['rating_id']['publisher_datetime'].split()), '05/13/2023 10:30:05 AM')
-            self.assertEqual(format_res['rating_id']['publisher_name'], self.partner_admin.display_name)
-            self.assertDictEqual(
-                format_res['rating_stats'],
-                {'avg': 4.0, 'total': 4, 'percent': {1: 0.0, 2: 0.0, 3: 0.0, 4: 100.0, 5: 0.0}}
+            with self.assertQueryCount(employee=37):
+                res = self.make_jsonrpc_request(
+                    route="/mail/thread/messages",
+                    params={
+                        "thread_model": record._name,
+                        "thread_id": record.id,
+                        "only_portal": True,
+                    },
+                )
+            fetched_messages = res["data"]["mail.message"]
+            fetched_ratings = res["data"]["rating.rating"]
+            self.assertEqual(len(fetched_messages), 2)
+            self.assertEqual(len(fetched_ratings), 2)
+            self.assertEqual(
+                res["data"]["mail.thread"][0]["rating_stats"],
+                {
+                    "avg": 4.0,
+                    "percent": {"1": 0.0, "2": 0.0, "3": 0.0, "4": 100.0, "5": 0.0},
+                    "total": 4,
+                },
             )
-            self.assertEqual(format_res['rating_value'], 4)
-
-    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
-    @users('employee')
-    @warmup
-    def test_portal_message_format_monorecord(self):
-        message = self.messages_all[0].with_user(self.env.user)
-
-        with self.assertQueryCount(employee=16):  # randomness: 15+1
-            res = message.portal_message_format(options={'rating_include': True})
-
-        self.assertEqual(len(res), 1)
-
-    @mute_logger("odoo.tests", "odoo.addons.mail.models.mail_mail", "odoo.models.unlink")
-    @users("employee")
-    @warmup
-    def test_portal_attachment_as_author(self):
-        message = self.env["mail.message"].create(
-            {
-                "attachment_ids": [Command.create({"name": "test attachment"})],
-                "author_id": self.user_employee.partner_id.id,
-            }
-        )
-        res = message.portal_message_format()
-        self.assertEqual(
-            res[0]["attachment_ids"][0]["ownership_token"],
-            message.attachment_ids[0]._get_ownership_token(),
-        )
+            for fetched_msg, fetched_rating, record_msg in zip(
+                fetched_messages, fetched_ratings, record_messages, strict=True,
+            ):
+                self.assertEqual(fetched_msg["id"], record_msg.id)
+                self.assertMessageFields(
+                    fetched_msg, {"subtype_id": self.env.ref("mail.mt_comment").id},
+                )
+                self.assertEqual(fetched_rating["message_id"], fetched_msg["id"])
+                self.assertEqual(fetched_rating["publisher_comment"], "Comment")
+                self.assertEqual(fetched_rating["publisher_datetime"], "2023-05-13 10:30:05")
+                self.assertEqual(fetched_rating["publisher_id"], self.user_admin.partner_id.id)
 
 
 @tagged('rating', 'mail_performance', 'post_install', '-at_install')

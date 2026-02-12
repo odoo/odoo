@@ -388,10 +388,14 @@ class MailMessage(models.Model):
         allowed = self.browse(id_ for id_ in ids if id_ in allowed_ids)
         return allowed._as_query(order)
 
+    def _get_share_domain(self):
+        """Raw domain for shared content."""
+        return Domain("is_internal", "=", False) & Domain("subtype_id.internal", "=", False)
+
     def _get_search_domain_share(self):
         if self.env.user._is_internal():
             return Domain.TRUE
-        return Domain('is_internal', '=', False) & Domain('subtype_id.internal', '=', False)
+        return self._get_share_domain()
 
     def _filter_records_for_message_operation(self, doc_model, doc_res_ids, operation):
         """ Helper returning records on which 'operation' on mail.message is
