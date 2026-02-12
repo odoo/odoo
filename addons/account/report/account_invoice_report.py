@@ -126,7 +126,7 @@ class AccountInvoiceReport(models.Model):
 
     @api.model
     def _from(self) -> SQL:
-        return SQL(
+        query = SQL(
             '''
             FROM account_move_line line
                 LEFT JOIN res_partner partner ON partner.id = line.partner_id
@@ -137,10 +137,32 @@ class AccountInvoiceReport(models.Model):
                 LEFT JOIN uom_uom uom_template ON uom_template.id = template.uom_id
                 INNER JOIN account_move move ON move.id = line.move_id
                 LEFT JOIN res_partner commercial_partner ON commercial_partner.id = move.commercial_partner_id
-                JOIN %(currency_table)s ON account_currency_table.company_id = line.company_id
-            ''',
-            currency_table=self.env['res.currency']._get_simple_currency_table(self.env.companies),
+            '''
         )
+        multiple_currencies = self.env.companies.mapped('currency_id')
+        if hasattr(self.env['account.report'], '_currency_table_aml_join') and len(multiple_currencies)>1:
+            options = {
+                "currency_table": {
+                    "type": "cta",
+                    "periods": {
+                        f"{None}_{fields.Date.today()}": {"from": None, "to": fields.Date.today()},
+                    }
+                },
+                "date": {"currency_table_period_key": f"{None}_{fields.Date.today()}"},
+                "companies": self.env.companies,
+            }
+            account_report = self.env["account.report"].sudo().search([], limit=1)
+            account_report._init_currency_table(options)
+            currency_table_join  = account_report._currency_table_aml_join(
+                options, aml_alias=SQL("line")
+            )
+        else:
+            currency_table_join = SQL(
+                "JOIN %(currency_table)s ON account_currency_table.company_id = line.company_id",
+                currency_table=self.env['res.currency']._get_simple_currency_table(self.env.companies),
+            )
+        return SQL("""%s %s""", query, currency_table_join )
+
 
     @api.model
     def _where(self) -> SQL:
