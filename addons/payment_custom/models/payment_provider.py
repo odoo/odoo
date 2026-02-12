@@ -34,6 +34,15 @@ class PaymentProvider(models.Model):
         providers.filtered(lambda p: p.custom_mode == "wire_transfer").pending_msg = None
         return providers
 
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        if self.custom_mode != "wire_transfer":
+            return vals_list
+
+        for vals in vals_list:
+            vals["is_live"] = True
+        return vals_list
+
     def _get_default_payment_method_codes(self):
         """Override of `payment` to return the default payment method codes."""
         self.ensure_one()

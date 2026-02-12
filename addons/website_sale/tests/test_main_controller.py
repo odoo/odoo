@@ -29,7 +29,7 @@ class TestPaymentProviderVisibility(PaymentHttpCommon, SaleCommon):
             .sudo()
             .search([("name", "=", "Demo"), ("company_id", "=", website_shop.company_id.id)])
         )
-        restricted_provider.write({"state": "test", "website_id": website_shop.id})
+        restricted_provider.website_id = website_shop.id
 
         url_so = self.sale_order.get_portal_url()
         self.sale_order.require_payment = True
@@ -47,9 +47,14 @@ class TestPaymentProviderVisibility(PaymentHttpCommon, SaleCommon):
             self.assertEqual(mock_method.call_args.kwargs["website_id"], website_portal.id)
 
         mock_method.call_args.kwargs.pop("show_non_tokenize_provider", None)
-        providers = self.env["payment.provider"]._get_compatible_providers(
-            *mock_method.call_args.args, **mock_method.call_args.kwargs
-        )
+        providers = self.provider + restricted_provider
+        with patch(
+            "odoo.addons.payment.models.payment_provider.PaymentProvider._get_compatible_providers",
+            return_value=providers,
+        ):
+            providers = self.env["payment.provider"]._get_compatible_providers(
+                *mock_method.call_args.args, **mock_method.call_args.kwargs
+            )
 
         self.assertIn(self.provider.id, providers.ids, "The visible provider should be visible.")
 

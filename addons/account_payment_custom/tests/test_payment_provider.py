@@ -11,7 +11,7 @@ class TestPaymentProvider(AccountPaymentCustomCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.wire_transfer_cron = cls.env.ref(
+        cls.auto_confirm_cron = cls.env.ref(
             "account_payment_custom.cron_auto_confirm_paid_wire_transfer_txs"
         )
 
@@ -21,20 +21,14 @@ class TestPaymentProvider(AccountPaymentCustomCommon):
             "wire_transfer", self.provider.journal_id.inbound_payment_method_line_ids.mapped("code")
         )
 
-    def test_enabling_provider_activates_processing_cron(self):
-        """Test that the post-processing cron is activated when a provider is enabled."""
-        self.env["payment.provider"].search([]).state = "disabled"  # Reset providers' state.
-        for enabled_state in ("enabled", "test"):
-            self.wire_transfer_cron.active = False  # Reset the cron's active field.
-            self.provider.state = "disabled"  # Prepare the provider for enabling.
-            self.provider.state = enabled_state
-            self.assertTrue(self.wire_transfer_cron.active)
+    def test_installing_provider_activates_auto_confirm_cron(self):
+        """Test that the auto-confirm cron is activated when a provider is installed."""
+        self.auto_confirm_cron.active = False
+        self.provider._setup_provider("custom", custom_mode="wire_transfer")
+        self.assertTrue(self.auto_confirm_cron.active)
 
-    def test_disabling_provider_deactivates_processing_cron(self):
-        """Test that the post-processing cron is deactivated when a provider is disabled."""
-        self.env["payment.provider"].search([]).state = "disabled"  # Reset providers' state.
-        for enabled_state in ("enabled", "test"):
-            self.wire_transfer_cron.active = True  # Reset the cron's active field.
-            self.provider.state = enabled_state  # Prepare the provider for disabling.
-            self.provider.state = "disabled"
-            self.assertFalse(self.wire_transfer_cron.active)
+    def test_uninstalling_provider_deactivates_auto_confirm_cron(self):
+        """Test that the auto-confirm cron is deactivated when a provider is disabled."""
+        self.auto_confirm_cron.active = True
+        self.provider._remove_provider("custom", custom_mode="wire_transfer")
+        self.assertFalse(self.auto_confirm_cron.active)

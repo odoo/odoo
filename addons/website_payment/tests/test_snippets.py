@@ -12,9 +12,6 @@ class TestSnippets(HttpCaseWithUserPortal):
         if payment_demo.state != 'installed':
             self.skipTest("payment_demo module is not installed")
 
-        demo_provider = self.env['payment.provider'].search([('code', '=', "demo")])
-        demo_provider.write({'state': 'test'})
-
         belgium = self.env.ref('base.be')
 
         self.env.ref('base.user_admin').write({

@@ -11,13 +11,13 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 @tagged("-at_install", "post_install")
 class TestPaymentTransaction(PaymentCommon):
-    def test_is_live_when_created_by_enabled_provider(self):
-        self.provider.state = "enabled"
+    def test_is_live_when_created_by_live_provider(self):
+        self.provider.is_live = True
         tx = self._create_transaction("redirect")
         self.assertTrue(tx.is_live)
 
     def test_is_not_live_when_created_by_test_provider(self):
-        self.provider.state = "test"  # Will work with anything other than 'enabled'
+        self.provider.is_live = False
         tx = self._create_transaction("redirect")
         self.assertFalse(tx.is_live)
 

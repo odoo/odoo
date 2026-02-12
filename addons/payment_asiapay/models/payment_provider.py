@@ -50,11 +50,11 @@ class PaymentProvider(models.Model):
 
     # ==== CONSTRAINT METHODS ===#
 
-    @api.constrains("available_currency_ids", "state")
+    @api.constrains("available_currency_ids")
     def _limit_available_currency_ids(self):
         allowed_codes = set(const.CURRENCY_MAPPING.keys())
         for provider in self.filtered(lambda p: p.code == "asiapay"):
-            if len(provider.available_currency_ids) > 1 and provider.state != "disabled":
+            if len(provider.available_currency_ids) > 1:
                 raise ValidationError(
                     provider.env._("Only one currency can be selected by AsiaPay account.")
                 )
@@ -91,7 +91,7 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
 
-        environment = "production" if self.state == "enabled" else "test"
+        environment = "production" if self.is_live else "test"
         api_urls = const.API_URLS[environment]
         return api_urls.get(self.asiapay_brand, api_urls["paydollar"])
 

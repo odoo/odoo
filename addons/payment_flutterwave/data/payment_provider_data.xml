@@ -7,4 +7,9 @@
         <field name="allow_tokenization">True</field>
     </record>
 
+    <function
+        model="payment.provider"
+        name="_activate_default_pms"
+        eval="[[ref('payment.payment_provider_flutterwave')]]"
+    />
 </odoo>

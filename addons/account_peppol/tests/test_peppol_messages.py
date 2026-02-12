@@ -839,7 +839,6 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         dummy_provider = self.env['payment.provider'].create({
             'name': "Dummy Provider",
             'code': 'none',
-            'state': 'test',
             'is_published': True,
             'payment_method_ids': [Command.set(payment_method.ids)],
             'allow_tokenization': True,

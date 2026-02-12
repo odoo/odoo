@@ -35,7 +35,6 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
         })
 
         cls.provider = cls.dummy_provider.copy({"company_id": cls.company_b.id})
-        cls.provider.state = "test"
 
     def test_pay_logged_in_another_company(self):
         """User pays for an amount in another company."""

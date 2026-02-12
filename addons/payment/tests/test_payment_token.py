@@ -28,9 +28,9 @@ class TestPaymentToken(PaymentCommon):
             token.partner_id = self.public_user.partner_id
 
     def test_unarchiving_token_requires_active_provider(self):
-        """Test that unarchiving disabled tokens is forbidden if the provider is disabled."""
+        """Test that unarchiving disabled tokens is forbidden if the provider is archived."""
+        self.provider.active = False
         token = self._create_token(active=False)
-        token.provider_id.state = "disabled"
         with self.assertRaises(UserError):
             token.active = True
 

@@ -76,8 +76,8 @@ class MercadoPagoOnboardingController(Controller):
             "mercado_pago_refresh_token": response_content["refresh_token"],
             "mercado_pago_access_token_expiry": expires_in,
             "mercado_pago_public_key": response_content["public_key"],
-            # Enable the provider.
-            "state": "enabled",
+            # Set the provider live
+            "is_live": True,
             "is_published": True,
             "allow_tokenization": True,
         })

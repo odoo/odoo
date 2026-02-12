@@ -233,7 +233,7 @@ class PaymentTransaction(models.Model):
             if not values.get("reference"):
                 values["reference"] = self._compute_reference(provider.code, **values)
 
-            values["is_live"] = provider.state == "enabled"
+            values["is_live"] = provider.is_live
 
             # Duplicate partner values.
             partner = self.env["res.partner"].browse(values["partner_id"])
@@ -677,7 +677,7 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         self.ensure_one()
-        self._ensure_provider_is_not_disabled()
+        self._ensure_provider_is_active()
         self._log_sent_message()
         try:
             self._send_payment_request()
@@ -711,7 +711,7 @@ class PaymentTransaction(models.Model):
         :rtype: payment.transaction
         """
         self.ensure_one()
-        self._ensure_provider_is_not_disabled()
+        self._ensure_provider_is_active()
 
         capture_tx = self._create_child_transaction(amount_to_capture or self.amount)
         capture_tx._log_sent_message()
@@ -745,7 +745,7 @@ class PaymentTransaction(models.Model):
         :rtype: payment.transaction
         """
         self.ensure_one()
-        self._ensure_provider_is_not_disabled()
+        self._ensure_provider_is_active()
 
         void_tx = self._create_child_transaction(amount_to_void or self.amount)
         void_tx._log_sent_message()
@@ -779,7 +779,7 @@ class PaymentTransaction(models.Model):
         :rtype: payment.transaction
         """
         self.ensure_one()
-        self._ensure_provider_is_not_disabled()
+        self._ensure_provider_is_active()
 
         refund_tx = self._create_child_transaction(amount_to_refund or self.amount, is_refund=True)
         refund_tx._log_sent_message()
@@ -803,20 +803,14 @@ class PaymentTransaction(models.Model):
         """
         return
 
-    def _ensure_provider_is_not_disabled(self):
-        """Ensure that the provider's state is not `disabled` before sending a request to its
-        provider.
+    def _ensure_provider_is_active(self):
+        """Ensure that the provider is active before sending a request.
 
         :return: None
         :raise UserError: If the provider's state is `disabled`.
         """
-        if self.provider_id.state == "disabled":
-            raise UserError(
-                self.env._(
-                    "Making a request to the provider is not possible because the provider is"
-                    " disabled."
-                )
-            )
+        if not self.provider_id.active:
+            raise UserError(self.env._("The provider must not be archived to make a request."))
 
     def _create_child_transaction(self, amount, is_refund=False, **custom_create_values):
         """Create a new transaction with the current transaction as its parent transaction.

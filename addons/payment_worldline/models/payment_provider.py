@@ -67,11 +67,9 @@ class PaymentProvider(models.Model):
         :return: The API URL.
         :rtype: str
         """
-        if self.state == "enabled":
-            api_url = "https://payment.direct.worldline-solutions.com"
-        else:  # 'test'
-            api_url = "https://payment.preprod.direct.worldline-solutions.com"
-        return api_url
+        if self.is_live:
+            return "https://payment.direct.worldline-solutions.com"
+        return "https://payment.preprod.direct.worldline-solutions.com"
 
     def _build_request_headers(self, method, endpoint, *args, idempotency_key=None, **kwargs):
         """Override of `payment` to build the request headers."""

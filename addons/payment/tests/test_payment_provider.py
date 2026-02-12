@@ -15,87 +15,96 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 @tagged("-at_install", "post_install")
 class TestPaymentProvider(PaymentCommon):
-    def test_changing_provider_state_archives_tokens(self):
-        """Test that all active tokens of a provider are archived when its state is changed."""
-        for old_state in ("enabled", "test"):  # No need to check when the provided was disabled.
-            for new_state in ("enabled", "test", "disabled"):
-                if old_state != new_state:  # No need to check when the state is unchanged.
-                    self.provider.state = old_state
-                    token = self._create_token()
-                    self.provider.state = new_state
-                    self.assertFalse(token.active)
+    def test_toggling_live_mode_archives_tokens(self):
+        """Test that toggling live mode of a provider archives all its active tokens."""
+        for is_live in (True, False):
+            self.provider.is_live = not is_live
+            token = self._create_token()
+            self.provider.is_live = is_live
+            self.assertFalse(token.active)
 
-    def test_enabling_provider_activates_default_payment_methods(self):
-        """Test that the default payment methods of a provider are activated when it is
-        enabled."""
+    def test_archiving_provider_archives_tokens(self):
+        """Test that archiving a provider archives all its active tokens."""
+        token = self._create_token()
+        self.provider.active = False
+        self.assertFalse(token.active)
+
+    def test_archiving_provider_deactivates_default_payment_methods(self):
+        """Test that archiving a provider deactivates its default payment methods ."""
+        self.payment_methods.active = True
+        with patch(
+            "odoo.addons.payment.models.payment_provider.PaymentProvider"
+            "._get_default_payment_method_codes",
+            return_value=self.payment_method_code,
+        ):
+            self.provider.active = False
+            self.assertFalse(self.payment_methods.active)
+
+    def test_unarchiving_provider_activates_default_payment_methods(self):
+        """Test that unarchiving a provider activates its default payment methods."""
+        self.provider.active = False
         self.payment_methods.active = False
-        for new_state in ("enabled", "test"):
-            self.provider.state = "disabled"
-            with patch(
-                "odoo.addons.payment.models.payment_provider.PaymentProvider"
-                "._get_default_payment_method_codes",
-                return_value={self.payment_method_code},
-            ):
-                self.provider.state = new_state
-                self.assertTrue(self.payment_methods.active)
+        with patch(
+            "odoo.addons.payment.models.payment_provider.PaymentProvider"
+            "._get_default_payment_method_codes",
+            return_value={self.payment_method_code},
+        ):
+            self.provider.active = True
+            self.assertTrue(self.payment_methods.active)
 
-    def test_enabling_manual_capture_provider_activates_compatible_default_pms(self):
-        """Test that only payment methods supporting manual capture are activated when a provider
-        requiring manual capture is enabled."""
+    def test_unarchiving_manual_capture_provider_activates_only_compatible_default_pms(self):
+        """Test that archiving a manual capture provider only activates its compatible default
+        payment methods."""
         payment_method_with_manual_capture = self.env["payment.method"].create({
             "name": "Payment Method With Manual Capture",
             "code": "pm_with_manual_capture",
             "support_manual_capture": "full_only",
         })
-        self.provider.state = "disabled"
-        self.provider.capture_manually = True
-        self.provider.payment_method_ids = [
-            Command.set([self.payment_method.id, payment_method_with_manual_capture.id])
-        ]
+        self.provider.write({
+            "active": False,
+            "capture_manually": True,
+            "payment_method_ids": [
+                Command.set([self.payment_method.id, payment_method_with_manual_capture.id])
+            ],
+        })
         self.payment_method.support_manual_capture = "none"
-        default_codes = {self.payment_method_code, payment_method_with_manual_capture.code}
         with patch(
             "odoo.addons.payment.models.payment_provider.PaymentProvider"
             "._get_default_payment_method_codes",
-            return_value=default_codes,
+            return_value={self.payment_method_code, payment_method_with_manual_capture.code},
         ):
-            self.provider.state = "test"
-            self.assertFalse(self.payment_methods.active)
+            self.provider.active = True
+            self.assertFalse(self.payment_method.active)
             self.assertTrue(payment_method_with_manual_capture.active)
 
-    def test_disabling_provider_deactivates_default_payment_methods(self):
-        """Test that the default payment methods of a provider are deactivated when it is
-        disabled."""
+    def test_installing_provider_activates_post_processing_cron(self):
+        """Test that the post-processing cron is activated when a provider is installed."""
+        post_processing_cron = self.env.ref("payment.cron_post_process_payment_tx")
+        post_processing_cron.active = False
+        self.provider._setup_provider("none")
+        self.assertTrue(post_processing_cron.active)
+
+    def test_uninstalling_provider_deactivates_post_processing_cron(self):
+        """Test that the post-processing cron is deactivated when a provider is uninstalled."""
+        post_processing_cron = self.env.ref("payment.cron_post_process_payment_tx")
+        post_processing_cron.active = True
+        with patch(
+            "odoo.addons.payment.models.payment_provider.PaymentProvider.search_count",
+            return_value=0,
+        ):
+            self.provider._remove_provider("none")
+        self.assertFalse(post_processing_cron.active)
+
+    def test_uninstalling_provider_deactivates_default_payment_methods(self):
+        """Test that uninstalling a provider deactivates its default payment methods ."""
         self.payment_methods.active = True
-        for old_state in ("enabled", "test"):
-            self.provider.state = old_state
-            with patch(
-                "odoo.addons.payment.models.payment_provider.PaymentProvider"
-                "._get_default_payment_method_codes",
-                return_value=self.payment_method_code,
-            ):
-                self.provider.state = "disabled"
-                self.assertFalse(self.payment_methods.active)
-
-    def test_enabling_provider_activates_processing_cron(self):
-        """Test that the post-processing cron is activated when a provider is enabled."""
-        self.env["payment.provider"].search([]).state = "disabled"  # Reset providers' state.
-        post_processing_cron = self.env.ref("payment.cron_post_process_payment_tx")
-        for enabled_state in ("enabled", "test"):
-            post_processing_cron.active = False  # Reset the cron's active field.
-            self.provider.state = "disabled"  # Prepare the dummy provider for enabling.
-            self.provider.state = enabled_state
-            self.assertTrue(post_processing_cron.active)
-
-    def test_disabling_provider_deactivates_processing_cron(self):
-        """Test that the post-processing cron is deactivated when a provider is disabled."""
-        self.env["payment.provider"].search([]).state = "disabled"  # Reset providers' state.
-        post_processing_cron = self.env.ref("payment.cron_post_process_payment_tx")
-        for enabled_state in ("enabled", "test"):
-            post_processing_cron.active = True  # Reset the cron's active field.
-            self.provider.state = enabled_state  # Prepare the dummy provider for disabling.
-            self.provider.state = "disabled"
-            self.assertFalse(post_processing_cron.active)
+        with patch(
+            "odoo.addons.payment.models.payment_provider.PaymentProvider"
+            "._get_default_payment_method_codes",
+            return_value=self.payment_method_code,
+        ):
+            self.provider._remove_provider("none")
+            self.assertFalse(self.payment_methods.active)
 
     def test_published_provider_compatible_with_all_users(self):
         """Test that a published provider is always available to all users."""
@@ -329,49 +338,37 @@ class TestPaymentProvider(PaymentCommon):
 
     def test_availability_report_covers_all_reasons(self):
         """Test that every possible unavailability reason is correctly reported."""
-        # Disable all providers.
-        providers = self.env["payment.provider"].search([])
-        providers.state = "disabled"
-
         # Prepare a base provider.
-        self.provider.write({
-            "state": "test",
-            "allow_express_checkout": True,
-            "allow_tokenization": True,
-        })
+        self.provider.write({"allow_express_checkout": True, "allow_tokenization": True})
 
         # Prepare a provider with an incompatible country.
         invalid_country_provider = self.provider.copy()
         belgium = self.env.ref("base.be")
-        invalid_country_provider.write({
-            "state": "test",
-            "available_country_ids": [Command.set([belgium.id])],
-        })
+        invalid_country_provider.write({"available_country_ids": [Command.set([belgium.id])]})
         france = self.env.ref("base.fr")
         self.partner.country_id = france
 
         # Prepare a provider with a minimum amount higher than the payment amount.
         below_min_provider = self.provider.copy()
-        below_min_provider.write({"state": "test", "minimum_amount": self.amount + 10.0})
+        below_min_provider.write({"minimum_amount": self.amount + 10.0})
 
         # Prepare a provider with a maximum amount lower than the payment amount.
         exceeding_max_provider = self.provider.copy()
-        exceeding_max_provider.write({"state": "test", "maximum_amount": self.amount - 10.0})
+        exceeding_max_provider.write({"maximum_amount": self.amount - 10.0})
 
         # Prepare a provider with an incompatible currency.
         invalid_currency_provider = self.provider.copy()
         invalid_currency_provider.write({
-            "state": "test",
-            "available_currency_ids": [Command.unlink(self.currency_usd.id)],
+            "available_currency_ids": [Command.unlink(self.currency_usd.id)]
         })
 
         # Prepare a provider without tokenization support.
         no_tokenization_provider = self.provider.copy()
-        no_tokenization_provider.write({"state": "test", "allow_tokenization": False})
+        no_tokenization_provider.write({"allow_tokenization": False})
 
         # Prepare a provider without express checkout support.
         no_express_checkout_provider = self.provider.copy()
-        no_express_checkout_provider.write({"state": "test", "allow_express_checkout": False})
+        no_express_checkout_provider.write({"allow_express_checkout": False})
 
         # Get compatible providers to generate their availability report.
         report = {}
@@ -386,35 +383,35 @@ class TestPaymentProvider(PaymentCommon):
         )
 
         # Compare the generated providers report with the expected one.
-        expected_providers_report = {
-            self.provider: {"available": True, "reason": ""},
-            invalid_country_provider: {
-                "available": False,
-                "reason": REPORT_REASONS_MAPPING["incompatible_country"],
-            },
-            below_min_provider: {
-                "available": False,
-                "reason": REPORT_REASONS_MAPPING["exceed_min_or_max_amount"],
-            },
-            exceeding_max_provider: {
-                "available": False,
-                "reason": REPORT_REASONS_MAPPING["exceed_min_or_max_amount"],
-            },
-            invalid_currency_provider: {
-                "available": False,
-                "reason": REPORT_REASONS_MAPPING["incompatible_currency"],
-            },
-            no_tokenization_provider: {
-                "available": False,
-                "reason": REPORT_REASONS_MAPPING["tokenization_not_supported"],
-            },
-            no_express_checkout_provider: {
+        providers_report = report["providers"]
+        self.assertDictEqual(providers_report[self.provider], {"available": True, "reason": ""})
+        self.assertDictEqual(
+            providers_report[invalid_country_provider],
+            {"available": False, "reason": REPORT_REASONS_MAPPING["incompatible_country"]},
+        )
+        self.assertDictEqual(
+            providers_report[below_min_provider],
+            {"available": False, "reason": REPORT_REASONS_MAPPING["exceed_min_or_max_amount"]},
+        )
+        self.assertDictEqual(
+            providers_report[exceeding_max_provider],
+            {"available": False, "reason": REPORT_REASONS_MAPPING["exceed_min_or_max_amount"]},
+        )
+        self.assertDictEqual(
+            providers_report[invalid_currency_provider],
+            {"available": False, "reason": REPORT_REASONS_MAPPING["incompatible_currency"]},
+        )
+        self.assertDictEqual(
+            providers_report[no_tokenization_provider],
+            {"available": False, "reason": REPORT_REASONS_MAPPING["tokenization_not_supported"]},
+        )
+        self.assertDictEqual(
+            providers_report[no_express_checkout_provider],
+            {
                 "available": False,
                 "reason": REPORT_REASONS_MAPPING["express_checkout_not_supported"],
             },
-        }
-        self.maxDiff = None
-        self.assertDictEqual(report["providers"], expected_providers_report)
+        )
 
     def test_validation_currency_is_supported(self):
         """Test that only currencies supported by both the provider and the payment method can be

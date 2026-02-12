@@ -3,7 +3,6 @@
 
     <record id="payment.payment_provider_demo" model="payment.provider">
         <field name="code">demo</field>
-        <field name="state">test</field>
         <field name="is_published">True</field>
         <field name="inline_form_view_id" ref="inline_form"/>
         <field name="token_inline_form_view_id" ref="token_inline_form"/>
@@ -16,5 +15,11 @@
                      ])]"
         />
     </record>
+
+    <function
+        model="payment.provider"
+        name="_activate_default_pms"
+        eval="[[ref('payment.payment_provider_demo')]]"
+    />
 
 </odoo>

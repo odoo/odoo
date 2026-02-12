@@ -88,13 +88,13 @@ class PaymentProvider(models.Model):
                     )
                 )
 
-    @api.constrains("state", "mercado_pago_access_token")
-    def _check_mercado_pago_credentials_are_set_before_enabling(self):
-        """Check that the Mercado Pago credentials are valid when the provider is enabled.
+    @api.constrains("is_live", "mercado_pago_access_token")
+    def _check_mercado_pago_credentials_are_set_if_live(self):
+        """Check that the Mercado Pago credentials are valid when the provider is set in live mode.
 
         :raise ValidationError: If the Mercado Pago credentials are not set.
         """
-        for provider in self.filtered(lambda p: p.code == "mercado_pago" and p.state != "disabled"):
+        for provider in self.filtered(lambda p: p.code == "mercado_pago" and p.is_live):
             if not provider.mercado_pago_access_token:
                 raise ValidationError(
                     self.env._(

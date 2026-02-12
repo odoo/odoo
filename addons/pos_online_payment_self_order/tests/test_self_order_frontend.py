@@ -57,7 +57,6 @@ class TestSelfOrderOnlinePayment(TestUi):
         provider_b = self.env['payment.provider'].create(
             {'name': 'Dummy provider B',
              'company_id': company_b.id,
-             'state': 'test',
              'is_published': True,
              'payment_method_ids': [Command.set([self.pm_unknown.id])],
              })

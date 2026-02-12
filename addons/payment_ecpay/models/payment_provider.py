@@ -73,9 +73,8 @@ class PaymentProvider(models.Model):
         :return: The API URL.
         :rtype: str
         """
-        if self.state == "enabled":
+        if self.is_live:
             return "https://payment.ecpay.com.tw/Cashier/AioCheckOut/V5"
-        # 'test'
         return "https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5"
 
     def _ecpay_calculate_signature(self, data):

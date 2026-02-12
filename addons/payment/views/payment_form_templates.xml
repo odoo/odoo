@@ -133,7 +133,7 @@
             - is_selected: Whether the radio button of the token should be checked.
         -->
         <t t-set="provider_sudo" t-value="token_sudo.provider_id"/>
-        <t t-set="is_test" t-value="provider_sudo.state == 'test'"/>
+        <t t-set="is_test" t-value="not provider_sudo.is_live"/>
         <t t-set="is_unpublished" t-value="not provider_sudo.is_published"/>
         <t t-set="inline_form_xml_id" t-value="provider_sudo.token_inline_form_view_id.xml_id"/>
         <div class="d-flex gap-3 align-items-start align-items-md-center">
@@ -169,6 +169,7 @@
                                t-att-data-payment-option-id="token_sudo.id"
                                t-att-data-provider-code="token_sudo.provider_id._get_code()"
                                t-att-data-provider-id="token_sudo.provider_id.id"
+                               t-att-data-provider-is-live="provider_sudo.is_live"
                         />
                         <div class="d-flex align-items-center flex-wrap gap-2">
                             <!-- === Token label === -->
@@ -248,7 +249,7 @@
         <t t-set="provider_sudo"
            t-value="pm_sudo.provider_ids.filtered(lambda p: p in providers_sudo)[:1]"
         />
-        <t t-set="is_test" t-value="provider_sudo.state == 'test'"/>
+        <t t-set="is_test" t-value="not provider_sudo.is_live"/>
         <t t-set="is_unpublished" t-value="not provider_sudo.is_published"/>
         <t t-set="pms_to_display_sudo" t-value="pm_sudo.brand_ids or pm_sudo"/>
         <t t-set="inline_form_xml_id" t-value="provider_sudo.inline_form_view_id.xml_id"/>
@@ -268,7 +269,7 @@
                            t-att-data-payment-method-code="pm_sudo.code"
                            t-att-data-provider-id="provider_sudo.id"
                            t-att-data-provider-code="provider_sudo._get_code()"
-                           t-att-data-provider-state="provider_sudo.state"
+                           t-att-data-provider-is-live="provider_sudo.is_live"
                     />
                     <div class="d-flex gap-2 flex-grow-1 me-auto">
                         <!-- === Method label === -->

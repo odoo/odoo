@@ -20,6 +20,15 @@ class PaymentProvider(models.Model):
             return super()._get_default_payment_method_codes()
         return const.DEFAULT_PAYMENT_METHOD_CODES
 
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        if self.custom_mode != "cash_on_delivery":
+            return vals_list
+
+        for vals in vals_list:
+            vals["is_live"] = True
+        return vals_list
+
     # === BUSINESS METHODS === #
 
     @api.model
