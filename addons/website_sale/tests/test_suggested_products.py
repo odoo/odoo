@@ -1,17 +1,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from dateutil.relativedelta import relativedelta
+
 from unittest.mock import patch
+
+from dateutil.relativedelta import relativedelta
 
 from odoo import fields
 from odoo.fields import Command
 from odoo.tests import tagged
+
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
 class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -35,8 +37,10 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
         })
         cls.template_combo_desk_chair = cls.env['product.template'].create({
             'name': 'Desk + Chair',
-            'public_categ_ids':
-                [Command.link(cls.category_desks.id), Command.link(cls.category_chairs.id)],
+            'public_categ_ids': [
+                Command.link(cls.category_desks.id),
+                Command.link(cls.category_chairs.id),
+            ],
             'is_published': True,
         })
         # Create sale orders
@@ -62,7 +66,7 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
         updating the optional and alternative products."""
         suggested_products_cron = self.env.ref('website_sale.ir_cron_update_suggested_products')
         with self.capture_triggers(
-                'website_sale.ir_cron_update_suggested_products'
+            'website_sale.ir_cron_update_suggested_products'
         ) as captured_triggers:
             # Enable the suggested products feature
             self.env['res.config.settings'].create({'group_suggested_products': True}).set_values()
@@ -78,7 +82,9 @@ class TestSuggestedProducts(WebsiteSaleCommon, CronMixinCase):
         # Update suggested products on tested_products
         tested_products._update_suggested_products()
         self.assertEqual(self.template_desk.alternative_product_ids, self.template_combo_desk_chair)
-        self.assertEqual(self.template_chair.alternative_product_ids, self.template_combo_desk_chair)
+        self.assertEqual(
+            self.template_chair.alternative_product_ids, self.template_combo_desk_chair
+        )
         chair_and_desk = self.template_chair | self.template_desk
         self.assertEqual(self.template_combo_desk_chair.alternative_product_ids, chair_and_desk)
 

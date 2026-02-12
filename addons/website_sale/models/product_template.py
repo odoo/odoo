@@ -83,8 +83,8 @@ class ProductTemplate(models.Model):
     )
     alternative_product_ids = fields.Many2many(
         string="Alternative Products",
-        help="Suggest alternatives to your customer (upsell strategy)."
-             " Those products show up on the product page.",
+        help="Suggest alternatives to your customer (upsell strategy). Those products show up on"
+        " the product page.",
         comodel_name='product.template',
         relation='product_alternative_rel',
         column1='src_id',
@@ -93,19 +93,19 @@ class ProductTemplate(models.Model):
     )
     suggest_alternative_products = fields.Boolean(
         string="Suggest Alternative Products",
-        help="Alternative products will be automatically filled based on shared categories"
-             " and attributes.",
+        help="Alternative products will be automatically filled based on shared categories and"
+        " attributes.",
         default=_default_suggest_products,
     )
     accessory_product_ids = fields.Many2many(
         string="Accessory Products",
+        help="Accessories show up when the customer reviews the cart before payment (cross-sell"
+        " strategy).",
         comodel_name='product.product',
         relation='product_accessory_rel',
         column1='src_id',
         column2='dest_id',
         check_company=True,
-        help="Accessories show up when the customer reviews the cart before payment"
-             " (cross-sell strategy).",
     )
     suggest_accessory_products = fields.Boolean(
         string="Suggest Accessory Products",
@@ -358,15 +358,17 @@ class ProductTemplate(models.Model):
             for product in products_batch:
                 other_products = all_products.filtered_domain([
                     ('id', '!=', product.id),
-                    '|', ('company_id', '=', product.company_id.id), ('company_id', '=', False),
+                    '|',
+                    ('company_id', '=', product.company_id.id),
+                    ('company_id', '=', False),
                 ])
                 if (
                     force_update
                     or product.suggest_optional_products
                     or product.suggest_accessory_products
                 ):
-                    optionals, accessories = (
-                        product._get_suggested_optionals_and_accessories(other_products, 2, 1)
+                    optionals, accessories = product._get_suggested_optionals_and_accessories(
+                        other_products, 2, 1
                     )
                 if force_update or product.suggest_optional_products:
                     product.optional_product_ids = optionals
@@ -375,8 +377,8 @@ class ProductTemplate(models.Model):
                     product.accessory_product_ids = accessories
                     product.suggest_accessory_products = True
                 if force_update or product.suggest_alternative_products:
-                    product.alternative_product_ids = (
-                        product._get_suggested_alternatives(other_products, 4)
+                    product.alternative_product_ids = product._get_suggested_alternatives(
+                        other_products, 4
                     )
                     product.suggest_alternative_products = True
                 product.suggested_products_last_update = now
@@ -385,7 +387,7 @@ class ProductTemplate(models.Model):
                 self.env['ir.cron']._commit_progress(len(products_batch))
 
     def _get_suggested_optionals_and_accessories(
-            self, other_products, max_optionals, max_accessories
+        self, other_products, max_optionals, max_accessories
     ):
         """Get products that are bought together with main product a.
         Products bought together in at least 2 sale orders dated within 5 years."""
@@ -412,8 +414,8 @@ class ProductTemplate(models.Model):
                 no_items_lines = order.order_line.filtered_domain([('combo_item_id', '=', False)])
                 # other products have to be cheaper than product a
                 other_products_on_so = no_items_lines.product_id.product_tmpl_id.filtered_domain([
-                        ('id', 'in', other_products.ids),
-                        ('list_price', '<', self.list_price),
+                    ('id', 'in', other_products.ids),
+                    ('list_price', '<', self.list_price),
                 ])
                 products_count.update(other_products_on_so.ids)
             # Filter the products that have been bought together at least 2 times
@@ -448,8 +450,9 @@ class ProductTemplate(models.Model):
         scores = []
         categories_a = set(self.public_categ_ids.ids)
         attributes_a = set(
-            self.valid_product_template_attribute_line_ids
-            .mapped('product_template_value_ids').mapped('display_name')
+            self.valid_product_template_attribute_line_ids.mapped(
+                'product_template_value_ids'
+            ).mapped('display_name')
         )
         # Limit to 1000 other products with at least one category in common (random order)
         other_products_sharing_categories = list(
@@ -460,8 +463,9 @@ class ProductTemplate(models.Model):
         for product_b in other_products_sharing_categories[:1000]:
             categories_b = set(product_b.public_categ_ids.ids)
             attributes_b = set(
-                product_b.valid_product_template_attribute_line_ids
-                .mapped('product_template_value_ids').mapped('display_name')
+                product_b.valid_product_template_attribute_line_ids.mapped(
+                    'product_template_value_ids'
+                ).mapped('display_name')
             )
             # Jaccard coefficient (A and B / A or B)
             intersection_cat = categories_a & categories_b
