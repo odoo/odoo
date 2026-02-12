@@ -9,6 +9,8 @@ from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
 
 _logger = logging.getLogger(__name__)
 
+NILVERA_TEST_VAT_NUMS = {'1234567801', '1234567802'}
+
 
 class ResPartner(models.Model):
     _name = 'res.partner'
@@ -53,6 +55,11 @@ class ResPartner(models.Model):
 
         super(ResPartner, self - l10n_tr_partners)._compute_is_company()
 
+    def check_vat_tr(self, vat):
+        # EXTENDS 'base_vat'
+        company = self.env.company
+        return super().check_vat_tr(vat) or (company.l10n_tr_nilvera_use_test_env and vat in NILVERA_TEST_VAT_NUMS)
+
     def _send_user_notification(self, type, message, action_button=None):
         self.env.user._bus_send(
             'account_notification' if action_button else 'simple_notification',
@@ -65,10 +72,10 @@ class ResPartner(models.Model):
 
     def l10n_tr_check_nilvera_customer(self):
         results = defaultdict(lambda: self.env['res.partner'])
-        for record in self:
-            if not record.vat:
-                return
-
+        # we want to skip records whose status is already set, unless we want to
+        # purposefully retry them
+        retry_existing = self.env.context.get('retry_existing', False)
+        for record in self.filtered(lambda p: p.vat and (retry_existing or p.l10n_tr_nilvera_customer_status == 'not_checked')):
             if record._check_nilvera_customer():
                 if len(record.l10n_tr_nilvera_customer_alias_ids) > 1:
                     results['multi_alias'] |= record
@@ -123,6 +130,10 @@ class ResPartner(models.Model):
                     # Remove aliases from database that are not in query result.
                     to_keep = persisted_aliases.filtered(lambda a: a.name not in aliases_to_remove)
                     (persisted_aliases - to_keep).unlink()
+
+                # commit the result of each request because in the case of a bulk verify the
+                # server can timeout and all progress will be undone
+                self.env.cr.commit()
                 return True
             else:
                 return False
