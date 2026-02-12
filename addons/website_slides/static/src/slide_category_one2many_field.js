@@ -19,6 +19,7 @@ class SlideCategoryOneToManyField extends X2ManyField {
 
 registry.category("fields").add("slide_category_one2many", {
     ...x2ManyField,
+    relatedFields: [{ name: "is_category", type: "boolean", readonly: false }],
     component: SlideCategoryOneToManyField,
     additionalClasses: [...x2ManyField.additionalClasses || [], "o_field_one2many"],
 });
