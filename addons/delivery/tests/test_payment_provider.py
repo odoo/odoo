@@ -10,8 +10,6 @@ class TestCODPaymentProvider(CashOnDeliveryCommon):
 
     def test_cod_provider_available_when_dm_cod_enabled(self):
         order = self.sale_order
-        self.free_delivery.allow_cash_on_delivery = True
-        order.carrier_id = self.free_delivery
         compatible_providers = self.env['payment.provider'].sudo()._get_compatible_providers(
             self.company.id, self.partner.id, self.amount, sale_order_id=order.id
         )
@@ -22,7 +20,6 @@ class TestCODPaymentProvider(CashOnDeliveryCommon):
     def test_cod_provider_unavailable_when_dm_cod_disabled(self):
         order = self.sale_order
         self.free_delivery.allow_cash_on_delivery = False
-        order.carrier_id = self.free_delivery
         compatible_providers = self.env['payment.provider'].sudo()._get_compatible_providers(
             self.company.id, self.partner.id, self.amount, sale_order_id=order.id
         )

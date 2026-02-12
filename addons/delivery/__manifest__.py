@@ -32,6 +32,7 @@ The system is able to add and compute the shipping line.
 
         'wizard/res_config_settings_views.xml',
         'wizard/choose_delivery_carrier_views.xml',
+        'wizard/pay_on_delivery_views.xml',
     ],
     'demo': ['data/delivery_demo.xml'],
     'assets': {

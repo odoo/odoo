@@ -7,7 +7,6 @@ class PaymentMethod(models.Model):
     _inherit = 'payment.method'
 
     @api.model
-    def _get_payment_method_at_delivery_codes(self):
-        """Return the technical codes of payment methods whose transactions should be
-        marked as done when the order is delivered."""
+    def _get_payment_method_on_delivery_codes(self):
+        """Return the technical codes of "Pay on Delivery" payment methods."""
         return ['cash_on_delivery']

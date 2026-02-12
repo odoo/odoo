@@ -194,16 +194,19 @@ class SaleOrderLine(models.Model):
 
     def _prepare_qty_delivered(self):
         delivered_qties = super()._prepare_qty_delivered()
+        prevalidated_moves = self.env['stock.move'].browse(
+            self.env.context.get('prevalidated_move_ids')
+        )
         for line in self:  # TODO: maybe one day, this should be done in SQL for performance sake
             if line.qty_delivered_method == 'stock_move':
                 qty = 0.0
                 outgoing_moves, incoming_moves = line._get_outgoing_incoming_moves()
                 for move in outgoing_moves:
-                    if move.state != 'done':
+                    if not (move.state == 'done' or move in prevalidated_moves):
                         continue
                     qty += move.uom_id._compute_quantity(move.quantity, line.product_uom_id, rounding_method='HALF-UP')
                 for move in incoming_moves:
-                    if move.state != 'done':
+                    if not (move.state == 'done' or move in prevalidated_moves):
                         continue
                     qty -= move.uom_id._compute_quantity(move.quantity, line.product_uom_id, rounding_method='HALF-UP')
                 delivered_qties[line] = qty

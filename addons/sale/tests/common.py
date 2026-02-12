@@ -47,17 +47,14 @@ class SaleCommon(
     def _enable_discounts(cls):
         cls.env.user.group_ids += cls.group_discount_per_so_line
 
-    def _create_so(self, **values):
+    @classmethod
+    def _create_so(cls, **values):
         default_values = {
-            'partner_id': self.partner.id,
-            'order_line': [
-                Command.create({
-                    'product_id': self.product.id,
-                }),
-            ],
-            **values
+            'partner_id': cls.partner.id,
+            'order_line': [Command.create({'product_id': cls.product.id})],
+            **values,
         }
-        return self.env['sale.order'].create(default_values)
+        return cls.env['sale.order'].create(default_values)
 
 
 class TestSaleCommon(AccountTestInvoicingCommon):

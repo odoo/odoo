@@ -100,8 +100,8 @@ class PaymentCommon(BaseCommon):
         if self.account_payment_installed and self.enable_post_process_patcher:
             # disable account payment generation if account_payment is installed
             # because the accounting setup of providers is not managed in this common
-            self.post_process_patcher = patch(
-                'odoo.addons.account_payment.models.payment_transaction.PaymentTransaction._post_process',
+            self.post_process_patcher = patch.object(
+                self.env.registry['payment.transaction'], '_post_process'
             )
             self.startPatcher(self.post_process_patcher)
 
@@ -149,17 +149,18 @@ class PaymentCommon(BaseCommon):
         user.invalidate_recordset()
         return user
 
-    def _create_transaction(self, flow, sudo=True, **values):
+    @classmethod
+    def _create_transaction(cls, flow, sudo=True, **values):
         default_values = {
-            'payment_method_id': self.payment_method_id,
-            'amount': self.amount,
-            'currency_id': self.currency.id,
-            'provider_id': self.provider.id,
-            'reference': self.reference,
+            'payment_method_id': cls.payment_method_id,
+            'amount': cls.amount,
+            'currency_id': cls.currency.id,
+            'provider_id': cls.provider.id,
+            'reference': cls.reference,
             'operation': f'online_{flow}',
-            'partner_id': self.partner.id,
+            'partner_id': cls.partner.id,
         }
-        return self.env['payment.transaction'].sudo(sudo).create(dict(default_values, **values))
+        return cls.env['payment.transaction'].sudo(sudo).create(dict(default_values, **values))
 
     def _create_token(self, sudo=True, **values):
         default_values = {

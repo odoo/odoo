@@ -12,11 +12,11 @@
             </header>
             <button name="payment_action_void" position="after">
                 <button
-                    name="action_confirm_payment_on_delivery"
+                    name="action_open_pay_on_delivery_form"
                     type="object"
                     string="Confirm Payment"
                     class="oe_highlight"
-                    invisible="not pending_delivery_transaction_ids"
+                    invisible="not amount_on_delivery"
                 />
             </button>
             <sheet position="before">
@@ -24,10 +24,10 @@
                     name="payment_to_collect_warning"
                     class="alert alert-warning"
                     role="alert"
-                    invisible="not pending_delivery_transaction_ids"
+                    invisible="not amount_on_delivery"
                 >
                     Payment to collect:
-                    <field name="amount_on_delivery" widget="monetary"/>
+                    <field name="amount_on_delivery"/>
                     <field name="currency_id" invisible="1"/>
                 </div>
             </sheet>

@@ -1,10 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import _, api, models
 
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
+
+    @api.depends_context('prevalidated_move_ids')
+    def _compute_amount_on_delivery(self):
+        return super()._compute_amount_on_delivery()
 
     def set_delivery_line(self, carrier, amount):
         res = super().set_delivery_line(carrier, amount)
