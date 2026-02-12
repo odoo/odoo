@@ -13,6 +13,8 @@ When creating invoices from picking, the system is able to add and compute the s
     'depends': ['sale_stock', 'delivery'],
     'data': [
         'security/ir.model.access.csv',
+        'report/shipping_reports.xml',
+        'views/ir_actions_report.xml',
         'views/product_template_view.xml',
         'views/delivery_view.xml',
         'views/delivery_portal_template.xml',
@@ -27,6 +29,11 @@ When creating invoices from picking, the system is able to add and compute the s
         'views/stock_move_line_views.xml',
         'report/product_templates.xml',
     ],
+    "assets": {
+        "web.assets_backend": [
+            'stock_delivery/static/src/print_action_handler.js',
+        ],
+    },
     'demo': ['data/delivery_demo.xml'],
     'auto_install': True,
     'author': 'Odoo S.A.',
