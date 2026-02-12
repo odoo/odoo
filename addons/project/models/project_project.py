@@ -870,21 +870,21 @@ class ProjectProject(models.Model):
     # Mail gateway
     # ---------------------------------------------------
 
-    def _track_template(self, changes):
-        res = super()._track_template(changes)
+    def _track_template(self, tracked_fields):
+        res = super()._track_template(tracked_fields)
         project = self[0]
-        if self.env.user.has_group('project.group_project_stages') and 'stage_id' in changes and project.stage_id.mail_template_id:
+        if self.env.user.has_group('project.group_project_stages') and 'stage_id' in tracked_fields and project.stage_id.mail_template_id:
             res['stage_id'] = (project.stage_id.mail_template_id, {
                 'auto_delete_keep_log': False,
                 'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
             })
         return res
 
-    def _track_subtype(self, init_values):
+    def _track_subtype(self, track_init_values):
         self.ensure_one()
-        if 'stage_id' in init_values:
+        if 'stage_id' in track_init_values:
             return self.env.ref('project.mt_project_stage_change')
-        return super()._track_subtype(init_values)
+        return super()._track_subtype(track_init_values)
 
     def _mail_get_message_subtypes(self):
         res = super()._mail_get_message_subtypes()

@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from __future__ import annotations
+
+import typing
 
 from datetime import datetime
 
 from odoo import api, fields, models
+from odoo.models import BaseModel
+
+if typing.TYPE_CHECKING:
+    from odoo.api import ValuesType
 
 
 class MailTrackingValue(models.Model):
@@ -65,18 +71,23 @@ class MailTrackingValue(models.Model):
         return self.filtered(has_free_access)
 
     @api.model
-    def _create_tracking_values(self, initial_value, new_value, col_name, col_info, record):
+    def _create_tracking_values(
+            self,
+            initial_value: typing.Any, new_value: typing.Any,
+            col_name: str, col_info: ValuesType, record: BaseModel,
+        ) -> ValuesType:
         """ Prepare values to create a mail.tracking.value. It prepares old and
         new value according to the field type.
 
-        :param initial_value: field value before the change, could be text, int,
-          date, datetime, ...;
-        :param new_value: field value after the change, could be text, int,
-          date, datetime, ...;
+        :param typing.Any initial_value: field value before the change. Relational
+            fields should contain RecordSets;
+        :param typing.Any new_value: field value after the change. Relational fields
+            should contain RecordSets;
         :param str col_name: technical field name, column name (e.g. 'user_id);
-        :param dict col_info: result of fields_get(col_name);
-        :param <record> record: record on which tracking is performed, used for
-          related computation e.g. finding currency of monetary fields;
+        :param ValuesType col_info: result of fields_get(col_name);
+        :param BaseModel record: record on which tracking is performed, used fto find
+            field information based on column name and record model e.g. finding
+            currency of monetary fields;
 
         :return: a dict values valid for 'mail.tracking.value' creation;
         """
@@ -174,7 +185,10 @@ class MailTrackingValue(models.Model):
         return values
 
     @api.model
-    def _create_tracking_values_property(self, initial_value, col_name, col_info, record):
+    def _create_tracking_values_property(
+            self, initial_value: typing.Any,
+            col_name: str, col_info: ValuesType, record: BaseModel
+        ) -> ValuesType:
         """Generate the values for the <mail.tracking.values> corresponding to a property."""
         col_info = col_info | {'type': initial_value['type'], 'selection': initial_value.get('selection')}
 
@@ -191,14 +205,13 @@ class MailTrackingValue(models.Model):
             value, False, col_name, col_info, record)
         return {**tracking_values, 'field_info': field_info}
 
-    def _tracking_value_format(self):
-        """ Return structure and formatted data structure to be used by chatter
-        to display tracking values. Order it according to asked display, aka
-        ascending sequence (and field name).
+    def _tracking_value_format(self) -> list[ValuesType]:
+        """ Return structured formatted data to be used by chatter to display
+        tracking values. It is organized by model.
 
         :return: for each tracking value in self, their formatted display
           values given as a dict;
-        :rtype: list[dict]
+        :rtype: list[VAluesType]
         """
         model_map = {}
         for tracking in self:
@@ -210,14 +223,14 @@ class MailTrackingValue(models.Model):
             formatted += trackings._tracking_value_format_model(model)
         return formatted
 
-    def _tracking_value_format_model(self, model):
-        """ Return structure and formatted data structure to be used by chatter
-        to display tracking values. Order it according to asked display, aka
-        ascending sequence (and field name).
+    def _tracking_value_format_model(self, model: str) -> list[ValuesType]:
+        """ Return structured formatted data to be used by chatter to display
+        tracking values on a single model. Order it based on ascending sequence
+        then field name. Property fields are always last.
 
         :returns: for each tracking value in self, their formatted display
           values given as a dict;
-        :rtype: list[dict]
+        :rtype: list[ValuesType]
         """
         if not self:
             return []
@@ -274,7 +287,7 @@ class MailTrackingValue(models.Model):
         ]
         return formatted
 
-    def _format_display_value(self, field_type, new=True):
+    def _format_display_value(self, field_type: str, new: bool = True) -> str:
         """ Format value of 'mail.tracking.value', according to the field type.
 
         :param str field_type: Odoo field type;

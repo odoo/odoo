@@ -436,6 +436,7 @@ class AccountTax(models.Model):
         for (document_type, sequence), old_value, new_value in modified_lines:
             diff_keys = [key for key in old_value if old_value[key] != new_value[key]]
             if diff_keys:
+                # TDE FIXME: change to real tracking
                 body = Markup("<b>{type}</b> {rep} {seq}:<ul class='mb-0 ps-4'>{changes}</ul>").format(
                     type=document_type.capitalize(),
                     rep=_('repartition line'),
@@ -484,6 +485,7 @@ class AccountTax(models.Model):
         self.ensure_one()
 
         if self.is_used:
+            # TDE NOTE: remove and replace by filter display
             repartition_line_str_field_id = self.env['ir.model.fields']._get('account.tax', 'repartition_lines_str').id
             for tracked_value_id in kwargs['tracking_value_ids']:
                 if tracked_value_id[2]['field_id'] == repartition_line_str_field_id:

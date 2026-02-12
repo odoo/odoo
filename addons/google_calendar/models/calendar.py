@@ -375,6 +375,7 @@ class CalendarEvent(models.Model):
         user = self.env.user
         my_cancelled_records = self.filtered(lambda e: e.user_id == user)
         for event in self:
+            # TDE NOTE: to check
             # remove the tracking data to avoid calling _track_template in the pre-commit phase
             self.env.cr.precommit.data.pop(f'mail.tracking.create.{event._name}.{event.id}', None)
         super(CalendarEvent, my_cancelled_records)._cancel()

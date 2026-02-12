@@ -497,16 +497,16 @@ class TestTrackingTemplate(TestTrackingCommon):
             'use_default_to': True,
         } for n in range(2)])
 
-        def _track_subtype(self, init_values):
-            if 'container_id' in init_values and self.container_id:
+        def _track_subtype(self, track_init_values):
+            if 'container_id' in track_init_values and self.container_id:
                 return self.env.ref('test_mail.st_mail_test_ticket_container_upd')
             return self.env.ref('mail.mt_note')
         self.patch(self.registry['mail.test.ticket'], '_track_subtype', _track_subtype)
 
-        def _track_template(self, changes):
-            if 'email_from' in changes:
+        def _track_template(self, tracked_fields):
+            if 'email_from' in tracked_fields:
                 return {'email_from': (mail_templates[0], {})}
-            elif 'container_id' in changes:
+            elif 'container_id' in tracked_fields:
                 return {'container_id': (
                     mail_templates[1], {
                         'message_type': 'notification',

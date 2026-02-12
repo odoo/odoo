@@ -43,10 +43,10 @@ class MailTestTicket(models.Model):
 
         return groups
 
-    def _track_template(self, changes):
-        res = super()._track_template(changes)
+    def _track_template(self, tracked_fields):
+        res = super()._track_template(tracked_fields)
         record = self[0]
-        if 'customer_id' in changes and record.mail_template:
+        if 'customer_id' in tracked_fields and record.mail_template:
             res['customer_id'] = (
                 record.mail_template,
                 {
@@ -54,7 +54,7 @@ class MailTestTicket(models.Model):
                     'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
                 }
             )
-        elif 'datetime' in changes:
+        elif 'datetime' in tracked_fields:
             res['datetime'] = (
                 'test_mail.mail_test_ticket_tracking_view',
                 {
@@ -69,11 +69,11 @@ class MailTestTicket(models.Model):
             return self.env.ref('test_mail.st_mail_test_ticket_container_upd')
         return super(MailTestTicket, self)._creation_subtype()
 
-    def _track_subtype(self, init_values):
+    def _track_subtype(self, track_init_values):
         self.ensure_one()
-        if 'container_id' in init_values and self.container_id:
+        if 'container_id' in track_init_values and self.container_id:
             return self.env.ref('test_mail.st_mail_test_ticket_container_upd')
-        return super(MailTestTicket, self)._track_subtype(init_values)
+        return super()._track_subtype(track_init_values)
 
     def _get_customer_information(self):
         email_keys_to_values = super()._get_customer_information()
@@ -150,11 +150,11 @@ class MailTestTicketMc(models.Model):
             return self.env.ref('test_mail.st_mail_test_ticket_container_mc_upd')
         return super()._creation_subtype()
 
-    def _track_subtype(self, init_values):
+    def _track_subtype(self, track_init_values):
         self.ensure_one()
-        if 'container_id' in init_values and self.container_id:
+        if 'container_id' in track_init_values and self.container_id:
             return self.env.ref('test_mail.st_mail_test_ticket_container_mc_upd')
-        return super()._track_subtype(init_values)
+        return super()._track_subtype(track_init_values)
 
 
 class MailTestTicketPartner(models.Model):
@@ -197,11 +197,11 @@ class MailTestTicketPartner(models.Model):
             return self.env.ref('test_mail.st_mail_test_ticket_partner_new')
         return super(MailTestTicket, self)._creation_subtype()
 
-    def _track_template(self, changes):
-        res = super()._track_template(changes)
+    def _track_template(self, tracked_fields):
+        res = super()._track_template(tracked_fields)
         record = self[0]
         # acknowledgement-like email, like in project/helpdesk
-        if 'state' in changes and record.state == 'new' and record.state_template_id:
+        if 'state' in tracked_fields and record.state == 'new' and record.state_template_id:
             res['state'] = (
                 record.state_template_id,
                 {

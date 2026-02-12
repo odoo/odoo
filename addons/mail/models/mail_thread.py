@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from __future__ import annotations
 
 import ast
 import datetime
@@ -13,6 +14,8 @@ import lxml
 import logging
 import textwrap
 import time
+import typing
+
 from collections import defaultdict, namedtuple
 from collections.abc import Iterable
 from email import message_from_string
@@ -46,6 +49,11 @@ from odoo.tools.mail import (
     generate_tracking_message_id,
     unfold_references,
 )
+
+if typing.TYPE_CHECKING:
+    from odoo.api import CommandValue, ValuesType
+    from odoo.models import BaseModel
+
 
 MAX_DIRECT_PUSH = 5
 BAD_CONTENT_TYPES = ('binary/octet-stream', '*/*', 'bin/plain')  # replaced by application/octet-stream
@@ -535,36 +543,33 @@ class MailThread(models.AbstractModel):
     # TRACKING / LOG
     # ------------------------------------------------------
 
+    # track data storage / manipulation
+    # ------------------------------------------------------
+
     def _track_disabled(self):
         return self.env.context.get('tracking_disable') or self.env.context.get('mail_notrack')
 
-    def _track_prepare(self, fields_iter):
-        """ Prepare the tracking of ``fields_iter`` for ``self``.
+    def _track_prepare(self, field_names: Iterable[str]):
+        """ Prepare the tracking of `fields_iter` for `self` for tracked
+        fields (see `_track_get_fields`). Store initial values for tracked fields
+        in precommit data.
 
-        :param iter fields_iter: iterable of fields names to potentially track
+        :param Iterable[str] field_names: field names to potentially track, to be
+            checked against model-based tracked fields
         """
-        fnames = self._track_get_fields().intersection(fields_iter)
-        if not self or not fnames:
+        tracked_fnames = self._track_get_fields().intersection(field_names)
+        if not self or not tracked_fnames:
             return
         self.env.cr.precommit.add(self._track_finalize)
         initial_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.{self._name}', {})
-        for record in self.sudo():  # be sure to compute initial values whatever current user ACLs
-            if not record.id:
-                continue
-            values = initial_values.setdefault(record.id, {})
-            if values is not None:
-                for fname in fnames:
-                    value = (
-                        # get the properties definition with the value
-                        # (not just the dict with the value)
-                        field.convert_to_read(record[fname], record)
-                        if (field := record._fields[fname]).type == 'properties'
-                        else record[fname]
-                    )
-                    values.setdefault(fname, value)
+        for record in self.sudo().filtered(lambda r: r.id):  # be sure to compute initial values whatever current user ACLs
+            record_values = initial_values.setdefault(record.id, {})
+            if record_values is not None:  # None means tracking was disabled for this record
+                for fname in tracked_fnames:
+                    record_values.setdefault(fname, record._track_convert_value(fname, record[fname]))
 
     def _track_discard(self):
-        """ Prevent any tracking of fields on ``self``. """
+        """ Prevent any tracking of fields on `self`. """
         if not self or not self._track_get_fields():
             return
         self.env.cr.precommit.add(self._track_finalize)
@@ -573,14 +578,9 @@ class MailThread(models.AbstractModel):
         for id_ in self.ids:
             initial_values[id_] = None
 
-    def _track_filter_for_display(self, tracking_values):
-        """Filter out tracking values from being displayed."""
-        self.ensure_one()
-        return tracking_values
-
     def _track_finalize(self):
         """ Generate the tracking messages for the records that have been
-        prepared with ``_tracking_prepare``.
+        prepared with `_tracking_prepare`.
         """
         initial_values = self.env.cr.precommit.data.pop(f'mail.tracking.{self._name}', {})
         ids = [id_ for id_, vals in initial_values.items() if vals]
@@ -591,22 +591,16 @@ class MailThread(models.AbstractModel):
         context = clean_context(self.env.context)
         tracking = records.with_context(context)._message_track(fnames, initial_values)
         for record in records:
-            changes, _tracking_value_ids = tracking.get(record.id, (None, None))
-            record._message_track_post_template(changes)
+            tracked_fields, _tracking_value_ids = tracking.get(record.id, (None, None))
+            record._message_track_post_template(tracked_fields)
 
-    def _track_set_author(self, author):
-        """ Set the author of the tracking message. """
-        if not self._track_get_fields():
-            return
+    def _track_set_author(self, author: BaseModel):
+        """ Set the author (res.partner) of the tracking message for `self`. """
         authors = self.env.cr.precommit.data.setdefault(f'mail.tracking.author.{self._name}', {})
         for id_ in self.ids:
             authors[id_] = author
 
-    def _track_post_template_finalize(self):
-        """Call the tracking template method with right values from precommit."""
-        self._message_track_post_template(self.env.cr.precommit.data.pop(f'mail.tracking.create.{self._name}.{self.id}', []))
-
-    def _track_set_log_message(self, message):
+    def _track_set_log_message(self, message: str | Markup):
         """ Link tracking to a message logged as body, in addition to subtype
         description (if set) and tracking values that make the core content of
         tracking message. """
@@ -616,18 +610,8 @@ class MailThread(models.AbstractModel):
         for id_ in self.ids:
             body_values[id_] = message
 
-    def _track_get_default_log_message(self, tracked_fields):
-        """Get a default log message based on the changed fields.
-
-        :param List[str] tracked_fields: Name of the tracked fields being evaluated;
-
-        :return: A message to log when these changes happen for this record;
-        :rtype: str
-        """
-        return ''
-
     @ormcache('self.env.uid', 'self.env.su')
-    def _track_get_fields(self):
+    def _track_get_fields(self) -> set[str]:
         """ Return the set of tracked fields names for the current model. """
         model_fields = {
             name
@@ -644,38 +628,35 @@ class MailThread(models.AbstractModel):
 
         return model_fields and set(self.fields_get(model_fields, attributes=()))
 
-    def _track_subtype(self, initial_values):
-        """ Give the subtypes triggered by the changes on the record according
-        to values that have been updated.
+    # track posting
+    # ------------------------------------------------------
 
-        :param dict initial_values: original values of the record; only modified
-          fields are present in the dict
-
-        :returns: a subtype browse record or False if no subtype is triggered
-        """
-        self.ensure_one()
-        return False
-
-    def _message_track(self, fields_iter, initial_values_dict):
+    def _message_track(
+        self,
+        tracked_fields: Iterable[str],
+        track_init_values: dict[int, ValuesType]
+    ) -> dict[int, tuple[set[str], list[CommandValue]]]:
         """ Track updated values. Comparing the initial and current values of
         the fields given in tracked_fields, it generates a message containing
         the updated values. This message can be linked to a mail.message.subtype
         given by the ``_track_subtype`` method.
 
-        :param iter fields_iter: iterable of field names to track
-        :param dict initial_values_dict: mapping {record_id: initial_values}
-          where initial_values is a dict {field_name: value, ... }
+        :param Iterable[str] tracked_fields: iterable of field names to track
+        :param dict[int, ValuesType] track_init_values: mapping
+            {record_id: initial_values} where initial_values is a dict {field_name: value, ... }
+
         :return: mapping {record_id: (changed_field_names, tracking_value_ids)}
-            containing existing records only
+            for each existing record only
+        :rtype: dict[int, tuple[set[str], list[CommandValue]]]
         """
-        if not fields_iter:
+        if not tracked_fields:
             return {}
 
-        tracked_fields = self.fields_get(fields_iter, attributes=('string', 'type', 'selection', 'currency_field'))
+        tracked_fields_get = self.fields_get(tracked_fields, attributes=('string', 'type', 'selection', 'currency_field'))
         tracking = dict()
         for record in self:
             try:
-                tracking[record.id] = record._mail_track(tracked_fields, initial_values_dict[record.id])
+                tracking[record.id] = record._mail_track(tracked_fields_get, track_init_values[record.id])
             except MissingError:
                 continue
 
@@ -688,10 +669,10 @@ class MailThread(models.AbstractModel):
                 continue
 
             # find subtypes and post messages or log if no subtype found
-            subtype = record._track_subtype(
-                dict((col_name, initial_values_dict[record.id][col_name])
-                     for col_name in changes)
-            )
+            subtype = record._track_subtype({
+                col_name: track_init_values[record.id][col_name]
+                for col_name in changes
+            })
             author_id = authors[record.id].id if record.id in authors else None
             # _set_log_message takes priority over _track_get_default_log_message even if it's an empty string
             body = bodies[record.id] if record.id in bodies else record._track_get_default_log_message(changes)
@@ -714,15 +695,45 @@ class MailThread(models.AbstractModel):
 
         return tracking
 
-    def _message_track_post_template(self, changes):
-        """ Based on a tracking, post a message defined by ``_track_template``
-        parameters. It allows to implement automatic post of messages based
-        on templates (e.g. stage change triggering automatic email).
+    def _track_get_default_log_message(self, tracked_fields: Iterable[str]) -> str | Markup:
+        """Get a default log message content based on tracked and updated fields.
 
-        :param dict changes: mapping {record_id: (changed_field_names, tracking_value_ids)}
-            containing existing records only
+        :param Iterable[str] tracked_fields: name of fields being tracked and updated
+
+        :return: message, used a body to log when these changes happen for this record;
+        :rtype: str | Markup
         """
-        if not self or not changes:
+        self.ensure_one()
+        return ''
+
+    def _track_subtype(self, track_init_values: ValuesType) -> BaseModel | False:
+        """ Give the subtype triggered by the changes on the record according
+        to values that have been updated.
+
+        :param ValuesType track_init_values: original values of the
+            record; only modified fields are present in the dict
+
+        :return: a subtype browse record or False if no subtype is triggered
+        """
+        self.ensure_one()
+        return False
+
+    # track template posting
+    # ------------------------------------------------------
+
+    def _track_post_template_finalize(self):
+        """ Generate template-based message generation for records that have been
+        prepared. """
+        self._message_track_post_template(self.env.cr.precommit.data.pop(f'mail.tracking.create.{self._name}.{self.id}', []))
+
+    def _message_track_post_template(self, tracked_fields: Iterable[str]) -> True:
+        """ Based on a tracking, post a message based on a template, as defined
+        by ``_track_template`` parameters. Implements automatic posting of
+        formatted messages e.g. stage change triggering automatic email.
+
+        :param Iterable[str] tracked_fields: name of fields being tracked and updated;
+        """
+        if not self or not tracked_fields:
             return True
         # Clean the context to get rid of residual default_* keys
         # that could cause issues afterward during the mail.message
@@ -733,7 +744,7 @@ class MailThread(models.AbstractModel):
         # doesn't exist
         cleaned_self = self.with_context(clean_context(self.env.context))._fallback_lang()
         try:
-            templates = self._track_template(changes)
+            templates = self._track_template(tracked_fields)
         except MissingError:
             if not self.exists():
                 return
@@ -754,8 +765,26 @@ class MailThread(models.AbstractModel):
                 cleaned_self.message_post_with_source(template, **post_kwargs)
         return True
 
-    def _track_template(self, changes):
+    def _track_template(self, tracked_fields: Iterable[str]) -> dict[str, tuple[BaseModel, ValuesType]]:
+        """ Model-based template send parameters, based on a set of tracked updated
+        fields (giben by their names). Parameters are classic mail posting or
+        email sending parameters (see `_message_track_post_template`).
+
+        :param Iterable[str] tracked_fields: name of fields being tracked and updated;
+
+        :return: a dict of parameters. Keys are fields trigerring template sending
+            e.g. 'stage_id'. Values are 2-elements tuple. First is the MailTemplate
+            to send. Second are values to give to composer / sender.
+        """
         return dict()
+
+    # format tools
+    # ------------------------------------------------------
+
+    def _track_filter_for_display(self, tracking_values: BaseModel) -> BaseModel:
+        """Filter out tracking values from being displayed."""
+        self.ensure_one()
+        return tracking_values
 
     # ------------------------------------------------------
     # MAIL GATEWAY

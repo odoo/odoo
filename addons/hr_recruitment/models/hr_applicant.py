@@ -894,12 +894,12 @@ class HrApplicant(models.Model):
             },
         }
 
-    def _track_template(self, changes):
-        res = super()._track_template(changes)
+    def _track_template(self, tracked_fields):
+        res = super()._track_template(tracked_fields)
         applicant = self[0]
         # When applcant is unarchived, they are put back to the default stage automatically. In this case,
         # don't post automated message related to the stage change.
-        if 'stage_id' in changes and applicant.exists()\
+        if 'stage_id' in tracked_fields and applicant.exists()\
             and applicant.stage_id.template_id\
             and not applicant.env.context.get('just_moved')\
             and not applicant.env.context.get('just_unarchived'):
@@ -915,11 +915,11 @@ class HrApplicant(models.Model):
             return self.env.ref('hr_recruitment.mt_talent_new', raise_if_not_found=False)
         return self.env.ref('hr_recruitment.mt_applicant_new')
 
-    def _track_subtype(self, init_values):
+    def _track_subtype(self, track_init_values):
         record = self[0]
-        if 'stage_id' in init_values and record.stage_id:
+        if 'stage_id' in track_init_values and record.stage_id:
             return self.env.ref('hr_recruitment.mt_applicant_stage_changed')
-        return super()._track_subtype(init_values)
+        return super()._track_subtype(track_init_values)
 
     def _notify_get_reply_to(self, default=None, author_id=False):
         """ Override to set alias of applicants to their job definition if any. """
