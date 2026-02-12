@@ -11,6 +11,77 @@
     </data>
 
     <data>
+<!-- OM : OMAN -->
+        <record id="l10n_om_overtime_ruleset" model="hr.attendance.overtime.ruleset">
+            <field name="name">Oman Ruleset</field>
+            <field name="rate_combination_mode">sum</field>
+            <field name="country_id" ref="base.om"/>
+        </record>
+        <record id="l10n_om_week_days_daytime_overtime_rule" model="hr.attendance.overtime.rule">
+            <field name="name">Week Days Daytime Overtime</field>
+            <field name="ruleset_id" ref="l10n_om_overtime_ruleset"/>
+            <field name="base_off">timing</field>
+            <field name="paid" eval="True"/>
+            <field name="amount_rate">1.25</field>
+            <field name="timing_type">work_days</field>
+            <field name="timing_start">0</field>
+            <field name="timing_stop">21</field>
+        </record>
+        <record id="l10n_om_week_days_nighttime_overtime_rule" model="hr.attendance.overtime.rule">
+            <field name="name">Week Days NightTime Overtime</field>
+            <field name="ruleset_id" ref="l10n_om_overtime_ruleset"/>
+            <field name="base_off">timing</field>
+            <field name="paid" eval="True"/>
+            <field name="amount_rate">1.5</field>
+            <field name="timing_type">work_days</field>
+            <field name="timing_start">21</field>
+            <field name="timing_stop">4</field>
+        </record>
+        <record id="l10n_om_rest_days_overtime_rule" model="hr.attendance.overtime.rule">
+            <field name="name">Rest Days &amp; public holidays Overtime</field>
+            <field name="ruleset_id" ref="l10n_om_overtime_ruleset"/>
+            <field name="base_off">timing</field>
+            <field name="paid" eval="True"/>
+            <field name="amount_rate">2</field>
+            <field name="timing_type">non_work_days</field>
+            <field name="timing_start">0</field>
+            <field name="timing_stop">24</field>
+        </record>
+        <record id="l10n_om_overtime_special_ruleset" model="hr.attendance.overtime.ruleset">
+            <field name="name">Oman Special Ruleset</field>
+            <field name="rate_combination_mode">sum</field>
+            <field name="country_id" ref="base.om"/>
+        </record>
+        <record id="l10n_om_week_days_daytime_special_rule" model="hr.attendance.overtime.rule">
+            <field name="name">Week Days Daytime Special Overtime</field>
+            <field name="ruleset_id" ref="l10n_om_overtime_special_ruleset"/>
+            <field name="base_off">timing</field>
+            <field name="paid" eval="True"/>
+            <field name="amount_rate">1.5</field>
+            <field name="timing_type">work_days</field>
+            <field name="timing_start">0</field>
+            <field name="timing_stop">21</field>
+        </record>
+        <record id="l10n_om_week_days_nighttime_special_rule" model="hr.attendance.overtime.rule">
+            <field name="name">Week Days NightTime Special Overtime</field>
+            <field name="ruleset_id" ref="l10n_om_overtime_special_ruleset"/>
+            <field name="base_off">timing</field>
+            <field name="paid" eval="True"/>
+            <field name="amount_rate">1.75</field>
+            <field name="timing_type">work_days</field>
+            <field name="timing_start">21</field>
+            <field name="timing_stop">4</field>
+        </record>
+        <record id="l10n_om_rest_days_special_rule" model="hr.attendance.overtime.rule">
+            <field name="name">Rest Days &amp; Public Holidays Special Overtime</field>
+            <field name="ruleset_id" ref="l10n_om_overtime_special_ruleset"/>
+            <field name="base_off">timing</field>
+            <field name="paid" eval="True"/>
+            <field name="amount_rate">3.0</field>
+            <field name="timing_type">non_work_days</field>
+            <field name="timing_start">0</field>
+            <field name="timing_stop">24</field>
+        </record>
 <!-- SA : Saudi Arabia -->
         <record id="l10n_sa_overtime_ruleset" model="hr.attendance.overtime.ruleset">
             <field name="name">Saudi Overtime Ruleset</field>
