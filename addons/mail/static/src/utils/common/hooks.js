@@ -376,9 +376,20 @@ export function useVisible(refName, cb, { ready = true } = {}) {
  * @property {function} clear
  * @property {function} highlightMessage
  * @property {number|null} highlightedMessageId
+ */
+
+/**
+ * @param {Object} params
+ * @param {function(): import("models").Thread|null} params.thread
+ * @param {function(): Object} [params.messageFetchRouteParams]
+ * @param {number} [params.duration=1500]
  * @returns {MessageScrolling}
  */
-export function useMessageScrolling(duration = 1500) {
+export function useMessageScrolling({
+    thread: threadFn,
+    messageFetchRouteParams = () => ({}),
+    duration = 1500,
+}) {
     let timeout;
     const state = useState({
         clear() {
@@ -390,14 +401,20 @@ export function useMessageScrolling(duration = 1500) {
         },
         /**
          * @param {import("models").Message} message
-         * @param {import("models").Thread} thread
          */
-        async highlightMessage(message, thread) {
+        async highlightMessage(message) {
+            const thread = threadFn();
+            if (!thread) {
+                return;
+            }
             state.initiated = true;
             let messageScrollDirection;
             if (message.notIn(thread.messages)) {
                 messageScrollDirection = message.id < thread.messages[0]?.id ? "top" : "bottom";
-                await thread.loadAround(message.id);
+                await thread.loadAround({
+                    messageId: message.id,
+                    routeParams: messageFetchRouteParams(),
+                });
             }
             const lastHighlightedMessageId = state.highlightedMessageId;
             this.clear();

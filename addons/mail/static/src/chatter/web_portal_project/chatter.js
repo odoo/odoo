@@ -1,4 +1,4 @@
-import { useChildSubEnv, useRef, useState } from "@web/owl2/utils";
+import { useChildSubEnv, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { useMessageScrolling } from "@mail/utils/common/hooks";
@@ -29,11 +29,15 @@ export class Chatter extends Component {
             aside: false,
             disabled: !this.props.threadId,
         });
-        this.messageHighlight = useMessageScrolling();
+        this.messageHighlight = useMessageScrolling({
+            thread: () => this.state.thread,
+            messageFetchRouteParams: () => this.messageFetchRouteParams,
+        });
         this.highlightMessage = router.current.highlight_message_id;
         this.rootRef = useRef("root");
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
         useChildSubEnv(this.childSubEnv);
+        useSubEnv(this.subEnv);
 
         onMounted(this._onMounted);
         onWillUpdateProps((nextProps) => {
@@ -64,12 +68,24 @@ export class Chatter extends Component {
         };
     }
 
+    get extraMessageFetchRouteParams() {
+        return {};
+    }
+
+    get messageFetchRouteParams() {
+        return this.env.messageFetchRouteParams;
+    }
+
     get onCloseFullComposerRequestList() {
         return ["messages"];
     }
 
     get requestList() {
         return [];
+    }
+
+    get subEnv() {
+        return { messageFetchRouteParams: this.extraMessageFetchRouteParams };
     }
 
     changeThread(threadModel, threadId) {
@@ -106,7 +122,9 @@ export class Chatter extends Component {
         if (!thread.id || !this.state.thread?.eq(thread)) {
             return;
         }
-        await thread.fetchThreadData(requestList);
+        await thread.fetchThreadData(requestList, {
+            messageFetchRouteParams: this.messageFetchRouteParams,
+        });
     }
 
     onCloseFullComposerCallback() {

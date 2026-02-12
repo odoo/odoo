@@ -33,4 +33,8 @@ patch(Chatter.prototype, {
             () => [this.topRef.el]
         );
     },
+
+    get extraMessageFetchRouteParams() {
+        return super.extraMessageFetchRouteParams;
+    },
 });

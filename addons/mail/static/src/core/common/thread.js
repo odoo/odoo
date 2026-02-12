@@ -117,7 +117,9 @@ export class Thread extends Component {
                     this.smoothScrollingDeferred,
                 ]);
                 if (this.loadOlderState.isVisible) {
-                    toRaw(this.props.thread).fetchMoreMessages();
+                    toRaw(this.props.thread).fetchMoreMessages({
+                        routeParams: this.messageFetchRouteParams,
+                    });
                 }
             },
             { ready: false }
@@ -130,7 +132,10 @@ export class Thread extends Component {
                     this.smoothScrollingDeferred,
                 ]);
                 if (this.loadNewerState.isVisible) {
-                    toRaw(this.props.thread).fetchMoreMessages("newer");
+                    toRaw(this.props.thread).fetchMoreMessages({
+                        epoch: "newer",
+                        routeParams: this.messageFetchRouteParams,
+                    });
                 }
             },
             { ready: false }
@@ -169,10 +174,7 @@ export class Thread extends Component {
         useLayoutEffect(
             () => {
                 if (this.props.thread.highlightMessage && this.state.mountedAndLoaded) {
-                    this.messageHighlight?.highlightMessage(
-                        this.props.thread.highlightMessage,
-                        this.props.thread
-                    );
+                    this.messageHighlight?.highlightMessage(this.props.thread.highlightMessage);
                     this.props.thread.highlightMessage = null;
                 }
             },
@@ -489,8 +491,12 @@ export class Thread extends Component {
         return true;
     }
 
+    get messageFetchRouteParams() {
+        return this.env.messageFetchRouteParams;
+    }
+
     fetchInitialMessages() {
-        toRaw(this.props.thread).fetchNewMessages();
+        toRaw(this.props.thread).fetchNewMessages({ routeParams: this.messageFetchRouteParams });
     }
 
     get viewportEl() {
@@ -515,7 +521,7 @@ export class Thread extends Component {
     }
 
     onClickLoadOlder() {
-        this.props.thread.fetchMoreMessages();
+        this.props.thread.fetchMoreMessages({ routeParams: this.messageFetchRouteParams });
     }
 
     async onClickPreferences() {
@@ -547,7 +553,7 @@ export class Thread extends Component {
     async jumpToPresent({ immediate = false } = {}) {
         this.messageHighlight?.clear();
         if (!immediate || this.props.thread.loadNewer) {
-            await this.props.thread.loadAround();
+            await this.props.thread.loadAround({ routeParams: this.messageFetchRouteParams });
             this.props.thread.loadNewer = false;
             this.state.showJumpPresent = false;
         }

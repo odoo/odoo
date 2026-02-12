@@ -18,6 +18,10 @@ patch(Chatter.prototype, {
         });
     },
 
+    get extraMessageFetchRouteParams() {
+        return super.extraMessageFetchRouteParams;
+    },
+
     async toggleIsFollower() {
         this.state.isFollower = await this.orm.call(
             this.props.threadModel,
