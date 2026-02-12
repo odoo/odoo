@@ -6,7 +6,7 @@ from odoo.fields import Domain
 from odoo.tools import float_is_zero, float_repr, float_round, float_compare
 from odoo.exceptions import ValidationError
 from collections import defaultdict
-from datetime import datetime
+from itertools import groupby
 
 
 class ProductTemplate(models.Model):
@@ -142,31 +142,40 @@ class ProductProduct(models.Model):
         """Compute totals of multiple svl related values"""
         company_id = self.env.company
         self.company_currency_id = company_id.currency_id
+        at_date = fields.Datetime.to_datetime(self.env.context.get('to_date'))
+        if at_date:
+            at_date = at_date.replace(hour=23, minute=59, second=59)
+        # Pre-compute AVCO values
+        avco_products = self.filtered(lambda p: p.cost_method == 'average' and not p.lot_valuated)
+        avco_results = avco_products._run_avco_batch(at_date=at_date)
+        if at_date:
+            self = self.with_context(at_date=at_date)
+        qty_available_map = {}
+        qty_valued_map = {}
+        for product in self:
+            valuated_product = product.sudo(False)._with_valuation_context()
+            qty_valued_map[valuated_product.id] = valuated_product.qty_available
+            qty_available_map[valuated_product.id] = valuated_product.with_context(warehouse_id=False).qty_available if self.env.context.get('warehouse_id') else qty_valued_map[valuated_product.id]
+        fifo_map = self.with_context(warehouse_id=False)._run_fifo_batch(qty_available_map, at_date=at_date)
 
         for product in self:
-            at_date = fields.Datetime.to_datetime(product.env.context.get('to_date'))
-            if at_date:
-                at_date = at_date.replace(hour=23, minute=59, second=59)
-                product = product.with_context(at_date=at_date)
-            valuated_product = product.sudo(False)._with_valuation_context()
-            qty_valued = valuated_product.qty_available
-            qty_available = valuated_product.with_context(warehouse_id=False).qty_available if self.env.context.get('warehouse_id') else qty_valued
             if product.lot_valuated:
                 product.total_value = product._get_value_from_lots()
-            elif product.uom_id.is_zero(qty_valued):
+            elif product.uom_id.is_zero(qty_valued_map.get(product.id)):
                 product.total_value = 0
-            elif product.uom_id.is_zero(qty_available):
-                product.total_value = product.standard_price * qty_valued
+            elif product.uom_id.is_zero(qty_available_map.get(product.id)):
+                product.total_value = product.standard_price * qty_valued_map.get(product.id)
             elif product.cost_method == 'standard':
                 standard_price = product.standard_price
                 if at_date:
                     standard_price = product._get_standard_price_at_date(at_date)
-                product.total_value = standard_price * qty_valued
+                product.total_value = standard_price * qty_valued_map.get(product.id, 0)
             elif product.cost_method == 'average':
-                product.total_value = product._run_avco(at_date=at_date)[1] * qty_valued / qty_available
+                _, avco_total_value = avco_results.get(product.id, (0, 0))
+                product.total_value = avco_total_value * qty_valued_map.get(product.id, 0) / qty_available_map.get(product.id, 1) if qty_available_map.get(product.id, 0) else 0
             else:
-                product.total_value = product.with_context(warehouse_id=False)._run_fifo(qty_available, at_date=at_date) * qty_valued / qty_available
-            product.avg_cost = product.total_value / qty_valued if not product.uom_id.is_zero(qty_valued) else 0
+                product.total_value = fifo_map.get(product.id, 0) * qty_valued_map.get(product.id, 0) / qty_available_map.get(product.id, 1)
+            product.avg_cost = product.total_value / qty_valued_map.get(product.id, 0) if not product.uom_id.is_zero(qty_valued_map.get(product.id, 0)) else 0
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -225,11 +234,15 @@ class ProductProduct(models.Model):
         return product_value.value if product_value else self.standard_price
 
     def _get_last_in(self, date=None):
-        last_in_domain = Domain([('is_in', '=', True), ('product_id', '=', self.id)])
+        last_in_domain = Domain([('is_in', '=', True), ('product_id', 'in', self.ids)])
         if date:
             last_in_domain &= Domain([('date', '<=', date)])
-        last_in = self.env['stock.move'].search(last_in_domain, order='date desc, id desc', limit=1)
-        return last_in
+        moves = self.env['stock.move'].search(last_in_domain, order='product_id, date desc, id desc')
+        last_in_by_product = {
+            product_id: next(moves_group)
+            for product_id, moves_group in groupby(moves, key=lambda v: v.product_id.id)
+        }
+        return last_in_by_product
 
     def _get_value_from_lots(self):
         domain = Domain([('product_id', 'in', self.ids)])
@@ -260,6 +273,40 @@ class ProductProduct(models.Model):
             qty_by_move[moves[0]] = remaining_qty
             moves_qty_by_product[product] = qty_by_move
         return moves_qty_by_product
+
+    def _process_avco_moves(self, moves, product_values_list, quantity, avco_value, avco_total_value, at_date=None, lot=None, in_qty_map=None, out_qty_map=None, in_values_map=None):
+        for move in moves:
+            while product_values_list and move.date >= product_values_list[0].date:
+                product_value = product_values_list.pop(0)
+                avco_value = product_value.value
+                avco_total_value = avco_value * quantity
+            if move.is_in or move.is_dropship:
+                in_qty = in_qty_map.get(move, 0) if in_qty_map and not move.is_dropship else move._get_valued_qty()
+                in_value = move.value
+                if at_date or move.is_dropship:
+                    in_value = in_values_map.get(move.id)['value']
+                if lot:
+                    lot_qty = move._get_valued_qty(lot)
+                    in_value = (in_value * lot_qty / in_qty) if in_qty else 0
+                    in_qty = lot_qty
+                previous_qty = quantity
+                quantity += in_qty
+                if previous_qty > 0:
+                    avco_total_value += in_value
+                    avco_value = avco_total_value / quantity
+                elif previous_qty <= 0:
+                    avco_value = in_value / in_qty if in_qty else avco_value
+                    avco_total_value = avco_value * quantity
+            if move.is_out or move.is_dropship:
+                out_qty = out_qty_map.get(move, 0) if out_qty_map and not move.is_dropship else move._get_valued_qty()
+                out_value = out_qty * avco_value
+                if lot:
+                    lot_qty = move._get_valued_qty(lot)
+                    out_value = (out_value * lot_qty / out_qty) if out_qty else 0
+                    out_qty = lot_qty
+                avco_total_value -= out_value
+                quantity -= out_qty
+        return quantity, avco_value, avco_total_value
 
     def _run_avco(self, at_date=None, lot=None, method="realtime"):
         """ Recompute the average cost of the product base on the last closing
@@ -330,42 +377,90 @@ class ProductProduct(models.Model):
         moves.move_line_ids.fetch(['company_id', 'location_id', 'location_dest_id', 'lot_id', 'owner_id', 'picked', 'quantity_product_uom'])
 
         # TODO Only browse from last product_value
-        for move in moves:
-            while product_values and move.date >= product_values[0].date:
-                product_value = product_values[0]
-                product_values = product_values[1:]
-                avco_value = product_value.value
-                avco_total_value = avco_value * quantity
-            if move.is_in or move.is_dropship:
-                in_qty = move._get_valued_qty()
-                in_value = move.value
-                if at_date or move.is_dropship:
-                    in_value = move._get_value(at_date=at_date)
-                if lot:
-                    lot_qty = move._get_valued_qty(lot)
-                    in_value = (in_value * lot_qty / in_qty) if in_qty else 0
-                    in_qty = lot_qty
-                previous_qty = quantity
-                quantity += in_qty
-                # Regular case, value from accumulation
-                if previous_qty > 0:
-                    avco_total_value += in_value
-                    avco_value = avco_total_value / quantity
-                # From negative quantity case, value from last_in
-                elif previous_qty <= 0:
-                    avco_value = in_value / in_qty if in_qty else avco_value
-                    avco_total_value = avco_value * quantity
-            if move.is_out or move.is_dropship:
-                out_qty = move._get_valued_qty()
-                out_value = out_qty * avco_value
-                if lot:
-                    lot_qty = move._get_valued_qty(lot)
-                    out_value = (out_value * lot_qty / out_qty) if out_qty else 0
-                    out_qty = lot_qty
-                avco_total_value -= out_value
-                quantity -= out_qty
+        product_values_list = list(product_values)
+        quantity, avco_value, avco_total_value = self._process_avco_moves(
+            moves, product_values_list, quantity, avco_value, avco_total_value, at_date, lot
+        )
 
         return avco_value, avco_total_value
+
+    def _run_avco_batch(self, at_date=None, method="realtime"):
+        results = defaultdict(lambda: (0, 0))
+        avco_products = self.filtered(lambda p: p.cost_method == 'average')
+        if not avco_products:
+            return results
+
+        for product in avco_products:
+            results[product.id] = (0, 0)
+
+        moves_domain = [
+        ('product_id', 'in', avco_products._as_query()),
+        ('company_id', '=', self.env.company.id),
+        ]
+
+        if method == 'realtime':
+            moves_domain += ['|', '|', ('is_in', '=', True), ('is_out', '=', True), ('is_dropship', '=', True)]
+        else:
+            moves_domain += ['|', ('is_in', '=', True), ('is_dropship', '=', True)]
+        if at_date:
+            moves_domain.append(('date', '<=', at_date))
+
+        move_fields = ['product_id', 'date', 'is_dropship', 'is_in', 'is_out', 'value', 'move_line_ids']
+        moves = self.env['stock.move'].search_fetch(
+            moves_domain,
+            field_names=move_fields,
+            order='product_id, date, id'
+        )
+
+        directions_data = moves._get_move_directions()
+        in_qty_map = directions_data.get('in_qty_map', {})
+        out_qty_map = directions_data.get('out_qty_map', {})
+        dropshiped_moves = self.env['stock.move'].search_fetch(
+            [('is_dropship', '=', True)],
+            field_names=move_fields,
+            order='product_id, date, id'
+        )
+
+        product_value_domain = [('product_id', 'in', avco_products.ids), ('lot_id', '=', False)]
+        if at_date:
+            product_value_domain.append(('date', '<=', at_date))
+        product_values = self.env['product.value'].sudo().search(product_value_domain, order="product_id, date, id")
+
+        moves_by_product = {k: list(g) for k, g in groupby(moves, key=lambda m: m.product_id.id)}
+        values_by_product = {k: list(g) for k, g in groupby(product_values, key=lambda v: v.product_id.id)}
+        in_values_map = dropshiped_moves._get_value(in_qty_map=in_qty_map, out_qty_map=out_qty_map)
+        if at_date:
+            in_values_map |= (directions_data['in'])._get_value(at_date=at_date, in_qty_map=in_qty_map, out_qty_map=out_qty_map)
+
+        for product in avco_products:
+            p_id = product.id
+            product_moves = moves_by_product.get(p_id, [])
+            product_vals = values_by_product.get(p_id, [])
+
+            last_move_in = None
+            for m in reversed(product_moves):
+                if m.is_in or m.is_dropship:
+                    last_move_in = m
+                    break
+
+            if product_vals and (not last_move_in or product_vals[-1].date > last_move_in.date):
+                quantity = product._with_valuation_context().with_context(to_date=at_date).qty_available
+                avco_value = product_vals[-1].value
+                results[p_id] = (avco_value, avco_value * quantity)
+                continue
+
+            _, final_avco, total_val = self._process_avco_moves(
+                product_moves,
+                product_vals,
+                0, 0, 0,
+                at_date,
+                in_qty_map=in_qty_map,
+                out_qty_map=out_qty_map,
+                in_values_map=in_values_map,
+            )
+            results[p_id] = (final_avco, total_val)
+
+        return results
 
     def _run_fifo(self, quantity, lot=None, at_date=None, location=None):
         """ Returns the value for the next outgoing product base on the qty give as argument."""
@@ -407,6 +502,55 @@ class ProductProduct(models.Model):
             else:
                 fifo_cost += quantity * self.standard_price
         return fifo_cost
+
+    def _run_fifo_batch(self, quantity_map, lot=None, at_date=None, location=None):
+        """ Returns the value for the next outgoing product base on the qty give as argument."""
+        result = {}
+        if at_date:
+            filtered_products = self.filtered(lambda p: p.uom_id.compare(quantity_map[p.id], 0) <= 0)
+            last_in_by_product = filtered_products._get_last_in(date=at_date)
+        stack_map, directions_quantity_map, values_map = self._run_fifo_get_stack_batch(lot=lot, at_date=at_date, location=location)
+        qty_map = directions_quantity_map.get('out_qty_map', {}) | directions_quantity_map.get('in_qty_map', {})
+        for product, (fifo_stack, qty_on_first_move) in stack_map.items():
+            quantity = quantity_map.get(product.id,0)
+            if product.uom_id.compare(quantity, 0) <= 0:
+                if at_date:
+                    last_in = last_in_by_product.get(product.id)
+                    return {product.id: quantity * (last_in._get_price_unit() if last_in else product.standard_price)}
+                return {product.id: quantity * product.standard_price}
+            external_location = location and location.is_valued_external
+
+            fifo_cost = 0
+            
+            last_move = False
+            # Going up to get the quantity in the argument
+            while quantity > 0 and fifo_stack:
+                move = fifo_stack.pop(0)
+                last_move = move
+                move_value = move.value
+                if at_date:
+                    move_value = values_map.get(move.id, {}).get('value')
+                if qty_on_first_move:
+                    valued_qty = qty_map.get(move, move._get_valued_qty())
+                    in_qty = qty_on_first_move
+                    in_value = move_value * in_qty / valued_qty
+                    qty_on_first_move = 0
+                else:
+                    in_qty = qty_map.get(move, move._get_valued_qty())
+                    in_value = move_value
+                if in_qty > quantity:
+                    in_value = in_value * quantity / in_qty
+                    in_qty = quantity
+                fifo_cost += in_value
+                quantity -= in_qty
+            # When we required more quantity than available we extrapolate with the last known price
+            if quantity > 0:
+                if last_move and last_move.quantity:
+                    fifo_cost += quantity * (last_move.value / last_move.quantity)
+                else:
+                    fifo_cost += quantity * product.standard_price
+            result[product.id] = fifo_cost
+        return result
 
     def _run_fifo_get_stack(self, lot=None, at_date=None, location=None):
         # TODO: return a list of tuple (move, valued_qty) instead
@@ -461,8 +605,129 @@ class ProductProduct(models.Model):
         fifo_stack.reverse()
         return fifo_stack, remaining_qty_on_first_stack_move
 
+    def _run_fifo_get_stack_batch(self, lot=None, at_date=None, location=None):
+        """
+        Batch version of _run_fifo_get_stack that processes multiple products at once.
+        Returns a consistent structure with fifo_stack_size calculated per product.
+        
+        :return: tuple(stack_map, directions_quantity_map, values_map)
+            - stack_map: dict mapping product to (fifo_stack, remaining_qty_on_first_stack_move)
+            - directions_quantity_map: dict with 'in_qty_map', 'out_qty_map', 'in', 'out' keys
+            - values_map: dict mapping move.id to {'value': value}
+        """
+        external_location = location and location.is_valued_external
+        
+        # Calculate fifo_stack_size per product
+        fifo_stack_sizes = {}
+        products_with_stock = self.env['product.product']
+        
+        for product in self:
+            product_ctx = product
+            if location:
+                product_ctx = product.with_context(location=location.ids)
+            
+            if lot:
+                fifo_stack_size = lot.product_qty
+            else:
+                fifo_stack_size = product_ctx._with_valuation_context().with_context(to_date=at_date).qty_available
+            
+            if self.env.context.get('fifo_qty_already_processed'):
+                # When validating multiple moves at the same time, the qty_available won't be up to date yet
+                fifo_stack_size -= self.env.context['fifo_qty_already_processed']
+            
+            fifo_stack_sizes[product] = fifo_stack_size
+            
+            # Only process products with positive stack size
+            if product.uom_id.compare(fifo_stack_size, 0) > 0:
+                products_with_stock |= product
+        
+        # Initialize return structures
+        stack_map = {}
+        directions_quantity_map = {'in_qty_map': {}, 'out_qty_map': {}, 'in': self.env['stock.move'], 'out': self.env['stock.move']}
+        values_map = {}
+        
+        # Return early if no products have stock
+        if not products_with_stock:
+            # Ensure all products have an entry in stack_map, even if empty
+            for product in self:
+                stack_map[product] = ([], 0)
+            return stack_map, directions_quantity_map, values_map
+        
+        # Build domain for moves
+        moves_domain = Domain([
+            ('product_id', 'in', products_with_stock.ids),
+            ('company_id', '=', self.env.company.id)
+        ])
+        if lot:
+            moves_domain &= Domain([('move_line_ids.lot_id', 'in', lot.id)])
+        if at_date:
+            moves_domain &= Domain([('date', '<=', at_date)])
+        if location:
+            moves_domain &= Domain([('location_dest_id', '=', location.id)])
+        if external_location:
+            moves_domain &= Domain([('is_out', '=', True)])
+        else:
+            moves_domain &= Domain([('is_in', '=', True)])
+        
+        # Fetch all moves at once, ordered by product, then date desc
+        moves_in = self.env['stock.move'].search(moves_domain, order='product_id, date desc, id desc')
+        
+        # Group moves by product
+        moves_in_by_product = {product_id: list(move_group) for product_id, move_group in groupby(moves_in, key=lambda m: m.product_id.id)}
+        
+        # Prefetch directions to avoid doing it one by one in the loop
+        directions_quantity_map = moves_in._get_move_directions()
+        
+        # Prefetch values if at_date is specified
+        if at_date:
+            values_map = directions_quantity_map['in']._get_value(
+                at_date=at_date, 
+                in_qty_map=directions_quantity_map.get('in_qty_map', {}), 
+                out_qty_map=directions_quantity_map.get('out_qty_map', {})
+            )
+        
+        # Process each product to build its FIFO stack
+        for product in self:
+            fifo_stack = []
+            remaining_qty_on_first_stack_move = 0
+            fifo_stack_size = fifo_stack_sizes.get(product, 0)
+            
+            # Skip if no stock or product not in moves
+            if product.uom_id.compare(fifo_stack_size, 0) <= 0:
+                stack_map[product] = (fifo_stack, remaining_qty_on_first_stack_move)
+                continue
+            
+            product_moves = moves_in_by_product.get(product.id, [])
+            
+            # Go to the bottom of the stack
+            for move in product_moves:
+                if product.uom_id.compare(fifo_stack_size, 0) <= 0:
+                    break
+                
+                # Get quantity from prefetched directions or compute it
+                in_qty = directions_quantity_map.get('in_qty_map', {}).get(move, move._get_valued_qty())
+                
+                fifo_stack.append(move)
+                remaining_qty_on_first_stack_move = min(in_qty, fifo_stack_size)
+                fifo_stack_size -= in_qty
+            
+            # Reverse to get FIFO order (oldest first)
+            fifo_stack.reverse()
+            
+            stack_map[product] = (fifo_stack, remaining_qty_on_first_stack_move)
+        
+        return stack_map, directions_quantity_map, values_map
+
+
     def _update_standard_price(self, extra_value=None, extra_quantity=None):
         # TODO: Add extra value and extra quantity kwargs to avoid total recomputation
+        average_cost_products = self.filtered(lambda p: p.cost_method not in ['standard', 'fifo'])
+        if average_cost_products:
+            product_prices = average_cost_products._run_avco_batch()
+        fifo_products = self.filtered(lambda p: p.cost_method == 'fifo')
+        if fifo_products:
+            last_in_by_product = fifo_products._get_last_in()
+
         for product in self:
             if product.cost_method == 'standard':
                 continue
@@ -473,10 +738,10 @@ class ProductProduct(models.Model):
                 qty_available = product._with_valuation_context().qty_available
                 if product.uom_id.compare(qty_available, 0) > 0:
                     product.sudo().with_context(disable_auto_revaluation=True).standard_price = product.total_value / qty_available
-                elif last_in := product._get_last_in():
+                elif last_in := last_in_by_product.get(product):
                     product.sudo().with_context(disable_auto_revaluation=True).standard_price = last_in._get_price_unit()
                 continue
-            new_standard_price = product._run_avco()[0]
+            new_standard_price = product_prices.get(product.id, (0, 0))[0]
             if new_standard_price:
                 product.with_context(disable_auto_revaluation=True).sudo().standard_price = new_standard_price
 

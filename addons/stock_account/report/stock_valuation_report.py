@@ -27,6 +27,7 @@ class StockValuationReport(models.AbstractModel):
 
     def _get_report_data(self, date=False, product_category=False, warehouse=False):
         company = self.env.company
+        inventory_data = None
         # Check if date is a string instance
         if isinstance(date, str):
             date = fields.Date.from_string(date)
@@ -77,7 +78,8 @@ class StockValuationReport(models.AbstractModel):
             date, location_domain=[('usage', '=', 'inventory')],
         )
         stock_valuation_account_vals = company._get_stock_valuation_account_vals(
-            accounts_by_product, date, company._get_location_valuation_vals(date))
+            accounts_by_product, date, company._get_location_valuation_vals(date), inventory_data=inventory_data
+        )
 
         report_data = {
             'company_id': company.id,

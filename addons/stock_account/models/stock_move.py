@@ -6,6 +6,7 @@ from odoo import api, fields, models, _, Command
 from odoo.fields import Domain
 from odoo.tools import OrderedSet
 from odoo.exceptions import UserError
+from itertools import groupby
 
 VALUATION_DICT = {
     'value': 0,
@@ -271,6 +272,9 @@ class StockMove(models.Model):
         products_to_recompute = set()
         lots_to_recompute = set()
         fifo_qty_processed = defaultdict(float)
+        needed_moves = self.filtered(lambda m: m.is_in)
+        move_quantity_direction_map = self._get_move_directions()
+        value_map = needed_moves._get_value(in_qty_map=move_quantity_direction_map['in_qty_map'], out_qty_map=move_quantity_direction_map['out_qty_map'])
 
         for move in self:
             # Incoming moves
@@ -279,7 +283,7 @@ class StockMove(models.Model):
                 if move.product_id.lot_valuated:
                     lots_to_recompute.update(move.move_line_ids.lot_id.ids)
             if move.is_in:
-                move.value = move.sudo()._get_value()
+                move.value = value_map.get(move.id, {}).get('value', 0)
                 continue
             # Outgoing moves
             if not move._is_out():
@@ -310,8 +314,8 @@ class StockMove(models.Model):
         self.env['product.product'].browse(products_to_recompute)._update_standard_price()
         self.env['stock.lot'].browse(lots_to_recompute)._update_standard_price()
 
-    def _get_value(self, forced_std_price=False, at_date=False, ignore_manual_update=False):
-        return self._get_value_data(forced_std_price, at_date, ignore_manual_update)['value']
+    def _get_value(self, forced_std_price=False, at_date=False, ignore_manual_update=False, in_qty_map=None, out_qty_map=None):
+        return self._get_value_data(forced_std_price, at_date, ignore_manual_update, in_qty_map=in_qty_map, out_qty_map=out_qty_map)
 
     def _get_value_data(
         self,
@@ -319,8 +323,11 @@ class StockMove(models.Model):
         at_date=False,
         ignore_manual_update=False,
         add_extra_value=True,
+        in_qty_map=None,
+        out_qty_map=None,
     ):
-        """Returns the value and the quantity valued on the move
+        """Returns the value and the quantity valued on the move(s).
+
         In priority order:
         - Take value from accounting documents (invoices, bills)
         - Take value from quotations + landed costs
@@ -328,107 +335,157 @@ class StockMove(models.Model):
 
         Forced standard price is useful when we have to get the value
         of a move in the past with the standard price at that time.
+
+        Returns:
+            dict mapping move_id to {'value': float, 'quantity': float, 'description': str}
         """
-        # TODO: Make multi
-        self.ensure_one()
-        # It probably needs a priority order:
-        # 1. take from Invoice/Bills
-        # 2. from SO/PO lines
-        # 3. standard_price
+        qty_map = (in_qty_map or {}) | (out_qty_map or {})
 
-        valued_qty = remaining_qty = self._get_valued_qty()
-        value = 0
-        descriptions = []
+        # Initialize tracking dicts for all moves
+        result = {}
+        moves_with_manual_update = set()
 
+        for move in self:
+            qty = qty_map.get(move, move._get_valued_qty())
+            result[move.id] = {}
+            result[move.id]["quantity"] = qty
+            result[move.id]["remaining_qty"]= qty
+            result[move.id]["value"]= 0
+            result[move.id]["descriptions"] = []
+
+        # 1. Manual updates (this one is batched)
         if not ignore_manual_update:
-            manual_data = self._get_manual_value(
-                remaining_qty, at_date)
-            # In case of manual update we will skip extra cost
-            if manual_data['quantity']:
-                add_extra_value = False
-            value += manual_data['value']
-            remaining_qty -= manual_data['quantity']
-            if manual_data.get('description'):
-                descriptions.append(manual_data['description'])
+            manual_data_map = self._get_manual_value(result, at_date)
+            for move in self:
+                manual_data = manual_data_map[move.id]
+                # In case of manual update we will skip extra cost for this move
+                if manual_data['quantity']:
+                    moves_with_manual_update.add(move.id)
+                result[move.id]["value"] += manual_data['value']
+                result[move.id]["remaining_qty"] -= manual_data['quantity']
+                if manual_data.get('description'):
+                    result[move.id]["descriptions"].append(manual_data['description'])
+        # 2. Invoice/Bills (not batched yet)
+        for move in self:
+            if result[move.id]["remaining_qty"] > 0:
+                account_data = move._get_value_from_account_move(result[move.id]["remaining_qty"], at_date)
+                result[move.id]["value"] += account_data['value']
+                result[move.id]["remaining_qty"] -= account_data['quantity']
+                if account_data.get('description'):
+                    result[move.id]["descriptions"].append(account_data['description'])
+        # 3. Production (not batched yet)
+        for move in self:
+            if result[move.id]["remaining_qty"] > 0:
+                production_data = move._get_value_from_production(result[move.id]["remaining_qty"], at_date)
+                result[move.id]["value"] += production_data['value']
+                result[move.id]["remaining_qty"] -= production_data['quantity']
+                if production_data.get('description'):
+                    result[move.id]["descriptions"].append(production_data['description'])
 
-        # 1. take from Invoice/Bills
-        if remaining_qty:
-            account_data = self._get_value_from_account_move(remaining_qty, at_date)
-            value += account_data['value']
-            remaining_qty -= account_data['quantity']
-            if account_data.get('description'):
-                descriptions.append(account_data['description'])
+        # 4. Quotations (SO/PO lines) (not batched yet)
+        for move in self:
+            if result[move.id]["remaining_qty"] > 0:
+                quotation_data = move._get_value_from_quotation(result[move.id]["remaining_qty"], at_date)
+                result[move.id]["value"] += quotation_data['value']
+                result[move.id]["remaining_qty"] -= quotation_data['quantity']
+                if quotation_data.get('description'):
+                    result[move.id]["descriptions"].append(quotation_data['description'])
+        # 5. Returns (optimized)
+        for move in self:
+            if result[move.id]["remaining_qty"] > 0:
+                return_data = move._get_value_from_returns(result[move.id]["remaining_qty"], at_date)
+                result[move.id]["value"] += return_data['value']
+                result[move.id]["remaining_qty"] -= return_data['quantity']
+                if return_data.get('description'):
+                    result[move.id]["descriptions"].append(return_data['description'])
 
-        if remaining_qty:
-            production_data = self._get_value_from_production(remaining_qty, at_date)
-            value += production_data["value"]
-            remaining_qty -= production_data["quantity"]
-            if production_data.get("description"):
-                descriptions.append(production_data["description"])
+        # 6. Standard price (not batched yet)
+        for move in self:
+            if result[move.id]["remaining_qty"] > 0:
+                std_price_data = move._get_value_from_std_price(
+                    result[move.id]["remaining_qty"],
+                    forced_std_price,
+                    at_date
+                )
+                result[move.id]["value"] += std_price_data['value']
+                if std_price_data.get('description'):
+                    result[move.id]["descriptions"].append(std_price_data['description'])
 
-        # 2. from SO/PO lines
-        if remaining_qty:
-            quotation_data = self._get_value_from_quotation(remaining_qty, at_date)
-            value += quotation_data['value']
-            remaining_qty -= quotation_data['quantity']
-            if quotation_data.get('description'):
-                descriptions.append(quotation_data['description'])
-
-        # 3. from returns
-        if remaining_qty:
-            return_data = self._get_value_from_returns(remaining_qty, at_date)
-            value += return_data['value']
-            remaining_qty -= return_data['quantity']
-            if return_data.get('description'):
-                descriptions.append(return_data['description'])
-
-        # 4. standard_price
-        if remaining_qty:
-            std_price_data = self._get_value_from_std_price(remaining_qty, forced_std_price, at_date)
-            value += std_price_data['value']
-            descriptions.append(std_price_data.get('description'))
-
+        # 7. Extra costs (landed costs, etc.) (batched)
         if add_extra_value:
-            extra_data = self._get_value_from_extra(valued_qty, at_date)
-            value += extra_data['value']
-            if extra_data.get('description'):
-                descriptions.append(extra_data['description'])
+            moves_to_process = self.filtered(lambda m: m.id not in moves_with_manual_update)
+            if moves_to_process:
+                extra_data_dict = moves_to_process.sudo()._get_value_from_extra(quantity=result, at_date=at_date)
+                for move_id, extra_data in extra_data_dict.items():
+                    result[move_id]["value"] += extra_data['value']
+                    if extra_data.get('description'):
+                        result[move_id]["descriptions"].append(extra_data['description'])
 
-        return {
-            'value': value,
-            'quantity': valued_qty,
-            'description': '\n'.join(descriptions),
-        }
+        return result
 
     def _get_valued_qty(self, lot=None):
         self.ensure_one()
-        if self._is_in():
-            return sum(self._get_in_move_lines(lot).mapped('quantity_product_uom'))
-        if self._is_out():
-            return sum(self._get_out_move_lines(lot).mapped('quantity_product_uom'))
         if self.is_dropship:
             if lot:
                 return sum(self.move_line_ids.filtered(lambda ml: ml.lot_id == lot).mapped('quantity_product_uom'))
             return self.product_uom._compute_quantity(self.quantity, self.product_id.uom_id)
+        if self._is_in():
+            return sum(self._get_in_move_lines(lot).mapped('quantity_product_uom'))
+        if self._is_out():
+            return sum(self._get_out_move_lines(lot).mapped('quantity_product_uom'))
         return 0
 
     def _get_manual_value(self, quantity, at_date=None):
-        valuation_data = dict(VALUATION_DICT)
-        domain = Domain([('move_id', '=', self.id)])
+        """Get manual values for multiple moves at once.
+
+        Args:
+            quantity: can be a single value (applied to all moves) or a dict {move_id: quantity}
+
+        Returns:
+            dict mapping move_id to valuation_data
+        """
+        # Handle quantities - support both single value and dict
+        if isinstance(quantity, dict):
+            quantities = quantity
+        else:
+            quantities = {self.id: {"remaining_qty": quantity}}
+
+        # Single query for all moves
+        domain = Domain([('move_id', 'in', self.ids)])
         if at_date:
             domain &= Domain([('date', '<=', at_date)])
-        manual_value = self.env['product.value'].sudo().search(domain, order="date desc, id desc", limit=1)
-        if manual_value:
-            valuation_data['value'] = manual_value.value
-            valuation_data['quantity'] = quantity
-            description = _("Adjusted on %(date)s by %(user)s",
-                date=manual_value.date,
-                user=manual_value.user_id.name,
-            )
-            if manual_value.description:
-                description += "\n" + manual_value.description
-            valuation_data['description'] = description
-        return valuation_data
+
+        all_manual_values = self.env['product.value'].sudo().search(
+            domain,
+            order="move_id, date desc, id desc"
+        )
+
+        # Group by move_id and take first (most recent) from each group
+        manual_values_by_move = {
+            move_id: next(group)
+            for move_id, group in groupby(all_manual_values, key=lambda v: v.move_id.id)
+        }
+
+        # Build results for all moves
+        results = {}
+        for move in self:
+            valuation_data = dict(VALUATION_DICT)
+            manual_value = manual_values_by_move.get(move.id)
+
+            if manual_value:
+                valuation_data['value'] = manual_value.value
+                valuation_data['quantity'] = quantities.get(move.id).get("remaining_qty")
+                description = _("Adjusted on %(date)s by %(user)s",
+                    date=manual_value.date,
+                    user=manual_value.user_id.name,
+                )
+                if manual_value.description:
+                    description += "\n" + manual_value.description
+                valuation_data['description'] = description
+
+            results[move.id] = valuation_data
+
+        return results
 
     def _get_value_from_account_move(self, quantity, at_date=None):
         return dict(VALUATION_DICT)
@@ -442,8 +499,9 @@ class StockMove(models.Model):
     def _get_value_from_returns(self, quantity, at_date=None):
         if self.origin_returned_move_id and self.origin_returned_move_id.is_out:
             origin_move = self.origin_returned_move_id
+            value_quantity = origin_move._get_valued_qty()
             return {
-                'value': origin_move.value * quantity / origin_move._get_valued_qty(),
+                'value': origin_move.value * quantity / value_quantity,
                 'quantity': quantity,
                 'description': _('Value based on original move %(reference)s', reference=origin_move.reference),
             }
@@ -466,30 +524,58 @@ class StockMove(models.Model):
         }
 
     def _get_value_from_extra(self, quantity, at_date=None):
-        return dict(VALUATION_DICT)
+        return {record.id: dict(VALUATION_DICT) for record in self}
 
     def _get_move_directions(self):
-        move_in_ids = set()
-        move_out_ids = set()
-        locations_should_be_valued = (self.move_line_ids.location_id | self.move_line_ids.location_dest_id).filtered(lambda l: l._should_be_valued())
-        for record in self:
-            for move_line in record.move_line_ids:
-                if move_line._should_exclude_for_valuation() or not move_line.picked:
-                    continue
-                if move_line.location_id not in locations_should_be_valued and move_line.location_dest_id in locations_should_be_valued:
-                    move_in_ids.add(record.id)
-                if move_line.location_id in locations_should_be_valued and move_line.location_dest_id not in locations_should_be_valued:
-                    move_out_ids.add(record.id)
+        """
+        Gets the 'in' and 'out' moves from self based on their move lines and locations.
+        Calculates the quantities for each move accordingly.
+        """
+        if not self:
+            return {
+                'in': self.env['stock.move'],
+                'out': self.env['stock.move'],
+                'in_qty_map': {},
+                'out_qty_map': {}
+            }
 
-        move_directions = defaultdict(set)
-        for record in self:
-            if record.id in move_in_ids and not record._is_dropshipped_returned():
-                move_directions[record.id].add('in')
+        self.fetch(['location_id', 'location_dest_id', 'company_id'])
+        move_lines = self.move_line_ids
+        move_lines.fetch(['location_id', 'location_dest_id', 'owner_id', 'picked', 'quantity_product_uom'])
 
-            if record.id in move_out_ids and not record._is_dropshipped():
-                move_directions[record.id].add('out')
+        all_locations = (self.location_id | self.location_dest_id |
+                        move_lines.location_id | move_lines.location_dest_id)
+        valued_loc_ids = {loc.id for loc in all_locations if loc._should_be_valued()}
 
-        return move_directions
+        in_qty_map = {}
+        out_qty_map = {}
+        move_in_candidates = set()
+        move_out_candidates = set()
+
+        for ml in move_lines:
+            if not ml.picked or ml._should_exclude_for_valuation():
+                continue
+
+            move = ml.move_id
+            is_in = ml.location_id.id not in valued_loc_ids and ml.location_dest_id.id in valued_loc_ids
+            is_out = ml.location_id.id in valued_loc_ids and ml.location_dest_id.id not in valued_loc_ids
+
+            if is_in:
+                move_in_candidates.add(move)
+                in_qty_map[move] = in_qty_map.get(move, 0.0) + ml.quantity_product_uom
+            if is_out:
+                move_out_candidates.add(move)
+                out_qty_map[move] = out_qty_map.get(move, 0.0) + ml.quantity_product_uom
+
+        final_in_ids = [move.id for move in move_in_candidates if not move._is_dropshipped_returned()]
+        final_out_ids = [move.id for move in move_out_candidates if not move._is_dropshipped()]
+
+        return {
+            'in': self.browse(final_in_ids),
+            'out': self.browse(final_out_ids),
+            'in_qty_map': in_qty_map,
+            'out_qty_map': out_qty_map,
+        }
 
     def _get_in_move_lines(self, lot=None):
         """ Returns the `stock.move.line` records of `self` considered as incoming. It is done thanks
