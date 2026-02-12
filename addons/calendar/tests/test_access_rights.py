@@ -372,3 +372,84 @@ class TestAccessRights(TransactionCase):
             form.partner_ids.add(self.raoul.partner_id)
 
         self.assertIn(self.raoul.partner_id.id, recurring_event.partner_ids.ids, "Partner should be added as attendee")
+
+    def test_res_record_with_allowed_records_for_non_admin(self):
+        """Ensure res_record compute and inverse behave correctly for accessible records."""
+        event = self.create_event(
+            user=self.john,
+            res_model_id=self.env['ir.model']._get_id('res.partner'),
+            res_id=self.george.partner_id.id,
+        )
+
+        record = event.with_user(self.john).res_record
+        self.assertEqual(record._name, 'res.partner')
+        self.assertEqual(record.id, self.george.partner_id.id)
+        self.assertEqual(
+            event.with_user(self.john).read(['res_record'])[0]['res_record'],
+            f'res.partner,{self.george.partner_id.id}',
+        )
+
+        event.with_user(self.john).write({
+            'res_record': f'res.partner,{self.raoul.partner_id.id}',
+        })
+
+        self.assertEqual(event.res_model_id.model, 'res.partner')
+        self.assertEqual(event.res_id, self.raoul.partner_id.id)
+        self.assertEqual(
+            event.with_user(self.john).read(['res_record'])[0]['res_record'],
+            f'res.partner,{self.raoul.partner_id.id}',
+        )
+
+    def test_res_record_with_not_allowed_records_for_non_admin(self):
+        """Ensure res_record works even if target records are not accessible."""
+        restricted_company = self.env['res.company'].create({
+            'name': 'Restricted Calendar Company',
+        })
+        restricted_partner = self.env['res.partner'].create({
+            'name': 'Restricted Calendar Partner',
+            'company_id': restricted_company.id,
+        })
+
+        # using server action as it is restricted to non admin users
+        restricted_record = self.env['ir.actions.server'].create({
+            'name': 'Restricted Server Action',
+            'model_id': self.env['ir.model']._get_id('calendar.event'),
+            'state': 'code',
+            'code': 'action = None',
+        })
+
+        cases = [
+            ('res.partner', restricted_partner.id, restricted_partner),
+            ('ir.actions.server', restricted_record.id, restricted_record),
+        ]
+
+        for model, res_id, target in cases:
+            with self.subTest(model=model):
+                with self.assertRaises(AccessError):
+                    target.with_user(self.john).check_access('read')
+
+                compute_event = self.create_event(self.john)
+                compute_event.write({
+                    'res_model_id': self.env['ir.model']._get_id(model),
+                    'res_id': res_id,
+                })
+
+                record = compute_event.with_user(self.john).res_record
+                self.assertEqual(record._name, model)
+                self.assertEqual(record.id, res_id)
+                self.assertEqual(
+                    compute_event.with_user(self.john).read(['res_record'])[0]['res_record'],
+                    f'{model},{res_id}',
+                )
+
+                inverse_event = self.create_event(self.john)
+                inverse_event.with_user(self.john).write({
+                    'res_record': f'{model},{res_id}',
+                })
+
+                self.assertEqual(inverse_event.res_model_id.model, model)
+                self.assertEqual(inverse_event.res_id, res_id)
+                self.assertEqual(
+                    inverse_event.with_user(self.john).read(['res_record'])[0]['res_record'],
+                    f'{model},{res_id}',
+                )
