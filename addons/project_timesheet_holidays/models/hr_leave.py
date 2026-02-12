@@ -36,11 +36,11 @@ class HrLeave(models.Model):
             calendar = leave.employee_id.resource_calendar_id
             calendar_timezone = pytz.timezone((calendar or leave.employee_id).tz)
 
-            if calendar.flexible_hours and (leave.request_unit_hours or leave.request_unit_half or leave.date_from.date() == leave.date_to.date()):
+            if calendar.flexible_hours and leave.date_from.date() == leave.date_to.date():
                 leave_date = leave.date_from.astimezone(calendar_timezone).date()
                 if leave.request_unit_hours:
                     hours = leave.request_hour_to - leave.request_hour_from
-                elif leave.request_unit_half:
+                elif leave.request_unit_half and leave.request_date_from_period == leave.request_date_to_period:
                     hours = calendar.hours_per_day / 2
                 else:  # Single-day leave
                     hours = calendar.hours_per_day
