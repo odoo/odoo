@@ -367,6 +367,21 @@ def upgrade_reactive(file_manager, log_info, log_error):
         file_manager.print_progress(fileno, len(js_files))
 
 
+def upgrade_use_external_listener(file_manager, log_info, log_error):
+    """ Changes the imports from useExternalListeners from "@odoo/owl" to "@web/owl2/utils". """
+    js_files = JSTooling.get_js_files(file_manager)
+
+    for fileno, file in enumerate(js_files, start=1):
+        try:
+            if not JSTooling.has_active_usage(file.content, 'useExternalListener'):
+                continue
+            file.content = JSTooling.remove_import(file.content, 'useExternalListener', '@odoo/owl')
+            file.content = JSTooling.add_import(file.content, 'useExternalListener', '@web/owl2/utils')
+        except Exception as e:  # noqa: BLE001
+            log_error(file.path, e)
+        file_manager.print_progress(fileno, len(js_files))
+
+
 def upgrade_tportal(file_manager, log_info, log_error):
     """Sub-task: Migrate t-portal, ignoring comments."""
     path_pattern = re.compile('|'.join(EXCLUDED_PATH))
@@ -414,6 +429,7 @@ def upgrade(file_manager) -> str:
     collector.run_sub("Migrating useRef", upgrade_useref)
     collector.run_sub("Migrating useState", upgrade_usestate)
     collector.run_sub("Migrating reactive", upgrade_reactive)
+    collector.run_sub("Migrating useExternalListener", upgrade_use_external_listener)
     collector.run_sub("Migrating t-portal", upgrade_tportal)
 
     collector.finalize()
