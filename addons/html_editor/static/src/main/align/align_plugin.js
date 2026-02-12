@@ -77,6 +77,7 @@ export class AlignPlugin extends Plugin {
     }
 
     get alignmentIconMode() {
+        const userDirection = getComputedStyle(document.body).direction;
         const sel = this.dependencies.selection.getSelectionData().deepEditableSelection;
         const block = closestBlock(sel?.anchorNode);
         let { direction, textAlign } = getComputedStyle(block);
@@ -92,11 +93,23 @@ export class AlignPlugin extends Plugin {
         }
         if (textAlign === "end") {
             // The icon name suffix for "end" is "right", both in LTR and RTL
+            // but when having the other user language, it is "left"
+            if (userDirection !== direction) {
+                return "left";
+            }
             return "right";
         }
         // Return only one of the four supported icon name suffixes, defaulting
         // to "left" which is also used for "start" in both LTR and RTL
-        return ["center", "right", "justify"].includes(textAlign) ? textAlign : "left";
+        let result = ["center", "right", "justify"].includes(textAlign) ? textAlign : "left";
+        if (userDirection !== direction) {
+            if (result === "right") {
+                result = "left";
+            } else if (result === "left") {
+                result = "right";
+            }
+        }
+        return result;
     }
 
     getBlocksToAlign() {
@@ -108,14 +121,23 @@ export class AlignPlugin extends Plugin {
     }
 
     setAlignment(mode = "") {
+        const userDirection = getComputedStyle(document.body).direction;
         const visitedBlocks = new Set();
         let isAlignmentUpdated = false;
 
         for (const block of this.getBlocksToAlign()) {
             if (!visitedBlocks.has(block)) {
-                const { textAlign } = getComputedStyle(block);
-                if (textAlign !== mode) {
-                    block.style.textAlign = mode;
+                const { textAlign, direction } = getComputedStyle(block);
+                let modeForBlock = mode;
+                if (direction !== userDirection) {
+                    if (mode === "start") {
+                        modeForBlock = "end";
+                    } else if (mode === "end") {
+                        modeForBlock = "start";
+                    }
+                }
+                if (textAlign !== modeForBlock) {
+                    block.style.textAlign = modeForBlock;
                     isAlignmentUpdated = true;
                 }
                 visitedBlocks.add(block);

@@ -158,6 +158,16 @@ describe("start", () => {
                 '<div contenteditable="true" style="text-align: center;"><h1 style="text-align: start;">a[]b</h1></div>',
         });
     });
+
+    test("should END align an RTL container within an editable that is center-aligned", async () => {
+        await testEditor({
+            contentBefore:
+                '<div contenteditable="true" style="text-align: center;"><h1 dir="rtl">a[]b</h1></div>',
+            stepFunction: alignStart,
+            contentAfter:
+                '<div contenteditable="true" style="text-align: center;"><h1 dir="rtl" style="text-align: end;">a[]b</h1></div>',
+        });
+    });
 });
 
 describe("center", () => {
@@ -373,6 +383,16 @@ describe("end", () => {
             stepFunction: alignEnd,
             contentAfter:
                 '<div contenteditable="true" style="text-align: center;"><h1 style="text-align: end;">a[]b</h1></div>',
+        });
+    });
+
+    test("should START align an RTL container within an editable that is center-aligned", async () => {
+        await testEditor({
+            contentBefore:
+                '<div contenteditable="true" style="text-align: center;"><h1 dir="rtl">a[]b</h1></div>',
+            stepFunction: alignEnd,
+            contentAfter:
+                '<div contenteditable="true" style="text-align: center;"><h1 dir="rtl" style="text-align: start;">a[]b</h1></div>',
         });
     });
 });
