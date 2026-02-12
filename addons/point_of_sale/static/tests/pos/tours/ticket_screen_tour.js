@@ -101,7 +101,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             TicketScreen.selectOrder("003"),
             TicketScreen.clickControlButton("Details"),
             TicketScreen.checkOrderDetailsDialog("003", "$ 8.00", { Bank: "$ 8.00" }),
-            Dialog.discard(),
+            Dialog.confirm("Close", ".btn-secondary"),
             TicketScreen.back(),
             // Invoice order
             inLeftSide(Order.hasLine()),

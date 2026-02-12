@@ -1,10 +1,19 @@
-import { patch } from "@web/core/utils/patch";
 import { OrderDetailsDialog } from "@point_of_sale/app/screens/ticket_screen/order_details_dialog/order_details_dialog";
+import { patch } from "@web/core/utils/patch";
 
 patch(OrderDetailsDialog.prototype, {
     getOrderFields() {
+        const order = this.props.order;
         const fields = super.getOrderFields();
-        fields.find((f) => f.label === "Served By").value = this.props.order.employee_id.name;
+
+        const servedBy = fields.find((f) => f.id === "served_by");
+        if (servedBy) {
+            Object.assign(servedBy, {
+                value: order.employee_id?.name,
+                condition: !!order.employee_id?.name,
+            });
+        }
+
         return fields;
     },
 });

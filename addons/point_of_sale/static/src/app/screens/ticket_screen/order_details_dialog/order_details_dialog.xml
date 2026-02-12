@@ -1,78 +1,66 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.OrderDetailsDialog">
         <Dialog size="'md'" title="this.title">
+            <t t-set="order" t-value="props.order"/>
             <div class="d-flex flex-column gap-3 rounded-2">
-                <t t-foreach="this.orderDetails" t-as="card" t-key="card.title">
-                    <div class="card border rounded-2">
-                        <!-- Header -->
-                        <div class="card-header d-flex justify-content-between align-items-center bg-secondary py-2 px-3">
-                            <div class="d-flex align-items-center">
-                                <i t-att-class="`fa ${card.icon} fs-6`" aria-hidden="true"/>
-                                <h5 class="ms-2 mb-0 fw-semibold text-dark">
-                                    <t t-out="card.title"/>
-                                    <small class="text-muted ms-2"><b><t t-out="card.subtitle"/></b></small>
-                                </h5>
+                <div class="card border bg-secondary-subtle rounded-2 pb-2">
+                    <div class="card-header bg-secondary-subtle border-0 pt-2 pb-0 px-3">
+                        <div class="position-relative">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <i class="fa fa-shopping-basket fs-6 mb-2 me-1" aria-hidden="true"/>
+                                <h5>Order Info</h5>
                             </div>
-                            <!-- Buttons -->
-                            <t t-if="card.buttons">
-                                <div class="d-flex gap-2">
-                                    <t t-foreach="card.buttons" t-as="btn" t-key="btn_index">
-                                        <button t-if="btn.visible and btn.action" t-on-click="btn.action" t-attf-class="btn rounded-2 btn-sm btn-{{btn.color}} rounded-2" t-out="btn.label" />
-                                        <BadgeTag t-if="!btn.action" color="btn.colorIndex" text="btn.label"/>
-                                    </t>
+                            <div class="d-flex position-absolute top-0 end-0">
+                                <span class="o_tag position-relative d-inline-flex align-items-center user-select-none mw-100 o_badge badge lh-1" t-attf-class="o_tag_color_{{states[order.state].color}}">
+                                    <div class="o_tag_badge_text o_badge_text" t-out="states[order.state].label"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-3">
+                        <div class="row g-3">
+                            <t t-foreach="getOrderFields()" t-as="field" t-key="field.id">
+                                <div class="col-sm-6 d-flex field-details flex-column" t-if="field.condition">
+                                    <div class="text-muted small" t-esc="field.label"/>
+                                    <div class="fw-medium" t-esc="field.value"/>
                                 </div>
                             </t>
                         </div>
+                    </div>
+                </div>
 
-                        <!-- Fields -->
-                        <div t-if="card.fields" class="p-3">
-                            <div class="row g-3">
-                                <t t-foreach="card.fields" t-as="field" t-key="field_index">
-                                    <div t-if="field.value" class="col-md-6">
-                                        <div class="d-flex field-details flex-column">
-                                            <div class="text-muted small"><t t-out="field.label"/></div>
-                                            <div class="fw-medium">
-                                                <t t-out="field.value"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </t>
+                <div t-if="order.payment_ids.length" class="card border bg-secondary-subtle rounded-2 pb-2">
+                    <div class="card-header border-0 bg-secondary-subtle pt-2 pb-0 px-3">
+                        <div class="position-relative">
+                            <div class="d-flex align-items-center flex-column">
+                                <div class="d-flex align-items-center">
+                                    <i class="fa fa-credit-card fs-6 mb-2 me-1" aria-hidden="true"/>
+                                    <h5>Payment Info</h5>
+                                </div>
+                                <p class="h2 text-success" t-out="formatCurrency(order.amount_total)"/>
                             </div>
-                        </div>
-
-                        <!-- Table -->
-                        <div t-if="card.table" class="table-responsive p-3">
-                            <table class="table table-bordered table-sm align-middle mb-0">
-                                <thead class="bg-secondary-subtle">
-                                    <tr>
-                                        <t t-foreach="card.table.headers" t-as="head" t-key="head_index">
-                                            <th class="fw-semibold text-dark text-capitalize px-3 py-2">
-                                                <t t-out="head"/>
-                                            </th>
-                                        </t>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <t t-foreach="card.table.rows" t-as="row" t-key="row_index">
-                                        <tr>
-                                            <t t-foreach="card.table.headers" t-as="head" t-key="head_index">
-                                                <td class="px-3 py-2">
-                                                    <t t-out="row[head] or ''"/>
-                                                </td>
-                                            </t>
-                                        </tr>
-                                    </t>
-                                </tbody>
-                            </table>
+                            <button t-if="pos.canEditPayment(order)" t-on-click="props.editPayment" class="btn btn-secondary d-flex align-items-center justify-content-center position-absolute top-0 end-0 bg-secondary-subtle">
+                                <i class="fa fa-pencil me-1" aria-hidden="true"/>
+                                <span t-if="!ui.isSmall">Edit Payment</span>
+                            </button>
                         </div>
                     </div>
-                </t>
+                    <div class="row g-2 px-3 py-2">
+                        <div class="col-4 text-muted small text-center">Payment Date</div>
+                        <div class="col-4 text-muted small text-center">Mode</div>
+                        <div class="col-4 text-muted small text-center">Amount</div>
+                        <t t-foreach="order.payment_ids" t-as="payment" t-key="payment.id">
+                            <div class="col-4 fw-medium text-center" t-esc="formatDateTime(payment.payment_date) or ''"/>
+                            <div class="col-4 fw-medium text-center" t-esc="payment.payment_method_id?.name or ''"/>
+                            <div class="col-4 fw-medium text-center" t-esc="payment.amount ? formatCurrency(payment.amount) : ''"/>
+                        </t>
+                    </div>
+                </div>
             </div>
 
-            <!-- Footer -->
             <t t-set-slot="footer">
                 <button class="btn btn-secondary" t-on-click="this.props.close">
-                    Discard
+                   Close
                 </button>
             </t>
         </Dialog>

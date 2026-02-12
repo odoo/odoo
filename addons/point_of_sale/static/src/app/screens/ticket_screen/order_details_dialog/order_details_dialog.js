@@ -5,14 +5,14 @@ import { formatDateTime } from "@web/core/l10n/dates";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
+import { useService } from "@web/core/utils/hooks";
 
-const STATEMAP = {
-    draft: _t("New"),
-    paid: _t("Paid"),
-    done: _t("Posted"),
-    cancel: _t("Cancelled"),
+const STATES = {
+    draft: { label: _t("New"), color: 2 },
+    paid: { label: _t("Paid"), color: 4 },
+    done: { label: _t("Posted"), color: 10 },
+    cancel: { label: _t("Cancelled"), color: 9 },
 };
-const COLORMAP = { draft: 2, paid: 4, done: 10, cancel: 9 };
 
 export class OrderDetailsDialog extends Component {
     static components = { Dialog, BadgeTag };
@@ -24,62 +24,68 @@ export class OrderDetailsDialog extends Component {
     };
 
     setup() {
-        this.sources = { pos: _t("Point of Sale") };
-        this.order = this.props.order;
         this.pos = usePos();
-        this.orderDetails = [
-            {
-                title: _t("Order Info"),
-                subtitle: formatDateTime(this.order.date_order),
-                icon: "fa-bookmark",
-                fields: this.getOrderFields(),
-                buttons: [
-                    {
-                        label: STATEMAP[this.order.state],
-                        visible: true,
-                        colorIndex: COLORMAP[this.order.state],
-                    },
-                ],
-            },
-        ];
-        if (this.order.payment_ids.length) {
-            const orderCurrecy = this.order.currency_id;
-            this.orderDetails.push({
-                title: _t("Payment Info"),
-                subtitle: formatCurrency(this.order.amount_total, orderCurrecy),
-                icon: "fa-credit-card",
-                buttons: [
-                    {
-                        label: _t("Edit Payment"),
-                        action: this.props.editPayment,
-                        visible: this.pos.canEditPayment(this.order),
-                        color: "primary",
-                    },
-                ],
-                table: {
-                    headers: [_t("Payment Date"), _t("Mode"), _t("Amount")],
-                    rows: (this.order.payment_ids || []).map((p) => ({
-                        [_t("Payment Date")]: formatDateTime(p.payment_date) || "",
-                        [_t("Mode")]: p.payment_method_id?.name || "",
-                        [_t("Amount")]: p.amount ? formatCurrency(p.amount, orderCurrecy) : "",
-                    })),
-                },
-            });
-        }
+        this.states = STATES;
+        this.ui = useService("ui");
     }
 
     get title() {
-        return _t("Order Details: ") + this.order.tracking_number;
+        return _t("Order Details: ") + this.props.order.tracking_number;
+    }
+
+    formatDateTime(dt) {
+        return formatDateTime(dt);
+    }
+
+    formatCurrency(amount) {
+        return formatCurrency(amount, this.props.order.currency_id);
     }
 
     getOrderFields() {
+        const order = this.props.order;
         return [
-            { label: _t("Session"), value: this.order.session_id.name },
-            { label: _t("Origin"), value: this.sources[this.order.source] },
-            { label: _t("Order Reference"), value: this.order.name },
-            { label: _t("Receipt Number"), value: this.order.pos_reference },
-            { label: _t("Served By"), value: this.order.user_id?.name },
-            { label: _t("Customer"), value: this.order.partner_id?.name },
+            {
+                id: "session",
+                label: _t("Session"),
+                value: order.session_id?.name,
+                condition: !!order.session_id?.name,
+            },
+            {
+                id: "origin",
+                label: _t("Origin"),
+                value: _t("Point of Sale"),
+                condition: order.source === "pos",
+            },
+            {
+                id: "order_reference",
+                label: _t("Order Reference"),
+                value: order.name,
+                condition: !!order.name,
+            },
+            {
+                id: "receipt_number",
+                label: _t("Receipt Number"),
+                value: order.pos_reference,
+                condition: !!order.pos_reference,
+            },
+            {
+                id: "served_by",
+                label: _t("Served By"),
+                value: order.user_id?.name,
+                condition: !!order.user_id?.name,
+            },
+            {
+                id: "customer",
+                label: _t("Customer"),
+                value: order.partner_id?.name,
+                condition: !!order.partner_id?.name,
+            },
+            {
+                id: "order_time",
+                label: _t("Order Time"),
+                value: this.formatDateTime(order.date_order),
+                condition: !!order.date_order,
+            },
         ];
     }
 }
