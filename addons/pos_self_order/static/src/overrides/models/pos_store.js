@@ -1,7 +1,21 @@
 import { PosStore } from "@point_of_sale/app/services/pos_store";
 import { patch } from "@web/core/utils/patch";
+import { changesToOrder } from "@point_of_sale/app/models/utils/order_change";
 
 patch(PosStore.prototype, {
+    setOrder(order) {
+        super.setOrder(order);
+        if (
+            order &&
+            ((order.source === "kiosk" && !order.online_payment_method_id) ||
+                (order.source === "mobile" && !order.use_self_order_online_payment)) &&
+            !Object.keys(order.last_order_preparation_change.lines).length
+        ) {
+            const orderChange = changesToOrder(order, this.config.printerCategories, false);
+            order.uiState.lastPrints.push(orderChange);
+            order.updateLastOrderChange();
+        }
+    },
     async getServerOrders() {
         if (this.session._self_ordering) {
             await this.data.loadServerOrders([

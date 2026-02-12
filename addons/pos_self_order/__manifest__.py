@@ -51,6 +51,7 @@
         'point_of_sale._assets_pos': [
             'pos_self_order/static/src/backend/qr_order_button/*',
             'pos_self_order/static/src/overrides/**/*',
+            "pos_self_order/static/src/app/store/order_change_receipt_template_inherit.xml",
         ],
         'web.assets_backend': [
             "pos_self_order/static/src/upgrade_selection_field.js",
