@@ -61,10 +61,10 @@ class ResPartner(models.Model):
 
     def l10n_tr_check_nilvera_customer(self):
         results = defaultdict(lambda: self.env['res.partner'])
-        for record in self:
-            if not record.vat:
-                return
-
+        # we want to skip records whose status is already set, unless we want to
+        # purposefully retry them
+        retry_existing = self.env.context.get('retry_existing', False)
+        for record in self.filtered(lambda p: p.vat and (retry_existing or p.l10n_tr_nilvera_customer_status == 'not_checked')):
             if record._check_nilvera_customer():
                 if len(record.l10n_tr_nilvera_customer_alias_ids) > 1:
                     results['multi_alias'] |= record
@@ -119,6 +119,10 @@ class ResPartner(models.Model):
                     # Remove aliases from database that are not in query result.
                     to_keep = persisted_aliases.filtered(lambda a: a.name not in aliases_to_remove)
                     (persisted_aliases - to_keep).unlink()
+
+                # commit the result of each request because in the case of a bulk verify the
+                # server can timeout and all progress will be undone
+                self.env.cr.commit()
                 return True
             else:
                 return False
