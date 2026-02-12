@@ -12,7 +12,7 @@ from reportlab.pdfgen.canvas import Canvas
 
 from odoo import fields, models, api, _
 from odoo.addons.iap.tools import iap_tools
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.pdf import PdfFileReader, PdfFileWriter
 from odoo.tools.safe_eval import safe_eval
 
@@ -81,6 +81,17 @@ class SnailmailLetter(models.Model):
             else:
                 letter.display_name = letter.partner_id.name
 
+    def _check_model_and_document_id(self, model=None, res_id=None):
+        model = model or self.model
+        res_id = res_id if res_id is not None else self.res_id
+
+        if model not in self.env:
+            raise ValidationError(_("Invalid Model : %s", model))
+        if not hasattr(self.env[model], 'message_post'):
+            raise ValidationError(_("Model not supported for snailmail."))
+        if res_id <= 0 or not self.env[model].browse(res_id).exists():
+            raise ValidationError(_("Invalid document reference."))
+
     @api.depends('model', 'res_id')
     def _compute_reference(self):
         for res in self:
@@ -89,6 +100,7 @@ class SnailmailLetter(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            self._check_model_and_document_id(vals['model'], vals['res_id'])
             msg_id = self.env[vals['model']].browse(vals['res_id']).message_post(
                 body=_("Letter sent by post with Snailmail"),
                 message_type='snailmail',
@@ -124,6 +136,8 @@ class SnailmailLetter(models.Model):
         return letters
 
     def write(self, vals):
+        if 'model' in vals or 'res_id' in vals:
+            self._check_model_and_document_id(vals.get('model'), vals.get('res_id'))
         res = super().write(vals)
         if 'attachment_id' in vals:
             self.attachment_id.check('read')
