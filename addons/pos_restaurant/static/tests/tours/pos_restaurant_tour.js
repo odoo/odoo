@@ -1101,14 +1101,12 @@ registry.category("web_tour.tours").add("test_sync_lines_qty_update", {
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("5"),
             ProductScreen.clickLine("Coca-Cola"),
-            Chrome.waitRequest(), // Wait for sync request (the order is created)
             assertCurrentOrderDirty(false),
             Numpad.click("3"),
             Order.hasLine({ productName: "Coca-Cola", quantity: 3 }),
             assertCurrentOrderDirty(true),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
-            Chrome.waitRequest(), // Wait for sync request
             FloorScreen.clickTable("5"),
             ProductScreen.isShown(),
             assertCurrentOrderDirty(false),
@@ -1125,14 +1123,12 @@ registry.category("web_tour.tours").add("test_sync_set_partner", {
             Order.hasLine({ productName: "Coca-Cola" }),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("5"),
-            Chrome.waitRequest(), // Wait for sync request
             assertCurrentOrderDirty(false),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("Acme Corporation"),
             assertCurrentOrderDirty(true),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
-            Chrome.waitRequest(), // Wait for sync request
         ].flat(),
 });
 
@@ -1146,14 +1142,12 @@ registry.category("web_tour.tours").add("test_sync_set_note", {
             Order.hasLine({ productName: "Coca-Cola" }),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("5"),
-            Chrome.waitRequest(), // Wait for sync request
             assertCurrentOrderDirty(false),
             ProductScreen.isShown(),
             ProductScreen.addInternalNote("Hello world"),
             assertCurrentOrderDirty(true),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
-            Chrome.waitRequest(), // Wait for sync request
         ].flat(),
 });
 
@@ -1167,7 +1161,6 @@ registry.category("web_tour.tours").add("test_sync_set_line_note", {
             Order.hasLine({ productName: "Coca-Cola" }),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("5"),
-            Chrome.waitRequest(), // Wait for sync request
             assertCurrentOrderDirty(false),
             ProductScreen.isShown(),
             ProductScreen.clickLine("Coca-Cola"),
@@ -1175,7 +1168,6 @@ registry.category("web_tour.tours").add("test_sync_set_line_note", {
             assertCurrentOrderDirty(true),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
-            Chrome.waitRequest(), // Wait for sync request
         ].flat(),
 });
 
@@ -1189,7 +1181,6 @@ registry.category("web_tour.tours").add("test_sync_set_pricelist", {
             Order.hasLine({ productName: "Coca-Cola" }),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("5"),
-            Chrome.waitRequest(), // Wait for sync request
             assertCurrentOrderDirty(false),
             ProductScreen.isShown(),
             ProductScreen.clickLine("Coca-Cola"),
@@ -1197,7 +1188,6 @@ registry.category("web_tour.tours").add("test_sync_set_pricelist", {
             assertCurrentOrderDirty(true),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
-            Chrome.waitRequest(), // Wait for sync request
         ].flat(),
 });
 
