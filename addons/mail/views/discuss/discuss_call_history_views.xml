@@ -6,10 +6,9 @@
             <field name="model">discuss.call.history</field>
             <field name="arch" type="xml">
                 <list string="Call History" sample="1">
-                    <field name="channel_id"/>
-                    <field name="start_dt"/>
-                    <field name="end_dt"/>
-                    <field name="duration_hour" widget="float_time"/>
+                    <field name="channel_id" string="Conversation"/>
+                    <field name="start_dt" string="Date" widget="daterange" options="{'end_date_field': 'end_dt'}"/>
+                    <field name="duration_hour" string="Duration" widget="float_time" options="{'show_seconds': false}"/>
                 </list>
             </field>
         </record>
