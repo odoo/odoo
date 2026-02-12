@@ -6090,6 +6090,23 @@ class AccountMove(models.Model):
             wizard.action_send_and_print(force_synchronous=force_synchronous)
         return wizard
 
+    def _get_invoice_pdf(self):
+        """ Generate the pdf of the bill.
+        Only used in substitution of `_get_invoice_pdf_proforma` called by `_get_invoice_legal_documents{_all}` for moves that are not invoice
+        :return dict: the PDF's data such as
+        {'filename': 'BILL_2026_01_0001.pdf', 'filetype': 'pdf', 'content': ...}
+        """
+        self.ensure_one()
+        assert self.is_sale_document() is False
+        filename = self._get_invoice_report_filename()
+        content, report_type = self.env['ir.actions.report']._pre_render_qweb_pdf('account.account_invoices', self.ids)
+        content_by_id = self.env['ir.actions.report']._get_splitted_report('account.account_invoices', content, report_type)
+        return {
+            'filename': filename,
+            'filetype': 'pdf',
+            'content': content_by_id[self.id],
+        }
+
     def _get_invoice_pdf_proforma(self):
         """ Generate the Proforma of the invoice.
         :return dict: the Proforma's data such as
@@ -6108,7 +6125,7 @@ class AccountMove(models.Model):
     def _get_invoice_legal_documents(self, filetype, allow_fallback=False):
         """ Retrieve the invoice legal document of type filetype.
         :param filetype: the type of legal document to retrieve. Example: 'pdf'.
-        :param bool allow_fallback: if True, returns a Proforma if the PDF invoice doesn't exist.
+        :param bool allow_fallback: if True and the PDF invoice doesn't exist, returns a Proforma for invoices and a regular pdf for bills.
         :return dict: the invoice PDF data such as
         {'filename': 'INV_2024_0001.pdf', 'filetype': 'pdf', 'content':...}
         To extend to add more supported filetypes.
@@ -6122,11 +6139,11 @@ class AccountMove(models.Model):
                     'content': invoice_pdf.raw,
                 }
             elif allow_fallback:
-                return self._get_invoice_pdf_proforma()
+                return self._get_invoice_pdf_proforma() if self.is_sale_document() else self._get_invoice_pdf()
 
     def _get_invoice_legal_documents_all(self, allow_fallback=False):
         """ Retrieve the invoice legal attachments: PDF, XML, ...
-        :param bool allow_fallback: if True, returns a Proforma if the PDF invoice doesn't exist.
+        :param bool allow_fallback: if True and the PDF invoice doesn't exist, returns a Proforma for invoices and a regular pdf for bills.
         :return list: a list of the attachments data such as
         [{'filename': 'INV_2024_0001.pdf', 'filetype': 'pdf', 'content': ...}, ...]
         """
@@ -6142,7 +6159,7 @@ class AccountMove(models.Model):
                 for attachment in attachments
             ]
         elif allow_fallback:
-            return [self._get_invoice_pdf_proforma()]
+            return [self._get_invoice_pdf_proforma()] if self.is_sale_document() else [self._get_invoice_pdf()]
 
     def _get_invoice_report_filename(self, extension='pdf'):
         """ Get the filename of the generated invoice report with extension file. """

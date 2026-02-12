@@ -170,8 +170,8 @@ class PortalAccount(CustomerPortal):
                 return request.make_response(zip_content, headers)
 
         elif report_type in ('html', 'pdf', 'text'):
-            has_generated_invoice = bool(invoice_sudo.invoice_pdf_report_id)
-            request.update_context(proforma_invoice=not has_generated_invoice)
+            proforma = not invoice_sudo.invoice_pdf_report_id and invoice_sudo.is_sale_document()
+            request.update_context(proforma_invoice=proforma)
             # Use the template set on the related partner if there is.
             # This is not perfect as the invoice can still have been computed with another template, but it's a slight fix/imp for stable.
             pdf_report_name = invoice_sudo.partner_id.invoice_template_pdf_report_id.report_name or 'account.account_invoices'
