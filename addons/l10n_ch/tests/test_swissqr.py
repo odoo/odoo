@@ -89,7 +89,6 @@ class TestSwissQR(AccountTestInvoicingCommon):
             {
                 'acc_number': number,
                 'partner_id': self.env.user.company_id.partner_id.id,
-                'allow_out_payment': True,
             }
         )
 
