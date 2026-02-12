@@ -17,10 +17,10 @@
                 <attribute name="invisible" separator=" or " add="l10n_tr_nilvera_send_status == 'error' and l10n_tr_nilvera_uuid"/>
             </xpath>
             <xpath expr="//div[@name='journal_div']" position="after">
-                <label for="l10n_tr_nilvera_send_status" invisible="country_code != 'TR' or state == 'draft' or move_type not in ['out_invoice', 'out_refund', 'in_invoice']"/>
+                <label for="l10n_tr_nilvera_send_status" invisible="country_code != 'TR' or state == 'draft' or move_type not in ['out_invoice', 'out_refund']"/>
                 <div name="nilvera_div"
                      class="d-flex"
-                     invisible="country_code != 'TR' or state == 'draft' or move_type not in ['out_invoice', 'out_refund', 'in_invoice']">
+                     invisible="country_code != 'TR' or state == 'draft' or move_type not in ['out_invoice', 'out_refund']">
                     <field name="l10n_tr_nilvera_send_status" class="oe_inline"/>
                 </div>
                 <field name="l10n_tr_is_export_invoice"
@@ -46,6 +46,7 @@
                            readonly="state in ['cancel', 'posted']"/>
                     <span class="o_form_label mx-3" invisible="l10n_tr_nilvera_customer_status != 'einvoice'">is</span>
                     <field name="l10n_tr_gib_invoice_type"
+                           required="l10n_tr_nilvera_customer_status == 'einvoice' and l10n_tr_gib_invoice_scenario"
                            invisible="l10n_tr_nilvera_customer_status not in ['einvoice', 'earchive']"
                            readonly="state in ['cancel', 'posted']"/>
                 </div>
@@ -53,9 +54,10 @@
                        domain="[('code_type', 'in', l10n_tr_exemption_code_domain_list or [])]"
                        invisible="not l10n_tr_exemption_code_domain_list
                                   or l10n_tr_nilvera_customer_status not in ['einvoice', 'earchive']"
-                       required="l10n_tr_is_export_invoice or l10n_tr_gib_invoice_type == 'IHRACKAYITLI'"
+                       required="l10n_tr_is_export_invoice or l10n_tr_gib_invoice_type in ('IHRACKAYITLI', 'ISTISNA')"
                        readonly="state in ['cancel', 'posted']"/>
                 <field name="l10n_tr_shipping_type"
+                       required="l10n_tr_is_export_invoice"
                        invisible="not l10n_tr_exemption_code_domain_list
                                   or l10n_tr_nilvera_customer_status != 'earchive'
                                   or not l10n_tr_is_export_invoice"
