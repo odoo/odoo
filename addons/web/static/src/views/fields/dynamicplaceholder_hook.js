@@ -27,6 +27,7 @@ export function useDynamicPlaceholder() {
          * @param {function} options.validateCallback
          * @param {function} options.closeCallback
          * @param {function} [options.positionCallback]
+         * @param {function} options.preventClose
          */
          async open(
              element,
@@ -52,6 +53,7 @@ export function useDynamicPlaceholder() {
                     closeOnClickAway: true,
                     onClose: options.closeCallback,
                     onPositioned: options.positionCallback,
+                    preventClose: options.preventClose,
                 }
             );
         }
