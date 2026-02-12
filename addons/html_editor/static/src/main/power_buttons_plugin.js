@@ -4,6 +4,7 @@ import { closestBlock } from "@html_editor/utils/blocks";
 import { isEditorTab, isEmptyBlock } from "@html_editor/utils/dom_info";
 import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
 import { omit, pick } from "@web/core/utils/objects";
+import { debounce } from "@web/core/utils/timing";
 
 /** @typedef {import("./powerbox/powerbox_plugin").PowerboxCommand} PowerboxCommand */
 /** @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection */
@@ -63,7 +64,7 @@ export class PowerButtonsPlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         layout_geometry_change_handlers: this.updatePowerButtons.bind(this),
-        selectionchange_handlers: this.updatePowerButtons.bind(this),
+        selectionchange_handlers: this.triggerDebouncedUpdatePowerButtons.bind(this),
         post_mount_component_handlers: this.updatePowerButtons.bind(this),
     };
 
@@ -72,6 +73,12 @@ export class PowerButtonsPlugin extends Plugin {
             "oe-power-buttons-overlay"
         );
         this.createPowerButtons();
+        const shouldDebounce = this.config.debouncePowerbuttons !== false;
+        if (shouldDebounce) {
+            this.debouncedUpdatePowerButtons = debounce(this.updatePowerButtons.bind(this), 30);
+        } else {
+            this.debouncedUpdatePowerButtons = this.updatePowerButtons.bind(this);
+        }
     }
 
     createPowerButtons() {
@@ -117,6 +124,11 @@ export class PowerButtonsPlugin extends Plugin {
         this.powerButtonsContainer.className = `o_we_power_buttons d-flex justify-content-center invisible position-absolute`;
         this.powerButtonsContainer.append(...this.descriptionToElementMap.values());
         this.powerButtonsOverlay.append(this.powerButtonsContainer);
+    }
+
+    triggerDebouncedUpdatePowerButtons() {
+        this.powerButtonsContainer.classList.add("invisible");
+        this.debouncedUpdatePowerButtons();
     }
 
     updatePowerButtons() {

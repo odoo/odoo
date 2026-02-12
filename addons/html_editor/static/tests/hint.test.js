@@ -8,7 +8,7 @@ import {
     setContent,
     setSelection,
 } from "./_helpers/selection";
-import { insertText } from "./_helpers/user_actions";
+import { insertText, simulateArrowKeyPress } from "./_helpers/user_actions";
 
 test("hints are removed when editor is destroyed", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>", {});
@@ -211,4 +211,26 @@ test("hint for blockquote should have the same padding as its text content", asy
     expect(hintStyle.content).toBe("none");
     const paddingText = getComputedStyle(blockquote).padding;
     expect(paddingHint).toBe(paddingText);
+});
+
+test("should debounce hint on selection change", async () => {
+    const { el, editor } = await setupEditor(
+        "<p>[]<br></p><p><br></p><p><br></p><p><br></p><p><br></p>",
+        {
+            config: { debounceHints: true },
+        }
+    );
+    expect(getContent(el)).toBe(`<p>[]<br></p><p><br></p><p><br></p><p><br></p><p><br></p>`);
+    await simulateArrowKeyPress(editor, "ArrowDown");
+    expect(getContent(el)).toBe(`<p><br></p><p>[]<br></p><p><br></p><p><br></p><p><br></p>`);
+    await simulateArrowKeyPress(editor, "ArrowDown");
+    expect(getContent(el)).toBe(`<p><br></p><p><br></p><p>[]<br></p><p><br></p><p><br></p>`);
+    await simulateArrowKeyPress(editor, "ArrowDown");
+    expect(getContent(el)).toBe(`<p><br></p><p><br></p><p><br></p><p>[]<br></p><p><br></p>`);
+    await simulateArrowKeyPress(editor, "ArrowDown");
+    await animationFrame();
+    await new Promise((resolve) => setTimeout(resolve, 30));
+    expect(getContent(el)).toBe(
+        `<p><br></p><p><br></p><p><br></p><p><br></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+    );
 });
