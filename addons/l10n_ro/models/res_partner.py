@@ -24,7 +24,10 @@ class ResPartner(models.Model):
         # OVERRIDE
         # In Romania, if you have a VAT number, it's also your company registry (CUI) number
         super()._compute_company_registry()
-        for partner in self.filtered(lambda p: p.country_id.code == 'RO' and p.vat):
-            vat_country, vat_number = self._split_vat(partner.vat)
-            if vat_country in ('RO', '') and self._check_vat_number('RO', vat_number):
-                partner.company_registry = vat_number
+        for partner in self.filtered(lambda p: p._deduce_country_code() == 'RO'):
+            if partner.vat:
+                vat_country, vat_number = self._split_vat(partner.vat)
+                if vat_country in ('RO', '') and self._check_vat_number('RO', vat_number):
+                    partner.company_registry = vat_number
+            else:
+                partner.company_registry = False
