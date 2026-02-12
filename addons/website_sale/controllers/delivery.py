@@ -227,11 +227,13 @@ class Delivery(WebsiteSale):
         ):
             order_sudo._set_delivery_method(cheapest_dm)
 
+        amount_without_delivery = order_sudo._compute_amount_total_without_delivery()
+
         # Return the list of delivery methods available for the sales order.
         return {
             'delivery_methods': sorted_delivery_methods,
             'adjusted_minor_amount': payment_utils.to_minor_currency_units(
-                order_sudo.amount_total, order_sudo.currency_id
+                amount_without_delivery, order_sudo.currency_id
             ),
         }
 
