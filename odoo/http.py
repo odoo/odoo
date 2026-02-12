@@ -1793,7 +1793,7 @@ class Request:
 
         if session.db != dbname:
             if session.db:
-                _logger.warning("Logged into database %r, but dbfilter rejects it; logging session out.", session.db)
+                _logger.warning("Logged into database %r on %r host, but dbfilter rejects it; logging session out.", session.db, host)
                 session.logout(keep_db=False)
             session.db = dbname
 
