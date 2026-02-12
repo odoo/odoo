@@ -30,7 +30,9 @@ import { advanceTime, animationFrame, tick } from "@odoo/hoot-mock";
 import {
     Command,
     destroyApp,
+    getMockEnv,
     getService,
+    assignDialogTestEnv,
     mountWithCleanup,
     onRpc,
     patchWithCleanup,
@@ -1432,6 +1434,37 @@ test("can quickly add emoji with ':' keyword", async () => {
     await contains(".o-navigable:text('😅 :sweat_smile:')");
     await htmlInsertText(editor, ":s", { replace: true });
     await contains(".o-we-SuggestionList", { count: 0 });
+});
+
+test("Can dismiss mail composer with 500+ active_ids", async () => {
+    // When there are more than 500 active_ids, _compute_res_ids
+    // short-circuits and leaves res_ids empty for performance reasons.
+    // In that case, the code must rely on active_ids and dismissing
+    // the dialog must not crash.
+    const pyEnv = await startServer();
+    assignDialogTestEnv();
+    const partnerId = pyEnv["res.partner"].create({ name: "Partner" });
+    registerArchs({
+        "mail.compose.message,false,form": `
+            <form string="Compose Email" js_class="mail_composer_form">
+                <field name="model"/>
+                <field name="partner_ids"/>
+                <field name="partner_cc_ids"/>
+            </form>`,
+    });
+    await start();
+    const env = getMockEnv();
+    const composerId = pyEnv["mail.compose.message"].create({
+        model: "res.partner",
+        res_ids: "", // simulate >500 active_ids case
+        partner_ids: [],
+    });
+    await openFormView("mail.compose.message", composerId, {
+        context: { active_ids: [partnerId] },
+    });
+    expect(env.dialogData).not.toBeEmpty()
+    // Dialog is closed without errors
+    await env.dialogData.dismiss()
 });
 
 test("composer reply-to message is restored on thread change", async () => {
