@@ -6129,6 +6129,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         if self.invoice_pdf_report_id:
             attachments = self.env['account.move.send']._get_invoice_extra_attachments(self)
+<<<<<<< 20a32afe81b6730b8d6836a4e1bad1b479286a47
             return [
                 {
                     'filename': attachment.name,
@@ -6139,6 +6140,54 @@ class AccountMove(models.Model):
             ]
         elif allow_fallback:
             return [self._get_invoice_pdf_proforma()]
+||||||| 873192a642fb94790bfe4ebfd91b8277f757cb64
+        else:
+            content, _ = self.env['ir.actions.report']._render('account.account_invoices', self.ids, data={'proforma': True})
+            attachments = self.env['ir.attachment'].new({
+                'raw': content,
+                'name': self._get_invoice_proforma_pdf_report_filename(),
+                'mimetype': 'application/pdf',
+                'res_model': self._name,
+                'res_id': self.id,
+            })
+        return attachments
+
+    def get_invoice_pdf_report_attachment(self):
+        if len(self) < 2 and self.invoice_pdf_report_id:
+            # if the Send & Print succeeded
+            return self.invoice_pdf_report_id.raw, self.invoice_pdf_report_id.name
+        elif len(self) < 2 and self.message_main_attachment_id:
+            # if the Send & Print failed with fallback=True -> proforma PDF
+            return self.message_main_attachment_id.raw, self.message_main_attachment_id.name
+        # all other cases
+        pdf_content = self.env['ir.actions.report']._render('account.account_invoices', self.ids)[0]
+        pdf_name = self._get_invoice_report_filename() if len(self) == 1 else "Invoices.pdf"
+        return pdf_content, pdf_name
+=======
+        else:
+            proforma = self.is_sale_document(())
+            content, _ = self.env['ir.actions.report']._render('account.account_invoices', self.ids, data={'proforma': proforma})
+            attachments = self.env['ir.attachment'].new({
+                'raw': content,
+                'name': self._get_invoice_proforma_pdf_report_filename() if proforma else self._get_invoice_report_filename(),
+                'mimetype': 'application/pdf',
+                'res_model': self._name,
+                'res_id': self.id,
+            })
+        return attachments
+
+    def get_invoice_pdf_report_attachment(self):
+        if len(self) < 2 and self.invoice_pdf_report_id:
+            # if the Send & Print succeeded
+            return self.invoice_pdf_report_id.raw, self.invoice_pdf_report_id.name
+        elif len(self) < 2 and self.message_main_attachment_id:
+            # if the Send & Print failed with fallback=True -> proforma PDF
+            return self.message_main_attachment_id.raw, self.message_main_attachment_id.name
+        # all other cases
+        pdf_content = self.env['ir.actions.report']._render('account.account_invoices', self.ids)[0]
+        pdf_name = self._get_invoice_report_filename() if len(self) == 1 else "Invoices.pdf"
+        return pdf_content, pdf_name
+>>>>>>> 3d593fb60367fb11deea476030418cacb0de1144
 
     def _get_invoice_report_filename(self, extension='pdf'):
         """ Get the filename of the generated invoice report with extension file. """
