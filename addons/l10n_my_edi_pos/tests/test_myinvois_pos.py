@@ -170,21 +170,33 @@ class TestMyInvoisPoS(TestPoSCommon):
     @mute_logger('odoo.addons.point_of_sale.models.pos_order')
     def test_consolidate_invoices_from_multiple_configs(self):
         """ When consolidating from multiple configs at once, we expect one Consolidated Invoice per config. """
+        orders = self.env['pos.order']
         with freeze_time("2025-01-01"):
             with self.with_pos_session():
-                first_order = self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)]})
+                orders |= self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)]})
             self.config = self.other_config  # Switch config
             with self.with_pos_session():
-                second_order = self._create_order({'pos_order_lines_ui_args': [(self.product_two, 1.0)]})
-            # Consolidate them
-            wizard = self.env['myinvois.consolidate.invoice.wizard'].create({
-                'date_from': '2025-01-01',
-                'date_to': '2025-01-31',
-                'consolidation_type': 'pos',
-            })
-            wizard.button_consolidate()
-            consolidated_invoice = (first_order | second_order).consolidated_invoice_ids
-            self.assertEqual(len(consolidated_invoice), 2)  # One consolidated invoice holds up to 100 lines
+                orders |= self._create_order({'pos_order_lines_ui_args': [(self.product_two, 1.0)]})
+
+        with freeze_time("2025-01-02"):
+            with self.with_pos_session():
+                orders |= self._create_order({'pos_order_lines_ui_args': [(self.product_one, 1.0)]})
+                orders |= self._create_order({'pos_order_lines_ui_args': [(self.product_two, 1.0)]})
+            self.config = self.basic_config  # Switch config
+            with self.with_pos_session():
+                orders |= self._create_order({'pos_order_lines_ui_args': [(self.product_two, 1.0)]})
+        # Consolidate them
+        wizard = self.env['myinvois.consolidate.invoice.wizard'].create({
+            'date_from': '2025-01-01',
+            'date_to': '2025-01-31',
+            'consolidation_type': 'pos',
+        })
+        wizard.button_consolidate()
+        consolidated_invoice = orders.consolidated_invoice_ids
+        self.assertEqual(len(consolidated_invoice), 2)  # One consolidated invoice holds up to 100 lines
+        config1, config2 = consolidated_invoice
+        self.assertEqual(config1.linked_order_count, 2)
+        self.assertEqual(config2.linked_order_count, 3)
 
     @mute_logger('odoo.addons.point_of_sale.models.pos_order')
     def test_consolidate_invoices_limit(self):
