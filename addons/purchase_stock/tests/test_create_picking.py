@@ -39,6 +39,9 @@ class TestCreatePicking(ProductVariantsCommon):
         }
 
     def test_00_create_picking(self):
+        """
+        Check that purchase orders and receipts are properly synchronized.
+        """
 
         # Draft purchase order created
         self.po = self.env['purchase.order'].create(self.po_vals)
@@ -54,9 +57,9 @@ class TestCreatePicking(ProductVariantsCommon):
         self.assertEqual(len(self.po.order_line.move_ids), 1, 'The two moves should be merged in one')
 
         # Validate first shipment
-        self.picking = self.po.picking_ids[0]
-        self.picking.move_ids.picked = True
-        self.picking._action_done()
+        receipt_1 = self.po.picking_ids[0]
+        receipt_1.move_ids.picked = True
+        receipt_1._action_done()
         self.assertEqual(self.po.order_line.mapped('qty_received'), [7.0], 'Purchase: all products should be received')
 
         # create new order line
@@ -71,6 +74,24 @@ class TestCreatePicking(ProductVariantsCommon):
         self.assertEqual(self.po.incoming_picking_count, 2, 'New picking should be created')
         moves = self.po.order_line.mapped('move_ids').filtered(lambda x: x.state not in ('done', 'cancel'))
         self.assertEqual(len(moves), 1, 'One moves should have been created')
+        # In second receipt, add product which is not in the PO.
+        receipt_2 = self.po.picking_ids - receipt_1
+        receipt_2.move_ids.quantity = 1
+        receipt_2_form = Form(receipt_2)
+        with receipt_2_form.move_ids.new() as move:
+            move.product_id = self.product_sofa_blue
+            move.quantity = 1.0
+        receipt_2 = receipt_2_form.save()
+        Form.from_action(self.env, receipt_2.button_validate()).save().process()
+        backorder = receipt_2.backorder_ids
+        receipt_type_id = self.ref('stock.picking_type_in')
+
+        self.assertEqual(self.po.picking_ids, receipt_1 | receipt_2 | backorder)
+        self.assertRecordValues(receipt_2.move_line_ids, [
+            {'product_id': self.product_id_2.id, 'quantity': 1, 'picking_type_id': receipt_type_id},
+            {'product_id': self.product_sofa_blue.id, 'quantity': 1, 'picking_type_id': receipt_type_id}])
+        self.assertRecordValues(backorder.move_line_ids, [
+            {'product_id': self.product_id_2.id, 'quantity': 4, 'picking_type_id': receipt_type_id}])
 
     def test_01_check_double_validation(self):
 
