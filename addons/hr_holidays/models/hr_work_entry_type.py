@@ -278,13 +278,12 @@ class HrWorkEntryType(models.Model):
             work_entry_type.virtual_remaining_leaves = work_entry_type_tuple[1].get('virtual_remaining_leaves', 0)
 
     def _compute_allocation_count(self):
-        min_datetime = fields.Datetime.to_string(datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0))
-        max_datetime = fields.Datetime.to_string(datetime.now().replace(month=12, day=31, hour=23, minute=59, second=59))
+        today = fields.Date.to_string(date.today())
         domain = [
             ('work_entry_type_id', 'in', self.ids),
-            ('date_from', '>=', min_datetime),
-            ('date_from', '<=', max_datetime),
-            ('state', 'in', ('confirm', 'validate', 'validate1')),
+            ('date_from', '<=', today),
+            '|', ('date_to', '=', False), ('date_to', '>=', today),
+            ('state', 'in', ('confirm', 'validate')),
         ]
 
         grouped_res = self.env['hr.leave.allocation']._read_group(
