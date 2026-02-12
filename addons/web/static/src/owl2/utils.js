@@ -121,9 +121,9 @@ export function useState(data) {
  * @param {() => void} [callback]
  */
 export function reactive(data, callback) {
-    if (callback) {
-        console.trace("reactive called with callback");
-    }
+    // if (callback) {
+    //     console.trace("reactive called with callback");
+    // }
     return owl.reactive(data, callback);
 }
 
