@@ -1,0 +1,10 @@
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_hr.OrderDetailsDialog" t-inherit="point_of_sale.OrderDetailsDialog" t-inherit-mode="extension">
+        <xpath expr="//div[div[text()='Served By']]" position="replace">
+            <div class="col-sm-6 d-flex field-details flex-column" t-if="order.employee_id?.name">
+                <div class="text-muted small">Served By</div>
+                <div class="fw-medium" t-esc="order.employee_id.name"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

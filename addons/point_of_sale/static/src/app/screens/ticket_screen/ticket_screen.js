@@ -107,6 +107,10 @@ export class TicketScreen extends Component {
             // Show updated list of synced orders when going back to the screen.
             this.onFilterSelected(this.state.filter);
         });
+        // this._fetchSyncedOrders().then(() => {
+        //     const paidOrder = this.pos.models["pos.order"].find((o) => o.state === "paid");
+        //     this.pos.showOrderDetails(paidOrder);
+        // });
     }
     async onClickPageNbr() {
         const nbr = await makeAwaitable(this.dialog, NumberPopup, {

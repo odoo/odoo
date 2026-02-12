@@ -213,7 +213,7 @@ registry.category("web_tour.tours").add("test_edit_payments_with_tip", {
                 Bank: "$ 2.00",
                 Cash: "$ 6.00",
             }),
-            Dialog.discard(),
+            Dialog.confirm("Close", ".btn-secondary"),
             // Tip after payment case
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("2"),
