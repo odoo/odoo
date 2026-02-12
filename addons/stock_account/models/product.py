@@ -477,7 +477,7 @@ class ProductProduct(models.Model):
                     product.sudo().with_context(disable_auto_revaluation=True).standard_price = last_in._get_price_unit()
                 continue
             new_standard_price = product._run_avco()[0]
-            if new_standard_price:
+            if new_standard_price and product.qty_available > 0:
                 product.with_context(disable_auto_revaluation=True).sudo().standard_price = new_standard_price
 
 
