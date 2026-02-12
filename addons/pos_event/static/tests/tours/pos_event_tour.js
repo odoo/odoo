@@ -62,6 +62,32 @@ registry.category("web_tour.tours").add("SellingEventInPosWithChoiceAnswers", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("CheckEventTicketPrice", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("My Awesome Event"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.confirm(),
+            EventTourUtils.answerTicketSelectQuestion("1", "Question1", "Q1-Answer1"),
+            EventTourUtils.answerGlobalSelectQuestion("Question2", "Q2-Answer1"),
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs("200.00"),
+            ProductScreen.clickPriceList("Special Pricelist"),
+            ProductScreen.totalAmountIs("120.00"),
+            ProductScreen.clickDisplayedProduct("My Awesome Event"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.confirm(),
+            EventTourUtils.answerTicketSelectQuestion("1", "Question1", "Q1-Answer1"),
+            EventTourUtils.answerGlobalSelectQuestion("Question2", "Q2-Answer1"),
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs("240.00"),
+            ProductScreen.clickPriceList("Test Pricelist"),
+            ProductScreen.totalAmountIs("400.00"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_selling_multiple_ticket_saved", {
     steps: () =>
         [

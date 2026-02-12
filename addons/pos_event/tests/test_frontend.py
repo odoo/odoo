@@ -140,6 +140,37 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(len(event_registration.registration_answer_ids), 3)
         self.assertEqual(event_answer_name, ['Q1-Answer1', 'Q2-Answer1', 'Q3-Answer1'])
 
+    def test_event_pricelist_pos(self):
+        self.pos_user.write({
+            'group_ids': [
+                (4, self.env.ref('event.group_event_user').id),
+            ]
+        })
+        self.main_pos_config.write({
+            "limit_categories": True,
+            "iface_available_categ_ids": [(6, 0, [self.event_category.id])],
+        })
+        self.event_ticket_product = self.test_event.event_ticket_ids[0].product_id
+        self.special_pricelist = self.env['product.pricelist'].create({
+            'name': 'Special Pricelist',
+            'item_ids': [Command.create({
+                'compute_price': 'fixed',
+                'applied_on': '1_product',
+                'fixed_price': 120,
+                'product_id': self.event_ticket_product.id,
+            })],
+        })
+        self.event_ticket_product.product_tmpl_id.write({
+            'list_price': 50,
+        })
+
+        self.main_pos_config.write({
+            'pricelist_id': self.pricelist,
+            'available_pricelist_ids': [(6, 0, [self.pricelist.id, self.special_pricelist.id])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CheckEventTicketPrice', login="pos_user")
+
     def test_selling_multislot_event_in_pos(self):
         self.pos_user.write({
             'group_ids': [
@@ -222,7 +253,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'iface_available_categ_ids': [(6, 0, [self.event_category.id])],
         })
         self.env['res.partner'].search([('name', '=', 'Partner Test 1')]).write({
-            'property_product_pricelist': self.main_pos_config.available_pricelist_ids.filtered(lambda pl: pl.item_ids)[0],
+            'property_product_pricelist': self.main_pos_config.available_pricelist_ids.filtered(lambda pl: pl.item_ids)[1],
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_orderline_price_remain_same_as_ticket_price')
