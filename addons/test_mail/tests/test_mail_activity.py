@@ -124,11 +124,19 @@ class TestActivityRights(TestActivityCommon):
         with self.assertRaises(exceptions.AccessError):
             (access_ro + access_locked).with_user(self.user_employee).check_access('write')
 
+<<<<<<< 873d7f3e31abd1598a44ffa6f9548b895bd2643a
         # '_get_mail_message_access' allows to post, hence posting activities
         access_open.with_user(self.user_employee).activity_schedule(
+||||||| c2595e47e3b36120f4c3da8bfe8c16f6c5969a70
+        # '_mail_get_operation_for_mail_message_operation' allows to post, hence posting activities
+        access_open.with_user(self.user_employee).activity_schedule(
+=======
+        # '_mail_get_operation_for_mail_message_operation' allows to post, hence posting activities
+        emp_new_1 = access_open.with_user(self.user_employee).activity_schedule(
+>>>>>>> 493a8e49ce3496d318db7c0a5569843064b6f8e1
             'test_mail.mail_act_test_todo_generic',
         )
-        access_ro.with_user(self.user_employee).activity_schedule(
+        emp_new_2 = access_ro.with_user(self.user_employee).activity_schedule(
             'test_mail.mail_act_test_todo_generic',
         )
 
@@ -137,12 +145,26 @@ class TestActivityRights(TestActivityCommon):
                 'test_mail.mail_act_test_todo_generic',
             )
 
+<<<<<<< 873d7f3e31abd1598a44ffa6f9548b895bd2643a
         self.env.invalidate_all()
         self.env.transaction.clear_access_cache()
         # check read access correctly uses '_mail_get_operation_for_mail_message_operation'
         admin_activities[0].with_user(self.user_employee).read(['summary'])
         admin_activities[1].with_user(self.user_employee).read(['summary'])
 
+||||||| c2595e47e3b36120f4c3da8bfe8c16f6c5969a70
+=======
+        self.env.invalidate_all()
+        # check read access correctly uses '_mail_get_operation_for_mail_message_operation'
+        admin_activities[0].with_user(self.user_employee).read(['summary'])
+        admin_activities[1].with_user(self.user_employee).read(['summary'])
+
+        self.env.invalidate_all()
+        # check search correctly uses '_get_mail_message_access'
+        found = self.env['mail.activity'].with_user(self.user_employee).search([('res_model', '=', 'mail.test.access.custo')])
+        self.assertEqual(found, admin_activities[:2] + emp_new_1 + emp_new_2, 'Should respect _get_mail_message_access, reading non locked records')
+
+>>>>>>> 493a8e49ce3496d318db7c0a5569843064b6f8e1
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_security_user_noaccess_automated(self):
         def _employee_crash(records, operation):

@@ -543,13 +543,23 @@ class TestMailMessageAccess(MessageAccessCommon):
                 'subtype_id': False,
             }, True, 'Pure log (no subtype, even comment) cannot be read by portal users'),
             (self.record_portal.message_ids[0], {
+                'subtype_id': False,
+            }, True, 'Pure log (no subtype, even comment) cannot be read by portal users'),
+            (self.record_portal.message_ids[0], {
                 'is_internal': True,
             }, True, 'Internal message (comment) cannot be read by portal users'),
             (self.record_portal.message_ids[0], {
                 'is_internal': True,
                 'message_type': 'notification',
+<<<<<<< 873d7f3e31abd1598a44ffa6f9548b895bd2643a
             }, True, 'Internal message (notification) cannot be read by portal users'),
             # forbidden: other
+||||||| c2595e47e3b36120f4c3da8bfe8c16f6c5969a70
+            }, False, 'Internal message (notification) can be read by portal users'),
+=======
+            }, False, 'Internal message (notification) can be read by portal users'),
+            # forbidden: other
+>>>>>>> 493a8e49ce3496d318db7c0a5569843064b6f8e1
             (self.record_portal.message_ids[0], {
                 'message_type': 'user_notification',
             }, True, 'User notifications for other people can never be read by portal users'),

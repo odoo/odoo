@@ -1303,6 +1303,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         self.assertEqual(len(rec1.message_ids), 3)
 
 
+<<<<<<< 873d7f3e31abd1598a44ffa6f9548b895bd2643a
 @tagged('mail_performance', 'WIP', 'post_install', '-at_install')
 class TestMailAccessPerformance(BaseMailPerformance):
 
@@ -1367,6 +1368,111 @@ class TestMailAccessPerformance(BaseMailPerformance):
         self.assertEqual(found, self.messages - self.messages_emp_nope)
 
 
+||||||| c2595e47e3b36120f4c3da8bfe8c16f6c5969a70
+=======
+@tagged('mail_performance', 'WIP', 'post_install', '-at_install')
+class TestMailAccessPerformance(BaseMailPerformance):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.records_access = cls.env['mail.test.access'].create([
+            {'name': 'Access.1', 'access': 'public'},
+            {'name': 'Access.2', 'access': 'logged'},
+            {'name': 'Access.3', 'access': 'followers'},
+        ])
+        cls.records_access_custo = cls.env['mail.test.access.custo'].create([
+            {'name': 'Custo.1'},
+            {'name': 'Custo.2', 'is_readonly': True},  # read access, should be able to read messages / activities
+            {'name': 'Custo.3', 'is_locked': True},  # not able to read messages / activities
+        ])
+        cls.records_mc = cls.env['mail.test.multi.company'].create([
+            {'name': 'MC.1'},
+            {'name': 'MC.2'},
+            {'name': 'MC.3'},
+        ])
+
+        # messages to check access
+        cls.messages = cls.env['mail.message']
+        for records_model in [cls.records_access, cls.records_access_custo, cls.records_mc]:
+            for record in records_model:
+                cls.messages += record.with_user(cls.user_admin).message_post(
+                    body=f'Posting on {record.name}',
+                    message_type='comment',
+                    subtype_xmlid='mail.mt_comment',
+                )
+        # message employee cannot read due to specific rules (aka locked record)
+        cls.messages_emp_nope = cls.messages[5]
+
+        # activities to check access
+        cls.activities = cls.env['mail.activity']
+        for records_model in [cls.records_access, cls.records_access_custo, cls.records_mc]:
+            cls.activities += cls.env['mail.activity'].create([
+                {
+                    'res_id': record.id,
+                    'res_model_id': cls.env['ir.model']._get_id(record._name),
+                    'summary': f'TestActivity {idx} on {record._name},{record.id} for {user.name}',
+                    'user_id': user.id,
+                }
+                for record in records_model
+                for user in (cls.user_admin + cls.user_employee)
+                for idx in range(2)
+            ])
+            records_model.message_unsubscribe(partner_ids=(cls.user_admin + cls.user_employee).partner_id.ids)
+        # activities employee cannot read due to specific rules (other user on non open custo)
+        cls.activities_emp_nope = cls.activities.filtered(
+            lambda a: a.res_model == 'mail.test.access.custo' and a.res_id == cls.records_access_custo[2].id and a.user_id == cls.user_admin
+        )
+
+    @users('employee')
+    @warmup
+    def test_activity_read(self):
+        # queries
+        # fetch activities: 1
+        # filter records: 3 (1 / model)
+        # '_fetch_query': 1
+        profile = self.profile() if self.warm else nullcontext()
+        with self.assertQueryCount(employee=5), profile:
+            content = (self.activities - self.activities_emp_nope).with_env(self.env).read(['summary'])
+        self.assertEqual(len(content), len(self.activities - self.activities_emp_nope))
+
+    @users('employee')
+    @warmup
+    def test_activity_search(self):
+        # queries
+        # select mail.activity: 1
+        # filter records: 3 (1 / model)
+        profile = self.profile() if self.warm else nullcontext()
+        with self.assertQueryCount(employee=4), profile:
+            found = self.activities.with_env(self.env).search([('summary', 'ilike', 'TestActivity')])
+        self.assertEqual(found, self.activities - self.activities_emp_nope)
+
+    @users('employee')
+    @warmup
+    def test_message_read(self):
+        # queries
+        # fetch messages: 1
+        # filter records: 3 (1 / model)
+        # 'read': 1
+        profile = self.profile() if self.warm else nullcontext()
+        with self.assertQueryCount(employee=5), profile:
+            content = (self.messages - self.messages_emp_nope).with_env(self.env).read(['body'])
+        self.assertEqual(len(content), len(self.messages - self.messages_emp_nope))
+
+    @users('employee')
+    @warmup
+    def test_message_search(self):
+        # queries
+        # select mail.message: 1
+        # filter records: 3 (1 / model)
+        profile = self.profile() if self.warm else nullcontext()
+        with self.assertQueryCount(employee=4), profile:
+            found = self.messages.with_env(self.env).search([('body', 'ilike', 'Posting on ')])
+        self.assertEqual(found, self.messages - self.messages_emp_nope)
+
+
+>>>>>>> 493a8e49ce3496d318db7c0a5569843064b6f8e1
 @tagged('mail_performance', 'mail_store', 'post_install', '-at_install')
 class TestMessageToStorePerformance(BaseMailPerformance):
 
