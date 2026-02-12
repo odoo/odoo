@@ -247,7 +247,7 @@ export function setActiveProperties(fieldEl, field) {
     const classList = fieldEl.classList;
     const textarea = fieldEl.querySelector("textarea");
     const input = fieldEl.querySelector(
-        'input[type="text"], input[type="email"], input[type="number"], input[type="tel"], input[type="url"], textarea'
+        'input[type="text"], input[type="email"], input[type="number"], input[type="tel"], input[type="url"], textarea, input[type="password"]'
     );
     const fileInputEl = fieldEl.querySelector("input[type=file]");
     const description = fieldEl.querySelector(".s_website_form_field_description");
