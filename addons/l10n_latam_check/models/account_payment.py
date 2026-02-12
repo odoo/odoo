@@ -177,7 +177,7 @@ class AccountPayment(models.Model):
         check_ids = self.l10n_latam_new_check_ids | self.l10n_latam_move_check_ids
         # if only one check we don't create the split line, we add same data on liquidity line ?
 
-        if self.payment_method_code == 'own_checks' and self.payment_type == 'outbound' and len(self.l10n_latam_new_check_ids) > 1 and check_ids:
+        if self.payment_method_code == 'own_checks' and self.payment_type == 'outbound' and len(self.l10n_latam_new_check_ids) >= 1 and check_ids:
             liquidity_balance_total = 0.0
             line_vals = []
             for check in check_ids:
@@ -191,7 +191,7 @@ class AccountPayment(models.Model):
                     liquidity_amount_currency,
                     self.company_id.currency_id,
                     self.company_id,
-                    self
+                    self.date
                 )
                 line_vals.append({
                     'name': _(
