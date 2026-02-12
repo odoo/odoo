@@ -284,7 +284,7 @@ def upgrade_this(file_manager, log_info, log_error):
     # Step 2: Add this. to all non local template vars (except those coming from external t-call)
     for fileno, file in enumerate(web_files, start=1):
         try:
-            file.content = update_template(file.content, outside_vars)
+            file.content = update_template(file.content, outside_vars, inside_vars)
         except Exception as e:
             log_error(file.path, e)
 
