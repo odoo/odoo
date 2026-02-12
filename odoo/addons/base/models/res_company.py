@@ -385,8 +385,15 @@ class Company(models.Model):
                     ('id', 'child_of', company.id),
                     ('id', '!=', company.id),
                 ])
+
+                changed_vals = {}
                 for fname in sorted(changed):
-                    branches[fname] = company[fname]
+                    changed_value = company[fname]
+                    if self._fields[fname].type == "many2one":
+                        changed_value = changed_value.id
+                    changed_vals[fname] = changed_value
+
+                branches.write(changed_vals)
 
         if companies_needs_l10n:
             companies_needs_l10n.install_l10n_modules()
