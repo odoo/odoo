@@ -58,7 +58,9 @@ const threadPatch = {
     /** @override */
     fetchInitialMessages() {
         if (this.channel?.self_member_id && this.props.thread.scrollUnread) {
-            toRaw(this.props.thread).loadAround(this.channel.self_member_id.new_message_separator);
+            toRaw(this.props.thread).loadAround({
+                messageId: this.channel.self_member_id.new_message_separator,
+            });
         } else {
             super.fetchInitialMessages();
         }
@@ -70,11 +72,10 @@ const threadPatch = {
         return _t("1 new message");
     },
     async onClickUnreadMessagesBanner() {
-        await this.props.thread.loadAround(this.channel.self_member_id.new_message_separator_ui);
-        this.messageHighlight?.highlightMessage(
-            this.props.thread.firstUnreadMessage,
-            this.props.thread
-        );
+        await this.props.thread.loadAround({
+            messageId: this.channel.self_member_id.new_message_separator_ui,
+        });
+        this.messageHighlight?.highlightMessage(this.props.thread.firstUnreadMessage);
     },
 };
 patch(Thread.prototype, threadPatch);

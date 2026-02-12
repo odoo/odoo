@@ -18,6 +18,13 @@ patch(Chatter.prototype, {
         });
     },
 
+    get extraMessageFetchRouteParams() {
+        return {
+            ...super.extraMessageFetchRouteParams,
+            ...(this.props.projectSharingId ? { only_portal: true } : {}),
+        };
+    },
+
     async toggleIsFollower() {
         this.state.isFollower = await this.orm.call(
             this.props.threadModel,
