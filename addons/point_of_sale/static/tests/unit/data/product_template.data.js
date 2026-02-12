@@ -639,7 +639,6 @@ export class ProductTemplate extends models.ServerModel {
             uom_id: 1,
             description_sale: false,
             description: false,
-            tracking: "none",
             type: "consu",
             service_tracking: "no",
             is_storable: false,
