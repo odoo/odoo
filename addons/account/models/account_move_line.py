@@ -1530,7 +1530,11 @@ class AccountMoveLine(models.Model):
                 and not self.env.is_protected(self._fields['balance'], line)
                 and (not changed('balance') or (line not in before and not line.balance))
             ):
-                balance = line.company_id.currency_id.round(line.amount_currency / line.currency_rate)
+                if changed('currency_rate') and line in before and line.display_type == 'tax':
+                    before_line_rate = before[line]['currency_rate']
+                    balance = line.company_id.currency_id.round(line.balance * before_line_rate / line.currency_rate)
+                else:
+                    balance = line.company_id.currency_id.round(line.amount_currency / line.currency_rate)
                 line.balance = balance
 
         # Since this method is called during the sync, inside of `create`/`write`, these fields
