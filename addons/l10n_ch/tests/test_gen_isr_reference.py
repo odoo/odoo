@@ -28,6 +28,7 @@ class TestGenISRReference(AccountTestInvoicingCommon):
                 "l10n_ch_isr_subscription_chf": "01-162-8",
                 "bank_id": cls.bank.id,
                 "partner_id": cls.partner_a.id,
+                'allow_out_payment': True,
             }
         )
         cls.bank_acc_qriban = cls.env["res.partner.bank"].create(
@@ -35,6 +36,7 @@ class TestGenISRReference(AccountTestInvoicingCommon):
                 "acc_number": QR_IBAN,
                 "bank_id": cls.bank.id,
                 "partner_id": cls.partner_a.id,
+                'allow_out_payment': True,
             }
         )
         cls.product_a.taxes_id = cls.product_b.taxes_id = None
