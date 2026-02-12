@@ -79,11 +79,18 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
         if (!anchorNode || !focusNode || !anchorNode.isConnected || !focusNode.isConnected) {
             return;
         }
-        const anchorBlock =
-            closestElement(anchorNode, (el) => isBlock(el) && el.parentElement === this.editable) ||
-            closestBlock(anchorNode);
+        let anchorBlock = closestBlock(anchorNode);
         if (!anchorBlock) {
             return;
+        }
+        if (anchorBlock.matches("[data-embedded-props] *")) {
+            const rootAnchorBlock = closestElement(
+                anchorNode,
+                (el) => isBlock(el) && el.parentElement === this.editable
+            );
+            if (rootAnchorBlock) {
+                anchorBlock = rootAnchorBlock;
+            }
         }
 
         const containerRect = this.avatarOverlay.getBoundingClientRect();
