@@ -95,10 +95,10 @@ class StockLandedCost(models.Model):
         self.button_cancel()
         return super().unlink()
 
-    def _track_subtype(self, init_values):
-        if 'state' in init_values and self.state == 'done':
+    def _track_subtype(self, track_init_values):
+        if 'state' in track_init_values and self.state == 'done':
             return self.env.ref('stock_landed_costs.mt_stock_landed_cost_open')
-        return super()._track_subtype(init_values)
+        return super()._track_subtype(track_init_values)
 
     def button_cancel(self):
         if any(cost.state == 'done' for cost in self):

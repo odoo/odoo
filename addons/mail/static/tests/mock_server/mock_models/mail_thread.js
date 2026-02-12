@@ -613,8 +613,8 @@ export class MailThread extends models.ServerModel {
         return initialTrackedFieldValuesByRecordId;
     }
 
-    /** @param {Object} initial_values */
-    _track_subtype(initial_values) {
+    /** @param {Object} track_init_values */
+    _track_subtype(track_init_values) {
         return false;
     }
 

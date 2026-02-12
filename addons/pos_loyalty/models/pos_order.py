@@ -244,6 +244,7 @@ class PosOrder(models.Model):
         return updated_gift_cards
 
     def _add_log_for_gift_cards(self, gift_cards):
+        # TDE FIXME: change to real tracking
         body = Markup(
             """
                 <span class='o-mail-Message-trackingOld text-muted fw-bold'>{message}<span/>

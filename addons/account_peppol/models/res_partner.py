@@ -85,6 +85,7 @@ class ResPartner(models.Model):
         old_label = selection_values[old_value] if old_value else False  # get translated labels
         new_label = selection_values[new_value] if new_value else False
 
+        # TDE FIXME: change to real tracking
         body = Markup("""
             <ul>
                 <li>

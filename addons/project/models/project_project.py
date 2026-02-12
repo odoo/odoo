@@ -877,11 +877,11 @@ class ProjectProject(models.Model):
             })
         return res
 
-    def _track_subtype(self, init_values):
+    def _track_subtype(self, track_init_values):
         self.ensure_one()
-        if 'stage_id' in init_values:
+        if 'stage_id' in track_init_values:
             return self.env.ref('project.mt_project_stage_change')
-        return super()._track_subtype(init_values)
+        return super()._track_subtype(track_init_values)
 
     def _mail_get_message_subtypes(self):
         res = super()._mail_get_message_subtypes()

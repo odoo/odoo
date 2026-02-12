@@ -495,8 +495,8 @@ class TestTrackingTemplate(TestTrackingCommon):
             'use_default_to': True,
         } for n in range(2)])
 
-        def _track_subtype(self, init_values):
-            if 'container_id' in init_values and self.container_id:
+        def _track_subtype(self, track_init_values):
+            if 'container_id' in track_init_values and self.container_id:
                 return self.env.ref('test_mail.st_mail_test_ticket_container_upd')
             return self.env.ref('mail.mt_note')
         self.patch(self.registry['mail.test.ticket'], '_track_subtype', _track_subtype)

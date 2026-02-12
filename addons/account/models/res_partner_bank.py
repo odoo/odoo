@@ -355,7 +355,6 @@ class ResPartnerBank(models.Model):
             field = self._fields[field_name]
             if not (hasattr(field, 'related') and field.related) and hasattr(field, 'tracking') and field.tracking:
                 tracking_fields.append(field_name)
-        fields_definition = self.env['res.partner.bank'].fields_get(tracking_fields)
 
         # Get initial values for each account
         for account in self:
@@ -395,8 +394,10 @@ class ResPartnerBank(models.Model):
             self._check_allow_out_payment()
 
         # Log changes to move lines on each move
+        # TDE CLEANME: to be cleaned using standard track API
+        tracked_fields_get = self.env['res.partner.bank'].fields_get(tracking_fields)
         for account, initial_values in account_initial_values.items():
-            tracking_value_ids = account._mail_track(fields_definition, initial_values)[1]
+            tracking_value_ids = account._mail_track(tracked_fields_get, initial_values)[1]
             if tracking_value_ids:
                 msg = _("Bank Account %s updated", account._get_html_link(title=f"#{account.id}"))
                 account.partner_id._message_log(body=msg, tracking_value_ids=tracking_value_ids)

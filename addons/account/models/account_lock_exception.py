@@ -1,5 +1,5 @@
 from odoo import _, api, fields, models
-from odoo.fields import Command, Domain
+from odoo.fields import Domain
 from odoo.tools.misc import format_datetime
 from odoo.exceptions import UserError, ValidationError
 
@@ -192,10 +192,9 @@ class AccountLock_Exception(models.Model):
             field = exception.lock_date_field
             value = exception.lock_date
             field_info = exception.fields_get([field])[field]
-            tracking_values = self.env['mail.tracking.value']._create_tracking_values(
+            tracking_value = self.env['mail.tracking.value']._create_tracking_values(
                 company[field], value, field, field_info, exception,
             )
-            tracking_value_ids = [Command.create(tracking_values)]
 
             # In case there is no explicit end datetime "forever" is implied by not mentioning an end datetime
             end_datetime_string = _(" valid until %s", format_datetime(self.env, exception.end_datetime)) if exception.end_datetime else ""
@@ -209,7 +208,7 @@ class AccountLock_Exception(models.Model):
             )
             company.sudo().message_post(
                 body=company_chatter_message,
-                tracking_value_ids=tracking_value_ids,
+                tracking_value_ids=[(0, 0, tracking_value)],
             )
 
         exceptions._invalidate_affected_user_lock_dates()
