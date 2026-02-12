@@ -233,7 +233,7 @@ class AccountMove(models.Model):
                             indicates a client error (4xx), or if a server error occurs (500).
         :return: None
         """
-        with _get_nilvera_client(self.env.company) as client:
+        with _get_nilvera_client(self.env._, self.env.company) as client:
             response = client.request(
                 "POST",
                 endpoint,
@@ -287,7 +287,7 @@ class AccountMove(models.Model):
 
     def _l10n_tr_nilvera_get_submitted_document_status(self):
         for company, invoices in self.grouped("company_id").items():
-            with _get_nilvera_client(company) as client:
+            with _get_nilvera_client(self.env._, company) as client:
                 for invoice in invoices:
                     invoice_channel = invoice._l10n_tr_get_status_invoice_channel()
                     document_category = invoice._l10n_tr_get_document_category(invoice_channel)
@@ -316,7 +316,7 @@ class AccountMove(models.Model):
                         invoice.message_post(body=_("The invoice status couldn't be retrieved from Nilvera."))
 
     def _l10n_tr_nilvera_get_documents(self, invoice_channel="einvoice", document_category="Purchase", journal_type="purchase"):
-        with _get_nilvera_client(self.env.company) as client:
+        with _get_nilvera_client(self.env._, self.env.company) as client:
             endpoint = f"/{invoice_channel}/{quote(document_category)}"
             last_fetched_date_field_name = f"l10n_tr_{invoice_channel}_{journal_type}_last_fetched_date"
             start_date = self.env.company[last_fetched_date_field_name]
@@ -454,7 +454,7 @@ class AccountMove(models.Model):
         invoice.with_context(no_new_invoice=True).message_post(attachment_ids=attachment.ids)
 
     def l10n_tr_nilvera_get_pdf(self):
-        with _get_nilvera_client(self.env.company) as client:
+        with _get_nilvera_client(self.env._, self.env.company) as client:
             for invoice in self:
                 if (
                         invoice.l10n_tr_nilvera_customer_status not in {'einvoice', 'earchive'}
@@ -525,7 +525,7 @@ class AccountMove(models.Model):
             ('l10n_tr_nilvera_pdf_file', '=', False),
         ], limit=batch_size)
         for company, invoices in invoices_to_fetch_pdf.grouped("company_id").items():
-            with _get_nilvera_client(company) as client:
+            with _get_nilvera_client(self.env._, company) as client:
                 for invoice in invoices:
                     self._l10n_tr_nilvera_add_pdf_to_invoice(
                         client,
