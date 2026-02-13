@@ -395,7 +395,13 @@ export class FormatPlugin extends Plugin {
             selectedTextNodes[0] &&
             selectedTextNodes[0].textContent === "\u200B"
         ) {
-            this.dependencies.selection.setCursorStart(selectedTextNodes[0]);
+            // We set the cursor at the end of the selected ZWS text node, to
+            // avoid an issue on ios safari where the selection is collapsed,
+            // and set the format as bold/italian, the cursor is not properly
+            // updated. Even though the selection is properly set, safari seems
+            // to force the cursor to stay at the old position at rendering
+            // if there's no node exists between new position and the old one.
+            this.dependencies.selection.setCursorEnd(selectedTextNodes[0]);
         } else if (selectedTextNodes.length) {
             const firstNode = selectedTextNodes[0];
             const lastNode = selectedTextNodes[selectedTextNodes.length - 1];
