@@ -191,7 +191,7 @@
                     t-att-data-line-id="line.id"
                     t-att-data-product-id="line.product_id.id"
                     t-att-value="line._get_displayed_quantity()"
-                    t-attf-name="cart-quantity-{{line.id}}-{{int(is_mobile or False)}}"
+                    t-attf-name="cart-quantity-{{line.id}}{{'-mobile' if is_mobile else '')}}"
                     aria-label="Quantity"
                 />
                 <t t-if="line._get_shop_warning(clear=False)">

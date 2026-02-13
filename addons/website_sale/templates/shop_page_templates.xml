@@ -60,13 +60,14 @@
                         t-elif="ptav.display_type == 'color'"
                         class="d-flex"
                     >
-                        <img
+                        <i
                             t-if="ptav.product_attribute_value_id.image"
                             t-att-src="'/web/image/product.attribute.value/%s/image' % ptav.product_attribute_value_id.id"
                             class="css_attribute_preview_thumbnail cursor-pointer d-block"
                             t-att-title="ptav.name"
                         />
                         <i
+                            t-elif="not ptav.is_custom"
                             t-att-style="'background: ' + str(ptav.html_color or ptav.name)"
                             class="css_attribute_color cursor-pointer d-block"
                             t-att-title="ptav.name"
