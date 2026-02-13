@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
@@ -19,6 +20,13 @@ class ButtonWithNotification extends Component {
         const result = await this.orm.call(this.props.record.resModel, this.props.method, [
             this.props.record.resId,
         ]);
+        if (!result) {
+            this.notification.add(
+                _t("User email address is not set. Please configure your email before proceeding."),
+                { type: "danger" }
+            );
+            return;
+        }
         const message = result.toast_message;
         this.notification.add(message, { type: "success" });
     }
