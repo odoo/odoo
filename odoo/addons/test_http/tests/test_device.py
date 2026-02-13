@@ -481,6 +481,27 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 1)
 
+    @mute_logger('odoo.http')
+    def test_ensure_single_log_if_retrying(self):
+        with patch('time.sleep', return_value=None):
+            self.authenticate(self.user_admin.login, self.user_admin.login)
+            self.hit('2026-01-01 08:00:00', '/test_http/trigger-retrying')
+            # Ensure log is inserted only once if retrying is triggered
+            sessions, devices, logs = self.get_devices(self.user_admin)
+            self.assertEqual(len(sessions), 1)
+            self.assertEqual(len(devices), 1)
+            self.assertEqual(len(logs), 1)
+
+    def test_ensure_single_log_if_no_save_session(self):
+        self.authenticate(self.user_admin.login, self.user_admin.login)
+        self.hit('2026-01-01 08:00:00', '/test_http/no_save_session')
+        self.hit('2026-01-01 08:00:00', '/test_http/no_save_session')
+        # Ensure log is inserted only once if we hit a route with `save_session=False`
+        sessions, devices, logs = self.get_devices(self.user_admin)
+        self.assertEqual(len(sessions), 1)
+        self.assertEqual(len(devices), 1)
+        self.assertEqual(len(logs), 1)
+
     # --------------------
     # FINGERPRINT
     # --------------------
