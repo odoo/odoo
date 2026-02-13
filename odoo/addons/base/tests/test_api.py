@@ -478,8 +478,7 @@ class TestAPI(SavepointCaseWithUserDemo):
             result = partners.browse()
             for child in children:
                 result += child
-            main_size = ((main_size + 1) * CHILDREN)  # FIXME should not grow this much
-            self.assertEqual(len(list(result._prefetch_ids)), main_size)
+            self.assertEqual(len(list(result._prefetch_ids)), main_size + CHILDREN)
 
             # country of first child (harder case)
             result = partners.country_id.browse()
