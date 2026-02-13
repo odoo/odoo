@@ -145,6 +145,55 @@ test("Selecting a choice calls onSelect and the displayed value is updated", asy
     expect.verifySteps(["world"]);
 });
 
+test.tags("desktop");
+test.debug("Can be rendered 2", async () => {
+    class MyParent extends Component {
+        static props = ["*"];
+        static components = { SelectMenu };
+        static template = xml`
+            <SelectMenu
+                groups="state.groups"
+                choices="state.choices"
+                value="state.value"
+                onSelect.bind="onSelect"
+            />
+        `;
+        setup() {
+            this.state = useState({
+                value: "world",
+                choices: [{ label: "Hello", value: "hello" }],
+                groups: [
+                    {
+                        label: "Group A",
+                        choices: [{ label: "World", value: "world" }],
+                    },
+                ],
+            });
+        }
+
+        async onSelect(value) {
+            expect.step(value);
+            this.state.choices = [];
+            this.state.groups = [];
+            delete MyParent.state;
+        }
+    }
+    await mountSingleApp(MyParent);
+
+    expect(".o_select_menu").toHaveCount(1);
+    expect(".o_select_menu_toggler").toHaveCount(1);
+
+    await click(".o_select_menu_toggler");
+    await click(".o-dropdown-item");
+    // expect(".o_select_menu_menu").toHaveCount(0);
+    // expect(".o_select_menu_item").toHaveCount(0);
+    // await animationFrame();
+
+    // expect(".o_select_menu_menu").toHaveCount(1);
+    // expect(".o_select_menu_item").toHaveCount(2);
+    // expect(queryAllTexts(".o_select_menu_item")).toEqual(["Hello", "World"]);
+});
+
 test("Close dropdown on click outside", async () => {
     await mountSingleApp(Parent);
 
