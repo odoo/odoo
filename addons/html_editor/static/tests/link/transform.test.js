@@ -74,7 +74,7 @@ test("should transform url after space (1)", async () => {
             await insertSpace(editor);
         },
         contentAfter:
-            '<p>a http://test.com b <a href="http://test.com">http://test.com</a>&nbsp;[] c http://test.com d</p>',
+            '<p>a http://test.com b <a href="http://test.com">http://test.com</a> []&nbsp;c http://test.com d</p>',
     });
 });
 test("should transform url after space (2)", async () => {
@@ -90,7 +90,7 @@ test("should transform url after space (2)", async () => {
             // Action: insert space
             await insertSpace(editor);
         },
-        contentAfter: '<p><a href="http://test.com">http://test.com</a>&nbsp;[]</p>',
+        contentAfter: '<p><a href="http://test.com">http://test.com</a> []</p>',
     });
 });
 
@@ -100,28 +100,28 @@ test("should transform url followed by punctuation characters after space (1)", 
         stepFunction: async (editor) => {
             await insertSpace(editor);
         },
-        contentAfter: '<p><a href="http://test.com">http://test.com</a>.&nbsp;[]</p>',
+        contentAfter: '<p><a href="http://test.com">http://test.com</a>. []</p>',
     });
 });
 test("should transform url followed by punctuation characters after space (2)", async () => {
     await testEditor({
         contentBefore: "<p>test.com...[]</p>",
         stepFunction: (editor) => insertSpace(editor),
-        contentAfter: '<p><a href="http://test.com">test.com</a>...&nbsp;[]</p>',
+        contentAfter: '<p><a href="http://test.com">test.com</a>... []</p>',
     });
 });
 test("should transform url followed by punctuation characters after space (3)", async () => {
     await testEditor({
         contentBefore: "<p>test.com,[]</p>",
         stepFunction: (editor) => insertSpace(editor),
-        contentAfter: '<p><a href="http://test.com">test.com</a>,&nbsp;[]</p>',
+        contentAfter: '<p><a href="http://test.com">test.com</a>, []</p>',
     });
 });
 test("should transform url followed by punctuation characters after space (4)", async () => {
     await testEditor({
         contentBefore: "<p>test.com,hello[]</p>",
         stepFunction: (editor) => insertSpace(editor),
-        contentAfter: '<p><a href="http://test.com">test.com</a>,hello&nbsp;[]</p>',
+        contentAfter: '<p><a href="http://test.com">test.com</a>,hello []</p>',
     });
 });
 test("should transform url followed by punctuation characters after space (5)", async () => {
@@ -137,7 +137,7 @@ test("should transform url followed by punctuation characters after space (5)", 
             // Action: insert space
             await insertSpace(editor);
         },
-        contentAfter: '<p><a href="http://test.com">http://test.com</a>&nbsp;[]</p>',
+        contentAfter: '<p><a href="http://test.com">http://test.com</a> []</p>',
     });
 });
 
@@ -190,13 +190,11 @@ test("transform text url into link and undo it", async () => {
     const { el, editor } = await setupEditor(`<p>[]</p>`);
     await insertText(editor, "www.abc.jpg ");
     expect(cleanLinkArtifacts(getContent(el))).toBe(
-        '<p><a href="http://www.abc.jpg">www.abc.jpg</a>&nbsp;[]</p>'
+        '<p><a href="http://www.abc.jpg">www.abc.jpg</a> []</p>'
     );
 
     undo(editor);
-    expect(cleanLinkArtifacts(getContent(el))).toBe(
-        '<p><a href="http://www.abc.jpg">www.abc.jpg</a>[]</p>'
-    );
+    expect(cleanLinkArtifacts(getContent(el))).toBe("<p>www.abc.jpg []</p>");
 
     undo(editor);
     expect(cleanLinkArtifacts(getContent(el))).toBe("<p>www.abc.jpg[]</p>");

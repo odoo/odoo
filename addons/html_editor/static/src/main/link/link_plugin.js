@@ -6,7 +6,11 @@ import {
     descendants,
     selectElements,
 } from "@html_editor/utils/dom_traversal";
-import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import {
+    callbacksForCursorUpdate,
+    findInSelection,
+    normalizeDeepCursorPosition,
+} from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
 import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
@@ -232,7 +236,10 @@ export class LinkPlugin extends Plugin {
 
         /** Handlers */
         beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),
-        input_handlers: this.onInputDeleteNormalizeLink.bind(this),
+        input_handlers: [
+            this.onInputAutoconvertToLink.bind(this),
+            this.onInputDeleteNormalizeLink.bind(this),
+        ],
         before_delete_handlers: this.updateCurrentLinkSyncState.bind(this),
         delete_handlers: this.onInputDeleteNormalizeLink.bind(this),
         before_paste_handlers: this.updateCurrentLinkSyncState.bind(this),
@@ -820,28 +827,6 @@ export class LinkPlugin extends Plugin {
                 this.dependencies.history.addStep();
             }
         }
-        if (ev.inputType === "insertText" && ev.data === " ") {
-            const nodeForSelectionRestore = this.handleAutomaticLinkInsertion();
-            if (nodeForSelectionRestore) {
-                // Since we manually insert a space here, we will be adding a history step
-                // after link creation with selection at the end of the link and another
-                // after inserting the space. So first undo will remove the space, and the
-                // second will undo the link creation.
-                this.dependencies.selection.setSelection({
-                    anchorNode: nodeForSelectionRestore,
-                    anchorOffset: 0,
-                });
-                this.dependencies.history.addStep();
-                nodeForSelectionRestore.textContent =
-                    "\u00A0" + nodeForSelectionRestore.textContent;
-                this.dependencies.selection.setSelection({
-                    anchorNode: nodeForSelectionRestore,
-                    anchorOffset: 1,
-                });
-                this.dependencies.history.addStep();
-                ev.preventDefault();
-            }
-        }
         // Firefox: avoid corrupted selection inside link.
         const selection = this.document.getSelection();
         if (
@@ -856,6 +841,32 @@ export class LinkPlugin extends Plugin {
             selection.collapse(selection.anchorNode, offset);
         }
         this.updateCurrentLinkSyncState();
+    }
+
+    onInputAutoconvertToLink(ev) {
+        if (ev.inputType === "insertText" && ev.data === " ") {
+            const restoreSelection = this.dependencies.history.makeSavePoint();
+            const selection = this.document.getSelection();
+            const [node, offset] = normalizeDeepCursorPosition(
+                selection.anchorNode,
+                selection.anchorOffset
+            );
+            this.dependencies.selection.setSelection({
+                anchorNode: node,
+                anchorOffset: offset > 0 ? offset - 1 : offset,
+            });
+            const nodeForSelectionRestore = this.handleAutomaticLinkInsertion();
+            if (nodeForSelectionRestore) {
+                this.dependencies.selection.setSelection({
+                    anchorNode: nodeForSelectionRestore,
+                    anchorOffset: 1,
+                });
+                this.dependencies.history.addStep();
+                ev.preventDefault();
+            } else {
+                restoreSelection();
+            }
+        }
     }
 
     onInputDeleteNormalizeLink() {
