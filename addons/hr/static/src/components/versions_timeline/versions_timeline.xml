@@ -5,6 +5,7 @@
         <div t-ref="root" position="after">
             <div class="o_arrow_button_wrapper">
                 <button
+                    t-if="showAddButton"
                     t-ref="datetime-picker-target-version"
                     title="New Employee Record"
                     t-on-click="onClickDateTimePickerBtn"

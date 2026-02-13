@@ -512,10 +512,10 @@ class HrEmployee(models.Model):
         for employee in self:
             employee.work_location_type = employee.version_id.work_location_id.location_type or 'other'
 
-    @api.depends('version_ids.date_version', 'version_ids.active', 'active')
+    @api.depends('version_ids.date_version', 'version_ids.active')
     def _compute_current_version_id(self):
         for employee in self:
-            version = self.env['hr.version'].search(
+            version = self.env['hr.version'].with_context(active_test=employee.active).search(
                 [('employee_id', 'in', employee.ids), ('date_version', '<=', fields.Date.today())],
                 order='date_version desc',
                 limit=1,
@@ -523,8 +523,8 @@ class HrEmployee(models.Model):
             new_current_version = False
             if version:
                 new_current_version = version
-            elif employee.version_ids:
-                new_current_version = employee.version_ids[0]
+            elif employee.with_context(active_test=employee.active).version_ids:
+                new_current_version = employee.with_context(active_test=employee.active).version_ids[0]
             # To not trigger computed properties if still the same version
             if employee.current_version_id != new_current_version:
                 employee.current_version_id = new_current_version
@@ -759,6 +759,20 @@ class HrEmployee(models.Model):
         return False, False
 
     def _compute_versions_count(self):
+        if archived_employees := self.filtered(lambda e: not e.active):
+            version_read_group = self.env['hr.version'].with_context(active_test=False)._read_group(
+                [('employee_id', 'in', self.ids)],
+                ['employee_id', 'active'],
+                ['id:count'],
+            )
+            version_count_per_employee = {
+                employee: count
+                for employee, active, count in version_read_group
+                if active != employee in archived_employees
+            }
+            for employee in self:
+                employee.versions_count = version_count_per_employee.get(employee, 0)
+            return
         version_count_per_employee = dict(
             self.env['hr.version']._read_group(
                 [('employee_id', 'in', self.ids)],
@@ -1444,7 +1458,10 @@ We can redirect you to the public employee list."""
 
     def unlink(self):
         resources = self.mapped('resource_id')
+        # TODO: [XBO] (in master) would be better to define ondelete='cascade' on employee_id field in `hr.version`
+        versions = self.with_context(active_test=False).version_ids
         super().unlink()
+        versions.unlink()
         return resources.unlink()
 
     def _get_employee_m2o_to_empty_on_archived_employees(self):
@@ -1460,6 +1477,7 @@ We can redirect you to the public employee list."""
             'departure_description': False,
             'departure_date': False
         })
+        self.version_id.action_unarchive()
         return res
 
     def action_archive(self):
@@ -1490,6 +1508,7 @@ We can redirect you to the public employee list."""
                     'context': {'active_id': self.id},
                     'views': [[False, 'form']]
                 }
+        self.version_ids.action_archive()
         return res
 
     @api.onchange('company_id')
@@ -1759,6 +1778,9 @@ We can redirect you to the public employee list."""
 
     def action_open_versions(self):
         self.ensure_one()
+        context = {}
+        if not self.active:
+            context['search_default_archived'] = 1
         return {
             'type': 'ir.actions.act_window',
             'name': self.employee_id.name + self.env._(' Records'),
@@ -1767,7 +1789,8 @@ We can redirect you to the public employee list."""
             'view_mode': 'list,graph,pivot',
             'views': [(self.env.ref('hr.hr_version_list_view').id, 'list'), (False, 'graph'), (False, 'pivot')],
             'domain': [('employee_id', '=', self.employee_id.id)],
-            'search_view_id': self.env.ref('hr.hr_version_search_view').id
+            'search_view_id': self.env.ref('hr.hr_version_search_view').id,
+            'context': context,
         }
 
     def _get_store_avatar_card_fields(self, target):

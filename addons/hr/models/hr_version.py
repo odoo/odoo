@@ -281,19 +281,19 @@ class HrVersion(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_last_version(self):
-        for employee_id, versions in self.grouped('employee_id').items():
-            if employee_id.version_ids == versions:
+        for employee, versions in self.grouped('employee_id').items():
+            if employee.active and employee.version_ids == versions:
                 raise ValidationError(
-                    self.env._('Employee %s must always have at least one active version.') % employee_id.name
+                    self.env._('Employee %s must always have at least one active version.', employee.name),
                 )
 
     def write(self, vals):
         # Employee Versions Validation
         if 'employee_id' in vals:
-            if self.filtered(lambda v: v.employee_id and v.employee_id.version_ids <= self and vals['employee_id'] != v.employee_id.id):
+            if self.filtered(lambda v: v.employee_id.active and v.employee_id.version_ids <= self and vals['employee_id'] != v.employee_id.id):
                 raise ValidationError(self.env._("Cannot unassign all the active versions of an employee."))
         if 'active' in vals and not vals['active']:
-            if self.filtered(lambda v: v.employee_id and v.employee_id.version_ids <= self):
+            if self.filtered(lambda v: v.employee_id.active and v.employee_id.version_ids <= self):
                 raise ValidationError(self.env._("Cannot archive all the active versions of an employee."))
 
         if self.env.context.get('sync_contract_dates') or ("contract_date_start" not in vals and "contract_date_end" not in vals):

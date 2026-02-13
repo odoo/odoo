@@ -712,6 +712,26 @@ class TestHrEmployee(TestHrCommon):
         self.assertNotEqual(partner.email, second_employee.work_email)
         self.assertNotEqual(partner.email, first_employee.work_email)
 
+    def test_unlink_employee_also_unlink_related_versions(self):
+        self.employee.create_version({
+            'date_version': fields.Date.today() - relativedelta(days=10),
+        })
+        self.employee_without_image.create_version({
+            'date_version': fields.Date.today() - relativedelta(days=5),
+        })
+        self.employee_without_image.create_version({
+            'date_version': fields.Date.today() - relativedelta(days=1),
+            'active': False,
+        })
+        self.assertEqual(len(self.employee.version_ids), 2)
+        self.assertEqual(len(self.employee_without_image.version_ids), 2)
+        (self.employee + self.employee_without_image).invalidate_recordset(['version_ids'])
+        self.assertEqual(len(self.employee.with_context(active_test=False).version_ids), 2)
+        self.assertEqual(len(self.employee_without_image.with_context(active_test=False).version_ids), 3)
+
+        employee_versions = self.employee.with_context(active_test=False).version_ids + self.employee_without_image.with_context(active_test=False).version_ids
+        (self.employee + self.employee_without_image).unlink()
+        self.assertFalse(employee_versions.exists())
 
 @tagged('-at_install', 'post_install')
 class TestHrEmployeeLinks(HttpCase):
