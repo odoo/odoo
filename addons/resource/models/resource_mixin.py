@@ -38,7 +38,7 @@ class ResourceMixin(models.AbstractModel):
                 resources_vals_list.append(
                     self._prepare_resource_values(
                         vals,
-                        vals.get('tz', False) or companies_tz.get(vals.get('company_id'))
+                        vals.pop('tz', False) or companies_tz.get(vals.get('company_id'))
                     )
                 )
             elif not vals.get('tz'):
