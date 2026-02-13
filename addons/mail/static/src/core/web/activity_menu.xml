@@ -16,7 +16,12 @@
                     <t t-foreach="store.activityGroups" t-as="group" t-key="group_index" name="activityGroupLoop">
                         <div class="o-mail-ActivityGroup list-group-item list-group-item-action d-flex p-2 cursor-pointer"
                              t-att-data-model_name="group.model" t-on-click="() => this.openActivityGroup(group)">
-                            <img alt="Activity" t-att-src="group.icon"/>
+                            <t t-if="group.icon_type === 'fa'">
+                                <i t-att-class="group.icon" t-attf-style="color: {{ group.icon_color }}; background-color: {{ group.icon_bg }};" class="rounded"/>
+                            </t>
+                            <t t-else="">
+                                <img alt="Activity" t-att-src="group.icon"/>
+                            </t>
                             <div class="flex-grow-1 overflow-hidden">
                                 <div class="d-flex px-2" name="activityTitle" t-out="group.name"/>
                                 <div t-if="group.type === 'activity'" class="d-flex">
