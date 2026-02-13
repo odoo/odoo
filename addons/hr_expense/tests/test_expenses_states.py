@@ -61,7 +61,7 @@ class TestExpensesStates(TestExpenseCommon, MailCase):
             {'state': 'posted', 'payment_state': 'not_paid'},
         ])
 
-        self.assertEqual('in_process', self.expenses_company.account_move_id.origin_payment_id.state)
+        self.assertEqual('paid', self.expenses_company.account_move_id.origin_payment_id.state)
         self.assertFalse(self.expenses_employee.account_move_id.origin_payment_id)
 
     def test_expense_state_synchro_1_cancel_move(self):

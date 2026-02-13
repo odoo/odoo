@@ -97,7 +97,7 @@ class AccountJournal(models.Model):
         dashboard_data = super()._get_journal_dashboard_data_batched()
         self._fill_dashboard_data_count(dashboard_data, 'account.payment', 'num_checks_to_print', [
             ('payment_method_line_id.code', '=', 'check_printing'),
-            ('state', '=', 'in_process'),
+            ('state', '=', 'paid'),
             ('is_sent', '=', False),
         ])
         return dashboard_data

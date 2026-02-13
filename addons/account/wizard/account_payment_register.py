@@ -602,7 +602,7 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_actionable_errors(self):
         for wizard in self:
             actionable_errors = {}
-            if unreconciled_matched_payments := wizard.line_ids.move_id.reconciled_payment_ids.filtered(lambda p: not p.is_reconciled and not p.is_matched and p.state == 'in_process'):
+            if unreconciled_matched_payments := wizard.line_ids.move_id.reconciled_payment_ids.filtered(lambda p: not p.is_reconciled and not p.is_matched and p.state == 'paid'):
                 actionable_errors['unreconciled_matched_payments'] = {
                     'message': self.env._("Amount of %(amount).2f %(currency)s is already paid. Make sure you don't pay twice.",
                         amount=wizard.unreconciled_paid_amount,
@@ -938,7 +938,7 @@ class AccountPaymentRegister(models.TransientModel):
                 lambda p: (
                     not p.is_reconciled
                     and not p.is_matched
-                    and p.state == 'in_process'
+                    and p.state == 'paid'
                 )
             )
             wizard.unreconciled_paid_amount = sum(
