@@ -56,7 +56,7 @@
                 .
             </t>
         </t>
-        <t t-if="hasattr(object, 'timesheet_count') and object.timesheet_count">
+        <t t-if="hasattr(object, 'display_timesheet_review_in_mail_template') and object.display_timesheet_review_in_mail_template">
             <br /><br />
             PS: you can review your timesheets <a t-att-href="'/my/timesheets?search_in=invoice&amp;search=%s' % object.name">from the portal.</a>
         </t>
@@ -188,7 +188,7 @@
         <t t-if="object.payment_state in ('paid', 'in_payment')">
             This self-billing invoice has already been paid.
         </t>
-        <t t-if="hasattr(object, 'timesheet_count') and object.timesheet_count">
+        <t t-if="hasattr(object, 'display_timesheet_review_in_mail_template') and object.display_timesheet_review_in_mail_template">
             <br /><br />
             PS: you can review your timesheets <a t-att-href="'/my/timesheets?search_in=invoice&amp;search=%s' % object.name">from the portal.</a>
         </t>
