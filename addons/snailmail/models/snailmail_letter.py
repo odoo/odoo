@@ -165,9 +165,9 @@ class SnailmailLetter(models.Model):
                 self.env.ref(f'web.external_layout_{layout}')
                 for layout in ('bubble', 'wave', 'folder')
             }:
-                self.company_id.external_report_layout_id = self.env.ref('web.external_layout_standard')
+                self.company_id.sudo().external_report_layout_id = self.env.ref('web.external_layout_standard')
             filename, pdf_bin = self._generate_report_pdf(report)
-            self.company_id.external_report_layout_id = prev
+            self.company_id.sudo().external_report_layout_id = prev
 
             pdf_bin = self._overwrite_margins(pdf_bin)
             if self.cover:
