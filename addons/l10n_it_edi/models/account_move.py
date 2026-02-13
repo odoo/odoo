@@ -935,7 +935,10 @@ class AccountMove(models.Model):
         return bool(
             template_reference
             and not self.l10n_it_edi_is_self_invoice
-            and list(buyer._l10n_it_edi_export_check(checks).keys()) == ['l10n_it_edi_partner_address_missing']
+            and (
+                list(buyer._l10n_it_edi_export_check(checks).keys()) == ['l10n_it_edi_partner_address_missing']
+                or self._l10n_it_edi_is_simplified_document_type(self.l10n_it_document_type.code)
+            )
             and (not buyer.country_id or buyer.country_id.code == 'IT')
             and (buyer.l10n_it_codice_fiscale or (buyer.vat and (buyer.vat[:2].upper() == 'IT' or buyer.vat[:2].isdecimal())))
             and self.amount_total <= 400
