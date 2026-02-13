@@ -40,6 +40,7 @@ export class InvoiceButton extends Component {
             if (accountMoveId) {
                 await this.invoiceService.downloadPdf(accountMoveId);
             }
+            return order;
         } catch (error) {
             if (error instanceof Error) {
                 throw error;
