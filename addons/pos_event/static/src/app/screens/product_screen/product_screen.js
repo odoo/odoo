@@ -95,7 +95,7 @@ patch(ProductScreen.prototype, {
                 return acc;
             }, {});
             const isAvailable = Object.values(avaibilityByTicket).some((av) =>
-                Object.values(av).some((a) => typeof a === "number" && a > 0)
+                Object.values(av).some((a) => (typeof a === "number" && a > 0) || a === "unlimited")
             );
             if (!isAvailable || eventSeats === 0) {
                 this.notification.add("All slots are booked out for this event.", {
@@ -133,9 +133,11 @@ patch(ProductScreen.prototype, {
             slotSelected = this.pos.models["event.slot"].get(slotResult.slotId);
         } else {
             avaibilityByTicket = tickets.reduce((acc, ticket) => {
-                if (ticket.seats_max === 0 && !event.seats_limited) {
+                if (ticket.seats_max === 0) {
+                    // Ticket = unlimited seats
                     acc[ticket.id] = "unlimited";
                 } else {
+                    // Ticket = limited seats
                     acc[ticket.id] = ticket.seats_available;
                 }
                 return acc;
