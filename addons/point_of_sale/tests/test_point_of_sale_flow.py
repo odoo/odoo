@@ -2302,3 +2302,35 @@ class TestPointOfSaleFlow(CommonPosTest):
         }])
         self.assertEqual(len(order.lines), 1, "Two lines with the same UUID were created")
         self.assertEqual(order.lines[0].qty, 2, "The quantity of the line should have been updated to 2")
+
+    def test_manual_refund_negative_qty_invoice_creates_credit_note(self):
+        """Invoicing a POS order created with negative qty (manual refund, no Refund action)
+        must create a credit note (RINV/out_refund), not a customer invoice (INV)."""
+        self.pos_config_usd.open_ui()
+
+        # Create an order with negative qty only (no Refund action → is_refund stays False)
+        order, _ = self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': self.partner_mobt.id,
+                'pricelist_id': self.pos_config_usd.pricelist_id.id,
+            },
+            'line_data': [
+                {'product_id': self.ten_dollars_no_tax.product_variant_id.id, 'qty': -1},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id, 'amount': -10},
+            ],
+        })
+
+        self.assertEqual(order.state, 'paid')
+        self.assertLess(order.amount_total, 0, 'Order total should be negative (manual refund).')
+        self.assertFalse(order.is_refund, 'Order was not created via Refund action.')
+
+        order.action_pos_order_invoice()
+
+        self.assertTrue(order.account_move, 'An invoice/credit note should be created.')
+        self.assertEqual(
+            order.account_move.move_type,
+            'out_refund',
+            'Invoicing a manual refund (negative qty) must create a credit note (RINV), not a customer invoice.',
+        )
