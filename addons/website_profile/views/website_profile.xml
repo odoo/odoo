@@ -247,7 +247,7 @@
                     t-attf-style="max-width: {{img_max_width or '50%'}};"
                     t-options="{'widget': 'image', 'preview_image': 'image_128'}"/>
                 <h4 class="text-center" t-field="rank_id.name"/>
-                <small class="w-50 text-center">
+                <small class="w-75 text-center o_line_clamp">
                     <t t-set="karma_value" t-value="next_rank_id.karma_min - user.karma if next_rank_id else user.karma"/>
                     <t t-if="next_rank_id">
                         Get

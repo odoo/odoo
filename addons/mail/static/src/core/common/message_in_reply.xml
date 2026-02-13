@@ -10,7 +10,7 @@
                 <span class="d-inline-flex align-items-center" t-att-class="{ 'cursor-pointer': props.onClick }" t-on-click="() => this.props.onClick?.()">
                     <t t-if="!props.message.parent_id.isEmpty">
                         <img class="o-mail-MessageInReply-avatar me-2 rounded object-fit-cover" t-att-src="authorAvatarUrl" t-att-title="props.message.parent_id.authorName" alt="Avatar"/>
-                        <span class="o-mail-MessageInReply-content overflow-hidden smaller">
+                        <span class="o-mail-MessageInReply-content o_line_clamp smaller">
                             <b class="o-mail-MessageInReply-author o-fw-600"><t t-out="props.message.parent_id.authorName"/></b>:
                             <span class="o-mail-MessageInReply-message ms-1 text-break">
                                 <i t-if="props.message.parent_id.hasAttachments" class="fa fa-fw me-1" t-att-class="props.message.parent_id.previewIcon" />

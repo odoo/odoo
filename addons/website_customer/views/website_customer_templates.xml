@@ -140,7 +140,7 @@
                                     />
                                     <div class="card-body">
                                         <h5 class="card-title" t-field="partner.display_name"/>
-                                        <small class="o_wcrm_short_description text-muted overflow-hidden" t-field="partner.website_short_description"/>
+                                        <small class="o_line_clamp o_wcrm_short_description text-muted overflow-hidden" style="--lines-clamp: 4;" t-field="partner.website_short_description"/>
                                         <small t-if="not partner.website_short_description" class="css_editable_mode_hidden text-muted fst-italic" groups="website.group_website_restricted_editor">
                                             Enter a short description
                                         </small>

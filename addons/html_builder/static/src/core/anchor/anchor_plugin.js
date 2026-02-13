@@ -108,8 +108,7 @@ export class AnchorPlugin extends Plugin {
         const message = _t(
             "Anchor copied to clipboard%(br)s%(open_span)sLink: %(anchor_link)s%(close_span)s",
             {
-                open_span: markup`<span style=" display: -webkit-box; -webkit-line-clamp: 1;
-                    -webkit-box-orient: vertical; overflow: hidden;">`,
+                open_span: markup`<span class="o_line_clamp" style="--lines-clamp: 1;">`,
                 anchor_link: anchorLink,
                 br: markup`<br>`,
                 close_span: markup`</span>`,

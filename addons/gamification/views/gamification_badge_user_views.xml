@@ -24,7 +24,7 @@
                             <div class="col-2">
                                 <field name="badge_id" widget="image" options="{'preview_image': 'image_1024'}" t-att-alt="record.badge_name.value" />
                             </div>
-                            <field class="mt-1 o_badge_content text-muted" name="comment"/>
+                            <field class="o_line_clamp mt-1 o_badge_content text-muted" name="comment" style="--lines-clamp: 5;"/>
                         </t>
                     </t>
                 </templates>

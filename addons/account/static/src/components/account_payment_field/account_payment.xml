@@ -92,7 +92,7 @@
                         <tr>
                             <td class="fw-bolder align-top">Memo:</td>
                             <td class="ps-1">
-                                <div class="o_memo_content" t-att-data-tooltip="props.ref" data-tooltip-position="left">
+                                <div class="o_memo_content o_line_clamp" t-att-data-tooltip="props.ref" data-tooltip-position="left" style="--lines-clamp: 3;">
                                     <t t-out="props.ref"/>
                                 </div>
                             </td>

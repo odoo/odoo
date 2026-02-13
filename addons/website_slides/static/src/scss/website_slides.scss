@@ -12,29 +12,6 @@ $o-wslides-color-dark2: #1f262d;
 $o-wslides-color-dark3: #101216;
 $o-wslides-fs-side-width: 300px;
 
-// Truncate text descriptions to a specific number of lines.
-// If '-webkit-line-clamp' is not supported, a less effective
-// 'line-height' fallback will be used instead.
-$truncate-limits: 2, 3, 10;
-$line-height-truncate: 1.5em;
-
-@each $limit in $truncate-limits {
-    .o_wslides_desc_truncate_#{$limit} {
-        max-height: $limit * $line-height-truncate;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: normal;
-        line-height: $line-height-truncate;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: $limit;
-    }
-    .o_wslides_desc_truncate_#{$limit}_badges {
-        @extend .o_wslides_desc_truncate_#{$limit};
-        max-height: $limit * $line-height-truncate * 1.2;
-    }
-}
-
 // Common to new slides pages
 // **************************************************
 
