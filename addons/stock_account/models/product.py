@@ -143,30 +143,49 @@ class ProductProduct(models.Model):
         company_id = self.env.company
         self.company_currency_id = company_id.currency_id
 
+        at_date = fields.Datetime.to_datetime(self.env.context.get('to_date'))
+        all_standard_price = self.filtered(lambda product: product.cost_method == 'standard')
+        if at_date:
+            all_standard_price_at_date = all_standard_price._get_standard_price_at_date_batched(at_date)
+        else:
+            all_standard_price_at_date = all_standard_price._get_standard_price_at_date_batched()
+
+        valuated_products = self.sudo(False)._with_valuation_context_batched()
+        total_value_batched = defaultdict(set)
+        avg_cost_batched = defaultdict(set)
         for product in self:
-            at_date = fields.Datetime.to_datetime(product.env.context.get('to_date'))
             if at_date:
                 at_date = at_date.replace(hour=23, minute=59, second=59)
                 product = product.with_context(at_date=at_date)
-            valuated_product = product.sudo(False)._with_valuation_context()
+            valuated_product = valuated_products.get(product.id, product)
             qty_valued = valuated_product.qty_available
             qty_available = valuated_product.with_context(warehouse_id=False).qty_available if self.env.context.get('warehouse_id') else qty_valued
+            retrieved_standard_price = all_standard_price_at_date.get(product.id)
+            new_total_value = None
             if product.lot_valuated:
-                product.total_value = product._get_value_from_lots()
+                new_total_value = product._get_value_from_lots()
             elif product.uom_id.is_zero(qty_valued):
-                product.total_value = 0
+                new_total_value = 0
             elif product.uom_id.is_zero(qty_available):
-                product.total_value = product.standard_price * qty_valued
+                new_total_value = product.standard_price * qty_valued
             elif product.cost_method == 'standard':
                 standard_price = product.standard_price
                 if at_date:
-                    standard_price = product._get_standard_price_at_date(at_date)
-                product.total_value = standard_price * qty_valued
+                    standard_price = retrieved_standard_price
+                new_total_value = standard_price * qty_valued
             elif product.cost_method == 'average':
-                product.total_value = product._run_avco(at_date=at_date)[1] * qty_valued / qty_available
+                new_total_value = product._run_avco(at_date=at_date)[1] * qty_valued / qty_available
             else:
-                product.total_value = product.with_context(warehouse_id=False)._run_fifo(qty_available, at_date=at_date) * qty_valued / qty_available
-            product.avg_cost = product.total_value / qty_valued if not product.uom_id.is_zero(qty_valued) else 0
+                new_total_value = product.with_context(warehouse_id=False)._run_fifo(qty_available, at_date=at_date) * qty_valued / qty_available
+            total_value_batched[new_total_value].add(product.id)
+            new_avg_cost = new_total_value / qty_valued if not product.uom_id.is_zero(qty_valued) else 0
+            avg_cost_batched[new_avg_cost].add(product.id)
+
+        for new_total_value, product_ids in total_value_batched.items():
+            self.env['product.product'].browse(product_ids).total_value = new_total_value
+
+        for new_avg_cost, product_ids in avg_cost_batched.items():
+            self.env['product.product'].browse(product_ids).avg_cost = new_avg_cost
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -224,6 +243,34 @@ class ProductProduct(models.Model):
             product_value = self.env['product.value'].search(product_value_domain, limit=1, order="date, id")
         return product_value.value if product_value else self.standard_price
 
+    def _get_standard_price_at_date_batched(self, date=None):
+        if not date or date == fields.Date.today():
+            return {product.id: product.standard_price for product in self}
+        product_value_domain = Domain([
+            ('product_id', 'in', self.ids),
+            ('move_id', '=', False),
+            ('lot_id', '=', False),
+        ])
+
+        product_values_grouped = defaultdict()
+        product_values_grouped_unprocessed = self.env['product.value']._read_group(domain=product_value_domain & Domain([('date', '<=', date)]), groupby=['product_id'], aggregates=['id:recordset'])
+        for product, product_values_for_product in product_values_grouped_unprocessed:
+            if product.cost_method != 'standard':
+                raise ValidationError(_("You can only get the standard price at a given date for products with 'Standard Price' as cost method."))
+            if product_values_for_product:
+                product_values_grouped[product.id] = product_values_for_product.sorted("date DESC, id DESC")[0]
+            else:
+                # If there is no history then get the first value
+                product_values_grouped[product.id] = self.env['product.value'].search(domain=product_value_domain, limit=1, order="date, id")
+
+        for product in self:
+            product_value = None
+            if product.id in product_values_grouped:
+                product_value = product_values_grouped[product.id]
+
+            product_values_grouped[product.id] = product_value.value if product_value else product.standard_price
+        return product_values_grouped
+
     def _get_last_in(self, date=None):
         last_in_domain = Domain([('is_in', '=', True), ('product_id', '=', self.id)])
         if date:
@@ -248,6 +295,19 @@ class ProductProduct(models.Model):
                 owners=[False, self.env.company.partner_id.id]
             )
         return self_with_context
+
+    def _with_valuation_context_batched(self):
+        grouped_context = defaultdict()
+        valued_locations = self.env['stock.location'].search([('is_valued_internal', '=', True)])
+        for product in self:
+            self_with_context = product.with_context(location=valued_locations.ids) if valued_locations else product
+            # In FIFO, the stack in on stock.move and their value is already computed base on the owner
+            if product.cost_method != 'fifo':
+                self_with_context = self_with_context.with_context(
+                    owners=[False, self.env.company.partner_id.id],
+                )
+            grouped_context[product.id] = self_with_context
+        return grouped_context
 
     def _get_remaining_moves(self):
         moves_qty_by_product = {}
