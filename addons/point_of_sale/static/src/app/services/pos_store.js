@@ -2621,6 +2621,21 @@ export class PosStore extends WithLazyGetterTrap {
         );
     }
 
+    orderProductBySequenceAndFav(products) {
+        const searchWord = this.searchProductWord.trim();
+        const isSearchByWord = searchWord !== "";
+        return isSearchByWord
+            ? products.sort((a, b) => b.is_favorite - a.is_favorite)
+            : products.sort((a, b) => {
+                  if (b.is_favorite !== a.is_favorite) {
+                      return b.is_favorite - a.is_favorite;
+                  } else if (a.pos_sequence !== b.pos_sequence) {
+                      return a.pos_sequence - b.pos_sequence;
+                  }
+                  return a.name.localeCompare(b.name);
+              });
+    }
+
     get productsToDisplay() {
         const searchWord = this.searchProductWord.trim();
         const allProducts = this.models["product.template"].getAll();
@@ -2683,74 +2698,66 @@ export class PosStore extends WithLazyGetterTrap {
             return [];
         }
 
-        return isSearchByWord
-            ? filteredList.sort((a, b) => b.is_favorite - a.is_favorite)
-            : filteredList.sort((a, b) => {
-                  if (b.is_favorite !== a.is_favorite) {
-                      return b.is_favorite - a.is_favorite;
-                  } else if (a.pos_sequence !== b.pos_sequence) {
-                      return a.pos_sequence - b.pos_sequence;
-                  }
-                  return a.name.localeCompare(b.name);
-              });
+        return this.orderProductBySequenceAndFav(filteredList);
     }
 
     get productToDisplayByCateg() {
         const sortedProducts = this.productsToDisplay;
         if (!this.config.iface_group_by_categ) {
             return sortedProducts.length ? [["0", sortedProducts]] : [];
-        } else {
-            const groupedByCategory = {};
-            const selectedCategories = this.selectedCategory
-                ? this.selectedCategory.getAllChildren().map((c) => c.id)
-                : false;
-            for (const product of sortedProducts) {
-                if (product.pos_categ_ids.length === 0) {
-                    // Only display product without category if we don't have a category selected
-                    if (selectedCategories) {
-                        continue;
-                    }
-                    if (!groupedByCategory[0]) {
-                        groupedByCategory[0] = [];
-                    }
-                    groupedByCategory[0].push(product);
-                    continue;
-                }
-                const productCategories = product.pos_categ_ids.map((c) => c.id);
-                for (const categId of productCategories) {
-                    if (selectedCategories && !selectedCategories.includes(categId)) {
-                        continue;
-                    }
-                    if (!groupedByCategory[categId]) {
-                        groupedByCategory[categId] = [];
-                    }
-                    groupedByCategory[categId].push(product);
-                }
-            }
-            const res = Object.entries(groupedByCategory).sort(([a], [b]) => {
-                // None category goes last
-                const aNoneCategory = a === "0";
-                const bNoneCategory = b === "0";
-                if (aNoneCategory && bNoneCategory) {
-                    return 0;
-                }
-                if (aNoneCategory) {
-                    return 1;
-                }
-                if (bNoneCategory) {
-                    return -1;
-                }
-
-                const catA = this.models["pos.category"].get(a);
-                const catB = this.models["pos.category"].get(b);
-
-                const isRootA = !catA.parent_id;
-                const isRootB = !catB.parent_id;
-
-                return isRootA !== isRootB ? (isRootA ? -1 : 1) : catA.sequence - catB.sequence;
-            });
-            return res;
         }
+
+        const results = [];
+        const searchWord = this.searchProductWord.trim();
+        const byCateg = this.models["product.template"].getAllBy("pos_categ_ids");
+        const selectedCategoryIds = !this.selectedCategory
+            ? this.models["pos.category"].map((c) => c.id)
+            : this.selectedCategory.getAllChildren().map((c) => c.id);
+
+        // Sorting in place the categories according to their sequence in the database
+        selectedCategoryIds.sort((a, b) => {
+            const categA = this.models["pos.category"].get(a);
+            const categB = this.models["pos.category"].get(b);
+
+            // All category with a parent will be at the end
+            if (categA.parent_id && !categB.parent_id) {
+                return 1;
+            } else if (!categA.parent_id && categB.parent_id) {
+                return -1;
+            }
+
+            return categA.sequence - categB.sequence;
+        });
+
+        if (!this.selectedCategory) {
+            // In case of no category selected, we want to display products without category in
+            // a "Without category" category at the end of the list.
+            // We use the default sortedProducts order to keep the same order as in the non
+            // group by category mode.
+            const productWithoutCategory = sortedProducts.filter((p) => !p.pos_categ_ids.length);
+            byCateg["0"] = productWithoutCategory;
+            selectedCategoryIds.push("0");
+        }
+
+        for (const catId of selectedCategoryIds) {
+            const products = byCateg[catId] || [];
+            const filtered = searchWord
+                ? this.getProductsBySearchWord(searchWord, products)
+                : products;
+
+            if (filtered.length) {
+                // Its advised to not use group by categ with too much products in differents
+                // categories, but in case of we end up with too much products, we slice them in
+                // group of 100 to avoid freezing the browser tab.
+                // We cannot just slice the products to display and keep the same category, because
+                // we want to avoid having categories with only few products displayed and others
+                // with a lot of products not displayed.
+                const sorted = this.orderProductBySequenceAndFav(filtered);
+                results.push([catId, sorted.splice(0, 100)]);
+            }
+        }
+
+        return results;
     }
 
     getProductsBySearchWord(searchWord, products) {
