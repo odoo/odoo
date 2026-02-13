@@ -6,6 +6,10 @@ from odoo.fields import Command
 class TestReportBom(HttpCase):
 
     def test_mrp_report_bom_variant_selection(self):
+        self.env.ref('base.user_admin').write({'group_ids': [
+            Command.link(self.env.ref('product.group_product_variant').id),
+        ]})
+
         attribute = self.env['product.attribute'].create({'name': 'Size'})
         value_S, value_L = self.env['product.attribute.value'].create([
             {'name': 'S', 'attribute_id': attribute.id},
