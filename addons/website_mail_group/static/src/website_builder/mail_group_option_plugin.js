@@ -16,7 +16,7 @@ class MailGroupOptionPlugin extends Plugin {
     static shared = ["createGroup"];
     resources = {
         builder_options: [MailGroupOption],
-        dropzone_selector: {
+        dropzone_selectors: {
             selector: ".s_group",
             dropNear: "p, h1, h2, h3, blockquote, .card",
             dropIn: ".row.o_grid_mode",

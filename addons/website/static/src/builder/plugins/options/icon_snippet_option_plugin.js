@@ -8,7 +8,7 @@ export class IconSnippetOptionPlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        so_content_addition_selector: [".s_icon"],
+        so_content_addition_selectors: [".s_icon"],
     };
 
     async onSnippetDropped({ snippetEl, dragState }) {

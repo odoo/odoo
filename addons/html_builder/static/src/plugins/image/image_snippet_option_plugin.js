@@ -8,7 +8,7 @@ class ImageSnippetOptionPlugin extends Plugin {
     /** @type {import("plugins").BuilderResources} */
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        so_content_addition_selector: [".s_image"],
+        so_content_addition_selectors: [".s_image"],
     };
 
     async onSnippetDropped({ snippetEl, dragState }) {

@@ -16,7 +16,7 @@ class ChartOptionPlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [ChartOption],
-        so_content_addition_selector: [".s_chart"],
+        so_content_addition_selectors: [".s_chart"],
         builder_actions: {
             SetChartTypeAction,
             AddColumnAction,

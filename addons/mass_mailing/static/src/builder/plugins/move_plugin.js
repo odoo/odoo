@@ -5,7 +5,7 @@ class MovePlugin extends Plugin {
     static id = "mass_mailing.MovePlugin";
     static dependencies = ["move"];
     resources = {
-        is_movable_selector: [
+        is_movable_selectors: [
             {
                 selector: ".o_mail_snippet_general",
                 direction: "vertical",

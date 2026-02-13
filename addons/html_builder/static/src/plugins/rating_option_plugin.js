@@ -15,7 +15,7 @@ class RatingOptionPlugin extends Plugin {
     /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_options: RatingOption,
-        so_content_addition_selector: [".s_rating"],
+        so_content_addition_selectors: [".s_rating"],
         builder_actions: {
             SetIconsAction,
             CustomIconAction,

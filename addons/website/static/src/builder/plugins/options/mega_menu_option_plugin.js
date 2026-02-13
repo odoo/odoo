@@ -17,14 +17,14 @@ export class MegaMenuOptionPlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(SNIPPET_SPECIFIC_NEXT, MegaMenuOption)],
-        dropzone_selector: {
+        dropzone_selectors: {
             selector: ".o_mega_menu .nav > .nav-link",
             dropIn: ".o_mega_menu nav",
             dropNear: ".o_mega_menu .nav-link",
         },
         save_handlers: this.saveMegaMenuClasses.bind(this),
         no_parent_containers: ".o_mega_menu",
-        is_unremovable_selector: ".o_mega_menu > section",
+        is_unremovable_selectors: ".o_mega_menu > section",
         unsplittable_node_predicates: (node) =>
             node?.nodeType === Node.ELEMENT_NODE && node.matches(".o_mega_menu .nav > .nav-link"), //avoid merge
     };

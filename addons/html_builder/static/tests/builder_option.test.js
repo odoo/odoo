@@ -362,7 +362,7 @@ test("Option containers dispatched to plugins are updated reactively", async () 
                     reasons.push("Class list has 'not_removable'");
                 }
             },
-            change_current_options_containers_listeners: (containers) => {
+            change_current_options_containers_handlers: (containers) => {
                 expect.step("containers update dispatched");
                 this.optionContainers = containers;
             },

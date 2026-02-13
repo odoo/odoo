@@ -144,7 +144,7 @@ import { trackOccurrences, trackOccurrencesPair } from "../utils/tracking";
  * @typedef {((records: HistoryMutationRecord[]) => void)[]} before_filter_mutation_record_handlers
  * @typedef {((root: HTMLElement) => void)[]} content_updated_handlers
  * @typedef {(() => void)[]} external_step_added_handlers
- * @typedef {((records: HistoryMutationRecord[], currentOperation: "original"|"undo"|"redo"|"restore") => void)[]} handleNewRecords
+ * @typedef {((records: HistoryMutationRecord[], currentOperation: "original"|"undo"|"redo"|"restore") => void)[]} new_records_handlers
  * @typedef {(() => void)[]} history_cleaned_handlers
  * @typedef {(() => void)[]} history_reset_handlers
  * @typedef {(() => void)[]} history_reset_from_steps_handlers
@@ -493,9 +493,9 @@ export class HistoryPlugin extends Plugin {
             // `undoOperation`
             if (dispatch) {
                 const stepType = this.currentStep.type;
-                this.dispatchTo("handleNewRecords", processedRecords, stepType);
+                this.dispatchTo("new_records_handlers", processedRecords, stepType);
             }
-            // Process potential new records adds by handleNewRecords.
+            // Process potential new records added by new_records_handlers.
             this.processNewRecords(this.observer.takeRecords());
             this.dispatchContentUpdated();
         }

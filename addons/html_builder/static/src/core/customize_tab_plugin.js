@@ -16,7 +16,7 @@ export class CustomizeTabPlugin extends Plugin {
     resources = {
         post_redo_handlers: () => this.closeCustomizeComponent(),
         post_undo_handlers: () => this.closeCustomizeComponent(),
-        change_current_options_containers_listeners: () => this.closeCustomizeComponent(),
+        change_current_options_containers_handlers: () => this.closeCustomizeComponent(),
     };
 
     setup() {

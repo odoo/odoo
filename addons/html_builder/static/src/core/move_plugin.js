@@ -20,7 +20,7 @@ import { localization } from "@web/core/l10n/localization";
  *     exclude?: CSSSelector;
  *     direction: "horizontal" | "vertical";
  *     noScroll?: boolean;
- * }[]} is_movable_selector
+ * }[]} is_movable_selectors
  * @typedef {((arg: {
  *      movedEl: HTMLElement,
  *      dragState: DragState,
@@ -38,7 +38,7 @@ export class MovePlugin extends Plugin {
         on_cloned_handlers: this.onCloned.bind(this),
         on_will_remove_handlers: this.onWillRemove.bind(this),
         on_element_dropped_handlers: this.onElementDropped.bind(this),
-        is_movable_selector: [
+        is_movable_selectors: [
             {
                 selector: "section, .s_showcase .row .row:not(.s_col_no_resize) > div",
                 direction: "vertical",
@@ -63,7 +63,7 @@ export class MovePlugin extends Plugin {
         const horizontalSelector = [];
         const horizontalExclude = [];
         const noScrollSelector = [];
-        for (const movableSelector of this.getResource("is_movable_selector")) {
+        for (const movableSelector of this.getResource("is_movable_selectors")) {
             const { selector, exclude, direction, noScroll } = movableSelector;
             if (selector) {
                 const selectors = direction === "vertical" ? verticalSelector : horizontalSelector;

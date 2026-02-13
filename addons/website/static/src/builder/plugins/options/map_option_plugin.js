@@ -15,14 +15,14 @@ class MapOptionPlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [MapOption],
-        so_content_addition_selector: [".s_map"],
+        so_content_addition_selectors: [".s_map"],
         builder_actions: {
             MapUpdateSrcAction,
             MapDescriptionAction,
             MapDescriptionTextAction,
         },
         // TODO remove when the snippet will have a "Height" option.
-        keep_overlay_options: (el) => el.matches(".s_map"),
+        keep_overlay_options_predicates: (el) => el.matches(".s_map"),
     };
 
     setup() {

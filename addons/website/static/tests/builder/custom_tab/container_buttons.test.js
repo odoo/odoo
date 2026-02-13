@@ -327,7 +327,7 @@ test("applying option container button should wait for actions in progress", asy
     class TestPlugin extends Plugin {
         static id = "test";
         resources = {
-            get_options_container_top_buttons: this.getButtons.bind(this),
+            options_container_top_buttons_providers: this.getButtons.bind(this),
         };
 
         getButtons(target) {

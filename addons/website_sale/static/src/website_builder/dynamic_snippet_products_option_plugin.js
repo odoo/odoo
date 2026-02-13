@@ -15,7 +15,7 @@ class DynamicSnippetProductsOptionPlugin extends Plugin {
     modelNameFilter = "product.product";
     resources = {
         builder_options: withSequence(DYNAMIC_SNIPPET_CAROUSEL, DynamicSnippetProductsOption),
-        dynamic_snippet_template_updated: this.onTemplateUpdated.bind(this),
+        dynamic_snippet_template_updated_handlers: this.onTemplateUpdated.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
     setup() {

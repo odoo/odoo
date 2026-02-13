@@ -25,8 +25,8 @@ export class BuilderOverlayPlugin extends Plugin {
     /** @type {import("plugins").BuilderResources} */
     resources = {
         step_added_handlers: this.refreshOverlays.bind(this),
-        change_current_options_containers_listeners: this.openBuilderOverlays.bind(this),
-        on_mobile_preview_clicked: withSequence(20, this.refreshOverlays.bind(this)),
+        change_current_options_containers_handlers: this.openBuilderOverlays.bind(this),
+        on_mobile_preview_clicked_handlers: withSequence(20, this.refreshOverlays.bind(this)),
         has_overlay_options: { hasOption: (el) => isResizable(el) },
     };
 

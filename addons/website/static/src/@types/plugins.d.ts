@@ -14,7 +14,7 @@ declare module "plugins" {
     import { ChartOptionShared } from "@website/builder/plugins/options/chart_option_plugin";
     import { CookiesBarOptionShared } from "@website/builder/plugins/options/cookies_bar_option";
     import { DynamicSnippetCarouselOptionShared } from "@website/builder/plugins/options/dynamic_snippet_carousel_option_plugin";
-    import { dynamic_snippet_template_updated, DynamicSnippetOptionShared } from "@website/builder/plugins/options/dynamic_snippet_option_plugin";
+    import { dynamic_snippet_template_updated_handlers, DynamicSnippetOptionShared } from "@website/builder/plugins/options/dynamic_snippet_option_plugin";
     import { footer_templates_providers, FooterOptionShared } from "@website/builder/plugins/options/footer_option_plugin";
     import { get_gallery_items_handlers, reorder_items_handlers } from "@website/builder/plugins/options/gallery_element_option_plugin";
     import { GoogleMapsOptionShared } from "@website/builder/plugins/options/google_maps_option/google_maps_option_plugin";
@@ -31,7 +31,7 @@ declare module "plugins" {
     import { SwitchableViewsShared } from "@website/builder/plugins/switchable_views_plugin";
     import { theme_options, ThemeTabShared } from "@website/builder/plugins/theme/theme_tab_plugin";
     import { TranslateWebpageOptionShared } from "@website/builder/plugins/translation/options/translate_webpage_option_plugin";
-    import { mark_translatable_nodes } from "@website/builder/plugins/translation/translation_plugin";
+    import { mark_translatable_nodes_handlers } from "@website/builder/plugins/translation/translation_plugin";
     import { WebsiteSaveShared } from "@website/builder/plugins/website_save_plugin";
     import { WebsiteSessionShared } from "@website/builder/plugins/website_session_plugin";
 
@@ -74,9 +74,9 @@ declare module "plugins" {
     export interface WebsiteResourcesList {
         // Handlers
         content_manually_updated_handlers: content_manually_updated_handlers;
-        dynamic_snippet_template_updated: dynamic_snippet_template_updated;
+        dynamic_snippet_template_updated_handlers: dynamic_snippet_template_updated_handlers;
         get_gallery_items_handlers: get_gallery_items_handlers;
-        mark_translatable_nodes: mark_translatable_nodes;
+        mark_translatable_nodes_handlers: mark_translatable_nodes_handlers;
         on_visibility_toggled_handlers: on_visibility_toggled_handlers;
         remove_hover_effect_handlers: remove_hover_effect_handlers;
         reorder_items_handlers: reorder_items_handlers;

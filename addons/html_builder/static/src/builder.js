@@ -27,8 +27,8 @@ import { getHtmlStyle } from "@html_editor/utils/formatting";
 import { isVisible } from "@html_builder/utils/utils";
 
 /**
- * @typedef {(() => void)[]} on_mobile_preview_clicked
- * @typedef {(() => void)[]} trigger_dom_updated
+ * @typedef {(() => void)[]} on_mobile_preview_clicked_handlers
+ * @typedef {(() => void)[]} trigger_dom_updated_handlers
  * @typedef {{ Component: Component; props: object; }[]} lower_panel_entries
  */
 
@@ -130,10 +130,10 @@ export class Builder extends Component {
                 installSnippetModule: (snippet) => this.props.installSnippetModule?.(snippet),
                 /** @type {import("plugins").BuilderResources} */
                 resources: {
-                    trigger_dom_updated: () => {
+                    trigger_dom_updated_handlers: () => {
                         this.triggerDomUpdated();
                     },
-                    on_mobile_preview_clicked: withSequence(20, () => {
+                    on_mobile_preview_clicked_handlers: withSequence(20, () => {
                         this.triggerDomUpdated();
                     }),
                     before_save_handlers: () => {
@@ -160,7 +160,7 @@ export class Builder extends Component {
                     on_snippet_dropped_handlers: () => {
                         this.activeTargetEl = null;
                     },
-                    change_current_options_containers_listeners: (currentOptionsContainers) => {
+                    change_current_options_containers_handlers: (currentOptionsContainers) => {
                         this.state.currentOptionsContainers = currentOptionsContainers;
                         if (currentOptionsContainers.length) {
                             this.activeTargetEl = null;
@@ -319,7 +319,7 @@ export class Builder extends Component {
 
     onMobilePreviewClick() {
         this.props.toggleMobile();
-        this.editor.resources["on_mobile_preview_clicked"].forEach((handler) => handler());
+        this.editor.resources["on_mobile_preview_clicked_handlers"].forEach((handler) => handler());
     }
 
     updateInvisibleEls(isMobile = this.props.isMobile) {

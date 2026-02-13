@@ -23,7 +23,7 @@ class accordionOptionPlugin extends Plugin {
             withSequence(SNIPPET_SPECIFIC, AccordionOption),
             withSequence(SNIPPET_SPECIFIC, AccordionItemOption),
         ],
-        so_content_addition_selector: [".s_accordion"],
+        so_content_addition_selectors: [".s_accordion"],
         builder_actions: {
             DefineCustomIconAction,
             CustomAccordionIconAction,

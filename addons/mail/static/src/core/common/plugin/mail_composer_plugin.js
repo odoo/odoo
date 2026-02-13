@@ -13,7 +13,7 @@ export class MailComposerPlugin extends Plugin {
     static dependencies = ["clipboard", "hint", "input", "selection"];
     resources = {
         before_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
-        bypass_paste_image_files: () => true,
+        bypass_paste_image_files_predicates: () => true,
         create_link_handlers: (linkEl) => (linkEl.target = "_blank"),
         hints: [
             withSequence(1, {

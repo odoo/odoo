@@ -33,8 +33,8 @@ export class OverlayButtonsPlugin extends Plugin {
         selectionchange_handlers: this.shouldShowToolbar.bind(this),
         selection_leave_handlers: this.showOverlayButtonsUi.bind(this),
         step_added_handlers: this.refreshButtons.bind(this),
-        change_current_options_containers_listeners: this.addOverlayButtons.bind(this),
-        on_mobile_preview_clicked: withSequence(20, this.refreshButtons.bind(this)),
+        change_current_options_containers_handlers: this.addOverlayButtons.bind(this),
+        on_mobile_preview_clicked_handlers: withSequence(20, this.refreshButtons.bind(this)),
     };
 
     setup() {

@@ -5,7 +5,7 @@ export class AuthorAvatarSyncPlugin extends Plugin {
     static id = "authorAvatarSync";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        handleNewRecords: (records) => {
+        new_records_handlers: (records) => {
             records
                 .filter((r) => r.type === "attributes" && r.attributeName === "data-oe-many2one-id")
                 .filter((r) => r.target.dataset.oeField === "author_id")

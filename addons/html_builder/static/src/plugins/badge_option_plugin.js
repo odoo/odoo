@@ -14,7 +14,7 @@ class BadgeOptionPlugin extends Plugin {
     /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_options: [withSequence(before(ANIMATE), BadgeOption)],
-        so_content_addition_selector: [".s_badge"],
+        so_content_addition_selectors: [".s_badge"],
     };
 }
 registry.category("builder-plugins").add(BadgeOptionPlugin.id, BadgeOptionPlugin);

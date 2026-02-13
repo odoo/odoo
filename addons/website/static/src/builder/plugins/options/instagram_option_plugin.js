@@ -28,7 +28,7 @@ class InstagramOptionPlugin extends Plugin {
         builder_actions: {
             InstagramPageAction,
         },
-        so_content_addition_selector: [".s_instagram_page"],
+        so_content_addition_selectors: [".s_instagram_page"],
         normalize_handlers: this.normalize.bind(this),
     };
 

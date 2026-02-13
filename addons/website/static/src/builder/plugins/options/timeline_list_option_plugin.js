@@ -29,11 +29,11 @@ class TimelineListOptionPlugin extends Plugin {
             withSequence(SNIPPET_SPECIFIC_END, DotLinesColorOption),
             withSequence(BEGIN, DotColorOption),
         ],
-        dropzone_selector: {
+        dropzone_selectors: {
             selector: ".s_timeline_list_row",
             dropNear: ".s_timeline_list_row",
         },
-        is_movable_selector: { selector: ".s_timeline_list_row", direction: "vertical" },
+        is_movable_selectors: { selector: ".s_timeline_list_row", direction: "vertical" },
     };
 }
 

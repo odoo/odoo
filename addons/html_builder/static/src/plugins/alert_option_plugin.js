@@ -14,7 +14,7 @@ class AlertOptionPlugin extends Plugin {
             AlertIconAction,
         },
         builder_options: [withSequence(before(WIDTH), AlertOption)],
-        so_content_addition_selector: [".s_alert"],
+        so_content_addition_selectors: [".s_alert"],
     };
 }
 

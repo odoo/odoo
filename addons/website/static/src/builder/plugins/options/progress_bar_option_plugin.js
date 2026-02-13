@@ -31,7 +31,7 @@ class ProgressBarOptionPlugin extends Plugin {
             DisplayAction,
             ProgressBarValueAction,
         },
-        so_content_addition_selector: [".s_progress_bar"],
+        so_content_addition_selectors: [".s_progress_bar"],
     };
 }
 

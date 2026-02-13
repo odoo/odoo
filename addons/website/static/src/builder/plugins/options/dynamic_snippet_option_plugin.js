@@ -45,7 +45,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
  * @typedef {((arg: {
  *      el: HTMLElement;
  *      template: Template;
- * }) => void)[]} dynamic_snippet_template_updated
+ * }) => void)[]} dynamic_snippet_template_updated_handlers
  */
 
 export const DYNAMIC_SNIPPET = SNIPPET_SPECIFIC_END;
@@ -84,7 +84,7 @@ class DynamicSnippetOptionPlugin extends Plugin {
             NumberOfRecordsAction,
         },
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        is_unremovable_selector: ".s_dynamic_snippet_title",
+        is_unremovable_selectors: ".s_dynamic_snippet_title",
     };
     setup() {
         this.dynamicFiltersCache = new Cache(this._fetchDynamicFilters, JSON.stringify);
@@ -218,7 +218,10 @@ class DynamicSnippetOptionPlugin extends Plugin {
             el.classList.remove(...(oldTemplate.extraSnippetClasses?.split(" ") || []));
             el.classList.add(...(template.extraSnippetClasses?.split(" ") || []));
         }
-        this.dispatchTo("dynamic_snippet_template_updated", { el: el, template: template });
+        this.dispatchTo("dynamic_snippet_template_updated_handlers", {
+            el: el,
+            template: template,
+        });
     }
     async fetchDynamicFilters(params) {
         this.fetchedDynamicFilters = await this.dynamicFiltersCache.read(params);

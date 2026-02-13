@@ -17,7 +17,7 @@ export class ProductsDesignPanelPlugin extends Plugin {
         builder_components: {
             ProductsDesignPanel,
         },
-        handleNewRecords: this.handleMutations.bind(this),
+        new_records_handlers: this.handleMutations.bind(this),
         save_handlers: this.onSave.bind(this),
         product_design_list_to_save: {
             selector: "#o_wsale_products_grid",

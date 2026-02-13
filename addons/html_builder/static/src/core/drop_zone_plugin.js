@@ -24,7 +24,7 @@ import { _t } from "@web/core/l10n/translation";
  */
 
 /**
- * @typedef {DropzoneSelector[]} dropzone_selector
+ * @typedef {DropzoneSelector[]} dropzone_selectors
  * @typedef {((el: HTMLElement) => boolean)[]} filter_for_sibling_dropzone_predicates
  */
 
@@ -60,7 +60,7 @@ export class DropZonePlugin extends Plugin {
 
     setup() {
         this.snippetModel = this.config.snippetModel;
-        this.dropzoneSelectors = this.getResource("dropzone_selector");
+        this.dropzoneSelectors = this.getResource("dropzone_selectors");
         this.iframe = this.document.defaultView.frameElement;
     }
 

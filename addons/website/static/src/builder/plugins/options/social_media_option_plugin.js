@@ -153,7 +153,7 @@ class SocialMediaOptionPlugin extends Plugin {
             withSequence(SNIPPET_SPECIFIC, SocialMediaLinks),
             withSequence(ANIMATE, SocialMediaAnimateOption),
         ],
-        so_content_addition_selector: [".s_share", ".s_social_media"],
+        so_content_addition_selectors: [".s_share", ".s_social_media"],
         builder_actions: {
             ResetSocialMediaIconSizeAction,
             DeleteSocialMediaLinkAction,

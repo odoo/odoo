@@ -2,6 +2,8 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { convertCSSColorToRgba } from "@web/core/utils/colors";
+import { isImageCorsProtected } from "@html_editor/utils/image";
+import { loadImageInfo } from "@html_editor/utils/image_processing";
 
 /**
  * @typedef { Object } ImageHoverShared
@@ -12,7 +14,7 @@ import { convertCSSColorToRgba } from "@web/core/utils/colors";
 export class ImageHoverPlugin extends Plugin {
     static id = "imageHover";
     static shared = ["setHoverEffect", "removeHoverEffect"];
-    static dependencies = ["imagePostProcess", "imageToolOption"];
+    static dependencies = ["imagePostProcess", "imageShapeOption", "imageToolOption"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -25,7 +27,8 @@ export class ImageHoverPlugin extends Plugin {
         system_attributes: ["data-original-src-before-hover"],
         default_shape_handlers: (dataset) =>
             dataset.hoverEffect && "html_builder/geometric/geo_square",
-        post_compute_shape_listeners: async (svg, params) => {
+        hover_effect_allowed_predicates: (el) => this.canHaveHoverEffect(el),
+        post_compute_shape_handlers: async (svg, params) => {
             let rgba = null;
             let rbg = null;
             let opacity = null;
@@ -202,6 +205,25 @@ export class ImageHoverPlugin extends Plugin {
             ...defaultEffectValues[hoverEffectId]?.(),
             hoverEffect: hoverEffectId,
         };
+    }
+    async canHaveHoverEffect(imgEl) {
+        // If the element is not an image, return false
+        if (imgEl.tagName !== "IMG") {
+            return false;
+        }
+
+        const [imageInfo, isCorsProtected] = await Promise.all([
+            loadImageInfo(imgEl),
+            isImageCorsProtected(imgEl),
+        ]);
+        const dataset = { ...imgEl.dataset, ...imageInfo };
+        const imageShapeCategory = this.dependencies.imageShapeOption.getShapeCategory(imgEl);
+        return (
+            !isCorsProtected &&
+            imageShapeCategory !== "devices" &&
+            !this.dependencies.imageShapeOption.isAnimableShape(dataset.shape) &&
+            this.dependencies.imageShapeOption.isImageSupportedForShapes(imgEl, dataset)
+        );
     }
 }
 export class SetHoverEffectAction extends BuilderAction {

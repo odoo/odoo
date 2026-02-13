@@ -12,7 +12,7 @@ export class FieldChangeReplicationPlugin extends Plugin {
 
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        handleNewRecords: this.handleMutations.bind(this),
+        new_records_handlers: this.handleMutations.bind(this),
         normalize_handlers: withSequence(9000, this.normalizeHandler.bind(this)),
     };
 

@@ -3,7 +3,6 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { ImageToolOption } from "./image_tool_option";
 import { VideoSizeOption } from "./video_size_option";
-import { isImageCorsProtected } from "@html_editor/utils/image";
 import { withSequence } from "@html_editor/utils/resource";
 import {
     REPLACE_MEDIA,
@@ -106,14 +105,10 @@ class ImageToolOptionPlugin extends Plugin {
                 }
             }
         },
-        hover_effect_allowed_predicates: (el) => this.canHaveHoverEffect(el),
         normalize_handlers: this.migrateImages.bind(this),
     };
     setup() {
         this.htmlStyle = getHtmlStyle(this.document);
-    }
-    async canHaveHoverEffect(imgEl) {
-        return imgEl.tagName === "IMG" && !(await isImageCorsProtected(imgEl));
     }
     migrateImages(rootEl) {
         for (const el of selectElements(

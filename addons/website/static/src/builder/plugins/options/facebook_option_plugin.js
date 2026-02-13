@@ -16,7 +16,7 @@ class FacebookOptionPlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [FacebookOption],
-        so_content_addition_selector: [".o_facebook_page"],
+        so_content_addition_selectors: [".o_facebook_page"],
         builder_actions: {
             DataAttributeListAction,
             CheckFacebookLinkAction,

@@ -89,7 +89,7 @@ export class CarouselOptionPlugin extends Plugin {
         get_gallery_items_handlers: this.getGalleryItems.bind(this),
         reorder_items_handlers: this.reorderCarouselItems.bind(this),
         before_save_handlers: this.restoreCarousels.bind(this),
-        is_unremovable_selector: carouselItemOptionSelector,
+        is_unremovable_selectors: carouselItemOptionSelector,
     };
 
     /**
