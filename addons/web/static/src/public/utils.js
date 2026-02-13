@@ -30,7 +30,7 @@ import { addLoadingEffect } from "@web/core/utils/ui";
 
 export const DEBOUNCE = 400;
 export const BUTTON_HANDLER_SELECTOR =
-    'a, button, input[type="submit"], input[type="button"], .btn';
+    'a, button, input[type="submit"], input[type="button"], .btn, [role="button"]';
 
 /**
  * Protects a function which is to be used as a handler by preventing its
@@ -41,8 +41,11 @@ export const BUTTON_HANDLER_SELECTOR =
  *      The function which is to be used as a handler. If a promise
  *      is returned, it is used to determine when the handler's action is
  *      finished. Otherwise, the return is used as jQuery uses it.
+ * @param {function|boolean} preventDefault
+ * @param {function|boolean} stopPropagation
+ * @param {function|boolean} stopImmediatePropagation
  */
-export function makeAsyncHandler(fct) {
+export function makeAsyncHandler(fct, preventDefault, stopPropagation, stopImmediatePropagation) {
     let pending = false;
     function _isLocked() {
         return pending;
@@ -53,7 +56,20 @@ export function makeAsyncHandler(fct) {
     function _unlock() {
         pending = false;
     }
-    return function () {
+    return function (ev) {
+        if (preventDefault === true || (preventDefault && preventDefault())) {
+            ev.preventDefault();
+        }
+        if (stopPropagation === true || (stopPropagation && stopPropagation())) {
+            ev.stopPropagation();
+        }
+        if (
+            stopImmediatePropagation === true ||
+            (stopImmediatePropagation && stopImmediatePropagation())
+        ) {
+            ev.stopImmediatePropagation();
+        }
+
         if (_isLocked()) {
             // If a previous call to this handler is still pending, ignore
             // the new call.
@@ -80,12 +96,15 @@ export function makeAsyncHandler(fct) {
  *      The function which is to be used as a button click handler. If a
  *      promise is returned, it is used to determine when the button can be
  *      re-enabled. Otherwise, the return is used as jQuery uses it.
+ * @param {function|boolean} preventDefault
+ * @param {function|boolean} stopPropagation
+ * @param {function|boolean} stopImmediatePropagation
  */
-export function makeButtonHandler(fct) {
+export function makeButtonHandler(fct, preventDefault, stopPropagation, stopImmediatePropagation) {
     // Fallback: if the final handler is not bound to a button, at least
     // make it an async handler (also handles the case where some events
     // might ignore the disabled state of the button).
-    fct = makeAsyncHandler(fct);
+    fct = makeAsyncHandler(fct, preventDefault, stopPropagation, stopImmediatePropagation);
 
     return function (ev) {
         const result = fct.apply(this, arguments);

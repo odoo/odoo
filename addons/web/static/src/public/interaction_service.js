@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import { appTranslateFn } from "@web/core/l10n/translation";
+import { globalInteractionsDeferred } from "./buffer_interaction_events";
 import { Interaction } from "./interaction";
 import { getTemplate } from "@web/core/templates";
 import { PairSet } from "./utils";
@@ -53,7 +54,10 @@ class InteractionService {
      */
     activate(Interactions, target) {
         this.Interactions = Interactions;
-        const startProm = this.env.isReady.then(() => this.startInteractions(target));
+        const startProm = this.env.isReady.then(async () => {
+            await this.startInteractions(target);
+            globalInteractionsDeferred.resolve();
+        });
         this.proms.push(startProm);
     }
 
