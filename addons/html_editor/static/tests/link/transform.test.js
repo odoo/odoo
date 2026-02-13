@@ -139,9 +139,7 @@ test("transform text url into link and undo it", async () => {
     );
 
     undo(editor);
-    expect(cleanLinkArtifacts(getContent(el))).toBe(
-        '<p><a href="https://www.abc.jpg">www.abc.jpg</a>[]</p>'
-    );
+    expect(cleanLinkArtifacts(getContent(el))).toBe("<p>www.abc.jpg&nbsp;[]</p>");
 
     undo(editor);
     expect(cleanLinkArtifacts(getContent(el))).toBe("<p>www.abc.jpg[]</p>");
