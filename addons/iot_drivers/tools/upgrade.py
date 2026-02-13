@@ -1,8 +1,6 @@
 """Module to manage odoo code upgrades using git"""
 
 import logging
-import re
-import requests
 import subprocess
 from odoo.addons.iot_drivers.tools.helpers import (
     odoo_restart,
@@ -21,29 +19,11 @@ _logger = logging.getLogger(__name__)
 
 
 def get_last_stable_odoo_version():
-    """Get the last stable Odoo version from the server."""
-    try:
-        # 200 per page, as there already are 86 branches (08/2025)
-        response = requests.get(
-        'https://api.github.com/repos/odoo/odoo/branches?per_page=200', timeout=5
-        )
-        response.raise_for_status()
-        branches = response.json()
-    except requests.exceptions.RequestException:
-        _logger.exception("Failed to fetch branches from GitHub")
-        return None
-
-    ordered_branches = sorted({
-        float(match.group(1))
-        for branch in branches
-        if (match := re.search(r'(\d+(?:\.\d+)?)', branch['name']))
-    }, reverse=True)
-
-    if not ordered_branches:
-        return None
-
-    last = ordered_branches[0]
-    return f'saas-{last}' if int(last) != last else str(last)
+    """This method provides the last stable Odoo version.
+    To be changed whenever a new stable Odoo version is released and
+    we are sure that this version is compatible with all db versions.
+    """
+    return "saas-19.2"
 
 
 @toggleable
