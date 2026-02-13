@@ -213,7 +213,7 @@ export function addLink(node, transformChildren) {
  * @param {boolean} [param0.readonly] If true, returns a non-clickable span; if false, returns a clickable link
  * @returns {HTMLElement} Either an HTMLSpanElement(readonly) or HTMLAnchorElement(clickable)
  */
-function generateMentionElement({ className, id, model, text, readonly }) {
+export function generateMentionElement({ className, id, model, text, readonly }) {
     if (readonly) {
         const span = document.createElement("span");
         setAttributes(span, {

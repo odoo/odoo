@@ -7,7 +7,7 @@
             <t t-if="this.message.notificationType === 'call'">
                 <span class="text-muted" t-out="this.callInformation"/>
             </t>
-            <t t-elif="['channel_rename', 'thread_deletion'].includes(this.message.notificationType)">
+            <t t-elif="['channel_rename', 'thread_deletion', 'thread_creation'].includes(this.message.notificationType)">
                 <span class="text-muted" t-out="this.message.inlineBody"/>
             </t>
             <t t-else="">
