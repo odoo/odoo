@@ -50,7 +50,7 @@ def setup_product_combo_items(self):
         }
     )
 
-    combo_product_2 = self.env["product.product"].create(
+    self.combo_product_2 = self.env["product.product"].create(
         {
             "name": "Combo Product 2",
             "is_storable": True,
@@ -81,7 +81,7 @@ def setup_product_combo_items(self):
                     "extra_price": 0,
                 }),
                 Command.create({
-                    "product_id": combo_product_2.id,
+                    "product_id": self.combo_product_2.id,
                     "extra_price": 0,
                 }),
                 Command.create({
