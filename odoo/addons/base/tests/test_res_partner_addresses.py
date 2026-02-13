@@ -1,4 +1,4 @@
-from odoo.addons.base.tests.test_views import ViewCase
+from odoo.addons.base.tests.test_ir_ui_view import ViewCase
 from odoo.tests import tagged
 
 

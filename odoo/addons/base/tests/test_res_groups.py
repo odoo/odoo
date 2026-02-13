@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests import tagged, TransactionCase, Form
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -144,3 +144,10 @@ class TestGroups(TransactionCase):
         self.assertIn(u1, e.all_user_ids)
         self.assertIn(u2, e.all_user_ids)
         self.assertNotIn(p, e.all_user_ids)
+
+
+class TestResGroupForm(TransactionCase):
+    def test_create_res_group(self):
+        group_form = Form(self.env['res.groups'])
+        group_form.name = 'a group'
+        group_form.save()
