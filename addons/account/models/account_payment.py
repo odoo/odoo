@@ -1155,7 +1155,10 @@ class AccountPayment(models.Model):
         self.filtered(lambda pay: pay.state in {False, 'draft', 'in_process'}).state = 'in_process'
 
     def action_validate(self):
-        self.state = 'paid'
+        for payment in self:
+            if payment.state != 'in_process':
+                raise UserError(_("Payment must be in paid state to be reconciled."))
+            payment.state = 'paid'
 
     def action_reject(self):
         self.state = 'rejected'

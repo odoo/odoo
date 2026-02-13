@@ -106,15 +106,24 @@
                         </group>
                         <group name="group2">
                             <label for="amount"/>
-                            <div name="amount_div" class="o_row">
-                                <field name="amount"
-                                 force_save="1"
-                                 readonly="not can_edit_wizard or can_group_payments and not group_payment"/>
-                                <field name="currency_id"
-                                       required="1"
-                                       options="{'no_create': True, 'no_open': True}"
-                                       invisible="not can_edit_wizard or can_group_payments and not group_payment"
-                                       groups="base.group_multi_currency"/>
+                            <div name="amount_div" class="d-flex flex-column align-items-start">
+                                <div class="d-flex align-items-center gap-1">
+                                    <field name="amount"
+                                     force_save="1"
+                                     readonly="not can_edit_wizard or can_group_payments and not group_payment"/>
+                                    <field name="currency_id"
+                                           required="1"
+                                           options="{'no_create': True, 'no_open': True}"
+                                           invisible="not can_edit_wizard or can_group_payments and not group_payment"
+                                           groups="base.group_multi_currency"/>
+                                </div>
+                                <div name="currency_conversion_div" class="d-flex gap-1 text-muted" invisible="currency_id == company_currency_id == source_currency_id">
+                                    <span>1</span>
+                                    <field name="company_currency_id" readonly="1" options="{'no_open': True}"/>
+                                    <span>=</span>
+                                    <field name="exchange_rate" readonly="True"/>
+                                    <field name="exchange_rate_currency_code" readonly="True"/>
+                                </div>
                             </div>
                             <field
                                 name="installments_switch_html"
