@@ -5,7 +5,7 @@
     'summary': 'Base Import & Export Tests: Ensure Flow Robustness',
     'description': """This module contains tests related to base import and export.""",
     # website is there only for MockRequest
-    'depends': ['web', 'base_import', 'website'],
+    'depends': ['web', 'base_import', 'website', 'test_tools'],
     'data': [
         'security/ir.model.access.csv',
     ],
