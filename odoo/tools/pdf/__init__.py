@@ -622,7 +622,7 @@ class OdooPdfFileWriter(PdfFileWriter):
                 DictionaryObject({
                     NameObject('/CheckSum'): createStringObject(md5(attachment['content']).hexdigest()),
                     NameObject('/ModDate'): createStringObject(datetime.now().strftime(DEFAULT_PDF_DATETIME_FORMAT)),
-                    NameObject('/Size'): NameObject(f"/{len(attachment['content'])}"),
+                    NameObject('/Size'): NumberObject(len(attachment['content'])),
                 }),
         })
         if attachment.get('subtype'):
