@@ -141,4 +141,16 @@ export class PosOrder extends models.ServerModel {
             "product.attribute.custom.value": posCustomAttributeValue,
         };
     }
+
+    get_stock_reports_to_print() {
+        return [
+            {
+                type: "ir.actions.report",
+                report_name: "stock.report_return_document",
+                report_type: "qweb-pdf",
+                report_file: "return_slip",
+                name: "Return slip",
+            },
+        ];
+    }
 }
