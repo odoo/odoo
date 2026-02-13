@@ -147,9 +147,8 @@ export class VideoSelector extends Component {
                     if (!src.startsWith("https:") && !src.startsWith("http:")) {
                         this.state.urlInput = "https:" + this.state.urlInput;
                     }
-                    this.state.isVertical = !!closestElement(
-                        this.props.media,
-                        ".media_iframe_video"
+                    this.state.isVertical = !!closestElement(this.props.media, (el) =>
+                        el.matches('div[data-embedded="video"], .media_iframe_video')
                     )?.dataset.isVertical;
                     await this.syncOptionsWithUrl();
                     if (status(this) === "destroyed") {
