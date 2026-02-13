@@ -62,6 +62,18 @@
         }
     }
 
+    // Prevented horizontal overflow of control buttons.
+    .container-fluid {
+        @include media-breakpoint-up(md) {
+            .carousel-control-prev {
+                transform: translateX(50%);
+            }
+            .carousel-control-next {
+                transform: translateX(-50%);
+            }
+        }
+    }
+
     // Applies arrows' alignment except when title is on the left + desktop
     &:where(.o_wsale_products_opt_design_thumbs) {
         &:not(:has(.s_dynamic_snippet_title_aside)) {
@@ -74,17 +86,6 @@
                 @include o-aligns-controlers;
                 @include o-adapts-col-size;
             }
-        }
-    }
-}
-.s_dynamic_snippet_products .container-fluid .s_dynamic_snippet_content {
-    @include media-breakpoint-up(md) {
-        // Prevented horizontal overflow of control buttons.
-        .carousel-control-prev {
-            transform: translateX(50%); 
-        }
-        .carousel-control-next {
-            transform: translateX(-50%); 
         }
     }
 }
