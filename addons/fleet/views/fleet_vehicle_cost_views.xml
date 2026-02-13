@@ -7,7 +7,7 @@
             <form string="Contract logs">
                 <field name="company_id" invisible="1"/>
                 <header>
-                    <button name="action_close" string="Cancel" type="object" class="btn-secondary" invisible="state == 'closed'"/>
+                    <button name="action_close" string="Close" type="object" class="btn-secondary" invisible="state == 'closed'"/>
                     <button name="action_reactivate" string="Reactivate" type="object" class="btn-secondary" invisible="state != 'closed'"/>
                     <field name="state" widget="statusbar" statusbar_visible="futur,open" invisible="state in ('expired', 'closed')"/>
                     <field name="state" widget="statusbar" statusbar_visible="futur,open,expired" invisible="state != 'expired'"/>
