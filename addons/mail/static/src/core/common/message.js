@@ -113,7 +113,7 @@ export class Message extends Component {
             emailHeaderOpen: false,
         });
         this.rightClickDropdownState = useDropdownState({
-            onClose: () => this.props.messageSelection.clearSelected(),
+            onClose: () => this.props.messageSelection?.clearSelected(),
         });
         this.rightClickAnchor = useChildRef("rightClickAnchor");
         /** @type {ShadowRoot} */
