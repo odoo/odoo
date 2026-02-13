@@ -886,6 +886,7 @@ patch(PosStore.prototype, {
         const destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
         await this.mergeOrders(sourceOrder, destinationOrder);
         await this.setTable(destinationTable);
+        return destinationOrder;
     },
     async handleFailToPrepareOrderTransfer(orders) {
         await this.syncAllOrders({ orders });

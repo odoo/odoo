@@ -25,9 +25,9 @@ patch(PosStore.prototype, {
 
         this.models["pos.order.line"].addEventListener("update", (data) => {
             const line = this.models["pos.order.line"].get(data.id);
-            const order = line.order_id;
 
-            if (!line.isDiscountLine) {
+            if (line && !line.isDiscountLine) {
+                const order = line.order_id;
                 updateOrderDiscount(order);
             }
         });

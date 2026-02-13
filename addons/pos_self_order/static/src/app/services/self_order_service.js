@@ -88,15 +88,8 @@ export class SelfOrder extends Reactive {
             }
         });
         if (this.config.self_ordering_mode === "kiosk") {
-            this.data.connectWebSocket("STATUS", ({ status }) => {
-                if (status === "closed") {
-                    this.pos_session = [];
-                    this.ordering = false;
-                } else {
-                    // reload to get potential new settings
-                    // more easier than RPC for now
-                    window.location.reload();
-                }
+            this.data.connectWebSocket("STATUS", async ({ status }) => {
+                await this.handleKioskSessionStatusChange(status);
             });
             this.data.connectWebSocket("PAYMENT_STATUS", ({ payment_result, data }) => {
                 if (payment_result === "Success") {
@@ -158,6 +151,16 @@ export class SelfOrder extends Reactive {
             initLNA(this.notification);
         } else {
             odoo.use_lna = false;
+        }
+    }
+    async handleKioskSessionStatusChange(status) {
+        if (status === "closed") {
+            this.pos_session = [];
+            this.ordering = false;
+        } else {
+            // reload to get potential new settings
+            // more easier than RPC for now
+            window.location.reload();
         }
     }
 
