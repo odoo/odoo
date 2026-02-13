@@ -21,14 +21,12 @@ class IrActionsReport(models.Model):
         # Add only supported options for macOS
         command_args.extend([
             '--disable-local-file-access',
+            '--quiet',
             '--no-pdf-compression',
             '--disable-smart-shrinking',
             '--print-media-type',
             '--no-stop-slow-scripts'
         ])
-        
-        # Add quiet mode at the beginning
-        command_args.insert(0, '--quiet')
         
         # Add javascript delay based on system resources
         try:

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+    <!-- Configuration to fix Wkhtmltopdf memory issues -->
+    <record id="wkhtmltopdf_memory_limit" model="ir.config_parameter">
+        <field name="key">report.wkhtmltopdf.memory_limit</field>
+        <field name="value">2684354560</field>
+    </record>
+
+    <record id="wkhtmltopdf_max_file_descriptors" model="ir.config_parameter">
+        <field name="key">report.wkhtmltopdf.max_file_descriptors</field>
+        <field name="value">10000</field>
+    </record>
+
+    <record id="wkhtmltopdf_timeout" model="ir.config_parameter">
+        <field name="key">report.wkhtmltopdf.timeout</field>
+        <field name="value">300</field>
+    </record>
+
+    <record id="wkhtmltopdf_quiet" model="ir.config_parameter">
+        <field name="key">report.wkhtmltopdf.quiet</field>
+        <field name="value">True</field>
+    </record>
+
+    <record id="wkhtmltopdf_disable_local_file_access" model="ir.config_parameter">
+        <field name="key">report.wkhtmltopdf.disable_local-file-access</field>
+        <field name="value">True</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+    <!-- Email Configuration Parameters -->
+    <record id="mail_default_from" model="ir.config_parameter">
+        <field name="key">mail.default.from</field>
+        <field name="value">noreply@localhost</field>
+    </record>
+
+    <record id="mail_catchall_domain" model="ir.config_parameter">
+        <field name="key">mail.catchall.domain</field>
+        <field name="value">localhost</field>
+    </record>
+
+    <record id="mail_catchall_alias" model="ir.config_parameter">
+        <field name="key">mail.catchall.alias</field>
+        <field name="value">catchall</field>
+    </record>
+
+    <record id="mail_bounce_alias" model="ir.config_parameter">
+        <field name="key">mail.bounce.alias</field>
+        <field name="value">bounce</field>
+    </record>
+
+    <!-- Email Server Configuration -->
+    <record id="mail_server_default" model="ir.mail_server">
+        <field name="name">Default SMTP Server</field>
+        <field name="smtp_host">localhost</field>
+        <field name="smtp_port">587</field>
+        <field name="smtp_encryption">none</field>
+        <field name="smtp_user"></field>
+        <field name="smtp_pass"></field>
+        <field name="active">True</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <!-- Alternative SMTP Server for development -->
+    <record id="mail_server_development" model="ir.mail_server">
+        <field name="name">Development SMTP Server</field>
+        <field name="smtp_host">smtp.gmail.com</field>
+        <field name="smtp_port">587</field>
+        <field name="smtp_encryption">starttls</field>
+        <field name="smtp_user">your-email@gmail.com</field>
+        <field name="smtp_pass">your-app-password</field>
+        <field name="active">False</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <!-- Email Template Configuration -->
+    <record id="mail_template_sale_quotation_enhanced" model="mail.template">
+        <field name="name">Sale Quotation (Enhanced)</field>
+        <field name="model_id" ref="model_sale_order"/>
+        <field name="subject">Quotation {{ object.name }} from {{ object.company_id.name }}</field>
+        <field name="email_from">{{ object.company_id.email or 'noreply@localhost' }}</field>
+        <field name="email_to">{{ object.partner_id.email }}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p>Dear {{ object.partner_id.name }},</p>
+                <p>Thank you for your interest in our products. Please find attached our quotation.</p>
+                <p>If you have any questions, please don't hesitate to contact us.</p>
+                <p>Best regards,<br/>
+                {{ object.user_id.name }}<br/>
+                {{ object.company_id.name }}</p>
+            </div>
+        </field>
+        <field name="auto_delete">True</field>
+    </record>
+
+    <record id="mail_template_sale_confirmation_enhanced" model="mail.template">
+        <field name="name">Sale Confirmation (Enhanced)</field>
+        <field name="model_id" ref="model_sale_order"/>
+        <field name="subject">Order Confirmation {{ object.name }} from {{ object.company_id.name }}</field>
+        <field name="email_from">{{ object.company_id.email or 'noreply@localhost' }}</field>
+        <field name="email_to">{{ object.partner_id.email }}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p>Dear {{ object.partner_id.name }},</p>
+                <p>Thank you for your order. We have received your order {{ object.name }} and will process it shortly.</p>
+                <p>Order Details:</p>
+                <ul>
+                    <li>Order Number: {{ object.name }}</li>
+                    <li>Date: {{ object.date_order }}</li>
+                    <li>Total Amount: {{ object.amount_total }}</li>
+                </ul>
+                <p>We will keep you updated on the progress of your order.</p>
+                <p>Best regards,<br/>
+                {{ object.user_id.name }}<br/>
+                {{ object.company_id.name }}</p>
+            </div>
+        </field>
+        <field name="auto_delete">True</field>
+    </record>
+
+</odoo>
