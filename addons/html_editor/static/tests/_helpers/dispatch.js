@@ -4,6 +4,10 @@ function dispatchTo(editor, resourceId, ...args) {
     (editor.resources[resourceId] || []).forEach((fn) => fn(...args));
 }
 
+function processThrough(editor, resourceId, item, ...args) {
+    return editor.processThrough(resourceId, item, ...args);
+}
+
 export function dispatchNormalize(editor) {
     dispatchTo(editor, "normalize_handlers", editor.editable);
 }
@@ -15,6 +19,6 @@ export function cleanHints(editor) {
     }
 }
 
-export function dispatchCleanForSave(editor, payload) {
-    dispatchTo(editor, "clean_for_save_handlers", payload);
+export function processThroughCleanForSave(editor, item, options) {
+    return processThrough(editor, "clean_for_save_processors", item, options);
 }

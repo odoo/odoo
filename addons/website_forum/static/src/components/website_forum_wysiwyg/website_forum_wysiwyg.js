@@ -62,7 +62,7 @@ export class WebsiteForumWysiwyg extends Wysiwyg {
             content: this.getTextAreaContent(),
             resources: {
                 start_edition_handlers: () => this.cleanImageClasses(this.editor.editable),
-                clean_for_save_handlers: ({ root }) => this.cleanImageClasses(root),
+                clean_for_save_processors: (root) => this.cleanImageClasses(root),
             },
             defaultLinkAttributes: { rel: "ugc noreferrer noopener", target: "_blank" },
             dropImageAsAttachment: true,

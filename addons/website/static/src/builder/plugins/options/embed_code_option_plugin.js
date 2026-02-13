@@ -23,10 +23,10 @@ class EmbedCodeOptionPlugin extends Plugin {
         builder_actions: {
             EditCodeAction,
         },
-        clean_for_save_handlers: this.cleanForSave.bind(this),
+        clean_for_save_processors: this.cleanForSave.bind(this),
     };
 
-    cleanForSave({ root }) {
+    cleanForSave(root) {
         // Saving Embed Code snippets with <script> in the database, as these
         // elements are removed in edit mode.
         for (const embedCodeEl of root.querySelectorAll(".s_embed_code")) {

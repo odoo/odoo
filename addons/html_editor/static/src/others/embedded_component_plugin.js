@@ -26,7 +26,6 @@ export class EmbeddedComponentPlugin extends Plugin {
     resources = {
         /** Handlers */
         normalize_handlers: withSequence(0, this.normalize.bind(this)),
-        clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
         attribute_change_handlers: this.onChangeAttribute.bind(this),
         restore_savepoint_handlers: () => this.handleComponents(this.editable),
         history_reset_handlers: () => this.handleComponents(this.editable),
@@ -34,9 +33,15 @@ export class EmbeddedComponentPlugin extends Plugin {
         step_added_handlers: ({ stepCommonAncestor }) => this.handleComponents(stepCommonAncestor),
         external_step_added_handlers: () => this.handleComponents(this.editable),
 
+        /** Processors */
+        clean_for_save_processors: (root) => this.cleanForSave(root),
         serializable_descendants_processors: this.processDescendantsToSerialize.bind(this),
         attribute_change_processors: this.onChangeAttribute.bind(this),
+
+        /** Predicates */
         savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
+
+        /** Selectors */
         move_node_whitelist_selectors: "[data-embedded]",
     };
 

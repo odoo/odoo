@@ -85,14 +85,17 @@ export class MediaPlugin extends Plugin {
         closest_savable_providers: withSequence(20, (el) => this.editable),
 
         /** Handlers */
-        clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
         normalize_handlers: this.normalizeMedia.bind(this),
         selectionchange_handlers: this.selectAroundIcon.bind(this),
 
-        unsplittable_node_predicates: isIconElement, // avoid merge
-        is_node_editable_predicates: this.isEditableMediaElement.bind(this),
+        /** Processors */
+        clean_for_save_processors: (root) => this.cleanForSave(root),
         clipboard_content_processors: this.clean.bind(this),
         clipboard_text_processors: (text) => text.replace(/\u200B/g, ""),
+
+        /** Predicates */
+        unsplittable_node_predicates: isIconElement, // avoid merge
+        is_node_editable_predicates: this.isEditableMediaElement.bind(this),
         functional_empty_node_predicates: isMediaElement,
 
         selectors_for_feff_providers: () =>

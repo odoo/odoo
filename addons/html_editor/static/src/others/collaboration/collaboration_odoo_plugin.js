@@ -58,7 +58,7 @@ export class CollaborationOdooPlugin extends Plugin {
                 }
             );
         }, 50),
-        clean_for_save_handlers: ({ root }) => this.attachHistoryIds(root),
+        clean_for_save_processors: (root) => this.attachHistoryIds(root),
         history_missing_parent_step_handlers: this.onHistoryMissingParentStep.bind(this),
         history_reset_handlers: this.onReset.bind(this),
         step_added_handlers: ({ step }) =>

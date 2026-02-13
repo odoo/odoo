@@ -48,7 +48,9 @@ export class SeparatorPlugin extends Plugin {
         selectionchange_handlers: this.handleSelectionInHr.bind(this),
         deselect_custom_selected_nodes_handlers: this.deselectHR.bind(this),
         clean_handlers: this.deselectHR.bind(this),
-        clean_for_save_handlers: ({ root }) => {
+
+        /** Processors */
+        clean_for_save_processors: (root) => {
             this.deselectHR(root);
         },
     };

@@ -88,7 +88,7 @@ export class DragAndDropPlugin extends Plugin {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
         system_classes: ["o_draggable"],
-        clean_for_save_handlers: this.cleanForSave.bind(this),
+        clean_for_save_processors: this.cleanForSave.bind(this),
     };
 
     setup() {
@@ -103,7 +103,7 @@ export class DragAndDropPlugin extends Plugin {
         this.draggableComponentImgs?.destroy();
     }
 
-    cleanForSave({ root }) {
+    cleanForSave(root) {
         selectElements(root, ".o_draggable").forEach((el) => {
             el.classList.remove("o_draggable");
         });

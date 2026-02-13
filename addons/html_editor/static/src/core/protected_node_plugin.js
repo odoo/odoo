@@ -19,15 +19,20 @@ export class ProtectedNodePlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
-        clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
         normalize_handlers: withSequence(0, this.normalize.bind(this)),
         before_filter_mutation_record_handlers: this.beforeFilteringMutationRecords.bind(this),
 
+        /** Processors */
+        clean_for_save_processors: (root) => this.cleanForSave(root),
+
+        /** Predicates */
         unsplittable_node_predicates: [
             isProtecting, // avoid merge
             isUnprotecting,
         ],
         savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
+
+        /** Providers */
         removable_descendants_providers: this.filterDescendantsToRemove.bind(this),
     };
 

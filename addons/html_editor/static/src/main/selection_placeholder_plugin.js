@@ -26,7 +26,7 @@ export class SelectionPlaceholderPlugin extends Plugin {
         normalize_handlers: withSequence(100, this.updatePlaceholders.bind(this)),
         step_added_handlers: this.updatePlaceholders.bind(this),
         selectionchange_handlers: (selectionData) => this.onSelectionChange(selectionData),
-        clean_for_save_handlers: withSequence(0, ({ root }) => {
+        clean_for_save_processors: withSequence(0, (root) => {
             for (const placeholder of root.querySelectorAll(PLACEHOLDER_SELECTOR)) {
                 placeholder.remove();
             }

@@ -3,8 +3,8 @@ import { AddSnippetDialogSandboxed } from "./snippet_viewer/add_snippet_dialog";
 import { registry } from "@web/core/registry";
 
 export class MassMailingSnippetModel extends SnippetModel {
-    cleanSnippetForSave(snippetCopyEl, cleanForSaveHandlers) {
-        super.cleanSnippetForSave(snippetCopyEl, cleanForSaveHandlers);
+    cleanSnippetForSave(snippetCopyEl, cleanForSaveProcessors) {
+        super.cleanSnippetForSave(snippetCopyEl, cleanForSaveProcessors);
         const dynamicPlaceholders = snippetCopyEl.querySelectorAll("t[t-out]");
         dynamicPlaceholders.forEach((placeholderEl) => {
             const placeholderString =

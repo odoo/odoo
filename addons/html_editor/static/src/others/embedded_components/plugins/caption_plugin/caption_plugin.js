@@ -43,7 +43,7 @@ export class CaptionPlugin extends Plugin {
                 isActive: () => this.hasImageCaption(this.dependencies.image.getTargetedImage()),
             },
         ],
-        clean_for_save_handlers: this.cleanForSave.bind(this),
+        clean_for_save_processors: this.cleanForSave.bind(this),
         mount_component_handlers: this.setupNewCaption.bind(this),
         delete_handlers: this.afterDelete.bind(this),
         before_cut_handlers: this.expandSelectionToCaption.bind(this),
@@ -80,7 +80,7 @@ export class CaptionPlugin extends Plugin {
         }
     }
 
-    cleanForSave({ root }) {
+    cleanForSave(root) {
         for (const figure of root.querySelectorAll("figure")) {
             figure.removeAttribute("contenteditable");
             const image = figure.querySelector("img");

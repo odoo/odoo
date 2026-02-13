@@ -181,10 +181,10 @@ export class Builder extends Component {
                     key: this.env.localOverlayContainerKey,
                     ref: this.props.overlayRef,
                 },
-                saveSnippet: (snippetEl, cleanForSaveHandlers, wrapWithSaveSnippetHandlers) =>
+                saveSnippet: (snippetEl, cleanForSaveProcessors, wrapWithSaveSnippetHandlers) =>
                     this.snippetModel.saveSnippet(
                         snippetEl,
-                        cleanForSaveHandlers,
+                        cleanForSaveProcessors,
                         wrapWithSaveSnippetHandlers
                     ),
                 snippetModel: this.snippetModel,

@@ -146,7 +146,7 @@ export class BuilderOptionsPlugin extends Plugin {
         step_added_handlers: this.onStepAdded.bind(this),
         post_undo_handlers: (revertedStep) => this.restoreContainers(revertedStep, "undo"),
         post_redo_handlers: (revertedStep) => this.restoreContainers(revertedStep, "redo"),
-        clean_for_save_handlers: this.cleanForSave.bind(this),
+        clean_for_save_processors: this.cleanForSave.bind(this),
         start_edition_handlers: () => {
             if (this.config.initialTarget) {
                 const el = this.editable.querySelector(this.config.initialTarget);
@@ -458,7 +458,7 @@ export class BuilderOptionsPlugin extends Plugin {
         return buttons;
     }
 
-    cleanForSave({ root }) {
+    cleanForSave(root) {
         for (const Option of this.builderOptions) {
             const { selector, exclude, cleanForSave } = Option;
             if (!cleanForSave) {

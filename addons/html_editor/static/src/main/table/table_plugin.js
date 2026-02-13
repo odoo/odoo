@@ -1,11 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isBlock } from "@html_editor/utils/blocks";
-import {
-    fillEmpty,
-    fillShrunkPhrasingParent,
-    removeClass,
-} from "@html_editor/utils/dom";
+import { fillEmpty, fillShrunkPhrasingParent, removeClass } from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
     isProtected,
@@ -112,6 +108,8 @@ export class TablePlugin extends Plugin {
                 isAvailable: isHtmlContentSupported,
             },
         ],
+
+        /** Providers */
         toolbar_namespace_providers: [
             withSequence(
                 90,
@@ -122,11 +120,17 @@ export class TablePlugin extends Plugin {
 
         /** Handlers */
         selectionchange_handlers: this.updateSelectionTable.bind(this),
-        clipboard_content_processors: this.processContentForClipboard.bind(this),
-        clean_for_save_handlers: ({ root }) => this.deselectTable(root),
         before_line_break_handlers: this.resetTableSelection.bind(this),
         before_split_block_handlers: this.resetTableSelection.bind(this),
+        normalize_handlers: this.distributeTableColorsToAllCells.bind(this),
+
+        /** Processors */
         before_insert_processors: this.handleTableInsert.bind(this),
+        clean_for_save_processors: (root) => {
+            this.deselectTable(root);
+        },
+        clipboard_content_processors: this.processContentForClipboard.bind(this),
+        targeted_nodes_processors: this.adjustTargetedNodes.bind(this),
 
         /** Overrides */
         tab_overrides: withSequence(20, this.handleTab.bind(this)),
@@ -134,12 +138,11 @@ export class TablePlugin extends Plugin {
         delete_range_overrides: this.handleDeleteRange.bind(this),
         color_apply_overrides: this.applyTableColor.bind(this),
 
+        /** Predicates */
         unremovable_node_predicates: isUnremovableTableComponent,
         unsplittable_node_predicates: (node) =>
             node.nodeName === "TABLE" || tableInnerComponents.has(node.nodeName),
         fully_selected_node_predicates: (node) => !!closestElement(node, ".o_selected_td"),
-        targeted_nodes_processors: this.adjustTargetedNodes.bind(this),
-        move_node_whitelist_selectors: "table",
         selection_blocker_predicates: (node) => {
             if (node.nodeName === "TABLE") {
                 return true;
@@ -152,7 +155,9 @@ export class TablePlugin extends Plugin {
                 return true;
             }
         },
-        normalize_handlers: this.distributeTableColorsToAllCells.bind(this),
+
+        /** Selectors */
+        move_node_whitelist_selectors: "table",
     };
 
     setup() {

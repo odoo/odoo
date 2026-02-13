@@ -11,7 +11,7 @@ export class SanitizePlugin extends Plugin {
     static shared = ["sanitize"];
     /** @type {import("plugins").EditorResources} */
     resources = {
-        clean_for_save_handlers: this.cleanForSave.bind(this),
+        clean_for_save_processors: this.cleanForSave.bind(this),
         normalize_handlers: this.normalize.bind(this),
     };
 
@@ -61,7 +61,7 @@ export class SanitizePlugin extends Plugin {
      * classes/attributes in a custom plugin should be managed by that same
      * custom plugin.
      */
-    cleanForSave({ root }) {
+    cleanForSave(root) {
         for (const el of selectElements(
             root,
             ".o-contenteditable-false, .o-contenteditable-true"
