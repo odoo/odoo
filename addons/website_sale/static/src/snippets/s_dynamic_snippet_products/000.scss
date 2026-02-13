@@ -33,15 +33,17 @@
         }
 
         @include media-breakpoint-up(lg) {
-            &:where(:not(.o_carousel_multi_items):has(.s_dynamic_snippet_title_aside)) {
-                .o_carousel_arrow_wrap {
-                    --o-wsale-card-thumb-aspect-ratio: none;
+            &:where(:not(.o_carousel_multi_items)) > :where(:not(.container-fluid)) {
+                .s_dynamic_snippet_title_aside + .s_dynamic_snippet_content {
+                    .o_carousel_arrow_wrap {
+                        --o-wsale-card-thumb-aspect-ratio: none;
+                    }
                 }
             }
         }
     }
 }
-.s_dynamic_snippet_products .container-fluid .s_dynamic_snippet_content {
+.s_dynamic_snippet_products:not(.o_arrows_bottom) .container-fluid .s_dynamic_snippet_content {
     @include media-breakpoint-up(md) {
         // Prevented horizontal overflow of control buttons.
         .carousel-control-prev {
