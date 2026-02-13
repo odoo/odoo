@@ -172,7 +172,9 @@
                     <filter string="Start Date" name="start_date" date="date_start" end_month="1" end_year="1"/>
                     <filter string="End Date" name="end_date" date="date" end_month="1" end_year="1"/>
                     <separator/>
-                    <filter string="Templates" context="{'render_project_templates': True}" name="templates" domain="[('is_template', '=', True)]"
+                    <filter string="Templates"
+                        context="{'render_project_templates': True, 'default_is_template': True}"
+                        name="templates" domain="[('is_template', '=', True)]"
                         invisible="not context.get('display_milestone_deadline')"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
@@ -363,8 +365,18 @@
             </field>
         </record>
 
+        <!-- Please update both act_window when modifying one (open_create_project or open_create_project_template) as they should be the same except for the name -->
         <record id="open_create_project" model="ir.actions.act_window">
             <field name="name">Create a Project</field>
+            <field name="res_model">project.project</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="project_project_view_form_simplified_footer"/>
+            <field name="target">new</field>
+            <field name="context">{"default_allow_billable": 0}</field>
+        </record>
+
+        <record id="open_create_project_template" model="ir.actions.act_window">
+            <field name="name">Create a Project Template</field>
             <field name="res_model">project.project</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="project_project_view_form_simplified_footer"/>
@@ -744,9 +756,23 @@
             <field name="arch" type="xml">
                 <kanban position="attributes">
                     <attribute name="js_class"></attribute>
+                    <attribute name="on_create">project.open_create_project_template</attribute>
                 </kanban>
                 <span name="partner_name" position="replace"/>
             </field>
+        </record>
+
+        <record id="open_view_project_template" model="ir.actions.act_window">
+            <field name="name">Project Templates</field>
+            <field name="res_model">project.project</field>
+            <field name="path">project-template</field>
+            <field name="domain">[('is_template', '=', True)]</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="context">{'default_is_template': True}</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'list', 'view_id': ref('project_templates_view_list')}),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('project_templates_view_kanban')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('project_templates_view_form')})]"/>
         </record>
 
         <record id="action_server_convert_project_to_template" model="ir.actions.server">
