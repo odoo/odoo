@@ -1178,6 +1178,13 @@ export class Wysiwyg extends Component {
         this.odooEditor.resetContent(value);
     }
     /**
+     * @param {String} value
+     */
+    insertContent(value) {
+        this.odooEditor.dispatchEvent(new Event("dirty"));
+        this.odooEditor.resetContent(value);
+    }
+    /**
      * Undo one step of change in the editor.
      */
     undo() {
