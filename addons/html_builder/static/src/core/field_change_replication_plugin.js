@@ -13,7 +13,7 @@ export class FieldChangeReplicationPlugin extends Plugin {
     /** @type {import("plugins").BuilderResources} */
     resources = {
         handleNewRecords: this.handleMutations.bind(this),
-        normalize_handlers: withSequence(9000, this.normalizeHandler.bind(this)),
+        normalize_processors: withSequence(9000, this.normalizeProcessor.bind(this)),
     };
 
     setup() {
@@ -39,7 +39,7 @@ export class FieldChangeReplicationPlugin extends Plugin {
      * @param { Node } commonAncestor
      * @param { "original"|"undo"|"redo"|"restore" } stepState
      */
-    normalizeHandler(commonAncestor, stepState) {
+    normalizeProcessor(commonAncestor, stepState) {
         const fields = this.fieldsToReplicate;
         this.fieldsToReplicate = new Set();
         if (stepState !== "original") {
@@ -114,7 +114,7 @@ export class FieldChangeReplicationPlugin extends Plugin {
             }
         }
         for (const touchedEl of touchedEls) {
-            this.dispatchTo("normalize_handlers", touchedEl);
+            this.processThrough("normalize_processors", touchedEl);
         }
     }
 }

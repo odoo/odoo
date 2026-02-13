@@ -301,7 +301,6 @@ export class LinkPlugin extends Plugin {
         before_paste_handlers: this.updateCurrentLinkSyncState.bind(this),
         after_paste_handlers: this.onPasteNormalizeLink.bind(this),
         selectionchange_handlers: this.handleSelectionChange.bind(this),
-        normalize_handlers: this.normalizeLink.bind(this),
         after_insert_handlers: this.handleAfterInsert.bind(this),
         on_will_remove_handlers: () => this.closeLinkTools(),
 
@@ -314,6 +313,7 @@ export class LinkPlugin extends Plugin {
 
         /** Processors */
         clean_for_save_processors: (root) => this.removeEmptyLinks(root),
+        normalize_processors: this.normalizeLink.bind(this),
         to_inline_code_processors: (node) => {
             this.removeEmptyLinks(node);
             for (const btn of selectElements(node, "a.btn")) {

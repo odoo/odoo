@@ -1,15 +1,11 @@
 import { removeClass } from "@html_editor/utils/dom";
 
-function dispatchTo(editor, resourceId, ...args) {
-    (editor.resources[resourceId] || []).forEach((fn) => fn(...args));
-}
-
 function processThrough(editor, resourceId, item, ...args) {
     return editor.processThrough(resourceId, item, ...args);
 }
 
-export function dispatchNormalize(editor) {
-    dispatchTo(editor, "normalize_handlers", editor.editable);
+export function processThroughNormalize(editor) {
+    return processThrough(editor, "normalize_processors", editor.editable);
 }
 
 export function cleanHints(editor) {

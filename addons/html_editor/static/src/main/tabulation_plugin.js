@@ -70,8 +70,8 @@ export class TabulationPlugin extends Plugin {
         content_not_editable_providers: (rootEl) => selectElements(rootEl, ".oe-tabs"),
         contenteditable_to_remove_selector: "span.oe-tabs",
 
-        /** Handlers */
-        normalize_handlers: this.normalize.bind(this),
+        /** Processors */
+        normalize_processors: this.normalize.bind(this),
 
         /** Overrides */
         delete_forward_overrides: this.handleDeleteForward.bind(this),

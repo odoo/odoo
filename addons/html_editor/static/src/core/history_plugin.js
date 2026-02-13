@@ -1093,7 +1093,7 @@ export class HistoryPlugin extends Plugin {
             return false;
         }
         const stepCommonAncestor = this.getMutationsRoot(currentStep.mutations) || this.editable;
-        this.dispatchTo("normalize_handlers", stepCommonAncestor, type);
+        this.processThrough("normalize_processors", stepCommonAncestor, type);
         this.handleObserverRecords(false);
         if (currentMutationsCount === currentStep.mutations.length) {
             // If there was no registered mutation during the normalization step,
@@ -1369,8 +1369,8 @@ export class HistoryPlugin extends Plugin {
                 this.revertMutations(stepToRevert.mutations);
             }
             this.applyMutations(newStep.mutations);
-            this.dispatchTo(
-                "normalize_handlers",
+            this.processThrough(
+                "normalize_processors",
                 this.getMutationsRoot(newStep.mutations) || this.editable
             );
             this.steps.splice(index, 0, newStep);

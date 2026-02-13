@@ -184,13 +184,13 @@ export class FormatPlugin extends Plugin {
         ],
         /** Handlers */
         beforeinput_handlers: withSequence(20, this.onBeforeInput.bind(this)),
-        normalize_handlers: this.normalize.bind(this),
         selectionchange_handlers: this.removeEmptyInlineElement.bind(this),
         before_set_tag_handlers: this.removeFontSizeFormat.bind(this),
         before_insert_processors: this.unwrapEmptyFormat.bind(this),
 
         /** Processors */
         clean_for_save_processors: this.cleanForSave.bind(this),
+        normalize_processors: this.normalize.bind(this),
 
         /** Predicates */
         intangible_char_for_keyboard_navigation_predicates: (_, char) => char === "\u200b",

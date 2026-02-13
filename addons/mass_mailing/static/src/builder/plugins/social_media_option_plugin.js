@@ -58,7 +58,7 @@ class MassMailingSocialMediaOptionPlugin extends Plugin {
             ".s_social_media .s_social_media_title",
         ],
         clean_for_save_processors: this.cleanForSave.bind(this),
-        normalize_handlers: this.normalize.bind(this),
+        normalize_processors: this.normalize.bind(this),
         replace_media_dialog_params_handlers: this.applyIconsMediaDialogParams.bind(this),
     };
 

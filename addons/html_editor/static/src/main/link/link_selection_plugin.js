@@ -38,10 +38,10 @@ export class LinkSelectionPlugin extends Plugin {
     resources = {
         /** Handlers */
         selectionchange_handlers: this.resetLinkInSelection.bind(this),
-        normalize_handlers: () => this.resetLinkInSelection(),
 
         /** Processors */
         clean_for_save_processors: (root) => this.clearLinkInSelectionClass(root),
+        normalize_processors: () => this.resetLinkInSelection(),
 
         /** Providers */
         feff_providers: this.addFeffsToLinks.bind(this),

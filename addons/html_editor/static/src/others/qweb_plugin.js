@@ -39,7 +39,6 @@ export class QWebPlugin extends Plugin {
     resources = {
         /** Handlers */
         selectionchange_handlers: withSequence(8, this.onSelectionChange.bind(this)),
-        normalize_handlers: withSequence(0, this.normalize.bind(this)),
 
         /** Processors */
         clean_for_save_processors: (root) => {
@@ -49,6 +48,7 @@ export class QWebPlugin extends Plugin {
                 delete element.dataset.oeProtected;
             }
         },
+        normalize_processors: withSequence(0, this.normalize.bind(this)),
         clipboard_content_processors: this.clearDataAttributes.bind(this),
 
         /** Predicates */

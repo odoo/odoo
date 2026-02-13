@@ -75,7 +75,9 @@ export class ColorPlugin extends Plugin {
         ],
         format_class_predicates: (className) =>
             TEXT_CLASSES_REGEX.test(className) || BG_CLASSES_REGEX.test(className),
-        normalize_handlers: this.normalize.bind(this),
+
+        /** Processors */
+        normalize_processors: this.normalize.bind(this),
     };
 
     normalize(root) {

@@ -603,7 +603,7 @@ export class CollaborationOdooPlugin extends Plugin {
             this.editable.replaceChildren(this.dependencies.baseContainer.createBaseContainer());
         }
         stripHistoryIds(this.editable);
-        this.dispatchTo("normalize_handlers", this.editable);
+        this.processThrough("normalize_processors", this.editable);
 
         this.dependencies.history.reset(content);
 

@@ -87,7 +87,7 @@ export class ToggleBlockPlugin extends Plugin {
             },
         ],
 
-        normalize_handlers: withSequence(Infinity, this.normalize.bind(this)),
+        normalize_processors: withSequence(Infinity, this.normalize.bind(this)),
 
         delete_backward_overrides: this.handleDeleteBackward.bind(this),
         delete_forward_overrides: this.handleDeleteForward.bind(this),
