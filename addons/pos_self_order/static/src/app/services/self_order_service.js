@@ -323,9 +323,9 @@ export class SelfOrder extends Reactive {
             return;
         }
 
-        // When no payment methods redirect to confirmation page
-        // the client will be able to pay at counter
-        if (paymentMethods.length === 0) {
+        // Redirects users directly to the order confirmation page if no payment methods are available or if the total order amount is zero.
+        // Allows customers to pay at the counter when no payment option is configured.
+        if (!(paymentMethods.length && order.getTotalWithTax())) {
             let screenMode = "pay";
 
             if (orderHasChanges) {

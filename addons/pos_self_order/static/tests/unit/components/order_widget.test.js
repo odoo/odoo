@@ -22,6 +22,11 @@ test("buttonToShow", async () => {
     // With valid payment method
     models["pos.payment.method"].getFirst().use_payment_terminal = "stripe";
     expect(comp.buttonToShow).toMatchObject({ label: "Pay", disabled: false });
+    // With zero amount order
+    store.currentOrder.lines.forEach((line) => {
+        line.price_unit = 0;
+    });
+    expect(comp.buttonToShow).toMatchObject({ label: "Order", disabled: false });
 });
 
 test("lineNotSend", async () => {
