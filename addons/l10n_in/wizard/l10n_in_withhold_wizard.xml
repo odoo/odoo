@@ -30,7 +30,7 @@
                                        decoration-success="tds_deduction == 'lower'"
                                        decoration-danger="tds_deduction == 'higher'"
                                        decoration-warning="tds_deduction == 'no'"
-                                       invisible="tds_deduction == 'normal'"
+                                       invisible="tds_deduction == 'normal' or l10n_in_tds_tax_type == 'tds_sale'"
                                 />
                             </div>
                             <field name="base" widget="monetary" options="{'currency_field': 'currency_id'}" required="True"/>
