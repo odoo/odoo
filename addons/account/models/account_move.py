@@ -1912,7 +1912,7 @@ class AccountMove(models.Model):
             move.duplicated_ref_ids = move_to_duplicate_move.get(move._origin, self.env['account.move'])
 
     def _fetch_duplicate_reference(self, matching_states=('draft', 'posted')):
-        moves = self.filtered(lambda m: m.is_sale_document() or m.is_purchase_document() and m.ref)
+        moves = self.filtered(lambda m: (m.is_sale_document() or m.is_purchase_document()) and m.ref)
 
         if not moves:
             return {}
