@@ -32,6 +32,7 @@ export class FontSizeSelector extends Component {
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
         this.iframeContentRef = useRef("iframeContent");
         this.debouncedCustomFontSizeInput = useDebounced(this.onCustomFontSizeInput, 200);
+        this.fontSizeSelector = useRef("fontSizeSelector");
 
         onMounted(() => {
             const iframeEl = this.iframeContentRef.el;
@@ -53,21 +54,33 @@ export class FontSizeSelector extends Component {
                 );
                 const color = getCSSVariableValue("black", htmlStyle);
                 const fontFamily = getCSSVariableValue("o-system-fonts", htmlStyle);
-                Object.assign(iframeDoc.body.style, {
-                    padding: "0",
-                    margin: "0",
-                });
-                Object.assign(this.fontSizeInput.style, {
-                    width: "100%",
-                    height: "100%",
-                    border: "none",
-                    outline: "none",
-                    textAlign: "center",
-                    backgroundColor: backgroundColor,
-                    color: color,
-                    fontFamily: fontFamily,
-                });
-                this.fontSizeInput.type = "text";
+
+                const style = iframeDoc.createElement("style");
+                style.textContent = `
+                    body {
+                        padding: 0;
+                        margin: 0;
+                    }
+                    input::-webkit-outer-spin-button,
+                    input::-webkit-inner-spin-button {
+                        -webkit-appearance: none;
+                        margin: 0;
+                    }
+                    input[type=number] {
+                        -moz-appearance: textfield;
+                        width: 100%;
+                        height: 100%;
+                        border: none;
+                        outline: none;
+                        text-align: center;
+                        background-color: ${backgroundColor};
+                        color: ${color};
+                        font-family: ${fontFamily};
+                    }
+                `;
+                iframeDoc.head.appendChild(style);
+                this.fontSizeInput.type = "number";
+                this.fontSizeInput.min = 0;
                 this.fontSizeInput.name = "font-size-input";
                 this.fontSizeInput.autocomplete = "off";
                 this.fontSizeInput.value = this.state.displayName;
@@ -75,6 +88,7 @@ export class FontSizeSelector extends Component {
                 this.fontSizeInput.addEventListener("click", () => {
                     if (!this.dropdown.isOpen) {
                         this.dropdown.open();
+                        this.fontSizeSelector.el?.focus();
                     }
                 });
                 this.fontSizeInput.addEventListener("input", this.debouncedCustomFontSizeInput);
@@ -139,9 +153,10 @@ export class FontSizeSelector extends Component {
     }
 
     onKeyDownFontSizeInput(ev) {
-        if (["Enter", "Tab"].includes(ev.key) && this.dropdown.isOpen) {
+        if (["Enter", "Escape"].includes(ev.key) && this.dropdown.isOpen) {
             this.dropdown.close();
-        } else if (["ArrowUp", "ArrowDown"].includes(ev.key)) {
+        } else if (["ArrowUp", "ArrowDown", "Tab"].includes(ev.key)) {
+            ev.preventDefault();
             const fontSizeSelectorMenu = document.querySelector(".o_font_size_selector_menu div");
             if (!fontSizeSelectorMenu) {
                 return;
@@ -159,5 +174,7 @@ export class FontSizeSelector extends Component {
 
     onSelected(item) {
         this.props.onSelected(item);
+        // Delay focusing the editable until the dropdown has settled.
+        setTimeout(() => this.props.onBlur());
     }
 }

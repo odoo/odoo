@@ -24,7 +24,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 
 import { Component, onMounted, useExternalListener, useRef } from "@odoo/owl";
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { usePositionHook } from "@html_editor/position_hook";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
@@ -75,7 +74,6 @@ export class ImageTransformation extends Component {
                 this.destroy();
             }
         });
-        useHotkey("escape", () => this.destroy());
         usePositionHook({ el: this.props.editable }, this.document, () => {
             if (!this.isCurrentlyTransforming) {
                 this.resetHandlers();

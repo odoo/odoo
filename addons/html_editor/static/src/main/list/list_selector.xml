@@ -2,16 +2,16 @@
     <t t-name="html_editor.ListSelector">
         <Dropdown menuClass="'o-we-toolbar-dropdown'" bottomSheet="false" menuRef="menuRef">
             <button class="btn btn-light fa fa-list-ul" t-att-title="props.title" name="list_selector"/>
-            <t t-set-slot="content" t-key="props.key.value">
-                <div data-prevent-closing-overlay="true">
+            <t t-set-slot="content">
+                <div data-prevent-closing-overlay="true" class="d-flex justify-content-center align-item-center">
                     <t t-set="activeMode" t-value="getActiveMode()"/>
                     <t t-foreach="props.getButtons()" t-as="button" t-key="button_index">
-                        <button
-                            t-att-title="button.description"
-                            t-att-name="button.id"
-                            t-attf-class="btn btn-light fa {{button.icon}}"
-                            t-att-class="{ active: activeMode === button.mode }"
-                            t-on-click="button.run"
+                        <DropdownItem
+                            tag="'button'"
+                            attrs="{ name: button.id, title: button.description }"
+                            class="{'dropdown-item_active_noarrow btn btn-light fa': true, [button.icon]: true, active: activeMode === button.mode }"
+                            closingMode="'none'"
+                            onSelected="(ev) => this.onSelected(ev, button)"
                         />
                     </t>
                 </div>

@@ -12,6 +12,7 @@ export class ImageToolbarDropdown extends Component {
         name: String,
         icon: { type: String, optional: true },
         onSelected: Function,
+        focusEditable: { Type: Function, optional: true },
         items: Array,
         getDisplay: { type: Function, optional: true },
     };
@@ -28,5 +29,7 @@ export class ImageToolbarDropdown extends Component {
 
     onSelected(item) {
         this.props.onSelected(item);
+        // Delay focusing the editable until the dropdown has settled.
+        setTimeout(() => this.props.focusEditable());
     }
 }

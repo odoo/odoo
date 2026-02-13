@@ -257,6 +257,19 @@ export class ToolbarPlugin extends Plugin {
                 if (ev.key?.startsWith("Arrow")) {
                     this.closeToolbar(this.dependencies.selection.getSelectionData());
                     this.onSelectionChangeActive = false;
+                } else if (ev.key === "Escape" && this.overlay.isOpen) {
+                    ev.stopPropagation();
+                    this.closeToolbar();
+                    const selection = this.dependencies.selection.getEditableSelection();
+                    let anchorNode, anchorOffset;
+                    if (selection.direction) {
+                        anchorNode = selection.focusNode;
+                        anchorOffset = selection.focusOffset;
+                    } else {
+                        anchorNode = selection.anchorNode;
+                        anchorOffset = selection.anchorOffset;
+                    }
+                    this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
                 }
             });
             this.addDomListener(this.editable, "keyup", (ev) => {

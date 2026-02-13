@@ -184,6 +184,8 @@ describe("toolbar dropdowns", () => {
         const bulletedListButtonSelector = ".dropdown-menu button[name='bulleted_list']";
         await focusAndClick(bulletedListButtonSelector);
         await animationFrame();
+        // Need another animation frame for the dropdown to settle
+        await animationFrame();
         expect(bulletedListButtonSelector).toBeVisible();
         expect(bulletedListButtonSelector).toHaveClass("active");
         expect(!!editor.editable.querySelector("ul li")).toBe(true);
@@ -194,6 +196,8 @@ describe("toolbar dropdowns", () => {
         click(".o-we-toolbar .btn[name='text_align']");
         const alignCenterButtonSelector = ".dropdown-menu button.fa-align-center";
         await focusAndClick(alignCenterButtonSelector);
+        await animationFrame();
+        // Need another animation frame for the dropdown to settle
         await animationFrame();
         expect(alignCenterButtonSelector).toBeVisible();
         expect(alignCenterButtonSelector).toHaveClass("active");

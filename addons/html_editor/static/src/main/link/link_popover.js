@@ -5,6 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { cleanZWChars, deduceURLfromText } from "./utils";
 import { useColorPicker } from "@web/core/color_picker/color_picker";
 import { CheckBox } from "@web/core/checkbox/checkbox";
+import { trapFocus } from "@html_editor/utils/dom_info";
 import { isAbsoluteURLInCurrentDomain } from "@html_editor/utils/url";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -386,14 +387,10 @@ export class LinkPopover extends Component {
             this.onClickApply();
         } else if (ev.key == "Tab") {
             ev.preventDefault();
-            const focusableElements = [
-                ...this.editingWrapper.el.querySelectorAll("input, select, button:not([disabled])"),
-            ];
-            const currentIndex = focusableElements.indexOf(document.activeElement);
-            const nextIndex =
-                (currentIndex + (ev.shiftKey ? -1 : 1) + focusableElements.length) %
-                focusableElements.length;
-            focusableElements[nextIndex].focus();
+            const focusableElements = this.editingWrapper.el.querySelectorAll(
+                "input, select, button:not([disabled])"
+            );
+            trapFocus(focusableElements, ev.shiftKey);
         }
     }
 

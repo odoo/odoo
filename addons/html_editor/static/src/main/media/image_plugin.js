@@ -174,6 +174,7 @@ export class ImagePlugin extends Plugin {
                     onSelected: (item) => {
                         this.setImagePadding({ size: item.value });
                     },
+                    focusEditable: () => this.dependencies.selection.focusEditable(),
                 },
                 isAvailable: isHtmlContentSupported,
             },
@@ -190,6 +191,7 @@ export class ImagePlugin extends Plugin {
                         this.resizeImage({ size: item.value });
                         this.updateImageParams();
                     },
+                    focusEditable: () => this.dependencies.selection.focusEditable(),
                 },
                 isAvailable: (selection) =>
                     isHtmlContentSupported(selection) && (this.config.allowImageResize ?? true),
@@ -401,6 +403,7 @@ export class ImagePlugin extends Plugin {
             document: this.document,
             editable: this.editable,
             activeTitle: _t("Click again to reset transformation"),
+            focusEditable: () => this.dependencies.selection.focusEditable(),
         };
     }
 
