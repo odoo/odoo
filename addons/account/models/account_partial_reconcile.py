@@ -111,7 +111,7 @@ class AccountPartialReconcile(models.Model):
             return True
 
         # Get the payments without journal entry to reset once the amount residual is reset
-        to_update_payments = self._get_to_update_payments(from_state='paid')
+        to_update_payments = self._get_to_update_payments(from_state='reconciled')
         # Retrieve the CABA entries to reverse.
         moves_to_reverse = self.env['account.move'].search([('tax_cash_basis_rec_id', 'in', self.ids)])
         # Same for the exchange difference entries.
@@ -142,13 +142,13 @@ class AccountPartialReconcile(models.Model):
 
         all_reconciled = all_reconciled.exists()
         self._update_matching_number(all_reconciled)
-        to_update_payments.state = 'in_process'
+        to_update_payments.state = 'paid'
         return res
 
     @api.model_create_multi
     def create(self, vals_list):
         partials = super().create(vals_list)
-        partials._get_to_update_payments(from_state='in_process').state = 'paid'
+        partials._get_to_update_payments(from_state='paid').state = 'reconciled'
         self._update_matching_number(partials.debit_move_id + partials.credit_move_id)
         return partials
 

@@ -1289,11 +1289,11 @@ class AccountMove(models.Model):
                                     and reverse_move_types == {'entry'})
                     if in_reverse or out_reverse or misc_reverse:
                         new_pmt_state = 'reversed'
-            elif invoice.state == 'posted' and invoice.matched_payment_ids.filtered(lambda p: not p.move_id and p.state == 'in_process'):
+            elif invoice.state == 'posted' and invoice.matched_payment_ids.filtered(lambda p: not p.move_id and p.state == 'paid'):
                 new_pmt_state = invoice._get_invoice_in_payment_state()
             elif reconciliation_vals:
                 new_pmt_state = 'partial'
-            elif invoice.state == 'posted' and invoice.matched_payment_ids.filtered(lambda p: not p.move_id and p.state == 'paid'):
+            elif invoice.state == 'posted' and invoice.matched_payment_ids.filtered(lambda p: not p.move_id and p.state == 'reconciled'):
                 new_pmt_state = invoice._get_invoice_in_payment_state()
             invoice.payment_state = new_pmt_state
 
@@ -6595,7 +6595,7 @@ class AccountMove(models.Model):
                 lambda p: (
                     not p.is_reconciled
                     and not p.is_matched
-                    and p.state == 'in_process'
+                    and p.state == 'paid'
                 )
             )
         )

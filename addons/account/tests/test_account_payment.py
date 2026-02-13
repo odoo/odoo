@@ -617,7 +617,7 @@ class TestAccountPayment(AccountTestInvoicingWithBanksCommon, MailCommon):
                     active_ids=move.ids
                 ).create({'amount': amount})._create_payments()
 
-                self.assertEqual(payment.state, 'paid' if is_community else 'in_process')
+                self.assertEqual(payment.state, 'reconciled' if is_community else 'paid')
 
         # Remove the outstanding account on the payment method line to avoid generating a journal entry on the payment
         self.company_data['default_journal_bank'].inbound_payment_method_line_ids.payment_account_id = self.env['account.account']

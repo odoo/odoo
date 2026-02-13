@@ -394,7 +394,7 @@ class TestAccountPayment(AccountPaymentCommon):
         tx._set_done()
         # _post_process() shouldn't raise an error even though the invoice is cancelled
         tx._post_process()
-        self.assertEqual(tx.payment_id.state, 'in_process')
+        self.assertEqual(tx.payment_id.state, 'paid')
 
     def test_payment_token_for_invoice_partner_is_available(self):
         """Test that the payment token of the invoice partner is available"""
