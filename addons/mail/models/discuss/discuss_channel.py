@@ -1479,7 +1479,7 @@ class DiscussChannel(models.Model):
         )
         sub_channel.add_members(partner_ids=(self.env.user.partner_id | message.author_id).ids, post_joined_message=False)
         notification = (
-            Markup('<div class="o_mail_notification">%s</div>')
+            Markup('<div class="o_mail_notification" data-oe-type="thread_creation">%s</div>')
             % _(
                 "%(user)s started a thread: %(goto)s%(thread_name)s%(goto_end)s."
             )

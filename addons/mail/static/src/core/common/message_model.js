@@ -9,6 +9,7 @@ import {
     getNonEditableMentions,
     htmlToTextContentInline,
 } from "@mail/utils/common/format";
+import { getInnerHtml } from "@mail/utils/common/html";
 
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
@@ -443,6 +444,21 @@ export class Message extends Record {
                 return this.thread?.channel?.parent_channel_id
                     ? _t("%(user)s changed the thread name to %(name)s", params)
                     : _t("%(user)s changed the channel name to %(name)s", params);
+            }
+            if (this.notificationType === "thread_creation") {
+                const doc = createDocumentFragmentFromContent(this.body ?? "");
+                const linkEl = doc.body.querySelector(
+                    ".o_mail_notification a.o_channel_redirect[data-oe-model='discuss.channel'][data-oe-id]"
+                );
+                if (linkEl) {
+                    const channel = this.store["discuss.channel"].get(Number(linkEl.dataset.oeId));
+                    if (channel) {
+                        linkEl.textContent = linkEl.textContent.trim().startsWith("#")
+                            ? `#${channel.fullNameWithParent}`
+                            : channel.displayName;
+                    }
+                }
+                return getInnerHtml(doc.body);
             }
             if (this.isEmpty) {
                 return _t("This message has been removed");
