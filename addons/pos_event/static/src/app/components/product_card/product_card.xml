@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_event.ProductCard" t-inherit="point_of_sale.ProductCard" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('product-img')]" position="before">
-            <t t-set="availableSeats" t-value="this.totalTicketSeats" />
+            <t t-set="availableSeats" t-value="this.totalAvailableSeats"/>
             <t t-set="futureSlots" t-value="this.totalFutureSlots" />            
             <div t-if="displayRemainingSeats" class="shadow-sm m-1 py-1 px-2 z-1 rounded position-absolute top-0 end-0 bg-white">
                 <t t-if="isEventMultiSlot">

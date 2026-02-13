@@ -55,8 +55,41 @@ export class EventConfiguratorPopup extends Component {
         }
         return Math.max(ticketAvailability - existingUnsyncRegistration.length, 0);
     }
+    getTicketRemainingQty(ticket) {
+        const maxTicketQty = this.getTicketMaxQty(ticket);
+        if (maxTicketQty === "unlimited") {
+            return maxTicketQty;
+        }
+        return Math.max(maxTicketQty - this.state[ticket.id].qty, 0);
+    }
     confirm() {
         const data = [];
+        /**
+         * Check total quantity of tickets does not exceed the event seats limit
+         * (respectively, the slot seats limit when event is multi slot)
+         * We need a separate check as each ticket limits could still be respected
+         * (cf next check, a few lines underneath).
+         */
+        const event = this.props.tickets[0].event_id;
+        const slotOrEventAvailableSeats = this.slotId
+            ? this.slotAvailability
+            : event.seats_available;
+        const totalTicketQuantity = (Object.entries(this.state) ?? []).reduce(
+            (sum, [_, { qty }]) => sum + qty,
+            0
+        );
+        if (event.seats_limited && totalTicketQuantity > slotOrEventAvailableSeats) {
+            this.dialog.add(AlertDialog, {
+                title: _t("%s limit exceeded", this.slotId ? _t("Slot") : _t("Event")),
+                body: _t(
+                    "You selected more tickets than available seats (max %s). Please select a smaller amount.",
+                    slotOrEventAvailableSeats
+                ),
+            });
+            this.props.close();
+            return;
+        }
+        // Check ticket quantity based on each ticket limitations
         for (const [ticketId, { qty }] of Object.entries(this.state)) {
             if (qty > 0) {
                 const ticket = this.pos.models["event.event.ticket"].get(parseInt(ticketId));
@@ -64,7 +97,7 @@ export class EventConfiguratorPopup extends Component {
 
                 if (!available) {
                     this.dialog.add(AlertDialog, {
-                        title: _t("Error"),
+                        title: _t("Ticket limit exceeded"),
                         body: _t(
                             "The selected ticket (%s) is not available. Please select a different ticket.",
                             [ticket.name]
