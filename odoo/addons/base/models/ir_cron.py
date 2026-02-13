@@ -21,6 +21,7 @@ from odoo.modules import Manifest
 from odoo.modules.registry import Registry
 from odoo.tools import SQL, config
 from odoo.tools.constants import GC_UNLINK_LIMIT
+from odoo.tools.func import deprecated
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable
@@ -826,7 +827,7 @@ class IrCron(models.Model):
         }])
         return self.with_context(ir_cron_progress_id=progress.id), progress
 
-    @api.deprecated("Since 19.0, use _commit_progress")
+    @deprecated("Since 19.0, use _commit_progress")
     def _notify_progress(self, *, done: int, remaining: int, deactivate: bool = False):
         """
         Log the progress of the cron job.

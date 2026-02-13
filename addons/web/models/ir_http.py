@@ -4,6 +4,7 @@ from odoo import api, fields, models, release
 from odoo.http import request
 from odoo.http.requestlib import DEFAULT_MAX_CONTENT_LENGTH
 from odoo.tools import config
+from odoo.tools.func import deprecated
 from odoo.tools.misc import hmac, str2bool
 
 """
@@ -202,6 +203,6 @@ class IrHttp(models.AbstractModel):
             session_info['bundle_params']['debug'] = request.session.debug
         return session_info
 
-    @api.deprecated("Deprecated since 19.0, use get_all_currencies on 'res.currency'")
+    @deprecated("Deprecated since 19.0, use get_all_currencies on 'res.currency'")
     def get_currencies(self):
         return self.env['res.currency'].get_all_currencies()
