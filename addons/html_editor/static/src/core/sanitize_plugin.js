@@ -12,7 +12,7 @@ export class SanitizePlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         clean_for_save_processors: this.cleanForSave.bind(this),
-        normalize_handlers: this.normalize.bind(this),
+        normalize_processors: this.normalize.bind(this),
     };
 
     setup() {

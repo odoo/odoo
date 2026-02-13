@@ -180,10 +180,16 @@ export class ListPlugin extends Plugin {
         hints: [{ selector: `LI, LI > ${baseContainerGlobalSelector}`, text: _t("List") }],
 
         /** Handlers */
-        normalize_handlers: this.normalize.bind(this),
         step_added_handlers: this.updateToolbarButtons.bind(this),
         delete_handlers: this.adjustListPaddingOnDelete.bind(this),
         before_insert_separator_handlers: this.exitList.bind(this),
+        format_selection_handlers: this.applyFormatToListItem.bind(this),
+
+        /** Processors */
+        normalize_processors: this.normalize.bind(this),
+        node_to_insert_processors: this.processNodeToInsert.bind(this),
+        clipboard_content_processors: this.processContentForClipboard.bind(this),
+        before_insert_within_pre_processors: this.insertListWithinPre.bind(this),
 
         /** Overrides */
         delete_backward_overrides: this.handleDeleteBackward.bind(this),
@@ -192,10 +198,6 @@ export class ListPlugin extends Plugin {
         shift_tab_overrides: this.handleShiftTab.bind(this),
         split_element_block_overrides: this.handleSplitBlock.bind(this),
         color_apply_overrides: this.applyColorToListItem.bind(this),
-        format_selection_handlers: this.applyFormatToListItem.bind(this),
-        node_to_insert_processors: this.processNodeToInsert.bind(this),
-        clipboard_content_processors: this.processContentForClipboard.bind(this),
-        before_insert_within_pre_processors: this.insertListWithinPre.bind(this),
         triple_click_overrides: this.handleTripleClick.bind(this),
 
         fully_selected_node_predicates: (node, selection, range) => {

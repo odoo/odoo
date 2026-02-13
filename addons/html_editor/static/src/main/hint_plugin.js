@@ -30,11 +30,11 @@ export class HintPlugin extends Plugin {
             this.clearHints();
             this.updateHints();
         },
-        normalize_handlers: this.normalize.bind(this),
         content_updated_handlers: this.updateHints.bind(this),
 
         /** Processors */
         clean_for_save_processors: (root) => this.clearHints(root),
+        normalize_processors: this.normalize.bind(this),
 
         /** Providers */
         hint_targets_providers: (selectionData, editable) => {

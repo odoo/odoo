@@ -21,7 +21,7 @@ class FacebookOptionPlugin extends Plugin {
             DataAttributeListAction,
             CheckFacebookLinkAction,
         },
-        normalize_handlers: this.normalize.bind(this),
+        normalize_processors: this.normalize.bind(this),
         content_not_editable_selectors: ".o_facebook_page",
     };
 

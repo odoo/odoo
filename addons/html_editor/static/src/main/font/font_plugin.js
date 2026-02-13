@@ -303,7 +303,7 @@ export class FontPlugin extends Plugin {
             this.updateFontSelectorParams.bind(this),
             this.updateFontSizeSelectorParams.bind(this),
         ],
-        normalize_handlers: this.normalize.bind(this),
+        normalize_processors: this.normalize.bind(this),
 
         /** Overrides */
         split_element_block_overrides: [

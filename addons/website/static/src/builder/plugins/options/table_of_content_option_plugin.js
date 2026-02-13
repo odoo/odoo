@@ -39,7 +39,7 @@ class TableOfContentOptionPlugin extends Plugin {
         builder_actions: {
             NavbarPositionAction,
         },
-        normalize_handlers: this.normalize.bind(this),
+        normalize_processors: this.normalize.bind(this),
         // Prevent dropping a table of content inside another table of content.
         dropzone_selector: {
             selector: ".s_table_of_content",

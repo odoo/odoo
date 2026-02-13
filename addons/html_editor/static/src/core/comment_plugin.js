@@ -6,7 +6,7 @@ export class CommentPlugin extends Plugin {
     static id = "comment";
     /** @type {import("plugins").EditorResources} */
     resources = {
-        normalize_handlers: this.removeComment.bind(this),
+        normalize_processors: this.removeComment.bind(this),
     };
 
     removeComment(node) {

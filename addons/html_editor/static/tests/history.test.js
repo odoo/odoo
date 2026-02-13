@@ -23,7 +23,7 @@ describe("reset", () => {
         const TestPlugin = class extends Plugin {
             static id = "test";
             resources = {
-                normalize_handlers: () => {
+                normalize_processors: () => {
                     this.editable.firstChild.setAttribute("data-test-normalize", "1");
                 },
             };
@@ -658,7 +658,7 @@ describe("shortcut", () => {
             content_updated_handlers: () => {
                 expect.step("contentUpdated");
             },
-            normalize_handlers: (root) => {
+            normalize_processors: (root) => {
                 expect.step("normalize");
                 root.classList.add("test");
             },

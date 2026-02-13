@@ -15,7 +15,7 @@ class BackgroundOptionPlugin extends Plugin {
     static id = "backgroundOption";
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        normalize_handlers: this.normalize.bind(this),
+        normalize_processors: this.normalize.bind(this),
         system_classes: ["o_colored_level"],
     };
     normalize(root) {

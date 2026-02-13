@@ -3,7 +3,7 @@ import { setupEditor, testEditor } from "./_helpers/editor";
 import { deleteBackward, deleteForward, insertText, undo } from "./_helpers/user_actions";
 import { getContent } from "./_helpers/selection";
 import { execCommand } from "./_helpers/userCommands";
-import { dispatchNormalize } from "./_helpers/dispatch";
+import { processThroughNormalize } from "./_helpers/dispatch";
 
 function insertFontAwesome(faClass) {
     return (editor) => {
@@ -190,7 +190,7 @@ describe("parse/render", () => {
         icon.className = "fa fa-pastafarianism";
         div.appendChild(icon);
         el.firstChild.appendChild(div);
-        dispatchNormalize(editor);
+        processThroughNormalize(editor);
         expect(getContent(el)).toBe(
             `<p><div><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i></div></p>`
         );

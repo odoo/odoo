@@ -147,10 +147,10 @@ export class DomPlugin extends Plugin {
             container.textContent = content;
         } else {
             if (content.nodeType === Node.ELEMENT_NODE) {
-                this.dispatchTo("normalize_handlers", content);
+                this.processThrough("normalize_processors", content);
             } else {
                 for (const child of children(content)) {
-                    this.dispatchTo("normalize_handlers", child);
+                    this.processThrough("normalize_processors", child);
                 }
             }
             container.replaceChildren(content);

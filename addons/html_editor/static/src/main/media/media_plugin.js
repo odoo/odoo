@@ -85,11 +85,11 @@ export class MediaPlugin extends Plugin {
         closest_savable_providers: withSequence(20, (el) => this.editable),
 
         /** Handlers */
-        normalize_handlers: this.normalizeMedia.bind(this),
         selectionchange_handlers: this.selectAroundIcon.bind(this),
 
         /** Processors */
         clean_for_save_processors: (root) => this.cleanForSave(root),
+        normalize_processors: this.normalizeMedia.bind(this),
         clipboard_content_processors: this.clean.bind(this),
         clipboard_text_processors: (text) => text.replace(/\u200B/g, ""),
 

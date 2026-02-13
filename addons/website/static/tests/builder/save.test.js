@@ -231,7 +231,7 @@ test("preview shouldn't let o_dirty", async () => {
     class TestPlugin extends Plugin {
         static id = "TestPlugin";
         resources = {
-            normalize_handlers: (root) => {
+            normalize_processors: (root) => {
                 const el = root.querySelector(".test-option");
                 if (editorIsStart && el.dataset.applied !== "true") {
                     // apply a mutation when we remove the preview
