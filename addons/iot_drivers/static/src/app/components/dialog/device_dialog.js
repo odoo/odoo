@@ -27,14 +27,12 @@ export const CONNECTION_ICONS = {
 };
 
 export class DeviceDialog extends Component {
-    static props = {};
     static components = { Dialog };
 
-    setup() {
-        this.store = useStore();
-        this.icons = DEVICE_ICONS;
-        this.connectionIcons = CONNECTION_ICONS;
-    }
+    store = useStore();
+
+    icons = DEVICE_ICONS;
+    connectionIcons = CONNECTION_ICONS;
 
     formatDeviceType(deviceType, numDevices) {
         const formattedDeviceType =
@@ -45,7 +43,7 @@ export class DeviceDialog extends Component {
     }
 
     get devices() {
-        return this.store.base.devices;
+        return this.store.base().devices;
     }
 
     static template = xml`
@@ -56,24 +54,24 @@ export class DeviceDialog extends Component {
             btnName="'Show'"
             isLarge="true">
             <t t-set-slot="body">
-                <div t-if="Object.keys(devices).length === 0" class="alert alert-warning fs-6" role="alert">
+                <div t-if="Object.keys(this.devices).length === 0" class="alert alert-warning fs-6" role="alert">
                     No devices found.
                 </div>
                 <div class="accordion">
-                    <div t-foreach="Object.keys(devices)" t-as="deviceType" t-key="deviceType" class="accordion-item">
+                    <div t-foreach="Object.keys(this.devices)" t-as="deviceType" t-key="deviceType" class="accordion-item">
                         <h2 class="accordion-header" t-att-id="'heading-' + deviceType">
                             <button class="accordion-button px-3 d-flex gap-3 collapsed" type="button" data-bs-toggle="collapse" t-att-data-bs-target="'#collapse-' + deviceType" t-att-aria-controls="'collapse-' + deviceType">
-                                <span t-att-class="'color-primary fa fa-fw fa-2x ' + icons[deviceType]"/>
-                                <span class="fs-5 fw-bold" t-out="devices[deviceType].length"/>
-                                <span class="fs-5" t-out="formatDeviceType(deviceType, devices[deviceType].length)"/>
+                                <span t-att-class="'color-primary fa fa-fw fa-2x ' + this.icons[deviceType]"/>
+                                <span class="fs-5 fw-bold" t-out="this.devices[deviceType].length"/>
+                                <span class="fs-5" t-out="this.formatDeviceType(deviceType, this.devices[deviceType].length)"/>
                             </button>
                         </h2>
                         <div t-att-id="'collapse-' + deviceType" class="accordion-collapse collapse" t-att-aria-labelledby="'heading-' + deviceType">
                             <div class="d-flex flex-column p-1 gap-2">
-                                <div t-foreach="devices[deviceType]" t-as="device" t-key="device.identifier" class="d-flex flex-column bg-light rounded p-2 gap-1">
+                                <div t-foreach="this.devices[deviceType]" t-as="device" t-key="device.identifier" class="d-flex flex-column bg-light rounded p-2 gap-1">
                                     <span t-out="device.name" class="one-line"/>
                                     <span class="text-secondary one-line">
-                                        <span t-att-class="'me-2 fa fa-fw ' + connectionIcons[device.connection]"/>
+                                        <span t-att-class="'me-2 fa fa-fw ' + this.connectionIcons[device.connection]"/>
                                         <t t-out="device.identifier"/>
                                     </span>
                                 </div>

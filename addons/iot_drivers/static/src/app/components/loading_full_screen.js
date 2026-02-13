@@ -2,16 +2,16 @@
 
 import useStore from "../hooks/store_hook.js";
 
-const { Component, xml, onMounted } = owl;
+const { Component, xml, onMounted, props, types: t } = owl;
 
 export class LoadingFullScreen extends Component {
-    static props = {
-        slots: Object,
-    };
+    props = props({
+        slots: t.object(["body"]),
+    });
+
+    store = useStore();
 
     setup() {
-        this.store = useStore();
-
         // We delay the RPC verification to be sure that the Odoo service
         // was already restarted
         onMounted(() => {

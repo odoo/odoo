@@ -4,26 +4,22 @@ import useStore from "../../hooks/store_hook.js";
 import { Dialog } from "./dialog.js";
 import { LoadingFullScreen } from "../loading_full_screen.js";
 
-const { Component, xml, useState } = owl;
+const { Component, xml, signal } = owl;
 
 export class HandlerDialog extends Component {
-    static props = {};
     static components = { Dialog, LoadingFullScreen };
 
-    setup() {
-        this.store = useStore();
-        this.state = useState({
-            initialization: true,
-            waitRestart: false,
-            loading: false,
-            handlerData: {},
-            globalLogger: {},
-        });
-    }
+    store = useStore();
+
+    initialization = signal(true);
+    waitRestart = signal(false);
+    loading = signal(false);
+    handlerData = signal({});
+    globalLogger = signal({});
 
     onClose() {
-        this.state.initialization = [];
-        this.state.handlerData = {};
+        this.initialization.set([]);
+        this.handlerData.set({});
     }
 
     async getHandlerData() {
@@ -31,12 +27,12 @@ export class HandlerDialog extends Component {
             const data = await this.store.rpc({
                 url: "/iot_drivers/log_levels",
             });
-            this.state.handlerData = data;
-            this.state.globalLogger = {
+            this.handlerData.set(data);
+            this.globalLogger.set({
                 "iot-logging-root": data.root_logger_log_level,
                 "iot-logging-odoo": data.odoo_current_log_level,
-            };
-            this.state.initialization = false;
+            });
+            this.initialization.set(false);
         } catch {
             console.warn("Error while fetching data");
         }
@@ -58,7 +54,7 @@ export class HandlerDialog extends Component {
     }
 
     async enableCustomHandlers(value) {
-        this.state.waitRestart = !value;
+        this.waitRestart.set(!value);
         try {
             await this.store.rpc({
                 url: "/iot_drivers/enable_custom_handlers",
@@ -74,15 +70,15 @@ export class HandlerDialog extends Component {
 
     static template = xml`
     <t t-translation="off">
-        <LoadingFullScreen t-if="this.state.waitRestart">
+        <LoadingFullScreen t-if="this.waitRestart()">
             <t t-set-slot="body">
                 Processing your request, please wait...
             </t>
         </LoadingFullScreen>
 
-        <Dialog name="'Handlers Configuration'" btnName="'Handlers Configuration'" onOpen.bind="getHandlerData" onClose.bind="onClose">
+        <Dialog name="'Handlers Configuration'" btnName="'Handlers Configuration'" onOpen.bind="this.getHandlerData" onClose.bind="this.onClose">
             <t t-set-slot="body">
-                <div t-if="this.state.initialization" class="position-absolute top-0 start-0 bg-white h-100 w-100 justify-content-center align-items-center d-flex flex-column gap-3 always-on-top handler-loading">
+                <div t-if="this.initialization()" class="position-absolute top-0 start-0 bg-white h-100 w-100 justify-content-center align-items-center d-flex flex-column gap-3 always-on-top handler-loading">
                     <div class="spinner-border" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
@@ -96,15 +92,15 @@ export class HandlerDialog extends Component {
                                 id="custom-handlers"
                                 class="form-check-input cursor-pointer"
                                 type="checkbox"
-                                t-att-checked="this.state.handlerData.is_custom_handlers_enabled"
+                                t-att-checked="this.handlerData().is_custom_handlers_enabled"
                                 t-on-change="(ev) => this.enableCustomHandlers(ev.target.checked)" />
                             <label class="form-check-label cursor-pointer" for="custom-handlers">Download custom handlers from the database</label>
                         </div>
                     </div>
                     <div class="mb-3">
                         <h5>Global logs level</h5>
-                        <div t-foreach="Object.entries(this.state.globalLogger)" t-as="global" t-key="global[0]" class="input-group input-group-sm mb-3">
-                            <label class="input-group-text w-50" t-att-for="global[0]" t-esc="global[0]" />
+                        <div t-foreach="Object.entries(this.globalLogger())" t-as="global" t-key="global[0]" class="input-group input-group-sm mb-3">
+                            <label class="input-group-text w-50" t-att-for="global[0]" t-out="global[0]" />
                             <select t-att-name="global[0]"
                                 t-if="global[1]"
                                 class="form-select"
@@ -122,8 +118,8 @@ export class HandlerDialog extends Component {
                     </div>
                     <div class="mb-3">
                         <h5>Interfaces logs level</h5>
-                        <div t-foreach="Object.entries(this.state.handlerData.interfaces_logger_info)" t-as="interface" t-key="interface[0]" class="input-group input-group-sm mb-3">
-                            <label class="input-group-text w-50" t-att-for="interface[0]" t-esc="interface[0]" />
+                        <div t-foreach="Object.entries(this.handlerData().interfaces_logger_info)" t-as="interface" t-key="interface[0]" class="input-group input-group-sm mb-3">
+                            <label class="input-group-text w-50" t-att-for="interface[0]" t-out="interface[0]" />
                             <select t-att-name="'iot-logging-interface-'+interface[0]"
                                 t-if="interface[1]"
                                 class="form-select"
@@ -141,8 +137,8 @@ export class HandlerDialog extends Component {
                     </div>
                     <div class="mb-3">
                         <h5>Drivers logs level</h5>
-                        <div t-foreach="Object.entries(this.state.handlerData.drivers_logger_info)" t-as="drivers" t-key="drivers[0]" class="input-group input-group-sm mb-3">
-                            <label class="input-group-text w-50" t-att-for="drivers[0]" t-esc="drivers[0]" />
+                        <div t-foreach="Object.entries(this.handlerData().drivers_logger_info)" t-as="drivers" t-key="drivers[0]" class="input-group input-group-sm mb-3">
+                            <label class="input-group-text w-50" t-att-for="drivers[0]" t-out="drivers[0]" />
                             <select t-att-name="'iot-logging-driver-'+drivers[0]"
                                 t-if="drivers[1]"
                                 class="form-select"
