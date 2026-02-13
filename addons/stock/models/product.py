@@ -166,6 +166,8 @@ class ProductProduct(models.Model):
         domain_move_out = [('product_id', 'in', self.ids)] + domain_move_out_loc
         if lot_id is not None:
             domain_quant += [('lot_id', '=', lot_id)]
+            domain_move_in += [('move_line_ids.lot_id', '=', lot_id)]
+            domain_move_out += [('move_line_ids.lot_id', '=', lot_id)]
         if owner_id is not None:
             domain_quant += [('owner_id', '=', owner_id)]
             domain_move_in += [('restrict_partner_id', '=', owner_id)]
@@ -207,8 +209,15 @@ class ProductProduct(models.Model):
             # Calculate the moves that were done before now to calculate back in time (as most questions will be recent ones)
             domain_move_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_in_done
             domain_move_out_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_out_done
+<<<<<<< 30c8cd5b214259effe8717a5568daa0c1ddc518b
 
             groupby = ['product_id', 'uom_id']
+||||||| a3f50fa860d23739bbb3b64e2c535b948e0e5323
+
+            groupby = ['product_id', 'product_uom']
+=======
+            groupby = ['product_id', 'product_uom']
+>>>>>>> d8d22adf4b624e5ea5ae127fbfb7cb1df97e6a15
             for product, uom, quantity in Move._read_group(domain_move_in_done, groupby, ['quantity:sum']):
                 moves_in_res_past[product.id] += uom._compute_quantity(quantity, product.uom_id)
 
