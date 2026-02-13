@@ -89,6 +89,15 @@
             <strong>تاريخ الفاتورة</strong>
         </xpath>
         <!-- End Invoice Date -->
+        <!-- Amount Due -->
+        <xpath expr="//t[@t-if='len(payments_vals) > 0']/tr/td" position="replace">
+            <td>
+                <strong t-if="display_in_ar" class="text-nowrap" dir="ltr">إجمالي مبلغ الفاتورة المستحق الدفع</strong>
+                <strong t-if="display_in_en" class="text-nowrap">Invoice Total Payable Amount</strong>
+                <strong class="text-nowrap">Invoice Total Payable Amount</strong>
+            </td>
+        </xpath>
+        <!-- End Amount Due -->
         <!-- Invoice lines table -->
         <span name="th_taxes_ar" position="replace">
             <span name="th_taxes_ar" t-if="display_in_ar" t-translation="off">معدل ضريبة القيمة المضافة<br/></span>
@@ -106,17 +115,23 @@
             <attribute name="class" add="d-none" separator=" "/>
         </th>
         <xpath expr="//table[@name='invoice_line_table']/thead/tr" position="inside">
+            <t t-set="has_discount" t-value="any(line.discount for line in o.invoice_line_ids)"/>
+            <th name="th_discount_amount" class="text-end" t-if="has_discount">
+                <span name="th_discount_amount_ar" t-if="display_in_ar" t-translation="off" dir="rtl">مبلغ الخصم /الرسوم<br/></span>
+                <span name="th_discount_amount_en" t-if="display_in_en" t-translation="off">Discount Amount<br/></span>
+                <span name="th_discount_amount_span">Discount Amount</span>
+            </th>
             <th name="th_vat_amount" class="text-end">
-                <span name="th_vat_amount_ar" t-if="display_in_ar" t-translation="off" dir="rtl" class="text-nowrap">مبلغ ضريبة القيمة المضافة<br/></span>
+                <span name="th_vat_amount_ar" t-if="display_in_ar" t-translation="off" dir="rtl">مبلغ ضريبة القيمة المضافة<br/></span>
                 <span name="th_vat_amount_en" t-if="display_in_en" t-translation="off">VAT Amount<br/></span>
                 <span name="th_vat_amount_span">VAT Amount</span>
             </th>
             <th name="th_vat_excl" class="text-end">
-                <span name="th_vat_excl_ar" t-if="display_in_ar" t-translation="off" dir="rtl" class="text-nowrap">إجمالي المبلغ
+                <span name="th_vat_excl_ar" t-if="display_in_ar" t-translation="off" dir="rtl">إجمالي المبلغ
                     <br/>
                     (غير شامل القيمة المضافة)<br/>
                 </span>
-                <span name="th_vat_excl_en" t-if="display_in_en" t-translation="off" class="text-nowrap">Subtotal<br/>(Exclusive of VAT)<br/>
+                <span name="th_vat_excl_en" t-if="display_in_en" t-translation="off">Subtotal<br/>(Exclusive of VAT)<br/>
                 </span>
                 <span name="th_vat_excl_span">Subtotal<br/>(Exclusive of VAT)</span>
             </th>
@@ -134,6 +149,11 @@
             <attribute name="class" add="d-none" separator=" "/>
         </td>
         <t name="account_invoice_line_accountable" position="inside">
+            <td name="td_discount_amount" class="text-end" t-if="has_discount">
+                <span class="text-nowrap"
+                    t-out="line.get_discount_and_net_price()['discount_amount']"
+                    t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+            </td>
             <td name="td_vat_amount" class="text-end">
                 <span class="text-nowrap" t-field="line.l10n_gcc_invoice_tax_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}">4.05</span>
             </td>
