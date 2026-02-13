@@ -26,7 +26,7 @@ const tldWhitelist = [
 
 const urlRegexBase = `|(?:www.))[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-zA-Z][a-zA-Z0-9]{1,62}|(?:[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.(?:${tldWhitelist.join(
     "|"
-)})\\b))(?:(?:[/?#])[^\\s]*[^!.,})\\]'"\\s]|(?:[^!(){}.,[\\]'"\\s]+))?`;
+)})\\b))(?:(?:[/?#])[^\\s]*[^!.,})\\]'"\`\\s]|(?:[^!(){}.,[\\]'"\`\\s]+))?`;
 const httpCapturedRegex = `(https?:\\/\\/)`;
 
 export const URL_REGEX = new RegExp(`((?:(?:${httpCapturedRegex}${urlRegexBase})`, "i");
