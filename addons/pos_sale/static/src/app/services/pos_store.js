@@ -98,7 +98,7 @@ patch(PosStore.prototype, {
         ]);
 
         for (const line of sale_order.order_line) {
-            if (line.display_type === "line_note") {
+            if (["line_note", "subscription_discount"].includes(line.display_type)) {
                 if (previousProductLine) {
                     const previousNote = previousProductLine.customer_note;
                     previousProductLine.customer_note = previousNote
