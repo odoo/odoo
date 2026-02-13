@@ -237,7 +237,7 @@ class PurchaseOrderLine(models.Model):
         price_unit = self._get_stock_move_price_unit()
         qty = self._get_qty_procurement()
 
-        move_dests = self.move_dest_ids or self.move_ids.move_dest_ids
+        move_dests = self.move_dest_ids or self.move_ids.move_dest_ids.filtered(lambda m: m.location_dest_id.usage != 'internal')
         move_dests = move_dests.filtered(lambda m: m.state != 'cancel' and not m._is_purchase_return())
 
         if not move_dests:
