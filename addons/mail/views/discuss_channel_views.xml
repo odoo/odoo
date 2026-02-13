@@ -106,6 +106,7 @@
                                     <list string="Members" editable="bottom">
                                         <field name="partner_id" readonly="id or guest_id" required="not guest_id"/>
                                         <field name="guest_id" readonly="id or partner_id" required="not partner_id"/>
+                                        <field name="channel_role" readonly="guest_id" widget="selection"/>
                                     </list>
                                 </field>
                             </page>
