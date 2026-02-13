@@ -1282,19 +1282,17 @@ describe(`new urls`, () => {
         ]);
 
         await contains(`.breadcrumb .dropdown-toggle`).click();
-        expect(`.o-overlay-container .dropdown-menu`).toHaveText("Partners Action 27");
-        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
-            "",
-            "Second record",
+        expect(`.o-overlay-container .dropdown-menu`).toHaveText(
+            "Second record\nPartners Action 27"
+        );
+        expect(queryAllTexts`.breadcrumb-item a, .o_breadcrumb .active`).toEqual([
             "Partners Action 28",
             "First record",
         ]);
-        expect(`.o-overlay-container .dropdown-menu a`).toHaveAttribute(
-            "data-tooltip",
-            "Back to “Partners Action 27”"
+        expect(queryAllAttributes(".o-overlay-container .dropdown-menu a", "data-tooltip")).toEqual(
+            ["Back to “Second record” form", "Back to “Partners Action 27”"]
         );
         expect(queryAllAttributes(".o_breadcrumb li.breadcrumb-item a", "data-tooltip")).toEqual([
-            'Back to "Second record" form',
             'Back to "Partners Action 28"',
         ]);
     });
@@ -1659,11 +1657,12 @@ describe(`new urls`, () => {
         expect(browser.location.href).toBe(
             "http://example.com/odoo/action-200/5/action-300/action-100/1"
         );
-        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
-            "Kanban Partners",
+        expect(queryAllTexts`.breadcrumb-item a, .o_breadcrumb .active`).toEqual([
             "List Partners with active id",
             "First record",
         ]);
+        await contains(`.breadcrumb .dropdown-toggle`).click();
+        expect(`.o-overlay-container .dropdown-menu`).toHaveText("Kanban Partners");
         expect(router.current.actionStack).toEqual([
             {
                 action: 200,
@@ -1747,11 +1746,12 @@ describe(`new urls`, () => {
         expect(browser.location.href).toBe(
             "http://example.com/odoo/action-200/5/action-300/action-100/1"
         );
-        expect(queryAllTexts`.breadcrumb-item, .o_breadcrumb .active`).toEqual([
-            "Kanban Partners",
+        expect(queryAllTexts`.breadcrumb-item a, .o_breadcrumb .active`).toEqual([
             "List Partners with active id",
             "First record",
         ]);
+        await contains(`.breadcrumb .dropdown-toggle`).click();
+        expect(`.o-overlay-container .dropdown-menu`).toHaveText("Kanban Partners");
         expect.verifySteps([
             "get menu_id-null",
             "get current_lang-en",

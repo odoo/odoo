@@ -466,7 +466,7 @@ test("breadcrumbs are updated when switching between views", async () => {
 
     // open a record in form view
     await contains(".o_kanban_view .o_kanban_record").click();
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual([
         "Partners",
         "First record",
     ]);
@@ -890,8 +890,7 @@ test('reverse breadcrumb works on accesskey "b"', async () => {
     // open a record in form view
     await contains(".o_list_view .o_data_cell").click();
     await contains(".o_form_view button:contains(Execute action)").click();
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
-        "Partners",
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual([
         "First record",
         "Partners Action 4",
     ]);
@@ -1131,8 +1130,7 @@ test("execute_action of type action are handled", async () => {
         "First record",
     ]);
     await contains(".o_form_view button:contains(Execute action)").click();
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
-        "Partners",
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual([
         "First record",
         "Partners Action 4",
     ]);
@@ -1546,30 +1544,29 @@ test("go back to a previous action using the breadcrumbs", async () => {
 
     // push another action on top of the first one, and come back to the form view
     await getService("action").doAction(4);
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
-        "Partners",
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual([
         "First record",
         "Partners Action 4",
     ]);
 
     // go back using the breadcrumbs
-    await contains(".o_control_panel .breadcrumb a:eq(1)").click();
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
+    await contains(".o_control_panel .breadcrumb a").click();
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual([
         "Partners",
         "First record",
     ]);
 
     // push again the other action on top of the first one, and come back to the list view
     await getService("action").doAction(4);
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
-        "Partners",
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual([
         "First record",
         "Partners Action 4",
     ]);
 
     // go back using the breadcrumbs
-    await contains(".o_control_panel .breadcrumb a:first").click();
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners"]);
+    await contains(".o_control_panel .breadcrumb .dropdown-toggle").click();
+    await contains(".o-overlay-container .dropdown-menu a:contains(Partners)").click();
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual(["Partners"]);
 });
 
 test.tags("desktop");
@@ -1585,7 +1582,7 @@ test("form views are restored in edit when coming back in breadcrumbs", async ()
     await getService("action").doAction(4);
 
     // go back to form view
-    await contains(".o_control_panel .breadcrumb a:eq(1)").click();
+    await contains(".o_control_panel .breadcrumb a").click();
     expect(".o_form_view .o_form_editable").toHaveCount(1);
 });
 
@@ -1603,7 +1600,7 @@ test("form views restore the correct id in url when coming back in breadcrumbs",
     expect(router.current).not.toInclude("resId");
 
     // go back to form view
-    await contains(".o_control_panel .breadcrumb a:eq(1)").click();
+    await contains(".o_control_panel .breadcrumb a").click();
     expect(router.current.resId).toBe(1);
 });
 
@@ -2004,13 +2001,12 @@ test("execute action from dirty, new record, and come back", async () => {
     await contains(".o_field_widget[name=foo] input").edit("val");
     await contains(".o_form_uri").click();
     expect(".o_form_view .o_form_editable").toHaveCount(1);
-    expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual([
-        "Partners",
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual([
         "test",
         "First record",
     ]);
     // go back to test using the breadcrumbs
-    await contains(".o_control_panel .breadcrumb-item a:eq(1)").click();
+    await contains(".o_control_panel .breadcrumb-item a").click();
     expect(".o_form_view .o_form_editable").toHaveCount(1);
     expect(queryAllTexts(".breadcrumb-item, .o_breadcrumb .active")).toEqual(["Partners", "test"]);
     expect.verifySteps([
@@ -2728,8 +2724,10 @@ test("click on breadcrumb of a deleted record", async () => {
 
     await contains(".o_data_row .o_data_cell").click();
     expect(".o_form_view").toHaveCount(1);
-    expect(queryAllTexts(".breadcrumb-item")).toEqual(["", "First record", "Partners"]);
-    expect(".o_breadcrumb .active").toHaveText("First record");
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual([
+        "Partners",
+        "First record",
+    ]);
     // open action menu and delete
     await contains(".o_cp_action_menus .fa-cog").click();
     await toggleMenuItem("Delete");
@@ -2739,15 +2737,18 @@ test("click on breadcrumb of a deleted record", async () => {
     await contains(".o_dialog .modal-footer .btn-danger").click();
 
     expect(".o_form_view").toHaveCount(1);
-    expect(queryAllTexts(".breadcrumb-item")).toEqual(["", "First record", "Partners"]);
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual([
+        "Partners",
+        "Second record",
+    ]);
     expect(".o_breadcrumb .active").toHaveText("Second record");
 
     // click on "First record" in breadcrumbs, which doesn't exist anymore
-    await contains(".breadcrumb-item a").click();
+    await contains(".breadcrumb .dropdown-toggle").click();
+    await contains(".o-overlay-container .dropdown-menu a:contains(First record)").click();
     await animationFrame();
     expect(".o_list_view").toHaveCount(1);
-    expect(queryAllTexts(".breadcrumb-item")).toEqual([]);
-    expect(".o_breadcrumb .active").toHaveText("Partners");
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual(["Partners"]);
     expect.verifyErrors([
         "It seems the records with IDs 1 cannot be found. They might have been deleted.",
     ]);

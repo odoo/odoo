@@ -1161,9 +1161,14 @@ stepUtils.autoExpandMoreButtons(true),
 },
 {
     isActive: ["desktop"],
-    trigger: '.breadcrumb-item:nth-child(2) a',
-    content: _t('Back to the sale order'),
-    tooltipPosition: 'bottom',
+    trigger: '.breadcrumb .breadcrumb-item .dropdown-toggle',
+    content: 'Open the breadcrumb dropdown',
+    run: "click",
+},
+{
+    isActive: ["desktop"],
+    trigger: '.o-overlay-container .dropdown-menu a',
+    content: 'Back to the sale order',
     run: "click",
 },
 {

@@ -1596,7 +1596,7 @@ test("execute action from settings view with several actions in the breadcrumb",
 
     def.resolve();
     await animationFrame();
-    expect(".o_breadcrumb").toHaveText("First action\nSettings\nOther action");
+    expect(".o_breadcrumb").toHaveText("Settings\nOther action");
 });
 
 test("settings can contain one2many fields", async () => {
