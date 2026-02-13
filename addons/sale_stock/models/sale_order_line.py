@@ -336,7 +336,8 @@ class SaleOrderLine(models.Model):
             seen_wh_ids = set()
             for move in sorted_moves:
                 if move.warehouse_id.id not in seen_wh_ids:
-                    triggering_rule_ids.append(move.rule_id.id)
+                    if move.rule_id.id:
+                        triggering_rule_ids.append(move.rule_id.id)
                     seen_wh_ids.add(move.warehouse_id.id)
         if self.env.context.get('accrual_entry_date'):
             accrual_date = fields.Date.from_string(self.env.context['accrual_entry_date'])
