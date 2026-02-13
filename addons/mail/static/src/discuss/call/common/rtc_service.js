@@ -1,5 +1,6 @@
 import { fields, Record } from "@mail/model/export";
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
+import { setupMuteSuggestion } from "@mail/discuss/call/common/call_mute_suggestion";
 import { CallPermissionDialog } from "@mail/discuss/call/common/call_permission_dialog";
 import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/discuss_channel_model_patch";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
@@ -351,7 +352,11 @@ export class Rtc extends Record {
                 this.store["discuss.channel.rtc.session"].get(this._remotelyHostedSessionId)
             );
         },
+        onAdd() {
+            this._muteSuggestionCleanup = setupMuteSuggestion(this.store);
+        },
         onDelete() {
+            this._muteSuggestionCleanup?.();
             if (this.channel) {
                 this.channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.INACTIVE;
             }

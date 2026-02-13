@@ -12,6 +12,7 @@ import {
     SIZES,
     start,
     startServer,
+    simulateSelfSpeaking,
     triggerEvents,
     triggerHotkey,
     waitStoreFetch,
@@ -19,6 +20,7 @@ import {
     dropFiles,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { MUTE_SUGGESTION_CONFIG } from "@mail/discuss/call/common/call_mute_suggestion";
 import {
     CROSS_TAB_CLIENT_MESSAGE,
     CROSS_TAB_HOST_MESSAGE,
@@ -1314,4 +1316,63 @@ test("Meeting chat panel excludes call notifications for 'New Meeting' channels"
     await contains(".o-mail-NotificationMessage:text('Mitchell Admin started a call.11:00 AM')", {
         count: 0,
     });
+});
+
+test("mute suggestion appearance and cooldown", async () => {
+    const { armingDelay, activeDuration, cooldownDuration } = MUTE_SUGGESTION_CONFIG;
+    const suggestionSelector =
+        ".o_popover span:text('Are you talking? Your mic is off. Click the mic to turn it on.')";
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const env = await start();
+    const rtc = env.services["discuss.rtc"];
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await contains(".o-discuss-Call");
+    await click("button[title='Mute']");
+    // sustained talking triggers suggestion
+    await simulateSelfSpeaking(rtc.selfSession, armingDelay);
+    await contains(suggestionSelector);
+    // auto-hides after active duration
+    await advanceTime(activeDuration);
+    await contains(suggestionSelector, { count: 0 });
+    // cooldown prevents immediate re-appearance
+    await advanceTime(cooldownDuration / 2); // in cooldown
+    await simulateSelfSpeaking(rtc.selfSession, armingDelay);
+    await contains(suggestionSelector, { count: 0 });
+    await advanceTime(cooldownDuration / 2); // cooldown end
+    // unsustained talking do not trigger suggestion
+    await simulateSelfSpeaking(rtc.selfSession, armingDelay - 300);
+    await contains(suggestionSelector, { count: 0 });
+    // valid attempt post-cooldown triggers suggestion
+    await simulateSelfSpeaking(rtc.selfSession, armingDelay);
+    await contains(suggestionSelector);
+});
+
+test("mute suggestion dismissal and resetting", async () => {
+    const { armingDelay, activeDuration, cooldownDuration } = MUTE_SUGGESTION_CONFIG;
+    const suggestionSelector =
+        ".o_popover span:text('Are you talking? Your mic is off. Click the mic to turn it on.')";
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const env = await start();
+    const rtc = env.services["discuss.rtc"];
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await contains(".o-discuss-Call");
+    await click("button[title='Mute']");
+    await simulateSelfSpeaking(rtc.selfSession, armingDelay);
+    await contains(suggestionSelector);
+    // manual dismissal hides suggestion
+    await click(".o_popover i[aria-label='Dismiss']");
+    await contains(suggestionSelector, { count: 0 });
+    await advanceTime(activeDuration + cooldownDuration); // cooldown end
+    // dismissal persists even after cooldown preventing re-appearance
+    await simulateSelfSpeaking(rtc.selfSession, armingDelay);
+    await contains(suggestionSelector, { count: 0 });
+    // suggestion reappears after reset (unmute to reset)
+    await click("button[title='Unmute']");
+    await click("button[title='Mute']");
+    await simulateSelfSpeaking(rtc.selfSession, armingDelay);
+    await contains(suggestionSelector);
 });
