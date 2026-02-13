@@ -1,6 +1,6 @@
 import { NameAndSignature } from "@web/core/signature/name_and_signature";
 
-import { expect, test } from "@odoo/hoot";
+import { expect, queryOne, test } from "@odoo/hoot";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { click, drag, edit, queryFirst, waitFor } from "@odoo/hoot-dom";
 import {
@@ -341,4 +341,23 @@ test("signature field should render initials", async () => {
         message: 'should open a modal with "Auto" button',
     });
     expect.verifySteps(["V.B."]);
+});
+
+test("error loading url", async () => {
+    Partner._records = [{
+        id: 1,
+        sign: "1 kb",
+    }]
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <field name="sign" widget="signature" />
+            </form>`,
+    });
+    const img = queryOne(".o_field_widget img");
+    img.dispatchEvent(new Event("error"));
+    await waitFor(".o_notification:has(.bg-danger):contains(Could not display the selected image)");
 });
