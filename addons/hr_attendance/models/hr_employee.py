@@ -40,6 +40,9 @@ class HrEmployee(models.Model):
     hours_previously_today = fields.Float(
         compute='_compute_hours_today',
         groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
+    today_attendance_ids = fields.Many2many(
+        'hr.attendance', compute='_compute_hours_today',
+        groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
     last_attendance_worked_hours = fields.Float(
         compute='_compute_hours_today',
         groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
@@ -138,6 +141,7 @@ class HrEmployee(models.Model):
                 ('check_in', '<=', now),
                 '|', ('check_out', '>=', start_naive), ('check_out', '=', False),
             ], order='check_in asc')
+            employee.today_attendance_ids = attendances
             hours_previously_today = 0
             worked_hours = 0
             attendance_worked_hours = 0

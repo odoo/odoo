@@ -26,8 +26,10 @@ class HrAttendance(http.Controller):
         if employee:
             response = {
                 'id': employee.id,
+                'name': employee.name,
                 'hours_today': float_round(employee.hours_today, precision_digits=2),
                 'hours_previously_today': float_round(employee.hours_previously_today, precision_digits=2),
+                'today_attendance_ids': employee.today_attendance_ids.read(['check_in', 'check_out', 'worked_hours']),
                 'last_attendance_worked_hours': float_round(employee.last_attendance_worked_hours, precision_digits=2),
                 'last_check_in': employee.last_check_in,
                 'attendance_state': employee.attendance_state,
