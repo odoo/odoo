@@ -29,7 +29,7 @@ export class BorderOption3 extends BaseOptionComponent {
 export class BorderOption4 extends BaseOptionComponent {
     static template = "mass_mailing.BorderOption";
     static selector = ".row > div";
-    static exclude = ".o_mail_wrapper_td, .s_image_gallery .row > div";
+    static exclude = ".o_mail_wrapper_td, .s_image_gallery .row > div, .row > .s_record_snapshot";
     static components = { BorderConfigurator };
 }
 

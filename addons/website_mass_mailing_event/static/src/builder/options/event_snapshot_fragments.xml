@@ -1,0 +1,113 @@
+<templates>
+    <t t-name="website_mass_mailing_event.s_event_snapshot_columns_fragment">
+        <div class="card rounded h-100" style="border-radius: 5px !important; border-color: rgb(233, 236, 239) !important;">
+            <div class="o_not_editable">
+                <img class="img img-fluid o_editable_media rounded mx-auto" t-attf-data-name="{{record.display_name}} Image"
+                    t-att-src="coverUrl" t-attf-alt="{{record.name}} Image"
+                    t-att-data-original-src="coverUrl"
+                    style="object-fit: cover; width: 100%;
+                    --box-border-bottom-left-radius: 0px; --box-border-bottom-right-radius: 0px; --box-border-top-right-radius: 0px; --box-border-top-left-radius: 0px;"/>
+            </div>
+            <div class="card-body">
+                <h3 class="card-title">
+                    <strong t-out="record.display_name"/>
+                </h3>
+                <p>
+                    <font style="color: rgb(99,99,99);" t-out="record.subtitle or 'Add a description...'"/>
+                </p>
+                <p>
+                    <strong>
+                        <span t-out="dateBegin"/> at
+                        <span t-out="timeBegin"/>
+                    </strong>
+                </p>
+                <p t-if="record.address_id">
+                    <span class="h5-fs">
+                        <t t-call="website_mass_mailing_event.event_address_template" t-call-context="addressData"/>
+                    </span>
+                </p>
+                <p>
+                    <a t-attf-href="{{record.event_share_url}}/register" target="_blank" class="btn btn-primary">Register Now</a>
+                </p>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website_mass_mailing_event.s_event_snapshot_card_fragment">
+        <div>
+            <div class="o_not_editable">
+                <img class="img img-fluid o_editable_media rounded mx-auto" style="width: 100%;
+                    --box-border-bottom-left-radius: 0px; --box-border-bottom-right-radius: 0px; --box-border-top-right-radius: 0px; --box-border-top-left-radius: 0px;"
+                    t-attf-data-name="{{record.display_name}} Image"
+                    t-att-src="coverUrl" t-attf-alt="{{record.name}} Image"
+                    t-att-data-original-src="coverUrl"/>
+            </div>
+            <div class="text-center pt8">
+                <h3><strong t-out="record.display_name"/></h3>
+                <p>
+                    <font style="color: rgb(99,99,99);" t-out="record.subtitle or 'Add a description...'"/>
+                </p>
+                <p>
+                    <strong>
+                        <span t-out="dateBegin"/> at
+                        <span t-out="timeBegin"/>
+                    </strong>
+                </p>
+                <p t-if="record.address_id">
+                    <span class="h5-fs">
+                        <t t-call="website_mass_mailing_event.event_address_template" t-call-context="addressData"/>
+                    </span>
+                </p>
+                <p>
+                    <a t-attf-href="{{record.event_share_url}}/register" target="_blank" class="btn btn-primary">Register Now</a>
+                </p>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website_mass_mailing_event.s_event_snapshot_aside_fragment">
+        <div class="row align-items-center">
+            <div class="col-md-6 col-12">
+                <div class="o_not_editable">
+                    <img class="img img-fluid o_editable_media rounded mx-auto" style="object-fit: cover; width: 100%;
+                        --box-border-bottom-left-radius: 0px; --box-border-bottom-right-radius: 0px; --box-border-top-right-radius: 0px; --box-border-top-left-radius: 0px;"
+                        t-att-src="coverUrl" t-attf-alt="{{record.name}} Image"
+                        t-att-data-original-src="coverUrl"/>
+                </div>
+            </div>
+            <div class="col-md-6 col-12">
+                <h3><strong t-out="record.display_name"/></h3>
+                <p>
+                    <font style="color: rgb(99,99,99);" t-out="record.subtitle or 'Add a description...'"/>
+                </p>
+                <p>
+                    <strong>
+                        <span t-out="dateBegin"/> at
+                        <span t-out="timeBegin"/>
+                    </strong>
+                </p>
+                <p t-if="record.address_id">
+                    <span class="h5-fs">
+                        <t t-call="website_mass_mailing_event.event_address_template" t-call-context="addressData"/>
+                    </span>
+                </p>
+                <p>
+                    <a t-attf-href="{{record.event_share_url}}/register" target="_blank" class="btn btn-primary">Register Now</a>
+                </p>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website_mass_mailing_event.event_address_template">
+        <t t-set="has_city" t-value="address.city"/>
+        <t t-set="has_state" t-value="state and country.state_required"/>
+
+        <span class="fa fa-map-marker"></span> <t t-if="has_city">
+            <t t-out="address.city"/><t t-if="address.country_id">, </t>
+        </t>
+        <t t-if="has_state">
+            <t t-out="state.code"/>,
+        </t>
+        <t t-out="country.name"/>
+    </t>
+</templates>
