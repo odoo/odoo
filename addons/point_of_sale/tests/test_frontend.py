@@ -1215,6 +1215,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'qty_free': 2,
             'qty_max': 5,
         })
+        self.combo_product_2.active = False
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('ProductComboMaxFreeQtyTour')
 
