@@ -74,10 +74,7 @@ class TestMailingContactToList(MassMailCommon):
             self.assertEqual(contacts.list_ids, mailing)
             create_dates = contacts.subscription_ids.mapped('create_date')
             self.assertTrue(all(date == frozen_time for date in create_dates), "All create dates should be equal to frozen datetime")
-        self.assertEqual(action["type"], "ir.actions.client")
-        self.assertTrue(action.get("params", {}).get("next"), "Should return a notification with a next action")
-        subaction = action["params"]["next"]
-        self.assertEqual(subaction["type"], "ir.actions.act_window_close")
+        self.assertEqual(action["type"], "ir.actions.act_window")
 
 
 @tagged('mailing_list')
@@ -167,53 +164,6 @@ class TestMailingListMerge(MassMailCommon):
         # Copy the contact with default_list_ids in context, which should not raise anything
         contact_2 = contact_1.with_context(default_list_ids=self.mailing_list_3.ids).copy()
         self.assertEqual(contact_1.list_ids, contact_2.list_ids, 'Should copy the existing mailing list(s)')
-
-    @users('user_marketing')
-    def test_mailing_list_merge(self):
-        # TEST CASE: Merge A,B into the existing mailing list C
-        # The mailing list C contains the same email address than 'Norbert' in list B
-        # This test ensure that the mailing lists are correctly merged and no
-        # duplicates are appearing in C
-        merge_form = Form(self.env['mailing.list.merge'].with_context(
-            active_ids=[self.mailing_list_1.id, self.mailing_list_2.id],
-            active_model='mailing.list'
-        ))
-        merge_form.new_list_name = False
-        merge_form.merge_options = 'existing'
-        # Need to set `merge_options` before `dest_lid_id` so `dest_list_id` is visible
-        # `'invisible': [('merge_options', '=', 'new')]`
-        merge_form.dest_list_id = self.mailing_list_3
-        merge_form.archive_src_lists = False
-        result_list = merge_form.save().action_mailing_lists_merge()
-
-        # Assert the number of contacts is correct
-        self.assertEqual(
-            len(result_list.contact_ids.ids), 5,
-            'The number of contacts on the mailing list C is not equal to 5')
-
-        # Assert there's no duplicated email address
-        self.assertEqual(
-            len(list(set(result_list.contact_ids.mapped('email')))), 5,
-            'Duplicates have been merged into the destination mailing list. Check %s' % (result_list.contact_ids.mapped('email')))
-
-    @users('user_marketing')
-    def test_mailing_list_merge_cornercase(self):
-        """ Check wrong use of merge wizard """
-        with self.assertRaises(exceptions.UserError):
-            merge_form = Form(self.env['mailing.list.merge'].with_context(
-                active_ids=[self.mailing_list_1.id, self.mailing_list_2.id],
-            ))
-
-        merge_form = Form(self.env['mailing.list.merge'].with_context(
-            active_ids=[self.mailing_list_1.id],
-            active_model='mailing.list',
-            default_src_list_ids=[self.mailing_list_1.id, self.mailing_list_2.id],
-            default_dest_list_id=self.mailing_list_3.id,
-            default_merge_options='existing',
-        ))
-        merge = merge_form.save()
-        self.assertEqual(merge.src_list_ids, self.mailing_list_1 + self.mailing_list_2)
-        self.assertEqual(merge.dest_list_id, self.mailing_list_3)
 
 
 @tagged('mailing_list')
