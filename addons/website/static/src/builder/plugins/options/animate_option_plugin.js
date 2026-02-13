@@ -392,7 +392,11 @@ export class SetAnimationModeAction extends BuilderAction {
     }
 
     async apply({ editingElement, value: effectName, params: { forceAnimation } }) {
-        if (this.animationWithFadein.includes(effectName)) {
+        // Prevent adding fade-in when another animation class is present.
+        if (
+            this.animationWithFadein.includes(effectName) &&
+            !/o_anim_/.test(editingElement.className)
+        ) {
             editingElement.classList.add("o_anim_fade_in");
         }
         if (effectName === "onScroll") {
