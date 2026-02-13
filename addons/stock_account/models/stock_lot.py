@@ -31,7 +31,6 @@ class StockLot(models.Model):
                 lot.total_value = 0.0
                 lot.avg_cost = 0.0
                 continue
-
             valuated_product = lot.product_id.with_context(at_date=at_date, lot_id=lot.id)
             qty_valued = valuated_product.qty_available
             qty_available = valuated_product.with_context(warehouse_id=False).qty_available
@@ -40,10 +39,58 @@ class StockLot(models.Model):
             elif valuated_product.cost_method == 'standard' or valuated_product.uom_id.is_zero(qty_available):
                 lot.total_value = lot.standard_price * qty_valued
             elif valuated_product.cost_method == 'average':
-                lot.total_value = valuated_product._run_avco(at_date=at_date, lot=lot)[1] * qty_valued / qty_available
+                lot.total_value = valuated_product.with_context(warehouse_id=False)._run_avco(at_date=at_date, lot=lot)[1] * qty_valued / qty_available
             else:
+<<<<<<< 30c8cd5b214259effe8717a5568daa0c1ddc518b
                 lot.total_value = valuated_product._run_fifo(qty_available, at_date=at_date, lot=lot) * qty_valued / qty_available
             lot.avg_cost = lot.total_value / qty_available if qty_available else 0.0
+||||||| a3f50fa860d23739bbb3b64e2c535b948e0e5323
+                lot.total_value = valuated_product._run_fifo(qty_available, at_date=at_date, lot=lot) * qty_valued / qty_available
+
+    # TODO: remove avg cost column in master and merge the two compute methods
+    @api.depends('product_id.lot_valuated')
+    @api.depends_context('to_date')
+    def _compute_avg_cost(self):
+        """Compute totals of multiple svl related values"""
+        at_date = fields.Datetime.to_datetime(self.env.context.get('to_date'))
+
+        self.avg_cost = 0.0
+        for lot in self:
+            if not lot.lot_valuated:
+                continue
+
+            qty_available = lot.product_qty
+            if lot.product_id.cost_method == 'standard':
+                total_value = lot.standard_price * qty_available
+            elif lot.product_id.cost_method == 'average':
+                total_value = lot.product_id._run_avco(at_date=at_date, lot=lot)[1]
+            else:
+                total_value = lot.product_id._run_fifo(qty_available, at_date=at_date, lot=lot)
+            lot.avg_cost = total_value / qty_available if qty_available else 0.0
+=======
+                lot.total_value = valuated_product.with_context(warehouse_id=False)._run_fifo(qty_available, at_date=at_date, lot=lot) * qty_valued / qty_available
+
+    # TODO: remove avg cost column in master and merge the two compute methods
+    @api.depends('product_id.lot_valuated')
+    @api.depends_context('to_date')
+    def _compute_avg_cost(self):
+        """Compute totals of multiple svl related values"""
+        at_date = fields.Datetime.to_datetime(self.env.context.get('to_date'))
+
+        self.avg_cost = 0.0
+        for lot in self:
+            if not lot.lot_valuated:
+                continue
+
+            qty_available = lot.product_qty
+            if lot.product_id.cost_method == 'standard':
+                total_value = lot.standard_price * qty_available
+            elif lot.product_id.cost_method == 'average':
+                total_value = lot.product_id._run_avco(at_date=at_date, lot=lot)[1]
+            else:
+                total_value = lot.product_id._run_fifo(qty_available, at_date=at_date, lot=lot)
+            lot.avg_cost = total_value / qty_available if qty_available else 0.0
+>>>>>>> d8d22adf4b624e5ea5ae127fbfb7cb1df97e6a15
 
     @api.model_create_multi
     def create(self, vals_list):
