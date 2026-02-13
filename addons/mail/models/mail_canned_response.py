@@ -71,6 +71,12 @@ class MailCannedResponse(models.Model):
         self._broadcast(delete=True)
         return super().unlink()
 
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        if "source" not in (default or {}):
+            return [dict(vals, source=self.env._("%s (copy)", rec.source)) for rec, vals in zip(self, vals_list)]
+        return vals_list
+
     def _broadcast(self, /, *, delete=False):
         for canned_response in self:
             stores = [Store(bus_channel=group) for group in canned_response.group_ids]
