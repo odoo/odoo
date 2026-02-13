@@ -60,7 +60,7 @@ class PaymentTransaction(models.Model):
             self.currency_id.name, self.currency_id.decimal_places
         )
 
-        return {
+        payload = {
             "description": self.reference,
             "amount": {
                 "currency": self.currency_id.name,
@@ -92,6 +92,30 @@ class PaymentTransaction(models.Model):
                 }
             ],
         }
+        if self.token_id:
+            payload["sequenceType"] = "recurring"
+            payload["customerId"] = self.token_id.mollie_customer_id
+            payload["mandateId"] = self.token_id.provider_ref
+            payload.pop("method")
+        elif self.tokenize:
+            payload["sequenceType"] = "first"
+            payload["customerId"] = self._mollie_create_customer()
+        else:
+            payload["sequenceType"] = "oneoff"
+        return payload
+
+    def _mollie_create_customer(self):
+        """Create a Mollie customer.
+
+        Note: exceptions are intentionally left to bubble up to
+        `_get_specific_rendering_values` to ensure more accurate error messages.
+
+        :return: The Mollie customer ID.
+        :rtype: str
+        """
+        payload = {"name": self.partner_name, "email": self.partner_email}
+        response = self._send_api_request("POST", "/customers", json=payload)
+        return response["id"]
 
     def _mollie_prepare_billing_address_payload(self):
         """Return correctly formatted billing address payload.
@@ -110,6 +134,15 @@ class PaymentTransaction(models.Model):
             "email": self.partner_email or "",
         }
 
+    def _send_payment_request(self):
+        """Override of `payment` to send a token payment request to Mollie."""
+        if self.provider_code != "mollie":
+            return super()._send_payment_request()
+
+        payload = self._mollie_prepare_payment_request_payload()
+        payment_data = self._send_api_request("POST", "/payments", json=payload)
+        self._process("mollie", payment_data)
+
     @api.model
     def _extract_reference(self, provider_code, payment_data):
         """Override of `payment` to extract the reference from the payment data."""
@@ -122,6 +155,9 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "mollie":
             super()._apply_updates(payment_data)
             return
+
+        # Update the provider reference.
+        self.provider_reference = payment_data["id"]
 
         # Update the payment method.
         payment_method_type = payment_data.get("method", "")
@@ -159,3 +195,23 @@ class PaymentTransaction(models.Model):
         amount = amount_data.get("value")
         currency_code = amount_data.get("currency")
         return {"amount": float(amount), "currency_code": currency_code}
+
+    def _extract_token_values(self, payment_data):
+        """Override of `payment` to extract the token values from the payment data."""
+        if self.provider_code != "mollie":
+            return super()._extract_token_values(payment_data)
+
+        mandate_id = payment_data.get("mandateId")
+        customer_id = payment_data.get("customerId")
+        if not mandate_id or not customer_id:
+            _logger.warning(
+                "Tried to tokenize with missing mandate_id (%s) or customer_id (%s)",
+                mandate_id,
+                customer_id,
+            )
+            return {}
+
+        token_values = {"provider_ref": mandate_id, "mollie_customer_id": customer_id}
+        if card_number := payment_data.get("details", {}).get("cardNumber"):
+            token_values["payment_details"] = card_number[-4:]
+        return token_values

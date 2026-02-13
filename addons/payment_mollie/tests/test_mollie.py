@@ -33,6 +33,63 @@ class MollieTest(MollieCommon, PaymentHttpCommon):
         )
         self.assertEqual(payload["description"], tx.reference)
 
+    def test_payload_preparation_in_payment_with_tokenize(self):
+        """Test that tokenization requests create a customer and set a 'first' sequence without a
+        mandate ID."""
+        tx = self._create_transaction("redirect", tokenize=True)
+        with patch.object(
+            self.env.registry["payment.transaction"],
+            "_mollie_create_customer",
+            return_value="cst_test987",
+        ):
+            payload = tx._mollie_prepare_payment_request_payload()
+
+        expected_payload = {"sequenceType": "first", "customerId": "cst_test987"}
+        for key, value in expected_payload.items():
+            self.assertEqual(payload.get(key), value)
+        self.assertNotIn("mandateId", payload)
+
+    def test_payload_preparation_in_payment_with_token(self):
+        """Test that using a saved token produces a recurring payload with customer and mandate IDs
+        and no method."""
+        token = self._create_token(mollie_customer_id="cst_test987")
+        tx = self._create_transaction("redirect", token_id=token.id)
+
+        payload = tx._mollie_prepare_payment_request_payload()
+
+        expected_payload = {
+            "sequenceType": "recurring",
+            "customerId": "cst_test987",
+            "mandateId": "provider Ref (TEST)",
+        }
+        for key, value in expected_payload.items():
+            self.assertEqual(payload.get(key), value)
+        self.assertNotIn("method", payload)
+
+    def test_payload_preparation_in_oneoff_payment(self):
+        """Test that a payment without tokenization or token is configured as a one-off sequence."""
+        tx = self._create_transaction("redirect")
+        payload = tx._mollie_prepare_payment_request_payload()
+        self.assertEqual(payload.get("sequenceType"), "oneoff")
+
+    def test_extract_token_values_maps_fields_correctly(self):
+        """Test that the token values are extracted correctly from the payment data."""
+        tx = self._create_transaction("direct")
+        payment_data = {
+            "customerId": "cst_test987",
+            "details": {"cardNumber": "4242"},
+            "mandateId": "provider Ref (TEST)",
+        }
+        token_values = tx._extract_token_values(payment_data)
+        self.assertDictEqual(
+            token_values,
+            {
+                "payment_details": "4242",
+                "provider_ref": "provider Ref (TEST)",
+                "mollie_customer_id": "cst_test987",
+            },
+        )
+
     @mute_logger(
         "odoo.addons.payment_mollie.controllers.main",
         "odoo.addons.payment_mollie.models.payment_transaction",
@@ -46,6 +103,7 @@ class MollieTest(MollieCommon, PaymentHttpCommon):
             return_value={
                 "status": "paid",
                 "amount": {"value": str(self.amount), "currency": self.currency.name},
+                "id": "provider Ref (TEST)",
             },
         ):
             self._make_http_post_request(url, data=self.payment_data)
