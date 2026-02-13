@@ -1,11 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import math
+
 from odoo import api, fields, models
 
 
 class ResourceCalendarAttendance(models.Model):
     _name = 'resource.calendar.attendance'
     _description = "Work Detail"
-    _order = 'sequence, dayofweek, hour_from'
+    _order = 'sequence, week_type, dayofweek, hour_from'
 
     dayofweek = fields.Selection([
         ('0', 'Monday'),
@@ -30,6 +33,11 @@ class ResourceCalendarAttendance(models.Model):
         ('morning', 'Morning'),
         ('afternoon', 'Afternoon'),
         ('full_day', 'Full Day')], store=True, compute='_compute_day_period')
+    week_type = fields.Selection([
+        ('1', 'Second'),
+        ('0', 'First'),
+        ], 'Week Number', default=False)
+    two_weeks_calendar = fields.Boolean("Calendar in 2 weeks mode", related='calendar_id.two_weeks_calendar')
     sequence = fields.Integer(default=10,
         help="Gives the sequence of this line when displaying the resource calendar.")
 
@@ -84,12 +92,26 @@ class ResourceCalendarAttendance(models.Model):
         for attendance in self.filtered(lambda att: att.hour_from or att.hour_to):
             attendance.duration_hours = max(0, attendance.hour_to - attendance.hour_from)
 
+    @api.depends('week_type')
     def _compute_display_name(self):
         super()._compute_display_name()
+        section_names = {'0': self.env._('First week'), '1': self.env._('Second week')}
         dayofweek_selection = dict(self._fields['dayofweek']._description_selection(self.env))
         day_period_selection = dict(self._fields['day_period']._description_selection(self.env))
         for record in self:
             record.display_name = f"{dayofweek_selection[record.dayofweek]} ({day_period_selection[record.day_period]})"
+            if record.two_weeks_calendar:
+                record.display_name = section_names[record.weektype] + ' - ' + record.display_name
+
+    @api.model
+    def get_week_type(self, date):
+        # week_type is defined by
+        #  * counting the number of days from January 1 of year 1
+        #    (extrapolated to dates prior to the first adoption of the Gregorian calendar)
+        #  * converted to week numbers and then the parity of this number is asserted.
+        # It ensures that an even week number always follows an odd week number. With classical week number,
+        # some years have 53 weeks. Therefore, two consecutive odd week number follow each other (53 --> 1).
+        return int(math.floor((date.toordinal() - 1) / 7) % 2)
 
     def _copy_attendance_vals(self):
         self.ensure_one()
@@ -98,6 +120,7 @@ class ResourceCalendarAttendance(models.Model):
             'duration_hours': self.duration_hours,
             'hour_from': self.hour_from,
             'hour_to': self.hour_to,
+            'week_type': self.week_type,
             'sequence': self.sequence,
         }
 

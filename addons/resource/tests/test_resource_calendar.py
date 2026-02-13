@@ -93,8 +93,16 @@ class TestResourceCalendar(TransactionCase):
             'name': '40 hours/week',
             'hours_per_day': 8,
             'full_time_required_hours': 40,
+            'attendance_ids': [(5, 0, 0),
+                (0, 0, {'dayofweek': '0', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
+                (0, 0, {'dayofweek': '1', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
+                (0, 0, {'dayofweek': '2', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
+                (0, 0, {'dayofweek': '3', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
+                (0, 0, {'dayofweek': '4', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),
+            ],
+            'company_id': False,
         })
-        calendar.company_id = False
+        self.assertFalse(calendar.company_id)
         date_from = datetime(2019, 5, 27, 0, 0, 0).astimezone(UTC)
         date_to = datetime(2019, 5, 31, 23, 59, 59).astimezone(UTC)
         days = calendar._get_unusual_days(date_from, date_to, self.env.company)
