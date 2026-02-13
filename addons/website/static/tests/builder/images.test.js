@@ -284,6 +284,63 @@ describe("Image format/optimize", () => {
 
         expect(img.dataset.quality).toBe("50");
     });
+    test("Quality option does not disappear when a shape is applied on the image", async () => {
+        onRpc("/html_editor/get_image_info", () => ({
+            attachment: { id: 1 },
+            original: {
+                id: 1,
+                image_src: "/website/static/src/img/snippets_demo/s_text_image.webp",
+                mimetype: "image/webp",
+            },
+        }));
+        // The first img corresponds to a default image on which a shape has
+        // been applied. The second one corresponds to a modified image on which
+        // a shape has been applied. The last one corresponds to a case where
+        // the mimetype information is not present (this case should not appear
+        // in practice but the system should be robust to this case as the
+        // backend has all the information needed to work correctly).
+        const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            <img src='${dummyBase64Img}'
+                data-attachment-id="1" data-original-id="1"
+                data-original-src="/website/static/src/img/snippets_demo/s_text_image.webp"
+                data-mimetype="image/svg+xml"
+                data-shape="html_builder/devices/iphone_front_portrait"
+                data-mimetype-before-conversion="image/webp"
+                class="first"
+            >
+        </div>
+        <div class="test-options-target">
+            <img src='${dummyBase64Img}'
+                data-attachment-id="1" data-original-id="1"
+                data-original-src="/website/static/src/img/snippets_demo/s_text_image.webp"
+                data-mimetype="image/svg+xml"
+                data-shape="html_builder/devices/iphone_front_portrait"
+                data-mimetype-before-conversion="image/webp"
+                data-format-mimetype="image/webp"
+                class="second"
+            >
+        </div>
+        <div class="test-options-target">
+            <img src='${dummyBase64Img}'
+                data-attachment-id="1" data-original-id="1"
+                data-original-src="/website/static/src/img/snippets_demo/s_text_image.webp"
+                data-mimetype="image/svg+xml"
+                data-shape="html_builder/devices/iphone_front_portrait"
+                class="third"
+            >
+        </div>
+    `);
+        await contains(":iframe .test-options-target img.first").click();
+        await waitSidebarUpdated();
+        expect(`[data-action-id="setImageQuality"]`).toBeVisible();
+        await contains(":iframe .test-options-target img.second").click();
+        await waitSidebarUpdated();
+        expect(`[data-action-id="setImageQuality"]`).toBeVisible();
+        await contains(":iframe .test-options-target img.third").click();
+        await waitSidebarUpdated();
+        expect(`[data-action-id="setImageQuality"]`).toBeVisible();
+    });
 });
 
 test("Save image with correct parameter", async () => {
