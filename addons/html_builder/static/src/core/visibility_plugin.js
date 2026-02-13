@@ -35,7 +35,7 @@ export class VisibilityPlugin extends Plugin {
         on_mobile_preview_clicked: withSequence(10, this.onMobilePreviewClicked.bind(this)),
         system_attributes: ["data-invisible"],
         system_classes: ["o_snippet_override_invisible"],
-        clean_for_save_handlers: this.cleanForSaveVisibility.bind(this),
+        clean_for_save_processors: this.cleanForSaveVisibility.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         on_restore_containers_handlers: (newTargetEl) => this.makeTargetVisible(newTargetEl),
     };
@@ -98,7 +98,7 @@ export class VisibilityPlugin extends Plugin {
         this.config.updateInvisibleElementsPanel();
     }
 
-    cleanForSaveVisibility({ root: rootEl }) {
+    cleanForSaveVisibility(rootEl) {
         const invisibleEls = getElementsWithOption(rootEl, invisibleElementsSelector);
         for (const invisibleEl of invisibleEls) {
             // Hide the invisible elements.

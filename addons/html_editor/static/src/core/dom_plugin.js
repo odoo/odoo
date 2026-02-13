@@ -107,7 +107,7 @@ export class DomPlugin extends Plugin {
             },
         ],
         /** Handlers */
-        clean_for_save_handlers: ({ root }) => {
+        clean_for_save_processors: (root) => {
             this.removeEmptyClassAndStyleAttributes(root);
         },
         clipboard_content_processors: this.removeEmptyClassAndStyleAttributes.bind(this),

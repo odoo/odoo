@@ -5,7 +5,7 @@ import { Component, markup, onWillDestroy, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { getContent, getSelection, setContent, setSelection } from "./selection";
 import { Deferred, animationFrame, tick } from "@odoo/hoot-mock";
-import { dispatchCleanForSave } from "./dispatch";
+import { processThroughCleanForSave } from "./dispatch";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 import { toExplicitString } from "@web/../lib/hoot/hoot_utils";
 
@@ -249,7 +249,7 @@ export async function testEditor(config) {
     if (contentAfter) {
         // Test the saved value, with added cursor markers for convenience of testing.
         const content = editor.getContent(); // Saved value.
-        dispatchCleanForSave(editor, { root: el, preserveSelection: true });
+        processThroughCleanForSave(editor, el, { preserveSelection: true });
         const innerHTML = el.innerHTML; // Cleaned value without cursors.
         await compareFunction(
             getContent(el, config.options),

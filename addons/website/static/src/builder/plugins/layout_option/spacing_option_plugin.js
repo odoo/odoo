@@ -13,7 +13,7 @@ class SpacingOptionPlugin extends Plugin {
         },
         savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
         on_cloned_handlers: this.onCloned.bind(this),
-        clean_for_save_handlers: this.cleanForSave.bind(this),
+        clean_for_save_processors: this.cleanForSave.bind(this),
     };
 
     /**
@@ -45,7 +45,7 @@ class SpacingOptionPlugin extends Plugin {
         this.removeGridPreviews(cloneEl);
     }
 
-    cleanForSave({ root }) {
+    cleanForSave(root) {
         this.removeGridPreviews(root);
     }
 }

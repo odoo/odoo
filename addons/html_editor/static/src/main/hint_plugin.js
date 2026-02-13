@@ -31,9 +31,12 @@ export class HintPlugin extends Plugin {
             this.updateHints();
         },
         normalize_handlers: this.normalize.bind(this),
-        clean_for_save_handlers: ({ root }) => this.clearHints(root),
         content_updated_handlers: this.updateHints.bind(this),
 
+        /** Processors */
+        clean_for_save_processors: (root) => this.clearHints(root),
+
+        /** Providers */
         hint_targets_providers: (selectionData, editable) => {
             if (!selectionData.currentSelectionIsInEditable || !selectionData.documentSelection) {
                 return [];
@@ -45,6 +48,7 @@ export class HintPlugin extends Plugin {
                 return [];
             }
         },
+
         system_classes: ["o-we-hint"],
         system_attributes: ["o-we-hint-text"],
     };

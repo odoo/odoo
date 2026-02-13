@@ -37,11 +37,11 @@ export class WebsiteSnippetModel extends SnippetModel {
         return label;
     }
 
-    cleanSnippetForSave(snippetCopyEl, cleanForSaveHandlers) {
+    cleanSnippetForSave(snippetCopyEl, cleanForSaveProcessors) {
         const rootEl = snippetCopyEl.matches(".s_popup")
             ? snippetCopyEl.firstElementChild
             : snippetCopyEl;
-        super.cleanSnippetForSave(rootEl, cleanForSaveHandlers);
+        super.cleanSnippetForSave(rootEl, cleanForSaveProcessors);
     }
 
     getContext(snippetEl) {

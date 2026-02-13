@@ -52,7 +52,7 @@ export class BaseContainerPlugin extends Plugin {
         this.getResource("unsplittable_node_predicates").some((fn) => fn(element));
     /** @type {import("plugins").EditorResources} */
     resources = {
-        clean_for_save_handlers: this.cleanForSave.bind(this),
+        clean_for_save_processors: this.cleanForSave.bind(this),
         // `baseContainer` normalization should occur after every other normalization
         // because a `div` may only have the baseContainer identity if it does not
         // already have another incompatible identity given by another plugin.
@@ -199,7 +199,7 @@ export class BaseContainerPlugin extends Plugin {
         return true;
     }
 
-    cleanForSave({ root }) {
+    cleanForSave(root) {
         for (const baseContainer of selectElements(root, `.${BASE_CONTAINER_CLASS}`)) {
             baseContainer.classList.remove(BASE_CONTAINER_CLASS);
             if (baseContainer.classList.length === 0) {

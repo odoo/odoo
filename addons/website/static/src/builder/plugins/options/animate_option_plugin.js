@@ -62,7 +62,7 @@ export class AnimateOptionPlugin extends Plugin {
             SetAnimationEffectAction,
         },
         normalize_handlers: this.normalize.bind(this),
-        clean_for_save_handlers: this.cleanForSave.bind(this),
+        clean_for_save_processors: this.cleanForSave.bind(this),
         unsplittable_node_predicates: (node) => node.classList?.contains("o_animated_text"),
         lower_panel_entries: withSequence(10, { Component: EmphasizeAnimatedText }),
     };
@@ -341,7 +341,7 @@ export class AnimateOptionPlugin extends Plugin {
             img.loading = "eager";
         }
     }
-    cleanForSave({ root }) {
+    cleanForSave(root) {
         for (const el of root.querySelectorAll(".o_animate_preview")) {
             el.classList.remove("o_animate_preview");
         }

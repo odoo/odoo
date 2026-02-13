@@ -39,21 +39,25 @@ export class QWebPlugin extends Plugin {
     resources = {
         /** Handlers */
         selectionchange_handlers: withSequence(8, this.onSelectionChange.bind(this)),
-        clean_for_save_handlers: ({ root }) => {
+        normalize_handlers: withSequence(0, this.normalize.bind(this)),
+
+        /** Processors */
+        clean_for_save_processors: (root) => {
             this.clearDataAttributes(root);
             for (const element of root.querySelectorAll(PROTECTED_QWEB_SELECTOR)) {
                 element.removeAttribute("contenteditable");
                 delete element.dataset.oeProtected;
             }
         },
-        normalize_handlers: withSequence(0, this.normalize.bind(this)),
+        clipboard_content_processors: this.clearDataAttributes.bind(this),
 
-        system_attributes: QWEB_DATA_ATTRIBUTES,
+        /** Predicates */
         unremovable_node_predicates: isUnremovableQWebElement,
         unsplittable_node_predicates: isUnsplittableQWebElement,
-        clipboard_content_processors: this.clearDataAttributes.bind(this),
         legit_empty_link_predicates: (linkEl) =>
             linkEl.getAttributeNames().some((name) => name.startsWith("t-")),
+
+        system_attributes: QWEB_DATA_ATTRIBUTES,
     };
 
     setup() {

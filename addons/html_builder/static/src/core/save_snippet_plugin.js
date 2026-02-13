@@ -70,13 +70,15 @@ export class SaveSnippetPlugin extends Plugin {
                 el = childBlockquote;
             }
         }
-        const cleanForSaveHandlers = [
-            ...this.getResource("clean_for_save_handlers"),
-            ({ root }) => escapeTextNodes(root),
+        const cleanForSaveProcessors = [
+            ...this.getResource("clean_for_save_processors"),
+            (root) => {
+                escapeTextNodes(root);
+            },
         ];
         const savedName = await this.config.saveSnippet(
             el,
-            cleanForSaveHandlers,
+            cleanForSaveProcessors,
             this.wrapWithBeforeAfterSaveHandlers.bind(this)
         );
         if (savedName) {

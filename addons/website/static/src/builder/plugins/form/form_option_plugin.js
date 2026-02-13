@@ -185,7 +185,7 @@ export class FormOptionPlugin extends Plugin {
             ".s_website_form_recaptcha",
             ".row > div:not(.s_website_form_field, .s_website_form_submit, .s_website_form_field *, .s_website_form_submit *)",
         ].map((selector) => `.s_website_form form ${selector}`),
-        clean_for_save_handlers: ({ root: rootEl }) => {
+        clean_for_save_processors: (rootEl) => {
             this.removeSuccessMessagePreviews(rootEl);
         },
         dropzone_selector: [

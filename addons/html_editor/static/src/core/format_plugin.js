@@ -184,12 +184,15 @@ export class FormatPlugin extends Plugin {
         ],
         /** Handlers */
         beforeinput_handlers: withSequence(20, this.onBeforeInput.bind(this)),
-        clean_for_save_handlers: this.cleanForSave.bind(this),
         normalize_handlers: this.normalize.bind(this),
         selectionchange_handlers: this.removeEmptyInlineElement.bind(this),
         before_set_tag_handlers: this.removeFontSizeFormat.bind(this),
         before_insert_processors: this.unwrapEmptyFormat.bind(this),
 
+        /** Processors */
+        clean_for_save_processors: this.cleanForSave.bind(this),
+
+        /** Predicates */
         intangible_char_for_keyboard_navigation_predicates: (_, char) => char === "\u200b",
     };
 
@@ -509,7 +512,7 @@ export class FormatPlugin extends Plugin {
         this.mergeAdjacentInlines(root);
     }
 
-    cleanForSave({ root, preserveSelection = false } = {}) {
+    cleanForSave(root, { preserveSelection = false } = {}) {
         for (const element of root.querySelectorAll("[data-oe-zws-empty-inline]")) {
             let currentElement = element.parentElement;
             this.cleanElement(element, { preserveSelection });

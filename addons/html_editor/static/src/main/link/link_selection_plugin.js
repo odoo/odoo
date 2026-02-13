@@ -38,10 +38,15 @@ export class LinkSelectionPlugin extends Plugin {
     resources = {
         /** Handlers */
         selectionchange_handlers: this.resetLinkInSelection.bind(this),
-        clean_for_save_handlers: ({ root }) => this.clearLinkInSelectionClass(root),
         normalize_handlers: () => this.resetLinkInSelection(),
+
+        /** Processors */
+        clean_for_save_processors: (root) => this.clearLinkInSelectionClass(root),
+
+        /** Providers */
         feff_providers: this.addFeffsToLinks.bind(this),
-        system_classes: ["o_link_in_selection"],
+
+        /** Predicates */
         selection_placeholder_container_predicates: (container) => {
             if (container.nodeName === "BUTTON" || container.nodeName === "A") {
                 // We sometimes have buttons or links that are blocks with
@@ -52,6 +57,8 @@ export class LinkSelectionPlugin extends Plugin {
                 return false;
             }
         },
+
+        system_classes: ["o_link_in_selection"],
     };
 
     addFeffsToLinks(root, cursors) {

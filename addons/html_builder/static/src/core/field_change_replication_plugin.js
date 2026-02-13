@@ -93,7 +93,7 @@ export class FieldChangeReplicationPlugin extends Plugin {
             if (targetEls.length) {
                 const cloneEl = sourceEl.cloneNode(true);
                 this.dependencies.dom.removeSystemProperties(cloneEl);
-                this.dispatchTo("clean_for_save_handlers", { root: cloneEl });
+                this.processThrough("clean_for_save_processors", cloneEl);
                 for (const targetEl of targetEls) {
                     if (targetEl.classList.contains("o_translation_without_style")) {
                         // For generated elements such as the navigation

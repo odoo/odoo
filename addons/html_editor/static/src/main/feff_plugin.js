@@ -35,7 +35,7 @@ export class FeffPlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         normalize_handlers: this.updateFeffs.bind(this),
-        clean_for_save_handlers: this.cleanForSave.bind(this),
+        clean_for_save_processors: this.cleanForSave.bind(this),
         intangible_char_for_keyboard_navigation_predicates: (ev, char, lastSkipped) =>
             // Skip first FEFF, but not the second one (unless shift is pressed).
             char === "\uFEFF" && (ev.shiftKey || lastSkipped !== "\uFEFF"),
@@ -43,7 +43,7 @@ export class FeffPlugin extends Plugin {
         clipboard_text_processors: (text) => text.replace(/\ufeff/g, ""),
     };
 
-    cleanForSave({ root, preserveSelection = false }) {
+    cleanForSave(root, { preserveSelection = false } = {}) {
         if (preserveSelection) {
             const cursors = this.getCursors();
             this.removeFeffs(root, cursors);

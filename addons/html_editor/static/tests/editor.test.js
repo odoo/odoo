@@ -106,14 +106,14 @@ test("Element is not editable if any plugin marks it non-editable", async () => 
     await expect(selectionPlugin.isNodeEditable(img)).toBe(false);
 });
 
-test("clean_for_save_listeners is done last", async () => {
+test("clean_for_save_processors is done last", async () => {
     // This test uses custom elements tag `c-div` to make sure they won't fall into
     // a case where they won't be merged anyway.
     // Without the proper fix, this test fails with sibling elements `c-div` merged together
     class TestPlugin extends Plugin {
         static id = "test";
         resources = {
-            clean_for_save_handlers: ({ root }) => {
+            clean_for_save_processors: (root) => {
                 for (const el of root.querySelectorAll("c-div")) {
                     el.removeAttribute("class");
                 }

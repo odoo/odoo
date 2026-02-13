@@ -54,7 +54,7 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
  */
 
 /**
- * @typedef {((arg: {root: EditorContext["editable"]}) => void)[]} clean_for_save_handlers
+ * @typedef {((root HTMLElement = EditorContext["editable"]) => HTMLElement)[]} clean_for_save_processors
  * @typedef {(() => void)[]} start_edition_handlers
  */
 
@@ -367,9 +367,7 @@ export class Editor {
     }
 
     getElContent() {
-        const el = this.editable.cloneNode(true);
-        this.resources["clean_for_save_handlers"].forEach((cb) => cb({ root: el }));
-        return el;
+        return this.processThrough("clean_for_save_processors", this.editable.cloneNode(true));
     }
 
     destroy(willBeRemoved) {
