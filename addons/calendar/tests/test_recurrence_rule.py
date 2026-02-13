@@ -12,6 +12,7 @@ class TestRecurrenceRule(TransactionCase):
         recurrence = self.env['calendar.recurrence'].create({
             'rrule_type': 'daily',
             'interval': 2,
+            'end_type': 'count',
             'count': 3,
             'event_tz': 'UTC',
         })
@@ -42,6 +43,7 @@ class TestRecurrenceRule(TransactionCase):
             'rrule_type': 'weekly',
             'tue': True,
             'wed': True,
+            'end_type': 'count',
             'interval': 2,
             'count': 3,
             'event_tz': 'UTC',
@@ -153,6 +155,7 @@ class TestRecurrenceRule(TransactionCase):
         recurrence = self.env['calendar.recurrence'].create({
             'rrule_type': 'yearly',
             'interval': 2,
+            'end_type': 'count',
             'count': 3,
             'event_tz': 'UTC',
         })

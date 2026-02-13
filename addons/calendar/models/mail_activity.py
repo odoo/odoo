@@ -41,7 +41,7 @@ class MailActivity(models.Model):
             'default_res_model': self.env.context.get('default_res_model'),
             'default_name': self.res_name,
             'default_description': self.note if not is_html_empty(self.note) else '',
-            'default_activity_ids': [(6, 0, self.ids)],
+            'default_meeting_activity_ids': [(6, 0, self.ids)],
             'default_partner_ids': self.user_id.partner_id.ids,
             'default_user_id': self.user_id.id,
             'initial_date': self.date_deadline,

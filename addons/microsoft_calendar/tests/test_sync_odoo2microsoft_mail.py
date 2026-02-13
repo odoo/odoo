@@ -77,6 +77,8 @@ class TestSyncOdoo2MicrosoftMail(TestCommon, MailCase):
                 if not mail_notified_partners:
                     self.assertNotSentEmail()
                     mock_insert.assert_called_once()
+                    self.assertTrue(mock_insert.call_args[0][0]['isReminderOn'])
+                    self.assertEqual(mock_insert.call_args[0][0]['reminderMinutesBeforeStart'], 15)
                     self.assert_dict_equal(mock_insert.call_args[0][0]['organizer'], {
                         'emailAddress': {'address': organizer.email if organizer else '', 'name': organizer.name if organizer else ''}
                     })

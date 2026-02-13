@@ -49,7 +49,7 @@ class TestSyncOdoo2GoogleMail(TestTokenAccess, TestSyncGoogle, MailCommon):
                         'guestsCanModify': is_public,
                         'organizer': {'email': organizer.email, 'self': False} if organizer else False,
                         'summary': 'Event',
-                        'reminders': {'useDefault': False, 'overrides': []},
+                        'reminders': {'useDefault': False, 'overrides': [{'method': 'popup', 'minutes': 15}]},
                     }, timeout=3)
                 else:
                     self.assertGoogleEventNotInserted()

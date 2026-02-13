@@ -448,7 +448,7 @@ class TestLeadMerge(TestLeadMergeCommon):
         activity = lead_1.activity_schedule('crm.lead_test_activity_1', user_id=self.user_sales_manager.id)
         calendar_event = self.env['calendar.event'].create({
             'name': 'Meeting with partner',
-            'activity_ids': [(4, activity.id)],
+            'meeting_activity_ids': [(4, activity.id)],
             'start': '2021-06-12 21:00:00',
             'stop': '2021-06-13 00:00:00',
             'res_model_id': self.env['ir.model']._get('crm.crm_lead').id,
