@@ -436,7 +436,7 @@ class ProductProduct(models.Model):
     def _search_qty_available(self, operator, value):
         # In the very specific case we want to retrieve products with stock available, we only need
         # to use the quants, not the stock moves. Therefore, we bypass the usual
-        # '_search_product_quantity' method and call '_search_qty_available_new' instead. This
+        # '_search_template_quantity' method and call '_search_qty_available_new' instead. This
         # allows better performances.
         if not ({'from_date', 'to_date'} & set(self.env.context.keys())):
             product_ids = self._search_qty_available_new(
@@ -444,24 +444,21 @@ class ProductProduct(models.Model):
                 self.env.context.get('package_id')
             )
             return [('id', 'in', product_ids)]
-        return self._search_product_quantity(operator, value, 'qty_available')
+        return self._search_template_quantity(operator, value, 'qty_available')
 
     def _search_virtual_available(self, operator, value):
-        # TDE FIXME: should probably clean the search methods
-        return self._search_product_quantity(operator, value, 'virtual_available')
+        return self._search_template_quantity(operator, value, 'virtual_available')
 
     def _search_incoming_qty(self, operator, value):
-        # TDE FIXME: should probably clean the search methods
-        return self._search_product_quantity(operator, value, 'incoming_qty')
+        return self._search_template_quantity(operator, value, 'incoming_qty')
 
     def _search_outgoing_qty(self, operator, value):
-        # TDE FIXME: should probably clean the search methods
-        return self._search_product_quantity(operator, value, 'outgoing_qty')
+        return self._search_template_quantity(operator, value, 'outgoing_qty')
 
     def _search_free_qty(self, operator, value):
-        return self._search_product_quantity(operator, value, 'free_qty')
+        return self._search_template_quantity(operator, value, 'free_qty')
 
-    def _search_product_quantity(self, operator, value, field):
+    def _search_template_quantity(self, operator, value, field):
         # Order the search on `id` to prevent the default order on the product name which slows
         # down the search.
         ids = self.with_context(prefetch_fields=False).search_fetch([], [field], order='id').filtered_domain([(field, operator, value)]).ids
