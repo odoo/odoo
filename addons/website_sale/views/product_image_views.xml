@@ -46,13 +46,13 @@
                 <field name="name"/>
                 <templates>
                     <t t-name="card" class="p-0 border-0">
-                        <div class="card">
-                            <div class="o_squared_image">
-                                <field class="card-img-top" name="image_1920" widget="x2_many_image"/>
+                        <div class="card flex-row border rounded-0">
+                            <div class="o_website_sale_image_list_card_image ratio ratio-1x1">
+                                <field name="image_1920" widget="x2_many_image"/>
                             </div>
                             <field
                                 name="attribute_value_ids"
-                                class="mt-3"
+                                class="overflow-y-auto p-2"
                                 widget="many2many_tags"
                                 options="{'color_field': 'color'}"
                             />
