@@ -3,42 +3,79 @@
 
 <t t-name="hr_attendance.attendance_menu">
     <t t-if="this.state.isDisplayed">
-        <Dropdown position="'bottom-end'" beforeOpen.bind="searchReadEmployee" menuClass="`p-2 pb-3`" state="dropdown">
+        <Dropdown position="'bottom-end'"
+                  beforeOpen.bind="searchReadEmployee"
+                  menuClass="'p-0'"
+                  state="dropdown">
             <button>
-                <i class="fa fa-circle" t-attf-class="text-{{ this.state.checkedIn ? 'success' : 'danger' }}" role="img" aria-label="Attendance"/>
+                <i class="fa fa-circle"
+                   t-attf-class="text-{{ this.state.checkedIn ? 'success' : 'danger' }}"
+                   role="img"
+                   aria-label="Attendance"/>
             </button>
+
             <t t-set-slot="content">
-                <div class="o_att_menu_container d-flex flex-column gap-4">
-                    <div class="d-flex flex-column gap-3">
-                        <div t-if="this.state.checkedIn" class="d-flex flex-wrap gap-3">
-                            <div t-if="!this.isFirstAttendance" class="att_container flex-grow-1 flex-shrink-0">
-                                <small class="d-block text-muted">Before <t t-esc="this.lastCheckIn"/></small>
-                                <div t-esc="this.hoursPreviouslyToday" class="fs-3 text-info text-end"/>
-                            </div>
-                            <div class="att_container flex-grow-1 flex-shrink-0">
-                                <small class="d-block text-muted">Since <t t-esc="this.lastCheckIn"/></small>
-                                <div t-esc="this.lastAttendanceWorkedHours" t-attf-class="fs-3 text-info {{ !this.isFirstAttendance ? 'text-end' : '' }}"/>
-                            </div>
-                        </div>
-                        <div t-if="!this.isFirstAttendance"
-                            class="att_container d-flex flex-column"
-                            t-att-class="this.state.checkedIn ? 'p-3 bg-100 rounded' : ''">
-                            <div class="d-flex" t-att-class="this.state.checkedIn ? 'align-items-center justify-content-between' : 'flex-column'">
-                                <small class="text-muted">Total today</small>
-                                <h2 t-esc="this.hoursToday" class="mb-0 fs-2"/>
-                            </div>
-                            <button t-on-click="() => this.signInOut()" class="flex-basis-100 mt-3" t-attf-class="btn btn-{{ this.state.checkedIn ? 'warning' : 'success' }}">
-                                <span t-if="!this.state.checkedIn">Check in</span>
-                                <span t-else="">Check out</span>
-                                <i t-attf-class="fa fa-sign-{{ this.state.checkedIn ? 'out' : 'in' }} ms-1"/>
-                            </button>
-                        </div>
+                <div class="att_container d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center gap-5 border-bottom p-3">
+                        <h3 class="mb-0">
+                            <t t-if="this.state.checkedIn">
+                                Timesheets
+                            </t>
+                            <t t-else="">
+                                <t t-if="this.hasCheckedInToday">
+                                    <small>Welcome back</small> <span class="d-block"><t t-esc="this.employeeName"/>!</span>
+                                </t>
+                                <t t-else="">
+                                    <small>Welcome,</small> <span class="d-block"><t t-esc="this.employeeName"/>.</span>
+                                </t>
+                            </t>
+                        </h3>
                     </div>
-                    <button t-if="this.isFirstAttendance" t-on-click="() => this.signInOut()" t-attf-class="btn btn-{{ this.state.checkedIn ? 'warning' : 'success' }}">
-                        <span t-if="!this.state.checkedIn">Check in</span>
-                        <span t-else="">Check out</span>
-                        <i t-attf-class="fa fa-sign-{{ this.state.checkedIn ? 'out' : 'in' }} ms-1"/>
-                    </button>
+                    
+                    <div class="o_att_today_wrap px-3">
+                        <table class="table mb-0">
+                            <tbody>
+                                <tr t-foreach="this.attendancesToday" t-as="attendance" t-key="attendance.id">
+                                    <td>
+                                        <t t-set="start" t-value="this.splitTime(attendance.start)"/>
+                                        <t t-esc="start.h"/>:<span class="text-muted"><t t-esc="start.m"/></span>
+                                    </td>
+                                    <td class="px-0">–</td>
+                                    <td>
+                                        <t t-if="attendance.end">
+                                            <t t-set="end" t-value="this.splitTime(attendance.end)"/>
+                                            <t t-esc="end.h"/>:<span class="text-muted"><t t-esc="end.m"/></span>
+                                        </t>
+                                        <t t-else="">
+                                            Now
+                                        </t>
+                                    </td>
+                                    <td class="ps-4 text-end">
+                                        <t t-set="duration" t-value="this.splitTime(attendance.duration)"/>
+                                        <t t-esc="duration.h"/>h<span class="text-muted"><t t-esc="duration.m"/></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="border-bottom-0">
+                                        Today
+                                    </td>
+                                    <td class="border-bottom-0 ps-4 text-end">
+                                        <t t-set="total" t-value="this.splitTime(this.hoursToday)"/>
+                                        <t t-esc="total.h"/>h<span class="text-muted"><t t-esc="total.m"/></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="o_wrap_btn_sign_out position-md-sticky bottom-0 p-3 z-2">
+                        <button t-on-click="() => this.signInOut()"
+                                t-attf-class="btn btn-{{ this.state.checkedIn ? 'warning' : 'primary' }} w-100">
+                            <span t-if="!this.state.checkedIn">Check in</span>
+                            <span t-else="">Check out</span>
+                            <i t-attf-class="fa fa-sign-{{ this.state.checkedIn ? 'out' : 'in' }} ms-1"/>
+                        </button>
+                    </div>
                 </div>
             </t>
         </Dropdown>
