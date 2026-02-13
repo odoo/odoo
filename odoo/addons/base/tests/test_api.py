@@ -334,7 +334,7 @@ class TestAPI(SavepointCaseWithUserDemo):
         self.assertEqual(prefetch_ids, partners.with_context(active_test=False)._prefetch_ids)
         self.assertEqual(prefetch_ids, part.with_prefetch(prefetch_ids)._prefetch_ids)
         self.assertEqual(set(prefetch_ids), set(partners.filtered('country_id')._prefetch_ids))
-        self.assertEqual(set(prefetch_ids), set(partners[0]._prefetch_ids))
+        self.assertEqual(prefetch_ids, partners[0]._prefetch_ids)
         self.assertEqual(set(prefetch_ids), set(partners[:5]._prefetch_ids))
 
         # iteration and relational fields should use the same prefetch set
@@ -414,14 +414,13 @@ class TestAPI(SavepointCaseWithUserDemo):
             self.assertEqual(len(list(result._prefetch_ids)), main_size)
 
             # get the children
-            # adding CHILDREN for current UnionPrefetch
             children = partners[0].child_ids
             main_size = RECORDS * CHILDREN  # total number of children
-            self.assertEqual(len(list(children._prefetch_ids)), main_size + CHILDREN)
+            self.assertEqual(len(list(children._prefetch_ids)), main_size)
 
             # union with all children
             children |= children.parent_id.child_ids
-            main_size = ((main_size + CHILDREN) * (CHILDREN + 1))  # FIXME should not grow this much
+            main_size *= (CHILDREN + 1)  # FIXME should not grow this much
             self.assertEqual(len(list(children._prefetch_ids)), main_size + CHILDREN)
 
             # now incrementally build
@@ -435,7 +434,7 @@ class TestAPI(SavepointCaseWithUserDemo):
             result = partners.country_id.browse()
             for partner in partners[:11]:
                 result += partner.child_ids[0].country_id
-            main_size = RECORDS * CHILDREN * 11 + 79 * 11  # FIXME too much
+            main_size = RECORDS * CHILDREN + (CHILDREN + 1) * 11
             self.assertEqual(len(list(result._prefetch_ids)), main_size)
 
         # when building subsets of large recordsets, prefetch in priority the
