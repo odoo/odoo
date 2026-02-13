@@ -9,6 +9,7 @@ from . import test_ir_websocket
 from . import test_kpi_provider
 from . import test_link_preview
 from . import test_mail_activity
+from . import test_mail_canned_response
 from . import test_mail_composer
 from . import test_mail_mail
 from . import test_mail_message
