@@ -98,11 +98,15 @@ class ResourceCalendar(models.Model):
     def write(self, vals):
         vals['attendance_ids'] = [
             *vals.get('attendance_ids', []),
-            *[Command.delete(a.id) for a in self._attendances_to_unlink(vals.get("schedule_type"))]
+            *[Command.delete(a.id) for a in self._get_attendances_to_unlink(vals.get("schedule_type"))]
         ]
         return super().write(vals)
 
-    def _attendances_to_unlink(self, next_schedule_type=None):
+    @api.autovacuum
+    def _auto_attendance_clean(self):
+        self._get_attendances_to_unlink().unlink()
+
+    def _get_attendances_to_unlink(self, next_schedule_type=None):
         return self.attendance_ids.filtered(lambda a: bool(a.date) if (next_schedule_type or a.calendar_id.schedule_type) == "fixed" else not a.date)
 
     @api.depends('hours_per_week', 'company_id.resource_calendar_id.hours_per_week')
@@ -114,11 +118,11 @@ class ResourceCalendar(models.Model):
     def _compute_attendance_ids(self):
         for calendar in self:
             if calendar.schedule_type == "variable":
-                calendar.attendance_ids = [Command.delete(a.id) for a in calendar._attendances_to_unlink()]
+                calendar.attendance_ids = calendar._origin.attendance_ids
             elif not (calendar.attendance_ids.filtered(lambda a: not a.date)
                       or calendar._origin.company_id == calendar.company_id
                       and calendar._origin.schedule_type == calendar.schedule_type):
-                calendar.attendance_ids = [(5, 0, 0)] + calendar._get_default_attendance_ids(calendar.company_id)
+                calendar.attendance_ids = calendar._get_default_attendance_ids(calendar.company_id)
 
     @api.depends('company_id')
     def _compute_global_leave_ids(self):

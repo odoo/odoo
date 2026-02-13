@@ -89,7 +89,7 @@
                                 </div>
                             </group>
                         </group>
-                        <field name="attendance_ids"/>
+                        <field name="attendance_ids" widget="resource_calendar_attendance_filtered_one2many" domain_filter="[('date', '=', False)]"/>
                     </div>
                     <field nolabel="1"  name="attendance_ids" widget="resource_calendar_attendance_calendar_one2many"
                            class="flex-grow-1" invisible="schedule_type != 'variable'"/>
